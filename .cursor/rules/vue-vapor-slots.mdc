@@ -1,0 +1,37 @@
+---
+description: Vue Vapor mode slot handling caveats
+globs: src/components/**/*.vue
+alwaysApply: false
+---
+
+# Vue Vapor Slots
+
+This project uses `<script lang="ts" setup vapor>`. Vapor mode has a known interop issue with slots.
+
+## Problem
+
+`$slots` and `useSlots()` do NOT reliably detect slot content when a standard VDOM parent passes slots to a Vapor child. The slot **renders** fine — only **detection** is broken.
+
+```vue
+<!-- ❌ BAD — v-if guard will be false even when slot content is provided -->
+<span v-if="$slots.default" class="my-label">
+    <slot />
+</span>
+
+<!-- ❌ ALSO BAD — useSlots() has the same interop issue -->
+const slots = useSlots();
+const hasSlot = computed(() => !!slots.default);
+```
+
+## Fix
+
+For default slots with a prop fallback, remove the `v-if` guard entirely. The `<slot>` element renders correctly; only detection fails.
+
+```vue
+<!-- ✅ GOOD — always render, slot content or prop fallback will show -->
+<span class="my-label">
+    <slot>{{ label }}</slot>
+</span>
+```
+
+For named slots (prefix/suffix) where an empty wrapper causes layout issues, keep `$slots` guards but be aware they may fail in VDOM→Vapor interop (e.g. Storybook). Test accordingly.

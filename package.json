@@ -1,0 +1,63 @@
+{
+  "name": "ropav",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/styles"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/components/*/index.d.ts",
+      "import": "./dist/components/*/index.js"
+    },
+    "./base.css": "./dist/base.css",
+    "./scss/*": "./src/styles/*"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "prepublishOnly": "pnpm run build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "@fontsource-variable/inter": "^5.0.0",
+    "vue": "^3.6.0-beta.4"
+  },
+  "peerDependenciesMeta": {
+    "@fontsource-variable/inter": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@storybook/vue3-vite": "^10.2.10",
+    "@types/node": "^24.10.13",
+    "@vitejs/plugin-vue": "^6.0.4",
+    "@vue/tsconfig": "^0.8.1",
+    "sass-embedded": "^1.97.3",
+    "storybook": "^10.2.10",
+    "typescript": "~5.9.3",
+    "vite": "beta",
+    "vite-plugin-dts": "^4.5.4",
+    "vue": "3.6.0-beta.4",
+    "vue-tsc": "^3.2.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "beta"
+    }
+  }
+}

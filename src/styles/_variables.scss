@@ -1,0 +1,83 @@
+// ─── Font family ─────────────────────────────────────────────
+$font-family-base: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif !default;
+
+// ─── Colors ──────────────────────────────────────────────────
+$color-primary:   #3b82f6 !default;
+$color-secondary: #6366f1 !default;
+$color-success:   #22c55e !default;
+$color-warning:   #f59e0b !default;
+$color-danger:    #ef4444 !default;
+$color-info:      #06b6d4 !default;
+
+$color-white:     #ffffff !default;
+$color-black:     #09090b !default;
+
+$color-gray-50:   #fafafa !default;
+$color-gray-100:  #f4f4f5 !default;
+$color-gray-200:  #e4e4e7 !default;
+$color-gray-300:  #d4d4d8 !default;
+$color-gray-400:  #a1a1aa !default;
+$color-gray-500:  #71717a !default;
+$color-gray-600:  #52525b !default;
+$color-gray-700:  #3f3f46 !default;
+$color-gray-800:  #27272a !default;
+$color-gray-900:  #18181b !default;
+
+$color-text:            $color-gray-900 !default;
+$color-text-secondary:  $color-gray-500 !default;
+$color-text-disabled:   $color-gray-400 !default;
+$color-border:          $color-gray-200 !default;
+$color-background:      $color-white !default;
+
+// ─── Font sizes ──────────────────────────────────────────────
+$font-size-xs:   0.75rem   !default; // 12px
+$font-size-sm:   0.875rem  !default; // 14px
+$font-size-base: 1rem      !default; // 16px
+$font-size-lg:   1.125rem  !default; // 18px
+$font-size-xl:   1.25rem   !default; // 20px
+$font-size-2xl:  1.5rem    !default; // 24px
+$font-size-3xl:  1.875rem  !default; // 30px
+
+// ─── Font weights ────────────────────────────────────────────
+$font-weight-normal:   400 !default;
+$font-weight-medium:   500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold:     700 !default;
+
+// ─── Spacing ─────────────────────────────────────────────────
+$spacing-0:  0        !default;
+$spacing-1:  0.25rem  !default; // 4px
+$spacing-2:  0.5rem   !default; // 8px
+$spacing-3:  0.75rem  !default; // 12px
+$spacing-4:  1rem     !default; // 16px
+$spacing-5:  1.25rem  !default; // 20px
+$spacing-6:  1.5rem   !default; // 24px
+$spacing-8:  2rem     !default; // 32px
+$spacing-10: 2.5rem   !default; // 40px
+$spacing-12: 3rem     !default; // 48px
+
+// ─── Border radius ──────────────────────────────────────────
+$radius-none: 0        !default;
+$radius-sm:   0.125rem !default; // 2px
+$radius-base: 0.25rem  !default; // 4px
+$radius-md:   0.375rem !default; // 6px
+$radius-lg:   0.5rem   !default; // 8px
+$radius-xl:   0.75rem  !default; // 12px
+$radius-2xl:  1rem     !default; // 16px
+$radius-full: 9999px   !default;
+
+// ─── Component sizes ────────────────────────────────────────
+$size-sm: 32px !default;
+$size-md: 40px !default;
+$size-lg: 48px !default;
+
+// ─── Shadows ─────────────────────────────────────────────────
+$shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.05)                                      !default;
+$shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)   !default;
+$shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !default;
+$shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !default;
+
+// ─── Transitions ─────────────────────────────────────────────
+$transition-fast:    150ms ease !default;
+$transition-base:    200ms ease !default;
+$transition-slow:    300ms ease !default;

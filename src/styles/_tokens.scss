@@ -1,0 +1,87 @@
+@use 'variables' as *;
+
+:root {
+    // ── Font family ──
+    --rp-font-family: #{$font-family-base};
+
+    // ── Colors ──
+    --rp-color-primary:   #{$color-primary};
+    --rp-color-secondary: #{$color-secondary};
+    --rp-color-success:   #{$color-success};
+    --rp-color-warning:   #{$color-warning};
+    --rp-color-danger:    #{$color-danger};
+    --rp-color-info:      #{$color-info};
+
+    --rp-color-white:     #{$color-white};
+    --rp-color-black:     #{$color-black};
+
+    --rp-color-gray-50:   #{$color-gray-50};
+    --rp-color-gray-100:  #{$color-gray-100};
+    --rp-color-gray-200:  #{$color-gray-200};
+    --rp-color-gray-300:  #{$color-gray-300};
+    --rp-color-gray-400:  #{$color-gray-400};
+    --rp-color-gray-500:  #{$color-gray-500};
+    --rp-color-gray-600:  #{$color-gray-600};
+    --rp-color-gray-700:  #{$color-gray-700};
+    --rp-color-gray-800:  #{$color-gray-800};
+    --rp-color-gray-900:  #{$color-gray-900};
+
+    --rp-color-text:           #{$color-text};
+    --rp-color-text-secondary: #{$color-text-secondary};
+    --rp-color-text-disabled:  #{$color-text-disabled};
+    --rp-color-border:         #{$color-border};
+    --rp-color-background:     #{$color-background};
+
+    // ── Font sizes ──
+    --rp-font-size-xs:   #{$font-size-xs};
+    --rp-font-size-sm:   #{$font-size-sm};
+    --rp-font-size-base: #{$font-size-base};
+    --rp-font-size-lg:   #{$font-size-lg};
+    --rp-font-size-xl:   #{$font-size-xl};
+    --rp-font-size-2xl:  #{$font-size-2xl};
+    --rp-font-size-3xl:  #{$font-size-3xl};
+
+    // ── Font weights ──
+    --rp-font-weight-normal:   #{$font-weight-normal};
+    --rp-font-weight-medium:   #{$font-weight-medium};
+    --rp-font-weight-semibold: #{$font-weight-semibold};
+    --rp-font-weight-bold:     #{$font-weight-bold};
+
+    // ── Spacing ──
+    --rp-spacing-0:  #{$spacing-0};
+    --rp-spacing-1:  #{$spacing-1};
+    --rp-spacing-2:  #{$spacing-2};
+    --rp-spacing-3:  #{$spacing-3};
+    --rp-spacing-4:  #{$spacing-4};
+    --rp-spacing-5:  #{$spacing-5};
+    --rp-spacing-6:  #{$spacing-6};
+    --rp-spacing-8:  #{$spacing-8};
+    --rp-spacing-10: #{$spacing-10};
+    --rp-spacing-12: #{$spacing-12};
+
+    // ── Border radius ──
+    --rp-radius-none: #{$radius-none};
+    --rp-radius-sm:   #{$radius-sm};
+    --rp-radius-base: #{$radius-base};
+    --rp-radius-md:   #{$radius-md};
+    --rp-radius-lg:   #{$radius-lg};
+    --rp-radius-xl:   #{$radius-xl};
+    --rp-radius-2xl:  #{$radius-2xl};
+    --rp-radius-full: #{$radius-full};
+
+    // ── Component sizes ──
+    --rp-size-sm: #{$size-sm};
+    --rp-size-md: #{$size-md};
+    --rp-size-lg: #{$size-lg};
+
+    // ── Shadows ──
+    --rp-shadow-sm:   #{$shadow-sm};
+    --rp-shadow-base: #{$shadow-base};
+    --rp-shadow-md:   #{$shadow-md};
+    --rp-shadow-lg:   #{$shadow-lg};
+
+    // ── Transitions ──
+    --rp-transition-fast: #{$transition-fast};
+    --rp-transition-base: #{$transition-base};
+    --rp-transition-slow: #{$transition-slow};
+}

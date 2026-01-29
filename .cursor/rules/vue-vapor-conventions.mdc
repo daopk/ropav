@@ -1,0 +1,98 @@
+---
+description: Vue Vapor component conventions for ropav design system
+globs: src/components/**/*.{vue,ts}
+alwaysApply: false
+---
+
+# Vue Vapor Component Conventions
+
+All components use `<script lang="ts" setup vapor>` with Vue 3.6 Vapor mode.
+
+## Component Structure
+
+Each component lives in its own folder:
+
+```
+component-name/
+  component-name.vue      # Component
+  types.ts                # Props, Context, InjectionKey
+  index.ts                # Re-export component + types
+  component-name.stories.ts
+```
+
+## Script Setup
+
+```vue
+<script lang="ts" setup vapor>
+import { computed } from 'vue';
+import { bem } from '@/utils/bem';
+import type { ButtonProps } from './types';
+
+defineOptions({ name: 'RpButton' });
+
+const props = withDefaults(defineProps<ButtonProps>(), {
+    size: 'md',
+    disabled: false,
+});
+</script>
+```
+
+- Prefix all component names with `Rp` via `defineOptions`.
+- Props interface in `types.ts`, defaults via `withDefaults`.
+- Standard sizes: `sm | md | lg`. Colors: `primary | secondary | success | warning | danger`.
+
+## BEM CSS
+
+Use `<style lang="scss" scoped>` with BEM naming `rp-{block}__{element}--{modifier}`.
+
+```typescript
+const rootClass = computed(() =>
+    bem('rp-button', props.variant, props.color, props.size, {
+        disabled: props.disabled,
+    }),
+);
+```
+
+- Design tokens via `--rp-*` CSS variables.
+- Local-only variables use `--_` prefix (e.g. `--_thumb-size`).
+- Mixins (`flex-center`, `focus-ring`, `visually-hidden`) are auto-injected by Vite.
+
+## Provide / Inject
+
+For parent-child component pairs (RadioGroup/Radio, Collapse/CollapseItem):
+
+```typescript
+// types.ts
+export const radioGroupKey: InjectionKey<RadioGroupContext> = Symbol('radioGroup');
+
+// Parent: use reactive getters
+provide<RadioGroupContext>(radioGroupKey, {
+    get modelValue() { return props.modelValue ?? null; },
+    get size() { return props.size; },
+    select(value) { emit('update:modelValue', value); },
+});
+
+// Child: inject with null fallback for standalone use
+const group = inject(radioGroupKey, null);
+```
+
+## v-model
+
+Bind native element + emit `update:modelValue`:
+
+```vue
+<input :value="modelValue" @input="onInput" />
+```
+
+```typescript
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
+```
+
+## Exports
+
+`index.ts` re-exports component + types:
+
+```typescript
+export { default as Avatar } from './avatar.vue';
+export type { AvatarProps } from './types';
+```
