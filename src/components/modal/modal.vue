@@ -2,7 +2,7 @@
     <Teleport to="body">
         <div v-if="modelValue" class="rp-modal" @keydown.escape="onEscape">
             <div class="rp-modal__overlay" @click="onOverlayClick" />
-            <div :class="panelClass" role="dialog" aria-modal="true" ref="panelRef">
+            <div :class="panelClass" role="dialog" aria-modal="true">
                 <div v-if="title || closable" class="rp-modal__header">
                     <h2 class="rp-modal__title">
                         <slot name="title">{{ title }}</slot>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, watch, ref, onBeforeUnmount } from 'vue';
+import { computed, watch, onBeforeUnmount } from 'vue';
 import { bem } from '@/utils/bem';
 import { CloseIcon } from '@/components/_internal/icons';
 import type { ModalProps } from './types';
@@ -41,8 +41,6 @@ const props = withDefaults(defineProps<ModalProps>(), {
 const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
-
-const panelRef = ref<HTMLElement | null>(null);
 
 const panelClass = computed(() =>
     bem('rp-modal__panel', props.size),
