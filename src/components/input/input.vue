@@ -9,8 +9,8 @@
             :type="type"
             :value="modelValue"
             :placeholder="placeholder"
-            :disabled="disabled"
-            :readonly="readonly"
+            :disabled="disabled || undefined"
+            :readonly="readonly || undefined"
             @input="onInput"
         />
         <span

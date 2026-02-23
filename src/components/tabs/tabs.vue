@@ -6,7 +6,7 @@
                 :key="tab.name"
                 role="tab"
                 :class="['rp-tabs__trigger', { 'rp-tabs__trigger--active': tab.name === modelValue, 'rp-tabs__trigger--disabled': tab.disabled }]"
-                :disabled="tab.disabled"
+                :disabled="tab.disabled || undefined"
                 :aria-selected="tab.name === modelValue"
                 @click="select(tab.name)"
             >

@@ -5,7 +5,7 @@
             class="rp-radio__native"
             :value="value"
             :checked="isChecked"
-            :disabled="isDisabled"
+            :disabled="isDisabled || undefined"
             @change="onSelect"
         />
         <span class="rp-radio__dot" />

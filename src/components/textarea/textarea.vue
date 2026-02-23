@@ -5,8 +5,8 @@
             :value="modelValue"
             :placeholder="placeholder"
             :rows="rows"
-            :disabled="disabled"
-            :readonly="readonly"
+            :disabled="disabled || undefined"
+            :readonly="readonly || undefined"
             :style="{ resize }"
             @input="onInput"
         />

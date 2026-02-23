@@ -2,7 +2,7 @@
     <nav :class="rootClass" aria-label="Pagination">
         <button
             class="rp-pagination__btn"
-            :disabled="disabled || modelValue <= 1"
+            :disabled="disabled || modelValue <= 1 || undefined"
             @click="goTo(modelValue - 1)"
         >
             <ChevronLeftIcon />
@@ -15,7 +15,7 @@
             <button
                 v-else
                 :class="['rp-pagination__btn', { 'rp-pagination__btn--active': item.value === modelValue }]"
-                :disabled="disabled"
+                :disabled="disabled || undefined"
                 @click="goTo(item.value!)"
             >
                 {{ item.value }}
@@ -24,7 +24,7 @@
 
         <button
             class="rp-pagination__btn"
-            :disabled="disabled || modelValue >= totalPages"
+            :disabled="disabled || modelValue >= totalPages || undefined"
             @click="goTo(modelValue + 1)"
         >
             <ChevronRightIcon />

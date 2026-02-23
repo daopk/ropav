@@ -4,7 +4,7 @@
             type="checkbox"
             class="rp-checkbox__native"
             :checked="modelValue"
-            :disabled="disabled"
+            :disabled="disabled || undefined"
             :indeterminate="indeterminate"
             @change="onChange"
         />

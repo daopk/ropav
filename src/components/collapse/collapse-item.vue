@@ -2,7 +2,7 @@
     <div :class="rootClass">
         <button
             class="rp-collapse-item__header"
-            :disabled="disabled"
+            :disabled="disabled || undefined"
             @click="onToggle"
         >
             <span class="rp-collapse-item__title">

@@ -1,5 +1,5 @@
 <template>
-    <button :class="rootClass" :disabled="disabled || loading" :type="type">
+    <button :class="rootClass" :disabled="disabled || loading || undefined" :type="type">
         <Spinner v-if="loading" size="sm" color="current" />
         <span v-if="$slots.prefix && !loading" class="rp-button__prefix">
             <slot name="prefix" />

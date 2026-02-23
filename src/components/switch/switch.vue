@@ -4,7 +4,7 @@
             type="checkbox"
             class="rp-switch__native"
             :checked="modelValue"
-            :disabled="disabled"
+            :disabled="disabled || undefined"
             @change="onChange"
         />
         <span class="rp-switch__track">
