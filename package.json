@@ -53,12 +53,13 @@
     "typescript": "~5.9.3",
     "vite": "beta",
     "vite-plugin-dts": "^4.5.4",
-    "vue": "3.6.0-beta.4",
+    "vue": "beta",
     "vue-tsc": "^3.2.5"
   },
   "pnpm": {
     "overrides": {
-      "vite": "beta"
+      "vite": "beta",
+      "vue": "beta"
     }
   }
 }

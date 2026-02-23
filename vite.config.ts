@@ -16,7 +16,9 @@ const componentEntries = componentDirs.reduce<Record<string, string>>((entries, 
 function injectComponentCss(): Plugin {
   return {
     name: 'inject-component-css',
-    apply: 'build',
+    apply(config, { command }) {
+      return command === 'build' && !!config.build?.lib
+    },
     enforce: 'post',
     generateBundle(_, bundle) {
       for (const chunk of Object.values(bundle)) {
