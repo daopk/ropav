@@ -19,6 +19,8 @@ const meta = {
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
         clearable: { control: 'boolean' },
+        copyable: { control: 'boolean' },
+        viewable: { control: 'boolean' },
         block: { control: 'boolean' },
     },
     args: {
@@ -28,6 +30,8 @@ const meta = {
         disabled: false,
         readonly: false,
         clearable: false,
+        copyable: false,
+        viewable: false,
         block: false,
     },
     render: (args) => ({
@@ -77,6 +81,40 @@ export const Clearable: Story = {
 
 export const Password: Story = {
     args: { type: 'password', placeholder: 'Enter password...' },
+};
+
+export const PasswordViewable: Story = {
+    args: { type: 'password', placeholder: 'Enter password...', viewable: true },
+    render: (args) => ({
+        components: { Input },
+        setup() {
+            const value = ref('secret123');
+            return { args, value };
+        },
+        template: '<Input v-bind="args" v-model="value" />',
+    }),
+};
+
+export const Copyable: Story = {
+    render: (args) => ({
+        components: { Input },
+        setup() {
+            const value = ref('Copy this text');
+            return { args, value };
+        },
+        template: '<Input v-bind="args" v-model="value" copyable />',
+    }),
+};
+
+export const CopyableReadonly: Story = {
+    render: (args) => ({
+        components: { Input },
+        setup() {
+            const value = ref('sk_live_abc123xyz');
+            return { args, value };
+        },
+        template: '<Input v-bind="args" v-model="value" copyable readonly />',
+    }),
 };
 
 export const Disabled: Story = {

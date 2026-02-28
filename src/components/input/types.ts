@@ -6,5 +6,7 @@ export interface InputProps {
     disabled?: boolean;
     readonly?: boolean;
     clearable?: boolean;
+    copyable?: boolean;
+    viewable?: boolean;
     block?: boolean;
 }
