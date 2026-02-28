@@ -32,7 +32,11 @@ const displayContent = computed(() => {
 });
 
 const indicatorClass = computed(() =>
-    bem('rp-badge__indicator', props.color, props.size, props.placement, { dot: props.dot, bordered: props.bordered }),
+    bem('rp-badge__indicator', props.color, props.size, {
+        edge: props.placement === 'edge',
+        dot: props.dot,
+        bordered: props.bordered,
+    }),
 );
 </script>
 
@@ -47,12 +51,6 @@ const indicatorClass = computed(() =>
         top: 0;
         right: 0;
         transform: translate(30%, -30%);
-
-        &--edge {
-            top: 14%;
-            right: 14%;
-            transform: translate(50%, -50%);
-        }
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -63,16 +61,24 @@ const indicatorClass = computed(() =>
         border-radius: var(--rp-radius-full);
         z-index: 1;
 
-        &--bordered {
-            border: 2px solid var(--rp-color-background);
-        }
-
         @include semantic-colors(--_badge-color);
 
         background-color: var(--_badge-color);
         color: var(--rp-color-white);
 
-        // ── Sizes (number) ──
+        // ── Placement ──
+        &--edge {
+            top: 14%;
+            right: 14%;
+            transform: translate(50%, -50%);
+        }
+
+        // ── Border ──
+        &--bordered {
+            border: 2px solid var(--rp-color-background);
+        }
+
+        // ── Sizes ──
         &--sm {
             min-width: 6px;
             height: 12px;
@@ -98,21 +104,21 @@ const indicatorClass = computed(() =>
         &--dot {
             padding: 0;
             min-width: 0;
-        }
 
-        &--dot.rp-badge__indicator--sm {
-            width: 6px;
-            height: 6px;
-        }
+            &.rp-badge__indicator--sm {
+                width: 6px;
+                height: 6px;
+            }
 
-        &--dot.rp-badge__indicator--md {
-            width: 8px;
-            height: 8px;
-        }
+            &.rp-badge__indicator--md {
+                width: 8px;
+                height: 8px;
+            }
 
-        &--dot.rp-badge__indicator--lg {
-            width: 10px;
-            height: 10px;
+            &.rp-badge__indicator--lg {
+                width: 10px;
+                height: 10px;
+            }
         }
     }
 }
