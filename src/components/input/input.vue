@@ -117,6 +117,7 @@ async function copyValue() {
 <style lang="scss" scoped>
 .rp-input {
     @include flex-center;
+    box-sizing: border-box;
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);

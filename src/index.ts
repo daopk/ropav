@@ -7,6 +7,7 @@ export * from "./components/checkbox";
 export * from "./components/collapse";
 export * from "./components/divider";
 export * from "./components/dropdown";
+export * from "./components/field";
 export * from "./components/input";
 export * from "./components/modal";
 export * from "./components/pagination";
