@@ -1,3 +1,5 @@
+export type { Size, SemanticColor, StatusColor } from "./types/common";
+
 export * from "./components/alert";
 export * from "./components/avatar";
 export * from "./components/badge";

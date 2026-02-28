@@ -7,7 +7,9 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject, ref, nextTick, watch } from 'vue';
+import { computed, ref } from 'vue';
+import { useMenuKeyboard } from '@/composables/useMenuKeyboard';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownKey } from './types';
 import type { DropdownContentProps } from './types';
 
@@ -17,7 +19,7 @@ const props = withDefaults(defineProps<DropdownContentProps>(), {
     align: 'start',
 });
 
-const dropdown = inject(dropdownKey)!;
+const dropdown = useRequiredInject(dropdownKey, 'RpDropdownContent');
 const contentRef = ref<HTMLElement | null>(null);
 
 const rootClass = computed(() => [
@@ -26,56 +28,10 @@ const rootClass = computed(() => [
     `rp-dropdown__content--${dropdown.size}`,
 ]);
 
-const menuItemSelector = '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"])';
-
-function getMenuItems(): HTMLElement[] {
-    if (!contentRef.value) return [];
-    return Array.from(contentRef.value.querySelectorAll<HTMLElement>(menuItemSelector))
-        .filter((el) => el.closest('[role="menu"]') === contentRef.value);
-}
-
-function onKeydown(e: KeyboardEvent) {
-    const items = getMenuItems();
-    if (items.length === 0) return;
-
-    const activeEl = document.activeElement as HTMLElement;
-    const currentIndex = items.indexOf(activeEl);
-
-    switch (e.key) {
-        case 'ArrowDown': {
-            e.preventDefault();
-            const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-            items[next]?.focus();
-            break;
-        }
-        case 'ArrowUp': {
-            e.preventDefault();
-            const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-            items[prev]?.focus();
-            break;
-        }
-        case 'Home':
-            e.preventDefault();
-            items[0]?.focus();
-            break;
-        case 'End':
-            e.preventDefault();
-            items[items.length - 1]?.focus();
-            break;
-        case 'Escape':
-            e.preventDefault();
-            dropdown.close();
-            break;
-    }
-}
-
-watch(() => dropdown.isOpen, (open) => {
-    if (open) {
-        nextTick(() => {
-            const items = getMenuItems();
-            items[0]?.focus();
-        });
-    }
+const { onKeydown } = useMenuKeyboard({
+    contentRef,
+    isOpen: () => dropdown.isOpen,
+    onEscape: () => dropdown.close(),
 });
 </script>
 

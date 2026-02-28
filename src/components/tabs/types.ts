@@ -1,8 +1,9 @@
 import type { InjectionKey } from 'vue';
+import type { Size } from '@/types/common';
 
 export interface TabsProps {
     modelValue?: string;
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
     variant?: 'line' | 'enclosed';
 }
 
@@ -20,11 +21,11 @@ export interface TabRegistration {
 
 export interface TabsContext {
     activeTab: string;
-    size: 'sm' | 'md' | 'lg';
+    size: Size;
     variant: 'line' | 'enclosed';
     select: (name: string) => void;
     register: (tab: TabRegistration) => void;
     unregister: (name: string) => void;
 }
 
-export const tabsKey: InjectionKey<TabsContext> = Symbol('tabs');
+export const tabsKey = Symbol('tabs') as InjectionKey<TabsContext>;

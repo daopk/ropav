@@ -87,8 +87,7 @@ function onInput(e: Event) {
     }
 
     &--disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+        @include disabled-state;
     }
 
     &--readonly {

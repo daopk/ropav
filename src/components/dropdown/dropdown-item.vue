@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownKey } from './types';
 import type { DropdownItemProps } from './types';
 
@@ -34,7 +35,7 @@ const emit = defineEmits<{
     select: [];
 }>();
 
-const dropdown = inject(dropdownKey)!;
+const dropdown = useRequiredInject(dropdownKey, 'RpDropdownItem');
 
 const rootClass = computed(() => [
     'rp-dropdown__item',

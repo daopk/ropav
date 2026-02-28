@@ -23,13 +23,13 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { inject } from 'vue';
 import { ChevronRightIcon } from '@/components/_internal/icons';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownSubKey } from './types';
 
 defineOptions({ name: 'RpDropdownSubTrigger' });
 
-const sub = inject(dropdownSubKey)!;
+const sub = useRequiredInject(dropdownSubKey, 'RpDropdownSubTrigger');
 </script>
 
 <style lang="scss" scoped>

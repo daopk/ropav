@@ -1,7 +1,8 @@
 import type { InjectionKey } from 'vue';
+import type { Size } from '@/types/common';
 
 export interface DropdownProps {
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
 }
 
 export interface DropdownContentProps {
@@ -30,7 +31,7 @@ export interface DropdownRadioItemProps {
 
 export interface DropdownContext {
     isOpen: boolean;
-    size: 'sm' | 'md' | 'lg';
+    size: Size;
     open: () => void;
     close: () => void;
     toggle: () => void;
@@ -49,6 +50,6 @@ export interface DropdownSubContext {
     closeImmediate: () => void;
 }
 
-export const dropdownKey: InjectionKey<DropdownContext> = Symbol('dropdown');
-export const dropdownRadioGroupKey: InjectionKey<DropdownRadioContext> = Symbol('dropdown-radio-group');
-export const dropdownSubKey: InjectionKey<DropdownSubContext> = Symbol('dropdown-sub');
+export const dropdownKey = Symbol('dropdown') as InjectionKey<DropdownContext>;
+export const dropdownRadioGroupKey = Symbol('dropdown-radio-group') as InjectionKey<DropdownRadioContext>;
+export const dropdownSubKey = Symbol('dropdown-sub') as InjectionKey<DropdownSubContext>;

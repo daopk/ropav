@@ -35,9 +35,7 @@ const rootClass = computed(() =>
     @include flex-center;
     line-height: 1;
 
-    @each $name in primary, secondary, success, warning, danger {
-        &--#{$name} { color: var(--rp-color-#{$name}); }
-    }
+    @include semantic-colors(color);
 
     &--current {
         color: currentColor;

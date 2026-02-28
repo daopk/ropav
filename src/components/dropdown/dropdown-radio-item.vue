@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownRadioGroupKey } from './types';
 import type { DropdownRadioItemProps } from './types';
 
@@ -29,7 +30,7 @@ const props = withDefaults(defineProps<DropdownRadioItemProps>(), {
     disabled: false,
 });
 
-const radioGroup = inject(dropdownRadioGroupKey)!;
+const radioGroup = useRequiredInject(dropdownRadioGroupKey, 'RpDropdownRadioItem');
 
 const isSelected = computed(() => radioGroup.modelValue === props.value);
 

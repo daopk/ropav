@@ -1,4 +1,6 @@
+import type { Size, SemanticColor } from '@/types/common';
+
 export interface SpinnerProps {
-    size?: 'sm' | 'md' | 'lg';
-    color?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'current';
+    size?: Size;
+    color?: SemanticColor | 'current';
 }

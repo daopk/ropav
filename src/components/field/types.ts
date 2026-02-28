@@ -1,3 +1,5 @@
+import type { Size } from '@/types/common';
+
 export interface FieldProps {
     label?: string;
     description?: string;
@@ -5,5 +7,5 @@ export interface FieldProps {
     success?: string;
     required?: boolean;
     disabled?: boolean;
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
 }

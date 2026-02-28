@@ -5,12 +5,12 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { inject } from 'vue';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownKey } from './types';
 
 defineOptions({ name: 'RpDropdownTrigger' });
 
-const dropdown = inject(dropdownKey)!;
+const dropdown = useRequiredInject(dropdownKey, 'RpDropdownTrigger');
 
 function onKeydown(e: KeyboardEvent) {
     if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {

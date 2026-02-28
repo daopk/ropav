@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject, onMounted, onBeforeUnmount } from 'vue';
+import { computed, onMounted, onBeforeUnmount } from 'vue';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { tabsKey } from './types';
 import type { TabPanelProps } from './types';
 
@@ -16,7 +17,7 @@ const props = withDefaults(defineProps<TabPanelProps>(), {
     disabled: false,
 });
 
-const tabs = inject(tabsKey)!;
+const tabs = useRequiredInject(tabsKey, 'RpTabPanel');
 
 const isActive = computed(() => tabs.activeTab === props.name);
 

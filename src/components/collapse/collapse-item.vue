@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { bem } from '@/utils/bem';
 import { ChevronDownIcon } from '@/components/_internal/icons';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { collapseKey } from './types';
 import type { CollapseItemProps } from './types';
 
@@ -35,7 +36,7 @@ const props = withDefaults(defineProps<CollapseItemProps>(), {
     disabled: false,
 });
 
-const collapse = inject(collapseKey)!;
+const collapse = useRequiredInject(collapseKey, 'RpCollapseItem');
 const wrapperRef = ref<HTMLElement | null>(null);
 
 const isActive = computed(() => collapse.activeNames.includes(props.name));
@@ -80,22 +81,20 @@ function onToggle() {
     }
 
     &--disabled {
-        opacity: 0.5;
+        @include disabled-state;
+        cursor: default;
     }
 
     &__header {
+        @include reset-button;
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
         padding: var(--rp-spacing-4);
-        font: inherit;
         font-size: var(--rp-font-size-base);
         font-weight: var(--rp-font-weight-medium);
         color: var(--rp-color-text);
-        background: none;
-        border: none;
-        cursor: pointer;
         transition: background-color var(--rp-transition-fast);
         text-align: left;
 
@@ -109,7 +108,7 @@ function onToggle() {
         }
 
         &:disabled {
-            cursor: not-allowed;
+            @include disabled-state;
         }
     }
 

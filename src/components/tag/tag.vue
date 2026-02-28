@@ -43,9 +43,7 @@ const rootClass = computed(() =>
     white-space: nowrap;
     border: 1px solid transparent;
 
-    @each $name in primary, secondary, success, warning, danger {
-        &--#{$name} { --_tag-color: var(--rp-color-#{$name}); }
-    }
+    @include semantic-colors(--_tag-color);
 
     // ── Sizes ──
     &--sm {
@@ -94,29 +92,10 @@ const rootClass = computed(() =>
     }
 
     &__close {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        @include icon-close-button;
         width: 1em;
         height: 1em;
-        padding: 0;
-        background: none;
-        border: none;
-        color: inherit;
-        opacity: 0.6;
-        cursor: pointer;
         border-radius: var(--rp-radius-sm);
-        transition: opacity var(--rp-transition-fast);
-        flex-shrink: 0;
-
-        &:hover {
-            opacity: 1;
-        }
-
-        svg {
-            width: 100%;
-            height: 100%;
-        }
     }
 }
 </style>

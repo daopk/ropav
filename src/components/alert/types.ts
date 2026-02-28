@@ -1,5 +1,7 @@
+import type { StatusColor } from '@/types/common';
+
 export interface AlertProps {
-    color?: 'info' | 'success' | 'warning' | 'danger';
+    color?: StatusColor;
     variant?: 'subtle' | 'solid' | 'outline';
     closable?: boolean;
     title?: string;

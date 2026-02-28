@@ -7,66 +7,26 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { inject, ref, nextTick, watch } from 'vue';
+import { ref } from 'vue';
+import { useMenuKeyboard } from '@/composables/useMenuKeyboard';
+import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownKey, dropdownSubKey } from './types';
 
 defineOptions({ name: 'RpDropdownSubContent' });
 
-const dropdown = inject(dropdownKey)!;
-const sub = inject(dropdownSubKey)!;
+const dropdown = useRequiredInject(dropdownKey, 'RpDropdownSubContent');
+const sub = useRequiredInject(dropdownSubKey, 'RpDropdownSubContent');
 const contentRef = ref<HTMLElement | null>(null);
 
-const menuItemSelector = '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"])';
-
-function getMenuItems(): HTMLElement[] {
-    if (!contentRef.value) return [];
-    return Array.from(contentRef.value.querySelectorAll<HTMLElement>(menuItemSelector))
-        .filter((el) => el.closest('[role="menu"]') === contentRef.value);
-}
-
-function onKeydown(e: KeyboardEvent) {
-    const items = getMenuItems();
-
-    switch (e.key) {
-        case 'ArrowDown': {
-            e.preventDefault();
-            e.stopPropagation();
-            const activeEl = document.activeElement as HTMLElement;
-            const idx = items.indexOf(activeEl);
-            const next = idx < items.length - 1 ? idx + 1 : 0;
-            items[next]?.focus();
-            break;
-        }
-        case 'ArrowUp': {
-            e.preventDefault();
-            e.stopPropagation();
-            const activeEl = document.activeElement as HTMLElement;
-            const idx = items.indexOf(activeEl);
-            const prev = idx > 0 ? idx - 1 : items.length - 1;
-            items[prev]?.focus();
-            break;
-        }
-        case 'ArrowLeft':
-            e.preventDefault();
-            e.stopPropagation();
-            sub.closeImmediate();
-            break;
-        case 'Escape':
-            e.preventDefault();
-            e.stopPropagation();
-            sub.closeImmediate();
-            dropdown.close();
-            break;
-    }
-}
-
-watch(() => sub.isOpen, (open) => {
-    if (open) {
-        nextTick(() => {
-            const items = getMenuItems();
-            items[0]?.focus();
-        });
-    }
+const { onKeydown } = useMenuKeyboard({
+    contentRef,
+    isOpen: () => sub.isOpen,
+    stopPropagation: true,
+    onArrowLeft: () => sub.closeImmediate(),
+    onEscape: () => {
+        sub.closeImmediate();
+        dropdown.close();
+    },
 });
 </script>
 

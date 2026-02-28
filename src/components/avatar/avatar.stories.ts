@@ -32,22 +32,41 @@ export const WithImage: Story = {
         src: 'https://i.pravatar.cc/150?img=12',
         alt: 'User avatar',
     },
+    render: (args) => ({
+        components: { Avatar },
+        setup: () => ({ args }),
+        template: '<Avatar v-bind="args" />',
+    }),
 };
 
 export const WithInitials: Story = {
     args: {
         name: 'John Doe',
     },
+    render: (args) => ({
+        components: { Avatar },
+        setup: () => ({ args }),
+        template: '<Avatar v-bind="args" />',
+    }),
 };
 
 export const SingleName: Story = {
     args: {
         name: 'Alice',
     },
+    render: (args) => ({
+        components: { Avatar },
+        setup: () => ({ args }),
+        template: '<Avatar v-bind="args" />',
+    }),
 };
 
 export const Fallback: Story = {
-    args: {},
+    render: (args) => ({
+        components: { Avatar },
+        setup: () => ({ args }),
+        template: '<Avatar v-bind="args" />',
+    }),
 };
 
 export const Sizes: Story = {
@@ -80,4 +99,9 @@ export const BrokenImage: Story = {
         src: 'https://broken-url.example/nope.jpg',
         name: 'Fallback User',
     },
+    render: (args) => ({
+        components: { Avatar },
+        setup: () => ({ args }),
+        template: '<Avatar v-bind="args" />',
+    }),
 };

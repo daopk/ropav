@@ -1,6 +1,8 @@
+import type { Size } from '@/types/common';
+
 export interface SwitchProps {
     modelValue?: boolean;
     label?: string;
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
     disabled?: boolean;
 }

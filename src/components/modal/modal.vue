@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <div v-if="modelValue" class="rp-modal" @keydown.escape="onEscape">
+        <div v-if="modelValue" class="rp-modal">
             <div class="rp-modal__overlay" @click="onOverlayClick" />
             <div :class="panelClass" role="dialog" aria-modal="true">
                 <div v-if="title || closable" class="rp-modal__header">
@@ -58,10 +58,6 @@ function onEscapeKey(e: KeyboardEvent) {
     if (e.key === 'Escape' && props.closeOnEscape && props.modelValue) {
         close();
     }
-}
-
-function onEscape() {
-    if (props.closeOnEscape) close();
 }
 
 watch(() => props.modelValue, (open) => {
@@ -130,16 +126,13 @@ onBeforeUnmount(() => {
     }
 
     &__close {
+        @include reset-button;
         @include flex-center;
         width: 28px;
         height: 28px;
-        padding: 0;
         margin-left: var(--rp-spacing-3);
-        background: none;
-        border: none;
         color: var(--rp-color-text-secondary);
         border-radius: var(--rp-radius-md);
-        cursor: pointer;
         transition: background-color var(--rp-transition-fast),
             color var(--rp-transition-fast);
 

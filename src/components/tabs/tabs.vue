@@ -87,15 +87,12 @@ provide<TabsContext>(tabsKey, {
     }
 
     &--line &__trigger {
+        @include reset-button;
         position: relative;
         padding: var(--_tab-py) var(--_tab-px);
-        font: inherit;
         font-size: var(--_tab-font);
         font-weight: var(--rp-font-weight-medium);
         color: var(--rp-color-text-secondary);
-        background: none;
-        border: none;
-        cursor: pointer;
         transition: color var(--rp-transition-fast);
         margin-bottom: -2px;
         border-bottom: 2px solid transparent;
@@ -117,16 +114,14 @@ provide<TabsContext>(tabsKey, {
     }
 
     &--enclosed &__trigger {
+        @include reset-button;
         padding: var(--_tab-py) var(--_tab-px);
-        font: inherit;
         font-size: var(--_tab-font);
         font-weight: var(--rp-font-weight-medium);
         color: var(--rp-color-text-secondary);
-        background: none;
         border: 1px solid transparent;
         border-bottom: none;
         border-radius: var(--rp-radius-md) var(--rp-radius-md) 0 0;
-        cursor: pointer;
         margin-bottom: -1px;
         transition: color var(--rp-transition-fast),
             background-color var(--rp-transition-fast);
@@ -144,8 +139,7 @@ provide<TabsContext>(tabsKey, {
 
     &__trigger {
         &--disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            @include disabled-state;
         }
 
         &:focus-visible {

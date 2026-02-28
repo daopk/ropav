@@ -1,3 +1,5 @@
+import type { Size } from '@/types/common';
+
 export interface SelectOption {
     label: string;
     value: string | number;
@@ -11,6 +13,6 @@ export interface SelectProps {
     disabled?: boolean;
     clearable?: boolean;
     searchable?: boolean;
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
     block?: boolean;
 }

@@ -109,7 +109,8 @@ function goTo(page: number) {
     font-family: var(--rp-font-family);
 
     &--disabled {
-        opacity: 0.5;
+        @include disabled-state;
+        cursor: default;
     }
 
     // ── Sizes ──
@@ -118,17 +119,14 @@ function goTo(page: number) {
     &--lg { --_pg-size: 40px; --_pg-font: var(--rp-font-size-base); }
 
     &__btn {
+        @include reset-button;
         @include flex-center;
         width: var(--_pg-size);
         height: var(--_pg-size);
-        padding: 0;
-        font: inherit;
         font-size: var(--_pg-font);
         color: var(--rp-color-text);
-        background: none;
         border: 1px solid var(--rp-color-border);
         border-radius: var(--rp-radius-md);
-        cursor: pointer;
         transition: background-color var(--rp-transition-fast),
             color var(--rp-transition-fast),
             border-color var(--rp-transition-fast);
@@ -143,8 +141,7 @@ function goTo(page: number) {
         }
 
         &:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
+            @include disabled-state;
         }
 
         &--active {

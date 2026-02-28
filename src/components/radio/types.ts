@@ -1,4 +1,5 @@
 import type { InjectionKey } from 'vue';
+import type { Size } from '@/types/common';
 
 export interface RadioProps {
     value: string | number;
@@ -8,16 +9,16 @@ export interface RadioProps {
 
 export interface RadioGroupProps {
     modelValue?: string | number | null;
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
     disabled?: boolean;
     direction?: 'horizontal' | 'vertical';
 }
 
 export interface RadioGroupContext {
     modelValue: string | number | null;
-    size: 'sm' | 'md' | 'lg';
+    size: Size;
     disabled: boolean;
     select: (value: string | number) => void;
 }
 
-export const radioGroupKey: InjectionKey<RadioGroupContext> = Symbol('radioGroup');
+export const radioGroupKey = Symbol('radioGroup') as InjectionKey<RadioGroupContext>;

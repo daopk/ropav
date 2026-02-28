@@ -55,9 +55,7 @@ const rootClass = computed(() =>
     white-space: nowrap;
     user-select: none;
 
-    @each $name in primary, secondary, success, warning, danger {
-        &--#{$name} { --_btn-color: var(--rp-color-#{$name}); }
-    }
+    @include semantic-colors(--_btn-color);
 
     // ── Sizes ──
     &--sm {
@@ -130,8 +128,7 @@ const rootClass = computed(() =>
 
     // ── States ──
     &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+        @include disabled-state;
     }
 
     &:focus-visible {

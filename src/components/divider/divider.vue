@@ -1,6 +1,6 @@
 <template>
     <div :class="rootClass" role="separator" :aria-orientation="orientation">
-        <span v-if="hasLabel" :class="labelClass">
+        <span class="rp-divider__label">
             <slot>{{ label }}</slot>
         </span>
     </div>
@@ -18,16 +18,12 @@ const props = withDefaults(defineProps<DividerProps>(), {
     labelPosition: 'center',
 });
 
-const hasLabel = computed(() => !!props.label);
-
 const rootClass = computed(() =>
     bem('rp-divider', props.orientation, {
-        'has-label': hasLabel.value,
-        [`label-${props.labelPosition}`]: hasLabel.value,
+        'has-label': !!props.label,
+        [`label-${props.labelPosition}`]: !!props.label,
     }),
 );
-
-const labelClass = computed(() => ['rp-divider__label']);
 </script>
 
 <style lang="scss" scoped>
@@ -90,6 +86,10 @@ const labelClass = computed(() => ['rp-divider__label']);
         padding: 0 var(--rp-spacing-3);
         white-space: nowrap;
         line-height: 1;
+    }
+
+    &:not(.rp-divider--has-label) &__label:empty {
+        display: none;
     }
 
     &--vertical &__label {

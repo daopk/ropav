@@ -67,9 +67,7 @@ const indicatorClass = computed(() =>
             border: 2px solid var(--rp-color-background);
         }
 
-        @each $name in primary, secondary, success, warning, danger {
-            &--#{$name} { --_badge-color: var(--rp-color-#{$name}); }
-        }
+        @include semantic-colors(--_badge-color);
 
         background-color: var(--_badge-color);
         color: var(--rp-color-white);

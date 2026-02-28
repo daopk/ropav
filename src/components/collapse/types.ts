@@ -16,4 +16,4 @@ export interface CollapseContext {
     toggle: (name: string) => void;
 }
 
-export const collapseKey: InjectionKey<CollapseContext> = Symbol('collapse');
+export const collapseKey = Symbol('collapse') as InjectionKey<CollapseContext>;

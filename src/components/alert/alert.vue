@@ -123,29 +123,10 @@ function onClose() {
     }
 
     &__close {
-        flex-shrink: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        @include icon-close-button;
         width: 1.25em;
         height: 1.25em;
-        padding: 0;
         margin-top: 1px;
-        background: none;
-        border: none;
-        color: inherit;
-        opacity: 0.6;
-        cursor: pointer;
-        transition: opacity var(--rp-transition-fast);
-
-        &:hover {
-            opacity: 1;
-        }
-
-        svg {
-            width: 100%;
-            height: 100%;
-        }
     }
 }
 </style>

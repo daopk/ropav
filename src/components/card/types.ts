@@ -1,6 +1,8 @@
+import type { Size } from '@/types/common';
+
 export interface CardProps {
     variant?: 'elevated' | 'outline' | 'filled';
-    size?: 'sm' | 'md' | 'lg';
+    size?: Size;
     header?: string;
     footer?: string;
     showHeader?: boolean;
