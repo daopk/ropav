@@ -4,7 +4,9 @@ const config: StorybookConfig = {
   "stories": [
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
-  "addons": [],
+  "addons": [
+    "@storybook/addon-themes",
+  ],
   "framework": "@storybook/vue3-vite"
 };
 export default config;

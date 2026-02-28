@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/vue3-vite'
 import { setup } from '@storybook/vue3-vite';
+import { withThemeByClassName } from '@storybook/addon-themes';
 import { vaporInteropPlugin } from 'vue';
 import '@fontsource-variable/inter';
 import '../src/styles/base.scss';
@@ -13,8 +14,17 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withThemeByClassName({
+      themes: {
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+      parentSelector: 'html',
+    }),
+  ],
 };
-
 
 setup((app) => {
   app.use(vaporInteropPlugin)

@@ -64,8 +64,7 @@ function onInput(e: Event) {
     }
 
     &:focus-within:not(.rp-textarea--disabled) {
-        border-color: var(--rp-color-primary);
-        box-shadow: 0 0 0 2px color-mix(in srgb, var(--rp-color-primary) 25%, transparent);
+        @include focus-ring;
     }
 
     // ── Sizes ──

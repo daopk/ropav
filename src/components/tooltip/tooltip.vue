@@ -63,8 +63,8 @@ const tipClass = computed(() =>
         font-size: var(--rp-font-size-xs);
         font-weight: var(--rp-font-weight-medium);
         line-height: 1.4;
-        color: var(--rp-color-white);
-        background-color: var(--rp-color-gray-800);
+        color: var(--rp-color-text-inverted);
+        background-color: var(--rp-color-surface-inverted);
         border-radius: var(--rp-radius-md);
         white-space: nowrap;
         pointer-events: none;
@@ -86,7 +86,7 @@ const tipClass = computed(() =>
                 top: 100%;
                 left: 50%;
                 transform: translateX(-50%);
-                border-top-color: var(--rp-color-gray-800);
+                border-top-color: var(--rp-color-surface-inverted);
             }
         }
 
@@ -99,7 +99,7 @@ const tipClass = computed(() =>
                 bottom: 100%;
                 left: 50%;
                 transform: translateX(-50%);
-                border-bottom-color: var(--rp-color-gray-800);
+                border-bottom-color: var(--rp-color-surface-inverted);
             }
         }
 
@@ -112,7 +112,7 @@ const tipClass = computed(() =>
                 left: 100%;
                 top: 50%;
                 transform: translateY(-50%);
-                border-left-color: var(--rp-color-gray-800);
+                border-left-color: var(--rp-color-surface-inverted);
             }
         }
 
@@ -125,7 +125,7 @@ const tipClass = computed(() =>
                 right: 100%;
                 top: 50%;
                 transform: translateY(-50%);
-                border-right-color: var(--rp-color-gray-800);
+                border-right-color: var(--rp-color-surface-inverted);
             }
         }
     }

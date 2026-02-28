@@ -137,7 +137,7 @@ provide<TabsContext>(tabsKey, {
 
         &--active {
             color: var(--rp-color-text);
-            background-color: var(--rp-color-white);
+            background-color: var(--rp-color-surface);
             border-color: var(--rp-color-border);
         }
     }

@@ -31,6 +31,13 @@
     --rp-color-text-disabled:  #{$color-text-disabled};
     --rp-color-border:         #{$color-border};
     --rp-color-background:     #{$color-background};
+    --rp-color-focus-ring:     color-mix(in srgb, #{$color-primary} 25%, transparent);
+
+    --rp-color-surface:          #{$color-white};
+    --rp-color-surface-raised:   #{$color-white};
+    --rp-color-overlay:          rgba(0, 0, 0, 0.5);
+    --rp-color-surface-inverted: #{$color-gray-800};
+    --rp-color-text-inverted:    #{$color-white};
 
     // ── Font sizes ──
     --rp-font-size-xs:   #{$font-size-xs};
@@ -84,4 +91,35 @@
     --rp-transition-fast: #{$transition-fast};
     --rp-transition-base: #{$transition-base};
     --rp-transition-slow: #{$transition-slow};
+}
+
+html.dark {
+    --rp-color-text:           #{$color-gray-50};
+    --rp-color-text-secondary: #{$color-gray-400};
+    --rp-color-text-disabled:  #{$color-gray-600};
+    --rp-color-border:         #{$color-gray-700};
+    --rp-color-background:     #{$color-gray-900};
+    --rp-color-focus-ring:     color-mix(in srgb, #{$color-primary} 40%, transparent);
+
+    --rp-color-surface:          #{$color-gray-900};
+    --rp-color-surface-raised:   #{$color-gray-800};
+    --rp-color-overlay:          rgba(0, 0, 0, 0.7);
+    --rp-color-surface-inverted: #{$color-gray-200};
+    --rp-color-text-inverted:    #{$color-gray-900};
+
+    --rp-color-gray-50:  #{$color-gray-900};
+    --rp-color-gray-100: #{$color-gray-800};
+    --rp-color-gray-200: #{$color-gray-700};
+    --rp-color-gray-300: #{$color-gray-600};
+    --rp-color-gray-400: #{$color-gray-500};
+    --rp-color-gray-500: #{$color-gray-400};
+    --rp-color-gray-600: #{$color-gray-300};
+    --rp-color-gray-700: #{$color-gray-200};
+    --rp-color-gray-800: #{$color-gray-100};
+    --rp-color-gray-900: #{$color-gray-50};
+
+    --rp-shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --rp-shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+    --rp-shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --rp-shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
 }

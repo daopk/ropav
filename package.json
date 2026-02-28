@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@fontsource-variable/inter": "^5.2.8",
+    "@storybook/addon-themes": "^10.2.10",
     "@storybook/vue3-vite": "^10.2.10",
     "@types/node": "^24.10.13",
     "@vitejs/plugin-vue": "^6.0.4",

@@ -38,12 +38,12 @@ const rootClass = computed(() =>
 
     // ── Variants ──
     &--elevated {
-        background-color: var(--rp-color-white);
+        background-color: var(--rp-color-surface);
         box-shadow: var(--rp-shadow-md);
     }
 
     &--outline {
-        background-color: var(--rp-color-white);
+        background-color: var(--rp-color-surface);
         border: 1px solid var(--rp-color-border);
     }
 

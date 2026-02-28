@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
     &__overlay {
         position: absolute;
         inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: var(--rp-color-overlay);
     }
 
     &__panel {
@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
         display: flex;
         flex-direction: column;
         max-height: calc(100vh - 2 * var(--rp-spacing-8));
-        background-color: var(--rp-color-white);
+        background-color: var(--rp-color-surface);
         border-radius: var(--rp-radius-xl);
         box-shadow: var(--rp-shadow-lg);
         font-family: var(--rp-font-family);

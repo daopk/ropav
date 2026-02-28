@@ -64,7 +64,7 @@ const indicatorClass = computed(() =>
         z-index: 1;
 
         &--bordered {
-            border: 2px solid var(--rp-color-white);
+            border: 2px solid var(--rp-color-background);
         }
 
         @each $name in primary, secondary, success, warning, danger {
