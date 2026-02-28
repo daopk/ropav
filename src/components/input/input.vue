@@ -5,6 +5,7 @@
         </span>
         <input
             ref="inputRef"
+            :id="fieldId"
             class="rp-input__native"
             :type="nativeType"
             :value="modelValue"
@@ -44,12 +45,15 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { bem } from '@/utils/bem';
 import { CloseIcon, CopyIcon, CheckIcon, EyeIcon, EyeOffIcon } from '@/components/_internal/icons';
+import { fieldKey } from '@/components/field/types';
 import type { InputProps } from './types';
 
 defineOptions({ name: 'RpInput' });
+
+const fieldId = inject(fieldKey, undefined);
 
 const props = withDefaults(defineProps<InputProps>(), {
     modelValue: '',

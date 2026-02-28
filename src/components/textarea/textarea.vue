@@ -1,6 +1,7 @@
 <template>
     <div :class="rootClass">
         <textarea
+            :id="fieldId"
             class="rp-textarea__native"
             :value="modelValue"
             :placeholder="placeholder"
@@ -14,11 +15,14 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { bem } from '@/utils/bem';
+import { fieldKey } from '@/components/field/types';
 import type { TextareaProps } from './types';
 
 defineOptions({ name: 'RpTextarea' });
+
+const fieldId = inject(fieldKey, undefined);
 
 const props = withDefaults(defineProps<TextareaProps>(), {
     modelValue: '',

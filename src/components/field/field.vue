@@ -1,11 +1,11 @@
 <template>
     <div :class="rootClass">
-        <label v-if="label" class="rp-field__label">
+        <label v-if="label" :for="fieldId" class="rp-field__label" @click="focusControl">
             {{ label }}
             <span v-if="required" class="rp-field__required" aria-hidden="true">*</span>
         </label>
         <p v-if="description" class="rp-field__description">{{ description }}</p>
-        <div class="rp-field__control">
+        <div ref="controlRef" class="rp-field__control">
             <slot />
         </div>
         <p v-if="error" class="rp-field__message rp-field__message--error" role="alert">
@@ -18,9 +18,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, provide, ref, useId } from 'vue';
 import { bem } from '@/utils/bem';
 import type { FieldProps } from './types';
+import { fieldKey } from './types';
 
 defineOptions({ name: 'RpField' });
 
@@ -33,6 +34,18 @@ const props = withDefaults(defineProps<FieldProps>(), {
     disabled: false,
     size: 'md',
 });
+
+const fieldId = useId();
+provide(fieldKey, fieldId);
+
+const controlRef = ref<HTMLElement | null>(null);
+
+function focusControl() {
+    const el = controlRef.value?.querySelector<HTMLElement>(
+        'input, textarea, select, [tabindex]:not([tabindex="-1"])',
+    );
+    el?.focus();
+}
 
 const rootClass = computed(() =>
     bem('rp-field', props.size, {

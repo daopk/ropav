@@ -1,6 +1,7 @@
 <template>
     <div :class="rootClass" ref="selectRef">
         <div
+            :id="fieldId"
             class="rp-select__trigger"
             :tabindex="disabled ? -1 : 0"
             @click="toggle"
@@ -63,13 +64,16 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, nextTick } from 'vue';
+import { computed, inject, ref, nextTick } from 'vue';
 import { bem } from '@/utils/bem';
 import { useClickOutside } from '@/composables/useClickOutside';
 import { CloseIcon, ChevronDownIcon } from '@/components/_internal/icons';
+import { fieldKey } from '@/components/field/types';
 import type { SelectProps, SelectOption } from './types';
 
 defineOptions({ name: 'RpSelect' });
+
+const fieldId = inject(fieldKey, undefined);
 
 const props = withDefaults(defineProps<SelectProps>(), {
     modelValue: null,

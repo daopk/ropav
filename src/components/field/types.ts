@@ -1,3 +1,4 @@
+import type { InjectionKey } from 'vue';
 import type { Size } from '@/types/common';
 
 export interface FieldProps {
@@ -9,3 +10,5 @@ export interface FieldProps {
     disabled?: boolean;
     size?: Size;
 }
+
+export const fieldKey = Symbol('field') as InjectionKey<string>;
