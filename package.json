@@ -34,16 +34,9 @@
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
-    "@fontsource-variable/inter": "^5.0.0",
     "vue": "^3.6.0-beta.4"
   },
-  "peerDependenciesMeta": {
-    "@fontsource-variable/inter": {
-      "optional": true
-    }
-  },
   "devDependencies": {
-    "@fontsource-variable/inter": "^5.2.8",
     "@storybook/addon-themes": "^10.2.13",
     "@storybook/vue3-vite": "^10.2.13",
     "@types/node": "^24.11.0",

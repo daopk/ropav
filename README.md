@@ -6,16 +6,13 @@
 
 ```bash
 pnpm add ropav vue
-# optional: self-hosted Inter font
-pnpm add @fontsource-variable/inter
 ```
 
 ## Quick Start
 
 ```ts
 // main.ts
-import '@fontsource-variable/inter'  // optional, loads Inter font
-import 'ropav/base.css'              // design tokens (CSS custom properties)
+import 'ropav/base.css'  // design tokens (CSS custom properties)
 
 import { Button, Avatar } from 'ropav'
 ```
@@ -76,7 +73,7 @@ If you have Sass in your build pipeline, you can override SCSS variables at comp
 | Token | CSS Variable | Default |
 |---|---|---|
 | **Font** | | |
-| Font family | `--rp-font-family` | `Inter Variable, Inter, system-ui, ...` |
+| Font family | `--rp-font-family` | `system-ui, -apple-system, ...` |
 | **Colors** | | |
 | Primary | `--rp-color-primary` | `#3b82f6` |
 | Secondary | `--rp-color-secondary` | `#6366f1` |
@@ -124,17 +121,7 @@ If you have Sass in your build pipeline, you can override SCSS variables at comp
 
 ## Font
 
-Ropav defaults to [Inter](https://rsms.me/inter/) via `@fontsource-variable/inter` (optional peer dependency). If not installed, components fall back to the system font stack.
-
-```bash
-pnpm add @fontsource-variable/inter
-```
-
-```ts
-import '@fontsource-variable/inter'
-```
-
-To use a different font, skip installing fontsource and override the CSS variable:
+Ropav uses the system font stack by default (`system-ui, -apple-system, Segoe UI, Roboto, ...`). To use a custom font, override the CSS variable:
 
 ```css
 :root {
