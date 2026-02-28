@@ -44,6 +44,7 @@ export interface DropdownRadioContext {
 
 export interface DropdownSubContext {
     isOpen: boolean;
+    triggerEl: HTMLElement | null;
     open: () => void;
     close: () => void;
     openImmediate: () => void;

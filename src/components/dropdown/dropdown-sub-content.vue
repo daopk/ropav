@@ -22,7 +22,10 @@ const { onKeydown } = useMenuKeyboard({
     contentRef,
     isOpen: () => sub.isOpen,
     stopPropagation: true,
-    onArrowLeft: () => sub.closeImmediate(),
+    onArrowLeft: () => {
+        sub.closeImmediate();
+        sub.triggerEl?.focus();
+    },
     onEscape: () => {
         sub.closeImmediate();
         dropdown.close();

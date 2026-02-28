@@ -1,5 +1,6 @@
 <template>
     <div
+        ref="triggerRef"
         class="rp-dropdown__item rp-dropdown__sub-trigger"
         role="menuitem"
         tabindex="0"
@@ -23,6 +24,7 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { ref, onMounted } from 'vue';
 import { ChevronRightIcon } from '@/components/_internal/icons';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { dropdownSubKey } from './types';
@@ -30,6 +32,11 @@ import { dropdownSubKey } from './types';
 defineOptions({ name: 'RpDropdownSubTrigger' });
 
 const sub = useRequiredInject(dropdownSubKey, 'RpDropdownSubTrigger');
+const triggerRef = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    sub.triggerEl = triggerRef.value;
+});
 </script>
 
 <style lang="scss" scoped>

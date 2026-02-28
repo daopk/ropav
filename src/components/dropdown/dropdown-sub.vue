@@ -12,6 +12,7 @@ import type { DropdownSubContext } from './types';
 defineOptions({ name: 'RpDropdownSub' });
 
 const isOpen = ref(false);
+const triggerEl = ref<HTMLElement | null>(null);
 let openTimer: ReturnType<typeof setTimeout> | null = null;
 let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -47,6 +48,8 @@ onBeforeUnmount(clearTimers);
 
 provide<DropdownSubContext>(dropdownSubKey, {
     get isOpen() { return isOpen.value; },
+    get triggerEl() { return triggerEl.value; },
+    set triggerEl(el) { triggerEl.value = el; },
     open,
     close,
     openImmediate,
