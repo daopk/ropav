@@ -18,8 +18,6 @@ const meta = {
         footer: { control: 'text' },
     },
     args: {
-        variant: 'elevated',
-        size: 'md',
     },
     render: (args) => ({
         components: { Card },

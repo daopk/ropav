@@ -116,10 +116,6 @@ export const Block: Story = {
     render: (args) => ({
         components: { Button },
         setup: () => ({ args }),
-        template: `
-            <div style="width: 320px;">
-                <Button v-bind="args">Full Width</Button>
-            </div>
-        `,
+        template: `<Button v-bind="args">Full Width</Button>`,
     }),
 };
