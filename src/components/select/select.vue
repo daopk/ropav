@@ -3,6 +3,12 @@
         <div
             :id="fieldId"
             class="rp-select__trigger"
+            role="combobox"
+            :aria-expanded="isOpen"
+            aria-haspopup="listbox"
+            :aria-activedescendant="activeDescendantId"
+            :aria-controls="listboxId"
+            :aria-disabled="disabled || undefined"
             :tabindex="disabled ? -1 : 0"
             @click="toggle"
             @keydown="onTriggerKeydown"
@@ -35,7 +41,7 @@
         </div>
 
         <Transition name="rp-select-dropdown">
-            <div v-if="isOpen" class="rp-select__dropdown">
+            <div v-if="isOpen" class="rp-select__dropdown" role="listbox" :id="listboxId">
                 <div
                     v-if="filteredOptions.length === 0"
                     class="rp-select__empty"
@@ -45,6 +51,10 @@
                 <div
                     v-for="(option, index) in filteredOptions"
                     :key="option.value"
+                    role="option"
+                    :id="`${selectId}-option-${index}`"
+                    :aria-selected="option.value === modelValue"
+                    :aria-disabled="option.disabled || undefined"
                     :class="[
                         'rp-select__option',
                         {
@@ -64,7 +74,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject, ref, nextTick } from 'vue';
+import { computed, inject, ref, nextTick, useId } from 'vue';
 import { bem } from '@/utils/bem';
 import { useClickOutside } from '@/composables/useClickOutside';
 import { CloseIcon, ChevronDownIcon } from '@/components/_internal/icons';
@@ -73,7 +83,8 @@ import type { SelectProps, SelectOption } from './types';
 
 defineOptions({ name: 'RpSelect' });
 
-const fieldId = inject(fieldKey, undefined);
+const field = inject(fieldKey, undefined);
+const fieldId = field?.id;
 
 const props = withDefaults(defineProps<SelectProps>(), {
     modelValue: null,
@@ -95,6 +106,14 @@ const searchInputRef = ref<HTMLInputElement | null>(null);
 const isOpen = ref(false);
 const searchQuery = ref('');
 const focusedIndex = ref(-1);
+
+const selectId = useId();
+const listboxId = selectId + '-listbox';
+
+const activeDescendantId = computed(() => {
+    if (focusedIndex.value < 0) return undefined;
+    return `${selectId}-option-${focusedIndex.value}`;
+});
 
 const rootClass = computed(() =>
     bem('rp-select', props.size, {
@@ -212,8 +231,7 @@ useClickOutside(selectRef, isOpen, close);
     }
 
     &--disabled {
-        opacity: 0.5;
-        pointer-events: none;
+        @include disabled-state;
     }
 
     // ── Sizes ──

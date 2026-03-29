@@ -1,8 +1,9 @@
-import type { StatusColor } from '@/types/common';
+import type { Size, SemanticColor } from '@/types/common';
 
 export interface AlertProps {
-    color?: StatusColor;
+    color?: SemanticColor;
     variant?: 'subtle' | 'solid' | 'outline';
+    size?: Size;
     closable?: boolean;
     title?: string;
 }

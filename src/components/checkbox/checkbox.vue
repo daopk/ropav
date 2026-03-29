@@ -6,6 +6,7 @@
             :checked="modelValue"
             :disabled="disabled || undefined"
             :indeterminate="indeterminate"
+            :aria-checked="indeterminate ? 'mixed' : modelValue"
             @change="onChange"
         />
         <span class="rp-checkbox__box">
@@ -85,6 +86,10 @@ function onChange(e: Event) {
     &__native {
         @include visually-hidden;
         pointer-events: none;
+    }
+
+    &__native:focus-visible + &__box {
+        @include focus-ring;
     }
 
     &__box {

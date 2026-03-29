@@ -22,7 +22,8 @@ import type { TextareaProps } from './types';
 
 defineOptions({ name: 'RpTextarea' });
 
-const fieldId = inject(fieldKey, undefined);
+const field = inject(fieldKey, undefined);
+const fieldId = field?.id;
 
 const props = withDefaults(defineProps<TextareaProps>(), {
     modelValue: '',

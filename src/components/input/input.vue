@@ -53,7 +53,8 @@ import type { InputProps } from './types';
 
 defineOptions({ name: 'RpInput' });
 
-const fieldId = inject(fieldKey, undefined);
+const field = inject(fieldKey, undefined);
+const fieldId = field?.id;
 
 const props = withDefaults(defineProps<InputProps>(), {
     modelValue: '',

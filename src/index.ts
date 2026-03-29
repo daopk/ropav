@@ -1,4 +1,4 @@
-export type { Size, SemanticColor, StatusColor } from "./types/common";
+export type { Size, SemanticColor } from "./types/common";
 
 export * from "./components/alert";
 export * from "./components/avatar";

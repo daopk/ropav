@@ -3,8 +3,10 @@
         <input
             type="checkbox"
             class="rp-switch__native"
+            role="switch"
             :checked="modelValue"
             :disabled="disabled || undefined"
+            :aria-checked="modelValue"
             @change="onChange"
         />
         <span class="rp-switch__track">
@@ -89,6 +91,10 @@ function onChange(e: Event) {
     &__native {
         @include visually-hidden;
         pointer-events: none;
+    }
+
+    &__native:focus-visible + &__track {
+        @include focus-ring;
     }
 
     &__track {

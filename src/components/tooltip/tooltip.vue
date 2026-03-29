@@ -1,24 +1,27 @@
 <template>
     <span
         class="rp-tooltip"
+        :aria-describedby="isVisible && !disabled ? tooltipId : undefined"
         @mouseenter="onShow"
         @mouseleave="onHide"
         @focusin="onShow"
         @focusout="onHide"
     >
         <slot />
-        <span v-if="isVisible && !disabled" :class="tipClass" role="tooltip">
+        <span v-if="isVisible && !disabled" :id="tooltipId" :class="tipClass" role="tooltip">
             {{ content }}
         </span>
     </span>
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, onBeforeUnmount } from 'vue';
+import { computed, ref, onBeforeUnmount, useId } from 'vue';
 import { bem } from '@/utils/bem';
 import type { TooltipProps } from './types';
 
 defineOptions({ name: 'RpTooltip' });
+
+const tooltipId = useId();
 
 const props = withDefaults(defineProps<TooltipProps>(), {
     placement: 'top',

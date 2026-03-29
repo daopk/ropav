@@ -11,4 +11,11 @@ export interface FieldProps {
     size?: Size;
 }
 
-export const fieldKey = Symbol('field') as InjectionKey<string>;
+export interface FieldContext {
+    id: string;
+    size: Size;
+    disabled: boolean;
+    error: boolean;
+}
+
+export const fieldKey = Symbol('field') as InjectionKey<FieldContext>;

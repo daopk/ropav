@@ -91,8 +91,8 @@ function onToggle() {
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        padding: var(--rp-spacing-4);
-        font-size: var(--rp-font-size-base);
+        padding: var(--_collapse-py) var(--_collapse-px);
+        font-size: var(--_collapse-font);
         font-weight: var(--rp-font-weight-medium);
         color: var(--rp-color-text);
         transition: background-color var(--rp-transition-fast);
@@ -146,8 +146,8 @@ function onToggle() {
     }
 
     &__content {
-        padding: 0 var(--rp-spacing-4) var(--rp-spacing-4);
-        font-size: var(--rp-font-size-base);
+        padding: 0 var(--_collapse-px) var(--_collapse-py);
+        font-size: var(--_collapse-font);
         line-height: 1.6;
         color: var(--rp-color-text-secondary);
     }

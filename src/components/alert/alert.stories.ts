@@ -8,11 +8,15 @@ const meta = {
     argTypes: {
         color: {
             control: 'select',
-            options: ['info', 'success', 'warning', 'danger'],
+            options: ['primary', 'secondary', 'info', 'success', 'warning', 'danger'],
         },
         variant: {
             control: 'select',
             options: ['subtle', 'solid', 'outline'],
+        },
+        size: {
+            control: 'select',
+            options: ['sm', 'md', 'lg'],
         },
         closable: { control: 'boolean' },
         title: { control: 'text' },
@@ -20,6 +24,7 @@ const meta = {
     args: {
         color: 'info',
         variant: 'subtle',
+        size: 'md',
         closable: false,
     },
     render: (args) => ({

@@ -36,7 +36,12 @@ const props = withDefaults(defineProps<FieldProps>(), {
 });
 
 const fieldId = useId();
-provide(fieldKey, fieldId);
+provide(fieldKey, {
+    get id() { return fieldId; },
+    get size() { return props.size; },
+    get disabled() { return props.disabled; },
+    get error() { return !!props.error; },
+});
 
 const controlRef = ref<HTMLElement | null>(null);
 

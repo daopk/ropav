@@ -32,6 +32,7 @@ defineOptions({ name: 'RpAlert' });
 const props = withDefaults(defineProps<AlertProps>(), {
     color: 'info',
     variant: 'subtle',
+    size: 'md',
     closable: false,
 });
 
@@ -42,7 +43,7 @@ const emit = defineEmits<{
 const visible = ref(true);
 
 const rootClass = computed(() =>
-    bem('rp-alert', props.variant, props.color),
+    bem('rp-alert', props.variant, props.color, props.size),
 );
 
 function onClose() {
@@ -55,14 +56,34 @@ function onClose() {
 .rp-alert {
     display: flex;
     align-items: flex-start;
-    gap: var(--rp-spacing-3);
-    padding: var(--rp-spacing-3) var(--rp-spacing-4);
-    border-radius: var(--rp-radius-lg);
     font-family: var(--rp-font-family);
-    font-size: var(--rp-font-size-sm);
     line-height: 1.5;
     border: 1px solid transparent;
 
+    // ── Sizes ──
+    &--sm {
+        padding: var(--rp-spacing-2) var(--rp-spacing-3);
+        font-size: var(--rp-font-size-xs);
+        border-radius: var(--rp-radius-md);
+        gap: var(--rp-spacing-2);
+    }
+
+    &--md {
+        padding: var(--rp-spacing-3) var(--rp-spacing-4);
+        font-size: var(--rp-font-size-sm);
+        border-radius: var(--rp-radius-lg);
+        gap: var(--rp-spacing-3);
+    }
+
+    &--lg {
+        padding: var(--rp-spacing-4) var(--rp-spacing-5);
+        font-size: var(--rp-font-size-base);
+        border-radius: var(--rp-radius-lg);
+        gap: var(--rp-spacing-3);
+    }
+
+    &--primary { --_alert-color: var(--rp-color-primary); }
+    &--secondary { --_alert-color: var(--rp-color-secondary); }
     &--info    { --_alert-color: var(--rp-color-info); }
     &--success { --_alert-color: var(--rp-color-success); }
     &--warning { --_alert-color: var(--rp-color-warning); }
