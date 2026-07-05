@@ -1,8 +1,8 @@
 {
   "color": {
-    "text": { "$value": "{color.gray.900}", "$type": "color" },
-    "text-secondary": { "$value": "{color.gray.600}", "$type": "color" },
-    "text-disabled": { "$value": "{color.gray.500}", "$type": "color" },
+    "text": { "$value": "{color.gray.12}", "$type": "color" },
+    "text-secondary": { "$value": "{color.gray.11}", "$type": "color" },
+    "text-disabled": { "$value": "{color.gray.9}", "$type": "color" },
     "text-inverted": {
       "$value": "{color.white}",
       "$type": "color",
@@ -21,28 +21,28 @@
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "surface-muted": {
-      "$value": "{color.gray.50}",
+      "$value": "{color.gray.2}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "surface-hover": {
-      "$value": "{color.gray.100}",
+      "$value": "{color.gray.3}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "surface-inverted": {
-      "$value": "{color.gray.900}",
+      "$value": "{color.gray.12}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "overlay": {
-      "$value": "rgba(3, 7, 18, 0.55)",
+      "$value": "rgba(17, 17, 17, 0.55)",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
 
-    "border": { "$value": "{color.gray.200}", "$type": "color" },
-    "border-hover": { "$value": "{color.gray.400}", "$type": "color" },
+    "border": { "$value": "{color.gray.6}", "$type": "color" },
+    "border-hover": { "$value": "{color.gray.8}", "$type": "color" },
 
     "focus-ring": {
       "$value": "color-mix(in srgb, {color.primary} 32%, transparent)",
@@ -91,7 +91,7 @@
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "control-track-bg": {
-      "$value": "{color.gray.300}",
+      "$value": "{color.gray.7}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },

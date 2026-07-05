@@ -14,12 +14,11 @@
     --_track-h: 22px;
     --_thumb-size: 18px;
     --_thumb-offset: 2px;
-    --_track-bg: #{$color-gray-300};
+    --_track-bg: var(--rp-color-border);
     --_thumb-bg: #{$color-white};
 
     html.dark & {
-        --_track-bg: #{$color-gray-700};
-        --_thumb-bg: #{$color-gray-50};
+        --_thumb-bg: var(--rp-color-surface-inverted);
     }
 
     &__native {

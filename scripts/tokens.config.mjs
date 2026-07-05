@@ -207,10 +207,8 @@ function valueToScssValue(value, dictionary, options = {}) {
             : valueToScssValue(tokenValue(reference), dictionary);
     }
 
-    return replaceReferences(
-        value,
-        references,
-        (referencedToken) => referenceToSassValue(referencedToken, dictionary),
+    return replaceReferences(value, references, (referencedToken) =>
+        referenceToSassValue(referencedToken, dictionary),
     );
 }
 

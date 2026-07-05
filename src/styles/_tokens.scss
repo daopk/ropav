@@ -21,10 +21,10 @@
     --rp-color-background                : #{$color-background};
     --rp-color-surface                   : #{$color-white};
     --rp-color-surface-raised            : #{$color-white};
-    --rp-color-surface-muted             : #{$color-gray-50};
-    --rp-color-surface-hover             : #{$color-gray-100};
-    --rp-color-surface-inverted          : #{$color-gray-900};
-    --rp-color-overlay                   : rgba(3, 7, 18, 0.55);
+    --rp-color-surface-muted             : #{$color-gray-2};
+    --rp-color-surface-hover             : #{$color-gray-3};
+    --rp-color-surface-inverted          : #{$color-gray-12};
+    --rp-color-overlay                   : rgba(17, 17, 17, 0.55);
     --rp-color-border                    : #{$color-border};
     --rp-color-border-hover              : #{$color-border-hover};
     --rp-color-focus-ring                : color-mix(in srgb, var(--rp-color-primary) 32%, transparent);
@@ -151,19 +151,19 @@
 
 html.dark {
     // Colors
-    --rp-color-text                      : #{$color-gray-50};
-    --rp-color-text-secondary            : #{$color-gray-400};
-    --rp-color-text-disabled             : #{$color-gray-600};
-    --rp-color-text-inverted             : #{$color-gray-900};
-    --rp-color-background                : #{$color-gray-900};
-    --rp-color-surface                   : #{$color-gray-900};
-    --rp-color-surface-raised            : #{$color-gray-800};
-    --rp-color-surface-muted             : #{$color-gray-800};
-    --rp-color-surface-hover             : #{$color-gray-700};
-    --rp-color-surface-inverted          : #{$color-gray-100};
-    --rp-color-overlay                   : rgba(3, 7, 18, 0.75);
-    --rp-color-border                    : #{$color-gray-700};
-    --rp-color-border-hover              : #{$color-gray-600};
+    --rp-color-text                      : #eeeeee;
+    --rp-color-text-secondary            : #b4b4b4;
+    --rp-color-text-disabled             : #6e6e6e;
+    --rp-color-text-inverted             : #{$color-gray-12};
+    --rp-color-background                : #111111;
+    --rp-color-surface                   : #111111;
+    --rp-color-surface-raised            : #191919;
+    --rp-color-surface-muted             : #191919;
+    --rp-color-surface-hover             : #222222;
+    --rp-color-surface-inverted          : #{$color-gray-2};
+    --rp-color-overlay                   : rgba(17, 17, 17, 0.75);
+    --rp-color-border                    : #3a3a3a;
+    --rp-color-border-hover              : #606060;
     --rp-color-focus-ring                : color-mix(in srgb, var(--rp-color-primary) 45%, transparent);
     --rp-color-primary-subtle-bg         : #0d2847;
     --rp-color-primary-subtle-bg-hover   : #003362;
