@@ -1,7 +1,8 @@
 <template>
-    <div :class="rootClass">
+    <div :class="rootClass" @mousedown="focusInput">
         <input
             :id="control.id"
+            ref="inputRef"
             :name="name"
             class="rp-input__native"
             :type="type"
@@ -21,7 +22,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import type { InputProps } from './types';
@@ -42,9 +43,11 @@ const emit = defineEmits<{
 }>();
 
 const control = useControlState(props);
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const rootClass = computed(() =>
     bem('rp-input', {
+        [`radius-${props.radius}`]: Boolean(props.radius),
         disabled: control.disabled,
         invalid: control.invalid,
         readonly: props.readonly,
@@ -53,6 +56,11 @@ const rootClass = computed(() =>
 
 function onInput(e: Event) {
     emit('update:modelValue', (e.target as HTMLInputElement).value);
+}
+
+function focusInput() {
+    if (control.disabled) return;
+    inputRef.value?.focus();
 }
 </script>
 

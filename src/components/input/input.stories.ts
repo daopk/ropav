@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import Input from './input.vue';
 
+const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
 const meta = {
     title: 'Components/Input',
     component: Input as any,
@@ -11,6 +13,10 @@ const meta = {
             control: 'select',
             options: ['text', 'password', 'email', 'number', 'tel', 'url'],
         },
+        radius: {
+            control: 'select',
+            options: [undefined, ...radii],
+        },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
@@ -19,6 +25,7 @@ const meta = {
     args: {
         modelValue: '',
         type: 'text',
+        radius: undefined,
         placeholder: 'Enter text...',
         disabled: false,
         readonly: false,
@@ -45,4 +52,16 @@ export const Disabled: Story = {
 
 export const Invalid: Story = {
     args: { invalid: true },
+};
+
+export const Radii: Story = {
+    render: (args) => ({
+        components: { Input },
+        setup: () => ({ args, radii }),
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <Input v-for="radius in radii" :key="radius" v-bind="args" :radius="radius" :model-value="radius" />
+            </div>
+        `,
+    }),
 };

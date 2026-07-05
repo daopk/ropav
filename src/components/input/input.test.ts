@@ -5,6 +5,8 @@ import { flush, input, mountDom } from '../../../tests/utils/vue';
 import Input from './input.vue';
 
 describe('Input', () => {
+    const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
     it('emits raw string values from native input events', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -64,5 +66,93 @@ describe('Input', () => {
         expect(root.classList.contains('rp-input--disabled')).toBe(true);
         expect(root.classList.contains('rp-input--invalid')).toBe(true);
         expect(root.classList.contains('rp-input--readonly')).toBe(true);
+    });
+
+    it('focuses the native input when pressing the input padding', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        root.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).toBe(native);
+    });
+
+    it('keeps the native input focusable when the press starts inside the control', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        native.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).toBe(native);
+    });
+
+    it('does not focus the native input from padding when disabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        disabled: true,
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        root.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).not.toBe(native);
+    });
+
+    it('adds a radius modifier for each supported radius', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        radii.map((radius) => h(Input, { modelValue: radius, radius })),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-input')];
+
+        expect(roots).toHaveLength(radii.length);
+        for (const [index, radius] of radii.entries()) {
+            expect([...roots[index].classList]).toEqual(['rp-input', `rp-input--radius-${radius}`]);
+        }
     });
 });
