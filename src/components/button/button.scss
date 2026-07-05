@@ -1,4 +1,26 @@
+@mixin button-color($color) {
+    --_rp-button-accent: var(--rp-color-#{$color});
+    --_rp-button-accent-hover: var(--rp-color-#{$color}-hover);
+    --_rp-button-accent-active: var(--rp-color-#{$color}-active);
+    --_rp-button-accent-on: var(--rp-color-on-#{$color});
+    --_rp-button-accent-subtle-bg-hover: var(--rp-color-#{$color}-subtle-bg-hover);
+    --_rp-button-accent-subtle-bg-active: var(--rp-color-#{$color}-subtle-bg-active);
+    --_rp-button-accent-border: var(--rp-color-#{$color}-border);
+    --_rp-button-accent-border-hover: var(--rp-color-#{$color}-border-hover);
+    --_rp-button-accent-fg: var(--rp-color-#{$color}-fg);
+}
+
 .rp-button {
+    --_rp-button-accent: var(--rp-color-primary);
+    --_rp-button-accent-hover: var(--rp-color-primary-hover);
+    --_rp-button-accent-active: var(--rp-color-primary-active);
+    --_rp-button-accent-on: var(--rp-color-on-primary);
+    --_rp-button-accent-subtle-bg-hover: var(--rp-color-primary-subtle-bg-hover);
+    --_rp-button-accent-subtle-bg-active: var(--rp-color-primary-subtle-bg-active);
+    --_rp-button-accent-border: var(--rp-color-primary-border);
+    --_rp-button-accent-border-hover: var(--rp-color-primary-border-hover);
+    --_rp-button-accent-fg: var(--rp-color-primary-fg);
+
     @include flex-center;
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
@@ -25,34 +47,78 @@
         border-color: var(--rp-color-border-hover);
     }
 
-    &--solid {
-        background-color: var(--rp-color-primary);
-        border-color: var(--rp-color-primary);
-        color: var(--rp-color-on-primary);
+    &--color-primary {
+        @include button-color('primary');
+    }
+
+    &--color-secondary {
+        @include button-color('secondary');
+    }
+
+    &--color-success {
+        @include button-color('success');
+    }
+
+    &--color-warning {
+        @include button-color('warning');
+    }
+
+    &--color-danger {
+        @include button-color('danger');
+    }
+
+    &--color-info {
+        @include button-color('info');
+    }
+
+    &--color-primary,
+    &--color-secondary,
+    &--color-success,
+    &--color-warning,
+    &--color-danger,
+    &--color-info {
+        border-color: var(--_rp-button-accent-border);
+        color: var(--_rp-button-accent-fg);
 
         &:hover:not(:disabled) {
-            background-color: var(--rp-color-primary-hover);
-            border-color: var(--rp-color-primary-hover);
+            background-color: var(--_rp-button-accent-subtle-bg-hover);
+            border-color: var(--_rp-button-accent-border-hover);
         }
 
         &:active:not(:disabled) {
-            background-color: var(--rp-color-primary-active);
-            border-color: var(--rp-color-primary-active);
+            background-color: var(--_rp-button-accent-subtle-bg-active);
+            border-color: var(--_rp-button-accent-border-hover);
+        }
+    }
+
+    &--solid {
+        background-color: var(--_rp-button-accent);
+        border-color: var(--_rp-button-accent);
+        color: var(--_rp-button-accent-on);
+
+        &:hover:not(:disabled) {
+            background-color: var(--_rp-button-accent-hover);
+            border-color: var(--_rp-button-accent-hover);
+        }
+
+        &:active:not(:disabled) {
+            background-color: var(--_rp-button-accent-active);
+            border-color: var(--_rp-button-accent-active);
         }
     }
 
     &--ghost {
         background-color: transparent;
         border-color: transparent;
-        color: var(--rp-color-primary-fg);
+        color: var(--_rp-button-accent-fg);
 
         &:hover:not(:disabled) {
-            background-color: var(--rp-color-primary-subtle-bg-hover);
+            background-color: var(--_rp-button-accent-subtle-bg-hover);
             border-color: transparent;
         }
 
         &:active:not(:disabled) {
-            background-color: var(--rp-color-primary-subtle-bg-active);
+            background-color: var(--_rp-button-accent-subtle-bg-active);
         }
     }
 

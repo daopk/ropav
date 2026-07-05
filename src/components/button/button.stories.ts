@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import Button from './button.vue';
 
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+
 const meta = {
     title: 'Components/Button',
     component: Button as any,
@@ -9,6 +11,10 @@ const meta = {
         variant: {
             control: 'select',
             options: [undefined, 'solid', 'ghost'],
+        },
+        color: {
+            control: 'select',
+            options: [undefined, ...colors],
         },
         type: {
             control: 'select',
@@ -35,6 +41,32 @@ export const Variants: Story = {
                 <Button v-bind="args">Default</Button>
                 <Button v-bind="args" variant="solid">Solid</Button>
                 <Button v-bind="args" variant="ghost">Ghost</Button>
+            </div>
+        `,
+    }),
+};
+
+export const Colors: Story = {
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args, colors }),
+        template: `
+            <div style="display: grid; gap: 16px;">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                    <Button v-for="color in colors" :key="'outline-' + color" v-bind="args" :color="color">
+                        {{ color }}
+                    </Button>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                    <Button v-for="color in colors" :key="'solid-' + color" v-bind="args" variant="solid" :color="color">
+                        {{ color }}
+                    </Button>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                    <Button v-for="color in colors" :key="'ghost-' + color" v-bind="args" variant="ghost" :color="color">
+                        {{ color }}
+                    </Button>
+                </div>
             </div>
         `,
     }),

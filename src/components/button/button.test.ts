@@ -78,4 +78,28 @@ describe('Button', () => {
 
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
     });
+
+    it('adds color modifiers with variants', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        { color: 'danger', variant: 'solid' },
+                        { default: () => 'Delete' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect([...button.classList]).toEqual([
+            'rp-button',
+            'rp-button--solid',
+            'rp-button--color-danger',
+        ]);
+    });
 });
