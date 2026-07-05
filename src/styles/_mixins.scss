@@ -124,19 +124,13 @@
     @each $name in primary, secondary, success, warning, danger, info {
         &--#{$name} {
             #{$prefix}-bg: var(--rp-color-#{$name});
-            #{$prefix}-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 90%, #{$color-black});
-            #{$prefix}-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 80%, #{$color-black});
-            #{$prefix}-subtle-bg: color-mix(in srgb, var(--rp-color-#{$name}) 10%, transparent);
-            #{$prefix}-subtle-bg-hover: color-mix(
-                in srgb,
-                var(--rp-color-#{$name}) 14%,
-                transparent
-            );
-            #{$prefix}-subtle-bg-active: color-mix(
-                in srgb,
-                var(--rp-color-#{$name}) 18%,
-                transparent
-            );
+            #{$prefix}-bg-hover: var(--rp-color-#{$name}-hover);
+            #{$prefix}-bg-active: var(--rp-color-#{$name}-active);
+            #{$prefix}-subtle-bg: var(--rp-color-#{$name}-subtle-bg);
+            #{$prefix}-subtle-bg-hover: var(--rp-color-#{$name}-subtle-bg-hover);
+            #{$prefix}-subtle-bg-active: var(--rp-color-#{$name}-subtle-bg-active);
+            #{$prefix}-border: var(--rp-color-#{$name}-border);
+            #{$prefix}-border-hover: var(--rp-color-#{$name}-border-hover);
             #{$prefix}-fg: var(--rp-color-#{$name}-fg);
             #{$prefix}-on-bg: var(--rp-color-on-#{$name});
         }

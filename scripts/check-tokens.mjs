@@ -22,6 +22,7 @@ const defaultTokenFiles = [
     'tokens/default/semantic.tokens.json',
 ];
 const darkOverrideTokenFiles = ['tokens/dark/overrides.tokens.json'];
+const semanticColorNames = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'];
 
 const staleFiles = [];
 const platformOutputs = await dictionary.formatAllPlatforms();
@@ -82,42 +83,33 @@ function checkThemeContrast(themeName, files) {
     }
 
     const failures = [];
-    const semanticColors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'];
-    for (const color of semanticColors) {
-        assertContrast(
-            themeName,
-            tokenValues,
-            failures,
-            `color.${color}`,
-            `color.on-${color}`,
-            4.5,
-        );
-        assertContrastValue(
-            themeName,
-            tokenValues,
-            failures,
-            `color.${color} solid hover`,
-            `color-mix(in srgb, {color.${color}} 90%, {color.black})`,
-            `color.on-${color}`,
-            4.5,
-        );
-        assertContrastValue(
-            themeName,
-            tokenValues,
-            failures,
-            `color.${color} solid active`,
-            `color-mix(in srgb, {color.${color}} 80%, {color.black})`,
-            `color.on-${color}`,
-            4.5,
-        );
-        assertContrast(
-            themeName,
-            tokenValues,
-            failures,
-            `color.${color}-fg`,
-            'color.background',
-            4.5,
-        );
+    for (const color of semanticColorNames) {
+        for (const state of [color, `${color}-hover`, `${color}-active`]) {
+            assertContrast(
+                themeName,
+                tokenValues,
+                failures,
+                `color.${state}`,
+                `color.on-${color}`,
+                4.5,
+            );
+        }
+
+        for (const background of [
+            'background',
+            `${color}-subtle-bg`,
+            `${color}-subtle-bg-hover`,
+            `${color}-subtle-bg-active`,
+        ]) {
+            assertContrast(
+                themeName,
+                tokenValues,
+                failures,
+                `color.${color}-fg`,
+                `color.${background}`,
+                4.5,
+            );
+        }
     }
 
     assertContrast(themeName, tokenValues, failures, 'color.text', 'color.background', 4.5);
@@ -181,6 +173,11 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
     const failures = [];
 
     for (const [, name] of tokenCss.matchAll(/^\s+(--rp-[a-z0-9-]+)\s*:/gim)) {
+        if (name.startsWith('--rp-color-palette-')) {
+            failures.push(`private palette CSS custom property ${name} was generated`);
+            continue;
+        }
+
         if (!allowedNames.has(name)) {
             failures.push(`CSS custom property ${name} is not part of the public token API`);
         }
@@ -249,32 +246,6 @@ function assertContrast(
     if (ratio < minRatio) {
         failures.push(
             `${themeName}: ${foregroundPath} on ${backgroundPath} is ${ratio.toFixed(2)}:1, expected at least ${minRatio}:1`,
-        );
-    }
-}
-
-function assertContrastValue(
-    themeName,
-    tokenValues,
-    failures,
-    foregroundLabel,
-    foregroundValue,
-    backgroundPath,
-    minRatio,
-) {
-    const foreground = resolveColorValue(tokenValues, foregroundValue, new Set());
-    const background = resolveColor(tokenValues, backgroundPath);
-    if (!isOpaqueColor(foreground) || !isOpaqueColor(background)) {
-        failures.push(
-            `${themeName}: ${foregroundLabel} on ${backgroundPath} could not be resolved to opaque colors`,
-        );
-        return;
-    }
-
-    const ratio = contrastRatio(foreground, background);
-    if (ratio < minRatio) {
-        failures.push(
-            `${themeName}: ${foregroundLabel} on ${backgroundPath} is ${ratio.toFixed(2)}:1, expected at least ${minRatio}:1`,
         );
     }
 }

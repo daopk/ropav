@@ -202,13 +202,15 @@ function valueToScssValue(value, dictionary, options = {}) {
         references.length === 1 &&
         isExactReference(value, reference)
     ) {
-        return `$${scssName(reference)}`;
+        return hasScssVariable(reference)
+            ? `$${scssName(reference)}`
+            : valueToScssValue(tokenValue(reference), dictionary);
     }
 
     return replaceReferences(
         value,
         references,
-        (referencedToken) => `#{$${scssName(referencedToken)}}`,
+        (referencedToken) => referenceToSassValue(referencedToken, dictionary),
     );
 }
 

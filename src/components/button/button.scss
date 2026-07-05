@@ -31,13 +31,13 @@
         color: var(--rp-color-on-primary);
 
         &:hover:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
-            border-color: color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
+            background-color: var(--rp-color-primary-hover);
+            border-color: var(--rp-color-primary-hover);
         }
 
         &:active:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
-            border-color: color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
+            background-color: var(--rp-color-primary-active);
+            border-color: var(--rp-color-primary-active);
         }
     }
 
@@ -47,12 +47,12 @@
         color: var(--rp-color-primary-fg);
 
         &:hover:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 14%, transparent);
+            background-color: var(--rp-color-primary-subtle-bg-hover);
             border-color: transparent;
         }
 
         &:active:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 18%, transparent);
+            background-color: var(--rp-color-primary-subtle-bg-active);
         }
     }
 

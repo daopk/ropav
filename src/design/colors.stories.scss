@@ -1,0 +1,169 @@
+.rp-color-story {
+    display: grid;
+    gap: var(--rp-spacing-8);
+    max-width: 1120px;
+    padding: var(--rp-spacing-8);
+    color: var(--rp-color-text);
+    background: var(--rp-color-background);
+}
+
+.rp-color-story__header {
+    display: flex;
+    gap: var(--rp-spacing-4);
+    align-items: end;
+    justify-content: space-between;
+    padding-bottom: var(--rp-spacing-4);
+    border-bottom: var(--rp-border-width-thin) solid var(--rp-color-border);
+
+    h1 {
+        margin: 0;
+        font-size: var(--rp-font-size-3xl);
+        line-height: var(--rp-line-height-tight);
+    }
+}
+
+.rp-color-story__eyebrow {
+    margin: 0 0 var(--rp-spacing-1);
+    color: var(--rp-color-text-secondary);
+    font-size: var(--rp-font-size-sm);
+    font-weight: var(--rp-font-weight-semibold);
+    text-transform: uppercase;
+}
+
+.rp-color-story__theme {
+    flex: 0 0 auto;
+    padding: var(--rp-spacing-2) var(--rp-spacing-3);
+    color: var(--rp-color-primary-fg);
+    font-size: var(--rp-font-size-sm);
+    font-weight: var(--rp-font-weight-semibold);
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-radius: var(--rp-radius-md);
+}
+
+.rp-color-section {
+    display: grid;
+    gap: var(--rp-spacing-3);
+
+    h2 {
+        margin: 0;
+        font-size: var(--rp-font-size-xl);
+        line-height: var(--rp-line-height-tight);
+    }
+}
+
+.rp-color-grid {
+    display: grid;
+    gap: var(--rp-spacing-3);
+}
+
+.rp-color-grid--accent {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.rp-color-grid--neutral {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.rp-color-token {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: var(--rp-spacing-3);
+    align-items: center;
+    min-width: 0;
+    padding: var(--rp-spacing-3);
+    background: var(--rp-color-surface-raised);
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-radius: var(--rp-radius-lg);
+}
+
+.rp-color-token__swatch {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--rp-radius-md);
+}
+
+.rp-color-token__swatch--small {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+}
+
+.rp-color-token__meta,
+.rp-color-table__token > span,
+.rp-color-table__value {
+    display: grid;
+    gap: var(--rp-spacing-1);
+    min-width: 0;
+}
+
+.rp-color-token strong,
+.rp-color-table strong {
+    overflow-wrap: break-word;
+    font-size: var(--rp-font-size-sm);
+    line-height: var(--rp-line-height-tight);
+}
+
+.rp-color-token code,
+.rp-color-table code {
+    overflow-wrap: anywhere;
+    color: var(--rp-color-text-secondary);
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    font-size: var(--rp-font-size-xs);
+    line-height: var(--rp-line-height-normal);
+}
+
+.rp-color-table {
+    display: grid;
+    overflow: hidden;
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-radius: var(--rp-radius-lg);
+}
+
+.rp-color-table__row {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.25fr) minmax(180px, 1fr) minmax(180px, 1fr);
+    gap: var(--rp-spacing-4);
+    align-items: center;
+    padding: var(--rp-spacing-3);
+    background: var(--rp-color-surface-raised);
+
+    + .rp-color-table__row {
+        border-top: var(--rp-border-width-thin) solid var(--rp-color-border);
+    }
+}
+
+.rp-color-table__row--head {
+    color: var(--rp-color-text-secondary);
+    font-size: var(--rp-font-size-xs);
+    font-weight: var(--rp-font-weight-semibold);
+    text-transform: uppercase;
+    background: var(--rp-color-surface-muted);
+}
+
+.rp-color-table__token {
+    display: flex;
+    gap: var(--rp-spacing-3);
+    align-items: center;
+    min-width: 0;
+}
+
+@media (width <= 760px) {
+    .rp-color-story {
+        padding: var(--rp-spacing-4);
+    }
+
+    .rp-color-story__header {
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .rp-color-table__row {
+        grid-template-columns: 1fr;
+        gap: var(--rp-spacing-2);
+    }
+
+    .rp-color-table__row--head {
+        display: none;
+    }
+}
