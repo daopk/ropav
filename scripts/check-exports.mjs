@@ -23,7 +23,6 @@ const expectedFiles = [
     'dist/radio.css',
     'dist/select.css',
     'dist/switch.css',
-    'dist/tabs.css',
     'dist/textarea.css',
     'dist/components/button/index.js',
     'dist/components/checkbox/index.js',
@@ -31,7 +30,6 @@ const expectedFiles = [
     'dist/components/radio/index.js',
     'dist/components/select/index.js',
     'dist/components/switch/index.js',
-    'dist/components/tabs/index.js',
     'dist/components/textarea/index.js',
 ];
 
@@ -68,10 +66,6 @@ try {
             'RadioGroup',
             'Select',
             'Switch',
-            'Tabs',
-            'TabsList',
-            'TabsTrigger',
-            'TabPanel',
             'Textarea',
         ],
         'dist/index.js',
@@ -82,13 +76,6 @@ try {
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
     assertExports(select, ['Select'], 'dist/components/select/index.js');
-
-    const tabs = await server.ssrLoadModule('/dist/components/tabs/index.js');
-    assertExports(
-        tabs,
-        ['Tabs', 'TabsList', 'TabsTrigger', 'TabPanel'],
-        'dist/components/tabs/index.js',
-    );
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');

@@ -9,7 +9,6 @@ const publicComponents = [
     'RadioGroup',
     'Select',
     'Switch',
-    'Tabs',
     'Textarea',
 ] as const;
 

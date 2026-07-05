@@ -4,5 +4,4 @@ export * from './components/input';
 export * from './components/radio';
 export * from './components/select';
 export * from './components/switch';
-export * from './components/tabs';
 export * from './components/textarea';

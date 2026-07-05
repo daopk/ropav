@@ -11,7 +11,6 @@ const componentDirs = [
     'radio',
     'select',
     'switch',
-    'tabs',
     'textarea',
 ];
 
