@@ -24,7 +24,7 @@ describe('Button', () => {
 
         expect(button.type).toBe('button');
         expect(button.disabled).toBe(false);
-        expect(button.classList.contains('rp-button--solid')).toBe(true);
+        expect([...button.classList]).toEqual(['rp-button']);
         expect(container.querySelector('.rp-button__prefix')).toBeTruthy();
         expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
         expect(button.textContent).toContain('Save');
@@ -61,5 +61,21 @@ describe('Button', () => {
         expect(container.querySelector('.rp-button__spinner')).toBeTruthy();
         expect(container.querySelector('.rp-button__prefix')).toBeNull();
         expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
+    });
+
+    it('adds the solid primary style only when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Button, { variant: 'solid' }, { default: () => 'Save' });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
     });
 });

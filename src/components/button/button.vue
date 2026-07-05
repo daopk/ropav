@@ -21,13 +21,14 @@ import type { ButtonProps } from './types';
 defineOptions({ name: 'RpButton' });
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-    variant: 'solid',
     type: 'button',
     disabled: false,
     loading: false,
 });
 
-const rootClass = computed(() => bem('rp-button', props.variant));
+const rootClass = computed(() =>
+    props.variant ? bem('rp-button', props.variant) : bem('rp-button'),
+);
 </script>
 
 <style src="./button.scss" lang="scss" scoped></style>

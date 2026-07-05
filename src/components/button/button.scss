@@ -4,7 +4,10 @@
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);
     line-height: var(--rp-line-height-none);
-    border: var(--rp-border-width-thin) solid transparent;
+    appearance: none;
+    background-color: transparent;
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    color: var(--rp-color-text);
     cursor: pointer;
     transition:
         background-color var(--rp-transition-fast),
@@ -18,25 +21,34 @@
     font-size: var(--rp-font-size-base);
     border-radius: var(--rp-radius-lg);
 
+    &:hover:not(:disabled) {
+        border-color: var(--rp-color-border-hover);
+    }
+
     &--solid {
         background-color: var(--rp-color-primary);
+        border-color: var(--rp-color-primary);
         color: var(--rp-color-on-primary);
 
         &:hover:not(:disabled) {
             background-color: color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
+            border-color: color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
         }
 
         &:active:not(:disabled) {
             background-color: color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
+            border-color: color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
         }
     }
 
     &--ghost {
         background-color: transparent;
+        border-color: transparent;
         color: var(--rp-color-primary-fg);
 
         &:hover:not(:disabled) {
             background-color: color-mix(in srgb, var(--rp-color-primary) 14%, transparent);
+            border-color: transparent;
         }
 
         &:active:not(:disabled) {

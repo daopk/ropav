@@ -8,7 +8,7 @@ const meta = {
     argTypes: {
         variant: {
             control: 'select',
-            options: ['solid', 'ghost'],
+            options: [undefined, 'solid', 'ghost'],
         },
         type: {
             control: 'select',
@@ -18,30 +18,37 @@ const meta = {
         loading: { control: 'boolean' },
     },
     args: {
-        variant: 'solid',
         disabled: false,
         loading: false,
     },
-    render: (args) => ({
-        components: { Button },
-        setup: () => ({ args }),
-        template: '<Button v-bind="args">Button</Button>',
-    }),
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-
-export const Ghost: Story = {
-    args: { variant: 'ghost' },
+export const Variants: Story = {
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args }),
+        template: `
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <Button v-bind="args">Default</Button>
+                <Button v-bind="args" variant="solid">Solid</Button>
+                <Button v-bind="args" variant="ghost">Ghost</Button>
+            </div>
+        `,
+    }),
 };
 
-export const Loading: Story = {
-    args: { loading: true },
-};
-
-export const Disabled: Story = {
-    args: { disabled: true },
+export const States: Story = {
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args }),
+        template: `
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <Button v-bind="args" loading>Loading</Button>
+                <Button v-bind="args" disabled>Disabled</Button>
+            </div>
+        `,
+    }),
 };
