@@ -11,6 +11,7 @@ export interface InputProps {
     readonly?: boolean;
     required?: boolean;
     invalid?: boolean;
+    valid?: boolean;
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;

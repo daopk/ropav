@@ -35,6 +35,7 @@ const props = withDefaults(defineProps<InputProps>(), {
     disabled: undefined,
     required: undefined,
     invalid: undefined,
+    valid: undefined,
     readonly: false,
 });
 
@@ -50,6 +51,7 @@ const rootClass = computed(() =>
         [`radius-${props.radius}`]: Boolean(props.radius),
         disabled: control.disabled,
         invalid: control.invalid,
+        valid: control.valid && !control.invalid,
         readonly: props.readonly,
     }),
 );

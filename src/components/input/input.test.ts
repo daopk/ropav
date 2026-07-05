@@ -68,6 +68,51 @@ describe('Input', () => {
         expect(root.classList.contains('rp-input--readonly')).toBe(true);
     });
 
+    it('applies valid state without ARIA invalid', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        modelValue: 'zoi@example.com',
+                        valid: true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(root.classList.contains('rp-input--valid')).toBe(true);
+        expect(root.classList.contains('rp-input--invalid')).toBe(false);
+        expect(native.hasAttribute('aria-invalid')).toBe(false);
+    });
+
+    it('lets invalid state take priority over valid state', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        invalid: true,
+                        modelValue: 'zoi@example.com',
+                        valid: true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(root.classList.contains('rp-input--invalid')).toBe(true);
+        expect(root.classList.contains('rp-input--valid')).toBe(false);
+        expect(native.getAttribute('aria-invalid')).toBe('true');
+    });
+
     it('focuses the native input when pressing the input padding', async () => {
         const container = mountDom(
             defineComponent({

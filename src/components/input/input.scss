@@ -13,11 +13,11 @@
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast);
 
-    &:hover:not(.rp-input--disabled) {
+    &:hover:not(.rp-input--disabled):not(.rp-input--invalid):not(.rp-input--valid) {
         border-color: var(--rp-color-border-hover);
     }
 
-    &:focus-within:not(.rp-input--disabled) {
+    &:focus-within:not(.rp-input--disabled):not(.rp-input--invalid):not(.rp-input--valid) {
         @include focus-ring;
     }
 
@@ -44,8 +44,24 @@
         @include disabled-state;
     }
 
+    &--valid {
+        border-color: var(--rp-color-success-fg);
+
+        &:focus-within:not(.rp-input--disabled) {
+            border-color: var(--rp-color-success-fg);
+            box-shadow: 0 0 0 var(--rp-border-width-medium)
+                color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
+        }
+    }
+
     &--invalid {
         border-color: var(--rp-color-danger-fg);
+
+        &:focus-within:not(.rp-input--disabled) {
+            border-color: var(--rp-color-danger-fg);
+            box-shadow: 0 0 0 var(--rp-border-width-medium)
+                color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+        }
     }
 
     &--readonly {

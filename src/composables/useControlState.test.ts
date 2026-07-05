@@ -26,6 +26,7 @@ describe('useControlState', () => {
         expect(control.disabled).toBe(true);
         expect(control.required).toBe(false);
         expect(control.invalid).toBe(false);
+        expect(control.valid).toBe(false);
         expect(control.ariaDescribedby).toBe('local-help');
         expect(control.ariaLabelledby).toBe('local-label');
     });
@@ -41,6 +42,7 @@ describe('useControlState', () => {
                         disabled: false,
                         required: true,
                         invalid: true,
+                        valid: true,
                         describedby: 'local-help shared-id local-help',
                         labelledby: 'custom-label label-id custom-label',
                     });
@@ -53,6 +55,7 @@ describe('useControlState', () => {
         expect(control.disabled).toBe(false);
         expect(control.required).toBe(true);
         expect(control.invalid).toBe(true);
+        expect(control.valid).toBe(true);
         expect(control.ariaDescribedby).toBe('local-help shared-id');
         expect(control.ariaLabelledby).toBe('custom-label label-id');
     });

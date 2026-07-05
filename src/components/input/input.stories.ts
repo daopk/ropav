@@ -21,6 +21,7 @@ const meta = {
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
         invalid: { control: 'boolean' },
+        valid: { control: 'boolean' },
     },
     args: {
         modelValue: '',
@@ -30,6 +31,7 @@ const meta = {
         disabled: false,
         readonly: false,
         invalid: false,
+        valid: false,
     },
     render: (args) => ({
         components: { Input },
@@ -52,6 +54,10 @@ export const Disabled: Story = {
 
 export const Invalid: Story = {
     args: { invalid: true },
+};
+
+export const Valid: Story = {
+    args: { valid: true },
 };
 
 export const Radii: Story = {

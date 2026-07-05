@@ -5,6 +5,7 @@ export interface ControlStateOptions {
     disabled?: boolean;
     required?: boolean;
     invalid?: boolean;
+    valid?: boolean;
     describedby?: string;
     labelledby?: string;
 }
@@ -14,6 +15,7 @@ export interface ControlState {
     disabled: boolean;
     required: boolean;
     invalid: boolean;
+    valid: boolean;
     ariaDescribedby: string | undefined;
     ariaLabelledby: string | undefined;
 }
@@ -28,6 +30,7 @@ export function useControlState(options: ControlStateOptions = {}): ControlState
     const disabled = computed(() => options.disabled ?? false);
     const required = computed(() => options.required ?? false);
     const invalid = computed(() => options.invalid ?? false);
+    const valid = computed(() => options.valid ?? false);
 
     const ariaDescribedby = computed(() => mergeIds(options.describedby));
     const ariaLabelledby = computed(() => mergeIds(options.labelledby));
@@ -44,6 +47,9 @@ export function useControlState(options: ControlStateOptions = {}): ControlState
         },
         get invalid() {
             return invalid.value;
+        },
+        get valid() {
+            return valid.value;
         },
         get ariaDescribedby() {
             return ariaDescribedby.value;
