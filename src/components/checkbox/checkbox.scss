@@ -16,6 +16,9 @@
     --_checkbox-icon-size: 14px;
     --_checkbox-font-size: var(--rp-font-size-base);
     --_checkbox-radius: 4px;
+    --_checkbox-checked-bg: var(--_checkbox-color);
+    --_checkbox-checked-border: var(--_checkbox-color);
+    --_checkbox-checked-icon: var(--_checkbox-on-color);
 
     display: inline-flex;
     align-items: center;
@@ -53,8 +56,8 @@
 
     &--checked &__box,
     &--indeterminate &__box {
-        background-color: var(--_checkbox-color);
-        border-color: var(--_checkbox-color);
+        background-color: var(--_checkbox-checked-bg);
+        border-color: var(--_checkbox-checked-border);
     }
 
     &--invalid &__box {
@@ -64,7 +67,7 @@
     &__icon {
         width: var(--_checkbox-icon-size);
         height: var(--_checkbox-icon-size);
-        color: var(--_checkbox-on-color);
+        color: var(--_checkbox-checked-icon);
         transform-origin: center;
 
         :deep([stroke-width]) {
@@ -81,6 +84,12 @@
         &--color-#{$color} {
             @include checkbox-color($color);
         }
+    }
+
+    &--outline {
+        --_checkbox-checked-bg: var(--rp-color-surface);
+        --_checkbox-checked-border: var(--_checkbox-color);
+        --_checkbox-checked-icon: var(--_checkbox-color);
     }
 
     &--size-xs {

@@ -22,6 +22,7 @@ import type { RadioGroupProps } from './types';
 defineOptions({ name: 'RpRadioGroup' });
 
 const props = withDefaults(defineProps<RadioGroupProps>(), {
+    variant: undefined,
     color: undefined,
     size: undefined,
     disabled: undefined,

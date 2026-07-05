@@ -6,6 +6,7 @@ import Checkbox from './checkbox.vue';
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const variants = ['solid', 'outline'] as const;
 
 const meta = {
     title: 'Components/Checkbox',
@@ -15,6 +16,10 @@ const meta = {
         color: {
             control: 'select',
             options: [undefined, ...colors],
+        },
+        variant: {
+            control: 'select',
+            options: [undefined, ...variants],
         },
         size: {
             control: 'select',
@@ -66,6 +71,25 @@ export const Checked: Story = {
             return { args, checked };
         },
         template: '<Checkbox v-bind="args" v-model="checked">Checked</Checkbox>',
+    }),
+};
+
+export const Variants: Story = {
+    render: (args) => ({
+        components: { Checkbox },
+        setup() {
+            const checked = reactive<Record<string, boolean>>(
+                Object.fromEntries(variants.map((variant) => [variant, true])),
+            );
+            return { args, checked, variants };
+        },
+        template: `
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <Checkbox v-for="variant in variants" :key="variant" v-bind="args" v-model="checked[variant]" :variant="variant">
+                    {{ variant }}
+                </Checkbox>
+            </div>
+        `,
     }),
 };
 

@@ -189,7 +189,7 @@ describe('Radio', () => {
         expect(radioRoot.classList.contains('rp-radio--checked')).toBe(true);
     });
 
-    it('adds color and size modifiers from the group with per-option overrides', async () => {
+    it('adds variant, color, and size modifiers from the group with per-option overrides', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -199,13 +199,19 @@ describe('Radio', () => {
                             color: 'success',
                             modelValue: 'apple',
                             size: 'lg',
+                            variant: 'outline',
                         },
                         {
                             default: () => [
                                 h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
                                 h(
                                     Radio,
-                                    { color: 'danger', size: 'sm', value: 'banana' },
+                                    {
+                                        color: 'danger',
+                                        size: 'sm',
+                                        value: 'banana',
+                                        variant: 'solid',
+                                    },
                                     { default: () => 'Banana' },
                                 ),
                             ],
@@ -223,11 +229,13 @@ describe('Radio', () => {
         expect([...appleRoot.classList]).toEqual([
             'rp-radio',
             'rp-radio--checked',
+            'rp-radio--outline',
             'rp-radio--color-success',
             'rp-radio--size-lg',
         ]);
         expect([...bananaRoot.classList]).toEqual([
             'rp-radio',
+            'rp-radio--solid',
             'rp-radio--color-danger',
             'rp-radio--size-sm',
         ]);

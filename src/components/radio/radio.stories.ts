@@ -6,6 +6,7 @@ import RadioGroup from './radio-group.vue';
 
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const variants = ['solid', 'outline'] as const;
 
 const meta = {
     title: 'Components/Radio',
@@ -15,6 +16,10 @@ const meta = {
         color: {
             control: 'select',
             options: [undefined, ...colors],
+        },
+        variant: {
+            control: 'select',
+            options: [undefined, ...variants],
         },
         size: {
             control: 'select',
@@ -59,6 +64,26 @@ export const Default: Story = {
         await expect(apple).not.toBeChecked();
         await expect(banana).toBeChecked();
     },
+};
+
+export const Variants: Story = {
+    render: (args) => ({
+        components: { Radio, RadioGroup },
+        setup() {
+            const values = reactive<Record<string, string>>(
+                Object.fromEntries(variants.map((variant) => [variant, 'apple'])),
+            );
+            return { args, values, variants };
+        },
+        template: `
+            <div style="display: grid; gap: 16px;">
+                <RadioGroup v-for="variant in variants" :key="variant" v-bind="args" v-model="values[variant]" :variant="variant">
+                    <Radio value="apple">{{ variant }}</Radio>
+                    <Radio value="banana">Option</Radio>
+                </RadioGroup>
+            </div>
+        `,
+    }),
 };
 
 export const Sizes: Story = {

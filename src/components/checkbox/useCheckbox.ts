@@ -12,6 +12,7 @@ export function useCheckbox(props: Readonly<CheckboxProps>, emitUpdate: (value: 
             indeterminate: props.indeterminate,
             disabled: control.disabled,
             invalid: control.invalid,
+            [props.variant ?? '']: Boolean(props.variant),
             [`color-${props.color}`]: Boolean(props.color),
             [`size-${props.size}`]: Boolean(props.size),
             [`radius-${props.radius}`]: Boolean(props.radius),

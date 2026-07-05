@@ -6,6 +6,7 @@ import Checkbox from './checkbox.vue';
 
 describe('Checkbox', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+    const variants = ['solid', 'outline'] as const;
 
     it('emits model updates from native checkbox changes', async () => {
         const onUpdate = vi.fn();
@@ -119,7 +120,7 @@ describe('Checkbox', () => {
         expect(root.classList.contains('rp-checkbox--invalid')).toBe(true);
     });
 
-    it('adds color, size, and radius modifiers when requested', async () => {
+    it('adds variant, color, size, and radius modifiers when requested', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -129,6 +130,7 @@ describe('Checkbox', () => {
                             color: 'success',
                             size: 'lg',
                             radius: 'xl',
+                            variant: 'outline',
                             modelValue: true,
                         },
                         { default: () => 'Styled' },
@@ -144,10 +146,38 @@ describe('Checkbox', () => {
         expect([...root.classList]).toEqual([
             'rp-checkbox',
             'rp-checkbox--checked',
+            'rp-checkbox--outline',
             'rp-checkbox--color-success',
             'rp-checkbox--size-lg',
             'rp-checkbox--radius-xl',
         ]);
+    });
+
+    it('adds a modifier for each supported variant', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        variants.map((variant) =>
+                            h(Checkbox, { modelValue: false, variant }, { default: () => variant }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const checkboxes = [...container.querySelectorAll('.rp-checkbox')];
+
+        expect(checkboxes).toHaveLength(variants.length);
+        for (const [index, variant] of variants.entries()) {
+            expect([...checkboxes[index].classList]).toEqual([
+                'rp-checkbox',
+                `rp-checkbox--${variant}`,
+            ]);
+        }
     });
 
     it('adds a radius modifier for each supported radius', async () => {

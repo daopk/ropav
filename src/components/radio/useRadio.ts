@@ -9,6 +9,7 @@ export function useRadio(props: Readonly<RadioProps>) {
     const group = useRequiredInject(radioGroupKey, 'RpRadio');
     const isChecked = computed(() => group.modelValue === props.value);
     const isDisabled = computed(() => props.disabled || group.disabled);
+    const variant = computed(() => props.variant ?? group.variant);
     const color = computed(() => props.color ?? group.color);
     const size = computed(() => props.size ?? group.size);
 
@@ -16,6 +17,7 @@ export function useRadio(props: Readonly<RadioProps>) {
         bem('rp-radio', {
             checked: isChecked.value,
             disabled: isDisabled.value,
+            [variant.value ?? '']: Boolean(variant.value),
             [`color-${color.value}`]: Boolean(color.value),
             [`size-${size.value}`]: Boolean(size.value),
         }),
@@ -63,6 +65,9 @@ export function useRadioGroup(
         },
         get required() {
             return control.required;
+        },
+        get variant() {
+            return props.variant;
         },
         get color() {
             return props.color;
