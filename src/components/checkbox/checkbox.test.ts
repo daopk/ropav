@@ -5,6 +5,8 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Checkbox from './checkbox.vue';
 
 describe('Checkbox', () => {
+    const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
     it('emits model updates from native checkbox changes', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -115,5 +117,63 @@ describe('Checkbox', () => {
         expect(native.getAttribute('aria-labelledby')).toBe('terms-label');
         expect(native.getAttribute('aria-describedby')).toBe('terms-description terms-message');
         expect(root.classList.contains('rp-checkbox--invalid')).toBe(true);
+    });
+
+    it('adds color, size, and radius modifiers when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            color: 'success',
+                            size: 'lg',
+                            radius: 'xl',
+                            modelValue: true,
+                        },
+                        { default: () => 'Styled' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-checkbox')!;
+
+        expect([...root.classList]).toEqual([
+            'rp-checkbox',
+            'rp-checkbox--checked',
+            'rp-checkbox--color-success',
+            'rp-checkbox--size-lg',
+            'rp-checkbox--radius-xl',
+        ]);
+    });
+
+    it('adds a radius modifier for each supported radius', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        radii.map((radius) =>
+                            h(Checkbox, { radius, modelValue: false }, { default: () => radius }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const checkboxes = [...container.querySelectorAll('.rp-checkbox')];
+
+        expect(checkboxes).toHaveLength(radii.length);
+        for (const [index, radius] of radii.entries()) {
+            expect([...checkboxes[index].classList]).toEqual([
+                'rp-checkbox',
+                `rp-checkbox--radius-${radius}`,
+            ]);
+        }
     });
 });

@@ -1,4 +1,22 @@
+@mixin checkbox-color($color) {
+    --_checkbox-color: var(--rp-color-#{$color});
+    --_checkbox-on-color: var(--rp-color-on-#{$color});
+}
+
+@mixin checkbox-size($size, $icon, $font-size) {
+    --_checkbox-size: #{$size};
+    --_checkbox-icon-size: #{$icon};
+    --_checkbox-font-size: #{$font-size};
+}
+
 .rp-checkbox {
+    --_checkbox-color: var(--rp-color-primary);
+    --_checkbox-on-color: var(--rp-color-on-primary);
+    --_checkbox-size: 18px;
+    --_checkbox-icon-size: 14px;
+    --_checkbox-font-size: var(--rp-font-size-base);
+    --_checkbox-radius: 4px;
+
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -9,8 +27,7 @@
         @include disabled-state;
     }
     gap: var(--rp-spacing-2);
-    font-size: var(--rp-font-size-base);
-    --_checkbox-size: 18px;
+    font-size: var(--_checkbox-font-size);
 
     &__native {
         @include visually-hidden;
@@ -27,7 +44,7 @@
         height: var(--_checkbox-size);
         flex-shrink: 0;
         border: var(--rp-border-width-medium) solid var(--rp-color-border);
-        border-radius: var(--rp-radius-sm);
+        border-radius: var(--_checkbox-radius);
         background-color: var(--rp-color-surface);
         transition:
             background-color var(--rp-transition-fast),
@@ -36,8 +53,8 @@
 
     &--checked &__box,
     &--indeterminate &__box {
-        background-color: var(--rp-color-primary);
-        border-color: var(--rp-color-primary);
+        background-color: var(--_checkbox-color);
+        border-color: var(--_checkbox-color);
     }
 
     &--invalid &__box {
@@ -45,9 +62,9 @@
     }
 
     &__icon {
-        width: 14px;
-        height: 14px;
-        color: var(--rp-color-on-primary);
+        width: var(--_checkbox-icon-size);
+        height: var(--_checkbox-icon-size);
+        color: var(--_checkbox-on-color);
         transform-origin: center;
 
         :deep([stroke-width]) {
@@ -58,6 +75,38 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
+    }
+
+    @each $color in primary, secondary, success, warning, danger, info {
+        &--color-#{$color} {
+            @include checkbox-color($color);
+        }
+    }
+
+    &--size-xs {
+        @include checkbox-size(14px, 10px, var(--rp-font-size-xs));
+    }
+
+    &--size-sm {
+        @include checkbox-size(16px, 12px, var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include checkbox-size(18px, 14px, var(--rp-font-size-base));
+    }
+
+    &--size-lg {
+        @include checkbox-size(22px, 16px, var(--rp-font-size-lg));
+    }
+
+    &--size-xl {
+        @include checkbox-size(26px, 20px, var(--rp-font-size-xl));
+    }
+
+    @each $radius, $value in (xs: 2px, sm: 4px, md: 6px, lg: 8px, xl: var(--rp-radius-full)) {
+        &--radius-#{$radius} {
+            --_checkbox-radius: #{$value};
+        }
     }
 }
 

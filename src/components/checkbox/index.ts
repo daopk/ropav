@@ -1,2 +1,2 @@
 export { default as Checkbox } from './checkbox.vue';
-export type { CheckboxProps } from './types';
+export type { CheckboxColor, CheckboxProps, CheckboxRadius, CheckboxSize } from './types';
