@@ -31,6 +31,7 @@ const rootClass = computed(() =>
         solid: props.variant === 'solid',
         ghost: props.variant === 'ghost',
         [`color-${props.color}`]: Boolean(props.color),
+        [`size-${props.size}`]: Boolean(props.size),
     }),
 );
 </script>

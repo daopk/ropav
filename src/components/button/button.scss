@@ -1,3 +1,10 @@
+@mixin button-size($height, $padding-x, $font-size, $radius) {
+    --_rp-button-height: #{$height};
+    --_rp-button-padding-x: #{$padding-x};
+    --_rp-button-font-size: #{$font-size};
+    --_rp-button-radius: #{$radius};
+}
+
 @mixin button-color($color) {
     --_rp-button-accent: var(--rp-color-#{$color});
     --_rp-button-accent-hover: var(--rp-color-#{$color}-hover);
@@ -8,6 +15,11 @@
     --_rp-button-accent-border: var(--rp-color-#{$color}-border);
     --_rp-button-accent-border-hover: var(--rp-color-#{$color}-border-hover);
     --_rp-button-accent-fg: var(--rp-color-#{$color}-fg);
+    --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
+    --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
+    --_rp-button-border: var(--_rp-button-accent-border);
+    --_rp-button-border-hover: var(--_rp-button-accent-border-hover);
+    --_rp-button-fg: var(--_rp-button-accent-fg);
 }
 
 .rp-button {
@@ -20,110 +32,128 @@
     --_rp-button-accent-border: var(--rp-color-primary-border);
     --_rp-button-accent-border-hover: var(--rp-color-primary-border-hover);
     --_rp-button-accent-fg: var(--rp-color-primary-fg);
+    --_rp-button-bg: var(--rp-color-surface);
+    --_rp-button-bg-hover: var(--rp-color-surface-hover);
+    --_rp-button-bg-active: var(--rp-color-surface-muted);
+    --_rp-button-border: var(--rp-color-border);
+    --_rp-button-border-hover: var(--rp-color-border-hover);
+    --_rp-button-border-active: var(--_rp-button-border-hover);
+    --_rp-button-fg: var(--rp-color-text);
+    --_rp-button-height: var(--rp-size-control-md);
+    --_rp-button-padding-x: var(--rp-spacing-4);
+    --_rp-button-font-size: var(--rp-font-size-base);
+    --_rp-button-radius: var(--rp-radius-lg);
+    --_rp-button-shadow: var(--rp-shadow-sm);
+    --_rp-button-shadow-hover: var(--rp-shadow-base);
+    --_rp-button-shadow-active: var(--rp-shadow-sm);
 
     @include flex-center;
+    box-sizing: border-box;
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
-    font-weight: var(--rp-font-weight-normal);
+    font-weight: var(--rp-font-weight-semibold);
     line-height: var(--rp-line-height-none);
     appearance: none;
-    background-color: transparent;
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
-    color: var(--rp-color-text);
+    background-color: var(--_rp-button-bg);
+    border: var(--rp-border-width-thin) solid var(--_rp-button-border);
+    box-shadow: var(--_rp-button-shadow);
+    color: var(--_rp-button-fg);
     cursor: pointer;
     transition:
         background-color var(--rp-transition-fast),
         color var(--rp-transition-fast),
         border-color var(--rp-transition-fast),
-        box-shadow var(--rp-transition-fast);
+        box-shadow var(--rp-transition-fast),
+        transform var(--rp-transition-fast);
     white-space: nowrap;
     user-select: none;
-    height: var(--rp-size-control-md);
-    padding: 0 var(--rp-spacing-4);
-    font-size: var(--rp-font-size-base);
-    border-radius: var(--rp-radius-lg);
+    height: var(--_rp-button-height);
+    padding: 0 var(--_rp-button-padding-x);
+    font-size: var(--_rp-button-font-size);
+    border-radius: var(--_rp-button-radius);
 
     &:hover:not(:disabled) {
-        border-color: var(--rp-color-border-hover);
+        background-color: var(--_rp-button-bg-hover);
+        border-color: var(--_rp-button-border-hover);
+        box-shadow: var(--_rp-button-shadow-hover);
     }
 
-    &--color-primary {
-        @include button-color('primary');
+    &:active:not(:disabled) {
+        background-color: var(--_rp-button-bg-active);
+        border-color: var(--_rp-button-border-active);
+        box-shadow: var(--_rp-button-shadow-active);
+        transform: translateY(1px);
     }
 
-    &--color-secondary {
-        @include button-color('secondary');
-    }
-
-    &--color-success {
-        @include button-color('success');
-    }
-
-    &--color-warning {
-        @include button-color('warning');
-    }
-
-    &--color-danger {
-        @include button-color('danger');
-    }
-
-    &--color-info {
-        @include button-color('info');
-    }
-
-    &--color-primary,
-    &--color-secondary,
-    &--color-success,
-    &--color-warning,
-    &--color-danger,
-    &--color-info {
-        border-color: var(--_rp-button-accent-border);
-        color: var(--_rp-button-accent-fg);
-
-        &:hover:not(:disabled) {
-            background-color: var(--_rp-button-accent-subtle-bg-hover);
-            border-color: var(--_rp-button-accent-border-hover);
+    @each $color in primary, secondary, success, warning, danger, info {
+        &--color-#{$color} {
+            @include button-color($color);
         }
+    }
 
-        &:active:not(:disabled) {
-            background-color: var(--_rp-button-accent-subtle-bg-active);
-            border-color: var(--_rp-button-accent-border-hover);
-        }
+    &--size-xs {
+        @include button-size(
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-1)),
+            var(--rp-spacing-2),
+            var(--rp-font-size-xs),
+            var(--rp-radius-md)
+        );
+    }
+
+    &--size-sm {
+        @include button-size(
+            var(--rp-size-control-sm),
+            var(--rp-spacing-3),
+            var(--rp-font-size-sm),
+            var(--rp-radius-md)
+        );
+    }
+
+    &--size-lg {
+        @include button-size(
+            var(--rp-size-control-lg),
+            var(--rp-spacing-5),
+            var(--rp-font-size-lg),
+            var(--rp-radius-lg)
+        );
+    }
+
+    &--size-xl {
+        @include button-size(
+            calc(var(--rp-size-control-lg) + var(--rp-spacing-2)),
+            var(--rp-spacing-6),
+            var(--rp-font-size-lg),
+            var(--rp-radius-xl)
+        );
     }
 
     &--solid {
-        background-color: var(--_rp-button-accent);
-        border-color: var(--_rp-button-accent);
-        color: var(--_rp-button-accent-on);
-
-        &:hover:not(:disabled) {
-            background-color: var(--_rp-button-accent-hover);
-            border-color: var(--_rp-button-accent-hover);
-        }
-
-        &:active:not(:disabled) {
-            background-color: var(--_rp-button-accent-active);
-            border-color: var(--_rp-button-accent-active);
-        }
+        --_rp-button-bg: var(--_rp-button-accent);
+        --_rp-button-bg-hover: var(--_rp-button-accent-hover);
+        --_rp-button-bg-active: var(--_rp-button-accent-active);
+        --_rp-button-border: var(--_rp-button-accent);
+        --_rp-button-border-hover: var(--_rp-button-accent-hover);
+        --_rp-button-border-active: var(--_rp-button-accent-active);
+        --_rp-button-fg: var(--_rp-button-accent-on);
     }
 
     &--ghost {
-        background-color: transparent;
-        border-color: transparent;
-        color: var(--_rp-button-accent-fg);
-
-        &:hover:not(:disabled) {
-            background-color: var(--_rp-button-accent-subtle-bg-hover);
-            border-color: transparent;
-        }
-
-        &:active:not(:disabled) {
-            background-color: var(--_rp-button-accent-subtle-bg-active);
-        }
+        --_rp-button-bg: transparent;
+        --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
+        --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
+        --_rp-button-border: transparent;
+        --_rp-button-border-hover: transparent;
+        --_rp-button-border-active: transparent;
+        --_rp-button-fg: var(--_rp-button-accent-fg);
+        --_rp-button-shadow: none;
+        --_rp-button-shadow-hover: none;
+        --_rp-button-shadow-active: none;
     }
 
     &:disabled {
         @include disabled-state;
+        box-shadow: none;
+        transform: none;
     }
 
     &:focus-visible {

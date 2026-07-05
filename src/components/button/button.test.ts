@@ -102,4 +102,20 @@ describe('Button', () => {
             'rp-button--color-danger',
         ]);
     });
+
+    it('adds size modifiers when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Button, { size: 'xl' }, { default: () => 'Save' });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect([...button.classList]).toEqual(['rp-button', 'rp-button--size-xl']);
+    });
 });
