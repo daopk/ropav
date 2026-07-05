@@ -6,4 +6,3 @@ export * from './components/select';
 export * from './components/switch';
 export * from './components/tabs';
 export * from './components/textarea';
-export * from './components/tooltip';

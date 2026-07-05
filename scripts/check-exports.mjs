@@ -25,7 +25,6 @@ const expectedFiles = [
     'dist/switch.css',
     'dist/tabs.css',
     'dist/textarea.css',
-    'dist/tooltip.css',
     'dist/components/button/index.js',
     'dist/components/checkbox/index.js',
     'dist/components/input/index.js',
@@ -34,7 +33,6 @@ const expectedFiles = [
     'dist/components/switch/index.js',
     'dist/components/tabs/index.js',
     'dist/components/textarea/index.js',
-    'dist/components/tooltip/index.js',
 ];
 
 for (const file of expectedFiles) {
@@ -75,7 +73,6 @@ try {
             'TabsTrigger',
             'TabPanel',
             'Textarea',
-            'Tooltip',
         ],
         'dist/index.js',
     );

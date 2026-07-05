@@ -11,7 +11,6 @@ const publicComponents = [
     'Switch',
     'Tabs',
     'Textarea',
-    'Tooltip',
 ] as const;
 
 describe('public source exports', () => {

@@ -13,7 +13,6 @@ const componentDirs = [
     'switch',
     'tabs',
     'textarea',
-    'tooltip',
 ];
 
 const componentEntries = componentDirs.reduce<Record<string, string>>((entries, name) => {
