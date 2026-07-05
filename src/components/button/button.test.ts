@@ -33,6 +33,33 @@ describe('Button', () => {
         expect(button.textContent).toContain('Save');
     });
 
+    it('renders left and right slots before legacy prefix and suffix slots', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Button, null, {
+                        default: () => 'Save',
+                        left: () => h('span', { class: 'left-icon' }, 'Left'),
+                        right: () => h('span', { class: 'right-icon' }, 'Right'),
+                        prefix: () => h('span', { class: 'prefix-icon' }, 'Prefix'),
+                        suffix: () => h('span', { class: 'suffix-icon' }, 'Suffix'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(container.querySelector('.rp-button__prefix .left-icon')).toBeTruthy();
+        expect(container.querySelector('.rp-button__suffix .right-icon')).toBeTruthy();
+        expect(button.textContent).toContain('Left');
+        expect(button.textContent).toContain('Right');
+        expect(button.textContent).not.toContain('Prefix');
+        expect(button.textContent).not.toContain('Suffix');
+    });
+
     it('disables while loading and hides the prefix slot', async () => {
         const container = mountDom(
             defineComponent({
@@ -61,7 +88,7 @@ describe('Button', () => {
         expect(button.type).toBe('submit');
         expect(button.disabled).toBe(true);
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost']);
-        expect(container.querySelector('.rp-button__spinner')).toBeTruthy();
+        expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
         expect(container.querySelector('.rp-button__prefix')).toBeNull();
         expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
     });

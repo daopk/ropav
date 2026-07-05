@@ -233,12 +233,11 @@
     }
 
     &__spinner {
+        display: block;
         width: 1em;
         height: 1em;
-        border: var(--rp-border-width-medium) solid currentColor;
-        border-right-color: transparent;
-        border-radius: var(--rp-radius-full);
         flex-shrink: 0;
+        transform-origin: center;
         animation: rp-button-spin 700ms linear infinite;
     }
 }

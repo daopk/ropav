@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import IconArrowRight from '~icons/lucide/arrow-right';
+import IconPlus from '~icons/lucide/plus';
 import Button from './button.vue';
 
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
@@ -66,6 +68,38 @@ export const Sizes: Story = {
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                 <Button v-for="size in sizes" :key="size" v-bind="args" :size="size">
                     {{ size }}
+                </Button>
+            </div>
+        `,
+    }),
+};
+
+export const Slots: Story = {
+    render: (args) => ({
+        components: { Button, IconArrowRight, IconPlus },
+        setup: () => ({ args }),
+        template: `
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <Button v-bind="args">
+                    <template #left>
+                        <IconPlus aria-hidden="true" />
+                    </template>
+                    Create
+                </Button>
+                <Button v-bind="args">
+                    Continue
+                    <template #right>
+                        <IconArrowRight aria-hidden="true" />
+                    </template>
+                </Button>
+                <Button v-bind="args">
+                    <template #left>
+                        <IconPlus aria-hidden="true" />
+                    </template>
+                    Add option
+                    <template #right>
+                        <IconArrowRight aria-hidden="true" />
+                    </template>
                 </Button>
             </div>
         `,

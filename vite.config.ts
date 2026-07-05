@@ -2,6 +2,7 @@ import { resolve, posix } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
+import Icons from 'unplugin-icons/vite';
 
 const componentDirs = [
     'button',
@@ -62,6 +63,9 @@ export default defineConfig({
     },
     plugins: [
         vue(),
+        Icons({
+            compiler: 'vue3',
+        }),
         dts({
             tsconfigPath: './tsconfig.app.json',
             cleanVueFileName: true,
