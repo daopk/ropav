@@ -4,11 +4,14 @@ export interface SelectOption {
     disabled?: boolean;
 }
 
+export type SelectRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export interface SelectProps {
     id?: string;
     name?: string;
     modelValue: string | number | null;
     options?: SelectOption[];
+    radius?: SelectRadius;
     placeholder?: string;
     disabled?: boolean;
     required?: boolean;

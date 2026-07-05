@@ -7,6 +7,8 @@ import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
 
 describe('Select', () => {
+    const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
     it('keeps state handlers testable without rendering the full component', async () => {
         const props = reactive<SelectProps>({
             modelValue: null,
@@ -98,5 +100,34 @@ describe('Select', () => {
         expect(trigger.getAttribute('tabindex')).toBe('-1');
         expect(container.querySelector('[role="listbox"]')).toBeNull();
         expect(onUpdate).not.toHaveBeenCalled();
+    });
+
+    it('adds a radius modifier for each supported radius', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        radii.map((radius) =>
+                            h(Select, {
+                                modelValue: radius,
+                                options: [{ label: radius, value: radius }],
+                                radius,
+                            }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        const roots = [...container.querySelectorAll('.rp-select')];
+
+        expect(roots).toHaveLength(radii.length);
+        for (const [index, radius] of radii.entries()) {
+            expect([...roots[index].classList]).toEqual([
+                'rp-select',
+                `rp-select--radius-${radius}`,
+            ]);
+        }
     });
 });

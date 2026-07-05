@@ -36,6 +36,7 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
     const rootClass = computed(() =>
         bem('rp-select', {
             open: isOpen.value,
+            [`radius-${props.radius}`]: Boolean(props.radius),
             disabled: control.disabled,
             invalid: control.invalid,
         }),

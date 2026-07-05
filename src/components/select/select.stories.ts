@@ -3,6 +3,8 @@ import { expect, userEvent, within } from 'storybook/test';
 import { ref } from 'vue';
 import Select from './select.vue';
 
+const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
 const fruitOptions = [
     { label: 'Apple', value: 'apple' },
     { label: 'Banana', value: 'banana' },
@@ -17,12 +19,17 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         modelValue: { control: 'text' },
+        radius: {
+            control: 'select',
+            options: [undefined, ...radii],
+        },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
     },
     args: {
         modelValue: null,
         options: fruitOptions,
+        radius: undefined,
         placeholder: 'Select a fruit...',
         disabled: false,
     },
@@ -64,6 +71,24 @@ export const DisabledOptions: Story = {
 
 export const Disabled: Story = {
     args: { disabled: true },
+};
+
+export const Radii: Story = {
+    render: (args) => ({
+        components: { Select },
+        setup: () => ({ args, radii }),
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <Select
+                    v-for="radius in radii"
+                    :key="radius"
+                    v-bind="args"
+                    :radius="radius"
+                    :model-value="radius"
+                />
+            </div>
+        `,
+    }),
 };
 
 export const KeyboardNavigation: Story = {

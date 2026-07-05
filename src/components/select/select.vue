@@ -32,8 +32,8 @@
                 {{ displayLabel || placeholder }}
             </span>
 
-            <span class="rp-select__arrow" :class="{ 'rp-select__arrow--open': isOpen }">
-                <ChevronDownIcon />
+            <span class="rp-select__arrow">
+                <ChevronsUpDownIcon />
             </span>
         </div>
 
@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import ChevronDownIcon from '~icons/lucide/chevron-down';
+import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
 
