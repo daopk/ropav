@@ -5,6 +5,8 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Button from './button.vue';
 
 describe('Button', () => {
+    const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
+
     it('uses button type by default and renders slots', async () => {
         const container = mountDom(
             defineComponent({
@@ -77,6 +79,30 @@ describe('Button', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
+    });
+
+    it('adds a variant modifier for each supported variant', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        variants.map((variant) =>
+                            h(Button, { variant }, { default: () => variant }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const buttons = [...container.querySelectorAll('button')];
+
+        expect(buttons).toHaveLength(variants.length);
+        for (const [index, variant] of variants.entries()) {
+            expect([...buttons[index].classList]).toEqual(['rp-button', `rp-button--${variant}`]);
+        }
     });
 
     it('adds color modifiers with variants', async () => {

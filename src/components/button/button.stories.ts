@@ -3,6 +3,7 @@ import Button from './button.vue';
 
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
 const meta = {
     title: 'Components/Button',
@@ -11,7 +12,7 @@ const meta = {
     argTypes: {
         variant: {
             control: 'select',
-            options: [undefined, 'solid', 'ghost'],
+            options: [undefined, ...variants],
         },
         color: {
             control: 'select',
@@ -40,12 +41,13 @@ type Story = StoryObj<typeof meta>;
 export const Variants: Story = {
     render: (args) => ({
         components: { Button },
-        setup: () => ({ args }),
+        setup: () => ({ args, variants }),
         template: `
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                 <Button v-bind="args">Default</Button>
-                <Button v-bind="args" variant="solid">Solid</Button>
-                <Button v-bind="args" variant="ghost">Ghost</Button>
+                <Button v-for="variant in variants" :key="variant" v-bind="args" :variant="variant">
+                    {{ variant }}
+                </Button>
             </div>
         `,
     }),
@@ -68,21 +70,11 @@ export const Sizes: Story = {
 export const Colors: Story = {
     render: (args) => ({
         components: { Button },
-        setup: () => ({ args, colors }),
+        setup: () => ({ args, colors, variants }),
         template: `
             <div style="display: grid; gap: 16px;">
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                    <Button v-for="color in colors" :key="'outline-' + color" v-bind="args" :color="color">
-                        {{ color }}
-                    </Button>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                    <Button v-for="color in colors" :key="'solid-' + color" v-bind="args" variant="solid" :color="color">
-                        {{ color }}
-                    </Button>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                    <Button v-for="color in colors" :key="'ghost-' + color" v-bind="args" variant="ghost" :color="color">
+                <div v-for="variant in variants" :key="variant" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                    <Button v-for="color in colors" :key="variant + '-' + color" v-bind="args" :variant="variant" :color="color">
                         {{ color }}
                     </Button>
                 </div>

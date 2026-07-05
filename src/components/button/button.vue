@@ -28,8 +28,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 
 const rootClass = computed(() =>
     bem('rp-button', {
-        solid: props.variant === 'solid',
-        ghost: props.variant === 'ghost',
+        [props.variant ?? '']: Boolean(props.variant),
         [`color-${props.color}`]: Boolean(props.color),
         [`size-${props.size}`]: Boolean(props.size),
     }),
