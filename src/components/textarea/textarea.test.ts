@@ -10,6 +10,9 @@ function typeTextarea(el: HTMLTextAreaElement, value: string) {
 }
 
 describe('Textarea', () => {
+    const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
     it('emits string updates from native textarea input', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -66,6 +69,7 @@ describe('Textarea', () => {
                         labelledby: 'bio-label',
                         describedby: 'external-help bio-description bio-message',
                         modelValue: '',
+                        readonly: true,
                         required: true,
                     });
                 },
@@ -79,6 +83,7 @@ describe('Textarea', () => {
 
         expect(native.id).toBe('bio-control');
         expect(native.disabled).toBe(true);
+        expect(native.readOnly).toBe(true);
         expect(native.required).toBe(true);
         expect(native.getAttribute('aria-required')).toBe('true');
         expect(native.getAttribute('aria-invalid')).toBe('true');
@@ -88,5 +93,146 @@ describe('Textarea', () => {
         );
         expect(root.classList.contains('rp-textarea--disabled')).toBe(true);
         expect(root.classList.contains('rp-textarea--invalid')).toBe(true);
+        expect(root.classList.contains('rp-textarea--readonly')).toBe(true);
+    });
+
+    it('applies valid state without ARIA invalid', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        modelValue: 'Ready',
+                        valid: true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-textarea')!;
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+
+        expect(root.classList.contains('rp-textarea--valid')).toBe(true);
+        expect(root.classList.contains('rp-textarea--invalid')).toBe(false);
+        expect(native.hasAttribute('aria-invalid')).toBe(false);
+    });
+
+    it('lets invalid state take priority over valid state', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        invalid: true,
+                        modelValue: 'Needs work',
+                        valid: true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-textarea')!;
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+
+        expect(root.classList.contains('rp-textarea--invalid')).toBe(true);
+        expect(root.classList.contains('rp-textarea--valid')).toBe(false);
+        expect(native.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it('focuses the native textarea when pressing the textarea padding', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-textarea')!;
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+
+        root.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).toBe(native);
+    });
+
+    it('does not focus the native textarea from padding when disabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        disabled: true,
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-textarea')!;
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+
+        root.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).not.toBe(native);
+    });
+
+    it('adds a radius modifier for each supported radius', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        radii.map((radius) => h(Textarea, { modelValue: radius, radius })),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-textarea')];
+
+        expect(roots).toHaveLength(radii.length);
+        for (const [index, radius] of radii.entries()) {
+            expect([...roots[index].classList]).toEqual([
+                'rp-textarea',
+                `rp-textarea--radius-${radius}`,
+            ]);
+        }
+    });
+
+    it('adds a size modifier for each supported size', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        sizes.map((size) => h(Textarea, { modelValue: size, size })),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-textarea')];
+
+        expect(roots).toHaveLength(sizes.length);
+        for (const [index, size] of sizes.entries()) {
+            expect([...roots[index].classList]).toEqual([
+                'rp-textarea',
+                `rp-textarea--size-${size}`,
+            ]);
+        }
     });
 });

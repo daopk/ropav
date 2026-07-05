@@ -1,5 +1,5 @@
 <template>
-    <div :class="rootClass">
+    <div :class="rootClass" @mousedown="focusTextarea">
         <textarea
             :id="control.id"
             :name="name"
@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<TextareaProps>(), {
     disabled: undefined,
     required: undefined,
     invalid: undefined,
+    valid: undefined,
     readonly: false,
 });
 
@@ -39,7 +40,7 @@ const emit = defineEmits<{
     'update:modelValue': [value: string];
 }>();
 
-const { control, rootClass, onInput } = useTextarea(props, (value) => {
+const { control, rootClass, onInput, focusTextarea } = useTextarea(props, (value) => {
     emit('update:modelValue', value);
 });
 </script>
