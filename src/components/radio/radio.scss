@@ -47,7 +47,7 @@
         flex-shrink: 0;
         border: var(--rp-border-width-medium) solid var(--rp-color-border);
         border-radius: var(--rp-radius-full);
-        background-color: var(--rp-color-surface);
+        background-color: var(--rp-color-button-default-bg);
         transition:
             background-color var(--rp-transition-fast),
             border-color var(--rp-transition-fast);
@@ -84,7 +84,7 @@
     }
 
     &--outline {
-        --_radio-checked-bg: var(--rp-color-surface);
+        --_radio-checked-bg: var(--rp-color-button-default-bg);
         --_radio-checked-border: var(--_radio-color);
         --_radio-checked-dot: var(--_radio-color);
     }

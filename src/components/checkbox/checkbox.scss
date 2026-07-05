@@ -48,7 +48,7 @@
         flex-shrink: 0;
         border: var(--rp-border-width-medium) solid var(--rp-color-border);
         border-radius: var(--_checkbox-radius);
-        background-color: var(--rp-color-surface);
+        background-color: var(--rp-color-button-default-bg);
         transition:
             background-color var(--rp-transition-fast),
             border-color var(--rp-transition-fast);
@@ -87,7 +87,7 @@
     }
 
     &--outline {
-        --_checkbox-checked-bg: var(--rp-color-surface);
+        --_checkbox-checked-bg: var(--rp-color-button-default-bg);
         --_checkbox-checked-border: var(--_checkbox-color);
         --_checkbox-checked-icon: var(--_checkbox-color);
     }
