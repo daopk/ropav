@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { ChevronDownIcon } from '@/components/_internal/icons';
+import ChevronDownIcon from '~icons/lucide/chevron-down';
 import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
 

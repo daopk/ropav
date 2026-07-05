@@ -22,8 +22,10 @@
             @change="onChange"
         />
         <span class="rp-checkbox__box">
-            <MinusIcon v-if="indeterminate" class="rp-checkbox__icon" />
-            <CheckIcon v-else-if="modelValue" class="rp-checkbox__icon" />
+            <Transition name="rp-checkbox-icon" mode="out-in">
+                <MinusIcon v-if="indeterminate" key="minus" class="rp-checkbox__icon" />
+                <CheckIcon v-else-if="modelValue" key="check" class="rp-checkbox__icon" />
+            </Transition>
         </span>
         <span v-if="$slots.default" class="rp-checkbox__label">
             <slot />
@@ -32,7 +34,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { CheckIcon, MinusIcon } from '@/components/_internal/icons';
+import CheckIcon from '~icons/lucide/check';
+import MinusIcon from '~icons/lucide/minus';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxProps } from './types';
 
