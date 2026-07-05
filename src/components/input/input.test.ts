@@ -7,15 +7,17 @@ import Input from './input.vue';
 describe('Input', () => {
     it('emits raw string values from native input events', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Input, {
-                    type: 'number',
-                    modelValue: '',
-                    'onUpdate:modelValue': onUpdate,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        type: 'number',
+                        modelValue: '',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
 
         const native = container.querySelector('input') as HTMLInputElement;
         input(native, '');
@@ -28,20 +30,22 @@ describe('Input', () => {
     });
 
     it('applies direct state and ARIA props', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Input, {
-                    id: 'email-control',
-                    describedby: 'email-help email-error',
-                    disabled: true,
-                    invalid: true,
-                    labelledby: 'email-label',
-                    modelValue: 'zoi@example.com',
-                    readonly: true,
-                    required: true,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        id: 'email-control',
+                        describedby: 'email-help email-error',
+                        disabled: true,
+                        invalid: true,
+                        labelledby: 'email-label',
+                        modelValue: 'zoi@example.com',
+                        readonly: true,
+                        required: true,
+                    });
+                },
+            }),
+        );
 
         await flush();
 

@@ -1,6 +1,13 @@
 body.sb-show-main,
 .docs-story {
-  background: var(--rp-color-background) !important;
-  color: var(--rp-color-text);
-  font-family: var(--rp-font-family, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    background: var(--rp-color-background) !important;
+    color: var(--rp-color-text);
+    font-family: var(
+        --rp-font-family,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif
+    );
 }

@@ -3,10 +3,7 @@ import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import type { CheckboxProps } from './types';
 
-export function useCheckbox(
-    props: Readonly<CheckboxProps>,
-    emitUpdate: (value: boolean) => void,
-) {
+export function useCheckbox(props: Readonly<CheckboxProps>, emitUpdate: (value: boolean) => void) {
     const control = useControlState(props);
 
     const rootClass = computed(() =>

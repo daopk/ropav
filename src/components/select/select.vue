@@ -1,6 +1,12 @@
 <template>
     <div :class="rootClass" ref="selectRef">
-        <input v-if="name" type="hidden" :name="name" :value="modelValue ?? ''" :disabled="control.disabled || undefined" />
+        <input
+            v-if="name"
+            type="hidden"
+            :name="name"
+            :value="modelValue ?? ''"
+            :disabled="control.disabled || undefined"
+        />
         <div
             :id="control.id"
             ref="triggerRef"
@@ -33,10 +39,7 @@
 
         <Transition name="rp-select-dropdown">
             <div v-if="isOpen" class="rp-select__dropdown" role="listbox" :id="listboxId">
-                <div
-                    v-if="visibleOptions.length === 0"
-                    class="rp-select__empty"
-                >
+                <div v-if="visibleOptions.length === 0" class="rp-select__empty">
                     <slot name="empty">No options</slot>
                 </div>
                 <div

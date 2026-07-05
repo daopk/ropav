@@ -7,8 +7,8 @@ export interface UseDelayedOpenOptions {
 
 function readOption<T>(value: T | (() => T | undefined) | undefined, fallback: T): T {
     return typeof value === 'function'
-        ? (value as () => T | undefined)() ?? fallback
-        : value ?? fallback;
+        ? ((value as () => T | undefined)() ?? fallback)
+        : (value ?? fallback);
 }
 
 export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
@@ -16,7 +16,10 @@ export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
     let openTimer: ReturnType<typeof setTimeout> | null = null;
 
     function clearTimers() {
-        if (openTimer) { clearTimeout(openTimer); openTimer = null; }
+        if (openTimer) {
+            clearTimeout(openTimer);
+            openTimer = null;
+        }
     }
 
     function isDisabled() {
@@ -31,7 +34,10 @@ export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
             return;
         }
         if (openTimer) clearTimeout(openTimer);
-        openTimer = setTimeout(() => { isOpen.value = true; openTimer = null; }, delay);
+        openTimer = setTimeout(() => {
+            isOpen.value = true;
+            openTimer = null;
+        }, delay);
     }
 
     function closeImmediate() {

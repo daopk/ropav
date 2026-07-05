@@ -7,14 +7,20 @@ import Checkbox from './checkbox.vue';
 describe('Checkbox', () => {
     it('emits model updates from native checkbox changes', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Checkbox, {
-                    modelValue: false,
-                    'onUpdate:modelValue': onUpdate,
-                }, { default: () => 'Accept terms' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            modelValue: false,
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        { default: () => 'Accept terms' },
+                    );
+                },
+            }),
+        );
 
         const native = container.querySelector('input') as HTMLInputElement;
         native.click();
@@ -26,15 +32,21 @@ describe('Checkbox', () => {
 
     it('does not emit updates when disabled', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Checkbox, {
-                    disabled: true,
-                    modelValue: false,
-                    'onUpdate:modelValue': onUpdate,
-                }, { default: () => 'Disabled' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            disabled: true,
+                            modelValue: false,
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        { default: () => 'Disabled' },
+                    );
+                },
+            }),
+        );
 
         const native = container.querySelector('input') as HTMLInputElement;
         native.click();
@@ -45,14 +57,20 @@ describe('Checkbox', () => {
     });
 
     it('renders indeterminate state with mixed aria state', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Checkbox, {
-                    indeterminate: true,
-                    modelValue: false,
-                }, { default: () => 'Select all' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            indeterminate: true,
+                            modelValue: false,
+                        },
+                        { default: () => 'Select all' },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
@@ -66,18 +84,24 @@ describe('Checkbox', () => {
     });
 
     it('applies direct state and ARIA props', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Checkbox, {
-                    id: 'terms-control',
-                    invalid: true,
-                    labelledby: 'terms-label',
-                    describedby: 'terms-description terms-message',
-                    modelValue: false,
-                    required: true,
-                }, { default: () => 'I agree' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            id: 'terms-control',
+                            invalid: true,
+                            labelledby: 'terms-label',
+                            describedby: 'terms-description terms-message',
+                            modelValue: false,
+                            required: true,
+                        },
+                        { default: () => 'I agree' },
+                    );
+                },
+            }),
+        );
 
         await flush();
 

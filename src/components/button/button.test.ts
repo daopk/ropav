@@ -6,15 +6,17 @@ import Button from './button.vue';
 
 describe('Button', () => {
     it('uses button type by default and renders slots', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Button, null, {
-                    default: () => 'Save',
-                    prefix: () => h('span', { class: 'prefix-icon' }, 'P'),
-                    suffix: () => h('span', { class: 'suffix-icon' }, 'S'),
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Button, null, {
+                        default: () => 'Save',
+                        prefix: () => h('span', { class: 'prefix-icon' }, 'P'),
+                        suffix: () => h('span', { class: 'suffix-icon' }, 'S'),
+                    });
+                },
+            }),
+        );
 
         await flush();
 
@@ -29,19 +31,25 @@ describe('Button', () => {
     });
 
     it('disables while loading and hides the prefix slot', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Button, {
-                    loading: true,
-                    type: 'submit',
-                    variant: 'ghost',
-                }, {
-                    default: () => 'Delete',
-                    prefix: () => h('span', 'Prefix'),
-                    suffix: () => h('span', 'Suffix'),
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            loading: true,
+                            type: 'submit',
+                            variant: 'ghost',
+                        },
+                        {
+                            default: () => 'Delete',
+                            prefix: () => h('span', 'Prefix'),
+                            suffix: () => h('span', 'Suffix'),
+                        },
+                    );
+                },
+            }),
+        );
 
         await flush();
 

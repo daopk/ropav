@@ -19,9 +19,7 @@ export interface ControlState {
 }
 
 function mergeIds(...values: Array<string | undefined>): string | undefined {
-    const ids = values
-        .flatMap((value) => value?.split(/\s+/) ?? [])
-        .filter(Boolean);
+    const ids = values.flatMap((value) => value?.split(/\s+/) ?? []).filter(Boolean);
     return ids.length > 0 ? Array.from(new Set(ids)).join(' ') : undefined;
 }
 
@@ -35,11 +33,23 @@ export function useControlState(options: ControlStateOptions = {}): ControlState
     const ariaLabelledby = computed(() => mergeIds(options.labelledby));
 
     return {
-        get id() { return id.value; },
-        get disabled() { return disabled.value; },
-        get required() { return required.value; },
-        get invalid() { return invalid.value; },
-        get ariaDescribedby() { return ariaDescribedby.value; },
-        get ariaLabelledby() { return ariaLabelledby.value; },
+        get id() {
+            return id.value;
+        },
+        get disabled() {
+            return disabled.value;
+        },
+        get required() {
+            return required.value;
+        },
+        get invalid() {
+            return invalid.value;
+        },
+        get ariaDescribedby() {
+            return ariaDescribedby.value;
+        },
+        get ariaLabelledby() {
+            return ariaLabelledby.value;
+        },
     };
 }

@@ -3,10 +3,7 @@ import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import type { TextareaProps } from './types';
 
-export function useTextarea(
-    props: Readonly<TextareaProps>,
-    emitUpdate: (value: string) => void,
-) {
+export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: string) => void) {
     const control = useControlState(props);
 
     const rootClass = computed(() =>

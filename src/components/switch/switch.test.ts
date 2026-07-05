@@ -7,14 +7,20 @@ import Switch from './switch.vue';
 describe('Switch', () => {
     it('emits model updates from native switch changes', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Switch, {
-                    modelValue: false,
-                    'onUpdate:modelValue': onUpdate,
-                }, { default: () => 'Enable alerts' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            modelValue: false,
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        { default: () => 'Enable alerts' },
+                    );
+                },
+            }),
+        );
 
         const native = container.querySelector('input') as HTMLInputElement;
         expect(native.getAttribute('role')).toBe('switch');
@@ -29,15 +35,21 @@ describe('Switch', () => {
 
     it('does not emit updates when disabled', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Switch, {
-                    disabled: true,
-                    modelValue: false,
-                    'onUpdate:modelValue': onUpdate,
-                }, { default: () => 'Disabled' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            disabled: true,
+                            modelValue: false,
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        { default: () => 'Disabled' },
+                    );
+                },
+            }),
+        );
 
         const root = container.querySelector('.rp-switch')!;
         const native = container.querySelector('input') as HTMLInputElement;
@@ -52,13 +64,19 @@ describe('Switch', () => {
     });
 
     it('renders checked state', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Switch, {
-                    modelValue: true,
-                }, { default: () => 'Enabled' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            modelValue: true,
+                        },
+                        { default: () => 'Enabled' },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
@@ -72,18 +90,24 @@ describe('Switch', () => {
     });
 
     it('applies direct state and ARIA props', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Switch, {
-                    id: 'notifications-control',
-                    invalid: true,
-                    labelledby: 'notifications-label',
-                    describedby: 'notifications-description notifications-message',
-                    modelValue: false,
-                    required: true,
-                }, { default: () => 'Email notifications' });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            id: 'notifications-control',
+                            invalid: true,
+                            labelledby: 'notifications-label',
+                            describedby: 'notifications-description notifications-message',
+                            modelValue: false,
+                            required: true,
+                        },
+                        { default: () => 'Email notifications' },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
@@ -95,7 +119,9 @@ describe('Switch', () => {
         expect(native.getAttribute('aria-required')).toBe('true');
         expect(native.getAttribute('aria-invalid')).toBe('true');
         expect(native.getAttribute('aria-labelledby')).toBe('notifications-label');
-        expect(native.getAttribute('aria-describedby')).toBe('notifications-description notifications-message');
+        expect(native.getAttribute('aria-describedby')).toBe(
+            'notifications-description notifications-message',
+        );
         expect(root.classList.contains('rp-switch--invalid')).toBe(true);
     });
 });

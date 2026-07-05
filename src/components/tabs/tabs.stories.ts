@@ -90,7 +90,10 @@ export const KeyboardNavigation: Story = {
         accountTab.focus();
         await userEvent.keyboard('{ArrowRight}');
 
-        await expect(canvas.getByRole('tab', { name: 'Security' })).toHaveAttribute('aria-selected', 'true');
+        await expect(canvas.getByRole('tab', { name: 'Security' })).toHaveAttribute(
+            'aria-selected',
+            'true',
+        );
         await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Security panel');
     },
 };

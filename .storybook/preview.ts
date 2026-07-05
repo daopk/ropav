@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/vue3-vite'
+import type { Preview } from '@storybook/vue3-vite';
 import { setup } from '@storybook/vue3-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { vaporInteropPlugin } from 'vue';
@@ -8,34 +8,34 @@ import './preview.scss';
 const defaultTheme = 'light';
 
 const preview: Preview = {
-  initialGlobals: {
-    theme: defaultTheme,
-  },
-  parameters: {
-    backgrounds: {
-      disable: true,
+    initialGlobals: {
+        theme: defaultTheme,
     },
-    controls: {
-      matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
-      },
+    parameters: {
+        backgrounds: {
+            disable: true,
+        },
+        controls: {
+            matchers: {
+                color: /(background|color)$/i,
+                date: /Date$/i,
+            },
+        },
     },
-  },
-  decorators: [
-    withThemeByClassName({
-      themes: {
-        light: '',
-        dark: 'dark',
-      },
-      defaultTheme,
-      parentSelector: 'html',
-    }),
-  ],
+    decorators: [
+        withThemeByClassName({
+            themes: {
+                light: '',
+                dark: 'dark',
+            },
+            defaultTheme,
+            parentSelector: 'html',
+        }),
+    ],
 };
 
 setup((app) => {
-  app.use(vaporInteropPlugin)
-})
+    app.use(vaporInteropPlugin);
+});
 
 export default preview;

@@ -25,12 +25,12 @@ export function useTabs(
         return `${tabsId}-panel-${safeTabId(value)}`;
     }
 
-    const rootClass = computed(() =>
-        bem('rp-tabs'),
-    );
+    const rootClass = computed(() => bem('rp-tabs'));
 
     provide<TabsContext>(tabsKey, {
-        get activeTab() { return props.modelValue; },
+        get activeTab() {
+            return props.modelValue;
+        },
         select,
         getTriggerId,
         getPanelId,
@@ -41,8 +41,9 @@ export function useTabs(
 
 function getEnabledTabs(list: HTMLElement | null) {
     if (!list) return [];
-    return Array.from(list.querySelectorAll<HTMLButtonElement>('[role="tab"]'))
-        .filter((tab) => !tab.disabled && tab.getAttribute('aria-disabled') !== 'true');
+    return Array.from(list.querySelectorAll<HTMLButtonElement>('[role="tab"]')).filter(
+        (tab) => !tab.disabled && tab.getAttribute('aria-disabled') !== 'true',
+    );
 }
 
 export function useTabsList() {

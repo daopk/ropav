@@ -1,2 +1,2 @@
-export { default as Tooltip } from "./tooltip.vue";
-export type { TooltipProps } from "./types";
+export { default as Tooltip } from './tooltip.vue';
+export type { TooltipProps } from './types';

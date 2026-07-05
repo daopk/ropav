@@ -12,10 +12,7 @@ import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
 
-export function useSelect(
-    props: Readonly<SelectProps>,
-    emitUpdate: (value: SelectValue) => void,
-) {
+export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: SelectValue) => void) {
     const selectRef = ref<HTMLElement | null>(null);
     const triggerRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);

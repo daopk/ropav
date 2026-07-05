@@ -4,14 +4,14 @@
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);
-    background-color: var(--rp-color-control-bg);
-    border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+    background-color: var(--rp-color-surface);
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
     transition:
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast);
 
     &:hover:not(.rp-input--disabled) {
-        border-color: var(--rp-color-control-border-hover);
+        border-color: var(--rp-color-border-hover);
     }
 
     &:focus-within:not(.rp-input--disabled) {
@@ -32,7 +32,7 @@
     }
 
     &--readonly {
-        background-color: var(--rp-color-control-readonly-bg);
+        background-color: var(--rp-color-surface-muted);
     }
 
     &__native {
@@ -42,16 +42,15 @@
         outline: none;
         background: transparent;
         font: inherit;
-        color: var(--rp-color-control-fg);
+        color: var(--rp-color-text);
         line-height: var(--rp-line-height-none);
 
         &::placeholder {
-            color: var(--rp-color-control-placeholder);
+            color: var(--rp-color-text-secondary);
         }
 
         &:disabled {
             cursor: not-allowed;
         }
     }
-
 }

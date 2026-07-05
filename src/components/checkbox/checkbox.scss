@@ -26,9 +26,9 @@
         width: var(--_checkbox-size);
         height: var(--_checkbox-size);
         flex-shrink: 0;
-        border: var(--rp-border-width-medium) solid var(--rp-color-control-border);
+        border: var(--rp-border-width-medium) solid var(--rp-color-border);
         border-radius: var(--rp-radius-base);
-        background-color: var(--rp-color-control-bg);
+        background-color: var(--rp-color-surface);
         transition:
             background-color var(--rp-transition-fast),
             border-color var(--rp-transition-fast);
@@ -36,8 +36,8 @@
 
     &--checked &__box,
     &--indeterminate &__box {
-        background-color: var(--rp-color-control-selected-bg);
-        border-color: var(--rp-color-control-selected-bg);
+        background-color: var(--rp-color-primary);
+        border-color: var(--rp-color-primary);
     }
 
     &--invalid &__box {
@@ -47,7 +47,7 @@
     &__icon {
         width: 12px;
         height: 12px;
-        color: var(--rp-color-control-selected-fg);
+        color: var(--rp-color-on-primary);
     }
 
     &__label {

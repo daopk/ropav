@@ -1,5 +1,9 @@
 <template>
-    <label :class="rootClass" :data-disabled="isDisabled || undefined" :data-state="isChecked ? 'checked' : 'unchecked'">
+    <label
+        :class="rootClass"
+        :data-disabled="isDisabled || undefined"
+        :data-state="isChecked ? 'checked' : 'unchecked'"
+    >
         <input
             type="radio"
             class="rp-radio__native"

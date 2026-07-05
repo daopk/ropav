@@ -8,14 +8,17 @@ function mountClickOutside(initialActive: boolean) {
     const target = ref<HTMLElement | null>(null);
     const active = ref(initialActive);
     const callback = vi.fn();
-    const wrapper = mountDomWithApp(defineComponent({
-        setup() {
-            useClickOutside(target, active, callback);
-            return () => h('div', { ref: target, id: 'target' }, [
-                h('button', { id: 'inside', type: 'button' }, 'Inside'),
-            ]);
-        },
-    }));
+    const wrapper = mountDomWithApp(
+        defineComponent({
+            setup() {
+                useClickOutside(target, active, callback);
+                return () =>
+                    h('div', { ref: target, id: 'target' }, [
+                        h('button', { id: 'inside', type: 'button' }, 'Inside'),
+                    ]);
+            },
+        }),
+    );
 
     return { ...wrapper, active, callback };
 }

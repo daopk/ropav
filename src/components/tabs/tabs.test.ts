@@ -9,27 +9,48 @@ import TabsTrigger from './tabs-trigger.vue';
 
 describe('Tabs', () => {
     it('supports arrow navigation with trigger and panel linkage', async () => {
-        const container = mountDom(defineComponent({
-            setup() {
-                const active = ref('one');
-                return () => h(Tabs, {
-                    modelValue: active.value,
-                    'onUpdate:modelValue': (value: string) => { active.value = value; },
-                }, {
-                    default: () => [
-                        h(TabsList, null, {
-                            default: () => [
-                                h(TabsTrigger, { value: 'one' }, { default: () => 'One' }),
-                                h(TabsTrigger, { value: 'disabled', disabled: true }, { default: () => 'Disabled' }),
-                                h(TabsTrigger, { value: 'two' }, { default: () => 'Two' }),
-                            ],
-                        }),
-                        h(TabPanel, { value: 'one' }, { default: () => 'One panel' }),
-                        h(TabPanel, { value: 'two' }, { default: () => 'Two panel' }),
-                    ],
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const active = ref('one');
+                    return () =>
+                        h(
+                            Tabs,
+                            {
+                                modelValue: active.value,
+                                'onUpdate:modelValue': (value: string) => {
+                                    active.value = value;
+                                },
+                            },
+                            {
+                                default: () => [
+                                    h(TabsList, null, {
+                                        default: () => [
+                                            h(
+                                                TabsTrigger,
+                                                { value: 'one' },
+                                                { default: () => 'One' },
+                                            ),
+                                            h(
+                                                TabsTrigger,
+                                                { value: 'disabled', disabled: true },
+                                                { default: () => 'Disabled' },
+                                            ),
+                                            h(
+                                                TabsTrigger,
+                                                { value: 'two' },
+                                                { default: () => 'Two' },
+                                            ),
+                                        ],
+                                    }),
+                                    h(TabPanel, { value: 'one' }, { default: () => 'One panel' }),
+                                    h(TabPanel, { value: 'two' }, { default: () => 'Two panel' }),
+                                ],
+                            },
+                        );
+                },
+            }),
+        );
 
         await flush();
 
@@ -41,8 +62,9 @@ describe('Tabs', () => {
         keydown(list, 'ArrowRight');
         await flush();
 
-        const selected = Array.from(container.querySelectorAll('[role="tab"]'))
-            .find((tab) => tab.getAttribute('aria-selected') === 'true');
+        const selected = Array.from(container.querySelectorAll('[role="tab"]')).find(
+            (tab) => tab.getAttribute('aria-selected') === 'true',
+        );
         expect(selected?.textContent).toBe('Two');
         expect(container.querySelector('[role="tabpanel"]')?.textContent).toBe('Two panel');
     });
@@ -50,28 +72,45 @@ describe('Tabs', () => {
     it('keeps trigger buttons from submitting parent forms', async () => {
         const onSubmit = vi.fn((e: Event) => e.preventDefault());
 
-        const container = mountDom(defineComponent({
-            setup() {
-                const tab = ref('a');
-                return () => h('form', { onSubmit }, [
-                    h(Tabs, {
-                        modelValue: tab.value,
-                        'onUpdate:modelValue': (value: string) => { tab.value = value; },
-                    }, {
-                        default: () => [
-                            h(TabsList, null, {
-                                default: () => [
-                                    h(TabsTrigger, { value: 'a' }, { default: () => 'A' }),
-                                    h(TabsTrigger, { value: 'b' }, { default: () => 'B' }),
-                                ],
-                            }),
-                            h(TabPanel, { value: 'a' }, { default: () => 'A panel' }),
-                            h(TabPanel, { value: 'b' }, { default: () => 'B panel' }),
-                        ],
-                    }),
-                ]);
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const tab = ref('a');
+                    return () =>
+                        h('form', { onSubmit }, [
+                            h(
+                                Tabs,
+                                {
+                                    modelValue: tab.value,
+                                    'onUpdate:modelValue': (value: string) => {
+                                        tab.value = value;
+                                    },
+                                },
+                                {
+                                    default: () => [
+                                        h(TabsList, null, {
+                                            default: () => [
+                                                h(
+                                                    TabsTrigger,
+                                                    { value: 'a' },
+                                                    { default: () => 'A' },
+                                                ),
+                                                h(
+                                                    TabsTrigger,
+                                                    { value: 'b' },
+                                                    { default: () => 'B' },
+                                                ),
+                                            ],
+                                        }),
+                                        h(TabPanel, { value: 'a' }, { default: () => 'A panel' }),
+                                        h(TabPanel, { value: 'b' }, { default: () => 'B panel' }),
+                                    ],
+                                },
+                            ),
+                        ]);
+                },
+            }),
+        );
 
         await flush();
 

@@ -12,14 +12,16 @@ function typeTextarea(el: HTMLTextAreaElement, value: string) {
 describe('Textarea', () => {
     it('emits string updates from native textarea input', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Textarea, {
-                    modelValue: '',
-                    'onUpdate:modelValue': onUpdate,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        modelValue: '',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
 
         const native = container.querySelector('textarea') as HTMLTextAreaElement;
         typeTextarea(native, 'Hello world');
@@ -30,15 +32,17 @@ describe('Textarea', () => {
     });
 
     it('renders rows and readonly state', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Textarea, {
-                    modelValue: 'Notes',
-                    readonly: true,
-                    rows: 6,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        modelValue: 'Notes',
+                        readonly: true,
+                        rows: 6,
+                    });
+                },
+            }),
+        );
 
         await flush();
 
@@ -52,19 +56,21 @@ describe('Textarea', () => {
     });
 
     it('applies direct state and ARIA props', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Textarea, {
-                    id: 'bio-control',
-                    disabled: true,
-                    invalid: true,
-                    labelledby: 'bio-label',
-                    describedby: 'external-help bio-description bio-message',
-                    modelValue: '',
-                    required: true,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        id: 'bio-control',
+                        disabled: true,
+                        invalid: true,
+                        labelledby: 'bio-label',
+                        describedby: 'external-help bio-description bio-message',
+                        modelValue: '',
+                        required: true,
+                    });
+                },
+            }),
+        );
 
         await flush();
 
@@ -77,7 +83,9 @@ describe('Textarea', () => {
         expect(native.getAttribute('aria-required')).toBe('true');
         expect(native.getAttribute('aria-invalid')).toBe('true');
         expect(native.getAttribute('aria-labelledby')).toBe('bio-label');
-        expect(native.getAttribute('aria-describedby')).toBe('external-help bio-description bio-message');
+        expect(native.getAttribute('aria-describedby')).toBe(
+            'external-help bio-description bio-message',
+        );
         expect(root.classList.contains('rp-textarea--disabled')).toBe(true);
         expect(root.classList.contains('rp-textarea--invalid')).toBe(true);
     });

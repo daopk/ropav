@@ -6,7 +6,8 @@
     line-height: var(--rp-line-height-none);
     border: var(--rp-border-width-thin) solid transparent;
     cursor: pointer;
-    transition: background-color var(--rp-transition-fast),
+    transition:
+        background-color var(--rp-transition-fast),
         color var(--rp-transition-fast),
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast);
@@ -22,11 +23,11 @@
         color: var(--rp-color-on-primary);
 
         &:hover:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 90%, var(--rp-color-black));
+            background-color: color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
         }
 
         &:active:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rp-color-primary) 80%, var(--rp-color-black));
+            background-color: color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
         }
     }
 
@@ -71,5 +72,7 @@
 }
 
 @keyframes rp-button-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }

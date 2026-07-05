@@ -18,9 +18,7 @@ export function useTooltip(props: Readonly<TooltipProps>) {
         visibility.closeImmediate();
     }
 
-    const tipClass = computed(() =>
-        bem('rp-tooltip__tip', props.placement ?? 'top'),
-    );
+    const tipClass = computed(() => bem('rp-tooltip__tip', props.placement ?? 'top'));
 
     return {
         tooltipId,

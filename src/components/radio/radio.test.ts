@@ -8,25 +8,33 @@ import RadioGroup from './radio-group.vue';
 describe('Radio', () => {
     it('requires a RadioGroup provider', () => {
         expect(() => {
-            mountDom(defineComponent({
-                render() {
-                    return h(Radio, { value: 'standalone' }, { default: () => 'Standalone' });
-                },
-            }));
+            mountDom(
+                defineComponent({
+                    render() {
+                        return h(Radio, { value: 'standalone' }, { default: () => 'Standalone' });
+                    },
+                }),
+            );
         }).toThrow('[Ropav] <RpRadio> must be used inside its parent provider component.');
     });
 
     it('renders inside RadioGroup', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(RadioGroup, { modelValue: 'apple' }, {
-                    default: () => [
-                        h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
-                        h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
-                    ],
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        { modelValue: 'apple' },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
@@ -36,20 +44,26 @@ describe('Radio', () => {
 
     it('emits selected values and shares the configured group name', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(RadioGroup, {
-                    modelValue: 'apple',
-                    name: 'fruit',
-                    'onUpdate:modelValue': onUpdate,
-                }, {
-                    default: () => [
-                        h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
-                        h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
-                    ],
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            modelValue: 'apple',
+                            name: 'fruit',
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
@@ -67,39 +81,59 @@ describe('Radio', () => {
         const disabledGroupUpdate = vi.fn();
         const disabledOptionUpdate = vi.fn();
 
-        const disabledGroup = mountDom(defineComponent({
-            render() {
-                return h(RadioGroup, {
-                    disabled: true,
-                    modelValue: 'apple',
-                    'onUpdate:modelValue': disabledGroupUpdate,
-                }, {
-                    default: () => [
-                        h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
-                        h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
-                    ],
-                });
-            },
-        }));
+        const disabledGroup = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            disabled: true,
+                            modelValue: 'apple',
+                            'onUpdate:modelValue': disabledGroupUpdate,
+                        },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
 
-        const disabledOption = mountDom(defineComponent({
-            render() {
-                return h(RadioGroup, {
-                    modelValue: 'apple',
-                    'onUpdate:modelValue': disabledOptionUpdate,
-                }, {
-                    default: () => [
-                        h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
-                        h(Radio, { value: 'banana', disabled: true }, { default: () => 'Banana' }),
-                    ],
-                });
-            },
-        }));
+        const disabledOption = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            modelValue: 'apple',
+                            'onUpdate:modelValue': disabledOptionUpdate,
+                        },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(
+                                    Radio,
+                                    { value: 'banana', disabled: true },
+                                    { default: () => 'Banana' },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
 
         await flush();
 
-        const disabledGroupBanana = disabledGroup.querySelector('input[value="banana"]') as HTMLInputElement;
-        const disabledOptionBanana = disabledOption.querySelector('input[value="banana"]') as HTMLInputElement;
+        const disabledGroupBanana = disabledGroup.querySelector(
+            'input[value="banana"]',
+        ) as HTMLInputElement;
+        const disabledOptionBanana = disabledOption.querySelector(
+            'input[value="banana"]',
+        ) as HTMLInputElement;
 
         disabledGroupBanana.click();
         disabledOptionBanana.click();
@@ -112,23 +146,29 @@ describe('Radio', () => {
     });
 
     it('applies direct state and ARIA props on the group', async () => {
-        const container = mountDom(defineComponent({
-            render() {
-                return h(RadioGroup, {
-                    id: 'fruit-control',
-                    describedby: 'fruit-description fruit-message',
-                    invalid: true,
-                    labelledby: 'fruit-label',
-                    modelValue: 'apple',
-                    required: true,
-                }, {
-                    default: () => [
-                        h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
-                        h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
-                    ],
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            id: 'fruit-control',
+                            describedby: 'fruit-description fruit-message',
+                            invalid: true,
+                            labelledby: 'fruit-label',
+                            modelValue: 'apple',
+                            required: true,
+                        },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
 
         await flush();
 

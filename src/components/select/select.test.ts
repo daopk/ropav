@@ -19,12 +19,14 @@ describe('Select', () => {
         const updates: Array<string | number | null> = [];
         let select!: ReturnType<typeof useSelect>;
 
-        mountDom(defineComponent({
-            setup() {
-                select = useSelect(props, (value) => updates.push(value));
-                return () => h('div');
-            },
-        }));
+        mountDom(
+            defineComponent({
+                setup() {
+                    select = useSelect(props, (value) => updates.push(value));
+                    return () => h('div');
+                },
+            }),
+        );
 
         select.onTriggerKeydown(keyEvent('ArrowDown'));
         await nextTick();
@@ -41,19 +43,21 @@ describe('Select', () => {
 
     it('navigates options with disabled items skipped', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Select, {
-                    modelValue: null,
-                    options: [
-                        { label: 'Alpha', value: 'a' },
-                        { label: 'Beta', value: 'b', disabled: true },
-                        { label: 'Gamma', value: 'c' },
-                    ],
-                    'onUpdate:modelValue': onUpdate,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        modelValue: null,
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b', disabled: true },
+                            { label: 'Gamma', value: 'c' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
 
         const trigger = container.querySelector('[role="combobox"]')!;
         keydown(trigger, 'ArrowDown');
@@ -68,19 +72,21 @@ describe('Select', () => {
 
     it('keeps disabled select closed and non-interactive', async () => {
         const onUpdate = vi.fn();
-        const container = mountDom(defineComponent({
-            render() {
-                return h(Select, {
-                    disabled: true,
-                    modelValue: null,
-                    options: [
-                        { label: 'Alpha', value: 'a' },
-                        { label: 'Beta', value: 'b' },
-                    ],
-                    'onUpdate:modelValue': onUpdate,
-                });
-            },
-        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        disabled: true,
+                        modelValue: null,
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
 
         const trigger = container.querySelector('[role="combobox"]')!;
         click(trigger);
@@ -93,5 +99,4 @@ describe('Select', () => {
         expect(container.querySelector('[role="listbox"]')).toBeNull();
         expect(onUpdate).not.toHaveBeenCalled();
     });
-
 });

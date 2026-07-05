@@ -1,5 +1,9 @@
 <template>
-    <label :class="rootClass" :data-disabled="control.disabled || undefined" :data-state="modelValue ? 'checked' : 'unchecked'">
+    <label
+        :class="rootClass"
+        :data-disabled="control.disabled || undefined"
+        :data-state="modelValue ? 'checked' : 'unchecked'"
+    >
         <input
             :id="control.id"
             :name="name"

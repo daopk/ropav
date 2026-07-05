@@ -8,7 +8,12 @@
         @focusout="onHide"
     >
         <slot />
-        <span v-if="isVisible && !disabled && $slots.content" :id="tooltipId" :class="tipClass" role="tooltip">
+        <span
+            v-if="isVisible && !disabled && $slots.content"
+            :id="tooltipId"
+            :class="tipClass"
+            role="tooltip"
+        >
             <slot name="content" />
         </span>
     </span>

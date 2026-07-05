@@ -20,12 +20,14 @@ describe('useRequiredInject', () => {
             },
         });
 
-        mountDom(defineComponent({
-            setup() {
-                provide(key, { message: 'available' });
-                return () => h(Child);
-            },
-        }));
+        mountDom(
+            defineComponent({
+                setup() {
+                    provide(key, { message: 'available' });
+                    return () => h(Child);
+                },
+            }),
+        );
 
         expect(injected).toEqual({ message: 'available' });
     });
@@ -33,11 +35,15 @@ describe('useRequiredInject', () => {
     it('throws a helpful error when the provider is missing', () => {
         const key = Symbol('missing') as InjectionKey<ProvidedValue>;
 
-        expect(() => mountDom(defineComponent({
-            setup() {
-                useRequiredInject(key, 'LonelyChild');
-                return () => h('div');
-            },
-        }))).toThrow('[Ropav] <LonelyChild> must be used inside its parent provider component.');
+        expect(() =>
+            mountDom(
+                defineComponent({
+                    setup() {
+                        useRequiredInject(key, 'LonelyChild');
+                        return () => h('div');
+                    },
+                }),
+            ),
+        ).toThrow('[Ropav] <LonelyChild> must be used inside its parent provider component.');
     });
 });

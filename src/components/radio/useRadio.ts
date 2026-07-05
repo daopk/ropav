@@ -48,10 +48,18 @@ export function useRadioGroup(
     const groupName = computed(() => props.name ?? `${control.id ?? generatedName}-radio`);
 
     provide<RadioGroupContext>(radioGroupKey, {
-        get modelValue() { return props.modelValue; },
-        get name() { return groupName.value; },
-        get disabled() { return control.disabled; },
-        get required() { return control.required; },
+        get modelValue() {
+            return props.modelValue;
+        },
+        get name() {
+            return groupName.value;
+        },
+        get disabled() {
+            return control.disabled;
+        },
+        get required() {
+            return control.required;
+        },
         select(value) {
             emitUpdate(value);
         },

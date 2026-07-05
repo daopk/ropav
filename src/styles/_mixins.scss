@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 @mixin flex-center {
     display: inline-flex;
     align-items: center;
@@ -5,7 +7,7 @@
 }
 
 @mixin focus-ring {
-    border-color: var(--rp-color-control-border-focus);
+    border-color: var(--rp-color-primary);
     box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
 }
 
@@ -75,7 +77,11 @@
     }
 }
 
-@mixin menu-surface($z-index: var(--rp-z-index-dropdown), $surface: var(--rp-color-surface-raised), $radius: var(--rp-radius-lg)) {
+@mixin menu-surface(
+    $z-index: $z-index-dropdown,
+    $surface: var(--rp-color-surface-raised),
+    $radius: var(--rp-radius-lg)
+) {
     z-index: $z-index;
     background-color: $surface;
     border: var(--rp-border-width-thin) solid var(--rp-color-border);
@@ -99,7 +105,9 @@
 
 @mixin semantic-colors($var-name) {
     @each $name in primary, secondary, success, warning, danger, info {
-        &--#{$name} { #{$var-name}: var(--rp-color-#{$name}-fg); }
+        &--#{$name} {
+            #{$var-name}: var(--rp-color-#{$name}-fg);
+        }
     }
 }
 
@@ -116,11 +124,19 @@
     @each $name in primary, secondary, success, warning, danger, info {
         &--#{$name} {
             #{$prefix}-bg: var(--rp-color-#{$name});
-            #{$prefix}-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 90%, var(--rp-color-black));
-            #{$prefix}-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 80%, var(--rp-color-black));
+            #{$prefix}-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 90%, #{$color-black});
+            #{$prefix}-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 80%, #{$color-black});
             #{$prefix}-subtle-bg: color-mix(in srgb, var(--rp-color-#{$name}) 10%, transparent);
-            #{$prefix}-subtle-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 14%, transparent);
-            #{$prefix}-subtle-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 18%, transparent);
+            #{$prefix}-subtle-bg-hover: color-mix(
+                in srgb,
+                var(--rp-color-#{$name}) 14%,
+                transparent
+            );
+            #{$prefix}-subtle-bg-active: color-mix(
+                in srgb,
+                var(--rp-color-#{$name}) 18%,
+                transparent
+            );
             #{$prefix}-fg: var(--rp-color-#{$name}-fg);
             #{$prefix}-on-bg: var(--rp-color-on-#{$name});
         }

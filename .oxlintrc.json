@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "plugins": ["unicorn", "typescript", "oxc", "import", "vue", "vitest"],
+  "ignorePatterns": ["dist/**", "storybook-static/**"],
+  "rules": {
+    "import/no-unassigned-import": "off",
+    "vitest/require-mock-type-parameters": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "eslint/no-await-in-loop": "off"
+      }
+    }
+  ]
+}

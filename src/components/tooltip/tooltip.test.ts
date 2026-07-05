@@ -8,12 +8,14 @@ import { useTooltip } from './useTooltip';
 function mountTooltip(overrides: TooltipProps = {}) {
     const props = reactive<TooltipProps>({ delay: 100, ...overrides });
     let tooltip!: ReturnType<typeof useTooltip>;
-    const wrapper = mountDomWithApp(defineComponent({
-        setup() {
-            tooltip = useTooltip(props);
-            return () => h('div');
-        },
-    }));
+    const wrapper = mountDomWithApp(
+        defineComponent({
+            setup() {
+                tooltip = useTooltip(props);
+                return () => h('div');
+            },
+        }),
+    );
 
     return { ...wrapper, props, tooltip };
 }

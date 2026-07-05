@@ -17,8 +17,9 @@ export function useListNavigation<T extends ListNavigationItem>(
     const loop = options.loop ?? true;
 
     const enabledIndexes = computed(() =>
-        options.items()
-            .map((item, index) => item.disabled ? -1 : index)
+        options
+            .items()
+            .map((item, index) => (item.disabled ? -1 : index))
             .filter((index) => index >= 0),
     );
 
@@ -38,9 +39,18 @@ export function useListNavigation<T extends ListNavigationItem>(
             return;
         }
 
-        const next = direction === 1
-            ? indexes.find((i) => i > index)
-            : [...indexes].reverse().find((i) => i < index);
+        let next: number | undefined;
+        if (direction === 1) {
+            next = indexes.find((i) => i > index);
+        } else {
+            for (let i = indexes.length - 1; i >= 0; i -= 1) {
+                const candidate = indexes[i]!;
+                if (candidate < index) {
+                    next = candidate;
+                    break;
+                }
+            }
+        }
 
         if (next !== undefined) {
             localFocusedIndex.value = next;
@@ -73,7 +83,11 @@ export function useListNavigation<T extends ListNavigationItem>(
 
     function moveFocus(delta: 1 | -1) {
         if (localFocusedIndex.value < 0) {
-            delta === 1 ? focusFirst() : focusLast();
+            if (delta === 1) {
+                focusFirst();
+            } else {
+                focusLast();
+            }
             return;
         }
         setNearest(localFocusedIndex.value + delta, delta);

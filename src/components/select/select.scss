@@ -13,12 +13,12 @@
         @include flex-center;
         justify-content: space-between;
         width: 100%;
-        min-width: var(--rp-component-menu-min-width);
+        min-width: $component-menu-min-width;
         height: var(--rp-size-control-md);
         padding: 0 var(--rp-spacing-4);
         font-size: var(--rp-font-size-base);
-        background-color: var(--rp-color-control-bg);
-        border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+        background-color: var(--rp-color-surface);
+        border: var(--rp-border-width-thin) solid var(--rp-color-border);
         border-radius: var(--rp-radius-lg);
         cursor: pointer;
         transition:
@@ -27,7 +27,7 @@
         gap: var(--rp-spacing-2);
 
         &:hover {
-            border-color: var(--rp-color-control-border-hover);
+            border-color: var(--rp-color-border-hover);
         }
 
         &:focus-visible {
@@ -49,22 +49,21 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: var(--rp-color-control-fg);
+        color: var(--rp-color-text);
     }
 
     &__placeholder {
-        color: var(--rp-color-control-placeholder);
+        color: var(--rp-color-text-secondary);
     }
 
     &__arrow {
         @include inline-icon;
-        color: var(--rp-color-control-icon);
+        color: var(--rp-color-text-secondary);
         transition: transform var(--rp-transition-fast);
 
         &--open {
             transform: rotate(180deg);
         }
-
     }
 
     &__dropdown {
@@ -72,8 +71,8 @@
         top: calc(100% + var(--rp-spacing-1));
         left: 0;
         right: 0;
-        @include menu-surface(var(--rp-z-index-dropdown), var(--rp-color-surface-raised), var(--rp-radius-lg));
-        max-height: var(--rp-component-menu-max-height);
+        @include menu-surface;
+        max-height: $component-menu-max-height;
         overflow-y: auto;
     }
 
