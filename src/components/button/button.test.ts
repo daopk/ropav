@@ -5,6 +5,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Button from './button.vue';
 
 describe('Button', () => {
+    const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
     it('uses button type by default and renders slots', async () => {
@@ -143,5 +144,30 @@ describe('Button', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--size-xl']);
+    });
+
+    it('adds a radius modifier for each supported radius', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        radii.map((radius) => h(Button, { radius }, { default: () => radius })),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const buttons = [...container.querySelectorAll('button')];
+
+        expect(buttons).toHaveLength(radii.length);
+        for (const [index, radius] of radii.entries()) {
+            expect([...buttons[index].classList]).toEqual([
+                'rp-button',
+                `rp-button--radius-${radius}`,
+            ]);
+        }
     });
 });

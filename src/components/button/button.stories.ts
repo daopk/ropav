@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import Button from './button.vue';
 
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
@@ -21,6 +22,10 @@ const meta = {
         size: {
             control: 'select',
             options: [undefined, ...sizes],
+        },
+        radius: {
+            control: 'select',
+            options: [undefined, ...radii],
         },
         type: {
             control: 'select',
@@ -61,6 +66,20 @@ export const Sizes: Story = {
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                 <Button v-for="size in sizes" :key="size" v-bind="args" :size="size">
                     {{ size }}
+                </Button>
+            </div>
+        `,
+    }),
+};
+
+export const Radii: Story = {
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args, radii }),
+        template: `
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <Button v-for="radius in radii" :key="radius" v-bind="args" :radius="radius">
+                    {{ radius }}
                 </Button>
             </div>
         `,

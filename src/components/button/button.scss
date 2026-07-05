@@ -1,8 +1,7 @@
-@mixin button-size($height, $padding-x, $font-size, $radius) {
+@mixin button-size($height, $padding-x, $font-size) {
     --_rp-button-height: #{$height};
     --_rp-button-padding-x: #{$padding-x};
     --_rp-button-font-size: #{$font-size};
-    --_rp-button-radius: #{$radius};
 }
 
 @mixin button-color($color) {
@@ -44,7 +43,7 @@
     --_rp-button-height: var(--rp-size-control-md);
     --_rp-button-padding-x: var(--rp-spacing-4);
     --_rp-button-font-size: var(--rp-font-size-base);
-    --_rp-button-radius: var(--rp-radius-lg);
+    --_rp-button-radius: var(--rp-radius-sm);
     --_rp-button-shadow: var(--rp-shadow-sm);
     --_rp-button-shadow-hover: var(--rp-shadow-base);
     --_rp-button-shadow-active: var(--rp-shadow-sm);
@@ -97,8 +96,7 @@
         @include button-size(
             calc(var(--rp-size-control-sm) - var(--rp-spacing-1)),
             var(--rp-spacing-2),
-            var(--rp-font-size-xs),
-            var(--rp-radius-md)
+            var(--rp-font-size-xs)
         );
     }
 
@@ -106,8 +104,7 @@
         @include button-size(
             var(--rp-size-control-sm),
             var(--rp-spacing-3),
-            var(--rp-font-size-sm),
-            var(--rp-radius-md)
+            var(--rp-font-size-sm)
         );
     }
 
@@ -115,8 +112,7 @@
         @include button-size(
             var(--rp-size-control-lg),
             var(--rp-spacing-5),
-            var(--rp-font-size-lg),
-            var(--rp-radius-lg)
+            var(--rp-font-size-lg)
         );
     }
 
@@ -124,9 +120,23 @@
         @include button-size(
             calc(var(--rp-size-control-lg) + var(--rp-spacing-2)),
             var(--rp-spacing-6),
-            var(--rp-font-size-lg),
-            var(--rp-radius-xl)
+            var(--rp-font-size-lg)
         );
+    }
+
+    @each $radius,
+        $value
+            in (
+                xs: var(--rp-radius-sm),
+                sm: var(--rp-radius-base),
+                md: var(--rp-radius-md),
+                lg: var(--rp-radius-lg),
+                xl: var(--rp-radius-xl)
+            )
+    {
+        &--radius-#{$radius} {
+            --_rp-button-radius: #{$value};
+        }
     }
 
     &--solid {
