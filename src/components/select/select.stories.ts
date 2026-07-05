@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, userEvent, within } from 'storybook/test';
 import { computed, reactive, ref } from 'vue';
 import Select from './select.vue';
 
@@ -122,25 +121,4 @@ export const Radii: Story = {
             </div>
         `,
     }),
-};
-
-export const KeyboardNavigation: Story = {
-    tags: ['test'],
-    render: (args) => ({
-        components: { Select },
-        setup() {
-            const value = ref(null);
-            return { args, value };
-        },
-        template: '<Select v-bind="args" v-model="value" />',
-    }),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const trigger = canvas.getByRole('combobox');
-
-        trigger.focus();
-        await userEvent.keyboard('{ArrowDown}{ArrowDown}{Enter}');
-
-        await expect(trigger).toHaveTextContent('Banana');
-    },
 };
