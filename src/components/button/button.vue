@@ -1,7 +1,7 @@
 <template>
-    <button :class="rootClass" :disabled="disabled || loading || undefined" :type="type">
-        <IconLoaderCircle v-if="loading" class="rp-button__spinner" aria-hidden="true" />
-        <span v-if="($slots.left || $slots.prefix) && !loading" class="rp-button__prefix">
+    <button :class="rootClass" :disabled="disabled || isLoading || undefined" :type="type">
+        <IconLoaderCircle v-if="isLoading" class="rp-button__spinner" aria-hidden="true" />
+        <span v-if="($slots.left || $slots.prefix) && !isLoading" class="rp-button__prefix">
             <slot v-if="$slots.left" name="left" />
             <slot v-else name="prefix" />
         </span>
@@ -28,6 +28,8 @@ const props = withDefaults(defineProps<ButtonProps>(), {
     disabled: false,
     loading: false,
 });
+
+const isLoading = computed(() => props.loading && !props.disabled);
 
 const rootClass = computed(() =>
     bem('rp-button', {

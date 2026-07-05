@@ -93,6 +93,35 @@ describe('Button', () => {
         expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
     });
 
+    it('lets disabled override the loading state', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            disabled: true,
+                            loading: true,
+                        },
+                        {
+                            default: () => 'Save',
+                            prefix: () => h('span', { class: 'prefix-icon' }, 'Prefix'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(button.disabled).toBe(true);
+        expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
+        expect(container.querySelector('.rp-button__prefix .prefix-icon')).toBeTruthy();
+        expect(button.textContent).toContain('Save');
+    });
+
     it('adds the solid primary style only when requested', async () => {
         const container = mountDom(
             defineComponent({
