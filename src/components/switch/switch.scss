@@ -1,4 +1,24 @@
+@mixin switch-color($color) {
+    --_switch-color: var(--rp-color-#{$color});
+}
+
+@mixin switch-size($track-w, $track-h, $thumb-size, $font-size) {
+    --_track-w: #{$track-w};
+    --_track-h: #{$track-h};
+    --_thumb-size: #{$thumb-size};
+    --_switch-font-size: #{$font-size};
+}
+
 .rp-switch {
+    --_switch-color: var(--rp-color-primary);
+    --_switch-font-size: var(--rp-font-size-base);
+    --_track-w: 40px;
+    --_track-h: 22px;
+    --_thumb-size: 18px;
+    --_thumb-offset: 2px;
+    --_track-bg: var(--rp-color-border);
+    --_thumb-bg: #{$color-white};
+
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -9,13 +29,7 @@
         @include disabled-state;
     }
     gap: var(--rp-spacing-2);
-    font-size: var(--rp-font-size-base);
-    --_track-w: 40px;
-    --_track-h: 22px;
-    --_thumb-size: 18px;
-    --_thumb-offset: 2px;
-    --_track-bg: var(--rp-color-border);
-    --_thumb-bg: #{$color-white};
+    font-size: var(--_switch-font-size);
 
     html.dark & {
         --_thumb-bg: var(--rp-color-surface-inverted);
@@ -43,7 +57,7 @@
     }
 
     &--checked &__track {
-        background-color: var(--rp-color-primary);
+        background-color: var(--_switch-color);
     }
 
     &--invalid &__track {
@@ -71,5 +85,31 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
+    }
+
+    @each $color in primary, secondary, success, warning, danger, info {
+        &--color-#{$color} {
+            @include switch-color($color);
+        }
+    }
+
+    &--size-xs {
+        @include switch-size(28px, 16px, 12px, var(--rp-font-size-xs));
+    }
+
+    &--size-sm {
+        @include switch-size(34px, 18px, 14px, var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include switch-size(40px, 22px, 18px, var(--rp-font-size-base));
+    }
+
+    &--size-lg {
+        @include switch-size(48px, 26px, 22px, var(--rp-font-size-lg));
+    }
+
+    &--size-xl {
+        @include switch-size(56px, 30px, 26px, var(--rp-font-size-xl));
     }
 }

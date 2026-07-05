@@ -5,6 +5,9 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Switch from './switch.vue';
 
 describe('Switch', () => {
+    const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
     it('emits model updates from native switch changes', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -123,5 +126,88 @@ describe('Switch', () => {
             'notifications-description notifications-message',
         );
         expect(root.classList.contains('rp-switch--invalid')).toBe(true);
+    });
+
+    it('adds color and size modifiers when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            color: 'success',
+                            modelValue: true,
+                            size: 'lg',
+                        },
+                        { default: () => 'Styled' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-switch')!;
+
+        expect([...root.classList]).toEqual([
+            'rp-switch',
+            'rp-switch--checked',
+            'rp-switch--color-success',
+            'rp-switch--size-lg',
+        ]);
+    });
+
+    it('adds a color modifier for each supported color', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        colors.map((color) =>
+                            h(Switch, { color, modelValue: false }, { default: () => color }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const switches = [...container.querySelectorAll('.rp-switch')];
+
+        expect(switches).toHaveLength(colors.length);
+        for (const [index, color] of colors.entries()) {
+            expect([...switches[index].classList]).toEqual([
+                'rp-switch',
+                `rp-switch--color-${color}`,
+            ]);
+        }
+    });
+
+    it('adds a size modifier for each supported size', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        sizes.map((size) =>
+                            h(Switch, { modelValue: false, size }, { default: () => size }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const switches = [...container.querySelectorAll('.rp-switch')];
+
+        expect(switches).toHaveLength(sizes.length);
+        for (const [index, size] of sizes.entries()) {
+            expect([...switches[index].classList]).toEqual([
+                'rp-switch',
+                `rp-switch--size-${size}`,
+            ]);
+        }
     });
 });

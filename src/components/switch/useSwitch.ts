@@ -11,6 +11,8 @@ export function useSwitch(props: Readonly<SwitchProps>, emitUpdate: (value: bool
             checked: props.modelValue,
             disabled: control.disabled,
             invalid: control.invalid,
+            [`color-${props.color}`]: Boolean(props.color),
+            [`size-${props.size}`]: Boolean(props.size),
         }),
     );
 
