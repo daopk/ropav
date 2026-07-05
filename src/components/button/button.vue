@@ -1,16 +1,14 @@
 <template>
     <button :class="rootClass" :disabled="disabled || isLoading || undefined" :type="type">
         <IconLoaderCircle v-if="isLoading" class="rp-button__spinner" aria-hidden="true" />
-        <span v-if="($slots.left || $slots.prefix) && !isLoading" class="rp-button__prefix">
-            <slot v-if="$slots.left" name="left" />
-            <slot v-else name="prefix" />
+        <span v-if="$slots.left && !isLoading" class="rp-button__left">
+            <slot name="left" />
         </span>
         <span class="rp-button__label">
             <slot />
         </span>
-        <span v-if="$slots.right || $slots.suffix" class="rp-button__suffix">
-            <slot v-if="$slots.right" name="right" />
-            <slot v-else name="suffix" />
+        <span v-if="$slots.right" class="rp-button__right">
+            <slot name="right" />
         </span>
     </button>
 </template>

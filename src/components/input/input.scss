@@ -1,4 +1,13 @@
+@mixin input-size($height, $padding-x, $font-size) {
+    --_rp-input-height: #{$height};
+    --_rp-input-padding-x: #{$padding-x};
+    --_rp-input-font-size: #{$font-size};
+}
+
 .rp-input {
+    --_rp-input-height: var(--rp-size-control-md);
+    --_rp-input-padding-x: var(--rp-spacing-3);
+    --_rp-input-font-size: var(--rp-font-size-base);
     --_rp-input-radius: var(--rp-radius-sm);
 
     @include flex-center;
@@ -21,9 +30,42 @@
         @include focus-ring;
     }
 
-    height: var(--rp-size-control-md);
-    font-size: var(--rp-font-size-base);
+    height: var(--_rp-input-height);
+    padding: 0 var(--_rp-input-padding-x);
+    font-size: var(--_rp-input-font-size);
     border-radius: var(--_rp-input-radius);
+
+    &--size-xs {
+        @include input-size(
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-1)),
+            var(--rp-spacing-1),
+            var(--rp-font-size-xs)
+        );
+    }
+
+    &--size-sm {
+        @include input-size(var(--rp-size-control-sm), var(--rp-spacing-2), var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include input-size(
+            var(--rp-size-control-md),
+            var(--rp-spacing-3),
+            var(--rp-font-size-base)
+        );
+    }
+
+    &--size-lg {
+        @include input-size(var(--rp-size-control-lg), var(--rp-spacing-4), var(--rp-font-size-lg));
+    }
+
+    &--size-xl {
+        @include input-size(
+            calc(var(--rp-size-control-lg) + var(--rp-spacing-2)),
+            var(--rp-spacing-5),
+            var(--rp-font-size-lg)
+        );
+    }
 
     @each $radius,
         $value
@@ -74,7 +116,7 @@
         width: 100%;
         height: 100%;
         min-width: 0;
-        padding: 0 var(--rp-spacing-4);
+        padding: 0;
         border: none;
         outline: none;
         background: transparent;
@@ -89,5 +131,13 @@
         &:disabled {
             cursor: not-allowed;
         }
+    }
+
+    &__left,
+    &__right {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        color: color-mix(in srgb, var(--rp-color-text-secondary) 50%, var(--rp-color-border));
     }
 }

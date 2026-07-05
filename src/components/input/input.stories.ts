@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
+import IconCircleCheck from '~icons/lucide/circle-check';
+import IconSearch from '~icons/lucide/search';
 import Input from './input.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
     title: 'Components/Input',
@@ -17,6 +20,10 @@ const meta = {
             control: 'select',
             options: [undefined, ...radii],
         },
+        size: {
+            control: 'select',
+            options: [undefined, ...sizes],
+        },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
@@ -27,6 +34,7 @@ const meta = {
         modelValue: '',
         type: 'text',
         radius: undefined,
+        size: undefined,
         placeholder: 'Enter text...',
         disabled: false,
         readonly: false,
@@ -58,6 +66,39 @@ export const Invalid: Story = {
 
 export const Valid: Story = {
     args: { valid: true },
+};
+
+export const Slots: Story = {
+    render: (args) => ({
+        components: { IconCircleCheck, IconSearch, Input },
+        setup: () => ({ args }),
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <Input v-bind="args" model-value="" placeholder="Search">
+                    <template #left>
+                        <IconSearch aria-hidden="true" />
+                    </template>
+                </Input>
+                <Input v-bind="args" model-value="zoi@example.com">
+                    <template #right>
+                        <IconCircleCheck aria-hidden="true" />
+                    </template>
+                </Input>
+            </div>
+        `,
+    }),
+};
+
+export const Sizes: Story = {
+    render: (args) => ({
+        components: { Input },
+        setup: () => ({ args, sizes }),
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <Input v-for="size in sizes" :key="size" v-bind="args" :size="size" :model-value="size" />
+            </div>
+        `,
+    }),
 };
 
 export const Radii: Story = {

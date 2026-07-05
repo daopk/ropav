@@ -225,8 +225,8 @@
         @include focus-ring;
     }
 
-    &__prefix,
-    &__suffix {
+    &__left,
+    &__right {
         display: inline-flex;
         align-items: center;
         flex-shrink: 0;

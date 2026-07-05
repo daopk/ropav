@@ -14,8 +14,8 @@ describe('Button', () => {
                 render() {
                     return h(Button, null, {
                         default: () => 'Save',
-                        prefix: () => h('span', { class: 'prefix-icon' }, 'P'),
-                        suffix: () => h('span', { class: 'suffix-icon' }, 'S'),
+                        left: () => h('span', { class: 'left-icon' }, 'L'),
+                        right: () => h('span', { class: 'right-icon' }, 'R'),
                     });
                 },
             }),
@@ -28,19 +28,17 @@ describe('Button', () => {
         expect(button.type).toBe('button');
         expect(button.disabled).toBe(false);
         expect([...button.classList]).toEqual(['rp-button']);
-        expect(container.querySelector('.rp-button__prefix')).toBeTruthy();
-        expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
+        expect(container.querySelector('.rp-button__left .left-icon')).toBeTruthy();
+        expect(container.querySelector('.rp-button__right .right-icon')).toBeTruthy();
         expect(button.textContent).toContain('Save');
     });
 
-    it('renders left and right slots before legacy prefix and suffix slots', async () => {
+    it('does not render legacy prefix and suffix slots', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(Button, null, {
                         default: () => 'Save',
-                        left: () => h('span', { class: 'left-icon' }, 'Left'),
-                        right: () => h('span', { class: 'right-icon' }, 'Right'),
                         prefix: () => h('span', { class: 'prefix-icon' }, 'Prefix'),
                         suffix: () => h('span', { class: 'suffix-icon' }, 'Suffix'),
                     });
@@ -52,15 +50,13 @@ describe('Button', () => {
 
         const button = container.querySelector('button') as HTMLButtonElement;
 
-        expect(container.querySelector('.rp-button__prefix .left-icon')).toBeTruthy();
-        expect(container.querySelector('.rp-button__suffix .right-icon')).toBeTruthy();
-        expect(button.textContent).toContain('Left');
-        expect(button.textContent).toContain('Right');
+        expect(container.querySelector('.rp-button__left')).toBeNull();
+        expect(container.querySelector('.rp-button__right')).toBeNull();
         expect(button.textContent).not.toContain('Prefix');
         expect(button.textContent).not.toContain('Suffix');
     });
 
-    it('disables while loading and hides the prefix slot', async () => {
+    it('disables while loading and hides the left slot', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -73,8 +69,8 @@ describe('Button', () => {
                         },
                         {
                             default: () => 'Delete',
-                            prefix: () => h('span', 'Prefix'),
-                            suffix: () => h('span', 'Suffix'),
+                            left: () => h('span', 'Left'),
+                            right: () => h('span', 'Right'),
                         },
                     );
                 },
@@ -89,8 +85,8 @@ describe('Button', () => {
         expect(button.disabled).toBe(true);
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost']);
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__prefix')).toBeNull();
-        expect(container.querySelector('.rp-button__suffix')).toBeTruthy();
+        expect(container.querySelector('.rp-button__left')).toBeNull();
+        expect(container.querySelector('.rp-button__right')).toBeTruthy();
     });
 
     it('lets disabled override the loading state', async () => {
@@ -105,7 +101,7 @@ describe('Button', () => {
                         },
                         {
                             default: () => 'Save',
-                            prefix: () => h('span', { class: 'prefix-icon' }, 'Prefix'),
+                            left: () => h('span', { class: 'left-icon' }, 'Left'),
                         },
                     );
                 },
@@ -118,7 +114,7 @@ describe('Button', () => {
 
         expect(button.disabled).toBe(true);
         expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
-        expect(container.querySelector('.rp-button__prefix .prefix-icon')).toBeTruthy();
+        expect(container.querySelector('.rp-button__left .left-icon')).toBeTruthy();
         expect(button.textContent).toContain('Save');
     });
 
