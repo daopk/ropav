@@ -1,0 +1,33 @@
+<template>
+    <label :class="rootClass" :data-disabled="isDisabled || undefined" :data-state="isChecked ? 'checked' : 'unchecked'">
+        <input
+            type="radio"
+            class="rp-radio__native"
+            :name="group.name"
+            :value="value"
+            :checked="isChecked"
+            :disabled="isDisabled || undefined"
+            :required="group.required || undefined"
+            @change="onSelect"
+        />
+        <span class="rp-radio__dot" />
+        <span v-if="$slots.default" class="rp-radio__label">
+            <slot />
+        </span>
+    </label>
+</template>
+
+<script lang="ts" setup vapor>
+import { useRadio } from './useRadio';
+import type { RadioProps } from './types';
+
+defineOptions({ name: 'RpRadio' });
+
+const props = withDefaults(defineProps<RadioProps>(), {
+    disabled: false,
+});
+
+const { group, isChecked, isDisabled, rootClass, onSelect } = useRadio(props);
+</script>
+
+<style src="./radio.scss" lang="scss" scoped></style>

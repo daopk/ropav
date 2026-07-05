@@ -1,0 +1,44 @@
+{
+  "color": {
+    "text": { "$value": "{color.gray.50}" },
+    "text-secondary": { "$value": "{color.gray.400}" },
+    "text-disabled": { "$value": "{color.gray.600}" },
+    "text-inverted": { "$value": "{color.gray.900}" },
+
+    "background": { "$value": "{color.gray.900}" },
+    "surface": { "$value": "{color.gray.900}" },
+    "surface-raised": { "$value": "{color.gray.800}" },
+    "surface-muted": { "$value": "{color.gray.800}" },
+    "surface-hover": { "$value": "{color.gray.700}" },
+    "surface-inverted": { "$value": "{color.gray.100}" },
+    "overlay": { "$value": "rgba(3, 7, 18, 0.75)" },
+
+    "border": { "$value": "{color.gray.700}" },
+    "border-hover": { "$value": "{color.gray.600}" },
+    "focus-ring": { "$value": "color-mix(in srgb, {color.primary} 45%, transparent)" },
+
+    "control-bg": { "$value": "{color.gray.900}" },
+    "control-readonly-bg": { "$value": "{color.gray.800}" },
+    "control-fg": { "$value": "{color.gray.50}" },
+    "control-placeholder": { "$value": "{color.gray.500}" },
+    "control-icon": { "$value": "{color.gray.400}" },
+    "control-border": { "$value": "{color.gray.700}" },
+    "control-border-hover": { "$value": "{color.gray.600}" },
+    "control-border-focus": { "$value": "{color.primary}" },
+    "control-track-bg": { "$value": "{color.gray.700}" },
+    "control-thumb-bg": { "$value": "{color.gray.50}" },
+
+    "primary-fg": { "$value": "color-mix(in srgb, {color.primary} 65%, {color.white})" },
+    "secondary-fg": { "$value": "color-mix(in srgb, {color.secondary} 65%, {color.white})" },
+    "success-fg": { "$value": "color-mix(in srgb, {color.success} 65%, {color.white})" },
+    "warning-fg": { "$value": "color-mix(in srgb, {color.warning} 65%, {color.white})" },
+    "danger-fg": { "$value": "color-mix(in srgb, {color.danger} 65%, {color.white})" },
+    "info-fg": { "$value": "color-mix(in srgb, {color.info} 65%, {color.white})" }
+  },
+  "shadow": {
+    "sm": { "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.3)" },
+    "base": { "$value": "0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3)" },
+    "md": { "$value": "0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3)" },
+    "lg": { "$value": "0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3)" }
+  }
+}

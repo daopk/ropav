@@ -1,0 +1,87 @@
+.rp-tooltip {
+    position: relative;
+    display: inline-flex;
+
+    &__tip {
+        --_arrow: 5px;
+        --_gap: var(--rp-border-width-medium);
+
+        position: absolute;
+        z-index: var(--rp-z-index-tooltip);
+        padding: var(--rp-spacing-1) var(--rp-spacing-2);
+        font-family: var(--rp-font-family);
+        font-size: var(--rp-font-size-xs);
+        font-weight: var(--rp-font-weight-medium);
+        line-height: var(--rp-line-height-normal);
+        color: var(--rp-color-text-inverted);
+        background-color: var(--rp-color-surface-inverted);
+        border-radius: var(--rp-radius-md);
+        white-space: nowrap;
+        pointer-events: none;
+        animation: rp-tooltip-fade var(--rp-transition-fast);
+
+        &::after {
+            content: '';
+            position: absolute;
+            border: var(--_arrow) solid transparent;
+        }
+
+        // ── Placements ──
+        &--top {
+            bottom: calc(100% + var(--_arrow) + var(--_gap));
+            left: 50%;
+            transform: translateX(-50%);
+
+            &::after {
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border-top-color: var(--rp-color-surface-inverted);
+            }
+        }
+
+        &--bottom {
+            top: calc(100% + var(--_arrow) + var(--_gap));
+            left: 50%;
+            transform: translateX(-50%);
+
+            &::after {
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border-bottom-color: var(--rp-color-surface-inverted);
+            }
+        }
+
+        &--left {
+            right: calc(100% + var(--_arrow) + var(--_gap));
+            top: 50%;
+            transform: translateY(-50%);
+
+            &::after {
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                border-left-color: var(--rp-color-surface-inverted);
+            }
+        }
+
+        &--right {
+            left: calc(100% + var(--_arrow) + var(--_gap));
+            top: 50%;
+            transform: translateY(-50%);
+
+            &::after {
+                right: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                border-right-color: var(--rp-color-surface-inverted);
+            }
+        }
+    }
+}
+
+@keyframes rp-tooltip-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

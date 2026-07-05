@@ -1,0 +1,75 @@
+.rp-button {
+    @include flex-center;
+    gap: var(--rp-spacing-2);
+    font-family: var(--rp-font-family);
+    font-weight: var(--rp-font-weight-normal);
+    line-height: var(--rp-line-height-none);
+    border: var(--rp-border-width-thin) solid transparent;
+    cursor: pointer;
+    transition: background-color var(--rp-transition-fast),
+        color var(--rp-transition-fast),
+        border-color var(--rp-transition-fast),
+        box-shadow var(--rp-transition-fast);
+    white-space: nowrap;
+    user-select: none;
+    height: var(--rp-size-control-md);
+    padding: 0 var(--rp-spacing-4);
+    font-size: var(--rp-font-size-base);
+    border-radius: var(--rp-radius-lg);
+
+    &--solid {
+        background-color: var(--rp-color-primary);
+        color: var(--rp-color-on-primary);
+
+        &:hover:not(:disabled) {
+            background-color: color-mix(in srgb, var(--rp-color-primary) 90%, var(--rp-color-black));
+        }
+
+        &:active:not(:disabled) {
+            background-color: color-mix(in srgb, var(--rp-color-primary) 80%, var(--rp-color-black));
+        }
+    }
+
+    &--ghost {
+        background-color: transparent;
+        color: var(--rp-color-primary-fg);
+
+        &:hover:not(:disabled) {
+            background-color: color-mix(in srgb, var(--rp-color-primary) 14%, transparent);
+        }
+
+        &:active:not(:disabled) {
+            background-color: color-mix(in srgb, var(--rp-color-primary) 18%, transparent);
+        }
+    }
+
+    &:disabled {
+        @include disabled-state;
+    }
+
+    &:focus-visible {
+        outline: none;
+        @include focus-ring;
+    }
+
+    &__prefix,
+    &__suffix {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    &__spinner {
+        width: 1em;
+        height: 1em;
+        border: var(--rp-border-width-medium) solid currentColor;
+        border-right-color: transparent;
+        border-radius: var(--rp-radius-full);
+        flex-shrink: 0;
+        animation: rp-button-spin 700ms linear infinite;
+    }
+}
+
+@keyframes rp-button-spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,57 @@
+.rp-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: var(--rp-font-family);
+    user-select: none;
+
+    &--disabled {
+        @include disabled-state;
+    }
+    gap: var(--rp-spacing-2);
+    font-size: var(--rp-font-size-base);
+    --_checkbox-size: 18px;
+
+    &__native {
+        @include visually-hidden;
+        pointer-events: none;
+    }
+
+    &__native:focus-visible + &__box {
+        @include focus-ring;
+    }
+
+    &__box {
+        @include flex-center;
+        width: var(--_checkbox-size);
+        height: var(--_checkbox-size);
+        flex-shrink: 0;
+        border: var(--rp-border-width-medium) solid var(--rp-color-control-border);
+        border-radius: var(--rp-radius-base);
+        background-color: var(--rp-color-control-bg);
+        transition:
+            background-color var(--rp-transition-fast),
+            border-color var(--rp-transition-fast);
+    }
+
+    &--checked &__box,
+    &--indeterminate &__box {
+        background-color: var(--rp-color-control-selected-bg);
+        border-color: var(--rp-color-control-selected-bg);
+    }
+
+    &--invalid &__box {
+        border-color: var(--rp-color-danger-fg);
+    }
+
+    &__icon {
+        width: 12px;
+        height: 12px;
+        color: var(--rp-color-control-selected-fg);
+    }
+
+    &__label {
+        line-height: var(--rp-line-height-normal);
+        color: var(--rp-color-text);
+    }
+}

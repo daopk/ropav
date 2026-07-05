@@ -1,0 +1,128 @@
+@mixin flex-center {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin focus-ring {
+    border-color: var(--rp-color-control-border-focus);
+    box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
+}
+
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+@mixin reset-button {
+    padding: 0;
+    font: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+@mixin icon-close-button {
+    @include flex-center;
+    @include reset-button;
+    color: inherit;
+    opacity: 0.6;
+    flex-shrink: 0;
+    transition: opacity var(--rp-transition-fast);
+
+    &:hover {
+        opacity: 1;
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@mixin disabled-state {
+    opacity: var(--rp-opacity-disabled);
+    cursor: not-allowed;
+}
+
+@mixin control-size-vars($prefix) {
+    &--sm {
+        #{$prefix}-height: var(--rp-size-control-sm);
+        #{$prefix}-font: var(--rp-font-size-sm);
+        #{$prefix}-px: var(--rp-spacing-3);
+        #{$prefix}-radius: var(--rp-radius-md);
+    }
+
+    &--md {
+        #{$prefix}-height: var(--rp-size-control-md);
+        #{$prefix}-font: var(--rp-font-size-base);
+        #{$prefix}-px: var(--rp-spacing-4);
+        #{$prefix}-radius: var(--rp-radius-lg);
+    }
+
+    &--lg {
+        #{$prefix}-height: var(--rp-size-control-lg);
+        #{$prefix}-font: var(--rp-font-size-lg);
+        #{$prefix}-px: var(--rp-spacing-6);
+        #{$prefix}-radius: var(--rp-radius-lg);
+    }
+}
+
+@mixin menu-surface($z-index: var(--rp-z-index-dropdown), $surface: var(--rp-color-surface-raised), $radius: var(--rp-radius-lg)) {
+    z-index: $z-index;
+    background-color: $surface;
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-radius: $radius;
+    box-shadow: var(--rp-shadow-md);
+    padding: var(--rp-spacing-1) 0;
+}
+
+@mixin inline-icon($size: 1em) {
+    display: inline-flex;
+    align-items: center;
+    width: $size;
+    height: $size;
+    flex-shrink: 0;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@mixin semantic-colors($var-name) {
+    @each $name in primary, secondary, success, warning, danger, info {
+        &--#{$name} { #{$var-name}: var(--rp-color-#{$name}-fg); }
+    }
+}
+
+@mixin semantic-color-pair($color-var, $foreground-var) {
+    @each $name in primary, secondary, success, warning, danger, info {
+        &--#{$name} {
+            #{$color-var}: var(--rp-color-#{$name});
+            #{$foreground-var}: var(--rp-color-on-#{$name});
+        }
+    }
+}
+
+@mixin semantic-state-colors($prefix) {
+    @each $name in primary, secondary, success, warning, danger, info {
+        &--#{$name} {
+            #{$prefix}-bg: var(--rp-color-#{$name});
+            #{$prefix}-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 90%, var(--rp-color-black));
+            #{$prefix}-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 80%, var(--rp-color-black));
+            #{$prefix}-subtle-bg: color-mix(in srgb, var(--rp-color-#{$name}) 10%, transparent);
+            #{$prefix}-subtle-bg-hover: color-mix(in srgb, var(--rp-color-#{$name}) 14%, transparent);
+            #{$prefix}-subtle-bg-active: color-mix(in srgb, var(--rp-color-#{$name}) 18%, transparent);
+            #{$prefix}-fg: var(--rp-color-#{$name}-fg);
+            #{$prefix}-on-bg: var(--rp-color-on-#{$name});
+        }
+    }
+}
