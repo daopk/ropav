@@ -1,14 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import Radio from './radio.vue';
 import RadioGroup from './radio-group.vue';
+
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
     title: 'Components/Radio',
     component: RadioGroup as any,
     tags: ['autodocs'],
     argTypes: {
+        color: {
+            control: 'select',
+            options: [undefined, ...colors],
+        },
+        size: {
+            control: 'select',
+            options: [undefined, ...sizes],
+        },
         disabled: { control: 'boolean' },
     },
     args: {
@@ -48,6 +59,46 @@ export const Default: Story = {
         await expect(apple).not.toBeChecked();
         await expect(banana).toBeChecked();
     },
+};
+
+export const Sizes: Story = {
+    render: (args) => ({
+        components: { Radio, RadioGroup },
+        setup() {
+            const values = reactive<Record<string, string>>(
+                Object.fromEntries(sizes.map((size) => [size, 'apple'])),
+            );
+            return { args, sizes, values };
+        },
+        template: `
+            <div style="display: grid; gap: 16px;">
+                <RadioGroup v-for="size in sizes" :key="size" v-bind="args" v-model="values[size]" :size="size">
+                    <Radio value="apple">{{ size }}</Radio>
+                    <Radio value="banana">Option</Radio>
+                </RadioGroup>
+            </div>
+        `,
+    }),
+};
+
+export const Colors: Story = {
+    render: (args) => ({
+        components: { Radio, RadioGroup },
+        setup() {
+            const values = reactive<Record<string, string>>(
+                Object.fromEntries(colors.map((color) => [color, 'apple'])),
+            );
+            return { args, colors, values };
+        },
+        template: `
+            <div style="display: grid; gap: 16px;">
+                <RadioGroup v-for="color in colors" :key="color" v-bind="args" v-model="values[color]" :color="color">
+                    <Radio value="apple">{{ color }}</Radio>
+                    <Radio value="banana">Option</Radio>
+                </RadioGroup>
+            </div>
+        `,
+    }),
 };
 
 export const Disabled: Story = {

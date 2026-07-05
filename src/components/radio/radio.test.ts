@@ -188,4 +188,48 @@ describe('Radio', () => {
         expect(uncheckedRadio.required).toBe(true);
         expect(radioRoot.classList.contains('rp-radio--checked')).toBe(true);
     });
+
+    it('adds color and size modifiers from the group with per-option overrides', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            color: 'success',
+                            modelValue: 'apple',
+                            size: 'lg',
+                        },
+                        {
+                            default: () => [
+                                h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                                h(
+                                    Radio,
+                                    { color: 'danger', size: 'sm', value: 'banana' },
+                                    { default: () => 'Banana' },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const appleRoot = container.querySelector('input[value="apple"]')!.closest('.rp-radio')!;
+        const bananaRoot = container.querySelector('input[value="banana"]')!.closest('.rp-radio')!;
+
+        expect([...appleRoot.classList]).toEqual([
+            'rp-radio',
+            'rp-radio--checked',
+            'rp-radio--color-success',
+            'rp-radio--size-lg',
+        ]);
+        expect([...bananaRoot.classList]).toEqual([
+            'rp-radio',
+            'rp-radio--color-danger',
+            'rp-radio--size-sm',
+        ]);
+    });
 });

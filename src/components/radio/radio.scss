@@ -1,4 +1,21 @@
+@mixin radio-color($color) {
+    --_radio-color: var(--rp-color-#{$color});
+    --_radio-on-color: var(--rp-color-on-#{$color});
+}
+
+@mixin radio-size($size, $dot, $font-size) {
+    --_radio-size: #{$size};
+    --_radio-dot: #{$dot};
+    --_radio-font-size: #{$font-size};
+}
+
 .rp-radio {
+    --_radio-color: var(--rp-color-primary);
+    --_radio-on-color: var(--rp-color-on-primary);
+    --_radio-size: 18px;
+    --_radio-dot: 8px;
+    --_radio-font-size: var(--rp-font-size-base);
+
     display: inline-flex;
     align-items: center;
     cursor: pointer;
@@ -9,13 +26,15 @@
         @include disabled-state;
     }
     gap: var(--rp-spacing-2);
-    font-size: var(--rp-font-size-base);
-    --_radio-size: 18px;
-    --_radio-dot: 8px;
+    font-size: var(--_radio-font-size);
 
     &__native {
         @include visually-hidden;
         pointer-events: none;
+    }
+
+    &__native:focus-visible + &__dot {
+        @include focus-ring;
     }
 
     &__dot {
@@ -35,15 +54,15 @@
             width: var(--_radio-dot);
             height: var(--_radio-dot);
             border-radius: var(--rp-radius-full);
-            background-color: var(--rp-color-on-primary);
+            background-color: var(--_radio-on-color);
             transform: scale(0);
             transition: transform var(--rp-transition-fast);
         }
     }
 
     &--checked &__dot {
-        background-color: var(--rp-color-primary);
-        border-color: var(--rp-color-primary);
+        background-color: var(--_radio-color);
+        border-color: var(--_radio-color);
 
         &::after {
             transform: scale(1);
@@ -53,5 +72,31 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
+    }
+
+    @each $color in primary, secondary, success, warning, danger, info {
+        &--color-#{$color} {
+            @include radio-color($color);
+        }
+    }
+
+    &--size-xs {
+        @include radio-size(14px, 6px, var(--rp-font-size-xs));
+    }
+
+    &--size-sm {
+        @include radio-size(16px, 7px, var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include radio-size(18px, 8px, var(--rp-font-size-base));
+    }
+
+    &--size-lg {
+        @include radio-size(22px, 10px, var(--rp-font-size-lg));
+    }
+
+    &--size-xl {
+        @include radio-size(26px, 12px, var(--rp-font-size-xl));
     }
 }

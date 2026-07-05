@@ -28,6 +28,8 @@ import type { RadioProps } from './types';
 defineOptions({ name: 'RpRadio' });
 
 const props = withDefaults(defineProps<RadioProps>(), {
+    color: undefined,
+    size: undefined,
     disabled: false,
 });
 
