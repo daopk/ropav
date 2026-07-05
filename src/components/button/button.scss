@@ -32,9 +32,9 @@
     --_rp-button-accent-border: var(--rp-color-primary-border);
     --_rp-button-accent-border-hover: var(--rp-color-primary-border-hover);
     --_rp-button-accent-fg: var(--rp-color-primary-fg);
-    --_rp-button-bg: var(--rp-color-surface);
-    --_rp-button-bg-hover: var(--rp-color-surface-hover);
-    --_rp-button-bg-active: var(--rp-color-surface-muted);
+    --_rp-button-bg: var(--rp-color-button-default-bg);
+    --_rp-button-bg-hover: var(--rp-color-button-default-bg-hover);
+    --_rp-button-bg-active: var(--rp-color-button-default-bg-active);
     --_rp-button-border: var(--rp-color-border);
     --_rp-button-border-hover: var(--rp-color-border-hover);
     --_rp-button-border-active: var(--_rp-button-border-hover);
@@ -51,7 +51,7 @@
     box-sizing: border-box;
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
-    font-weight: var(--rp-font-weight-semibold);
+    font-weight: var(--rp-font-weight-medium);
     line-height: var(--rp-line-height-none);
     appearance: none;
     background-color: var(--_rp-button-bg);

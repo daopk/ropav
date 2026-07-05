@@ -10,6 +10,9 @@
     "surface-raised": { "$value": "{color.palette.dark.gray.2}" },
     "surface-muted": { "$value": "{color.palette.dark.gray.2}" },
     "surface-hover": { "$value": "{color.palette.dark.gray.3}" },
+    "button-default-bg": { "$value": "{color.palette.dark.gray.2}" },
+    "button-default-bg-hover": { "$value": "{color.palette.dark.gray.3}" },
+    "button-default-bg-active": { "$value": "{color.palette.dark.gray.4}" },
     "surface-inverted": { "$value": "{color.gray.2}" },
     "overlay": { "$value": "rgba(17, 17, 17, 0.75)" },
 

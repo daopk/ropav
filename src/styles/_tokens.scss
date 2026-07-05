@@ -23,6 +23,9 @@
     --rp-color-surface-raised            : #{$color-white};
     --rp-color-surface-muted             : #{$color-gray-2};
     --rp-color-surface-hover             : #{$color-gray-3};
+    --rp-color-button-default-bg         : #{$color-gray-2};
+    --rp-color-button-default-bg-hover   : #{$color-gray-3};
+    --rp-color-button-default-bg-active  : #{$color-gray-4};
     --rp-color-surface-inverted          : #{$color-gray-12};
     --rp-color-overlay                   : rgba(17, 17, 17, 0.55);
     --rp-color-border                    : #{$color-border};
@@ -160,6 +163,9 @@ html.dark {
     --rp-color-surface-raised            : #191919;
     --rp-color-surface-muted             : #191919;
     --rp-color-surface-hover             : #222222;
+    --rp-color-button-default-bg         : #191919;
+    --rp-color-button-default-bg-hover   : #222222;
+    --rp-color-button-default-bg-active  : #2a2a2a;
     --rp-color-surface-inverted          : #{$color-gray-2};
     --rp-color-overlay                   : rgba(17, 17, 17, 0.75);
     --rp-color-border                    : #3a3a3a;

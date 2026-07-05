@@ -30,6 +30,21 @@
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
+    "button-default-bg": {
+      "$value": "{color.gray.2}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "button-default-bg-hover": {
+      "$value": "{color.gray.3}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "button-default-bg-active": {
+      "$value": "{color.gray.4}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
     "surface-inverted": {
       "$value": "{color.gray.12}",
       "$type": "color",
