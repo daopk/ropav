@@ -73,10 +73,43 @@
         color: var(--rp-color-text-disabled);
     }
 
-    &__arrow {
+    &__indicator {
         @include inline-icon;
+        position: relative;
         color: var(--rp-color-text-disabled);
         transform: translateX(var(--rp-spacing-1));
+    }
+
+    &__arrow {
+        @include inline-icon;
+        transition: opacity var(--rp-transition-fast);
+    }
+
+    &__clear {
+        @include reset-button;
+        @include inline-icon;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        color: var(--rp-color-text-secondary);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            color var(--rp-transition-fast),
+            opacity var(--rp-transition-fast);
+
+        &:hover {
+            color: var(--rp-color-text);
+        }
+    }
+
+    &__trigger:hover &__clear {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &__trigger:hover &__clear + &__arrow {
+        opacity: 0;
     }
 
     &__dropdown {

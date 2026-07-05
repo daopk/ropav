@@ -32,8 +32,21 @@
                 {{ displayLabel || placeholder }}
             </span>
 
-            <span class="rp-select__arrow">
-                <ChevronsUpDownIcon />
+            <span class="rp-select__indicator">
+                <button
+                    v-if="canClear"
+                    type="button"
+                    class="rp-select__clear"
+                    aria-label="Clear selection"
+                    tabindex="-1"
+                    @mousedown.prevent
+                    @click.stop="clearSelection"
+                >
+                    <XIcon />
+                </button>
+                <span class="rp-select__arrow" aria-hidden="true">
+                    <ChevronsUpDownIcon />
+                </span>
             </span>
         </div>
 
@@ -71,6 +84,7 @@
 
 <script lang="ts" setup vapor>
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
+import XIcon from '~icons/lucide/x';
 import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
 
@@ -79,6 +93,7 @@ defineOptions({ name: 'RpSelect' });
 const props = withDefaults(defineProps<SelectProps>(), {
     options: () => [],
     placeholder: 'Select...',
+    clearable: false,
     disabled: undefined,
     required: undefined,
     invalid: undefined,
@@ -101,8 +116,10 @@ const {
     rootClass,
     hasValue,
     displayLabel,
+    canClear,
     toggle,
     selectOption,
+    clearSelection,
     onOptionMouseenter,
     onTriggerKeydown,
 } = useSelect(props, (value) => {

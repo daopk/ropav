@@ -102,6 +102,61 @@ describe('Select', () => {
         expect(onUpdate).not.toHaveBeenCalled();
     });
 
+    it('clears the selected value without toggling the dropdown', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        clearable: true,
+                        modelValue: 'a',
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const clear = container.querySelector('.rp-select__clear')!;
+        click(clear);
+        await nextTick();
+
+        expect(onUpdate).toHaveBeenCalledWith(null);
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('only renders the clear control when clearable has a value and is enabled', () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Select, {
+                            clearable: true,
+                            modelValue: null,
+                            options: [{ label: 'Alpha', value: 'a' }],
+                        }),
+                        h(Select, {
+                            clearable: true,
+                            disabled: true,
+                            modelValue: 'a',
+                            options: [{ label: 'Alpha', value: 'a' }],
+                        }),
+                        h(Select, {
+                            clearable: true,
+                            modelValue: 'a',
+                            options: [{ label: 'Alpha', value: 'a' }],
+                        }),
+                    ]);
+                },
+            }),
+        );
+
+        expect(container.querySelectorAll('.rp-select__clear')).toHaveLength(1);
+    });
+
     it('adds a radius modifier for each supported radius', async () => {
         const container = mountDom(
             defineComponent({

@@ -13,6 +13,7 @@ export interface SelectProps {
     options?: SelectOption[];
     radius?: SelectRadius;
     placeholder?: string;
+    clearable?: boolean;
     disabled?: boolean;
     required?: boolean;
     invalid?: boolean;

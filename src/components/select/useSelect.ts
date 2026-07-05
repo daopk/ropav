@@ -1,9 +1,4 @@
 import { computed, nextTick, ref, useId } from 'vue';
-import {
-    getOptionListActiveDescendantId,
-    getOptionListDisplayLabel,
-    hasOptionListValue,
-} from '@/components/_internal/optionList';
 import { useClickOutside } from '@/composables/useClickOutside';
 import { useControlState } from '@/composables/useControlState';
 import { useListNavigation } from '@/composables/useListNavigation';
@@ -11,6 +6,19 @@ import { bem } from '@/utils/bem';
 import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
+
+function hasSelectValue(value: SelectValue) {
+    return value != null && value !== '';
+}
+
+function getSelectDisplayLabel(options: SelectOption[] | undefined, value: SelectValue) {
+    if (!hasSelectValue(value)) return '';
+    return options?.find((option) => option.value === value)?.label ?? '';
+}
+
+function getSelectActiveDescendantId(baseId: string, focusedIndex: number) {
+    return focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
+}
 
 export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: SelectValue) => void) {
     const selectRef = ref<HTMLElement | null>(null);
@@ -30,7 +38,7 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
 
     const focusedIndex = navigation.focusedIndex;
     const activeDescendantId = computed(() =>
-        getOptionListActiveDescendantId(selectId, focusedIndex.value),
+        getSelectActiveDescendantId(selectId, focusedIndex.value),
     );
 
     const rootClass = computed(() =>
@@ -42,8 +50,11 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
         }),
     );
 
-    const hasValue = computed(() => hasOptionListValue(props.modelValue));
-    const displayLabel = computed(() => getOptionListDisplayLabel(props.options, props.modelValue));
+    const hasValue = computed(() => hasSelectValue(props.modelValue));
+    const displayLabel = computed(() => getSelectDisplayLabel(props.options, props.modelValue));
+    const canClear = computed(() =>
+        Boolean(props.clearable && hasValue.value && !control.disabled),
+    );
 
     function focusTrigger() {
         nextTick(() => triggerRef.value?.focus());
@@ -73,6 +84,13 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
     function selectOption(option: SelectOption) {
         if (option.disabled) return;
         emitUpdate(option.value);
+        close();
+        focusTrigger();
+    }
+
+    function clearSelection() {
+        if (!canClear.value) return;
+        emitUpdate(null);
         close();
         focusTrigger();
     }
@@ -149,8 +167,10 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
         rootClass,
         hasValue,
         displayLabel,
+        canClear,
         toggle,
         selectOption,
+        clearSelection,
         onOptionMouseenter,
         onTriggerKeydown,
     };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Select from './select.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -24,6 +24,7 @@ const meta = {
             options: [undefined, ...radii],
         },
         placeholder: { control: 'text' },
+        clearable: { control: 'boolean' },
         disabled: { control: 'boolean' },
     },
     args: {
@@ -31,6 +32,7 @@ const meta = {
         options: fruitOptions,
         radius: undefined,
         placeholder: 'Select a fruit...',
+        clearable: false,
         disabled: false,
     },
     render: (args) => ({
@@ -59,6 +61,21 @@ export const WithValue: Story = {
     }),
 };
 
+export const Clearable: Story = {
+    args: {
+        clearable: true,
+        modelValue: 'cherry',
+    },
+    render: (args) => ({
+        components: { Select },
+        setup() {
+            const value = ref(args.modelValue ?? null);
+            return { args, value };
+        },
+        template: '<Select v-bind="args" v-model="value" />',
+    }),
+};
+
 export const DisabledOptions: Story = {
     args: {
         options: [
@@ -76,15 +93,31 @@ export const Disabled: Story = {
 export const Radii: Story = {
     render: (args) => ({
         components: { Select },
-        setup: () => ({ args, radii }),
+        setup() {
+            const values = reactive<Record<(typeof radii)[number], string | number | null>>({
+                xs: 'apple',
+                sm: 'banana',
+                md: 'cherry',
+                lg: 'dragonfruit',
+                xl: 'elderberry',
+            });
+            const selectArgs = computed(() => {
+                const { modelValue, radius, ...rest } = args;
+                void modelValue;
+                void radius;
+                return rest;
+            });
+
+            return { radii, selectArgs, values };
+        },
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
                 <Select
                     v-for="radius in radii"
                     :key="radius"
-                    v-bind="args"
+                    v-bind="selectArgs"
+                    v-model="values[radius]"
                     :radius="radius"
-                    :model-value="radius"
                 />
             </div>
         `,
