@@ -178,9 +178,12 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
         tokenDictionary.allTokens.filter(hasCssCustomProperty).map(cssCustomProperty),
     );
     const tokenCss = readFileSync(join(projectRoot, 'src/styles/_tokens.scss'), 'utf8');
+    const generatedNames = new Set();
     const failures = [];
 
     for (const [, name] of tokenCss.matchAll(/^\s+(--rp-[a-z0-9-]+)\s*:/gim)) {
+        generatedNames.add(name);
+
         if (name.startsWith('--rp-color-palette-')) {
             failures.push(`private palette CSS custom property ${name} was generated`);
             continue;
@@ -188,6 +191,12 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
 
         if (!allowedNames.has(name)) {
             failures.push(`CSS custom property ${name} is not part of the public token API`);
+        }
+    }
+
+    for (const name of allowedNames) {
+        if (!generatedNames.has(name)) {
+            failures.push(`public CSS custom property ${name} is not generated`);
         }
     }
 

@@ -28,7 +28,7 @@ export function hasCssCustomProperty(token) {
     if (extension.cssVariable === true) return true;
 
     const path = tokenPath(token);
-    const [category, type, name] = path;
+    const [category, type] = path;
 
     if (category === 'color') return isPublicColorToken(path);
     if (category === 'font') return type === 'family' || type === 'size' || type === 'weight';
@@ -37,7 +37,7 @@ export function hasCssCustomProperty(token) {
     if (category === 'radius') return true;
     if (category === 'border' && type === 'width') return true;
     if (category === 'size' && type === 'control') return true;
-    if (category === 'opacity' && name === 'disabled') return true;
+    if (category === 'opacity' && type === 'disabled') return true;
     if (category === 'shadow') return true;
     if (category === 'transition') return true;
 
