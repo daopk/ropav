@@ -19,19 +19,20 @@
     gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);
-    background-color: var(--rp-color-button-default-bg);
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    background-color: var(--rp-color-control-bg);
+    border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
     cursor: text;
     transition:
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast);
 
     &:hover:not(.rp-input--disabled):not(.rp-input--invalid):not(.rp-input--valid) {
-        border-color: var(--rp-color-border-hover);
+        border-color: var(--rp-color-control-border-hover);
     }
 
     &:focus-within:not(.rp-input--disabled):not(.rp-input--invalid):not(.rp-input--valid) {
-        @include focus-ring;
+        border-color: var(--rp-color-control-border-focus);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
     }
 
     height: var(--_rp-input-height);
@@ -116,7 +117,7 @@
     }
 
     &--readonly {
-        background-color: var(--rp-color-surface-muted);
+        background-color: var(--rp-color-control-readonly-bg);
     }
 
     &__native {
@@ -130,11 +131,11 @@
         outline: none;
         background: transparent;
         font: inherit;
-        color: var(--rp-color-text);
+        color: var(--rp-color-control-fg);
         line-height: var(--rp-line-height-none);
 
         &::placeholder {
-            color: var(--rp-color-text-secondary);
+            color: var(--rp-color-control-placeholder);
         }
 
         &:disabled {
@@ -147,6 +148,6 @@
         display: inline-flex;
         align-items: center;
         flex-shrink: 0;
-        color: color-mix(in srgb, var(--rp-color-text-secondary) 50%, var(--rp-color-border));
+        color: var(--rp-color-control-icon);
     }
 }

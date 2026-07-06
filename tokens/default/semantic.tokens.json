@@ -66,64 +66,64 @@
     },
 
     "control-bg": {
-      "$value": "{color.surface}",
+      "$value": "{color.gray.2}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-readonly-bg": {
       "$value": "{color.surface-muted}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-fg": {
       "$value": "{color.text}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-placeholder": {
       "$value": "{color.text-secondary}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-icon": {
       "$value": "{color.text-secondary}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-border": {
       "$value": "{color.border}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-border-hover": {
       "$value": "{color.border-hover}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-border-focus": {
       "$value": "{color.primary}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-track-bg": {
-      "$value": "{color.gray.7}",
+      "$value": "{color.border}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-thumb-bg": {
       "$value": "{color.white}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-selected-bg": {
       "$value": "{color.primary}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
     "control-selected-fg": {
       "$value": "{color.on-primary}",
       "$type": "color",
-      "$extensions": { "ropav": { "scssVariable": false } }
+      "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
 
     "on-primary": { "$value": "{color.white}", "$type": "color" },

@@ -19,8 +19,8 @@
         height: var(--rp-size-control-md);
         padding: 0 var(--rp-spacing-3);
         font-size: var(--rp-font-size-base);
-        background-color: var(--rp-color-button-default-bg);
-        border: var(--rp-border-width-thin) solid var(--rp-color-border);
+        background-color: var(--rp-color-control-bg);
+        border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
         border-radius: var(--_rp-select-radius);
         cursor: pointer;
         transition:
@@ -29,12 +29,13 @@
         gap: var(--rp-spacing-2);
 
         &:hover {
-            border-color: var(--rp-color-border-hover);
+            border-color: var(--rp-color-control-border-hover);
         }
 
         &:focus-visible {
             outline: none;
-            @include focus-ring;
+            border-color: var(--rp-color-control-border-focus);
+            box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
         }
     }
 
@@ -54,7 +55,8 @@
     }
 
     &--open &__trigger {
-        @include focus-ring;
+        border-color: var(--rp-color-control-border-focus);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
     }
 
     &--invalid &__trigger {
@@ -66,17 +68,17 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: var(--rp-color-text);
+        color: var(--rp-color-control-fg);
     }
 
     &__placeholder {
-        color: var(--rp-color-text-disabled);
+        color: var(--rp-color-control-placeholder);
     }
 
     &__indicator {
         @include inline-icon;
         position: relative;
-        color: var(--rp-color-text-disabled);
+        color: var(--rp-color-control-icon);
         transform: translateX(var(--rp-spacing-1));
     }
 
@@ -91,7 +93,7 @@
         position: absolute;
         inset: 0;
         z-index: 1;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-control-icon);
         opacity: 0;
         pointer-events: none;
         transition:
@@ -99,7 +101,7 @@
             opacity var(--rp-transition-fast);
 
         &:hover {
-            color: var(--rp-color-text);
+            color: var(--rp-color-control-fg);
         }
     }
 
@@ -133,7 +135,7 @@
         transition:
             background-color var(--rp-transition-fast),
             color var(--rp-transition-fast);
-        color: var(--rp-color-text);
+        color: var(--rp-color-control-fg);
 
         &--focused {
             background-color: var(--rp-color-surface-hover);

@@ -18,19 +18,20 @@
     box-sizing: border-box;
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);
-    background-color: var(--rp-color-button-default-bg);
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    background-color: var(--rp-color-control-bg);
+    border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
     cursor: text;
     transition:
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast);
 
     &:hover:not(.rp-textarea--disabled):not(.rp-textarea--invalid):not(.rp-textarea--valid) {
-        border-color: var(--rp-color-border-hover);
+        border-color: var(--rp-color-control-border-hover);
     }
 
     &:focus-within:not(.rp-textarea--disabled):not(.rp-textarea--invalid):not(.rp-textarea--valid) {
-        @include focus-ring;
+        border-color: var(--rp-color-control-border-focus);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
     }
 
     padding: var(--_rp-textarea-padding-y) var(--_rp-textarea-padding-x);
@@ -102,7 +103,7 @@
     }
 
     &--readonly {
-        background-color: var(--rp-color-surface-muted);
+        background-color: var(--rp-color-control-readonly-bg);
     }
 
     &__native {
@@ -115,11 +116,11 @@
         outline: none;
         background: transparent;
         font: inherit;
-        color: var(--rp-color-text);
+        color: var(--rp-color-control-fg);
         line-height: var(--rp-line-height-relaxed);
 
         &::placeholder {
-            color: var(--rp-color-text-secondary);
+            color: var(--rp-color-control-placeholder);
         }
 
         &:disabled {

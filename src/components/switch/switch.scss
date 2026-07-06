@@ -10,14 +10,14 @@
 }
 
 .rp-switch {
-    --_switch-color: var(--rp-color-primary);
+    --_switch-color: var(--rp-color-control-selected-bg);
     --_switch-font-size: var(--rp-font-size-base);
     --_track-w: 40px;
     --_track-h: 22px;
     --_thumb-size: 18px;
     --_thumb-offset: 2px;
-    --_track-bg: var(--rp-color-border);
-    --_thumb-bg: #{$color-white};
+    --_track-bg: var(--rp-color-control-track-bg);
+    --_thumb-bg: var(--rp-color-control-thumb-bg);
 
     display: inline-flex;
     align-items: center;
@@ -30,10 +30,6 @@
     }
     gap: var(--rp-spacing-2);
     font-size: var(--_switch-font-size);
-
-    html.dark & {
-        --_thumb-bg: var(--rp-color-surface-inverted);
-    }
 
     &__native {
         @include visually-hidden;
