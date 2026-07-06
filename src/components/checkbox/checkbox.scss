@@ -27,6 +27,7 @@
     cursor: pointer;
     font-family: var(--rp-font-family);
     user-select: none;
+    vertical-align: top;
 
     html.dark & {
         --_checkbox-invalid-border: var(--rp-color-danger-fg);

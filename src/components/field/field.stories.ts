@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
+import Checkbox from '../checkbox/checkbox.vue';
 import Input from '../input/input.vue';
+import RadioGroup from '../radio/radio-group.vue';
+import Radio from '../radio/radio.vue';
 import Select from '../select/select.vue';
+import Switch from '../switch/switch.vue';
 import Textarea from '../textarea/textarea.vue';
 import Field from './field.vue';
 
@@ -60,17 +64,20 @@ export const Invalid: Story = {
 
 export const FormControls: Story = {
     render: (args) => ({
-        components: { Field, Input, Select, Textarea },
+        components: { Checkbox, Field, Input, Radio, RadioGroup, Select, Switch, Textarea },
         setup() {
             const email = ref('');
             const role = ref<string | number | null>(null);
             const note = ref('');
+            const plan = ref<string | number | null>('pro');
+            const updates = ref(true);
+            const notifications = ref(false);
             const options = [
                 { label: 'Owner', value: 'owner' },
                 { label: 'Editor', value: 'editor' },
                 { label: 'Viewer', value: 'viewer' },
             ];
-            return { args, email, role, note, options };
+            return { args, email, role, note, plan, updates, notifications, options };
         },
         template: `
             <div style="display: grid; gap: 16px; max-width: 420px;">
@@ -84,6 +91,26 @@ export const FormControls: Story = {
 
                 <Field id="field-note" label="Note" message="Keep it short and specific." v-slot="{ controlProps }">
                     <Textarea v-bind="controlProps" v-model="note" placeholder="Add context..." />
+                </Field>
+
+                <Field id="field-plan" label="Plan" description="Pick the billing tier for this workspace." v-slot="{ controlProps }">
+                    <RadioGroup v-bind="controlProps" v-model="plan">
+                        <Radio value="starter">Starter</Radio>
+                        <Radio value="pro">Pro</Radio>
+                        <Radio value="enterprise">Enterprise</Radio>
+                    </RadioGroup>
+                </Field>
+
+                <Field id="field-updates" label="Product updates" message="You can unsubscribe at any time." v-slot="{ controlProps }">
+                    <Checkbox v-bind="controlProps" v-model="updates">
+                        Send weekly product updates
+                    </Checkbox>
+                </Field>
+
+                <Field id="field-notifications" label="Notifications" description="Notify members when their access changes." v-slot="{ controlProps }">
+                    <Switch v-bind="controlProps" v-model="notifications">
+                        Access change alerts
+                    </Switch>
                 </Field>
             </div>
         `,
