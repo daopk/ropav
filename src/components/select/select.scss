@@ -2,6 +2,7 @@
     --_rp-select-radius: var(--rp-radius-sm);
     --_rp-select-invalid-border: var(--rp-color-danger);
     --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
+    --_rp-select-option-focused-bg: var(--rp-color-surface-hover);
 
     position: relative;
     display: inline-flex;
@@ -12,6 +13,7 @@
     html.dark & {
         --_rp-select-invalid-border: var(--rp-color-danger-fg);
         --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+        --_rp-select-option-focused-bg: var(--rp-color-button-default-bg-active);
     }
 
     &--disabled {
@@ -151,7 +153,7 @@
         color: var(--rp-color-control-fg);
 
         &--focused {
-            background-color: var(--rp-color-surface-hover);
+            background-color: var(--_rp-select-option-focused-bg);
         }
 
         &--selected {
