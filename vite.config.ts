@@ -1,50 +1,18 @@
-import { resolve, posix } from 'node:path';
-import { defineConfig, type Plugin } from 'vite';
+import { resolve } from 'node:path';
+import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
 import Icons from 'unplugin-icons/vite';
 
-const componentDirs = [
-    'button',
-    'checkbox',
-    'input',
-    'radio',
-    'select',
-    'switch',
-    'textarea',
-];
+import { injectComponentCss } from './config/inject-component-css';
+import { createVaporIconCompiler } from './config/vapor-icon-compiler';
+
+const componentDirs = ['button', 'checkbox', 'input', 'radio', 'select', 'switch', 'textarea'];
 
 const componentEntries = componentDirs.reduce<Record<string, string>>((entries, name) => {
     entries[`components/${name}/index`] = resolve(__dirname, `src/components/${name}/index.ts`);
     return entries;
 }, {});
-
-function injectComponentCss(): Plugin {
-    return {
-        name: 'inject-component-css',
-        apply(config, { command }) {
-            return command === 'build' && !!config.build?.lib;
-        },
-        enforce: 'post',
-        generateBundle(_, bundle) {
-            for (const chunk of Object.values(bundle)) {
-                if (chunk.type !== 'chunk') continue;
-                const importedCss = (chunk as any).viteMetadata?.importedCss as
-                    | Set<string>
-                    | undefined;
-                if (!importedCss?.size) continue;
-
-                const imports = [...importedCss]
-                    .map((css) => {
-                        const rel = posix.relative(posix.dirname(chunk.fileName), css);
-                        return `import '${rel.startsWith('.') ? rel : './' + rel}';`;
-                    })
-                    .join('\n');
-                chunk.code = imports + '\n' + chunk.code;
-            }
-        },
-    };
-}
 
 export default defineConfig({
     css: {
@@ -62,7 +30,7 @@ export default defineConfig({
     plugins: [
         vue(),
         Icons({
-            compiler: 'vue3',
+            compiler: createVaporIconCompiler(),
         }),
         dts({
             tsconfigPath: './tsconfig.app.json',
