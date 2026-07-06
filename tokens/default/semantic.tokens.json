@@ -9,9 +9,9 @@
       "$extensions": { "ropav": { "scssVariable": false } }
     },
 
-    "background": { "$value": "{color.white}", "$type": "color" },
+    "background": { "$value": "{color.gray.2}", "$type": "color" },
     "surface": {
-      "$value": "{color.white}",
+      "$value": "{color.gray.1}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
@@ -31,12 +31,12 @@
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "button-default-bg": {
-      "$value": "{color.gray.2}",
+      "$value": "{color.surface}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
     "button-default-bg-hover": {
-      "$value": "{color.gray.3}",
+      "$value": "{color.surface-hover}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     },
@@ -66,7 +66,7 @@
     },
 
     "control-bg": {
-      "$value": "{color.gray.2}",
+      "$value": "{color.surface}",
       "$type": "color",
       "$extensions": { "ropav": { "cssVariable": true, "scssVariable": false } }
     },
