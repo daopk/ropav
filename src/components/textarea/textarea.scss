@@ -9,6 +9,10 @@
     --_rp-textarea-padding-x: var(--rp-spacing-3);
     --_rp-textarea-font-size: var(--rp-font-size-base);
     --_rp-textarea-radius: var(--rp-radius-sm);
+    --_rp-textarea-valid-border: var(--rp-color-success-border-hover);
+    --_rp-textarea-valid-ring: color-mix(in srgb, var(--rp-color-success) 32%, transparent);
+    --_rp-textarea-invalid-border: var(--rp-color-danger-border-hover);
+    --_rp-textarea-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     display: inline-flex;
     box-sizing: border-box;
@@ -68,27 +72,32 @@
         }
     }
 
+    html.dark & {
+        --_rp-textarea-valid-border: var(--rp-color-success-fg);
+        --_rp-textarea-valid-ring: color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
+        --_rp-textarea-invalid-border: var(--rp-color-danger-fg);
+        --_rp-textarea-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    }
+
     &--disabled {
         @include disabled-state;
     }
 
     &--valid {
-        border-color: var(--rp-color-success-fg);
+        border-color: var(--_rp-textarea-valid-border);
 
         &:focus-within:not(.rp-textarea--disabled) {
-            border-color: var(--rp-color-success-fg);
-            box-shadow: 0 0 0 var(--rp-border-width-medium)
-                color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
+            border-color: var(--_rp-textarea-valid-border);
+            box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-textarea-valid-ring);
         }
     }
 
     &--invalid {
-        border-color: var(--rp-color-danger-fg);
+        border-color: var(--_rp-textarea-invalid-border);
 
         &:focus-within:not(.rp-textarea--disabled) {
-            border-color: var(--rp-color-danger-fg);
-            box-shadow: 0 0 0 var(--rp-border-width-medium)
-                color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+            border-color: var(--_rp-textarea-invalid-border);
+            box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-textarea-invalid-ring);
         }
     }
 

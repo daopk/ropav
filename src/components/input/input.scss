@@ -9,6 +9,10 @@
     --_rp-input-padding-x: var(--rp-spacing-3);
     --_rp-input-font-size: var(--rp-font-size-base);
     --_rp-input-radius: var(--rp-radius-sm);
+    --_rp-input-valid-border: var(--rp-color-success-border-hover);
+    --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-success) 32%, transparent);
+    --_rp-input-invalid-border: var(--rp-color-danger-border-hover);
+    --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     @include flex-center;
     box-sizing: border-box;
@@ -82,27 +86,32 @@
         }
     }
 
+    html.dark & {
+        --_rp-input-valid-border: var(--rp-color-success-fg);
+        --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
+        --_rp-input-invalid-border: var(--rp-color-danger-fg);
+        --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    }
+
     &--disabled {
         @include disabled-state;
     }
 
     &--valid {
-        border-color: var(--rp-color-success-fg);
+        border-color: var(--_rp-input-valid-border);
 
         &:focus-within:not(.rp-input--disabled) {
-            border-color: var(--rp-color-success-fg);
-            box-shadow: 0 0 0 var(--rp-border-width-medium)
-                color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
+            border-color: var(--_rp-input-valid-border);
+            box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-input-valid-ring);
         }
     }
 
     &--invalid {
-        border-color: var(--rp-color-danger-fg);
+        border-color: var(--_rp-input-invalid-border);
 
         &:focus-within:not(.rp-input--disabled) {
-            border-color: var(--rp-color-danger-fg);
-            box-shadow: 0 0 0 var(--rp-border-width-medium)
-                color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+            border-color: var(--_rp-input-invalid-border);
+            box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-input-invalid-ring);
         }
     }
 
