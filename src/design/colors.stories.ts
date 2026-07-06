@@ -39,7 +39,15 @@ const darkTokens = JSON.parse(darkTokensSource) as TokenFile;
 const defaultTokenValues = collectTokenValueMap(coreTokens, semanticTokens);
 const darkTokenValues = collectTokenValueMap(coreTokens, semanticTokens, darkTokens);
 
-const publicAccentNames = new Set(['primary', 'secondary', 'success', 'warning', 'danger', 'info']);
+const publicAccentNames = new Set([
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'danger',
+    'info',
+    'neutral',
+]);
 
 const coreColors = collectColorTokens(coreTokens.color, defaultTokenValues);
 const brandColors = coreColors.filter((color) => publicAccentNames.has(color.name));

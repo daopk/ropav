@@ -80,7 +80,7 @@
         color: var(--rp-color-text);
     }
 
-    @each $color in primary, secondary, success, warning, danger, info {
+    @each $color in primary, secondary, success, warning, danger, info, neutral {
         &--color-#{$color} {
             @include checkbox-color($color);
         }

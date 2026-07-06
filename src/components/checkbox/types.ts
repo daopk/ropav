@@ -1,4 +1,11 @@
-export type CheckboxColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
+export type CheckboxColor =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'neutral';
 
 export type CheckboxSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

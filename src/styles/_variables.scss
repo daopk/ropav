@@ -11,6 +11,7 @@ $color-success       : #218358 !default;
 $color-warning       : #cc4e00 !default;
 $color-danger        : #ce2c31 !default;
 $color-info          : #107d98 !default;
+$color-neutral       : #646464 !default;
 $color-white         : #ffffff !default;
 $color-black         : #111111 !default;
 $color-gray-1        : #fcfcfc !default;
@@ -37,6 +38,7 @@ $color-on-success    : $color-white !default;
 $color-on-warning    : $color-white !default;
 $color-on-danger     : $color-white !default;
 $color-on-info       : $color-white !default;
+$color-on-neutral    : $color-white !default;
 
 // Font sizes
 $font-size-xs  : 0.75rem !default;

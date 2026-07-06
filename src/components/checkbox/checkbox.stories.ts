@@ -3,7 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import Checkbox from './checkbox.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'outline'] as const;

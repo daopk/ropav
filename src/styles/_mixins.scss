@@ -104,7 +104,7 @@
 }
 
 @mixin semantic-colors($var-name) {
-    @each $name in primary, secondary, success, warning, danger, info {
+    @each $name in primary, secondary, success, warning, danger, info, neutral {
         &--#{$name} {
             #{$var-name}: var(--rp-color-#{$name}-fg);
         }
@@ -112,7 +112,7 @@
 }
 
 @mixin semantic-color-pair($color-var, $foreground-var) {
-    @each $name in primary, secondary, success, warning, danger, info {
+    @each $name in primary, secondary, success, warning, danger, info, neutral {
         &--#{$name} {
             #{$color-var}: var(--rp-color-#{$name});
             #{$foreground-var}: var(--rp-color-on-#{$name});
@@ -121,7 +121,7 @@
 }
 
 @mixin semantic-state-colors($prefix) {
-    @each $name in primary, secondary, success, warning, danger, info {
+    @each $name in primary, secondary, success, warning, danger, info, neutral {
         &--#{$name} {
             #{$prefix}-bg: var(--rp-color-#{$name});
             #{$prefix}-bg-hover: var(--rp-color-#{$name}-hover);

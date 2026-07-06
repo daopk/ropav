@@ -5,6 +5,15 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Button from './button.vue';
 
 describe('Button', () => {
+    const colors = [
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+        'neutral',
+    ] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
@@ -180,6 +189,31 @@ describe('Button', () => {
             'rp-button--solid',
             'rp-button--color-danger',
         ]);
+    });
+
+    it('adds a color modifier for each supported color', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        colors.map((color) => h(Button, { color }, { default: () => color })),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const buttons = [...container.querySelectorAll('button')];
+
+        expect(buttons).toHaveLength(colors.length);
+        for (const [index, color] of colors.entries()) {
+            expect([...buttons[index].classList]).toEqual([
+                'rp-button',
+                `rp-button--color-${color}`,
+            ]);
+        }
     });
 
     it('adds size modifiers when requested', async () => {

@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue';
 import Radio from './radio.vue';
 import RadioGroup from './radio-group.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'outline'] as const;
 

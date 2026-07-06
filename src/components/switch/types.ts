@@ -1,4 +1,11 @@
-export type SwitchColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
+export type SwitchColor =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'neutral';
 
 export type SwitchSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

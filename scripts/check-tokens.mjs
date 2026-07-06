@@ -22,7 +22,15 @@ const defaultTokenFiles = [
     'tokens/default/semantic.tokens.json',
 ];
 const darkOverrideTokenFiles = ['tokens/dark/overrides.tokens.json'];
-const semanticColorNames = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'];
+const semanticColorNames = [
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'danger',
+    'info',
+    'neutral',
+];
 
 const staleFiles = [];
 const platformOutputs = await dictionary.formatAllPlatforms();

@@ -14,6 +14,7 @@
     --rp-color-warning                   : #{$color-warning};
     --rp-color-danger                    : #{$color-danger};
     --rp-color-info                      : #{$color-info};
+    --rp-color-neutral                   : #{$color-neutral};
     --rp-color-text                      : #{$color-text};
     --rp-color-text-secondary            : #{$color-text-secondary};
     --rp-color-text-disabled             : #{$color-text-disabled};
@@ -37,6 +38,7 @@
     --rp-color-on-warning                : #{$color-on-warning};
     --rp-color-on-danger                 : #{$color-on-danger};
     --rp-color-on-info                   : #{$color-on-info};
+    --rp-color-on-neutral                : #{$color-on-neutral};
     --rp-color-primary-hover             : color-mix(in srgb, var(--rp-color-primary) 90%, #{$color-black});
     --rp-color-primary-active            : color-mix(in srgb, var(--rp-color-primary) 80%, #{$color-black});
     --rp-color-primary-subtle-bg         : #e6f4fe;
@@ -85,6 +87,14 @@
     --rp-color-info-border               : #7dcedc;
     --rp-color-info-border-hover         : #3db9cf;
     --rp-color-info-fg                   : #0d3c48;
+    --rp-color-neutral-hover             : color-mix(in srgb, var(--rp-color-neutral) 90%, #{$color-black});
+    --rp-color-neutral-active            : color-mix(in srgb, var(--rp-color-neutral) 80%, #{$color-black});
+    --rp-color-neutral-subtle-bg         : #f0f0f0;
+    --rp-color-neutral-subtle-bg-hover   : #e8e8e8;
+    --rp-color-neutral-subtle-bg-active  : #e0e0e0;
+    --rp-color-neutral-border            : #cecece;
+    --rp-color-neutral-border-hover      : #bbbbbb;
+    --rp-color-neutral-fg                : #202020;
 
     // Font sizes
     --rp-font-size-xs  : #{$font-size-xs};
@@ -205,6 +215,12 @@ html.dark {
     --rp-color-info-border               : #12677e;
     --rp-color-info-border-hover         : #11809c;
     --rp-color-info-fg                   : #4ccce6;
+    --rp-color-neutral-subtle-bg         : #222222;
+    --rp-color-neutral-subtle-bg-hover   : #2a2a2a;
+    --rp-color-neutral-subtle-bg-active  : #313131;
+    --rp-color-neutral-border            : #484848;
+    --rp-color-neutral-border-hover      : #606060;
+    --rp-color-neutral-fg                : #eeeeee;
 
     // Shadows
     --rp-shadow-sm  : 0 1px 2px 0 rgba(0, 0, 0, 0.3);

@@ -5,7 +5,15 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Switch from './switch.vue';
 
 describe('Switch', () => {
-    const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+    const colors = [
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+        'neutral',
+    ] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
     it('emits model updates from native switch changes', async () => {

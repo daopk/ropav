@@ -42,6 +42,7 @@
     "warning": { "$value": "{color.palette.light.orange.11}", "$type": "color" },
     "danger": { "$value": "{color.palette.light.red.11}", "$type": "color" },
     "info": { "$value": "{color.palette.light.cyan.11}", "$type": "color" },
+    "neutral": { "$value": "{color.palette.light.gray.11}", "$type": "color" },
     "white": { "$value": "#ffffff", "$type": "color" },
     "black": { "$value": "#111111", "$type": "color" },
     "gray": {

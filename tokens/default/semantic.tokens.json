@@ -132,6 +132,7 @@
     "on-warning": { "$value": "{color.white}", "$type": "color" },
     "on-danger": { "$value": "{color.white}", "$type": "color" },
     "on-info": { "$value": "{color.white}", "$type": "color" },
+    "on-neutral": { "$value": "{color.white}", "$type": "color" },
 
     "primary-hover": {
       "$value": "color-mix(in srgb, {color.primary} 90%, {color.black})",
@@ -375,6 +376,47 @@
     },
     "info-fg": {
       "$value": "{color.palette.light.cyan.12}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+
+    "neutral-hover": {
+      "$value": "color-mix(in srgb, {color.neutral} 90%, {color.black})",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-active": {
+      "$value": "color-mix(in srgb, {color.neutral} 80%, {color.black})",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-subtle-bg": {
+      "$value": "{color.palette.light.gray.3}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-subtle-bg-hover": {
+      "$value": "{color.palette.light.gray.4}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-subtle-bg-active": {
+      "$value": "{color.palette.light.gray.5}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-border": {
+      "$value": "{color.palette.light.gray.7}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-border-hover": {
+      "$value": "{color.palette.light.gray.8}",
+      "$type": "color",
+      "$extensions": { "ropav": { "scssVariable": false } }
+    },
+    "neutral-fg": {
+      "$value": "{color.palette.light.gray.12}",
       "$type": "color",
       "$extensions": { "ropav": { "scssVariable": false } }
     }

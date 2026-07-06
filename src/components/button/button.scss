@@ -86,7 +86,7 @@
         transform: translateY(1px);
     }
 
-    @each $color in primary, secondary, success, warning, danger, info {
+    @each $color in primary, secondary, success, warning, danger, info, neutral {
         &--color-#{$color} {
             @include button-color($color);
         }

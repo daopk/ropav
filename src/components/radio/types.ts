@@ -1,6 +1,13 @@
 import type { InjectionKey } from 'vue';
 
-export type RadioColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
+export type RadioColor =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'neutral';
 
 export type RadioSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

@@ -3,7 +3,7 @@ import IconArrowRight from '~icons/lucide/arrow-right';
 import IconPlus from '~icons/lucide/plus';
 import Button from './button.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info'] as const;
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;

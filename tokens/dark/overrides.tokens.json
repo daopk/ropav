@@ -71,7 +71,14 @@
     "info-subtle-bg-active": { "$value": "{color.palette.dark.cyan.5}" },
     "info-border": { "$value": "{color.palette.dark.cyan.7}" },
     "info-border-hover": { "$value": "{color.palette.dark.cyan.8}" },
-    "info-fg": { "$value": "{color.palette.dark.cyan.11}" }
+    "info-fg": { "$value": "{color.palette.dark.cyan.11}" },
+
+    "neutral-subtle-bg": { "$value": "{color.palette.dark.gray.3}" },
+    "neutral-subtle-bg-hover": { "$value": "{color.palette.dark.gray.4}" },
+    "neutral-subtle-bg-active": { "$value": "{color.palette.dark.gray.5}" },
+    "neutral-border": { "$value": "{color.palette.dark.gray.7}" },
+    "neutral-border-hover": { "$value": "{color.palette.dark.gray.8}" },
+    "neutral-fg": { "$value": "{color.palette.dark.gray.12}" }
   },
   "shadow": {
     "sm": { "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.3)" },

@@ -1,4 +1,11 @@
-export type ButtonColor = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
+export type ButtonColor =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'neutral';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

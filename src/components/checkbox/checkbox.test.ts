@@ -5,6 +5,15 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Checkbox from './checkbox.vue';
 
 describe('Checkbox', () => {
+    const colors = [
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+        'neutral',
+    ] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'outline'] as const;
 
@@ -151,6 +160,33 @@ describe('Checkbox', () => {
             'rp-checkbox--size-lg',
             'rp-checkbox--radius-xl',
         ]);
+    });
+
+    it('adds a color modifier for each supported color', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        colors.map((color) =>
+                            h(Checkbox, { color, modelValue: false }, { default: () => color }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const checkboxes = [...container.querySelectorAll('.rp-checkbox')];
+
+        expect(checkboxes).toHaveLength(colors.length);
+        for (const [index, color] of colors.entries()) {
+            expect([...checkboxes[index].classList]).toEqual([
+                'rp-checkbox',
+                `rp-checkbox--color-${color}`,
+            ]);
+        }
     });
 
     it('adds a modifier for each supported variant', async () => {

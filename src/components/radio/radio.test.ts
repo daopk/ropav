@@ -6,6 +6,16 @@ import Radio from './radio.vue';
 import RadioGroup from './radio-group.vue';
 
 describe('Radio', () => {
+    const colors = [
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+        'neutral',
+    ] as const;
+
     it('requires a RadioGroup provider', () => {
         expect(() => {
             mountDom(
@@ -239,5 +249,43 @@ describe('Radio', () => {
             'rp-radio--color-danger',
             'rp-radio--size-sm',
         ]);
+    });
+
+    it('adds a color modifier for each supported color', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        colors.map((color) =>
+                            h(
+                                RadioGroup,
+                                {
+                                    color,
+                                    modelValue: color,
+                                },
+                                {
+                                    default: () =>
+                                        h(Radio, { value: color }, { default: () => color }),
+                                },
+                            ),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const radios = [...container.querySelectorAll('.rp-radio')];
+
+        expect(radios).toHaveLength(colors.length);
+        for (const [index, color] of colors.entries()) {
+            expect([...radios[index].classList]).toEqual([
+                'rp-radio',
+                'rp-radio--checked',
+                `rp-radio--color-${color}`,
+            ]);
+        }
     });
 });
