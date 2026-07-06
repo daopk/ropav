@@ -12,13 +12,22 @@ pnpm add ropav vue
 
 ```ts
 import 'ropav/base.css';
-import { Button, Input } from 'ropav';
+import { Button, Field, Input } from 'ropav';
 ```
 
 Deep imports are available for individual components:
 
 ```ts
 import { Button } from 'ropav/button';
+```
+
+Field wrappers can pass accessible ids and state into form controls through slot
+props:
+
+```vue
+<Field id="email" label="Email" error="Enter a valid email" v-slot="{ controlProps }">
+  <Input v-bind="controlProps" v-model="email" />
+</Field>
 ```
 
 ## Theming and tokens

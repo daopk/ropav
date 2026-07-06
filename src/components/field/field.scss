@@ -1,0 +1,45 @@
+.rp-field {
+    display: grid;
+    gap: var(--rp-spacing-1);
+    min-width: 0;
+    font-family: var(--rp-font-family);
+    color: var(--rp-color-text);
+
+    &__label {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: var(--rp-spacing-1);
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-sm);
+        font-weight: var(--rp-font-weight-medium);
+        line-height: var(--rp-line-height-normal);
+    }
+
+    &__required {
+        color: var(--rp-color-danger-fg);
+        line-height: var(--rp-line-height-none);
+    }
+
+    &__control {
+        min-width: 0;
+    }
+
+    &__description,
+    &__message {
+        margin: 0;
+        color: var(--rp-color-text-secondary);
+        font-size: var(--rp-font-size-sm);
+        line-height: var(--rp-line-height-normal);
+    }
+
+    &--invalid &__message {
+        color: var(--rp-color-danger-fg);
+    }
+
+    &--disabled &__label,
+    &--disabled &__description,
+    &--disabled &__message {
+        color: var(--rp-color-text-disabled);
+    }
+}

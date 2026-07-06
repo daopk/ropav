@@ -4,6 +4,7 @@ import * as Ropav from './index';
 const publicComponents = [
     'Button',
     'Checkbox',
+    'Field',
     'IconButton',
     'Input',
     'Radio',
