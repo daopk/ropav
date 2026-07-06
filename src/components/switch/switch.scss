@@ -18,12 +18,19 @@
     --_thumb-offset: 2px;
     --_track-bg: var(--rp-color-control-track-bg);
     --_thumb-bg: var(--rp-color-control-thumb-bg);
+    --_switch-invalid-border: var(--rp-color-danger);
+    --_switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     font-family: var(--rp-font-family);
     user-select: none;
+
+    html.dark & {
+        --_switch-invalid-border: var(--rp-color-danger-fg);
+        --_switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    }
 
     &--disabled {
         @include disabled-state;
@@ -57,8 +64,12 @@
     }
 
     &--invalid &__track {
-        outline: var(--rp-border-width-thin) solid var(--rp-color-danger-fg);
+        outline: var(--rp-border-width-thin) solid var(--_switch-invalid-border);
         outline-offset: var(--_thumb-offset);
+    }
+
+    &--invalid &__native:focus-visible + &__track {
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_switch-invalid-ring);
     }
 
     &__thumb {

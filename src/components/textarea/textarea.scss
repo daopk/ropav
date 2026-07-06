@@ -11,7 +11,7 @@
     --_rp-textarea-radius: var(--rp-radius-sm);
     --_rp-textarea-valid-border: var(--rp-color-success-border-hover);
     --_rp-textarea-valid-ring: color-mix(in srgb, var(--rp-color-success) 32%, transparent);
-    --_rp-textarea-invalid-border: var(--rp-color-danger-border-hover);
+    --_rp-textarea-invalid-border: var(--rp-color-danger);
     --_rp-textarea-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     display: inline-flex;

@@ -1,9 +1,15 @@
 .rp-field {
+    --_rp-field-danger: var(--rp-color-danger);
+
     display: grid;
     gap: var(--rp-spacing-1);
     min-width: 0;
     font-family: var(--rp-font-family);
     color: var(--rp-color-text);
+
+    html.dark & {
+        --_rp-field-danger: var(--rp-color-danger-fg);
+    }
 
     &__label {
         display: inline-flex;
@@ -17,7 +23,7 @@
     }
 
     &__required {
-        color: var(--rp-color-danger-fg);
+        color: var(--_rp-field-danger);
         line-height: var(--rp-line-height-none);
     }
 
@@ -34,7 +40,7 @@
     }
 
     &--invalid &__message {
-        color: var(--rp-color-danger-fg);
+        color: var(--_rp-field-danger);
     }
 
     &--disabled &__label,

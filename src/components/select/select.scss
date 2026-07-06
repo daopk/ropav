@@ -1,11 +1,18 @@
 .rp-select {
     --_rp-select-radius: var(--rp-radius-sm);
+    --_rp-select-invalid-border: var(--rp-color-danger);
+    --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     position: relative;
     display: inline-flex;
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-normal);
     line-height: var(--rp-line-height-none);
+
+    html.dark & {
+        --_rp-select-invalid-border: var(--rp-color-danger-fg);
+        --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    }
 
     &--disabled {
         @include disabled-state;
@@ -60,7 +67,13 @@
     }
 
     &--invalid &__trigger {
-        border-color: var(--rp-color-danger-fg);
+        border-color: var(--_rp-select-invalid-border);
+    }
+
+    &--invalid &__trigger:focus-visible,
+    &--open#{&}--invalid &__trigger {
+        border-color: var(--_rp-select-invalid-border);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-select-invalid-ring);
     }
 
     &__value {

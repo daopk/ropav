@@ -19,12 +19,19 @@
     --_checkbox-checked-bg: var(--_checkbox-color);
     --_checkbox-checked-border: var(--_checkbox-color);
     --_checkbox-checked-icon: var(--_checkbox-on-color);
+    --_checkbox-invalid-border: var(--rp-color-danger);
+    --_checkbox-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     font-family: var(--rp-font-family);
     user-select: none;
+
+    html.dark & {
+        --_checkbox-invalid-border: var(--rp-color-danger-fg);
+        --_checkbox-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    }
 
     &--disabled {
         @include disabled-state;
@@ -61,7 +68,12 @@
     }
 
     &--invalid &__box {
-        border-color: var(--rp-color-danger-fg);
+        border-color: var(--_checkbox-invalid-border);
+    }
+
+    &--invalid &__native:focus-visible + &__box {
+        border-color: var(--_checkbox-invalid-border);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_checkbox-invalid-ring);
     }
 
     &__icon {
