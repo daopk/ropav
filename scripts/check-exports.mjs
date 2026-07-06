@@ -19,6 +19,7 @@ const expectedFiles = [
     'dist/base.css',
     'dist/button.css',
     'dist/checkbox.css',
+    'dist/icon-button.css',
     'dist/input.css',
     'dist/radio.css',
     'dist/select.css',
@@ -26,6 +27,7 @@ const expectedFiles = [
     'dist/textarea.css',
     'dist/components/button/index.js',
     'dist/components/checkbox/index.js',
+    'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
     'dist/components/radio/index.js',
     'dist/components/select/index.js',
@@ -61,6 +63,7 @@ try {
         [
             'Button',
             'Checkbox',
+            'IconButton',
             'Input',
             'Radio',
             'RadioGroup',
@@ -73,6 +76,9 @@ try {
 
     const button = await server.ssrLoadModule('/dist/components/button/index.js');
     assertExports(button, ['Button'], 'dist/components/button/index.js');
+
+    const iconButton = await server.ssrLoadModule('/dist/components/icon-button/index.js');
+    assertExports(iconButton, ['IconButton'], 'dist/components/icon-button/index.js');
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
     assertExports(select, ['Select'], 'dist/components/select/index.js');

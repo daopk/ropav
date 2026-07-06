@@ -1,0 +1,36 @@
+.rp-icon-button {
+    width: var(--_rp-button-height);
+    padding: 0;
+
+    &__icon,
+    &__spinner {
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+
+        :slotted(svg) {
+            display: block;
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    &__spinner {
+        display: block;
+        transform-origin: center;
+        animation: rp-icon-button-spin 700ms linear infinite;
+    }
+}
+
+@keyframes rp-icon-button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

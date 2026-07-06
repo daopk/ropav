@@ -29,6 +29,10 @@
       "types": "./dist/components/checkbox/index.d.ts",
       "import": "./dist/components/checkbox/index.js"
     },
+    "./icon-button": {
+      "types": "./dist/components/icon-button/index.d.ts",
+      "import": "./dist/components/icon-button/index.js"
+    },
     "./input": {
       "types": "./dist/components/input/index.d.ts",
       "import": "./dist/components/input/index.js"
