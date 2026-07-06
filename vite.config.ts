@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -7,12 +8,14 @@ import Icons from 'unplugin-icons/vite';
 import { injectComponentCss } from './config/inject-component-css';
 import { createVaporIconCompiler } from './config/vapor-icon-compiler';
 
-const componentDirs = ['button', 'checkbox', 'input', 'radio', 'select', 'switch', 'textarea'];
-
-const componentEntries = componentDirs.reduce<Record<string, string>>((entries, name) => {
-    entries[`components/${name}/index`] = resolve(__dirname, `src/components/${name}/index.ts`);
-    return entries;
-}, {});
+const componentEntries = readdirSync(resolve(__dirname, 'src/components'), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .toSorted()
+    .reduce<Record<string, string>>((entries, name) => {
+        entries[`components/${name}/index`] = resolve(__dirname, `src/components/${name}/index.ts`);
+        return entries;
+    }, {});
 
 export default defineConfig({
     css: {
