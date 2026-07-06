@@ -127,7 +127,7 @@
     @each $radius,
         $value
             in (
-                xs: var(--rp-radius-sm),
+                xs: var(--rp-radius-xs),
                 sm: var(--rp-radius-sm),
                 md: var(--rp-radius-md),
                 lg: var(--rp-radius-lg),
