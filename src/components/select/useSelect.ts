@@ -144,6 +144,13 @@ export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: Sele
                     navigation.focusLast();
                 }
                 break;
+            case 'Delete':
+            case 'Backspace':
+                if (canClear.value) {
+                    e.preventDefault();
+                    clearSelection();
+                }
+                break;
             case 'Escape':
                 e.preventDefault();
                 close();

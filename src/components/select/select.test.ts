@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, reactive } from 'vue';
 
-import { click, keydown, keyEvent, mountDom } from '../../../tests/utils/vue';
+import { click, keydown, keyEvent, mountDom, waitTransition } from '../../../tests/utils/vue';
 import Select from './select.vue';
 import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
@@ -123,6 +123,62 @@ describe('Select', () => {
         const clear = container.querySelector('.rp-select__clear')!;
         click(clear);
         await nextTick();
+
+        expect(onUpdate).toHaveBeenCalledWith(null);
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('clears the selected value from the trigger with Delete', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        clearable: true,
+                        modelValue: 'a',
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'Delete');
+        await nextTick();
+
+        expect(onUpdate).toHaveBeenCalledWith(null);
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('clears and closes the selected value from the trigger with Backspace', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        clearable: true,
+                        modelValue: 'a',
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+        expect(container.querySelector('[role="listbox"]')).not.toBeNull();
+
+        keydown(trigger, 'Backspace');
+        await waitTransition();
 
         expect(onUpdate).toHaveBeenCalledWith(null);
         expect(container.querySelector('[role="listbox"]')).toBeNull();
