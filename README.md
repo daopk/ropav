@@ -12,13 +12,13 @@ pnpm add ropav vue
 
 ```ts
 import 'ropav/base.css';
-import { Button, Field, Input } from 'ropav';
+import { Button, Card, Field, Input } from 'ropav';
 ```
 
 Deep imports are available for individual components:
 
 ```ts
-import { Button } from 'ropav/button';
+import { Card } from 'ropav/card';
 ```
 
 Field wrappers can pass accessible ids and state into form controls through slot

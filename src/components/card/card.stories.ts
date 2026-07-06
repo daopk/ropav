@@ -1,0 +1,182 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { computed } from 'vue';
+import Card from './card.vue';
+
+const paddings = ['none', 'sm', 'md', 'lg'] as const;
+const radii = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
+const layers = ['base', 'surface', 'raised'] as const;
+
+const borderExamples = [
+    { label: 'border on', border: true },
+    { label: 'border off', border: false },
+];
+
+const radiusExamples: Array<{ label: string; radius?: (typeof radii)[number] }> = [
+    { label: 'none', radius: 'none' },
+    { label: 'xs', radius: 'xs' },
+    { label: 'sm (default)', radius: 'sm' },
+    { label: 'md', radius: 'md' },
+    { label: 'lg', radius: 'lg' },
+    { label: 'xl', radius: 'xl' },
+];
+
+const paddingExamples: Array<{ label: string; padding?: (typeof paddings)[number] }> = [
+    { label: 'none', padding: 'none' },
+    { label: 'sm', padding: 'sm' },
+    { label: 'md (default)', padding: 'md' },
+    { label: 'lg', padding: 'lg' },
+];
+
+const meta = {
+    title: 'Components/Card',
+    component: Card as any,
+    tags: ['autodocs'],
+    argTypes: {
+        layer: {
+            control: 'select',
+            options: [undefined, ...layers],
+        },
+        padding: {
+            control: 'select',
+            options: [undefined, ...paddings],
+        },
+        radius: {
+            control: 'select',
+            options: [undefined, ...radii],
+        },
+        border: { control: 'boolean' },
+        title: { control: 'text' },
+        description: { control: 'text' },
+    },
+    args: {
+        border: true,
+        title: 'Project health',
+        description: 'Last updated just now',
+    },
+} satisfies Meta<typeof Card>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Basic: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({ args }),
+        template: `
+            <Card v-bind="args" style="max-width: 360px;">
+                <div style="display: grid; gap: 8px;">
+                    <strong>92% complete</strong>
+                    <span style="color: var(--rp-color-text-secondary);">All critical tasks are on track for the next milestone.</span>
+                </div>
+            </Card>
+        `,
+    }),
+};
+
+export const Layers: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({ args, layers }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="layer in layers"
+                    :key="layer"
+                    v-bind="args"
+                    :layer="layer"
+                    :title="layer"
+                    description="Surface layer"
+                >
+                    <span>Card content</span>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
+export const Border: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({
+            borderArgs: computed(() => ({
+                ...args,
+                title: '',
+                description: '',
+            })),
+            borderExamples,
+        }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="example in borderExamples"
+                    :key="example.label"
+                    v-bind="borderArgs"
+                    :border="example.border"
+                    style="min-height: 120px;"
+                >
+                    <div style="display: grid; height: 100%; place-items: center; color: var(--rp-color-text); font-weight: var(--rp-font-weight-semibold);">
+                        {{ example.label }}
+                    </div>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
+export const Radii: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({
+            radiusArgs: computed(() => ({
+                ...args,
+                title: '',
+                description: '',
+            })),
+            radiusExamples,
+        }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="example in radiusExamples"
+                    :key="example.label"
+                    v-bind="radiusArgs"
+                    :radius="example.radius"
+                    style="min-height: 120px;"
+                >
+                    <div style="display: grid; height: 100%; place-items: center; color: var(--rp-color-text); font-weight: var(--rp-font-weight-semibold);">
+                        {{ example.label }}
+                    </div>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
+export const Padding: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({
+            paddingArgs: computed(() => ({
+                ...args,
+                title: '',
+                description: '',
+            })),
+            paddingExamples,
+        }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="example in paddingExamples"
+                    :key="example.label"
+                    v-bind="paddingArgs"
+                    :padding="example.padding"
+                    style="min-height: 160px;"
+                >
+                    <div style="display: grid; height: 100%; min-height: 96px; place-items: center; background: var(--rp-color-primary-subtle-bg); color: var(--rp-color-primary-fg); font-weight: var(--rp-font-weight-semibold);">
+                        {{ example.label }}
+                    </div>
+                </Card>
+            </div>
+        `,
+    }),
+};

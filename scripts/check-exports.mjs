@@ -18,6 +18,7 @@ const expectedFiles = [
     'dist/index.js',
     'dist/base.css',
     'dist/button.css',
+    'dist/card.css',
     'dist/checkbox.css',
     'dist/field.css',
     'dist/icon-button.css',
@@ -27,6 +28,7 @@ const expectedFiles = [
     'dist/switch.css',
     'dist/textarea.css',
     'dist/components/button/index.js',
+    'dist/components/card/index.js',
     'dist/components/checkbox/index.js',
     'dist/components/field/index.js',
     'dist/components/icon-button/index.js',
@@ -64,6 +66,7 @@ try {
         root,
         [
             'Button',
+            'Card',
             'Checkbox',
             'Field',
             'IconButton',
@@ -79,6 +82,9 @@ try {
 
     const button = await server.ssrLoadModule('/dist/components/button/index.js');
     assertExports(button, ['Button'], 'dist/components/button/index.js');
+
+    const card = await server.ssrLoadModule('/dist/components/card/index.js');
+    assertExports(card, ['Card'], 'dist/components/card/index.js');
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');
     assertExports(field, ['Field'], 'dist/components/field/index.js');

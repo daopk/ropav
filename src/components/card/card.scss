@@ -1,0 +1,101 @@
+.rp-card {
+    --_rp-card-bg: var(--rp-color-surface-raised);
+    --_rp-card-border: var(--rp-color-border);
+    --_rp-card-fg: var(--rp-color-text);
+    --_rp-card-padding: var(--rp-spacing-5);
+    --_rp-card-radius: var(--rp-radius-sm);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    font-family: var(--rp-font-family);
+    color: var(--_rp-card-fg);
+    background-color: var(--_rp-card-bg);
+    border: var(--rp-border-width-thin) solid var(--_rp-card-border);
+    border-radius: var(--_rp-card-radius);
+    transition:
+        background-color var(--rp-transition-fast),
+        border-color var(--rp-transition-fast);
+
+    &--layer-base {
+        --_rp-card-bg: var(--rp-color-background);
+    }
+
+    &--layer-surface {
+        --_rp-card-bg: var(--rp-color-surface);
+    }
+
+    &--layer-raised {
+        --_rp-card-bg: var(--rp-color-surface-raised);
+    }
+
+    &--borderless {
+        --_rp-card-border: transparent;
+    }
+
+    @each $padding,
+        $value
+            in (
+                none: var(--rp-spacing-0),
+                sm: var(--rp-spacing-3),
+                md: var(--rp-spacing-5),
+                lg: var(--rp-spacing-6)
+            )
+    {
+        &--padding-#{$padding} {
+            --_rp-card-padding: #{$value};
+        }
+    }
+
+    @each $radius,
+        $value
+            in (
+                none: var(--rp-radius-none),
+                xs: var(--rp-radius-xs),
+                sm: var(--rp-radius-sm),
+                md: var(--rp-radius-md),
+                lg: var(--rp-radius-lg),
+                xl: var(--rp-radius-xl)
+            )
+    {
+        &--radius-#{$radius} {
+            --_rp-card-radius: #{$value};
+        }
+    }
+
+    &__header,
+    &__body {
+        box-sizing: border-box;
+        padding: var(--_rp-card-padding);
+    }
+
+    &__header {
+        display: grid;
+        gap: var(--rp-spacing-1);
+    }
+
+    &__body {
+        flex: 1 1 auto;
+        min-width: 0;
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-base);
+        line-height: var(--rp-line-height-normal);
+    }
+
+    &__title {
+        margin: 0;
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-lg);
+        font-weight: var(--rp-font-weight-semibold);
+        line-height: var(--rp-line-height-tight);
+    }
+
+    &__description {
+        margin: 0;
+        color: var(--rp-color-text-secondary);
+        font-size: var(--rp-font-size-sm);
+        line-height: var(--rp-line-height-normal);
+    }
+}

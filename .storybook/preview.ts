@@ -5,7 +5,7 @@ import { vaporInteropPlugin } from 'vue';
 import '../src/styles/base.scss';
 import './preview.scss';
 
-const defaultTheme = 'light';
+const defaultTheme = 'dark';
 
 const preview: Preview = {
     initialGlobals: {
