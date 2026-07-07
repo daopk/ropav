@@ -11,6 +11,7 @@ function typeTextarea(el: HTMLTextAreaElement, value: string) {
 
 describe('Textarea', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+    const resizes = ['vertical', 'both'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
     it('emits string updates from native textarea input', async () => {
@@ -232,6 +233,31 @@ describe('Textarea', () => {
             expect([...roots[index].classList]).toEqual([
                 'rp-textarea',
                 `rp-textarea--size-${size}`,
+            ]);
+        }
+    });
+
+    it('adds a resize modifier only when resize is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Textarea, { modelValue: 'none' }),
+                        ...resizes.map((resize) => h(Textarea, { modelValue: resize, resize })),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-textarea')];
+
+        expect([...roots[0].classList]).toEqual(['rp-textarea']);
+        for (const [index, resize] of resizes.entries()) {
+            expect([...roots[index + 1].classList]).toEqual([
+                'rp-textarea',
+                `rp-textarea--resize-${resize}`,
             ]);
         }
     });

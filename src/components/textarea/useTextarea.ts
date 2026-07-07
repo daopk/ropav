@@ -26,6 +26,7 @@ export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: 
         bem('rp-textarea', {
             [`size-${props.size}`]: Boolean(props.size),
             [`radius-${props.radius}`]: Boolean(props.radius),
+            [`resize-${props.resize}`]: props.resize !== undefined && props.resize !== 'none',
             disabled: control.disabled,
             invalid: control.invalid,
             valid: control.valid && !control.invalid,

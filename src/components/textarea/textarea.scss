@@ -34,7 +34,6 @@
         box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
     }
 
-    padding: var(--_rp-textarea-padding-y) var(--_rp-textarea-padding-x);
     font-size: var(--_rp-textarea-font-size);
     border-radius: var(--_rp-textarea-radius);
 
@@ -106,14 +105,24 @@
         background-color: var(--rp-color-control-readonly-bg);
     }
 
+    &--resize-vertical &__native {
+        resize: vertical;
+    }
+
+    &--resize-both &__native {
+        resize: both;
+    }
+
     &__native {
         box-sizing: border-box;
         flex: 1;
         width: 100%;
         min-width: 0;
-        padding: 0;
+        min-height: calc(1lh + var(--_rp-textarea-padding-y) + var(--_rp-textarea-padding-y));
+        padding: var(--_rp-textarea-padding-y) var(--_rp-textarea-padding-x);
         border: none;
         outline: none;
+        resize: none;
         background: transparent;
         font: inherit;
         color: var(--rp-color-control-fg);

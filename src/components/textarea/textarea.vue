@@ -29,6 +29,7 @@ defineOptions({ name: 'RpTextarea' });
 const props = withDefaults(defineProps<TextareaProps>(), {
     placeholder: '',
     rows: 3,
+    resize: 'none',
     disabled: undefined,
     required: undefined,
     invalid: undefined,

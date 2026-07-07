@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import Textarea from './textarea.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const resizes = ['none', 'vertical', 'both'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
@@ -19,6 +20,10 @@ const meta = {
             control: 'select',
             options: [undefined, ...sizes],
         },
+        resize: {
+            control: 'select',
+            options: resizes,
+        },
         rows: { control: 'number' },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
@@ -29,6 +34,7 @@ const meta = {
     args: {
         modelValue: '',
         radius: undefined,
+        resize: 'none',
         size: undefined,
         rows: 3,
         placeholder: 'Enter text...',
@@ -86,6 +92,13 @@ export const Invalid: Story = {
 
 export const Valid: Story = {
     args: { valid: true },
+};
+
+export const Resizable: Story = {
+    args: {
+        modelValue: 'Resizable notes',
+        resize: 'vertical',
+    },
 };
 
 export const Sizes: Story = {
