@@ -23,6 +23,7 @@ const meta = {
         openDelay: { control: 'number' },
         arrow: { control: 'boolean' },
         disabled: { control: 'boolean' },
+        offset: { control: 'object' },
         target: { control: false },
     },
     args: {
@@ -127,6 +128,30 @@ export const CustomContent: Story = {
                             <span style="width: 8px; height: 8px; border-radius: 999px; background: var(--rp-color-success);"></span>
                             All checks passed
                         </span>
+                    </template>
+                </Tooltip>
+            </div>
+        `,
+    }),
+};
+
+export const Offset: Story = {
+    args: {
+        placement: 'bottom',
+        offset: {
+            mainAxis: 24,
+            crossAxis: 16,
+        },
+        open: true,
+    },
+    render: (args) => ({
+        components: { Button, Tooltip },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Tooltip v-bind="args" content="Offset on both axes" :open-delay="0" arrow>
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">Offset</Button>
                     </template>
                 </Tooltip>
             </div>

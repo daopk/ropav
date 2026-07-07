@@ -13,6 +13,13 @@ export type TooltipColor =
 
 export type TooltipTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
 
+export interface TooltipOffsetOptions {
+    mainAxis?: number;
+    crossAxis?: number;
+}
+
+export type TooltipOffset = number | TooltipOffsetOptions;
+
 export interface TooltipTriggerProps {
     'aria-describedby'?: string;
 }
@@ -27,6 +34,7 @@ export interface TooltipProps {
     target?: TooltipTarget | null;
     placement?: TooltipPlacement;
     color?: TooltipColor;
+    offset?: TooltipOffset;
     open?: boolean;
     openDelay?: number;
     arrow?: boolean;

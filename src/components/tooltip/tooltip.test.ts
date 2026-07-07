@@ -178,6 +178,53 @@ describe('Tooltip', () => {
         }
     });
 
+    it('applies numeric and axis object offsets as content style variables', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            Tooltip,
+                            {
+                                content: 'Numeric offset',
+                                offset: 12,
+                            },
+                            {
+                                default: () => h('button', 'Numeric'),
+                            },
+                        ),
+                        h(
+                            Tooltip,
+                            {
+                                content: 'Axis offset',
+                                offset: {
+                                    mainAxis: 20,
+                                    crossAxis: -6,
+                                },
+                            },
+                            {
+                                default: () => h('button', 'Axis'),
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const [numericTooltip, axisTooltip] = [
+            ...container.querySelectorAll('[role="tooltip"]'),
+        ] as HTMLElement[];
+
+        expect(numericTooltip.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe(
+            '12px',
+        );
+        expect(numericTooltip.style.getPropertyValue('--_rp-tooltip-cross-axis-offset')).toBe('');
+        expect(axisTooltip.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe('20px');
+        expect(axisTooltip.style.getPropertyValue('--_rp-tooltip-cross-axis-offset')).toBe('-6px');
+    });
+
     it('supports controlled visibility through the open prop', async () => {
         const props = reactive<TooltipProps>({
             content: 'Controlled help',

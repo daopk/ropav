@@ -11,7 +11,7 @@ import {
 } from 'vue';
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { bem } from '@/utils/bem';
-import type { TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
+import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
 
 interface TooltipPosition {
     x: number;
@@ -34,6 +34,28 @@ function getTargetPosition(rect: DOMRect, placement: TooltipPlacement): TooltipP
         default:
             return { x: rect.left + rect.width / 2, y: rect.top };
     }
+}
+
+function resolveOffsetStyle(offset: TooltipOffset | undefined): CSSProperties | undefined {
+    if (offset == null) return undefined;
+
+    if (typeof offset === 'number') {
+        return {
+            '--_rp-tooltip-main-axis-offset': `${offset}px`,
+        };
+    }
+
+    const style: CSSProperties = {};
+
+    if (offset.mainAxis != null) {
+        style['--_rp-tooltip-main-axis-offset'] = `${offset.mainAxis}px`;
+    }
+
+    if (offset.crossAxis != null) {
+        style['--_rp-tooltip-cross-axis-offset'] = `${offset.crossAxis}px`;
+    }
+
+    return Object.keys(style).length > 0 ? style : undefined;
 }
 
 export function useTooltip(
@@ -83,9 +105,12 @@ export function useTooltip(
     }));
 
     const contentStyle = computed<CSSProperties | undefined>(() => {
-        if (!isTargetMode.value || !targetPosition.value) return undefined;
+        const style = resolveOffsetStyle(props.offset);
+
+        if (!isTargetMode.value || !targetPosition.value) return style;
 
         return {
+            ...style,
             '--_rp-tooltip-target-x': `${targetPosition.value.x}px`,
             '--_rp-tooltip-target-y': `${targetPosition.value.y}px`,
         };

@@ -1,5 +1,6 @@
 .rp-tooltip {
-    --_rp-tooltip-gap: var(--rp-spacing-2);
+    --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
+    --_rp-tooltip-cross-axis-offset: 0px;
     --_rp-tooltip-arrow-size: 0.5rem;
     --_rp-tooltip-bg: var(--rp-color-surface-inverted);
     --_rp-tooltip-fg: var(--rp-color-text-inverted);
@@ -46,8 +47,8 @@
     }
 
     &--placement-top &__content {
-        bottom: calc(100% + var(--_rp-tooltip-gap));
-        left: 50%;
+        bottom: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        left: calc(50% + var(--_rp-tooltip-cross-axis-offset));
         translate: -50% 0;
     }
 
@@ -58,8 +59,8 @@
     }
 
     &--placement-right &__content {
-        top: 50%;
-        left: calc(100% + var(--_rp-tooltip-gap));
+        top: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        left: calc(100% + var(--_rp-tooltip-main-axis-offset));
         translate: 0 -50%;
     }
 
@@ -70,8 +71,8 @@
     }
 
     &--placement-bottom &__content {
-        top: calc(100% + var(--_rp-tooltip-gap));
-        left: 50%;
+        top: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        left: calc(50% + var(--_rp-tooltip-cross-axis-offset));
         translate: -50% 0;
     }
 
@@ -82,8 +83,8 @@
     }
 
     &--placement-left &__content {
-        top: 50%;
-        right: calc(100% + var(--_rp-tooltip-gap));
+        top: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        right: calc(100% + var(--_rp-tooltip-main-axis-offset));
         translate: 0 -50%;
     }
 
@@ -106,19 +107,23 @@
     }
 
     &--target#{&}--placement-top &__content {
-        translate: -50% calc(-100% - var(--_rp-tooltip-gap));
+        translate: calc(-50% + var(--_rp-tooltip-cross-axis-offset))
+            calc(-100% - var(--_rp-tooltip-main-axis-offset));
     }
 
     &--target#{&}--placement-right &__content {
-        translate: var(--_rp-tooltip-gap) -50%;
+        translate: var(--_rp-tooltip-main-axis-offset)
+            calc(-50% + var(--_rp-tooltip-cross-axis-offset));
     }
 
     &--target#{&}--placement-bottom &__content {
-        translate: -50% var(--_rp-tooltip-gap);
+        translate: calc(-50% + var(--_rp-tooltip-cross-axis-offset))
+            var(--_rp-tooltip-main-axis-offset);
     }
 
     &--target#{&}--placement-left &__content {
-        translate: calc(-100% - var(--_rp-tooltip-gap)) -50%;
+        translate: calc(-100% - var(--_rp-tooltip-main-axis-offset))
+            calc(-50% + var(--_rp-tooltip-cross-axis-offset));
     }
 }
 
