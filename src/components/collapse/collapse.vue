@@ -1,8 +1,8 @@
 <template>
     <div
-        :class="rootClass"
-        :data-state="isOpen ? 'open' : 'closed'"
-        :data-disabled="isDisabled || undefined"
+        :class="rootProps.class"
+        :data-state="rootProps['data-state']"
+        :data-disabled="rootProps['data-disabled']"
     >
         <slot
             name="trigger"
@@ -17,14 +17,14 @@
             <section
                 v-if="shouldRenderContent"
                 v-show="isOpen"
-                :id="collapseId"
+                :id="contentProps.id"
                 class="rp-collapse__content"
-                :role="contentRole"
-                :data-state="isOpen ? 'open' : 'closed'"
-                :aria-hidden="isOpen ? undefined : 'true'"
-                :aria-label="ariaLabel || undefined"
-                :aria-labelledby="labelledby"
-                :aria-describedby="describedby"
+                :role="contentProps.role"
+                :data-state="contentProps['data-state']"
+                :aria-hidden="contentProps['aria-hidden']"
+                :aria-label="contentProps['aria-label']"
+                :aria-labelledby="contentProps['aria-labelledby']"
+                :aria-describedby="contentProps['aria-describedby']"
             >
                 <div class="rp-collapse__inner">
                     <slot
@@ -57,18 +57,10 @@ const emit = defineEmits<{
     'update:open': [value: boolean];
 }>();
 
-const {
-    collapseId,
-    contentRole,
-    isDisabled,
-    isOpen,
-    shouldRenderContent,
-    rootClass,
-    triggerSlotProps,
-    contentSlotProps,
-} = useCollapse(props, (open) => {
-    emit('update:open', open);
-});
+const { isOpen, shouldRenderContent, rootProps, contentProps, triggerSlotProps, contentSlotProps } =
+    useCollapse(props, (open) => {
+        emit('update:open', open);
+    });
 </script>
 
 <style src="./collapse.scss" lang="scss" scoped></style>

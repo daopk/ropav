@@ -1,27 +1,43 @@
-import { computed, ref, useId } from 'vue';
+import { computed, ref, unref, useId } from 'vue';
 import { bem } from '@/utils/bem';
 import type {
+    CollapseContentProps,
     CollapseContentRole,
-    CollapseProps,
+    CollapseOptionValue,
+    CollapseRootProps,
     CollapseSlotProps,
+    CollapseState,
     CollapseTriggerProps,
     CollapseTriggerSlotProps,
+    UseCollapseOptions,
+    UseCollapseReturn,
 } from './types';
 
 const DEFAULT_ROLE: CollapseContentRole = 'region';
 
-export function useCollapse(
-    props: Readonly<CollapseProps>,
-    emitOpenChange?: (open: boolean) => void,
-) {
-    const generatedId = useId();
-    const uncontrolledOpen = ref(Boolean(props.defaultOpen));
+function readOption<T>(value: CollapseOptionValue<T> | undefined): T | undefined {
+    if (typeof value === 'function') return (value as () => T)();
+    return unref(value);
+}
 
-    const collapseId = computed(() => props.id ?? `${generatedId}-collapse`);
-    const isDisabled = computed(() => Boolean(props.disabled));
-    const isOpen = computed(() => Boolean(props.open ?? uncontrolledOpen.value));
-    const contentRole = computed(() => props.role ?? DEFAULT_ROLE);
-    const shouldRenderContent = computed(() => !props.unmountOnExit || isOpen.value);
+function ariaText(value: CollapseOptionValue<string | undefined> | undefined) {
+    return readOption(value) || undefined;
+}
+
+export function useCollapse(
+    options: Readonly<UseCollapseOptions> = {},
+    emitOpenChange?: (open: boolean) => void,
+): UseCollapseReturn {
+    const generatedId = useId();
+    const uncontrolledOpen = ref(Boolean(readOption(options.defaultOpen)));
+
+    const collapseId = computed(() => readOption(options.id) ?? `${generatedId}-collapse`);
+    const controlledOpen = computed(() => readOption(options.open));
+    const isDisabled = computed(() => Boolean(readOption(options.disabled)));
+    const isOpen = computed(() => Boolean(controlledOpen.value ?? uncontrolledOpen.value));
+    const collapseState = computed<CollapseState>(() => (isOpen.value ? 'open' : 'closed'));
+    const contentRole = computed(() => readOption(options.role) ?? DEFAULT_ROLE);
+    const shouldRenderContent = computed(() => !readOption(options.unmountOnExit) || isOpen.value);
 
     const rootClass = computed(() =>
         bem('rp-collapse', {
@@ -30,6 +46,12 @@ export function useCollapse(
             disabled: isDisabled.value,
         }),
     );
+
+    const rootProps = computed<CollapseRootProps>(() => ({
+        class: rootClass.value,
+        'data-state': collapseState.value,
+        'data-disabled': isDisabled.value || undefined,
+    }));
 
     const contentSlotProps = computed<CollapseSlotProps>(() => ({
         isOpen: isOpen.value,
@@ -47,6 +69,16 @@ export function useCollapse(
         onClick: onTriggerClick,
     }));
 
+    const contentProps = computed<CollapseContentProps>(() => ({
+        id: collapseId.value,
+        role: contentRole.value,
+        'data-state': collapseState.value,
+        'aria-hidden': isOpen.value ? undefined : 'true',
+        'aria-label': ariaText(options.ariaLabel),
+        'aria-labelledby': ariaText(options.labelledby),
+        'aria-describedby': ariaText(options.describedby),
+    }));
+
     const triggerSlotProps = computed<CollapseTriggerSlotProps>(() => ({
         triggerProps: triggerProps.value,
         ...contentSlotProps.value,
@@ -56,8 +88,11 @@ export function useCollapse(
         if (isDisabled.value) return;
 
         const previousOpen = isOpen.value;
-        if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        if (previousOpen !== nextOpen) emitOpenChange?.(nextOpen);
+        if (controlledOpen.value === undefined) uncontrolledOpen.value = nextOpen;
+        if (previousOpen !== nextOpen) {
+            options.onOpenChange?.(nextOpen);
+            emitOpenChange?.(nextOpen);
+        }
     }
 
     function openCollapse() {
@@ -78,14 +113,21 @@ export function useCollapse(
 
     return {
         collapseId,
+        collapseState,
         contentRole,
         isDisabled,
         isOpen,
         shouldRenderContent,
         rootClass,
+        rootProps,
         triggerProps,
+        contentProps,
         triggerSlotProps,
         contentSlotProps,
+        setOpen,
+        open: openCollapse,
+        close: closeCollapse,
+        toggle: toggleCollapse,
         openCollapse,
         closeCollapse,
         toggleCollapse,

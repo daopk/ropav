@@ -29,4 +29,9 @@ describe('public source exports', () => {
             expect(Ropav[component]).toBeTruthy();
         }
     });
+
+    it('exposes public composables from src/index.ts', () => {
+        expect(Ropav).toHaveProperty('useCollapse');
+        expect(Ropav.useCollapse).toBeTypeOf('function');
+    });
 });

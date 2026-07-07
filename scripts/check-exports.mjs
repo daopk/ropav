@@ -108,6 +108,7 @@ try {
             'Switch',
             'Textarea',
             'Tooltip',
+            'useCollapse',
         ],
         'dist/index.js',
     );
@@ -122,7 +123,7 @@ try {
     assertExports(card, ['Card'], 'dist/components/card/index.js');
 
     const collapse = await server.ssrLoadModule('/dist/components/collapse/index.js');
-    assertExports(collapse, ['Collapse'], 'dist/components/collapse/index.js');
+    assertExports(collapse, ['Collapse', 'useCollapse'], 'dist/components/collapse/index.js');
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');
     assertExports(field, ['Field'], 'dist/components/field/index.js');

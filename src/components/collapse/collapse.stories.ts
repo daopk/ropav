@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import IconChevronDown from '~icons/lucide/chevron-down';
 import Button from '../button/button.vue';
 import Collapse from './collapse.vue';
+import { useCollapse } from './useCollapse';
 
 const wrapperStyle = {
     boxSizing: 'border-box',
@@ -15,6 +17,17 @@ const panelStyle = {
     display: 'grid',
     gap: '8px',
     padding: '16px 0 0',
+};
+
+const headlessPanelStyle = {
+    display: 'grid',
+    gap: '8px',
+    marginTop: '12px',
+    padding: '16px',
+    color: 'var(--rp-color-text)',
+    lineHeight: 'var(--rp-line-height-normal)',
+    border: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    borderRadius: 'var(--rp-radius-sm)',
 };
 
 const meta = {
@@ -87,4 +100,55 @@ export const UnmountOnExit: Story = {
     args: {
         unmountOnExit: true,
     },
+};
+
+export const Composable: Story = {
+    render: () => ({
+        components: { Button, IconChevronDown },
+        setup() {
+            const open = ref(false);
+            const collapse = useCollapse({
+                id: 'story-headless-collapse',
+                open,
+                ariaLabel: 'Additional details',
+                onOpenChange(nextOpen) {
+                    open.value = nextOpen;
+                },
+            });
+
+            return {
+                ...collapse,
+                headlessPanelStyle,
+                wrapperStyle,
+            };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Button v-bind="triggerProps" variant="outline">
+                    Section details
+                    <template #right>
+                        <IconChevronDown
+                            aria-hidden="true"
+                            :style="{
+                                transition: 'transform var(--rp-transition-fast)',
+                                transform: isOpen ? 'rotate(180deg)' : undefined,
+                            }"
+                        />
+                    </template>
+                </Button>
+
+                <section
+                    v-if="shouldRenderContent"
+                    v-bind="contentProps"
+                    :style="{
+                        ...headlessPanelStyle,
+                        display: isOpen ? undefined : 'none',
+                    }"
+                >
+                    <strong>Summary</strong>
+                    <span>This story renders custom markup with the public composable.</span>
+                </section>
+            </div>
+        `,
+    }),
 };

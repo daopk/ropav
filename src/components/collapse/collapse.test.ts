@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, reactive } from 'vue';
+import { defineComponent, h, reactive, ref } from 'vue';
 
 import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
 import Collapse from './collapse.vue';
+import { useCollapse } from './useCollapse';
 import type { CollapseSlotProps, CollapseTriggerSlotProps } from './types';
 
 describe('Collapse', () => {
@@ -217,5 +218,88 @@ describe('Collapse', () => {
         await waitTransition();
 
         expect(container.querySelector('#lazy-panel')).toBeNull();
+    });
+
+    it('exposes composable props and actions for headless usage', async () => {
+        const onOpenChange = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const open = ref(false);
+                    const disabled = ref(false);
+                    const collapse = useCollapse({
+                        id: 'headless-panel',
+                        open: () => open.value,
+                        disabled,
+                        ariaLabel: 'Section details',
+                        onOpenChange(nextOpen) {
+                            onOpenChange(nextOpen);
+                            open.value = nextOpen;
+                        },
+                    });
+
+                    return () =>
+                        h(
+                            'div',
+                            {
+                                ...collapse.rootProps.value,
+                                class: ['headless-collapse', ...collapse.rootProps.value.class],
+                            },
+                            [
+                                h(
+                                    'button',
+                                    {
+                                        class: 'trigger',
+                                        ...collapse.triggerProps.value,
+                                    },
+                                    'Toggle',
+                                ),
+                                collapse.shouldRenderContent.value
+                                    ? h(
+                                          'section',
+                                          {
+                                              class: 'content',
+                                              ...collapse.contentProps.value,
+                                              style: {
+                                                  display: collapse.isOpen.value ? '' : 'none',
+                                              },
+                                          },
+                                          'Headless body',
+                                      )
+                                    : null,
+                            ],
+                        );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.headless-collapse') as HTMLElement;
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const content = container.querySelector('#headless-panel') as HTMLElement;
+
+        expect([...root.classList]).toEqual([
+            'headless-collapse',
+            'rp-collapse',
+            'rp-collapse--closed',
+        ]);
+        expect(root.getAttribute('data-state')).toBe('closed');
+        expect(trigger.getAttribute('aria-controls')).toBe('headless-panel');
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(content.getAttribute('role')).toBe('region');
+        expect(content.getAttribute('aria-label')).toBe('Section details');
+        expect(content.getAttribute('aria-hidden')).toBe('true');
+        expect(content.style.display).toBe('none');
+
+        click(trigger);
+        await flush();
+
+        expect(onOpenChange).toHaveBeenCalledWith(true);
+        expect(root.getAttribute('data-state')).toBe('open');
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        expect(content.getAttribute('data-state')).toBe('open');
+        expect(content.getAttribute('aria-hidden')).toBeNull();
+        expect(content.style.display).not.toBe('none');
     });
 });
