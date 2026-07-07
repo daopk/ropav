@@ -26,6 +26,7 @@ const expectedFiles = [
     'dist/input.css',
     'dist/radio.css',
     'dist/select.css',
+    'dist/slider.css',
     'dist/switch.css',
     'dist/textarea.css',
     'dist/tooltip.css',
@@ -38,6 +39,7 @@ const expectedFiles = [
     'dist/components/input/index.js',
     'dist/components/radio/index.js',
     'dist/components/select/index.js',
+    'dist/components/slider/index.js',
     'dist/components/switch/index.js',
     'dist/components/textarea/index.js',
     'dist/components/tooltip/index.js',
@@ -87,6 +89,7 @@ try {
             'Radio',
             'RadioGroup',
             'Select',
+            'Slider',
             'Switch',
             'Textarea',
             'Tooltip',
@@ -111,6 +114,9 @@ try {
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
     assertExports(select, ['Select'], 'dist/components/select/index.js');
+
+    const slider = await server.ssrLoadModule('/dist/components/slider/index.js');
+    assertExports(slider, ['Slider'], 'dist/components/slider/index.js');
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');

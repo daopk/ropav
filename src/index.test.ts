@@ -12,6 +12,7 @@ const publicComponents = [
     'Radio',
     'RadioGroup',
     'Select',
+    'Slider',
     'Switch',
     'Textarea',
     'Tooltip',

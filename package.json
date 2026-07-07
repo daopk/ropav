@@ -57,6 +57,10 @@
       "types": "./dist/components/select/index.d.ts",
       "import": "./dist/components/select/index.js"
     },
+    "./slider": {
+      "types": "./dist/components/slider/index.d.ts",
+      "import": "./dist/components/slider/index.js"
+    },
     "./switch": {
       "types": "./dist/components/switch/index.d.ts",
       "import": "./dist/components/switch/index.js"
