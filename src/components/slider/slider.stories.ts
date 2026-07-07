@@ -5,6 +5,23 @@ import Slider from './slider.vue';
 import { sliderColors, sliderOrientations, sliderSizes } from './types';
 
 const percentFormatter = (value: number) => `${value}%`;
+const storyWrapperStyle = {
+    boxSizing: 'border-box',
+    width: 'min(360px, 100%)',
+    padding: '40px 24px 28px',
+};
+const stackedStoryWrapperStyle = {
+    ...storyWrapperStyle,
+    display: 'grid',
+    gap: '16px',
+};
+const verticalStoryWrapperStyle = {
+    ...storyWrapperStyle,
+    display: 'flex',
+    alignItems: 'center',
+    height: '280px',
+    padding: '48px 80px 40px',
+};
 
 const meta = {
     title: 'Components/Slider',
@@ -58,13 +75,12 @@ const meta = {
         components: { Slider },
         setup() {
             const value = ref(args.modelValue ?? 0);
-            return { args, value };
+            return { args, storyWrapperStyle, value };
         },
         template: `
-            <Slider v-bind="args" v-model="value">
-                Volume
-                <template #value="{ value: currentValue }">{{ currentValue }}</template>
-            </Slider>
+            <div :style="storyWrapperStyle">
+                <Slider v-bind="args" v-model="value" />
+            </div>
         `,
     }),
 } satisfies Meta<typeof Slider>;
@@ -103,14 +119,11 @@ export const Vertical: Story = {
         components: { Slider },
         setup() {
             const value = ref(args.modelValue ?? 0);
-            return { args, value };
+            return { args, value, verticalStoryWrapperStyle };
         },
         template: `
-            <div style="display: flex; align-items: center; height: 240px; padding: 24px 80px;">
-                <Slider v-bind="args" v-model="value">
-                    Volume
-                    <template #value="{ value: currentValue }">{{ currentValue }}</template>
-                </Slider>
+            <div :style="verticalStoryWrapperStyle">
+                <Slider v-bind="args" v-model="value" />
             </div>
         `,
     }),
@@ -121,13 +134,12 @@ export const FormatValue: Story = {
         components: { Slider },
         setup() {
             const value = ref(args.modelValue ?? 0);
-            return { args, percentFormatter, value };
+            return { args, percentFormatter, storyWrapperStyle, value };
         },
         template: `
-            <Slider v-bind="args" v-model="value" :format-value="percentFormatter">
-                Volume
-                <template #value="{ formattedValue }">{{ formattedValue }}</template>
-            </Slider>
+            <div :style="storyWrapperStyle">
+                <Slider v-bind="args" v-model="value" :format-value="percentFormatter" />
+            </div>
         `,
     }),
 };
@@ -144,16 +156,16 @@ export const CustomThumb: Story = {
         components: { IconVolume2, Slider },
         setup() {
             const value = ref(args.modelValue ?? 0);
-            return { args, value };
+            return { args, storyWrapperStyle, value };
         },
         template: `
-            <Slider v-bind="args" v-model="value">
-                Volume
-                <template #value="{ value: currentValue }">{{ currentValue }}</template>
-                <template #thumb>
-                    <IconVolume2 />
-                </template>
-            </Slider>
+            <div :style="storyWrapperStyle">
+                <Slider v-bind="args" v-model="value">
+                    <template #thumb>
+                        <IconVolume2 />
+                    </template>
+                </Slider>
+            </div>
         `,
     }),
 };
@@ -169,20 +181,17 @@ export const Colors: Story = {
                 >,
             );
 
-            return { args, colors: sliderColors, values };
+            return { args, colors: sliderColors, stackedStoryWrapperStyle, values };
         },
         template: `
-            <div style="display: grid; gap: 16px; max-width: 360px;">
+            <div :style="stackedStoryWrapperStyle">
                 <Slider
                     v-for="color in colors"
                     :key="color"
                     v-bind="args"
                     v-model="values[color]"
                     :color="color"
-                >
-                    {{ color }}
-                    <template #value="{ value }">{{ value }}</template>
-                </Slider>
+                />
             </div>
         `,
     }),
@@ -205,10 +214,10 @@ export const Sizes: Story = {
                 >,
             );
 
-            return { args, sizes: sliderSizes, values };
+            return { args, sizes: sliderSizes, stackedStoryWrapperStyle, values };
         },
         template: `
-            <div style="display: grid; gap: 16px; max-width: 360px;">
+            <div :style="stackedStoryWrapperStyle">
                 <Slider
                     v-for="size in sizes"
                     :key="size"
