@@ -7,7 +7,7 @@
         @focusout="closeTooltip"
         @keydown="onKeydown"
     >
-        <slot :trigger-props="triggerProps" />
+        <slot v-if="!isTargetMode" :trigger-props="triggerProps" />
 
         <Transition name="rp-tooltip-content">
             <span
@@ -16,6 +16,7 @@
                 :id="tooltipId"
                 class="rp-tooltip__content"
                 role="tooltip"
+                :style="contentStyle"
             >
                 <slot name="content">{{ content }}</slot>
             </span>
@@ -45,9 +46,11 @@ const emit = defineEmits<{
 const {
     tooltipId,
     isVisible,
+    isTargetMode,
     shouldRenderContent,
     rootClass,
     triggerProps,
+    contentStyle,
     openTooltip,
     closeTooltip,
     onKeydown,

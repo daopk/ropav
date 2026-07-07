@@ -23,6 +23,7 @@ const meta = {
         openDelay: { control: 'number' },
         arrow: { control: 'boolean' },
         disabled: { control: 'boolean' },
+        target: { control: false },
     },
     args: {
         content: 'Create a new project',
@@ -128,6 +129,24 @@ export const CustomContent: Story = {
                         </span>
                     </template>
                 </Tooltip>
+            </div>
+        `,
+    }),
+};
+
+export const Target: Story = {
+    render: (args) => ({
+        components: { Button, Tooltip },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Button id="tooltip-target-button" variant="outline">External target</Button>
+                <Tooltip
+                    v-bind="args"
+                    target="#tooltip-target-button"
+                    content="Tooltip attached by selector"
+                    :open-delay="0"
+                />
             </div>
         `,
     }),

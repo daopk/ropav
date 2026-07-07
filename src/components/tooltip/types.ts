@@ -1,3 +1,5 @@
+import type { Ref } from 'vue';
+
 export type TooltipPlacement = 'top' | 'right' | 'bottom' | 'left';
 
 export type TooltipColor =
@@ -8,6 +10,8 @@ export type TooltipColor =
     | 'danger'
     | 'info'
     | 'neutral';
+
+export type TooltipTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
 
 export interface TooltipTriggerProps {
     'aria-describedby'?: string;
@@ -20,6 +24,7 @@ export interface TooltipSlotProps {
 export interface TooltipProps {
     id?: string;
     content?: string;
+    target?: TooltipTarget | null;
     placement?: TooltipPlacement;
     color?: TooltipColor;
     open?: boolean;

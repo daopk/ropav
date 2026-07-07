@@ -4,5 +4,6 @@ export type {
     TooltipPlacement,
     TooltipProps,
     TooltipSlotProps,
+    TooltipTarget,
     TooltipTriggerProps,
 } from './types';
