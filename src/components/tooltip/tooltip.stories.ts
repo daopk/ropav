@@ -14,6 +14,7 @@ const meta = {
             options: placements,
         },
         content: { control: 'text' },
+        open: { control: 'boolean' },
         openDelay: { control: 'number' },
         arrow: { control: 'boolean' },
         disabled: { control: 'boolean' },

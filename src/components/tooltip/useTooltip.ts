@@ -3,7 +3,10 @@ import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { bem } from '@/utils/bem';
 import type { TooltipProps, TooltipTriggerProps } from './types';
 
-export function useTooltip(props: Readonly<TooltipProps>) {
+export function useTooltip(
+    props: Readonly<TooltipProps>,
+    emitOpenChange?: (open: boolean) => void,
+) {
     const slots = useSlots();
     const generatedId = useId();
 
@@ -11,10 +14,13 @@ export function useTooltip(props: Readonly<TooltipProps>) {
     const placement = computed(() => props.placement ?? 'top');
     const hasContent = computed(() => Boolean(props.content || slots.content));
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
+    const shouldRenderContent = computed(() => !isDisabled.value);
 
     const { isOpen, open, closeImmediate } = useDelayedOpen({
+        open: () => props.open,
         openDelay: () => props.openDelay ?? 300,
         disabled: () => isDisabled.value,
+        onOpenChange: emitOpenChange,
     });
 
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
@@ -29,7 +35,7 @@ export function useTooltip(props: Readonly<TooltipProps>) {
     );
 
     const triggerProps = computed<TooltipTriggerProps>(() => ({
-        'aria-describedby': isDisabled.value ? undefined : tooltipId.value,
+        'aria-describedby': shouldRenderContent.value ? tooltipId.value : undefined,
     }));
 
     function openTooltip() {
@@ -52,6 +58,7 @@ export function useTooltip(props: Readonly<TooltipProps>) {
         tooltipId,
         isOpen,
         isVisible,
+        shouldRenderContent,
         rootClass,
         triggerProps,
         openTooltip,

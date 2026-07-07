@@ -12,6 +12,7 @@ export interface TooltipProps {
     id?: string;
     content?: string;
     placement?: TooltipPlacement;
+    open?: boolean;
     openDelay?: number;
     arrow?: boolean;
     disabled?: boolean;

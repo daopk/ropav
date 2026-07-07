@@ -77,10 +77,16 @@ describe('Tooltip', () => {
         );
 
         const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const hiddenTooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
+
+        expect(trigger.getAttribute('aria-describedby')).toBe('copy-tooltip');
+        expect(hiddenTooltip.id).toBe('copy-tooltip');
+        expect(hiddenTooltip.style.display).toBe('none');
+
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
         const tooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
 
         expect(trigger.getAttribute('aria-describedby')).toBe('copy-tooltip');
@@ -120,6 +126,97 @@ describe('Tooltip', () => {
         ]);
     });
 
+    it('supports controlled visibility through the open prop', async () => {
+        const props = reactive<TooltipProps>({
+            content: 'Controlled help',
+            open: false,
+            openDelay: 0,
+        });
+        let tooltip!: ReturnType<typeof useTooltip>;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    tooltip = useTooltip(props);
+                    return () => h('div');
+                },
+            }),
+        );
+
+        expect(tooltip.isVisible.value).toBe(false);
+
+        props.open = true;
+        await nextTick();
+        expect(tooltip.isVisible.value).toBe(true);
+        expect(tooltip.rootClass.value).toEqual([
+            'rp-tooltip',
+            'rp-tooltip--placement-top',
+            'rp-tooltip--open',
+        ]);
+
+        props.open = false;
+        await nextTick();
+        expect(tooltip.isVisible.value).toBe(false);
+    });
+
+    it('renders immediately when open is controlled true', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {
+                            content: 'Pinned help',
+                            open: true,
+                        },
+                        {
+                            default: ({ triggerProps }: TooltipSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Pinned'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        expect(root.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(container.querySelector('[role="tooltip"]')?.textContent).toBe('Pinned help');
+    });
+
+    it('emits update:open from trigger interactions when controlled', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {
+                            content: 'Controlled help',
+                            open: false,
+                            openDelay: 0,
+                            'onUpdate:open': onUpdate,
+                        },
+                        {
+                            default: () => h('button', 'Hover'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledWith(true);
+        expect(root.classList.contains('rp-tooltip--open')).toBe(false);
+        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
+            'none',
+        );
+    });
+
     it('honors openDelay before showing content', async () => {
         vi.useFakeTimers();
 
@@ -144,11 +241,15 @@ describe('Tooltip', () => {
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await nextTick();
 
-        expect(container.querySelector('[role="tooltip"]')).toBeNull();
+        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
+            'none',
+        );
 
         vi.advanceTimersByTime(149);
         await nextTick();
-        expect(container.querySelector('[role="tooltip"]')).toBeNull();
+        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
+            'none',
+        );
 
         vi.advanceTimersByTime(1);
         await flush();
@@ -181,7 +282,9 @@ describe('Tooltip', () => {
         keydown(root, 'Escape');
         await waitTransition();
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
-        expect(container.querySelector('[role="tooltip"]')).toBeNull();
+        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
+            'none',
+        );
     });
 
     it('does not open when disabled', async () => {
@@ -256,6 +359,6 @@ describe('Tooltip', () => {
         roots[2].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        expect(container.querySelector('[role="tooltip"]')?.textContent).toBe('bottom slot');
+        expect(roots[2].querySelector('[role="tooltip"]')?.textContent).toBe('bottom slot');
     });
 });
