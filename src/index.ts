@@ -5,6 +5,7 @@ export * from './components/checkbox';
 export * from './components/field';
 export * from './components/icon-button';
 export * from './components/input';
+export * from './components/progress';
 export * from './components/radio';
 export * from './components/select';
 export * from './components/slider';

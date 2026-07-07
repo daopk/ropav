@@ -1,0 +1,113 @@
+@mixin progress-color($color) {
+    --_rp-progress-color: var(--rp-color-#{$color});
+}
+
+@mixin progress-size($height, $font-size) {
+    --_rp-progress-track-height: #{$height};
+    --_rp-progress-font-size: #{$font-size};
+}
+
+.rp-progress {
+    --_rp-progress-color: var(--_rp-progress-custom-color, var(--rp-color-control-selected-bg));
+    --_rp-progress-track-bg: var(--rp-color-control-track-bg);
+    --_rp-progress-track-height: 8px;
+    --_rp-progress-font-size: var(--rp-font-size-base);
+    --_rp-progress-radius: var(--rp-radius-full);
+    --_rp-progress-value: 0%;
+    --_rp-progress-ratio: 0;
+
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    gap: var(--rp-spacing-2);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-progress-font-size);
+    line-height: var(--rp-line-height-normal);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        gap: var(--rp-spacing-3);
+    }
+
+    &__label {
+        min-width: 0;
+        color: var(--rp-color-text);
+    }
+
+    &__value {
+        flex-shrink: 0;
+        color: var(--rp-color-text-secondary);
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__track {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: var(--_rp-progress-track-height);
+        overflow: hidden;
+        background: var(--_rp-progress-track-bg);
+        border-radius: var(--_rp-progress-radius);
+    }
+
+    &__indicator {
+        display: block;
+        width: var(--_rp-progress-value);
+        height: 100%;
+        background: var(--_rp-progress-color);
+        border-radius: inherit;
+        transition: width var(--rp-transition-base);
+    }
+
+    &--indeterminate &__indicator {
+        position: absolute;
+        width: 38%;
+        min-width: 2rem;
+        animation: rp-progress-indeterminate 1200ms ease-in-out infinite;
+    }
+
+    @each $color in primary, secondary, success, warning, danger, info, neutral {
+        &--color-#{$color} {
+            @include progress-color($color);
+        }
+    }
+
+    &--size-xs {
+        @include progress-size(4px, var(--rp-font-size-xs));
+    }
+
+    &--size-sm {
+        @include progress-size(6px, var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include progress-size(8px, var(--rp-font-size-base));
+    }
+
+    &--size-lg {
+        @include progress-size(10px, var(--rp-font-size-lg));
+    }
+
+    &--size-xl {
+        @include progress-size(12px, var(--rp-font-size-xl));
+    }
+
+    @each $radius in none, xs, sm, md, lg, xl, full {
+        &--radius-#{$radius} {
+            --_rp-progress-radius: var(--rp-radius-#{$radius});
+        }
+    }
+}
+
+@keyframes rp-progress-indeterminate {
+    0% {
+        transform: translateX(-110%);
+    }
+
+    100% {
+        transform: translateX(270%);
+    }
+}
