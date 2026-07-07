@@ -133,7 +133,9 @@
     "preview": "vite preview",
     "storybook": "pnpm run tokens:build && storybook dev -p 6006 --no-open",
     "build-storybook": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck:storybook && storybook build",
-    "release": "bumpp"
+    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md",
+    "changelog:all": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md -r 0",
+    "release": "bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
   },
   "peerDependencies": {
     "vue": "^3.6.0-beta.4"
@@ -149,6 +151,8 @@
     "@vue/compiler-vapor": "3.6.0-beta.17",
     "@vue/tsconfig": "^0.9.1",
     "bumpp": "^11.1.0",
+    "conventional-changelog": "^7.2.1",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
     "jsdom": "^29.1.1",
     "oxfmt": "^0.57.0",
     "oxlint": "^1.72.0",
