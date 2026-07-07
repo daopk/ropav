@@ -69,6 +69,29 @@ describe('Card', () => {
         expect(container.querySelector('.rp-card__description')).toBeNull();
     });
 
+    it('renders a custom footer slot', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Card, null, {
+                        default: () => h('span', { class: 'body-content' }, 'Body'),
+                        footer: () => h('button', { class: 'footer-action' }, 'Open'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card', 'rp-card--footer-compact']);
+        expect(container.querySelector('.rp-card__body .body-content')).toBeTruthy();
+        expect(container.querySelector('.rp-card__footer .footer-action')?.textContent).toBe(
+            'Open',
+        );
+    });
+
     it('does not render unsupported named slots outside default', async () => {
         const container = mountDom(
             defineComponent({
@@ -79,7 +102,6 @@ describe('Card', () => {
                         title: () => h('span', { class: 'title-content' }, 'Title'),
                         description: () =>
                             h('span', { class: 'description-content' }, 'Description'),
-                        footer: () => h('button', { class: 'footer-action' }, 'Open'),
                     });
                 },
             }),
@@ -92,7 +114,6 @@ describe('Card', () => {
         expect(container.querySelector('.media-content')).toBeNull();
         expect(container.querySelector('.title-content')).toBeNull();
         expect(container.querySelector('.description-content')).toBeNull();
-        expect(container.querySelector('.footer-action')).toBeNull();
         expect(container.querySelector('.rp-card__header')).toBeNull();
         expect(container.querySelector('.rp-card__title')).toBeNull();
         expect(container.querySelector('.rp-card__description')).toBeNull();
@@ -207,6 +228,32 @@ describe('Card', () => {
         expect(container.querySelector('.rp-card__header')).toBeTruthy();
     });
 
+    it('adds a footer bordered modifier when footerBorder is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Card,
+                        {
+                            footerBorder: true,
+                        },
+                        {
+                            default: () => 'Card content',
+                            footer: () => h('button', { class: 'footer-action' }, 'Save'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card', 'rp-card--footer-bordered']);
+        expect(container.querySelector('.rp-card__footer .footer-action')).toBeTruthy();
+    });
+
     it('does not compact header spacing when there is no body content', async () => {
         const container = mountDom(
             defineComponent({
@@ -222,6 +269,26 @@ describe('Card', () => {
 
         expect([...card.classList]).toEqual(['rp-card']);
         expect(container.querySelector('.rp-card__header')).toBeTruthy();
+        expect(container.querySelector('.rp-card__body')).toBeNull();
+    });
+
+    it('does not compact footer spacing when there is no body content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Card, null, {
+                        footer: () => h('button', { class: 'footer-action' }, 'Open'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card']);
+        expect(container.querySelector('.rp-card__footer')).toBeTruthy();
         expect(container.querySelector('.rp-card__body')).toBeNull();
     });
 

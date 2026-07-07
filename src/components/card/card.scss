@@ -3,6 +3,7 @@
     --_rp-card-border: var(--rp-color-border);
     --_rp-card-fg: var(--rp-color-text);
     --_rp-card-header-border: var(--rp-color-border);
+    --_rp-card-footer-border: var(--rp-color-border);
     --_rp-card-padding: var(--rp-spacing-5);
     --_rp-card-radius: var(--rp-radius-sm);
 
@@ -40,11 +41,23 @@
         border-bottom: var(--rp-border-width-thin) solid var(--_rp-card-header-border);
     }
 
+    &--footer-bordered &__footer {
+        border-top: var(--rp-border-width-thin) solid var(--_rp-card-footer-border);
+    }
+
     &--header-compact &__header {
         padding-block-end: calc(var(--_rp-card-padding) / 2);
     }
 
     &--header-compact &__body {
+        padding-block-start: calc(var(--_rp-card-padding) / 2);
+    }
+
+    &--footer-compact &__body {
+        padding-block-end: calc(var(--_rp-card-padding) / 2);
+    }
+
+    &--footer-compact &__footer {
         padding-block-start: calc(var(--_rp-card-padding) / 2);
     }
 
@@ -79,12 +92,14 @@
     }
 
     &__header,
-    &__body {
+    &__body,
+    &__footer {
         box-sizing: border-box;
         padding: var(--_rp-card-padding);
     }
 
-    &__header {
+    &__header,
+    &__footer {
         display: grid;
         gap: var(--rp-spacing-1);
     }

@@ -14,6 +14,10 @@
         <div v-if="hasBody" :class="['rp-card__body', bodyClass]">
             <slot />
         </div>
+
+        <div v-if="hasFooter" class="rp-card__footer">
+            <slot name="footer" />
+        </div>
     </div>
 </template>
 
@@ -27,6 +31,7 @@ defineOptions({ name: 'RpCard' });
 const props = withDefaults(defineProps<CardProps>(), {
     border: true,
     headerBorder: false,
+    footerBorder: false,
     title: '',
     description: '',
 });
@@ -36,8 +41,12 @@ const hasTitle = computed(() => Boolean(props.title));
 const hasDescription = computed(() => Boolean(props.description));
 const hasHeader = computed(() => Boolean(slots.header || hasTitle.value || hasDescription.value));
 const hasBody = computed(() => Boolean(slots.default));
+const hasFooter = computed(() => Boolean(slots.footer));
 const hasCompactHeaderSpacing = computed(() =>
     Boolean(hasHeader.value && hasBody.value && !props.headerBorder),
+);
+const hasCompactFooterSpacing = computed(() =>
+    Boolean(hasFooter.value && hasBody.value && !props.footerBorder),
 );
 
 const rootClass = computed(() =>
@@ -48,6 +57,8 @@ const rootClass = computed(() =>
         borderless: !props.border,
         'header-bordered': props.headerBorder,
         'header-compact': hasCompactHeaderSpacing.value,
+        'footer-bordered': props.footerBorder,
+        'footer-compact': hasCompactFooterSpacing.value,
     }),
 );
 </script>

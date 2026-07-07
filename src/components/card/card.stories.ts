@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { computed } from 'vue';
+import Button from '../button/button.vue';
 import Card from './card.vue';
 
 const paddings = ['none', 'sm', 'md', 'lg'] as const;
@@ -14,6 +15,11 @@ const borderExamples = [
 const headerBorderExamples = [
     { label: 'header border off', headerBorder: false },
     { label: 'header border on', headerBorder: true },
+];
+
+const footerBorderExamples = [
+    { label: 'footer border off', footerBorder: false },
+    { label: 'footer border on', footerBorder: true },
 ];
 
 const radiusExamples: Array<{ label: string; radius?: (typeof radii)[number] }> = [
@@ -51,6 +57,7 @@ const meta = {
         },
         border: { control: 'boolean' },
         headerBorder: { control: 'boolean' },
+        footerBorder: { control: 'boolean' },
         title: { control: 'text' },
         description: { control: 'text' },
         bodyClass: { control: 'text' },
@@ -58,6 +65,7 @@ const meta = {
     args: {
         border: true,
         headerBorder: false,
+        footerBorder: false,
         title: 'Project health',
         description: 'Last updated just now',
         bodyClass: '',
@@ -159,6 +167,37 @@ export const HeaderBorder: Story = {
     }),
 };
 
+export const FooterBorder: Story = {
+    render: (args) => ({
+        components: { Button, Card },
+        setup: () => ({
+            footerBorderExamples,
+            footerBorderArgs: (example: (typeof footerBorderExamples)[number]) => ({
+                ...args,
+                footerBorder: example.footerBorder,
+                title: example.label,
+                description: 'Optional footer divider',
+            }),
+        }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="example in footerBorderExamples"
+                    :key="example.label"
+                    v-bind="footerBorderArgs(example)"
+                    style="min-height: 160px;"
+                >
+                    <span>Card content</span>
+
+                    <template #footer>
+                        <Button type="button" size="sm" variant="outline">Review</Button>
+                    </template>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
 export const HeaderSlot: Story = {
     render: (args) => ({
         components: { Card },
@@ -182,6 +221,25 @@ export const HeaderSlot: Story = {
                 </template>
 
                 <span>All services are healthy and responding normally.</span>
+            </Card>
+        `,
+    }),
+};
+
+export const FooterSlot: Story = {
+    render: (args) => ({
+        components: { Button, Card },
+        setup: () => ({ args }),
+        template: `
+            <Card v-bind="args" style="max-width: 380px;">
+                <span>All services are healthy and responding normally.</span>
+
+                <template #footer>
+                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                        <Button type="button" size="sm" variant="ghost">Cancel</Button>
+                        <Button type="button" size="sm" variant="solid" color="primary">Deploy</Button>
+                    </div>
+                </template>
             </Card>
         `,
     }),

@@ -12,6 +12,7 @@ export interface CardProps {
     radius?: CardRadius;
     border?: boolean;
     headerBorder?: boolean;
+    footerBorder?: boolean;
     title?: string;
     description?: string;
     bodyClass?: HTMLAttributes['class'];
