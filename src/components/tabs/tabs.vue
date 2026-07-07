@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<TabsProps>(), {
     defaultValue: undefined,
     size: 'md',
     orientation: 'horizontal',
+    placement: 'left',
     activationMode: 'automatic',
     disabled: false,
     unmountOnExit: false,

@@ -4,6 +4,10 @@ export type TabsValue = string | number;
 
 export type TabsOrientation = 'horizontal' | 'vertical';
 
+export type TabsPlacement = 'left' | 'right';
+
+export type TabsTriggerAlign = 'left' | 'center' | 'right';
+
 export type TabsActivationMode = 'automatic' | 'manual';
 
 export type TabsState = 'active' | 'inactive';
@@ -16,6 +20,8 @@ export interface TabsProps {
     defaultValue?: TabsValue | null;
     size?: TabsSize;
     orientation?: TabsOrientation;
+    placement?: TabsPlacement;
+    align?: TabsTriggerAlign;
     activationMode?: TabsActivationMode;
     disabled?: boolean;
     unmountOnExit?: boolean;
@@ -35,6 +41,7 @@ export interface TabsTriggerProps {
     id?: string;
     value: TabsValue;
     disabled?: boolean;
+    align?: TabsTriggerAlign;
 }
 
 export interface TabsContentProps {
@@ -63,6 +70,7 @@ export interface TabsRootProps {
     'data-disabled'?: boolean;
     'data-size': TabsSize;
     'data-orientation': TabsOrientation;
+    'data-placement'?: TabsPlacement;
     'data-activation-mode': TabsActivationMode;
     'aria-label'?: string;
     'aria-labelledby'?: string;
@@ -75,6 +83,7 @@ export interface TabsListRootProps {
     role: 'tablist';
     'data-disabled'?: boolean;
     'data-orientation': TabsOrientation;
+    'data-placement'?: TabsPlacement;
     'aria-orientation': TabsOrientation;
     'aria-label'?: string;
     'aria-labelledby'?: string;
@@ -91,6 +100,7 @@ export interface TabsTriggerRootProps {
     tabIndex: number;
     'data-state': TabsState;
     'data-disabled'?: boolean;
+    'data-align'?: TabsTriggerAlign;
     'aria-selected': boolean;
     'aria-controls'?: string;
     'aria-disabled'?: boolean;
@@ -115,12 +125,15 @@ export interface TabsSlotProps {
     value: TabsValue | null;
     size: TabsSize;
     disabled: boolean;
+    placement: TabsPlacement;
+    align: TabsTriggerAlign;
     select: (value: TabsValue) => void;
 }
 
 export interface TabsListSlotProps {
     disabled: boolean;
     orientation: TabsOrientation;
+    placement: TabsPlacement;
 }
 
 export interface TabsTriggerSlotProps {
@@ -128,6 +141,7 @@ export interface TabsTriggerSlotProps {
     selected: boolean;
     size: TabsSize;
     disabled: boolean;
+    align: TabsTriggerAlign;
     select: () => void;
 }
 
@@ -141,6 +155,8 @@ export interface TabsContext {
     size: TabsSize;
     disabled: boolean;
     orientation: TabsOrientation;
+    placement: TabsPlacement;
+    align?: TabsTriggerAlign;
     activationMode: TabsActivationMode;
     unmountOnExit: boolean;
     ariaLabel?: string;

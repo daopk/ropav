@@ -52,6 +52,14 @@ const meta = {
             control: 'select',
             options: ['horizontal', 'vertical'],
         },
+        placement: {
+            control: 'select',
+            options: ['left', 'right'],
+        },
+        align: {
+            control: 'select',
+            options: ['left', 'center', 'right'],
+        },
         activationMode: {
             control: 'select',
             options: ['automatic', 'manual'],
@@ -64,6 +72,8 @@ const meta = {
         defaultValue: 'gallery',
         size: 'md',
         orientation: 'horizontal',
+        placement: 'left',
+        align: undefined,
         activationMode: 'automatic',
         disabled: false,
         unmountOnExit: false,
@@ -115,6 +125,45 @@ export const Vertical: Story = {
     args: {
         orientation: 'vertical',
     },
+};
+
+export const VerticalRight: Story = {
+    args: {
+        orientation: 'vertical',
+        placement: 'right',
+    },
+};
+
+export const TriggerAlign: Story = {
+    args: {
+        orientation: 'vertical',
+        align: 'right',
+    },
+    render: (args) => ({
+        components: { Tabs, TabsContent, TabsList, TabsTrigger },
+        setup() {
+            return { args, panelStyle, tabs, wrapperStyle };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Tabs v-bind="args">
+                    <TabsList>
+                        <TabsTrigger value="gallery">Gallery</TabsTrigger>
+                        <TabsTrigger value="messages" align="center">Messages</TabsTrigger>
+                        <TabsTrigger value="settings" align="left">Settings</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent
+                        v-for="tab in tabs"
+                        :key="tab.value"
+                        :value="tab.value"
+                    >
+                        <div :style="panelStyle">{{ tab.body }}</div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        `,
+    }),
 };
 
 export const WithDisabledTrigger: Story = {

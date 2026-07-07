@@ -6,7 +6,29 @@ import Tabs from './tabs.vue';
 import TabsContent from './tabs-content.vue';
 import TabsList from './tabs-list.vue';
 import TabsTrigger from './tabs-trigger.vue';
-import type { TabsValue } from './types';
+import type { TabsPlacement, TabsTriggerAlign, TabsValue } from './types';
+
+function renderVerticalTabsPlacement(placement: TabsPlacement) {
+    return h(
+        Tabs,
+        {
+            defaultValue: 'overview',
+            orientation: 'vertical',
+            placement,
+            ariaLabel: `${placement} sections`,
+        },
+        {
+            default: () => [
+                h(TabsList, null, () => [
+                    h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                    h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                ]),
+                h(TabsContent, { value: 'overview' }, () => 'Overview panel'),
+                h(TabsContent, { value: 'activity' }, () => 'Activity panel'),
+            ],
+        },
+    );
+}
 
 describe('Tabs', () => {
     it('requires a Tabs provider for child components', () => {
@@ -203,6 +225,98 @@ describe('Tabs', () => {
         expect(triggers[1].classList.contains('rp-tabs-trigger--size-md')).toBe(true);
         expect(triggers[2].classList.contains('rp-tabs-trigger--size-lg')).toBe(true);
         expect(triggers[3].classList.contains('rp-tabs-trigger--size-lg')).toBe(true);
+    });
+
+    it('supports left and right placements for vertical tabs', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', null, [
+                        renderVerticalTabsPlacement('left'),
+                        renderVerticalTabsPlacement('right'),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs'));
+        const lists = Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs-list'));
+        const triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+        const contents = Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs-content'));
+
+        expect([...roots[0].classList]).toEqual([
+            'rp-tabs',
+            'rp-tabs--size-md',
+            'rp-tabs--vertical',
+            'rp-tabs--placement-left',
+        ]);
+        expect([...roots[1].classList]).toEqual([
+            'rp-tabs',
+            'rp-tabs--size-md',
+            'rp-tabs--vertical',
+            'rp-tabs--placement-right',
+        ]);
+        expect(roots[0].getAttribute('data-placement')).toBe('left');
+        expect(roots[1].getAttribute('data-placement')).toBe('right');
+        expect(lists[0].classList.contains('rp-tabs-list--placement-left')).toBe(true);
+        expect(lists[1].classList.contains('rp-tabs-list--placement-right')).toBe(true);
+        expect(lists[0].getAttribute('data-placement')).toBe('left');
+        expect(lists[1].getAttribute('data-placement')).toBe('right');
+        expect(triggers[0].classList.contains('rp-tabs-trigger--placement-left')).toBe(true);
+        expect(triggers[2].classList.contains('rp-tabs-trigger--placement-right')).toBe(true);
+        expect(contents[0].classList.contains('rp-tabs-content--vertical')).toBe(true);
+        expect(contents[2].classList.contains('rp-tabs-content--vertical')).toBe(true);
+    });
+
+    it('aligns trigger content at the group and trigger level', async () => {
+        const align: TabsTriggerAlign = 'right';
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tabs,
+                        { align, defaultValue: 'overview', orientation: 'vertical' },
+                        {
+                            default: () => [
+                                h(TabsList, null, () => [
+                                    h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                    h(
+                                        TabsTrigger,
+                                        { align: 'center', value: 'activity' },
+                                        () => 'Activity',
+                                    ),
+                                    h(
+                                        TabsTrigger,
+                                        { align: 'left', value: 'settings' },
+                                        () => 'Settings',
+                                    ),
+                                ]),
+                                h(TabsContent, { value: 'overview' }, () => 'Overview panel'),
+                                h(TabsContent, { value: 'activity' }, () => 'Activity panel'),
+                                h(TabsContent, { value: 'settings' }, () => 'Settings panel'),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+
+        expect(triggers[0].classList.contains('rp-tabs-trigger--align-right')).toBe(true);
+        expect(triggers[0].getAttribute('data-align')).toBe('right');
+        expect(triggers[1].classList.contains('rp-tabs-trigger--align-center')).toBe(true);
+        expect(triggers[1].getAttribute('data-align')).toBe('center');
+        expect(triggers[2].classList.contains('rp-tabs-trigger--align-left')).toBe(true);
+        expect(triggers[2].getAttribute('data-align')).toBe('left');
     });
 
     it('selects the first enabled tab by default when uncontrolled', async () => {

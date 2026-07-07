@@ -1,12 +1,20 @@
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, useId, watch } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { tabsKey } from './types';
-import type { TabsActivationMode, TabsOrientation, TabsState, TabsValue } from './types';
+import type {
+    TabsActivationMode,
+    TabsOrientation,
+    TabsPlacement,
+    TabsState,
+    TabsTriggerAlign,
+    TabsValue,
+} from './types';
 
 const TABLIST_SELECTOR = '.rp-tabs-list';
 const TRIGGER_SELECTOR = '.rp-tabs-trigger';
 
 export const DEFAULT_ORIENTATION: TabsOrientation = 'horizontal';
+export const DEFAULT_PLACEMENT: TabsPlacement = 'left';
 export const DEFAULT_ACTIVATION_MODE: TabsActivationMode = 'automatic';
 
 type NavigationDirection = 1 | -1;
@@ -76,8 +84,27 @@ export function orientationClasses(disabled: boolean, orientation: TabsOrientati
     return { disabled, [orientation]: true };
 }
 
-export function triggerClasses(active: boolean, disabled: boolean, orientation: TabsOrientation) {
-    return { ...stateClasses(active), ...orientationClasses(disabled, orientation) };
+export function placementClasses(orientation: TabsOrientation, placement: TabsPlacement) {
+    return { [`placement-${placement}`]: orientation === 'vertical' };
+}
+
+export function alignClasses(align: TabsTriggerAlign | undefined) {
+    return align ? { [`align-${align}`]: true } : {};
+}
+
+export function triggerClasses(
+    active: boolean,
+    disabled: boolean,
+    orientation: TabsOrientation,
+    placement: TabsPlacement,
+    align: TabsTriggerAlign | undefined,
+) {
+    return {
+        ...stateClasses(active),
+        ...orientationClasses(disabled, orientation),
+        ...placementClasses(orientation, placement),
+        ...alignClasses(align),
+    };
 }
 
 export function toAttr<T extends string | boolean | undefined>(value: T): T | undefined {

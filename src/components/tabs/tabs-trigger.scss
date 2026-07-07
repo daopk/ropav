@@ -138,4 +138,26 @@
             height: auto;
         }
     }
+
+    &--vertical#{&}--placement-right {
+        &::after {
+            right: calc(-1 * var(--rp-border-width-medium));
+            left: auto;
+        }
+    }
+
+    &--align-left {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    &--align-center {
+        justify-content: center;
+        text-align: center;
+    }
+
+    &--align-right {
+        justify-content: flex-end;
+        text-align: right;
+    }
 }

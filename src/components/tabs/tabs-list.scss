@@ -17,6 +17,11 @@
         border-left: var(--rp-border-width-medium) solid var(--rp-color-border);
     }
 
+    &--vertical#{&}--placement-right {
+        border-right: var(--rp-border-width-medium) solid var(--rp-color-border);
+        border-left: 0;
+    }
+
     &--disabled {
         @include disabled-state;
     }

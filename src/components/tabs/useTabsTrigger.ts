@@ -5,6 +5,7 @@ import type {
     TabsTriggerProps,
     TabsTriggerRootProps,
     TabsTriggerSlotProps,
+    TabsTriggerAlign,
     UseTabsTriggerReturn,
 } from './types';
 
@@ -14,12 +15,22 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
     const isFocusable = computed(
         () => group.getFocusableValue() === props.value && !isDisabled.value,
     );
+    const align = computed<TabsTriggerAlign | undefined>(() => props.align ?? group.align);
+    const effectiveAlign = computed<TabsTriggerAlign>(
+        () => align.value ?? (group.orientation === 'vertical' ? 'left' : 'center'),
+    );
 
     const rootClass = computed(() =>
         bem(
             'rp-tabs-trigger',
             `size-${group.size}`,
-            triggerClasses(isSelected.value, isDisabled.value, group.orientation),
+            triggerClasses(
+                isSelected.value,
+                isDisabled.value,
+                group.orientation,
+                group.placement,
+                align.value,
+            ),
         ),
     );
 
@@ -32,6 +43,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         tabIndex: isFocusable.value ? 0 : -1,
         'data-state': state.value,
         'data-disabled': toAttr(isDisabled.value),
+        'data-align': toAttr(align.value),
         'aria-selected': isSelected.value,
         'aria-controls': group.getContentId(props.value),
         'aria-disabled': toAttr(isDisabled.value),
@@ -45,6 +57,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         selected: isSelected.value,
         size: group.size,
         disabled: isDisabled.value,
+        align: effectiveAlign.value,
         select,
     }));
 

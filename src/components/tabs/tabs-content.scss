@@ -10,4 +10,8 @@
         outline: none;
         @include focus-ring;
     }
+
+    &--vertical {
+        flex: 1 1 0;
+    }
 }

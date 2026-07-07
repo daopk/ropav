@@ -5,10 +5,12 @@ import {
     ariaProps,
     DEFAULT_ACTIVATION_MODE,
     DEFAULT_ORIENTATION,
+    DEFAULT_PLACEMENT,
     findRegistration,
     getNextTrigger,
     getTabsTrigger,
     orientationClasses,
+    placementClasses,
     toAttr,
     useTabsRegistry,
 } from './useTabsShared';
@@ -17,10 +19,12 @@ import type {
     TabsContentRegistration,
     TabsContext,
     TabsOrientation,
+    TabsPlacement,
     TabsProps,
     TabsRootProps,
     TabsSize,
     TabsSlotProps,
+    TabsTriggerAlign,
     TabsTriggerRegistration,
     TabsValue,
     UseTabsReturn,
@@ -44,6 +48,8 @@ export function useTabs(
     const isDisabled = computed(() => Boolean(props.disabled));
     const size = computed<TabsSize>(() => props.size ?? 'md');
     const orientation = computed<TabsOrientation>(() => props.orientation ?? DEFAULT_ORIENTATION);
+    const placement = computed<TabsPlacement>(() => props.placement ?? DEFAULT_PLACEMENT);
+    const align = computed<TabsTriggerAlign | undefined>(() => props.align);
     const activationMode = computed<TabsActivationMode>(
         () => props.activationMode ?? DEFAULT_ACTIVATION_MODE,
     );
@@ -61,6 +67,7 @@ export function useTabs(
             'rp-tabs',
             `size-${size.value}`,
             orientationClasses(isDisabled.value, orientation.value),
+            placementClasses(orientation.value, placement.value),
         ),
     );
 
@@ -70,6 +77,7 @@ export function useTabs(
         'data-disabled': toAttr(isDisabled.value),
         'data-size': size.value,
         'data-orientation': orientation.value,
+        'data-placement': toAttr(orientation.value === 'vertical' ? placement.value : undefined),
         'data-activation-mode': activationMode.value,
         ...ariaProps(props.ariaLabel, props.labelledby, props.describedby),
     }));
@@ -78,6 +86,8 @@ export function useTabs(
         value: selectedValue.value,
         size: size.value,
         disabled: isDisabled.value,
+        placement: placement.value,
+        align: align.value ?? (orientation.value === 'vertical' ? 'left' : 'center'),
         select: selectValue,
     }));
 
@@ -144,6 +154,12 @@ export function useTabs(
         },
         get orientation() {
             return orientation.value;
+        },
+        get placement() {
+            return placement.value;
+        },
+        get align() {
+            return align.value;
         },
         get activationMode() {
             return activationMode.value;

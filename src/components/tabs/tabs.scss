@@ -11,7 +11,7 @@
     }
 
     &--vertical {
-        grid-template-columns: max-content minmax(0, 1fr);
+        display: flex;
         align-items: start;
         gap: var(--rp-spacing-5);
     }

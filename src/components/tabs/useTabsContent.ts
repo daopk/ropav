@@ -13,7 +13,11 @@ export function useTabsContent(props: Readonly<TabsContentProps>): UseTabsConten
     const shouldUnmountOnExit = computed(() => props.unmountOnExit ?? group.unmountOnExit);
     const shouldRenderContent = computed(() => !shouldUnmountOnExit.value || isSelected.value);
 
-    const rootClass = computed(() => bem('rp-tabs-content', stateClasses(isSelected.value)));
+    const rootClass = computed(() =>
+        bem('rp-tabs-content', stateClasses(isSelected.value), {
+            vertical: group.orientation === 'vertical',
+        }),
+    );
 
     const rootProps = computed<TabsContentRootProps>(() => ({
         id: id.value,
