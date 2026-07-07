@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
@@ -9,10 +9,28 @@ function typeTextarea(el: HTMLTextAreaElement, value: string) {
     el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
 }
 
+function mockTextareaMetrics() {
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(
+        () =>
+            ({
+                lineHeight: '20px',
+                fontSize: '16px',
+                paddingTop: '4px',
+                paddingBottom: '4px',
+                borderTopWidth: '0px',
+                borderBottomWidth: '0px',
+            }) as CSSStyleDeclaration,
+    );
+}
+
 describe('Textarea', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const resizes = ['vertical', 'both'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
 
     it('emits string updates from native textarea input', async () => {
         const onUpdate = vi.fn();
@@ -260,5 +278,81 @@ describe('Textarea', () => {
                 `rp-textarea--resize-${resize}`,
             ]);
         }
+    });
+
+    it('autosizes between minRows and maxRows', async () => {
+        mockTextareaMetrics();
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        autosize: true,
+                        maxRows: 3,
+                        minRows: 2,
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-textarea')!;
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+        let scrollHeight = 20;
+
+        Object.defineProperty(native, 'scrollHeight', {
+            configurable: true,
+            get: () => scrollHeight,
+        });
+
+        typeTextarea(native, 'Short');
+        await flush();
+
+        expect(root.classList.contains('rp-textarea--autosize')).toBe(true);
+        expect(native.rows).toBe(2);
+        expect(native.style.height).toBe('48px');
+        expect(native.style.overflowY).toBe('hidden');
+
+        scrollHeight = 120;
+        typeTextarea(native, 'Line 1\nLine 2\nLine 3\nLine 4');
+        await flush();
+
+        expect(native.style.height).toBe('68px');
+        expect(native.style.overflowY).toBe('auto');
+    });
+
+    it('autosizes without a maxRows limit', async () => {
+        mockTextareaMetrics();
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        autosize: true,
+                        minRows: 2,
+                        modelValue: '',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+        let scrollHeight = 160;
+
+        Object.defineProperty(native, 'scrollHeight', {
+            configurable: true,
+            get: () => scrollHeight,
+        });
+
+        typeTextarea(native, 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6');
+        await flush();
+
+        expect(native.rows).toBe(2);
+        expect(native.style.height).toBe('160px');
+        expect(native.style.overflowY).toBe('hidden');
     });
 });

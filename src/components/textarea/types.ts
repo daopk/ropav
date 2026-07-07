@@ -11,6 +11,9 @@ export interface TextareaProps {
     size?: TextareaSize;
     radius?: TextareaRadius;
     resize?: TextareaResize;
+    autosize?: boolean;
+    minRows?: number;
+    maxRows?: number;
     placeholder?: string;
     rows?: number;
     disabled?: boolean;

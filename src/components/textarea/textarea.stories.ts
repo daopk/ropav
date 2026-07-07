@@ -24,6 +24,9 @@ const meta = {
             control: 'select',
             options: resizes,
         },
+        autosize: { control: 'boolean' },
+        minRows: { control: 'number' },
+        maxRows: { control: 'number' },
         rows: { control: 'number' },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
@@ -35,6 +38,9 @@ const meta = {
         modelValue: '',
         radius: undefined,
         resize: 'none',
+        autosize: false,
+        minRows: undefined,
+        maxRows: undefined,
         size: undefined,
         rows: 3,
         placeholder: 'Enter text...',
@@ -98,6 +104,23 @@ export const Resizable: Story = {
     args: {
         modelValue: 'Resizable notes',
         resize: 'vertical',
+    },
+};
+
+export const Autosize: Story = {
+    args: {
+        autosize: true,
+        minRows: 2,
+        modelValue: 'Autosize notes',
+    },
+};
+
+export const AutosizeLimited: Story = {
+    args: {
+        autosize: true,
+        minRows: 2,
+        maxRows: 6,
+        modelValue: 'Autosize notes with a row limit',
     },
 };
 

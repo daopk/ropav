@@ -2,11 +2,12 @@
     <div :class="rootClass" @mousedown="focusTextarea">
         <textarea
             :id="control.id"
+            ref="textareaRef"
             :name="name"
             class="rp-textarea__native"
             :value="modelValue"
             :placeholder="placeholder"
-            :rows="rows"
+            :rows="nativeRows"
             :disabled="control.disabled || undefined"
             :readonly="readonly || undefined"
             :required="control.required || undefined"
@@ -30,6 +31,9 @@ const props = withDefaults(defineProps<TextareaProps>(), {
     placeholder: '',
     rows: 3,
     resize: 'none',
+    autosize: false,
+    minRows: undefined,
+    maxRows: undefined,
     disabled: undefined,
     required: undefined,
     invalid: undefined,
@@ -41,9 +45,14 @@ const emit = defineEmits<{
     'update:modelValue': [value: string];
 }>();
 
-const { control, rootClass, onInput, focusTextarea } = useTextarea(props, (value) => {
-    emit('update:modelValue', value);
-});
+const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea } = useTextarea(
+    props,
+    (value) => {
+        emit('update:modelValue', value);
+    },
+);
+
+void textareaRef;
 </script>
 
 <style src="./textarea.scss" lang="scss" scoped></style>
