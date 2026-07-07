@@ -1,4 +1,4 @@
-import type { ComputedRef, InjectionKey } from 'vue';
+import type { ComputedRef } from 'vue';
 
 export type TabsValue = string | number;
 
@@ -51,17 +51,6 @@ export interface TabsContentProps {
     ariaLabel?: string;
     ariaDescribedby?: string;
     ariaLabelledby?: string;
-}
-
-export interface TabsTriggerRegistration {
-    id: string;
-    value: TabsValue;
-    disabled: boolean;
-}
-
-export interface TabsContentRegistration {
-    id: string;
-    value: TabsValue;
 }
 
 export interface TabsRootProps {
@@ -150,31 +139,6 @@ export interface TabsContentSlotProps {
     selected: boolean;
 }
 
-export interface TabsContext {
-    selectedValue: TabsValue | null;
-    size: TabsSize;
-    disabled: boolean;
-    orientation: TabsOrientation;
-    placement: TabsPlacement;
-    align?: TabsTriggerAlign;
-    activationMode: TabsActivationMode;
-    unmountOnExit: boolean;
-    ariaLabel?: string;
-    describedby?: string;
-    labelledby?: string;
-    isSelected: (value: TabsValue) => boolean;
-    selectValue: (value: TabsValue) => void;
-    getFocusableValue: () => TabsValue | null;
-    getTriggerId: (value: TabsValue) => string | undefined;
-    getContentId: (value: TabsValue) => string | undefined;
-    getTriggerValue: (id: string) => TabsValue | undefined;
-    registerTrigger: (registration: TabsTriggerRegistration) => void;
-    unregisterTrigger: (id: string) => void;
-    registerContent: (registration: TabsContentRegistration) => void;
-    unregisterContent: (id: string) => void;
-    onListKeydown: (event: KeyboardEvent) => void;
-}
-
 export interface UseTabsReturn {
     rootClass: ComputedRef<string[]>;
     rootProps: ComputedRef<TabsRootProps>;
@@ -209,5 +173,3 @@ export interface UseTabsContentReturn {
     rootProps: ComputedRef<TabsContentRootProps>;
     slotProps: ComputedRef<TabsContentSlotProps>;
 }
-
-export const tabsKey = Symbol('tabs') as InjectionKey<TabsContext>;

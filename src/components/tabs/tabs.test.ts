@@ -353,6 +353,44 @@ describe('Tabs', () => {
         expect(triggers[1].tabIndex).toBe(0);
     });
 
+    it('falls back to the first enabled tab when defaultValue is disabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tabs,
+                        { defaultValue: 'overview' },
+                        {
+                            default: () => [
+                                h(TabsList, null, () => [
+                                    h(
+                                        TabsTrigger,
+                                        { value: 'overview', disabled: true },
+                                        () => 'Overview',
+                                    ),
+                                    h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                ]),
+                                h(TabsContent, { value: 'overview' }, () => 'Overview panel'),
+                                h(TabsContent, { value: 'activity' }, () => 'Activity panel'),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+
+        expect(triggers[0].getAttribute('aria-selected')).toBe('false');
+        expect(triggers[0].tabIndex).toBe(-1);
+        expect(triggers[1].getAttribute('aria-selected')).toBe('true');
+        expect(triggers[1].tabIndex).toBe(0);
+    });
+
     it('supports automatic keyboard activation', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

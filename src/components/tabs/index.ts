@@ -8,7 +8,6 @@ export type {
     TabsContentProps,
     TabsContentRootProps,
     TabsContentSlotProps,
-    TabsContext,
     TabsListProps,
     TabsListRootProps,
     TabsListSlotProps,
