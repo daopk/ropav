@@ -3,6 +3,7 @@ import Button from '../button/button.vue';
 import Tooltip from './tooltip.vue';
 
 const placements = ['top', 'right', 'bottom', 'left'] as const;
+const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
 
 const meta = {
     title: 'Components/Tooltip',
@@ -12,6 +13,10 @@ const meta = {
         placement: {
             control: 'select',
             options: placements,
+        },
+        color: {
+            control: 'select',
+            options: colors,
         },
         content: { control: 'text' },
         open: { control: 'boolean' },
@@ -67,6 +72,37 @@ export const Placements: Story = {
                     >
                         <template #default="{ triggerProps }">
                             <Button v-bind="triggerProps" variant="outline">{{ placement }}</Button>
+                        </template>
+                    </Tooltip>
+                </div>
+            </div>
+        `,
+    }),
+};
+
+export const Colors: Story = {
+    args: {
+        open: true,
+    },
+    render: (args) => ({
+        components: { Button, Tooltip },
+        setup: () => ({ args, colors }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 96px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 48px 56px; justify-content: center; max-width: 720px;">
+                    <Tooltip
+                        v-for="color in colors"
+                        :key="color"
+                        v-bind="args"
+                        :color="color"
+                        :content="color + ' tooltip'"
+                        :open-delay="0"
+                        arrow
+                    >
+                        <template #default="{ triggerProps }">
+                            <Button v-bind="triggerProps" variant="outline" :color="color">
+                                {{ color }}
+                            </Button>
                         </template>
                     </Tooltip>
                 </div>

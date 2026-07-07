@@ -8,6 +8,15 @@ import { useTooltip } from './useTooltip';
 
 describe('Tooltip', () => {
     const placements: TooltipPlacement[] = ['top', 'right', 'bottom', 'left'];
+    const colors = [
+        'primary',
+        'secondary',
+        'success',
+        'warning',
+        'danger',
+        'info',
+        'neutral',
+    ] as const;
 
     afterEach(() => {
         vi.useRealTimers();
@@ -124,6 +133,43 @@ describe('Tooltip', () => {
             'rp-tooltip--placement-top',
             'rp-tooltip--arrow',
         ]);
+    });
+
+    it('adds a color modifier for each supported color', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        colors.map((color) =>
+                            h(
+                                Tooltip,
+                                {
+                                    color,
+                                    content: `${color} help`,
+                                },
+                                {
+                                    default: () => h('button', color),
+                                },
+                            ),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-tooltip')] as HTMLElement[];
+
+        expect(roots).toHaveLength(colors.length);
+        for (const [index, color] of colors.entries()) {
+            expect([...roots[index].classList]).toEqual([
+                'rp-tooltip',
+                'rp-tooltip--placement-top',
+                `rp-tooltip--color-${color}`,
+            ]);
+        }
     });
 
     it('supports controlled visibility through the open prop', async () => {

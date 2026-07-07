@@ -38,6 +38,13 @@
         rotate: 45deg;
     }
 
+    @each $color in primary, secondary, success, warning, danger, info, neutral {
+        &--color-#{$color} {
+            --_rp-tooltip-bg: var(--rp-color-#{$color});
+            --_rp-tooltip-fg: var(--rp-color-on-#{$color});
+        }
+    }
+
     &--placement-top &__content {
         bottom: calc(100% + var(--_rp-tooltip-gap));
         left: 50%;

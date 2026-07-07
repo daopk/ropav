@@ -28,6 +28,7 @@ export function useTooltip(
     const rootClass = computed(() =>
         bem('rp-tooltip', {
             [`placement-${placement.value}`]: true,
+            [`color-${props.color}`]: Boolean(props.color),
             arrow: props.arrow,
             open: isVisible.value,
             disabled: props.disabled,
