@@ -53,6 +53,10 @@
       "types": "./dist/components/modal/index.d.ts",
       "import": "./dist/components/modal/index.js"
     },
+    "./overlay": {
+      "types": "./dist/components/overlay/index.d.ts",
+      "import": "./dist/components/overlay/index.js"
+    },
     "./popover": {
       "types": "./dist/components/popover/index.d.ts",
       "import": "./dist/components/popover/index.js"

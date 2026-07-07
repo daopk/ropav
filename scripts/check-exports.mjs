@@ -25,6 +25,7 @@ const expectedFiles = [
     'dist/icon-button.css',
     'dist/input.css',
     'dist/modal.css',
+    'dist/overlay.css',
     'dist/popover.css',
     'dist/progress.css',
     'dist/radio.css',
@@ -41,6 +42,7 @@ const expectedFiles = [
     'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
     'dist/components/modal/index.js',
+    'dist/components/overlay/index.js',
     'dist/components/popover/index.js',
     'dist/components/progress/index.js',
     'dist/components/radio/index.js',
@@ -93,6 +95,7 @@ try {
             'IconButton',
             'Input',
             'Modal',
+            'Overlay',
             'Popover',
             'Progress',
             'Radio',
@@ -123,6 +126,9 @@ try {
 
     const modal = await server.ssrLoadModule('/dist/components/modal/index.js');
     assertExports(modal, ['Modal'], 'dist/components/modal/index.js');
+
+    const overlay = await server.ssrLoadModule('/dist/components/overlay/index.js');
+    assertExports(overlay, ['Overlay'], 'dist/components/overlay/index.js');
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
     assertExports(select, ['Select'], 'dist/components/select/index.js');

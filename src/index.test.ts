@@ -10,6 +10,7 @@ const publicComponents = [
     'IconButton',
     'Input',
     'Modal',
+    'Overlay',
     'Popover',
     'Radio',
     'RadioGroup',
