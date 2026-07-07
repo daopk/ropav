@@ -23,24 +23,16 @@ export function useField(props: Readonly<FieldProps>) {
     const controlId = computed(() => props.id ?? `${generatedId}-control`);
     const labelId = computed(() => `${controlId.value}-label`);
     const descriptionId = computed(() => `${controlId.value}-description`);
-    const messageId = computed(() => `${controlId.value}-message`);
 
-    const isInvalid = computed(() => Boolean(props.invalid || props.error));
-    const messageText = computed(() => props.error || props.message);
+    const isInvalid = computed(() => Boolean(props.invalid));
 
     const hasLabel = computed(() => Boolean(props.label || slots.label));
     const hasDescription = computed(() => Boolean(props.description || slots.description));
-    const hasMessage = computed(() => Boolean(messageText.value || slots.message));
+    const hasMessage = computed(() => Boolean(slots.message));
 
     const controlLabelledby = computed(() => (hasLabel.value ? labelId.value : undefined));
-    const controlDescribedby = computed(
-        () =>
-            [
-                hasDescription.value ? descriptionId.value : undefined,
-                hasMessage.value ? messageId.value : undefined,
-            ]
-                .filter(Boolean)
-                .join(' ') || undefined,
+    const controlDescribedby = computed(() =>
+        hasDescription.value ? descriptionId.value : undefined,
     );
 
     const rootClass = computed(() =>
@@ -79,9 +71,7 @@ export function useField(props: Readonly<FieldProps>) {
         controlId,
         labelId,
         descriptionId,
-        messageId,
         isInvalid,
-        messageText,
         hasLabel,
         hasDescription,
         hasMessage,

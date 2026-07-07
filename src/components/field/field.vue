@@ -27,14 +27,7 @@
             <slot name="description">{{ description }}</slot>
         </p>
 
-        <p
-            v-if="hasMessage"
-            :id="messageId"
-            class="rp-field__message"
-            :role="isInvalid ? 'alert' : undefined"
-        >
-            <slot name="message">{{ messageText }}</slot>
-        </p>
+        <slot v-if="hasMessage" name="message" />
     </div>
 </template>
 
@@ -47,8 +40,6 @@ defineOptions({ name: 'RpField' });
 const props = withDefaults(defineProps<FieldProps>(), {
     label: '',
     description: '',
-    message: '',
-    error: '',
     disabled: undefined,
     required: false,
     invalid: undefined,
@@ -58,9 +49,7 @@ const {
     controlId,
     labelId,
     descriptionId,
-    messageId,
     isInvalid,
-    messageText,
     hasLabel,
     hasDescription,
     hasMessage,

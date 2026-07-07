@@ -15,8 +15,6 @@ export interface FieldProps {
     id?: string;
     label?: string;
     description?: string;
-    message?: string;
-    error?: string;
     disabled?: boolean;
     required?: boolean;
     invalid?: boolean;

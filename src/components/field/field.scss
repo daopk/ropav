@@ -35,21 +35,15 @@
         min-width: 0;
     }
 
-    &__description,
-    &__message {
+    &__description {
         margin: 0;
         color: var(--rp-color-text-secondary);
         font-size: var(--rp-font-size-sm);
         line-height: var(--rp-line-height-normal);
     }
 
-    &--invalid &__message {
-        color: var(--_rp-field-danger);
-    }
-
     &--disabled &__label,
-    &--disabled &__description,
-    &--disabled &__message {
+    &--disabled &__description {
         color: var(--rp-color-text-disabled);
     }
 }

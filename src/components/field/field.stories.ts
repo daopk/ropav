@@ -17,8 +17,6 @@ const meta = {
         id: { control: 'text' },
         label: { control: 'text' },
         description: { control: 'text' },
-        message: { control: 'text' },
-        error: { control: 'text' },
         disabled: { control: 'boolean' },
         required: { control: 'boolean' },
         invalid: { control: 'boolean' },
@@ -27,8 +25,6 @@ const meta = {
         id: 'email',
         label: 'Email',
         description: 'Use the email address you check most often.',
-        message: '',
-        error: '',
         disabled: false,
         required: false,
         invalid: false,
@@ -58,8 +54,27 @@ export const Required: Story = {
 
 export const Invalid: Story = {
     args: {
-        error: 'Enter a valid email address.',
+        invalid: true,
     },
+    render: (args) => ({
+        components: { Field, Input },
+        setup() {
+            const value = ref('not-an-email');
+            return { args, value };
+        },
+        template: `
+            <Field v-bind="args" style="max-width: 360px;">
+                <template #default="{ controlProps }">
+                    <Input v-bind="controlProps" v-model="value" placeholder="zoi@example.com" />
+                </template>
+                <template #message>
+                    <p style="margin: 0; color: var(--rp-color-danger); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                        Enter a valid email address.
+                    </p>
+                </template>
+            </Field>
+        `,
+    }),
 };
 
 export const FormControls: Story = {
@@ -89,8 +104,15 @@ export const FormControls: Story = {
                     <Select v-bind="controlProps" v-model="role" :options="options" placeholder="Select a role" />
                 </Field>
 
-                <Field id="field-note" label="Note" message="Keep it short and specific." v-slot="{ controlProps }">
-                    <Textarea v-bind="controlProps" v-model="note" placeholder="Add context..." />
+                <Field id="field-note" label="Note">
+                    <template #default="{ controlProps }">
+                        <Textarea v-bind="controlProps" v-model="note" placeholder="Add context..." />
+                    </template>
+                    <template #message>
+                        <p style="margin: 0; color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                            Keep it short and specific.
+                        </p>
+                    </template>
                 </Field>
 
                 <Field id="field-plan" label="Plan" description="Pick the billing tier for this workspace." v-slot="{ controlProps }">
@@ -101,10 +123,17 @@ export const FormControls: Story = {
                     </RadioGroup>
                 </Field>
 
-                <Field id="field-updates" label="Product updates" message="You can unsubscribe at any time." v-slot="{ controlProps }">
-                    <Checkbox v-bind="controlProps" v-model="updates">
-                        Send weekly product updates
-                    </Checkbox>
+                <Field id="field-updates" label="Product updates">
+                    <template #default="{ controlProps }">
+                        <Checkbox v-bind="controlProps" v-model="updates">
+                            Send weekly product updates
+                        </Checkbox>
+                    </template>
+                    <template #message>
+                        <p style="margin: 0; color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                            You can unsubscribe at any time.
+                        </p>
+                    </template>
                 </Field>
 
                 <Field id="field-notifications" label="Notifications" description="Notify members when their access changes." v-slot="{ controlProps }">

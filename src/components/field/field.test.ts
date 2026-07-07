@@ -8,7 +8,7 @@ import Field from './field.vue';
 import type { FieldSlotProps } from './types';
 
 describe('Field', () => {
-    it('provides control props that connect label, description, and message ids', async () => {
+    it('provides control props that connect label and description ids', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -18,7 +18,6 @@ describe('Field', () => {
                             id: 'email',
                             label: 'Email',
                             description: 'Use your work email.',
-                            message: 'We will send a confirmation.',
                             required: true,
                         },
                         {
@@ -37,22 +36,21 @@ describe('Field', () => {
 
         const label = container.querySelector('.rp-field__label') as HTMLLabelElement;
         const description = container.querySelector('.rp-field__description')!;
-        const message = container.querySelector('.rp-field__message')!;
         const native = container.querySelector('input') as HTMLInputElement;
 
         expect(label.id).toBe('email-label');
         expect(label.htmlFor).toBe('email');
         expect(label.textContent).toBe('Email*');
         expect(description.id).toBe('email-description');
-        expect(message.id).toBe('email-message');
+        expect(container.querySelector('.rp-field__message')).toBeNull();
         expect(native.id).toBe('email');
         expect(native.required).toBe(true);
         expect(native.getAttribute('aria-required')).toBe('true');
         expect(native.getAttribute('aria-labelledby')).toBe('email-label');
-        expect(native.getAttribute('aria-describedby')).toBe('email-description email-message');
+        expect(native.getAttribute('aria-describedby')).toBe('email-description');
     });
 
-    it('treats error text as invalid state and announces the message', async () => {
+    it('passes invalid state to the control slot', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -60,7 +58,7 @@ describe('Field', () => {
                         Field,
                         {
                             id: 'email',
-                            error: 'Enter a valid email.',
+                            invalid: true,
                         },
                         {
                             default: ({ controlProps }: FieldSlotProps) =>
@@ -77,14 +75,12 @@ describe('Field', () => {
         await flush();
 
         const root = container.querySelector('.rp-field')!;
-        const message = container.querySelector('.rp-field__message')!;
         const native = container.querySelector('input') as HTMLInputElement;
 
         expect(root.classList.contains('rp-field--invalid')).toBe(true);
-        expect(message.textContent).toBe('Enter a valid email.');
-        expect(message.getAttribute('role')).toBe('alert');
+        expect(container.querySelector('.rp-field__message')).toBeNull();
         expect(native.getAttribute('aria-invalid')).toBe('true');
-        expect(native.getAttribute('aria-describedby')).toBe('email-message');
+        expect(native.hasAttribute('aria-describedby')).toBe(false);
     });
 
     it('passes disabled state to the control slot', async () => {
@@ -153,10 +149,9 @@ describe('Field', () => {
         expect(container.querySelector('.custom-label')?.textContent).toBe('Username');
         expect(container.querySelector('.custom-description')?.textContent).toBe('Public handle');
         expect(container.querySelector('.custom-message')?.textContent).toBe('Available');
+        expect(container.querySelector('.rp-field__message')).toBeNull();
         expect(native.getAttribute('aria-labelledby')).toBe('username-label');
-        expect(native.getAttribute('aria-describedby')).toBe(
-            'username-description username-message',
-        );
+        expect(native.getAttribute('aria-describedby')).toBe('username-description');
     });
 
     it('focuses a custom control when pressing the label', async () => {
