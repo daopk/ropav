@@ -28,6 +28,10 @@
     }
 
     &__control {
+        .rp-field__label + & {
+            margin-block-start: var(--rp-spacing-1);
+        }
+
         min-width: 0;
     }
 
