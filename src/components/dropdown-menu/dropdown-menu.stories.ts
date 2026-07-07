@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import Button from '../button/button.vue';
 import DropdownMenu from './dropdown-menu.vue';
+import type { DropdownMenuItem } from './types';
 
 const placements = ['bottom-start', 'bottom-end', 'top-start', 'top-end'] as const;
 
@@ -8,6 +9,35 @@ const defaultItems = [
     { label: 'Rename', value: 'rename', shortcut: 'R' },
     { label: 'Duplicate', value: 'duplicate', shortcut: 'D' },
     { label: 'Archive', value: 'archive' },
+    { label: 'Delete', value: 'delete', destructive: true },
+];
+
+const submenuItems: DropdownMenuItem[] = [
+    { label: 'Rename', value: 'rename', shortcut: 'R' },
+    {
+        label: 'Move to',
+        value: 'move',
+        children: [
+            { label: 'Backlog', value: 'move-backlog' },
+            { label: 'In progress', value: 'move-progress' },
+            {
+                label: 'Archive',
+                value: 'move-archive',
+                children: [
+                    { label: 'This week', value: 'archive-week' },
+                    { label: 'This month', value: 'archive-month' },
+                ],
+            },
+        ],
+    },
+    {
+        label: 'Share',
+        value: 'share',
+        children: [
+            { label: 'Copy link', value: 'copy-link', shortcut: 'Cmd+L' },
+            { label: 'Invite teammate', value: 'invite' },
+        ],
+    },
     { label: 'Delete', value: 'delete', destructive: true },
 ];
 
@@ -106,6 +136,25 @@ export const CustomItem: Story = {
                         >
                             Soon
                         </span>
+                    </template>
+                </DropdownMenu>
+            </div>
+        `,
+    }),
+};
+
+export const Submenus: Story = {
+    args: {
+        items: submenuItems,
+    },
+    render: (args) => ({
+        components: { Button, DropdownMenu },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 460px; place-items: center; padding: 112px;">
+                <DropdownMenu v-bind="args" aria-label="Project actions">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">Actions</Button>
                     </template>
                 </DropdownMenu>
             </div>

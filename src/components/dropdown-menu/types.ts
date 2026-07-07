@@ -4,6 +4,8 @@ export type DropdownMenuItemValue = string | number;
 
 export type DropdownMenuFocusTarget = 'first' | 'last';
 
+export type DropdownMenuItemPath = number[];
+
 export interface DropdownMenuOpenOptions {
     focus?: DropdownMenuFocusTarget;
 }
@@ -18,6 +20,7 @@ export interface DropdownMenuItem {
     disabled?: boolean;
     destructive?: boolean;
     shortcut?: string;
+    children?: DropdownMenuItem[];
 }
 
 export interface DropdownMenuTriggerProps {
@@ -49,9 +52,15 @@ export interface DropdownMenuSlotProps {
 export interface DropdownMenuItemSlotProps {
     item: DropdownMenuItem;
     index: number;
+    path: DropdownMenuItemPath;
+    level: number;
     focused: boolean;
     disabled: boolean;
+    hasSubmenu: boolean;
+    isSubmenuOpen: boolean;
     select: () => void;
+    openSubmenu: (focus?: DropdownMenuFocusTarget) => void;
+    closeSubmenu: () => void;
     close: (options?: DropdownMenuCloseOptions) => void;
 }
 
@@ -60,21 +69,39 @@ export interface DropdownMenuItemProps {
     type: 'button';
     role: 'menuitem';
     class: string[];
+    'aria-controls'?: string;
+    'aria-expanded'?: boolean;
+    'aria-haspopup'?: 'menu';
     'aria-disabled'?: true;
     'data-disabled'?: true;
     'data-focused'?: true;
+    'data-submenu'?: true;
     onClick: (event: MouseEvent) => void;
     onMouseenter: (event: MouseEvent) => void;
+}
+
+export interface DropdownMenuSubmenuProps {
+    id: string;
+    role: 'menu';
+    class: string[];
+    'aria-label'?: string;
+    'aria-activedescendant'?: string;
 }
 
 export interface DropdownMenuRenderedItem {
     item: DropdownMenuItem;
     index: number;
-    key: DropdownMenuItemValue;
+    key: string;
+    path: DropdownMenuItemPath;
+    level: number;
     focused: boolean;
     disabled: boolean;
+    hasSubmenu: boolean;
+    submenuOpen: boolean;
     props: DropdownMenuItemProps;
+    submenuProps?: DropdownMenuSubmenuProps;
     slotProps: DropdownMenuItemSlotProps;
+    children: DropdownMenuRenderedItem[];
 }
 
 export interface DropdownMenuProps {

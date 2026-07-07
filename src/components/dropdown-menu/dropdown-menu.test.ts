@@ -23,6 +23,18 @@ describe('DropdownMenu', () => {
         { label: 'Archive', value: 'archive' },
         { label: 'Delete', value: 'delete', destructive: true },
     ];
+    const nestedItems: DropdownMenuItem[] = [
+        { label: 'Rename', value: 'rename' },
+        {
+            label: 'Move to',
+            value: 'move',
+            children: [
+                { label: 'Backlog', value: 'move-backlog' },
+                { label: 'In progress', value: 'move-progress' },
+            ],
+        },
+        { label: 'Delete', value: 'delete', destructive: true },
+    ];
 
     it('renders trigger props, opens items, selects an item, and closes', async () => {
         const onOpen = vi.fn();
@@ -125,6 +137,121 @@ describe('DropdownMenu', () => {
         await waitDropdownTransition();
 
         expect(onSelect).toHaveBeenCalledWith(items[2]);
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+    });
+
+    it('opens submenus with pointer interaction and selects leaf items', async () => {
+        const onSelect = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'nested-menu',
+                            items: nestedItems,
+                            onSelect,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+
+        const moveTrigger = [...container.querySelectorAll('[role="menuitem"]')].find((item) =>
+            item.textContent?.includes('Move to'),
+        ) as HTMLButtonElement;
+
+        expect(moveTrigger.getAttribute('aria-haspopup')).toBe('menu');
+        expect(moveTrigger.getAttribute('aria-expanded')).toBe('false');
+
+        click(moveTrigger);
+        await nextTick();
+
+        const submenu = container.querySelector('.rp-dropdown-menu__submenu') as HTMLElement;
+        const progressItem = [...submenu.querySelectorAll('[role="menuitem"]')].find((item) =>
+            item.textContent?.includes('In progress'),
+        ) as HTMLButtonElement;
+
+        expect(moveTrigger.getAttribute('aria-expanded')).toBe('true');
+        expect(moveTrigger.getAttribute('aria-controls')).toBe('nested-menu-submenu-1');
+        expect(submenu.getAttribute('role')).toBe('menu');
+        expect(submenu.getAttribute('aria-label')).toBe('Move to');
+
+        click(progressItem);
+        await waitDropdownTransition();
+
+        expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1]);
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+    });
+
+    it('navigates submenus with ArrowRight and ArrowLeft', async () => {
+        const onSelect = vi.fn();
+        const keyboardItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'move-backlog' },
+                    { label: 'Done', value: 'move-done' },
+                ],
+            },
+            { label: 'Archive', value: 'archive' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'keyboard-menu',
+                            items: keyboardItems,
+                            onSelect,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0');
+
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+
+        const submenu = container.querySelector('.rp-dropdown-menu__submenu') as HTMLElement;
+        expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0-0');
+        expect(submenu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0-0');
+
+        keydown(menu, 'ArrowLeft');
+        await nextTick();
+
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0');
+
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        keydown(menu, 'ArrowDown');
+        await nextTick();
+        keydown(menu, 'Enter');
+        await waitDropdownTransition();
+
+        expect(onSelect).toHaveBeenCalledWith(keyboardItems[0].children![1]);
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 

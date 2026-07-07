@@ -5,6 +5,7 @@ export type {
     DropdownMenuContentProps,
     DropdownMenuFocusTarget,
     DropdownMenuItem,
+    DropdownMenuItemPath,
     DropdownMenuItemProps,
     DropdownMenuItemSlotProps,
     DropdownMenuItemValue,
@@ -13,5 +14,6 @@ export type {
     DropdownMenuProps,
     DropdownMenuRenderedItem,
     DropdownMenuSlotProps,
+    DropdownMenuSubmenuProps,
     DropdownMenuTriggerProps,
 } from './types';
