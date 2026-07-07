@@ -10,10 +10,15 @@
     display: block;
     width: 100%;
     height: 100%;
-    background: var(--_rp-overlay-color);
+    background-color: var(--_rp-overlay-color);
     border-radius: inherit;
     opacity: var(--_rp-overlay-opacity);
     pointer-events: none;
+
+    &--gradient {
+        background-color: transparent;
+        opacity: 1;
+    }
 
     &--interactive {
         pointer-events: auto;

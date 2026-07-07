@@ -55,6 +55,29 @@ describe('Overlay', () => {
         expect(overlays[2].style.getPropertyValue('--_rp-overlay-opacity')).toBe('1');
     });
 
+    it('uses background-image and ignores color and opacity when gradient is set', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Overlay, {
+                        color: '#123456',
+                        opacity: 0.25,
+                        gradient: 'linear-gradient(90deg, #000, #fff)',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const overlay = container.querySelector('.rp-overlay') as HTMLElement;
+
+        expect([...overlay.classList]).toEqual(['rp-overlay', 'rp-overlay--gradient']);
+        expect(overlay.style.backgroundImage).toContain('linear-gradient');
+        expect(overlay.style.getPropertyValue('--_rp-overlay-color')).toBe('');
+        expect(overlay.style.getPropertyValue('--_rp-overlay-opacity')).toBe('');
+    });
+
     it('supports interactive overlays and disabled rendering', async () => {
         const container = mountDom(
             defineComponent({

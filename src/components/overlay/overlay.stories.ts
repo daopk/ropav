@@ -10,6 +10,7 @@ const meta = {
         opacity: {
             control: { type: 'range', min: 0, max: 1, step: 0.05 },
         },
+        gradient: { control: 'text' },
         zIndex: { control: 'number' },
         interactive: { control: 'boolean' },
         disabled: { control: 'boolean' },
@@ -17,6 +18,7 @@ const meta = {
     args: {
         color: '#111827',
         opacity: 0.55,
+        gradient: '',
         zIndex: 1,
         interactive: false,
         disabled: false,
@@ -89,6 +91,41 @@ export const Colors: Story = {
                     </span>
                     <Overlay v-bind="args" :color="example.color" />
                 </div>
+            </div>
+        `,
+    }),
+};
+
+export const Gradient: Story = {
+    args: {
+        color: '#111827',
+        opacity: 0.2,
+        gradient: 'linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(14, 165, 233, 0.35))',
+    },
+    render: (args) => ({
+        components: { Overlay },
+        setup: () => ({ args }),
+        template: `
+            <div
+                style="
+                    position: relative;
+                    display: grid;
+                    min-height: 220px;
+                    max-width: 440px;
+                    place-items: center;
+                    overflow: hidden;
+                    color: var(--rp-color-text-inverted);
+                    background:
+                        linear-gradient(135deg, rgba(249, 115, 22, 0.9), rgba(6, 182, 212, 0.8)),
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 12px, transparent 12px 24px);
+                    border-radius: var(--rp-radius-lg);
+                "
+            >
+                <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
+                    <strong style="font-size: var(--rp-font-size-xl);">Gradient overlay</strong>
+                    <span style="font-size: var(--rp-font-size-sm); opacity: 0.9;">Gradient ignores color and opacity props</span>
+                </div>
+                <Overlay v-bind="args" />
             </div>
         `,
     }),
