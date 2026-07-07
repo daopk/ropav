@@ -31,7 +31,7 @@ describe('Card', () => {
 
         const card = container.querySelector('.rp-card') as HTMLElement;
 
-        expect([...card.classList]).toEqual(['rp-card']);
+        expect([...card.classList]).toEqual(['rp-card', 'rp-card--header-compact']);
         expect(container.querySelector('.rp-card__title')?.textContent).toBe('Revenue');
         expect(container.querySelector('.rp-card__description')?.textContent).toBe('Month to date');
         expect(container.querySelector('.rp-card__body .body-content')).toBeTruthy();
@@ -148,6 +148,50 @@ describe('Card', () => {
         const card = container.querySelector('.rp-card') as HTMLElement;
 
         expect([...card.classList]).toEqual(['rp-card', 'rp-card--borderless']);
+    });
+
+    it('adds a header bordered modifier when headerBorder is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Card,
+                        {
+                            title: 'Settings',
+                            headerBorder: true,
+                        },
+                        {
+                            default: () => 'Card content',
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card', 'rp-card--header-bordered']);
+        expect(container.querySelector('.rp-card__header')).toBeTruthy();
+    });
+
+    it('does not compact header spacing when there is no body content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Card, { title: 'Header only' });
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card']);
+        expect(container.querySelector('.rp-card__header')).toBeTruthy();
+        expect(container.querySelector('.rp-card__body')).toBeNull();
     });
 
     it('adds custom classes to the body when requested', async () => {

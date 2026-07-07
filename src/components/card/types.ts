@@ -11,6 +11,7 @@ export interface CardProps {
     padding?: CardPadding;
     radius?: CardRadius;
     border?: boolean;
+    headerBorder?: boolean;
     title?: string;
     description?: string;
     bodyClass?: HTMLAttributes['class'];

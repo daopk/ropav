@@ -11,6 +11,11 @@ const borderExamples = [
     { label: 'border off', border: false },
 ];
 
+const headerBorderExamples = [
+    { label: 'header border off', headerBorder: false },
+    { label: 'header border on', headerBorder: true },
+];
+
 const radiusExamples: Array<{ label: string; radius?: (typeof radii)[number] }> = [
     { label: 'none', radius: 'none' },
     { label: 'xs', radius: 'xs' },
@@ -45,12 +50,14 @@ const meta = {
             options: [undefined, ...radii],
         },
         border: { control: 'boolean' },
+        headerBorder: { control: 'boolean' },
         title: { control: 'text' },
         description: { control: 'text' },
         bodyClass: { control: 'text' },
     },
     args: {
         border: true,
+        headerBorder: false,
         title: 'Project health',
         description: 'Last updated just now',
         bodyClass: '',
@@ -119,6 +126,33 @@ export const Border: Story = {
                     <div style="display: grid; height: 100%; place-items: center; color: var(--rp-color-text); font-weight: var(--rp-font-weight-semibold);">
                         {{ example.label }}
                     </div>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
+export const HeaderBorder: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({
+            headerBorderExamples,
+            headerBorderArgs: (example: (typeof headerBorderExamples)[number]) => ({
+                ...args,
+                headerBorder: example.headerBorder,
+                title: example.label,
+                description: 'Optional header divider',
+            }),
+        }),
+        template: `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <Card
+                    v-for="example in headerBorderExamples"
+                    :key="example.label"
+                    v-bind="headerBorderArgs(example)"
+                    style="min-height: 160px;"
+                >
+                    <span>Card content</span>
                 </Card>
             </div>
         `,

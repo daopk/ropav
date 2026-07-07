@@ -9,14 +9,14 @@
             </p>
         </div>
 
-        <div v-if="$slots.default" :class="['rp-card__body', bodyClass]">
+        <div v-if="hasBody" :class="['rp-card__body', bodyClass]">
             <slot />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, useSlots } from 'vue';
 import { bem } from '@/utils/bem';
 import type { CardProps } from './types';
 
@@ -24,13 +24,19 @@ defineOptions({ name: 'RpCard' });
 
 const props = withDefaults(defineProps<CardProps>(), {
     border: true,
+    headerBorder: false,
     title: '',
     description: '',
 });
 
+const slots = useSlots();
 const hasTitle = computed(() => Boolean(props.title));
 const hasDescription = computed(() => Boolean(props.description));
 const hasHeader = computed(() => Boolean(hasTitle.value || hasDescription.value));
+const hasBody = computed(() => Boolean(slots.default));
+const hasCompactHeaderSpacing = computed(() =>
+    Boolean(hasHeader.value && hasBody.value && !props.headerBorder),
+);
 
 const rootClass = computed(() =>
     bem('rp-card', {
@@ -38,6 +44,8 @@ const rootClass = computed(() =>
         [`padding-${props.padding}`]: Boolean(props.padding),
         [`radius-${props.radius}`]: Boolean(props.radius),
         borderless: !props.border,
+        'header-bordered': props.headerBorder,
+        'header-compact': hasCompactHeaderSpacing.value,
     }),
 );
 </script>

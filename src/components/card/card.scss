@@ -2,6 +2,7 @@
     --_rp-card-bg: var(--rp-color-surface-raised);
     --_rp-card-border: var(--rp-color-border);
     --_rp-card-fg: var(--rp-color-text);
+    --_rp-card-header-border: var(--rp-color-border);
     --_rp-card-padding: var(--rp-spacing-5);
     --_rp-card-radius: var(--rp-radius-sm);
 
@@ -33,6 +34,18 @@
 
     &--borderless {
         --_rp-card-border: transparent;
+    }
+
+    &--header-bordered &__header {
+        border-bottom: var(--rp-border-width-thin) solid var(--_rp-card-header-border);
+    }
+
+    &--header-compact &__header {
+        padding-block-end: calc(var(--_rp-card-padding) / 2);
+    }
+
+    &--header-compact &__body {
+        padding-block-start: calc(var(--_rp-card-padding) / 2);
     }
 
     @each $padding,
