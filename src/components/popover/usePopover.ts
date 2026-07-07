@@ -1,14 +1,4 @@
-import {
-    computed,
-    isRef,
-    onBeforeUnmount,
-    onMounted,
-    ref,
-    useId,
-    useSlots,
-    watch,
-    type CSSProperties,
-} from 'vue';
+import { computed, isRef, onMounted, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
 import type {
     PopoverContentSlotProps,
@@ -25,8 +15,6 @@ interface PopoverPosition {
     y: number;
 }
 
-type Cleanup = () => void;
-type TargetAttribute = 'aria-controls' | 'aria-expanded' | 'aria-haspopup';
 type PopoverCssVariable =
     | '--_rp-popover-main-axis-offset'
     | '--_rp-popover-cross-axis-offset'
@@ -35,7 +23,9 @@ type PopoverCssVariable =
 
 const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
 const DEFAULT_ROLE: PopoverRole = 'dialog';
-const TARGET_ATTRIBUTES: TargetAttribute[] = ['aria-controls', 'aria-expanded', 'aria-haspopup'];
+const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
+
+type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
 
 function isHTMLElement(value: unknown): value is HTMLElement {
     return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
@@ -124,6 +114,20 @@ function applyTargetAttributes(
     element.setAttribute('aria-haspopup', options.role);
 }
 
+function resolveTargetElement(target: string | HTMLElement | null | undefined): HTMLElement | null {
+    if (!target) return null;
+
+    if (typeof target !== 'string') return isHTMLElement(target) ? target : null;
+    if (typeof document === 'undefined') return null;
+
+    try {
+        const element = document.querySelector(target);
+        return isHTMLElement(element) ? element : null;
+    } catch {
+        return null;
+    }
+}
+
 export function usePopover(
     props: Readonly<PopoverProps>,
     emitOpenChange?: (open: boolean) => void,
@@ -134,14 +138,6 @@ export function usePopover(
     const targetElement = ref<HTMLElement | null>(null);
     const targetPosition = ref<PopoverPosition | null>(null);
     const uncontrolledOpen = ref(false);
-
-    let isMounted = false;
-    let targetListenerCleanup: Cleanup | undefined;
-    let targetListenerElement: HTMLElement | null = null;
-    let viewportCleanup: Cleanup | undefined;
-    let documentCleanup: Cleanup | undefined;
-    let attributedTarget: HTMLElement | null = null;
-    let previousTargetAttributes: Record<TargetAttribute, string | null> | null = null;
 
     const popoverId = computed(() => props.id ?? `${generatedId}-popover`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
@@ -237,47 +233,6 @@ export function usePopover(
         return isRef(props.target) ? props.target.value : props.target;
     }
 
-    function resolveTarget() {
-        const target = readTarget();
-        if (!target) return null;
-
-        if (typeof target === 'string') {
-            if (typeof document === 'undefined') return null;
-
-            try {
-                const element = document.querySelector(target);
-                return isHTMLElement(element) ? element : null;
-            } catch {
-                return null;
-            }
-        }
-
-        return isHTMLElement(target) ? target : null;
-    }
-
-    function restoreTargetAttributes() {
-        if (!attributedTarget || !previousTargetAttributes) return;
-        restoreAttributes(attributedTarget, previousTargetAttributes);
-
-        attributedTarget = null;
-        previousTargetAttributes = null;
-    }
-
-    function syncTargetAttributes() {
-        restoreTargetAttributes();
-
-        if (!shouldWireTarget.value || !targetElement.value) return;
-
-        attributedTarget = targetElement.value;
-        previousTargetAttributes = snapshotAttributes(attributedTarget);
-
-        applyTargetAttributes(attributedTarget, previousTargetAttributes, {
-            id: popoverId.value,
-            expanded: isVisible.value,
-            role: popoverRole.value,
-        });
-    }
-
     function updateTargetPosition() {
         if (!isTargetMode.value || !targetElement.value) {
             targetPosition.value = null;
@@ -288,57 +243,6 @@ export function usePopover(
             targetElement.value.getBoundingClientRect(),
             placement.value,
         );
-    }
-
-    function unbindTargetListeners() {
-        targetListenerCleanup?.();
-        targetListenerCleanup = undefined;
-        targetListenerElement = null;
-    }
-
-    function bindTargetListeners(element: HTMLElement) {
-        if (targetListenerElement === element) return;
-
-        unbindTargetListeners();
-        element.addEventListener('click', onTargetClick);
-
-        targetListenerElement = element;
-        targetListenerCleanup = () => {
-            element.removeEventListener('click', onTargetClick);
-        };
-    }
-
-    function syncTargetListeners() {
-        if (shouldWireTarget.value && targetElement.value) {
-            bindTargetListeners(targetElement.value);
-        } else {
-            unbindTargetListeners();
-        }
-    }
-
-    function bindViewportListeners() {
-        if (typeof window === 'undefined' || viewportCleanup) return;
-
-        window.addEventListener('resize', updateTargetPosition);
-        window.addEventListener('scroll', updateTargetPosition, true);
-
-        viewportCleanup = () => {
-            window.removeEventListener('resize', updateTargetPosition);
-            window.removeEventListener('scroll', updateTargetPosition, true);
-        };
-    }
-
-    function removeViewportListeners() {
-        viewportCleanup?.();
-        viewportCleanup = undefined;
-    }
-
-    function syncViewportListeners() {
-        if (isVisible.value && isTargetMode.value && targetElement.value) {
-            bindViewportListeners();
-        } else {
-            removeViewportListeners();
-        }
     }
 
     function isEventInsidePopover(event: Event) {
@@ -360,114 +264,104 @@ export function usePopover(
         closePopover();
     }
 
-    function bindDocumentListeners() {
-        if (typeof document === 'undefined' || documentCleanup) return;
+    function syncTargetElement() {
+        const nextTarget = isTargetMode.value ? resolveTargetElement(readTarget()) : null;
 
-        document.addEventListener('click', onDocumentClick, true);
-        document.addEventListener('keydown', onDocumentKeydown);
-
-        documentCleanup = () => {
-            document.removeEventListener('click', onDocumentClick, true);
-            document.removeEventListener('keydown', onDocumentKeydown);
-        };
-    }
-
-    function removeDocumentListeners() {
-        documentCleanup?.();
-        documentCleanup = undefined;
-    }
-
-    function syncDocumentListeners() {
-        if (isVisible.value) bindDocumentListeners();
-        else removeDocumentListeners();
-    }
-
-    function clearTarget() {
-        unbindTargetListeners();
-        removeViewportListeners();
-        restoreTargetAttributes();
-        targetElement.value = null;
-        targetPosition.value = null;
-    }
-
-    function setTargetElement(nextTarget: HTMLElement | null) {
-        if (targetElement.value === nextTarget) return;
-
-        unbindTargetListeners();
-        removeViewportListeners();
-        restoreTargetAttributes();
-        targetElement.value = nextTarget;
-    }
-
-    function syncTarget() {
-        if (!isTargetMode.value) {
-            clearTarget();
-            return;
+        if (targetElement.value !== nextTarget) {
+            targetElement.value = nextTarget;
         }
 
-        const nextTarget = resolveTarget();
-        setTargetElement(nextTarget);
-
-        if (!targetElement.value) {
+        if (!nextTarget) {
             targetPosition.value = null;
             return;
         }
 
-        syncTargetListeners();
-        syncTargetAttributes();
-        updateTargetPosition();
-        syncViewportListeners();
-    }
-
-    function syncOpenStateListeners() {
-        syncDocumentListeners();
-        syncViewportListeners();
+        if (isVisible.value) updateTargetPosition();
     }
 
     watch(isDisabled, (disabled) => {
         if (disabled) closePopover();
-        if (isMounted) syncTarget();
     });
 
     watch(
         () => readTarget(),
-        () => {
-            if (isMounted) syncTarget();
-        },
+        () => syncTargetElement(),
         { flush: 'post' },
     );
 
-    watch([isTargetMode, shouldWireTarget, popoverId, popoverRole, isVisible], () => {
-        if (isMounted) syncTargetAttributes();
-    });
+    watch(
+        [shouldWireTarget, targetElement],
+        ([shouldWire, target], _previous, onCleanup) => {
+            if (!shouldWire || !target) return;
 
-    watch([placement, isVisible], () => {
-        if (isMounted && isVisible.value) updateTargetPosition();
-    });
+            target.addEventListener('click', onTargetClick);
+            onCleanup(() => {
+                target.removeEventListener('click', onTargetClick);
+            });
+        },
+        { flush: 'sync' },
+    );
 
-    watch(isVisible, (visible) => {
-        if (!isMounted) return;
+    watch(
+        [shouldWireTarget, targetElement, popoverId, popoverRole, isVisible],
+        ([shouldWire, target], _previous, onCleanup) => {
+            if (!shouldWire || !target) return;
 
-        if (visible) {
-            updateTargetPosition();
-        }
+            const snapshot = snapshotAttributes(target);
+            applyTargetAttributes(target, snapshot, {
+                id: popoverId.value,
+                expanded: isVisible.value,
+                role: popoverRole.value,
+            });
 
-        syncOpenStateListeners();
-    });
+            onCleanup(() => {
+                restoreAttributes(target, snapshot);
+            });
+        },
+        { flush: 'sync' },
+    );
 
-    onMounted(() => {
-        isMounted = true;
-        syncTarget();
-        syncOpenStateListeners();
-    });
+    watch(
+        [isVisible, isTargetMode, targetElement],
+        ([visible, targetMode, target], _previous, onCleanup) => {
+            if (!visible || !targetMode || !target || typeof window === 'undefined') return;
 
-    onBeforeUnmount(() => {
-        isMounted = false;
-        unbindTargetListeners();
-        removeViewportListeners();
-        removeDocumentListeners();
-        restoreTargetAttributes();
-    });
+            window.addEventListener('resize', updateTargetPosition);
+            window.addEventListener('scroll', updateTargetPosition, true);
+
+            onCleanup(() => {
+                window.removeEventListener('resize', updateTargetPosition);
+                window.removeEventListener('scroll', updateTargetPosition, true);
+            });
+        },
+        { flush: 'sync' },
+    );
+
+    watch(
+        isVisible,
+        (visible, _previous, onCleanup) => {
+            if (!visible || typeof document === 'undefined') return;
+
+            document.addEventListener('click', onDocumentClick, true);
+            document.addEventListener('keydown', onDocumentKeydown);
+
+            onCleanup(() => {
+                document.removeEventListener('click', onDocumentClick, true);
+                document.removeEventListener('keydown', onDocumentKeydown);
+            });
+        },
+        { flush: 'sync', immediate: true },
+    );
+
+    watch(
+        [targetElement, placement, isVisible],
+        () => {
+            if (isVisible.value) updateTargetPosition();
+        },
+        { flush: 'sync' },
+    );
+
+    onMounted(syncTargetElement);
 
     return {
         rootRef,
