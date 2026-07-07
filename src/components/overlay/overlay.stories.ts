@@ -1,6 +1,32 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import Overlay from './overlay.vue';
 
+const demoImage =
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80';
+
+const colorExamples = [
+    {
+        label: 'Black',
+        color: '#111827',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+        label: 'Primary',
+        color: 'var(--rp-color-primary)',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+        label: 'Danger',
+        color: 'var(--rp-color-danger)',
+        image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80',
+    },
+    {
+        label: 'Custom',
+        color: '#7c3aed',
+        image: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=600&q=80',
+    },
+];
+
 const meta = {
     title: 'Components/Overlay',
     component: Overlay as any,
@@ -43,11 +69,12 @@ export const Basic: Story = {
                     max-width: 440px;
                     place-items: center;
                     overflow: hidden;
-                    color: var(--rp-color-text-inverted);
-                    background:
-                        linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(5, 150, 105, 0.82)),
-                        repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 12px, transparent 12px 24px);
+                    color: #fff;
+                    background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80');
+                    background-position: center;
+                    background-size: cover;
                     border-radius: var(--rp-radius-lg);
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
                 "
             >
                 <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
@@ -65,27 +92,25 @@ export const Colors: Story = {
         components: { Overlay },
         setup: () => ({
             args,
-            examples: [
-                { label: 'Black', color: '#111827' },
-                { label: 'Primary', color: 'var(--rp-color-primary)' },
-                { label: 'Danger', color: 'var(--rp-color-danger)' },
-                { label: 'Custom', color: '#7c3aed' },
-            ],
+            examples: colorExamples,
         }),
         template: `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
                 <div
                     v-for="example in examples"
                     :key="example.label"
+                    :style="{ backgroundImage: 'url(' + example.image + ')' }"
                     style="
                         position: relative;
                         display: grid;
                         min-height: 128px;
                         place-items: center;
                         overflow: hidden;
-                        color: var(--rp-color-text-inverted);
-                        background: linear-gradient(135deg, var(--rp-color-success), var(--rp-color-info));
+                        color: #fff;
+                        background-position: center;
+                        background-size: cover;
                         border-radius: var(--rp-radius-md);
+                        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
                     "
                 >
                     <span style="position: relative; z-index: 2; font-weight: var(--rp-font-weight-semibold);">
@@ -107,9 +132,10 @@ export const Gradient: Story = {
     },
     render: (args) => ({
         components: { Overlay },
-        setup: () => ({ args }),
+        setup: () => ({ args, demoImage }),
         template: `
             <div
+                :style="{ backgroundImage: 'url(' + demoImage + ')' }"
                 style="
                     position: relative;
                     display: grid;
@@ -117,11 +143,11 @@ export const Gradient: Story = {
                     max-width: 440px;
                     place-items: center;
                     overflow: hidden;
-                    color: var(--rp-color-text-inverted);
-                    background:
-                        linear-gradient(135deg, rgba(249, 115, 22, 0.9), rgba(6, 182, 212, 0.8)),
-                        repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 12px, transparent 12px 24px);
+                    color: #fff;
+                    background-position: center;
+                    background-size: cover;
                     border-radius: var(--rp-radius-lg);
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
                 "
             >
                 <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
@@ -142,9 +168,10 @@ export const Blur: Story = {
     },
     render: (args) => ({
         components: { Overlay },
-        setup: () => ({ args }),
+        setup: () => ({ args, demoImage }),
         template: `
             <div
+                :style="{ backgroundImage: 'url(' + demoImage + ')' }"
                 style="
                     position: relative;
                     display: grid;
@@ -152,11 +179,11 @@ export const Blur: Story = {
                     max-width: 440px;
                     place-items: center;
                     overflow: hidden;
-                    color: var(--rp-color-text-inverted);
-                    background:
-                        repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 12px, transparent 12px 24px),
-                        linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(22, 163, 74, 0.82));
+                    color: #fff;
+                    background-position: center;
+                    background-size: cover;
                     border-radius: var(--rp-radius-lg);
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
                 "
             >
                 <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
