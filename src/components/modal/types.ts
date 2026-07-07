@@ -28,7 +28,7 @@ export interface ModalProps {
     initialFocus?: ModalInitialFocus | null;
     closeOnOverlayClick?: boolean;
     closeOnEscape?: boolean;
-    hideCloseButton?: boolean;
+    showCloseButton?: boolean;
     preventScroll?: boolean;
     returnFocus?: boolean;
     keepMounted?: boolean;

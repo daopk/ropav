@@ -190,7 +190,7 @@ describe('Modal', () => {
                         {
                             defaultOpen: true,
                             title: 'Focus trap',
-                            hideCloseButton: true,
+                            showCloseButton: false,
                         },
                         {
                             default: () =>

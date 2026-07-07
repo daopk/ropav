@@ -2,7 +2,7 @@
     <Transition name="rp-modal">
         <div
             v-if="shouldRender"
-            v-show="isVisible"
+            v-show="isOpen"
             :class="[rootClass, stateClass]"
             :style="rootStyle"
             @click="onOverlayClick"
@@ -19,13 +19,7 @@
                 tabindex="-1"
             >
                 <div v-if="hasHeader" class="rp-modal__header" :id="headerId">
-                    <slot
-                        name="header"
-                        :is-open="slotProps.isOpen"
-                        :open="slotProps.open"
-                        :close="slotProps.close"
-                        :toggle="slotProps.toggle"
-                    >
+                    <slot name="header" v-bind="slotProps">
                         <div class="rp-modal__heading">
                             <h2 v-if="title" :id="titleId" class="rp-modal__title">
                                 {{ title }}
@@ -49,22 +43,11 @@
                 </IconButton>
 
                 <div v-if="$slots.default" class="rp-modal__body">
-                    <slot
-                        :is-open="slotProps.isOpen"
-                        :open="slotProps.open"
-                        :close="slotProps.close"
-                        :toggle="slotProps.toggle"
-                    />
+                    <slot v-bind="slotProps" />
                 </div>
 
                 <div v-if="hasFooter" class="rp-modal__footer">
-                    <slot
-                        name="footer"
-                        :is-open="slotProps.isOpen"
-                        :open="slotProps.open"
-                        :close="slotProps.close"
-                        :toggle="slotProps.toggle"
-                    />
+                    <slot name="footer" v-bind="slotProps" />
                 </div>
             </section>
         </div>
@@ -92,7 +75,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
     initialFocus: null,
     closeOnOverlayClick: true,
     closeOnEscape: true,
-    hideCloseButton: false,
+    showCloseButton: true,
     preventScroll: true,
     returnFocus: true,
     keepMounted: false,
@@ -110,7 +93,7 @@ const {
     titleId,
     descriptionId,
     role,
-    isVisible,
+    isOpen,
     shouldRender,
     rootClass,
     rootStyle,
@@ -122,23 +105,21 @@ const {
 });
 
 const hasCustomHeader = computed(() => Boolean(slots.header));
-const hasTitle = computed(() => Boolean(props.title));
-const hasDescription = computed(() => Boolean(props.description));
 const hasHeader = computed(() =>
-    Boolean(hasCustomHeader.value || hasTitle.value || hasDescription.value),
+    Boolean(hasCustomHeader.value || props.title || props.description),
 );
 const hasFooter = computed(() => Boolean(slots.footer));
-const showCloseButton = computed(() => !props.hideCloseButton);
+const showCloseButton = computed(() => props.showCloseButton);
 
 const headerId = computed(() =>
     hasCustomHeader.value && !props.ariaLabel ? titleId.value : undefined,
 );
 const ariaLabelledby = computed(() => {
     if (props.ariaLabel) return undefined;
-    return hasCustomHeader.value || hasTitle.value ? titleId.value : undefined;
+    return hasCustomHeader.value || props.title ? titleId.value : undefined;
 });
 const ariaDescribedby = computed(() =>
-    hasDescription.value && !hasCustomHeader.value ? descriptionId.value : undefined,
+    props.description && !hasCustomHeader.value ? descriptionId.value : undefined,
 );
 const ariaLabel = computed(() => (ariaLabelledby.value ? undefined : props.ariaLabel || undefined));
 const stateClass = computed(() => ({

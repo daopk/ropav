@@ -10,13 +10,25 @@ import {
     type CSSProperties,
 } from 'vue';
 import { bem } from '@/utils/bem';
-import type { ModalInitialFocus, ModalPresetSize, ModalProps, ModalSlotProps } from './types';
+import type {
+    ModalInitialFocus,
+    ModalPresetSize,
+    ModalProps,
+    ModalRole,
+    ModalSize,
+    ModalSlotProps,
+} from './types';
 
 let bodyScrollLockCount = 0;
 let previousBodyOverflow = '';
 const activeModalStack: symbol[] = [];
 
-const focusableSelector = [
+type Cleanup = () => void;
+
+const DEFAULT_ROLE: ModalRole = 'dialog';
+const DEFAULT_SIZE: ModalSize = 'md';
+
+const FOCUSABLE_SELECTOR = [
     'a[href]',
     'button:not([disabled])',
     'textarea:not([disabled])',
@@ -25,20 +37,25 @@ const focusableSelector = [
     '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
-const modalPresetSizes = new Set<ModalPresetSize>(['sm', 'md', 'lg', 'xl', 'full']);
+const MODAL_PRESET_SIZES = new Set<ModalPresetSize>(['sm', 'md', 'lg', 'xl', 'full']);
 
 function isHTMLElement(value: unknown): value is HTMLElement {
     return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
 }
 
 function isModalPresetSize(size: string): size is ModalPresetSize {
-    return modalPresetSizes.has(size as ModalPresetSize);
+    return MODAL_PRESET_SIZES.has(size as ModalPresetSize);
 }
 
 function isFocusable(element: HTMLElement) {
     if (element.getAttribute('aria-hidden') === 'true') return false;
     if (element.hasAttribute('disabled')) return false;
     return element.tabIndex >= 0;
+}
+
+function getFocusableElements(panel: HTMLElement | null) {
+    if (!panel) return [];
+    return [...panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(isFocusable);
 }
 
 function focusElement(element: HTMLElement | null | undefined) {
@@ -51,7 +68,7 @@ function focusElement(element: HTMLElement | null | undefined) {
     }
 }
 
-function lockBodyScroll() {
+function lockBodyScroll(): Cleanup | undefined {
     if (typeof document === 'undefined') return undefined;
 
     if (bodyScrollLockCount === 0) {
@@ -71,6 +88,15 @@ function readInitialFocus(initialFocus: ModalInitialFocus | null | undefined) {
     return isRef(initialFocus) ? initialFocus.value : initialFocus;
 }
 
+function queryPanelElement(panel: HTMLElement, selector: string) {
+    try {
+        const element = panel.querySelector(selector);
+        return isHTMLElement(element) ? element : null;
+    } catch {
+        return null;
+    }
+}
+
 export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: boolean) => void) {
     const generatedId = useId();
     const panelRef = ref<HTMLElement | null>(null);
@@ -78,26 +104,25 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     const modalToken = Symbol('modal');
 
     let isMounted = false;
-    let isActive = false;
+    let isActiveModal = false;
     let previousActiveElement: HTMLElement | null = null;
-    let removeDocumentListeners: (() => void) | undefined;
-    let unlockScroll: (() => void) | undefined;
+    let removeDocumentListeners: Cleanup | undefined;
+    let unlockScroll: Cleanup | undefined;
 
     const modalId = computed(() => props.id ?? `${generatedId}-modal`);
     const titleId = computed(() => `${modalId.value}-title`);
     const descriptionId = computed(() => `${modalId.value}-description`);
-    const role = computed(() => props.role ?? 'dialog');
-    const size = computed(() => props.size || 'md');
+    const role = computed(() => props.role ?? DEFAULT_ROLE);
+    const size = computed(() => props.size || DEFAULT_SIZE);
     const isPresetSize = computed(() => isModalPresetSize(size.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
-    const isVisible = computed(() => isOpen.value);
-    const shouldRender = computed(() => Boolean(props.keepMounted || isVisible.value));
+    const shouldRender = computed(() => Boolean(props.keepMounted || isOpen.value));
 
     const rootClass = computed(() =>
         bem('rp-modal', {
             [`size-${size.value}`]: isPresetSize.value,
             'size-custom': !isPresetSize.value,
-            open: isVisible.value,
+            open: isOpen.value,
         }),
     );
 
@@ -110,16 +135,16 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     });
 
     const slotProps = computed<ModalSlotProps>(() => ({
-        isOpen: isVisible.value,
+        isOpen: isOpen.value,
         open: openModal,
         close: closeModal,
         toggle: toggleModal,
     }));
 
     function setOpen(nextOpen: boolean) {
-        const previousOpen = isOpen.value;
+        if (nextOpen === isOpen.value) return;
         if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        if (previousOpen !== nextOpen) emitOpenChange?.(nextOpen);
+        emitOpenChange?.(nextOpen);
     }
 
     function openModal() {
@@ -134,28 +159,20 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         setOpen(!isOpen.value);
     }
 
-    function getFocusableElements() {
-        const panel = panelRef.value;
-        if (!panel) return [];
-
-        return [...panel.querySelectorAll<HTMLElement>(focusableSelector)].filter(isFocusable);
-    }
-
     function resolveInitialFocus() {
         const initialFocus = readInitialFocus(props.initialFocus);
         const panel = panelRef.value;
         if (!initialFocus || !panel) return null;
 
         if (typeof initialFocus === 'string') {
-            const element = panel.querySelector(initialFocus);
-            return isHTMLElement(element) ? element : null;
+            return queryPanelElement(panel, initialFocus);
         }
 
         return panel.contains(initialFocus) ? initialFocus : null;
     }
 
     function focusInitialElement() {
-        const firstFocusable = getFocusableElements()[0];
+        const firstFocusable = getFocusableElements(panelRef.value)[0];
         focusElement(resolveInitialFocus() ?? firstFocusable ?? panelRef.value);
     }
 
@@ -176,7 +193,7 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         const panel = panelRef.value;
         if (!panel) return;
 
-        const focusableElements = getFocusableElements();
+        const focusableElements = getFocusableElements(panel);
         if (focusableElements.length === 0) {
             event.preventDefault();
             focusElement(panel);
@@ -207,7 +224,7 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     }
 
     function onDocumentKeydown(event: KeyboardEvent) {
-        if (!isVisible.value || !isTopModal()) return;
+        if (!isOpen.value || !isTopModal()) return;
 
         if (event.key === 'Escape') {
             if (props.closeOnEscape === false) return;
@@ -241,9 +258,9 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     }
 
     function activateModal() {
-        if (isActive) return;
+        if (isActiveModal) return;
 
-        isActive = true;
+        isActiveModal = true;
         addToStack();
 
         if (typeof document !== 'undefined') {
@@ -253,13 +270,15 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
 
         bindDocumentListeners();
         if (props.preventScroll !== false) unlockScroll = lockBodyScroll();
-        void nextTick(focusInitialElement);
+        void nextTick(() => {
+            if (isActiveModal) focusInitialElement();
+        });
     }
 
     function deactivateModal() {
-        if (!isActive) return;
+        if (!isActiveModal) return;
 
-        isActive = false;
+        isActiveModal = false;
         removeFromStack();
         removeDocumentListeners?.();
         unlockScroll?.();
@@ -274,16 +293,16 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
 
     onMounted(() => {
         isMounted = true;
-        if (isVisible.value) activateModal();
+        if (isOpen.value) activateModal();
     });
 
     onBeforeUnmount(() => {
         deactivateModal();
     });
 
-    watch(isVisible, (nextVisible) => {
+    watch(isOpen, (nextOpen) => {
         if (!isMounted) return;
-        if (nextVisible) activateModal();
+        if (nextOpen) activateModal();
         else deactivateModal();
     });
 
@@ -293,7 +312,7 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         titleId,
         descriptionId,
         role,
-        isVisible,
+        isOpen,
         shouldRender,
         rootClass,
         rootStyle,
