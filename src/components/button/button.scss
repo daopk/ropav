@@ -241,12 +241,16 @@
         flex-shrink: 0;
     }
 
-    &__spinner {
-        @include spinner-icon;
+    &__loading {
+        @include flex-center;
         position: absolute;
         top: 50%;
         left: 50%;
         translate: -50% -50%;
+    }
+
+    &__spinner {
+        @include spinner-icon;
     }
 }
 

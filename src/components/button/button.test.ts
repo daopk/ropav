@@ -140,6 +140,36 @@ describe('Button', () => {
         expect(button.textContent).toContain('Save');
     });
 
+    it('renders a custom loading slot when provided', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            loading: true,
+                        },
+                        {
+                            default: () => 'Save',
+                            loading: () => h('span', { class: 'loading-dots' }, '...'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const loading = container.querySelector('.rp-button__loading');
+
+        expect(loading?.getAttribute('aria-hidden')).toBe('true');
+        expect(container.querySelector('.loading-dots')).toBeTruthy();
+        expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
+        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
+            'true',
+        );
+    });
+
     it('adds the solid primary style only when requested', async () => {
         const container = mountDom(
             defineComponent({

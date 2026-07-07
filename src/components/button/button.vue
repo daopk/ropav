@@ -5,7 +5,11 @@
         :type="type"
         :aria-busy="loading || undefined"
     >
-        <IconLoaderCircle v-if="loading" class="rp-button__spinner" aria-hidden="true" />
+        <span v-if="loading" class="rp-button__loading" aria-hidden="true">
+            <slot name="loading">
+                <IconLoaderCircle class="rp-button__spinner" />
+            </slot>
+        </span>
         <span class="rp-button__content" :aria-hidden="loading || undefined">
             <span v-if="$slots.left" class="rp-button__left">
                 <slot name="left" />

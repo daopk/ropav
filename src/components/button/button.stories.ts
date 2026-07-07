@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import IconArrowRight from '~icons/lucide/arrow-right';
 import IconPlus from '~icons/lucide/plus';
 import Button from './button.vue';
+import './button.stories.scss';
 
 const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -144,6 +145,42 @@ export const States: Story = {
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                 <Button v-bind="args" loading>Loading</Button>
                 <Button v-bind="args" disabled>Disabled</Button>
+            </div>
+        `,
+    }),
+};
+
+export const LoadingSlot: Story = {
+    args: {
+        color: 'primary',
+        loading: true,
+        variant: 'solid',
+    },
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args }),
+        template: `
+            <div class="rp-button-story-row">
+                <Button v-bind="args">
+                    Saving
+                    <template #loading>
+                        <span class="rp-button-story-dots">
+                            <span />
+                            <span />
+                            <span />
+                        </span>
+                    </template>
+                </Button>
+                <Button v-bind="args" variant="outline">
+                    Syncing
+                    <template #loading>
+                        <span class="rp-button-story-dots">
+                            <span />
+                            <span />
+                            <span />
+                        </span>
+                    </template>
+                </Button>
             </div>
         `,
     }),
