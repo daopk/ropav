@@ -47,6 +47,7 @@ export interface AccordionRootProps {
     'aria-label'?: string;
     'aria-labelledby'?: string;
     'aria-describedby'?: string;
+    onKeydown: (event: KeyboardEvent) => void;
 }
 
 export interface AccordionItemRootProps {
@@ -60,7 +61,6 @@ export interface AccordionTriggerProps extends CollapseTriggerProps {
     id: string;
     class: string;
     'aria-disabled'?: boolean;
-    onKeydown: (event: KeyboardEvent) => void;
 }
 
 export interface AccordionContentProps extends CollapseContentProps {

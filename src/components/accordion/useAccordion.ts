@@ -12,6 +12,7 @@ import type {
     AccordionItemTriggerSlotProps,
     AccordionItemValue,
     AccordionModelValue,
+    AccordionOrientation,
     AccordionProps,
     AccordionRootProps,
     AccordionState,
@@ -20,6 +21,7 @@ import type {
     UseAccordionReturn,
 } from './types';
 
+const ACCORDION_SELECTOR = '.rp-accordion';
 const TRIGGER_SELECTOR = '.rp-accordion-item__trigger';
 
 function normalizeValue(value: AccordionModelValue | undefined, multiple: boolean) {
@@ -38,6 +40,57 @@ function hasValue(values: AccordionItemValue[], value: AccordionItemValue) {
 
 function withoutValue(values: AccordionItemValue[], value: AccordionItemValue) {
     return values.filter((itemValue) => itemValue !== value);
+}
+
+type NavigationDirection = 1 | -1;
+
+const ORIENTATION_NAVIGATION_KEYS: Record<
+    AccordionOrientation,
+    Partial<Record<string, NavigationDirection>>
+> = {
+    vertical: {
+        ArrowDown: 1,
+        ArrowUp: -1,
+    },
+    horizontal: {
+        ArrowRight: 1,
+        ArrowLeft: -1,
+    },
+};
+
+function getAccordionTrigger(event: KeyboardEvent, root: HTMLElement) {
+    const target = event.target;
+    if (!(target instanceof Element)) return undefined;
+
+    const trigger = target.closest<HTMLButtonElement>(TRIGGER_SELECTOR);
+    if (!trigger || trigger.closest(ACCORDION_SELECTOR) !== root) return undefined;
+
+    return trigger;
+}
+
+function getAccordionTriggers(root: HTMLElement) {
+    return Array.from(root.querySelectorAll<HTMLButtonElement>(TRIGGER_SELECTOR)).filter(
+        (trigger) => trigger.closest(ACCORDION_SELECTOR) === root && !trigger.disabled,
+    );
+}
+
+function getNextTrigger(
+    root: HTMLElement,
+    currentTrigger: HTMLButtonElement,
+    key: string,
+    orientation: AccordionOrientation,
+) {
+    const triggers = getAccordionTriggers(root);
+    const currentIndex = triggers.indexOf(currentTrigger);
+    if (currentIndex === -1 || triggers.length === 0) return undefined;
+
+    if (key === 'Home') return triggers[0];
+    if (key === 'End') return triggers[triggers.length - 1];
+
+    const direction = ORIENTATION_NAVIGATION_KEYS[orientation][key];
+    if (!direction) return undefined;
+
+    return triggers[(currentIndex + direction + triggers.length) % triggers.length];
 }
 
 export function useAccordion(
@@ -74,6 +127,7 @@ export function useAccordion(
         'aria-label': props.ariaLabel || undefined,
         'aria-labelledby': props.labelledby || undefined,
         'aria-describedby': props.describedby || undefined,
+        onKeydown: onRootKeydown,
     }));
 
     function setValues(nextValues: AccordionItemValue[]) {
@@ -97,6 +151,20 @@ export function useAccordion(
         }
 
         setValues(open ? [value] : []);
+    }
+
+    function onRootKeydown(event: KeyboardEvent) {
+        const root = event.currentTarget as HTMLElement | null;
+        if (!root) return;
+
+        const trigger = getAccordionTrigger(event, root);
+        if (!trigger) return;
+
+        const nextTrigger = getNextTrigger(root, trigger, event.key, orientation.value);
+        if (!nextTrigger) return;
+
+        event.preventDefault();
+        nextTrigger.focus();
     }
 
     provide<AccordionContext>(accordionKey, {
@@ -155,8 +223,8 @@ export function useAccordionItem(props: Readonly<AccordionItemProps>): UseAccord
             ariaDescribedby: () => props.ariaDescribedby,
             ariaLabelledby: () => props.ariaLabelledby ?? triggerId.value,
         },
-        (open) => {
-            setOpen(open);
+        (nextOpen) => {
+            setOpen(nextOpen);
         },
     );
 
@@ -185,7 +253,6 @@ export function useAccordionItem(props: Readonly<AccordionItemProps>): UseAccord
         'aria-disabled': triggerAriaDisabled.value || undefined,
         disabled: isDisabled.value || undefined,
         onClick: onTriggerClick,
-        onKeydown: onTriggerKeydown,
     }));
 
     const contentProps = computed<AccordionContentProps>(() => ({
@@ -221,56 +288,13 @@ export function useAccordionItem(props: Readonly<AccordionItemProps>): UseAccord
         setOpen(!isOpen.value);
     }
 
-    function setOpen(open: boolean) {
+    function setOpen(nextOpen: boolean) {
         if (isDisabled.value) return;
-        group.setItemOpen(props.value, open);
+        group.setItemOpen(props.value, nextOpen);
     }
 
     function onTriggerClick() {
         toggle();
-    }
-
-    function onTriggerKeydown(event: KeyboardEvent) {
-        const nextTrigger = getNextTrigger(event);
-        if (!nextTrigger) return;
-
-        event.preventDefault();
-        nextTrigger.focus();
-    }
-
-    function getNextTrigger(event: KeyboardEvent) {
-        const currentTrigger = event.currentTarget as HTMLButtonElement | null;
-        if (!currentTrigger) return undefined;
-
-        const root = currentTrigger.closest('.rp-accordion');
-        if (!root) return undefined;
-
-        const triggers = Array.from(
-            root.querySelectorAll<HTMLButtonElement>(TRIGGER_SELECTOR),
-        ).filter((trigger) => !trigger.disabled);
-        const currentIndex = triggers.indexOf(currentTrigger);
-        if (currentIndex === -1 || triggers.length === 0) return undefined;
-
-        switch (event.key) {
-            case 'Home':
-                return triggers[0];
-            case 'End':
-                return triggers[triggers.length - 1];
-            case 'ArrowDown':
-                if (group.orientation !== 'vertical') return undefined;
-                return triggers[(currentIndex + 1) % triggers.length];
-            case 'ArrowUp':
-                if (group.orientation !== 'vertical') return undefined;
-                return triggers[(currentIndex - 1 + triggers.length) % triggers.length];
-            case 'ArrowRight':
-                if (group.orientation !== 'horizontal') return undefined;
-                return triggers[(currentIndex + 1) % triggers.length];
-            case 'ArrowLeft':
-                if (group.orientation !== 'horizontal') return undefined;
-                return triggers[(currentIndex - 1 + triggers.length) % triggers.length];
-            default:
-                return undefined;
-        }
     }
 
     return {

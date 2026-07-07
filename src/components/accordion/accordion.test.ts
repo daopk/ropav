@@ -395,4 +395,132 @@ describe('Accordion', () => {
 
         expect(buttons[0].textContent).toBe('Close one');
     });
+
+    it('keeps keyboard navigation scoped to the nearest accordion', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Accordion,
+                        { defaultValue: 'outer-nested' },
+                        {
+                            default: () => [
+                                h(
+                                    AccordionItem,
+                                    { id: 'outer-one', value: 'outer-one', title: 'Outer one' },
+                                    { default: () => h('p', 'Outer one body') },
+                                ),
+                                h(
+                                    AccordionItem,
+                                    {
+                                        id: 'outer-nested',
+                                        value: 'outer-nested',
+                                        title: 'Outer nested',
+                                    },
+                                    {
+                                        default: () =>
+                                            h(
+                                                Accordion,
+                                                { defaultValue: 'inner-one' },
+                                                {
+                                                    default: () => [
+                                                        h(
+                                                            AccordionItem,
+                                                            {
+                                                                id: 'inner-one',
+                                                                value: 'inner-one',
+                                                                title: 'Inner one',
+                                                            },
+                                                            {
+                                                                default: () =>
+                                                                    h('p', 'Inner one body'),
+                                                            },
+                                                        ),
+                                                        h(
+                                                            AccordionItem,
+                                                            {
+                                                                id: 'inner-two',
+                                                                value: 'inner-two',
+                                                                title: 'Inner two',
+                                                            },
+                                                            {
+                                                                default: () =>
+                                                                    h('p', 'Inner two body'),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
+                                            ),
+                                    },
+                                ),
+                                h(
+                                    AccordionItem,
+                                    { id: 'outer-last', value: 'outer-last', title: 'Outer last' },
+                                    { default: () => h('p', 'Outer last body') },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const outerNested = container.querySelector('#outer-nested-trigger') as HTMLButtonElement;
+        const outerLast = container.querySelector('#outer-last-trigger') as HTMLButtonElement;
+        const innerOne = container.querySelector('#inner-one-trigger') as HTMLButtonElement;
+        const innerTwo = container.querySelector('#inner-two-trigger') as HTMLButtonElement;
+
+        outerNested.focus();
+        keydown(outerNested, 'ArrowDown');
+        expect(document.activeElement).toBe(outerLast);
+
+        innerOne.focus();
+        keydown(innerOne, 'ArrowDown');
+        expect(document.activeElement).toBe(innerTwo);
+    });
+
+    it('uses horizontal arrow keys for horizontal accordions', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Accordion,
+                        { orientation: 'horizontal' },
+                        {
+                            default: () => [
+                                h(
+                                    AccordionItem,
+                                    { value: 'one', title: 'One' },
+                                    { default: () => h('p', 'One body') },
+                                ),
+                                h(
+                                    AccordionItem,
+                                    { value: 'two', title: 'Two' },
+                                    { default: () => h('p', 'Two body') },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const buttons = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-accordion-item__trigger'),
+        );
+
+        buttons[0].focus();
+        keydown(buttons[0], 'ArrowDown');
+        expect(document.activeElement).toBe(buttons[0]);
+
+        keydown(buttons[0], 'ArrowRight');
+        expect(document.activeElement).toBe(buttons[1]);
+
+        keydown(buttons[1], 'ArrowLeft');
+        expect(document.activeElement).toBe(buttons[0]);
+    });
 });
