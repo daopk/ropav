@@ -1,23 +1,23 @@
 @mixin radio-color($color) {
-    --_radio-color: var(--rp-color-#{$color});
-    --_radio-on-color: var(--rp-color-on-#{$color});
+    --_rp-radio-color: var(--rp-color-#{$color});
+    --_rp-radio-on-color: var(--rp-color-on-#{$color});
 }
 
 @mixin radio-size($size, $dot, $font-size) {
-    --_radio-size: #{$size};
-    --_radio-dot: #{$dot};
-    --_radio-font-size: #{$font-size};
+    --_rp-radio-size: #{$size};
+    --_rp-radio-dot: #{$dot};
+    --_rp-radio-font-size: #{$font-size};
 }
 
 .rp-radio {
-    --_radio-color: var(--rp-color-control-selected-bg);
-    --_radio-on-color: var(--rp-color-control-selected-fg);
-    --_radio-size: 18px;
-    --_radio-dot: 8px;
-    --_radio-font-size: var(--rp-font-size-base);
-    --_radio-checked-bg: var(--_radio-color);
-    --_radio-checked-border: var(--_radio-color);
-    --_radio-checked-dot: var(--_radio-on-color);
+    --_rp-radio-color: var(--rp-color-control-selected-bg);
+    --_rp-radio-on-color: var(--rp-color-control-selected-fg);
+    --_rp-radio-size: 18px;
+    --_rp-radio-dot: 8px;
+    --_rp-radio-font-size: var(--rp-font-size-base);
+    --_rp-radio-checked-bg: var(--_rp-radio-color);
+    --_rp-radio-checked-border: var(--_rp-radio-color);
+    --_rp-radio-checked-dot: var(--_rp-radio-on-color);
 
     display: inline-flex;
     align-items: center;
@@ -29,7 +29,7 @@
         @include disabled-state;
     }
     gap: var(--rp-spacing-2);
-    font-size: var(--_radio-font-size);
+    font-size: var(--_rp-radio-font-size);
 
     &__native {
         @include visually-hidden;
@@ -42,8 +42,8 @@
 
     &__dot {
         @include flex-center;
-        width: var(--_radio-size);
-        height: var(--_radio-size);
+        width: var(--_rp-radio-size);
+        height: var(--_rp-radio-size);
         flex-shrink: 0;
         border: var(--rp-border-width-medium) solid var(--rp-color-control-border);
         border-radius: var(--rp-radius-full);
@@ -54,18 +54,18 @@
 
         &::after {
             content: '';
-            width: var(--_radio-dot);
-            height: var(--_radio-dot);
+            width: var(--_rp-radio-dot);
+            height: var(--_rp-radio-dot);
             border-radius: var(--rp-radius-full);
-            background-color: var(--_radio-checked-dot);
+            background-color: var(--_rp-radio-checked-dot);
             transform: scale(0);
             transition: transform var(--rp-transition-fast);
         }
     }
 
     &--checked &__dot {
-        background-color: var(--_radio-checked-bg);
-        border-color: var(--_radio-checked-border);
+        background-color: var(--_rp-radio-checked-bg);
+        border-color: var(--_rp-radio-checked-border);
 
         &::after {
             transform: scale(1);
@@ -84,9 +84,9 @@
     }
 
     &--outline {
-        --_radio-checked-bg: var(--rp-color-control-bg);
-        --_radio-checked-border: var(--_radio-color);
-        --_radio-checked-dot: var(--_radio-color);
+        --_rp-radio-checked-bg: var(--rp-color-control-bg);
+        --_rp-radio-checked-border: var(--_rp-radio-color);
+        --_rp-radio-checked-dot: var(--_rp-radio-color);
     }
 
     &--size-xs {

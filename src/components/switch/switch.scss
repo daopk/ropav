@@ -1,25 +1,25 @@
 @mixin switch-color($color) {
-    --_switch-color: var(--rp-color-#{$color});
+    --_rp-switch-color: var(--rp-color-#{$color});
 }
 
 @mixin switch-size($track-w, $track-h, $thumb-size, $font-size) {
-    --_track-w: #{$track-w};
-    --_track-h: #{$track-h};
-    --_thumb-size: #{$thumb-size};
-    --_switch-font-size: #{$font-size};
+    --_rp-switch-track-width: #{$track-w};
+    --_rp-switch-track-height: #{$track-h};
+    --_rp-switch-thumb-size: #{$thumb-size};
+    --_rp-switch-font-size: #{$font-size};
 }
 
 .rp-switch {
-    --_switch-color: var(--rp-color-control-selected-bg);
-    --_switch-font-size: var(--rp-font-size-base);
-    --_track-w: 40px;
-    --_track-h: 22px;
-    --_thumb-size: 18px;
-    --_thumb-offset: 2px;
-    --_track-bg: var(--rp-color-control-track-bg);
-    --_thumb-bg: var(--rp-color-control-thumb-bg);
-    --_switch-invalid-border: var(--rp-color-danger);
-    --_switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
+    --_rp-switch-color: var(--rp-color-control-selected-bg);
+    --_rp-switch-font-size: var(--rp-font-size-base);
+    --_rp-switch-track-width: 40px;
+    --_rp-switch-track-height: 22px;
+    --_rp-switch-thumb-size: 18px;
+    --_rp-switch-thumb-offset: 2px;
+    --_rp-switch-track-bg: var(--rp-color-control-track-bg);
+    --_rp-switch-thumb-bg: var(--rp-color-control-thumb-bg);
+    --_rp-switch-invalid-border: var(--rp-color-danger);
+    --_rp-switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
 
     display: inline-flex;
     align-items: center;
@@ -28,15 +28,15 @@
     user-select: none;
 
     html.dark & {
-        --_switch-invalid-border: var(--rp-color-danger-fg);
-        --_switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+        --_rp-switch-invalid-border: var(--rp-color-danger-fg);
+        --_rp-switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
     }
 
     &--disabled {
         @include disabled-state;
     }
     gap: var(--rp-spacing-2);
-    font-size: var(--_switch-font-size);
+    font-size: var(--_rp-switch-font-size);
 
     &__native {
         @include visually-hidden;
@@ -51,33 +51,33 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        width: var(--_track-w);
-        height: var(--_track-h);
+        width: var(--_rp-switch-track-width);
+        height: var(--_rp-switch-track-height);
         flex-shrink: 0;
-        background-color: var(--_track-bg);
+        background-color: var(--_rp-switch-track-bg);
         border-radius: var(--rp-radius-full);
         transition: background-color var(--rp-transition-fast);
     }
 
     &--checked &__track {
-        background-color: var(--_switch-color);
+        background-color: var(--_rp-switch-color);
     }
 
     &--invalid &__track {
-        outline: var(--rp-border-width-thin) solid var(--_switch-invalid-border);
-        outline-offset: var(--_thumb-offset);
+        outline: var(--rp-border-width-thin) solid var(--_rp-switch-invalid-border);
+        outline-offset: var(--_rp-switch-thumb-offset);
     }
 
     &--invalid &__native:focus-visible + &__track {
-        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_switch-invalid-ring);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-switch-invalid-ring);
     }
 
     &__thumb {
         position: absolute;
-        left: var(--_thumb-offset);
-        width: var(--_thumb-size);
-        height: var(--_thumb-size);
-        background-color: var(--_thumb-bg);
+        left: var(--_rp-switch-thumb-offset);
+        width: var(--_rp-switch-thumb-size);
+        height: var(--_rp-switch-thumb-size);
+        background-color: var(--_rp-switch-thumb-bg);
         border-radius: var(--rp-radius-full);
         box-shadow: var(--rp-shadow-sm);
         transition: transform var(--rp-transition-fast);
@@ -85,7 +85,7 @@
 
     &--checked &__thumb {
         transform: translateX(
-            calc(var(--_track-w) - var(--_thumb-size) - var(--_thumb-offset) * 2)
+            calc(var(--_rp-switch-track-width) - var(--_rp-switch-thumb-size) - var(--_rp-switch-thumb-offset) * 2)
         );
     }
 
