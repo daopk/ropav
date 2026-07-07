@@ -25,6 +25,10 @@
       "types": "./dist/components/button/index.d.ts",
       "import": "./dist/components/button/index.js"
     },
+    "./button-group": {
+      "types": "./dist/components/button-group/index.d.ts",
+      "import": "./dist/components/button-group/index.js"
+    },
     "./card": {
       "types": "./dist/components/card/index.d.ts",
       "import": "./dist/components/card/index.js"

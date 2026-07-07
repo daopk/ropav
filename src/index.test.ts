@@ -3,6 +3,7 @@ import * as Ropav from './index';
 
 const publicComponents = [
     'Button',
+    'ButtonGroup',
     'Card',
     'Checkbox',
     'Field',

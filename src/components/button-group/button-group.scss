@@ -1,0 +1,66 @@
+.rp-button-group {
+    display: inline-flex;
+    align-items: stretch;
+    gap: var(--rp-spacing-2);
+    font-family: var(--rp-font-family);
+    vertical-align: middle;
+
+    &--vertical {
+        flex-direction: column;
+    }
+
+    &--wrap {
+        flex-wrap: wrap;
+    }
+
+    &--attached {
+        gap: 0;
+
+        &:focus-within {
+            position: relative;
+            z-index: 1;
+        }
+
+        :slotted(.rp-button) {
+            position: relative;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        :slotted(.rp-button:is(:hover, :focus-visible)) {
+            z-index: 1;
+        }
+
+        &:not(.rp-button-group--vertical) {
+            :slotted(.rp-button:not(:first-child)) {
+                margin-inline-start: calc(var(--rp-border-width-thin) * -1);
+            }
+
+            :slotted(.rp-button:first-child) {
+                border-start-start-radius: var(--_rp-button-radius);
+                border-end-start-radius: var(--_rp-button-radius);
+            }
+
+            :slotted(.rp-button:last-child) {
+                border-start-end-radius: var(--_rp-button-radius);
+                border-end-end-radius: var(--_rp-button-radius);
+            }
+        }
+
+        &.rp-button-group--vertical {
+            :slotted(.rp-button:not(:first-child)) {
+                margin-block-start: calc(var(--rp-border-width-thin) * -1);
+            }
+
+            :slotted(.rp-button:first-child) {
+                border-start-start-radius: var(--_rp-button-radius);
+                border-start-end-radius: var(--_rp-button-radius);
+            }
+
+            :slotted(.rp-button:last-child) {
+                border-end-start-radius: var(--_rp-button-radius);
+                border-end-end-radius: var(--_rp-button-radius);
+            }
+        }
+    }
+}
