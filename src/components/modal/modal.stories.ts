@@ -151,18 +151,30 @@ export const CustomOverlay: Story = {
         title: 'Custom overlay',
         description: 'This modal forwards visual props to the shared Overlay component.',
         overlayProps: {
-            opacity: 0.72,
-            blur: 4,
+            gradient: 'linear-gradient(135deg, rgba(8, 13, 27, 0.82), rgba(20, 184, 166, 0.46))',
+            blur: 8,
         },
     },
     render: (args) => ({
         components: { Button, Modal },
         setup() {
-            const open = ref(false);
+            const open = ref(true);
             return { args, open };
         },
         template: `
-            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 48px;">
+            <div style="box-sizing: border-box; display: grid; min-height: 460px; gap: 24px; place-items: center; padding: 48px; background: linear-gradient(135deg, #f8fafc, #dbeafe);">
+                <div style="display: grid; width: min(720px, 100%); gap: 16px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <span style="display: block; width: 160px; height: 80px; border-radius: var(--rp-radius-sm); background: #f97316;"></span>
+                        <span style="display: block; width: 220px; height: 80px; border-radius: var(--rp-radius-sm); background: #14b8a6;"></span>
+                        <span style="display: block; width: 120px; height: 80px; border-radius: var(--rp-radius-sm); background: #6366f1;"></span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+                        <span style="height: 96px; border-radius: var(--rp-radius-sm); background: repeating-linear-gradient(45deg, #ffffff, #ffffff 10px, #e2e8f0 10px, #e2e8f0 20px);"></span>
+                        <span style="height: 96px; border-radius: var(--rp-radius-sm); background: linear-gradient(135deg, #fde68a, #fb7185);"></span>
+                        <span style="height: 96px; border-radius: var(--rp-radius-sm); background: repeating-linear-gradient(90deg, #ffffff, #ffffff 8px, #c7d2fe 8px, #c7d2fe 16px);"></span>
+                    </div>
+                </div>
                 <Button variant="outline" @click="open = true">Open custom overlay</Button>
                 <Modal v-bind="args" v-model:open="open">
                     <p style="margin: 0;">
