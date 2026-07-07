@@ -1,0 +1,13 @@
+.rp-tabs-content {
+    box-sizing: border-box;
+    min-width: 0;
+    color: var(--rp-color-text);
+    font-family: var(--rp-font-family);
+    font-size: var(--rp-font-size-base);
+    line-height: var(--rp-line-height-normal);
+
+    &:focus-visible {
+        outline: none;
+        @include focus-ring;
+    }
+}

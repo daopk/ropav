@@ -97,6 +97,10 @@
       "types": "./dist/components/switch/index.d.ts",
       "import": "./dist/components/switch/index.js"
     },
+    "./tabs": {
+      "types": "./dist/components/tabs/index.d.ts",
+      "import": "./dist/components/tabs/index.js"
+    },
     "./textarea": {
       "types": "./dist/components/textarea/index.d.ts",
       "import": "./dist/components/textarea/index.js"

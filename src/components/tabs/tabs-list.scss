@@ -1,0 +1,23 @@
+.rp-tabs-list {
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    gap: 0;
+    font-family: var(--rp-font-family);
+    background-color: transparent;
+    border-bottom: var(--rp-border-width-medium) solid var(--rp-color-border);
+
+    &--vertical {
+        flex-direction: column;
+        width: max-content;
+        border-bottom: 0;
+        border-left: var(--rp-border-width-medium) solid var(--rp-color-border);
+    }
+
+    &--disabled {
+        @include disabled-state;
+    }
+}

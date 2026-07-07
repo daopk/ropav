@@ -20,6 +20,10 @@ const publicComponents = [
     'Select',
     'Slider',
     'Switch',
+    'Tabs',
+    'TabsContent',
+    'TabsList',
+    'TabsTrigger',
     'Textarea',
     'Tooltip',
 ] as const;

@@ -36,6 +36,7 @@ const expectedFiles = [
     'dist/select.css',
     'dist/slider.css',
     'dist/switch.css',
+    'dist/tabs.css',
     'dist/textarea.css',
     'dist/tooltip.css',
     'dist/components/accordion/index.js',
@@ -57,6 +58,7 @@ const expectedFiles = [
     'dist/components/select/index.js',
     'dist/components/slider/index.js',
     'dist/components/switch/index.js',
+    'dist/components/tabs/index.js',
     'dist/components/textarea/index.js',
     'dist/components/tooltip/index.js',
 ];
@@ -116,11 +118,19 @@ try {
             'Select',
             'Slider',
             'Switch',
+            'Tabs',
+            'TabsContent',
+            'TabsList',
+            'TabsTrigger',
             'Textarea',
             'Tooltip',
             'useAccordion',
             'useAccordionItem',
             'useCollapse',
+            'useTabs',
+            'useTabsContent',
+            'useTabsList',
+            'useTabsTrigger',
         ],
         'dist/index.js',
     );
@@ -177,6 +187,22 @@ try {
 
     const slider = await server.ssrLoadModule('/dist/components/slider/index.js');
     assertExports(slider, ['Slider'], 'dist/components/slider/index.js');
+
+    const tabs = await server.ssrLoadModule('/dist/components/tabs/index.js');
+    assertExports(
+        tabs,
+        [
+            'Tabs',
+            'TabsContent',
+            'TabsList',
+            'TabsTrigger',
+            'useTabs',
+            'useTabsContent',
+            'useTabsList',
+            'useTabsTrigger',
+        ],
+        'dist/components/tabs/index.js',
+    );
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');
