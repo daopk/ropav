@@ -3,6 +3,7 @@ import type { DropdownMenuItem } from './types';
 import {
     arePathsEqual,
     getEventPoint,
+    hasMeasuredRect,
     isPathPrefix,
     isPointInRect,
     type ItemPath,
@@ -45,16 +46,31 @@ function isPointInTriangle(point: PointerPoint, triangle: SafeTriangle) {
     return Math.abs(area - (area1 + area2 + area3)) < 0.5;
 }
 
+function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max);
+}
+
+function clampPointToRect(point: PointerPoint, rect: DOMRect): PointerPoint {
+    return {
+        x: clamp(point.x, rect.left, rect.right),
+        y: clamp(point.y, rect.top, rect.bottom),
+    };
+}
+
 export function getDropdownMenuSafeTriangle({
     itemRect,
     submenuRect,
     origin,
 }: GetSafeTriangleOptions): SafeTriangle {
-    const opensRight = !itemRect || submenuRect.left >= itemRect.right;
+    const measuredItemRect = itemRect && hasMeasuredRect(itemRect) ? itemRect : null;
+    const opensRight = !measuredItemRect || submenuRect.left >= measuredItemRect.right;
     const edgeX = opensRight ? submenuRect.left : submenuRect.right;
+    const boundedOrigin = measuredItemRect ? clampPointToRect(origin, measuredItemRect) : origin;
     const expandedOrigin = {
-        x: origin.x + (opensRight ? -SAFE_TRIANGLE_ORIGIN_OFFSET : SAFE_TRIANGLE_ORIGIN_OFFSET),
-        y: origin.y,
+        x:
+            boundedOrigin.x +
+            (opensRight ? -SAFE_TRIANGLE_ORIGIN_OFFSET : SAFE_TRIANGLE_ORIGIN_OFFSET),
+        y: boundedOrigin.y,
     };
 
     return [

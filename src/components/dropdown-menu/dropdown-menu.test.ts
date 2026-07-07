@@ -9,6 +9,7 @@ import type {
     DropdownMenuPlacement,
     DropdownMenuSlotProps,
 } from './types';
+import { getDropdownMenuSafeTriangle } from './useDropdownMenuHoverIntent';
 
 async function waitDropdownTransition() {
     await waitTransition();
@@ -359,6 +360,30 @@ describe('DropdownMenu', () => {
 
         expect(document.getElementById('safe-menu-submenu-0')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-1');
+    });
+
+    it('bounds the safe triangle origin to the open submenu trigger', () => {
+        const triangle = getDropdownMenuSafeTriangle({
+            itemRect: createRect(100, 40, 280, 80),
+            submenuRect: createRect(288, 32, 468, 128),
+            origin: {
+                x: -120,
+                y: 160,
+            },
+        });
+
+        expect(triangle[0]).toEqual({
+            x: 98,
+            y: 80,
+        });
+        expect(triangle[1]).toEqual({
+            x: 288,
+            y: 30,
+        });
+        expect(triangle[2]).toEqual({
+            x: 288,
+            y: 130,
+        });
     });
 
     it('updates the safe triangle origin as the pointer moves across an open trigger', async () => {
