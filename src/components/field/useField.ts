@@ -2,6 +2,20 @@ import { computed, useId, useSlots } from 'vue';
 import { bem } from '@/utils/bem';
 import type { FieldControlProps, FieldProps } from './types';
 
+const INTERACTIVE_LABEL_SELECTOR = [
+    'button',
+    'a[href]',
+    'input',
+    'select',
+    'textarea',
+    '[contenteditable="true"]',
+    '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+function isInteractiveLabelTarget(target: Element) {
+    return Boolean(target.closest(INTERACTIVE_LABEL_SELECTOR));
+}
+
 export function useField(props: Readonly<FieldProps>) {
     const slots = useSlots();
     const generatedId = useId();
@@ -46,6 +60,21 @@ export function useField(props: Readonly<FieldProps>) {
         describedby: controlDescribedby.value,
     }));
 
+    function focusControl(e: MouseEvent) {
+        if (props.disabled) return;
+
+        const target = e.target;
+        if (target instanceof Element && isInteractiveLabelTarget(target)) return;
+
+        const label = e.currentTarget;
+        const control =
+            label instanceof HTMLLabelElement
+                ? (label.control ?? label.ownerDocument.getElementById(controlId.value))
+                : undefined;
+
+        if (control instanceof HTMLElement) control.focus();
+    }
+
     return {
         controlId,
         labelId,
@@ -60,5 +89,6 @@ export function useField(props: Readonly<FieldProps>) {
         controlDescribedby,
         rootClass,
         controlProps,
+        focusControl,
     };
 }

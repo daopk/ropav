@@ -3,6 +3,7 @@ import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Input from '../input/input.vue';
+import Select from '../select/select.vue';
 import Field from './field.vue';
 import type { FieldSlotProps } from './types';
 
@@ -156,5 +157,39 @@ describe('Field', () => {
         expect(native.getAttribute('aria-describedby')).toBe(
             'username-description username-message',
         );
+    });
+
+    it('focuses a custom control when pressing the label', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Field,
+                        {
+                            id: 'role',
+                            label: 'Role',
+                        },
+                        {
+                            default: ({ controlProps }: FieldSlotProps) =>
+                                h(Select, {
+                                    ...controlProps,
+                                    modelValue: null,
+                                    options: [{ label: 'Owner', value: 'owner' }],
+                                }),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const label = container.querySelector('.rp-field__label') as HTMLLabelElement;
+        const trigger = container.querySelector('[role="combobox"]') as HTMLElement;
+
+        label.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        await flush();
+
+        expect(document.activeElement).toBe(trigger);
     });
 });

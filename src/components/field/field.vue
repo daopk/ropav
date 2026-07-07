@@ -1,6 +1,12 @@
 <template>
     <div :class="rootClass">
-        <label v-if="hasLabel" :id="labelId" class="rp-field__label" :for="controlId">
+        <label
+            v-if="hasLabel"
+            :id="labelId"
+            class="rp-field__label"
+            :for="controlId"
+            @mousedown="focusControl"
+        >
             <slot name="label">{{ label }}</slot>
             <span v-if="required" class="rp-field__required" aria-hidden="true">*</span>
         </label>
@@ -62,6 +68,7 @@ const {
     controlDescribedby,
     rootClass,
     controlProps,
+    focusControl,
 } = useField(props);
 </script>
 
