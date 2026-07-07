@@ -49,6 +49,10 @@
       "types": "./dist/components/input/index.d.ts",
       "import": "./dist/components/input/index.js"
     },
+    "./popover": {
+      "types": "./dist/components/popover/index.d.ts",
+      "import": "./dist/components/popover/index.js"
+    },
     "./progress": {
       "types": "./dist/components/progress/index.d.ts",
       "import": "./dist/components/progress/index.js"

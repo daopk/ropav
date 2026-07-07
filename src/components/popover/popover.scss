@@ -1,0 +1,93 @@
+.rp-popover {
+    --_rp-popover-main-axis-offset: var(--rp-spacing-2);
+    --_rp-popover-cross-axis-offset: 0px;
+    --_rp-popover-radius: var(--rp-radius-sm);
+
+    position: relative;
+    display: inline-flex;
+    font-family: var(--rp-font-family);
+    vertical-align: middle;
+
+    &__content {
+        position: absolute;
+        z-index: $z-index-dropdown;
+        box-sizing: border-box;
+        min-width: $component-menu-min-width;
+        max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
+        padding: var(--rp-spacing-4);
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-base);
+        line-height: var(--rp-line-height-normal);
+        overflow-wrap: anywhere;
+        background-color: var(--rp-color-surface-raised);
+        border: var(--rp-border-width-thin) solid var(--rp-color-border);
+        border-radius: var(--_rp-popover-radius);
+        box-shadow: var(--rp-shadow-base);
+    }
+
+    &--placement-top &__content {
+        bottom: calc(100% + var(--_rp-popover-main-axis-offset));
+        left: calc(50% + var(--_rp-popover-cross-axis-offset));
+        translate: -50% 0;
+    }
+
+    &--placement-right &__content {
+        top: calc(50% + var(--_rp-popover-cross-axis-offset));
+        left: calc(100% + var(--_rp-popover-main-axis-offset));
+        translate: 0 -50%;
+    }
+
+    &--placement-bottom &__content {
+        top: calc(100% + var(--_rp-popover-main-axis-offset));
+        left: calc(50% + var(--_rp-popover-cross-axis-offset));
+        translate: -50% 0;
+    }
+
+    &--placement-left &__content {
+        top: calc(50% + var(--_rp-popover-cross-axis-offset));
+        right: calc(100% + var(--_rp-popover-main-axis-offset));
+        translate: 0 -50%;
+    }
+
+    &--target {
+        display: contents;
+    }
+
+    &--target &__content {
+        position: fixed;
+        top: var(--_rp-popover-target-y, 0);
+        right: auto;
+        bottom: auto;
+        left: var(--_rp-popover-target-x, 0);
+    }
+
+    &--target#{&}--placement-top &__content {
+        translate: calc(-50% + var(--_rp-popover-cross-axis-offset))
+            calc(-100% - var(--_rp-popover-main-axis-offset));
+    }
+
+    &--target#{&}--placement-right &__content {
+        translate: var(--_rp-popover-main-axis-offset)
+            calc(-50% + var(--_rp-popover-cross-axis-offset));
+    }
+
+    &--target#{&}--placement-bottom &__content {
+        translate: calc(-50% + var(--_rp-popover-cross-axis-offset))
+            var(--_rp-popover-main-axis-offset);
+    }
+
+    &--target#{&}--placement-left &__content {
+        translate: calc(-100% - var(--_rp-popover-main-axis-offset))
+            calc(-50% + var(--_rp-popover-cross-axis-offset));
+    }
+}
+
+.rp-popover-content-enter-active,
+.rp-popover-content-leave-active {
+    transition: opacity var(--rp-transition-fast);
+}
+
+.rp-popover-content-enter-from,
+.rp-popover-content-leave-to {
+    opacity: 0;
+}
