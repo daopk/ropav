@@ -11,7 +11,7 @@ export interface PopoverOffsetOptions {
 
 export type PopoverOffset = number | PopoverOffsetOptions;
 
-export type PopoverRole = 'dialog' | 'menu' | 'listbox' | 'tree' | 'grid';
+export type PopoverRole = 'dialog';
 
 export interface PopoverTriggerProps {
     'aria-controls'?: string;
@@ -44,6 +44,9 @@ export interface PopoverProps {
     open?: boolean;
     disabled?: boolean;
     role?: PopoverRole;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+    ariaDescribedby?: string;
     closeOnOutsideClick?: boolean;
     closeOnEscape?: boolean;
 }

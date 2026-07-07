@@ -151,6 +151,9 @@ export function usePopover(
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
     const shouldRenderContent = computed(() => !isDisabled.value);
     const shouldWireTarget = computed(() => isTargetMode.value && !isDisabled.value);
+    const ariaLabel = computed(() => props.ariaLabel || undefined);
+    const ariaLabelledby = computed(() => props.ariaLabelledby || undefined);
+    const ariaDescribedby = computed(() => props.ariaDescribedby || undefined);
 
     const rootClass = computed(() =>
         bem('rp-popover', {
@@ -370,6 +373,9 @@ export function usePopover(
         isVisible,
         isTargetMode,
         popoverRole,
+        ariaLabel,
+        ariaLabelledby,
+        ariaDescribedby,
         shouldRenderContent,
         rootClass,
         contentStyle,

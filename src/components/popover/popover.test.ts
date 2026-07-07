@@ -28,6 +28,7 @@ describe('Popover', () => {
                         Popover,
                         {
                             id: 'account-popover',
+                            ariaLabel: 'Account actions',
                         },
                         {
                             default: ({ triggerProps, isOpen }: PopoverSlotProps) =>
@@ -55,6 +56,7 @@ describe('Popover', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
         expect(popover.getAttribute('role')).toBe('dialog');
+        expect(popover.getAttribute('aria-label')).toBe('Account actions');
         expect(popover.style.display).toBe('none');
 
         click(trigger);
@@ -70,6 +72,43 @@ describe('Popover', () => {
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(popover.style.display).toBe('none');
+    });
+
+    it('supports labelled and described dialog content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        {
+                            id: 'labelled-popover',
+                            open: true,
+                            ariaLabelledby: 'labelled-popover-title',
+                            ariaDescribedby: 'labelled-popover-description',
+                        },
+                        {
+                            content: () =>
+                                h('div', [
+                                    h('h2', { id: 'labelled-popover-title' }, 'Project status'),
+                                    h(
+                                        'p',
+                                        { id: 'labelled-popover-description' },
+                                        'Ready for release.',
+                                    ),
+                                ]),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const popover = container.querySelector('#labelled-popover') as HTMLElement;
+
+        expect(popover.getAttribute('role')).toBe('dialog');
+        expect(popover.getAttribute('aria-labelledby')).toBe('labelled-popover-title');
+        expect(popover.getAttribute('aria-describedby')).toBe('labelled-popover-description');
     });
 
     it('keeps content clicks inside and closes on outside click and Escape', async () => {

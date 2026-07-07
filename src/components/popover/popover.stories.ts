@@ -3,7 +3,6 @@ import Button from '../button/button.vue';
 import Popover from './popover.vue';
 
 const placements = ['top', 'right', 'bottom', 'left'] as const;
-const roles = ['dialog', 'menu', 'listbox', 'tree', 'grid'] as const;
 
 const meta = {
     title: 'Components/Popover',
@@ -14,10 +13,6 @@ const meta = {
             control: 'select',
             options: placements,
         },
-        role: {
-            control: 'select',
-            options: roles,
-        },
         open: { control: 'boolean' },
         disabled: { control: 'boolean' },
         offset: { control: 'object' },
@@ -27,7 +22,6 @@ const meta = {
     },
     args: {
         placement: 'bottom',
-        role: 'dialog',
         disabled: false,
         closeOnOutsideClick: true,
         closeOnEscape: true,
@@ -41,6 +35,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
+    args: {
+        ariaLabel: 'Project status',
+    },
     render: (args) => ({
         components: { Button, Popover },
         setup: () => ({ args }),
@@ -79,6 +76,7 @@ export const Placements: Story = {
                         :key="placement"
                         v-bind="args"
                         :placement="placement"
+                        :aria-label="'Popover on ' + placement"
                     >
                         <template #default="{ triggerProps }">
                             <Button v-bind="triggerProps" variant="outline">{{ placement }}</Button>
@@ -98,6 +96,7 @@ export const Placements: Story = {
 export const Offset: Story = {
     args: {
         placement: 'right',
+        ariaLabel: 'Offset details',
         offset: {
             mainAxis: 24,
             crossAxis: 16,
@@ -123,6 +122,9 @@ export const Offset: Story = {
 };
 
 export const Target: Story = {
+    args: {
+        ariaLabel: 'External target details',
+    },
     render: (args) => ({
         components: { Button, Popover },
         setup: () => ({ args }),

@@ -16,6 +16,9 @@
                 :id="popoverId"
                 class="rp-popover__content"
                 :role="popoverRole"
+                :aria-label="ariaLabel"
+                :aria-labelledby="ariaLabelledby"
+                :aria-describedby="ariaDescribedby"
                 :style="contentStyle"
             >
                 <slot
@@ -63,6 +66,9 @@ const {
     isVisible,
     isTargetMode,
     popoverRole,
+    ariaLabel,
+    ariaLabelledby,
+    ariaDescribedby,
     shouldRenderContent,
     rootClass,
     contentStyle,
