@@ -1,0 +1,38 @@
+.rp-collapse {
+    --_rp-collapse-duration: var(--rp-transition-fast);
+
+    display: block;
+    min-width: 0;
+    font-family: var(--rp-font-family);
+    color: var(--rp-color-text);
+
+    &--disabled {
+        @include disabled-state;
+    }
+
+    &__content {
+        box-sizing: border-box;
+        display: grid;
+        min-width: 0;
+        overflow: hidden;
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-base);
+        line-height: var(--rp-line-height-normal);
+        grid-template-rows: 1fr;
+        transition:
+            grid-template-rows var(--_rp-collapse-duration),
+            opacity var(--_rp-collapse-duration);
+    }
+
+    &__inner {
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+    }
+}
+
+.rp-collapse-content-enter-from,
+.rp-collapse-content-leave-to {
+    opacity: 0;
+    grid-template-rows: 0fr;
+}

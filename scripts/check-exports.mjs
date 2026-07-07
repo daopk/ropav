@@ -21,6 +21,7 @@ const expectedFiles = [
     'dist/button-group.css',
     'dist/card.css',
     'dist/checkbox.css',
+    'dist/collapse.css',
     'dist/field.css',
     'dist/icon-button.css',
     'dist/input.css',
@@ -38,6 +39,7 @@ const expectedFiles = [
     'dist/components/button-group/index.js',
     'dist/components/card/index.js',
     'dist/components/checkbox/index.js',
+    'dist/components/collapse/index.js',
     'dist/components/field/index.js',
     'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
@@ -91,6 +93,7 @@ try {
             'ButtonGroup',
             'Card',
             'Checkbox',
+            'Collapse',
             'Field',
             'IconButton',
             'Input',
@@ -117,6 +120,9 @@ try {
 
     const card = await server.ssrLoadModule('/dist/components/card/index.js');
     assertExports(card, ['Card'], 'dist/components/card/index.js');
+
+    const collapse = await server.ssrLoadModule('/dist/components/collapse/index.js');
+    assertExports(collapse, ['Collapse'], 'dist/components/collapse/index.js');
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');
     assertExports(field, ['Field'], 'dist/components/field/index.js');

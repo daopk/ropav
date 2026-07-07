@@ -6,6 +6,7 @@ const publicComponents = [
     'ButtonGroup',
     'Card',
     'Checkbox',
+    'Collapse',
     'Field',
     'IconButton',
     'Input',

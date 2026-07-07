@@ -37,6 +37,10 @@
       "types": "./dist/components/checkbox/index.d.ts",
       "import": "./dist/components/checkbox/index.js"
     },
+    "./collapse": {
+      "types": "./dist/components/collapse/index.d.ts",
+      "import": "./dist/components/collapse/index.js"
+    },
     "./field": {
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"
