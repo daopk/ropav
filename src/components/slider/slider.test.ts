@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
 import { flush, input, mountDom } from '../../../tests/utils/vue';
@@ -8,6 +8,10 @@ import { sliderColors, sliderSizes } from './types';
 describe('Slider', () => {
     const colors = sliderColors;
     const sizes = sliderSizes;
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
     it('emits numeric model updates from native range input events', async () => {
         const onUpdate = vi.fn();
@@ -195,11 +199,63 @@ describe('Slider', () => {
 
         expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--placement-top')).toBe(true);
-        expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(false);
         expect(tooltipContent.getAttribute('role')).toBeNull();
         expect(tooltipContent.getAttribute('aria-hidden')).toBe('true');
         expect(tooltipContent.style.display).toBe('none');
         expect(tooltipContent.textContent).toBe('50');
+    });
+
+    it('supports custom thumb tooltip options', async () => {
+        vi.useFakeTimers();
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Slider, {
+                        modelValue: 44,
+                        tooltip: {
+                            id: 'volume-tooltip',
+                            placement: 'bottom',
+                            color: 'warning',
+                            offset: { mainAxis: 12, crossAxis: -4 },
+                            openDelay: 100,
+                            arrow: true,
+                        },
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-slider__track') as HTMLElement;
+        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
+        const tooltipContent = tooltip.querySelector('.rp-tooltip__content') as HTMLElement;
+
+        expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--placement-bottom')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--color-warning')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(true);
+        expect(tooltipContent.id).toBe('volume-tooltip');
+        expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe(
+            '12px',
+        );
+        expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-cross-axis-offset')).toBe(
+            '-4px',
+        );
+
+        track.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(false);
+
+        vi.advanceTimersByTime(99);
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(false);
+
+        vi.advanceTimersByTime(1);
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
     });
 
     it('supports formatting the thumb tooltip value', async () => {

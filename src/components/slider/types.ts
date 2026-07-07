@@ -1,3 +1,5 @@
+import type { TooltipColor, TooltipOffset, TooltipPlacement } from '../tooltip/types';
+
 export const sliderColors = [
     'primary',
     'secondary',
@@ -22,7 +24,19 @@ export type SliderOrientation = (typeof sliderOrientations)[number];
 
 export type SliderValueFormatter = (value: number) => string | number;
 
-export type SliderTooltip = false | 'hover' | 'always';
+export type SliderTooltipMode = 'hover' | 'always';
+
+export interface SliderTooltipOptions {
+    mode?: SliderTooltipMode;
+    id?: string;
+    placement?: TooltipPlacement;
+    color?: TooltipColor;
+    offset?: TooltipOffset;
+    openDelay?: number;
+    arrow?: boolean;
+}
+
+export type SliderTooltip = false | SliderTooltipMode | SliderTooltipOptions;
 
 export type SliderMarkColor = SliderColor;
 

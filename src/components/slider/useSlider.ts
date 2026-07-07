@@ -1,8 +1,15 @@
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, type CSSProperties } from 'vue';
+import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { sliderColors } from './types';
-import type { SliderMark, SliderMarkInput, SliderProps } from './types';
+import type {
+    SliderMark,
+    SliderMarkInput,
+    SliderProps,
+    SliderTooltipMode,
+    SliderTooltipOptions,
+} from './types';
 
 type SliderStateProps = Readonly<
     SliderProps & {
@@ -184,9 +191,23 @@ function getSliderAriaValueText(
     return undefined;
 }
 
+function getSliderTooltipOptions(
+    tooltip: NonNullable<SliderProps['tooltip']>,
+): SliderTooltipOptions {
+    return typeof tooltip === 'object' ? tooltip : {};
+}
+
+function getSliderTooltipMode(
+    tooltip: NonNullable<SliderProps['tooltip']>,
+): SliderTooltipMode | false {
+    if (tooltip === false) return false;
+    if (typeof tooltip === 'object') return tooltip.mode ?? 'hover';
+
+    return tooltip;
+}
+
 export function useSlider(props: SliderStateProps, emitUpdate: (value: number) => void) {
     const control = useControlState(props);
-    const hoveredTooltipOpen = ref(false);
 
     const bounds = computed(() => normalizeSliderBounds(props.min, props.max));
     const nativeStep = computed(() => normalizeSliderStep(props.step));
@@ -216,15 +237,33 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         normalizeSliderMarks(props.marks, bounds.value.min, bounds.value.max, valuePercent.value),
     );
 
+    const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));
+    const tooltipMode = computed(() => getSliderTooltipMode(props.tooltip));
+    const tooltipOpenDelay = computed(() => tooltipOptions.value.openDelay ?? 0);
+    const {
+        isOpen: delayedTooltipOpen,
+        open: openDelayedTooltip,
+        closeImmediate: closeDelayedTooltip,
+    } = useDelayedOpen({
+        openDelay: () => tooltipOpenDelay.value,
+        disabled: () => tooltipMode.value !== 'hover' || control.disabled,
+    });
+
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
-    const tooltipVisible = computed(() => props.tooltip !== false);
-    const tooltipAlwaysVisible = computed(() => props.tooltip === 'always');
+    const tooltipVisible = computed(() => tooltipMode.value !== false);
+    const tooltipAlwaysVisible = computed(() => tooltipMode.value === 'always');
     const tooltipOpen = computed(
         () =>
             tooltipAlwaysVisible.value ||
-            (props.tooltip === 'hover' && hoveredTooltipOpen.value && !control.disabled),
+            (tooltipMode.value === 'hover' && delayedTooltipOpen.value && !control.disabled),
     );
-    const tooltipPlacement = computed(() => (props.orientation === 'vertical' ? 'left' : 'top'));
+    const tooltipPlacement = computed(
+        () => tooltipOptions.value.placement ?? (props.orientation === 'vertical' ? 'left' : 'top'),
+    );
+    const tooltipId = computed(() => tooltipOptions.value.id);
+    const tooltipColor = computed(() => tooltipOptions.value.color);
+    const tooltipOffset = computed(() => tooltipOptions.value.offset);
+    const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
     const tooltipContent = computed(() => String(formattedValue.value));
 
     const rootClass = computed(() =>
@@ -260,13 +299,11 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
     }
 
     function openTooltip() {
-        if (props.tooltip === 'hover' && !control.disabled) {
-            hoveredTooltipOpen.value = true;
-        }
+        if (tooltipMode.value === 'hover' && !control.disabled) openDelayedTooltip();
     }
 
     function closeTooltip() {
-        hoveredTooltipOpen.value = false;
+        closeDelayedTooltip();
     }
 
     function onTooltipKeydown(event: KeyboardEvent) {
@@ -288,6 +325,11 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         tooltipVisible,
         tooltipOpen,
         tooltipPlacement,
+        tooltipId,
+        tooltipColor,
+        tooltipOffset,
+        tooltipOpenDelay,
+        tooltipArrow,
         tooltipContent,
         onInput,
         openTooltip,

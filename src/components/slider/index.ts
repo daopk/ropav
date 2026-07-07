@@ -11,5 +11,7 @@ export type {
     SliderSize,
     SliderThumbStyle,
     SliderTooltip,
+    SliderTooltipMode,
+    SliderTooltipOptions,
     SliderValueFormatter,
 } from './types';

@@ -45,8 +45,7 @@ const meta = {
         marks: { control: 'object' },
         thumbStyle: { control: 'object' },
         tooltip: {
-            control: 'select',
-            options: [false, 'hover', 'always'],
+            control: 'object',
         },
         formatValue: { control: false },
         disabled: { control: 'boolean' },
@@ -145,6 +144,18 @@ export const FormatValue: Story = {
             </div>
         `,
     }),
+};
+
+export const CustomTooltip: Story = {
+    args: {
+        tooltip: {
+            mode: 'always',
+            placement: 'bottom',
+            color: 'warning',
+            offset: 12,
+            arrow: true,
+        },
+    },
 };
 
 export const CustomThumb: Story = {

@@ -77,12 +77,15 @@
 
             <Tooltip
                 v-if="tooltipVisible"
+                :id="tooltipId"
                 class="rp-slider__tooltip"
                 :content="tooltipContent"
                 :placement="tooltipPlacement"
+                :color="tooltipColor"
+                :offset="tooltipOffset"
                 :open="tooltipOpen"
-                :open-delay="0"
-                arrow
+                :open-delay="tooltipOpenDelay"
+                :arrow="tooltipArrow"
                 decorative
             >
                 <span class="rp-slider__tooltip-anchor" aria-hidden="true" />
@@ -130,6 +133,11 @@ const {
     tooltipVisible,
     tooltipOpen,
     tooltipPlacement,
+    tooltipId,
+    tooltipColor,
+    tooltipOffset,
+    tooltipOpenDelay,
+    tooltipArrow,
     tooltipContent,
     onInput,
     openTooltip,
