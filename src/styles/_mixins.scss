@@ -103,6 +103,23 @@
     }
 }
 
+@mixin spinner-icon($size: 1em) {
+    display: block;
+    width: $size;
+    height: $size;
+    flex-shrink: 0;
+    transform-origin: center;
+    animation: rp-spinner-spin 700ms linear infinite;
+}
+
+@mixin spinner-keyframes {
+    @keyframes rp-spinner-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
 @mixin semantic-colors($var-name) {
     @each $name in primary, secondary, success, warning, danger, info, neutral {
         &--#{$name} {

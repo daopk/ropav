@@ -233,17 +233,8 @@
     }
 
     &__spinner {
-        display: block;
-        width: 1em;
-        height: 1em;
-        flex-shrink: 0;
-        transform-origin: center;
-        animation: rp-button-spin 700ms linear infinite;
+        @include spinner-icon;
     }
 }
 
-@keyframes rp-button-spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
+@include spinner-keyframes;

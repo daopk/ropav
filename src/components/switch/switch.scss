@@ -85,7 +85,10 @@
 
     &--checked &__thumb {
         transform: translateX(
-            calc(var(--_rp-switch-track-width) - var(--_rp-switch-thumb-size) - var(--_rp-switch-thumb-offset) * 2)
+            calc(
+                var(--_rp-switch-track-width) - var(--_rp-switch-thumb-size) -
+                    var(--_rp-switch-thumb-offset) * 2
+            )
         );
     }
 

@@ -104,7 +104,7 @@ describe('IconButton', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect(button.disabled).toBe(true);
-        expect(container.querySelector('svg.rp-icon-button__spinner')).toBeNull();
+        expect(container.querySelector('.rp-icon-button__spinner')).toBeNull();
         expect(container.querySelector('.rp-icon-button__icon .search-icon')).toBeTruthy();
     });
 

@@ -2,8 +2,7 @@
     width: var(--_rp-button-height);
     padding: 0;
 
-    &__icon,
-    &__spinner {
+    &__icon {
         width: 1em;
         height: 1em;
         flex-shrink: 0;
@@ -23,14 +22,8 @@
     }
 
     &__spinner {
-        display: block;
-        transform-origin: center;
-        animation: rp-icon-button-spin 700ms linear infinite;
+        @include spinner-icon;
     }
 }
 
-@keyframes rp-icon-button-spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
+@include spinner-keyframes;

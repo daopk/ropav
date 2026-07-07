@@ -122,7 +122,7 @@ describe('Button', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect(button.disabled).toBe(true);
-        expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
+        expect(container.querySelector('.rp-button__spinner')).toBeNull();
         expect(container.querySelector('.rp-button__left .left-icon')).toBeTruthy();
         expect(button.textContent).toContain('Save');
     });
