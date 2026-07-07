@@ -31,6 +31,8 @@ const colorStoryStyle = {
 type TabColor = (typeof componentColors)[number];
 
 function getTabColorStyle(color: TabColor) {
+    if (color === 'primary') return {};
+
     return {
         '--rp-color-primary': `var(--rp-color-${color})`,
     };
