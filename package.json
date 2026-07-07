@@ -49,6 +49,10 @@
       "types": "./dist/components/collapse/index.d.ts",
       "import": "./dist/components/collapse/index.js"
     },
+    "./dropdown-menu": {
+      "types": "./dist/components/dropdown-menu/index.d.ts",
+      "import": "./dist/components/dropdown-menu/index.js"
+    },
     "./field": {
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"

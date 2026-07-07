@@ -8,6 +8,7 @@ const publicComponents = [
     'Card',
     'Checkbox',
     'Collapse',
+    'DropdownMenu',
     'Field',
     'IconButton',
     'Input',

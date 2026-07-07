@@ -5,6 +5,7 @@ export * from './components/button-group';
 export * from './components/card';
 export * from './components/checkbox';
 export * from './components/collapse';
+export * from './components/dropdown-menu';
 export * from './components/field';
 export * from './components/icon-button';
 export * from './components/input';

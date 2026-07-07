@@ -2,7 +2,7 @@ import { watch, onMounted, onBeforeUnmount, type Ref } from 'vue';
 
 export function useClickOutside(
     target: Ref<HTMLElement | null>,
-    active: Ref<boolean>,
+    active: Readonly<Ref<boolean>>,
     callback: () => void,
 ) {
     let isListening = false;
