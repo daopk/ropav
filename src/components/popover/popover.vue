@@ -15,7 +15,7 @@
                 v-show="isVisible"
                 :id="popoverId"
                 class="rp-popover__content"
-                :role="role"
+                :role="popoverRole"
                 :style="contentStyle"
             >
                 <slot
@@ -62,6 +62,7 @@ const {
     popoverId,
     isVisible,
     isTargetMode,
+    popoverRole,
     shouldRenderContent,
     rootClass,
     contentStyle,

@@ -227,6 +227,86 @@ describe('Popover', () => {
         }
     });
 
+    it('keeps target content positioned after changing an open target', async () => {
+        const firstTarget = document.createElement('button');
+        const secondTarget = document.createElement('button');
+
+        let secondRect = {
+            top: 20,
+            right: 90,
+            bottom: 50,
+            left: 10,
+            width: 80,
+            height: 30,
+        };
+
+        firstTarget.getBoundingClientRect = vi.fn(
+            () =>
+                ({
+                    top: 12,
+                    right: 70,
+                    bottom: 36,
+                    left: 30,
+                    width: 40,
+                    height: 24,
+                    toJSON: () => ({}),
+                }) as DOMRect,
+        );
+        secondTarget.getBoundingClientRect = vi.fn(
+            () =>
+                ({
+                    ...secondRect,
+                    x: secondRect.left,
+                    y: secondRect.top,
+                    toJSON: () => ({}),
+                }) as DOMRect,
+        );
+
+        document.body.append(firstTarget, secondTarget);
+
+        const props = reactive<PopoverProps>({
+            id: 'retarget-popover',
+            target: firstTarget,
+            open: true,
+        });
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Popover, props, {
+                        default: () => h('p', 'Retargeted content'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const popover = container.querySelector('#retarget-popover') as HTMLElement;
+        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('50px');
+        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('36px');
+
+        props.target = secondTarget;
+        await flush();
+
+        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('50px');
+        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('50px');
+
+        secondRect = {
+            top: 48,
+            right: 160,
+            bottom: 88,
+            left: 80,
+            width: 80,
+            height: 40,
+        };
+        window.dispatchEvent(new Event('resize'));
+        await flush();
+
+        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('120px');
+        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('88px');
+    });
+
     it('emits update:open from trigger interactions when controlled', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

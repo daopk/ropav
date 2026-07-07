@@ -15,6 +15,7 @@ import type {
     PopoverOffset,
     PopoverPlacement,
     PopoverProps,
+    PopoverRole,
     PopoverSlotProps,
     PopoverTriggerProps,
 } from './types';
@@ -24,52 +25,103 @@ interface PopoverPosition {
     y: number;
 }
 
+type Cleanup = () => void;
 type TargetAttribute = 'aria-controls' | 'aria-expanded' | 'aria-haspopup';
+type PopoverCssVariable =
+    | '--_rp-popover-main-axis-offset'
+    | '--_rp-popover-cross-axis-offset'
+    | '--_rp-popover-target-x'
+    | '--_rp-popover-target-y';
+
+const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
+const DEFAULT_ROLE: PopoverRole = 'dialog';
+const TARGET_ATTRIBUTES: TargetAttribute[] = ['aria-controls', 'aria-expanded', 'aria-haspopup'];
 
 function isHTMLElement(value: unknown): value is HTMLElement {
     return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
 }
 
 function getTargetPosition(rect: DOMRect, placement: PopoverPlacement): PopoverPosition {
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
     switch (placement) {
         case 'right':
-            return { x: rect.right, y: rect.top + rect.height / 2 };
+            return { x: rect.right, y: centerY };
         case 'bottom':
-            return { x: rect.left + rect.width / 2, y: rect.bottom };
+            return { x: centerX, y: rect.bottom };
         case 'left':
-            return { x: rect.left, y: rect.top + rect.height / 2 };
+            return { x: rect.left, y: centerY };
         case 'top':
         default:
-            return { x: rect.left + rect.width / 2, y: rect.top };
+            return { x: centerX, y: rect.top };
     }
+}
+
+function setPixelVar(
+    style: CSSProperties,
+    variable: PopoverCssVariable,
+    value: number | undefined,
+) {
+    if (value != null) style[variable] = `${value}px`;
+}
+
+function styleOrUndefined(style: CSSProperties): CSSProperties | undefined {
+    return Object.keys(style).length > 0 ? style : undefined;
 }
 
 function resolveOffsetStyle(offset: PopoverOffset | undefined): CSSProperties | undefined {
     if (offset == null) return undefined;
 
-    if (typeof offset === 'number') {
-        return {
-            '--_rp-popover-main-axis-offset': `${offset}px`,
-        };
-    }
-
     const style: CSSProperties = {};
 
-    if (offset.mainAxis != null) {
-        style['--_rp-popover-main-axis-offset'] = `${offset.mainAxis}px`;
+    if (typeof offset === 'number') {
+        setPixelVar(style, '--_rp-popover-main-axis-offset', offset);
+        return style;
     }
 
-    if (offset.crossAxis != null) {
-        style['--_rp-popover-cross-axis-offset'] = `${offset.crossAxis}px`;
-    }
+    setPixelVar(style, '--_rp-popover-main-axis-offset', offset.mainAxis);
+    setPixelVar(style, '--_rp-popover-cross-axis-offset', offset.crossAxis);
 
-    return Object.keys(style).length > 0 ? style : undefined;
+    return styleOrUndefined(style);
 }
 
 function addIdReference(currentValue: string | null, id: string) {
     const ids = (currentValue ?? '').split(/\s+/).filter(Boolean);
     if (!ids.includes(id)) ids.push(id);
     return ids.join(' ');
+}
+
+function snapshotAttributes(element: HTMLElement) {
+    const snapshot = {} as Record<TargetAttribute, string | null>;
+
+    for (const attribute of TARGET_ATTRIBUTES) {
+        snapshot[attribute] = element.getAttribute(attribute);
+    }
+
+    return snapshot;
+}
+
+function restoreAttributes(element: HTMLElement, snapshot: Record<TargetAttribute, string | null>) {
+    for (const attribute of TARGET_ATTRIBUTES) {
+        const value = snapshot[attribute];
+        if (value == null) element.removeAttribute(attribute);
+        else element.setAttribute(attribute, value);
+    }
+}
+
+function applyTargetAttributes(
+    element: HTMLElement,
+    snapshot: Record<TargetAttribute, string | null>,
+    options: {
+        id: string;
+        expanded: boolean;
+        role: PopoverRole;
+    },
+) {
+    element.setAttribute('aria-controls', addIdReference(snapshot['aria-controls'], options.id));
+    element.setAttribute('aria-expanded', String(options.expanded));
+    element.setAttribute('aria-haspopup', options.role);
 }
 
 export function usePopover(
@@ -84,15 +136,16 @@ export function usePopover(
     const uncontrolledOpen = ref(false);
 
     let isMounted = false;
-    let removeTargetListeners: (() => void) | undefined;
-    let removePositionListeners: (() => void) | undefined;
-    let removeInteractionListeners: (() => void) | undefined;
+    let targetListenerCleanup: Cleanup | undefined;
+    let targetListenerElement: HTMLElement | null = null;
+    let viewportCleanup: Cleanup | undefined;
+    let documentCleanup: Cleanup | undefined;
     let attributedTarget: HTMLElement | null = null;
     let previousTargetAttributes: Record<TargetAttribute, string | null> | null = null;
 
     const popoverId = computed(() => props.id ?? `${generatedId}-popover`);
-    const placement = computed(() => props.placement ?? 'bottom');
-    const popoverRole = computed(() => props.role ?? 'dialog');
+    const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
+    const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
     const isTargetMode = computed(() => props.target != null && props.target !== '');
     const hasContent = computed(() =>
         Boolean(slots.content || (isTargetMode.value && slots.default)),
@@ -117,15 +170,12 @@ export function usePopover(
             ...resolveOffsetStyle(props.offset),
         };
 
-        if (!isTargetMode.value || !targetPosition.value) {
-            return Object.keys(style).length > 0 ? style : undefined;
+        if (isTargetMode.value && targetPosition.value) {
+            setPixelVar(style, '--_rp-popover-target-x', targetPosition.value.x);
+            setPixelVar(style, '--_rp-popover-target-y', targetPosition.value.y);
         }
 
-        return {
-            ...style,
-            '--_rp-popover-target-x': `${targetPosition.value.x}px`,
-            '--_rp-popover-target-y': `${targetPosition.value.y}px`,
-        };
+        return styleOrUndefined(style);
     });
 
     const triggerProps = computed<PopoverTriggerProps>(() => ({
@@ -136,19 +186,16 @@ export function usePopover(
         onKeydown: onTriggerKeydown,
     }));
 
-    const slotProps = computed<PopoverSlotProps>(() => ({
-        triggerProps: triggerProps.value,
+    const contentSlotProps = computed<PopoverContentSlotProps>(() => ({
         isOpen: isVisible.value,
         open: openPopover,
         close: closePopover,
         toggle: togglePopover,
     }));
 
-    const contentSlotProps = computed<PopoverContentSlotProps>(() => ({
-        isOpen: isVisible.value,
-        open: openPopover,
-        close: closePopover,
-        toggle: togglePopover,
+    const slotProps = computed<PopoverSlotProps>(() => ({
+        triggerProps: triggerProps.value,
+        ...contentSlotProps.value,
     }));
 
     function setOpen(nextOpen: boolean) {
@@ -210,11 +257,7 @@ export function usePopover(
 
     function restoreTargetAttributes() {
         if (!attributedTarget || !previousTargetAttributes) return;
-
-        for (const [attribute, value] of Object.entries(previousTargetAttributes)) {
-            if (value == null) attributedTarget.removeAttribute(attribute);
-            else attributedTarget.setAttribute(attribute, value);
-        }
+        restoreAttributes(attributedTarget, previousTargetAttributes);
 
         attributedTarget = null;
         previousTargetAttributes = null;
@@ -226,18 +269,13 @@ export function usePopover(
         if (!shouldWireTarget.value || !targetElement.value) return;
 
         attributedTarget = targetElement.value;
-        previousTargetAttributes = {
-            'aria-controls': attributedTarget.getAttribute('aria-controls'),
-            'aria-expanded': attributedTarget.getAttribute('aria-expanded'),
-            'aria-haspopup': attributedTarget.getAttribute('aria-haspopup'),
-        };
+        previousTargetAttributes = snapshotAttributes(attributedTarget);
 
-        attributedTarget.setAttribute(
-            'aria-controls',
-            addIdReference(previousTargetAttributes['aria-controls'], popoverId.value),
-        );
-        attributedTarget.setAttribute('aria-expanded', String(isVisible.value));
-        attributedTarget.setAttribute('aria-haspopup', popoverRole.value);
+        applyTargetAttributes(attributedTarget, previousTargetAttributes, {
+            id: popoverId.value,
+            expanded: isVisible.value,
+            role: popoverRole.value,
+        });
     }
 
     function updateTargetPosition() {
@@ -252,37 +290,60 @@ export function usePopover(
         );
     }
 
-    function bindTargetListeners(element: HTMLElement) {
-        removeTargetListeners?.();
+    function unbindTargetListeners() {
+        targetListenerCleanup?.();
+        targetListenerCleanup = undefined;
+        targetListenerElement = null;
+    }
 
+    function bindTargetListeners(element: HTMLElement) {
+        if (targetListenerElement === element) return;
+
+        unbindTargetListeners();
         element.addEventListener('click', onTargetClick);
 
-        removeTargetListeners = () => {
+        targetListenerElement = element;
+        targetListenerCleanup = () => {
             element.removeEventListener('click', onTargetClick);
-            removeTargetListeners = undefined;
         };
     }
 
-    function removeViewportListeners() {
-        removePositionListeners?.();
-        removePositionListeners = undefined;
+    function syncTargetListeners() {
+        if (shouldWireTarget.value && targetElement.value) {
+            bindTargetListeners(targetElement.value);
+        } else {
+            unbindTargetListeners();
+        }
     }
 
     function bindViewportListeners() {
-        if (typeof window === 'undefined' || removePositionListeners) return;
+        if (typeof window === 'undefined' || viewportCleanup) return;
 
         window.addEventListener('resize', updateTargetPosition);
         window.addEventListener('scroll', updateTargetPosition, true);
 
-        removePositionListeners = () => {
+        viewportCleanup = () => {
             window.removeEventListener('resize', updateTargetPosition);
             window.removeEventListener('scroll', updateTargetPosition, true);
         };
     }
 
+    function removeViewportListeners() {
+        viewportCleanup?.();
+        viewportCleanup = undefined;
+    }
+
+    function syncViewportListeners() {
+        if (isVisible.value && isTargetMode.value && targetElement.value) {
+            bindViewportListeners();
+        } else {
+            removeViewportListeners();
+        }
+    }
+
     function isEventInsidePopover(event: Event) {
         const eventTarget = event.target;
-        if (!eventTarget || !(eventTarget instanceof Node)) return false;
+        if (typeof Node === 'undefined' || !(eventTarget instanceof Node)) return false;
 
         return Boolean(
             rootRef.value?.contains(eventTarget) || targetElement.value?.contains(eventTarget),
@@ -299,55 +360,68 @@ export function usePopover(
         closePopover();
     }
 
-    function removeDocumentListeners() {
-        removeInteractionListeners?.();
-        removeInteractionListeners = undefined;
-    }
-
     function bindDocumentListeners() {
-        if (typeof document === 'undefined' || removeInteractionListeners) return;
+        if (typeof document === 'undefined' || documentCleanup) return;
 
         document.addEventListener('click', onDocumentClick, true);
         document.addEventListener('keydown', onDocumentKeydown);
 
-        removeInteractionListeners = () => {
+        documentCleanup = () => {
             document.removeEventListener('click', onDocumentClick, true);
             document.removeEventListener('keydown', onDocumentKeydown);
         };
     }
 
+    function removeDocumentListeners() {
+        documentCleanup?.();
+        documentCleanup = undefined;
+    }
+
+    function syncDocumentListeners() {
+        if (isVisible.value) bindDocumentListeners();
+        else removeDocumentListeners();
+    }
+
+    function clearTarget() {
+        unbindTargetListeners();
+        removeViewportListeners();
+        restoreTargetAttributes();
+        targetElement.value = null;
+        targetPosition.value = null;
+    }
+
+    function setTargetElement(nextTarget: HTMLElement | null) {
+        if (targetElement.value === nextTarget) return;
+
+        unbindTargetListeners();
+        removeViewportListeners();
+        restoreTargetAttributes();
+        targetElement.value = nextTarget;
+    }
+
     function syncTarget() {
         if (!isTargetMode.value) {
-            removeTargetListeners?.();
-            removeViewportListeners();
-            restoreTargetAttributes();
-            targetElement.value = null;
-            targetPosition.value = null;
+            clearTarget();
             return;
         }
 
         const nextTarget = resolveTarget();
-        if (targetElement.value === nextTarget) {
-            if (shouldWireTarget.value && nextTarget) bindTargetListeners(nextTarget);
-            else removeTargetListeners?.();
-            syncTargetAttributes();
-            updateTargetPosition();
-            return;
-        }
+        setTargetElement(nextTarget);
 
-        removeTargetListeners?.();
-        removeViewportListeners();
-        restoreTargetAttributes();
-        targetElement.value = nextTarget;
-
-        if (!nextTarget) {
+        if (!targetElement.value) {
             targetPosition.value = null;
             return;
         }
 
-        if (shouldWireTarget.value) bindTargetListeners(nextTarget);
+        syncTargetListeners();
         syncTargetAttributes();
         updateTargetPosition();
+        syncViewportListeners();
+    }
+
+    function syncOpenStateListeners() {
+        syncDocumentListeners();
+        syncViewportListeners();
     }
 
     watch(isDisabled, (disabled) => {
@@ -375,30 +449,21 @@ export function usePopover(
         if (!isMounted) return;
 
         if (visible) {
-            bindDocumentListeners();
-            if (isTargetMode.value) {
-                updateTargetPosition();
-                bindViewportListeners();
-            }
-        } else {
-            removeDocumentListeners();
-            removeViewportListeners();
+            updateTargetPosition();
         }
+
+        syncOpenStateListeners();
     });
 
     onMounted(() => {
         isMounted = true;
         syncTarget();
-
-        if (isVisible.value) {
-            bindDocumentListeners();
-            if (isTargetMode.value) bindViewportListeners();
-        }
+        syncOpenStateListeners();
     });
 
     onBeforeUnmount(() => {
         isMounted = false;
-        removeTargetListeners?.();
+        unbindTargetListeners();
         removeViewportListeners();
         removeDocumentListeners();
         restoreTargetAttributes();
@@ -410,6 +475,7 @@ export function usePopover(
         isOpen,
         isVisible,
         isTargetMode,
+        popoverRole,
         shouldRenderContent,
         rootClass,
         contentStyle,
