@@ -42,6 +42,7 @@ describe('IconButton', () => {
         expect(button.type).toBe('button');
         expect(button.disabled).toBe(false);
         expect(button.getAttribute('aria-label')).toBe('Search');
+        expect(button.getAttribute('aria-busy')).toBeNull();
         expect([...button.classList]).toEqual(['rp-button', 'rp-icon-button']);
         expect(container.querySelector('.rp-icon-button__icon .search-icon')).toBeTruthy();
         expect(container.querySelector('.rp-icon-button__icon')?.getAttribute('aria-hidden')).toBe(
@@ -75,12 +76,13 @@ describe('IconButton', () => {
 
         expect(button.type).toBe('submit');
         expect(button.disabled).toBe(true);
+        expect(button.getAttribute('aria-busy')).toBe('true');
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost', 'rp-icon-button']);
         expect(container.querySelector('svg.rp-icon-button__spinner')).toBeTruthy();
         expect(container.querySelector('.rp-icon-button__icon')).toBeNull();
     });
 
-    it('lets disabled override the loading state', async () => {
+    it('keeps the loading state visible when disabled', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -104,8 +106,9 @@ describe('IconButton', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect(button.disabled).toBe(true);
-        expect(container.querySelector('.rp-icon-button__spinner')).toBeNull();
-        expect(container.querySelector('.rp-icon-button__icon .search-icon')).toBeTruthy();
+        expect(button.getAttribute('aria-busy')).toBe('true');
+        expect(container.querySelector('svg.rp-icon-button__spinner')).toBeTruthy();
+        expect(container.querySelector('.rp-icon-button__icon')).toBeNull();
     });
 
     it('adds color, size, radius, and variant modifiers when requested', async () => {

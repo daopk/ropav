@@ -36,6 +36,7 @@ describe('Button', () => {
 
         expect(button.type).toBe('button');
         expect(button.disabled).toBe(false);
+        expect(button.getAttribute('aria-busy')).toBeNull();
         expect([...button.classList]).toEqual(['rp-button']);
         expect(container.querySelector('.rp-button__left .left-icon')).toBeTruthy();
         expect(container.querySelector('.rp-button__right .right-icon')).toBeTruthy();
@@ -92,13 +93,14 @@ describe('Button', () => {
 
         expect(button.type).toBe('submit');
         expect(button.disabled).toBe(true);
+        expect(button.getAttribute('aria-busy')).toBe('true');
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost']);
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
         expect(container.querySelector('.rp-button__left')).toBeNull();
         expect(container.querySelector('.rp-button__right')).toBeTruthy();
     });
 
-    it('lets disabled override the loading state', async () => {
+    it('keeps the loading state visible when disabled', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -122,8 +124,9 @@ describe('Button', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect(button.disabled).toBe(true);
-        expect(container.querySelector('.rp-button__spinner')).toBeNull();
-        expect(container.querySelector('.rp-button__left .left-icon')).toBeTruthy();
+        expect(button.getAttribute('aria-busy')).toBe('true');
+        expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
+        expect(container.querySelector('.rp-button__left')).toBeNull();
         expect(button.textContent).toContain('Save');
     });
 
