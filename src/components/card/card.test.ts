@@ -149,4 +149,32 @@ describe('Card', () => {
 
         expect([...card.classList]).toEqual(['rp-card', 'rp-card--borderless']);
     });
+
+    it('adds custom classes to the body when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Card,
+                        {
+                            bodyClass: ['custom-body', { 'custom-body--active': true }],
+                        },
+                        {
+                            default: () => 'Custom body',
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const body = container.querySelector('.rp-card__body') as HTMLElement;
+
+        expect([...body.classList]).toEqual([
+            'rp-card__body',
+            'custom-body',
+            'custom-body--active',
+        ]);
+    });
 });

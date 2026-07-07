@@ -1,3 +1,5 @@
+import type { HTMLAttributes } from 'vue';
+
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
 export type CardRadius = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -11,4 +13,5 @@ export interface CardProps {
     border?: boolean;
     title?: string;
     description?: string;
+    bodyClass?: HTMLAttributes['class'];
 }

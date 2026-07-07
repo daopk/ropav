@@ -9,7 +9,7 @@
             </p>
         </div>
 
-        <div v-if="$slots.default" class="rp-card__body">
+        <div v-if="$slots.default" :class="['rp-card__body', bodyClass]">
             <slot />
         </div>
     </div>
