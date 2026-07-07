@@ -17,6 +17,7 @@ globalThis.SVGElement = dom.window.SVGElement;
 const expectedFiles = [
     'dist/index.js',
     'dist/base.css',
+    'dist/accordion.css',
     'dist/button.css',
     'dist/button-group.css',
     'dist/card.css',
@@ -35,6 +36,7 @@ const expectedFiles = [
     'dist/switch.css',
     'dist/textarea.css',
     'dist/tooltip.css',
+    'dist/components/accordion/index.js',
     'dist/components/button/index.js',
     'dist/components/button-group/index.js',
     'dist/components/card/index.js',
@@ -89,6 +91,8 @@ try {
     assertExports(
         root,
         [
+            'Accordion',
+            'AccordionItem',
             'Button',
             'ButtonGroup',
             'Card',
@@ -108,9 +112,18 @@ try {
             'Switch',
             'Textarea',
             'Tooltip',
+            'useAccordion',
+            'useAccordionItem',
             'useCollapse',
         ],
         'dist/index.js',
+    );
+
+    const accordion = await server.ssrLoadModule('/dist/components/accordion/index.js');
+    assertExports(
+        accordion,
+        ['Accordion', 'AccordionItem', 'useAccordion', 'useAccordionItem'],
+        'dist/components/accordion/index.js',
     );
 
     const button = await server.ssrLoadModule('/dist/components/button/index.js');

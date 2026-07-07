@@ -1,0 +1,23 @@
+.rp-accordion {
+    --_rp-accordion-radius: var(--rp-radius-sm);
+    --_rp-accordion-duration: var(--rp-transition-fast);
+
+    box-sizing: border-box;
+    display: grid;
+    min-width: 0;
+    overflow: hidden;
+    font-family: var(--rp-font-family);
+    color: var(--rp-color-text);
+    background-color: var(--rp-color-surface-raised);
+    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-radius: var(--_rp-accordion-radius);
+
+    &--disabled {
+        @include disabled-state;
+    }
+
+    &--horizontal {
+        display: flex;
+        align-items: stretch;
+    }
+}
