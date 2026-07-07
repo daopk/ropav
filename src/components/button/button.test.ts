@@ -66,7 +66,7 @@ describe('Button', () => {
         expect(button.textContent).not.toContain('Suffix');
     });
 
-    it('disables while loading and hides the left slot', async () => {
+    it('disables while loading and visually hides the content', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -94,9 +94,16 @@ describe('Button', () => {
         expect(button.type).toBe('submit');
         expect(button.disabled).toBe(true);
         expect(button.getAttribute('aria-busy')).toBe('true');
-        expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost']);
+        expect([...button.classList]).toEqual([
+            'rp-button',
+            'rp-button--ghost',
+            'rp-button--loading',
+        ]);
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__left')).toBeNull();
+        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
+            'true',
+        );
+        expect(container.querySelector('.rp-button__left')).toBeTruthy();
         expect(container.querySelector('.rp-button__right')).toBeTruthy();
     });
 
@@ -126,7 +133,10 @@ describe('Button', () => {
         expect(button.disabled).toBe(true);
         expect(button.getAttribute('aria-busy')).toBe('true');
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__left')).toBeNull();
+        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
+            'true',
+        );
+        expect(container.querySelector('.rp-button__left')).toBeTruthy();
         expect(button.textContent).toContain('Save');
     });
 

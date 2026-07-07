@@ -49,8 +49,8 @@
     --_rp-button-shadow-active: var(--rp-shadow-sm);
 
     @include flex-center;
+    position: relative;
     box-sizing: border-box;
-    gap: var(--rp-spacing-2);
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-medium);
     line-height: var(--rp-line-height-none);
@@ -225,6 +225,15 @@
         @include focus-ring;
     }
 
+    &--loading &__content {
+        visibility: hidden;
+    }
+
+    &__content {
+        @include flex-center;
+        gap: var(--rp-spacing-2);
+    }
+
     &__left,
     &__right {
         display: inline-flex;
@@ -234,6 +243,10 @@
 
     &__spinner {
         @include spinner-icon;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
     }
 }
 

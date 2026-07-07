@@ -6,14 +6,16 @@
         :aria-busy="loading || undefined"
     >
         <IconLoaderCircle v-if="loading" class="rp-button__spinner" aria-hidden="true" />
-        <span v-if="$slots.left && !loading" class="rp-button__left">
-            <slot name="left" />
-        </span>
-        <span class="rp-button__label">
-            <slot />
-        </span>
-        <span v-if="$slots.right" class="rp-button__right">
-            <slot name="right" />
+        <span class="rp-button__content" :aria-hidden="loading || undefined">
+            <span v-if="$slots.left" class="rp-button__left">
+                <slot name="left" />
+            </span>
+            <span class="rp-button__label">
+                <slot />
+            </span>
+            <span v-if="$slots.right" class="rp-button__right">
+                <slot name="right" />
+            </span>
         </span>
     </button>
 </template>
@@ -38,6 +40,7 @@ const rootClass = computed(() =>
         [`color-${props.color}`]: Boolean(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
+        loading: props.loading,
     }),
 );
 </script>
