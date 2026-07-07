@@ -21,6 +21,5 @@ export interface BadgeProps {
     color?: BadgeColor;
     size?: BadgeSize;
     radius?: BadgeRadius;
-    dot?: boolean;
     ariaLabel?: string;
 }

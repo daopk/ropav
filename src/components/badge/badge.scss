@@ -6,11 +6,10 @@
     --_rp-badge-border: var(--rp-color-#{$color}-border);
 }
 
-@mixin badge-size($height, $padding-x, $font-size, $dot-size) {
+@mixin badge-size($height, $padding-x, $font-size) {
     --_rp-badge-height: #{$height};
     --_rp-badge-padding-x: #{$padding-x};
     --_rp-badge-font-size: #{$font-size};
-    --_rp-badge-dot-size: #{$dot-size};
 }
 
 .rp-badge {
@@ -22,11 +21,10 @@
     --_rp-badge-height: 1.5rem;
     --_rp-badge-padding-x: var(--rp-spacing-2);
     --_rp-badge-font-size: var(--rp-font-size-sm);
-    --_rp-badge-dot-size: 0.4375rem;
     --_rp-badge-radius: var(--rp-radius-full);
-    --_rp-badge-current-bg: var(--_rp-badge-subtle-bg);
-    --_rp-badge-current-fg: var(--_rp-badge-fg);
-    --_rp-badge-current-border: transparent;
+    --_rp-badge-current-bg: var(--rp-color-button-default-bg);
+    --_rp-badge-current-fg: var(--rp-color-text);
+    --_rp-badge-current-border: var(--rp-color-border);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -83,23 +81,23 @@
     }
 
     &--size-xs {
-        @include badge-size(1rem, var(--rp-spacing-1), var(--rp-font-size-xs), 0.3125rem);
+        @include badge-size(1rem, var(--rp-spacing-1), var(--rp-font-size-xs));
     }
 
     &--size-sm {
-        @include badge-size(1.25rem, var(--rp-spacing-2), var(--rp-font-size-xs), 0.375rem);
+        @include badge-size(1.25rem, var(--rp-spacing-2), var(--rp-font-size-xs));
     }
 
     &--size-md {
-        @include badge-size(1.5rem, var(--rp-spacing-2), var(--rp-font-size-sm), 0.4375rem);
+        @include badge-size(1.5rem, var(--rp-spacing-2), var(--rp-font-size-sm));
     }
 
     &--size-lg {
-        @include badge-size(1.75rem, var(--rp-spacing-3), var(--rp-font-size-base), 0.5rem);
+        @include badge-size(1.75rem, var(--rp-spacing-3), var(--rp-font-size-base));
     }
 
     &--size-xl {
-        @include badge-size(2rem, var(--rp-spacing-4), var(--rp-font-size-base), 0.625rem);
+        @include badge-size(2rem, var(--rp-spacing-4), var(--rp-font-size-base));
     }
 
     @each $radius in none, xs, sm, md, lg, xl, full {
@@ -108,17 +106,18 @@
         }
     }
 
-    &--dot-only {
-        width: var(--_rp-badge-height);
-        padding: 0;
-    }
-
-    &__dot {
-        width: var(--_rp-badge-dot-size);
-        height: var(--_rp-badge-dot-size);
+    &__left,
+    &__right {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         flex: 0 0 auto;
-        background-color: currentColor;
-        border-radius: var(--rp-radius-full);
+
+        > :deep(svg) {
+            display: block;
+            width: 1em;
+            height: 1em;
+        }
     }
 
     &__label {

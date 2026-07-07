@@ -1,27 +1,26 @@
 <template>
     <span :class="rootClass" :style="rootStyle" :aria-label="ariaLabel || undefined">
-        <span v-if="dot" class="rp-badge__dot" aria-hidden="true" />
+        <span v-if="$slots.left" class="rp-badge__left">
+            <slot name="left" />
+        </span>
         <span v-if="$slots.default" class="rp-badge__label">
             <slot />
+        </span>
+        <span v-if="$slots.right" class="rp-badge__right">
+            <slot name="right" />
         </span>
     </span>
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, useSlots, type CSSProperties } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
 import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
 import type { BadgeColor, BadgeProps } from './types';
 
 defineOptions({ name: 'RpBadge' });
 
-const props = withDefaults(defineProps<BadgeProps>(), {
-    dot: false,
-});
-
-const slots = useSlots();
-
-const hasDefaultSlot = computed(() => Boolean(slots.default));
+const props = defineProps<BadgeProps>();
 
 const rootClass = computed(() =>
     bem('rp-badge', {
@@ -29,8 +28,6 @@ const rootClass = computed(() =>
         [`color-${props.color}`]: isComponentPresetColor(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
-        dot: props.dot,
-        'dot-only': props.dot && !hasDefaultSlot.value,
     }),
 );
 

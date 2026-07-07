@@ -1,4 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import IconArrowRight from '~icons/lucide/arrow-right';
+import IconCheckCircle from '~icons/lucide/check-circle';
+import IconSparkles from '~icons/lucide/sparkles';
 import Badge from './badge.vue';
 import { badgeColors, badgeRadiuses, badgeSizes, badgeVariants } from './types';
 
@@ -22,12 +25,9 @@ const meta = {
             control: 'select',
             options: [undefined, ...badgeRadiuses],
         },
-        dot: { control: 'boolean' },
         ariaLabel: { control: 'text' },
     },
-    args: {
-        dot: false,
-    },
+    args: {},
 } satisfies Meta<typeof Badge>;
 
 export default meta;
@@ -86,16 +86,30 @@ export const Sizes: Story = {
     }),
 };
 
-export const Dot: Story = {
+export const Slots: Story = {
     render: (args) => ({
-        components: { Badge },
-        setup: () => ({ args, badgeColors }),
+        components: { Badge, IconArrowRight, IconCheckCircle, IconSparkles },
+        setup: () => ({ args }),
         template: `
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                <Badge v-for="color in badgeColors" :key="color" v-bind="args" dot :color="color">
-                    {{ color }}
+                <Badge v-bind="args" color="success">
+                    <template #left>
+                        <IconCheckCircle aria-hidden="true" />
+                    </template>
+                    Verified
                 </Badge>
-                <Badge v-bind="args" dot color="danger" aria-label="Unread" />
+                <Badge v-bind="args" color="secondary">
+                    Featured
+                    <template #right>
+                        <IconSparkles aria-hidden="true" />
+                    </template>
+                </Badge>
+                <Badge v-bind="args" color="info" variant="surface">
+                    Continue
+                    <template #right>
+                        <IconArrowRight aria-hidden="true" />
+                    </template>
+                </Badge>
             </div>
         `,
     }),

@@ -36,11 +36,15 @@ describe('Badge', () => {
         expect(container.querySelector('.rp-badge__label')?.textContent).toBe('Ready');
     });
 
-    it('renders a dot before the label when requested', async () => {
+    it('renders left and right slots around the label', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h(Badge, { dot: true }, { default: () => 'Online' });
+                    return h(Badge, null, {
+                        left: () => h('span', { class: 'left-content' }, 'L'),
+                        default: () => 'Ready',
+                        right: () => h('span', { class: 'right-content' }, 'R'),
+                    });
                 },
             }),
         );
@@ -49,28 +53,10 @@ describe('Badge', () => {
 
         const badge = container.querySelector('.rp-badge') as HTMLElement;
 
-        expect([...badge.classList]).toEqual(['rp-badge', 'rp-badge--dot']);
-        expect(container.querySelector('.rp-badge__dot')).toBeTruthy();
-        expect(container.querySelector('.rp-badge__label')?.textContent).toBe('Online');
-    });
-
-    it('supports dot-only badges with an aria label', async () => {
-        const container = mountDom(
-            defineComponent({
-                render() {
-                    return h(Badge, { dot: true, ariaLabel: 'Unread' });
-                },
-            }),
-        );
-
-        await flush();
-
-        const badge = container.querySelector('.rp-badge') as HTMLElement;
-
-        expect([...badge.classList]).toEqual(['rp-badge', 'rp-badge--dot', 'rp-badge--dot-only']);
-        expect(badge.getAttribute('aria-label')).toBe('Unread');
-        expect(container.querySelector('.rp-badge__dot')).toBeTruthy();
-        expect(container.querySelector('.rp-badge__label')).toBeNull();
+        expect([...badge.classList]).toEqual(['rp-badge']);
+        expect(container.querySelector('.rp-badge__left .left-content')).toBeTruthy();
+        expect(container.querySelector('.rp-badge__right .right-content')).toBeTruthy();
+        expect(container.querySelector('.rp-badge__label')?.textContent).toBe('Ready');
     });
 
     it('adds a variant modifier for each supported variant', async () => {
