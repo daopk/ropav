@@ -13,6 +13,7 @@ defineOptions({ name: 'RpTabs' });
 const props = withDefaults(defineProps<TabsProps>(), {
     modelValue: undefined,
     defaultValue: undefined,
+    size: 'md',
     orientation: 'horizontal',
     activationMode: 'automatic',
     disabled: false,

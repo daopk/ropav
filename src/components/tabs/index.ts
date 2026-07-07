@@ -17,6 +17,7 @@ export type {
     TabsRootProps,
     TabsSlotProps,
     TabsState,
+    TabsSize,
     TabsTriggerProps,
     TabsTriggerRootProps,
     TabsTriggerSlotProps,

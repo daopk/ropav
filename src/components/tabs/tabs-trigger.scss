@@ -1,6 +1,19 @@
+@mixin tabs-trigger-size($height, $padding-y, $padding-x, $gap, $font-size) {
+    --_rp-tabs-trigger-height: #{$height};
+    --_rp-tabs-trigger-padding-y: #{$padding-y};
+    --_rp-tabs-trigger-padding-x: #{$padding-x};
+    --_rp-tabs-trigger-gap: #{$gap};
+    --_rp-tabs-trigger-font-size: #{$font-size};
+}
+
 .rp-tabs-trigger {
     --_rp-tabs-trigger-fg: var(--rp-color-text-secondary);
     --_rp-tabs-trigger-indicator: transparent;
+    --_rp-tabs-trigger-height: var(--rp-size-control-md);
+    --_rp-tabs-trigger-padding-y: var(--rp-spacing-2);
+    --_rp-tabs-trigger-padding-x: var(--rp-spacing-4);
+    --_rp-tabs-trigger-gap: var(--rp-spacing-2);
+    --_rp-tabs-trigger-font-size: var(--rp-font-size-base);
 
     @include reset-button;
     position: relative;
@@ -9,12 +22,12 @@
     justify-content: center;
     box-sizing: border-box;
     min-width: 0;
-    min-height: var(--rp-size-control-lg);
-    padding: var(--rp-spacing-3) var(--rp-spacing-6);
-    gap: var(--rp-spacing-3);
+    min-height: var(--_rp-tabs-trigger-height);
+    padding: var(--_rp-tabs-trigger-padding-y) var(--_rp-tabs-trigger-padding-x);
+    gap: var(--_rp-tabs-trigger-gap);
     color: var(--_rp-tabs-trigger-fg);
     font-family: var(--rp-font-family);
-    font-size: var(--rp-font-size-lg);
+    font-size: var(--_rp-tabs-trigger-font-size);
     font-weight: var(--rp-font-weight-normal);
     line-height: var(--rp-line-height-tight);
     text-align: center;
@@ -40,6 +53,56 @@
         height: 1em;
         flex: 0 0 auto;
         color: currentColor;
+    }
+
+    &--size-xs {
+        @include tabs-trigger-size(
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-1)),
+            var(--rp-spacing-1),
+            var(--rp-spacing-2),
+            var(--rp-spacing-1),
+            var(--rp-font-size-xs)
+        );
+    }
+
+    &--size-sm {
+        @include tabs-trigger-size(
+            var(--rp-size-control-sm),
+            var(--rp-spacing-1),
+            var(--rp-spacing-3),
+            var(--rp-spacing-2),
+            var(--rp-font-size-sm)
+        );
+    }
+
+    &--size-md {
+        @include tabs-trigger-size(
+            var(--rp-size-control-md),
+            var(--rp-spacing-2),
+            var(--rp-spacing-4),
+            var(--rp-spacing-2),
+            var(--rp-font-size-base)
+        );
+    }
+
+    &--size-lg {
+        @include tabs-trigger-size(
+            var(--rp-size-control-lg),
+            var(--rp-spacing-3),
+            var(--rp-spacing-6),
+            var(--rp-spacing-3),
+            var(--rp-font-size-lg)
+        );
+    }
+
+    &--size-xl {
+        @include tabs-trigger-size(
+            calc(var(--rp-size-control-lg) + var(--rp-spacing-2)),
+            var(--rp-spacing-4),
+            var(--rp-spacing-6),
+            var(--rp-spacing-3),
+            var(--rp-font-size-lg)
+        );
     }
 
     &:hover:not(:disabled) {

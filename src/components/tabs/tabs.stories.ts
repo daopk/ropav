@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
-import IconImage from '~icons/lucide/image';
-import IconMessageCircle from '~icons/lucide/message-circle';
-import IconSettings from '~icons/lucide/settings';
 import Tabs from './tabs.vue';
 import TabsContent from './tabs-content.vue';
 import TabsList from './tabs-list.vue';
@@ -26,19 +23,16 @@ const tabs = [
     {
         value: 'gallery',
         label: 'Gallery',
-        icon: IconImage,
         body: 'Gallery tab content',
     },
     {
         value: 'messages',
         label: 'Messages',
-        icon: IconMessageCircle,
         body: 'Messages tab content',
     },
     {
         value: 'settings',
         label: 'Settings',
-        icon: IconSettings,
         body: 'Settings tab content',
     },
 ] as const;
@@ -50,6 +44,10 @@ const meta = {
     argTypes: {
         modelValue: { control: false },
         defaultValue: { control: 'text' },
+        size: {
+            control: 'select',
+            options: ['xs', 'sm', 'md', 'lg', 'xl'],
+        },
         orientation: {
             control: 'select',
             options: ['horizontal', 'vertical'],
@@ -64,6 +62,7 @@ const meta = {
     args: {
         modelValue: undefined,
         defaultValue: 'gallery',
+        size: 'md',
         orientation: 'horizontal',
         activationMode: 'automatic',
         disabled: false,
@@ -84,7 +83,6 @@ const meta = {
                             :key="tab.value"
                             :value="tab.value"
                         >
-                            <component :is="tab.icon" />
                             {{ tab.label }}
                         </TabsTrigger>
                     </TabsList>
@@ -149,6 +147,40 @@ export const WithDisabledTrigger: Story = {
     }),
 };
 
+export const Sizes: Story = {
+    render: () => ({
+        components: { Tabs, TabsContent, TabsList, TabsTrigger },
+        setup() {
+            const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+            const value = ref('overview');
+            return { panelStyle, sizes, value, wrapperStyle };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Tabs
+                    v-for="size in sizes"
+                    :key="size"
+                    v-model="value"
+                    :size="size"
+                    :aria-label="'Tabs size ' + size"
+                >
+                    <TabsList>
+                        <TabsTrigger value="overview">{{ size.toUpperCase() }}</TabsTrigger>
+                        <TabsTrigger value="activity">Activity</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="overview">
+                        <div :style="panelStyle">{{ size.toUpperCase() }} tab content</div>
+                    </TabsContent>
+                    <TabsContent value="activity">
+                        <div :style="panelStyle">Activity tab content</div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        `,
+    }),
+};
+
 export const Controlled: Story = {
     render: () => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
@@ -165,7 +197,6 @@ export const Controlled: Story = {
                             :key="tab.value"
                             :value="tab.value"
                         >
-                            <component :is="tab.icon" />
                             {{ tab.label }}
                         </TabsTrigger>
                     </TabsList>

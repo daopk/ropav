@@ -8,10 +8,13 @@ export type TabsActivationMode = 'automatic' | 'manual';
 
 export type TabsState = 'active' | 'inactive';
 
+export type TabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export interface TabsProps {
     id?: string;
     modelValue?: TabsValue | null;
     defaultValue?: TabsValue | null;
+    size?: TabsSize;
     orientation?: TabsOrientation;
     activationMode?: TabsActivationMode;
     disabled?: boolean;
@@ -58,6 +61,7 @@ export interface TabsRootProps {
     id?: string;
     class: string[];
     'data-disabled'?: boolean;
+    'data-size': TabsSize;
     'data-orientation': TabsOrientation;
     'data-activation-mode': TabsActivationMode;
     'aria-label'?: string;
@@ -109,6 +113,7 @@ export interface TabsContentRootProps {
 
 export interface TabsSlotProps {
     value: TabsValue | null;
+    size: TabsSize;
     disabled: boolean;
     select: (value: TabsValue) => void;
 }
@@ -121,6 +126,7 @@ export interface TabsListSlotProps {
 export interface TabsTriggerSlotProps {
     value: TabsValue;
     selected: boolean;
+    size: TabsSize;
     disabled: boolean;
     select: () => void;
 }
@@ -132,6 +138,7 @@ export interface TabsContentSlotProps {
 
 export interface TabsContext {
     selectedValue: TabsValue | null;
+    size: TabsSize;
     disabled: boolean;
     orientation: TabsOrientation;
     activationMode: TabsActivationMode;

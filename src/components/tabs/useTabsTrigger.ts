@@ -18,6 +18,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
     const rootClass = computed(() =>
         bem(
             'rp-tabs-trigger',
+            `size-${group.size}`,
             triggerClasses(isSelected.value, isDisabled.value, group.orientation),
         ),
     );
@@ -42,6 +43,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
     const slotProps = computed<TabsTriggerSlotProps>(() => ({
         value: props.value,
         selected: isSelected.value,
+        size: group.size,
         disabled: isDisabled.value,
         select,
     }));

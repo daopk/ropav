@@ -19,6 +19,7 @@ import type {
     TabsOrientation,
     TabsProps,
     TabsRootProps,
+    TabsSize,
     TabsSlotProps,
     TabsTriggerRegistration,
     TabsValue,
@@ -41,6 +42,7 @@ export function useTabs(
     const isControlled = computed(() => props.modelValue !== undefined);
     const uncontrolledValue = ref<TabsValue | null>(props.defaultValue ?? null);
     const isDisabled = computed(() => Boolean(props.disabled));
+    const size = computed<TabsSize>(() => props.size ?? 'md');
     const orientation = computed<TabsOrientation>(() => props.orientation ?? DEFAULT_ORIENTATION);
     const activationMode = computed<TabsActivationMode>(
         () => props.activationMode ?? DEFAULT_ACTIVATION_MODE,
@@ -55,13 +57,18 @@ export function useTabs(
     });
 
     const rootClass = computed(() =>
-        bem('rp-tabs', orientationClasses(isDisabled.value, orientation.value)),
+        bem(
+            'rp-tabs',
+            `size-${size.value}`,
+            orientationClasses(isDisabled.value, orientation.value),
+        ),
     );
 
     const rootProps = computed<TabsRootProps>(() => ({
         id: props.id,
         class: rootClass.value,
         'data-disabled': toAttr(isDisabled.value),
+        'data-size': size.value,
         'data-orientation': orientation.value,
         'data-activation-mode': activationMode.value,
         ...ariaProps(props.ariaLabel, props.labelledby, props.describedby),
@@ -69,6 +76,7 @@ export function useTabs(
 
     const slotProps = computed<TabsSlotProps>(() => ({
         value: selectedValue.value,
+        size: size.value,
         disabled: isDisabled.value,
         select: selectValue,
     }));
@@ -130,6 +138,9 @@ export function useTabs(
         },
         get disabled() {
             return isDisabled.value;
+        },
+        get size() {
+            return size.value;
         },
         get orientation() {
             return orientation.value;

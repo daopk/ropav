@@ -84,7 +84,8 @@ describe('Tabs', () => {
         const overviewPanel = container.querySelector('#overview-panel') as HTMLElement;
         const activityPanel = container.querySelector('#activity-panel') as HTMLElement;
 
-        expect([...root.classList]).toEqual(['rp-tabs', 'rp-tabs--horizontal']);
+        expect([...root.classList]).toEqual(['rp-tabs', 'rp-tabs--size-md', 'rp-tabs--horizontal']);
+        expect(root.getAttribute('data-size')).toBe('md');
         expect(root.getAttribute('data-orientation')).toBe('horizontal');
         expect(root.getAttribute('aria-label')).toBe('Project sections');
         expect(list.getAttribute('role')).toBe('tablist');
@@ -152,6 +153,56 @@ describe('Tabs', () => {
         expect(onUpdate).toHaveBeenCalledWith('settings');
         expect(triggers[0].getAttribute('aria-selected')).toBe('false');
         expect(triggers[1].getAttribute('aria-selected')).toBe('true');
+    });
+
+    it('uses medium size by default and applies size to every trigger in the group', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', null, [
+                        h(
+                            Tabs,
+                            { defaultValue: 'overview' },
+                            {
+                                default: () => [
+                                    h(TabsList, null, () => [
+                                        h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                        h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                    ]),
+                                    h(TabsContent, { value: 'overview' }, () => 'Overview panel'),
+                                    h(TabsContent, { value: 'activity' }, () => 'Activity panel'),
+                                ],
+                            },
+                        ),
+                        h(
+                            Tabs,
+                            { defaultValue: 'overview', size: 'lg' },
+                            {
+                                default: () => [
+                                    h(TabsList, null, () => [
+                                        h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                        h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                    ]),
+                                    h(TabsContent, { value: 'overview' }, () => 'Overview panel'),
+                                    h(TabsContent, { value: 'activity' }, () => 'Activity panel'),
+                                ],
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+
+        expect(triggers[0].classList.contains('rp-tabs-trigger--size-md')).toBe(true);
+        expect(triggers[1].classList.contains('rp-tabs-trigger--size-md')).toBe(true);
+        expect(triggers[2].classList.contains('rp-tabs-trigger--size-lg')).toBe(true);
+        expect(triggers[3].classList.contains('rp-tabs-trigger--size-lg')).toBe(true);
     });
 
     it('selects the first enabled tab by default when uncontrolled', async () => {
