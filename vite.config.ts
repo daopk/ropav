@@ -58,7 +58,7 @@ export default defineConfig({
             formats: ['es'],
         },
         minify: false,
-        sourcemap: true,
+        sourcemap: false,
         cssCodeSplit: true,
         rolldownOptions: {
             external: ['vue'],
