@@ -3,10 +3,9 @@ import { ref } from 'vue';
 import Button from '../button/button.vue';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuItem } from './types';
+import { getDropdownMenuSafeTriangle } from './useDropdownMenuHoverIntent';
 
 const placements = ['bottom-start', 'bottom-end', 'top-start', 'top-end'] as const;
-const SAFE_TRIANGLE_STORY_PADDING = 8;
-const SAFE_TRIANGLE_STORY_ORIGIN_OFFSET = 12;
 const StoryDropdownMenu = DropdownMenu as any;
 
 type StoryPoint = {
@@ -57,7 +56,6 @@ const safeTriangleItems: DropdownMenuItem[] = [
         children: [
             { label: 'Backlog', value: 'move-backlog' },
             { label: 'In progress', value: 'move-progress' },
-            { label: 'Done', value: 'move-done' },
         ],
     },
     {
@@ -66,16 +64,20 @@ const safeTriangleItems: DropdownMenuItem[] = [
         children: [
             { label: 'Copy public link', value: 'share-link' },
             { label: 'Invite teammate', value: 'share-teammate' },
+            { label: 'Send to reviewers', value: 'share-reviewers' },
             { label: 'Publish to workspace', value: 'share-workspace' },
+            { label: 'Manage access', value: 'share-access' },
         ],
     },
     {
         label: 'Change status',
         value: 'status',
         children: [
+            { label: 'Draft', value: 'status-draft' },
             { label: 'Needs review', value: 'status-review' },
             { label: 'Approved', value: 'status-approved' },
             { label: 'Blocked', value: 'status-blocked' },
+            { label: 'Archived', value: 'status-archived' },
         ],
     },
     {
@@ -94,6 +96,7 @@ const safeTriangleItems: DropdownMenuItem[] = [
             { label: 'Personal folder', value: 'copy-personal' },
             { label: 'Team folder', value: 'copy-team' },
             { label: 'Archive folder', value: 'copy-archive' },
+            { label: 'Shared drive', value: 'copy-shared' },
         ],
     },
     { label: 'Delete', value: 'delete', destructive: true },
@@ -108,25 +111,11 @@ function getSafeTriangleStoryPoints(
     const stageRect = stage.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
     const submenuRect = submenu.getBoundingClientRect();
-    const opensRight = submenuRect.left >= itemRect.right;
-    const edgeX = opensRight ? submenuRect.left : submenuRect.right;
-    const expandedOrigin = {
-        x:
-            origin.x +
-            (opensRight ? -SAFE_TRIANGLE_STORY_ORIGIN_OFFSET : SAFE_TRIANGLE_STORY_ORIGIN_OFFSET),
-        y: origin.y,
-    };
-    const points: StoryPoint[] = [
-        expandedOrigin,
-        {
-            x: edgeX,
-            y: submenuRect.top - SAFE_TRIANGLE_STORY_PADDING,
-        },
-        {
-            x: edgeX,
-            y: submenuRect.bottom + SAFE_TRIANGLE_STORY_PADDING,
-        },
-    ];
+    const points = getDropdownMenuSafeTriangle({
+        itemRect,
+        submenuRect,
+        origin,
+    });
 
     return points
         .map((point) => `${point.x - stageRect.left},${point.y - stageRect.top}`)

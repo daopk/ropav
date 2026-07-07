@@ -9,11 +9,16 @@ import {
     type PointerPoint,
 } from './dropdown-menu-utils';
 
-const SAFE_TRIANGLE_PADDING = 8;
-const SAFE_TRIANGLE_ORIGIN_OFFSET = 12;
-const SAFE_TRIANGLE_TIMEOUT = 500;
+const SAFE_TRIANGLE_PADDING = 2;
+const SAFE_TRIANGLE_ORIGIN_OFFSET = 2;
+const SAFE_TRIANGLE_TIMEOUT = 400;
 
-type SafeTriangle = [PointerPoint, PointerPoint, PointerPoint];
+export type SafeTriangle = [PointerPoint, PointerPoint, PointerPoint];
+type GetSafeTriangleOptions = {
+    itemRect: DOMRect | null;
+    submenuRect: DOMRect;
+    origin: PointerPoint;
+};
 type PendingHover = {
     item: DropdownMenuItem;
     path: ItemPath;
@@ -38,6 +43,31 @@ function isPointInTriangle(point: PointerPoint, triangle: SafeTriangle) {
     const area3 = getTriangleArea(a, b, point);
 
     return Math.abs(area - (area1 + area2 + area3)) < 0.5;
+}
+
+export function getDropdownMenuSafeTriangle({
+    itemRect,
+    submenuRect,
+    origin,
+}: GetSafeTriangleOptions): SafeTriangle {
+    const opensRight = !itemRect || submenuRect.left >= itemRect.right;
+    const edgeX = opensRight ? submenuRect.left : submenuRect.right;
+    const expandedOrigin = {
+        x: origin.x + (opensRight ? -SAFE_TRIANGLE_ORIGIN_OFFSET : SAFE_TRIANGLE_ORIGIN_OFFSET),
+        y: origin.y,
+    };
+
+    return [
+        expandedOrigin,
+        {
+            x: edgeX,
+            y: submenuRect.top - SAFE_TRIANGLE_PADDING,
+        },
+        {
+            x: edgeX,
+            y: submenuRect.bottom + SAFE_TRIANGLE_PADDING,
+        },
+    ];
 }
 
 export function useDropdownMenuHoverIntent({
@@ -95,24 +125,11 @@ export function useDropdownMenuHoverIntent({
 
         if (!submenuRect || !origin) return null;
 
-        const opensRight = !itemRect || submenuRect.left >= itemRect.right;
-        const edgeX = opensRight ? submenuRect.left : submenuRect.right;
-        const expandedOrigin = {
-            x: origin.x + (opensRight ? -SAFE_TRIANGLE_ORIGIN_OFFSET : SAFE_TRIANGLE_ORIGIN_OFFSET),
-            y: origin.y,
-        };
-
-        return [
-            expandedOrigin,
-            {
-                x: edgeX,
-                y: submenuRect.top - SAFE_TRIANGLE_PADDING,
-            },
-            {
-                x: edgeX,
-                y: submenuRect.bottom + SAFE_TRIANGLE_PADDING,
-            },
-        ];
+        return getDropdownMenuSafeTriangle({
+            itemRect: itemRect ?? null,
+            submenuRect,
+            origin,
+        });
     }
 
     function updateSafeTriangleOrigin(point: PointerPoint) {
