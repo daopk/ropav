@@ -1,7 +1,7 @@
 .rp-tooltip {
     --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
     --_rp-tooltip-cross-axis-offset: 0px;
-    --_rp-tooltip-arrow-size: 0.5rem;
+    --_rp-tooltip-arrow-size: 0.4375rem;
     --_rp-tooltip-bg: var(--_rp-tooltip-custom-bg, var(--rp-color-surface-inverted));
     --_rp-tooltip-fg: var(--_rp-tooltip-custom-fg, var(--rp-color-text-inverted));
 
@@ -15,10 +15,10 @@
         z-index: $z-index-tooltip;
         box-sizing: border-box;
         width: max-content;
-        max-width: min(20rem, calc(100vw - var(--rp-spacing-6)));
-        padding: var(--rp-spacing-2) var(--rp-spacing-3);
+        max-width: min(18rem, calc(100vw - var(--rp-spacing-6)));
+        padding: 0.375rem 0.625rem;
         color: var(--_rp-tooltip-fg);
-        font-size: var(--rp-font-size-sm);
+        font-size: 0.8125rem;
         font-weight: var(--rp-font-weight-medium);
         line-height: var(--rp-line-height-normal);
         text-align: center;
