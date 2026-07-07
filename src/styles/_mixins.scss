@@ -103,8 +103,8 @@
     }
 }
 
-@mixin spinner-icon($size: 1em) {
-    display: block;
+@mixin spinner-icon($size: 1em, $display: block) {
+    display: $display;
     width: $size;
     height: $size;
     flex-shrink: 0;

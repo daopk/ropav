@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
@@ -42,6 +42,14 @@ const expectedFiles = [
 for (const file of expectedFiles) {
     if (!existsSync(join(projectRoot, file))) {
         throw new Error(`Missing build output: ${file}`);
+    }
+}
+
+const baseCss = readFileSync(join(projectRoot, 'dist/base.css'), 'utf8');
+
+for (const selector of ['.rp-spinner', '@keyframes rp-spinner-spin']) {
+    if (!baseCss.includes(selector)) {
+        throw new Error(`dist/base.css does not include ${selector}`);
     }
 }
 

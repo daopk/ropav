@@ -1,0 +1,13 @@
+@use 'mixins' as *;
+
+.rp-spinner {
+    @include spinner-icon($display: inline-block);
+}
+
+.rp-spinner > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@include spinner-keyframes;
