@@ -59,6 +59,11 @@
         --_rp-slider-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
     }
 
+    &--custom-thumb {
+        --_rp-slider-thumb-bg: var(--_rp-slider-color);
+        --_rp-slider-thumb-border: var(--rp-color-control-thumb-bg);
+    }
+
     &--disabled {
         @include disabled-state;
     }
