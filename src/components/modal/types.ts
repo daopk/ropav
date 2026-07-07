@@ -21,7 +21,6 @@ export interface ModalSlotProps {
 export interface ModalProps {
     id?: string;
     open?: boolean;
-    defaultOpen?: boolean;
     title?: string;
     description?: string;
     ariaLabel?: string;

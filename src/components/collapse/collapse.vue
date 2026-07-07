@@ -20,7 +20,6 @@ defineOptions({ name: 'RpCollapse' });
 
 const props = withDefaults(defineProps<CollapseProps>(), {
     open: undefined,
-    defaultOpen: false,
     disabled: false,
     unmountOnExit: false,
     role: 'region',

@@ -72,7 +72,6 @@ defineOptions({ name: 'RpModal' });
 
 const props = withDefaults(defineProps<ModalProps>(), {
     open: undefined,
-    defaultOpen: false,
     title: '',
     description: '',
     ariaLabel: '',

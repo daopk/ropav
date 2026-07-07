@@ -46,7 +46,6 @@ export interface CollapseTriggerSlotProps extends CollapseSlotProps {
 export interface CollapseProps {
     id?: string;
     open?: boolean;
-    defaultOpen?: boolean;
     disabled?: boolean;
     unmountOnExit?: boolean;
     role?: CollapseContentRole;
@@ -58,7 +57,6 @@ export interface CollapseProps {
 export interface UseCollapseOptions {
     id?: CollapseOption<string | undefined>;
     open?: CollapseOption<boolean | undefined>;
-    defaultOpen?: CollapseOption<boolean | undefined>;
     disabled?: CollapseOption<boolean | undefined>;
     unmountOnExit?: CollapseOption<boolean | undefined>;
     role?: CollapseOption<CollapseContentRole | undefined>;

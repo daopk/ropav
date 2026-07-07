@@ -108,7 +108,7 @@ describe('Collapse', () => {
         expect(content.style.display).not.toBe('none');
     });
 
-    it('honors defaultOpen and ARIA content props', async () => {
+    it('renders ARIA content props when controlled open', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -118,8 +118,8 @@ describe('Collapse', () => {
                             ariaLabel: 'Profile details',
                             ariaDescribedby: 'profile-description',
                             ariaLabelledby: 'profile-title',
-                            defaultOpen: true,
                             id: 'profile-panel',
+                            open: true,
                             role: 'group',
                         },
                         {

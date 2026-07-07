@@ -20,7 +20,6 @@ const meta = {
             control: 'text',
         },
         open: { control: 'boolean' },
-        defaultOpen: { control: 'boolean' },
         title: { control: 'text' },
         description: { control: 'text' },
         ariaLabel: { control: 'text' },

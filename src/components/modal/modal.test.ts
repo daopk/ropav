@@ -18,17 +18,24 @@ function tab(shiftKey = false) {
 }
 
 describe('Modal', () => {
-    it('renders an accessible modal and closes in uncontrolled mode', async () => {
+    it('renders an accessible modal and closes with controlled state', async () => {
+        const props = reactive({
+            open: true,
+            id: 'invite-modal',
+            title: 'Invite teammate',
+            description: 'Send an invitation to collaborate.',
+        });
+
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(
                         Modal,
                         {
-                            id: 'invite-modal',
-                            defaultOpen: true,
-                            title: 'Invite teammate',
-                            description: 'Send an invitation to collaborate.',
+                            ...props,
+                            'onUpdate:open': (value: boolean) => {
+                                props.open = value;
+                            },
                         },
                         {
                             default: ({ close }: ModalSlotProps) =>
@@ -66,6 +73,7 @@ describe('Modal', () => {
         click(container.querySelector('.done') as HTMLButtonElement);
         await waitTransition();
 
+        expect(props.open).toBe(false);
         expect(container.querySelector('.rp-modal')).toBeNull();
         expect(document.body.style.overflow).toBe('');
     });
@@ -106,7 +114,7 @@ describe('Modal', () => {
                     return h(
                         Modal,
                         {
-                            defaultOpen: true,
+                            open: true,
                             ariaLabel: 'Custom width modal',
                             size: '55%',
                         },
@@ -134,7 +142,7 @@ describe('Modal', () => {
                     return h(
                         Modal,
                         {
-                            defaultOpen: true,
+                            open: true,
                             ariaLabel: 'Custom overlay modal',
                             overlayProps: {
                                 color: '#123456',
@@ -227,7 +235,7 @@ describe('Modal', () => {
                     return h(
                         Modal,
                         {
-                            defaultOpen: true,
+                            open: true,
                             title: 'Focus trap',
                             showCloseButton: false,
                         },

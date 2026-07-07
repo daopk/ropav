@@ -24,7 +24,7 @@ export function useCollapse(
     emitOpenChange?: (open: boolean) => void,
 ): UseCollapseReturn {
     const generatedId = useId();
-    const uncontrolledOpen = ref(Boolean(optionValue<boolean>(options.defaultOpen)));
+    const uncontrolledOpen = ref(false);
 
     const id = computed(() => optionValue<string>(options.id) ?? `${generatedId}-collapse`);
     const controlledOpen = computed(() => optionValue<boolean>(options.open));

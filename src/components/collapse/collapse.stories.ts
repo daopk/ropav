@@ -36,7 +36,6 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         open: { control: 'boolean' },
-        defaultOpen: { control: 'boolean' },
         disabled: { control: 'boolean' },
         unmountOnExit: { control: 'boolean' },
         role: {
@@ -46,7 +45,6 @@ const meta = {
     },
     args: {
         open: undefined,
-        defaultOpen: false,
         disabled: false,
         unmountOnExit: false,
         role: 'region',
@@ -91,9 +89,39 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const InitiallyOpen: Story = {
-    args: {
-        defaultOpen: true,
-    },
+    render: (args) => ({
+        components: { Button, Collapse, IconChevronDown },
+        setup() {
+            const open = ref(true);
+            return { args, open, panelStyle, wrapperStyle };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Collapse v-bind="args" :open="open" id="story-collapse-open" @update:open="open = $event">
+                    <template #trigger="{ triggerProps, isOpen }">
+                        <Button v-bind="triggerProps" variant="outline">
+                            Section details
+                            <template #right>
+                                <IconChevronDown
+                                    aria-hidden="true"
+                                    :style="{
+                                        transition: 'transform var(--rp-transition-fast)',
+                                        transform: isOpen ? 'rotate(180deg)' : undefined,
+                                    }"
+                                />
+                            </template>
+                        </Button>
+                    </template>
+
+                    <div :style="panelStyle">
+                        <strong>Summary</strong>
+                        <span>This area can hold supporting content for the current section.</span>
+                        <span>Use it for details that are helpful but not always needed.</span>
+                    </div>
+                </Collapse>
+            </div>
+        `,
+    }),
 };
 
 export const UnmountOnExit: Story = {

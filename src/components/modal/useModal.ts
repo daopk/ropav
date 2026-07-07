@@ -102,7 +102,7 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     const slots = useSlots();
     const generatedId = useId();
     const panelRef = ref<HTMLElement | null>(null);
-    const uncontrolledOpen = ref(Boolean(props.defaultOpen));
+    const uncontrolledOpen = ref(false);
     const modalToken = Symbol('modal');
 
     let isMounted = false;
