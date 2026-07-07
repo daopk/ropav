@@ -4,6 +4,7 @@ import IconMessageCircle from '~icons/lucide/message-circle';
 import IconSettings from '~icons/lucide/settings';
 import { ref } from 'vue';
 import { componentColors } from '../../utils/componentColors';
+import Card from '../card/card.vue';
 import Tabs from './tabs.vue';
 import TabsContent from './tabs-content.vue';
 import TabsList from './tabs-list.vue';
@@ -21,6 +22,53 @@ const panelStyle = {
     display: 'grid',
     gap: '8px',
     padding: '8px 0 0',
+};
+
+const cardDemoStyle = {
+    display: 'grid',
+    width: 'min(460px, 100%)',
+};
+
+const cardTabsPanelStyle = {
+    display: 'grid',
+    gap: '12px',
+    padding: '4px 16px 16px',
+};
+
+const cardTabsSummaryStyle = {
+    margin: 0,
+    color: 'var(--rp-color-text-secondary)',
+};
+
+const cardTabsMetricStyle = {
+    display: 'flex',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    gap: '16px',
+    padding: '12px 0',
+    borderTop: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+};
+
+const outlineConnectedTabsStyle = {
+    gap: '0',
+    width: 'min(520px, 100%)',
+};
+
+const outlineBorderedContentStyle = {
+    display: 'grid',
+    gap: '8px',
+    minHeight: '120px',
+    padding: '16px',
+    color: 'var(--rp-color-text)',
+    backgroundColor: 'var(--rp-color-background)',
+    borderRight: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    borderBottom: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    borderLeft: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    borderRadius: '0 0 var(--rp-radius-md) var(--rp-radius-md)',
+};
+
+const outlineContentDescriptionStyle = {
+    color: 'var(--rp-color-text-secondary)',
 };
 
 const colorStoryStyle = {
@@ -140,6 +188,112 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const InCard: Story = {
+    render: () => ({
+        components: { Card, Tabs, TabsContent, TabsList, TabsTrigger },
+        setup() {
+            return {
+                cardDemoStyle,
+                cardTabsMetricStyle,
+                cardTabsPanelStyle,
+                cardTabsSummaryStyle,
+                wrapperStyle,
+            };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Card
+                    layer="raised"
+                    padding="none"
+                    :style="cardDemoStyle"
+                >
+                    <Tabs default-value="overview" variant="line" aria-label="Workspace sections">
+                        <TabsList>
+                            <TabsTrigger value="overview">Overview</TabsTrigger>
+                            <TabsTrigger value="activity">Activity</TabsTrigger>
+                            <TabsTrigger value="settings">Settings</TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="overview">
+                            <div :style="cardTabsPanelStyle">
+                                <p :style="cardTabsSummaryStyle">The workspace is ready for the next release cycle.</p>
+                                <div :style="cardTabsMetricStyle">
+                                    <span>Completion</span>
+                                    <strong>92%</strong>
+                                </div>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="activity">
+                            <div :style="cardTabsPanelStyle">
+                                <p :style="cardTabsSummaryStyle">New reviews, deploy checks, and triage updates are waiting.</p>
+                                <div :style="cardTabsMetricStyle">
+                                    <span>Open items</span>
+                                    <strong>8</strong>
+                                </div>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="settings">
+                            <div :style="cardTabsPanelStyle">
+                                <p :style="cardTabsSummaryStyle">Notification and access settings are synced.</p>
+                                <div :style="cardTabsMetricStyle">
+                                    <span>Members</span>
+                                    <strong>14</strong>
+                                </div>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </Card>
+            </div>
+        `,
+    }),
+};
+
+export const OutlineWithBorderedContent: Story = {
+    render: () => ({
+        components: { Tabs, TabsContent, TabsList, TabsTrigger },
+        setup() {
+            return {
+                outlineBorderedContentStyle,
+                outlineConnectedTabsStyle,
+                outlineContentDescriptionStyle,
+                tabs,
+                wrapperStyle,
+            };
+        },
+        template: `
+            <div :style="wrapperStyle">
+                <Tabs
+                    default-value="gallery"
+                    variant="outline"
+                    :style="outlineConnectedTabsStyle"
+                    aria-label="Bordered outline sections"
+                >
+                    <TabsList>
+                        <TabsTrigger
+                            v-for="tab in tabs"
+                            :key="tab.value"
+                            :value="tab.value"
+                        >
+                            {{ tab.label }}
+                        </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent
+                        v-for="tab in tabs"
+                        :key="tab.value"
+                        :value="tab.value"
+                    >
+                        <div :style="outlineBorderedContentStyle">
+                            <strong>{{ tab.label }}</strong>
+                            <span :style="outlineContentDescriptionStyle">{{ tab.body }}</span>
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        `,
+    }),
+};
 
 export const ManualActivation: Story = {
     args: {
