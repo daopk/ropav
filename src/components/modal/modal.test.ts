@@ -44,6 +44,7 @@ describe('Modal', () => {
         await flush();
 
         const root = container.querySelector('.rp-modal') as HTMLElement;
+        const overlay = container.querySelector('.rp-modal__overlay') as HTMLElement;
         const panel = container.querySelector('#invite-modal') as HTMLElement;
         const title = container.querySelector('#invite-modal-title') as HTMLElement;
         const description = container.querySelector('#invite-modal-description') as HTMLElement;
@@ -54,6 +55,8 @@ describe('Modal', () => {
             'rp-modal--open',
             'rp-modal--closable',
         ]);
+        expect(overlay.classList.contains('rp-overlay')).toBe(true);
+        expect(overlay.classList.contains('rp-overlay--interactive')).toBe(true);
         expect(panel.getAttribute('role')).toBe('dialog');
         expect(panel.getAttribute('aria-modal')).toBe('true');
         expect(panel.getAttribute('aria-labelledby')).toBe(title.id);
@@ -124,6 +127,42 @@ describe('Modal', () => {
         expect(root.style.getPropertyValue('--_rp-modal-width')).toBe('55%');
     });
 
+    it('passes visual overlay props to the built-in overlay', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Modal,
+                        {
+                            defaultOpen: true,
+                            ariaLabel: 'Custom overlay modal',
+                            overlayProps: {
+                                color: '#123456',
+                                opacity: 0.64,
+                                blur: 6,
+                            },
+                        },
+                        {
+                            default: () => h('p', 'Custom overlay content'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const overlay = container.querySelector('.rp-modal__overlay') as HTMLElement;
+
+        expect(overlay.classList.contains('rp-overlay')).toBe(true);
+        expect(overlay.classList.contains('rp-overlay--blurred')).toBe(true);
+        expect(overlay.classList.contains('rp-overlay--interactive')).toBe(true);
+        expect(overlay.style.getPropertyValue('--_rp-overlay-color')).toBe('#123456');
+        expect(overlay.style.getPropertyValue('--_rp-overlay-opacity')).toBe('0.64');
+        expect(overlay.style.getPropertyValue('--_rp-overlay-blur')).toBe('6px');
+        expect(overlay.style.getPropertyValue('--_rp-overlay-z-index')).toBe('0');
+    });
+
     it('closes on overlay click and Escape, then restores focus and scroll', async () => {
         const trigger = document.createElement('button');
         trigger.textContent = 'Open settings';
@@ -164,7 +203,7 @@ describe('Modal', () => {
         expect(document.activeElement).toBe(container.querySelector('.primary-action'));
         expect(document.body.style.overflow).toBe('hidden');
 
-        click(container.querySelector('.rp-modal') as HTMLElement);
+        click(container.querySelector('.rp-modal__overlay') as HTMLElement);
         await waitTransition();
 
         expect(props.open).toBe(false);
@@ -248,7 +287,7 @@ describe('Modal', () => {
 
         await flush();
 
-        click(container.querySelector('.rp-modal') as HTMLElement);
+        click(container.querySelector('.rp-modal__overlay') as HTMLElement);
         keydown(document, 'Escape');
         await flush();
 

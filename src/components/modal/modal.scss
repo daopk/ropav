@@ -12,7 +12,6 @@
     padding: var(--rp-spacing-6);
     overflow: auto;
     font-family: var(--rp-font-family);
-    background-color: var(--rp-color-overlay);
 
     &--size-sm {
         --_rp-modal-width: 22rem;
@@ -32,11 +31,15 @@
         --_rp-modal-radius: var(--rp-radius-none);
 
         padding: 0;
-        background-color: transparent;
+    }
+
+    &__overlay {
+        border-radius: 0;
     }
 
     &__panel {
         position: relative;
+        z-index: 1;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;

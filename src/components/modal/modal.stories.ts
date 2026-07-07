@@ -28,6 +28,7 @@ const meta = {
         closeOnOverlayClick: { control: 'boolean' },
         closeOnEscape: { control: 'boolean' },
         showCloseButton: { control: 'boolean' },
+        overlayProps: { control: 'object' },
         preventScroll: { control: 'boolean' },
         returnFocus: { control: 'boolean' },
         keepMounted: { control: 'boolean' },
@@ -42,6 +43,7 @@ const meta = {
         closeOnOverlayClick: true,
         closeOnEscape: true,
         showCloseButton: true,
+        overlayProps: {},
         preventScroll: true,
         returnFocus: true,
         keepMounted: false,
@@ -134,6 +136,37 @@ export const CustomSize: Story = {
                 <Modal v-bind="args" v-model:open="open">
                     <p style="margin: 0;">
                         Try values like 55%, 50rem, 720px, or min(90vw, 50rem).
+                    </p>
+                    <template #footer="{ close }">
+                        <Button variant="solid" @click="close">Done</Button>
+                    </template>
+                </Modal>
+            </div>
+        `,
+    }),
+};
+
+export const CustomOverlay: Story = {
+    args: {
+        title: 'Custom overlay',
+        description: 'This modal forwards visual props to the shared Overlay component.',
+        overlayProps: {
+            opacity: 0.72,
+            blur: 4,
+        },
+    },
+    render: (args) => ({
+        components: { Button, Modal },
+        setup() {
+            const open = ref(false);
+            return { args, open };
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 48px;">
+                <Button variant="outline" @click="open = true">Open custom overlay</Button>
+                <Modal v-bind="args" v-model:open="open">
+                    <p style="margin: 0;">
+                        The overlay is configured through the Modal overlayProps prop.
                     </p>
                     <template #footer="{ close }">
                         <Button variant="solid" @click="close">Done</Button>

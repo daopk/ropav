@@ -5,8 +5,15 @@
             v-show="isOpen"
             :class="[rootClass, stateClass]"
             :style="rootStyle"
-            @click="onOverlayClick"
         >
+            <Overlay
+                v-bind="overlayProps"
+                class="rp-modal__overlay"
+                :z-index="0"
+                interactive
+                @click="onOverlayClick"
+            />
+
             <section
                 :id="modalId"
                 ref="panelRef"
@@ -58,6 +65,7 @@
 import { computed, useSlots } from 'vue';
 import IconX from '~icons/lucide/x';
 import IconButton from '../icon-button/icon-button.vue';
+import Overlay from '../overlay/overlay.vue';
 import { useModal } from './useModal';
 import type { ModalProps } from './types';
 
@@ -76,6 +84,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
     closeOnOverlayClick: true,
     closeOnEscape: true,
     showCloseButton: true,
+    overlayProps: () => ({}),
     preventScroll: true,
     returnFocus: true,
     keepMounted: false,
