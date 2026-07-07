@@ -130,15 +130,18 @@ export const Vertical: Story = {
 };
 
 export const FormatValue: Story = {
+    args: {
+        formatValue: percentFormatter,
+    },
     render: (args) => ({
         components: { Slider },
         setup() {
             const value = ref(args.modelValue ?? 0);
-            return { args, percentFormatter, storyWrapperStyle, value };
+            return { args, storyWrapperStyle, value };
         },
         template: `
             <div :style="storyWrapperStyle">
-                <Slider v-bind="args" v-model="value" :format-value="percentFormatter" />
+                <Slider v-bind="args" v-model="value" />
             </div>
         `,
     }),
