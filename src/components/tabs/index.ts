@@ -23,6 +23,7 @@ export type {
     TabsTriggerRootProps,
     TabsTriggerSlotProps,
     TabsValue,
+    TabsVariant,
     UseTabsContentReturn,
     UseTabsListReturn,
     UseTabsReturn,

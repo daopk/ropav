@@ -8,6 +8,13 @@
 
 .rp-tabs-trigger {
     --_rp-tabs-trigger-fg: var(--rp-color-text-secondary);
+    --_rp-tabs-trigger-bg: transparent;
+    --_rp-tabs-trigger-bg-hover: transparent;
+    --_rp-tabs-trigger-border: transparent;
+    --_rp-tabs-trigger-border-hover: transparent;
+    --_rp-tabs-trigger-radius: var(--rp-radius-none);
+    --_rp-tabs-trigger-shadow: none;
+    --_rp-tabs-trigger-outline-bg: var(--rp-color-background);
     --_rp-tabs-trigger-indicator: transparent;
     --_rp-tabs-trigger-height: var(--rp-size-control-md);
     --_rp-tabs-trigger-padding-y: var(--rp-spacing-2);
@@ -31,8 +38,15 @@
     font-weight: var(--rp-font-weight-normal);
     line-height: var(--rp-line-height-tight);
     text-align: center;
-    background-color: transparent;
-    transition: color var(--rp-transition-fast);
+    background-color: var(--_rp-tabs-trigger-bg);
+    border: 0;
+    border-radius: var(--_rp-tabs-trigger-radius);
+    box-shadow: var(--_rp-tabs-trigger-shadow);
+    transition:
+        background-color var(--rp-transition-fast),
+        border-color var(--rp-transition-fast),
+        box-shadow var(--rp-transition-fast),
+        color var(--rp-transition-fast);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
@@ -107,9 +121,12 @@
 
     &:hover:not(:disabled) {
         --_rp-tabs-trigger-fg: var(--rp-color-text);
+        --_rp-tabs-trigger-bg: var(--_rp-tabs-trigger-bg-hover);
+        --_rp-tabs-trigger-border: var(--_rp-tabs-trigger-border-hover);
     }
 
     &:focus-visible {
+        z-index: 2;
         outline: none;
         @include focus-ring;
     }
@@ -117,6 +134,59 @@
     &--active {
         --_rp-tabs-trigger-fg: var(--rp-color-text);
         --_rp-tabs-trigger-indicator: var(--rp-color-primary);
+    }
+
+    &--pills,
+    &--outline {
+        &::after {
+            display: none;
+        }
+    }
+
+    &--pills {
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-surface-hover);
+        --_rp-tabs-trigger-radius: var(--rp-radius-md);
+    }
+
+    &--pills#{&}--active {
+        --_rp-tabs-trigger-fg: var(--rp-color-on-primary);
+        --_rp-tabs-trigger-bg: var(--rp-color-primary);
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-primary-hover);
+    }
+
+    &--outline {
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-surface-hover);
+        --_rp-tabs-trigger-radius: var(--rp-radius-md) var(--rp-radius-md) 0 0;
+        z-index: 1;
+        border: var(--rp-border-width-thin) solid var(--_rp-tabs-trigger-border);
+    }
+
+    &--outline#{&}--active {
+        --_rp-tabs-trigger-fg: var(--rp-color-text);
+        --_rp-tabs-trigger-bg: var(--_rp-tabs-trigger-outline-bg);
+        --_rp-tabs-trigger-bg-hover: var(--_rp-tabs-trigger-outline-bg);
+        --_rp-tabs-trigger-border: var(--rp-color-border);
+        --_rp-tabs-trigger-border-hover: var(--rp-color-border);
+        z-index: 1;
+        border-bottom-color: var(--_rp-tabs-trigger-bg);
+    }
+
+    &--outline#{&}--vertical {
+        --_rp-tabs-trigger-radius: 0 var(--rp-radius-md) var(--rp-radius-md) 0;
+    }
+
+    &--outline#{&}--vertical#{&}--active {
+        border-bottom-color: var(--_rp-tabs-trigger-border);
+        border-left-color: var(--_rp-tabs-trigger-bg);
+    }
+
+    &--outline#{&}--vertical#{&}--placement-right {
+        --_rp-tabs-trigger-radius: var(--rp-radius-md) 0 0 var(--rp-radius-md);
+    }
+
+    &--outline#{&}--vertical#{&}--placement-right#{&}--active {
+        border-right-color: var(--_rp-tabs-trigger-bg);
+        border-left-color: var(--_rp-tabs-trigger-border);
     }
 
     &--disabled,

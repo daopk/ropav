@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<TabsProps>(), {
     modelValue: undefined,
     defaultValue: undefined,
     size: 'md',
+    variant: 'line',
     orientation: 'horizontal',
     placement: 'left',
     activationMode: 'automatic',

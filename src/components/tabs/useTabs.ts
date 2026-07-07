@@ -31,6 +31,7 @@ import type {
     TabsTriggerRootProps,
     TabsTriggerSlotProps,
     TabsValue,
+    TabsVariant,
     UseTabsContentReturn,
     UseTabsListReturn,
     UseTabsReturn,
@@ -41,6 +42,7 @@ const TABLIST_SELECTOR = '.rp-tabs-list';
 const TRIGGER_SELECTOR = '.rp-tabs-trigger';
 
 const DEFAULT_SIZE: TabsSize = 'md';
+const DEFAULT_VARIANT: TabsVariant = 'line';
 const DEFAULT_ORIENTATION: TabsOrientation = 'horizontal';
 const DEFAULT_PLACEMENT: TabsPlacement = 'left';
 const DEFAULT_ACTIVATION_MODE: TabsActivationMode = 'automatic';
@@ -59,6 +61,7 @@ interface TabsTriggerRegistration extends TabsRegistration {
 interface TabsContext {
     selectedValue: TabsValue | null;
     size: TabsSize;
+    variant: TabsVariant;
     disabled: boolean;
     orientation: TabsOrientation;
     placement: TabsPlacement;
@@ -259,6 +262,7 @@ export function useTabs(
     const uncontrolledValue = ref<TabsValue | null>(props.defaultValue ?? null);
     const isDisabled = computed(() => Boolean(props.disabled));
     const size = computed<TabsSize>(() => props.size ?? DEFAULT_SIZE);
+    const variant = computed<TabsVariant>(() => props.variant ?? DEFAULT_VARIANT);
     const orientation = computed<TabsOrientation>(() => props.orientation ?? DEFAULT_ORIENTATION);
     const placement = computed<TabsPlacement>(() => props.placement ?? DEFAULT_PLACEMENT);
     const align = computed<TabsTriggerAlign | undefined>(() => props.align);
@@ -278,6 +282,7 @@ export function useTabs(
         bem(
             'rp-tabs',
             `size-${size.value}`,
+            variant.value,
             getOrientationClasses(isDisabled.value, orientation.value),
             getPlacementClasses(orientation.value, placement.value),
         ),
@@ -288,6 +293,7 @@ export function useTabs(
         class: rootClass.value,
         'data-disabled': optionalAttr(isDisabled.value),
         'data-size': size.value,
+        'data-variant': variant.value,
         'data-orientation': orientation.value,
         'data-placement': optionalAttr(
             orientation.value === 'vertical' ? placement.value : undefined,
@@ -299,6 +305,7 @@ export function useTabs(
     const slotProps = computed<TabsSlotProps>(() => ({
         value: selectedValue.value,
         size: size.value,
+        variant: variant.value,
         disabled: isDisabled.value,
         placement: placement.value,
         align: align.value ?? getDefaultAlign(orientation.value),
@@ -369,6 +376,9 @@ export function useTabs(
         get size() {
             return size.value;
         },
+        get variant() {
+            return variant.value;
+        },
         get orientation() {
             return orientation.value;
         },
@@ -417,6 +427,7 @@ export function useTabsList(props: Readonly<TabsListProps>): UseTabsListReturn {
     const rootClass = computed(() =>
         bem(
             'rp-tabs-list',
+            group.variant,
             getOrientationClasses(group.disabled, group.orientation),
             getPlacementClasses(group.orientation, group.placement),
         ),
@@ -427,6 +438,7 @@ export function useTabsList(props: Readonly<TabsListProps>): UseTabsListReturn {
         class: rootClass.value,
         role: 'tablist',
         'data-disabled': optionalAttr(group.disabled),
+        'data-variant': group.variant,
         'data-orientation': group.orientation,
         'data-placement': optionalAttr(
             group.orientation === 'vertical' ? group.placement : undefined,
@@ -442,6 +454,7 @@ export function useTabsList(props: Readonly<TabsListProps>): UseTabsListReturn {
 
     const slotProps = computed<TabsListSlotProps>(() => ({
         disabled: group.disabled,
+        variant: group.variant,
         orientation: group.orientation,
         placement: group.placement,
     }));
@@ -462,6 +475,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         bem(
             'rp-tabs-trigger',
             `size-${group.size}`,
+            group.variant,
             getTriggerClasses(
                 isSelected.value,
                 isDisabled.value,
@@ -481,6 +495,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         tabIndex: isFocusable.value ? 0 : -1,
         'data-state': state.value,
         'data-disabled': optionalAttr(isDisabled.value),
+        'data-variant': group.variant,
         'data-align': optionalAttr(align.value),
         'aria-selected': isSelected.value,
         'aria-controls': group.getContentId(props.value),
@@ -494,6 +509,7 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         value: props.value,
         selected: isSelected.value,
         size: group.size,
+        variant: group.variant,
         disabled: isDisabled.value,
         align: effectiveAlign.value,
         select,

@@ -14,11 +14,14 @@ export type TabsState = 'active' | 'inactive';
 
 export type TabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
+export type TabsVariant = 'line' | 'pills' | 'outline';
+
 export interface TabsProps {
     id?: string;
     modelValue?: TabsValue | null;
     defaultValue?: TabsValue | null;
     size?: TabsSize;
+    variant?: TabsVariant;
     orientation?: TabsOrientation;
     placement?: TabsPlacement;
     align?: TabsTriggerAlign;
@@ -58,6 +61,7 @@ export interface TabsRootProps {
     class: string[];
     'data-disabled'?: boolean;
     'data-size': TabsSize;
+    'data-variant': TabsVariant;
     'data-orientation': TabsOrientation;
     'data-placement'?: TabsPlacement;
     'data-activation-mode': TabsActivationMode;
@@ -71,6 +75,7 @@ export interface TabsListRootProps {
     class: string[];
     role: 'tablist';
     'data-disabled'?: boolean;
+    'data-variant': TabsVariant;
     'data-orientation': TabsOrientation;
     'data-placement'?: TabsPlacement;
     'aria-orientation': TabsOrientation;
@@ -89,6 +94,7 @@ export interface TabsTriggerRootProps {
     tabIndex: number;
     'data-state': TabsState;
     'data-disabled'?: boolean;
+    'data-variant': TabsVariant;
     'data-align'?: TabsTriggerAlign;
     'aria-selected': boolean;
     'aria-controls'?: string;
@@ -113,6 +119,7 @@ export interface TabsContentRootProps {
 export interface TabsSlotProps {
     value: TabsValue | null;
     size: TabsSize;
+    variant: TabsVariant;
     disabled: boolean;
     placement: TabsPlacement;
     align: TabsTriggerAlign;
@@ -121,6 +128,7 @@ export interface TabsSlotProps {
 
 export interface TabsListSlotProps {
     disabled: boolean;
+    variant: TabsVariant;
     orientation: TabsOrientation;
     placement: TabsPlacement;
 }
@@ -129,6 +137,7 @@ export interface TabsTriggerSlotProps {
     value: TabsValue;
     selected: boolean;
     size: TabsSize;
+    variant: TabsVariant;
     disabled: boolean;
     align: TabsTriggerAlign;
     select: () => void;

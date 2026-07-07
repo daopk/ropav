@@ -6,7 +6,7 @@ import Tabs from './tabs.vue';
 import TabsContent from './tabs-content.vue';
 import TabsList from './tabs-list.vue';
 import TabsTrigger from './tabs-trigger.vue';
-import type { TabsPlacement, TabsTriggerAlign, TabsValue } from './types';
+import type { TabsPlacement, TabsTriggerAlign, TabsValue, TabsVariant } from './types';
 
 function renderVerticalTabsPlacement(placement: TabsPlacement) {
     return h(
@@ -106,13 +106,21 @@ describe('Tabs', () => {
         const overviewPanel = container.querySelector('#overview-panel') as HTMLElement;
         const activityPanel = container.querySelector('#activity-panel') as HTMLElement;
 
-        expect([...root.classList]).toEqual(['rp-tabs', 'rp-tabs--size-md', 'rp-tabs--horizontal']);
+        expect([...root.classList]).toEqual([
+            'rp-tabs',
+            'rp-tabs--size-md',
+            'rp-tabs--line',
+            'rp-tabs--horizontal',
+        ]);
         expect(root.getAttribute('data-size')).toBe('md');
+        expect(root.getAttribute('data-variant')).toBe('line');
         expect(root.getAttribute('data-orientation')).toBe('horizontal');
         expect(root.getAttribute('aria-label')).toBe('Project sections');
         expect(list.getAttribute('role')).toBe('tablist');
+        expect(list.getAttribute('data-variant')).toBe('line');
         expect(list.getAttribute('aria-orientation')).toBe('horizontal');
         expect(triggers[0].getAttribute('role')).toBe('tab');
+        expect(triggers[0].getAttribute('data-variant')).toBe('line');
         expect(triggers[0].getAttribute('aria-selected')).toBe('true');
         expect(triggers[0].getAttribute('aria-controls')).toBe('overview-panel');
         expect(triggers[0].tabIndex).toBe(0);
@@ -227,6 +235,66 @@ describe('Tabs', () => {
         expect(triggers[3].classList.contains('rp-tabs-trigger--size-lg')).toBe(true);
     });
 
+    it('applies tab variants across the root, list, and triggers', async () => {
+        const variants: TabsVariant[] = ['line', 'pills', 'outline'];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        null,
+                        variants.map((variant) =>
+                            h(
+                                Tabs,
+                                { defaultValue: 'overview', variant },
+                                {
+                                    default: () => [
+                                        h(TabsList, null, () => [
+                                            h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                            h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                        ]),
+                                        h(
+                                            TabsContent,
+                                            { value: 'overview' },
+                                            () => 'Overview panel',
+                                        ),
+                                        h(
+                                            TabsContent,
+                                            { value: 'activity' },
+                                            () => 'Activity panel',
+                                        ),
+                                    ],
+                                },
+                            ),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs'));
+        const lists = Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs-list'));
+        const triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+
+        variants.forEach((variant, index) => {
+            expect(roots[index].classList.contains(`rp-tabs--${variant}`)).toBe(true);
+            expect(roots[index].getAttribute('data-variant')).toBe(variant);
+            expect(lists[index].classList.contains(`rp-tabs-list--${variant}`)).toBe(true);
+            expect(lists[index].getAttribute('data-variant')).toBe(variant);
+
+            const firstTrigger = triggers[index * 2];
+            const secondTrigger = triggers[index * 2 + 1];
+            expect(firstTrigger.classList.contains(`rp-tabs-trigger--${variant}`)).toBe(true);
+            expect(firstTrigger.getAttribute('data-variant')).toBe(variant);
+            expect(secondTrigger.classList.contains(`rp-tabs-trigger--${variant}`)).toBe(true);
+            expect(secondTrigger.getAttribute('data-variant')).toBe(variant);
+        });
+    });
+
     it('supports left and right placements for vertical tabs', async () => {
         const container = mountDom(
             defineComponent({
@@ -251,12 +319,14 @@ describe('Tabs', () => {
         expect([...roots[0].classList]).toEqual([
             'rp-tabs',
             'rp-tabs--size-md',
+            'rp-tabs--line',
             'rp-tabs--vertical',
             'rp-tabs--placement-left',
         ]);
         expect([...roots[1].classList]).toEqual([
             'rp-tabs',
             'rp-tabs--size-md',
+            'rp-tabs--line',
             'rp-tabs--vertical',
             'rp-tabs--placement-right',
         ]);
