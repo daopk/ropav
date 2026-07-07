@@ -1,3 +1,22 @@
+## [0.0.8](https://github.com/daopk/ropav/compare/v0.0.7...v0.0.8) (2026-07-07)
+
+### ⚠ BREAKING CHANGES
+
+* remove defaultOpen from modal and collapse
+
+### Features
+
+* **card:** add footer slot support ([3d91af1](https://github.com/daopk/ropav/commit/3d91af16f47d59f4d2b91e8333b84389069a7913))
+* **card:** add optional header border ([450a955](https://github.com/daopk/ropav/commit/450a95533d58d0675ef927d2f9e3e00236b19509))
+* **card:** support custom body class ([10a6a84](https://github.com/daopk/ropav/commit/10a6a845e0166b520c8c438ebc166805f309b00a))
+* **card:** support header slot ([437d740](https://github.com/daopk/ropav/commit/437d7408d54af47123cc1c8363cd33a218e71fba))
+* remove defaultOpen from modal and collapse ([cb426db](https://github.com/daopk/ropav/commit/cb426db668df9d85c541f9d77146dee4535e52bd))
+
+### Bug Fixes
+
+* **field:** focus control when pressing label ([73deafa](https://github.com/daopk/ropav/commit/73deafa6b3332f67abc36f54c54aaa457deae7fe))
+* **field:** increase label control spacing ([9d3156f](https://github.com/daopk/ropav/commit/9d3156ff69ca683584a93f575e699635d015badb))
+* **popover:** narrow accessible role contract ([18dc2ed](https://github.com/daopk/ropav/commit/18dc2ede984b813a0f08878184269c4cd62ddd1b))
 
 ## [0.0.7](https://github.com/daopk/ropav/compare/v0.0.6...v0.0.7) (2026-07-07)
 
