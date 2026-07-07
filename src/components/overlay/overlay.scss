@@ -1,6 +1,7 @@
 .rp-overlay {
     --_rp-overlay-color: var(--rp-color-overlay);
     --_rp-overlay-opacity: 1;
+    --_rp-overlay-blur: 0px;
     --_rp-overlay-z-index: 1;
 
     position: absolute;
@@ -18,6 +19,11 @@
     &--gradient {
         background-color: transparent;
         opacity: 1;
+    }
+
+    &--blurred {
+        backdrop-filter: blur(var(--_rp-overlay-blur));
+        -webkit-backdrop-filter: blur(var(--_rp-overlay-blur));
     }
 
     &--interactive {

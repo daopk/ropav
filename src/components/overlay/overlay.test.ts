@@ -78,6 +78,55 @@ describe('Overlay', () => {
         expect(overlay.style.getPropertyValue('--_rp-overlay-opacity')).toBe('');
     });
 
+    it('adds backdrop blur styles when blur is set', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Overlay, { blur: 8 }),
+                        h(Overlay, { blur: '0.75rem', gradient: 'linear-gradient(#000, #fff)' }),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const overlays = [...container.querySelectorAll('.rp-overlay')] as HTMLElement[];
+
+        expect([...overlays[0].classList]).toEqual(['rp-overlay', 'rp-overlay--blurred']);
+        expect(overlays[0].style.getPropertyValue('--_rp-overlay-blur')).toBe('8px');
+        expect([...overlays[1].classList]).toEqual([
+            'rp-overlay',
+            'rp-overlay--gradient',
+            'rp-overlay--blurred',
+        ]);
+        expect(overlays[1].style.getPropertyValue('--_rp-overlay-blur')).toBe('0.75rem');
+    });
+
+    it('does not add backdrop blur styles for invalid numeric blur values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Overlay, { blur: -1 }),
+                        h(Overlay, { blur: Number.NaN }),
+                        h(Overlay, { blur: '' }),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const overlays = [...container.querySelectorAll('.rp-overlay')] as HTMLElement[];
+
+        for (const overlay of overlays) {
+            expect([...overlay.classList]).toEqual(['rp-overlay']);
+            expect(overlay.style.getPropertyValue('--_rp-overlay-blur')).toBe('');
+        }
+    });
+
     it('supports interactive overlays and disabled rendering', async () => {
         const container = mountDom(
             defineComponent({

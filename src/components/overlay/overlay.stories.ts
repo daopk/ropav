@@ -11,6 +11,7 @@ const meta = {
             control: { type: 'range', min: 0, max: 1, step: 0.05 },
         },
         gradient: { control: 'text' },
+        blur: { control: 'text' },
         zIndex: { control: 'number' },
         interactive: { control: 'boolean' },
         disabled: { control: 'boolean' },
@@ -19,6 +20,7 @@ const meta = {
         color: '#111827',
         opacity: 0.55,
         gradient: '',
+        blur: '',
         zIndex: 1,
         interactive: false,
         disabled: false,
@@ -100,6 +102,7 @@ export const Gradient: Story = {
     args: {
         color: '#111827',
         opacity: 0.2,
+        blur: '',
         gradient: 'linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(14, 165, 233, 0.35))',
     },
     render: (args) => ({
@@ -124,6 +127,41 @@ export const Gradient: Story = {
                 <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
                     <strong style="font-size: var(--rp-font-size-xl);">Gradient overlay</strong>
                     <span style="font-size: var(--rp-font-size-sm); opacity: 0.9;">Gradient ignores color and opacity props</span>
+                </div>
+                <Overlay v-bind="args" />
+            </div>
+        `,
+    }),
+};
+
+export const Blur: Story = {
+    args: {
+        color: 'rgba(17, 24, 39, 0.2)',
+        opacity: 1,
+        blur: '10px',
+    },
+    render: (args) => ({
+        components: { Overlay },
+        setup: () => ({ args }),
+        template: `
+            <div
+                style="
+                    position: relative;
+                    display: grid;
+                    min-height: 220px;
+                    max-width: 440px;
+                    place-items: center;
+                    overflow: hidden;
+                    color: var(--rp-color-text-inverted);
+                    background:
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 12px, transparent 12px 24px),
+                        linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(22, 163, 74, 0.82));
+                    border-radius: var(--rp-radius-lg);
+                "
+            >
+                <div style="position: relative; z-index: 2; display: grid; gap: 4px; justify-items: center;">
+                    <strong style="font-size: var(--rp-font-size-xl);">Blur overlay</strong>
+                    <span style="font-size: var(--rp-font-size-sm); opacity: 0.9;">Backdrop content is softened behind the layer</span>
                 </div>
                 <Overlay v-bind="args" />
             </div>
