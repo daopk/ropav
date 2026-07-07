@@ -13,10 +13,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, type CSSProperties } from 'vue';
+import { computed } from 'vue';
 import { bem } from '@/utils/bem';
-import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
-import type { BadgeColor, BadgeProps } from './types';
+import { isComponentPresetColor } from '@/utils/componentColors';
+import type { BadgeProps } from './types';
+import { getBadgeColorStyle } from './useBadgeColor';
 
 defineOptions({ name: 'RpBadge' });
 
@@ -32,19 +33,6 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() => getBadgeColorStyle(props.color));
-
-function getBadgeColorStyle(color: BadgeColor | undefined) {
-    const customColor = getComponentCustomColor(color);
-    if (!customColor) return undefined;
-
-    return {
-        '--_rp-badge-custom-bg': customColor,
-        '--_rp-badge-custom-fg': customColor,
-        '--_rp-badge-custom-on-bg': 'var(--rp-color-on-primary)',
-        '--_rp-badge-custom-subtle-bg': `color-mix(in srgb, ${customColor} 12%, transparent)`,
-        '--_rp-badge-custom-border': `color-mix(in srgb, ${customColor} 45%, transparent)`,
-    } satisfies CSSProperties;
-}
 </script>
 
 <style src="./badge.scss" lang="scss" scoped></style>

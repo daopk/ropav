@@ -3,21 +3,9 @@ import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Badge from './badge.vue';
+import { badgeColors, badgeRadiuses, badgeSizes, badgeVariants } from './types';
 
 describe('Badge', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
-    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
-    const radii = ['none', 'xs', 'sm', 'md', 'lg', 'xl', 'full'] as const;
-    const variants = ['solid', 'subtle', 'surface', 'outline'] as const;
-
     it('renders default slot content', async () => {
         const container = mountDom(
             defineComponent({
@@ -34,6 +22,22 @@ describe('Badge', () => {
         expect([...badge.classList]).toEqual(['rp-badge']);
         expect(badge.getAttribute('aria-label')).toBeNull();
         expect(container.querySelector('.rp-badge__label')?.textContent).toBe('Ready');
+    });
+
+    it('passes through an explicit aria label', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Badge, { ariaLabel: 'Deployment status' }, { default: () => 'Ready' });
+                },
+            }),
+        );
+
+        await flush();
+
+        const badge = container.querySelector('.rp-badge') as HTMLElement;
+
+        expect(badge.getAttribute('aria-label')).toBe('Deployment status');
     });
 
     it('renders left and right slots around the label', async () => {
@@ -65,7 +69,7 @@ describe('Badge', () => {
                 render() {
                     return h(
                         'div',
-                        variants.map((variant) =>
+                        badgeVariants.map((variant) =>
                             h(Badge, { variant }, { default: () => variant }),
                         ),
                     );
@@ -77,8 +81,8 @@ describe('Badge', () => {
 
         const badges = [...container.querySelectorAll('.rp-badge')];
 
-        expect(badges).toHaveLength(variants.length);
-        for (const [index, variant] of variants.entries()) {
+        expect(badges).toHaveLength(badgeVariants.length);
+        for (const [index, variant] of badgeVariants.entries()) {
             expect([...badges[index].classList]).toEqual(['rp-badge', `rp-badge--${variant}`]);
         }
     });
@@ -89,7 +93,7 @@ describe('Badge', () => {
                 render() {
                     return h(
                         'div',
-                        colors.map((color) => h(Badge, { color }, { default: () => color })),
+                        badgeColors.map((color) => h(Badge, { color }, { default: () => color })),
                     );
                 },
             }),
@@ -99,12 +103,12 @@ describe('Badge', () => {
 
         const badges = [...container.querySelectorAll('.rp-badge')];
 
-        expect(badges).toHaveLength(colors.length);
-        for (const [index, color] of colors.entries()) {
+        expect(badges).toHaveLength(badgeColors.length);
+        for (const [index, color] of badgeColors.entries()) {
             const badge = badges[index] as HTMLElement;
 
             expect([...badge.classList]).toEqual(['rp-badge', `rp-badge--color-${color}`]);
-            expect(badge.style.getPropertyValue('--_rp-badge-custom-bg')).toBe('');
+            expect(badge.style.getPropertyValue('--_rp-badge-custom-color')).toBe('');
         }
     });
 
@@ -113,8 +117,10 @@ describe('Badge', () => {
             defineComponent({
                 render() {
                     return h('div', [
-                        ...sizes.map((size) => h(Badge, { size }, { default: () => size })),
-                        ...radii.map((radius) => h(Badge, { radius }, { default: () => radius })),
+                        ...badgeSizes.map((size) => h(Badge, { size }, { default: () => size })),
+                        ...badgeRadiuses.map((radius) =>
+                            h(Badge, { radius }, { default: () => radius }),
+                        ),
                     ]);
                 },
             }),
@@ -124,12 +130,12 @@ describe('Badge', () => {
 
         const badges = [...container.querySelectorAll('.rp-badge')];
 
-        expect(badges).toHaveLength(sizes.length + radii.length);
-        for (const [index, size] of sizes.entries()) {
+        expect(badges).toHaveLength(badgeSizes.length + badgeRadiuses.length);
+        for (const [index, size] of badgeSizes.entries()) {
             expect([...badges[index].classList]).toEqual(['rp-badge', `rp-badge--size-${size}`]);
         }
-        for (const [index, radius] of radii.entries()) {
-            expect([...badges[index + sizes.length].classList]).toEqual([
+        for (const [index, radius] of badgeRadiuses.entries()) {
+            expect([...badges[index + badgeSizes.length].classList]).toEqual([
                 'rp-badge',
                 `rp-badge--radius-${radius}`,
             ]);
@@ -150,7 +156,10 @@ describe('Badge', () => {
         const badge = container.querySelector('.rp-badge') as HTMLElement;
 
         expect([...badge.classList]).toEqual(['rp-badge']);
-        expect(badge.style.getPropertyValue('--_rp-badge-custom-bg')).toBe('#ff3366');
+        expect(badge.style.getPropertyValue('--_rp-badge-custom-color')).toBe('#ff3366');
         expect(badge.style.getPropertyValue('--_rp-badge-custom-fg')).toBe('#ff3366');
+        expect(badge.style.getPropertyValue('--_rp-badge-custom-on')).toBe(
+            'var(--rp-color-on-primary)',
+        );
     });
 });
