@@ -37,14 +37,45 @@ describe('Card', () => {
         expect(container.querySelector('.rp-card__body .body-content')).toBeTruthy();
     });
 
-    it('does not render named slots outside default', async () => {
+    it('renders a custom header slot', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Card,
+                        {
+                            title: 'Fallback title',
+                            description: 'Fallback description',
+                        },
+                        {
+                            header: () => h('button', { class: 'header-action' }, 'Refresh'),
+                            default: () => h('span', { class: 'body-content' }, 'Body'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const card = container.querySelector('.rp-card') as HTMLElement;
+
+        expect([...card.classList]).toEqual(['rp-card', 'rp-card--header-compact']);
+        expect(container.querySelector('.rp-card__header .header-action')?.textContent).toBe(
+            'Refresh',
+        );
+        expect(container.querySelector('.rp-card__body .body-content')).toBeTruthy();
+        expect(container.querySelector('.rp-card__title')).toBeNull();
+        expect(container.querySelector('.rp-card__description')).toBeNull();
+    });
+
+    it('does not render unsupported named slots outside default', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(Card, null, {
                         default: () => h('span', { class: 'body-content' }, 'Body'),
                         media: () => h('img', { alt: 'Chart', class: 'media-content' }),
-                        header: () => h('span', { class: 'header-content' }, 'Header'),
                         title: () => h('span', { class: 'title-content' }, 'Title'),
                         description: () =>
                             h('span', { class: 'description-content' }, 'Description'),
@@ -59,10 +90,10 @@ describe('Card', () => {
         expect(container.querySelector('.rp-card__body .body-content')).toBeTruthy();
         expect(container.querySelector('.rp-card__media')).toBeNull();
         expect(container.querySelector('.media-content')).toBeNull();
-        expect(container.querySelector('.header-content')).toBeNull();
         expect(container.querySelector('.title-content')).toBeNull();
         expect(container.querySelector('.description-content')).toBeNull();
         expect(container.querySelector('.footer-action')).toBeNull();
+        expect(container.querySelector('.rp-card__header')).toBeNull();
         expect(container.querySelector('.rp-card__title')).toBeNull();
         expect(container.querySelector('.rp-card__description')).toBeNull();
         expect(container.querySelector('.rp-card__footer')).toBeNull();

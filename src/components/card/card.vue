@@ -1,12 +1,14 @@
 <template>
     <div :class="rootClass">
         <div v-if="hasHeader" class="rp-card__header">
-            <div v-if="hasTitle" class="rp-card__title">
-                {{ title }}
-            </div>
-            <p v-if="hasDescription" class="rp-card__description">
-                {{ description }}
-            </p>
+            <slot name="header">
+                <div v-if="hasTitle" class="rp-card__title">
+                    {{ title }}
+                </div>
+                <p v-if="hasDescription" class="rp-card__description">
+                    {{ description }}
+                </p>
+            </slot>
         </div>
 
         <div v-if="hasBody" :class="['rp-card__body', bodyClass]">
@@ -32,7 +34,7 @@ const props = withDefaults(defineProps<CardProps>(), {
 const slots = useSlots();
 const hasTitle = computed(() => Boolean(props.title));
 const hasDescription = computed(() => Boolean(props.description));
-const hasHeader = computed(() => Boolean(hasTitle.value || hasDescription.value));
+const hasHeader = computed(() => Boolean(slots.header || hasTitle.value || hasDescription.value));
 const hasBody = computed(() => Boolean(slots.default));
 const hasCompactHeaderSpacing = computed(() =>
     Boolean(hasHeader.value && hasBody.value && !props.headerBorder),

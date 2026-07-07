@@ -159,6 +159,34 @@ export const HeaderBorder: Story = {
     }),
 };
 
+export const HeaderSlot: Story = {
+    render: (args) => ({
+        components: { Card },
+        setup: () => ({ args }),
+        template: `
+            <Card v-bind="args" style="max-width: 380px;">
+                <template #header>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                        <div style="display: grid; gap: 4px;">
+                            <strong style="color: var(--rp-color-text); font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-tight);">
+                                Deployment
+                            </strong>
+                            <span style="color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                                Production status
+                            </span>
+                        </div>
+                        <span style="color: var(--rp-color-success-fg); font-weight: var(--rp-font-weight-semibold);">
+                            Live
+                        </span>
+                    </div>
+                </template>
+
+                <span>All services are healthy and responding normally.</span>
+            </Card>
+        `,
+    }),
+};
+
 export const Radii: Story = {
     render: (args) => ({
         components: { Card },
