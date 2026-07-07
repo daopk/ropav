@@ -1,38 +1,11 @@
 <template>
-    <div
-        :class="rootProps.class"
-        :data-state="rootProps['data-state']"
-        :data-disabled="rootProps['data-disabled']"
-    >
-        <slot
-            name="trigger"
-            :trigger-props="triggerSlotProps.triggerProps"
-            :is-open="triggerSlotProps.isOpen"
-            :open="triggerSlotProps.open"
-            :close="triggerSlotProps.close"
-            :toggle="triggerSlotProps.toggle"
-        />
+    <div v-bind="rootProps">
+        <slot name="trigger" v-bind="triggerSlotProps" />
 
         <Transition name="rp-collapse-content">
-            <section
-                v-if="shouldRenderContent"
-                v-show="isOpen"
-                :id="contentProps.id"
-                class="rp-collapse__content"
-                :role="contentProps.role"
-                :data-state="contentProps['data-state']"
-                :aria-hidden="contentProps['aria-hidden']"
-                :aria-label="contentProps['aria-label']"
-                :aria-labelledby="contentProps['aria-labelledby']"
-                :aria-describedby="contentProps['aria-describedby']"
-            >
+            <section v-if="shouldRenderContent" v-show="isOpen" v-bind="contentProps">
                 <div class="rp-collapse__inner">
-                    <slot
-                        :is-open="contentSlotProps.isOpen"
-                        :open="contentSlotProps.open"
-                        :close="contentSlotProps.close"
-                        :toggle="contentSlotProps.toggle"
-                    />
+                    <slot v-bind="contentSlotProps" />
                 </div>
             </section>
         </Transition>

@@ -1,10 +1,10 @@
-import type { ComputedRef, Ref } from 'vue';
+import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 
 export type CollapseState = 'open' | 'closed';
 
 export type CollapseContentRole = 'region' | 'group';
 
-export type CollapseOptionValue<T> = T | Ref<T> | (() => T);
+export type CollapseOption<T> = MaybeRefOrGetter<T>;
 
 export interface CollapseRootProps {
     class: string[];
@@ -22,6 +22,7 @@ export interface CollapseTriggerProps {
 }
 
 export interface CollapseContentProps {
+    class: string;
     id: string;
     role: CollapseContentRole;
     'data-state': CollapseState;
@@ -50,27 +51,26 @@ export interface CollapseProps {
     unmountOnExit?: boolean;
     role?: CollapseContentRole;
     ariaLabel?: string;
-    describedby?: string;
-    labelledby?: string;
+    ariaDescribedby?: string;
+    ariaLabelledby?: string;
 }
 
 export interface UseCollapseOptions {
-    id?: CollapseOptionValue<string | undefined>;
-    open?: CollapseOptionValue<boolean | undefined>;
-    defaultOpen?: CollapseOptionValue<boolean | undefined>;
-    disabled?: CollapseOptionValue<boolean | undefined>;
-    unmountOnExit?: CollapseOptionValue<boolean | undefined>;
-    role?: CollapseOptionValue<CollapseContentRole | undefined>;
-    ariaLabel?: CollapseOptionValue<string | undefined>;
-    describedby?: CollapseOptionValue<string | undefined>;
-    labelledby?: CollapseOptionValue<string | undefined>;
+    id?: CollapseOption<string | undefined>;
+    open?: CollapseOption<boolean | undefined>;
+    defaultOpen?: CollapseOption<boolean | undefined>;
+    disabled?: CollapseOption<boolean | undefined>;
+    unmountOnExit?: CollapseOption<boolean | undefined>;
+    role?: CollapseOption<CollapseContentRole | undefined>;
+    ariaLabel?: CollapseOption<string | undefined>;
+    ariaDescribedby?: CollapseOption<string | undefined>;
+    ariaLabelledby?: CollapseOption<string | undefined>;
     onOpenChange?: (open: boolean) => void;
 }
 
 export interface UseCollapseReturn {
-    collapseId: ComputedRef<string>;
-    collapseState: ComputedRef<CollapseState>;
-    contentRole: ComputedRef<CollapseContentRole>;
+    id: ComputedRef<string>;
+    state: ComputedRef<CollapseState>;
     isDisabled: ComputedRef<boolean>;
     isOpen: ComputedRef<boolean>;
     shouldRenderContent: ComputedRef<boolean>;
@@ -84,7 +84,4 @@ export interface UseCollapseReturn {
     open: () => void;
     close: () => void;
     toggle: () => void;
-    openCollapse: () => void;
-    closeCollapse: () => void;
-    toggleCollapse: () => void;
 }

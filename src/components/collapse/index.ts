@@ -3,7 +3,7 @@ export { useCollapse } from './useCollapse';
 export type {
     CollapseContentProps,
     CollapseContentRole,
-    CollapseOptionValue,
+    CollapseOption,
     CollapseProps,
     CollapseRootProps,
     CollapseSlotProps,

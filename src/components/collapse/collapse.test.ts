@@ -116,10 +116,10 @@ describe('Collapse', () => {
                         Collapse,
                         {
                             ariaLabel: 'Profile details',
+                            ariaDescribedby: 'profile-description',
+                            ariaLabelledby: 'profile-title',
                             defaultOpen: true,
-                            describedby: 'profile-description',
                             id: 'profile-panel',
-                            labelledby: 'profile-title',
                             role: 'group',
                         },
                         {
@@ -258,8 +258,8 @@ describe('Collapse', () => {
                                     ? h(
                                           'section',
                                           {
-                                              class: 'content',
                                               ...collapse.contentProps.value,
+                                              class: ['content', collapse.contentProps.value.class],
                                               style: {
                                                   display: collapse.isOpen.value ? '' : 'none',
                                               },
