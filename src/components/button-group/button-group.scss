@@ -21,43 +21,43 @@
             z-index: 1;
         }
 
-        :slotted(.rp-button) {
+        > :deep(.rp-button) {
             position: relative;
             border-radius: 0;
             box-shadow: none;
         }
 
-        :slotted(.rp-button:is(:hover, :focus-visible)) {
+        > :deep(.rp-button:is(:hover, :focus-visible)) {
             z-index: 1;
         }
 
         &:not(.rp-button-group--vertical) {
-            :slotted(.rp-button:not(:first-child)) {
+            > :deep(.rp-button:not(:first-child)) {
                 margin-inline-start: calc(var(--rp-border-width-thin) * -1);
             }
 
-            :slotted(.rp-button:first-child) {
+            > :deep(.rp-button:first-child) {
                 border-start-start-radius: var(--_rp-button-radius);
                 border-end-start-radius: var(--_rp-button-radius);
             }
 
-            :slotted(.rp-button:last-child) {
+            > :deep(.rp-button:last-child) {
                 border-start-end-radius: var(--_rp-button-radius);
                 border-end-end-radius: var(--_rp-button-radius);
             }
         }
 
         &.rp-button-group--vertical {
-            :slotted(.rp-button:not(:first-child)) {
+            > :deep(.rp-button:not(:first-child)) {
                 margin-block-start: calc(var(--rp-border-width-thin) * -1);
             }
 
-            :slotted(.rp-button:first-child) {
+            > :deep(.rp-button:first-child) {
                 border-start-start-radius: var(--_rp-button-radius);
                 border-start-end-radius: var(--_rp-button-radius);
             }
 
-            :slotted(.rp-button:last-child) {
+            > :deep(.rp-button:last-child) {
                 border-end-start-radius: var(--_rp-button-radius);
                 border-end-end-radius: var(--_rp-button-radius);
             }
