@@ -1,0 +1,168 @@
+import { computed, provide, ref } from 'vue';
+import { bem } from '@/utils/bem';
+import { tabsKey } from './types';
+import {
+    ariaProps,
+    DEFAULT_ACTIVATION_MODE,
+    DEFAULT_ORIENTATION,
+    findRegistration,
+    getNextTrigger,
+    getTabsTrigger,
+    orientationClasses,
+    toAttr,
+    useTabsRegistry,
+} from './useTabsShared';
+import type {
+    TabsActivationMode,
+    TabsContentRegistration,
+    TabsContext,
+    TabsOrientation,
+    TabsProps,
+    TabsRootProps,
+    TabsSlotProps,
+    TabsTriggerRegistration,
+    TabsValue,
+    UseTabsReturn,
+} from './types';
+
+export function useTabs(
+    props: Readonly<TabsProps>,
+    emitUpdate: (value: TabsValue) => void,
+): UseTabsReturn {
+    const triggerRegistry = useTabsRegistry<TabsTriggerRegistration>();
+    const contentRegistry = useTabsRegistry<TabsContentRegistration>();
+    const { items: triggers, unregister: unregisterTrigger } = triggerRegistry;
+    const {
+        items: contents,
+        register: registerContent,
+        unregister: unregisterContent,
+    } = contentRegistry;
+
+    const isControlled = computed(() => props.modelValue !== undefined);
+    const uncontrolledValue = ref<TabsValue | null>(props.defaultValue ?? null);
+    const isDisabled = computed(() => Boolean(props.disabled));
+    const orientation = computed<TabsOrientation>(() => props.orientation ?? DEFAULT_ORIENTATION);
+    const activationMode = computed<TabsActivationMode>(
+        () => props.activationMode ?? DEFAULT_ACTIVATION_MODE,
+    );
+    const selectedValue = computed<TabsValue | null>(() =>
+        isControlled.value ? (props.modelValue ?? null) : uncontrolledValue.value,
+    );
+    const firstEnabledTrigger = computed(() => triggers.value.find((trigger) => !trigger.disabled));
+    const selectedEnabledTrigger = computed(() => {
+        const trigger = findRegistration(triggers.value, selectedValue.value);
+        return trigger && !trigger.disabled ? trigger : undefined;
+    });
+
+    const rootClass = computed(() =>
+        bem('rp-tabs', orientationClasses(isDisabled.value, orientation.value)),
+    );
+
+    const rootProps = computed<TabsRootProps>(() => ({
+        id: props.id,
+        class: rootClass.value,
+        'data-disabled': toAttr(isDisabled.value),
+        'data-orientation': orientation.value,
+        'data-activation-mode': activationMode.value,
+        ...ariaProps(props.ariaLabel, props.labelledby, props.describedby),
+    }));
+
+    const slotProps = computed<TabsSlotProps>(() => ({
+        value: selectedValue.value,
+        disabled: isDisabled.value,
+        select: selectValue,
+    }));
+
+    function ensureUncontrolledDefault() {
+        if (!isControlled.value && selectedValue.value == null && firstEnabledTrigger.value) {
+            uncontrolledValue.value = firstEnabledTrigger.value.value;
+        }
+    }
+
+    function setValue(value: TabsValue) {
+        if (isDisabled.value || value === selectedValue.value) return;
+
+        if (!isControlled.value) uncontrolledValue.value = value;
+        emitUpdate(value);
+    }
+
+    function selectValue(value: TabsValue) {
+        const trigger = findRegistration(triggers.value, value);
+        if (isDisabled.value || trigger?.disabled) return;
+
+        setValue(value);
+    }
+
+    const getFocusableValue = () =>
+        selectedEnabledTrigger.value?.value ?? firstEnabledTrigger.value?.value ?? null;
+    const getTriggerId = (value: TabsValue) => findRegistration(triggers.value, value)?.id;
+    const getContentId = (value: TabsValue) => findRegistration(contents.value, value)?.id;
+    const getTriggerValue = (id: string) =>
+        triggers.value.find((trigger) => trigger.id === id)?.value;
+
+    function registerTrigger(registration: TabsTriggerRegistration) {
+        triggerRegistry.register(registration);
+        ensureUncontrolledDefault();
+    }
+
+    function onListKeydown(event: KeyboardEvent) {
+        const list = event.currentTarget as HTMLElement | null;
+        if (!list || isDisabled.value) return;
+
+        const trigger = getTabsTrigger(event, list);
+        if (!trigger) return;
+
+        const nextTrigger = getNextTrigger(list, trigger, event.key, orientation.value);
+        if (!nextTrigger) return;
+
+        event.preventDefault();
+        nextTrigger.focus();
+
+        const nextValue = getTriggerValue(nextTrigger.id);
+        if (nextValue !== undefined && activationMode.value === 'automatic') {
+            selectValue(nextValue);
+        }
+    }
+
+    provide<TabsContext>(tabsKey, {
+        get selectedValue() {
+            return selectedValue.value;
+        },
+        get disabled() {
+            return isDisabled.value;
+        },
+        get orientation() {
+            return orientation.value;
+        },
+        get activationMode() {
+            return activationMode.value;
+        },
+        get unmountOnExit() {
+            return Boolean(props.unmountOnExit);
+        },
+        get ariaLabel() {
+            return props.ariaLabel;
+        },
+        get describedby() {
+            return props.describedby;
+        },
+        get labelledby() {
+            return props.labelledby;
+        },
+        isSelected(value) {
+            return selectedValue.value === value;
+        },
+        selectValue,
+        getFocusableValue,
+        getTriggerId,
+        getContentId,
+        getTriggerValue,
+        registerTrigger,
+        unregisterTrigger,
+        registerContent,
+        unregisterContent,
+        onListKeydown,
+    });
+
+    return { rootClass, rootProps, slotProps, selectedValue, selectValue };
+}
