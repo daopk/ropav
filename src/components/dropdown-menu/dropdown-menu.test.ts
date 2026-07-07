@@ -231,6 +231,73 @@ describe('DropdownMenu', () => {
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 
+    it('opens second-level submenus and lets their flyout escape the parent submenu', async () => {
+        const onSelect = vi.fn();
+        const deepNestedItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'move-backlog' },
+                    {
+                        label: 'Archive',
+                        value: 'move-archive',
+                        children: [
+                            { label: 'This week', value: 'archive-week' },
+                            { label: 'This month', value: 'archive-month' },
+                        ],
+                    },
+                ],
+            },
+            { label: 'Delete', value: 'delete', destructive: true },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'deep-menu',
+                            items: deepNestedItems,
+                            onSelect,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+
+        click(document.getElementById('deep-menu-item-0') as HTMLButtonElement);
+        await nextTick();
+
+        const firstSubmenu = document.getElementById('deep-menu-submenu-0') as HTMLElement;
+        expect(firstSubmenu.classList.contains('rp-dropdown-menu__submenu--has-submenu')).toBe(
+            true,
+        );
+
+        click(document.getElementById('deep-menu-item-0-1') as HTMLButtonElement);
+        await nextTick();
+
+        const secondSubmenu = document.getElementById('deep-menu-submenu-0-1') as HTMLElement;
+        expect(secondSubmenu).not.toBeNull();
+        expect(secondSubmenu.getAttribute('aria-label')).toBe('Archive');
+        expect(document.getElementById('deep-menu-item-0-1')?.getAttribute('aria-expanded')).toBe(
+            'true',
+        );
+
+        click(document.getElementById('deep-menu-item-0-1-0') as HTMLButtonElement);
+        await waitDropdownTransition();
+
+        expect(onSelect).toHaveBeenCalledWith(deepNestedItems[0].children![1]!.children![0]);
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+    });
+
     it('keeps submenus open while the pointer crosses the safe triangle', async () => {
         const container = mountDom(
             defineComponent({
@@ -292,6 +359,63 @@ describe('DropdownMenu', () => {
 
         expect(document.getElementById('safe-menu-submenu-0')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-1');
+    });
+
+    it('updates the safe triangle origin as the pointer moves across an open trigger', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'refresh-safe-menu',
+                            items: [
+                                {
+                                    label: 'Move to',
+                                    value: 'move',
+                                    children: [
+                                        { label: 'Backlog', value: 'move-backlog' },
+                                        { label: 'Done', value: 'move-done' },
+                                    ],
+                                },
+                                { label: 'Archive', value: 'archive' },
+                            ],
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const moveTrigger = document.getElementById(
+            'refresh-safe-menu-item-0',
+        ) as HTMLButtonElement;
+        const archiveItem = document.getElementById(
+            'refresh-safe-menu-item-1',
+        ) as HTMLButtonElement;
+
+        moveTrigger.getBoundingClientRect = vi.fn(() => createRect(0, 0, 180, 40));
+        mouseenter(moveTrigger, 10, 20);
+        await nextTick();
+
+        const submenu = document.getElementById('refresh-safe-menu-submenu-0') as HTMLElement;
+        submenu.getBoundingClientRect = vi.fn(() => createRect(188, 0, 368, 120));
+
+        mousemove(menu, 170, 20);
+        await nextTick();
+
+        mouseenter(archiveItem, 100, 70);
+        await nextTick();
+
+        expect(document.getElementById('refresh-safe-menu-submenu-0')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('refresh-safe-menu-item-1');
     });
 
     it('keeps focus on a submenu trigger when all child items are disabled', async () => {

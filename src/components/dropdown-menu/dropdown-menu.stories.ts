@@ -126,6 +126,16 @@ function getSafeTriangleStoryPoints(
         .join(' ');
 }
 
+function isStoryPointInElement(point: StoryPoint, element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    return (
+        point.x >= rect.left &&
+        point.x <= rect.right &&
+        point.y >= rect.top &&
+        point.y <= rect.bottom
+    );
+}
+
 const meta = {
     title: 'Components/DropdownMenu',
     component: DropdownMenu as any,
@@ -269,6 +279,10 @@ export const SafeTriangle: Story = {
                 const stage = stageRef.value;
                 const item = stage?.querySelector<HTMLElement>('.rp-dropdown-menu__item--open');
                 const submenu = stage?.querySelector<HTMLElement>('.rp-dropdown-menu__submenu');
+                const point = {
+                    x: event.clientX,
+                    y: event.clientY,
+                };
 
                 if (!stage || !item || !submenu) {
                     hideTriangle();
@@ -276,11 +290,10 @@ export const SafeTriangle: Story = {
                 }
 
                 if (!triangleOrigin || triangleSubmenuId !== submenu.id) {
-                    triangleOrigin = {
-                        x: event.clientX,
-                        y: event.clientY,
-                    };
                     triangleSubmenuId = submenu.id;
+                    triangleOrigin = point;
+                } else if (isStoryPointInElement(point, item)) {
+                    triangleOrigin = point;
                 }
 
                 trianglePoints.value = getSafeTriangleStoryPoints(

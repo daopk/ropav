@@ -19,7 +19,7 @@ import type {
 const DEFAULT_PLACEMENT: DropdownMenuPlacement = 'bottom-start';
 const DEFAULT_FOCUS_TARGET: DropdownMenuFocusTarget = 'first';
 const SAFE_TRIANGLE_PADDING = 8;
-const SAFE_TRIANGLE_TIMEOUT = 350;
+const SAFE_TRIANGLE_TIMEOUT = 500;
 
 type ItemPath = number[];
 type SubmenuFocusTarget = DropdownMenuFocusTarget | false;
@@ -436,6 +436,15 @@ export function useDropdownMenu(
         ];
     }
 
+    function updateSafeTriangleOrigin(point: PointerPoint) {
+        if (openSubmenuPath.value.length === 0) return;
+
+        const itemRect = getItemElement(openSubmenuPath.value)?.getBoundingClientRect();
+        if (itemRect && isPointInRect(point, itemRect)) {
+            safeTriangleOrigin.value = point;
+        }
+    }
+
     function shouldDelayHover(path: ItemPath, point: PointerPoint) {
         if (openSubmenuPath.value.length === 0) return false;
         if (arePathsEqual(path, openSubmenuPath.value)) return false;
@@ -658,10 +667,11 @@ export function useDropdownMenu(
     }
 
     function onMenuMousemove(event: MouseEvent) {
-        latestPointerPoint = getEventPoint(event);
+        const point = getEventPoint(event);
+        latestPointerPoint = point;
+        updateSafeTriangleOrigin(point);
         if (!pendingHover) return;
 
-        const point = latestPointerPoint;
         if (shouldDelayHover(pendingHover.path, point)) return;
 
         const nextHover = pendingHover;
@@ -708,6 +718,7 @@ export function useDropdownMenu(
             role: 'menu' as const,
             class: bem('rp-dropdown-menu__submenu', {
                 open: isSubmenuOpen(path),
+                'has-submenu': hasNestedItems(item.children ?? []),
             }),
             'aria-label': item.label,
             'aria-activedescendant': getMenuActiveDescendant(path),

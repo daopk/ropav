@@ -127,6 +127,10 @@
         font-size: var(--rp-font-size-base);
         line-height: var(--rp-line-height-normal);
         outline: none;
+
+        &--has-submenu {
+            overflow: visible;
+        }
     }
 
     &--placement-bottom-end &__submenu,
