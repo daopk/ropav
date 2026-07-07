@@ -105,6 +105,19 @@ function isPointInTriangle(point: PointerPoint, triangle: SafeTriangle) {
     return Math.abs(area - (area1 + area2 + area3)) < 0.5;
 }
 
+function hasMeasuredRect(rect: DOMRect) {
+    return rect.width > 0 || rect.height > 0;
+}
+
+function isPointInRect(point: PointerPoint, rect: DOMRect, padding = 0) {
+    return (
+        point.x >= rect.left - padding &&
+        point.x <= rect.right + padding &&
+        point.y >= rect.top - padding &&
+        point.y <= rect.bottom + padding
+    );
+}
+
 function getEnabledIndexes(items: DropdownMenuItem[]) {
     return items.map((item, index) => (item.disabled ? -1 : index)).filter((index) => index >= 0);
 }
@@ -138,6 +151,7 @@ export function useDropdownMenu(
     const focusedPath = ref<ItemPath>([]);
     const openSubmenuPath = ref<ItemPath>([]);
     const safeTriangleOrigin = ref<PointerPoint | null>(null);
+    let latestPointerPoint: PointerPoint | null = null;
     let pendingHover: PendingHover | null = null;
     let pendingHoverTimer: number | undefined;
 
@@ -272,13 +286,20 @@ export function useDropdownMenu(
         const index =
             target === 'last' ? enabledIndexes[enabledIndexes.length - 1] : enabledIndexes[0];
 
-        focusedPath.value = index === undefined ? [] : [...menuPath, index];
+        if (index === undefined) {
+            if (menuPath.length === 0) focusedPath.value = [];
+            return false;
+        }
+
+        focusedPath.value = [...menuPath, index];
+        return true;
     }
 
     function resetFocus() {
         focusedPath.value = [];
         openSubmenuPath.value = [];
         safeTriangleOrigin.value = null;
+        latestPointerPoint = null;
         clearPendingHover();
     }
 
@@ -345,6 +366,17 @@ export function useDropdownMenu(
         return document.getElementById(getSubmenuId(path));
     }
 
+    function isSubmenuOpeningLeft(path: ItemPath) {
+        const submenuRect = getSubmenuElement(path)?.getBoundingClientRect();
+        const itemRect = getItemElement(path)?.getBoundingClientRect();
+
+        if (submenuRect && itemRect && hasMeasuredRect(submenuRect) && hasMeasuredRect(itemRect)) {
+            return submenuRect.right <= itemRect.left;
+        }
+
+        return placement.value.endsWith('end');
+    }
+
     function getMenuActiveDescendant(menuPath: ItemPath) {
         return arePathsEqual(getParentPath(focusedPath.value), menuPath)
             ? getItemId(focusedPath.value)
@@ -358,7 +390,15 @@ export function useDropdownMenu(
     function closeSubmenusAfter(menuPath: ItemPath) {
         openSubmenuPath.value = [...menuPath];
         safeTriangleOrigin.value = null;
+        latestPointerPoint = null;
         clearPendingHover();
+    }
+
+    function isPointInCurrentSubmenu(point: PointerPoint) {
+        if (openSubmenuPath.value.length === 0) return false;
+
+        const submenuRect = getSubmenuElement(openSubmenuPath.value)?.getBoundingClientRect();
+        return submenuRect ? isPointInRect(point, submenuRect, SAFE_TRIANGLE_PADDING) : false;
     }
 
     function getFallbackTriangleOrigin(path: ItemPath): PointerPoint | null {
@@ -400,6 +440,7 @@ export function useDropdownMenu(
         if (openSubmenuPath.value.length === 0) return false;
         if (arePathsEqual(path, openSubmenuPath.value)) return false;
         if (isPathPrefix(openSubmenuPath.value, path)) return false;
+        if (isPointInCurrentSubmenu(point)) return true;
 
         const triangle = getSafeTriangle(openSubmenuPath.value);
         return triangle ? isPointInTriangle(point, triangle) : false;
@@ -435,6 +476,11 @@ export function useDropdownMenu(
             if (!pendingHover) return;
 
             const nextHover = pendingHover;
+            if (latestPointerPoint && isPointInCurrentSubmenu(latestPointerPoint)) {
+                clearPendingHover();
+                return;
+            }
+
             commitHoveredItem(nextHover.item, nextHover.path);
         }, SAFE_TRIANGLE_TIMEOUT);
     }
@@ -450,7 +496,7 @@ export function useDropdownMenu(
         openSubmenuPath.value = [...path];
         safeTriangleOrigin.value = point ?? getFallbackTriangleOrigin(path);
         clearPendingHover();
-        if (focus) focusItem(focus, path);
+        if (focus && !focusItem(focus, path)) focusedPath.value = [...path];
     }
 
     function closeSubmenu(path: ItemPath) {
@@ -458,6 +504,7 @@ export function useDropdownMenu(
 
         openSubmenuPath.value = getParentPath(path);
         safeTriangleOrigin.value = null;
+        latestPointerPoint = null;
         clearPendingHover();
         if (isPathPrefix(path, focusedPath.value) && focusedPath.value.length > path.length) {
             focusedPath.value = [...path];
@@ -483,6 +530,7 @@ export function useDropdownMenu(
 
         const path = normalizePath(indexOrPath);
         const point = event ? getEventPoint(event) : undefined;
+        latestPointerPoint = point ?? latestPointerPoint;
 
         if (point && shouldDelayHover(path, point)) {
             delayHoveredItem(item, path);
@@ -545,6 +593,7 @@ export function useDropdownMenu(
     function onMenuKeydown(event: KeyboardEvent) {
         clearPendingHover();
         safeTriangleOrigin.value = null;
+        latestPointerPoint = null;
 
         switch (event.key) {
             case 'ArrowDown':
@@ -563,16 +612,9 @@ export function useDropdownMenu(
                 event.preventDefault();
                 focusItem('last', getParentPath(focusedPath.value));
                 break;
-            case 'ArrowRight': {
-                const item = getItemAtPath(focusedPath.value);
-                if (!item || !hasItemSubmenu(item) || item.disabled) break;
-
-                event.preventDefault();
-                openSubmenu(focusedPath.value);
-                break;
-            }
+            case 'ArrowRight':
             case 'ArrowLeft':
-                if (closeCurrentSubmenu()) event.preventDefault();
+                onMenuHorizontalKeydown(event);
                 break;
             case 'Enter':
             case ' ':
@@ -589,10 +631,37 @@ export function useDropdownMenu(
         }
     }
 
+    function onMenuHorizontalKeydown(event: KeyboardEvent) {
+        const isRight = event.key === 'ArrowRight';
+        const currentMenuPath = getParentPath(focusedPath.value);
+        const closePath =
+            focusedPath.value.length > 1
+                ? currentMenuPath
+                : arePathsEqual(focusedPath.value, openSubmenuPath.value)
+                  ? focusedPath.value
+                  : undefined;
+
+        if (closePath && isRight === isSubmenuOpeningLeft(closePath)) {
+            event.preventDefault();
+            closeSubmenu(closePath);
+            return;
+        }
+
+        const item = getItemAtPath(focusedPath.value);
+        if (!item || item.disabled || !hasItemSubmenu(item)) return;
+
+        const nextSubmenuOpensLeft = isSubmenuOpeningLeft(focusedPath.value);
+        if (isRight === nextSubmenuOpensLeft) return;
+
+        event.preventDefault();
+        openSubmenu(focusedPath.value);
+    }
+
     function onMenuMousemove(event: MouseEvent) {
+        latestPointerPoint = getEventPoint(event);
         if (!pendingHover) return;
 
-        const point = getEventPoint(event);
+        const point = latestPointerPoint;
         if (shouldDelayHover(pendingHover.path, point)) return;
 
         const nextHover = pendingHover;
@@ -602,6 +671,7 @@ export function useDropdownMenu(
     function onMenuMouseleave() {
         clearPendingHover();
         safeTriangleOrigin.value = null;
+        latestPointerPoint = null;
     }
 
     function getItemProps(
@@ -618,6 +688,7 @@ export function useDropdownMenu(
             id: getItemId(path),
             type: 'button',
             role: 'menuitem',
+            tabindex: -1,
             class: getItemClass(item, focused, disabled, hasSubmenu, submenuOpen),
             'aria-controls': hasSubmenu ? getSubmenuId(path) : undefined,
             'aria-expanded': hasSubmenu ? submenuOpen : undefined,
@@ -679,6 +750,16 @@ export function useDropdownMenu(
         } else {
             resetFocus();
         }
+    });
+
+    watch(focusedPath, (path) => {
+        if (path.length === 0) return;
+
+        const targetPath = [...path];
+        nextTick(() => {
+            if (!arePathsEqual(targetPath, focusedPath.value)) return;
+            getItemElement(targetPath)?.scrollIntoView?.({ block: 'nearest' });
+        });
     });
 
     onUnmounted(clearPendingHover);

@@ -125,8 +125,12 @@ describe('DropdownMenu', () => {
         expect(menuItems).toHaveLength(items.length);
         expect(menuItems[0].textContent).toContain('Rename');
         expect(menuItems[0].textContent).toContain('R');
+        expect(menuItems[0].getAttribute('tabindex')).toBe('-1');
         expect(menuItems[1].getAttribute('aria-disabled')).toBe('true');
         expect(menuItems[3].classList.contains('rp-dropdown-menu__item--destructive')).toBe(true);
+        expect(container.querySelector('.rp-dropdown-menu__item-wrap')?.getAttribute('role')).toBe(
+            'none',
+        );
 
         click(menuItems[0]);
         await waitDropdownTransition();
@@ -277,11 +281,112 @@ describe('DropdownMenu', () => {
         expect(moveTrigger.getAttribute('aria-expanded')).toBe('true');
         expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-0');
 
+        mousemove(menu, 200, 60);
+        await nextTick();
+
+        expect(document.getElementById('safe-menu-submenu-0')).not.toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-0');
+
         mousemove(menu, 20, 70);
         await nextTick();
 
         expect(document.getElementById('safe-menu-submenu-0')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-1');
+    });
+
+    it('keeps focus on a submenu trigger when all child items are disabled', async () => {
+        const disabledChildrenItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'move-backlog', disabled: true },
+                    { label: 'Done', value: 'move-done', disabled: true },
+                ],
+            },
+            { label: 'Archive', value: 'archive' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'disabled-children-menu',
+                            items: disabledChildrenItems,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
+
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
+
+        keydown(menu, 'ArrowLeft');
+        await nextTick();
+
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
+    });
+
+    it('uses the visual submenu direction for horizontal keyboard navigation', async () => {
+        const onSelect = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'end-menu',
+                            items: nestedItems,
+                            placement: 'bottom-end',
+                            onSelect,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(menu, 'ArrowDown');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1');
+
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+
+        keydown(menu, 'ArrowLeft');
+        await nextTick();
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1-0');
+
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1');
+        expect(onSelect).not.toHaveBeenCalled();
     });
 
     it('navigates submenus with ArrowRight and ArrowLeft', async () => {

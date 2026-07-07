@@ -31,6 +31,7 @@ export default defineComponent({
                     {
                         key: renderedItem.key,
                         class: 'rp-dropdown-menu__item-wrap',
+                        role: 'none',
                     },
                     children,
                 );

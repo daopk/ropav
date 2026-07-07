@@ -70,6 +70,7 @@ export interface DropdownMenuItemProps {
     id: string;
     type: 'button';
     role: 'menuitem';
+    tabindex: -1;
     class: string[];
     'aria-controls'?: string;
     'aria-expanded'?: boolean;
