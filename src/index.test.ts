@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import * as Ropav from './index';
 
 const publicComponents = [
+    'Badge',
     'Button',
     'ButtonGroup',
     'Card',

@@ -18,6 +18,7 @@ const expectedFiles = [
     'dist/index.js',
     'dist/base.css',
     'dist/accordion.css',
+    'dist/badge.css',
     'dist/button.css',
     'dist/button-group.css',
     'dist/card.css',
@@ -37,6 +38,7 @@ const expectedFiles = [
     'dist/textarea.css',
     'dist/tooltip.css',
     'dist/components/accordion/index.js',
+    'dist/components/badge/index.js',
     'dist/components/button/index.js',
     'dist/components/button-group/index.js',
     'dist/components/card/index.js',
@@ -93,6 +95,7 @@ try {
         [
             'Accordion',
             'AccordionItem',
+            'Badge',
             'Button',
             'ButtonGroup',
             'Card',
@@ -125,6 +128,9 @@ try {
         ['Accordion', 'AccordionItem', 'useAccordion', 'useAccordionItem'],
         'dist/components/accordion/index.js',
     );
+
+    const badge = await server.ssrLoadModule('/dist/components/badge/index.js');
+    assertExports(badge, ['Badge'], 'dist/components/badge/index.js');
 
     const button = await server.ssrLoadModule('/dist/components/button/index.js');
     assertExports(button, ['Button'], 'dist/components/button/index.js');
