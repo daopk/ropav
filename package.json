@@ -49,6 +49,10 @@
       "types": "./dist/components/input/index.d.ts",
       "import": "./dist/components/input/index.js"
     },
+    "./modal": {
+      "types": "./dist/components/modal/index.d.ts",
+      "import": "./dist/components/modal/index.js"
+    },
     "./popover": {
       "types": "./dist/components/popover/index.d.ts",
       "import": "./dist/components/popover/index.js"

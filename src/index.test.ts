@@ -9,6 +9,7 @@ const publicComponents = [
     'Field',
     'IconButton',
     'Input',
+    'Modal',
     'Popover',
     'Radio',
     'RadioGroup',
