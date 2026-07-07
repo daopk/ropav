@@ -65,6 +65,10 @@
       "types": "./dist/components/textarea/index.d.ts",
       "import": "./dist/components/textarea/index.js"
     },
+    "./tooltip": {
+      "types": "./dist/components/tooltip/index.d.ts",
+      "import": "./dist/components/tooltip/index.js"
+    },
     "./base.css": "./dist/base.css",
     "./scss/*": "./src/styles/*"
   },

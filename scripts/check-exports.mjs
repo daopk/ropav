@@ -28,6 +28,7 @@ const expectedFiles = [
     'dist/select.css',
     'dist/switch.css',
     'dist/textarea.css',
+    'dist/tooltip.css',
     'dist/components/button/index.js',
     'dist/components/button-group/index.js',
     'dist/components/card/index.js',
@@ -39,6 +40,7 @@ const expectedFiles = [
     'dist/components/select/index.js',
     'dist/components/switch/index.js',
     'dist/components/textarea/index.js',
+    'dist/components/tooltip/index.js',
 ];
 
 for (const file of expectedFiles) {
@@ -87,6 +89,7 @@ try {
             'Select',
             'Switch',
             'Textarea',
+            'Tooltip',
         ],
         'dist/index.js',
     );
@@ -111,6 +114,9 @@ try {
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');
+
+    const tooltip = await server.ssrLoadModule('/dist/components/tooltip/index.js');
+    assertExports(tooltip, ['Tooltip'], 'dist/components/tooltip/index.js');
 } finally {
     await server.close();
 }
