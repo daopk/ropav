@@ -5,6 +5,7 @@ import {
     onBeforeUnmount,
     onMounted,
     ref,
+    useSlots,
     useId,
     watch,
     type CSSProperties,
@@ -98,6 +99,7 @@ function queryPanelElement(panel: HTMLElement, selector: string) {
 }
 
 export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: boolean) => void) {
+    const slots = useSlots();
     const generatedId = useId();
     const panelRef = ref<HTMLElement | null>(null);
     const uncontrolledOpen = ref(Boolean(props.defaultOpen));
@@ -117,6 +119,26 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     const isPresetSize = computed(() => isModalPresetSize(size.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const shouldRender = computed(() => Boolean(props.keepMounted || isOpen.value));
+    const hasCustomHeader = computed(() => Boolean(slots.header));
+    const hasHeader = computed(() =>
+        Boolean(hasCustomHeader.value || props.title || props.description),
+    );
+    const hasFooter = computed(() => Boolean(slots.footer));
+    const showCloseButton = computed(() => props.showCloseButton);
+
+    const headerId = computed(() =>
+        hasCustomHeader.value && !props.ariaLabel ? titleId.value : undefined,
+    );
+    const ariaLabelledby = computed(() => {
+        if (props.ariaLabel) return undefined;
+        return hasCustomHeader.value || props.title ? titleId.value : undefined;
+    });
+    const ariaDescribedby = computed(() =>
+        props.description && !hasCustomHeader.value ? descriptionId.value : undefined,
+    );
+    const ariaLabel = computed(() =>
+        ariaLabelledby.value ? undefined : props.ariaLabel || undefined,
+    );
 
     const rootClass = computed(() =>
         bem('rp-modal', {
@@ -133,6 +155,11 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
             '--_rp-modal-width': size.value,
         };
     });
+
+    const stateClass = computed(() => ({
+        'rp-modal--closable': showCloseButton.value,
+        'rp-modal--headerless': !hasHeader.value,
+    }));
 
     const slotProps = computed<ModalSlotProps>(() => ({
         isOpen: isOpen.value,
@@ -314,8 +341,16 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         role,
         isOpen,
         shouldRender,
+        hasHeader,
+        hasFooter,
+        showCloseButton,
+        headerId,
+        ariaLabelledby,
+        ariaDescribedby,
+        ariaLabel,
         rootClass,
         rootStyle,
+        stateClass,
         slotProps,
         openModal,
         closeModal,

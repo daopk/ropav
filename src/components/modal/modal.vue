@@ -62,7 +62,6 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, useSlots } from 'vue';
 import IconX from '~icons/lucide/x';
 import IconButton from '../icon-button/icon-button.vue';
 import Overlay from '../overlay/overlay.vue';
@@ -94,8 +93,6 @@ const emit = defineEmits<{
     'update:open': [value: boolean];
 }>();
 
-const slots = useSlots();
-
 const {
     panelRef,
     modalId,
@@ -104,37 +101,22 @@ const {
     role,
     isOpen,
     shouldRender,
+    hasHeader,
+    hasFooter,
+    showCloseButton,
+    headerId,
+    ariaLabelledby,
+    ariaDescribedby,
+    ariaLabel,
     rootClass,
     rootStyle,
+    stateClass,
     slotProps,
     closeModal,
     onOverlayClick,
 } = useModal(props, (open) => {
     emit('update:open', open);
 });
-
-const hasCustomHeader = computed(() => Boolean(slots.header));
-const hasHeader = computed(() =>
-    Boolean(hasCustomHeader.value || props.title || props.description),
-);
-const hasFooter = computed(() => Boolean(slots.footer));
-const showCloseButton = computed(() => props.showCloseButton);
-
-const headerId = computed(() =>
-    hasCustomHeader.value && !props.ariaLabel ? titleId.value : undefined,
-);
-const ariaLabelledby = computed(() => {
-    if (props.ariaLabel) return undefined;
-    return hasCustomHeader.value || props.title ? titleId.value : undefined;
-});
-const ariaDescribedby = computed(() =>
-    props.description && !hasCustomHeader.value ? descriptionId.value : undefined,
-);
-const ariaLabel = computed(() => (ariaLabelledby.value ? undefined : props.ariaLabel || undefined));
-const stateClass = computed(() => ({
-    'rp-modal--closable': showCloseButton.value,
-    'rp-modal--headerless': !hasHeader.value,
-}));
 
 void panelRef;
 </script>
