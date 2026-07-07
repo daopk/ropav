@@ -1,9 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import Button from '../button/button.vue';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuItem } from './types';
 
 const placements = ['bottom-start', 'bottom-end', 'top-start', 'top-end'] as const;
+const SAFE_TRIANGLE_STORY_PADDING = 8;
+const StoryDropdownMenu = DropdownMenu as any;
+
+type StoryPoint = {
+    x: number;
+    y: number;
+};
 
 const defaultItems = [
     { label: 'Rename', value: 'rename', shortcut: 'R' },
@@ -41,6 +49,83 @@ const submenuItems: DropdownMenuItem[] = [
     { label: 'Delete', value: 'delete', destructive: true },
 ];
 
+const safeTriangleItems: DropdownMenuItem[] = [
+    {
+        label: 'Move to',
+        value: 'move',
+        children: [
+            { label: 'Backlog', value: 'move-backlog' },
+            { label: 'In progress', value: 'move-progress' },
+            { label: 'Done', value: 'move-done' },
+        ],
+    },
+    {
+        label: 'Share with',
+        value: 'share',
+        children: [
+            { label: 'Copy public link', value: 'share-link' },
+            { label: 'Invite teammate', value: 'share-teammate' },
+            { label: 'Publish to workspace', value: 'share-workspace' },
+        ],
+    },
+    {
+        label: 'Change status',
+        value: 'status',
+        children: [
+            { label: 'Needs review', value: 'status-review' },
+            { label: 'Approved', value: 'status-approved' },
+            { label: 'Blocked', value: 'status-blocked' },
+        ],
+    },
+    {
+        label: 'Export as',
+        value: 'export',
+        children: [
+            { label: 'PDF', value: 'export-pdf' },
+            { label: 'CSV', value: 'export-csv' },
+            { label: 'Markdown', value: 'export-markdown' },
+        ],
+    },
+    {
+        label: 'Copy to',
+        value: 'copy',
+        children: [
+            { label: 'Personal folder', value: 'copy-personal' },
+            { label: 'Team folder', value: 'copy-team' },
+            { label: 'Archive folder', value: 'copy-archive' },
+        ],
+    },
+    { label: 'Delete', value: 'delete', destructive: true },
+];
+
+function getSafeTriangleStoryPoints(
+    stage: HTMLElement,
+    item: HTMLElement,
+    submenu: HTMLElement,
+    origin: StoryPoint,
+) {
+    const stageRect = stage.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const submenuRect = submenu.getBoundingClientRect();
+    const opensRight = submenuRect.left >= itemRect.right;
+    const edgeX = opensRight ? submenuRect.left : submenuRect.right;
+    const points: StoryPoint[] = [
+        origin,
+        {
+            x: edgeX,
+            y: submenuRect.top - SAFE_TRIANGLE_STORY_PADDING,
+        },
+        {
+            x: edgeX,
+            y: submenuRect.bottom + SAFE_TRIANGLE_STORY_PADDING,
+        },
+    ];
+
+    return points
+        .map((point) => `${point.x - stageRect.left},${point.y - stageRect.top}`)
+        .join(' ');
+}
+
 const meta = {
     title: 'Components/DropdownMenu',
     component: DropdownMenu as any,
@@ -71,7 +156,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
     render: (args) => ({
-        components: { Button, DropdownMenu },
+        components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args }),
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
@@ -87,7 +172,7 @@ export const Basic: Story = {
 
 export const Placements: Story = {
     render: (args) => ({
-        components: { Button, DropdownMenu },
+        components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args, placements }),
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 760px; place-items: center; padding: 96px 112px;">
@@ -120,7 +205,7 @@ export const Placements: Story = {
 
 export const CustomItem: Story = {
     render: (args) => ({
-        components: { Button, DropdownMenu },
+        components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args }),
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
@@ -148,11 +233,99 @@ export const Submenus: Story = {
         items: submenuItems,
     },
     render: (args) => ({
-        components: { Button, DropdownMenu },
+        components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args }),
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 460px; place-items: center; padding: 112px;">
                 <DropdownMenu v-bind="args" aria-label="Project actions">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">Actions</Button>
+                    </template>
+                </DropdownMenu>
+            </div>
+        `,
+    }),
+};
+
+export const SafeTriangle: Story = {
+    args: {
+        items: safeTriangleItems,
+    },
+    render: (args) => ({
+        components: { Button, DropdownMenu: StoryDropdownMenu },
+        setup: () => {
+            const stageRef = ref<HTMLElement | null>(null);
+            const trianglePoints = ref('');
+            let triangleOrigin: StoryPoint | null = null;
+            let triangleSubmenuId = '';
+
+            function hideTriangle() {
+                triangleOrigin = null;
+                triangleSubmenuId = '';
+                trianglePoints.value = '';
+            }
+
+            function updateTriangle(event: MouseEvent) {
+                const stage = stageRef.value;
+                const item = stage?.querySelector<HTMLElement>('.rp-dropdown-menu__item--open');
+                const submenu = stage?.querySelector<HTMLElement>('.rp-dropdown-menu__submenu');
+
+                if (!stage || !item || !submenu) {
+                    hideTriangle();
+                    return;
+                }
+
+                if (!triangleOrigin || triangleSubmenuId !== submenu.id) {
+                    triangleOrigin = {
+                        x: event.clientX,
+                        y: event.clientY,
+                    };
+                    triangleSubmenuId = submenu.id;
+                }
+
+                trianglePoints.value = getSafeTriangleStoryPoints(
+                    stage,
+                    item,
+                    submenu,
+                    triangleOrigin,
+                );
+            }
+
+            return {
+                args,
+                hideTriangle,
+                safeTriangleItems,
+                stageRef,
+                trianglePoints,
+                updateTriangle,
+            };
+        },
+        template: `
+            <div
+                ref="stageRef"
+                style="box-sizing: border-box; position: relative; display: grid; min-height: 460px; place-items: center; overflow: visible; padding: 112px;"
+                @mousemove="updateTriangle"
+                @mouseleave="hideTriangle"
+            >
+                <svg
+                    v-if="trianglePoints"
+                    aria-hidden="true"
+                    style="position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; pointer-events: none;"
+                >
+                    <polygon
+                        :points="trianglePoints"
+                        fill="rgba(14, 165, 233, 0.18)"
+                        stroke="rgb(14, 165, 233)"
+                        stroke-width="1.5"
+                    />
+                </svg>
+                <DropdownMenu
+                    v-bind="args"
+                    :items="safeTriangleItems"
+                    :open="true"
+                    aria-label="Project actions"
+                    style="position: relative; z-index: 2;"
+                >
                     <template #default="{ triggerProps }">
                         <Button v-bind="triggerProps" variant="outline">Actions</Button>
                     </template>

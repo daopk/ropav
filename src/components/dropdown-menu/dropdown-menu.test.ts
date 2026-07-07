@@ -16,6 +16,42 @@ async function waitDropdownTransition() {
     await waitTransition();
 }
 
+function createRect(left: number, top: number, right: number, bottom: number): DOMRect {
+    return {
+        bottom,
+        height: bottom - top,
+        left,
+        right,
+        top,
+        width: right - left,
+        x: left,
+        y: top,
+        toJSON: () => ({}),
+    } as DOMRect;
+}
+
+function mouseenter(el: Element, clientX: number, clientY: number) {
+    el.dispatchEvent(
+        new MouseEvent('mouseenter', {
+            bubbles: false,
+            cancelable: true,
+            clientX,
+            clientY,
+        }),
+    );
+}
+
+function mousemove(el: Element, clientX: number, clientY: number) {
+    el.dispatchEvent(
+        new MouseEvent('mousemove', {
+            bubbles: true,
+            cancelable: true,
+            clientX,
+            clientY,
+        }),
+    );
+}
+
 describe('DropdownMenu', () => {
     const items: DropdownMenuItem[] = [
         { label: 'Rename', value: 'rename', shortcut: 'R' },
@@ -189,6 +225,63 @@ describe('DropdownMenu', () => {
 
         expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1]);
         expect(container.querySelector('[role="menu"]')).toBeNull();
+    });
+
+    it('keeps submenus open while the pointer crosses the safe triangle', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'safe-menu',
+                            items: [
+                                {
+                                    label: 'Move to',
+                                    value: 'move',
+                                    children: [
+                                        { label: 'Backlog', value: 'move-backlog' },
+                                        { label: 'Done', value: 'move-done' },
+                                    ],
+                                },
+                                { label: 'Archive', value: 'archive' },
+                            ],
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const moveTrigger = document.getElementById('safe-menu-item-0') as HTMLButtonElement;
+        const archiveItem = document.getElementById('safe-menu-item-1') as HTMLButtonElement;
+
+        mouseenter(moveTrigger, 170, 20);
+        await nextTick();
+
+        const submenu = document.getElementById('safe-menu-submenu-0') as HTMLElement;
+        moveTrigger.getBoundingClientRect = vi.fn(() => createRect(0, 0, 180, 40));
+        submenu.getBoundingClientRect = vi.fn(() => createRect(188, 0, 368, 120));
+
+        mouseenter(archiveItem, 181, 50);
+        await nextTick();
+
+        expect(document.getElementById('safe-menu-submenu-0')).not.toBeNull();
+        expect(moveTrigger.getAttribute('aria-expanded')).toBe('true');
+        expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-0');
+
+        mousemove(menu, 20, 70);
+        await nextTick();
+
+        expect(document.getElementById('safe-menu-submenu-0')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('safe-menu-item-1');
     });
 
     it('navigates submenus with ArrowRight and ArrowLeft', async () => {

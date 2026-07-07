@@ -39,6 +39,8 @@ export interface DropdownMenuContentProps {
     'aria-label'?: string;
     'aria-activedescendant'?: string;
     onKeydown: (event: KeyboardEvent) => void;
+    onMousemove: (event: MouseEvent) => void;
+    onMouseleave: (event: MouseEvent) => void;
 }
 
 export interface DropdownMenuSlotProps {
