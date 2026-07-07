@@ -88,8 +88,10 @@ export function useTooltip(
     const placement = computed(() => props.placement ?? 'top');
     const isTargetMode = computed(() => props.target != null && props.target !== '');
     const hasContent = computed(() => Boolean(props.content || slots.content));
+    const isDecorative = computed(() => Boolean(props.decorative));
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
     const shouldRenderContent = computed(() => !isDisabled.value);
+    const shouldDescribeContent = computed(() => shouldRenderContent.value && !isDecorative.value);
 
     const { isOpen, open, closeImmediate } = useDelayedOpen({
         open: () => props.open,
@@ -112,8 +114,11 @@ export function useTooltip(
     );
 
     const triggerProps = computed<TooltipTriggerProps>(() => ({
-        'aria-describedby': shouldRenderContent.value ? tooltipId.value : undefined,
+        'aria-describedby': shouldDescribeContent.value ? tooltipId.value : undefined,
     }));
+
+    const contentRole = computed(() => (isDecorative.value ? undefined : 'tooltip'));
+    const contentAriaHidden = computed(() => (isDecorative.value ? 'true' : undefined));
 
     const contentStyle = computed<CSSProperties | undefined>(() => {
         const style: CSSProperties = {
@@ -182,7 +187,7 @@ export function useTooltip(
     function syncTargetDescription() {
         restoreTargetDescription();
 
-        if (!isTargetMode.value || !shouldRenderContent.value || !targetElement.value) return;
+        if (!isTargetMode.value || !shouldDescribeContent.value || !targetElement.value) return;
 
         describedTarget = targetElement.value;
         previousTargetDescribedby = describedTarget.getAttribute('aria-describedby');
@@ -289,7 +294,7 @@ export function useTooltip(
         { flush: 'post' },
     );
 
-    watch([isTargetMode, shouldRenderContent, tooltipId], () => {
+    watch([isTargetMode, shouldDescribeContent, tooltipId], () => {
         if (isMounted) syncTargetDescription();
     });
 
@@ -328,6 +333,8 @@ export function useTooltip(
         shouldRenderContent,
         rootClass,
         triggerProps,
+        contentRole,
+        contentAriaHidden,
         contentStyle,
         openTooltip,
         closeTooltip,

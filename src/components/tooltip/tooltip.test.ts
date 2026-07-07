@@ -114,6 +114,39 @@ describe('Tooltip', () => {
         ]);
     });
 
+    it('renders decorative content without accessible trigger wiring', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {
+                            content: 'Visual value',
+                            decorative: true,
+                            id: 'decorative-tooltip',
+                            open: true,
+                        },
+                        {
+                            default: ({ triggerProps }: TooltipSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Value'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const tooltip = container.querySelector('.rp-tooltip__content') as HTMLElement;
+
+        expect(trigger.getAttribute('aria-describedby')).toBeNull();
+        expect(tooltip.id).toBe('decorative-tooltip');
+        expect(tooltip.getAttribute('role')).toBeNull();
+        expect(tooltip.getAttribute('aria-hidden')).toBe('true');
+        expect(tooltip.textContent).toBe('Visual value');
+    });
+
     it('keeps arrow disabled by default and enables it through the arrow prop', () => {
         const props = reactive<TooltipProps>({
             content: 'Arrow help',
@@ -341,6 +374,39 @@ describe('Tooltip', () => {
         await waitTransition();
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
         expect(tooltip.style.display).toBe('none');
+    });
+
+    it('does not add descriptions to selector targets when decorative', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            'button',
+                            { id: 'decorative-target', 'aria-describedby': 'existing-help' },
+                            'Selector target',
+                        ),
+                        h(Tooltip, {
+                            content: 'Decorative help',
+                            decorative: true,
+                            id: 'decorative-target-tooltip',
+                            target: '#decorative-target',
+                            open: true,
+                        }),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const target = container.querySelector('#decorative-target') as HTMLButtonElement;
+        const tooltip = container.querySelector('.rp-tooltip__content') as HTMLElement;
+
+        expect(target.getAttribute('aria-describedby')).toBe('existing-help');
+        expect(tooltip.getAttribute('role')).toBeNull();
+        expect(tooltip.getAttribute('aria-hidden')).toBe('true');
+        expect(tooltip.textContent).toBe('Decorative help');
     });
 
     it('supports HTMLElement and ref object targets', async () => {

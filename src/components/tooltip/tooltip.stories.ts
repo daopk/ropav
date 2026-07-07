@@ -22,6 +22,7 @@ const meta = {
         openDelay: { control: 'number' },
         arrow: { control: 'boolean' },
         disabled: { control: 'boolean' },
+        decorative: { control: 'boolean' },
         offset: { control: 'object' },
         target: { control: false },
     },
@@ -31,6 +32,7 @@ const meta = {
         openDelay: 300,
         arrow: false,
         disabled: false,
+        decorative: false,
     },
     parameters: {
         layout: 'fullscreen',

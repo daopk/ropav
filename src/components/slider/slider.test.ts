@@ -165,11 +165,13 @@ describe('Slider', () => {
 
         const root = container.querySelector('.rp-slider') as HTMLElement;
         const native = container.querySelector('input') as HTMLInputElement;
+        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-slider', 'rp-slider--vertical']);
         expect(native.getAttribute('orient')).toBe('vertical');
         expect(native.getAttribute('aria-orientation')).toBe('vertical');
         expect(root.style.getPropertyValue('--_rp-slider-percent')).toBe('50%');
+        expect(tooltip.classList.contains('rp-tooltip--placement-left')).toBe(true);
     });
 
     it('renders the current normalized value in the thumb tooltip', async () => {
@@ -189,9 +191,14 @@ describe('Slider', () => {
         await flush();
 
         const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
-        const tooltipContent = container.querySelector('.rp-slider__tooltip-content')!;
+        const tooltipContent = tooltip.querySelector('.rp-tooltip__content') as HTMLElement;
 
-        expect(tooltip.getAttribute('aria-hidden')).toBe('true');
+        expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--placement-top')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(true);
+        expect(tooltipContent.getAttribute('role')).toBeNull();
+        expect(tooltipContent.getAttribute('aria-hidden')).toBe('true');
+        expect(tooltipContent.style.display).toBe('none');
         expect(tooltipContent.textContent).toBe('50');
     });
 
@@ -210,7 +217,7 @@ describe('Slider', () => {
         await flush();
 
         const native = container.querySelector('input') as HTMLInputElement;
-        const tooltipContent = container.querySelector('.rp-slider__tooltip-content')!;
+        const tooltipContent = container.querySelector('.rp-tooltip__content')!;
 
         expect(native.getAttribute('aria-valuetext')).toBe('44%');
         expect(tooltipContent.textContent).toBe('44%');
@@ -232,7 +239,7 @@ describe('Slider', () => {
         await flush();
 
         const native = container.querySelector('input') as HTMLInputElement;
-        const tooltipContent = container.querySelector('.rp-slider__tooltip-content')!;
+        const tooltipContent = container.querySelector('.rp-tooltip__content')!;
 
         expect(native.getAttribute('aria-valuetext')).toBe('44 percent selected');
         expect(tooltipContent.textContent).toBe('44%');
@@ -270,9 +277,11 @@ describe('Slider', () => {
         await flush();
 
         const root = container.querySelector('.rp-slider')!;
-        const tooltipContent = container.querySelector('.rp-slider__tooltip-content')!;
+        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
+        const tooltipContent = tooltip.querySelector('.rp-tooltip__content')!;
 
         expect(root.classList.contains('rp-slider--tooltip-always-visible')).toBe(true);
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
         expect(tooltipContent.textContent).toBe('44');
     });
 

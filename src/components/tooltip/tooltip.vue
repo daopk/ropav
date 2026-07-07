@@ -15,7 +15,8 @@
                 v-show="isVisible"
                 :id="tooltipId"
                 class="rp-tooltip__content"
-                role="tooltip"
+                :role="contentRole"
+                :aria-hidden="contentAriaHidden"
                 :style="contentStyle"
             >
                 <slot name="content">{{ content }}</slot>
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<TooltipProps>(), {
     openDelay: 300,
     arrow: false,
     disabled: false,
+    decorative: false,
 });
 
 const emit = defineEmits<{
@@ -50,6 +52,8 @@ const {
     shouldRenderContent,
     rootClass,
     triggerProps,
+    contentRole,
+    contentAriaHidden,
     contentStyle,
     openTooltip,
     closeTooltip,

@@ -17,7 +17,14 @@
                 />
             </span>
         </span>
-        <span class="rp-slider__track">
+        <span
+            class="rp-slider__track"
+            @mouseenter="openTooltip"
+            @mouseleave="closeTooltip"
+            @focusin="openTooltip"
+            @focusout="closeTooltip"
+            @keydown="onTooltipKeydown"
+        >
             <span class="rp-slider__bar" aria-hidden="true" />
 
             <input
@@ -68,14 +75,24 @@
                 </span>
             </span>
 
-            <span v-if="tooltipVisible" class="rp-slider__tooltip" aria-hidden="true">
-                <span class="rp-slider__tooltip-content">{{ formattedValue }}</span>
-            </span>
+            <Tooltip
+                v-if="tooltipVisible"
+                class="rp-slider__tooltip"
+                :content="tooltipContent"
+                :placement="tooltipPlacement"
+                :open="tooltipOpen"
+                :open-delay="0"
+                arrow
+                decorative
+            >
+                <span class="rp-slider__tooltip-anchor" aria-hidden="true" />
+            </Tooltip>
         </span>
     </label>
 </template>
 
 <script lang="ts" setup vapor>
+import Tooltip from '../tooltip/tooltip.vue';
 import type { SliderProps } from './types';
 import { useSlider } from './useSlider';
 
@@ -111,7 +128,13 @@ const {
     markItems,
     trackStyle,
     tooltipVisible,
+    tooltipOpen,
+    tooltipPlacement,
+    tooltipContent,
     onInput,
+    openTooltip,
+    closeTooltip,
+    onTooltipKeydown,
 } = useSlider(props, (value) => {
     emit('update:modelValue', value);
 });

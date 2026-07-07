@@ -33,4 +33,5 @@ export interface TooltipProps {
     openDelay?: number;
     arrow?: boolean;
     disabled?: boolean;
+    decorative?: boolean;
 }

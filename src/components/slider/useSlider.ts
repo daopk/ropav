@@ -1,4 +1,4 @@
-import { computed, type CSSProperties } from 'vue';
+import { computed, ref, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { sliderColors } from './types';
@@ -186,6 +186,7 @@ function getSliderAriaValueText(
 
 export function useSlider(props: SliderStateProps, emitUpdate: (value: number) => void) {
     const control = useControlState(props);
+    const hoveredTooltipOpen = ref(false);
 
     const bounds = computed(() => normalizeSliderBounds(props.min, props.max));
     const nativeStep = computed(() => normalizeSliderStep(props.step));
@@ -218,6 +219,13 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
     const tooltipVisible = computed(() => props.tooltip !== false);
     const tooltipAlwaysVisible = computed(() => props.tooltip === 'always');
+    const tooltipOpen = computed(
+        () =>
+            tooltipAlwaysVisible.value ||
+            (props.tooltip === 'hover' && hoveredTooltipOpen.value && !control.disabled),
+    );
+    const tooltipPlacement = computed(() => (props.orientation === 'vertical' ? 'left' : 'top'));
+    const tooltipContent = computed(() => String(formattedValue.value));
 
     const rootClass = computed(() =>
         bem('rp-slider', {
@@ -251,6 +259,20 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         );
     }
 
+    function openTooltip() {
+        if (props.tooltip === 'hover' && !control.disabled) {
+            hoveredTooltipOpen.value = true;
+        }
+    }
+
+    function closeTooltip() {
+        hoveredTooltipOpen.value = false;
+    }
+
+    function onTooltipKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape') closeTooltip();
+    }
+
     return {
         control,
         nativeMin: computed(() => bounds.value.min),
@@ -264,6 +286,12 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         markItems,
         trackStyle,
         tooltipVisible,
+        tooltipOpen,
+        tooltipPlacement,
+        tooltipContent,
         onInput,
+        openTooltip,
+        closeTooltip,
+        onTooltipKeydown,
     };
 }
