@@ -341,7 +341,7 @@ describe('DropdownMenu', () => {
         moveTrigger.getBoundingClientRect = vi.fn(() => createRect(0, 0, 180, 40));
         submenu.getBoundingClientRect = vi.fn(() => createRect(188, 0, 368, 120));
 
-        mouseenter(archiveItem, 181, 50);
+        mouseenter(archiveItem, 168, 50);
         await nextTick();
 
         expect(document.getElementById('safe-menu-submenu-0')).not.toBeNull();

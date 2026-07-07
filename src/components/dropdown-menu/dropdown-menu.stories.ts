@@ -6,6 +6,7 @@ import type { DropdownMenuItem } from './types';
 
 const placements = ['bottom-start', 'bottom-end', 'top-start', 'top-end'] as const;
 const SAFE_TRIANGLE_STORY_PADDING = 8;
+const SAFE_TRIANGLE_STORY_ORIGIN_OFFSET = 12;
 const StoryDropdownMenu = DropdownMenu as any;
 
 type StoryPoint = {
@@ -109,8 +110,14 @@ function getSafeTriangleStoryPoints(
     const submenuRect = submenu.getBoundingClientRect();
     const opensRight = submenuRect.left >= itemRect.right;
     const edgeX = opensRight ? submenuRect.left : submenuRect.right;
+    const expandedOrigin = {
+        x:
+            origin.x +
+            (opensRight ? -SAFE_TRIANGLE_STORY_ORIGIN_OFFSET : SAFE_TRIANGLE_STORY_ORIGIN_OFFSET),
+        y: origin.y,
+    };
     const points: StoryPoint[] = [
-        origin,
+        expandedOrigin,
         {
             x: edgeX,
             y: submenuRect.top - SAFE_TRIANGLE_STORY_PADDING,

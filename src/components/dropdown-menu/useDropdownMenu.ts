@@ -19,6 +19,7 @@ import type {
 const DEFAULT_PLACEMENT: DropdownMenuPlacement = 'bottom-start';
 const DEFAULT_FOCUS_TARGET: DropdownMenuFocusTarget = 'first';
 const SAFE_TRIANGLE_PADDING = 8;
+const SAFE_TRIANGLE_ORIGIN_OFFSET = 12;
 const SAFE_TRIANGLE_TIMEOUT = 500;
 
 type ItemPath = number[];
@@ -422,9 +423,13 @@ export function useDropdownMenu(
 
         const opensRight = !itemRect || submenuRect.left >= itemRect.right;
         const edgeX = opensRight ? submenuRect.left : submenuRect.right;
+        const expandedOrigin = {
+            x: origin.x + (opensRight ? -SAFE_TRIANGLE_ORIGIN_OFFSET : SAFE_TRIANGLE_ORIGIN_OFFSET),
+            y: origin.y,
+        };
 
         return [
-            origin,
+            expandedOrigin,
             {
                 x: edgeX,
                 y: submenuRect.top - SAFE_TRIANGLE_PADDING,
