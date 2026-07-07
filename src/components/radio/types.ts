@@ -1,13 +1,7 @@
 import type { InjectionKey } from 'vue';
+import type { ComponentColorValue } from '../../utils/componentColors';
 
-export type RadioColor =
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'neutral';
+export type RadioColor = ComponentColorValue;
 
 export type RadioSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

@@ -1,6 +1,7 @@
 <template>
     <button
         :class="rootClass"
+        :style="rootStyle"
         :disabled="disabled || loading || undefined"
         :type="type"
         :aria-busy="loading || undefined"
@@ -27,8 +28,10 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
+import { isComponentPresetColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { ButtonProps } from './types';
+import { getButtonColorStyle } from './useButtonColor';
 
 defineOptions({ name: 'RpButton' });
 
@@ -41,12 +44,14 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 const rootClass = computed(() =>
     bem('rp-button', {
         [props.variant ?? '']: Boolean(props.variant),
-        [`color-${props.color}`]: Boolean(props.color),
+        [`color-${props.color}`]: isComponentPresetColor(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
         loading: props.loading,
     }),
 );
+
+const rootStyle = computed(() => getButtonColorStyle(props.color));
 </script>
 
 <style src="./button.scss" lang="scss" scoped></style>

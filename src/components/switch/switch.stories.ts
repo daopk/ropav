@@ -12,8 +12,7 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         color: {
-            control: 'select',
-            options: [undefined, ...colors],
+            control: 'text',
         },
         size: {
             control: 'select',
@@ -97,6 +96,13 @@ export const Colors: Story = {
             </div>
         `,
     }),
+};
+
+export const CustomColor: Story = {
+    args: {
+        color: '#ff3366',
+        modelValue: true,
+    },
 };
 
 export const Disabled: Story = {

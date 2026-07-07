@@ -188,12 +188,37 @@ describe('IconButton', () => {
 
         expect(buttons).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...buttons[index].classList]).toEqual([
+            const button = buttons[index] as HTMLElement;
+
+            expect([...button.classList]).toEqual([
                 'rp-button',
                 `rp-button--color-${color}`,
                 'rp-icon-button',
             ]);
+            expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables for arbitrary color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(IconButton, {
+                        ariaLabel: 'Custom',
+                        color: '#ff3366',
+                        variant: 'ghost',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost', 'rp-icon-button']);
+        expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-custom-fg')).toBe('#ff3366');
     });
 
     it('adds a radius modifier for each supported radius', async () => {

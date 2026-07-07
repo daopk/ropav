@@ -167,15 +167,48 @@ describe('Tooltip', () => {
         await flush();
 
         const roots = [...container.querySelectorAll('.rp-tooltip')] as HTMLElement[];
+        const contents = [...container.querySelectorAll('[role="tooltip"]')] as HTMLElement[];
 
         expect(roots).toHaveLength(colors.length);
+        expect(contents).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
             expect([...roots[index].classList]).toEqual([
                 'rp-tooltip',
                 'rp-tooltip--placement-top',
                 `rp-tooltip--color-${color}`,
             ]);
+            expect(contents[index].style.getPropertyValue('--_rp-tooltip-bg')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables for arbitrary color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {
+                            color: '#ff3366',
+                            content: 'Custom help',
+                        },
+                        {
+                            default: () => h('button', 'Custom'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const content = container.querySelector('[role="tooltip"]') as HTMLElement;
+
+        expect([...root.classList]).toEqual(['rp-tooltip', 'rp-tooltip--placement-top']);
+        expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#ff3366');
+        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe(
+            'var(--rp-color-on-primary)',
+        );
     });
 
     it('applies numeric and axis object offsets as content style variables', async () => {

@@ -1,6 +1,7 @@
 <template>
     <label
         :class="rootClass"
+        :style="rootStyle"
         :data-disabled="control.disabled || undefined"
         :data-state="indeterminate ? 'indeterminate' : modelValue ? 'checked' : 'unchecked'"
     >
@@ -52,7 +53,7 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { control, rootClass, onChange } = useCheckbox(props, (value) => {
+const { control, rootClass, rootStyle, onChange } = useCheckbox(props, (value) => {
     emit('update:modelValue', value);
 });
 </script>

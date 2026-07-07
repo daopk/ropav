@@ -19,8 +19,7 @@ const meta = {
             options: [undefined, ...variants],
         },
         color: {
-            control: 'select',
-            options: [undefined, ...colors],
+            control: 'text',
         },
         size: {
             control: 'select',
@@ -134,6 +133,18 @@ export const Colors: Story = {
                 </div>
             </div>
         `,
+    }),
+};
+
+export const CustomColor: Story = {
+    args: {
+        color: '#ff3366',
+        variant: 'solid',
+    },
+    render: (args) => ({
+        components: { Button },
+        setup: () => ({ args }),
+        template: '<Button v-bind="args">Custom color</Button>',
     }),
 };
 

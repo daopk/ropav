@@ -252,11 +252,39 @@ describe('Button', () => {
 
         expect(buttons).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...buttons[index].classList]).toEqual([
-                'rp-button',
-                `rp-button--color-${color}`,
-            ]);
+            const button = buttons[index] as HTMLElement;
+
+            expect([...button.classList]).toEqual(['rp-button', `rp-button--color-${color}`]);
+            expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables for arbitrary color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            color: '#ff3366',
+                            variant: 'solid',
+                        },
+                        { default: () => 'Custom' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
+        expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-custom-fg')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-custom-on')).toBe(
+            'var(--rp-color-on-primary)',
+        );
     });
 
     it('adds size modifiers when requested', async () => {

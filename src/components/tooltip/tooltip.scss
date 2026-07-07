@@ -2,8 +2,8 @@
     --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
     --_rp-tooltip-cross-axis-offset: 0px;
     --_rp-tooltip-arrow-size: 0.5rem;
-    --_rp-tooltip-bg: var(--rp-color-surface-inverted);
-    --_rp-tooltip-fg: var(--rp-color-text-inverted);
+    --_rp-tooltip-bg: var(--_rp-tooltip-custom-bg, var(--rp-color-surface-inverted));
+    --_rp-tooltip-fg: var(--_rp-tooltip-custom-fg, var(--rp-color-text-inverted));
 
     position: relative;
     display: inline-flex;

@@ -1,11 +1,6 @@
-export type CheckboxColor =
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'neutral';
+import type { ComponentColorValue } from '../../utils/componentColors';
+
+export type CheckboxColor = ComponentColorValue;
 
 export type CheckboxSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

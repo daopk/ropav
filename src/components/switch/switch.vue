@@ -1,6 +1,7 @@
 <template>
     <label
         :class="rootClass"
+        :style="rootStyle"
         :data-disabled="control.disabled || undefined"
         :data-state="modelValue ? 'checked' : 'unchecked'"
     >
@@ -46,7 +47,7 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { control, rootClass, onChange } = useSwitch(props, (value) => {
+const { control, rootClass, rootStyle, onChange } = useSwitch(props, (value) => {
     emit('update:modelValue', value);
 });
 </script>

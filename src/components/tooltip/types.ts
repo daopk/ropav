@@ -1,15 +1,9 @@
 import type { Ref } from 'vue';
+import type { ComponentColorValue } from '../../utils/componentColors';
 
 export type TooltipPlacement = 'top' | 'right' | 'bottom' | 'left';
 
-export type TooltipColor =
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'neutral';
+export type TooltipColor = ComponentColorValue;
 
 export type TooltipTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
 

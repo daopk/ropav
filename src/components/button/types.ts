@@ -1,11 +1,6 @@
-export type ButtonColor =
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'neutral';
+import type { ComponentColorValue } from '../../utils/componentColors';
+
+export type ButtonColor = ComponentColorValue;
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

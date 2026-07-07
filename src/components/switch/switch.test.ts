@@ -185,11 +185,35 @@ describe('Switch', () => {
 
         expect(switches).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...switches[index].classList]).toEqual([
-                'rp-switch',
-                `rp-switch--color-${color}`,
-            ]);
+            const switchRoot = switches[index] as HTMLElement;
+
+            expect([...switchRoot.classList]).toEqual(['rp-switch', `rp-switch--color-${color}`]);
+            expect(switchRoot.style.getPropertyValue('--_rp-switch-custom-color')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables for arbitrary color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Switch,
+                        {
+                            color: '#ff3366',
+                            modelValue: true,
+                        },
+                        { default: () => 'Custom' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-switch') as HTMLElement;
+
+        expect([...root.classList]).toEqual(['rp-switch', 'rp-switch--checked']);
+        expect(root.style.getPropertyValue('--_rp-switch-custom-color')).toBe('#ff3366');
     });
 
     it('adds a size modifier for each supported size', async () => {

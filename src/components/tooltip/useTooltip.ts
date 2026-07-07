@@ -10,6 +10,7 @@ import {
     type CSSProperties,
 } from 'vue';
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
+import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
 
@@ -58,6 +59,16 @@ function resolveOffsetStyle(offset: TooltipOffset | undefined): CSSProperties | 
     return Object.keys(style).length > 0 ? style : undefined;
 }
 
+function resolveTooltipColorStyle(color: TooltipProps['color']): CSSProperties | undefined {
+    const customColor = getComponentCustomColor(color);
+    if (!customColor) return undefined;
+
+    return {
+        '--_rp-tooltip-bg': customColor,
+        '--_rp-tooltip-fg': 'var(--rp-color-on-primary)',
+    };
+}
+
 export function useTooltip(
     props: Readonly<TooltipProps>,
     emitOpenChange?: (open: boolean) => void,
@@ -92,7 +103,7 @@ export function useTooltip(
     const rootClass = computed(() =>
         bem('rp-tooltip', {
             [`placement-${placement.value}`]: true,
-            [`color-${props.color}`]: Boolean(props.color),
+            [`color-${props.color}`]: isComponentPresetColor(props.color),
             arrow: props.arrow,
             target: isTargetMode.value,
             open: isVisible.value,
@@ -105,9 +116,14 @@ export function useTooltip(
     }));
 
     const contentStyle = computed<CSSProperties | undefined>(() => {
-        const style = resolveOffsetStyle(props.offset);
+        const style: CSSProperties = {
+            ...resolveOffsetStyle(props.offset),
+            ...resolveTooltipColorStyle(props.color),
+        };
 
-        if (!isTargetMode.value || !targetPosition.value) return style;
+        if (!isTargetMode.value || !targetPosition.value) {
+            return Object.keys(style).length > 0 ? style : undefined;
+        }
 
         return {
             ...style,

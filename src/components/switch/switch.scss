@@ -10,7 +10,7 @@
 }
 
 .rp-switch {
-    --_rp-switch-color: var(--rp-color-control-selected-bg);
+    --_rp-switch-color: var(--_rp-switch-custom-color, var(--rp-color-control-selected-bg));
     --_rp-switch-font-size: var(--rp-font-size-base);
     --_rp-switch-track-width: 40px;
     --_rp-switch-track-height: 22px;

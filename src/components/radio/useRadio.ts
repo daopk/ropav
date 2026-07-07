@@ -1,9 +1,20 @@
-import { computed, provide, useId } from 'vue';
+import { computed, provide, useId, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { useRequiredInject } from '@/composables/useRequiredInject';
+import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
 import type { RadioGroupContext, RadioGroupProps, RadioProps } from './types';
+
+function getRadioColorStyle(color: RadioProps['color']) {
+    const customColor = getComponentCustomColor(color);
+    if (!customColor) return undefined;
+
+    return {
+        '--_rp-radio-custom-color': customColor,
+        '--_rp-radio-custom-on-color': 'var(--rp-color-on-primary)',
+    } satisfies CSSProperties;
+}
 
 export function useRadio(props: Readonly<RadioProps>) {
     const group = useRequiredInject(radioGroupKey, 'RpRadio');
@@ -18,10 +29,12 @@ export function useRadio(props: Readonly<RadioProps>) {
             checked: isChecked.value,
             disabled: isDisabled.value,
             [variant.value ?? '']: Boolean(variant.value),
-            [`color-${color.value}`]: Boolean(color.value),
+            [`color-${color.value}`]: isComponentPresetColor(color.value),
             [`size-${size.value}`]: Boolean(size.value),
         }),
     );
+
+    const rootStyle = computed(() => getRadioColorStyle(color.value));
 
     function onSelect() {
         if (isDisabled.value) return;
@@ -33,6 +46,7 @@ export function useRadio(props: Readonly<RadioProps>) {
         isChecked,
         isDisabled,
         rootClass,
+        rootStyle,
         onSelect,
     };
 }

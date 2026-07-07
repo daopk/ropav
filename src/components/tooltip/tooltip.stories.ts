@@ -15,8 +15,7 @@ const meta = {
             options: placements,
         },
         color: {
-            control: 'select',
-            options: colors,
+            control: 'text',
         },
         content: { control: 'text' },
         open: { control: 'boolean' },
@@ -108,6 +107,29 @@ export const Colors: Story = {
                         </template>
                     </Tooltip>
                 </div>
+            </div>
+        `,
+    }),
+};
+
+export const CustomColor: Story = {
+    args: {
+        color: '#ff3366',
+        content: 'Custom color tooltip',
+        open: true,
+    },
+    render: (args) => ({
+        components: { Button, Tooltip },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Tooltip v-bind="args" :open-delay="0" arrow>
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline" color="#ff3366">
+                            Custom color
+                        </Button>
+                    </template>
+                </Tooltip>
             </div>
         `,
     }),

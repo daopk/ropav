@@ -182,11 +182,38 @@ describe('Checkbox', () => {
 
         expect(checkboxes).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...checkboxes[index].classList]).toEqual([
-                'rp-checkbox',
-                `rp-checkbox--color-${color}`,
-            ]);
+            const checkbox = checkboxes[index] as HTMLElement;
+
+            expect([...checkbox.classList]).toEqual(['rp-checkbox', `rp-checkbox--color-${color}`]);
+            expect(checkbox.style.getPropertyValue('--_rp-checkbox-custom-color')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables for arbitrary color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Checkbox,
+                        {
+                            color: '#ff3366',
+                            modelValue: true,
+                        },
+                        { default: () => 'Custom' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-checkbox') as HTMLElement;
+
+        expect([...root.classList]).toEqual(['rp-checkbox', 'rp-checkbox--checked']);
+        expect(root.style.getPropertyValue('--_rp-checkbox-custom-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-checkbox-custom-on-color')).toBe(
+            'var(--rp-color-on-primary)',
+        );
     });
 
     it('adds a modifier for each supported variant', async () => {

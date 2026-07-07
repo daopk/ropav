@@ -23,16 +23,28 @@
 }
 
 .rp-button {
-    --_rp-button-accent: var(--rp-color-primary);
-    --_rp-button-accent-hover: var(--rp-color-primary-hover);
-    --_rp-button-accent-active: var(--rp-color-primary-active);
-    --_rp-button-accent-on: var(--rp-color-on-primary);
-    --_rp-button-accent-subtle-bg: var(--rp-color-primary-subtle-bg);
-    --_rp-button-accent-subtle-bg-hover: var(--rp-color-primary-subtle-bg-hover);
-    --_rp-button-accent-subtle-bg-active: var(--rp-color-primary-subtle-bg-active);
-    --_rp-button-accent-border: var(--rp-color-primary-border);
-    --_rp-button-accent-border-hover: var(--rp-color-primary-border-hover);
-    --_rp-button-accent-fg: var(--rp-color-primary-fg);
+    --_rp-button-accent: var(--_rp-button-custom-color, var(--rp-color-primary));
+    --_rp-button-accent-hover: var(--_rp-button-custom-hover, var(--rp-color-primary-hover));
+    --_rp-button-accent-active: var(--_rp-button-custom-active, var(--rp-color-primary-active));
+    --_rp-button-accent-on: var(--_rp-button-custom-on, var(--rp-color-on-primary));
+    --_rp-button-accent-subtle-bg: var(
+        --_rp-button-custom-subtle-bg,
+        var(--rp-color-primary-subtle-bg)
+    );
+    --_rp-button-accent-subtle-bg-hover: var(
+        --_rp-button-custom-subtle-bg-hover,
+        var(--rp-color-primary-subtle-bg-hover)
+    );
+    --_rp-button-accent-subtle-bg-active: var(
+        --_rp-button-custom-subtle-bg-active,
+        var(--rp-color-primary-subtle-bg-active)
+    );
+    --_rp-button-accent-border: var(--_rp-button-custom-border, var(--rp-color-primary-border));
+    --_rp-button-accent-border-hover: var(
+        --_rp-button-custom-border-hover,
+        var(--rp-color-primary-border-hover)
+    );
+    --_rp-button-accent-fg: var(--_rp-button-custom-fg, var(--rp-color-primary-fg));
     --_rp-button-bg: var(--rp-color-button-default-bg);
     --_rp-button-bg-hover: var(--rp-color-button-default-bg-hover);
     --_rp-button-bg-active: var(--rp-color-button-default-bg-active);

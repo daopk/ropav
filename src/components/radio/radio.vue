@@ -1,6 +1,7 @@
 <template>
     <label
         :class="rootClass"
+        :style="rootStyle"
         :data-disabled="isDisabled || undefined"
         :data-state="isChecked ? 'checked' : 'unchecked'"
     >
@@ -34,7 +35,7 @@ const props = withDefaults(defineProps<RadioProps>(), {
     disabled: false,
 });
 
-const { group, isChecked, isDisabled, rootClass, onSelect } = useRadio(props);
+const { group, isChecked, isDisabled, rootClass, rootStyle, onSelect } = useRadio(props);
 </script>
 
 <style src="./radio.scss" lang="scss" scoped></style>

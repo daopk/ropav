@@ -1,11 +1,6 @@
-export type SwitchColor =
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'neutral';
+import type { ComponentColorValue } from '../../utils/componentColors';
+
+export type SwitchColor = ComponentColorValue;
 
 export type SwitchSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

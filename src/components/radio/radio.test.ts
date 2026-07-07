@@ -281,11 +281,43 @@ describe('Radio', () => {
 
         expect(radios).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...radios[index].classList]).toEqual([
+            const radio = radios[index] as HTMLElement;
+
+            expect([...radio.classList]).toEqual([
                 'rp-radio',
                 'rp-radio--checked',
                 `rp-radio--color-${color}`,
             ]);
+            expect(radio.style.getPropertyValue('--_rp-radio-custom-color')).toBe('');
         }
+    });
+
+    it('sets inline custom color variables from group color values', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RadioGroup,
+                        {
+                            color: '#ff3366',
+                            modelValue: 'apple',
+                        },
+                        {
+                            default: () => h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-radio') as HTMLElement;
+
+        expect([...root.classList]).toEqual(['rp-radio', 'rp-radio--checked']);
+        expect(root.style.getPropertyValue('--_rp-radio-custom-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-radio-custom-on-color')).toBe(
+            'var(--rp-color-on-primary)',
+        );
     });
 });

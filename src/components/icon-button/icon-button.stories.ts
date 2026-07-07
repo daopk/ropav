@@ -22,8 +22,7 @@ const meta = {
             options: [undefined, ...variants],
         },
         color: {
-            control: 'select',
-            options: [undefined, ...colors],
+            control: 'text',
         },
         size: {
             control: 'select',
@@ -130,6 +129,23 @@ export const Colors: Story = {
                     </IconButton>
                 </div>
             </div>
+        `,
+    }),
+};
+
+export const CustomColor: Story = {
+    args: {
+        ariaLabel: 'Search',
+        color: '#ff3366',
+        variant: 'solid',
+    },
+    render: (args) => ({
+        components: { IconButton, IconSearch },
+        setup: () => ({ args }),
+        template: `
+            <IconButton v-bind="args">
+                <IconSearch aria-hidden="true" />
+            </IconButton>
         `,
     }),
 };
