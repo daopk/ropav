@@ -72,6 +72,7 @@
     box-shadow: var(--_rp-button-shadow);
     color: var(--_rp-button-fg);
     cursor: pointer;
+    text-decoration: none;
     transition:
         background-color var(--rp-transition-fast),
         color var(--rp-transition-fast),
@@ -85,13 +86,13 @@
     font-size: var(--_rp-button-font-size);
     border-radius: var(--_rp-button-radius);
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(&--disabled) {
         background-color: var(--_rp-button-bg-hover);
         border-color: var(--_rp-button-border-hover);
         box-shadow: var(--_rp-button-shadow-hover);
     }
 
-    &:active:not(:disabled) {
+    &:active:not(:disabled):not(&--disabled) {
         background-color: var(--_rp-button-bg-active);
         border-color: var(--_rp-button-border-active);
         box-shadow: var(--_rp-button-shadow-active);
@@ -226,7 +227,8 @@
         --_rp-button-shadow-active: none;
     }
 
-    &:disabled {
+    &:disabled,
+    &--disabled {
         @include disabled-state;
         box-shadow: none;
         transform: none;

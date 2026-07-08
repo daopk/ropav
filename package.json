@@ -33,6 +33,10 @@
       "types": "./dist/components/button/index.d.ts",
       "import": "./dist/components/button/index.js"
     },
+    "./button-link": {
+      "types": "./dist/components/button-link/index.d.ts",
+      "import": "./dist/components/button-link/index.js"
+    },
     "./button-group": {
       "types": "./dist/components/button-group/index.d.ts",
       "import": "./dist/components/button-group/index.js"
