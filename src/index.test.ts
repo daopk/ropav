@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import * as Ropav from './index';
+
+const Ropav = await import('./index');
 
 const publicComponents = [
     'Badge',
@@ -26,7 +27,7 @@ const publicComponents = [
     'TabsTrigger',
     'Textarea',
     'Tooltip',
-] as const;
+] as const satisfies readonly (keyof typeof Ropav)[];
 
 describe('public source exports', () => {
     it('exposes the primary component entrypoints from src/index.ts', () => {
