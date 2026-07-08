@@ -1,0 +1,193 @@
+@use 'sass:map';
+
+$alert-colors: primary, secondary, success, warning, danger, info, neutral;
+
+$alert-variants: (
+    subtle: (
+        bg: var(--_rp-alert-accent-subtle-bg),
+        fg: var(--rp-color-text),
+        title: var(--_rp-alert-accent-fg),
+        icon: var(--_rp-alert-accent-fg),
+        border: transparent,
+    ),
+    surface: (
+        bg: var(--_rp-alert-accent-subtle-bg),
+        fg: var(--rp-color-text),
+        title: var(--_rp-alert-accent-fg),
+        icon: var(--_rp-alert-accent-fg),
+        border: var(--_rp-alert-accent-border),
+    ),
+    outline: (
+        bg: transparent,
+        fg: var(--rp-color-text),
+        title: var(--_rp-alert-accent-fg),
+        icon: var(--_rp-alert-accent-fg),
+        border: var(--_rp-alert-accent-border),
+    ),
+    solid: (
+        bg: var(--_rp-alert-accent),
+        fg: var(--_rp-alert-accent-on),
+        title: var(--_rp-alert-accent-on),
+        icon: var(--_rp-alert-accent-on),
+        border: var(--_rp-alert-accent),
+    ),
+);
+
+$alert-radii: (
+    none: var(--rp-radius-none),
+    xs: var(--rp-radius-xs),
+    sm: var(--rp-radius-sm),
+    md: var(--rp-radius-md),
+    lg: var(--rp-radius-lg),
+    xl: var(--rp-radius-xl),
+);
+
+@mixin alert-color($color) {
+    --_rp-alert-accent: var(--rp-color-#{$color});
+    --_rp-alert-accent-fg: var(--rp-color-#{$color}-fg);
+    --_rp-alert-accent-on: var(--rp-color-on-#{$color});
+    --_rp-alert-accent-subtle-bg: var(--rp-color-#{$color}-subtle-bg);
+    --_rp-alert-accent-border: var(--rp-color-#{$color}-border);
+}
+
+@mixin alert-variant($tokens) {
+    --_rp-alert-bg: #{map.get($tokens, bg)};
+    --_rp-alert-fg: #{map.get($tokens, fg)};
+    --_rp-alert-title-fg: #{map.get($tokens, title)};
+    --_rp-alert-icon-fg: #{map.get($tokens, icon)};
+    --_rp-alert-border: #{map.get($tokens, border)};
+}
+
+.rp-alert {
+    --_rp-alert-accent: var(--_rp-alert-custom-color, var(--rp-color-info));
+    --_rp-alert-accent-fg: var(--_rp-alert-custom-fg, var(--rp-color-info-fg));
+    --_rp-alert-accent-on: var(--_rp-alert-custom-on, var(--rp-color-on-info));
+    --_rp-alert-accent-subtle-bg: var(--_rp-alert-custom-subtle-bg, var(--rp-color-info-subtle-bg));
+    --_rp-alert-accent-border: var(--_rp-alert-custom-border, var(--rp-color-info-border));
+    --_rp-alert-bg: var(--_rp-alert-accent-subtle-bg);
+    --_rp-alert-fg: var(--rp-color-text);
+    --_rp-alert-title-fg: var(--_rp-alert-accent-fg);
+    --_rp-alert-icon-fg: var(--_rp-alert-accent-fg);
+    --_rp-alert-border: transparent;
+    --_rp-alert-radius: var(--rp-radius-sm);
+
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+    padding: var(--rp-spacing-4);
+    gap: var(--rp-spacing-3);
+    color: var(--_rp-alert-fg);
+    font-family: var(--rp-font-family);
+    font-size: var(--rp-font-size-sm);
+    line-height: var(--rp-line-height-normal);
+    background-color: var(--_rp-alert-bg);
+    border: var(--rp-border-width-thin) solid var(--_rp-alert-border);
+    border-radius: var(--_rp-alert-radius);
+    transition:
+        background-color var(--rp-transition-fast),
+        color var(--rp-transition-fast),
+        border-color var(--rp-transition-fast);
+
+    @each $color in $alert-colors {
+        &--color-#{$color} {
+            @include alert-color($color);
+        }
+    }
+
+    @each $variant, $tokens in $alert-variants {
+        &--#{$variant} {
+            @include alert-variant($tokens);
+        }
+    }
+
+    @each $radius, $value in $alert-radii {
+        &--radius-#{$radius} {
+            --_rp-alert-radius: #{$value};
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.125rem;
+        color: var(--_rp-alert-icon-fg);
+        line-height: 0;
+
+        > :deep(svg) {
+            display: block;
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    &__content {
+        display: grid;
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: var(--rp-spacing-1);
+    }
+
+    &__title {
+        color: var(--_rp-alert-title-fg);
+        font-size: var(--rp-font-size-base);
+        font-weight: var(--rp-font-weight-semibold);
+        line-height: var(--rp-line-height-tight);
+    }
+
+    &__description {
+        margin: 0;
+    }
+
+    &__body,
+    &__description {
+        min-width: 0;
+        color: var(--_rp-alert-fg);
+    }
+
+    &__action {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    &__close {
+        box-sizing: border-box;
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        margin: calc(var(--rp-spacing-1) * -1) calc(var(--rp-spacing-1) * -1)
+            calc(var(--rp-spacing-1) * -1) 0;
+        padding: 0;
+        color: var(--_rp-alert-icon-fg);
+        background: transparent;
+        border: 0;
+        border-radius: var(--rp-radius-sm);
+        cursor: pointer;
+        transition:
+            background-color var(--rp-transition-fast),
+            color var(--rp-transition-fast);
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--_rp-alert-icon-fg) 12%, transparent);
+        }
+
+        &:focus-visible {
+            outline: var(--rp-border-width-medium) solid var(--rp-color-focus-ring);
+            outline-offset: 2px;
+        }
+
+        > :deep(svg) {
+            display: block;
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+}

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 const Ropav = await import('./index');
 
 const publicComponents = [
+    'Alert',
     'Badge',
     'Button',
     'ButtonLink',
