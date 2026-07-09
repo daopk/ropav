@@ -26,6 +26,7 @@ const expectedFiles = [
     'dist/card.css',
     'dist/checkbox.css',
     'dist/collapse.css',
+    'dist/color-input.css',
     'dist/color-picker.css',
     'dist/color-swatch.css',
     'dist/dropdown-menu.css',
@@ -52,6 +53,7 @@ const expectedFiles = [
     'dist/components/card/index.js',
     'dist/components/checkbox/index.js',
     'dist/components/collapse/index.js',
+    'dist/components/color-input/index.js',
     'dist/components/color-picker/index.js',
     'dist/components/color-swatch/index.js',
     'dist/components/dropdown-menu/index.js',
@@ -115,6 +117,7 @@ try {
             'Card',
             'Checkbox',
             'Collapse',
+            'ColorInput',
             'ColorPicker',
             'ColorSwatch',
             'DropdownMenu',
@@ -174,6 +177,9 @@ try {
 
     const collapse = await server.ssrLoadModule('/dist/components/collapse/index.js');
     assertExports(collapse, ['Collapse', 'useCollapse'], 'dist/components/collapse/index.js');
+
+    const colorInput = await server.ssrLoadModule('/dist/components/color-input/index.js');
+    assertExports(colorInput, ['ColorInput'], 'dist/components/color-input/index.js');
 
     const colorPicker = await server.ssrLoadModule('/dist/components/color-picker/index.js');
     assertExports(colorPicker, ['ColorPicker'], 'dist/components/color-picker/index.js');

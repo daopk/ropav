@@ -1,0 +1,91 @@
+.rp-color-input {
+    --_rp-color-input-preview-size: calc(var(--_rp-input-height) - var(--rp-spacing-3));
+    --_rp-color-input-trigger-size: calc(var(--_rp-input-height) - var(--rp-spacing-2));
+    --_rp-color-input-empty-tile: var(--rp-color-gray-3);
+    --_rp-color-input-empty-tile-alt: var(--rp-color-white);
+    --_rp-color-input-empty-grid: conic-gradient(
+        var(--_rp-color-input-empty-tile) 25%,
+        var(--_rp-color-input-empty-tile-alt) 0 50%,
+        var(--_rp-color-input-empty-tile) 0 75%,
+        var(--_rp-color-input-empty-tile-alt) 0
+    );
+
+    display: inline-flex;
+    max-width: 100%;
+    font-family: var(--rp-font-family);
+    vertical-align: middle;
+
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-color-input-empty-tile: var(--rp-color-dark-6);
+        --_rp-color-input-empty-tile-alt: var(--rp-color-dark-4);
+    }
+
+    :deep(.rp-input) {
+        width: 100%;
+        min-width: $component-menu-min-width;
+    }
+
+    :deep(.rp-popover__content) {
+        min-width: auto;
+        padding: var(--rp-spacing-3);
+    }
+
+    :deep(.rp-color-picker) {
+        --_rp-color-picker-size: min(220px, calc(100vw - var(--rp-spacing-12)));
+    }
+
+    &__preview {
+        width: var(--_rp-color-input-preview-size);
+        height: var(--_rp-color-input-preview-size);
+        flex-shrink: 0;
+        pointer-events: none;
+    }
+
+    &__preview--empty {
+        box-sizing: border-box;
+        display: inline-flex;
+        background: var(--_rp-color-input-empty-grid);
+        background-size: calc(var(--_rp-color-input-preview-size) / 2)
+            calc(var(--_rp-color-input-preview-size) / 2);
+        border: var(--rp-border-width-thin) dashed var(--rp-color-control-border);
+        border-radius: var(--rp-radius-sm);
+    }
+
+    &__trigger {
+        @include reset-button;
+        @include flex-center;
+        width: var(--_rp-color-input-trigger-size);
+        height: var(--_rp-color-input-trigger-size);
+        flex-shrink: 0;
+        color: var(--rp-color-control-icon);
+        border-radius: var(--rp-radius-sm);
+        cursor: pointer;
+        transition:
+            color var(--rp-transition-fast),
+            background-color var(--rp-transition-fast);
+
+        &:hover {
+            color: var(--rp-color-control-fg);
+            background-color: var(--rp-color-default-hover);
+        }
+
+        &:focus-visible {
+            outline: none;
+            @include focus-ring;
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+    }
+
+    &__trigger[data-state='open'] {
+        color: var(--rp-color-control-fg);
+        background-color: var(--rp-color-default-hover);
+    }
+
+    &__trigger-icon {
+        @include inline-icon;
+    }
+}

@@ -11,6 +11,7 @@ const publicComponents = [
     'Card',
     'Checkbox',
     'Collapse',
+    'ColorInput',
     'ColorPicker',
     'ColorSwatch',
     'DropdownMenu',

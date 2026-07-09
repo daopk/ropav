@@ -57,6 +57,10 @@
       "types": "./dist/components/collapse/index.d.ts",
       "import": "./dist/components/collapse/index.js"
     },
+    "./color-input": {
+      "types": "./dist/components/color-input/index.d.ts",
+      "import": "./dist/components/color-input/index.js"
+    },
     "./color-picker": {
       "types": "./dist/components/color-picker/index.d.ts",
       "import": "./dist/components/color-picker/index.js"
