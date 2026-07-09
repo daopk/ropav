@@ -8,6 +8,7 @@ export * from './components/card';
 export * from './components/checkbox';
 export * from './components/collapse';
 export * from './components/color-picker';
+export * from './components/color-swatch';
 export * from './components/dropdown-menu';
 export * from './components/field';
 export * from './components/icon-button';

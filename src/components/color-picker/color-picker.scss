@@ -4,6 +4,8 @@
     --_rp-color-picker-hue-height: 14px;
     --_rp-color-picker-saturation-slider-gap: var(--rp-spacing-4);
     --_rp-color-picker-slider-gap: var(--rp-spacing-2);
+    --_rp-color-picker-swatches-gap: var(--rp-spacing-2);
+    --_rp-color-picker-swatch-size: 24px;
     --_rp-color-picker-thumb-size: 14px;
     --_rp-color-picker-thumb-radius: calc(var(--_rp-color-picker-thumb-size) / 2);
     --_rp-color-picker-saturation-radius: var(--_rp-color-picker-thumb-radius);
@@ -57,5 +59,47 @@
 
     &__header {
         margin-block-end: var(--rp-spacing-2);
+    }
+
+    &__swatches {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--_rp-color-picker-swatches-gap);
+        margin-block-start: var(--rp-spacing-3);
+    }
+
+    &__swatch {
+        position: relative;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex: 0 0 auto;
+        appearance: none;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+        border-radius: var(--rp-radius-sm);
+        box-shadow: none;
+        line-height: 0;
+
+        &:focus-visible {
+            outline: none;
+            @include focus-ring;
+        }
+
+        &:disabled {
+            @include disabled-state;
+            cursor: default;
+        }
+
+        > :deep(.rp-color-swatch) {
+            pointer-events: none;
+        }
+
+        &-check {
+            stroke-width: 3;
+        }
     }
 }

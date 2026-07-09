@@ -680,4 +680,101 @@ describe('ColorPicker', () => {
 
         expect(container.querySelector('.rp-color-picker__label')?.textContent).toBe('Saturation');
     });
+
+    it('renders swatches below the picker and emits the selected color', async () => {
+        const onUpdate = vi.fn();
+        const onHueUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        format: 'hex',
+                        hue: 0,
+                        modelValue: '#000000',
+                        swatches: ['#ff0000', 'rgb(0, 128, 0)'],
+                        'onUpdate:hue': onHueUpdate,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelectorAll(
+            '.rp-color-picker__swatch',
+        ) as NodeListOf<HTMLButtonElement>;
+        const colorSwatches = container.querySelectorAll(
+            '.rp-color-swatch',
+        ) as NodeListOf<HTMLElement>;
+
+        expect(container.querySelector('.rp-color-picker__swatches')).toBeTruthy();
+        expect(swatches).toHaveLength(2);
+        expect(colorSwatches).toHaveLength(2);
+        expect(colorSwatches[0].style.getPropertyValue('--_rp-color-swatch-color')).toBe('#ff0000');
+        expect(colorSwatches[0].getAttribute('aria-hidden')).toBe('true');
+        expect(colorSwatches[0].getAttribute('role')).toBeNull();
+        expect(swatches[0].getAttribute('aria-pressed')).toBe('false');
+        expect(swatches[1].getAttribute('aria-label')).toBe('Select color rgb(0, 128, 0)');
+
+        swatches[1].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await flush();
+
+        expect(onHueUpdate).toHaveBeenCalledWith(120);
+        expect(onUpdate).toHaveBeenCalledWith('#008000');
+    });
+
+    it('renders a check icon for the selected swatch', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        hue: 210,
+                        modelValue: '#008000',
+                        swatches: ['#ff0000', 'rgb(0, 128, 0)'],
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelectorAll(
+            '.rp-color-picker__swatch',
+        ) as NodeListOf<HTMLButtonElement>;
+
+        expect(swatches[0].querySelector('.rp-color-picker__swatch-check')).toBeNull();
+        expect(swatches[1].getAttribute('aria-pressed')).toBe('true');
+        expect(swatches[1].querySelector('.rp-color-picker__swatch-check')).toBeTruthy();
+    });
+
+    it('does not emit swatch selection when readonly', async () => {
+        const onUpdate = vi.fn();
+        const onHueUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        readonly: true,
+                        modelValue: '#000000',
+                        swatches: ['#ff0000'],
+                        'onUpdate:hue': onHueUpdate,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatch = container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement;
+
+        expect(swatch.disabled).toBe(true);
+
+        swatch.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await flush();
+
+        expect(onHueUpdate).not.toHaveBeenCalled();
+        expect(onUpdate).not.toHaveBeenCalled();
+    });
 });

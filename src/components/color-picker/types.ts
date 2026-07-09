@@ -16,6 +16,7 @@ export interface ColorPickerProps {
     format?: ColorPickerFormat;
     hue?: number;
     readonly?: boolean;
+    swatches?: string[];
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;

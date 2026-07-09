@@ -32,12 +32,44 @@
             :readonly="readonly"
             @update:value="emitOpacity"
         />
+
+        <div
+            v-if="swatches.length"
+            class="rp-color-picker__swatches"
+            role="group"
+            aria-label="Color swatches"
+        >
+            <button
+                v-for="(swatch, index) in swatches"
+                :key="`${swatch}-${index}`"
+                class="rp-color-picker__swatch"
+                type="button"
+                :disabled="readonly"
+                :aria-pressed="isSwatchSelected(swatch)"
+                :aria-label="`Select color ${swatch}`"
+                :title="swatch"
+                @click="emitSwatchColor(swatch)"
+            >
+                <ColorSwatch
+                    :color="swatch"
+                    size="var(--_rp-color-picker-swatch-size)"
+                    aria-hidden="true"
+                >
+                    <IconCheck
+                        v-if="isSwatchSelected(swatch)"
+                        class="rp-color-picker__swatch-check"
+                    />
+                </ColorSwatch>
+            </button>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, ref, useAttrs } from 'vue';
+import IconCheck from '~icons/lucide/check';
 import { bem } from '@/utils/bem';
+import ColorSwatch from '../color-swatch/color-swatch.vue';
 import ColorPickerSaturation from './color-picker-saturation.vue';
 import ColorPickerSlider from './color-picker-slider.vue';
 import {
@@ -64,6 +96,7 @@ const props = withDefaults(defineProps<ColorPickerProps>(), {
     format: 'hex',
     hue: 0,
     readonly: false,
+    swatches: () => [],
 });
 
 const emit = defineEmits<{
@@ -144,6 +177,26 @@ function emitOpacity(value: number) {
     emitColor({ opacity: value });
 }
 
+function emitSwatchColor(swatch: string) {
+    if (props.readonly) return;
+
+    const parsedColor = parseColorPickerValue(swatch);
+    if (!parsedColor) return;
+
+    const color = normalizeColor(parsedColor);
+    if (color.hue !== normalizeHue(props.hue)) emit('update:hue', color.hue);
+    emitColor(color);
+}
+
+function isSwatchSelected(swatch: string) {
+    const parsedColor = parseColorPickerValue(swatch);
+    if (!parsedColor) return false;
+
+    return (
+        getComparableColor(normalizeColor(parsedColor)) === getComparableColor(selectedColor.value)
+    );
+}
+
 function emitColor(nextColor: Partial<ColorPickerHsvColor>) {
     const color = normalizeColor({ ...selectedColor.value, ...nextColor });
 
@@ -175,6 +228,10 @@ function normalizeColor(color: Partial<ColorPickerHsvColor>): ColorPickerHsvColo
         value: roundPercent(clampPercent(color.value)),
         opacity: roundPercent(clampOpacity(color.opacity)),
     };
+}
+
+function getComparableColor(color: ColorPickerHsvColor) {
+    return formatColorPickerValue(color, 'rgba');
 }
 </script>
 

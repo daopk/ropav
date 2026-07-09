@@ -61,6 +61,10 @@
       "types": "./dist/components/color-picker/index.d.ts",
       "import": "./dist/components/color-picker/index.js"
     },
+    "./color-swatch": {
+      "types": "./dist/components/color-swatch/index.d.ts",
+      "import": "./dist/components/color-swatch/index.js"
+    },
     "./dropdown-menu": {
       "types": "./dist/components/dropdown-menu/index.d.ts",
       "import": "./dist/components/dropdown-menu/index.js"

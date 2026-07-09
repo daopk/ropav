@@ -12,6 +12,7 @@ const publicComponents = [
     'Checkbox',
     'Collapse',
     'ColorPicker',
+    'ColorSwatch',
     'DropdownMenu',
     'Field',
     'IconButton',

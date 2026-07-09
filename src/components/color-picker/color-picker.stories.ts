@@ -50,6 +50,7 @@ const meta = {
         format: { control: 'select', options: colorPickerFormats },
         hue: { control: { type: 'range', min: 0, max: 359, step: 1 } },
         readonly: { control: 'boolean' },
+        swatches: { control: 'object' },
     },
     args: {
         modelValue: '#4992d1',
@@ -85,6 +86,12 @@ export const WithOpacity: Story = {
     args: {
         modelValue: 'rgba(73, 146, 209, 0.55)',
         format: 'rgba',
+    },
+};
+
+export const WithSwatches: Story = {
+    args: {
+        swatches: ['#fa5252', '#fd7e14', '#fab005', '#40c057', '#228be6', '#7950f2'],
     },
 };
 
