@@ -36,6 +36,8 @@
         <div
             v-if="swatches.length"
             class="rp-color-picker__swatches"
+            :style="swatchesStyle"
+            :data-fill="normalizedSwatchesPerRow ? true : undefined"
             role="group"
             aria-label="Color swatches"
         >
@@ -50,11 +52,7 @@
                 :title="swatch"
                 @click="emitSwatchColor(swatch)"
             >
-                <ColorSwatch
-                    :color="swatch"
-                    size="var(--_rp-color-picker-swatch-size)"
-                    aria-hidden="true"
-                >
+                <ColorSwatch :color="swatch" :size="swatchSize" aria-hidden="true">
                     <IconCheck
                         v-if="isSwatchSelected(swatch)"
                         class="rp-color-picker__swatch-check"
@@ -66,7 +64,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useAttrs } from 'vue';
+import { computed, ref, useAttrs, type CSSProperties } from 'vue';
 import IconCheck from '~icons/lucide/check';
 import { bem } from '@/utils/bem';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
@@ -75,6 +73,7 @@ import ColorPickerSlider from './color-picker-slider.vue';
 import {
     clampOpacity,
     clampPercent,
+    DEFAULT_HUE,
     formatColorPickerValue,
     getHsvCssColor,
     isColorPickerAlphaFormat,
@@ -94,14 +93,12 @@ defineOptions({ name: 'RpColorPicker', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorPickerProps>(), {
     format: 'hex',
-    hue: 0,
     readonly: false,
     swatches: () => [],
 });
 
 const emit = defineEmits<{
     'update:modelValue': [value: ColorPickerValue];
-    'update:hue': [value: number];
 }>();
 
 const rootClass = computed(() =>
@@ -115,6 +112,18 @@ const rootAttrs = computed(() => {
     return filteredAttrs;
 });
 
+const normalizedSwatchesPerRow = computed(() => normalizeSwatchesPerRow(props.swatchesPerRow));
+const swatchesStyle = computed(() => {
+    const swatchesPerRow = normalizedSwatchesPerRow.value;
+    if (!swatchesPerRow) return undefined;
+
+    return {
+        '--_rp-color-picker-swatches-per-row': String(swatchesPerRow),
+    } as CSSProperties;
+});
+const swatchSize = computed(() =>
+    normalizedSwatchesPerRow.value ? '100%' : 'var(--_rp-color-picker-swatch-size)',
+);
 const showAlphaControls = computed(() => isColorPickerAlphaFormat(props.format));
 const emittedStringColor = ref<{
     value: string;
@@ -124,27 +133,17 @@ const emittedStringColor = ref<{
 
 const selectedColor = computed<ColorPickerHsvColor>(() => {
     const value = props.modelValue;
+    const cached = emittedStringColor.value;
+    if (cached && cached.value === value && cached.format === props.format) return cached.color;
 
-    if (typeof value === 'string') {
-        const cached = emittedStringColor.value;
-        if (cached && cached.value === value && cached.format === props.format) return cached.color;
-
-        return (
-            parseColorPickerValue(value) ?? {
-                hue: normalizeHue(props.hue),
-                saturation: 100,
-                value: 100,
-                opacity: 100,
-            }
-        );
-    }
-
-    return normalizeColor({
-        hue: normalizeHue(props.hue),
-        saturation: value.saturation,
-        value: value.value,
-        opacity: value.opacity,
-    });
+    return (
+        parseColorPickerValue(value) ?? {
+            hue: DEFAULT_HUE,
+            saturation: 100,
+            value: 100,
+            opacity: 100,
+        }
+    );
 });
 
 const saturationValue = computed<ColorPickerSelection>(() => ({
@@ -169,8 +168,7 @@ function emitModelValue(value: ColorPickerSelection) {
 }
 
 function emitHue(value: number) {
-    emit('update:hue', value);
-    if (typeof props.modelValue === 'string') emitColor({ hue: value });
+    emitColor({ hue: value });
 }
 
 function emitOpacity(value: number) {
@@ -184,7 +182,6 @@ function emitSwatchColor(swatch: string) {
     if (!parsedColor) return;
 
     const color = normalizeColor(parsedColor);
-    if (color.hue !== normalizeHue(props.hue)) emit('update:hue', color.hue);
     emitColor(color);
 }
 
@@ -199,26 +196,14 @@ function isSwatchSelected(swatch: string) {
 
 function emitColor(nextColor: Partial<ColorPickerHsvColor>) {
     const color = normalizeColor({ ...selectedColor.value, ...nextColor });
+    const formattedValue = formatColorPickerValue(color, props.format);
 
-    if (typeof props.modelValue === 'string') {
-        const formattedValue = formatColorPickerValue(color, props.format);
-        emittedStringColor.value = {
-            value: formattedValue,
-            format: props.format,
-            color,
-        };
-        emit('update:modelValue', formattedValue);
-        return;
-    }
-
-    const value: ColorPickerSelection = {
-        saturation: color.saturation,
-        value: color.value,
+    emittedStringColor.value = {
+        value: formattedValue,
+        format: props.format,
+        color,
     };
-
-    if (showAlphaControls.value) value.opacity = color.opacity;
-
-    emit('update:modelValue', value);
+    emit('update:modelValue', formattedValue);
 }
 
 function normalizeColor(color: Partial<ColorPickerHsvColor>): ColorPickerHsvColor {
@@ -232,6 +217,11 @@ function normalizeColor(color: Partial<ColorPickerHsvColor>): ColorPickerHsvColo
 
 function getComparableColor(color: ColorPickerHsvColor) {
     return formatColorPickerValue(color, 'rgba');
+}
+
+function normalizeSwatchesPerRow(value: number | undefined) {
+    if (!Number.isFinite(value) || value! < 1) return undefined;
+    return Math.min(100, Math.floor(value!));
 }
 </script>
 

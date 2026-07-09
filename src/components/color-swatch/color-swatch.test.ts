@@ -27,6 +27,9 @@ describe('ColorSwatch', () => {
         expect(swatch.style.getPropertyValue('--_rp-color-swatch-fg')).toBe(
             'var(--rp-color-white)',
         );
+        expect(swatch.style.getPropertyValue('--_rp-color-swatch-overlay-stroke')).toBe(
+            'rgb(0 0 0 / 10%)',
+        );
         expect(swatch.style.getPropertyValue('--_rp-color-swatch-size')).toBe('');
     });
 
@@ -131,6 +134,12 @@ describe('ColorSwatch', () => {
 
         expect(swatch.style.getPropertyValue('--_rp-color-swatch-fg')).toBe(
             'var(--rp-color-white)',
+        );
+        expect(swatch.style.getPropertyValue('--_rp-color-swatch-overlay-stroke')).toBe(
+            'rgb(255 255 255 / 18%)',
+        );
+        expect(swatch.style.getPropertyValue('--_rp-color-swatch-overlay-shadow')).toBe(
+            'rgb(255 255 255 / 10%)',
         );
     });
 

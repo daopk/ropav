@@ -15,7 +15,7 @@
 <script lang="ts" setup vapor>
 import { computed, useAttrs, type CSSProperties } from 'vue';
 import type { ColorSwatchProps, ColorSwatchSize } from './types';
-import { getColorSwatchForeground } from './useColorSwatchColor';
+import { getColorSwatchForeground, getColorSwatchOverlay } from './useColorSwatchColor';
 
 defineOptions({ name: 'RpColorSwatch', inheritAttrs: false });
 
@@ -30,9 +30,12 @@ const rootAriaLabel = computed(() =>
 );
 
 const rootStyle = computed(() => {
+    const overlay = getColorSwatchOverlay(props.color);
     const style = {
         '--_rp-color-swatch-color': props.color,
         '--_rp-color-swatch-fg': getColorSwatchForeground(props.color),
+        '--_rp-color-swatch-overlay-stroke': overlay.stroke,
+        '--_rp-color-swatch-overlay-shadow': overlay.shadow,
     } as CSSProperties;
 
     if (props.size !== undefined) {

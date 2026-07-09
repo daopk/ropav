@@ -27,15 +27,28 @@ const formatsPickerCellStyle = {
     width: '300px',
     gap: '8px',
 };
+const colorPickerSwatches = [
+    '#25262b',
+    '#f8f9fa',
+    '#fa5252',
+    '#e64980',
+    '#be4bdb',
+    '#7950f2',
+    '#4c6ef5',
+    '#228be6',
+    '#15aabf',
+    '#12b886',
+    '#40c057',
+    '#82c91e',
+    '#fab005',
+    '#fd7e14',
+];
 
-function useColorPickerStoryValue(args: Partial<Pick<ColorPickerProps, 'hue' | 'modelValue'>>) {
+function useColorPickerStoryValue(args: Partial<Pick<ColorPickerProps, 'modelValue'>>) {
     const value = ref<ColorPickerValue>(args.modelValue ?? '#4992d1');
-    const hue = ref(args.hue ?? 210);
-    const currentValue = computed(() =>
-        typeof value.value === 'string' ? value.value : JSON.stringify(value.value),
-    );
+    const currentValue = computed(() => value.value);
 
-    return { currentValue, hue, value };
+    return { currentValue, value };
 }
 
 function isColorPickerFormat(value: string): value is ColorPickerFormat {
@@ -48,14 +61,13 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         format: { control: 'select', options: colorPickerFormats },
-        hue: { control: { type: 'range', min: 0, max: 359, step: 1 } },
         readonly: { control: 'boolean' },
         swatches: { control: 'object' },
+        swatchesPerRow: { control: { type: 'number', min: 1, step: 1 } },
     },
     args: {
         modelValue: '#4992d1',
         format: 'hex',
-        hue: 210,
         readonly: false,
     },
     render: (args) => ({
@@ -66,7 +78,7 @@ const meta = {
         },
         template: `
             <div :style="storyWrapperStyle">
-                <ColorPicker v-bind="args" v-model="value" v-model:hue="hue" />
+                <ColorPicker v-bind="args" v-model="value" />
                 <span :title="currentValue">{{ currentValue }}</span>
             </div>
         `,
@@ -91,7 +103,8 @@ export const WithOpacity: Story = {
 
 export const WithSwatches: Story = {
     args: {
-        swatches: ['#fa5252', '#fd7e14', '#fab005', '#40c057', '#228be6', '#7950f2'],
+        swatches: colorPickerSwatches,
+        swatchesPerRow: 7,
     },
 };
 
@@ -100,20 +113,14 @@ export const WithFormats: Story = {
         components: { ColorPicker, Radio, RadioGroup },
         setup() {
             const value = ref<ColorPickerValue>(args.modelValue ?? '#4992d1');
-            const hue = ref(args.hue ?? 210);
             const format = ref<ColorPickerFormat>(args.format ?? 'hex');
-            const currentValue = computed(() =>
-                typeof value.value === 'string' ? value.value : JSON.stringify(value.value),
-            );
+            const currentValue = computed(() => value.value);
 
             watch(format, (nextFormat) => {
-                if (typeof value.value !== 'string') return;
-
                 const parsedColor = parseColorPickerValue(value.value);
                 if (!parsedColor) return;
 
                 value.value = formatColorPickerValue(parsedColor, nextFormat);
-                hue.value = parsedColor.hue;
             });
 
             function updateFormat(nextValue: string | number | null) {
@@ -128,7 +135,6 @@ export const WithFormats: Story = {
                 format,
                 formatsPickerCellStyle,
                 formatsStoryStyle,
-                hue,
                 storyWrapperStyle,
                 updateFormat,
                 value,
@@ -141,7 +147,6 @@ export const WithFormats: Story = {
                         v-bind="args"
                         :format="format"
                         v-model="value"
-                        v-model:hue="hue"
                     />
                     <span :title="currentValue">{{ currentValue }}</span>
                 </div>
@@ -172,11 +177,11 @@ export const WithField: Story = {
                 <Field
                     id="brand-color"
                     label="Color"
-                    description="Choose a color for the current hue."
+                    description="Choose a color."
                     v-slot="{ controlProps }"
                     style="max-width: 260px;"
                 >
-                    <ColorPicker v-bind="controlProps" v-bind="args" v-model="value" v-model:hue="hue" />
+                    <ColorPicker v-bind="controlProps" v-bind="args" v-model="value" />
                 </Field>
                 <span :title="currentValue">{{ currentValue }}</span>
             </div>

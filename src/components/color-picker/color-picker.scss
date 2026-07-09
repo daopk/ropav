@@ -4,7 +4,7 @@
     --_rp-color-picker-hue-height: 14px;
     --_rp-color-picker-saturation-slider-gap: var(--rp-spacing-4);
     --_rp-color-picker-slider-gap: var(--rp-spacing-2);
-    --_rp-color-picker-swatches-gap: var(--rp-spacing-2);
+    --_rp-color-picker-swatches-gap: var(--rp-spacing-1);
     --_rp-color-picker-swatch-size: 24px;
     --_rp-color-picker-thumb-size: 14px;
     --_rp-color-picker-thumb-radius: calc(var(--_rp-color-picker-thumb-size) / 2);
@@ -68,6 +68,12 @@
         margin-block-start: var(--rp-spacing-3);
     }
 
+    &__swatches[data-fill='true'] {
+        display: grid;
+        grid-template-columns: repeat(var(--_rp-color-picker-swatches-per-row), minmax(0, 1fr));
+        width: 100%;
+    }
+
     &__swatch {
         position: relative;
         box-sizing: border-box;
@@ -101,5 +107,15 @@
         &-check {
             stroke-width: 3;
         }
+    }
+
+    &__swatches[data-fill='true'] &__swatch {
+        width: 100%;
+        aspect-ratio: 1;
+    }
+
+    &__swatches[data-fill='true'] &__swatch > :deep(.rp-color-swatch) {
+        width: 100%;
+        height: 100%;
     }
 }

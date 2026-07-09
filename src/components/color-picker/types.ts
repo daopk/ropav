@@ -8,15 +8,15 @@ export interface ColorPickerSelection {
     opacity?: number;
 }
 
-export type ColorPickerValue = ColorPickerSelection | string;
+export type ColorPickerValue = string;
 
 export interface ColorPickerProps {
     id?: string;
     modelValue: ColorPickerValue;
     format?: ColorPickerFormat;
-    hue?: number;
     readonly?: boolean;
     swatches?: string[];
+    swatchesPerRow?: number;
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;

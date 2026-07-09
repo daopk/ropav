@@ -3,6 +3,11 @@ import { defineComponent, h, ref } from 'vue';
 
 import { flush, keydown, mountDom } from '../../../tests/utils/vue';
 import ColorPicker from './color-picker.vue';
+import {
+    formatColorPickerValue,
+    parseColorPickerValue,
+    type ColorPickerHsvColor,
+} from './color-picker-utils';
 import type { ColorPickerFormat, ColorPickerValue } from './types';
 
 function setRect(el: Element, rect: Partial<DOMRect>) {
@@ -23,14 +28,37 @@ function setRect(el: Element, rect: Partial<DOMRect>) {
     });
 }
 
+function formatHsvColor(color: Partial<ColorPickerHsvColor>, format: ColorPickerFormat = 'hex') {
+    return formatColorPickerValue(
+        {
+            hue: 0,
+            saturation: 0,
+            value: 0,
+            opacity: 100,
+            ...color,
+        },
+        format,
+    );
+}
+
+function updateFormattedColor(
+    modelValue: string,
+    nextColor: Partial<ColorPickerHsvColor>,
+    format: ColorPickerFormat = 'hex',
+) {
+    const parsedColor = parseColorPickerValue(modelValue);
+    if (!parsedColor) throw new Error(`Expected parseable color: ${modelValue}`);
+
+    return formatColorPickerValue({ ...parsedColor, ...nextColor }, format);
+}
+
 describe('ColorPicker', () => {
     it('renders the saturation panel and hue bar without native inputs or buttons', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 210,
-                        modelValue: { saturation: 40, value: 70 },
+                        modelValue: '#ff0000',
                     });
                 },
             }),
@@ -46,14 +74,12 @@ describe('ColorPicker', () => {
         expect(container.querySelector('button')).toBeNull();
         expect(panel.getAttribute('role')).toBe('slider');
         expect(hueBar.getAttribute('role')).toBe('slider');
-        expect(hueBar.style.getPropertyValue('--_rp-color-picker-hue')).toBe('210');
-        expect(
-            Number.parseFloat(hueBar.style.getPropertyValue('--_rp-color-picker-slider-x')),
-        ).toBeCloseTo(58.5);
-        expect(panel.style.getPropertyValue('--_rp-color-picker-hue')).toBe('210');
-        expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-x')).toBe('40%');
-        expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-y')).toBe('30%');
-        expect(panel.style.getPropertyValue('--_rp-color-picker-current')).toBe('rgb(107 143 179)');
+        expect(hueBar.style.getPropertyValue('--_rp-color-picker-hue')).toBe('0');
+        expect(hueBar.style.getPropertyValue('--_rp-color-picker-slider-x')).toBe('0%');
+        expect(panel.style.getPropertyValue('--_rp-color-picker-hue')).toBe('0');
+        expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-x')).toBe('100%');
+        expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-y')).toBe('0%');
+        expect(panel.style.getPropertyValue('--_rp-color-picker-current')).toBe('rgb(255 0 0)');
         expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
         expect(container.querySelector('.rp-color-picker__preview')).toBeNull();
         expect(handle).toBeTruthy();
@@ -65,7 +91,7 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        modelValue: { saturation: 0, value: 0 },
+                        modelValue: '#000000',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -88,7 +114,7 @@ describe('ColorPicker', () => {
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
-        expect(onUpdate).toHaveBeenCalledWith({ saturation: 50, value: 75 });
+        expect(onUpdate).toHaveBeenCalledWith(formatHsvColor({ saturation: 50, value: 75 }));
     });
 
     it('updates saturation and value while dragging until pointer release', async () => {
@@ -97,7 +123,7 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        modelValue: { saturation: 0, value: 0 },
+                        modelValue: '#000000',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -133,8 +159,8 @@ describe('ColorPicker', () => {
         await flush();
 
         expect(onUpdate).toHaveBeenCalledTimes(2);
-        expect(onUpdate).toHaveBeenNthCalledWith(1, { saturation: 50, value: 75 });
-        expect(onUpdate).toHaveBeenNthCalledWith(2, { saturation: 100, value: 0 });
+        expect(onUpdate).toHaveBeenNthCalledWith(1, formatHsvColor({ saturation: 50, value: 75 }));
+        expect(onUpdate).toHaveBeenNthCalledWith(2, formatHsvColor({ saturation: 100, value: 0 }));
     });
 
     it('does not emit saturation and value when normalized selection is unchanged', async () => {
@@ -143,7 +169,7 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        modelValue: { saturation: 50, value: 75 },
+                        modelValue: '#ff0000',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -159,8 +185,8 @@ describe('ColorPicker', () => {
             new MouseEvent('pointerdown', {
                 bubbles: true,
                 cancelable: true,
-                clientX: 110,
-                clientY: 45,
+                clientX: 210,
+                clientY: 20,
             }),
         );
         await flush();
@@ -176,7 +202,7 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        modelValue: { saturation: 50, value: 50 },
+                        modelValue: '#000000',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -200,18 +226,17 @@ describe('ColorPicker', () => {
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
-        expect(onUpdate).toHaveBeenCalledWith({ saturation: 0, value: 100 });
+        expect(onUpdate).toHaveBeenCalledWith(formatHsvColor({ saturation: 0, value: 100 }));
     });
 
-    it('emits hue updates from hue bar pointer selection', async () => {
-        const onHueUpdate = vi.fn();
+    it('emits color updates from hue bar pointer selection', async () => {
+        const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 0,
-                        modelValue: { saturation: 50, value: 50 },
-                        'onUpdate:hue': onHueUpdate,
+                        modelValue: '#800000',
+                        'onUpdate:modelValue': onUpdate,
                     });
                 },
             }),
@@ -231,19 +256,18 @@ describe('ColorPicker', () => {
         );
         await flush();
 
-        expect(onHueUpdate).toHaveBeenCalledOnce();
-        expect(onHueUpdate).toHaveBeenCalledWith(180);
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith(updateFormattedColor('#800000', { hue: 180 }));
     });
 
     it('does not emit hue when normalized selection is unchanged', async () => {
-        const onHueUpdate = vi.fn();
+        const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 180,
-                        modelValue: { saturation: 50, value: 50 },
-                        'onUpdate:hue': onHueUpdate,
+                        modelValue: '#008080',
+                        'onUpdate:modelValue': onUpdate,
                     });
                 },
             }),
@@ -263,20 +287,19 @@ describe('ColorPicker', () => {
         );
         await flush();
 
-        expect(onHueUpdate).not.toHaveBeenCalled();
+        expect(onUpdate).not.toHaveBeenCalled();
 
         window.dispatchEvent(new MouseEvent('pointerup'));
     });
 
     it('emits clamped hue from the extended hue surface', async () => {
-        const onHueUpdate = vi.fn();
+        const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 120,
-                        modelValue: { saturation: 50, value: 50 },
-                        'onUpdate:hue': onHueUpdate,
+                        modelValue: '#008000',
+                        'onUpdate:modelValue': onUpdate,
                     });
                 },
             }),
@@ -297,8 +320,8 @@ describe('ColorPicker', () => {
         );
         await flush();
 
-        expect(onHueUpdate).toHaveBeenCalledOnce();
-        expect(onHueUpdate).toHaveBeenCalledWith(0);
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith(updateFormattedColor('#008000', { hue: 0 }));
     });
 
     it('updates saturation and value from keyboard arrows', async () => {
@@ -307,7 +330,7 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        modelValue: { saturation: 50, value: 50 },
+                        modelValue: '#808080',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -320,23 +343,24 @@ describe('ColorPicker', () => {
         keydown(panel, 'ArrowRight');
         await flush();
 
-        expect(onUpdate).toHaveBeenLastCalledWith({ saturation: 51, value: 50 });
+        expect(onUpdate).toHaveBeenLastCalledWith(
+            updateFormattedColor('#808080', { saturation: 1 }),
+        );
 
         keydown(panel, 'ArrowUp');
         await flush();
 
-        expect(onUpdate).toHaveBeenLastCalledWith({ saturation: 50, value: 51 });
+        expect(onUpdate).toHaveBeenLastCalledWith(updateFormattedColor('#808080', { value: 51.2 }));
     });
 
     it('updates hue from hue bar keyboard arrows', async () => {
-        const onHueUpdate = vi.fn();
+        const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 210,
-                        modelValue: { saturation: 50, value: 50 },
-                        'onUpdate:hue': onHueUpdate,
+                        modelValue: '#404080',
+                        'onUpdate:modelValue': onUpdate,
                     });
                 },
             }),
@@ -348,25 +372,22 @@ describe('ColorPicker', () => {
         keydown(hueBar, 'ArrowLeft');
         await flush();
 
-        expect(onHueUpdate).toHaveBeenLastCalledWith(209);
+        expect(onUpdate).toHaveBeenLastCalledWith(updateFormattedColor('#404080', { hue: 239 }));
 
         keydown(hueBar, 'End');
         await flush();
 
-        expect(onHueUpdate).toHaveBeenLastCalledWith(359);
+        expect(onUpdate).toHaveBeenLastCalledWith(updateFormattedColor('#404080', { hue: 359 }));
     });
 
     it('does not emit when readonly but remains focusable', async () => {
         const onUpdate = vi.fn();
-        const onHueUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
                         readonly: true,
-                        hue: 210,
-                        modelValue: { saturation: 40, value: 70 },
-                        'onUpdate:hue': onHueUpdate,
+                        modelValue: '#6b8fb3',
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -401,7 +422,6 @@ describe('ColorPicker', () => {
         await flush();
 
         expect(onUpdate).not.toHaveBeenCalled();
-        expect(onHueUpdate).not.toHaveBeenCalled();
         expect(root.classList.contains('rp-color-picker--readonly')).toBe(true);
         expect(root.getAttribute('data-readonly')).toBe('true');
         expect(panel.getAttribute('tabindex')).toBe('0');
@@ -420,7 +440,7 @@ describe('ColorPicker', () => {
                         class: 'custom-color-picker',
                         disabled: true,
                         invalid: true,
-                        modelValue: { saturation: 40, value: 70 },
+                        modelValue: '#b36b6b',
                         required: true,
                     });
                 },
@@ -482,21 +502,15 @@ describe('ColorPicker', () => {
 
     it('formats pure red when the hue slider reaches the right edge', async () => {
         const value = ref<ColorPickerValue>('#ff0000');
-        const hue = ref(0);
         const onUpdate = vi.fn((nextValue: ColorPickerValue) => {
             value.value = nextValue;
-        });
-        const onHueUpdate = vi.fn((nextHue: number) => {
-            hue.value = nextHue;
         });
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
                         format: 'hex',
-                        hue: hue.value,
                         modelValue: value.value,
-                        'onUpdate:hue': onHueUpdate,
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -518,7 +532,6 @@ describe('ColorPicker', () => {
         );
         await flush();
 
-        expect(onHueUpdate).toHaveBeenCalledWith(359);
         expect(onUpdate).toHaveBeenCalledWith('#ff0000');
         expect(hueBar.style.getPropertyValue('--_rp-color-picker-hue')).toBe('360');
         expect(panel.style.getPropertyValue('--_rp-color-picker-hue')).toBe('360');
@@ -536,7 +549,6 @@ describe('ColorPicker', () => {
                     return () =>
                         h(ColorPicker, {
                             format: 'hex',
-                            hue: 0,
                             modelValue: value.value,
                             'onUpdate:modelValue': (nextValue: ColorPickerValue) => {
                                 value.value = nextValue;
@@ -644,7 +656,7 @@ describe('ColorPicker', () => {
                         id: 'brand-color',
                         describedby: 'brand-color-help brand-color-error',
                         labelledby: 'brand-color-label',
-                        modelValue: { saturation: 40, value: 70 },
+                        modelValue: '#b36b6b',
                     });
                 },
             }),
@@ -668,7 +680,7 @@ describe('ColorPicker', () => {
                     return h(
                         ColorPicker,
                         {
-                            modelValue: { saturation: 40, value: 70 },
+                            modelValue: '#b36b6b',
                         },
                         { default: () => 'Saturation' },
                     );
@@ -683,16 +695,13 @@ describe('ColorPicker', () => {
 
     it('renders swatches below the picker and emits the selected color', async () => {
         const onUpdate = vi.fn();
-        const onHueUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
                         format: 'hex',
-                        hue: 0,
                         modelValue: '#000000',
                         swatches: ['#ff0000', 'rgb(0, 128, 0)'],
-                        'onUpdate:hue': onHueUpdate,
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -720,7 +729,6 @@ describe('ColorPicker', () => {
         swatches[1].dispatchEvent(new MouseEvent('click', { bubbles: true }));
         await flush();
 
-        expect(onHueUpdate).toHaveBeenCalledWith(120);
         expect(onUpdate).toHaveBeenCalledWith('#008000');
     });
 
@@ -729,7 +737,6 @@ describe('ColorPicker', () => {
             defineComponent({
                 render() {
                     return h(ColorPicker, {
-                        hue: 210,
                         modelValue: '#008000',
                         swatches: ['#ff0000', 'rgb(0, 128, 0)'],
                     });
@@ -748,9 +755,31 @@ describe('ColorPicker', () => {
         expect(swatches[1].querySelector('.rp-color-picker__swatch-check')).toBeTruthy();
     });
 
+    it('fills each row with the requested number of swatches', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        swatches: ['#ff0000', '#00ff00', '#0000ff', '#ffffff'],
+                        swatchesPerRow: 3,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelector('.rp-color-picker__swatches') as HTMLElement;
+        const colorSwatch = container.querySelector('.rp-color-swatch') as HTMLElement;
+
+        expect(swatches.getAttribute('data-fill')).toBe('true');
+        expect(swatches.style.getPropertyValue('--_rp-color-picker-swatches-per-row')).toBe('3');
+        expect(colorSwatch.style.getPropertyValue('--_rp-color-swatch-size')).toBe('100%');
+    });
+
     it('does not emit swatch selection when readonly', async () => {
         const onUpdate = vi.fn();
-        const onHueUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
@@ -758,7 +787,6 @@ describe('ColorPicker', () => {
                         readonly: true,
                         modelValue: '#000000',
                         swatches: ['#ff0000'],
-                        'onUpdate:hue': onHueUpdate,
                         'onUpdate:modelValue': onUpdate,
                     });
                 },
@@ -774,7 +802,6 @@ describe('ColorPicker', () => {
         swatch.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         await flush();
 
-        expect(onHueUpdate).not.toHaveBeenCalled();
         expect(onUpdate).not.toHaveBeenCalled();
     });
 });

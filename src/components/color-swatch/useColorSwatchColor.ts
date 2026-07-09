@@ -17,6 +17,21 @@ export function getColorSwatchForeground(color: string) {
         : 'var(--rp-color-white)';
 }
 
+export function getColorSwatchOverlay(color: string) {
+    const background = parseCssColor(color);
+    if (!background || getPerceivedBrightness(background) >= 80) {
+        return {
+            stroke: 'rgb(0 0 0 / 10%)',
+            shadow: 'rgb(0 0 0 / 15%)',
+        };
+    }
+
+    return {
+        stroke: 'rgb(255 255 255 / 18%)',
+        shadow: 'rgb(255 255 255 / 10%)',
+    };
+}
+
 function parseCssColor(color: string): RgbColor | undefined {
     const value = color.trim().toLowerCase();
     if (value === 'black') return { red: 0, green: 0, blue: 0 };
