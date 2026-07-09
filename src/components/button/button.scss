@@ -61,7 +61,7 @@
 
     &--size-xs {
         @include button-size(
-            calc(var(--rp-size-control-sm) - var(--rp-spacing-1)),
+            var(--rp-size-control-xs),
             var(--rp-spacing-2),
             var(--rp-font-size-xs)
         );
@@ -85,7 +85,7 @@
 
     &--size-xl {
         @include button-size(
-            calc(var(--rp-size-control-lg) + var(--rp-spacing-2)),
+            var(--rp-size-control-xl),
             var(--rp-spacing-6),
             var(--rp-font-size-lg)
         );

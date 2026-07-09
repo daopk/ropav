@@ -767,6 +767,10 @@
   },
   "size": {
     "control": {
+      "xs": {
+        "$value": "28px",
+        "$type": "dimension"
+      },
       "sm": {
         "$value": "32px",
         "$type": "dimension"
@@ -777,6 +781,10 @@
       },
       "lg": {
         "$value": "48px",
+        "$type": "dimension"
+      },
+      "xl": {
+        "$value": "56px",
         "$type": "dimension"
       }
     }

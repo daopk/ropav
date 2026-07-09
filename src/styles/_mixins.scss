@@ -59,6 +59,13 @@ $rp-component-colors:
 }
 
 @mixin control-size-vars($prefix) {
+    &--xs {
+        #{$prefix}-height: var(--rp-size-control-xs);
+        #{$prefix}-font: var(--rp-font-size-xs);
+        #{$prefix}-px: var(--rp-spacing-2);
+        #{$prefix}-radius: var(--rp-radius-sm);
+    }
+
     &--sm {
         #{$prefix}-height: var(--rp-size-control-sm);
         #{$prefix}-font: var(--rp-font-size-sm);
@@ -75,6 +82,13 @@ $rp-component-colors:
 
     &--lg {
         #{$prefix}-height: var(--rp-size-control-lg);
+        #{$prefix}-font: var(--rp-font-size-lg);
+        #{$prefix}-px: var(--rp-spacing-6);
+        #{$prefix}-radius: var(--rp-radius-lg);
+    }
+
+    &--xl {
+        #{$prefix}-height: var(--rp-size-control-xl);
         #{$prefix}-font: var(--rp-font-size-lg);
         #{$prefix}-px: var(--rp-spacing-6);
         #{$prefix}-radius: var(--rp-radius-lg);
