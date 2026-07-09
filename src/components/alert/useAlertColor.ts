@@ -1,16 +1,28 @@
 import type { CSSProperties } from 'vue';
-import { getComponentCustomColor } from '@/utils/componentColors';
-import type { AlertColor } from './types';
+import { getComponentVariantColorRoles } from '@/utils/componentColors';
+import type { AlertColor, AlertVariant } from './types';
 
-export function getAlertColorStyle(color: AlertColor | undefined) {
-    const customColor = getComponentCustomColor(color);
-    if (!customColor) return undefined;
+export function getAlertColorStyle(
+    color: AlertColor | undefined,
+    variant: AlertVariant | undefined,
+    autoContrast: boolean | undefined,
+) {
+    if (!color && !variant) return undefined;
+
+    const resolvedVariant = variant ?? 'subtle';
+    const roles = getComponentVariantColorRoles({
+        color,
+        variant: resolvedVariant,
+        defaultColor: 'cyan',
+        autoContrast,
+    });
+    if (!roles) return undefined;
 
     return {
-        '--_rp-alert-custom-color': customColor,
-        '--_rp-alert-custom-fg': customColor,
-        '--_rp-alert-custom-on': 'var(--rp-color-on-primary)',
-        '--_rp-alert-custom-subtle-bg': `color-mix(in srgb, ${customColor} 12%, transparent)`,
-        '--_rp-alert-custom-border': `color-mix(in srgb, ${customColor} 45%, transparent)`,
-    } satisfies CSSProperties;
+        '--_rp-alert-bg': roles.background,
+        '--_rp-alert-fg': resolvedVariant === 'solid' ? roles.color : 'var(--rp-color-text)',
+        '--_rp-alert-title-fg': roles.color,
+        '--_rp-alert-icon-fg': roles.color,
+        '--_rp-alert-border': roles.border,
+    } as CSSProperties;
 }

@@ -9,6 +9,13 @@ import {
     scssName,
     tokenPath,
 } from './token-output-policy.mjs';
+import {
+    colorNames,
+    colorShades,
+    getAllDerivedColorVariableNames,
+    getDerivedColorVariables,
+    oldSemanticColorVariables,
+} from './color-system.mjs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(projectRoot);
@@ -17,20 +24,8 @@ const { default: config } = await import('./tokens.config.mjs');
 const dictionary = new StyleDictionary(config, { verbosity: 'silent' });
 await dictionary.hasInitialized;
 
-const defaultTokenFiles = [
-    'tokens/default/core.tokens.json',
-    'tokens/default/semantic.tokens.json',
-];
+const defaultTokenFiles = ['tokens/default/core.tokens.json'];
 const darkOverrideTokenFiles = ['tokens/dark/overrides.tokens.json'];
-const semanticColorNames = [
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-    'danger',
-    'info',
-    'neutral',
-];
 
 const staleFiles = [];
 const platformOutputs = await dictionary.formatAllPlatforms();
@@ -56,6 +51,7 @@ if (staleFiles.length > 0) {
 }
 
 const tokenStructureFailures = [
+    ...checkPaletteStructure(defaultTokenFiles),
     ...checkUnknownThemeOverrides(defaultTokenFiles, darkOverrideTokenFiles),
     ...checkDuplicateOutputNames(dictionary),
     ...checkGeneratedCssCustomProperties(dictionary),
@@ -68,10 +64,7 @@ if (tokenStructureFailures.length > 0) {
     process.exitCode = 1;
 }
 
-const contrastFailures = [
-    ...checkThemeContrast('default', defaultTokenFiles),
-    ...checkThemeContrast('dark', [...defaultTokenFiles, ...darkOverrideTokenFiles]),
-];
+const contrastFailures = [...checkThemeContrast('light'), ...checkThemeContrast('dark')];
 if (contrastFailures.length > 0) {
     console.error('Token color contrast checks failed:');
     for (const failure of contrastFailures) {
@@ -80,63 +73,109 @@ if (contrastFailures.length > 0) {
     process.exitCode = 1;
 }
 
-function checkThemeContrast(themeName, files) {
-    const tokenValues = new Map();
-    for (const file of files) {
-        collectTokenValues(
-            JSON.parse(readFileSync(join(projectRoot, file), 'utf8')),
-            [],
-            tokenValues,
-        );
-    }
-
+function checkThemeContrast(themeName) {
+    const cssValues = collectCssVariableValues(themeName);
     const failures = [];
-    for (const color of semanticColorNames) {
-        for (const state of [color, `${color}-hover`, `${color}-active`]) {
+
+    assertContrast(themeName, cssValues, failures, '--rp-color-text', '--rp-color-body', 4.5);
+    assertContrast(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-color-default-color',
+        '--rp-color-default',
+        4.5,
+    );
+    assertContrast(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-color-control-fg',
+        '--rp-color-control-bg',
+        4.5,
+    );
+    assertContrast(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-primary-color-contrast',
+        '--rp-primary-color-filled',
+        4.5,
+    );
+    assertBestContrast(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-primary-color-contrast',
+        '--rp-primary-color-filled',
+    );
+
+    for (const color of colorNames) {
+        assertContrast(
+            themeName,
+            cssValues,
+            failures,
+            `--rp-color-${color}-contrast`,
+            `--rp-color-${color}-filled`,
+            4.5,
+        );
+        assertBestContrast(
+            themeName,
+            cssValues,
+            failures,
+            `--rp-color-${color}-contrast`,
+            `--rp-color-${color}-filled`,
+        );
+
+        for (const shade of colorShades) {
             assertContrast(
                 themeName,
-                tokenValues,
+                cssValues,
                 failures,
-                `color.${state}`,
-                `color.on-${color}`,
+                `--rp-color-${color}-${shade}-contrast`,
+                `--rp-color-${color}-${shade}`,
                 4.5,
             );
-        }
-
-        for (const background of [
-            'background',
-            `${color}-subtle-bg`,
-            `${color}-subtle-bg-hover`,
-            `${color}-subtle-bg-active`,
-        ]) {
-            assertContrast(
+            assertBestContrast(
                 themeName,
-                tokenValues,
+                cssValues,
                 failures,
-                `color.${color}-fg`,
-                `color.${background}`,
-                4.5,
+                `--rp-color-${color}-${shade}-contrast`,
+                `--rp-color-${color}-${shade}`,
             );
         }
     }
 
-    assertContrast(themeName, tokenValues, failures, 'color.text', 'color.background', 4.5);
-    assertContrast(
-        themeName,
-        tokenValues,
-        failures,
-        'color.text-secondary',
-        'color.background',
-        4.5,
-    );
-    assertContrast(
-        themeName,
-        tokenValues,
-        failures,
-        'color.text-inverted',
-        'color.surface-inverted',
-        4.5,
-    );
+    return failures;
+}
+
+function checkPaletteStructure(files) {
+    const tokenValues = collectTokenValuesFromFiles(files);
+    const failures = [];
+
+    for (const color of colorNames) {
+        for (const shade of colorShades) {
+            const path = `color.${color}.${shade}`;
+            if (!tokenValues.has(path)) {
+                failures.push(`palette color ${color} is missing shade ${shade}`);
+            }
+        }
+
+        for (const path of tokenValues.keys()) {
+            if (path.startsWith(`color.${color}.`)) {
+                const shade = path.slice(`color.${color}.`.length);
+                if (!colorShades.includes(shade)) {
+                    failures.push(`palette color ${color} has unsupported shade ${shade}`);
+                }
+            }
+        }
+    }
+
+    for (const color of ['white', 'black']) {
+        if (!tokenValues.has(`color.${color}`)) {
+            failures.push(`core color ${color} is missing`);
+        }
+    }
 
     return failures;
 }
@@ -177,6 +216,10 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
     const allowedNames = new Set(
         tokenDictionary.allTokens.filter(hasCssCustomProperty).map(cssCustomProperty),
     );
+    for (const name of getAllDerivedColorVariableNames()) {
+        allowedNames.add(name);
+    }
+
     const tokenCss = readFileSync(join(projectRoot, 'src/styles/_tokens.scss'), 'utf8');
     const generatedNames = new Set();
     const failures = [];
@@ -184,8 +227,8 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
     for (const [, name] of tokenCss.matchAll(/^\s+(--rp-[a-z0-9-]+)\s*:/gim)) {
         generatedNames.add(name);
 
-        if (name.startsWith('--rp-color-palette-')) {
-            failures.push(`private palette CSS custom property ${name} was generated`);
+        if (oldSemanticColorVariables.has(name)) {
+            failures.push(`old semantic CSS custom property ${name} was generated`);
             continue;
         }
 
@@ -242,19 +285,36 @@ function collectTokenValues(node, path, values) {
     }
 }
 
-function assertContrast(
-    themeName,
-    tokenValues,
-    failures,
-    foregroundPath,
-    backgroundPath,
-    minRatio,
-) {
-    const foreground = resolveColor(tokenValues, foregroundPath);
-    const background = resolveColor(tokenValues, backgroundPath);
+function tokenValue(token) {
+    return token.original?.$value ?? token.$value;
+}
+
+function collectCssVariableValues(themeName) {
+    const values = new Map();
+
+    for (const token of dictionary.allTokens.filter(hasCssCustomProperty)) {
+        values.set(cssCustomProperty(token), tokenValue(token));
+    }
+
+    for (const [name, value] of Object.entries(getDerivedColorVariables('light'))) {
+        values.set(name, value);
+    }
+
+    if (themeName === 'dark') {
+        for (const [name, value] of Object.entries(getDerivedColorVariables('dark'))) {
+            values.set(name, value);
+        }
+    }
+
+    return values;
+}
+
+function assertContrast(themeName, cssValues, failures, foregroundName, backgroundName, minRatio) {
+    const foreground = resolveCssColor(cssValues, foregroundName);
+    const background = resolveCssColor(cssValues, backgroundName);
     if (!isOpaqueColor(foreground) || !isOpaqueColor(background)) {
         failures.push(
-            `${themeName}: ${foregroundPath} on ${backgroundPath} could not be resolved to opaque colors`,
+            `${themeName}: ${foregroundName} on ${backgroundName} could not be resolved to opaque colors`,
         );
         return;
     }
@@ -262,26 +322,64 @@ function assertContrast(
     const ratio = contrastRatio(foreground, background);
     if (ratio < minRatio) {
         failures.push(
-            `${themeName}: ${foregroundPath} on ${backgroundPath} is ${ratio.toFixed(2)}:1, expected at least ${minRatio}:1`,
+            `${themeName}: ${foregroundName} on ${backgroundName} is ${ratio.toFixed(2)}:1, expected at least ${minRatio}:1`,
         );
     }
 }
 
-function resolveColor(tokenValues, path, seen = new Set()) {
-    if (seen.has(path)) return undefined;
-    seen.add(path);
+function assertBestContrast(themeName, cssValues, failures, foregroundName, backgroundName) {
+    const foreground = resolveCssColor(cssValues, foregroundName);
+    const background = resolveCssColor(cssValues, backgroundName);
+    const black = resolveCssColor(cssValues, '--rp-color-black');
+    const white = resolveCssColor(cssValues, '--rp-color-white');
 
-    const value = tokenValues.get(path);
-    if (typeof value !== 'string') return undefined;
+    if (
+        !isOpaqueColor(foreground) ||
+        !isOpaqueColor(background) ||
+        !isOpaqueColor(black) ||
+        !isOpaqueColor(white)
+    ) {
+        failures.push(
+            `${themeName}: ${foregroundName} on ${backgroundName} could not be resolved for contrast selection`,
+        );
+        return;
+    }
 
-    return resolveColorValue(tokenValues, value, seen);
+    const blackRatio = contrastRatio(black, background);
+    const whiteRatio = contrastRatio(white, background);
+    const expected = blackRatio >= whiteRatio ? black : white;
+
+    if (!sameColor(foreground, expected)) {
+        const expectedName = blackRatio >= whiteRatio ? '--rp-color-black' : '--rp-color-white';
+        failures.push(
+            `${themeName}: ${foregroundName} on ${backgroundName} should resolve to ${expectedName}`,
+        );
+    }
 }
 
-function resolveColorValue(tokenValues, value, seen) {
+function resolveCssColor(cssValues, name, seen = new Set()) {
+    if (seen.has(name)) return undefined;
+    seen.add(name);
+
+    const value = cssValues.get(name);
+    if (typeof value !== 'string') return undefined;
+
+    return resolveCssColorValue(cssValues, value, seen);
+}
+
+function resolveCssColorValue(cssValues, value, seen) {
     const trimmedValue = value.trim();
 
     const reference = trimmedValue.match(/^\{([^}]+)\}$/);
-    if (reference) return resolveColor(tokenValues, normalizeReferencePath(reference[1]), seen);
+    if (reference) {
+        const referenceToken = dictionary.tokenMap.get(`{${normalizeReferencePath(reference[1])}}`);
+        if (!referenceToken || !hasCssCustomProperty(referenceToken)) return undefined;
+
+        return resolveCssColor(cssValues, cssCustomProperty(referenceToken), seen);
+    }
+
+    const cssVariable = trimmedValue.match(/^var\((--rp-[a-z0-9-]+)\)$/i);
+    if (cssVariable) return resolveCssColor(cssValues, cssVariable[1], seen);
 
     const hex = trimmedValue.match(/^#([\da-f]{6})$/i);
     if (hex) return colorFromHex(trimmedValue);
@@ -295,8 +393,8 @@ function resolveColorValue(tokenValues, value, seen) {
     );
     if (colorMix) {
         const [, firstValue, firstWeight, secondValue] = colorMix;
-        const firstColor = resolveColorValue(tokenValues, firstValue, seen);
-        const secondColor = resolveColorValue(tokenValues, secondValue, seen);
+        const firstColor = resolveCssColorValue(cssValues, firstValue, seen);
+        const secondColor = resolveCssColorValue(cssValues, secondValue, seen);
         if (!firstColor || !secondColor) return undefined;
 
         return mixColors(firstColor, Number.parseFloat(firstWeight) / 100, secondColor);
@@ -342,6 +440,15 @@ function mixColors(firstColor, firstWeight, secondColor) {
 
 function isOpaqueColor(color) {
     return color && color.alpha === 1;
+}
+
+function sameColor(first, second) {
+    return (
+        first.red === second.red &&
+        first.green === second.green &&
+        first.blue === second.blue &&
+        first.alpha === second.alpha
+    );
 }
 
 function contrastRatio(foreground, background) {

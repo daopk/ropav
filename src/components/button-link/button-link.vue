@@ -17,7 +17,7 @@
                 <IconLoaderCircle class="rp-button__spinner" />
             </slot>
         </span>
-        <span class="rp-button__content" :aria-hidden="loading || undefined">
+        <span class="rp-button__content">
             <span v-if="$slots.left" class="rp-button__left">
                 <slot name="left" />
             </span>
@@ -34,7 +34,6 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
-import { isComponentPresetColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { getButtonColorStyle } from '../button/useButtonColor';
 import type { ButtonLinkProps } from './types';
@@ -51,7 +50,6 @@ const isUnavailable = computed(() => props.disabled || props.loading);
 const rootClass = computed(() =>
     bem('rp-button', {
         [props.variant ?? '']: Boolean(props.variant),
-        [`color-${props.color}`]: isComponentPresetColor(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
         disabled: isUnavailable.value,
@@ -59,7 +57,9 @@ const rootClass = computed(() =>
     }),
 );
 
-const rootStyle = computed(() => getButtonColorStyle(props.color));
+const rootStyle = computed(() =>
+    getButtonColorStyle(props.color, props.variant, props.autoContrast),
+);
 
 const resolvedHref = computed(() => (isUnavailable.value ? undefined : props.href));
 const resolvedTarget = computed(() => (isUnavailable.value ? undefined : props.target));

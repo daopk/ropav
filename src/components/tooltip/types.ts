@@ -28,6 +28,7 @@ export interface TooltipProps {
     target?: TooltipTarget | null;
     placement?: TooltipPlacement;
     color?: TooltipColor;
+    autoContrast?: boolean;
     offset?: TooltipOffset;
     open?: boolean;
     openDelay?: number;

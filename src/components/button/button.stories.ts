@@ -4,7 +4,7 @@ import IconPlus from '~icons/lucide/plus';
 import Button from './button.vue';
 import './button.stories.scss';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
@@ -21,6 +21,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         size: {
             control: 'select',
             options: [undefined, ...sizes],
@@ -37,6 +38,7 @@ const meta = {
         loading: { control: 'boolean' },
     },
     args: {
+        autoContrast: false,
         disabled: false,
         loading: false,
     },
@@ -163,7 +165,7 @@ export const States: Story = {
 
 export const LoadingSlot: Story = {
     args: {
-        color: 'primary',
+        color: 'blue',
         loading: true,
         variant: 'solid',
     },

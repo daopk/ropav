@@ -3,7 +3,7 @@ import Button from '../button/button.vue';
 import Tooltip from './tooltip.vue';
 
 const placements = ['top', 'right', 'bottom', 'left'] as const;
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 
 const meta = {
     title: 'Components/Tooltip',
@@ -17,6 +17,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         content: { control: 'text' },
         open: { control: 'boolean' },
         openDelay: { control: 'number' },
@@ -27,12 +28,13 @@ const meta = {
         target: { control: false },
     },
     args: {
+        autoContrast: false,
+        arrow: false,
         content: 'Create a new project',
+        decorative: false,
+        disabled: false,
         placement: 'top',
         openDelay: 300,
-        arrow: false,
-        disabled: false,
-        decorative: false,
     },
     parameters: {
         layout: 'fullscreen',
@@ -149,7 +151,7 @@ export const CustomContent: Story = {
                     </template>
                     <template #content>
                         <span style="display: inline-flex; align-items: center; gap: 6px;">
-                            <span style="width: 8px; height: 8px; border-radius: 999px; background: var(--rp-color-success);"></span>
+                            <span style="width: 8px; height: 8px; border-radius: 999px; background: var(--rp-color-green-filled);"></span>
                             All checks passed
                         </span>
                     </template>

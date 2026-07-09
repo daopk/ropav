@@ -11,6 +11,7 @@ export interface RadioProps {
     value: string | number;
     variant?: RadioVariant;
     color?: RadioColor;
+    autoContrast?: boolean;
     size?: RadioSize;
     disabled?: boolean;
 }
@@ -21,6 +22,7 @@ export interface RadioGroupProps {
     modelValue: string | number | null;
     variant?: RadioVariant;
     color?: RadioColor;
+    autoContrast?: boolean;
     size?: RadioSize;
     disabled?: boolean;
     required?: boolean;
@@ -37,6 +39,7 @@ export interface RadioGroupContext {
     required: boolean;
     variant?: RadioVariant;
     color?: RadioColor;
+    autoContrast?: boolean;
     size?: RadioSize;
     select: (value: string | number) => void;
 }

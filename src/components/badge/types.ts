@@ -19,6 +19,7 @@ export type BadgeVariant = (typeof badgeVariants)[number];
 export interface BadgeProps {
     variant?: BadgeVariant;
     color?: BadgeColor;
+    autoContrast?: boolean;
     size?: BadgeSize;
     radius?: BadgeRadius;
     ariaLabel?: string;

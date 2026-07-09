@@ -20,9 +20,9 @@ export interface AlertProps {
     description?: string;
     variant?: AlertVariant;
     color?: AlertColor;
+    autoContrast?: boolean;
     radius?: AlertRadius;
     role?: AlertRole;
-    showIcon?: boolean;
     closable?: boolean;
     closeLabel?: string;
 }

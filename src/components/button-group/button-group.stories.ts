@@ -39,7 +39,7 @@ export const Actions: Story = {
             <ButtonGroup v-bind="args">
                 <Button variant="solid">Save</Button>
                 <Button variant="outline">Preview</Button>
-                <Button variant="ghost" color="danger">Delete</Button>
+                <Button variant="ghost" color="red">Delete</Button>
             </ButtonGroup>
         `,
     }),
@@ -75,7 +75,7 @@ export const Vertical: Story = {
             <ButtonGroup v-bind="args">
                 <Button variant="outline">Duplicate</Button>
                 <Button variant="outline">Archive</Button>
-                <Button variant="outline" color="danger">Delete</Button>
+                <Button variant="outline" color="red">Delete</Button>
             </ButtonGroup>
         `,
     }),
@@ -107,7 +107,7 @@ export const IconActions: Story = {
                 <IconButton aria-label="Archive" variant="outline">
                     <IconArchive />
                 </IconButton>
-                <IconButton aria-label="Delete" variant="outline" color="danger">
+                <IconButton aria-label="Delete" variant="outline" color="red">
                     <IconTrash />
                 </IconButton>
             </ButtonGroup>

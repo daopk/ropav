@@ -83,7 +83,7 @@ export const Basic: Story = {
             <Card v-bind="args" style="max-width: 360px;">
                 <div style="display: grid; gap: 8px;">
                     <strong>92% complete</strong>
-                    <span style="color: var(--rp-color-text-secondary);">All critical tasks are on track for the next milestone.</span>
+                    <span style="color: var(--rp-color-dimmed);">All critical tasks are on track for the next milestone.</span>
                 </div>
             </Card>
         `,
@@ -210,11 +210,11 @@ export const HeaderSlot: Story = {
                             <strong style="color: var(--rp-color-text); font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-tight);">
                                 Deployment
                             </strong>
-                            <span style="color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                            <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                                 Production status
                             </span>
                         </div>
-                        <span style="color: var(--rp-color-success-fg); font-weight: var(--rp-font-weight-semibold);">
+                        <span style="color: var(--rp-color-green-light-color); font-weight: var(--rp-font-weight-semibold);">
                             Live
                         </span>
                     </div>
@@ -237,7 +237,7 @@ export const FooterSlot: Story = {
                 <template #footer>
                     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
                         <Button type="button" size="sm" variant="ghost">Cancel</Button>
-                        <Button type="button" size="sm" variant="solid" color="primary">Deploy</Button>
+                        <Button type="button" size="sm" variant="solid" color="blue">Deploy</Button>
                     </div>
                 </template>
             </Card>
@@ -294,7 +294,7 @@ export const Padding: Story = {
                     :padding="example.padding"
                     style="min-height: 160px;"
                 >
-                    <div style="display: grid; height: 100%; min-height: 96px; place-items: center; background: var(--rp-color-primary-subtle-bg); color: var(--rp-color-primary-fg); font-weight: var(--rp-font-weight-semibold);">
+                    <div style="display: grid; height: 100%; min-height: 96px; place-items: center; background: var(--rp-blue-color-light); color: var(--rp-blue-color-light-color); font-weight: var(--rp-font-weight-semibold);">
                         {{ example.label }}
                     </div>
                 </Card>

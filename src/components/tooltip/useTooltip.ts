@@ -10,7 +10,7 @@ import {
     type CSSProperties,
 } from 'vue';
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
-import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
+import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
 
@@ -59,14 +59,23 @@ function resolveOffsetStyle(offset: TooltipOffset | undefined): CSSProperties | 
     return Object.keys(style).length > 0 ? style : undefined;
 }
 
-function resolveTooltipColorStyle(color: TooltipProps['color']): CSSProperties | undefined {
-    const customColor = getComponentCustomColor(color);
-    if (!customColor) return undefined;
+function resolveTooltipColorStyleWithContrast(
+    color: TooltipProps['color'],
+    autoContrast: TooltipProps['autoContrast'],
+): CSSProperties | undefined {
+    if (!color) return undefined;
+
+    const roles = getComponentVariantColorRoles({
+        color,
+        variant: 'solid',
+        autoContrast,
+    });
+    if (!roles) return undefined;
 
     return {
-        '--_rp-tooltip-bg': customColor,
-        '--_rp-tooltip-fg': 'var(--rp-color-on-primary)',
-    };
+        '--_rp-tooltip-bg': roles.background,
+        '--_rp-tooltip-fg': roles.color,
+    } as CSSProperties;
 }
 
 export function useTooltip(
@@ -105,7 +114,6 @@ export function useTooltip(
     const rootClass = computed(() =>
         bem('rp-tooltip', {
             [`placement-${placement.value}`]: true,
-            [`color-${props.color}`]: isComponentPresetColor(props.color),
             arrow: props.arrow,
             target: isTargetMode.value,
             open: isVisible.value,
@@ -123,7 +131,7 @@ export function useTooltip(
     const contentStyle = computed<CSSProperties | undefined>(() => {
         const style: CSSProperties = {
             ...resolveOffsetStyle(props.offset),
-            ...resolveTooltipColorStyle(props.color),
+            ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast),
         };
 
         if (!isTargetMode.value || !targetPosition.value) {

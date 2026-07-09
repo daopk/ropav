@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import coreTokensSource from '../../tokens/default/core.tokens.json?raw';
-import semanticTokensSource from '../../tokens/default/semantic.tokens.json?raw';
-import darkTokensSource from '../../tokens/dark/overrides.tokens.json?raw';
+import { componentColors, componentColorShades } from '../utils/componentColors';
 import './colors.stories.scss';
 
 type TokenValue = string | number;
@@ -22,51 +21,76 @@ interface TokenFile {
 
 type TokenValueMap = Map<string, TokenValue>;
 
-interface CoreColor {
-    name: string;
-    label: string;
-    value: string;
-}
-
-interface SemanticColor extends CoreColor {
-    variable: string;
-    darkValue?: string;
-}
-
 const coreTokens = JSON.parse(coreTokensSource) as TokenFile;
-const semanticTokens = JSON.parse(semanticTokensSource) as TokenFile;
-const darkTokens = JSON.parse(darkTokensSource) as TokenFile;
-const defaultTokenValues = collectTokenValueMap(coreTokens, semanticTokens);
-const darkTokenValues = collectTokenValueMap(coreTokens, semanticTokens, darkTokens);
+const defaultTokenValues = collectTokenValueMap(coreTokens);
+const variantSuffixes = [
+    'filled',
+    'filled-hover',
+    'contrast',
+    'light',
+    'light-hover',
+    'light-color',
+    'outline',
+    'outline-hover',
+];
+const schemeVariables = [
+    '--rp-color-scheme',
+    '--rp-color-text',
+    '--rp-color-body',
+    '--rp-color-default',
+    '--rp-color-default-hover',
+    '--rp-color-default-color',
+    '--rp-color-default-border',
+    '--rp-color-dimmed',
+    '--rp-color-disabled',
+    '--rp-color-disabled-color',
+    '--rp-color-disabled-border',
+    '--rp-color-placeholder',
+    '--rp-color-bright',
+    '--rp-color-focus-ring',
+    '--rp-color-control-bg',
+    '--rp-color-control-fg',
+    '--rp-color-control-border',
+    '--rp-color-control-border-focus',
+    '--rp-color-control-selected-bg',
+    '--rp-color-control-selected-fg',
+];
+const primaryVariables = [
+    ...componentColorShades.map((shade) => `--rp-primary-color-${shade}`),
+    ...variantSuffixes.map((suffix) => `--rp-primary-color-${suffix}`),
+];
 
-const publicAccentNames = new Set([
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-    'danger',
-    'info',
-    'neutral',
-]);
+const paletteColors = componentColors.map((name) => ({
+    name,
+    shades: componentColorShades.map((shade) => {
+        const token = getColorToken([name, shade]);
 
-const coreColors = collectColorTokens(coreTokens.color, defaultTokenValues);
-const brandColors = coreColors.filter((color) => publicAccentNames.has(color.name));
-const neutralColors = coreColors.filter(
-    (color) => color.name === 'white' || color.name === 'black' || color.name.startsWith('gray-'),
-);
+        return {
+            shade,
+            label: `${name}.${shade}`,
+            value: resolveTokenValue(token.$value, defaultTokenValues),
+            variable: `--rp-color-${name}-${shade}`,
+            contrastVariable: `--rp-color-${name}-${shade}-contrast`,
+        };
+    }),
+}));
+const fixedColors = ['white', 'black'].map((name) => {
+    const token = getColorToken([name]);
 
-const darkColorByName = new Map(
-    collectColorTokens(darkTokens.color, darkTokenValues).map((color) => [color.name, color.value]),
-);
-const semanticColors: SemanticColor[] = collectColorTokens(semanticTokens.color, defaultTokenValues)
-    .filter((color) => isPublicSemanticColor(color.name))
-    .map((color) => ({
-        name: color.name,
-        label: color.label,
-        value: color.value,
-        variable: `--rp-color-${color.name}`,
-        darkValue: darkColorByName.get(color.name),
-    }));
+    return {
+        shade: name,
+        label: name,
+        value: resolveTokenValue(token.$value, defaultTokenValues),
+        variable: `--rp-color-${name}`,
+    };
+});
+const variantVariables = componentColors.map((name) => ({
+    name,
+    variables: variantSuffixes.map((suffix) => ({
+        name: `--rp-color-${name}-${suffix}`,
+        label: suffix,
+    })),
+}));
 
 const meta = {
     title: 'Design Tokens/Colors',
@@ -82,10 +106,18 @@ const meta = {
             const updateComputedValues = () => {
                 const root = document.documentElement;
                 const rootStyle = getComputedStyle(root);
+                const variables = [
+                    ...variantVariables.flatMap((color) =>
+                        color.variables.map((variable) => variable.name),
+                    ),
+                    ...primaryVariables,
+                    ...schemeVariables,
+                ];
+
                 computedValues.value = Object.fromEntries(
-                    semanticColors.map((color) => [
-                        color.variable,
-                        rootStyle.getPropertyValue(color.variable).trim(),
+                    variables.map((variable) => [
+                        variable,
+                        rootStyle.getPropertyValue(variable).trim(),
                     ]),
                 );
                 themeName.value = root.classList.contains('dark') ? 'Dark' : 'Light';
@@ -105,11 +137,13 @@ const meta = {
             });
 
             return {
-                brandColors,
-                neutralColors,
-                semanticColors,
                 computedValues,
+                fixedColors,
+                paletteColors,
+                primaryVariables,
+                schemeVariables,
                 themeName,
+                variantVariables,
             };
         },
         template: `
@@ -122,12 +156,12 @@ const meta = {
                     <span class="rp-color-story__theme">{{ themeName }} theme</span>
                 </header>
 
-                <section class="rp-color-section" aria-labelledby="brand-colors-title">
-                    <h2 id="brand-colors-title">Brand and status</h2>
-                    <div class="rp-color-grid rp-color-grid--accent">
+                <section class="rp-color-section" aria-labelledby="palette-colors-title">
+                    <h2 id="palette-colors-title">Color palette</h2>
+                    <div class="rp-color-fixed-grid">
                         <article
-                            v-for="color in brandColors"
-                            :key="color.name"
+                            v-for="color in fixedColors"
+                            :key="color.variable"
                             class="rp-color-token"
                         >
                             <span
@@ -136,62 +170,104 @@ const meta = {
                             />
                             <span class="rp-color-token__meta">
                                 <strong>{{ color.label }}</strong>
+                                <code>{{ color.variable }}</code>
                                 <code>{{ color.value }}</code>
                             </span>
                         </article>
                     </div>
-                </section>
-
-                <section class="rp-color-section" aria-labelledby="neutral-colors-title">
-                    <h2 id="neutral-colors-title">Neutral</h2>
-                    <div class="rp-color-grid rp-color-grid--neutral">
+                    <div class="rp-color-scales">
                         <article
-                            v-for="color in neutralColors"
+                            v-for="color in paletteColors"
                             :key="color.name"
-                            class="rp-color-token"
+                            class="rp-color-scale"
                         >
-                            <span
-                                class="rp-color-token__swatch"
-                                :style="{ backgroundColor: color.value }"
-                            />
-                            <span class="rp-color-token__meta">
-                                <strong>{{ color.label }}</strong>
-                                <code>{{ color.value }}</code>
-                            </span>
+                            <h3>{{ color.name }}</h3>
+                            <div class="rp-color-scale__grid">
+                                <span
+                                    v-for="shade in color.shades"
+                                    :key="shade.variable"
+                                    class="rp-color-scale__shade"
+                                >
+                                    <span
+                                        class="rp-color-scale__swatch"
+                                        :style="{ backgroundColor: shade.value }"
+                                    />
+                                    <code>{{ shade.shade }}</code>
+                                    <code>{{ shade.contrastVariable }}</code>
+                                </span>
+                            </div>
                         </article>
                     </div>
                 </section>
 
-                <section class="rp-color-section" aria-labelledby="semantic-colors-title">
-                    <h2 id="semantic-colors-title">Semantic CSS variables</h2>
+                <section class="rp-color-section" aria-labelledby="variant-colors-title">
+                    <h2 id="variant-colors-title">Generated variants</h2>
+                    <div class="rp-color-variant-grid">
+                        <article
+                            v-for="color in variantVariables"
+                            :key="color.name"
+                            class="rp-color-variant"
+                        >
+                            <h3>{{ color.name }}</h3>
+                            <div class="rp-color-variant__items">
+                                <span
+                                    v-for="variable in color.variables"
+                                    :key="variable.name"
+                                    class="rp-color-variant__item"
+                                >
+                                    <span
+                                        class="rp-color-token__swatch rp-color-token__swatch--small"
+                                        :style="{ backgroundColor: 'var(' + variable.name + ')' }"
+                                    />
+                                    <span>
+                                        <strong>{{ variable.label }}</strong>
+                                        <code>{{ computedValues[variable.name] || variable.name }}</code>
+                                    </span>
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="rp-color-section" aria-labelledby="aliases-title">
+                    <h2 id="aliases-title">Primary and scheme aliases</h2>
                     <div class="rp-color-table" role="table">
                         <div class="rp-color-table__row rp-color-table__row--head" role="row">
-                            <span role="columnheader">Token</span>
-                            <span role="columnheader">Source</span>
+                            <span role="columnheader">Variable</span>
                             <span role="columnheader">Current</span>
                         </div>
                         <div
-                            v-for="color in semanticColors"
-                            :key="color.name"
+                            v-for="variable in primaryVariables"
+                            :key="variable"
                             class="rp-color-table__row"
                             role="row"
                         >
                             <span class="rp-color-table__token" role="cell">
                                 <span
                                     class="rp-color-token__swatch rp-color-token__swatch--small"
-                                    :style="{ backgroundColor: 'var(' + color.variable + ')' }"
+                                    :style="{ backgroundColor: 'var(' + variable + ')' }"
                                 />
-                                <span>
-                                    <strong>{{ color.label }}</strong>
-                                    <code>{{ color.variable }}</code>
-                                </span>
+                                <code>{{ variable }}</code>
                             </span>
                             <span class="rp-color-table__value" role="cell">
-                                <code>{{ color.value }}</code>
-                                <code v-if="color.darkValue">dark: {{ color.darkValue }}</code>
+                                <code>{{ computedValues[variable] || '...' }}</code>
+                            </span>
+                        </div>
+                        <div
+                            v-for="variable in schemeVariables"
+                            :key="variable"
+                            class="rp-color-table__row"
+                            role="row"
+                        >
+                            <span class="rp-color-table__token" role="cell">
+                                <span
+                                    class="rp-color-token__swatch rp-color-token__swatch--small"
+                                    :style="{ backgroundColor: 'var(' + variable + ')' }"
+                                />
+                                <code>{{ variable }}</code>
                             </span>
                             <span class="rp-color-table__value" role="cell">
-                                <code>{{ computedValues[color.variable] || '...' }}</code>
+                                <code>{{ computedValues[variable] || '...' }}</code>
                             </span>
                         </div>
                     </div>
@@ -206,40 +282,22 @@ type Story = StoryObj<typeof meta>;
 
 export const Palette: Story = {};
 
-function collectColorTokens(
-    tree: TokenTree,
-    tokenValues: TokenValueMap,
-    path: string[] = [],
-): CoreColor[] {
-    return Object.entries(tree).flatMap(([key, value]) => {
-        const nextPath = [...path, key];
+function getColorToken(path: string[]): DesignToken {
+    let current: DesignToken | TokenTree = coreTokens.color;
 
-        if (isDesignToken(value)) {
-            return value.$type === 'color' && typeof value.$value === 'string'
-                ? [
-                      {
-                          name: nextPath.join('-'),
-                          label: nextPath.join('.'),
-                          value: resolveTokenValue(value.$value, tokenValues),
-                      },
-                  ]
-                : [];
-        }
+    for (const segment of path) {
+        current = (current as TokenTree)[segment];
+    }
 
-        return collectColorTokens(value, tokenValues, nextPath);
-    });
+    if (!isDesignToken(current)) {
+        throw new Error(`Missing color token: color.${path.join('.')}`);
+    }
+
+    return current;
 }
 
 function isDesignToken(value: DesignToken | TokenTree): value is DesignToken {
     return '$value' in value;
-}
-
-function isPublicSemanticColor(name: string) {
-    if (name === 'white' || name === 'black') return false;
-    if (name.startsWith('gray-')) return false;
-    if (name.startsWith('control-')) return false;
-
-    return true;
 }
 
 function collectTokenValueMap(...files: TokenFile[]): TokenValueMap {
@@ -265,18 +323,17 @@ function collectTokenValues(tree: TokenTree, path: string[], values: TokenValueM
     }
 }
 
-function resolveTokenValue(
-    value: string,
-    tokenValues: TokenValueMap,
-    seen = new Set<string>(),
-): string {
-    return value.replace(/\{([^}]+)\}/g, (reference: string, path: string): string => {
-        const normalizedPath = String(path).replace(/\.\$?value$/, '');
-        if (seen.has(normalizedPath)) return reference;
+function resolveTokenValue(value: TokenValue, tokenValues: TokenValueMap): string {
+    if (typeof value !== 'string') return String(value);
 
-        const nextValue = tokenValues.get(normalizedPath);
-        if (typeof nextValue !== 'string') return reference;
+    const exactReference = value.match(/^\{([^}]+)\}$/);
+    if (exactReference) {
+        const referencedValue = tokenValues.get(exactReference[1]);
+        return referencedValue == null ? value : resolveTokenValue(referencedValue, tokenValues);
+    }
 
-        return resolveTokenValue(nextValue, tokenValues, new Set([...seen, normalizedPath]));
+    return value.replace(/\{([^}]+)\}/g, (match, path) => {
+        const referencedValue = tokenValues.get(path);
+        return referencedValue == null ? match : resolveTokenValue(referencedValue, tokenValues);
     });
 }

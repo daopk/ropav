@@ -6,15 +6,7 @@ import Radio from './radio.vue';
 import RadioGroup from './radio-group.vue';
 
 describe('Radio', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 
     it('requires a RadioGroup provider', () => {
         expect(() => {
@@ -206,7 +198,7 @@ describe('Radio', () => {
                     return h(
                         RadioGroup,
                         {
-                            color: 'success',
+                            color: 'green',
                             modelValue: 'apple',
                             size: 'lg',
                             variant: 'outline',
@@ -217,7 +209,7 @@ describe('Radio', () => {
                                 h(
                                     Radio,
                                     {
-                                        color: 'danger',
+                                        color: 'red',
                                         size: 'sm',
                                         value: 'banana',
                                         variant: 'solid',
@@ -240,18 +232,22 @@ describe('Radio', () => {
             'rp-radio',
             'rp-radio--checked',
             'rp-radio--outline',
-            'rp-radio--color-success',
             'rp-radio--size-lg',
         ]);
         expect([...bananaRoot.classList]).toEqual([
             'rp-radio',
             'rp-radio--solid',
-            'rp-radio--color-danger',
             'rp-radio--size-sm',
         ]);
+        expect((appleRoot as HTMLElement).style.getPropertyValue('--_rp-radio-color')).toBe(
+            'var(--rp-color-green-filled)',
+        );
+        expect((bananaRoot as HTMLElement).style.getPropertyValue('--_rp-radio-color')).toBe(
+            'var(--rp-color-red-filled)',
+        );
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves selected color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -283,16 +279,14 @@ describe('Radio', () => {
         for (const [index, color] of colors.entries()) {
             const radio = radios[index] as HTMLElement;
 
-            expect([...radio.classList]).toEqual([
-                'rp-radio',
-                'rp-radio--checked',
-                `rp-radio--color-${color}`,
-            ]);
-            expect(radio.style.getPropertyValue('--_rp-radio-custom-color')).toBe('');
+            expect([...radio.classList]).toEqual(['rp-radio', 'rp-radio--checked']);
+            expect(radio.style.getPropertyValue('--_rp-radio-color')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
         }
     });
 
-    it('sets inline custom color variables from group color values', async () => {
+    it('sets selected color variables from group color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -315,9 +309,53 @@ describe('Radio', () => {
         const root = container.querySelector('.rp-radio') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-radio', 'rp-radio--checked']);
-        expect(root.style.getPropertyValue('--_rp-radio-custom-color')).toBe('#ff3366');
-        expect(root.style.getPropertyValue('--_rp-radio-custom-on-color')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(root.style.getPropertyValue('--_rp-radio-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-radio-on-color')).toBe('');
+    });
+
+    it('sets readable selected foreground when group autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            RadioGroup,
+                            {
+                                autoContrast: true,
+                                color: '#fab005',
+                                modelValue: 'apple',
+                            },
+                            {
+                                default: () =>
+                                    h(Radio, { value: 'apple' }, { default: () => 'Apple' }),
+                            },
+                        ),
+                        h(
+                            RadioGroup,
+                            {
+                                autoContrast: true,
+                                color: '#141414',
+                                modelValue: 'banana',
+                            },
+                            {
+                                default: () =>
+                                    h(Radio, { value: 'banana' }, { default: () => 'Banana' }),
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lightRoot, darkRoot] = [...container.querySelectorAll('.rp-radio')] as HTMLElement[];
+
+        expect(lightRoot.style.getPropertyValue('--_rp-radio-on-color')).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(darkRoot.style.getPropertyValue('--_rp-radio-on-color')).toBe(
+            'var(--rp-color-white)',
         );
     });
 });

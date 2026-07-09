@@ -1,8 +1,8 @@
 .rp-select {
     --_rp-select-radius: var(--rp-radius-sm);
-    --_rp-select-invalid-border: var(--rp-color-danger);
-    --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
-    --_rp-select-option-focused-bg: var(--rp-color-surface-hover);
+    --_rp-select-invalid-border: var(--rp-color-red-filled);
+    --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
+    --_rp-select-option-focused-bg: var(--rp-color-default-hover);
 
     position: relative;
     display: inline-flex;
@@ -10,10 +10,15 @@
     font-weight: var(--rp-font-weight-normal);
     line-height: var(--rp-line-height-none);
 
-    html.dark & {
-        --_rp-select-invalid-border: var(--rp-color-danger-fg);
-        --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
-        --_rp-select-option-focused-bg: var(--rp-color-button-default-bg-active);
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-select-invalid-border: var(--rp-color-red-light-color);
+        --_rp-select-invalid-ring: color-mix(
+            in srgb,
+            var(--rp-color-red-light-color) 32%,
+            transparent
+        );
+        --_rp-select-option-focused-bg: var(--rp-color-disabled);
     }
 
     &--disabled {
@@ -157,12 +162,12 @@
         }
 
         &--selected {
-            color: var(--rp-color-primary-fg);
+            color: var(--rp-primary-color-light-color);
             font-weight: var(--rp-font-weight-medium);
         }
 
         &--disabled {
-            color: var(--rp-color-text-disabled);
+            color: var(--rp-color-disabled-color);
             cursor: not-allowed;
         }
     }
@@ -172,7 +177,7 @@
         align-items: center;
         justify-content: center;
         padding: var(--rp-spacing-4);
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-base);
     }
 }

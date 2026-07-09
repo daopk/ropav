@@ -37,7 +37,7 @@ const cardTabsPanelStyle = {
 
 const cardTabsSummaryStyle = {
     margin: 0,
-    color: 'var(--rp-color-text-secondary)',
+    color: 'var(--rp-color-dimmed)',
 };
 
 const cardTabsMetricStyle = {
@@ -46,7 +46,7 @@ const cardTabsMetricStyle = {
     justifyContent: 'space-between',
     gap: '16px',
     padding: '12px 0',
-    borderTop: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    borderTop: 'var(--rp-border-width-thin) solid var(--rp-color-default-border)',
 };
 
 const outlineConnectedTabsStyle = {
@@ -60,15 +60,15 @@ const outlineBorderedContentStyle = {
     minHeight: '120px',
     padding: '16px',
     color: 'var(--rp-color-text)',
-    backgroundColor: 'var(--rp-color-background)',
-    borderRight: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
-    borderBottom: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
-    borderLeft: 'var(--rp-border-width-thin) solid var(--rp-color-border)',
+    backgroundColor: 'var(--rp-color-body)',
+    borderRight: 'var(--rp-border-width-thin) solid var(--rp-color-default-border)',
+    borderBottom: 'var(--rp-border-width-thin) solid var(--rp-color-default-border)',
+    borderLeft: 'var(--rp-border-width-thin) solid var(--rp-color-default-border)',
     borderRadius: '0 0 var(--rp-radius-md) var(--rp-radius-md)',
 };
 
 const outlineContentDescriptionStyle = {
-    color: 'var(--rp-color-text-secondary)',
+    color: 'var(--rp-color-dimmed)',
 };
 
 const colorStoryStyle = {
@@ -79,10 +79,10 @@ const colorStoryStyle = {
 type TabColor = (typeof componentColors)[number];
 
 function getTabColorStyle(color: TabColor) {
-    if (color === 'primary') return {};
+    if (color === 'blue') return {};
 
     return {
-        '--rp-color-primary': `var(--rp-color-${color})`,
+        '--rp-blue-color-filled': `var(--rp-color-${color})`,
     };
 }
 

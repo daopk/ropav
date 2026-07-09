@@ -6,15 +6,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import IconButton from './icon-button.vue';
 
 describe('IconButton', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
@@ -117,7 +109,7 @@ describe('IconButton', () => {
                 render() {
                     return h(IconButton, {
                         ariaLabel: 'Delete',
-                        color: 'danger',
+                        color: 'red',
                         radius: 'lg',
                         size: 'sm',
                         variant: 'solid',
@@ -133,11 +125,12 @@ describe('IconButton', () => {
         expect([...button.classList]).toEqual([
             'rp-button',
             'rp-button--solid',
-            'rp-button--color-danger',
             'rp-button--size-sm',
             'rp-button--radius-lg',
             'rp-icon-button',
         ]);
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-red-filled)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
     });
 
     it('adds a variant modifier for each supported variant', async () => {
@@ -168,7 +161,7 @@ describe('IconButton', () => {
         }
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -190,16 +183,23 @@ describe('IconButton', () => {
         for (const [index, color] of colors.entries()) {
             const button = buttons[index] as HTMLElement;
 
-            expect([...button.classList]).toEqual([
-                'rp-button',
-                `rp-button--color-${color}`,
-                'rp-icon-button',
-            ]);
-            expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('');
+            expect([...button.classList]).toEqual(['rp-button', 'rp-icon-button']);
+            expect(button.style.getPropertyValue('--_rp-button-bg')).toBe(
+                'var(--rp-color-default)',
+            );
+            expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+                `var(--rp-color-${color}-light-hover)`,
+            );
+            expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
+                `var(--rp-color-${color}-light-color)`,
+            );
+            expect(button.style.getPropertyValue('--_rp-button-border')).toBe(
+                `var(--rp-color-${color}-outline)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets final color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -217,8 +217,33 @@ describe('IconButton', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--ghost', 'rp-icon-button']);
-        expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('#ff3366');
-        expect(button.style.getPropertyValue('--_rp-button-custom-fg')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('transparent');
+        expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+            'color-mix(in srgb, #ff3366 18%, transparent)',
+        );
+        expect(button.style.getPropertyValue('--_rp-button-border')).toBe('transparent');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('#ff3366');
+    });
+
+    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(IconButton, {
+                        ariaLabel: 'Contrast',
+                        autoContrast: true,
+                        color: '#fab005',
+                        variant: 'solid',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
     });
 
     it('adds a radius modifier for each supported radius', async () => {

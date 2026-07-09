@@ -1,6 +1,9 @@
+html,
+body,
+#storybook-root,
 body.sb-show-main,
 .docs-story {
-    background: var(--rp-color-background) !important;
+    background: var(--rp-color-body) !important;
     color: var(--rp-color-text);
     font-family: var(
         --rp-font-family,

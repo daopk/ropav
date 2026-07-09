@@ -5,15 +5,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Checkbox from './checkbox.vue';
 
 describe('Checkbox', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'outline'] as const;
 
@@ -136,7 +128,7 @@ describe('Checkbox', () => {
                     return h(
                         Checkbox,
                         {
-                            color: 'success',
+                            color: 'green',
                             size: 'lg',
                             radius: 'xl',
                             variant: 'outline',
@@ -156,13 +148,15 @@ describe('Checkbox', () => {
             'rp-checkbox',
             'rp-checkbox--checked',
             'rp-checkbox--outline',
-            'rp-checkbox--color-success',
             'rp-checkbox--size-lg',
             'rp-checkbox--radius-xl',
         ]);
+        expect((root as HTMLElement).style.getPropertyValue('--_rp-checkbox-color')).toBe(
+            'var(--rp-color-green-filled)',
+        );
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves selected color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -184,12 +178,14 @@ describe('Checkbox', () => {
         for (const [index, color] of colors.entries()) {
             const checkbox = checkboxes[index] as HTMLElement;
 
-            expect([...checkbox.classList]).toEqual(['rp-checkbox', `rp-checkbox--color-${color}`]);
-            expect(checkbox.style.getPropertyValue('--_rp-checkbox-custom-color')).toBe('');
+            expect([...checkbox.classList]).toEqual(['rp-checkbox']);
+            expect(checkbox.style.getPropertyValue('--_rp-checkbox-color')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets selected color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -210,9 +206,49 @@ describe('Checkbox', () => {
         const root = container.querySelector('.rp-checkbox') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-checkbox', 'rp-checkbox--checked']);
-        expect(root.style.getPropertyValue('--_rp-checkbox-custom-color')).toBe('#ff3366');
-        expect(root.style.getPropertyValue('--_rp-checkbox-custom-on-color')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(root.style.getPropertyValue('--_rp-checkbox-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-checkbox-on-color')).toBe('');
+    });
+
+    it('sets readable selected foreground when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            Checkbox,
+                            {
+                                autoContrast: true,
+                                color: '#fab005',
+                                modelValue: true,
+                            },
+                            { default: () => 'Light' },
+                        ),
+                        h(
+                            Checkbox,
+                            {
+                                autoContrast: true,
+                                color: '#141414',
+                                modelValue: true,
+                            },
+                            { default: () => 'Dark' },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lightRoot, darkRoot] = [
+            ...container.querySelectorAll('.rp-checkbox'),
+        ] as HTMLElement[];
+
+        expect(lightRoot.style.getPropertyValue('--_rp-checkbox-on-color')).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(darkRoot.style.getPropertyValue('--_rp-checkbox-on-color')).toBe(
+            'var(--rp-color-white)',
         );
     });
 

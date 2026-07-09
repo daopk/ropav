@@ -1,0 +1,166 @@
+import { describe, expect, it } from 'vitest';
+import {
+    getComponentContrastColor,
+    getComponentColorRoles,
+    getComponentColorValue,
+    getComponentVariantColorRoles,
+    isComponentPresetColor,
+    parseComponentColor,
+} from './componentColors';
+
+describe('component color resolver', () => {
+    it('resolves palette names as preset colors', () => {
+        expect(isComponentPresetColor('blue')).toBe(true);
+        expect(parseComponentColor('blue')).toEqual({ kind: 'preset', color: 'blue' });
+        expect(getComponentColorValue('blue')).toBe('var(--rp-color-blue-filled)');
+        expect(getComponentColorRoles('blue')).toMatchObject({
+            filled: 'var(--rp-color-blue-filled)',
+            hover: 'var(--rp-color-blue-filled-hover)',
+            contrast: 'var(--rp-color-blue-contrast)',
+            light: 'var(--rp-color-blue-light)',
+            outline: 'var(--rp-color-blue-outline)',
+            foreground: 'var(--rp-color-blue-light-color)',
+        });
+    });
+
+    it('resolves palette shade syntax to token variables', () => {
+        expect(isComponentPresetColor('blue.6')).toBe(false);
+        expect(parseComponentColor('blue.6')).toEqual({
+            kind: 'shade',
+            color: 'blue',
+            shade: '6',
+        });
+        expect(getComponentColorValue('blue.6')).toBe('var(--rp-color-blue-6)');
+        expect(getComponentColorRoles('blue.6')).toMatchObject({
+            filled: 'var(--rp-color-blue-6)',
+            hover: 'var(--rp-color-blue-7)',
+            contrast: 'var(--rp-color-blue-6-contrast)',
+            foreground: 'var(--rp-color-blue-6)',
+        });
+    });
+
+    it('resolves primary color tokens', () => {
+        expect(parseComponentColor('primary')).toEqual({ kind: 'primary' });
+        expect(getComponentColorValue('primary')).toBe('var(--rp-primary-color-filled)');
+        expect(getComponentColorRoles('primary')).toMatchObject({
+            filled: 'var(--rp-primary-color-filled)',
+            hover: 'var(--rp-primary-color-filled-hover)',
+            contrast: 'var(--rp-primary-color-contrast)',
+            light: 'var(--rp-primary-color-light)',
+            outline: 'var(--rp-primary-color-outline)',
+            foreground: 'var(--rp-primary-color-light-color)',
+        });
+    });
+
+    it('does not resolve invalid palette shade strings', () => {
+        expect(isComponentPresetColor('blue.10')).toBe(false);
+        expect(parseComponentColor('blue.10')).toEqual({ kind: 'invalid', value: 'blue.10' });
+        expect(getComponentColorValue('blue.10')).toBeUndefined();
+        expect(getComponentColorRoles('blue.10')).toBeUndefined();
+        expect(
+            getComponentVariantColorRoles({
+                color: 'blue.10',
+                variant: 'solid',
+                defaultColor: undefined,
+            }),
+        ).toBeUndefined();
+    });
+
+    it('resolves arbitrary CSS colors as raw values and derived roles', () => {
+        expect(isComponentPresetColor('#ff3366')).toBe(false);
+        expect(parseComponentColor('#ff3366')).toEqual({ kind: 'custom', value: '#ff3366' });
+        expect(getComponentColorValue('#ff3366')).toBe('#ff3366');
+        expect(getComponentColorRoles('#ff3366')).toMatchObject({
+            filled: '#ff3366',
+            hover: 'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
+            active: 'color-mix(in srgb, #ff3366 80%, var(--rp-color-black))',
+            light: 'color-mix(in srgb, #ff3366 12%, transparent)',
+            outline: '#ff3366',
+            contrast: 'var(--rp-color-black)',
+            foreground: '#ff3366',
+        });
+    });
+
+    it('keeps white contrast by default and resolves readable custom contrast when enabled', () => {
+        expect(getComponentContrastColor('blue', { autoContrast: true })).toBe(
+            'var(--rp-color-blue-contrast)',
+        );
+        expect(getComponentContrastColor('yellow.6', { autoContrast: true })).toBe(
+            'var(--rp-color-yellow-6-contrast)',
+        );
+        expect(getComponentContrastColor('#fab005')).toBe('var(--rp-color-white)');
+        expect(getComponentContrastColor('#fab005', { autoContrast: true })).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(getComponentContrastColor('#82c91e', { autoContrast: true })).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(getComponentContrastColor('#141414', { autoContrast: true })).toBe(
+            'var(--rp-color-white)',
+        );
+    });
+
+    it('falls back to white contrast for custom colors that cannot be parsed', () => {
+        expect(getComponentColorValue('var(--brand-color)')).toBe('var(--brand-color)');
+        expect(getComponentContrastColor('var(--brand-color)', { autoContrast: true })).toBe(
+            'var(--rp-color-white)',
+        );
+    });
+
+    it('returns final solid variant roles with autoContrast semantics', () => {
+        expect(
+            getComponentVariantColorRoles({
+                color: 'blue',
+                variant: 'solid',
+                autoContrast: false,
+            }),
+        ).toMatchObject({
+            background: 'var(--rp-color-blue-filled)',
+            hover: 'var(--rp-color-blue-filled-hover)',
+            color: 'var(--rp-color-white)',
+            border: 'var(--rp-color-blue-filled)',
+        });
+        expect(
+            getComponentVariantColorRoles({
+                color: '#fab005',
+                variant: 'solid',
+                autoContrast: true,
+            }),
+        ).toMatchObject({
+            background: '#fab005',
+            color: 'var(--rp-color-black)',
+            border: '#fab005',
+        });
+    });
+
+    it('returns final subtle, surface, outline, ghost, and plain roles', () => {
+        expect(getComponentVariantColorRoles({ color: 'blue.6', variant: 'subtle' })).toMatchObject(
+            {
+                background: 'color-mix(in srgb, var(--rp-color-blue-6) 12%, transparent)',
+                color: 'var(--rp-color-blue-6)',
+                border: 'transparent',
+            },
+        );
+        expect(
+            getComponentVariantColorRoles({ color: 'blue.6', variant: 'surface' }),
+        ).toMatchObject({
+            background: 'color-mix(in srgb, var(--rp-color-blue-6) 12%, transparent)',
+            border: 'var(--rp-color-blue-6)',
+        });
+        expect(
+            getComponentVariantColorRoles({ color: 'blue.6', variant: 'outline' }),
+        ).toMatchObject({
+            background: 'transparent',
+            border: 'var(--rp-color-blue-6)',
+        });
+        expect(getComponentVariantColorRoles({ color: 'blue.6', variant: 'ghost' })).toMatchObject({
+            background: 'transparent',
+            border: 'transparent',
+        });
+        expect(getComponentVariantColorRoles({ color: 'blue.6', variant: 'plain' })).toMatchObject({
+            background: 'transparent',
+            hover: 'transparent',
+            color: 'var(--rp-color-blue-6)',
+        });
+    });
+});

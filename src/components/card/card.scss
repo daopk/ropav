@@ -1,9 +1,9 @@
 .rp-card {
-    --_rp-card-bg: var(--rp-color-surface-raised);
-    --_rp-card-border: var(--rp-color-border);
+    --_rp-card-bg: var(--rp-color-default);
+    --_rp-card-border: var(--rp-color-default-border);
     --_rp-card-fg: var(--rp-color-text);
-    --_rp-card-header-border: var(--rp-color-border);
-    --_rp-card-footer-border: var(--rp-color-border);
+    --_rp-card-header-border: var(--rp-color-default-border);
+    --_rp-card-footer-border: var(--rp-color-default-border);
     --_rp-card-padding: var(--rp-spacing-5);
     --_rp-card-radius: var(--rp-radius-sm);
 
@@ -22,15 +22,15 @@
         border-color var(--rp-transition-fast);
 
     &--layer-base {
-        --_rp-card-bg: var(--rp-color-background);
+        --_rp-card-bg: var(--rp-color-body);
     }
 
     &--layer-surface {
-        --_rp-card-bg: var(--rp-color-surface);
+        --_rp-card-bg: var(--rp-color-default);
     }
 
     &--layer-raised {
-        --_rp-card-bg: var(--rp-color-surface-raised);
+        --_rp-card-bg: var(--rp-color-default);
     }
 
     &--borderless {
@@ -122,7 +122,7 @@
 
     &__description {
         margin: 0;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-sm);
         line-height: var(--rp-line-height-normal);
     }

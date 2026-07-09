@@ -24,6 +24,7 @@ const meta = {
         },
         placeholder: { control: 'text' },
         clearable: { control: 'boolean' },
+        clearLabel: { control: 'text' },
         disabled: { control: 'boolean' },
     },
     args: {
@@ -32,6 +33,7 @@ const meta = {
         radius: undefined,
         placeholder: 'Select a fruit...',
         clearable: false,
+        clearLabel: 'Clear selection',
         disabled: false,
     },
     render: (args) => ({

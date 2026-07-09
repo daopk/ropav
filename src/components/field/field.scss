@@ -1,5 +1,5 @@
 .rp-field {
-    --_rp-field-danger: var(--rp-color-danger);
+    --_rp-field-danger: var(--rp-color-red-filled);
 
     display: grid;
     gap: var(--rp-spacing-1);
@@ -7,8 +7,9 @@
     font-family: var(--rp-font-family);
     color: var(--rp-color-text);
 
-    html.dark & {
-        --_rp-field-danger: var(--rp-color-danger-fg);
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-field-danger: var(--rp-color-red-light-color);
     }
 
     &__label {
@@ -37,13 +38,13 @@
 
     &__description {
         margin: 0;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-sm);
         line-height: var(--rp-line-height-normal);
     }
 
     &--disabled &__label,
     &--disabled &__description {
-        color: var(--rp-color-text-disabled);
+        color: var(--rp-color-disabled-color);
     }
 }

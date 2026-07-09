@@ -1,18 +1,73 @@
 export const componentColors = [
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-    'danger',
-    'info',
-    'neutral',
+    'dark',
+    'gray',
+    'red',
+    'pink',
+    'grape',
+    'violet',
+    'indigo',
+    'blue',
+    'cyan',
+    'teal',
+    'green',
+    'lime',
+    'yellow',
+    'orange',
 ] as const;
 
-export type ComponentColor = (typeof componentColors)[number];
+export const componentColorShades = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 
-export type ComponentColorValue = ComponentColor | (string & {});
+export type ComponentColor = (typeof componentColors)[number];
+export type ComponentColorShade = (typeof componentColorShades)[number];
+export type ComponentColorShadeValue = `${ComponentColor}.${ComponentColorShade}`;
+
+export type ComponentColorValue = ComponentColor | ComponentColorShadeValue | (string & {});
+
+export type ComponentColorVariant = 'solid' | 'subtle' | 'surface' | 'outline' | 'ghost' | 'plain';
+
+export interface ComponentColorRoles {
+    filled: string;
+    hover: string;
+    active: string;
+    contrast: string;
+    light: string;
+    lightHover: string;
+    lightActive: string;
+    outline: string;
+    outlineHover: string;
+    foreground: string;
+}
+
+export interface ComponentVariantColorRoles {
+    background: string;
+    hover: string;
+    active: string;
+    color: string;
+    border: string;
+    borderHover: string;
+    borderActive: string;
+}
+
+export interface ComponentContrastColorOptions {
+    autoContrast?: boolean;
+}
+
+export interface ComponentVariantColorOptions extends ComponentContrastColorOptions {
+    color: ComponentColorValue | undefined;
+    variant: ComponentColorVariant | undefined;
+    defaultColor?: ComponentColorValue;
+}
+
+export type ParsedComponentColor =
+    | { kind: 'empty' }
+    | { kind: 'preset'; color: ComponentColor }
+    | { kind: 'primary' }
+    | { kind: 'shade'; color: ComponentColor; shade: ComponentColorShade }
+    | { kind: 'custom'; value: string }
+    | { kind: 'invalid'; value: string };
 
 const componentColorNames = new Set<string>(componentColors);
+const componentColorShadeNames = new Set<string>(componentColorShades);
 
 export function isComponentPresetColor(
     color: ComponentColorValue | undefined,
@@ -20,8 +75,343 @@ export function isComponentPresetColor(
     return Boolean(color && componentColorNames.has(color));
 }
 
-export function getComponentCustomColor(color: ComponentColorValue | undefined) {
-    if (!color || isComponentPresetColor(color)) return undefined;
+export function parseComponentColor(color: ComponentColorValue | undefined): ParsedComponentColor {
+    if (!color) return { kind: 'empty' };
+    if (color === 'primary') return { kind: 'primary' };
 
-    return color;
+    if (componentColorNames.has(color)) {
+        return { kind: 'preset', color: color as ComponentColor };
+    }
+
+    const shadeMatch = color.match(/^([a-z]+)\.(\d+)$/);
+    if (shadeMatch && componentColorNames.has(shadeMatch[1])) {
+        return componentColorShadeNames.has(shadeMatch[2])
+            ? {
+                  kind: 'shade',
+                  color: shadeMatch[1] as ComponentColor,
+                  shade: shadeMatch[2] as ComponentColorShade,
+              }
+            : { kind: 'invalid', value: color };
+    }
+
+    return { kind: 'custom', value: color };
+}
+
+export function getComponentColorValue(color: ComponentColorValue | undefined) {
+    const parsed = parseComponentColor(color);
+
+    if (parsed.kind === 'primary') return 'var(--rp-primary-color-filled)';
+    if (parsed.kind === 'preset') return `var(--rp-color-${parsed.color}-filled)`;
+    if (parsed.kind === 'shade') return `var(--rp-color-${parsed.color}-${parsed.shade})`;
+    if (parsed.kind === 'custom') return parsed.value;
+
+    return undefined;
+}
+
+export function getComponentContrastColor(
+    color: ComponentColorValue | undefined,
+    options: ComponentContrastColorOptions = {},
+) {
+    if (!options.autoContrast) return 'var(--rp-color-white)';
+
+    const parsed = parseComponentColor(color);
+
+    if (parsed.kind === 'primary') return 'var(--rp-primary-color-contrast)';
+    if (parsed.kind === 'preset') return `var(--rp-color-${parsed.color}-contrast)`;
+    if (parsed.kind === 'shade') return `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`;
+    if (parsed.kind === 'custom') return getReadableColorVariable(parsed.value);
+
+    return 'var(--rp-color-white)';
+}
+
+export function getComponentColorRoles(color: ComponentColorValue | undefined) {
+    const parsed = parseComponentColor(color);
+
+    if (parsed.kind === 'empty' || parsed.kind === 'invalid') {
+        return undefined;
+    }
+
+    if (parsed.kind === 'primary') {
+        return createComponentColorRoles('var(--rp-primary-color-filled)', {
+            hover: 'var(--rp-primary-color-filled-hover)',
+            contrast: 'var(--rp-primary-color-contrast)',
+            light: 'var(--rp-primary-color-light)',
+            lightHover: 'var(--rp-primary-color-light-hover)',
+            outline: 'var(--rp-primary-color-outline)',
+            outlineHover: 'color-mix(in srgb, var(--rp-primary-color-outline) 62%, transparent)',
+            foreground: 'var(--rp-primary-color-light-color)',
+        });
+    }
+
+    if (parsed.kind === 'preset') {
+        return createComponentColorRoles(`var(--rp-color-${parsed.color}-filled)`, {
+            hover: `var(--rp-color-${parsed.color}-filled-hover)`,
+            contrast: `var(--rp-color-${parsed.color}-contrast)`,
+            light: `var(--rp-color-${parsed.color}-light)`,
+            lightHover: `var(--rp-color-${parsed.color}-light-hover)`,
+            outline: `var(--rp-color-${parsed.color}-outline)`,
+            outlineHover: `color-mix(in srgb, var(--rp-color-${parsed.color}-outline) 62%, transparent)`,
+            foreground: `var(--rp-color-${parsed.color}-light-color)`,
+        });
+    }
+
+    if (parsed.kind === 'shade') {
+        const base = `var(--rp-color-${parsed.color}-${parsed.shade})`;
+        const hover = `var(--rp-color-${parsed.color}-${Math.min(Number(parsed.shade) + 1, 9)})`;
+
+        return createComponentColorRoles(base, {
+            hover,
+            contrast: `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`,
+            foreground: base,
+        });
+    }
+
+    return createComponentColorRoles(parsed.value, {
+        contrast: getReadableColorVariable(parsed.value),
+    });
+}
+
+export function getComponentVariantColorRoles({
+    color,
+    variant,
+    defaultColor = 'primary',
+    autoContrast,
+}: ComponentVariantColorOptions): ComponentVariantColorRoles | undefined {
+    const roles = getComponentColorRoles(color ?? defaultColor);
+    if (!roles) return undefined;
+
+    const contrast = getComponentContrastColor(color ?? defaultColor, { autoContrast });
+
+    if (variant === 'solid') {
+        return {
+            background: roles.filled,
+            hover: roles.hover,
+            active: roles.active,
+            color: contrast,
+            border: roles.filled,
+            borderHover: roles.hover,
+            borderActive: roles.active,
+        };
+    }
+
+    if (variant === 'subtle') {
+        return {
+            background: roles.light,
+            hover: roles.lightHover,
+            active: roles.lightActive,
+            color: roles.foreground,
+            border: 'transparent',
+            borderHover: 'transparent',
+            borderActive: 'transparent',
+        };
+    }
+
+    if (variant === 'surface') {
+        return {
+            background: roles.light,
+            hover: roles.lightHover,
+            active: roles.lightActive,
+            color: roles.foreground,
+            border: roles.outline,
+            borderHover: roles.lightHover,
+            borderActive: roles.outlineHover,
+        };
+    }
+
+    if (variant === 'outline') {
+        return {
+            background: 'transparent',
+            hover: roles.lightHover,
+            active: roles.lightActive,
+            color: roles.foreground,
+            border: roles.outline,
+            borderHover: roles.outlineHover,
+            borderActive: roles.outlineHover,
+        };
+    }
+
+    if (variant === 'ghost') {
+        return {
+            background: 'transparent',
+            hover: roles.lightHover,
+            active: roles.lightActive,
+            color: roles.foreground,
+            border: 'transparent',
+            borderHover: 'transparent',
+            borderActive: 'transparent',
+        };
+    }
+
+    if (variant === 'plain') {
+        return {
+            background: 'transparent',
+            hover: 'transparent',
+            active: 'transparent',
+            color: roles.foreground,
+            border: 'transparent',
+            borderHover: 'transparent',
+            borderActive: 'transparent',
+        };
+    }
+
+    return {
+        background: 'var(--rp-color-default)',
+        hover: roles.lightHover,
+        active: roles.lightActive,
+        color: roles.foreground,
+        border: roles.outline,
+        borderHover: roles.outlineHover,
+        borderActive: roles.outlineHover,
+    };
+}
+
+function createComponentColorRoles(
+    color: string,
+    overrides: Partial<ComponentColorRoles> = {},
+): ComponentColorRoles {
+    return {
+        filled: color,
+        hover: `color-mix(in srgb, ${color} 90%, var(--rp-color-black))`,
+        active: `color-mix(in srgb, ${color} 80%, var(--rp-color-black))`,
+        contrast: 'var(--rp-color-white)',
+        light: `color-mix(in srgb, ${color} 12%, transparent)`,
+        lightHover: `color-mix(in srgb, ${color} 18%, transparent)`,
+        lightActive: `color-mix(in srgb, ${color} 24%, transparent)`,
+        outline: color,
+        outlineHover: `color-mix(in srgb, ${color} 62%, transparent)`,
+        foreground: color,
+        ...overrides,
+    };
+}
+
+interface RgbColor {
+    red: number;
+    green: number;
+    blue: number;
+}
+
+function getReadableColorVariable(color: string) {
+    const parsed = parseCssColor(color);
+    if (!parsed) return 'var(--rp-color-white)';
+
+    const blackContrast = contrastRatio({ red: 0, green: 0, blue: 0 }, parsed);
+    const whiteContrast = contrastRatio({ red: 255, green: 255, blue: 255 }, parsed);
+
+    return blackContrast >= whiteContrast ? 'var(--rp-color-black)' : 'var(--rp-color-white)';
+}
+
+function parseCssColor(color: string): RgbColor | undefined {
+    const value = color.trim().toLowerCase();
+    if (value === 'black') return { red: 0, green: 0, blue: 0 };
+    if (value === 'white') return { red: 255, green: 255, blue: 255 };
+    if (value.startsWith('var(')) return undefined;
+
+    return parseHexColor(value) ?? parseRgbColor(value) ?? parseHslColor(value);
+}
+
+function parseHexColor(color: string): RgbColor | undefined {
+    const hex = color.match(/^#([\da-f]{3,8})$/i)?.[1];
+    if (!hex || ![3, 4, 6, 8].includes(hex.length)) return undefined;
+
+    if (hex.length === 3 || hex.length === 4) {
+        return {
+            red: Number.parseInt(hex[0] + hex[0], 16),
+            green: Number.parseInt(hex[1] + hex[1], 16),
+            blue: Number.parseInt(hex[2] + hex[2], 16),
+        };
+    }
+
+    return {
+        red: Number.parseInt(hex.slice(0, 2), 16),
+        green: Number.parseInt(hex.slice(2, 4), 16),
+        blue: Number.parseInt(hex.slice(4, 6), 16),
+    };
+}
+
+function parseRgbColor(color: string): RgbColor | undefined {
+    const rgb = color.match(/^rgba?\((.+)\)$/i)?.[1];
+    if (!rgb) return undefined;
+
+    const channels = rgb.split(',').slice(0, 3);
+    if (channels.length !== 3) return undefined;
+
+    const [red, green, blue] = channels.map(parseRgbChannel);
+    if (red == null || green == null || blue == null) return undefined;
+
+    return { red, green, blue };
+}
+
+function parseRgbChannel(channel: string) {
+    const value = channel.trim();
+    if (value.endsWith('%')) {
+        const percent = Number.parseFloat(value.slice(0, -1));
+        return Number.isFinite(percent) ? clamp(Math.round((percent / 100) * 255), 0, 255) : null;
+    }
+
+    const number = Number.parseFloat(value);
+    return Number.isFinite(number) ? clamp(Math.round(number), 0, 255) : null;
+}
+
+function parseHslColor(color: string): RgbColor | undefined {
+    const hsl = color.match(
+        /^hsla?\(\s*([-+]?\d*\.?\d+)(?:deg)?\s*,\s*([-+]?\d*\.?\d+)%\s*,\s*([-+]?\d*\.?\d+)%/i,
+    );
+    if (!hsl) return undefined;
+
+    const hue = Number.parseFloat(hsl[1]);
+    const saturation = Number.parseFloat(hsl[2]);
+    const lightness = Number.parseFloat(hsl[3]);
+    if (!Number.isFinite(hue) || !Number.isFinite(saturation) || !Number.isFinite(lightness)) {
+        return undefined;
+    }
+
+    return hslToRgb(hue, saturation / 100, lightness / 100);
+}
+
+function hslToRgb(hue: number, saturation: number, lightness: number): RgbColor {
+    const normalizedHue = (((hue % 360) + 360) % 360) / 360;
+    const q =
+        lightness < 0.5
+            ? lightness * (1 + saturation)
+            : lightness + saturation - lightness * saturation;
+    const p = 2 * lightness - q;
+
+    return {
+        red: Math.round(hueToRgb(p, q, normalizedHue + 1 / 3) * 255),
+        green: Math.round(hueToRgb(p, q, normalizedHue) * 255),
+        blue: Math.round(hueToRgb(p, q, normalizedHue - 1 / 3) * 255),
+    };
+}
+
+function hueToRgb(p: number, q: number, t: number) {
+    let normalized = t;
+    if (normalized < 0) normalized += 1;
+    if (normalized > 1) normalized -= 1;
+    if (normalized < 1 / 6) return p + (q - p) * 6 * normalized;
+    if (normalized < 1 / 2) return q;
+    if (normalized < 2 / 3) return p + (q - p) * (2 / 3 - normalized) * 6;
+    return p;
+}
+
+function contrastRatio(foreground: RgbColor, background: RgbColor) {
+    const foregroundLuminance = relativeLuminance(foreground);
+    const backgroundLuminance = relativeLuminance(background);
+    const lighter = Math.max(foregroundLuminance, backgroundLuminance);
+    const darker = Math.min(foregroundLuminance, backgroundLuminance);
+
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+function relativeLuminance(color: RgbColor) {
+    const [red, green, blue] = [color.red, color.green, color.blue]
+        .map((channel) => channel / 255)
+        .map((channel) =>
+            channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
+        );
+
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function clamp(value: number, min: number, max: number) {
+    return Math.min(max, Math.max(min, value));
 }

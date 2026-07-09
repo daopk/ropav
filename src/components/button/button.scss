@@ -4,54 +4,14 @@
     --_rp-button-font-size: #{$font-size};
 }
 
-@mixin button-color($color) {
-    --_rp-button-accent: var(--rp-color-#{$color});
-    --_rp-button-accent-hover: var(--rp-color-#{$color}-hover);
-    --_rp-button-accent-active: var(--rp-color-#{$color}-active);
-    --_rp-button-accent-on: var(--rp-color-on-#{$color});
-    --_rp-button-accent-subtle-bg: var(--rp-color-#{$color}-subtle-bg);
-    --_rp-button-accent-subtle-bg-hover: var(--rp-color-#{$color}-subtle-bg-hover);
-    --_rp-button-accent-subtle-bg-active: var(--rp-color-#{$color}-subtle-bg-active);
-    --_rp-button-accent-border: var(--rp-color-#{$color}-border);
-    --_rp-button-accent-border-hover: var(--rp-color-#{$color}-border-hover);
-    --_rp-button-accent-fg: var(--rp-color-#{$color}-fg);
-    --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
-    --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
-    --_rp-button-border: var(--_rp-button-accent-border);
-    --_rp-button-border-hover: var(--_rp-button-accent-border-hover);
-    --_rp-button-fg: var(--_rp-button-accent-fg);
-}
-
 .rp-button {
-    --_rp-button-accent: var(--_rp-button-custom-color, var(--rp-color-primary));
-    --_rp-button-accent-hover: var(--_rp-button-custom-hover, var(--rp-color-primary-hover));
-    --_rp-button-accent-active: var(--_rp-button-custom-active, var(--rp-color-primary-active));
-    --_rp-button-accent-on: var(--_rp-button-custom-on, var(--rp-color-on-primary));
-    --_rp-button-accent-subtle-bg: var(
-        --_rp-button-custom-subtle-bg,
-        var(--rp-color-primary-subtle-bg)
-    );
-    --_rp-button-accent-subtle-bg-hover: var(
-        --_rp-button-custom-subtle-bg-hover,
-        var(--rp-color-primary-subtle-bg-hover)
-    );
-    --_rp-button-accent-subtle-bg-active: var(
-        --_rp-button-custom-subtle-bg-active,
-        var(--rp-color-primary-subtle-bg-active)
-    );
-    --_rp-button-accent-border: var(--_rp-button-custom-border, var(--rp-color-primary-border));
-    --_rp-button-accent-border-hover: var(
-        --_rp-button-custom-border-hover,
-        var(--rp-color-primary-border-hover)
-    );
-    --_rp-button-accent-fg: var(--_rp-button-custom-fg, var(--rp-color-primary-fg));
-    --_rp-button-bg: var(--rp-color-button-default-bg);
-    --_rp-button-bg-hover: var(--rp-color-button-default-bg-hover);
-    --_rp-button-bg-active: var(--rp-color-button-default-bg-active);
-    --_rp-button-border: var(--rp-color-border);
-    --_rp-button-border-hover: var(--rp-color-border-hover);
+    --_rp-button-bg: var(--rp-color-default);
+    --_rp-button-bg-hover: var(--rp-color-default-hover);
+    --_rp-button-bg-active: var(--rp-color-disabled);
+    --_rp-button-border: var(--rp-color-default-border);
+    --_rp-button-border-hover: var(--rp-color-default-border-hover);
     --_rp-button-border-active: var(--_rp-button-border-hover);
-    --_rp-button-fg: var(--rp-color-text);
+    --_rp-button-fg: var(--rp-color-default-color);
     --_rp-button-height: var(--rp-size-control-md);
     --_rp-button-padding-x: var(--rp-spacing-4);
     --_rp-button-font-size: var(--rp-font-size-base);
@@ -97,12 +57,6 @@
         border-color: var(--_rp-button-border-active);
         box-shadow: var(--_rp-button-shadow-active);
         transform: translateY(1px);
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            @include button-color($color);
-        }
     }
 
     &--size-xs {
@@ -152,76 +106,31 @@
         }
     }
 
-    &--solid {
-        --_rp-button-bg: var(--_rp-button-accent);
-        --_rp-button-bg-hover: var(--_rp-button-accent-hover);
-        --_rp-button-bg-active: var(--_rp-button-accent-active);
-        --_rp-button-border: var(--_rp-button-accent);
-        --_rp-button-border-hover: var(--_rp-button-accent-hover);
-        --_rp-button-border-active: var(--_rp-button-accent-active);
-        --_rp-button-fg: var(--_rp-button-accent-on);
-    }
-
     &--subtle {
-        --_rp-button-bg: var(--_rp-button-accent-subtle-bg);
-        --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
-        --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
-        --_rp-button-border: transparent;
-        --_rp-button-border-hover: transparent;
-        --_rp-button-border-active: transparent;
-        --_rp-button-fg: var(--_rp-button-accent-fg);
         --_rp-button-shadow: none;
         --_rp-button-shadow-hover: none;
         --_rp-button-shadow-active: none;
     }
 
     &--surface {
-        --_rp-button-bg: var(--_rp-button-accent-subtle-bg);
-        --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
-        --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
-        --_rp-button-border: var(--_rp-button-accent-border);
-        --_rp-button-border-hover: var(--_rp-button-accent-subtle-bg-hover);
-        --_rp-button-border-active: var(--_rp-button-accent-border-hover);
-        --_rp-button-fg: var(--_rp-button-accent-fg);
         --_rp-button-shadow: none;
         --_rp-button-shadow-hover: none;
         --_rp-button-shadow-active: none;
     }
 
     &--outline {
-        --_rp-button-bg: transparent;
-        --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
-        --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
-        --_rp-button-border: var(--_rp-button-accent-border);
-        --_rp-button-border-hover: var(--_rp-button-accent-border-hover);
-        --_rp-button-border-active: var(--_rp-button-accent-border-hover);
-        --_rp-button-fg: var(--_rp-button-accent-fg);
         --_rp-button-shadow: none;
         --_rp-button-shadow-hover: none;
         --_rp-button-shadow-active: none;
     }
 
     &--ghost {
-        --_rp-button-bg: transparent;
-        --_rp-button-bg-hover: var(--_rp-button-accent-subtle-bg-hover);
-        --_rp-button-bg-active: var(--_rp-button-accent-subtle-bg-active);
-        --_rp-button-border: transparent;
-        --_rp-button-border-hover: transparent;
-        --_rp-button-border-active: transparent;
-        --_rp-button-fg: var(--_rp-button-accent-fg);
         --_rp-button-shadow: none;
         --_rp-button-shadow-hover: none;
         --_rp-button-shadow-active: none;
     }
 
     &--plain {
-        --_rp-button-bg: transparent;
-        --_rp-button-bg-hover: transparent;
-        --_rp-button-bg-active: transparent;
-        --_rp-button-border: transparent;
-        --_rp-button-border-hover: transparent;
-        --_rp-button-border-active: transparent;
-        --_rp-button-fg: var(--_rp-button-accent-fg);
         --_rp-button-shadow: none;
         --_rp-button-shadow-hover: none;
         --_rp-button-shadow-active: none;
@@ -240,7 +149,7 @@
     }
 
     &--loading &__content {
-        visibility: hidden;
+        opacity: 0;
     }
 
     &__content {

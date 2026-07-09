@@ -14,6 +14,7 @@ export interface SelectProps {
     radius?: SelectRadius;
     placeholder?: string;
     clearable?: boolean;
+    clearLabel?: string;
     disabled?: boolean;
     required?: boolean;
     invalid?: boolean;

@@ -3,7 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import Switch from './switch.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {

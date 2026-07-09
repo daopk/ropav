@@ -83,7 +83,7 @@ describe('Tooltip rendering', () => {
         expect(tooltip.textContent).toBe('Visual value');
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -117,9 +117,13 @@ describe('Tooltip rendering', () => {
             expect([...roots[index].classList]).toEqual([
                 'rp-tooltip',
                 'rp-tooltip--placement-top',
-                `rp-tooltip--color-${color}`,
             ]);
-            expect(contents[index].style.getPropertyValue('--_rp-tooltip-bg')).toBe('');
+            expect(contents[index].style.getPropertyValue('--_rp-tooltip-bg')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
+            expect(contents[index].style.getPropertyValue('--_rp-tooltip-fg')).toBe(
+                'var(--rp-color-white)',
+            );
         }
     });
 
@@ -148,9 +152,34 @@ describe('Tooltip rendering', () => {
 
         expect([...root.classList]).toEqual(['rp-tooltip', 'rp-tooltip--placement-top']);
         expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#ff3366');
-        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe('var(--rp-color-white)');
+    });
+
+    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {
+                            autoContrast: true,
+                            color: '#fab005',
+                            content: 'Contrast help',
+                        },
+                        {
+                            default: () => h('button', 'Contrast'),
+                        },
+                    );
+                },
+            }),
         );
+
+        await flush();
+
+        const content = container.querySelector('[role="tooltip"]') as HTMLElement;
+
+        expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#fab005');
+        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe('var(--rp-color-black)');
     });
 
     it('applies numeric and axis object offsets as content style variables', async () => {

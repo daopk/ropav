@@ -1,14 +1,7 @@
 import type { TooltipProps } from '../tooltip/types';
+import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
 
-export const sliderColors = [
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-    'danger',
-    'info',
-    'neutral',
-] as const;
+export const sliderColors = componentColors;
 
 export const sliderSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
@@ -16,7 +9,7 @@ export const sliderOrientations = ['horizontal', 'vertical'] as const;
 
 export type SliderPresetColor = (typeof sliderColors)[number];
 
-export type SliderColor = SliderPresetColor | (string & {});
+export type SliderColor = ComponentColorValue;
 
 export type SliderSize = (typeof sliderSizes)[number];
 

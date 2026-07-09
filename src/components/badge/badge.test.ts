@@ -87,7 +87,7 @@ describe('Badge', () => {
         }
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -107,8 +107,14 @@ describe('Badge', () => {
         for (const [index, color] of badgeColors.entries()) {
             const badge = badges[index] as HTMLElement;
 
-            expect([...badge.classList]).toEqual(['rp-badge', `rp-badge--color-${color}`]);
-            expect(badge.style.getPropertyValue('--_rp-badge-custom-color')).toBe('');
+            expect([...badge.classList]).toEqual(['rp-badge']);
+            expect(badge.style.getPropertyValue('--_rp-badge-bg')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
+            expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-white)');
+            expect(badge.style.getPropertyValue('--_rp-badge-border')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
         }
     });
 
@@ -142,7 +148,7 @@ describe('Badge', () => {
         }
     });
 
-    it('uses CSS variables for custom colors', async () => {
+    it('uses final CSS variables for custom colors', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -156,10 +162,31 @@ describe('Badge', () => {
         const badge = container.querySelector('.rp-badge') as HTMLElement;
 
         expect([...badge.classList]).toEqual(['rp-badge']);
-        expect(badge.style.getPropertyValue('--_rp-badge-custom-color')).toBe('#ff3366');
-        expect(badge.style.getPropertyValue('--_rp-badge-custom-fg')).toBe('#ff3366');
-        expect(badge.style.getPropertyValue('--_rp-badge-custom-on')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(badge.style.getPropertyValue('--_rp-badge-bg')).toBe('#ff3366');
+        expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-white)');
+        expect(badge.style.getPropertyValue('--_rp-badge-border')).toBe('#ff3366');
+    });
+
+    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Badge,
+                        {
+                            autoContrast: true,
+                            color: '#fab005',
+                        },
+                        { default: () => 'Contrast' },
+                    );
+                },
+            }),
         );
+
+        await flush();
+
+        const badge = container.querySelector('.rp-badge') as HTMLElement;
+
+        expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-black)');
     });
 });

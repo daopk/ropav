@@ -5,15 +5,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import ButtonLink from './button-link.vue';
 
 describe('ButtonLink', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
@@ -146,9 +138,9 @@ describe('ButtonLink', () => {
         expect(click.defaultPrevented).toBe(true);
         expect(onClick).not.toHaveBeenCalled();
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
-            'true',
-        );
+        expect(
+            container.querySelector('.rp-button__content')?.getAttribute('aria-hidden'),
+        ).toBeNull();
         expect(container.querySelector('.rp-button__left')).toBeTruthy();
         expect(container.querySelector('.rp-button__right')).toBeTruthy();
     });
@@ -179,9 +171,9 @@ describe('ButtonLink', () => {
         expect(loading?.getAttribute('aria-hidden')).toBe('true');
         expect(container.querySelector('.loading-dots')).toBeTruthy();
         expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
-        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
-            'true',
-        );
+        expect(
+            container.querySelector('.rp-button__content')?.getAttribute('aria-hidden'),
+        ).toBeNull();
     });
 
     it('adds color, size, radius, and variant modifiers when requested', async () => {
@@ -191,7 +183,7 @@ describe('ButtonLink', () => {
                     return h(
                         ButtonLink,
                         {
-                            color: 'danger',
+                            color: 'red',
                             href: '/delete',
                             radius: 'lg',
                             size: 'sm',
@@ -210,10 +202,11 @@ describe('ButtonLink', () => {
         expect([...link.classList]).toEqual([
             'rp-button',
             'rp-button--solid',
-            'rp-button--color-danger',
             'rp-button--size-sm',
             'rp-button--radius-lg',
         ]);
+        expect(link.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-red-filled)');
+        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
     });
 
     it('adds a variant modifier for each supported variant', async () => {
@@ -244,7 +237,7 @@ describe('ButtonLink', () => {
         }
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -266,12 +259,21 @@ describe('ButtonLink', () => {
         for (const [index, color] of colors.entries()) {
             const link = links[index] as HTMLElement;
 
-            expect([...link.classList]).toEqual(['rp-button', `rp-button--color-${color}`]);
-            expect(link.style.getPropertyValue('--_rp-button-custom-color')).toBe('');
+            expect([...link.classList]).toEqual(['rp-button']);
+            expect(link.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-default)');
+            expect(link.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+                `var(--rp-color-${color}-light-hover)`,
+            );
+            expect(link.style.getPropertyValue('--_rp-button-fg')).toBe(
+                `var(--rp-color-${color}-light-color)`,
+            );
+            expect(link.style.getPropertyValue('--_rp-button-border')).toBe(
+                `var(--rp-color-${color}-outline)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets final color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -293,11 +295,37 @@ describe('ButtonLink', () => {
         const link = container.querySelector('a') as HTMLAnchorElement;
 
         expect([...link.classList]).toEqual(['rp-button', 'rp-button--solid']);
-        expect(link.style.getPropertyValue('--_rp-button-custom-color')).toBe('#ff3366');
-        expect(link.style.getPropertyValue('--_rp-button-custom-fg')).toBe('#ff3366');
-        expect(link.style.getPropertyValue('--_rp-button-custom-on')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(link.style.getPropertyValue('--_rp-button-bg')).toBe('#ff3366');
+        expect(link.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+            'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
         );
+        expect(link.style.getPropertyValue('--_rp-button-border')).toBe('#ff3366');
+        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+    });
+
+    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        ButtonLink,
+                        {
+                            autoContrast: true,
+                            color: '#fab005',
+                            href: '/contrast',
+                            variant: 'solid',
+                        },
+                        { default: () => 'Contrast' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const link = container.querySelector('a') as HTMLAnchorElement;
+
+        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
     });
 
     it('adds a radius modifier for each supported radius', async () => {

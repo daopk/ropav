@@ -31,6 +31,7 @@ defineOptions({ name: 'RpRadio' });
 const props = withDefaults(defineProps<RadioProps>(), {
     variant: undefined,
     color: undefined,
+    autoContrast: undefined,
     size: undefined,
     disabled: false,
 });

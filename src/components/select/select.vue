@@ -37,7 +37,7 @@
                     v-if="canClear"
                     type="button"
                     class="rp-select__clear"
-                    aria-label="Clear selection"
+                    :aria-label="clearLabel"
                     tabindex="-1"
                     @mousedown.prevent
                     @click.stop="clearSelection"
@@ -94,6 +94,7 @@ const props = withDefaults(defineProps<SelectProps>(), {
     options: () => [],
     placeholder: 'Select...',
     clearable: false,
+    clearLabel: 'Clear selection',
     disabled: undefined,
     required: undefined,
     invalid: undefined,

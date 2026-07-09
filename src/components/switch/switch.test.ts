@@ -5,15 +5,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Switch from './switch.vue';
 
 describe('Switch', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
     it('emits model updates from native switch changes', async () => {
@@ -143,7 +135,7 @@ describe('Switch', () => {
                     return h(
                         Switch,
                         {
-                            color: 'success',
+                            color: 'green',
                             modelValue: true,
                             size: 'lg',
                         },
@@ -160,12 +152,14 @@ describe('Switch', () => {
         expect([...root.classList]).toEqual([
             'rp-switch',
             'rp-switch--checked',
-            'rp-switch--color-success',
             'rp-switch--size-lg',
         ]);
+        expect((root as HTMLElement).style.getPropertyValue('--_rp-switch-color')).toBe(
+            'var(--rp-color-green-filled)',
+        );
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves selected color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -187,12 +181,14 @@ describe('Switch', () => {
         for (const [index, color] of colors.entries()) {
             const switchRoot = switches[index] as HTMLElement;
 
-            expect([...switchRoot.classList]).toEqual(['rp-switch', `rp-switch--color-${color}`]);
-            expect(switchRoot.style.getPropertyValue('--_rp-switch-custom-color')).toBe('');
+            expect([...switchRoot.classList]).toEqual(['rp-switch']);
+            expect(switchRoot.style.getPropertyValue('--_rp-switch-color')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets selected color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -213,7 +209,7 @@ describe('Switch', () => {
         const root = container.querySelector('.rp-switch') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-switch', 'rp-switch--checked']);
-        expect(root.style.getPropertyValue('--_rp-switch-custom-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-switch-color')).toBe('#ff3366');
     });
 
     it('adds a size modifier for each supported size', async () => {

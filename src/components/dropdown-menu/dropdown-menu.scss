@@ -1,14 +1,15 @@
 .rp-dropdown-menu {
     --_rp-dropdown-menu-radius: var(--rp-radius-sm);
-    --_rp-dropdown-menu-focused-bg: var(--rp-color-surface-hover);
+    --_rp-dropdown-menu-focused-bg: var(--rp-color-default-hover);
 
     position: relative;
     display: inline-flex;
     font-family: var(--rp-font-family);
     vertical-align: middle;
 
-    html.dark & {
-        --_rp-dropdown-menu-focused-bg: var(--rp-color-button-default-bg-active);
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-dropdown-menu-focused-bg: var(--rp-color-disabled);
     }
 
     &--disabled {
@@ -81,11 +82,11 @@
         }
 
         &--destructive {
-            color: var(--rp-color-danger-fg);
+            color: var(--rp-color-red-light-color);
         }
 
         &--disabled {
-            color: var(--rp-color-text-disabled);
+            color: var(--rp-color-disabled-color);
             cursor: not-allowed;
         }
 
@@ -102,7 +103,7 @@
     }
 
     &__shortcut {
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font: inherit;
         font-size: var(--rp-font-size-sm);
     }
@@ -110,7 +111,7 @@
     &__submenu-icon {
         @include inline-icon(1rem);
         margin-left: auto;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
     }
 
     &__submenu {
@@ -145,7 +146,7 @@
         justify-content: center;
         min-height: var(--rp-size-control-sm);
         padding: var(--rp-spacing-2) var(--rp-spacing-4);
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-base);
     }
 }

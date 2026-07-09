@@ -9,10 +9,10 @@
     --_rp-input-padding-x: var(--rp-spacing-3);
     --_rp-input-font-size: var(--rp-font-size-base);
     --_rp-input-radius: var(--rp-radius-sm);
-    --_rp-input-valid-border: var(--rp-color-success-border-hover);
-    --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-success) 32%, transparent);
-    --_rp-input-invalid-border: var(--rp-color-danger);
-    --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
+    --_rp-input-valid-border: var(--rp-color-green-outline);
+    --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-green-filled) 32%, transparent);
+    --_rp-input-invalid-border: var(--rp-color-red-filled);
+    --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
 
     @include flex-center;
     box-sizing: border-box;
@@ -87,11 +87,20 @@
         }
     }
 
-    html.dark & {
-        --_rp-input-valid-border: var(--rp-color-success-fg);
-        --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-success-fg) 32%, transparent);
-        --_rp-input-invalid-border: var(--rp-color-danger-fg);
-        --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-input-valid-border: var(--rp-color-green-light-color);
+        --_rp-input-valid-ring: color-mix(
+            in srgb,
+            var(--rp-color-green-light-color) 32%,
+            transparent
+        );
+        --_rp-input-invalid-border: var(--rp-color-red-light-color);
+        --_rp-input-invalid-ring: color-mix(
+            in srgb,
+            var(--rp-color-red-light-color) 32%,
+            transparent
+        );
     }
 
     &--disabled {

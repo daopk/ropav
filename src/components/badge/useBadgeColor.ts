@@ -1,16 +1,24 @@
 import type { CSSProperties } from 'vue';
-import { getComponentCustomColor } from '@/utils/componentColors';
-import type { BadgeColor } from './types';
+import { getComponentVariantColorRoles } from '@/utils/componentColors';
+import type { BadgeColor, BadgeVariant } from './types';
 
-export function getBadgeColorStyle(color: BadgeColor | undefined) {
-    const customColor = getComponentCustomColor(color);
-    if (!customColor) return undefined;
+export function getBadgeColorStyle(
+    color: BadgeColor | undefined,
+    variant: BadgeVariant | undefined,
+    autoContrast: boolean | undefined,
+) {
+    if (!color && !variant) return undefined;
+
+    const roles = getComponentVariantColorRoles({
+        color,
+        variant: variant ?? 'solid',
+        autoContrast,
+    });
+    if (!roles) return undefined;
 
     return {
-        '--_rp-badge-custom-color': customColor,
-        '--_rp-badge-custom-fg': customColor,
-        '--_rp-badge-custom-on': 'var(--rp-color-on-primary)',
-        '--_rp-badge-custom-subtle-bg': `color-mix(in srgb, ${customColor} 12%, transparent)`,
-        '--_rp-badge-custom-border': `color-mix(in srgb, ${customColor} 45%, transparent)`,
-    } satisfies CSSProperties;
+        '--_rp-badge-bg': roles.background,
+        '--_rp-badge-fg': roles.color,
+        '--_rp-badge-border': roles.border,
+    } as CSSProperties;
 }

@@ -9,7 +9,7 @@ import type { OverlayProps } from './types';
 defineOptions({ name: 'RpOverlay' });
 
 const props = withDefaults(defineProps<OverlayProps>(), {
-    color: 'var(--rp-color-overlay)',
+    color: 'rgba(0, 0, 0, 0.55)',
     opacity: 1,
     gradient: '',
     zIndex: 1,

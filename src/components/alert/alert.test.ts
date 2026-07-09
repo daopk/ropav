@@ -7,7 +7,7 @@ import Alert from './alert.vue';
 import { alertColors, alertRadiuses, alertVariants } from './types';
 
 describe('Alert', () => {
-    it('renders title, description, body, and default alert semantics', async () => {
+    it('renders title, description, body, and default alert semantics without an icon', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -31,7 +31,7 @@ describe('Alert', () => {
 
         expect([...alert.classList]).toEqual(['rp-alert']);
         expect(alert.getAttribute('role')).toBe('alert');
-        expect(container.querySelector('.rp-alert__icon svg')).toBeTruthy();
+        expect(container.querySelector('.rp-alert__icon')).toBeNull();
         expect(container.querySelector('.rp-alert__title')?.textContent?.trim()).toBe(
             'Deployment queued',
         );
@@ -93,7 +93,7 @@ describe('Alert', () => {
         }
     });
 
-    it('adds color modifiers for preset colors', async () => {
+    it('resolves final color variables for preset colors', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -113,8 +113,18 @@ describe('Alert', () => {
         for (const [index, color] of alertColors.entries()) {
             const alert = alerts[index] as HTMLElement;
 
-            expect([...alert.classList]).toEqual(['rp-alert', `rp-alert--color-${color}`]);
-            expect(alert.style.getPropertyValue('--_rp-alert-custom-color')).toBe('');
+            expect([...alert.classList]).toEqual(['rp-alert']);
+            expect(alert.style.getPropertyValue('--_rp-alert-bg')).toBe(
+                `var(--rp-color-${color}-light)`,
+            );
+            expect(alert.style.getPropertyValue('--_rp-alert-fg')).toBe('var(--rp-color-text)');
+            expect(alert.style.getPropertyValue('--_rp-alert-title-fg')).toBe(
+                `var(--rp-color-${color}-light-color)`,
+            );
+            expect(alert.style.getPropertyValue('--_rp-alert-icon-fg')).toBe(
+                `var(--rp-color-${color}-light-color)`,
+            );
+            expect(alert.style.getPropertyValue('--_rp-alert-border')).toBe('transparent');
         }
     });
 
@@ -145,7 +155,7 @@ describe('Alert', () => {
         }
     });
 
-    it('uses CSS variables for custom colors', async () => {
+    it('uses final CSS variables for custom colors', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -159,14 +169,43 @@ describe('Alert', () => {
         const alert = container.querySelector('.rp-alert') as HTMLElement;
 
         expect([...alert.classList]).toEqual(['rp-alert']);
-        expect(alert.style.getPropertyValue('--_rp-alert-custom-color')).toBe('#ff3366');
-        expect(alert.style.getPropertyValue('--_rp-alert-custom-fg')).toBe('#ff3366');
-        expect(alert.style.getPropertyValue('--_rp-alert-custom-on')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(alert.style.getPropertyValue('--_rp-alert-bg')).toBe(
+            'color-mix(in srgb, #ff3366 12%, transparent)',
         );
+        expect(alert.style.getPropertyValue('--_rp-alert-fg')).toBe('var(--rp-color-text)');
+        expect(alert.style.getPropertyValue('--_rp-alert-title-fg')).toBe('#ff3366');
+        expect(alert.style.getPropertyValue('--_rp-alert-icon-fg')).toBe('#ff3366');
+        expect(alert.style.getPropertyValue('--_rp-alert-border')).toBe('transparent');
     });
 
-    it('can hide the icon and remove the role', async () => {
+    it('uses readable arbitrary color contrast for solid alerts when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Alert,
+                        {
+                            autoContrast: true,
+                            color: '#fab005',
+                            variant: 'solid',
+                        },
+                        { default: () => 'Contrast' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const alert = container.querySelector('.rp-alert') as HTMLElement;
+
+        expect(alert.style.getPropertyValue('--_rp-alert-bg')).toBe('#fab005');
+        expect(alert.style.getPropertyValue('--_rp-alert-fg')).toBe('var(--rp-color-black)');
+        expect(alert.style.getPropertyValue('--_rp-alert-title-fg')).toBe('var(--rp-color-black)');
+        expect(alert.style.getPropertyValue('--_rp-alert-icon-fg')).toBe('var(--rp-color-black)');
+    });
+
+    it('can remove the role without rendering an icon', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -174,7 +213,6 @@ describe('Alert', () => {
                         Alert,
                         {
                             role: 'none',
-                            showIcon: false,
                         },
                         {
                             default: () => 'Plain alert',

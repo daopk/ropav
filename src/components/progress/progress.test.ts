@@ -219,7 +219,7 @@ describe('Progress', () => {
             defineComponent({
                 render() {
                     return h(Progress, {
-                        color: 'success',
+                        color: 'green',
                         radius: 'md',
                         size: 'lg',
                         value: 50,
@@ -234,13 +234,15 @@ describe('Progress', () => {
 
         expect([...root.classList]).toEqual([
             'rp-progress',
-            'rp-progress--color-success',
             'rp-progress--size-lg',
             'rp-progress--radius-md',
         ]);
+        expect((root as HTMLElement).style.getPropertyValue('--_rp-progress-color')).toBe(
+            'var(--rp-color-green-filled)',
+        );
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -260,12 +262,14 @@ describe('Progress', () => {
         for (const [index, color] of progressColors.entries()) {
             const root = progressBars[index] as HTMLElement;
 
-            expect([...root.classList]).toEqual(['rp-progress', `rp-progress--color-${color}`]);
-            expect(root.style.getPropertyValue('--_rp-progress-custom-color')).toBe('');
+            expect([...root.classList]).toEqual(['rp-progress']);
+            expect(root.style.getPropertyValue('--_rp-progress-color')).toBe(
+                `var(--rp-color-${color}-filled)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets final color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -282,7 +286,7 @@ describe('Progress', () => {
         const root = container.querySelector('.rp-progress') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-progress']);
-        expect(root.style.getPropertyValue('--_rp-progress-custom-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-progress-color')).toBe('#ff3366');
     });
 
     it('adds a size modifier for each supported size', async () => {

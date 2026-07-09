@@ -12,6 +12,7 @@ export interface IconButtonProps {
     ariaLabel: string;
     variant?: IconButtonVariant;
     color?: IconButtonColor;
+    autoContrast?: boolean;
     size?: IconButtonSize;
     radius?: IconButtonRadius;
     type?: 'button' | 'submit' | 'reset';

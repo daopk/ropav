@@ -28,6 +28,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         size: {
             control: 'select',
             options: [undefined, ...sizes],
@@ -40,7 +41,8 @@ const meta = {
         loading: { control: 'boolean' },
     },
     args: {
-        color: 'primary',
+        autoContrast: false,
+        color: 'blue',
         disabled: false,
         href: '#',
         loading: false,

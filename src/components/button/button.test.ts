@@ -5,15 +5,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Button from './button.vue';
 
 describe('Button', () => {
-    const colors = [
-        'primary',
-        'secondary',
-        'success',
-        'warning',
-        'danger',
-        'info',
-        'neutral',
-    ] as const;
+    const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
@@ -100,9 +92,9 @@ describe('Button', () => {
             'rp-button--loading',
         ]);
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
-            'true',
-        );
+        expect(
+            container.querySelector('.rp-button__content')?.getAttribute('aria-hidden'),
+        ).toBeNull();
         expect(container.querySelector('.rp-button__left')).toBeTruthy();
         expect(container.querySelector('.rp-button__right')).toBeTruthy();
     });
@@ -133,9 +125,9 @@ describe('Button', () => {
         expect(button.disabled).toBe(true);
         expect(button.getAttribute('aria-busy')).toBe('true');
         expect(container.querySelector('svg.rp-button__spinner')).toBeTruthy();
-        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
-            'true',
-        );
+        expect(
+            container.querySelector('.rp-button__content')?.getAttribute('aria-hidden'),
+        ).toBeNull();
         expect(container.querySelector('.rp-button__left')).toBeTruthy();
         expect(button.textContent).toContain('Save');
     });
@@ -165,12 +157,12 @@ describe('Button', () => {
         expect(loading?.getAttribute('aria-hidden')).toBe('true');
         expect(container.querySelector('.loading-dots')).toBeTruthy();
         expect(container.querySelector('svg.rp-button__spinner')).toBeNull();
-        expect(container.querySelector('.rp-button__content')?.getAttribute('aria-hidden')).toBe(
-            'true',
-        );
+        expect(
+            container.querySelector('.rp-button__content')?.getAttribute('aria-hidden'),
+        ).toBeNull();
     });
 
-    it('adds the solid primary style only when requested', async () => {
+    it('adds the solid blue style only when requested', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -210,13 +202,13 @@ describe('Button', () => {
         }
     });
 
-    it('adds color modifiers with variants', async () => {
+    it('resolves final color variables with variants', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(
                         Button,
-                        { color: 'danger', variant: 'solid' },
+                        { color: 'red', variant: 'solid' },
                         { default: () => 'Delete' },
                     );
                 },
@@ -227,14 +219,18 @@ describe('Button', () => {
 
         const button = container.querySelector('button') as HTMLButtonElement;
 
-        expect([...button.classList]).toEqual([
-            'rp-button',
-            'rp-button--solid',
-            'rp-button--color-danger',
-        ]);
+        expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-red-filled)');
+        expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+            'var(--rp-color-red-filled-hover)',
+        );
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(button.style.getPropertyValue('--_rp-button-border')).toBe(
+            'var(--rp-color-red-filled)',
+        );
     });
 
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -254,12 +250,23 @@ describe('Button', () => {
         for (const [index, color] of colors.entries()) {
             const button = buttons[index] as HTMLElement;
 
-            expect([...button.classList]).toEqual(['rp-button', `rp-button--color-${color}`]);
-            expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('');
+            expect([...button.classList]).toEqual(['rp-button']);
+            expect(button.style.getPropertyValue('--_rp-button-bg')).toBe(
+                'var(--rp-color-default)',
+            );
+            expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+                `var(--rp-color-${color}-light-hover)`,
+            );
+            expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
+                `var(--rp-color-${color}-light-color)`,
+            );
+            expect(button.style.getPropertyValue('--_rp-button-border')).toBe(
+                `var(--rp-color-${color}-outline)`,
+            );
         }
     });
 
-    it('sets inline custom color variables for arbitrary color values', async () => {
+    it('sets final color variables for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -280,11 +287,50 @@ describe('Button', () => {
         const button = container.querySelector('button') as HTMLButtonElement;
 
         expect([...button.classList]).toEqual(['rp-button', 'rp-button--solid']);
-        expect(button.style.getPropertyValue('--_rp-button-custom-color')).toBe('#ff3366');
-        expect(button.style.getPropertyValue('--_rp-button-custom-fg')).toBe('#ff3366');
-        expect(button.style.getPropertyValue('--_rp-button-custom-on')).toBe(
-            'var(--rp-color-on-primary)',
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+            'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
         );
+        expect(button.style.getPropertyValue('--_rp-button-border')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+    });
+
+    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            Button,
+                            {
+                                autoContrast: true,
+                                color: '#fab005',
+                                variant: 'solid',
+                            },
+                            { default: () => 'Light' },
+                        ),
+                        h(
+                            Button,
+                            {
+                                autoContrast: true,
+                                color: '#141414',
+                                variant: 'solid',
+                            },
+                            { default: () => 'Dark' },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lightButton, darkButton] = [
+            ...container.querySelectorAll('button'),
+        ] as HTMLElement[];
+
+        expect(lightButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
+        expect(darkButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
     });
 
     it('adds size modifiers when requested', async () => {

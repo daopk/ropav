@@ -121,11 +121,34 @@ describe('Select', () => {
         );
 
         const clear = container.querySelector('.rp-select__clear')!;
+        expect(clear.getAttribute('aria-label')).toBe('Clear selection');
+
         click(clear);
         await nextTick();
 
         expect(onUpdate).toHaveBeenCalledWith(null);
         expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('uses a custom clear label for the clear control', () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        clearable: true,
+                        clearLabel: 'Remove fruit',
+                        modelValue: 'a',
+                        options: [
+                            { label: 'Alpha', value: 'a' },
+                            { label: 'Beta', value: 'b' },
+                        ],
+                    });
+                },
+            }),
+        );
+
+        const clear = container.querySelector('.rp-select__clear')!;
+        expect(clear.getAttribute('aria-label')).toBe('Remove fruit');
     });
 
     it('clears the selected value from the trigger with Delete', async () => {

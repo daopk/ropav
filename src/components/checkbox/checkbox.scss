@@ -1,8 +1,3 @@
-@mixin checkbox-color($color) {
-    --_rp-checkbox-color: var(--rp-color-#{$color});
-    --_rp-checkbox-on-color: var(--rp-color-on-#{$color});
-}
-
 @mixin checkbox-size($size, $icon, $font-size) {
     --_rp-checkbox-size: #{$size};
     --_rp-checkbox-icon-size: #{$icon};
@@ -10,11 +5,8 @@
 }
 
 .rp-checkbox {
-    --_rp-checkbox-color: var(--_rp-checkbox-custom-color, var(--rp-color-control-selected-bg));
-    --_rp-checkbox-on-color: var(
-        --_rp-checkbox-custom-on-color,
-        var(--rp-color-control-selected-fg)
-    );
+    --_rp-checkbox-color: var(--rp-color-control-selected-bg);
+    --_rp-checkbox-on-color: var(--rp-color-control-selected-fg);
     --_rp-checkbox-size: 18px;
     --_rp-checkbox-icon-size: 14px;
     --_rp-checkbox-font-size: var(--rp-font-size-base);
@@ -22,8 +14,8 @@
     --_rp-checkbox-checked-bg: var(--_rp-checkbox-color);
     --_rp-checkbox-checked-border: var(--_rp-checkbox-color);
     --_rp-checkbox-checked-icon: var(--_rp-checkbox-on-color);
-    --_rp-checkbox-invalid-border: var(--rp-color-danger);
-    --_rp-checkbox-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
+    --_rp-checkbox-invalid-border: var(--rp-color-red-filled);
+    --_rp-checkbox-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
 
     display: inline-flex;
     align-items: center;
@@ -31,11 +23,6 @@
     font-family: var(--rp-font-family);
     user-select: none;
     vertical-align: top;
-
-    html.dark & {
-        --_rp-checkbox-invalid-border: var(--rp-color-danger-fg);
-        --_rp-checkbox-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
-    }
 
     &--disabled {
         @include disabled-state;
@@ -94,12 +81,6 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            @include checkbox-color($color);
-        }
     }
 
     &--outline {

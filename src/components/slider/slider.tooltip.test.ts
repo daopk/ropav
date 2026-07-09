@@ -48,7 +48,7 @@ describe('Slider tooltip', () => {
                         tooltip: {
                             id: 'volume-tooltip',
                             placement: 'bottom',
-                            color: 'warning',
+                            color: 'orange',
                             offset: { mainAxis: 12, crossAxis: -4 },
                             openDelay: 100,
                             arrow: true,
@@ -66,9 +66,14 @@ describe('Slider tooltip', () => {
 
         expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--placement-bottom')).toBe(true);
-        expect(tooltip.classList.contains('rp-tooltip--color-warning')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(true);
         expect(tooltipContent.id).toBe('volume-tooltip');
+        expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-bg')).toBe(
+            'var(--rp-color-orange-filled)',
+        );
+        expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-fg')).toBe(
+            'var(--rp-color-white)',
+        );
         expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe(
             '12px',
         );

@@ -11,6 +11,7 @@ export type ButtonVariant = 'solid' | 'subtle' | 'surface' | 'outline' | 'ghost'
 export interface ButtonProps {
     variant?: ButtonVariant;
     color?: ButtonColor;
+    autoContrast?: boolean;
     size?: ButtonSize;
     radius?: ButtonRadius;
     type?: 'button' | 'submit' | 'reset';

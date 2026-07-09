@@ -1,5 +1,9 @@
 @use 'variables' as *;
 
+$rp-component-colors:
+    'dark', 'gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green',
+    'lime', 'yellow', 'orange';
+
 @mixin flex-center {
     display: inline-flex;
     align-items: center;
@@ -7,7 +11,7 @@
 }
 
 @mixin focus-ring {
-    border-color: var(--rp-color-primary);
+    border-color: var(--rp-color-control-border-focus);
     box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
 }
 
@@ -79,12 +83,12 @@
 
 @mixin menu-surface(
     $z-index: $z-index-dropdown,
-    $surface: var(--rp-color-surface-raised),
+    $surface: var(--rp-color-default),
     $radius: var(--rp-radius-lg)
 ) {
     z-index: $z-index;
     background-color: $surface;
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: $radius;
     box-shadow: var(--rp-shadow-md);
     padding: var(--rp-spacing-1) 0;
@@ -116,40 +120,6 @@
     @keyframes rp-spinner-spin {
         to {
             transform: rotate(360deg);
-        }
-    }
-}
-
-@mixin semantic-colors($var-name) {
-    @each $name in primary, secondary, success, warning, danger, info, neutral {
-        &--#{$name} {
-            #{$var-name}: var(--rp-color-#{$name}-fg);
-        }
-    }
-}
-
-@mixin semantic-color-pair($color-var, $foreground-var) {
-    @each $name in primary, secondary, success, warning, danger, info, neutral {
-        &--#{$name} {
-            #{$color-var}: var(--rp-color-#{$name});
-            #{$foreground-var}: var(--rp-color-on-#{$name});
-        }
-    }
-}
-
-@mixin semantic-state-colors($prefix) {
-    @each $name in primary, secondary, success, warning, danger, info, neutral {
-        &--#{$name} {
-            #{$prefix}-bg: var(--rp-color-#{$name});
-            #{$prefix}-bg-hover: var(--rp-color-#{$name}-hover);
-            #{$prefix}-bg-active: var(--rp-color-#{$name}-active);
-            #{$prefix}-subtle-bg: var(--rp-color-#{$name}-subtle-bg);
-            #{$prefix}-subtle-bg-hover: var(--rp-color-#{$name}-subtle-bg-hover);
-            #{$prefix}-subtle-bg-active: var(--rp-color-#{$name}-subtle-bg-active);
-            #{$prefix}-border: var(--rp-color-#{$name}-border);
-            #{$prefix}-border-hover: var(--rp-color-#{$name}-border-hover);
-            #{$prefix}-fg: var(--rp-color-#{$name}-fg);
-            #{$prefix}-on-bg: var(--rp-color-on-#{$name});
         }
     }
 }

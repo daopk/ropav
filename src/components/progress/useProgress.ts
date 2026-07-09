@@ -1,7 +1,7 @@
 import { computed, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
-import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
+import { getComponentColorValue } from '@/utils/componentColors';
 import type { ProgressProps } from './types';
 
 type ProgressStateProps = Readonly<
@@ -54,16 +54,6 @@ function getProgressAriaValueText(
     return undefined;
 }
 
-function setProgressStyleValue(
-    style: CSSProperties,
-    property: `--_rp-progress-${string}`,
-    value: string | undefined,
-) {
-    if (value) {
-        style[property] = value;
-    }
-}
-
 export function useProgress(props: ProgressStateProps) {
     const control = useControlState(props);
 
@@ -90,7 +80,6 @@ export function useProgress(props: ProgressStateProps) {
     );
     const rootClass = computed(() =>
         bem('rp-progress', {
-            [`color-${props.color}`]: isComponentPresetColor(props.color),
             [`size-${props.size}`]: Boolean(props.size),
             [`radius-${props.radius}`]: Boolean(props.radius),
             indeterminate: isIndeterminate.value,
@@ -102,11 +91,10 @@ export function useProgress(props: ProgressStateProps) {
             '--_rp-progress-ratio': `${valuePercent.value / 100}`,
         };
 
-        setProgressStyleValue(
-            style,
-            '--_rp-progress-custom-color',
-            getComponentCustomColor(props.color),
-        );
+        const colorValue = getComponentColorValue(props.color);
+        if (colorValue) {
+            style['--_rp-progress-color'] = colorValue;
+        }
 
         return style;
     });

@@ -24,6 +24,7 @@ defineOptions({ name: 'RpRadioGroup' });
 const props = withDefaults(defineProps<RadioGroupProps>(), {
     variant: undefined,
     color: undefined,
+    autoContrast: undefined,
     size: undefined,
     disabled: undefined,
     required: undefined,

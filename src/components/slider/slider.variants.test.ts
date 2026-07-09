@@ -6,7 +6,7 @@ import { flush, mountDom } from '../../../tests/utils/vue';
 import Slider from './slider.vue';
 
 describe('Slider variants', () => {
-    it('adds a color modifier for each supported color', async () => {
+    it('resolves final color variables for each supported color', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -24,17 +24,14 @@ describe('Slider variants', () => {
 
         expect(sliders).toHaveLength(colors.length);
         for (const [index, color] of colors.entries()) {
-            expect([...sliders[index].classList]).toEqual([
-                'rp-slider',
-                `rp-slider--color-${color}`,
-            ]);
+            expect([...sliders[index].classList]).toEqual(['rp-slider']);
             expect(
-                (sliders[index] as HTMLElement).style.getPropertyValue('--_rp-slider-custom-color'),
-            ).toBe('');
+                (sliders[index] as HTMLElement).style.getPropertyValue('--_rp-slider-color'),
+            ).toBe(`var(--rp-color-${color}-filled)`);
         }
     });
 
-    it('sets an inline custom color for arbitrary color values', async () => {
+    it('sets a final color variable for arbitrary color values', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -51,7 +48,7 @@ describe('Slider variants', () => {
         const root = container.querySelector('.rp-slider') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-slider']);
-        expect(root.style.getPropertyValue('--_rp-slider-custom-color')).toBe('#ff3366');
+        expect(root.style.getPropertyValue('--_rp-slider-color')).toBe('#ff3366');
         expect(root.style.getPropertyValue('--_rp-slider-percent')).toBe('50%');
     });
 

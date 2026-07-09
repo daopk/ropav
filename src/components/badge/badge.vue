@@ -15,7 +15,6 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import { bem } from '@/utils/bem';
-import { isComponentPresetColor } from '@/utils/componentColors';
 import type { BadgeProps } from './types';
 import { getBadgeColorStyle } from './useBadgeColor';
 
@@ -26,13 +25,14 @@ const props = defineProps<BadgeProps>();
 const rootClass = computed(() =>
     bem('rp-badge', {
         [props.variant ?? '']: Boolean(props.variant),
-        [`color-${props.color}`]: isComponentPresetColor(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
     }),
 );
 
-const rootStyle = computed(() => getBadgeColorStyle(props.color));
+const rootStyle = computed(() =>
+    getBadgeColorStyle(props.color, props.variant, props.autoContrast),
+);
 </script>
 
 <style src="./badge.scss" lang="scss" scoped></style>

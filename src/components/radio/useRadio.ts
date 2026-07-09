@@ -1,19 +1,25 @@
 import { computed, provide, useId, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { useRequiredInject } from '@/composables/useRequiredInject';
-import { getComponentCustomColor, isComponentPresetColor } from '@/utils/componentColors';
+import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
 import type { RadioGroupContext, RadioGroupProps, RadioProps } from './types';
 
-function getRadioColorStyle(color: RadioProps['color']) {
-    const customColor = getComponentCustomColor(color);
-    if (!customColor) return undefined;
+function getRadioColorStyle(color: RadioProps['color'], autoContrast: RadioProps['autoContrast']) {
+    const colorValue = getComponentColorValue(color);
+    if (color && !colorValue) return undefined;
+    if (!colorValue && !autoContrast) return undefined;
 
-    return {
-        '--_rp-radio-custom-color': customColor,
-        '--_rp-radio-custom-on-color': 'var(--rp-color-on-primary)',
-    } satisfies CSSProperties;
+    const style: CSSProperties = {};
+    if (colorValue) style['--_rp-radio-color'] = colorValue;
+    if (autoContrast) {
+        style['--_rp-radio-on-color'] = getComponentContrastColor(color ?? 'primary', {
+            autoContrast,
+        });
+    }
+
+    return style;
 }
 
 export function useRadio(props: Readonly<RadioProps>) {
@@ -22,6 +28,7 @@ export function useRadio(props: Readonly<RadioProps>) {
     const isDisabled = computed(() => props.disabled || group.disabled);
     const variant = computed(() => props.variant ?? group.variant);
     const color = computed(() => props.color ?? group.color);
+    const autoContrast = computed(() => props.autoContrast ?? group.autoContrast);
     const size = computed(() => props.size ?? group.size);
 
     const rootClass = computed(() =>
@@ -29,12 +36,11 @@ export function useRadio(props: Readonly<RadioProps>) {
             checked: isChecked.value,
             disabled: isDisabled.value,
             [variant.value ?? '']: Boolean(variant.value),
-            [`color-${color.value}`]: isComponentPresetColor(color.value),
             [`size-${size.value}`]: Boolean(size.value),
         }),
     );
 
-    const rootStyle = computed(() => getRadioColorStyle(color.value));
+    const rootStyle = computed(() => getRadioColorStyle(color.value, autoContrast.value));
 
     function onSelect() {
         if (isDisabled.value) return;
@@ -85,6 +91,9 @@ export function useRadioGroup(
         },
         get color() {
             return props.color;
+        },
+        get autoContrast() {
+            return props.autoContrast;
         },
         get size() {
             return props.size;

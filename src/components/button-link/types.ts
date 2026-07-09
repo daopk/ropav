@@ -18,6 +18,7 @@ export interface ButtonLinkProps {
     hreflang?: string;
     variant?: ButtonLinkVariant;
     color?: ButtonLinkColor;
+    autoContrast?: boolean;
     size?: ButtonLinkSize;
     radius?: ButtonLinkRadius;
     disabled?: boolean;

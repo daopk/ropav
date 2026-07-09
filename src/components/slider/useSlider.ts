@@ -2,7 +2,7 @@ import { computed, type CSSProperties } from 'vue';
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
-import { sliderColors } from './types';
+import { getComponentColorValue } from '@/utils/componentColors';
 import type {
     SliderMark,
     SliderMarkInput,
@@ -20,8 +20,6 @@ type SliderStateProps = Readonly<
         orientation: NonNullable<SliderProps['orientation']>;
     }
 >;
-
-const sliderColorNames = new Set<string>(sliderColors);
 
 const sliderMarkColorProperties = [
     '--_rp-slider-mark-color',
@@ -68,19 +66,11 @@ export function getSliderValuePercent(value: number, min: number, max: number) {
 }
 
 function getSliderMarkColorValue(color: SliderMark['color']) {
-    if (!color) return undefined;
-
-    return sliderColorNames.has(color) ? `var(--rp-color-${color})` : color;
+    return getComponentColorValue(color);
 }
 
-function isSliderPresetColor(color: SliderProps['color']) {
-    return Boolean(color && sliderColorNames.has(color));
-}
-
-function getSliderCustomColorValue(color: SliderProps['color']) {
-    if (!color || isSliderPresetColor(color)) return undefined;
-
-    return color;
+function getSliderColorValue(color: SliderProps['color']) {
+    return getComponentColorValue(color);
 }
 
 function setSliderStyleValue(
@@ -166,7 +156,7 @@ function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
         '--_rp-slider-ratio': `${valuePercent / 100}`,
     };
 
-    setSliderStyleValue(style, '--_rp-slider-custom-color', getSliderCustomColorValue(props.color));
+    setSliderStyleValue(style, '--_rp-slider-color', getSliderColorValue(props.color));
 
     for (const [property, propName, getValue] of sliderThumbStyleProps) {
         setSliderStyleValue(style, property, getValue(props.thumbStyle?.[propName]));
@@ -268,7 +258,6 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
 
     const rootClass = computed(() =>
         bem('rp-slider', {
-            [`color-${props.color}`]: isSliderPresetColor(props.color),
             [`size-${props.size}`]: Boolean(props.size),
             vertical: props.orientation === 'vertical',
             marked: markItems.value.length > 0,

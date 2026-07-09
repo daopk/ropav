@@ -1,7 +1,3 @@
-@mixin switch-color($color) {
-    --_rp-switch-color: var(--rp-color-#{$color});
-}
-
 @mixin switch-size($track-w, $track-h, $thumb-size, $font-size) {
     --_rp-switch-track-width: #{$track-w};
     --_rp-switch-track-height: #{$track-h};
@@ -10,7 +6,7 @@
 }
 
 .rp-switch {
-    --_rp-switch-color: var(--_rp-switch-custom-color, var(--rp-color-control-selected-bg));
+    --_rp-switch-color: var(--rp-color-control-selected-bg);
     --_rp-switch-font-size: var(--rp-font-size-base);
     --_rp-switch-track-width: 40px;
     --_rp-switch-track-height: 22px;
@@ -18,19 +14,14 @@
     --_rp-switch-thumb-offset: 2px;
     --_rp-switch-track-bg: var(--rp-color-control-track-bg);
     --_rp-switch-thumb-bg: var(--rp-color-control-thumb-bg);
-    --_rp-switch-invalid-border: var(--rp-color-danger);
-    --_rp-switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger) 32%, transparent);
+    --_rp-switch-invalid-border: var(--rp-color-red-filled);
+    --_rp-switch-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
 
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     font-family: var(--rp-font-family);
     user-select: none;
-
-    html.dark & {
-        --_rp-switch-invalid-border: var(--rp-color-danger-fg);
-        --_rp-switch-invalid-ring: color-mix(in srgb, var(--rp-color-danger-fg) 32%, transparent);
-    }
 
     &--disabled {
         @include disabled-state;
@@ -95,12 +86,6 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            @include switch-color($color);
-        }
     }
 
     &--size-xs {

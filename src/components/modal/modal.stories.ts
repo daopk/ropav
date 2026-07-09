@@ -68,7 +68,7 @@ export const Basic: Story = {
                 <Modal v-bind="args" v-model:open="open" initial-focus=".invite-email">
                     <div style="display: grid; gap: 16px;">
                         <Input class="invite-email" model-value="" placeholder="name@example.com" />
-                        <p style="margin: 0; color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                        <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                             The teammate will receive an email with access instructions.
                         </p>
                     </div>
@@ -204,7 +204,7 @@ export const CustomHeader: Story = {
                             <strong style="font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-tight);">
                                 Review changes
                             </strong>
-                            <span style="color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                            <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                                 Three files are ready to publish.
                             </span>
                         </div>

@@ -16,6 +16,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         radius: {
             control: 'select',
             options: [undefined, ...alertRadiuses],
@@ -24,17 +25,16 @@ const meta = {
             control: 'select',
             options: ['alert', 'status', 'none'],
         },
-        showIcon: { control: 'boolean' },
         closable: { control: 'boolean' },
         closeLabel: { control: 'text' },
         title: { control: 'text' },
         description: { control: 'text' },
     },
     args: {
-        title: 'Deployment queued',
-        description: 'The production rollout will start soon.',
-        showIcon: true,
+        autoContrast: false,
         closable: false,
+        description: 'The production rollout will start soon.',
+        title: 'Deployment queued',
     },
 } satisfies Meta<typeof Alert>;
 
@@ -86,7 +86,7 @@ export const Slots: Story = {
         components: { Alert, Button, IconSparkles },
         setup: () => ({ args }),
         template: `
-            <Alert v-bind="args" color="secondary" variant="surface" style="max-width: 560px;">
+            <Alert v-bind="args" color="violet" variant="surface" style="max-width: 560px;">
                 <template #icon>
                     <IconSparkles />
                 </template>
@@ -98,7 +98,7 @@ export const Slots: Story = {
                 A new version is ready to install.
 
                 <template #action>
-                    <Button type="button" size="sm" variant="outline" color="secondary">Install</Button>
+                    <Button type="button" size="sm" variant="outline" color="violet">Install</Button>
                 </template>
             </Alert>
         `,
@@ -108,7 +108,7 @@ export const Slots: Story = {
 export const Dismissible: Story = {
     args: {
         closable: true,
-        color: 'warning',
+        color: 'orange',
         variant: 'surface',
         title: 'Unsaved changes',
         description: 'Save your work before leaving this page.',

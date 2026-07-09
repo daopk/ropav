@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue';
 import Radio from './radio.vue';
 import RadioGroup from './radio-group.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'outline'] as const;
 
@@ -16,6 +16,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         variant: {
             control: 'select',
             options: [undefined, ...variants],
@@ -27,8 +28,9 @@ const meta = {
         disabled: { control: 'boolean' },
     },
     args: {
-        modelValue: 'apple',
+        autoContrast: false,
         disabled: false,
+        modelValue: 'apple',
     },
     render: (args) => ({
         components: { Radio, RadioGroup },

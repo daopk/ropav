@@ -2,8 +2,8 @@
     --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
     --_rp-tooltip-cross-axis-offset: 0px;
     --_rp-tooltip-arrow-size: 0.4375rem;
-    --_rp-tooltip-bg: var(--_rp-tooltip-custom-bg, var(--rp-color-surface-inverted));
-    --_rp-tooltip-fg: var(--_rp-tooltip-custom-fg, var(--rp-color-text-inverted));
+    --_rp-tooltip-bg: var(--rp-color-bright);
+    --_rp-tooltip-fg: var(--rp-color-default);
 
     position: relative;
     display: inline-flex;
@@ -37,13 +37,6 @@
         content: '';
         background-color: inherit;
         rotate: 45deg;
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            --_rp-tooltip-bg: var(--rp-color-#{$color});
-            --_rp-tooltip-fg: var(--rp-color-on-#{$color});
-        }
     }
 
     &--placement-top &__content {

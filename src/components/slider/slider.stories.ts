@@ -97,8 +97,8 @@ export const Marks: Story = {
     args: {
         marks: [
             20,
-            { value: 50, label: '50%', color: 'success' },
-            { value: 80, label: '80%', color: 'var(--rp-color-danger)' },
+            { value: 50, label: '50%', color: 'green' },
+            { value: 80, label: '80%', color: 'var(--rp-color-red-filled)' },
             { value: 90, label: 'Hidden', hidden: true },
         ],
     },
@@ -109,7 +109,7 @@ export const Vertical: Story = {
         orientation: 'vertical',
         marks: [
             { value: 0, label: '0' },
-            { value: 50, label: '50', color: 'success' },
+            { value: 50, label: '50', color: 'green' },
             { value: 100, label: '100' },
         ],
         tooltip: 'always',
@@ -151,7 +151,7 @@ export const CustomTooltip: Story = {
         tooltip: {
             mode: 'always',
             placement: 'bottom',
-            color: 'warning',
+            color: 'orange',
             offset: 12,
             arrow: true,
         },

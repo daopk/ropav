@@ -45,7 +45,7 @@ describe('Slider marks', () => {
                         modelValue: 60,
                         marks: [
                             { value: 20, label: 'Hidden', hidden: true },
-                            { value: 40, label: 'Warning', color: 'warning' },
+                            { value: 40, label: 'Warning', color: 'orange' },
                             { value: 80, label: 'Custom', color: '#ff3366' },
                         ],
                     });
@@ -62,16 +62,16 @@ describe('Slider marks', () => {
         expect(labels.map((label) => label.textContent?.trim())).toEqual(['Warning', 'Custom']);
         expect(marks[0].style.getPropertyValue('--_rp-slider-mark-position')).toBe('40%');
         expect(marks[0].style.getPropertyValue('--_rp-slider-mark-color')).toBe(
-            'var(--rp-color-warning)',
+            'var(--rp-color-orange-filled)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-slider-mark-label-color')).toBe(
-            'var(--rp-color-warning)',
+            'var(--rp-color-orange-filled)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-slider-mark-filled-label-color')).toBe(
-            'var(--rp-color-warning)',
+            'var(--rp-color-orange-filled)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-slider-mark-ring-color')).toBe(
-            'var(--rp-color-warning)',
+            'var(--rp-color-orange-filled)',
         );
         expect(marks[1].style.getPropertyValue('--_rp-slider-mark-position')).toBe('80%');
         expect(marks[1].style.getPropertyValue('--_rp-slider-mark-color')).toBe('#ff3366');

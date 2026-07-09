@@ -1,8 +1,3 @@
-@mixin radio-color($color) {
-    --_rp-radio-color: var(--rp-color-#{$color});
-    --_rp-radio-on-color: var(--rp-color-on-#{$color});
-}
-
 @mixin radio-size($size, $dot, $font-size) {
     --_rp-radio-size: #{$size};
     --_rp-radio-dot: #{$dot};
@@ -10,8 +5,8 @@
 }
 
 .rp-radio {
-    --_rp-radio-color: var(--_rp-radio-custom-color, var(--rp-color-control-selected-bg));
-    --_rp-radio-on-color: var(--_rp-radio-custom-on-color, var(--rp-color-control-selected-fg));
+    --_rp-radio-color: var(--rp-color-control-selected-bg);
+    --_rp-radio-on-color: var(--rp-color-control-selected-fg);
     --_rp-radio-size: 18px;
     --_rp-radio-dot: 8px;
     --_rp-radio-font-size: var(--rp-font-size-base);
@@ -75,12 +70,6 @@
     &__label {
         line-height: var(--rp-line-height-normal);
         color: var(--rp-color-text);
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            @include radio-color($color);
-        }
     }
 
     &--outline {

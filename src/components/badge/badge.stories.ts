@@ -17,6 +17,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         size: {
             control: 'select',
             options: [undefined, ...badgeSizes],
@@ -27,7 +28,9 @@ const meta = {
         },
         ariaLabel: { control: 'text' },
     },
-    args: {},
+    args: {
+        autoContrast: false,
+    },
 } satisfies Meta<typeof Badge>;
 
 export default meta;
@@ -92,19 +95,19 @@ export const Slots: Story = {
         setup: () => ({ args }),
         template: `
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                <Badge v-bind="args" color="success">
+                <Badge v-bind="args" color="green">
                     <template #left>
                         <IconCheckCircle aria-hidden="true" />
                     </template>
                     Verified
                 </Badge>
-                <Badge v-bind="args" color="secondary">
+                <Badge v-bind="args" color="violet">
                     Featured
                     <template #right>
                         <IconSparkles aria-hidden="true" />
                     </template>
                 </Badge>
-                <Badge v-bind="args" color="info" variant="surface">
+                <Badge v-bind="args" color="cyan" variant="surface">
                     Continue
                     <template #right>
                         <IconArrowRight aria-hidden="true" />

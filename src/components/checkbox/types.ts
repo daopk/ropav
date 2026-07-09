@@ -14,6 +14,7 @@ export interface CheckboxProps {
     modelValue: boolean;
     variant?: CheckboxVariant;
     color?: CheckboxColor;
+    autoContrast?: boolean;
     size?: CheckboxSize;
     radius?: CheckboxRadius;
     disabled?: boolean;

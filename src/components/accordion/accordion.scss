@@ -8,8 +8,8 @@
     overflow: hidden;
     font-family: var(--rp-font-family);
     color: var(--rp-color-text);
-    background-color: var(--rp-color-surface-raised);
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    background-color: var(--rp-color-default);
+    border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: var(--_rp-accordion-radius);
 
     &--disabled {

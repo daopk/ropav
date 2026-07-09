@@ -12,12 +12,12 @@ const colorExamples = [
     },
     {
         label: 'Primary',
-        color: 'var(--rp-color-primary)',
+        color: 'var(--rp-primary-color-filled)',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
     },
     {
         label: 'Danger',
-        color: 'var(--rp-color-danger)',
+        color: 'var(--rp-color-red-filled)',
         image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80',
     },
     {

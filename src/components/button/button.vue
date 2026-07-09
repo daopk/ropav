@@ -11,7 +11,7 @@
                 <IconLoaderCircle class="rp-button__spinner" />
             </slot>
         </span>
-        <span class="rp-button__content" :aria-hidden="loading || undefined">
+        <span class="rp-button__content">
             <span v-if="$slots.left" class="rp-button__left">
                 <slot name="left" />
             </span>
@@ -28,7 +28,6 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
-import { isComponentPresetColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { ButtonProps } from './types';
 import { getButtonColorStyle } from './useButtonColor';
@@ -44,14 +43,15 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 const rootClass = computed(() =>
     bem('rp-button', {
         [props.variant ?? '']: Boolean(props.variant),
-        [`color-${props.color}`]: isComponentPresetColor(props.color),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
         loading: props.loading,
     }),
 );
 
-const rootStyle = computed(() => getButtonColorStyle(props.color));
+const rootStyle = computed(() =>
+    getButtonColorStyle(props.color, props.variant, props.autoContrast),
+);
 </script>
 
 <style src="./button.scss" lang="scss" scoped></style>

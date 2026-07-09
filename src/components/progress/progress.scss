@@ -1,14 +1,10 @@
-@mixin progress-color($color) {
-    --_rp-progress-color: var(--rp-color-#{$color});
-}
-
 @mixin progress-size($height, $font-size) {
     --_rp-progress-track-height: #{$height};
     --_rp-progress-font-size: #{$font-size};
 }
 
 .rp-progress {
-    --_rp-progress-color: var(--_rp-progress-custom-color, var(--rp-color-control-selected-bg));
+    --_rp-progress-color: var(--rp-color-control-selected-bg);
     --_rp-progress-track-bg: var(--rp-color-control-track-bg);
     --_rp-progress-track-height: 8px;
     --_rp-progress-font-size: var(--rp-font-size-base);
@@ -39,7 +35,7 @@
 
     &__value {
         flex-shrink: 0;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-variant-numeric: tabular-nums;
     }
 
@@ -67,12 +63,6 @@
         width: 38%;
         min-width: 2rem;
         animation: rp-progress-indeterminate 1200ms ease-in-out infinite;
-    }
-
-    @each $color in primary, secondary, success, warning, danger, info, neutral {
-        &--color-#{$color} {
-            @include progress-color($color);
-        }
     }
 
     &--size-xs {

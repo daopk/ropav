@@ -4,14 +4,14 @@
     max-width: 960px;
     padding: var(--rp-spacing-8);
     color: var(--rp-color-text);
-    background: var(--rp-color-background);
+    background: var(--rp-color-body);
 }
 
 .rp-spinner-story__header {
     display: grid;
     gap: var(--rp-spacing-3);
     padding-bottom: var(--rp-spacing-4);
-    border-bottom: var(--rp-border-width-thin) solid var(--rp-color-border);
+    border-bottom: var(--rp-border-width-thin) solid var(--rp-color-default-border);
 
     h1,
     p {
@@ -25,13 +25,13 @@
 
     p:not(.rp-spinner-story__eyebrow) {
         max-width: 680px;
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         line-height: var(--rp-line-height-normal);
     }
 }
 
 .rp-spinner-story__eyebrow {
-    color: var(--rp-color-primary-fg);
+    color: var(--rp-primary-color-light-color);
     font-size: var(--rp-font-size-sm);
     font-weight: var(--rp-font-weight-semibold);
     text-transform: uppercase;
@@ -52,8 +52,8 @@
 .rp-spinner-demo__stage,
 .rp-spinner-section {
     padding: var(--rp-spacing-4);
-    background: var(--rp-color-surface-raised);
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    background: var(--rp-color-default);
+    border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: var(--rp-radius-lg);
 }
 
@@ -70,7 +70,7 @@
     }
 
     p {
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         line-height: var(--rp-line-height-normal);
     }
 }
@@ -92,12 +92,12 @@
     padding: var(--rp-spacing-4);
     color: var(--rp-color-text);
     font-size: var(--rp-font-size-2xl);
-    background: var(--rp-color-surface-muted);
-    border: var(--rp-border-width-thin) solid var(--rp-color-border);
+    background: var(--rp-color-default-hover);
+    border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: var(--rp-radius-md);
 
     span {
-        color: var(--rp-color-text-secondary);
+        color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-sm);
         font-weight: var(--rp-font-weight-medium);
     }
@@ -122,8 +122,8 @@
         margin: 0;
         padding: var(--rp-spacing-3);
         color: var(--rp-color-text);
-        background: var(--rp-color-surface-muted);
-        border: var(--rp-border-width-thin) solid var(--rp-color-border);
+        background: var(--rp-color-default-hover);
+        border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
         border-radius: var(--rp-radius-md);
     }
 

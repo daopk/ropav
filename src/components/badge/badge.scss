@@ -1,7 +1,5 @@
 @use 'sass:map';
 
-$badge-colors: primary, secondary, success, warning, danger, info, neutral;
-
 $badge-sizes: (
     xs: (
         height: 1rem,
@@ -30,29 +28,6 @@ $badge-sizes: (
     ),
 );
 
-$badge-variants: (
-    solid: (
-        bg: var(--_rp-badge-accent),
-        fg: var(--_rp-badge-accent-on),
-        border: var(--_rp-badge-accent),
-    ),
-    subtle: (
-        bg: var(--_rp-badge-accent-subtle-bg),
-        fg: var(--_rp-badge-accent-fg),
-        border: transparent,
-    ),
-    surface: (
-        bg: var(--_rp-badge-accent-subtle-bg),
-        fg: var(--_rp-badge-accent-fg),
-        border: var(--_rp-badge-accent-border),
-    ),
-    outline: (
-        bg: transparent,
-        fg: var(--_rp-badge-accent-fg),
-        border: var(--_rp-badge-accent-border),
-    ),
-);
-
 $badge-radii: (
     none: var(--rp-radius-none),
     xs: var(--rp-radius-xs),
@@ -63,42 +38,20 @@ $badge-radii: (
     full: var(--rp-radius-full),
 );
 
-@mixin badge-color($color) {
-    --_rp-badge-accent: var(--rp-color-#{$color});
-    --_rp-badge-accent-fg: var(--rp-color-#{$color}-fg);
-    --_rp-badge-accent-on: var(--rp-color-on-#{$color});
-    --_rp-badge-accent-subtle-bg: var(--rp-color-#{$color}-subtle-bg);
-    --_rp-badge-accent-border: var(--rp-color-#{$color}-border);
-}
-
 @mixin badge-size($tokens) {
     --_rp-badge-height: #{map.get($tokens, height)};
     --_rp-badge-padding-x: #{map.get($tokens, padding-x)};
     --_rp-badge-font-size: #{map.get($tokens, font-size)};
 }
 
-@mixin badge-variant($tokens) {
-    --_rp-badge-bg: #{map.get($tokens, bg)};
-    --_rp-badge-fg: #{map.get($tokens, fg)};
-    --_rp-badge-border: #{map.get($tokens, border)};
-}
-
 .rp-badge {
-    --_rp-badge-accent: var(--_rp-badge-custom-color, var(--rp-color-primary));
-    --_rp-badge-accent-fg: var(--_rp-badge-custom-fg, var(--rp-color-primary-fg));
-    --_rp-badge-accent-on: var(--_rp-badge-custom-on, var(--rp-color-on-primary));
-    --_rp-badge-accent-subtle-bg: var(
-        --_rp-badge-custom-subtle-bg,
-        var(--rp-color-primary-subtle-bg)
-    );
-    --_rp-badge-accent-border: var(--_rp-badge-custom-border, var(--rp-color-primary-border));
     --_rp-badge-height: 1.5rem;
     --_rp-badge-padding-x: var(--rp-spacing-2);
     --_rp-badge-font-size: var(--rp-font-size-sm);
     --_rp-badge-radius: var(--rp-radius-full);
-    --_rp-badge-bg: var(--rp-color-button-default-bg);
-    --_rp-badge-fg: var(--rp-color-text);
-    --_rp-badge-border: var(--rp-color-border);
+    --_rp-badge-bg: var(--rp-color-default);
+    --_rp-badge-fg: var(--rp-color-default-color);
+    --_rp-badge-border: var(--rp-color-default-border);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -123,18 +76,6 @@ $badge-radii: (
         background-color var(--rp-transition-fast),
         color var(--rp-transition-fast),
         border-color var(--rp-transition-fast);
-
-    @each $color in $badge-colors {
-        &--color-#{$color} {
-            @include badge-color($color);
-        }
-    }
-
-    @each $variant, $tokens in $badge-variants {
-        &--#{$variant} {
-            @include badge-variant($tokens);
-        }
-    }
 
     @each $size, $tokens in $badge-sizes {
         &--size-#{$size} {

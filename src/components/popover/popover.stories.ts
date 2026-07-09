@@ -51,7 +51,7 @@ export const Basic: Story = {
                         <div style="display: grid; gap: 12px; width: 220px;">
                             <div style="display: grid; gap: 4px;">
                                 <strong>Project status</strong>
-                                <span style="color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                                <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                                     Review is complete and ready for release.
                                 </span>
                             </div>
@@ -134,7 +134,7 @@ export const Target: Story = {
                 <Popover v-bind="args" target="#popover-target-button">
                     <div style="display: grid; gap: 8px; width: 220px;">
                         <strong>External target</strong>
-                        <span style="color: var(--rp-color-text-secondary); font-size: var(--rp-font-size-sm);">
+                        <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                             This panel is anchored by selector.
                         </span>
                     </div>

@@ -7,14 +7,14 @@
 }
 
 .rp-tabs-trigger {
-    --_rp-tabs-trigger-fg: var(--rp-color-text-secondary);
+    --_rp-tabs-trigger-fg: var(--rp-color-dimmed);
     --_rp-tabs-trigger-bg: transparent;
     --_rp-tabs-trigger-bg-hover: transparent;
     --_rp-tabs-trigger-border: transparent;
     --_rp-tabs-trigger-border-hover: transparent;
     --_rp-tabs-trigger-radius: var(--rp-radius-none);
     --_rp-tabs-trigger-shadow: none;
-    --_rp-tabs-trigger-outline-bg: var(--rp-color-background);
+    --_rp-tabs-trigger-outline-bg: var(--rp-color-body);
     --_rp-tabs-trigger-indicator: transparent;
     --_rp-tabs-trigger-height: var(--rp-size-control-md);
     --_rp-tabs-trigger-padding-y: var(--rp-spacing-2);
@@ -133,7 +133,7 @@
 
     &--active {
         --_rp-tabs-trigger-fg: var(--rp-color-text);
-        --_rp-tabs-trigger-indicator: var(--rp-color-primary);
+        --_rp-tabs-trigger-indicator: var(--rp-primary-color-filled);
     }
 
     &--pills,
@@ -144,18 +144,18 @@
     }
 
     &--pills {
-        --_rp-tabs-trigger-bg-hover: var(--rp-color-surface-hover);
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-default-hover);
         --_rp-tabs-trigger-radius: var(--rp-radius-md);
     }
 
     &--pills#{&}--active {
-        --_rp-tabs-trigger-fg: var(--rp-color-on-primary);
-        --_rp-tabs-trigger-bg: var(--rp-color-primary);
-        --_rp-tabs-trigger-bg-hover: var(--rp-color-primary-hover);
+        --_rp-tabs-trigger-fg: var(--rp-color-white);
+        --_rp-tabs-trigger-bg: var(--rp-primary-color-filled);
+        --_rp-tabs-trigger-bg-hover: var(--rp-primary-color-filled-hover);
     }
 
     &--outline {
-        --_rp-tabs-trigger-bg-hover: var(--rp-color-surface-hover);
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-default-hover);
         --_rp-tabs-trigger-radius: var(--rp-radius-md) var(--rp-radius-md) 0 0;
         z-index: 1;
         border: var(--rp-border-width-thin) solid var(--_rp-tabs-trigger-border);
@@ -165,8 +165,8 @@
         --_rp-tabs-trigger-fg: var(--rp-color-text);
         --_rp-tabs-trigger-bg: var(--_rp-tabs-trigger-outline-bg);
         --_rp-tabs-trigger-bg-hover: var(--_rp-tabs-trigger-outline-bg);
-        --_rp-tabs-trigger-border: var(--rp-color-border);
-        --_rp-tabs-trigger-border-hover: var(--rp-color-border);
+        --_rp-tabs-trigger-border: var(--rp-color-default-border);
+        --_rp-tabs-trigger-border-hover: var(--rp-color-default-border);
         z-index: 1;
         border-bottom-color: var(--_rp-tabs-trigger-bg);
     }

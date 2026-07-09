@@ -1,38 +1,3 @@
-@use 'sass:map';
-
-$alert-colors: primary, secondary, success, warning, danger, info, neutral;
-
-$alert-variants: (
-    subtle: (
-        bg: var(--_rp-alert-accent-subtle-bg),
-        fg: var(--rp-color-text),
-        title: var(--_rp-alert-accent-fg),
-        icon: var(--_rp-alert-accent-fg),
-        border: transparent,
-    ),
-    surface: (
-        bg: var(--_rp-alert-accent-subtle-bg),
-        fg: var(--rp-color-text),
-        title: var(--_rp-alert-accent-fg),
-        icon: var(--_rp-alert-accent-fg),
-        border: var(--_rp-alert-accent-border),
-    ),
-    outline: (
-        bg: transparent,
-        fg: var(--rp-color-text),
-        title: var(--_rp-alert-accent-fg),
-        icon: var(--_rp-alert-accent-fg),
-        border: var(--_rp-alert-accent-border),
-    ),
-    solid: (
-        bg: var(--_rp-alert-accent),
-        fg: var(--_rp-alert-accent-on),
-        title: var(--_rp-alert-accent-on),
-        icon: var(--_rp-alert-accent-on),
-        border: var(--_rp-alert-accent),
-    ),
-);
-
 $alert-radii: (
     none: var(--rp-radius-none),
     xs: var(--rp-radius-xs),
@@ -42,32 +7,11 @@ $alert-radii: (
     xl: var(--rp-radius-xl),
 );
 
-@mixin alert-color($color) {
-    --_rp-alert-accent: var(--rp-color-#{$color});
-    --_rp-alert-accent-fg: var(--rp-color-#{$color}-fg);
-    --_rp-alert-accent-on: var(--rp-color-on-#{$color});
-    --_rp-alert-accent-subtle-bg: var(--rp-color-#{$color}-subtle-bg);
-    --_rp-alert-accent-border: var(--rp-color-#{$color}-border);
-}
-
-@mixin alert-variant($tokens) {
-    --_rp-alert-bg: #{map.get($tokens, bg)};
-    --_rp-alert-fg: #{map.get($tokens, fg)};
-    --_rp-alert-title-fg: #{map.get($tokens, title)};
-    --_rp-alert-icon-fg: #{map.get($tokens, icon)};
-    --_rp-alert-border: #{map.get($tokens, border)};
-}
-
 .rp-alert {
-    --_rp-alert-accent: var(--_rp-alert-custom-color, var(--rp-color-info));
-    --_rp-alert-accent-fg: var(--_rp-alert-custom-fg, var(--rp-color-info-fg));
-    --_rp-alert-accent-on: var(--_rp-alert-custom-on, var(--rp-color-on-info));
-    --_rp-alert-accent-subtle-bg: var(--_rp-alert-custom-subtle-bg, var(--rp-color-info-subtle-bg));
-    --_rp-alert-accent-border: var(--_rp-alert-custom-border, var(--rp-color-info-border));
-    --_rp-alert-bg: var(--_rp-alert-accent-subtle-bg);
+    --_rp-alert-bg: var(--rp-color-cyan-light);
     --_rp-alert-fg: var(--rp-color-text);
-    --_rp-alert-title-fg: var(--_rp-alert-accent-fg);
-    --_rp-alert-icon-fg: var(--_rp-alert-accent-fg);
+    --_rp-alert-title-fg: var(--rp-color-cyan-light-color);
+    --_rp-alert-icon-fg: var(--rp-color-cyan-light-color);
     --_rp-alert-border: transparent;
     --_rp-alert-radius: var(--rp-radius-sm);
 
@@ -89,18 +33,6 @@ $alert-radii: (
         background-color var(--rp-transition-fast),
         color var(--rp-transition-fast),
         border-color var(--rp-transition-fast);
-
-    @each $color in $alert-colors {
-        &--color-#{$color} {
-            @include alert-color($color);
-        }
-    }
-
-    @each $variant, $tokens in $alert-variants {
-        &--#{$variant} {
-            @include alert-variant($tokens);
-        }
-    }
 
     @each $radius, $value in $alert-radii {
         &--radius-#{$radius} {

@@ -227,7 +227,7 @@ export const CustomItem: Story = {
                         <span style="flex: 1;">{{ item.label }}</span>
                         <span
                             v-if="item.destructive"
-                            style="color: var(--rp-color-danger-fg); font-size: var(--rp-font-size-sm);"
+                            style="color: var(--rp-color-red-light-color); font-size: var(--rp-font-size-sm);"
                         >
                             Soon
                         </span>

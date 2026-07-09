@@ -6,7 +6,7 @@ import IconSettings from '~icons/lucide/settings';
 import IconTrash from '~icons/lucide/trash-2';
 import IconButton from './icon-button.vue';
 
-const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
@@ -24,6 +24,7 @@ const meta = {
         color: {
             control: 'text',
         },
+        autoContrast: { control: 'boolean' },
         size: {
             control: 'select',
             options: [undefined, ...sizes],
@@ -41,6 +42,7 @@ const meta = {
     },
     args: {
         ariaLabel: 'Search',
+        autoContrast: false,
         disabled: false,
         loading: false,
     },
@@ -95,7 +97,7 @@ export const Icons: Story = {
                 <IconButton v-bind="args" aria-label="Settings">
                     <IconSettings aria-hidden="true" />
                 </IconButton>
-                <IconButton v-bind="args" aria-label="Delete" color="danger">
+                <IconButton v-bind="args" aria-label="Delete" color="red">
                     <IconTrash aria-hidden="true" />
                 </IconButton>
             </div>
