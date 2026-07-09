@@ -2,29 +2,29 @@
 
 $badge-sizes: (
     xs: (
-        height: 1rem,
-        padding-x: var(--rp-spacing-1),
-        font-size: calc(var(--rp-font-size-xs) - 0.0625rem),
+        height: 16px,
+        padding-x: 6px,
+        font-size: 9px,
     ),
     sm: (
-        height: 1.25rem,
-        padding-x: var(--rp-spacing-2),
-        font-size: calc(var(--rp-font-size-xs) - 0.0625rem),
+        height: 18px,
+        padding-x: 8px,
+        font-size: 10px,
     ),
     md: (
-        height: 1.5rem,
-        padding-x: var(--rp-spacing-2),
-        font-size: calc(var(--rp-font-size-sm) - 0.0625rem),
+        height: 20px,
+        padding-x: 10px,
+        font-size: 11px,
     ),
     lg: (
-        height: 1.75rem,
-        padding-x: var(--rp-spacing-3),
-        font-size: calc(var(--rp-font-size-base) - 0.0625rem),
+        height: 26px,
+        padding-x: 12px,
+        font-size: 13px,
     ),
     xl: (
-        height: 2rem,
-        padding-x: var(--rp-spacing-4),
-        font-size: calc(var(--rp-font-size-base) - 0.0625rem),
+        height: 32px,
+        padding-x: 16px,
+        font-size: 16px,
     ),
 );
 
@@ -45,9 +45,9 @@ $badge-radii: (
 }
 
 .rp-badge {
-    --_rp-badge-height: 1.5rem;
-    --_rp-badge-padding-x: var(--rp-spacing-2);
-    --_rp-badge-font-size: calc(var(--rp-font-size-sm) - 0.0625rem);
+    --_rp-badge-height: 20px;
+    --_rp-badge-padding-x: 10px;
+    --_rp-badge-font-size: 11px;
     --_rp-badge-radius: var(--rp-radius-full);
     --_rp-badge-bg: var(--rp-color-default);
     --_rp-badge-fg: var(--rp-color-default-color);
@@ -66,7 +66,7 @@ $badge-radii: (
     font-family: var(--rp-font-family);
     font-size: var(--_rp-badge-font-size);
     font-weight: var(--rp-font-weight-medium);
-    line-height: var(--rp-line-height-tight);
+    line-height: calc(var(--_rp-badge-height) - 2px);
     vertical-align: middle;
     white-space: nowrap;
     background-color: var(--_rp-badge-bg);

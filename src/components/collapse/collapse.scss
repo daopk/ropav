@@ -16,8 +16,8 @@
         min-width: 0;
         overflow: hidden;
         color: var(--rp-color-text);
-        font-size: var(--rp-font-size-base);
-        line-height: var(--rp-line-height-normal);
+        font-size: var(--rp-font-size-md);
+        line-height: var(--rp-line-height-md);
         grid-template-rows: 1fr;
         transition:
             grid-template-rows var(--_rp-collapse-duration),

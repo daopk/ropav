@@ -7,6 +7,7 @@ import Button from './button.vue';
 describe('Button', () => {
     const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
     it('uses button type by default and renders slots', async () => {
@@ -337,16 +338,22 @@ describe('Button', () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h(Button, { size: 'xl' }, { default: () => 'Save' });
+                    return h(
+                        'div',
+                        sizes.map((size) => h(Button, { size }, { default: () => size })),
+                    );
                 },
             }),
         );
 
         await flush();
 
-        const button = container.querySelector('button') as HTMLButtonElement;
+        const buttons = [...container.querySelectorAll('button')];
 
-        expect([...button.classList]).toEqual(['rp-button', 'rp-button--size-xl']);
+        expect(buttons).toHaveLength(sizes.length);
+        for (const [index, size] of sizes.entries()) {
+            expect([...buttons[index].classList]).toEqual(['rp-button', `rp-button--size-${size}`]);
+        }
     });
 
     it('adds a radius modifier for each supported radius', async () => {

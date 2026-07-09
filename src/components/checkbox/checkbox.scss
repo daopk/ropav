@@ -1,15 +1,13 @@
-@mixin checkbox-size($size, $icon, $font-size) {
+@mixin checkbox-size($size, $font-size) {
     --_rp-checkbox-size: #{$size};
-    --_rp-checkbox-icon-size: #{$icon};
     --_rp-checkbox-font-size: #{$font-size};
 }
 
 .rp-checkbox {
     --_rp-checkbox-color: var(--rp-color-control-selected-bg);
     --_rp-checkbox-on-color: var(--rp-color-control-selected-fg);
-    --_rp-checkbox-size: 18px;
-    --_rp-checkbox-icon-size: 14px;
-    --_rp-checkbox-font-size: var(--rp-font-size-base);
+    --_rp-checkbox-size: 24px;
+    --_rp-checkbox-font-size: var(--rp-font-size-md);
     --_rp-checkbox-radius: 4px;
     --_rp-checkbox-checked-bg: var(--_rp-checkbox-color);
     --_rp-checkbox-checked-border: var(--_rp-checkbox-color);
@@ -68,8 +66,8 @@
     }
 
     &__icon {
-        width: var(--_rp-checkbox-icon-size);
-        height: var(--_rp-checkbox-icon-size);
+        width: 60%;
+        height: 60%;
         color: var(--_rp-checkbox-checked-icon);
         transform-origin: center;
 
@@ -79,7 +77,7 @@
     }
 
     &__label {
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
         color: var(--rp-color-text);
     }
 
@@ -90,23 +88,23 @@
     }
 
     &--size-xs {
-        @include checkbox-size(14px, 10px, var(--rp-font-size-xs));
+        @include checkbox-size(16px, var(--rp-font-size-xs));
     }
 
     &--size-sm {
-        @include checkbox-size(16px, 12px, var(--rp-font-size-sm));
+        @include checkbox-size(20px, var(--rp-font-size-sm));
     }
 
     &--size-md {
-        @include checkbox-size(18px, 14px, var(--rp-font-size-base));
+        @include checkbox-size(24px, var(--rp-font-size-md));
     }
 
     &--size-lg {
-        @include checkbox-size(22px, 16px, var(--rp-font-size-lg));
+        @include checkbox-size(30px, var(--rp-font-size-lg));
     }
 
     &--size-xl {
-        @include checkbox-size(26px, 20px, var(--rp-font-size-xl));
+        @include checkbox-size(36px, var(--rp-font-size-xl));
     }
 
     @each $radius, $value in (xs: 2px, sm: 4px, md: 6px, lg: 8px, xl: var(--rp-radius-full)) {

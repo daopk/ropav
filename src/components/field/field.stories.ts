@@ -68,7 +68,7 @@ export const Invalid: Story = {
                     <Input v-bind="controlProps" v-model="value" placeholder="zoi@example.com" />
                 </template>
                 <template #message>
-                    <p style="margin: 0; color: var(--rp-color-red-filled); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                    <p style="margin: 0; color: var(--rp-color-red-filled); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-md);">
                         Enter a valid email address.
                     </p>
                 </template>
@@ -109,7 +109,7 @@ export const FormControls: Story = {
                         <Textarea v-bind="controlProps" v-model="note" placeholder="Add context..." />
                     </template>
                     <template #message>
-                        <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                        <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-md);">
                             Keep it short and specific.
                         </p>
                     </template>
@@ -130,7 +130,7 @@ export const FormControls: Story = {
                         </Checkbox>
                     </template>
                     <template #message>
-                        <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-normal);">
+                        <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-md);">
                             You can unsubscribe at any time.
                         </p>
                     </template>

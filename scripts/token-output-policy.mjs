@@ -22,6 +22,7 @@ export function hasCssCustomProperty(token) {
     const extension = ropavExtension(token);
     if (extension.cssVariable === false) return false;
     if (extension.cssVariable === true) return true;
+    if (extension.cssName) return true;
 
     const path = tokenPath(token);
     const [category, type] = path;

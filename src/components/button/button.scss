@@ -13,8 +13,8 @@
     --_rp-button-border-active: var(--_rp-button-border-hover);
     --_rp-button-fg: var(--rp-color-default-color);
     --_rp-button-height: var(--rp-size-control-md);
-    --_rp-button-padding-x: var(--rp-spacing-4);
-    --_rp-button-font-size: var(--rp-font-size-base);
+    --_rp-button-padding-x: 22px;
+    --_rp-button-font-size: var(--rp-font-size-md);
     --_rp-button-radius: var(--rp-radius-sm);
     --_rp-button-shadow: var(--rp-shadow-sm);
     --_rp-button-shadow-hover: var(--rp-shadow-base);
@@ -25,7 +25,7 @@
     box-sizing: border-box;
     font-family: var(--rp-font-family);
     font-weight: var(--rp-font-weight-medium);
-    line-height: var(--rp-line-height-none);
+    line-height: 1;
     appearance: none;
     background-color: var(--_rp-button-bg);
     border: var(--rp-border-width-thin) solid var(--_rp-button-border);
@@ -60,35 +60,23 @@
     }
 
     &--size-xs {
-        @include button-size(
-            var(--rp-size-control-xs),
-            var(--rp-spacing-2),
-            var(--rp-font-size-xs)
-        );
+        @include button-size(var(--rp-size-control-xs), 14px, var(--rp-font-size-xs));
     }
 
     &--size-sm {
-        @include button-size(
-            var(--rp-size-control-sm),
-            var(--rp-spacing-3),
-            var(--rp-font-size-sm)
-        );
+        @include button-size(var(--rp-size-control-sm), 18px, var(--rp-font-size-sm));
+    }
+
+    &--size-md {
+        @include button-size(var(--rp-size-control-md), 22px, var(--rp-font-size-md));
     }
 
     &--size-lg {
-        @include button-size(
-            var(--rp-size-control-lg),
-            var(--rp-spacing-5),
-            var(--rp-font-size-lg)
-        );
+        @include button-size(var(--rp-size-control-lg), 26px, var(--rp-font-size-lg));
     }
 
     &--size-xl {
-        @include button-size(
-            var(--rp-size-control-xl),
-            var(--rp-spacing-6),
-            var(--rp-font-size-lg)
-        );
+        @include button-size(var(--rp-size-control-xl), 32px, var(--rp-font-size-xl));
     }
 
     @each $radius,

@@ -17,8 +17,8 @@
 
     h1 {
         margin: 0;
-        font-size: var(--rp-font-size-3xl);
-        line-height: var(--rp-line-height-tight);
+        font-size: var(--rp-h1-font-size);
+        line-height: var(--rp-h1-line-height);
     }
 }
 
@@ -47,11 +47,12 @@
     h2,
     h3 {
         margin: 0;
-        line-height: var(--rp-line-height-tight);
+        line-height: var(--rp-line-height-xs);
     }
 
     h2 {
-        font-size: var(--rp-font-size-xl);
+        font-size: var(--rp-h3-font-size);
+        line-height: var(--rp-h3-line-height);
     }
 
     h3 {
@@ -105,7 +106,7 @@
 .rp-color-variant strong {
     overflow-wrap: break-word;
     font-size: var(--rp-font-size-sm);
-    line-height: var(--rp-line-height-tight);
+    line-height: var(--rp-line-height-xs);
 }
 
 .rp-color-token code,
@@ -117,7 +118,7 @@
     font-family:
         ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
     font-size: var(--rp-font-size-xs);
-    line-height: var(--rp-line-height-normal);
+    line-height: var(--rp-line-height-md);
 }
 
 .rp-color-scales {

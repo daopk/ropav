@@ -3,6 +3,7 @@ import { computed, reactive, ref } from 'vue';
 import Select from './select.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const fruitOptions = [
     { label: 'Apple', value: 'apple' },
@@ -22,6 +23,10 @@ const meta = {
             control: 'select',
             options: [undefined, ...radii],
         },
+        size: {
+            control: 'select',
+            options: [undefined, ...sizes],
+        },
         placeholder: { control: 'text' },
         clearable: { control: 'boolean' },
         clearLabel: { control: 'text' },
@@ -30,6 +35,7 @@ const meta = {
     args: {
         modelValue: null,
         options: fruitOptions,
+        size: undefined,
         radius: undefined,
         placeholder: 'Select a fruit...',
         clearable: false,
@@ -74,6 +80,40 @@ export const Clearable: Story = {
             return { args, value };
         },
         template: '<Select v-bind="args" v-model="value" />',
+    }),
+};
+
+export const Sizes: Story = {
+    render: (args) => ({
+        components: { Select },
+        setup() {
+            const values = reactive<Record<(typeof sizes)[number], string | number | null>>({
+                xs: 'apple',
+                sm: 'banana',
+                md: 'cherry',
+                lg: 'dragonfruit',
+                xl: 'elderberry',
+            });
+            const selectArgs = computed(() => {
+                const { modelValue, size, ...rest } = args;
+                void modelValue;
+                void size;
+                return rest;
+            });
+
+            return { selectArgs, sizes, values };
+        },
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <Select
+                    v-for="size in sizes"
+                    :key="size"
+                    v-bind="selectArgs"
+                    v-model="values[size]"
+                    :size="size"
+                />
+            </div>
+        `,
     }),
 };
 

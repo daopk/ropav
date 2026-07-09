@@ -201,7 +201,7 @@ export const CustomHeader: Story = {
                 <Modal v-bind="args" v-model:open="open">
                     <template #header>
                         <div style="display: grid; gap: 4px;">
-                            <strong style="font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-tight);">
+                            <strong style="font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-xs);">
                                 Review changes
                             </strong>
                             <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">

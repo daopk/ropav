@@ -207,7 +207,7 @@ export const HeaderSlot: Story = {
                 <template #header>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                         <div style="display: grid; gap: 4px;">
-                            <strong style="color: var(--rp-color-text); font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-tight);">
+                            <strong style="color: var(--rp-color-text); font-size: var(--rp-font-size-lg); line-height: var(--rp-line-height-xs);">
                                 Deployment
                             </strong>
                             <span style="color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">

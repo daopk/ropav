@@ -7,9 +7,9 @@
 
 .rp-switch {
     --_rp-switch-color: var(--rp-color-control-selected-bg);
-    --_rp-switch-font-size: var(--rp-font-size-base);
-    --_rp-switch-track-width: 40px;
-    --_rp-switch-track-height: 22px;
+    --_rp-switch-font-size: var(--rp-font-size-md);
+    --_rp-switch-track-width: 46px;
+    --_rp-switch-track-height: 24px;
     --_rp-switch-thumb-size: 18px;
     --_rp-switch-thumb-offset: 2px;
     --_rp-switch-track-bg: var(--rp-color-control-track-bg);
@@ -84,27 +84,27 @@
     }
 
     &__label {
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
         color: var(--rp-color-text);
     }
 
     &--size-xs {
-        @include switch-size(28px, 16px, 12px, var(--rp-font-size-xs));
+        @include switch-size(32px, 16px, 12px, var(--rp-font-size-xs));
     }
 
     &--size-sm {
-        @include switch-size(34px, 18px, 14px, var(--rp-font-size-sm));
+        @include switch-size(38px, 20px, 14px, var(--rp-font-size-sm));
     }
 
     &--size-md {
-        @include switch-size(40px, 22px, 18px, var(--rp-font-size-base));
+        @include switch-size(46px, 24px, 18px, var(--rp-font-size-md));
     }
 
     &--size-lg {
-        @include switch-size(48px, 26px, 22px, var(--rp-font-size-lg));
+        @include switch-size(56px, 30px, 22px, var(--rp-font-size-lg));
     }
 
     &--size-xl {
-        @include switch-size(56px, 30px, 26px, var(--rp-font-size-xl));
+        @include switch-size(72px, 36px, 28px, var(--rp-font-size-xl));
     }
 }

@@ -25,7 +25,7 @@ const headlessPanelStyle = {
     marginTop: '12px',
     padding: '16px',
     color: 'var(--rp-color-text)',
-    lineHeight: 'var(--rp-line-height-normal)',
+    lineHeight: 'var(--rp-line-height-md)',
     border: 'var(--rp-border-width-thin) solid var(--rp-color-default-border)',
     borderRadius: 'var(--rp-radius-sm)',
 };

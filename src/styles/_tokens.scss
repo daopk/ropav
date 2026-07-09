@@ -451,13 +451,11 @@
     --rp-color-control-selected-fg  : var(--rp-color-white);
 
     // Font sizes
-    --rp-font-size-xs  : #{$font-size-xs};
-    --rp-font-size-sm  : #{$font-size-sm};
-    --rp-font-size-base: #{$font-size-base};
-    --rp-font-size-lg  : #{$font-size-lg};
-    --rp-font-size-xl  : #{$font-size-xl};
-    --rp-font-size-2xl : #{$font-size-2xl};
-    --rp-font-size-3xl : #{$font-size-3xl};
+    --rp-font-size-xs: #{$font-size-xs};
+    --rp-font-size-sm: #{$font-size-sm};
+    --rp-font-size-md: #{$font-size-md};
+    --rp-font-size-lg: #{$font-size-lg};
+    --rp-font-size-xl: #{$font-size-xl};
 
     // Font weights
     --rp-font-weight-normal  : #{$font-weight-normal};
@@ -465,12 +463,32 @@
     --rp-font-weight-semibold: #{$font-weight-semibold};
     --rp-font-weight-bold    : #{$font-weight-bold};
 
+    // Headings
+    --rp-h1-font-size  : #{$heading-h1-font-size};
+    --rp-h1-line-height: #{$heading-h1-line-height};
+    --rp-h1-font-weight: #{$heading-h1-font-weight};
+    --rp-h2-font-size  : #{$heading-h2-font-size};
+    --rp-h2-line-height: #{$heading-h2-line-height};
+    --rp-h2-font-weight: #{$heading-h2-font-weight};
+    --rp-h3-font-size  : #{$heading-h3-font-size};
+    --rp-h3-line-height: #{$heading-h3-line-height};
+    --rp-h3-font-weight: #{$heading-h3-font-weight};
+    --rp-h4-font-size  : #{$heading-h4-font-size};
+    --rp-h4-line-height: #{$heading-h4-line-height};
+    --rp-h4-font-weight: #{$heading-h4-font-weight};
+    --rp-h5-font-size  : #{$heading-h5-font-size};
+    --rp-h5-line-height: #{$heading-h5-line-height};
+    --rp-h5-font-weight: #{$heading-h5-font-weight};
+    --rp-h6-font-size  : #{$heading-h6-font-size};
+    --rp-h6-line-height: #{$heading-h6-line-height};
+    --rp-h6-font-weight: #{$heading-h6-font-weight};
+
     // Line heights
-    --rp-line-height-none   : #{$line-height-none};
-    --rp-line-height-tight  : #{$line-height-tight};
-    --rp-line-height-normal : #{$line-height-normal};
-    --rp-line-height-relaxed: #{$line-height-relaxed};
-    --rp-line-height-loose  : #{$line-height-loose};
+    --rp-line-height-xs: #{$line-height-xs};
+    --rp-line-height-sm: #{$line-height-sm};
+    --rp-line-height-md: #{$line-height-md};
+    --rp-line-height-lg: #{$line-height-lg};
+    --rp-line-height-xl: #{$line-height-xl};
 
     // Spacing
     --rp-spacing-0 : #{$spacing-0};

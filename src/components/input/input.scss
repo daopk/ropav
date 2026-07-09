@@ -6,8 +6,8 @@
 
 .rp-input {
     --_rp-input-height: var(--rp-size-control-md);
-    --_rp-input-padding-x: var(--rp-spacing-3);
-    --_rp-input-font-size: var(--rp-font-size-base);
+    --_rp-input-padding-x: calc(var(--rp-size-control-md) / 3);
+    --_rp-input-font-size: var(--rp-font-size-md);
     --_rp-input-radius: var(--rp-radius-sm);
     --_rp-input-valid-border: var(--rp-color-green-outline);
     --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-green-filled) 32%, transparent);
@@ -41,27 +41,43 @@
     border-radius: var(--_rp-input-radius);
 
     &--size-xs {
-        @include input-size(var(--rp-size-control-xs), var(--rp-spacing-1), var(--rp-font-size-xs));
+        @include input-size(
+            var(--rp-size-control-xs),
+            calc(var(--rp-size-control-xs) / 3),
+            var(--rp-font-size-xs)
+        );
     }
 
     &--size-sm {
-        @include input-size(var(--rp-size-control-sm), var(--rp-spacing-2), var(--rp-font-size-sm));
+        @include input-size(
+            var(--rp-size-control-sm),
+            calc(var(--rp-size-control-sm) / 3),
+            var(--rp-font-size-sm)
+        );
     }
 
     &--size-md {
         @include input-size(
             var(--rp-size-control-md),
-            var(--rp-spacing-3),
-            var(--rp-font-size-base)
+            calc(var(--rp-size-control-md) / 3),
+            var(--rp-font-size-md)
         );
     }
 
     &--size-lg {
-        @include input-size(var(--rp-size-control-lg), var(--rp-spacing-4), var(--rp-font-size-lg));
+        @include input-size(
+            var(--rp-size-control-lg),
+            calc(var(--rp-size-control-lg) / 3),
+            var(--rp-font-size-lg)
+        );
     }
 
     &--size-xl {
-        @include input-size(var(--rp-size-control-xl), var(--rp-spacing-5), var(--rp-font-size-lg));
+        @include input-size(
+            var(--rp-size-control-xl),
+            calc(var(--rp-size-control-xl) / 3),
+            var(--rp-font-size-xl)
+        );
     }
 
     @each $radius,
@@ -133,7 +149,7 @@
         background: transparent;
         font: inherit;
         color: var(--rp-color-control-fg);
-        line-height: var(--rp-line-height-none);
+        line-height: 1;
 
         &::placeholder {
             color: var(--rp-color-control-placeholder);

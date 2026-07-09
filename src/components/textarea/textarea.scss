@@ -5,9 +5,9 @@
 }
 
 .rp-textarea {
-    --_rp-textarea-padding-y: var(--rp-spacing-3);
-    --_rp-textarea-padding-x: var(--rp-spacing-3);
-    --_rp-textarea-font-size: var(--rp-font-size-base);
+    --_rp-textarea-padding-y: 7px;
+    --_rp-textarea-padding-x: calc(var(--rp-size-control-md) / 3);
+    --_rp-textarea-font-size: var(--rp-font-size-md);
     --_rp-textarea-radius: var(--rp-radius-sm);
     --_rp-textarea-valid-border: var(--rp-color-green-outline);
     --_rp-textarea-valid-ring: color-mix(in srgb, var(--rp-color-green-filled) 32%, transparent);
@@ -38,23 +38,23 @@
     border-radius: var(--_rp-textarea-radius);
 
     &--size-xs {
-        @include textarea-size(var(--rp-spacing-1), var(--rp-spacing-1), var(--rp-font-size-xs));
+        @include textarea-size(4.5px, calc(var(--rp-size-control-xs) / 3), var(--rp-font-size-xs));
     }
 
     &--size-sm {
-        @include textarea-size(var(--rp-spacing-2), var(--rp-spacing-2), var(--rp-font-size-sm));
+        @include textarea-size(5.5px, calc(var(--rp-size-control-sm) / 3), var(--rp-font-size-sm));
     }
 
     &--size-md {
-        @include textarea-size(var(--rp-spacing-3), var(--rp-spacing-3), var(--rp-font-size-base));
+        @include textarea-size(7px, calc(var(--rp-size-control-md) / 3), var(--rp-font-size-md));
     }
 
     &--size-lg {
-        @include textarea-size(var(--rp-spacing-4), var(--rp-spacing-4), var(--rp-font-size-lg));
+        @include textarea-size(9.5px, calc(var(--rp-size-control-lg) / 3), var(--rp-font-size-lg));
     }
 
     &--size-xl {
-        @include textarea-size(var(--rp-spacing-5), var(--rp-spacing-5), var(--rp-font-size-lg));
+        @include textarea-size(13px, calc(var(--rp-size-control-xl) / 3), var(--rp-font-size-xl));
     }
 
     @each $radius,
@@ -135,7 +135,7 @@
         background: transparent;
         font: inherit;
         color: var(--rp-color-control-fg);
-        line-height: var(--rp-line-height-relaxed);
+        line-height: var(--rp-line-height-md);
 
         &::placeholder {
             color: var(--rp-color-control-placeholder);

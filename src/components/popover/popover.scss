@@ -16,8 +16,8 @@
         max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
         padding: var(--rp-spacing-4);
         color: var(--rp-color-text);
-        font-size: var(--rp-font-size-base);
-        line-height: var(--rp-line-height-normal);
+        font-size: var(--rp-font-size-md);
+        line-height: var(--rp-line-height-md);
         overflow-wrap: anywhere;
         background-color: var(--rp-color-default);
         border: var(--rp-border-width-thin) solid var(--rp-color-default-border);

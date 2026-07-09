@@ -6,11 +6,14 @@ export interface SelectOption {
 
 export type SelectRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
+export type SelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export interface SelectProps {
     id?: string;
     name?: string;
     modelValue: string | number | null;
     options?: SelectOption[];
+    size?: SelectSize;
     radius?: SelectRadius;
     placeholder?: string;
     clearable?: boolean;

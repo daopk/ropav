@@ -17,10 +17,10 @@
     --_rp-tabs-trigger-outline-bg: var(--rp-color-body);
     --_rp-tabs-trigger-indicator: transparent;
     --_rp-tabs-trigger-height: var(--rp-size-control-md);
-    --_rp-tabs-trigger-padding-y: var(--rp-spacing-2);
-    --_rp-tabs-trigger-padding-x: var(--rp-spacing-3);
+    --_rp-tabs-trigger-padding-y: 0;
+    --_rp-tabs-trigger-padding-x: calc(var(--rp-size-control-md) / 3);
     --_rp-tabs-trigger-gap: var(--rp-spacing-2);
-    --_rp-tabs-trigger-font-size: var(--rp-font-size-base);
+    --_rp-tabs-trigger-font-size: var(--rp-font-size-md);
 
     @include reset-button;
     position: relative;
@@ -36,7 +36,7 @@
     font-family: var(--rp-font-family);
     font-size: var(--_rp-tabs-trigger-font-size);
     font-weight: var(--rp-font-weight-normal);
-    line-height: var(--rp-line-height-tight);
+    line-height: 1;
     text-align: center;
     background-color: var(--_rp-tabs-trigger-bg);
     border: 0;
@@ -72,8 +72,8 @@
     &--size-xs {
         @include tabs-trigger-size(
             var(--rp-size-control-xs),
-            var(--rp-spacing-1),
-            0.375rem,
+            0,
+            calc(var(--rp-size-control-xs) / 3),
             var(--rp-spacing-1),
             var(--rp-font-size-xs)
         );
@@ -82,8 +82,8 @@
     &--size-sm {
         @include tabs-trigger-size(
             var(--rp-size-control-sm),
-            var(--rp-spacing-1),
-            var(--rp-spacing-2),
+            0,
+            calc(var(--rp-size-control-sm) / 3),
             var(--rp-spacing-2),
             var(--rp-font-size-sm)
         );
@@ -92,18 +92,18 @@
     &--size-md {
         @include tabs-trigger-size(
             var(--rp-size-control-md),
+            0,
+            calc(var(--rp-size-control-md) / 3),
             var(--rp-spacing-2),
-            var(--rp-spacing-3),
-            var(--rp-spacing-2),
-            var(--rp-font-size-base)
+            var(--rp-font-size-md)
         );
     }
 
     &--size-lg {
         @include tabs-trigger-size(
             var(--rp-size-control-lg),
-            var(--rp-spacing-3),
-            var(--rp-spacing-4),
+            0,
+            calc(var(--rp-size-control-lg) / 3),
             var(--rp-spacing-3),
             var(--rp-font-size-lg)
         );
@@ -112,10 +112,10 @@
     &--size-xl {
         @include tabs-trigger-size(
             var(--rp-size-control-xl),
-            var(--rp-spacing-4),
-            var(--rp-spacing-5),
+            0,
+            calc(var(--rp-size-control-xl) / 3),
             var(--rp-spacing-3),
-            var(--rp-font-size-lg)
+            var(--rp-font-size-xl)
         );
     }
 

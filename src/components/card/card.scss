@@ -108,8 +108,8 @@
         flex: 1 1 auto;
         min-width: 0;
         color: var(--rp-color-text);
-        font-size: var(--rp-font-size-base);
-        line-height: var(--rp-line-height-normal);
+        font-size: var(--rp-font-size-md);
+        line-height: var(--rp-line-height-md);
     }
 
     &__title {
@@ -117,13 +117,13 @@
         color: var(--rp-color-text);
         font-size: var(--rp-font-size-lg);
         font-weight: var(--rp-font-weight-semibold);
-        line-height: var(--rp-line-height-tight);
+        line-height: var(--rp-line-height-xs);
     }
 
     &__description {
         margin: 0;
         color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-sm);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
     }
 }

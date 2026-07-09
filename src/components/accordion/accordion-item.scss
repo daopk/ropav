@@ -39,9 +39,9 @@
         padding: var(--rp-spacing-3) var(--rp-spacing-4);
         color: var(--rp-color-text);
         font-family: var(--rp-font-family);
-        font-size: var(--rp-font-size-base);
+        font-size: var(--rp-font-size-md);
         font-weight: var(--rp-font-weight-medium);
-        line-height: var(--rp-line-height-tight);
+        line-height: var(--rp-line-height-xs);
         text-align: left;
         appearance: none;
         cursor: pointer;
@@ -87,8 +87,8 @@
         overflow: hidden;
         padding: 0 var(--rp-spacing-4) var(--rp-spacing-4);
         color: var(--rp-color-text);
-        font-size: var(--rp-font-size-base);
-        line-height: var(--rp-line-height-normal);
+        font-size: var(--rp-font-size-md);
+        line-height: var(--rp-line-height-md);
         grid-template-rows: 1fr;
         transition:
             grid-template-rows var(--_rp-accordion-duration),

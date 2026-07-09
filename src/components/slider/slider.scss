@@ -23,7 +23,7 @@
         var(--_rp-slider-thumb-size) / 2 + (100% - var(--_rp-slider-thumb-size)) *
             var(--_rp-slider-ratio)
     );
-    --_rp-slider-font-size: var(--rp-font-size-base);
+    --_rp-slider-font-size: var(--rp-font-size-md);
     --_rp-slider-mark-size: 4px;
     --_rp-slider-mark-color: var(--rp-color-control-thumb-bg);
     --_rp-slider-mark-label-color: var(--rp-color-dimmed);
@@ -42,7 +42,7 @@
     cursor: pointer;
     font-family: var(--rp-font-family);
     font-size: var(--_rp-slider-font-size);
-    line-height: var(--rp-line-height-normal);
+    line-height: var(--rp-line-height-md);
 
     html.dark &,
     [data-rp-color-scheme='dark'] & {
@@ -103,7 +103,7 @@
 
     &--marks-with-labels &__track {
         padding-bottom: calc(
-            var(--_rp-slider-font-size) * var(--rp-line-height-normal) + var(--rp-spacing-2)
+            var(--_rp-slider-font-size) * var(--rp-line-height-md) + var(--rp-spacing-2)
         );
     }
 
@@ -142,7 +142,7 @@
         width: max-content;
         max-width: 8rem;
         color: var(--_rp-slider-mark-label-color);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
         transform: translateX(-50%);
     }
 
@@ -331,7 +331,7 @@
 
     &--vertical#{&}--marks-with-labels &__track {
         padding-right: calc(
-            var(--_rp-slider-font-size) * var(--rp-line-height-normal) + var(--rp-spacing-2)
+            var(--_rp-slider-font-size) * var(--rp-line-height-md) + var(--rp-spacing-2)
         );
         padding-bottom: 0;
     }
@@ -495,7 +495,7 @@
     }
 
     &--size-md {
-        @include slider-size(8px, 16px, 4px, var(--rp-font-size-base), 4px);
+        @include slider-size(8px, 16px, 4px, var(--rp-font-size-md), 4px);
     }
 
     &--size-lg {

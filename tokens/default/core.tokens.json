@@ -21,7 +21,7 @@
         "$value": "0.875rem",
         "$type": "dimension"
       },
-      "base": {
+      "md": {
         "$value": "1rem",
         "$type": "dimension"
       },
@@ -31,14 +31,6 @@
       },
       "xl": {
         "$value": "1.25rem",
-        "$type": "dimension"
-      },
-      "2xl": {
-        "$value": "1.5rem",
-        "$type": "dimension"
-      },
-      "3xl": {
-        "$value": "1.875rem",
         "$type": "dimension"
       }
     },
@@ -62,25 +54,129 @@
     }
   },
   "line-height": {
-    "none": {
-      "$value": 1,
-      "$type": "number"
-    },
-    "tight": {
-      "$value": 1.25,
-      "$type": "number"
-    },
-    "normal": {
+    "xs": {
       "$value": 1.4,
       "$type": "number"
     },
-    "relaxed": {
-      "$value": 1.5,
+    "sm": {
+      "$value": 1.45,
       "$type": "number"
     },
-    "loose": {
+    "md": {
+      "$value": 1.55,
+      "$type": "number"
+    },
+    "lg": {
       "$value": 1.6,
       "$type": "number"
+    },
+    "xl": {
+      "$value": 1.65,
+      "$type": "number"
+    }
+  },
+  "heading": {
+    "h1": {
+      "font-size": {
+        "$value": "2.125rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h1-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.3,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h1-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h1-font-weight" } }
+      }
+    },
+    "h2": {
+      "font-size": {
+        "$value": "1.625rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h2-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.35,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h2-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h2-font-weight" } }
+      }
+    },
+    "h3": {
+      "font-size": {
+        "$value": "1.375rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h3-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.4,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h3-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h3-font-weight" } }
+      }
+    },
+    "h4": {
+      "font-size": {
+        "$value": "1.125rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h4-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.45,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h4-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h4-font-weight" } }
+      }
+    },
+    "h5": {
+      "font-size": {
+        "$value": "1rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h5-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.5,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h5-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h5-font-weight" } }
+      }
+    },
+    "h6": {
+      "font-size": {
+        "$value": "0.875rem",
+        "$type": "dimension",
+        "$extensions": { "ropav": { "cssName": "h6-font-size" } }
+      },
+      "line-height": {
+        "$value": 1.5,
+        "$type": "number",
+        "$extensions": { "ropav": { "cssName": "h6-line-height" } }
+      },
+      "font-weight": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$extensions": { "ropav": { "cssName": "h6-font-weight" } }
+      }
     }
   },
   "color": {
@@ -768,23 +864,23 @@
   "size": {
     "control": {
       "xs": {
-        "$value": "28px",
+        "$value": "30px",
         "$type": "dimension"
       },
       "sm": {
-        "$value": "32px",
+        "$value": "36px",
         "$type": "dimension"
       },
       "md": {
-        "$value": "40px",
+        "$value": "42px",
         "$type": "dimension"
       },
       "lg": {
-        "$value": "48px",
+        "$value": "50px",
         "$type": "dimension"
       },
       "xl": {
-        "$value": "56px",
+        "$value": "60px",
         "$type": "dimension"
       }
     }

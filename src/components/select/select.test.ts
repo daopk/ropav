@@ -8,6 +8,7 @@ import type { SelectProps } from './types';
 
 describe('Select', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
     it('keeps state handlers testable without rendering the full component', async () => {
         const props = reactive<SelectProps>({
@@ -262,6 +263,32 @@ describe('Select', () => {
                 'rp-select',
                 `rp-select--radius-${radius}`,
             ]);
+        }
+    });
+
+    it('adds a size modifier for each supported size', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        sizes.map((size) =>
+                            h(Select, {
+                                modelValue: size,
+                                options: [{ label: size, value: size }],
+                                size,
+                            }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        const roots = [...container.querySelectorAll('.rp-select')];
+
+        expect(roots).toHaveLength(sizes.length);
+        for (const [index, size] of sizes.entries()) {
+            expect([...roots[index].classList]).toEqual(['rp-select', `rp-select--size-${size}`]);
         }
     });
 });

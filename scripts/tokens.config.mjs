@@ -20,6 +20,7 @@ const sectionByTokenPath = {
     color: 'Colors',
     'font.size': 'Font sizes',
     'font.weight': 'Font weights',
+    heading: 'Headings',
     'line-height': 'Line heights',
     spacing: 'Spacing',
     radius: 'Border radius',

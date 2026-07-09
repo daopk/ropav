@@ -62,35 +62,35 @@ $rp-component-colors:
     &--xs {
         #{$prefix}-height: var(--rp-size-control-xs);
         #{$prefix}-font: var(--rp-font-size-xs);
-        #{$prefix}-px: var(--rp-spacing-2);
+        #{$prefix}-px: calc(var(--rp-size-control-xs) / 3);
         #{$prefix}-radius: var(--rp-radius-sm);
     }
 
     &--sm {
         #{$prefix}-height: var(--rp-size-control-sm);
         #{$prefix}-font: var(--rp-font-size-sm);
-        #{$prefix}-px: var(--rp-spacing-3);
+        #{$prefix}-px: calc(var(--rp-size-control-sm) / 3);
         #{$prefix}-radius: var(--rp-radius-md);
     }
 
     &--md {
         #{$prefix}-height: var(--rp-size-control-md);
-        #{$prefix}-font: var(--rp-font-size-base);
-        #{$prefix}-px: var(--rp-spacing-4);
+        #{$prefix}-font: var(--rp-font-size-md);
+        #{$prefix}-px: calc(var(--rp-size-control-md) / 3);
         #{$prefix}-radius: var(--rp-radius-lg);
     }
 
     &--lg {
         #{$prefix}-height: var(--rp-size-control-lg);
         #{$prefix}-font: var(--rp-font-size-lg);
-        #{$prefix}-px: var(--rp-spacing-6);
+        #{$prefix}-px: calc(var(--rp-size-control-lg) / 3);
         #{$prefix}-radius: var(--rp-radius-lg);
     }
 
     &--xl {
         #{$prefix}-height: var(--rp-size-control-xl);
-        #{$prefix}-font: var(--rp-font-size-lg);
-        #{$prefix}-px: var(--rp-spacing-6);
+        #{$prefix}-font: var(--rp-font-size-xl);
+        #{$prefix}-px: calc(var(--rp-size-control-xl) / 3);
         #{$prefix}-radius: var(--rp-radius-lg);
     }
 }

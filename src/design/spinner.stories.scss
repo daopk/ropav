@@ -19,14 +19,14 @@
     }
 
     h1 {
-        font-size: var(--rp-font-size-3xl);
-        line-height: var(--rp-line-height-tight);
+        font-size: var(--rp-h1-font-size);
+        line-height: var(--rp-h1-line-height);
     }
 
     p:not(.rp-spinner-story__eyebrow) {
         max-width: 680px;
         color: var(--rp-color-dimmed);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
     }
 }
 
@@ -65,13 +65,13 @@
     }
 
     h2 {
-        font-size: var(--rp-font-size-xl);
-        line-height: var(--rp-line-height-tight);
+        font-size: var(--rp-h3-font-size);
+        line-height: var(--rp-h3-line-height);
     }
 
     p {
         color: var(--rp-color-dimmed);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
     }
 }
 
@@ -91,7 +91,7 @@
     min-width: 112px;
     padding: var(--rp-spacing-4);
     color: var(--rp-color-text);
-    font-size: var(--rp-font-size-2xl);
+    font-size: var(--rp-h3-font-size);
     background: var(--rp-color-default-hover);
     border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: var(--rp-radius-md);
@@ -108,7 +108,7 @@
 }
 
 .rp-spinner-sample--lg {
-    font-size: var(--rp-font-size-3xl);
+    font-size: var(--rp-h1-font-size);
 }
 
 .rp-spinner-section {
@@ -129,7 +129,7 @@
 
     pre code {
         font-size: var(--rp-font-size-sm);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
         white-space: pre;
     }
 }

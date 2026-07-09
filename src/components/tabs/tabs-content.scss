@@ -3,8 +3,8 @@
     min-width: 0;
     color: var(--rp-color-text);
     font-family: var(--rp-font-family);
-    font-size: var(--rp-font-size-base);
-    line-height: var(--rp-line-height-normal);
+    font-size: var(--rp-font-size-md);
+    line-height: var(--rp-line-height-md);
 
     &:focus-visible {
         outline: none;

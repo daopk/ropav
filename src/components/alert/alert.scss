@@ -25,7 +25,7 @@ $alert-radii: (
     color: var(--_rp-alert-fg);
     font-family: var(--rp-font-family);
     font-size: var(--rp-font-size-sm);
-    line-height: var(--rp-line-height-normal);
+    line-height: var(--rp-line-height-md);
     background-color: var(--_rp-alert-bg);
     border: var(--rp-border-width-thin) solid var(--_rp-alert-border);
     border-radius: var(--_rp-alert-radius);
@@ -65,9 +65,9 @@ $alert-radii: (
 
     &__title {
         color: var(--_rp-alert-title-fg);
-        font-size: var(--rp-font-size-base);
+        font-size: var(--rp-font-size-md);
         font-weight: var(--rp-font-weight-semibold);
-        line-height: var(--rp-line-height-tight);
+        line-height: var(--rp-line-height-xs);
     }
 
     &__description {

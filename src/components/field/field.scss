@@ -20,12 +20,12 @@
         color: var(--rp-color-text);
         font-size: var(--rp-font-size-sm);
         font-weight: var(--rp-font-weight-medium);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
     }
 
     &__required {
         color: var(--_rp-field-danger);
-        line-height: var(--rp-line-height-none);
+        line-height: 1;
     }
 
     &__control {
@@ -40,7 +40,7 @@
         margin: 0;
         color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-sm);
-        line-height: var(--rp-line-height-normal);
+        line-height: var(--rp-line-height-md);
     }
 
     &--disabled &__label,
