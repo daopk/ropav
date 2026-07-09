@@ -1,13 +1,17 @@
-@mixin select-size($height, $padding-x, $font-size) {
+@mixin select-size($height, $padding-x, $font-size, $option-min-height, $option-padding-y) {
     --_rp-select-height: #{$height};
     --_rp-select-padding-x: #{$padding-x};
     --_rp-select-font-size: #{$font-size};
+    --_rp-select-option-min-height: #{$option-min-height};
+    --_rp-select-option-padding-y: #{$option-padding-y};
 }
 
 .rp-select {
     --_rp-select-height: var(--rp-size-control-md);
     --_rp-select-padding-x: calc(var(--rp-size-control-md) / 3);
     --_rp-select-font-size: var(--rp-font-size-md);
+    --_rp-select-option-min-height: calc(var(--rp-size-control-md) - var(--rp-spacing-4));
+    --_rp-select-option-padding-y: var(--rp-spacing-1);
     --_rp-select-radius: var(--rp-radius-sm);
     --_rp-select-invalid-border: var(--rp-color-red-filled);
     --_rp-select-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
@@ -23,7 +27,9 @@
         @include select-size(
             var(--rp-size-control-xs),
             calc(var(--rp-size-control-xs) / 3),
-            var(--rp-font-size-xs)
+            var(--rp-font-size-xs),
+            calc(var(--rp-size-control-xs) - var(--rp-spacing-2)),
+            calc(var(--rp-spacing-1) / 2)
         );
     }
 
@@ -31,7 +37,9 @@
         @include select-size(
             var(--rp-size-control-sm),
             calc(var(--rp-size-control-sm) / 3),
-            var(--rp-font-size-sm)
+            var(--rp-font-size-sm),
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-3)),
+            var(--rp-spacing-1)
         );
     }
 
@@ -39,7 +47,9 @@
         @include select-size(
             var(--rp-size-control-md),
             calc(var(--rp-size-control-md) / 3),
-            var(--rp-font-size-md)
+            var(--rp-font-size-md),
+            calc(var(--rp-size-control-md) - var(--rp-spacing-4)),
+            var(--rp-spacing-1)
         );
     }
 
@@ -47,7 +57,9 @@
         @include select-size(
             var(--rp-size-control-lg),
             calc(var(--rp-size-control-lg) / 3),
-            var(--rp-font-size-lg)
+            var(--rp-font-size-lg),
+            calc(var(--rp-size-control-lg) - var(--rp-spacing-5)),
+            calc(var(--rp-spacing-3) / 2)
         );
     }
 
@@ -55,7 +67,9 @@
         @include select-size(
             var(--rp-size-control-xl),
             calc(var(--rp-size-control-xl) / 3),
-            var(--rp-font-size-xl)
+            var(--rp-font-size-xl),
+            calc(var(--rp-size-control-xl) - var(--rp-spacing-6)),
+            var(--rp-spacing-2)
         );
     }
 
@@ -67,7 +81,7 @@
             var(--rp-color-red-light-color) 32%,
             transparent
         );
-        --_rp-select-option-focused-bg: var(--rp-color-disabled);
+        --_rp-select-option-focused-bg: var(--rp-color-default-hover);
     }
 
     &--disabled {
@@ -197,14 +211,12 @@
     &__option {
         display: flex;
         align-items: center;
-        min-height: var(--rp-size-control-sm);
-        padding: var(--rp-spacing-2) var(--_rp-select-padding-x);
-        border-radius: calc(var(--_rp-select-radius) - var(--rp-spacing-1));
+        min-height: var(--_rp-select-option-min-height);
+        padding: var(--_rp-select-option-padding-y) var(--_rp-select-padding-x);
+        border-radius: var(--_rp-select-radius);
         font-size: var(--_rp-select-font-size);
         cursor: pointer;
-        transition:
-            background-color var(--rp-transition-fast),
-            color var(--rp-transition-fast);
+        transition: color var(--rp-transition-fast);
         color: var(--rp-color-control-fg);
 
         &--focused {
@@ -213,7 +225,6 @@
 
         &--selected {
             color: var(--rp-primary-color-light-color);
-            font-weight: var(--rp-font-weight-medium);
         }
 
         &--disabled {

@@ -204,7 +204,7 @@ export function getSchemeColorVariables(scheme) {
         '--rp-color-body': 'var(--rp-color-white)',
         '--rp-color-placeholder': 'var(--rp-color-gray-5)',
         '--rp-color-default': 'var(--rp-color-white)',
-        '--rp-color-default-hover': 'var(--rp-color-gray-0)',
+        '--rp-color-default-hover': 'var(--rp-color-gray-1)',
         '--rp-color-default-color': 'var(--rp-color-black)',
         '--rp-color-default-border': 'var(--rp-color-gray-4)',
         '--rp-color-default-border-hover': 'var(--rp-color-gray-5)',
