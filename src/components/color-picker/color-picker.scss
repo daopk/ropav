@@ -1,0 +1,61 @@
+.rp-color-picker {
+    --_rp-color-picker-saturation-width: 220px;
+    --_rp-color-picker-saturation-height: 160px;
+    --_rp-color-picker-hue-height: 14px;
+    --_rp-color-picker-saturation-slider-gap: var(--rp-spacing-4);
+    --_rp-color-picker-slider-gap: var(--rp-spacing-2);
+    --_rp-color-picker-thumb-size: 14px;
+    --_rp-color-picker-thumb-radius: calc(var(--_rp-color-picker-thumb-size) / 2);
+    --_rp-color-picker-saturation-radius: var(--_rp-color-picker-thumb-radius);
+    --_rp-color-picker-size: var(--_rp-color-picker-saturation-width);
+    --_rp-color-picker-control-width: max(0px, calc(100% - var(--_rp-color-picker-thumb-size)));
+    --_rp-color-picker-saturation-control-height: max(
+        0px,
+        calc(var(--_rp-color-picker-saturation-height) - var(--_rp-color-picker-thumb-size))
+    );
+    --_rp-color-picker-checkerboard-tile: var(--rp-color-gray-3);
+    --_rp-color-picker-checkerboard-tile-alt: var(--rp-color-white);
+    --_rp-color-picker-checkerboard: conic-gradient(
+        var(--_rp-color-picker-checkerboard-tile) 25%,
+        var(--_rp-color-picker-checkerboard-tile-alt) 0 50%,
+        var(--_rp-color-picker-checkerboard-tile) 0 75%,
+        var(--_rp-color-picker-checkerboard-tile-alt) 0
+    );
+    --_rp-color-picker-checkerboard-size: var(--_rp-color-picker-hue-height)
+        var(--_rp-color-picker-hue-height);
+
+    display: inline-grid;
+    box-sizing: border-box;
+    width: var(--_rp-color-picker-size);
+    max-width: 100%;
+    row-gap: 0;
+    font-family: var(--rp-font-family);
+    font-size: var(--rp-font-size-md);
+    font-weight: var(--rp-font-weight-normal);
+    color: var(--rp-color-text);
+    user-select: none;
+    vertical-align: top;
+
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-color-picker-checkerboard-tile: var(--rp-color-dark-6);
+        --_rp-color-picker-checkerboard-tile-alt: var(--rp-color-dark-4);
+    }
+
+    &--readonly {
+        cursor: default;
+    }
+
+    &__label {
+        display: block;
+        overflow: hidden;
+        color: var(--rp-color-text);
+        line-height: var(--rp-line-height-sm);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__header {
+        margin-block-end: var(--rp-spacing-2);
+    }
+}

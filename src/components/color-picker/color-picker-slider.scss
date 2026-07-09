@@ -1,0 +1,88 @@
+.rp-color-picker {
+    &__hue,
+    &__opacity {
+        position: relative;
+        box-sizing: border-box;
+        width: var(--_rp-color-picker-control-width);
+        height: var(--_rp-color-picker-hue-height);
+        margin-inline: var(--_rp-color-picker-thumb-radius);
+        overflow: visible;
+        touch-action: none;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    &__hue[data-readonly='true'],
+    &__opacity[data-readonly='true'] {
+        cursor: default;
+    }
+
+    &__hue {
+        margin-block-start: var(--_rp-color-picker-saturation-slider-gap);
+    }
+
+    &__opacity {
+        margin-block-start: var(--_rp-color-picker-slider-gap);
+    }
+
+    &__slider-surface {
+        position: absolute;
+        inset: 0 calc(-1 * var(--_rp-color-picker-thumb-radius));
+        overflow: hidden;
+        border-radius: var(--rp-radius-full);
+        box-shadow: 0 0 1px rgb(0 0 0 / 30%);
+    }
+
+    &__hue-surface {
+        background: hsl(0 100% 50%);
+
+        &::before {
+            position: absolute;
+            inset: 0 var(--_rp-color-picker-thumb-radius);
+            content: '';
+            background: linear-gradient(
+                to right,
+                hsl(0 100% 50%),
+                hsl(60 100% 50%),
+                hsl(120 100% 50%),
+                hsl(180 100% 50%),
+                hsl(240 100% 50%),
+                hsl(300 100% 50%),
+                hsl(360 100% 50%)
+            );
+        }
+    }
+
+    &__opacity-surface {
+        background:
+            linear-gradient(to right, rgb(255 255 255 / 0%), var(--_rp-color-picker-opacity-color)),
+            var(--_rp-color-picker-checkerboard);
+        background-size: auto, var(--_rp-color-picker-checkerboard-size);
+    }
+
+    &__slider-handle {
+        position: absolute;
+        top: 50%;
+        left: var(--_rp-color-picker-slider-x);
+        box-sizing: border-box;
+        width: var(--_rp-color-picker-thumb-size);
+        height: var(--_rp-color-picker-thumb-size);
+        z-index: 1;
+        border: 2px solid var(--rp-color-white);
+        border-radius: var(--rp-radius-full);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+    }
+
+    &__hue-handle {
+        background-color: hsl(var(--_rp-color-picker-hue) 100% 50%);
+    }
+
+    &__opacity-handle {
+        background-color: var(--_rp-color-picker-opacity-color);
+    }
+}
