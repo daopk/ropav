@@ -143,6 +143,26 @@ describe('ColorSwatch', () => {
         );
     });
 
+    it('uses fallback foreground colors for malformed color strings', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorSwatch, {
+                        color: 'rgb(255oops, 255, 255)',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatch = container.querySelector('.rp-color-swatch') as HTMLElement;
+
+        expect(swatch.style.getPropertyValue('--_rp-color-swatch-fg')).toBe(
+            'var(--rp-color-white)',
+        );
+    });
+
     it('renders slot content inside the swatch', async () => {
         const container = mountDom(
             defineComponent({

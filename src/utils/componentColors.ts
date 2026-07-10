@@ -1,3 +1,5 @@
+import { parseCssColor, type ParsedCssColor } from './color';
+
 export const componentColors = [
     'dark',
     'gray',
@@ -284,11 +286,7 @@ function createComponentColorRoles(
     };
 }
 
-interface RgbColor {
-    red: number;
-    green: number;
-    blue: number;
-}
+type RgbColor = Pick<ParsedCssColor, 'red' | 'green' | 'blue'>;
 
 function getReadableColorVariable(color: string) {
     const parsed = parseCssColor(color);
@@ -298,99 +296,6 @@ function getReadableColorVariable(color: string) {
     const whiteContrast = contrastRatio({ red: 255, green: 255, blue: 255 }, parsed);
 
     return blackContrast >= whiteContrast ? 'var(--rp-color-black)' : 'var(--rp-color-white)';
-}
-
-function parseCssColor(color: string): RgbColor | undefined {
-    const value = color.trim().toLowerCase();
-    if (value === 'black') return { red: 0, green: 0, blue: 0 };
-    if (value === 'white') return { red: 255, green: 255, blue: 255 };
-    if (value.startsWith('var(')) return undefined;
-
-    return parseHexColor(value) ?? parseRgbColor(value) ?? parseHslColor(value);
-}
-
-function parseHexColor(color: string): RgbColor | undefined {
-    const hex = color.match(/^#([\da-f]{3,8})$/i)?.[1];
-    if (!hex || ![3, 4, 6, 8].includes(hex.length)) return undefined;
-
-    if (hex.length === 3 || hex.length === 4) {
-        return {
-            red: Number.parseInt(hex[0] + hex[0], 16),
-            green: Number.parseInt(hex[1] + hex[1], 16),
-            blue: Number.parseInt(hex[2] + hex[2], 16),
-        };
-    }
-
-    return {
-        red: Number.parseInt(hex.slice(0, 2), 16),
-        green: Number.parseInt(hex.slice(2, 4), 16),
-        blue: Number.parseInt(hex.slice(4, 6), 16),
-    };
-}
-
-function parseRgbColor(color: string): RgbColor | undefined {
-    const rgb = color.match(/^rgba?\((.+)\)$/i)?.[1];
-    if (!rgb) return undefined;
-
-    const channels = rgb.split(',').slice(0, 3);
-    if (channels.length !== 3) return undefined;
-
-    const [red, green, blue] = channels.map(parseRgbChannel);
-    if (red == null || green == null || blue == null) return undefined;
-
-    return { red, green, blue };
-}
-
-function parseRgbChannel(channel: string) {
-    const value = channel.trim();
-    if (value.endsWith('%')) {
-        const percent = Number.parseFloat(value.slice(0, -1));
-        return Number.isFinite(percent) ? clamp(Math.round((percent / 100) * 255), 0, 255) : null;
-    }
-
-    const number = Number.parseFloat(value);
-    return Number.isFinite(number) ? clamp(Math.round(number), 0, 255) : null;
-}
-
-function parseHslColor(color: string): RgbColor | undefined {
-    const hsl = color.match(
-        /^hsla?\(\s*([-+]?\d*\.?\d+)(?:deg)?\s*,\s*([-+]?\d*\.?\d+)%\s*,\s*([-+]?\d*\.?\d+)%/i,
-    );
-    if (!hsl) return undefined;
-
-    const hue = Number.parseFloat(hsl[1]);
-    const saturation = Number.parseFloat(hsl[2]);
-    const lightness = Number.parseFloat(hsl[3]);
-    if (!Number.isFinite(hue) || !Number.isFinite(saturation) || !Number.isFinite(lightness)) {
-        return undefined;
-    }
-
-    return hslToRgb(hue, saturation / 100, lightness / 100);
-}
-
-function hslToRgb(hue: number, saturation: number, lightness: number): RgbColor {
-    const normalizedHue = (((hue % 360) + 360) % 360) / 360;
-    const q =
-        lightness < 0.5
-            ? lightness * (1 + saturation)
-            : lightness + saturation - lightness * saturation;
-    const p = 2 * lightness - q;
-
-    return {
-        red: Math.round(hueToRgb(p, q, normalizedHue + 1 / 3) * 255),
-        green: Math.round(hueToRgb(p, q, normalizedHue) * 255),
-        blue: Math.round(hueToRgb(p, q, normalizedHue - 1 / 3) * 255),
-    };
-}
-
-function hueToRgb(p: number, q: number, t: number) {
-    let normalized = t;
-    if (normalized < 0) normalized += 1;
-    if (normalized > 1) normalized -= 1;
-    if (normalized < 1 / 6) return p + (q - p) * 6 * normalized;
-    if (normalized < 1 / 2) return q;
-    if (normalized < 2 / 3) return p + (q - p) * (2 / 3 - normalized) * 6;
-    return p;
 }
 
 function contrastRatio(foreground: RgbColor, background: RgbColor) {
@@ -410,8 +315,4 @@ function relativeLuminance(color: RgbColor) {
         );
 
     return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-}
-
-function clamp(value: number, min: number, max: number) {
-    return Math.min(max, Math.max(min, value));
 }

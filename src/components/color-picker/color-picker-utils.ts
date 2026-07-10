@@ -1,3 +1,4 @@
+import { parseCssColor, type ParsedCssColor } from '@/utils/color';
 import type { ColorPickerFormat } from './types';
 
 export const DEFAULT_HUE = 0;
@@ -10,13 +11,6 @@ export interface ColorPickerHsvColor {
     hue: number;
     saturation: number;
     value: number;
-    opacity: number;
-}
-
-interface RgbColor {
-    red: number;
-    green: number;
-    blue: number;
     opacity: number;
 }
 
@@ -141,7 +135,7 @@ function hsvToRgb(hue: number, saturation: number, value: number) {
     };
 }
 
-function rgbToHsv({ red, green, blue, opacity }: RgbColor): ColorPickerHsvColor {
+function rgbToHsv({ red, green, blue, opacity }: ParsedCssColor): ColorPickerHsvColor {
     const r = red / 255;
     const g = green / 255;
     const b = blue / 255;
@@ -164,7 +158,7 @@ function rgbToHsv({ red, green, blue, opacity }: RgbColor): ColorPickerHsvColor 
     };
 }
 
-function rgbToHsl({ red, green, blue }: Pick<RgbColor, 'red' | 'green' | 'blue'>): HslColor {
+function rgbToHsl({ red, green, blue }: Pick<ParsedCssColor, 'red' | 'green' | 'blue'>): HslColor {
     const r = red / 255;
     const g = green / 255;
     const b = blue / 255;
@@ -189,165 +183,6 @@ function rgbToHsl({ red, green, blue }: Pick<RgbColor, 'red' | 'green' | 'blue'>
         saturation: roundPercent(saturation * 100),
         lightness: roundPercent(lightness * 100),
     };
-}
-
-function hslToRgb(hue: number, saturation: number, lightness: number, opacity: number): RgbColor {
-    const h = normalizeHue(hue);
-    const s = clampPercent(saturation) / 100;
-    const l = clampPercent(lightness) / 100;
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-    const m = l - c / 2;
-
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (h < 60) {
-        r = c;
-        g = x;
-    } else if (h < 120) {
-        r = x;
-        g = c;
-    } else if (h < 180) {
-        g = c;
-        b = x;
-    } else if (h < 240) {
-        g = x;
-        b = c;
-    } else if (h < 300) {
-        r = x;
-        b = c;
-    } else {
-        r = c;
-        b = x;
-    }
-
-    return {
-        red: Math.round((r + m) * 255),
-        green: Math.round((g + m) * 255),
-        blue: Math.round((b + m) * 255),
-        opacity,
-    };
-}
-
-function parseCssColor(value: string): RgbColor | undefined {
-    const color = value.trim().toLowerCase();
-    return parseHexColor(color) ?? parseRgbColor(color) ?? parseHslColor(color);
-}
-
-function parseHexColor(color: string): RgbColor | undefined {
-    const hex = color.match(/^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i)?.[1];
-    if (!hex) return undefined;
-
-    if (hex.length === 3 || hex.length === 4) {
-        return {
-            red: Number.parseInt(hex[0] + hex[0], 16),
-            green: Number.parseInt(hex[1] + hex[1], 16),
-            blue: Number.parseInt(hex[2] + hex[2], 16),
-            opacity:
-                hex.length === 4
-                    ? roundPercent((Number.parseInt(hex[3] + hex[3], 16) / 255) * 100)
-                    : DEFAULT_OPACITY,
-        };
-    }
-
-    return {
-        red: Number.parseInt(hex.slice(0, 2), 16),
-        green: Number.parseInt(hex.slice(2, 4), 16),
-        blue: Number.parseInt(hex.slice(4, 6), 16),
-        opacity:
-            hex.length === 8
-                ? roundPercent((Number.parseInt(hex.slice(6, 8), 16) / 255) * 100)
-                : DEFAULT_OPACITY,
-    };
-}
-
-function parseRgbColor(color: string): RgbColor | undefined {
-    const match = color.match(/^rgba?\((.+)\)$/i);
-    if (!match) return undefined;
-
-    const parsed = parseFunctionChannels(match[1]);
-    if (!parsed || parsed.channels.length !== 3) return undefined;
-
-    const [red, green, blue] = parsed.channels.map(parseRgbChannel);
-    if (red == null || green == null || blue == null) return undefined;
-
-    return {
-        red,
-        green,
-        blue,
-        opacity: parseAlpha(parsed.alpha) ?? DEFAULT_OPACITY,
-    };
-}
-
-function parseHslColor(color: string): RgbColor | undefined {
-    const match = color.match(/^hsla?\((.+)\)$/i);
-    if (!match) return undefined;
-
-    const parsed = parseFunctionChannels(match[1]);
-    if (!parsed || parsed.channels.length !== 3) return undefined;
-
-    const hue = parseHueChannel(parsed.channels[0]);
-    const saturation = parsePercentChannel(parsed.channels[1]);
-    const lightness = parsePercentChannel(parsed.channels[2]);
-    if (hue == null || saturation == null || lightness == null) return undefined;
-
-    return hslToRgb(hue, saturation, lightness, parseAlpha(parsed.alpha) ?? DEFAULT_OPACITY);
-}
-
-function parseFunctionChannels(value: string) {
-    if (value.includes(',')) {
-        const parts = value.split(',').map((part) => part.trim());
-        return {
-            channels: parts.slice(0, 3),
-            alpha: parts[3],
-        };
-    }
-
-    const [channelsValue, alpha] = value.split('/').map((part) => part.trim());
-    return {
-        channels: channelsValue.split(/\s+/).filter(Boolean),
-        alpha,
-    };
-}
-
-function parseRgbChannel(channel: string) {
-    const value = channel.trim();
-    if (value.endsWith('%')) {
-        const percent = Number.parseFloat(value.slice(0, -1));
-        return Number.isFinite(percent) ? clamp(Math.round((percent / 100) * 255), 0, 255) : null;
-    }
-
-    const number = Number.parseFloat(value);
-    return Number.isFinite(number) ? clamp(Math.round(number), 0, 255) : null;
-}
-
-function parseHueChannel(channel: string) {
-    const value = channel.trim().replace(/deg$/i, '');
-    const number = Number.parseFloat(value);
-    return Number.isFinite(number) ? number : null;
-}
-
-function parsePercentChannel(channel: string) {
-    const value = channel.trim();
-    if (!value.endsWith('%')) return null;
-
-    const percent = Number.parseFloat(value.slice(0, -1));
-    return Number.isFinite(percent) ? clamp(percent, 0, 100) : null;
-}
-
-function parseAlpha(alpha: string | undefined) {
-    if (alpha == null || alpha === '') return undefined;
-
-    const value = alpha.trim();
-    if (value.endsWith('%')) {
-        const percent = Number.parseFloat(value.slice(0, -1));
-        return Number.isFinite(percent) ? roundPercent(clamp(percent, 0, 100)) : undefined;
-    }
-
-    const number = Number.parseFloat(value);
-    return Number.isFinite(number) ? roundPercent(clamp(number, 0, 1) * 100) : undefined;
 }
 
 function toHexChannel(value: number) {
