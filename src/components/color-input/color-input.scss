@@ -44,6 +44,10 @@
     :deep(.rp-input) {
         width: 100%;
         min-width: $component-menu-min-width;
+        padding-inline-start: calc(
+            (var(--_rp-color-input-height) - var(--_rp-color-input-preview-size)) / 2 -
+                var(--rp-border-width-thin)
+        );
     }
 
     :deep(.rp-popover__content) {
