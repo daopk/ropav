@@ -25,28 +25,60 @@
         box-shadow: var(--rp-shadow-base);
     }
 
-    &--placement-top &__content {
+    &--placement-top-start &__content,
+    &--placement-top &__content,
+    &--placement-top-end &__content {
         bottom: calc(100% + var(--_rp-popover-main-axis-offset));
-        left: calc(50% + var(--_rp-popover-cross-axis-offset));
-        translate: -50% 0;
     }
 
-    &--placement-right &__content {
-        top: calc(50% + var(--_rp-popover-cross-axis-offset));
+    &--placement-right-start &__content,
+    &--placement-right &__content,
+    &--placement-right-end &__content {
         left: calc(100% + var(--_rp-popover-main-axis-offset));
-        translate: 0 -50%;
     }
 
-    &--placement-bottom &__content {
+    &--placement-bottom-start &__content,
+    &--placement-bottom &__content,
+    &--placement-bottom-end &__content {
         top: calc(100% + var(--_rp-popover-main-axis-offset));
+    }
+
+    &--placement-left-start &__content,
+    &--placement-left &__content,
+    &--placement-left-end &__content {
+        right: calc(100% + var(--_rp-popover-main-axis-offset));
+    }
+
+    &--placement-top-start &__content,
+    &--placement-bottom-start &__content {
+        left: var(--_rp-popover-cross-axis-offset);
+    }
+
+    &--placement-top &__content,
+    &--placement-bottom &__content {
         left: calc(50% + var(--_rp-popover-cross-axis-offset));
         translate: -50% 0;
     }
 
+    &--placement-top-end &__content,
+    &--placement-bottom-end &__content {
+        right: calc(0px - var(--_rp-popover-cross-axis-offset));
+    }
+
+    &--placement-right-start &__content,
+    &--placement-left-start &__content {
+        top: var(--_rp-popover-cross-axis-offset);
+    }
+
+    &--placement-right &__content,
     &--placement-left &__content {
         top: calc(50% + var(--_rp-popover-cross-axis-offset));
-        right: calc(100% + var(--_rp-popover-main-axis-offset));
         translate: 0 -50%;
+    }
+
+    &--placement-right-end &__content,
+    &--placement-left-end &__content {
+        bottom: calc(0px - var(--_rp-popover-cross-axis-offset));
     }
 
     &--target {
@@ -54,31 +86,69 @@
     }
 
     &--target &__content {
+        --_rp-popover-target-translate-x: 0px;
+        --_rp-popover-target-translate-y: 0px;
+
         position: fixed;
         top: var(--_rp-popover-target-y, 0);
         right: auto;
         bottom: auto;
         left: var(--_rp-popover-target-x, 0);
+        translate: var(--_rp-popover-target-translate-x) var(--_rp-popover-target-translate-y);
     }
 
-    &--target#{&}--placement-top &__content {
-        translate: calc(-50% + var(--_rp-popover-cross-axis-offset))
-            calc(-100% - var(--_rp-popover-main-axis-offset));
+    &--target#{&}--placement-top-start &__content,
+    &--target#{&}--placement-top &__content,
+    &--target#{&}--placement-top-end &__content {
+        --_rp-popover-target-translate-y: calc(-100% - var(--_rp-popover-main-axis-offset));
     }
 
-    &--target#{&}--placement-right &__content {
-        translate: var(--_rp-popover-main-axis-offset)
-            calc(-50% + var(--_rp-popover-cross-axis-offset));
+    &--target#{&}--placement-right-start &__content,
+    &--target#{&}--placement-right &__content,
+    &--target#{&}--placement-right-end &__content {
+        --_rp-popover-target-translate-x: var(--_rp-popover-main-axis-offset);
     }
 
+    &--target#{&}--placement-bottom-start &__content,
+    &--target#{&}--placement-bottom &__content,
+    &--target#{&}--placement-bottom-end &__content {
+        --_rp-popover-target-translate-y: var(--_rp-popover-main-axis-offset);
+    }
+
+    &--target#{&}--placement-left-start &__content,
+    &--target#{&}--placement-left &__content,
+    &--target#{&}--placement-left-end &__content {
+        --_rp-popover-target-translate-x: calc(-100% - var(--_rp-popover-main-axis-offset));
+    }
+
+    &--target#{&}--placement-top-start &__content,
+    &--target#{&}--placement-bottom-start &__content {
+        --_rp-popover-target-translate-x: var(--_rp-popover-cross-axis-offset);
+    }
+
+    &--target#{&}--placement-top &__content,
     &--target#{&}--placement-bottom &__content {
-        translate: calc(-50% + var(--_rp-popover-cross-axis-offset))
-            var(--_rp-popover-main-axis-offset);
+        --_rp-popover-target-translate-x: calc(-50% + var(--_rp-popover-cross-axis-offset));
     }
 
+    &--target#{&}--placement-top-end &__content,
+    &--target#{&}--placement-bottom-end &__content {
+        --_rp-popover-target-translate-x: calc(-100% + var(--_rp-popover-cross-axis-offset));
+    }
+
+    &--target#{&}--placement-right-start &__content,
+    &--target#{&}--placement-left-start &__content {
+        --_rp-popover-target-translate-y: var(--_rp-popover-cross-axis-offset);
+    }
+
+    &--target#{&}--placement-right &__content,
     &--target#{&}--placement-left &__content {
-        translate: calc(-100% - var(--_rp-popover-main-axis-offset))
-            calc(-50% + var(--_rp-popover-cross-axis-offset));
+        --_rp-popover-target-translate-y: calc(-50% + var(--_rp-popover-cross-axis-offset));
+    }
+
+    &--target#{&}--placement-right-end &__content,
+    &--target#{&}--placement-left-end &__content {
+        --_rp-popover-target-translate-y: calc(-100% + var(--_rp-popover-cross-axis-offset));
     }
 }
 

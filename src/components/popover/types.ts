@@ -1,6 +1,21 @@
 import type { Ref } from 'vue';
 
-export type PopoverPlacement = 'top' | 'right' | 'bottom' | 'left';
+export const popoverPlacements = [
+    'top-start',
+    'top',
+    'top-end',
+    'right-start',
+    'right',
+    'right-end',
+    'bottom-start',
+    'bottom',
+    'bottom-end',
+    'left-start',
+    'left',
+    'left-end',
+] as const;
+
+export type PopoverPlacement = (typeof popoverPlacements)[number];
 
 export type PopoverTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
 

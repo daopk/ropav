@@ -1,8 +1,42 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, waitFor } from 'storybook/test';
 import Button from '../button/button.vue';
 import Popover from './popover.vue';
+import { popoverPlacements, type PopoverPlacement } from './types';
 
-const placements = ['top', 'right', 'bottom', 'left'] as const;
+function expectPlacementGeometry(
+    placement: PopoverPlacement,
+    anchorRect: DOMRect,
+    contentRect: DOMRect,
+) {
+    const [side, alignment = 'center'] = placement.split('-');
+
+    if (side === 'top') expect(contentRect.bottom).toBeLessThan(anchorRect.top);
+    if (side === 'right') expect(contentRect.left).toBeGreaterThan(anchorRect.right);
+    if (side === 'bottom') expect(contentRect.top).toBeGreaterThan(anchorRect.bottom);
+    if (side === 'left') expect(contentRect.right).toBeLessThan(anchorRect.left);
+
+    const isVerticalSide = side === 'top' || side === 'bottom';
+    const anchorStart = isVerticalSide ? anchorRect.left : anchorRect.top;
+    const contentStart = isVerticalSide ? contentRect.left : contentRect.top;
+    const anchorEnd = isVerticalSide ? anchorRect.right : anchorRect.bottom;
+    const contentEnd = isVerticalSide ? contentRect.right : contentRect.bottom;
+    const anchorCenter = (anchorStart + anchorEnd) / 2;
+    const contentCenter = (contentStart + contentEnd) / 2;
+
+    if (alignment === 'start') {
+        expect(Math.abs(contentStart - anchorStart), `${placement} start alignment`).toBeLessThan(
+            0.5,
+        );
+    } else if (alignment === 'end') {
+        expect(Math.abs(contentEnd - anchorEnd), `${placement} end alignment`).toBeLessThan(0.5);
+    } else {
+        expect(
+            Math.abs(contentCenter - anchorCenter),
+            `${placement} center alignment (${contentCenter} vs ${anchorCenter})`,
+        ).toBeLessThan(0.5);
+    }
+}
 
 const meta = {
     title: 'Components/Popover',
@@ -11,7 +45,7 @@ const meta = {
     argTypes: {
         placement: {
             control: 'select',
-            options: placements,
+            options: popoverPlacements,
         },
         open: { control: 'boolean' },
         disabled: { control: 'boolean' },
@@ -65,12 +99,16 @@ export const Basic: Story = {
 };
 
 export const Placements: Story = {
+    tags: ['test'],
+    args: {
+        open: true,
+    },
     render: (args) => ({
         components: { Button, Popover },
-        setup: () => ({ args, placements }),
+        setup: () => ({ args, placements: popoverPlacements }),
         template: `
-            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 96px;">
-                <div style="display: grid; grid-template-columns: repeat(2, max-content); gap: 72px 112px;">
+            <div style="box-sizing: border-box; display: grid; min-height: 1000px; place-content: center; padding: 180px 240px;">
+                <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 180px 240px;">
                     <Popover
                         v-for="placement in placements"
                         :key="placement"
@@ -91,6 +129,22 @@ export const Placements: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const roots = [...canvasElement.querySelectorAll<HTMLElement>('.rp-popover')];
+
+        expect(roots).toHaveLength(popoverPlacements.length);
+        await waitFor(() => expect(roots[0].querySelector('.rp-popover__content')).toBeVisible());
+
+        for (const [index, placement] of popoverPlacements.entries()) {
+            const content = roots[index].querySelector<HTMLElement>('.rp-popover__content')!;
+
+            expectPlacementGeometry(
+                placement,
+                roots[index].getBoundingClientRect(),
+                content.getBoundingClientRect(),
+            );
+        }
+    },
 };
 
 export const Offset: Story = {
@@ -142,4 +196,54 @@ export const Target: Story = {
             </div>
         `,
     }),
+};
+
+export const TargetPlacements: Story = {
+    tags: ['test'],
+    args: {
+        open: true,
+    },
+    render: (args) => ({
+        components: { Button, Popover },
+        setup: () => ({ args, placements: popoverPlacements }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 1000px; place-content: center; padding: 180px 240px;">
+                <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 180px 240px;">
+                    <div v-for="placement in placements" :key="placement">
+                        <Button :id="'popover-target-' + placement" variant="outline">
+                            {{ placement }}
+                        </Button>
+                        <Popover
+                            v-bind="args"
+                            :data-placement="placement"
+                            :placement="placement"
+                            :target="'#popover-target-' + placement"
+                            :aria-label="'Target popover on ' + placement"
+                        >
+                            <div style="width: 120px;">{{ placement }}</div>
+                        </Popover>
+                    </div>
+                </div>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const roots = [...canvasElement.querySelectorAll<HTMLElement>('.rp-popover')];
+
+        expect(roots).toHaveLength(popoverPlacements.length);
+        await waitFor(() => expect(roots[0].querySelector('.rp-popover__content')).toBeVisible());
+
+        for (const [index, placement] of popoverPlacements.entries()) {
+            const target = canvasElement.querySelector<HTMLElement>(
+                `#popover-target-${placement}`,
+            )!;
+            const content = roots[index].querySelector<HTMLElement>('.rp-popover__content')!;
+
+            expectPlacementGeometry(
+                placement,
+                target.getBoundingClientRect(),
+                content.getBoundingClientRect(),
+            );
+        }
+    },
 };

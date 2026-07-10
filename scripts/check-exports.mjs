@@ -127,6 +127,7 @@ try {
             'Modal',
             'Overlay',
             'Popover',
+            'popoverPlacements',
             'Progress',
             'Radio',
             'RadioGroup',
@@ -210,7 +211,7 @@ try {
     assertExports(select, ['Select'], 'dist/components/select/index.js');
 
     const popover = await server.ssrLoadModule('/dist/components/popover/index.js');
-    assertExports(popover, ['Popover'], 'dist/components/popover/index.js');
+    assertExports(popover, ['Popover', 'popoverPlacements'], 'dist/components/popover/index.js');
 
     const progress = await server.ssrLoadModule('/dist/components/progress/index.js');
     assertExports(progress, ['Progress'], 'dist/components/progress/index.js');

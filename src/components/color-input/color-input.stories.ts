@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { computed, ref, watch } from 'vue';
 import Field from '../field/field.vue';
+import { popoverPlacements } from '../popover/types';
 import Radio from '../radio/radio.vue';
 import RadioGroup from '../radio/radio-group.vue';
 import ColorInput from './color-input.vue';
@@ -65,6 +67,7 @@ const meta = {
         valid: { control: 'boolean' },
         swatches: { control: 'object' },
         swatchesPerRow: { control: { type: 'number', min: 1, max: 15, step: 1 } },
+        placement: { control: 'select', options: popoverPlacements },
     },
     args: {
         modelValue: '#4992d1',
@@ -90,7 +93,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ['test'],
+    play: async ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('.rp-input__native')!;
+        const inputControl = canvasElement.querySelector<HTMLElement>('.rp-input')!;
+        const picker = canvasElement.querySelector<HTMLElement>('.rp-popover__content')!;
+
+        await userEvent.click(input);
+        await waitFor(() => expect(picker).toBeVisible());
+
+        const inputRect = inputControl.getBoundingClientRect();
+        const pickerRect = picker.getBoundingClientRect();
+
+        expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThan(0.5);
+    },
+};
 
 export const WithSwatches: Story = {
     args: {

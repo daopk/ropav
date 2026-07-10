@@ -46,4 +46,9 @@ describe('public source exports', () => {
         expect(Ropav).toHaveProperty('useCollapse');
         expect(Ropav.useCollapse).toBeTypeOf('function');
     });
+
+    it('exposes popover placement options from src/index.ts', () => {
+        expect(Ropav.popoverPlacements).toHaveLength(12);
+        expect(Ropav.popoverPlacements).toContain('bottom-start');
+    });
 });

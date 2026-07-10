@@ -85,7 +85,7 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
     invalid: undefined,
     valid: undefined,
     readonly: false,
-    placement: 'bottom',
+    placement: 'bottom-start',
     open: undefined,
     triggerAriaLabel: 'Choose color',
 });

@@ -10,6 +10,7 @@ import {
     waitTransition,
 } from '../../../tests/utils/vue';
 import Popover from './popover.vue';
+import { popoverPlacements } from './types';
 import type {
     PopoverContentSlotProps,
     PopoverPlacement,
@@ -18,7 +19,7 @@ import type {
 } from './types';
 
 describe('Popover', () => {
-    const placements: PopoverPlacement[] = ['top', 'right', 'bottom', 'left'];
+    const placements: readonly PopoverPlacement[] = popoverPlacements;
 
     it('renders trigger slot props and toggles interactive content', async () => {
         const container = mountDom(
@@ -251,10 +252,18 @@ describe('Popover', () => {
 
         const popover = container.querySelector('#position-popover') as HTMLElement;
         const cases: Array<[PopoverPlacement, string, string]> = [
+            ['top-start', '10px', '20px'],
             ['top', '50px', '20px'],
+            ['top-end', '90px', '20px'],
+            ['right-start', '90px', '20px'],
             ['right', '90px', '35px'],
+            ['right-end', '90px', '50px'],
+            ['bottom-start', '10px', '50px'],
             ['bottom', '50px', '50px'],
+            ['bottom-end', '90px', '50px'],
+            ['left-start', '10px', '20px'],
             ['left', '10px', '35px'],
+            ['left-end', '10px', '50px'],
         ];
 
         for (const [placement, x, y] of cases) {

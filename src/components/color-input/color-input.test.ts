@@ -26,6 +26,7 @@ describe('ColorInput', () => {
         const popover = container.querySelector('.rp-popover__content') as HTMLElement;
 
         expect(root.classList.contains('rp-popover')).toBe(true);
+        expect(root.classList.contains('rp-popover--placement-bottom-start')).toBe(true);
         expect(native.id).toBe('brand-color');
         expect(native.value).toBe('#4992d1');
         expect(native.getAttribute('aria-label')).toBe('Brand color');

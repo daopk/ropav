@@ -15,6 +15,9 @@ interface PopoverPosition {
     y: number;
 }
 
+type PopoverSide = 'top' | 'right' | 'bottom' | 'left';
+type PopoverAlignment = 'start' | 'center' | 'end';
+
 type PopoverCssVariable =
     | '--_rp-popover-main-axis-offset'
     | '--_rp-popover-cross-axis-offset'
@@ -34,17 +37,20 @@ function isHTMLElement(value: unknown): value is HTMLElement {
 function getTargetPosition(rect: DOMRect, placement: PopoverPlacement): PopoverPosition {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
+    const [side, alignment = 'center'] = placement.split('-') as [PopoverSide, PopoverAlignment?];
+    const alignedX = alignment === 'start' ? rect.left : alignment === 'end' ? rect.right : centerX;
+    const alignedY = alignment === 'start' ? rect.top : alignment === 'end' ? rect.bottom : centerY;
 
-    switch (placement) {
+    switch (side) {
         case 'right':
-            return { x: rect.right, y: centerY };
+            return { x: rect.right, y: alignedY };
         case 'bottom':
-            return { x: centerX, y: rect.bottom };
+            return { x: alignedX, y: rect.bottom };
         case 'left':
-            return { x: rect.left, y: centerY };
+            return { x: rect.left, y: alignedY };
         case 'top':
         default:
-            return { x: centerX, y: rect.top };
+            return { x: alignedX, y: rect.top };
     }
 }
 
