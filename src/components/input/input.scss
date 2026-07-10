@@ -10,9 +10,9 @@
     --_rp-input-font-size: var(--rp-font-size-md);
     --_rp-input-radius: var(--rp-radius-sm);
     --_rp-input-valid-border: var(--rp-color-green-outline);
-    --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-green-filled) 32%, transparent);
-    --_rp-input-invalid-border: var(--rp-color-red-filled);
-    --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
+    --_rp-input-valid-ring: color-mix(in srgb, var(--rp-color-green-outline) 32%, transparent);
+    --_rp-input-invalid-border: var(--rp-color-red-outline);
+    --_rp-input-invalid-ring: color-mix(in srgb, var(--rp-color-red-outline) 32%, transparent);
 
     @include flex-center;
     box-sizing: border-box;
@@ -93,22 +93,6 @@
         &--radius-#{$radius} {
             --_rp-input-radius: #{$value};
         }
-    }
-
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
-        --_rp-input-valid-border: var(--rp-color-green-light-color);
-        --_rp-input-valid-ring: color-mix(
-            in srgb,
-            var(--rp-color-green-light-color) 32%,
-            transparent
-        );
-        --_rp-input-invalid-border: var(--rp-color-red-light-color);
-        --_rp-input-invalid-ring: color-mix(
-            in srgb,
-            var(--rp-color-red-light-color) 32%,
-            transparent
-        );
     }
 
     &--disabled {

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, waitFor } from 'storybook/test';
 import { ref } from 'vue';
 import IconCircleCheck from '~icons/lucide/circle-check';
 import IconSearch from '~icons/lucide/search';
@@ -60,12 +61,52 @@ export const Disabled: Story = {
     args: { disabled: true },
 };
 
-export const Invalid: Story = {
-    args: { invalid: true },
-};
+export const ValidationStates: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Input },
+        template: `
+            <div data-validation-states style="display: grid; gap: 12px; max-width: 320px;">
+                <Input model-value="Valid value" valid />
+                <Input model-value="Invalid value" invalid />
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const validationStates = canvasElement.querySelector<HTMLElement>(
+            '[data-validation-states]',
+        )!;
+        const darkValidationStates = validationStates.cloneNode(true) as HTMLElement;
 
-export const Valid: Story = {
-    args: { valid: true },
+        darkValidationStates.removeAttribute('data-validation-states');
+        darkValidationStates.setAttribute('data-rp-color-scheme', 'dark');
+        darkValidationStates.setAttribute('aria-hidden', 'true');
+        darkValidationStates.style.position = 'absolute';
+        darkValidationStates.style.visibility = 'hidden';
+        darkValidationStates.style.pointerEvents = 'none';
+        canvasElement.append(darkValidationStates);
+
+        const valid = darkValidationStates.querySelector<HTMLElement>('.rp-input--valid')!;
+        const invalid = darkValidationStates.querySelector<HTMLElement>('.rp-input--invalid')!;
+
+        try {
+            await waitFor(() => {
+                const validStyle = getComputedStyle(valid);
+                const invalidStyle = getComputedStyle(invalid);
+
+                expect(validStyle.getPropertyValue('--_rp-input-valid-border').trim()).toBe(
+                    validStyle.getPropertyValue('--rp-color-green-outline').trim(),
+                );
+                expect(validStyle.borderColor).toBe('rgb(105, 219, 124)');
+                expect(invalidStyle.getPropertyValue('--_rp-input-invalid-border').trim()).toBe(
+                    invalidStyle.getPropertyValue('--rp-color-red-outline').trim(),
+                );
+                expect(invalidStyle.borderColor).toBe('rgb(255, 135, 135)');
+            });
+        } finally {
+            darkValidationStates.remove();
+        }
+    },
 };
 
 export const Slots: Story = {
