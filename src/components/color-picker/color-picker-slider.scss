@@ -4,7 +4,11 @@
         position: relative;
         box-sizing: border-box;
         width: var(--_rp-color-picker-control-width);
-        height: var(--_rp-color-picker-hue-height);
+        height: max(
+            var(--_rp-color-picker-target-min-size),
+            var(--_rp-color-picker-hue-height),
+            var(--_rp-color-picker-thumb-size)
+        );
         margin-inline: var(--_rp-color-picker-thumb-radius);
         overflow: visible;
         touch-action: none;
@@ -37,10 +41,14 @@
 
     &__slider-surface {
         position: absolute;
-        inset: 0 calc(-1 * var(--_rp-color-picker-thumb-radius));
+        top: 50%;
+        right: calc(-1 * var(--_rp-color-picker-thumb-radius));
+        left: calc(-1 * var(--_rp-color-picker-thumb-radius));
+        height: var(--_rp-color-picker-hue-height);
         overflow: hidden;
         border-radius: var(--rp-radius-full);
         box-shadow: 0 0 1px rgb(0 0 0 / 30%);
+        transform: translateY(-50%);
     }
 
     &__hue-surface {

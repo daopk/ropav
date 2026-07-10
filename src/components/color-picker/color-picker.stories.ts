@@ -180,16 +180,25 @@ export const Sizes: Story = {
             const seventhRect = swatches[6].getBoundingClientRect();
             const eighthRect = swatches[7].getBoundingClientRect();
             const lastRect = swatches[13].getBoundingClientRect();
+            const hueRect = picker
+                .querySelector<HTMLElement>('.rp-color-picker__hue')!
+                .getBoundingClientRect();
+            const opacityRect = picker
+                .querySelector<HTMLElement>('.rp-color-picker__opacity')!
+                .getBoundingClientRect();
 
             expect(grid).toHaveAttribute('data-fill', 'true');
             expect(swatches).toHaveLength(colorPickerSwatches.length);
             expect(Math.abs(gridRect.width - pickerRect.width)).toBeLessThan(0.5);
             expect(Math.abs(firstRect.left - gridRect.left)).toBeLessThan(0.5);
-            expect(Math.abs(seventhRect.right - gridRect.right)).toBeLessThan(0.5);
+            expect(firstRect.width).toBeGreaterThanOrEqual(24);
+            expect(firstRect.height).toBeGreaterThanOrEqual(24);
             expect(Math.abs(seventhRect.top - firstRect.top)).toBeLessThan(0.5);
             expect(Math.abs(eighthRect.left - gridRect.left)).toBeLessThan(0.5);
             expect(eighthRect.top).toBeGreaterThan(firstRect.top);
-            expect(Math.abs(lastRect.right - gridRect.right)).toBeLessThan(0.5);
+            expect(Math.abs(lastRect.right - seventhRect.right)).toBeLessThan(0.5);
+            expect(hueRect.height).toBeGreaterThanOrEqual(24);
+            expect(opacityRect.height).toBeGreaterThanOrEqual(24);
         }
     },
 };

@@ -93,6 +93,7 @@ $color-picker-sizes: (
     --_rp-color-picker-swatches-margin: var(--rp-spacing-3);
     --_rp-color-picker-swatch-size: 24px;
     --_rp-color-picker-thumb-size: 14px;
+    --_rp-color-picker-target-min-size: 24px;
     --_rp-color-picker-font-size: var(--rp-font-size-md);
     --_rp-color-picker-thumb-radius: calc(var(--_rp-color-picker-thumb-size) / 2);
     --_rp-color-picker-saturation-radius: var(--_rp-color-picker-thumb-radius);
@@ -166,8 +167,12 @@ $color-picker-sizes: (
 
     &__swatches[data-fill='true'] {
         display: grid;
-        grid-template-columns: repeat(var(--_rp-color-picker-swatches-per-row), minmax(0, 1fr));
+        grid-template-columns: repeat(
+            var(--_rp-color-picker-swatches-per-row),
+            minmax(var(--_rp-color-picker-target-min-size), 1fr)
+        );
         width: 100%;
+        overflow-x: auto;
     }
 
     &__swatch {
@@ -176,6 +181,8 @@ $color-picker-sizes: (
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        min-width: var(--_rp-color-picker-target-min-size);
+        min-height: var(--_rp-color-picker-target-min-size);
         padding: 0;
         flex: 0 0 auto;
         appearance: none;
