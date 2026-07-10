@@ -8,6 +8,9 @@ export function useColorInputValue(
 ) {
     const parsedColor = computed(() => parseColorPickerValue(props.modelValue));
     const previewColor = computed(() => (parsedColor.value ? props.modelValue : undefined));
+    const hasValidSwatches = computed(() =>
+        Boolean(props.swatches?.some((swatch) => parseColorPickerValue(swatch))),
+    );
     const hasInvalidColor = computed(
         () => props.validateColor && props.modelValue.trim().length > 0 && !parsedColor.value,
     );
@@ -18,6 +21,7 @@ export function useColorInputValue(
 
     return {
         previewColor,
+        hasValidSwatches,
         hasInvalidColor,
         isInvalid,
         colorValidationMessage,

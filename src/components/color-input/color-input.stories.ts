@@ -66,6 +66,8 @@ const meta = {
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
+        disallowInput: { control: 'boolean' },
+        swatchesOnly: { control: 'boolean' },
         withEyeDropper: { control: 'boolean' },
         invalid: { control: 'boolean' },
         valid: { control: 'boolean' },
@@ -82,6 +84,8 @@ const meta = {
         placeholder: '#000000',
         disabled: false,
         readonly: false,
+        disallowInput: false,
+        swatchesOnly: false,
         withEyeDropper: true,
         invalid: false,
         valid: false,
@@ -160,6 +164,18 @@ export const Invalid: Story = {
 
 export const Readonly: Story = {
     args: { readonly: true },
+};
+
+export const DisallowInput: Story = {
+    args: { disallowInput: true },
+};
+
+export const SwatchesOnly: Story = {
+    args: {
+        swatchesOnly: true,
+        swatches: colorInputSwatches,
+        swatchesPerRow: 7,
+    },
 };
 
 export const Sizes: Story = {

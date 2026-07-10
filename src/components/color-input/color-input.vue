@@ -4,7 +4,7 @@
         :class="rootClass"
         :placement="placement"
         :open="open"
-        :disabled="control.disabled || readonly"
+        :disabled="popoverDisabled"
         :aria-label="pickerAriaLabel"
         @focusout="onFocusOut"
         @update:open="onOpenUpdate"
@@ -19,7 +19,7 @@
                 :radius="radius"
                 :placeholder="placeholder"
                 :disabled="control.disabled || undefined"
-                :readonly="readonly || undefined"
+                :readonly="readonly || disallowInput || swatchesOnly || undefined"
                 :required="control.required || undefined"
                 :invalid="isInvalid || undefined"
                 :valid="control.valid && !isInvalid ? true : undefined"
@@ -71,6 +71,7 @@
                 :format="format"
                 :size="size"
                 :readonly="readonly"
+                :with-picker="!swatchesOnly"
                 :swatches="swatches"
                 :swatches-per-row="swatchesPerRow"
                 :aria-label="pickerAriaLabel"
@@ -102,6 +103,8 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
     invalid: undefined,
     valid: undefined,
     readonly: false,
+    disallowInput: false,
+    swatchesOnly: false,
     placement: 'bottom-start',
     open: undefined,
     pickerAriaLabel: 'Choose color',
@@ -122,6 +125,7 @@ const {
     previewColor,
     isInvalid,
     colorValidationMessage,
+    popoverDisabled,
     getInputTriggerAttrs,
     rememberClose,
     onPickerKeydown,

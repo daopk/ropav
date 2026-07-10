@@ -392,6 +392,133 @@ describe('ColorInput', () => {
         expect(onUpdate).toHaveBeenCalledWith('#abcdef');
     });
 
+    it('can make the text input readonly while keeping picker selection enabled', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        disallowInput: true,
+                        swatches: ['#00ff00'],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(native.readOnly).toBe(true);
+        expect(native.disabled).toBe(false);
+
+        input(native, '#abcdef');
+        native.focus();
+        await flush();
+
+        const picker = container.querySelector('.rp-color-picker') as HTMLElement;
+        expect(onUpdate).not.toHaveBeenCalled();
+        expect(native.getAttribute('aria-expanded')).toBe('true');
+        expect(picker.classList.contains('rp-color-picker--readonly')).toBe(false);
+
+        click(container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement);
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith('#00ff00');
+    });
+
+    it('can restrict color updates to valid swatches only', async () => {
+        vi.stubGlobal('EyeDropper', function EyeDropper() {});
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        format: 'hex',
+                        swatchesOnly: true,
+                        withEyeDropper: true,
+                        swatches: ['not-a-color', 'rgb(0, 128, 0)'],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+
+        expect(native.readOnly).toBe(true);
+        expect(native.disabled).toBe(false);
+        expect(container.querySelector('.rp-color-input__eye-dropper')).toBeNull();
+
+        input(native, '#abcdef');
+        native.focus();
+        await flush();
+
+        expect(onUpdate).not.toHaveBeenCalled();
+        expect(native.getAttribute('aria-expanded')).toBe('true');
+        expect(popover.style.display).not.toBe('none');
+        expect(container.querySelector('.rp-color-picker__saturation')).toBeNull();
+        expect(container.querySelector('.rp-color-picker__hue')).toBeNull();
+        expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
+
+        const swatches = container.querySelectorAll(
+            '.rp-color-picker__swatch',
+        ) as NodeListOf<HTMLButtonElement>;
+        expect(swatches).toHaveLength(1);
+
+        click(swatches[0]);
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith('#008000');
+
+        swatches[0].focus();
+        keydown(swatches[0], 'Escape');
+        await waitTransition();
+
+        expect(document.activeElement).toBe(native);
+        expect(popover.style.display).toBe('none');
+        expect(native.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('does not expose an empty picker in swatches-only mode', async () => {
+        const onOpen = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        swatchesOnly: true,
+                        swatches: ['not-a-color'],
+                        'onUpdate:open': onOpen,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        native.focus();
+        click(native);
+        keydown(native, 'ArrowDown');
+        await flush();
+
+        expect(native.readOnly).toBe(true);
+        expect(native.getAttribute('role')).toBeNull();
+        expect(native.getAttribute('aria-controls')).toBeNull();
+        expect(native.getAttribute('aria-expanded')).toBeNull();
+        expect(native.getAttribute('aria-haspopup')).toBeNull();
+        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(onOpen).not.toHaveBeenCalled();
+    });
+
     it('exposes preview state through the left slot', async () => {
         const container = mountDom(
             defineComponent({

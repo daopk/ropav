@@ -13,6 +13,8 @@ export interface ColorInputProps {
     placeholder?: string;
     disabled?: boolean;
     readonly?: boolean;
+    disallowInput?: boolean;
+    swatchesOnly?: boolean;
     required?: boolean;
     invalid?: boolean;
     valid?: boolean;

@@ -16,9 +16,15 @@ export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorIn
     const control = useControlState(props);
     const value = useColorInputValue(props, () => control.invalid);
     const popover = useColorInputPopover(() => props.inputAttrs);
+    const popoverDisabled = computed(
+        () =>
+            control.disabled ||
+            Boolean(props.readonly) ||
+            (Boolean(props.swatchesOnly) && !value.hasValidSwatches.value),
+    );
     const eyeDropper = useColorInputEyeDropper({
-        enabled: () => props.withEyeDropper !== false,
-        disabled: () => control.disabled || Boolean(props.readonly),
+        enabled: () => props.withEyeDropper !== false && !props.swatchesOnly,
+        disabled: () => control.disabled || Boolean(props.readonly) || Boolean(props.swatchesOnly),
         format: () => props.format ?? 'hex',
         update: emit.modelValue,
     });
@@ -35,6 +41,7 @@ export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorIn
     );
 
     function onInputUpdate(nextValue: ColorPickerValue) {
+        if (control.disabled || props.readonly || props.disallowInput || props.swatchesOnly) return;
         emit.modelValue(nextValue);
     }
 
@@ -50,6 +57,7 @@ export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorIn
     return {
         control,
         rootClass,
+        popoverDisabled,
         ...value,
         ...popover,
         ...eyeDropper,

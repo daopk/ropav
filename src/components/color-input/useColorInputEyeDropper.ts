@@ -42,7 +42,7 @@ export function useColorInputEyeDropper(options: UseColorInputEyeDropperOptions)
         try {
             const result = await new EyeDropperApi().open();
             const color = parseColorPickerValue(result.sRGBHex);
-            if (!color) return;
+            if (!color || options.disabled()) return;
 
             options.update(formatColorPickerValue(color, options.format()));
         } catch {
