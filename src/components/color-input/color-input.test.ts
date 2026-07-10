@@ -1,8 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
 import { click, flush, input, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+});
 
 describe('ColorInput', () => {
     it('renders an input and preview swatch without a picker trigger button', async () => {
@@ -41,6 +45,214 @@ describe('ColorInput', () => {
         expect(container.querySelector('.rp-input__right')).toBeNull();
         expect(popover.style.display).toBe('none');
     });
+
+    it('picks a screen color from the right icon without opening the popover', async () => {
+        const openEyeDropper = vi.fn().mockResolvedValue({ sRGBHex: '#123456' });
+        const onUpdate = vi.fn();
+        const onOpen = vi.fn();
+        vi.stubGlobal(
+            'EyeDropper',
+            class {
+                open() {
+                    return openEyeDropper();
+                }
+            },
+        );
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#000000',
+                        format: 'rgb',
+                        eyeDropperAriaLabel: 'Sample a screen color',
+                        'onUpdate:modelValue': onUpdate,
+                        'onUpdate:open': onOpen,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement;
+        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+
+        expect(container.querySelector('.rp-input__right button')).toBe(button);
+        expect(button.getAttribute('aria-label')).toBe('Sample a screen color');
+        expect(button.type).toBe('button');
+        expect(button.querySelector('svg')).toBeTruthy();
+        expect(button.disabled).toBe(false);
+
+        click(button);
+        await flush();
+
+        expect(openEyeDropper).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith('rgb(18, 52, 86)');
+        expect(onOpen).not.toHaveBeenCalled();
+        expect(popover.style.display).toBe('none');
+    });
+
+    it('renders a custom eye dropper icon', async () => {
+        vi.stubGlobal('EyeDropper', function EyeDropper() {});
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        ColorInput,
+                        { modelValue: '#000000' },
+                        {
+                            'eye-dropper-icon': () =>
+                                h('span', { class: 'custom-eye-dropper-icon' }, 'Custom'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement;
+        const icon = button.querySelector('.rp-color-input__eye-dropper-icon') as HTMLElement;
+
+        expect(icon.getAttribute('aria-hidden')).toBe('true');
+        expect(icon.querySelector('.custom-eye-dropper-icon')?.textContent).toBe('Custom');
+        expect(button.querySelector('svg')).toBeNull();
+    });
+
+    it('closes an open picker before starting the eye dropper', async () => {
+        const openEyeDropper = vi.fn().mockResolvedValue({ sRGBHex: '#123456' });
+        const onOpen = vi.fn();
+        vi.stubGlobal(
+            'EyeDropper',
+            class {
+                open() {
+                    return openEyeDropper();
+                }
+            },
+        );
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#000000',
+                        'onUpdate:open': onOpen,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+        native.focus();
+        await flush();
+
+        expect(popover.style.display).not.toBe('none');
+        expect(onOpen).toHaveBeenLastCalledWith(true);
+
+        click(container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement);
+        await waitTransition();
+
+        expect(openEyeDropper).toHaveBeenCalledOnce();
+        expect(popover.style.display).toBe('none');
+        expect(onOpen).toHaveBeenLastCalledWith(false);
+    });
+
+    it('ignores cancellation from the native eye dropper', async () => {
+        const openEyeDropper = vi
+            .fn()
+            .mockRejectedValue(new DOMException('The user canceled the picker', 'AbortError'));
+        const onUpdate = vi.fn();
+        vi.stubGlobal(
+            'EyeDropper',
+            class {
+                open() {
+                    return openEyeDropper();
+                }
+            },
+        );
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#000000',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+        click(container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement);
+        await flush();
+
+        expect(openEyeDropper).toHaveBeenCalledOnce();
+        expect(onUpdate).not.toHaveBeenCalled();
+    });
+
+    it('can hide the eye dropper when the browser supports it', async () => {
+        vi.stubGlobal('EyeDropper', function EyeDropper() {});
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#000000',
+                        withEyeDropper: false,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        expect(container.querySelector('.rp-color-input__eye-dropper')).toBeNull();
+        expect(container.querySelector('.rp-input__right')).toBeNull();
+    });
+
+    it.each(['disabled', 'readonly'] as const)(
+        'disables the eye dropper when the color input is %s',
+        async (state) => {
+            const openEyeDropper = vi.fn();
+            vi.stubGlobal(
+                'EyeDropper',
+                class {
+                    open() {
+                        return openEyeDropper();
+                    }
+                },
+            );
+
+            const container = mountDom(
+                defineComponent({
+                    render() {
+                        return h(ColorInput, {
+                            modelValue: '#000000',
+                            [state]: true,
+                        });
+                    },
+                }),
+            );
+
+            await flush();
+
+            const button = container.querySelector(
+                '.rp-color-input__eye-dropper',
+            ) as HTMLButtonElement;
+            expect(button.disabled).toBe(true);
+
+            click(button);
+            await flush();
+
+            expect(openEyeDropper).not.toHaveBeenCalled();
+        },
+    );
 
     it('applies the selected size to both the input and picker', async () => {
         const container = mountDom(

@@ -30,4 +30,6 @@ export interface ColorInputProps {
     /** @deprecated Use pickerAriaLabel instead. */
     triggerAriaLabel?: string;
     pickerAriaLabel?: string;
+    withEyeDropper?: boolean;
+    eyeDropperAriaLabel?: string;
 }

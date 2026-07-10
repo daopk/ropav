@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { computed, reactive, ref, watch } from 'vue';
+import IconPipette from '~icons/lucide/pipette';
 import Field from '../field/field.vue';
 import { popoverPlacements } from '../popover/types';
 import Radio from '../radio/radio.vue';
@@ -65,6 +66,7 @@ const meta = {
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
+        withEyeDropper: { control: 'boolean' },
         invalid: { control: 'boolean' },
         valid: { control: 'boolean' },
         swatches: { control: 'object' },
@@ -80,6 +82,7 @@ const meta = {
         placeholder: '#000000',
         disabled: false,
         readonly: false,
+        withEyeDropper: true,
         invalid: false,
         valid: false,
     },
@@ -118,6 +121,23 @@ export const Default: Story = {
         expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThan(0.5);
         expect(Math.abs(pickerSurfaceRect.left - previewRect.left)).toBeLessThan(0.5);
     },
+};
+
+export const CustomEyeDropperIcon: Story = {
+    render: (args) => ({
+        components: { ColorInput, IconPipette },
+        setup() {
+            const value = ref(args.modelValue ?? '#4992d1');
+            return { args, value };
+        },
+        template: `
+            <ColorInput v-bind="args" v-model="value">
+                <template #eye-dropper-icon>
+                    <IconPipette />
+                </template>
+            </ColorInput>
+        `,
+    }),
 };
 
 export const WithSwatches: Story = {
