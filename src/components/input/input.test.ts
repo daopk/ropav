@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick } from 'vue';
+import { defineComponent, h, nextTick, reactive } from 'vue';
 
 import { flush, input, mountDom } from '../../../tests/utils/vue';
 import Input from './input.vue';
@@ -67,6 +67,83 @@ describe('Input', () => {
         expect(root.classList.contains('rp-input--disabled')).toBe(true);
         expect(root.classList.contains('rp-input--invalid')).toBe(true);
         expect(root.classList.contains('rp-input--readonly')).toBe(true);
+    });
+
+    it('forwards native attributes and events without overriding owned props', async () => {
+        const onBlur = vi.fn();
+        const onChange = vi.fn();
+        const onInput = vi.fn();
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, {
+                        id: 'owned-id',
+                        modelValue: '#123456',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            value: 'ignored-value',
+                            autocomplete: 'off',
+                            inputmode: 'text',
+                            pattern: '#[0-9a-fA-F]{6}',
+                            form: 'color-form',
+                            class: 'native-class',
+                            onBlur,
+                            onChange,
+                            onInput,
+                        },
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(native.id).toBe('owned-id');
+        expect(native.value).toBe('#123456');
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('inputmode')).toBe('text');
+        expect(native.getAttribute('pattern')).toBe('#[0-9a-fA-F]{6}');
+        expect(native.getAttribute('form')).toBe('color-form');
+        expect(native.classList.contains('rp-input__native')).toBe(true);
+        expect(native.classList.contains('native-class')).toBe(true);
+
+        native.dispatchEvent(new FocusEvent('blur'));
+        native.dispatchEvent(new Event('change'));
+        input(native, '#abcdef');
+        await flush();
+
+        expect(onBlur).toHaveBeenCalledOnce();
+        expect(onChange).toHaveBeenCalledOnce();
+        expect(onInput).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenCalledWith('#abcdef');
+    });
+
+    it('applies and clears a custom validation message', async () => {
+        const props = reactive({
+            modelValue: 'invalid',
+            validationMessage: 'Enter a valid value.',
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Input, props);
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        expect(native.validationMessage).toBe('Enter a valid value.');
+        expect(native.checkValidity()).toBe(false);
+
+        props.validationMessage = '';
+        await flush();
+
+        expect(native.validationMessage).toBe('');
+        expect(native.checkValidity()).toBe(true);
     });
 
     it('renders left and right slots around the native input', async () => {

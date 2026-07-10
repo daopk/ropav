@@ -21,4 +21,5 @@ export interface InputProps {
     describedby?: string;
     labelledby?: string;
     inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
 }

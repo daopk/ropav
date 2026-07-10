@@ -4,7 +4,7 @@
             <slot name="left" />
         </span>
         <input
-            v-bind="inputAttrs"
+            v-bind="nativeInputAttrs"
             :id="control.id"
             ref="inputRef"
             :name="name"
@@ -20,7 +20,6 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            @input="onInput"
         />
         <span v-if="$slots.right" class="rp-input__right">
             <slot name="right" />
@@ -29,6 +28,7 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed, watch, type InputHTMLAttributes } from 'vue';
 import { useInput } from './useInput';
 import type { InputProps } from './types';
 
@@ -51,6 +51,24 @@ const emit = defineEmits<{
 const { inputRef, control, rootClass, onInput, focusInput } = useInput(props, (value) => {
     emit('update:modelValue', value);
 });
+
+const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
+    const attrs = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        onInput(event) {
+            onInput(event);
+            attrs.onInput?.(event);
+        },
+    };
+});
+
+watch(
+    [inputRef, () => props.validationMessage],
+    ([input, validationMessage]) => input?.setCustomValidity(validationMessage ?? ''),
+    { flush: 'post', immediate: true },
+);
 
 void inputRef;
 </script>
