@@ -26,6 +26,7 @@ const publicComponents = [
     'Popover',
     'Radio',
     'RadioGroup',
+    'RangeSlider',
     'Select',
     'Slider',
     'Switch',

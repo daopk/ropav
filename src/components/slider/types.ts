@@ -17,6 +17,16 @@ export type SliderOrientation = (typeof sliderOrientations)[number];
 
 export type SliderValueFormatter = (value: number) => string | number;
 
+export type RangeSliderValue = [number, number];
+
+export type RangeSliderThumb = 'lower' | 'upper';
+
+export type RangeSliderEndpointValueText = string | SliderValueFormatter;
+
+export type RangeSliderAriaValueText =
+    | RangeSliderEndpointValueText
+    | [RangeSliderEndpointValueText, RangeSliderEndpointValueText];
+
 export type SliderTooltipMode = 'hover' | 'always';
 
 export type SliderTooltipOptions = Pick<
@@ -67,4 +77,15 @@ export interface SliderProps {
     ariaValueText?: string | SliderValueFormatter;
     describedby?: string;
     labelledby?: string;
+}
+
+export interface RangeSliderProps extends Omit<
+    SliderProps,
+    'modelValue' | 'name' | 'ariaLabel' | 'ariaValueText'
+> {
+    modelValue: RangeSliderValue;
+    minRange?: number;
+    name?: string | [string, string];
+    ariaLabel?: [string, string];
+    ariaValueText?: RangeSliderAriaValueText;
 }

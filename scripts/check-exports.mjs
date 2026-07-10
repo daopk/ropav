@@ -141,6 +141,7 @@ try {
             'Progress',
             'Radio',
             'RadioGroup',
+            'RangeSlider',
             'Select',
             'Slider',
             'Switch',
@@ -236,7 +237,7 @@ try {
     assertExports(progress, ['Progress'], 'dist/components/progress/index.js');
 
     const slider = await server.ssrLoadModule('/dist/components/slider/index.js');
-    assertExports(slider, ['Slider'], 'dist/components/slider/index.js');
+    assertExports(slider, ['RangeSlider', 'Slider'], 'dist/components/slider/index.js');
 
     const tabs = await server.ssrLoadModule('/dist/components/tabs/index.js');
     assertExports(
