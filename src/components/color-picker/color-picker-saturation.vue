@@ -1,24 +1,51 @@
 <template>
     <div
-        :id="id"
         ref="saturationRef"
         class="rp-color-picker__saturation"
-        role="slider"
+        role="group"
         :style="saturationStyle"
-        :tabindex="0"
-        aria-orientation="horizontal"
-        :aria-valuemin="0"
-        :aria-valuemax="100"
-        :aria-valuenow="Math.round(saturation)"
-        :aria-valuetext="ariaValueText"
-        :aria-label="ariaLabel || undefined"
+        :aria-label="groupAriaLabel"
         :aria-labelledby="labelledby"
         :aria-describedby="describedby"
         :aria-readonly="readonly || undefined"
         :data-readonly="readonly || undefined"
         @pointerdown="onPointerDown"
-        @keydown="onKeydown"
     >
+        <input
+            :id="id"
+            ref="saturationInputRef"
+            class="rp-color-picker__axis-input rp-color-picker__axis-input--saturation"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            :value="saturation"
+            aria-label="Saturation"
+            aria-orientation="horizontal"
+            :aria-valuenow="Math.round(saturation)"
+            :aria-valuetext="ariaValueText"
+            :aria-describedby="describedby"
+            :aria-readonly="readonly || undefined"
+            @input="onAxisInput($event, 'saturation')"
+            @keydown="onAxisKeydown($event, 'saturation')"
+        />
+        <input
+            :id="id ? `${id}-value` : undefined"
+            class="rp-color-picker__axis-input rp-color-picker__axis-input--value"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            :value="value"
+            aria-label="Value"
+            aria-orientation="vertical"
+            :aria-valuenow="Math.round(value)"
+            :aria-valuetext="ariaValueText"
+            :aria-describedby="describedby"
+            :aria-readonly="readonly || undefined"
+            @input="onAxisInput($event, 'value')"
+            @keydown="onAxisKeydown($event, 'value')"
+        />
         <span class="rp-color-picker__surface" aria-hidden="true" />
         <span class="rp-color-picker__handle" aria-hidden="true" />
     </div>
@@ -38,6 +65,8 @@ import {
 import type { ColorPickerSaturationProps, ColorPickerSelection } from './types';
 import { useColorPickerDrag } from './useColorPickerDrag';
 
+type ColorPickerAxis = 'saturation' | 'value';
+
 defineOptions({ name: 'RpColorPickerSaturation' });
 
 const props = withDefaults(defineProps<ColorPickerSaturationProps>(), {
@@ -50,6 +79,7 @@ const emit = defineEmits<{
 }>();
 
 const saturationRef = ref<HTMLElement | null>(null);
+const saturationInputRef = ref<HTMLInputElement | null>(null);
 const saturation = computed(() => clampPercent(props.modelValue.saturation));
 const value = computed(() => clampPercent(props.modelValue.value));
 const hue = computed(() => normalizeHue(props.hue));
@@ -66,6 +96,9 @@ const saturationStyle = computed(
 
 const ariaValueText = computed(
     () => `${Math.round(saturation.value)}% saturation, ${Math.round(value.value)}% value`,
+);
+const groupAriaLabel = computed(() =>
+    props.labelledby ? undefined : props.ariaLabel || 'Color area',
 );
 
 function updateValue(nextSaturation: number, nextValue: number) {
@@ -93,41 +126,54 @@ function updateFromPointer(e: PointerEvent, el: HTMLElement) {
 
 const { onPointerDown } = useColorPickerDrag({
     target: saturationRef,
+    focusTarget: saturationInputRef,
     readonly: () => props.readonly,
     updateFromPointer,
 });
 
-function onKeydown(e: KeyboardEvent) {
-    if (props.readonly) return;
+function onAxisKeydown(event: KeyboardEvent, axis: ColorPickerAxis) {
+    const currentValue = axis === 'saturation' ? saturation.value : value.value;
+    const step = event.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP;
+    let nextValue: number | undefined;
 
-    const step = e.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP;
-
-    switch (e.key) {
+    switch (event.key) {
         case 'ArrowRight':
-            e.preventDefault();
-            updateValue(saturation.value + step, value.value);
+        case 'ArrowUp':
+            nextValue = currentValue + step;
             break;
         case 'ArrowLeft':
-            e.preventDefault();
-            updateValue(saturation.value - step, value.value);
-            break;
-        case 'ArrowUp':
-            e.preventDefault();
-            updateValue(saturation.value, value.value + step);
-            break;
         case 'ArrowDown':
-            e.preventDefault();
-            updateValue(saturation.value, value.value - step);
+            nextValue = currentValue - step;
             break;
         case 'Home':
-            e.preventDefault();
-            updateValue(0, value.value);
+            nextValue = 0;
             break;
         case 'End':
-            e.preventDefault();
-            updateValue(100, value.value);
+            nextValue = 100;
             break;
     }
+
+    if (nextValue === undefined) return;
+
+    event.preventDefault();
+    if (!props.readonly) updateAxis(axis, nextValue);
+}
+
+function onAxisInput(event: Event, axis: ColorPickerAxis) {
+    const input = event.currentTarget;
+    if (!(input instanceof HTMLInputElement)) return;
+
+    if (props.readonly) {
+        input.value = String(axis === 'saturation' ? saturation.value : value.value);
+        return;
+    }
+
+    updateAxis(axis, Number(input.value));
+}
+
+function updateAxis(axis: ColorPickerAxis, nextValue: number) {
+    if (axis === 'saturation') updateValue(nextValue, value.value);
+    else updateValue(saturation.value, nextValue);
 }
 </script>
 

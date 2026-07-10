@@ -2,12 +2,14 @@ import { onBeforeUnmount, type Ref } from 'vue';
 
 interface UseColorPickerDragOptions {
     target: Ref<HTMLElement | null>;
+    focusTarget?: Ref<HTMLElement | null>;
     readonly: () => boolean;
     updateFromPointer: (event: PointerEvent, target: HTMLElement) => void;
 }
 
 export function useColorPickerDrag({
     target,
+    focusTarget,
     readonly,
     updateFromPointer,
 }: UseColorPickerDragOptions) {
@@ -39,7 +41,7 @@ export function useColorPickerDrag({
         if (!el) return;
 
         event.preventDefault();
-        el.focus();
+        (focusTarget?.value ?? el).focus();
         updateFromPointer(event, el);
 
         stopDragging();

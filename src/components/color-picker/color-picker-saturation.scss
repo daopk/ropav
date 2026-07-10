@@ -19,7 +19,12 @@
         cursor: default;
     }
 
-    &__saturation:focus-visible &__handle {
+    &__axis-input {
+        @include visually-hidden;
+        pointer-events: none;
+    }
+
+    &__axis-input:focus-visible ~ &__handle {
         box-shadow:
             0 0 1px rgb(0 0 0 / 60%),
             0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);

@@ -305,7 +305,9 @@ describe('ColorInput', () => {
         native.focus();
         await flush();
 
-        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturation = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLElement;
         saturation.focus();
         keydown(saturation, 'Escape');
         await waitTransition();
@@ -333,7 +335,9 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturation = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLElement;
         saturation.focus();
         outside.focus();
         await flush();
@@ -362,7 +366,9 @@ describe('ColorInput', () => {
         native.focus();
         await flush();
 
-        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturation = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLElement;
         saturation.focus();
         await flush();
 

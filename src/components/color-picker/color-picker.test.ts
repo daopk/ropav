@@ -53,7 +53,7 @@ function updateFormattedColor(
 }
 
 describe('ColorPicker', () => {
-    it('renders the saturation panel and hue bar without native inputs or buttons', async () => {
+    it('renders separate saturation and value axes with a hue bar', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -67,12 +67,27 @@ describe('ColorPicker', () => {
         await flush();
 
         const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturationAxis = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLInputElement;
+        const valueAxis = container.querySelector(
+            '.rp-color-picker__axis-input--value',
+        ) as HTMLInputElement;
         const hueBar = container.querySelector('.rp-color-picker__hue') as HTMLElement;
         const handle = container.querySelector('.rp-color-picker__handle')!;
 
-        expect(container.querySelector('input')).toBeNull();
+        expect(container.querySelectorAll('input')).toHaveLength(2);
         expect(container.querySelector('button')).toBeNull();
-        expect(panel.getAttribute('role')).toBe('slider');
+        expect(panel.getAttribute('role')).toBe('group');
+        expect(panel.getAttribute('aria-label')).toBe('Color area');
+        expect(saturationAxis.type).toBe('range');
+        expect(saturationAxis.getAttribute('aria-label')).toBe('Saturation');
+        expect(saturationAxis.getAttribute('aria-orientation')).toBe('horizontal');
+        expect(saturationAxis.getAttribute('aria-valuenow')).toBe('100');
+        expect(valueAxis.type).toBe('range');
+        expect(valueAxis.getAttribute('aria-label')).toBe('Value');
+        expect(valueAxis.getAttribute('aria-orientation')).toBe('vertical');
+        expect(valueAxis.getAttribute('aria-valuenow')).toBe('100');
         expect(hueBar.getAttribute('role')).toBe('slider');
         expect(hueBar.style.getPropertyValue('--_rp-color-picker-hue')).toBe('0');
         expect(hueBar.style.getPropertyValue('--_rp-color-picker-slider-x')).toBe('0%');
@@ -141,6 +156,9 @@ describe('ColorPicker', () => {
         );
         await flush();
 
+        expect(document.activeElement).toBe(
+            container.querySelector('.rp-color-picker__axis-input--saturation'),
+        );
         expect(onUpdate).toHaveBeenCalledOnce();
         expect(onUpdate).toHaveBeenCalledWith(formatHsvColor({ saturation: 50, value: 75 }));
     });
@@ -352,7 +370,7 @@ describe('ColorPicker', () => {
         expect(onUpdate).toHaveBeenCalledWith(updateFormattedColor('#008000', { hue: 0 }));
     });
 
-    it('updates saturation and value from keyboard arrows', async () => {
+    it('updates saturation and value through separate keyboard axes', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
@@ -367,15 +385,16 @@ describe('ColorPicker', () => {
 
         await flush();
 
-        const panel = container.querySelector('.rp-color-picker__saturation')!;
-        keydown(panel, 'ArrowRight');
+        const saturationAxis = container.querySelector('.rp-color-picker__axis-input--saturation')!;
+        const valueAxis = container.querySelector('.rp-color-picker__axis-input--value')!;
+        keydown(saturationAxis, 'ArrowRight');
         await flush();
 
         expect(onUpdate).toHaveBeenLastCalledWith(
             updateFormattedColor('#808080', { saturation: 1 }),
         );
 
-        keydown(panel, 'ArrowUp');
+        keydown(valueAxis, 'ArrowUp');
         await flush();
 
         expect(onUpdate).toHaveBeenLastCalledWith(updateFormattedColor('#808080', { value: 51.2 }));
@@ -426,6 +445,12 @@ describe('ColorPicker', () => {
 
         const root = container.querySelector('.rp-color-picker')!;
         const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturationAxis = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLInputElement;
+        const valueAxis = container.querySelector(
+            '.rp-color-picker__axis-input--value',
+        ) as HTMLInputElement;
         const hueBar = container.querySelector('.rp-color-picker__hue') as HTMLElement;
         setRect(panel, { width: 100, height: 100 });
         setRect(hueBar, { width: 100 });
@@ -445,16 +470,21 @@ describe('ColorPicker', () => {
                 clientX: 50,
             }),
         );
-        keydown(panel, 'ArrowRight');
+        keydown(saturationAxis, 'ArrowRight');
+        keydown(valueAxis, 'ArrowUp');
         keydown(hueBar, 'ArrowRight');
         await flush();
 
         expect(onUpdate).not.toHaveBeenCalled();
         expect(root.classList.contains('rp-color-picker--readonly')).toBe(true);
         expect(root.getAttribute('data-readonly')).toBe('true');
-        expect(panel.getAttribute('tabindex')).toBe('0');
+        expect(panel.hasAttribute('tabindex')).toBe(false);
+        expect(saturationAxis.tabIndex).toBe(0);
+        expect(valueAxis.tabIndex).toBe(0);
         expect(hueBar.getAttribute('tabindex')).toBe('0');
         expect(panel.getAttribute('aria-readonly')).toBe('true');
+        expect(saturationAxis.getAttribute('aria-readonly')).toBe('true');
+        expect(valueAxis.getAttribute('aria-readonly')).toBe('true');
         expect(hueBar.getAttribute('aria-readonly')).toBe('true');
         expect(panel.getAttribute('data-readonly')).toBe('true');
         expect(hueBar.getAttribute('data-readonly')).toBe('true');
@@ -676,7 +706,7 @@ describe('ColorPicker', () => {
         expect(onUpdate).toHaveBeenCalledWith('rgba(255, 0, 0, 0.25)');
     });
 
-    it('applies labelling and ARIA props to the saturation panel', async () => {
+    it('applies labelling and ARIA props to the color area axes', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -693,12 +723,27 @@ describe('ColorPicker', () => {
         await flush();
 
         const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const saturationAxis = container.querySelector(
+            '.rp-color-picker__axis-input--saturation',
+        ) as HTMLInputElement;
+        const valueAxis = container.querySelector(
+            '.rp-color-picker__axis-input--value',
+        ) as HTMLInputElement;
 
-        expect(panel.id).toBe('brand-color');
+        expect(saturationAxis.id).toBe('brand-color');
+        expect(valueAxis.id).toBe('brand-color-value');
         expect(panel.getAttribute('aria-labelledby')).toBe('brand-color-label');
         expect(panel.getAttribute('aria-describedby')).toBe('brand-color-help brand-color-error');
-        expect(panel.getAttribute('aria-valuenow')).toBe('40');
-        expect(panel.getAttribute('aria-valuetext')).toBe('40% saturation, 70% value');
+        expect(saturationAxis.getAttribute('aria-describedby')).toBe(
+            'brand-color-help brand-color-error',
+        );
+        expect(valueAxis.getAttribute('aria-describedby')).toBe(
+            'brand-color-help brand-color-error',
+        );
+        expect(saturationAxis.getAttribute('aria-valuenow')).toBe('40');
+        expect(valueAxis.getAttribute('aria-valuenow')).toBe('70');
+        expect(saturationAxis.getAttribute('aria-valuetext')).toBe('40% saturation, 70% value');
+        expect(valueAxis.getAttribute('aria-valuetext')).toBe('40% saturation, 70% value');
     });
 
     it('renders the default slot as visible label content', async () => {
