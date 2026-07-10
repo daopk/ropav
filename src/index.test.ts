@@ -21,6 +21,7 @@ const publicComponents = [
     'IconButton',
     'Input',
     'Modal',
+    'NumberInput',
     'Overlay',
     'Popover',
     'Radio',

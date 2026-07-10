@@ -97,6 +97,10 @@
       "types": "./dist/components/modal/index.d.ts",
       "import": "./dist/components/modal/index.js"
     },
+    "./number-input": {
+      "types": "./dist/components/number-input/index.d.ts",
+      "import": "./dist/components/number-input/index.js"
+    },
     "./overlay": {
       "types": "./dist/components/overlay/index.d.ts",
       "import": "./dist/components/overlay/index.js"

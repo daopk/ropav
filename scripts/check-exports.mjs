@@ -36,6 +36,7 @@ const expectedFiles = [
     'dist/icon-button.css',
     'dist/input.css',
     'dist/modal.css',
+    'dist/number-input.css',
     'dist/overlay.css',
     'dist/popover.css',
     'dist/progress.css',
@@ -65,6 +66,7 @@ const expectedFiles = [
     'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
     'dist/components/modal/index.js',
+    'dist/components/number-input/index.js',
     'dist/components/overlay/index.js',
     'dist/components/popover/index.js',
     'dist/components/progress/index.js',
@@ -132,6 +134,7 @@ try {
             'IconButton',
             'Input',
             'Modal',
+            'NumberInput',
             'Overlay',
             'Popover',
             'popoverPlacements',
@@ -216,6 +219,9 @@ try {
 
     const modal = await server.ssrLoadModule('/dist/components/modal/index.js');
     assertExports(modal, ['Modal'], 'dist/components/modal/index.js');
+
+    const numberInput = await server.ssrLoadModule('/dist/components/number-input/index.js');
+    assertExports(numberInput, ['NumberInput'], 'dist/components/number-input/index.js');
 
     const overlay = await server.ssrLoadModule('/dist/components/overlay/index.js');
     assertExports(overlay, ['Overlay'], 'dist/components/overlay/index.js');
