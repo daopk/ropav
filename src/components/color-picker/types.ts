@@ -20,6 +20,7 @@ export interface ColorPickerProps {
     format?: ColorPickerFormat;
     size?: ColorPickerSize;
     readonly?: boolean;
+    withPicker?: boolean;
     swatches?: string[];
     swatchesPerRow?: number;
     ariaLabel?: string;

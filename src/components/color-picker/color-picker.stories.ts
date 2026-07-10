@@ -72,6 +72,7 @@ const meta = {
         format: { control: 'select', options: colorPickerFormats },
         size: { control: 'select', options: [undefined, ...colorPickerSizes] },
         readonly: { control: 'boolean' },
+        withPicker: { control: 'boolean' },
         swatches: { control: 'object' },
         swatchesPerRow: { control: { type: 'number', min: 1, max: 15, step: 1 } },
     },
@@ -80,6 +81,7 @@ const meta = {
         format: 'hex',
         size: undefined,
         readonly: false,
+        withPicker: true,
     },
     render: (args) => ({
         components: { ColorPicker },
@@ -114,6 +116,14 @@ export const WithOpacity: Story = {
 
 export const WithSwatches: Story = {
     args: {
+        swatches: colorPickerSwatches,
+        swatchesPerRow: 7,
+    },
+};
+
+export const SwatchesOnly: Story = {
+    args: {
+        withPicker: false,
         swatches: colorPickerSwatches,
         swatchesPerRow: 7,
     },

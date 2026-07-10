@@ -6,40 +6,46 @@
             </span>
         </div>
 
-        <ColorPickerSaturation
-            :id="id"
-            :model-value="saturationValue"
-            :hue="selectedColor.hue"
-            :readonly="readonly"
-            :aria-label="ariaLabel"
-            :describedby="describedby"
-            :labelledby="labelledby"
-            @update:model-value="emitModelValue"
-        />
+        <template v-if="withPicker">
+            <ColorPickerSaturation
+                :id="id"
+                :model-value="saturationValue"
+                :hue="selectedColor.hue"
+                :readonly="readonly"
+                :aria-label="ariaLabel"
+                :describedby="describedby"
+                :labelledby="labelledby"
+                @update:model-value="emitModelValue"
+            />
 
-        <ColorPickerSlider
-            variant="hue"
-            :value="selectedColor.hue"
-            :readonly="readonly"
-            @update:value="emitHue"
-        />
+            <ColorPickerSlider
+                variant="hue"
+                :value="selectedColor.hue"
+                :readonly="readonly"
+                @update:value="emitHue"
+            />
 
-        <ColorPickerSlider
-            v-if="showAlphaControls"
-            variant="opacity"
-            :color="opacityColor"
-            :value="selectedColor.opacity"
-            :readonly="readonly"
-            @update:value="emitOpacity"
-        />
+            <ColorPickerSlider
+                v-if="showAlphaControls"
+                variant="opacity"
+                :color="opacityColor"
+                :value="selectedColor.opacity"
+                :readonly="readonly"
+                @update:value="emitOpacity"
+            />
+        </template>
 
         <div
             v-if="swatches.length"
             class="rp-color-picker__swatches"
             :style="swatchesStyle"
             :data-fill="normalizedSwatchesPerRow ? true : undefined"
+            :data-with-picker="withPicker || undefined"
+            :id="withPicker ? undefined : id"
             role="group"
-            aria-label="Color swatches"
+            :aria-label="withPicker ? 'Color swatches' : ariaLabel || 'Color swatches'"
+            :aria-describedby="withPicker ? undefined : describedby"
+            :aria-labelledby="withPicker ? undefined : labelledby"
         >
             <button
                 v-for="(swatch, index) in swatches"
@@ -96,6 +102,7 @@ defineOptions({ name: 'RpColorPicker', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorPickerProps>(), {
     format: 'hex',
     readonly: false,
+    withPicker: true,
     swatches: () => [],
 });
 

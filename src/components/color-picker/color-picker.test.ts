@@ -760,6 +760,46 @@ describe('ColorPicker', () => {
         expect(onUpdate).toHaveBeenCalledWith('#008000');
     });
 
+    it('renders selectable swatches without picker controls', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        id: 'brand-color',
+                        ariaLabel: 'Brand color',
+                        describedby: 'brand-color-help',
+                        format: 'hex',
+                        labelledby: 'brand-color-label',
+                        modelValue: '#000000',
+                        swatches: ['#ff0000', '#00ff00'],
+                        withPicker: false,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelector('.rp-color-picker__swatches') as HTMLElement;
+        const firstSwatch = swatches.querySelector('.rp-color-picker__swatch') as HTMLButtonElement;
+
+        expect(container.querySelector('.rp-color-picker__saturation')).toBeNull();
+        expect(container.querySelector('.rp-color-picker__hue')).toBeNull();
+        expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
+        expect(swatches.getAttribute('data-with-picker')).toBeNull();
+        expect(swatches.id).toBe('brand-color');
+        expect(swatches.getAttribute('aria-label')).toBe('Brand color');
+        expect(swatches.getAttribute('aria-describedby')).toBe('brand-color-help');
+        expect(swatches.getAttribute('aria-labelledby')).toBe('brand-color-label');
+
+        firstSwatch.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledWith('#ff0000');
+    });
+
     it('renders a check icon for the selected swatch', async () => {
         const container = mountDom(
             defineComponent({

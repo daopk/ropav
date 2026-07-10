@@ -158,6 +158,9 @@ $color-picker-sizes: (
         display: flex;
         flex-wrap: wrap;
         gap: var(--_rp-color-picker-swatches-gap);
+    }
+
+    &__swatches[data-with-picker='true'] {
         margin-block-start: var(--_rp-color-picker-swatches-margin);
     }
 
