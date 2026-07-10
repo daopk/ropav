@@ -1,0 +1,102 @@
+@use 'sass:map';
+
+$avatar-sizes: (
+    xs: (
+        size: var(--rp-size-control-xs),
+        font-size: var(--rp-font-size-xs),
+    ),
+    sm: (
+        size: var(--rp-size-control-sm),
+        font-size: var(--rp-font-size-sm),
+    ),
+    md: (
+        size: var(--rp-size-control-md),
+        font-size: var(--rp-font-size-md),
+    ),
+    lg: (
+        size: var(--rp-size-control-lg),
+        font-size: var(--rp-font-size-lg),
+    ),
+    xl: (
+        size: var(--rp-size-control-xl),
+        font-size: var(--rp-font-size-xl),
+    ),
+);
+
+$avatar-radii: (
+    none: var(--rp-radius-none),
+    xs: var(--rp-radius-xs),
+    sm: var(--rp-radius-sm),
+    md: var(--rp-radius-md),
+    lg: var(--rp-radius-lg),
+    xl: var(--rp-radius-xl),
+    full: var(--rp-radius-full),
+);
+
+@mixin avatar-size($tokens) {
+    --_rp-avatar-size: #{map.get($tokens, size)};
+    --_rp-avatar-font-size: #{map.get($tokens, font-size)};
+}
+
+.rp-avatar {
+    --_rp-avatar-size: var(--rp-size-control-md);
+    --_rp-avatar-font-size: var(--rp-font-size-md);
+    --_rp-avatar-radius: var(--rp-radius-full);
+    --_rp-avatar-bg: var(--rp-color-gray-light);
+    --_rp-avatar-fg: var(--rp-color-gray-light-color);
+
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--_rp-avatar-size);
+    height: var(--_rp-avatar-size);
+    overflow: hidden;
+    color: var(--_rp-avatar-fg);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-avatar-font-size);
+    font-weight: var(--rp-font-weight-medium);
+    line-height: 1;
+    vertical-align: middle;
+    background-color: var(--_rp-avatar-bg);
+    border-radius: var(--_rp-avatar-radius);
+    user-select: none;
+
+    @each $size, $tokens in $avatar-sizes {
+        &--size-#{$size} {
+            @include avatar-size($tokens);
+        }
+    }
+
+    @each $radius, $value in $avatar-radii {
+        &--radius-#{$radius} {
+            --_rp-avatar-radius: #{$value};
+        }
+    }
+
+    &__image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__fallback {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__initials {
+        text-transform: uppercase;
+    }
+
+    &__icon {
+        width: 50%;
+        height: 50%;
+    }
+}

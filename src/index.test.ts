@@ -4,6 +4,7 @@ const Ropav = await import('./index');
 
 const publicComponents = [
     'Alert',
+    'Avatar',
     'Badge',
     'Button',
     'ButtonLink',
