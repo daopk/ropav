@@ -1,0 +1,19 @@
+.rp-aspect-ratio {
+    --_rp-aspect-ratio: 1;
+
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: var(--_rp-aspect-ratio);
+
+    > :deep(*) {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}

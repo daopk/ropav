@@ -19,6 +19,7 @@ const expectedFiles = [
     'dist/base.css',
     'dist/alert.css',
     'dist/accordion.css',
+    'dist/aspect-ratio.css',
     'dist/avatar.css',
     'dist/badge.css',
     'dist/button.css',
@@ -47,6 +48,7 @@ const expectedFiles = [
     'dist/tooltip.css',
     'dist/components/alert/index.js',
     'dist/components/accordion/index.js',
+    'dist/components/aspect-ratio/index.js',
     'dist/components/avatar/index.js',
     'dist/components/badge/index.js',
     'dist/components/button/index.js',
@@ -112,6 +114,7 @@ try {
             'Accordion',
             'AccordionItem',
             'Alert',
+            'AspectRatio',
             'Avatar',
             'avatarVariants',
             'Badge',
@@ -164,6 +167,9 @@ try {
         ['Accordion', 'AccordionItem', 'useAccordion', 'useAccordionItem'],
         'dist/components/accordion/index.js',
     );
+
+    const aspectRatio = await server.ssrLoadModule('/dist/components/aspect-ratio/index.js');
+    assertExports(aspectRatio, ['AspectRatio'], 'dist/components/aspect-ratio/index.js');
 
     const avatar = await server.ssrLoadModule('/dist/components/avatar/index.js');
     assertExports(avatar, ['Avatar', 'avatarVariants'], 'dist/components/avatar/index.js');
