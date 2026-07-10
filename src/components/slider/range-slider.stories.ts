@@ -41,14 +41,11 @@ function getVisibleTooltipContents(canvasElement: HTMLElement) {
     );
 }
 
-function expectOpacityTransition(element: HTMLElement) {
+function expectNoTransition(element: HTMLElement) {
     const style = element.ownerDocument.defaultView!.getComputedStyle(element);
-    const properties = style.transitionProperty.split(',').map((value) => value.trim());
     const durations = style.transitionDuration.split(',').map((value) => value.trim());
-    const opacityIndex = properties.indexOf('opacity');
 
-    expect(opacityIndex).toBeGreaterThanOrEqual(0);
-    expect(Number.parseFloat(durations[opacityIndex % durations.length] ?? '0')).toBeGreaterThan(0);
+    expect(durations.every((duration) => Number.parseFloat(duration) === 0)).toBe(true);
 }
 
 const meta = {
@@ -319,7 +316,7 @@ export const MergedAlwaysTooltip: Story = {
         expect(mergedTooltip.isConnected).toBe(true);
         expect(mergedContent.textContent).toBe('4–5');
         for (const tooltip of [...endpointTooltips, mergedTooltip]) {
-            expectOpacityTransition(tooltip);
+            expectNoTransition(tooltip);
         }
 
         const separatedContents = getVisibleTooltipContents(canvasElement);

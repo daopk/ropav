@@ -336,7 +336,6 @@
         pointer-events: none;
         translate: var(--_rp-range-slider-tooltip-translate-x)
             var(--_rp-range-slider-tooltip-translate-y);
-        transition: opacity var(--rp-transition-fast);
     }
 
     &__tooltip--merged {
@@ -639,11 +638,5 @@
 
     &--size-xl {
         @include range-slider-size(12px, 24px, 6px, var(--rp-font-size-xl), 6px);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .rp-range-slider__tooltip {
-        transition: none;
     }
 }
