@@ -175,6 +175,7 @@ function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: Ra
         '--_rp-range-slider-upper-percent': `${upperPercent}%`,
         '--_rp-range-slider-lower-ratio': `${lowerPercent / 100}`,
         '--_rp-range-slider-upper-ratio': `${upperPercent / 100}`,
+        '--_rp-range-slider-tooltip-merged-percent': `${(lowerPercent + upperPercent) / 2}%`,
     };
 
     setRangeSliderStyleValue(
@@ -287,6 +288,10 @@ function getThumbIndex(thumb: RangeSliderThumb) {
     return thumb === 'lower' ? 0 : 1;
 }
 
+function getOppositeThumb(thumb: RangeSliderThumb): RangeSliderThumb {
+    return thumb === 'lower' ? 'upper' : 'lower';
+}
+
 function getThumbFromTarget(target: EventTarget | null) {
     const element = target as Element | null;
     const thumb = element
@@ -296,10 +301,14 @@ function getThumbFromTarget(target: EventTarget | null) {
     return thumb === 'lower' || thumb === 'upper' ? thumb : undefined;
 }
 
-function focusThumb(track: HTMLElement, thumb: RangeSliderThumb) {
-    const input = track.querySelector<HTMLInputElement>(
+function getThumbInput(track: HTMLElement, thumb: RangeSliderThumb) {
+    return track.querySelector<HTMLInputElement>(
         `.rp-range-slider__native--${thumb}, input[data-range-slider-thumb="${thumb}"]`,
     );
+}
+
+function focusThumb(track: HTMLElement, thumb: RangeSliderThumb) {
+    const input = getThumbInput(track, thumb);
     input?.focus({ preventScroll: true });
 }
 
@@ -351,30 +360,42 @@ export function useRangeSlider(
         control.id,
         control.id ? `${control.id}-upper` : undefined,
     ]);
-    const nativeMin = computed<RangeSliderValue>(() => [
-        bounds.value.min,
-        clamp(
-            getStepValueAtOrAbove(
-                normalizedValue.value[0] + normalizedMinRange.value,
-                bounds.value.min,
-                valueStep.value,
-            ),
+    const nativeMin = computed<RangeSliderValue>(() => {
+        if (normalizedMinRange.value === 0) {
+            return [bounds.value.min, bounds.value.min];
+        }
+
+        return [
             bounds.value.min,
-            bounds.value.max,
-        ),
-    ]);
-    const nativeMax = computed<RangeSliderValue>(() => [
-        clamp(
-            getStepValueAtOrBelow(
-                normalizedValue.value[1] - normalizedMinRange.value,
+            clamp(
+                getStepValueAtOrAbove(
+                    normalizedValue.value[0] + normalizedMinRange.value,
+                    bounds.value.min,
+                    valueStep.value,
+                ),
                 bounds.value.min,
-                valueStep.value,
+                bounds.value.max,
             ),
-            bounds.value.min,
+        ];
+    });
+    const nativeMax = computed<RangeSliderValue>(() => {
+        if (normalizedMinRange.value === 0) {
+            return [bounds.value.max, bounds.value.max];
+        }
+
+        return [
+            clamp(
+                getStepValueAtOrBelow(
+                    normalizedValue.value[1] - normalizedMinRange.value,
+                    bounds.value.min,
+                    valueStep.value,
+                ),
+                bounds.value.min,
+                bounds.value.max,
+            ),
             bounds.value.max,
-        ),
-        bounds.value.max,
-    ]);
+        ];
+    });
     const markItems = computed(() =>
         normalizeRangeSliderMarks(
             props.marks,
@@ -419,6 +440,10 @@ export function useRangeSlider(
         const baseId = tooltipOptions.value.id;
         return baseId ? [`${baseId}-lower`, `${baseId}-upper`] : [undefined, undefined];
     });
+    const mergedTooltipId = computed(() => {
+        const baseId = tooltipOptions.value.id;
+        return baseId ? `${baseId}-merged` : undefined;
+    });
     const tooltipColor = computed(() => tooltipOptions.value.color);
     const tooltipOffset = computed(() => tooltipOptions.value.offset);
     const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
@@ -426,6 +451,9 @@ export function useRangeSlider(
         String(formattedValue.value[0]),
         String(formattedValue.value[1]),
     ]);
+    const mergedTooltipContent = computed(
+        () => `${tooltipContent.value[0]}–${tooltipContent.value[1]}`,
+    );
 
     const rootClass = computed(() =>
         bem('rp-range-slider', {
@@ -440,7 +468,11 @@ export function useRangeSlider(
         }),
     );
 
-    function getAllowedValue(value: number, thumb: RangeSliderThumb) {
+    function getThumbUpdate(
+        thumb: RangeSliderThumb,
+        value: number,
+        anchorValue = normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))],
+    ) {
         const safeValue = normalizeSliderValue(
             value,
             bounds.value.min,
@@ -448,25 +480,40 @@ export function useRangeSlider(
             valueStep.value,
         );
 
-        if (thumb === 'lower') {
-            return Math.min(safeValue, nativeMax.value[0]);
+        if (normalizedMinRange.value > 0) {
+            const nextValue: RangeSliderValue = [...normalizedValue.value];
+            nextValue[getThumbIndex(thumb)] =
+                thumb === 'lower'
+                    ? Math.min(safeValue, nativeMax.value[0])
+                    : Math.max(safeValue, nativeMin.value[1]);
+
+            return { thumb, value: nextValue };
         }
 
-        return Math.max(safeValue, nativeMin.value[1]);
+        if (safeValue < anchorValue) {
+            return { thumb: 'lower' as const, value: [safeValue, anchorValue] as RangeSliderValue };
+        }
+        if (safeValue > anchorValue) {
+            return { thumb: 'upper' as const, value: [anchorValue, safeValue] as RangeSliderValue };
+        }
+
+        return { thumb, value: [safeValue, safeValue] as RangeSliderValue };
     }
 
-    function updateThumb(thumb: RangeSliderThumb, value: number) {
-        if (control.disabled) return;
+    function updateThumb(thumb: RangeSliderThumb, value: number, anchorValue?: number) {
+        if (control.disabled) return thumb;
 
-        activeThumb.value = thumb;
-        const nextValue: RangeSliderValue = [...normalizedValue.value];
-        nextValue[getThumbIndex(thumb)] = getAllowedValue(value, thumb);
-        emitUpdate(nextValue);
+        const update = getThumbUpdate(thumb, value, anchorValue);
+        activeThumb.value = update.thumb;
+        emitUpdate(update.value);
+
+        return update.thumb;
     }
 
     function onInput(thumb: RangeSliderThumb, event: Event) {
         const input = event.target as HTMLInputElement;
-        updateThumb(thumb, input.valueAsNumber);
+        const nextThumb = updateThumb(thumb, input.valueAsNumber);
+        transferFocusedThumb(input, thumb, nextThumb);
     }
 
     function hasThumbTooltipInteractionReason(thumb: RangeSliderThumb) {
@@ -509,6 +556,28 @@ export function useRangeSlider(
     function endTooltipInteraction(thumb: RangeSliderThumb, reason: TooltipInteractionReason) {
         tooltipInteractionReasons.value[thumb][reason] = false;
         if (!hasAnyTooltipInteractionReason()) syncTooltip();
+    }
+
+    function transferFocusedThumb(
+        input: HTMLInputElement,
+        thumb: RangeSliderThumb,
+        nextThumb: RangeSliderThumb,
+    ) {
+        if (thumb === nextThumb || input.ownerDocument.activeElement !== input) return;
+
+        const track = input.closest<HTMLElement>('.rp-range-slider__track');
+        if (!track) return;
+
+        const nextInput = getThumbInput(track, nextThumb);
+        if (!nextInput) return;
+
+        const currentReasons = tooltipInteractionReasons.value[thumb];
+        if (currentReasons.focus) {
+            currentReasons.focus = false;
+            tooltipInteractionReasons.value[nextThumb].focus = true;
+        }
+
+        nextInput.focus({ preventScroll: true });
     }
 
     function resetTooltipInteractionReasons(thumb: RangeSliderThumb) {
@@ -614,7 +683,8 @@ export function useRangeSlider(
         if (nextValue == null) return;
 
         event.preventDefault();
-        updateThumb(thumb, nextValue);
+        const nextThumb = updateThumb(thumb, nextValue);
+        transferFocusedThumb(event.target as HTMLInputElement, thumb, nextThumb);
     }
 
     function getValueFromPointer(event: PointerEvent, track: HTMLElement) {
@@ -638,6 +708,7 @@ export function useRangeSlider(
     let dragWindow: Window | null = null;
     let dragTrack: HTMLElement | null = null;
     let dragThumb: RangeSliderThumb | null = null;
+    let dragAnchorValue: number | null = null;
     let dragPointerId: number | undefined;
 
     function stopDragging() {
@@ -651,16 +722,35 @@ export function useRangeSlider(
         dragWindow = null;
         dragTrack = null;
         dragThumb = null;
+        dragAnchorValue = null;
         dragPointerId = undefined;
 
         if (stoppedThumb) endTooltipInteraction(stoppedThumb, 'drag');
     }
 
-    function updateFromPointer(event: PointerEvent, track: HTMLElement, thumb: RangeSliderThumb) {
-        const value = getValueFromPointer(event, track);
-        if (value == null) return;
+    function switchDraggingThumb(track: HTMLElement, nextThumb: RangeSliderThumb) {
+        const previousThumb = dragThumb;
+        if (!previousThumb || previousThumb === nextThumb) return;
 
-        updateThumb(thumb, value);
+        tooltipInteractionReasons.value[previousThumb].drag = false;
+        tooltipInteractionReasons.value[nextThumb].drag = true;
+        dragThumb = nextThumb;
+        activeThumb.value = nextThumb;
+
+        const previousInput = getThumbInput(track, previousThumb);
+        if (previousInput) transferFocusedThumb(previousInput, previousThumb, nextThumb);
+    }
+
+    function updateFromPointer(event: PointerEvent, track: HTMLElement) {
+        const value = getValueFromPointer(event, track);
+        if (value == null || !dragThumb) return;
+
+        const nextThumb = updateThumb(
+            dragThumb,
+            value,
+            dragAnchorValue ?? normalizedValue.value[getThumbIndex(getOppositeThumb(dragThumb))],
+        );
+        switchDraggingThumb(track, nextThumb);
     }
 
     function onPointerMove(event: PointerEvent) {
@@ -671,7 +761,7 @@ export function useRangeSlider(
             return;
         }
 
-        updateFromPointer(event, dragTrack, dragThumb);
+        updateFromPointer(event, dragTrack);
     }
 
     function onPointerEnd(event: PointerEvent) {
@@ -700,10 +790,11 @@ export function useRangeSlider(
 
         dragTrack = track;
         dragThumb = thumb;
+        dragAnchorValue = normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))];
         dragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : undefined;
         dragWindow = track.ownerDocument.defaultView;
         startTooltipInteraction(thumb, 'drag');
-        updateFromPointer(event, track, thumb);
+        updateFromPointer(event, track);
         dragWindow?.addEventListener('pointermove', onPointerMove);
         dragWindow?.addEventListener('pointerup', onPointerEnd);
         dragWindow?.addEventListener('pointercancel', onPointerEnd);
@@ -735,11 +826,13 @@ export function useRangeSlider(
         tooltipOpen,
         tooltipPlacement,
         tooltipIds,
+        mergedTooltipId,
         tooltipColor,
         tooltipOffset,
         tooltipOpenDelay,
         tooltipArrow,
         tooltipContent,
+        mergedTooltipContent,
         onInput,
         onTrackPointerDown,
         onTooltipFocus,

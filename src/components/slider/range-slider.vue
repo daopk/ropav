@@ -166,6 +166,22 @@
                         <span class="rp-range-slider__tooltip-anchor" />
                     </Tooltip>
                 </span>
+
+                <Tooltip
+                    v-if="tooltipVisible"
+                    :id="mergedTooltipId"
+                    class="rp-range-slider__tooltip rp-range-slider__tooltip--merged"
+                    :content="mergedTooltipContent"
+                    :placement="tooltipPlacement"
+                    :color="tooltipColor"
+                    :offset="tooltipOffset"
+                    :open="tooltipOpen"
+                    :open-delay="tooltipOpenDelay"
+                    :arrow="tooltipArrow"
+                    decorative
+                >
+                    <span class="rp-range-slider__tooltip-anchor" />
+                </Tooltip>
             </span>
         </span>
     </div>
@@ -224,11 +240,13 @@ const {
     tooltipOpen,
     tooltipPlacement,
     tooltipIds,
+    mergedTooltipId,
     tooltipColor,
     tooltipOffset,
     tooltipOpenDelay,
     tooltipArrow,
     tooltipContent,
+    mergedTooltipContent,
     onInput,
     onTrackPointerDown,
     onTooltipFocus,

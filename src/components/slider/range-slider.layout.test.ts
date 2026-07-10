@@ -101,7 +101,7 @@ describe('RangeSlider layout', () => {
             expect(native.getAttribute('orient')).toBe('vertical');
             expect(native.getAttribute('aria-orientation')).toBe('vertical');
         }
-        expect(tooltips).toHaveLength(2);
+        expect(tooltips).toHaveLength(3);
         expect(
             tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--placement-left')),
         ).toBe(true);

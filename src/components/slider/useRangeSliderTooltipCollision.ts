@@ -2,7 +2,6 @@ import { onBeforeUnmount, onMounted, onUpdated, ref, type Ref } from 'vue';
 
 const TOOLTIP_COLLISION_GAP = 4;
 const TOOLTIP_CONTENT_SELECTOR = '.rp-tooltip__content';
-const MEASURING_ATTRIBUTE = 'data-measuring-tooltip-collision';
 
 type TooltipRect = Pick<DOMRect, 'bottom' | 'height' | 'left' | 'right' | 'top' | 'width'>;
 
@@ -72,20 +71,12 @@ export function useRangeSliderTooltipCollision(root: Ref<HTMLElement | null>) {
             return;
         }
 
-        const previousMeasuringValue = el.getAttribute(MEASURING_ATTRIBUTE);
-        el.setAttribute(MEASURING_ATTRIBUTE, '');
-
-        let lowerRect: DOMRect;
-        let upperRect: DOMRect;
-        try {
-            lowerRect = lower.getBoundingClientRect();
-            upperRect = upper.getBoundingClientRect();
-        } finally {
-            if (previousMeasuringValue == null) el.removeAttribute(MEASURING_ATTRIBUTE);
-            else el.setAttribute(MEASURING_ATTRIBUTE, previousMeasuringValue);
-        }
-
-        setOverlapping(areRangeSliderTooltipRectsOverlapping(lowerRect, upperRect));
+        setOverlapping(
+            areRangeSliderTooltipRectsOverlapping(
+                lower.getBoundingClientRect(),
+                upper.getBoundingClientRect(),
+            ),
+        );
     }
 
     function scheduleMeasure() {

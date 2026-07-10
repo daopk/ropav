@@ -23,6 +23,34 @@ const verticalStoryWrapperStyle = {
     padding: '56px 96px 44px',
 };
 
+function getVisibleTooltipContents(canvasElement: HTMLElement) {
+    const view = canvasElement.ownerDocument.defaultView!;
+
+    return [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')].filter(
+        (content) => {
+            const tooltip = content.closest<HTMLElement>('.rp-range-slider__tooltip');
+            const contentStyle = view.getComputedStyle(content);
+            const tooltipStyle = tooltip ? view.getComputedStyle(tooltip) : contentStyle;
+
+            return (
+                contentStyle.display !== 'none' &&
+                tooltipStyle.visibility !== 'hidden' &&
+                Number.parseFloat(tooltipStyle.opacity) > 0
+            );
+        },
+    );
+}
+
+function expectOpacityTransition(element: HTMLElement) {
+    const style = element.ownerDocument.defaultView!.getComputedStyle(element);
+    const properties = style.transitionProperty.split(',').map((value) => value.trim());
+    const durations = style.transitionDuration.split(',').map((value) => value.trim());
+    const opacityIndex = properties.indexOf('opacity');
+
+    expect(opacityIndex).toBeGreaterThanOrEqual(0);
+    expect(Number.parseFloat(durations[opacityIndex % durations.length] ?? '0')).toBeGreaterThan(0);
+}
+
 const meta = {
     title: 'Components/RangeSlider',
     component: RangeSlider as any,
@@ -119,7 +147,8 @@ export const TrackPointerInteraction: Story = {
     tags: ['test'],
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const sliders = canvas.getAllByRole('slider');
+        const sliders = canvas.getAllByRole('slider') as HTMLInputElement[];
+        const root = canvasElement.querySelector<HTMLElement>('.rp-range-slider')!;
         const track = canvasElement.querySelector<HTMLElement>('.rp-range-slider__track')!;
         const thumbs = canvasElement.querySelector<HTMLElement>('.rp-range-slider__thumbs')!;
         const rect = thumbs.getBoundingClientRect();
@@ -146,6 +175,57 @@ export const TrackPointerInteraction: Story = {
         window.dispatchEvent(pointer('pointerup', 0.45));
         await waitFor(() => expect(sliders[0]).toHaveValue('45'));
         await expect(sliders[1]).toHaveValue('75');
+
+        track.dispatchEvent(pointer('pointerdown', 0.45));
+        window.dispatchEvent(pointer('pointermove', 0.85));
+        await waitFor(() => expect(sliders[0]).toHaveValue('75'));
+        await expect(sliders[1]).toHaveValue('85');
+        await expect(root).toHaveAttribute('data-active-thumb', 'upper');
+        await expect(sliders[1]).toHaveFocus();
+
+        window.dispatchEvent(pointer('pointermove', 0.9));
+        await waitFor(() => expect(sliders[1]).toHaveValue('90'));
+
+        window.dispatchEvent(pointer('pointermove', 0.65));
+        await waitFor(() => expect(sliders[0]).toHaveValue('65'));
+        await expect(sliders[1]).toHaveValue('75');
+        await expect(root).toHaveAttribute('data-active-thumb', 'lower');
+        await expect(sliders[0]).toHaveFocus();
+        window.dispatchEvent(pointer('pointerup', 0.65));
+    },
+};
+
+export const KeyboardCrossover: Story = {
+    tags: ['test'],
+    args: {
+        modelValue: [20, 80],
+        max: 95,
+        step: 10,
+        tooltip: false,
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const sliders = canvas.getAllByRole('slider') as HTMLInputElement[];
+        const root = canvasElement.querySelector<HTMLElement>('.rp-range-slider')!;
+
+        await expect(sliders[0]).toHaveAttribute('min', '0');
+        await expect(sliders[0]).toHaveAttribute('max', '95');
+        await expect(sliders[1]).toHaveAttribute('min', '0');
+        await expect(sliders[1]).toHaveAttribute('max', '95');
+        await expect(sliders[0]).toHaveAttribute('step', 'any');
+
+        sliders[0].focus();
+        await userEvent.keyboard('{End}');
+        await waitFor(() => expect(sliders[0]).toHaveValue('80'));
+        await expect(sliders[1]).toHaveValue('95');
+        await expect(root).toHaveAttribute('data-active-thumb', 'upper');
+        await expect(sliders[1]).toHaveFocus();
+
+        await userEvent.keyboard('{Home}');
+        await waitFor(() => expect(sliders[0]).toHaveValue('0'));
+        await expect(sliders[1]).toHaveValue('80');
+        await expect(root).toHaveAttribute('data-active-thumb', 'lower');
+        await expect(sliders[0]).toHaveFocus();
     },
 };
 
@@ -176,46 +256,148 @@ export const MinimumRange: Story = {
     },
     play: async ({ canvasElement }) => {
         const root = canvasElement.querySelector('.rp-range-slider')!;
-        const contents = [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
+        const endpointTooltips = [
+            ...canvasElement.querySelectorAll<HTMLElement>(
+                '.rp-range-slider__tooltip--lower, .rp-range-slider__tooltip--upper',
+            ),
+        ];
+        const endpointContents = endpointTooltips.map(
+            (tooltip) => tooltip.querySelector<HTMLElement>('.rp-tooltip__content')!,
+        );
 
         await new Promise<void>((resolve) =>
             requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         );
 
         expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false);
-        expect(contents).toHaveLength(2);
+        expect(endpointTooltips).toHaveLength(2);
+        expect(
+            endpointTooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open')),
+        ).toBe(true);
+        expect(getVisibleTooltipContents(canvasElement)).toEqual(endpointContents);
         expect(
             Math.abs(
-                contents[0].getBoundingClientRect().top - contents[1].getBoundingClientRect().top,
+                endpointContents[0].getBoundingClientRect().top -
+                    endpointContents[1].getBoundingClientRect().top,
             ),
         ).toBeLessThan(1);
     },
 };
 
-export const CollapsedAlwaysTooltips: Story = {
+export const MergedAlwaysTooltip: Story = {
     tags: ['test'],
     args: {
-        modelValue: [50, 50],
+        modelValue: [4, 5],
+        min: 0,
+        max: 10,
+        step: 0.1,
         tooltip: 'always',
-        formatValue: percentFormatter,
     },
     play: async ({ canvasElement }) => {
-        const root = canvasElement.querySelector('.rp-range-slider')!;
-        const contents = [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
+        const root = canvasElement.querySelector<HTMLElement>('.rp-range-slider')!;
+        const upperInput = canvasElement.querySelector<HTMLInputElement>(
+            '.rp-range-slider__native--upper',
+        )!;
+        const endpointTooltips = [
+            ...canvasElement.querySelectorAll<HTMLElement>(
+                '.rp-range-slider__tooltip--lower, .rp-range-slider__tooltip--upper',
+            ),
+        ];
+        const endpointContents = endpointTooltips.map(
+            (tooltip) => tooltip.querySelector<HTMLElement>('.rp-tooltip__content')!,
+        );
+        const mergedTooltip = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged',
+        )!;
+        const mergedContent = mergedTooltip.querySelector<HTMLElement>('.rp-tooltip__content')!;
 
+        await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        );
+        expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false);
+        expect(endpointTooltips).toHaveLength(2);
+        expect(mergedTooltip.isConnected).toBe(true);
+        expect(mergedContent.textContent).toBe('4–5');
+        for (const tooltip of [...endpointTooltips, mergedTooltip]) {
+            expectOpacityTransition(tooltip);
+        }
+
+        const separatedContents = getVisibleTooltipContents(canvasElement);
+        expect(separatedContents.map((content) => content.textContent)).toEqual(['4', '5']);
+        expect(
+            separatedContents.every((content) => content.getBoundingClientRect().width < 32),
+        ).toBe(true);
+
+        upperInput.value = '4.5';
+        upperInput.dispatchEvent(new Event('input', { bubbles: true }));
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
         );
 
-        const [lowerRect, upperRect] = contents.map((content) => content.getBoundingClientRect());
-        expect(lowerRect.bottom <= upperRect.top || upperRect.bottom <= lowerRect.top).toBe(true);
+        await waitFor(() => {
+            expect(
+                canvasElement.querySelector<HTMLElement>('.rp-range-slider__tooltip--merged'),
+            ).toBe(mergedTooltip);
+            expect(mergedTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+            expect(mergedContent.textContent).toBe('4–4.5');
+            expect(endpointTooltips.map((tooltip) => getComputedStyle(tooltip).opacity)).toEqual([
+                '0',
+                '0',
+            ]);
+            expect(getComputedStyle(mergedTooltip).opacity).toBe('1');
+            expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]);
+        });
+
+        const thumbCenters = [
+            ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__thumb-content'),
+        ].map((thumb) => {
+            const rect = thumb.getBoundingClientRect();
+            return rect.left + rect.width / 2;
+        });
+        const mergedAnchor = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged .rp-range-slider__tooltip-anchor',
+        )!;
+        const mergedAnchorRect = mergedAnchor.getBoundingClientRect();
+        const mergedCenter = mergedAnchorRect.left + mergedAnchorRect.width / 2;
+
+        expect(Math.abs(mergedCenter - (thumbCenters[0] + thumbCenters[1]) / 2)).toBeLessThan(0.5);
+
+        upperInput.value = '5';
+        upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+        await waitFor(() =>
+            expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false),
+        );
+        await waitFor(() => {
+            expect(
+                canvasElement.querySelector<HTMLElement>('.rp-range-slider__tooltip--merged'),
+            ).toBe(mergedTooltip);
+            expect(endpointTooltips.map((tooltip) => getComputedStyle(tooltip).opacity)).toEqual([
+                '1',
+                '1',
+            ]);
+            expect(getComputedStyle(mergedTooltip).opacity).toBe('0');
+            expect(getVisibleTooltipContents(canvasElement)).toEqual(endpointContents);
+        });
+
+        upperInput.value = '4.5';
+        upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+        await waitFor(() =>
+            expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
+        );
+        await waitFor(() => {
+            expect(
+                canvasElement.querySelector<HTMLElement>('.rp-range-slider__tooltip--merged'),
+            ).toBe(mergedTooltip);
+            expect(getComputedStyle(mergedTooltip).opacity).toBe('1');
+            expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]);
+        });
     },
 };
 
-export const CollapsedHoverTooltips: Story = {
+export const MergedHoverTooltip: Story = {
     tags: ['test'],
     args: {
-        modelValue: [50, 50],
+        modelValue: [49, 51],
         tooltip: 'hover',
         formatValue: percentFormatter,
     },
@@ -225,39 +407,49 @@ export const CollapsedHoverTooltips: Story = {
         const lowerThumb = canvasElement.querySelector<HTMLElement>(
             '.rp-range-slider__thumb--lower',
         )!;
-        const tooltips = [
-            ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip'),
+        const endpointTooltips = [
+            ...canvasElement.querySelectorAll<HTMLElement>(
+                '.rp-range-slider__tooltip--lower, .rp-range-slider__tooltip--upper',
+            ),
         ];
-        const contents = [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
 
         await userEvent.hover(track);
-        await waitFor(() =>
-            expect(
-                tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open')),
-            ).toBe(true),
-        );
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
         );
 
         expect(root.classList.contains('rp-range-slider--tooltip-always-visible')).toBe(false);
-        const [lowerRect, upperRect] = contents.map((content) => content.getBoundingClientRect());
-        expect(lowerRect.bottom <= upperRect.top || upperRect.bottom <= lowerRect.top).toBe(true);
+        const mergedTooltip = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged',
+        )!;
+        const mergedContent = mergedTooltip.querySelector<HTMLElement>('.rp-tooltip__content')!;
+
+        expect(mergedTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(mergedContent.textContent).toBe('49%–51%');
+        await waitFor(() =>
+            expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]),
+        );
 
         await userEvent.hover(lowerThumb);
-        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
-            true,
-        );
+        expect(mergedTooltip.classList.contains('rp-tooltip--open')).toBe(true);
 
         await userEvent.unhover(lowerThumb);
         await waitFor(() =>
             expect(
-                tooltips.every((tooltip) => !tooltip.classList.contains('rp-tooltip--open')),
+                endpointTooltips.every(
+                    (tooltip) => !tooltip.classList.contains('rp-tooltip--open'),
+                ),
             ).toBe(true),
         );
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false),
         );
+        await waitFor(() => {
+            expect(
+                canvasElement.querySelector<HTMLElement>('.rp-range-slider__tooltip--merged'),
+            ).toBe(mergedTooltip);
+            expect(getVisibleTooltipContents(canvasElement)).toHaveLength(0);
+        });
     },
 };
 
@@ -305,6 +497,57 @@ export const Vertical: Story = {
             </div>
         `,
     }),
+};
+
+export const MergedVerticalTooltip: Story = {
+    tags: ['test'],
+    args: {
+        modelValue: [48, 52],
+        orientation: 'vertical',
+        tooltip: 'always',
+        formatValue: percentFormatter,
+    },
+    render: (args) => ({
+        components: { RangeSlider },
+        setup() {
+            const value = ref<[number, number]>([...(args.modelValue ?? [0, 100])]);
+            return { args, value, verticalStoryWrapperStyle };
+        },
+        template: `
+            <div :style="verticalStoryWrapperStyle">
+                <RangeSlider v-bind="args" v-model="value" />
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const root = canvasElement.querySelector('.rp-range-slider')!;
+
+        await waitFor(() =>
+            expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
+        );
+
+        const mergedContent = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged .rp-tooltip__content',
+        )!;
+        expect(mergedContent.textContent).toBe('48%–52%');
+        await waitFor(() =>
+            expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]),
+        );
+
+        const thumbCenters = [
+            ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__thumb-content'),
+        ].map((thumb) => {
+            const rect = thumb.getBoundingClientRect();
+            return rect.top + rect.height / 2;
+        });
+        const mergedAnchor = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged .rp-range-slider__tooltip-anchor',
+        )!;
+        const mergedAnchorRect = mergedAnchor.getBoundingClientRect();
+        const mergedCenter = mergedAnchorRect.top + mergedAnchorRect.height / 2;
+
+        expect(Math.abs(mergedCenter - (thumbCenters[0] + thumbCenters[1]) / 2)).toBeLessThan(0.5);
+    },
 };
 
 export const FormattedValue: Story = {

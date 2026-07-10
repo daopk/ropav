@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import RangeSlider from './range-slider.vue';
@@ -49,6 +49,162 @@ function dispatchPointer(
 }
 
 describe('RangeSlider pointer interaction', () => {
+    it('keeps a controlled drag anchored while the lower thumb crosses and crosses back', async () => {
+        const value = ref<[number, number]>([20, 80]);
+        const onUpdate = vi.fn((nextValue: [number, number]) => {
+            value.value = nextValue;
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: value.value,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-range-slider')!;
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
+        const [lowerInput, upperInput] = [...container.querySelectorAll<HTMLInputElement>('input')];
+        const tooltips = [...container.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip')];
+        mockTrackRect(track);
+
+        dispatchPointer(lowerThumb, 'pointerdown', 20, 10, { pointerId: 11 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([20, 80]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lowerInput);
+
+        dispatchPointer(window, 'pointermove', 90, 10, { pointerId: 11 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([80, 90]);
+        expect(value.value).toEqual([80, 90]);
+        expect(root.getAttribute('data-active-thumb')).toBe('upper');
+        expect(document.activeElement).toBe(upperInput);
+
+        dispatchPointer(window, 'pointermove', 95, 10, { pointerId: 11 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([80, 95]);
+        expect(value.value).toEqual([80, 95]);
+        expect(root.getAttribute('data-active-thumb')).toBe('upper');
+
+        dispatchPointer(window, 'pointermove', 70, 10, { pointerId: 11 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([70, 80]);
+        expect(value.value).toEqual([70, 80]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lowerInput);
+
+        lowerInput.blur();
+        await flush();
+        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
+
+        dispatchPointer(window, 'pointerup', 70, 10, { pointerId: 11 });
+        await flush();
+        expect(tooltips.every((tooltip) => !tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
+    });
+
+    it('keeps a positive minimum range blocked at the other thumb', async () => {
+        const value = ref<[number, number]>([20, 80]);
+        const onUpdate = vi.fn((nextValue: [number, number]) => {
+            value.value = nextValue;
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: value.value,
+                        minRange: 10,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-range-slider')!;
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
+        const [lowerInput, upperInput] = [...container.querySelectorAll<HTMLInputElement>('input')];
+        mockTrackRect(track);
+
+        expect(lowerInput.max).toBe('70');
+        expect(upperInput.min).toBe('30');
+
+        dispatchPointer(lowerThumb, 'pointerdown', 20, 10, { pointerId: 12 });
+        dispatchPointer(window, 'pointermove', 100, 10, { pointerId: 12 });
+        await flush();
+
+        expect(onUpdate).toHaveBeenLastCalledWith([70, 80]);
+        expect(value.value).toEqual([70, 80]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lowerInput);
+        expect(lowerInput.max).toBe('70');
+        expect(upperInput.min).toBe('80');
+
+        dispatchPointer(window, 'pointerup', 100, 10, { pointerId: 12 });
+    });
+
+    it('switches thumb roles when a vertical drag crosses the stationary endpoint', async () => {
+        const value = ref<[number, number]>([20, 80]);
+        const onUpdate = vi.fn((nextValue: [number, number]) => {
+            value.value = nextValue;
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: value.value,
+                        orientation: 'vertical',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-range-slider')!;
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
+        const [lowerInput, upperInput] = [...container.querySelectorAll<HTMLInputElement>('input')];
+        mockTrackRect(track, {
+            bottom: 300,
+            height: 200,
+            left: 0,
+            right: 20,
+            top: 100,
+            width: 20,
+        });
+
+        dispatchPointer(lowerThumb, 'pointerdown', 10, 260, { pointerId: 13 });
+        dispatchPointer(window, 'pointermove', 10, 120, { pointerId: 13 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([80, 90]);
+        expect(value.value).toEqual([80, 90]);
+        expect(root.getAttribute('data-active-thumb')).toBe('upper');
+        expect(document.activeElement).toBe(upperInput);
+
+        dispatchPointer(window, 'pointermove', 10, 180, { pointerId: 13 });
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([60, 80]);
+        expect(value.value).toEqual([60, 80]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lowerInput);
+
+        dispatchPointer(window, 'pointerup', 10, 180, { pointerId: 13 });
+    });
+
     it('chooses the nearest thumb on the track and keeps that thumb for the drag', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

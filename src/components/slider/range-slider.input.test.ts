@@ -9,7 +9,7 @@ function getNativeInputs(container: Element) {
 }
 
 describe('RangeSlider input', () => {
-    it('emits tuple updates for the active native input without moving the other thumb', async () => {
+    it('clamps native input updates to minRange without moving the other thumb', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
@@ -33,6 +33,45 @@ describe('RangeSlider input', () => {
         await flush();
         expect(onUpdate).toHaveBeenLastCalledWith([20, 35]);
         expect(onUpdate).toHaveBeenCalledTimes(2);
+    });
+
+    it('sorts crossover updates and transfers focus to the new thumb role', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-range-slider')!;
+        const [lower, upper] = getNativeInputs(container);
+
+        lower.focus();
+        input(lower, '80');
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([80, 80]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lower);
+
+        input(lower, '90');
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([80, 90]);
+        expect(root.getAttribute('data-active-thumb')).toBe('upper');
+        expect(document.activeElement).toBe(upper);
+
+        input(upper, '10');
+        await flush();
+        expect(onUpdate).toHaveBeenLastCalledWith([10, 20]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lower);
+        expect(onUpdate).toHaveBeenCalledTimes(3);
     });
 
     it('handles the input event that browsers fire after range keyboard interaction', async () => {
@@ -61,13 +100,13 @@ describe('RangeSlider input', () => {
         expect(onUpdate).toHaveBeenCalledWith([25, 80]);
     });
 
-    it('keeps off-grid endpoints valid while manually applying step and boundary keys', async () => {
+    it('keeps off-grid endpoints valid while manually applying crossover keys', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(RangeSlider, {
-                        modelValue: [20, 95],
+                        modelValue: [20, 90],
                         min: 0,
                         max: 95,
                         step: 10,
@@ -79,6 +118,7 @@ describe('RangeSlider input', () => {
 
         await flush();
 
+        const root = container.querySelector('.rp-range-slider')!;
         const [lower, upper] = getNativeInputs(container);
 
         expect(lower.step).toBe('any');
@@ -86,26 +126,33 @@ describe('RangeSlider input', () => {
         expect(lower.checkValidity()).toBe(true);
         expect(upper.checkValidity()).toBe(true);
 
+        lower.focus();
         keydown(lower, 'ArrowRight');
         await flush();
-        expect(onUpdate).toHaveBeenLastCalledWith([30, 95]);
+        expect(onUpdate).toHaveBeenLastCalledWith([30, 90]);
 
         keydown(lower, 'Home');
         await flush();
-        expect(onUpdate).toHaveBeenLastCalledWith([0, 95]);
+        expect(onUpdate).toHaveBeenLastCalledWith([0, 90]);
 
         keydown(lower, 'End');
         await flush();
         expect(onUpdate).toHaveBeenLastCalledWith([90, 95]);
+        expect(root.getAttribute('data-active-thumb')).toBe('upper');
+        expect(document.activeElement).toBe(upper);
 
+        upper.focus();
         keydown(upper, 'ArrowLeft');
         await flush();
-        expect(onUpdate).toHaveBeenLastCalledWith([20, 90]);
+        expect(onUpdate).toHaveBeenLastCalledWith([20, 80]);
 
         keydown(upper, 'Home');
         await flush();
-        expect(onUpdate).toHaveBeenLastCalledWith([20, 20]);
+        expect(onUpdate).toHaveBeenLastCalledWith([0, 20]);
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(document.activeElement).toBe(lower);
 
+        upper.focus();
         keydown(upper, 'End');
         await flush();
         expect(onUpdate).toHaveBeenLastCalledWith([20, 95]);
@@ -135,7 +182,38 @@ describe('RangeSlider input', () => {
         expect(onUpdate).not.toHaveBeenCalled();
     });
 
-    it('sets dynamic native bounds from minRange and preserves lower-to-upper tab order', async () => {
+    it('uses full native bounds when minRange is zero', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        min: 10,
+                        max: 90,
+                        step: 5,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lower, upper] = getNativeInputs(container);
+
+        expect(lower.value).toBe('20');
+        expect(lower.min).toBe('10');
+        expect(lower.max).toBe('90');
+        expect(upper.value).toBe('80');
+        expect(upper.min).toBe('10');
+        expect(upper.max).toBe('90');
+        expect(
+            lower.compareDocumentPosition(upper) & Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
+        expect(lower.tabIndex).toBe(0);
+        expect(upper.tabIndex).toBe(0);
+    });
+
+    it('sets dynamic native bounds when minRange is positive', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
