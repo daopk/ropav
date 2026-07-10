@@ -7,6 +7,8 @@ export type NumberInputRadius = InputRadius;
 
 export type NumberInputSize = InputSize;
 
+export type NumberInputControlsPosition = 'left' | 'right' | 'split';
+
 export interface NumberInputProps {
     id?: string;
     name?: string;
@@ -18,6 +20,7 @@ export interface NumberInputProps {
     radius?: NumberInputRadius;
     placeholder?: string;
     controls?: boolean;
+    controlsPosition?: NumberInputControlsPosition;
     clampOnBlur?: boolean;
     disabled?: boolean;
     readonly?: boolean;

@@ -8,7 +8,7 @@ describe('NumberInput', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
-    it('renders number and null values with labelled controls by default', async () => {
+    it('renders values with labelled Minus and Plus controls on the right by default', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -37,10 +37,113 @@ describe('NumberInput', () => {
         expect(inputs[0].type).toBe('number');
         expect(inputs[0].value).toBe('12.5');
         expect(inputs[1].value).toBe('');
-        expect(increment.type).toBe('button');
-        expect(increment.getAttribute('aria-label')).toBe('Increment value');
+        expect(roots[0].querySelector('.rp-input__left')).toBeNull();
+        expect(roots[0].querySelector('.rp-input__right .rp-number-input__controls')).toBe(
+            controls,
+        );
+        expect([...controls.querySelectorAll('.rp-number-input__control')]).toEqual([
+            decrement,
+            increment,
+        ]);
         expect(decrement.type).toBe('button');
         expect(decrement.getAttribute('aria-label')).toBe('Decrement value');
+        expect(decrement.querySelector('svg path')?.getAttribute('d')).toBe('M5 12h14');
+        expect(increment.type).toBe('button');
+        expect(increment.getAttribute('aria-label')).toBe('Increment value');
+        expect(increment.querySelector('svg path')?.getAttribute('d')).toBe('M5 12h14m-7-7v14');
+    });
+
+    it.each([
+        ['left', ['decrement', 'increment'], []],
+        ['right', [], ['decrement', 'increment']],
+        ['split', ['decrement'], ['increment']],
+    ] as const)(
+        'places controls in the input slots for the %s position',
+        async (controlsPosition, expectedLeft, expectedRight) => {
+            const container = mountDom(
+                defineComponent({
+                    render() {
+                        return h(NumberInput, {
+                            controlsPosition,
+                            modelValue: 2,
+                        });
+                    },
+                }),
+            );
+
+            await flush();
+
+            const root = container.querySelector('.rp-number-input')!;
+            const controlNames = (slot: 'left' | 'right') =>
+                [...root.querySelectorAll(`.rp-input__${slot} .rp-number-input__control`)].map(
+                    (control) =>
+                        control.classList.contains('rp-number-input__control--decrement')
+                            ? 'decrement'
+                            : 'increment',
+                );
+
+            expect(controlNames('left')).toEqual(expectedLeft);
+            expect(controlNames('right')).toEqual(expectedRight);
+            expect(root.querySelectorAll('.rp-number-input__control')).toHaveLength(2);
+        },
+    );
+
+    it('moves controls when controlsPosition changes', async () => {
+        const props = reactive<{
+            controlsPosition: 'left' | 'right' | 'split';
+            modelValue: number;
+        }>({
+            controlsPosition: 'right',
+            modelValue: 2,
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(NumberInput, props);
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-number-input')!;
+        expect(root.querySelectorAll('.rp-input__left button')).toHaveLength(0);
+        expect(root.querySelectorAll('.rp-input__right button')).toHaveLength(2);
+
+        props.controlsPosition = 'split';
+        await flush();
+
+        expect(root.querySelectorAll('.rp-input__left button')).toHaveLength(1);
+        expect(root.querySelectorAll('.rp-input__right button')).toHaveLength(1);
+    });
+
+    it('falls back to right controls for an invalid position', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(NumberInput, {
+                        controlsPosition: 'invalid' as never,
+                        modelValue: 2,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-number-input')!;
+        const rightControls = [
+            ...root.querySelectorAll('.rp-input__right .rp-number-input__control'),
+        ];
+
+        expect(root.querySelector('.rp-input__left')).toBeNull();
+        expect(rightControls).toHaveLength(2);
+        expect(rightControls[0].classList.contains('rp-number-input__control--decrement')).toBe(
+            true,
+        );
+        expect(rightControls[1].classList.contains('rp-number-input__control--increment')).toBe(
+            true,
+        );
     });
 
     it('can hide controls and customize their accessible labels', async () => {
@@ -71,6 +174,8 @@ describe('NumberInput', () => {
         expect(increment.getAttribute('aria-label')).toBe('Add one item');
         expect(decrement.getAttribute('aria-label')).toBe('Remove one item');
         expect(roots[1].querySelector('.rp-number-input__controls')).toBeNull();
+        expect(roots[1].querySelector('.rp-input__left')).toBeNull();
+        expect(roots[1].querySelector('.rp-input__right')).toBeNull();
     });
 
     it('emits numbers and null from native input events', async () => {

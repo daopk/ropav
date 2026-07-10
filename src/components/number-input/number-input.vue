@@ -20,32 +20,52 @@
         :validation-message="validationMessage"
         @update:model-value="onInputUpdate"
     >
-        <template v-if="controls" #right>
-            <span class="rp-number-input__controls">
+        <template v-if="leftControls.length" #left>
+            <span class="rp-number-input__controls rp-number-input__controls--left">
                 <button
+                    v-for="controlType in leftControls"
+                    :key="controlType"
                     type="button"
                     tabindex="-1"
-                    class="rp-number-input__control rp-number-input__control--increment"
-                    :aria-label="incrementLabel"
-                    :disabled="!canIncrement"
+                    :class="[
+                        'rp-number-input__control',
+                        `rp-number-input__control--${controlType}`,
+                    ]"
+                    :aria-label="getControlLabel(controlType)"
+                    :disabled="isControlDisabled(controlType)"
                     @mousedown.prevent
-                    @click.stop="onIncrement"
+                    @click.stop="onControlClick($event, controlType)"
                 >
                     <span class="rp-number-input__control-icon" aria-hidden="true">
-                        <slot name="increment-icon"><IconChevronUp /></slot>
+                        <slot v-if="controlType === 'increment'" name="increment-icon">
+                            <IconPlus />
+                        </slot>
+                        <slot v-else name="decrement-icon"><IconMinus /></slot>
                     </span>
                 </button>
+            </span>
+        </template>
+        <template v-if="rightControls.length" #right>
+            <span class="rp-number-input__controls rp-number-input__controls--right">
                 <button
+                    v-for="controlType in rightControls"
+                    :key="controlType"
                     type="button"
                     tabindex="-1"
-                    class="rp-number-input__control rp-number-input__control--decrement"
-                    :aria-label="decrementLabel"
-                    :disabled="!canDecrement"
+                    :class="[
+                        'rp-number-input__control',
+                        `rp-number-input__control--${controlType}`,
+                    ]"
+                    :aria-label="getControlLabel(controlType)"
+                    :disabled="isControlDisabled(controlType)"
                     @mousedown.prevent
-                    @click.stop="onDecrement"
+                    @click.stop="onControlClick($event, controlType)"
                 >
                     <span class="rp-number-input__control-icon" aria-hidden="true">
-                        <slot name="decrement-icon"><IconChevronDown /></slot>
+                        <slot v-if="controlType === 'increment'" name="increment-icon">
+                            <IconPlus />
+                        </slot>
+                        <slot v-else name="decrement-icon"><IconMinus /></slot>
                     </span>
                 </button>
             </span>
@@ -54,11 +74,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import IconChevronDown from '~icons/lucide/chevron-down';
-import IconChevronUp from '~icons/lucide/chevron-up';
+import IconMinus from '~icons/lucide/minus';
+import IconPlus from '~icons/lucide/plus';
 import Input from '../input/input.vue';
 import type { NumberInputProps, NumberInputValue } from './types';
-import { useNumberInput } from './useNumberInput';
+import { useNumberInput, type NumberInputControl } from './useNumberInput';
 
 defineOptions({ name: 'RpNumberInput' });
 
@@ -66,6 +86,7 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
     step: 1,
     placeholder: '',
     controls: true,
+    controlsPosition: 'right',
     clampOnBlur: true,
     disabled: undefined,
     readonly: false,
@@ -85,6 +106,8 @@ const {
     rootClass,
     nativeInputAttrs,
     modelInputValue,
+    leftControls,
+    rightControls,
     canIncrement,
     canDecrement,
     increment,
@@ -99,12 +122,17 @@ function focusNativeInput(event: MouseEvent) {
     target.closest('.rp-number-input')?.querySelector<HTMLInputElement>('input')?.focus();
 }
 
-function onIncrement(event: MouseEvent) {
-    if (increment()) focusNativeInput(event);
+function getControlLabel(controlType: NumberInputControl) {
+    return controlType === 'increment' ? props.incrementLabel : props.decrementLabel;
 }
 
-function onDecrement(event: MouseEvent) {
-    if (decrement()) focusNativeInput(event);
+function isControlDisabled(controlType: NumberInputControl) {
+    return controlType === 'increment' ? !canIncrement.value : !canDecrement.value;
+}
+
+function onControlClick(event: MouseEvent, controlType: NumberInputControl) {
+    const didUpdate = controlType === 'increment' ? increment() : decrement();
+    if (didUpdate) focusNativeInput(event);
 }
 </script>
 

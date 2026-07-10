@@ -1,5 +1,5 @@
 .rp-number-input {
-    --_rp-number-input-control-width: calc(var(--_rp-input-height) * 0.65);
+    --_rp-number-input-control-size: var(--_rp-input-height);
 
     overflow: hidden;
     vertical-align: middle;
@@ -14,24 +14,39 @@
         appearance: none;
     }
 
+    :deep(.rp-input__left),
     :deep(.rp-input__right) {
         align-self: stretch;
         margin-block: calc(-1 * var(--rp-border-width-thin));
+    }
+
+    :deep(.rp-input__left) {
+        margin-inline-start: calc(-1 * var(--_rp-input-padding-x));
+    }
+
+    :deep(.rp-input__right) {
         margin-inline-end: calc(-1 * var(--_rp-input-padding-x));
     }
 
     &__controls {
-        display: grid;
-        grid-template-rows: repeat(2, minmax(0, 1fr));
-        width: var(--_rp-number-input-control-width);
+        display: inline-flex;
         height: var(--_rp-input-height);
         flex-shrink: 0;
-        border-inline-start: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+
+        &--left {
+            border-inline-end: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+        }
+
+        &--right {
+            border-inline-start: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+        }
     }
 
     &__control {
         @include reset-button;
         @include flex-center;
+        width: var(--_rp-number-input-control-size);
+        height: 100%;
         min-width: 0;
         min-height: 0;
         color: var(--rp-color-control-icon);
@@ -40,8 +55,8 @@
             background-color var(--rp-transition-fast),
             opacity var(--rp-transition-fast);
 
-        &:first-child {
-            border-block-end: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+        + .rp-number-input__control {
+            border-inline-start: var(--rp-border-width-thin) solid var(--rp-color-control-border);
         }
 
         &:hover:not(:disabled) {
@@ -56,7 +71,7 @@
     }
 
     &__control-icon {
-        @include inline-icon(0.75em);
+        @include inline-icon(0.875em);
 
         > :deep(svg) {
             display: block;

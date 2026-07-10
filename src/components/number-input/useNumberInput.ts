@@ -1,7 +1,7 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
-import type { NumberInputProps, NumberInputValue } from './types';
+import type { NumberInputControlsPosition, NumberInputProps, NumberInputValue } from './types';
 
 export interface NumberInputBounds {
     min: number | undefined;
@@ -9,6 +9,8 @@ export interface NumberInputBounds {
 }
 
 type StepDirection = -1 | 1;
+
+export type NumberInputControl = 'decrement' | 'increment';
 
 function finiteOrUndefined(value: number | undefined) {
     return value !== undefined && Number.isFinite(value) ? value : undefined;
@@ -83,6 +85,12 @@ export function parseNumberInputValue(value: string): NumberInputValue {
     return Number.isFinite(parsed) ? normalizeZero(parsed) : null;
 }
 
+export function normalizeNumberInputControlsPosition(
+    position: NumberInputControlsPosition | undefined,
+): NumberInputControlsPosition {
+    return position === 'left' || position === 'split' ? position : 'right';
+}
+
 function getModelInputValue(value: NumberInputValue) {
     return value !== null && Number.isFinite(value) ? String(normalizeZero(value)) : '';
 }
@@ -96,12 +104,28 @@ export function useNumberInput(
     const nativeStep = computed(() => normalizeNumberInputStep(props.step));
     const modelInputValue = computed(() => getModelInputValue(props.modelValue));
     const isInteractive = computed(() => !control.disabled && !props.readonly);
+    const controlsPosition = computed(() =>
+        normalizeNumberInputControlsPosition(props.controlsPosition),
+    );
+    const leftControls = computed<NumberInputControl[]>(() => {
+        if (!props.controls || controlsPosition.value === 'right') return [];
+        if (controlsPosition.value === 'split') return ['decrement'];
+
+        return ['decrement', 'increment'];
+    });
+    const rightControls = computed<NumberInputControl[]>(() => {
+        if (!props.controls || controlsPosition.value === 'left') return [];
+        if (controlsPosition.value === 'split') return ['increment'];
+
+        return ['decrement', 'increment'];
+    });
 
     const rootClass = computed(() =>
         bem('rp-number-input', {
             [`size-${props.size}`]: Boolean(props.size),
             [`radius-${props.radius}`]: Boolean(props.radius),
             controls: props.controls,
+            [`controls-${controlsPosition.value}`]: props.controls,
             disabled: control.disabled,
             invalid: control.invalid,
             valid: control.valid && !control.invalid,
@@ -198,6 +222,8 @@ export function useNumberInput(
         nativeStep,
         nativeInputAttrs,
         modelInputValue,
+        leftControls,
+        rightControls,
         canIncrement,
         canDecrement,
         increment: () => emitStep(1),

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import NumberInput from './number-input.vue';
 
+const controlsPositions = ['left', 'right', 'split'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
@@ -17,6 +18,10 @@ const meta = {
         max: { control: 'number' },
         step: { control: 'number' },
         controls: { control: 'boolean' },
+        controlsPosition: {
+            control: 'select',
+            options: controlsPositions,
+        },
         clampOnBlur: { control: 'boolean' },
         incrementLabel: { control: 'text' },
         decrementLabel: { control: 'text' },
@@ -48,6 +53,7 @@ const meta = {
         max: undefined,
         step: 1,
         controls: true,
+        controlsPosition: 'right',
         clampOnBlur: true,
         incrementLabel: 'Increment value',
         decrementLabel: 'Decrement value',
@@ -111,6 +117,43 @@ export const WithoutControls: Story = {
     args: {
         controls: false,
     },
+};
+
+export const ControlPositions: Story = {
+    render: (args) => ({
+        components: { NumberInput },
+        setup() {
+            const values = ref<Record<(typeof controlsPositions)[number], number | null>>({
+                left: args.modelValue,
+                right: args.modelValue,
+                split: args.modelValue,
+            });
+
+            return { args, controlsPositions, values };
+        },
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <div
+                    v-for="position in controlsPositions"
+                    :key="position"
+                    style="display: grid; gap: 4px;"
+                >
+                    <span style="color: var(--rp-color-text); font-size: var(--rp-font-size-sm);">
+                        {{ position }}
+                    </span>
+                    <NumberInput
+                        v-bind="{
+                            ...args,
+                            modelValue: values[position],
+                            controlsPosition: position,
+                            ariaLabel: position + ' controls',
+                        }"
+                        @update:model-value="values[position] = $event"
+                    />
+                </div>
+            </div>
+        `,
+    }),
 };
 
 export const WithoutClampOnBlur: Story = {
