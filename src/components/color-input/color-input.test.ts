@@ -662,7 +662,7 @@ describe('ColorInput', () => {
         expect(onOpen).not.toHaveBeenCalled();
     });
 
-    it('prefers pickerAriaLabel and keeps triggerAriaLabel as a deprecated fallback', async () => {
+    it('uses pickerAriaLabel and provides a default picker label', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -670,11 +670,9 @@ describe('ColorInput', () => {
                         h(ColorInput, {
                             modelValue: '#4992d1',
                             pickerAriaLabel: 'Brand color picker',
-                            triggerAriaLabel: 'Legacy label',
                         }),
                         h(ColorInput, {
                             modelValue: '#4992d1',
-                            triggerAriaLabel: 'Legacy picker label',
                         }),
                     ]);
                 },
@@ -686,6 +684,6 @@ describe('ColorInput', () => {
         const pickers = container.querySelectorAll('.rp-popover__content');
 
         expect(pickers[0].getAttribute('aria-label')).toBe('Brand color picker');
-        expect(pickers[1].getAttribute('aria-label')).toBe('Legacy picker label');
+        expect(pickers[1].getAttribute('aria-label')).toBe('Choose color');
     });
 });

@@ -5,7 +5,7 @@
         :placement="placement"
         :open="open"
         :disabled="control.disabled || readonly"
-        :aria-label="resolvedPickerAriaLabel"
+        :aria-label="pickerAriaLabel"
         @focusout="onFocusOut"
         @update:open="onOpenUpdate"
     >
@@ -73,7 +73,7 @@
                 :readonly="readonly"
                 :swatches="swatches"
                 :swatches-per-row="swatchesPerRow"
-                :aria-label="resolvedPickerAriaLabel"
+                :aria-label="pickerAriaLabel"
                 @focusin="rememberClose(slotProps)"
                 @keydown="onPickerKeydown($event, slotProps)"
                 @update:model-value="onPickerUpdate"
@@ -104,7 +104,7 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
     readonly: false,
     placement: 'bottom-start',
     open: undefined,
-    triggerAriaLabel: 'Choose color',
+    pickerAriaLabel: 'Choose color',
     validateColor: false,
     invalidColorMessage: 'Enter a valid color.',
     withEyeDropper: true,
@@ -122,7 +122,6 @@ const {
     previewColor,
     isInvalid,
     colorValidationMessage,
-    resolvedPickerAriaLabel,
     getInputTriggerAttrs,
     rememberClose,
     onPickerKeydown,

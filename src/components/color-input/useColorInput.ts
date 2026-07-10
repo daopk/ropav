@@ -34,8 +34,6 @@ export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorIn
         }),
     );
 
-    const resolvedPickerAriaLabel = computed(() => props.pickerAriaLabel || props.triggerAriaLabel);
-
     function onInputUpdate(nextValue: ColorPickerValue) {
         emit.modelValue(nextValue);
     }
@@ -52,7 +50,6 @@ export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorIn
     return {
         control,
         rootClass,
-        resolvedPickerAriaLabel,
         ...value,
         ...popover,
         ...eyeDropper,

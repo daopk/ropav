@@ -27,8 +27,6 @@ export interface ColorInputProps {
     placement?: PopoverPlacement;
     open?: boolean;
     popoverId?: string;
-    /** @deprecated Use pickerAriaLabel instead. */
-    triggerAriaLabel?: string;
     pickerAriaLabel?: string;
     withEyeDropper?: boolean;
     eyeDropperAriaLabel?: string;
