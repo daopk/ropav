@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { computed, reactive, ref, watch } from 'vue';
 import Field from '../field/field.vue';
 import Radio from '../radio/radio.vue';
@@ -122,10 +122,37 @@ export const WithSwatches: Story = {
 };
 
 export const SwatchesOnly: Story = {
+    tags: ['test'],
     args: {
         withPicker: false,
         swatches: colorPickerSwatches,
         swatchesPerRow: 7,
+    },
+    play: async ({ canvasElement }) => {
+        const swatches = [
+            ...canvasElement.querySelectorAll<HTMLButtonElement>('.rp-color-picker__swatch'),
+        ];
+        const value = canvasElement.querySelector<HTMLElement>('.rp-color-picker + span')!;
+
+        expect(swatches.filter((swatch) => swatch.tabIndex === 0)).toEqual([swatches[0]]);
+
+        swatches[0].focus();
+        await userEvent.keyboard(' ');
+
+        await waitFor(() => expect(swatches[0]).toHaveAttribute('aria-checked', 'true'));
+        expect(value).toHaveAttribute('title', colorPickerSwatches[0]);
+
+        await userEvent.keyboard('{ArrowRight}');
+
+        await waitFor(() => expect(swatches[1]).toHaveFocus());
+        expect(swatches[1]).toHaveAttribute('aria-checked', 'true');
+        expect(value).toHaveAttribute('title', colorPickerSwatches[1]);
+
+        swatches[2].focus();
+        await userEvent.keyboard('{Enter}');
+
+        await waitFor(() => expect(swatches[2]).toHaveAttribute('aria-checked', 'true'));
+        expect(value).toHaveAttribute('title', colorPickerSwatches[2]);
     },
 };
 

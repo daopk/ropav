@@ -1,15 +1,34 @@
-import type { InputHTMLAttributes } from 'vue';
+import { nextTick, type InputHTMLAttributes } from 'vue';
 import type { PopoverContentSlotProps, PopoverSlotProps } from '../popover/types';
 import type { ColorInputProps } from './types';
 
 function onInputKeydown(event: KeyboardEvent, popover: PopoverSlotProps) {
     if (event.key === 'ArrowDown') {
         event.preventDefault();
+        const trigger = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
         popover.open();
+        void nextTick(() => focusPickerFromTrigger(trigger));
         return;
     }
 
     if (event.key === 'Escape') popover.triggerProps.onKeydown(event);
+}
+
+function focusPickerFromTrigger(trigger: HTMLElement | null) {
+    const picker = trigger
+        ?.closest('.rp-color-input')
+        ?.querySelector<HTMLElement>('.rp-color-picker');
+    if (!picker) return;
+
+    const hasColorArea = Boolean(picker.querySelector('.rp-color-picker__saturation'));
+    const focusTarget = hasColorArea
+        ? picker.querySelector<HTMLElement>(
+              'input:not(:disabled), button:not(:disabled), [tabindex="0"]',
+          )
+        : (picker.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]') ??
+          picker.querySelector<HTMLElement>('[role="radio"][tabindex="0"]'));
+
+    focusTarget?.focus({ preventScroll: true });
 }
 
 function onPickerKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps) {

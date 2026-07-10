@@ -471,6 +471,11 @@ describe('ColorInput', () => {
         ) as NodeListOf<HTMLButtonElement>;
         expect(swatches).toHaveLength(1);
 
+        keydown(native, 'ArrowDown');
+        await flush();
+
+        expect(document.activeElement).toBe(swatches[0]);
+
         click(swatches[0]);
         await flush();
 
@@ -625,6 +630,9 @@ describe('ColorInput', () => {
 
         expect(picker.style.display).not.toBe('none');
         expect(native.getAttribute('aria-expanded')).toBe('true');
+        expect(document.activeElement).toBe(
+            container.querySelector('.rp-color-picker__axis-input--saturation'),
+        );
     });
 
     it('restores input focus when Escape closes the picker from inside', async () => {

@@ -790,13 +790,18 @@ describe('ColorPicker', () => {
             '.rp-color-swatch',
         ) as NodeListOf<HTMLElement>;
 
-        expect(container.querySelector('.rp-color-picker__swatches')).toBeTruthy();
+        const swatchGroup = container.querySelector('.rp-color-picker__swatches')!;
+
+        expect(swatchGroup.getAttribute('role')).toBe('radiogroup');
         expect(swatches).toHaveLength(2);
         expect(colorSwatches).toHaveLength(2);
         expect(colorSwatches[0].style.getPropertyValue('--_rp-color-swatch-color')).toBe('#ff0000');
         expect(colorSwatches[0].getAttribute('aria-hidden')).toBe('true');
         expect(colorSwatches[0].getAttribute('role')).toBeNull();
-        expect(swatches[0].getAttribute('aria-pressed')).toBe('false');
+        expect(swatches[0].getAttribute('role')).toBe('radio');
+        expect(swatches[0].getAttribute('aria-checked')).toBe('false');
+        expect(swatches[0].tabIndex).toBe(0);
+        expect(swatches[1].tabIndex).toBe(-1);
         expect(swatches[1].getAttribute('aria-label')).toBe('Select color rgb(0, 128, 0)');
 
         swatches[1].dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -854,6 +859,7 @@ describe('ColorPicker', () => {
         expect(container.querySelector('.rp-color-picker__hue')).toBeNull();
         expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
         expect(swatches.getAttribute('data-with-picker')).toBeNull();
+        expect(swatches.getAttribute('role')).toBe('radiogroup');
         expect(swatches.id).toBe('brand-color');
         expect(swatches.getAttribute('aria-label')).toBe('Brand color');
         expect(swatches.getAttribute('aria-describedby')).toBe('brand-color-help');
@@ -884,8 +890,71 @@ describe('ColorPicker', () => {
         ) as NodeListOf<HTMLButtonElement>;
 
         expect(swatches[0].querySelector('.rp-color-picker__swatch-check')).toBeNull();
-        expect(swatches[1].getAttribute('aria-pressed')).toBe('true');
+        expect(swatches[0].getAttribute('aria-checked')).toBe('false');
+        expect(swatches[0].tabIndex).toBe(-1);
+        expect(swatches[1].getAttribute('aria-checked')).toBe('true');
+        expect(swatches[1].tabIndex).toBe(0);
         expect(swatches[1].querySelector('.rp-color-picker__swatch-check')).toBeTruthy();
+    });
+
+    it('uses one tab stop and selects swatches with wrapping arrow navigation', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const value = ref<ColorPickerValue>('#00ff00');
+
+                    return () =>
+                        h(ColorPicker, {
+                            modelValue: value.value,
+                            swatches: ['#ff0000', '#00ff00', '#0000ff'],
+                            'onUpdate:modelValue': (nextValue: ColorPickerValue) => {
+                                onUpdate(nextValue);
+                                value.value = nextValue;
+                            },
+                        });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelectorAll(
+            '.rp-color-picker__swatch',
+        ) as NodeListOf<HTMLButtonElement>;
+
+        expect([...swatches].map((swatch) => swatch.tabIndex)).toEqual([-1, 0, -1]);
+
+        swatches[1].focus();
+        keydown(swatches[1], 'ArrowRight');
+        await flush();
+
+        expect(document.activeElement).toBe(swatches[2]);
+        expect(onUpdate).toHaveBeenLastCalledWith('#0000ff');
+        expect([...swatches].map((swatch) => swatch.getAttribute('aria-checked'))).toEqual([
+            'false',
+            'false',
+            'true',
+        ]);
+        expect([...swatches].map((swatch) => swatch.tabIndex)).toEqual([-1, -1, 0]);
+
+        keydown(swatches[2], 'ArrowDown');
+        await flush();
+
+        expect(document.activeElement).toBe(swatches[0]);
+        expect(onUpdate).toHaveBeenLastCalledWith('#ff0000');
+
+        keydown(swatches[0], 'ArrowLeft');
+        await flush();
+
+        expect(document.activeElement).toBe(swatches[2]);
+        expect(onUpdate).toHaveBeenLastCalledWith('#0000ff');
+
+        keydown(swatches[2], 'ArrowUp');
+        await flush();
+
+        expect(document.activeElement).toBe(swatches[1]);
+        expect(onUpdate).toHaveBeenLastCalledWith('#00ff00');
     });
 
     it('lets swatchesPerRow fill the available width regardless of picker size', async () => {
@@ -955,6 +1024,7 @@ describe('ColorPicker', () => {
         const swatch = container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement;
 
         expect(swatch.disabled).toBe(true);
+        expect(swatch.tabIndex).toBe(-1);
 
         swatch.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         await flush();
