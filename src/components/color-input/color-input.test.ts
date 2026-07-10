@@ -60,6 +60,105 @@ describe('ColorInput', () => {
         expect(container.querySelector('.rp-color-picker--size-lg')).toBeTruthy();
     });
 
+    it('forwards native input attrs and events while preserving trigger semantics', async () => {
+        const onBlur = vi.fn();
+        const onClick = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        popoverId: 'native-attrs-picker',
+                        inputAttrs: {
+                            autocomplete: 'off',
+                            inputmode: 'text',
+                            spellcheck: false,
+                            role: 'textbox',
+                            'aria-controls': 'ignored-picker',
+                            onBlur,
+                            onClick,
+                        },
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('inputmode')).toBe('text');
+        expect(native.getAttribute('spellcheck')).toBe('false');
+        expect(native.getAttribute('role')).toBe('combobox');
+        expect(native.getAttribute('aria-controls')).toBe('native-attrs-picker');
+
+        click(native);
+        native.dispatchEvent(new FocusEvent('blur'));
+        await flush();
+
+        expect(onClick).toHaveBeenCalledOnce();
+        expect(onBlur).toHaveBeenCalledOnce();
+        expect(native.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('does not open the picker from interactive custom preview content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        ColorInput,
+                        { modelValue: '#4992d1' },
+                        { left: () => h('button', { class: 'preview-action' }, 'Preview action') },
+                    );
+                },
+            }),
+        );
+
+        const button = container.querySelector('.preview-action') as HTMLButtonElement;
+        const picker = container.querySelector('.rp-popover__content') as HTMLElement;
+
+        button.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        click(button);
+        await flush();
+
+        expect(picker.style.display).toBe('none');
+    });
+
+    it('can opt into native validity for non-empty invalid colors', async () => {
+        const container = mountDom(
+            defineComponent({
+                data: () => ({ color: 'not-a-color' }),
+                render() {
+                    return h(ColorInput, {
+                        modelValue: this.color,
+                        validateColor: true,
+                        invalidColorMessage: 'Use a supported CSS color.',
+                        'onUpdate:modelValue': (value) => {
+                            this.color = value;
+                        },
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const control = container.querySelector('.rp-input') as HTMLElement;
+
+        expect(native.checkValidity()).toBe(false);
+        expect(native.validationMessage).toBe('Use a supported CSS color.');
+        expect(native.getAttribute('aria-invalid')).toBe('true');
+        expect(control.classList.contains('rp-input--invalid')).toBe(true);
+
+        input(native, '#abcdef');
+        await flush();
+
+        expect(native.checkValidity()).toBe(true);
+        expect(native.validationMessage).toBe('');
+        expect(native.hasAttribute('aria-invalid')).toBe(false);
+        expect(control.classList.contains('rp-input--invalid')).toBe(false);
+    });
+
     it('emits typed color values from the text input', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -313,6 +412,7 @@ describe('ColorInput', () => {
 
         expect(container.querySelector('.rp-color-swatch')).toBeNull();
         expect(container.querySelector('.rp-color-input__preview--empty')).toBeTruthy();
+        expect((container.querySelector('input') as HTMLInputElement).checkValidity()).toBe(true);
     });
 
     it('keeps the picker closed when readonly', async () => {

@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'vue';
 import type { ColorPickerFormat, ColorPickerValue } from '../color-picker/types';
 import type { InputRadius, InputSize } from '../input/types';
 import type { PopoverPlacement } from '../popover/types';
@@ -18,6 +19,9 @@ export interface ColorInputProps {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: InputHTMLAttributes;
+    validateColor?: boolean;
+    invalidColorMessage?: string;
     swatches?: string[];
     swatchesPerRow?: number;
     placement?: PopoverPlacement;

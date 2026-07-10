@@ -21,14 +21,13 @@
                 :disabled="control.disabled || undefined"
                 :readonly="readonly || undefined"
                 :required="control.required || undefined"
-                :invalid="control.invalid || undefined"
-                :valid="control.valid || undefined"
+                :invalid="isInvalid || undefined"
+                :valid="control.valid && !isInvalid ? true : undefined"
                 :aria-label="ariaLabel"
                 :describedby="describedby"
                 :labelledby="labelledby"
                 :input-attrs="getInputTriggerAttrs(slotProps)"
-                @click="slotProps.open"
-                @focusin="onInputFocus($event, slotProps)"
+                :validation-message="colorValidationMessage"
                 @update:model-value="onInputUpdate"
             >
                 <template #left>
@@ -68,7 +67,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, type InputHTMLAttributes } from 'vue';
+import { computed, type InputHTMLAttributes } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import ColorPicker from '../color-picker/color-picker.vue';
@@ -93,6 +92,8 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
     placement: 'bottom-start',
     open: undefined,
     triggerAriaLabel: 'Choose color',
+    validateColor: false,
+    invalidColorMessage: 'Enter a valid color.',
 });
 
 const emit = defineEmits<{
@@ -107,47 +108,52 @@ const rootClass = computed(() =>
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
         disabled: control.disabled,
-        invalid: control.invalid,
-        valid: control.valid && !control.invalid,
+        invalid: isInvalid.value,
+        valid: control.valid && !isInvalid.value,
         readonly: props.readonly,
     }),
 );
 
-const previewColor = computed(() =>
-    parseColorPickerValue(props.modelValue) ? props.modelValue : undefined,
+const parsedColor = computed(() => parseColorPickerValue(props.modelValue));
+const previewColor = computed(() => (parsedColor.value ? props.modelValue : undefined));
+const hasInvalidColor = computed(
+    () => props.validateColor && props.modelValue.trim().length > 0 && !parsedColor.value,
+);
+const isInvalid = computed(() => control.invalid || hasInvalidColor.value);
+const colorValidationMessage = computed(() =>
+    hasInvalidColor.value ? props.invalidColorMessage : undefined,
 );
 const resolvedPickerAriaLabel = computed(() => props.pickerAriaLabel || props.triggerAriaLabel);
 let closePicker: PopoverSlotProps['close'] | undefined;
-let inputElement: HTMLInputElement | undefined;
-let suppressNextFocusOpen = false;
-
-function onInputFocus(event: FocusEvent, slotProps: unknown) {
-    const popover = slotProps as PopoverSlotProps;
-
-    if (event.target instanceof HTMLInputElement) inputElement = event.target;
-    rememberClose(popover);
-
-    if (suppressNextFocusOpen) {
-        suppressNextFocusOpen = false;
-        return;
-    }
-
-    popover.open();
-}
 
 function getInputTriggerAttrs(slotProps: unknown): InputHTMLAttributes {
     const popover = slotProps as PopoverSlotProps;
     const trigger = popover.triggerProps;
+    const attrs = props.inputAttrs ?? {};
 
-    if (!trigger['aria-haspopup']) return {};
+    if (!trigger['aria-haspopup']) return attrs;
 
     return {
+        ...attrs,
         role: 'combobox',
         'aria-autocomplete': 'none',
         'aria-controls': trigger['aria-controls'],
         'aria-expanded': trigger['aria-expanded'],
         'aria-haspopup': trigger['aria-haspopup'],
-        onKeydown: (event) => onInputKeydown(event, popover),
+        onFocusin(event) {
+            rememberClose(popover);
+            popover.open();
+            attrs.onFocusin?.(event);
+        },
+        onClick(event) {
+            rememberClose(popover);
+            popover.open();
+            attrs.onClick?.(event);
+        },
+        onKeydown(event) {
+            onInputKeydown(event, popover);
+            attrs.onKeydown?.(event);
+        },
     };
 }
 
@@ -170,26 +176,15 @@ function onPickerKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps)
 
     const pickerRoot = event.currentTarget;
     const focusTarget =
-        inputElement ??
-        (pickerRoot instanceof Element
+        pickerRoot instanceof Element
             ? pickerRoot
                   .closest('.rp-color-input')
                   ?.querySelector<HTMLInputElement>('.rp-input__native')
-            : undefined);
+            : undefined;
 
     event.stopPropagation();
-    suppressNextFocusOpen = true;
+    focusTarget?.focus({ preventScroll: true });
     popover.close();
-
-    void nextTick(() => {
-        if (!focusTarget) {
-            suppressNextFocusOpen = false;
-            return;
-        }
-
-        inputElement = focusTarget;
-        focusTarget.focus({ preventScroll: true });
-    });
 }
 
 function onFocusOut(event: FocusEvent) {
