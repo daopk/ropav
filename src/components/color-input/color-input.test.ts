@@ -449,4 +449,31 @@ describe('ColorInput', () => {
         expect(container.querySelector('.rp-color-picker')).toBeNull();
         expect(onOpen).not.toHaveBeenCalled();
     });
+
+    it('prefers pickerAriaLabel and keeps triggerAriaLabel as a deprecated fallback', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(ColorInput, {
+                            modelValue: '#4992d1',
+                            pickerAriaLabel: 'Brand color picker',
+                            triggerAriaLabel: 'Legacy label',
+                        }),
+                        h(ColorInput, {
+                            modelValue: '#4992d1',
+                            triggerAriaLabel: 'Legacy picker label',
+                        }),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const pickers = container.querySelectorAll('.rp-popover__content');
+
+        expect(pickers[0].getAttribute('aria-label')).toBe('Brand color picker');
+        expect(pickers[1].getAttribute('aria-label')).toBe('Legacy picker label');
+    });
 });
