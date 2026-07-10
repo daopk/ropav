@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
-import { click, flush, input, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, input, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
 
 describe('ColorInput', () => {
@@ -13,6 +13,7 @@ describe('ColorInput', () => {
                         id: 'brand-color',
                         modelValue: '#4992d1',
                         ariaLabel: 'Brand color',
+                        popoverId: 'brand-color-picker',
                     });
                 },
             }),
@@ -30,6 +31,10 @@ describe('ColorInput', () => {
         expect(native.id).toBe('brand-color');
         expect(native.value).toBe('#4992d1');
         expect(native.getAttribute('aria-label')).toBe('Brand color');
+        expect(native.getAttribute('role')).toBe('combobox');
+        expect(native.getAttribute('aria-controls')).toBe('brand-color-picker');
+        expect(native.getAttribute('aria-expanded')).toBe('false');
+        expect(native.getAttribute('aria-haspopup')).toBe('dialog');
         expect(container.querySelector('.rp-input__left .rp-color-input__preview')).toBe(preview);
         expect(preview.style.getPropertyValue('--_rp-color-swatch-color')).toBe('#4992d1');
         expect(container.querySelector('.rp-color-input__trigger')).toBeNull();
@@ -136,12 +141,105 @@ describe('ColorInput', () => {
         const popover = container.querySelector('.rp-popover__content') as HTMLElement;
         expect(popover.style.display).not.toBe('none');
         expect(onOpen).toHaveBeenLastCalledWith(true);
+        expect(native.getAttribute('aria-expanded')).toBe('true');
 
         click(container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement);
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
         expect(onUpdate).toHaveBeenCalledWith('#00ff00');
+    });
+
+    it('reopens the picker by click or ArrowDown while the input remains focused', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const picker = container.querySelector('.rp-popover__content') as HTMLElement;
+
+        native.focus();
+        await flush();
+
+        keydown(native, 'Escape');
+        await waitTransition();
+
+        expect(document.activeElement).toBe(native);
+        expect(picker.style.display).toBe('none');
+        expect(native.getAttribute('aria-expanded')).toBe('false');
+
+        click(native);
+        await flush();
+
+        expect(picker.style.display).not.toBe('none');
+        expect(native.getAttribute('aria-expanded')).toBe('true');
+
+        keydown(native, 'Escape');
+        await waitTransition();
+        keydown(native, 'ArrowDown');
+        await flush();
+
+        expect(picker.style.display).not.toBe('none');
+        expect(native.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('restores input focus when Escape closes the picker from inside', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const picker = container.querySelector('.rp-popover__content') as HTMLElement;
+
+        native.focus();
+        await flush();
+
+        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        saturation.focus();
+        keydown(saturation, 'Escape');
+        await waitTransition();
+
+        expect(document.activeElement).toBe(native);
+        expect(picker.style.display).toBe('none');
+        expect(native.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('emits close when focus leaves an initially controlled-open picker', async () => {
+        const onOpen = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        open: true,
+                        'onUpdate:open': onOpen,
+                    });
+                },
+            }),
+        );
+        const outside = document.createElement('button');
+        container.append(outside);
+
+        await flush();
+
+        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        saturation.focus();
+        outside.focus();
+        await flush();
+
+        expect(onOpen).toHaveBeenLastCalledWith(false);
     });
 
     it('closes the picker when focus leaves the color input', async () => {

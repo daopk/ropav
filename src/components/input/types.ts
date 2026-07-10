@@ -1,3 +1,5 @@
+import type { InputHTMLAttributes } from 'vue';
+
 export type InputRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type InputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -18,4 +20,5 @@ export interface InputProps {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: InputHTMLAttributes;
 }

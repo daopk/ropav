@@ -26,7 +26,9 @@
                 :aria-label="ariaLabel"
                 :describedby="describedby"
                 :labelledby="labelledby"
-                @focusin="onInputFocus(slotProps)"
+                :input-attrs="getInputTriggerAttrs(slotProps)"
+                @click="slotProps.open"
+                @focusin="onInputFocus($event, slotProps)"
                 @update:model-value="onInputUpdate"
             >
                 <template #left>
@@ -48,7 +50,7 @@
             </Input>
         </template>
 
-        <template #content>
+        <template #content="slotProps">
             <ColorPicker
                 :model-value="modelValue"
                 :format="format"
@@ -57,6 +59,8 @@
                 :swatches="swatches"
                 :swatches-per-row="swatchesPerRow"
                 :aria-label="resolvedPickerAriaLabel"
+                @focusin="rememberClose(slotProps)"
+                @keydown="onPickerKeydown($event, slotProps)"
                 @update:model-value="onPickerUpdate"
             />
         </template>
@@ -64,7 +68,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, nextTick, type InputHTMLAttributes } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import ColorPicker from '../color-picker/color-picker.vue';
@@ -73,7 +77,7 @@ import ColorSwatch from '../color-swatch/color-swatch.vue';
 import Input from '../input/input.vue';
 import Popover from '../popover/popover.vue';
 import type { ColorPickerValue } from '../color-picker/types';
-import type { PopoverSlotProps } from '../popover/types';
+import type { PopoverContentSlotProps, PopoverSlotProps } from '../popover/types';
 import type { ColorInputProps } from './types';
 
 defineOptions({ name: 'RpColorInput' });
@@ -114,11 +118,78 @@ const previewColor = computed(() =>
 );
 const resolvedPickerAriaLabel = computed(() => props.pickerAriaLabel || props.triggerAriaLabel);
 let closePicker: PopoverSlotProps['close'] | undefined;
+let inputElement: HTMLInputElement | undefined;
+let suppressNextFocusOpen = false;
 
-function onInputFocus(slotProps: unknown) {
+function onInputFocus(event: FocusEvent, slotProps: unknown) {
     const popover = slotProps as PopoverSlotProps;
-    closePicker = popover.close;
+
+    if (event.target instanceof HTMLInputElement) inputElement = event.target;
+    rememberClose(popover);
+
+    if (suppressNextFocusOpen) {
+        suppressNextFocusOpen = false;
+        return;
+    }
+
     popover.open();
+}
+
+function getInputTriggerAttrs(slotProps: unknown): InputHTMLAttributes {
+    const popover = slotProps as PopoverSlotProps;
+    const trigger = popover.triggerProps;
+
+    if (!trigger['aria-haspopup']) return {};
+
+    return {
+        role: 'combobox',
+        'aria-autocomplete': 'none',
+        'aria-controls': trigger['aria-controls'],
+        'aria-expanded': trigger['aria-expanded'],
+        'aria-haspopup': trigger['aria-haspopup'],
+        onKeydown: (event) => onInputKeydown(event, popover),
+    };
+}
+
+function onInputKeydown(event: KeyboardEvent, popover: PopoverSlotProps) {
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        popover.open();
+        return;
+    }
+
+    if (event.key === 'Escape') popover.triggerProps.onKeydown(event);
+}
+
+function rememberClose(slotProps: PopoverSlotProps | PopoverContentSlotProps) {
+    closePicker = slotProps.close;
+}
+
+function onPickerKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps) {
+    if (event.key !== 'Escape') return;
+
+    const pickerRoot = event.currentTarget;
+    const focusTarget =
+        inputElement ??
+        (pickerRoot instanceof Element
+            ? pickerRoot
+                  .closest('.rp-color-input')
+                  ?.querySelector<HTMLInputElement>('.rp-input__native')
+            : undefined);
+
+    event.stopPropagation();
+    suppressNextFocusOpen = true;
+    popover.close();
+
+    void nextTick(() => {
+        if (!focusTarget) {
+            suppressNextFocusOpen = false;
+            return;
+        }
+
+        inputElement = focusTarget;
+        focusTarget.focus({ preventScroll: true });
+    });
 }
 
 function onFocusOut(event: FocusEvent) {

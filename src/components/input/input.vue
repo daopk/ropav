@@ -4,6 +4,7 @@
             <slot name="left" />
         </span>
         <input
+            v-bind="inputAttrs"
             :id="control.id"
             ref="inputRef"
             :name="name"
