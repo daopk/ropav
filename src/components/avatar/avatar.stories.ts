@@ -68,6 +68,24 @@ export const BrokenImage: Story = {
     }),
 };
 
+export const WithIcon: Story = {
+    args: {
+        name: undefined,
+        ariaLabel: 'Assistant avatar',
+        color: 'violet',
+        size: 'lg',
+    },
+    render: (args) => ({
+        components: { Avatar, IconBot },
+        setup: () => ({ args }),
+        template: `
+            <Avatar v-bind="args">
+                <IconBot aria-hidden="true" />
+            </Avatar>
+        `,
+    }),
+};
+
 export const Fallbacks: Story = {
     render: (args) => ({
         components: { Avatar, IconBot },
