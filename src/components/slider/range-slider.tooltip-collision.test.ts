@@ -29,6 +29,14 @@ describe('RangeSlider tooltip collision', () => {
         );
     });
 
+    it('supports a wider release gap to prevent collision state chatter', () => {
+        const lower = rect(0, 0, 32, 28);
+        const upper = rect(38, 0, 32, 28);
+
+        expect(areRangeSliderTooltipRectsOverlapping(lower, upper, 4)).toBe(false);
+        expect(areRangeSliderTooltipRectsOverlapping(lower, upper, 8)).toBe(true);
+    });
+
     it('ignores tooltip rectangles without a rendered size', () => {
         expect(areRangeSliderTooltipRectsOverlapping(rect(0, 0, 0, 28), rect(0, 0, 32, 28))).toBe(
             false,

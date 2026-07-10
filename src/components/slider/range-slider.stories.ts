@@ -41,11 +41,61 @@ function getVisibleTooltipContents(canvasElement: HTMLElement) {
     );
 }
 
-function expectNoTransition(element: HTMLElement) {
-    const style = element.ownerDocument.defaultView!.getComputedStyle(element);
-    const durations = style.transitionDuration.split(',').map((value) => value.trim());
+function waitForAnimation(element: HTMLElement) {
+    return new Promise<Animation>((resolve, reject) => {
+        const view = element.ownerDocument.defaultView!;
+        let frameId = 0;
+        const timeoutId = view.setTimeout(() => {
+            view.cancelAnimationFrame(frameId);
+            reject(new Error('Expected tooltip animation to start'));
+        }, 1000);
 
-    expect(durations.every((duration) => Number.parseFloat(duration) === 0)).toBe(true);
+        function check() {
+            const animation = element
+                .getAnimations()
+                .find(({ pending, playState }) => pending || playState === 'running');
+            if (animation) {
+                view.clearTimeout(timeoutId);
+                view.cancelAnimationFrame(frameId);
+                resolve(animation);
+                return;
+            }
+
+            frameId = view.requestAnimationFrame(check);
+        }
+
+        check();
+    });
+}
+
+function expectPositionAnimation(animation: Animation) {
+    const effect = animation.effect as KeyframeEffect;
+    const keyframes = effect.getKeyframes();
+    const duration = Number(effect.getComputedTiming().duration);
+
+    expect(duration).toBeGreaterThan(0);
+    expect(keyframes.length).toBeGreaterThanOrEqual(2);
+    expect(keyframes[0].transform).not.toBe(keyframes[keyframes.length - 1].transform);
+    expect(keyframes.every(({ opacity }) => opacity == null)).toBe(true);
+
+    return duration;
+}
+
+function getElementCenter(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+    };
+}
+
+function getHorizontalCenter(element: HTMLElement) {
+    return getElementCenter(element).x;
+}
+
+function setAnimationProgress(animation: Animation, duration: number, progress: number) {
+    animation.pause();
+    animation.currentTime = duration * progress;
 }
 
 const meta = {
@@ -307,6 +357,10 @@ export const MergedAlwaysTooltip: Story = {
             '.rp-range-slider__tooltip--merged',
         )!;
         const mergedContent = mergedTooltip.querySelector<HTMLElement>('.rp-tooltip__content')!;
+        const shouldAnimate =
+            typeof mergedTooltip.animate === 'function' &&
+            !canvasElement.ownerDocument.defaultView!.matchMedia('(prefers-reduced-motion: reduce)')
+                .matches;
 
         await new Promise<void>((resolve) =>
             requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
@@ -315,9 +369,6 @@ export const MergedAlwaysTooltip: Story = {
         expect(endpointTooltips).toHaveLength(2);
         expect(mergedTooltip.isConnected).toBe(true);
         expect(mergedContent.textContent).toBe('4–5');
-        for (const tooltip of [...endpointTooltips, mergedTooltip]) {
-            expectNoTransition(tooltip);
-        }
 
         const separatedContents = getVisibleTooltipContents(canvasElement);
         expect(separatedContents.map((content) => content.textContent)).toEqual(['4', '5']);
@@ -325,11 +376,34 @@ export const MergedAlwaysTooltip: Story = {
             separatedContents.every((content) => content.getBoundingClientRect().width < 32),
         ).toBe(true);
 
+        const carrierCenterBeforeMerge = getHorizontalCenter(endpointContents[0]);
+        const mergeAnimationStarted = shouldAnimate ? waitForAnimation(mergedTooltip) : undefined;
         upperInput.value = '4.5';
         upperInput.dispatchEvent(new Event('input', { bubbles: true }));
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
         );
+        if (mergeAnimationStarted) {
+            const animation = await mergeAnimationStarted;
+            const duration = expectPositionAnimation(animation);
+
+            setAnimationProgress(animation, duration, 0);
+            const startCenter = getHorizontalCenter(mergedContent);
+            setAnimationProgress(animation, duration, 0.5);
+            const middleCenter = getHorizontalCenter(mergedContent);
+            setAnimationProgress(animation, duration, 0.999);
+            const endCenter = getHorizontalCenter(mergedContent);
+
+            expect(Math.abs(startCenter - carrierCenterBeforeMerge)).toBeLessThan(0.5);
+            expect(middleCenter).toBeGreaterThan(Math.min(startCenter, endCenter));
+            expect(middleCenter).toBeLessThan(Math.max(startCenter, endCenter));
+            expect(getComputedStyle(mergedTooltip).opacity).toBe('1');
+            expect(endpointTooltips.map((tooltip) => getComputedStyle(tooltip).opacity)).toEqual([
+                '0',
+                '0',
+            ]);
+            animation.finish();
+        }
 
         await waitFor(() => {
             expect(
@@ -359,11 +433,48 @@ export const MergedAlwaysTooltip: Story = {
 
         expect(Math.abs(mergedCenter - (thumbCenters[0] + thumbCenters[1]) / 2)).toBeLessThan(0.5);
 
+        const carrierCenterAfterSplit = getHorizontalCenter(endpointContents[0]);
+        const splitAnimationStarted = shouldAnimate ? waitForAnimation(mergedTooltip) : undefined;
         upperInput.value = '5';
         upperInput.dispatchEvent(new Event('input', { bubbles: true }));
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false),
         );
+        if (splitAnimationStarted) {
+            const animation = await splitAnimationStarted;
+            const duration = expectPositionAnimation(animation);
+
+            setAnimationProgress(animation, duration, 0);
+            const splitThumbCenters = [
+                ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__thumb-content'),
+            ].map(getHorizontalCenter);
+            expect(
+                Math.abs(
+                    getHorizontalCenter(mergedContent) -
+                        (splitThumbCenters[0] + splitThumbCenters[1]) / 2,
+                ),
+            ).toBeLessThan(0.5);
+            setAnimationProgress(animation, duration, 0.35);
+            const centerWhileSplitting = getHorizontalCenter(mergedContent);
+            expect(getComputedStyle(mergedTooltip).opacity).toBe('1');
+            expect(endpointTooltips.map((tooltip) => getComputedStyle(tooltip).opacity)).toEqual([
+                '0',
+                '0',
+            ]);
+
+            upperInput.value = '8';
+            upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            expect(
+                Math.abs(getHorizontalCenter(mergedContent) - centerWhileSplitting),
+            ).toBeLessThan(0.5);
+
+            setAnimationProgress(animation, duration, 0.999);
+            expect(
+                Math.abs(getHorizontalCenter(mergedContent) - carrierCenterAfterSplit),
+            ).toBeLessThan(0.5);
+            animation.finish();
+        }
         await waitFor(() => {
             expect(
                 canvasElement.querySelector<HTMLElement>('.rp-range-slider__tooltip--merged'),
@@ -374,6 +485,13 @@ export const MergedAlwaysTooltip: Story = {
             ]);
             expect(getComputedStyle(mergedTooltip).opacity).toBe('0');
             expect(getVisibleTooltipContents(canvasElement)).toEqual(endpointContents);
+            expect(mergedTooltip.style.left).toBe('');
+            expect(mergedTooltip.style.top).toBe('');
+            expect(mergedContent.style.width).toBe('');
+            expect(mergedContent.style.height).toBe('');
+            expect(
+                [...endpointTooltips, mergedTooltip].every(({ style }) => style.opacity === ''),
+            ).toBe(true);
         });
 
         upperInput.value = '4.5';
@@ -518,18 +636,37 @@ export const MergedVerticalTooltip: Story = {
     }),
     play: async ({ canvasElement }) => {
         const root = canvasElement.querySelector('.rp-range-slider')!;
+        const upperInput = canvasElement.querySelector<HTMLInputElement>(
+            '.rp-range-slider__native--upper',
+        )!;
+        const endpointTooltips = [
+            ...canvasElement.querySelectorAll<HTMLElement>(
+                '.rp-range-slider__tooltip--lower, .rp-range-slider__tooltip--upper',
+            ),
+        ];
+        const endpointContents = endpointTooltips.map(
+            (tooltip) => tooltip.querySelector<HTMLElement>('.rp-tooltip__content')!,
+        );
+        const mergedTooltip = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__tooltip--merged',
+        )!;
+        const shouldAnimate =
+            typeof mergedTooltip.animate === 'function' &&
+            !canvasElement.ownerDocument.defaultView!.matchMedia('(prefers-reduced-motion: reduce)')
+                .matches;
 
         await waitFor(() =>
             expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
         );
 
-        const mergedContent = canvasElement.querySelector<HTMLElement>(
-            '.rp-range-slider__tooltip--merged .rp-tooltip__content',
-        )!;
+        const mergedContent = mergedTooltip.querySelector<HTMLElement>('.rp-tooltip__content')!;
         expect(mergedContent.textContent).toBe('48%–52%');
         await waitFor(() =>
             expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]),
         );
+        if (shouldAnimate) {
+            await waitFor(() => expect(mergedTooltip.getAnimations()).toHaveLength(0));
+        }
 
         const thumbCenters = [
             ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__thumb-content'),
@@ -544,6 +681,56 @@ export const MergedVerticalTooltip: Story = {
         const mergedCenter = mergedAnchorRect.top + mergedAnchorRect.height / 2;
 
         expect(Math.abs(mergedCenter - (thumbCenters[0] + thumbCenters[1]) / 2)).toBeLessThan(0.5);
+
+        if (shouldAnimate) {
+            const carrierCenter = getElementCenter(endpointContents[0]);
+            const splitAnimationStarted = waitForAnimation(mergedTooltip);
+            upperInput.value = '80';
+            upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+            await waitFor(() =>
+                expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(
+                    false,
+                ),
+            );
+
+            const animation = await splitAnimationStarted;
+            const duration = expectPositionAnimation(animation);
+            setAnimationProgress(animation, duration, 0.35);
+            const centerWhileSplitting = getElementCenter(mergedContent);
+
+            upperInput.value = '100';
+            upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            const centerAfterContentResize = getElementCenter(mergedContent);
+            expect(Math.abs(centerAfterContentResize.x - centerWhileSplitting.x)).toBeLessThan(0.5);
+            expect(Math.abs(centerAfterContentResize.y - centerWhileSplitting.y)).toBeLessThan(0.5);
+
+            setAnimationProgress(animation, duration, 0.999);
+            const splitEndCenter = getElementCenter(mergedContent);
+            expect(Math.abs(splitEndCenter.x - carrierCenter.x)).toBeLessThan(0.5);
+            expect(Math.abs(splitEndCenter.y - carrierCenter.y)).toBeLessThan(0.5);
+            animation.finish();
+
+            await waitFor(() => {
+                expect(getVisibleTooltipContents(canvasElement)).toEqual(endpointContents);
+                expect(mergedTooltip.style.left).toBe('');
+                expect(mergedTooltip.style.top).toBe('');
+                expect(mergedContent.style.width).toBe('');
+                expect(mergedContent.style.height).toBe('');
+                expect(
+                    [...endpointTooltips, mergedTooltip].every(({ style }) => style.opacity === ''),
+                ).toBe(true);
+            });
+
+            upperInput.value = '52';
+            upperInput.dispatchEvent(new Event('input', { bubbles: true }));
+            await waitFor(() =>
+                expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
+            );
+            await waitFor(() =>
+                expect(getVisibleTooltipContents(canvasElement)).toEqual([mergedContent]),
+            );
+        }
     },
 };
 

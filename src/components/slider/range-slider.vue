@@ -193,6 +193,7 @@ import Tooltip from '../tooltip/tooltip.vue';
 import type { RangeSliderProps } from './types';
 import { useRangeSlider } from './useRangeSlider';
 import { useRangeSliderTooltipCollision } from './useRangeSliderTooltipCollision';
+import { useRangeSliderTooltipTransition } from './useRangeSliderTooltipTransition';
 
 defineOptions({ name: 'RpRangeSlider' });
 
@@ -259,6 +260,7 @@ const {
 });
 
 const { tooltipsOverlapping } = useRangeSliderTooltipCollision(rangeSliderRef);
+useRangeSliderTooltipTransition(rangeSliderRef, tooltipsOverlapping, normalizedValue, activeThumb);
 
 const groupLabelledby = computed(() => {
     const values = [control.ariaLabelledby, slots.default ? labelId.value : undefined]
