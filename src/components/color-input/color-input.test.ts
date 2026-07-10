@@ -36,6 +36,24 @@ describe('ColorInput', () => {
         expect(popover.style.display).toBe('none');
     });
 
+    it('applies the selected size to both the input and picker', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        size: 'lg',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        expect(container.querySelector('.rp-input--size-lg')).toBeTruthy();
+        expect(container.querySelector('.rp-color-picker--size-lg')).toBeTruthy();
+    });
+
     it('emits typed color values from the text input', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

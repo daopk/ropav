@@ -1,12 +1,99 @@
+@use 'sass:map';
+
+$color-picker-sizes: (
+    xs: (
+        width: 160px,
+        saturation-height: 120px,
+        slider-height: 10px,
+        saturation-slider-gap: 8px,
+        slider-gap: 4px,
+        header-gap: 4px,
+        swatches-gap: 2px,
+        swatches-margin: 8px,
+        swatch-size: 16px,
+        thumb-size: 10px,
+        font-size: var(--rp-font-size-xs),
+    ),
+    sm: (
+        width: 190px,
+        saturation-height: 140px,
+        slider-height: 12px,
+        saturation-slider-gap: 12px,
+        slider-gap: 6px,
+        header-gap: 6px,
+        swatches-gap: 3px,
+        swatches-margin: 10px,
+        swatch-size: 20px,
+        thumb-size: 12px,
+        font-size: var(--rp-font-size-sm),
+    ),
+    md: (
+        width: 220px,
+        saturation-height: 160px,
+        slider-height: 14px,
+        saturation-slider-gap: 16px,
+        slider-gap: 8px,
+        header-gap: 8px,
+        swatches-gap: 4px,
+        swatches-margin: 12px,
+        swatch-size: 24px,
+        thumb-size: 14px,
+        font-size: var(--rp-font-size-md),
+    ),
+    lg: (
+        width: 260px,
+        saturation-height: 190px,
+        slider-height: 18px,
+        saturation-slider-gap: 20px,
+        slider-gap: 10px,
+        header-gap: 10px,
+        swatches-gap: 5px,
+        swatches-margin: 16px,
+        swatch-size: 30px,
+        thumb-size: 18px,
+        font-size: var(--rp-font-size-lg),
+    ),
+    xl: (
+        width: 300px,
+        saturation-height: 220px,
+        slider-height: 22px,
+        saturation-slider-gap: 24px,
+        slider-gap: 12px,
+        header-gap: 12px,
+        swatches-gap: 6px,
+        swatches-margin: 20px,
+        swatch-size: 36px,
+        thumb-size: 22px,
+        font-size: var(--rp-font-size-xl),
+    ),
+);
+
+@mixin color-picker-size($tokens) {
+    --_rp-color-picker-saturation-width: #{map.get($tokens, width)};
+    --_rp-color-picker-saturation-height: #{map.get($tokens, saturation-height)};
+    --_rp-color-picker-hue-height: #{map.get($tokens, slider-height)};
+    --_rp-color-picker-saturation-slider-gap: #{map.get($tokens, saturation-slider-gap)};
+    --_rp-color-picker-slider-gap: #{map.get($tokens, slider-gap)};
+    --_rp-color-picker-header-gap: #{map.get($tokens, header-gap)};
+    --_rp-color-picker-swatches-gap: #{map.get($tokens, swatches-gap)};
+    --_rp-color-picker-swatches-margin: #{map.get($tokens, swatches-margin)};
+    --_rp-color-picker-swatch-size: #{map.get($tokens, swatch-size)};
+    --_rp-color-picker-thumb-size: #{map.get($tokens, thumb-size)};
+    --_rp-color-picker-font-size: #{map.get($tokens, font-size)};
+}
+
 .rp-color-picker {
     --_rp-color-picker-saturation-width: 220px;
     --_rp-color-picker-saturation-height: 160px;
     --_rp-color-picker-hue-height: 14px;
     --_rp-color-picker-saturation-slider-gap: var(--rp-spacing-4);
     --_rp-color-picker-slider-gap: var(--rp-spacing-2);
+    --_rp-color-picker-header-gap: var(--rp-spacing-2);
     --_rp-color-picker-swatches-gap: var(--rp-spacing-1);
+    --_rp-color-picker-swatches-margin: var(--rp-spacing-3);
     --_rp-color-picker-swatch-size: 24px;
     --_rp-color-picker-thumb-size: 14px;
+    --_rp-color-picker-font-size: var(--rp-font-size-md);
     --_rp-color-picker-thumb-radius: calc(var(--_rp-color-picker-thumb-size) / 2);
     --_rp-color-picker-saturation-radius: var(--_rp-color-picker-thumb-radius);
     --_rp-color-picker-size: var(--_rp-color-picker-saturation-width);
@@ -32,7 +119,7 @@
     max-width: 100%;
     row-gap: 0;
     font-family: var(--rp-font-family);
-    font-size: var(--rp-font-size-md);
+    font-size: var(--_rp-color-picker-font-size);
     font-weight: var(--rp-font-weight-normal);
     color: var(--rp-color-text);
     user-select: none;
@@ -48,6 +135,12 @@
         cursor: default;
     }
 
+    @each $size, $tokens in $color-picker-sizes {
+        &--size-#{$size} {
+            @include color-picker-size($tokens);
+        }
+    }
+
     &__label {
         display: block;
         overflow: hidden;
@@ -58,14 +151,14 @@
     }
 
     &__header {
-        margin-block-end: var(--rp-spacing-2);
+        margin-block-end: var(--_rp-color-picker-header-gap);
     }
 
     &__swatches {
         display: flex;
         flex-wrap: wrap;
         gap: var(--_rp-color-picker-swatches-gap);
-        margin-block-start: var(--rp-spacing-3);
+        margin-block-start: var(--_rp-color-picker-swatches-margin);
     }
 
     &__swatches[data-fill='true'] {

@@ -89,6 +89,8 @@ import type {
     ColorPickerValue,
 } from './types';
 
+const MAX_SWATCHES_PER_ROW = 15;
+
 defineOptions({ name: 'RpColorPicker', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorPickerProps>(), {
@@ -103,6 +105,7 @@ const emit = defineEmits<{
 
 const rootClass = computed(() =>
     bem('rp-color-picker', {
+        [`size-${props.size}`]: Boolean(props.size),
         readonly: props.readonly,
     }),
 );
@@ -221,7 +224,7 @@ function getComparableColor(color: ColorPickerHsvColor) {
 
 function normalizeSwatchesPerRow(value: number | undefined) {
     if (!Number.isFinite(value) || value! < 1) return undefined;
-    return Math.min(100, Math.floor(value!));
+    return Math.min(MAX_SWATCHES_PER_ROW, Math.floor(value!));
 }
 </script>
 

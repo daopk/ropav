@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { computed, ref, watch } from 'vue';
+import { expect } from 'storybook/test';
+import { computed, reactive, ref, watch } from 'vue';
 import Field from '../field/field.vue';
 import Radio from '../radio/radio.vue';
 import RadioGroup from '../radio/radio-group.vue';
@@ -7,8 +8,10 @@ import ColorPicker from './color-picker.vue';
 import { formatColorPickerValue, parseColorPickerValue } from './color-picker-utils';
 import {
     colorPickerFormats,
+    colorPickerSizes,
     type ColorPickerFormat,
     type ColorPickerProps,
+    type ColorPickerSize,
     type ColorPickerValue,
 } from './types';
 
@@ -26,6 +29,12 @@ const formatsPickerCellStyle = {
     display: 'inline-grid',
     width: '300px',
     gap: '8px',
+};
+const sizesStoryStyle = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    gap: '24px',
 };
 const colorPickerSwatches = [
     '#25262b',
@@ -61,13 +70,15 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         format: { control: 'select', options: colorPickerFormats },
+        size: { control: 'select', options: [undefined, ...colorPickerSizes] },
         readonly: { control: 'boolean' },
         swatches: { control: 'object' },
-        swatchesPerRow: { control: { type: 'number', min: 1, step: 1 } },
+        swatchesPerRow: { control: { type: 'number', min: 1, max: 15, step: 1 } },
     },
     args: {
         modelValue: '#4992d1',
         format: 'hex',
+        size: undefined,
         readonly: false,
     },
     render: (args) => ({
@@ -105,6 +116,71 @@ export const WithSwatches: Story = {
     args: {
         swatches: colorPickerSwatches,
         swatchesPerRow: 7,
+    },
+};
+
+export const Sizes: Story = {
+    tags: ['test'],
+    args: {
+        format: 'rgba',
+        modelValue: 'rgba(73, 146, 209, 0.55)',
+        swatches: colorPickerSwatches,
+        swatchesPerRow: 7,
+    },
+    render: (args) => ({
+        components: { ColorPicker },
+        setup() {
+            const values = reactive<Record<ColorPickerSize, ColorPickerValue>>(
+                Object.fromEntries(
+                    colorPickerSizes.map((size) => [size, args.modelValue]),
+                ) as Record<ColorPickerSize, ColorPickerValue>,
+            );
+            const pickerArgs = computed(() => {
+                const { modelValue: _modelValue, size: _size, ...rest } = args;
+                return rest;
+            });
+
+            return { colorPickerSizes, pickerArgs, sizesStoryStyle, values };
+        },
+        template: `
+            <div :style="sizesStoryStyle">
+                <ColorPicker
+                    v-for="size in colorPickerSizes"
+                    :key="size"
+                    v-bind="pickerArgs"
+                    v-model="values[size]"
+                    :size="size"
+                >
+                    {{ size }}
+                </ColorPicker>
+            </div>
+        `,
+    }),
+    play: ({ canvasElement }) => {
+        const pickers = [...canvasElement.querySelectorAll<HTMLElement>('.rp-color-picker')];
+
+        expect(pickers).toHaveLength(colorPickerSizes.length);
+
+        for (const picker of pickers) {
+            const grid = picker.querySelector<HTMLElement>('.rp-color-picker__swatches')!;
+            const swatches = [...grid.querySelectorAll<HTMLElement>('.rp-color-picker__swatch')];
+            const gridRect = grid.getBoundingClientRect();
+            const pickerRect = picker.getBoundingClientRect();
+            const firstRect = swatches[0].getBoundingClientRect();
+            const seventhRect = swatches[6].getBoundingClientRect();
+            const eighthRect = swatches[7].getBoundingClientRect();
+            const lastRect = swatches[13].getBoundingClientRect();
+
+            expect(grid).toHaveAttribute('data-fill', 'true');
+            expect(swatches).toHaveLength(colorPickerSwatches.length);
+            expect(Math.abs(gridRect.width - pickerRect.width)).toBeLessThan(0.5);
+            expect(Math.abs(firstRect.left - gridRect.left)).toBeLessThan(0.5);
+            expect(Math.abs(seventhRect.right - gridRect.right)).toBeLessThan(0.5);
+            expect(Math.abs(seventhRect.top - firstRect.top)).toBeLessThan(0.5);
+            expect(Math.abs(eighthRect.left - gridRect.left)).toBeLessThan(0.5);
+            expect(eighthRect.top).toBeGreaterThan(firstRect.top);
+            expect(Math.abs(lastRect.right - gridRect.right)).toBeLessThan(0.5);
+        }
     },
 };
 

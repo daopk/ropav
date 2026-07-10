@@ -64,7 +64,7 @@ const meta = {
         invalid: { control: 'boolean' },
         valid: { control: 'boolean' },
         swatches: { control: 'object' },
-        swatchesPerRow: { control: { type: 'number', min: 1, step: 1 } },
+        swatchesPerRow: { control: { type: 'number', min: 1, max: 15, step: 1 } },
     },
     args: {
         modelValue: '#4992d1',

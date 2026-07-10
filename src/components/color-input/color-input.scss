@@ -56,7 +56,10 @@
     }
 
     :deep(.rp-color-picker) {
-        --_rp-color-picker-size: min(220px, calc(100vw - var(--rp-spacing-12)));
+        --_rp-color-picker-size: min(
+            var(--_rp-color-picker-saturation-width),
+            calc(100vw - var(--rp-spacing-12))
+        );
     }
 
     &__preview {

@@ -51,6 +51,7 @@
             <ColorPicker
                 :model-value="modelValue"
                 :format="format"
+                :size="size"
                 :readonly="readonly"
                 :swatches="swatches"
                 :swatches-per-row="swatchesPerRow"

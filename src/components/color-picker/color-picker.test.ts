@@ -8,7 +8,7 @@ import {
     parseColorPickerValue,
     type ColorPickerHsvColor,
 } from './color-picker-utils';
-import type { ColorPickerFormat, ColorPickerValue } from './types';
+import { colorPickerSizes, type ColorPickerFormat, type ColorPickerValue } from './types';
 
 function setRect(el: Element, rect: Partial<DOMRect>) {
     Object.defineProperty(el, 'getBoundingClientRect', {
@@ -83,6 +83,34 @@ describe('ColorPicker', () => {
         expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
         expect(container.querySelector('.rp-color-picker__preview')).toBeNull();
         expect(handle).toBeTruthy();
+    });
+
+    it('adds a modifier for each supported size and keeps the default class unchanged', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(ColorPicker, { modelValue: '#ff0000' }),
+                        ...colorPickerSizes.map((size) =>
+                            h(ColorPicker, { modelValue: '#ff0000', size }),
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const roots = [...container.querySelectorAll('.rp-color-picker')];
+
+        expect(roots).toHaveLength(colorPickerSizes.length + 1);
+        expect([...roots[0].classList]).toEqual(['rp-color-picker']);
+        for (const [index, size] of colorPickerSizes.entries()) {
+            expect([...roots[index + 1].classList]).toEqual([
+                'rp-color-picker',
+                `rp-color-picker--size-${size}`,
+            ]);
+        }
     });
 
     it('emits saturation and value from pointer selection', async () => {
@@ -755,12 +783,13 @@ describe('ColorPicker', () => {
         expect(swatches[1].querySelector('.rp-color-picker__swatch-check')).toBeTruthy();
     });
 
-    it('fills each row with the requested number of swatches', async () => {
+    it('lets swatchesPerRow fill the available width regardless of picker size', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(ColorPicker, {
                         modelValue: '#000000',
+                        size: 'xs',
                         swatches: ['#ff0000', '#00ff00', '#0000ff', '#ffffff'],
                         swatchesPerRow: 3,
                     });
@@ -771,11 +800,34 @@ describe('ColorPicker', () => {
         await flush();
 
         const swatches = container.querySelector('.rp-color-picker__swatches') as HTMLElement;
-        const colorSwatch = container.querySelector('.rp-color-swatch') as HTMLElement;
+        const colorSwatches = [...container.querySelectorAll<HTMLElement>('.rp-color-swatch')];
 
         expect(swatches.getAttribute('data-fill')).toBe('true');
         expect(swatches.style.getPropertyValue('--_rp-color-picker-swatches-per-row')).toBe('3');
-        expect(colorSwatch.style.getPropertyValue('--_rp-color-swatch-size')).toBe('100%');
+        expect(colorSwatches).toHaveLength(4);
+        for (const colorSwatch of colorSwatches) {
+            expect(colorSwatch.style.getPropertyValue('--_rp-color-swatch-size')).toBe('100%');
+        }
+    });
+
+    it('caps swatchesPerRow at 15', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        swatches: ['#ff0000'],
+                        swatchesPerRow: 100,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelector('.rp-color-picker__swatches') as HTMLElement;
+
+        expect(swatches.style.getPropertyValue('--_rp-color-picker-swatches-per-row')).toBe('15');
     });
 
     it('does not emit swatch selection when readonly', async () => {

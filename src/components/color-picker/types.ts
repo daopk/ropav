@@ -1,6 +1,10 @@
 export const colorPickerFormats = ['hex', 'hexa', 'rgb', 'rgba', 'hsl', 'hsla'] as const;
 
+export const colorPickerSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+
 export type ColorPickerFormat = (typeof colorPickerFormats)[number];
+
+export type ColorPickerSize = (typeof colorPickerSizes)[number];
 
 export interface ColorPickerSelection {
     saturation: number;
@@ -14,6 +18,7 @@ export interface ColorPickerProps {
     id?: string;
     modelValue: ColorPickerValue;
     format?: ColorPickerFormat;
+    size?: ColorPickerSize;
     readonly?: boolean;
     swatches?: string[];
     swatchesPerRow?: number;
