@@ -87,6 +87,7 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
     placeholder: '',
     controls: true,
     controlsPosition: 'right',
+    textAlign: 'left',
     clampOnBlur: true,
     disabled: undefined,
     readonly: false,

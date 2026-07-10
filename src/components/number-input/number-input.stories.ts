@@ -5,6 +5,7 @@ import NumberInput from './number-input.vue';
 const controlsPositions = ['left', 'right', 'split'] as const;
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const textAlignments = ['left', 'center', 'right'] as const;
 
 const meta = {
     title: 'Components/NumberInput',
@@ -33,6 +34,10 @@ const meta = {
             control: 'select',
             options: [undefined, ...sizes],
         },
+        textAlign: {
+            control: 'select',
+            options: textAlignments,
+        },
         placeholder: { control: 'text' },
         disabled: { control: 'boolean' },
         readonly: { control: 'boolean' },
@@ -59,6 +64,7 @@ const meta = {
         decrementLabel: 'Decrement value',
         radius: undefined,
         size: undefined,
+        textAlign: 'left',
         placeholder: 'Enter a number...',
         disabled: false,
         readonly: false,
@@ -149,6 +155,43 @@ export const ControlPositions: Story = {
                             ariaLabel: position + ' controls',
                         }"
                         @update:model-value="values[position] = $event"
+                    />
+                </div>
+            </div>
+        `,
+    }),
+};
+
+export const TextAlignments: Story = {
+    render: (args) => ({
+        components: { NumberInput },
+        setup() {
+            const values = ref<Record<(typeof textAlignments)[number], number | null>>({
+                left: args.modelValue,
+                center: args.modelValue,
+                right: args.modelValue,
+            });
+
+            return { args, textAlignments, values };
+        },
+        template: `
+            <div style="display: grid; gap: 12px; max-width: 320px;">
+                <div
+                    v-for="alignment in textAlignments"
+                    :key="alignment"
+                    style="display: grid; gap: 4px;"
+                >
+                    <span style="color: var(--rp-color-text); font-size: var(--rp-font-size-sm);">
+                        {{ alignment }}
+                    </span>
+                    <NumberInput
+                        v-bind="{
+                            ...args,
+                            modelValue: values[alignment],
+                            textAlign: alignment,
+                            ariaLabel: alignment + ' aligned number input',
+                        }"
+                        @update:model-value="values[alignment] = $event"
                     />
                 </div>
             </div>

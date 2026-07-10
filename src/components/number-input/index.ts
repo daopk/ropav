@@ -4,5 +4,6 @@ export type {
     NumberInputProps,
     NumberInputRadius,
     NumberInputSize,
+    NumberInputTextAlign,
     NumberInputValue,
 } from './types';

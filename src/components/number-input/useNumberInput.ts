@@ -1,7 +1,12 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
-import type { NumberInputControlsPosition, NumberInputProps, NumberInputValue } from './types';
+import type {
+    NumberInputControlsPosition,
+    NumberInputProps,
+    NumberInputTextAlign,
+    NumberInputValue,
+} from './types';
 
 export interface NumberInputBounds {
     min: number | undefined;
@@ -91,6 +96,12 @@ export function normalizeNumberInputControlsPosition(
     return position === 'left' || position === 'split' ? position : 'right';
 }
 
+export function normalizeNumberInputTextAlign(
+    textAlign: NumberInputTextAlign | undefined,
+): NumberInputTextAlign {
+    return textAlign === 'center' || textAlign === 'right' ? textAlign : 'left';
+}
+
 function getModelInputValue(value: NumberInputValue) {
     return value !== null && Number.isFinite(value) ? String(normalizeZero(value)) : '';
 }
@@ -107,6 +118,7 @@ export function useNumberInput(
     const controlsPosition = computed(() =>
         normalizeNumberInputControlsPosition(props.controlsPosition),
     );
+    const textAlign = computed(() => normalizeNumberInputTextAlign(props.textAlign));
     const leftControls = computed<NumberInputControl[]>(() => {
         if (!props.controls || controlsPosition.value === 'right') return [];
         if (controlsPosition.value === 'split') return ['decrement'];
@@ -126,6 +138,7 @@ export function useNumberInput(
             [`radius-${props.radius}`]: Boolean(props.radius),
             controls: props.controls,
             [`controls-${controlsPosition.value}`]: props.controls,
+            [`text-align-${textAlign.value}`]: true,
             disabled: control.disabled,
             invalid: control.invalid,
             valid: control.valid && !control.invalid,
@@ -204,6 +217,7 @@ export function useNumberInput(
             max: bounds.value.max,
             step: nativeStep.value,
             inputmode: attrs.inputmode ?? 'decimal',
+            style: [attrs.style, { textAlign: textAlign.value }],
             onBlur(event) {
                 onBlur(event);
                 attrs.onBlur?.(event);

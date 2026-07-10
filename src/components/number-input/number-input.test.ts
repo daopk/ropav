@@ -146,6 +146,82 @@ describe('NumberInput', () => {
         );
     });
 
+    it('defaults text alignment to left and overrides the native input style', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(NumberInput, {
+                        inputAttrs: {
+                            style: { textAlign: 'right' },
+                        },
+                        modelValue: 2,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-number-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(root.classList.contains('rp-number-input--text-align-left')).toBe(true);
+        expect(native.style.textAlign).toBe('left');
+    });
+
+    it.each(['left', 'center', 'right'] as const)(
+        'applies the %s text alignment modifier and native style',
+        async (textAlign) => {
+            const inputAttrsTextAlign = textAlign === 'left' ? 'right' : 'left';
+            const container = mountDom(
+                defineComponent({
+                    render() {
+                        return h(NumberInput, {
+                            inputAttrs: {
+                                style: { textAlign: inputAttrsTextAlign },
+                            },
+                            modelValue: 2,
+                            textAlign,
+                        });
+                    },
+                }),
+            );
+
+            await flush();
+
+            const root = container.querySelector('.rp-number-input')!;
+            const native = container.querySelector('input') as HTMLInputElement;
+
+            expect(root.classList.contains(`rp-number-input--text-align-${textAlign}`)).toBe(true);
+            expect(native.style.textAlign).toBe(textAlign);
+        },
+    );
+
+    it('falls back to left text alignment for an invalid runtime value', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(NumberInput, {
+                        inputAttrs: {
+                            style: { textAlign: 'right' },
+                        },
+                        modelValue: 2,
+                        textAlign: 'invalid' as never,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-number-input')!;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        expect(root.classList.contains('rp-number-input--text-align-left')).toBe(true);
+        expect(root.classList.contains('rp-number-input--text-align-invalid')).toBe(false);
+        expect(native.style.textAlign).toBe('left');
+    });
+
     it('can hide controls and customize their accessible labels', async () => {
         const container = mountDom(
             defineComponent({

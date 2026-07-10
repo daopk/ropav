@@ -1,11 +1,21 @@
 .rp-number-input {
     --_rp-number-input-control-size: var(--_rp-input-height);
+    --_rp-number-input-text-align: left;
 
     overflow: hidden;
     vertical-align: middle;
 
     :deep(.rp-input__native) {
         appearance: textfield;
+        text-align: var(--_rp-number-input-text-align);
+    }
+
+    &--text-align-center {
+        --_rp-number-input-text-align: center;
+    }
+
+    &--text-align-right {
+        --_rp-number-input-text-align: right;
     }
 
     :deep(.rp-input__native)::-webkit-inner-spin-button,

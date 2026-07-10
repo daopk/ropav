@@ -9,6 +9,8 @@ export type NumberInputSize = InputSize;
 
 export type NumberInputControlsPosition = 'left' | 'right' | 'split';
 
+export type NumberInputTextAlign = 'left' | 'center' | 'right';
+
 export interface NumberInputProps {
     id?: string;
     name?: string;
@@ -21,6 +23,7 @@ export interface NumberInputProps {
     placeholder?: string;
     controls?: boolean;
     controlsPosition?: NumberInputControlsPosition;
+    textAlign?: NumberInputTextAlign;
     clampOnBlur?: boolean;
     disabled?: boolean;
     readonly?: boolean;
