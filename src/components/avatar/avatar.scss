@@ -44,6 +44,8 @@ $avatar-radii: (
     --_rp-avatar-radius: var(--rp-radius-full);
     --_rp-avatar-bg: var(--rp-color-gray-light);
     --_rp-avatar-fg: var(--rp-color-gray-light-color);
+    --_rp-avatar-border: transparent;
+    --_rp-avatar-border-width: 0;
 
     position: relative;
     box-sizing: border-box;
@@ -61,8 +63,14 @@ $avatar-radii: (
     line-height: 1;
     vertical-align: middle;
     background-color: var(--_rp-avatar-bg);
+    border: var(--_rp-avatar-border-width) solid var(--_rp-avatar-border);
     border-radius: var(--_rp-avatar-radius);
     user-select: none;
+
+    &--surface,
+    &--outline {
+        --_rp-avatar-border-width: var(--rp-border-width-thin);
+    }
 
     @each $size, $tokens in $avatar-sizes {
         &--size-#{$size} {

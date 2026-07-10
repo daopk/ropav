@@ -113,6 +113,7 @@ try {
             'AccordionItem',
             'Alert',
             'Avatar',
+            'avatarVariants',
             'Badge',
             'Button',
             'ButtonLink',
@@ -165,7 +166,7 @@ try {
     );
 
     const avatar = await server.ssrLoadModule('/dist/components/avatar/index.js');
-    assertExports(avatar, ['Avatar'], 'dist/components/avatar/index.js');
+    assertExports(avatar, ['Avatar', 'avatarVariants'], 'dist/components/avatar/index.js');
 
     const badge = await server.ssrLoadModule('/dist/components/badge/index.js');
     assertExports(badge, ['Badge'], 'dist/components/badge/index.js');

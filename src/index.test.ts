@@ -52,4 +52,8 @@ describe('public source exports', () => {
         expect(Ropav.popoverPlacements).toHaveLength(12);
         expect(Ropav.popoverPlacements).toContain('bottom-start');
     });
+
+    it('exposes avatar variants from src/index.ts', () => {
+        expect(Ropav.avatarVariants).toEqual(['solid', 'subtle', 'surface', 'outline']);
+    });
 });

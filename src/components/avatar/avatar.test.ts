@@ -3,7 +3,7 @@ import { defineComponent, h, ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Avatar from './avatar.vue';
-import { avatarColors, avatarRadiuses, avatarSizes } from './types';
+import { avatarColors, avatarRadiuses, avatarSizes, avatarVariants } from './types';
 
 describe('Avatar', () => {
     it('renders an image with an accessible name', async () => {
@@ -218,6 +218,58 @@ describe('Avatar', () => {
         }
     });
 
+    it('applies the color roles for each variant', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        avatarVariants.map((variant) =>
+                            h(Avatar, { color: 'blue', name: variant, variant }),
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const avatars = [...container.querySelectorAll('.rp-avatar')] as HTMLElement[];
+        const expectedRoles = [
+            {
+                background: 'var(--rp-color-blue-filled)',
+                foreground: 'var(--rp-color-white)',
+                border: 'var(--rp-color-blue-filled)',
+            },
+            {
+                background: 'var(--rp-color-blue-light)',
+                foreground: 'var(--rp-color-blue-light-color)',
+                border: 'transparent',
+            },
+            {
+                background: 'var(--rp-color-blue-light)',
+                foreground: 'var(--rp-color-blue-light-color)',
+                border: 'var(--rp-color-blue-outline)',
+            },
+            {
+                background: 'transparent',
+                foreground: 'var(--rp-color-blue-light-color)',
+                border: 'var(--rp-color-blue-outline)',
+            },
+        ];
+
+        expect(avatars).toHaveLength(avatarVariants.length);
+        for (const [index, variant] of avatarVariants.entries()) {
+            const avatar = avatars[index];
+            const expected = expectedRoles[index];
+
+            expect([...avatar.classList]).toEqual(['rp-avatar', `rp-avatar--${variant}`]);
+            expect(avatar.style.getPropertyValue('--_rp-avatar-bg')).toBe(expected.background);
+            expect(avatar.style.getPropertyValue('--_rp-avatar-fg')).toBe(expected.foreground);
+            expect(avatar.style.getPropertyValue('--_rp-avatar-border')).toBe(expected.border);
+        }
+    });
+
     it('resolves supported colors to avatar variables', async () => {
         const container = mountDom(
             defineComponent({
@@ -241,6 +293,9 @@ describe('Avatar', () => {
             );
             expect(avatars[index].style.getPropertyValue('--_rp-avatar-fg')).toBe(
                 'var(--rp-color-white)',
+            );
+            expect(avatars[index].style.getPropertyValue('--_rp-avatar-border')).toBe(
+                `var(--rp-color-${color}-filled)`,
             );
         }
     });

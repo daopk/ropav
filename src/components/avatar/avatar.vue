@@ -57,12 +57,15 @@ const initials = computed(() => getInitials(props.name));
 
 const rootClass = computed(() =>
     bem('rp-avatar', {
+        [props.variant ?? '']: Boolean(props.variant),
         [`size-${props.size}`]: Boolean(props.size),
         [`radius-${props.radius}`]: Boolean(props.radius),
     }),
 );
 
-const rootStyle = computed(() => getAvatarColorStyle(props.color, props.autoContrast));
+const rootStyle = computed(() =>
+    getAvatarColorStyle(props.color, props.variant, props.autoContrast),
+);
 
 watch(
     () => props.src,
