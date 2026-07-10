@@ -25,35 +25,24 @@
                 :aria-label="ariaLabel"
                 :describedby="describedby"
                 :labelledby="labelledby"
+                @focusin="onInputFocus(slotProps)"
                 @update:model-value="onInputUpdate"
             >
                 <template #left>
-                    <ColorSwatch
-                        v-if="previewColor"
-                        class="rp-color-input__preview"
-                        :color="previewColor"
-                        size="var(--_rp-color-input-preview-size)"
-                        aria-hidden="true"
-                    />
-                    <span
-                        v-else
-                        class="rp-color-input__preview rp-color-input__preview--empty"
-                        aria-hidden="true"
-                    />
-                </template>
-
-                <template #right>
-                    <button
-                        v-bind="getTriggerProps(slotProps)"
-                        class="rp-color-input__trigger"
-                        type="button"
-                        :disabled="control.disabled || undefined"
-                        :aria-label="resolvedTriggerAriaLabel"
-                        :title="resolvedTriggerAriaLabel"
-                        :data-state="slotProps.isOpen ? 'open' : 'closed'"
-                    >
-                        <IconPalette class="rp-color-input__trigger-icon" aria-hidden="true" />
-                    </button>
+                    <slot name="left" :color="previewColor" :empty="!previewColor">
+                        <ColorSwatch
+                            v-if="previewColor"
+                            class="rp-color-input__preview"
+                            :color="previewColor"
+                            size="var(--_rp-color-input-preview-size)"
+                            aria-hidden="true"
+                        />
+                        <span
+                            v-else
+                            class="rp-color-input__preview rp-color-input__preview--empty"
+                            aria-hidden="true"
+                        />
+                    </slot>
                 </template>
             </Input>
         </template>
@@ -74,7 +63,6 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import IconPalette from '~icons/lucide/palette';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import ColorPicker from '../color-picker/color-picker.vue';
@@ -122,8 +110,11 @@ const rootClass = computed(() =>
 const previewColor = computed(() =>
     parseColorPickerValue(props.modelValue) ? props.modelValue : undefined,
 );
-const resolvedTriggerAriaLabel = computed(() => props.triggerAriaLabel);
 const resolvedPickerAriaLabel = computed(() => props.pickerAriaLabel || props.triggerAriaLabel);
+
+function onInputFocus(slotProps: unknown) {
+    (slotProps as PopoverSlotProps).open();
+}
 
 function onInputUpdate(value: ColorPickerValue) {
     emit('update:modelValue', value);
@@ -136,10 +127,6 @@ function onPickerUpdate(value: ColorPickerValue) {
 
 function onOpenUpdate(value: boolean) {
     emit('update:open', value);
-}
-
-function getTriggerProps(slotProps: unknown) {
-    return (slotProps as PopoverSlotProps).triggerProps;
 }
 </script>
 

@@ -5,7 +5,7 @@ import { click, flush, input, mountDom } from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
 
 describe('ColorInput', () => {
-    it('renders an input, preview swatch, and picker trigger', async () => {
+    it('renders an input and preview swatch without a picker trigger button', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -23,17 +23,16 @@ describe('ColorInput', () => {
         const root = container.querySelector('.rp-color-input')!;
         const native = container.querySelector('input') as HTMLInputElement;
         const preview = container.querySelector('.rp-color-input__preview') as HTMLElement;
-        const trigger = container.querySelector('.rp-color-input__trigger') as HTMLButtonElement;
         const popover = container.querySelector('.rp-popover__content') as HTMLElement;
 
         expect(root.classList.contains('rp-popover')).toBe(true);
         expect(native.id).toBe('brand-color');
         expect(native.value).toBe('#4992d1');
         expect(native.getAttribute('aria-label')).toBe('Brand color');
+        expect(container.querySelector('.rp-input__left .rp-color-input__preview')).toBe(preview);
         expect(preview.style.getPropertyValue('--_rp-color-swatch-color')).toBe('#4992d1');
-        expect(trigger.type).toBe('button');
-        expect(trigger.getAttribute('aria-label')).toBe('Choose color');
-        expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
+        expect(container.querySelector('.rp-color-input__trigger')).toBeNull();
+        expect(container.querySelector('.rp-input__right')).toBeNull();
         expect(popover.style.display).toBe('none');
     });
 
@@ -58,7 +57,42 @@ describe('ColorInput', () => {
         expect(onUpdate).toHaveBeenCalledWith('#abcdef');
     });
 
-    it('opens the picker and emits selected swatch colors', async () => {
+    it('exposes preview state through the left slot', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        ColorInput,
+                        {
+                            modelValue: '#4992d1',
+                        },
+                        {
+                            left: (slotProps: { color?: string; empty: boolean }) =>
+                                h(
+                                    'span',
+                                    {
+                                        class: 'custom-left',
+                                        'data-color': slotProps.color,
+                                        'data-empty': String(slotProps.empty),
+                                    },
+                                    'Preview',
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const customLeft = container.querySelector('.rp-input__left .custom-left') as HTMLElement;
+
+        expect(customLeft.dataset.color).toBe('#4992d1');
+        expect(customLeft.dataset.empty).toBe('false');
+        expect(container.querySelector('.rp-color-input__preview')).toBeNull();
+    });
+
+    it('opens the picker on input focus and emits selected swatch colors', async () => {
         const onUpdate = vi.fn();
         const onOpen = vi.fn();
         const container = mountDom(
@@ -76,8 +110,8 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const trigger = container.querySelector('.rp-color-input__trigger') as HTMLButtonElement;
-        click(trigger);
+        const native = container.querySelector('input') as HTMLInputElement;
+        native.focus();
         await flush();
 
         const popover = container.querySelector('.rp-popover__content') as HTMLElement;
@@ -106,10 +140,9 @@ describe('ColorInput', () => {
         await flush();
 
         const native = container.querySelector('input') as HTMLInputElement;
-        const trigger = container.querySelector('.rp-color-input__trigger') as HTMLButtonElement;
 
         expect(native.disabled).toBe(true);
-        expect(trigger.disabled).toBe(true);
+        expect(container.querySelector('.rp-color-input__trigger')).toBeNull();
         expect(container.querySelector('.rp-popover__content')).toBeNull();
     });
 
@@ -148,9 +181,8 @@ describe('ColorInput', () => {
         await flush();
 
         const native = container.querySelector('input') as HTMLInputElement;
-        const trigger = container.querySelector('.rp-color-input__trigger') as HTMLButtonElement;
 
-        click(trigger);
+        native.focus();
         await flush();
 
         expect(native.readOnly).toBe(true);
