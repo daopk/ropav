@@ -6,6 +6,7 @@
         :open="open"
         :disabled="control.disabled"
         :aria-label="resolvedPickerAriaLabel"
+        @focusout="onFocusOut"
         @update:open="onOpenUpdate"
     >
         <template #default="slotProps">
@@ -112,9 +113,23 @@ const previewColor = computed(() =>
     parseColorPickerValue(props.modelValue) ? props.modelValue : undefined,
 );
 const resolvedPickerAriaLabel = computed(() => props.pickerAriaLabel || props.triggerAriaLabel);
+let closePicker: PopoverSlotProps['close'] | undefined;
 
 function onInputFocus(slotProps: unknown) {
-    (slotProps as PopoverSlotProps).open();
+    const popover = slotProps as PopoverSlotProps;
+    closePicker = popover.close;
+    popover.open();
+}
+
+function onFocusOut(event: FocusEvent) {
+    const root = event.currentTarget;
+    const nextTarget = event.relatedTarget;
+
+    if (root instanceof HTMLElement && nextTarget instanceof Node && root.contains(nextTarget)) {
+        return;
+    }
+
+    closePicker?.();
 }
 
 function onInputUpdate(value: ColorPickerValue) {

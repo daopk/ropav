@@ -1,6 +1,9 @@
 .rp-color-input {
     --_rp-color-input-height: var(--rp-size-control-md);
-    --_rp-color-input-preview-size: calc(var(--_rp-color-input-height) - var(--rp-spacing-3));
+    --_rp-color-input-preview-size: calc(var(--_rp-color-input-height) / 2);
+    --_rp-color-input-preview-inset: calc(
+        (var(--_rp-color-input-height) - var(--_rp-color-input-preview-size)) / 2
+    );
     --_rp-color-input-empty-tile: var(--rp-color-gray-3);
     --_rp-color-input-empty-tile-alt: var(--rp-color-white);
     --_rp-color-input-empty-grid: conic-gradient(
@@ -45,14 +48,14 @@
         width: 100%;
         min-width: $component-menu-min-width;
         padding-inline-start: calc(
-            (var(--_rp-color-input-height) - var(--_rp-color-input-preview-size)) / 2 -
-                var(--rp-border-width-thin)
+            var(--_rp-color-input-preview-inset) - var(--rp-border-width-thin)
         );
     }
 
     :deep(.rp-popover__content) {
         min-width: auto;
         padding: var(--rp-spacing-3);
+        padding-inline: calc(var(--_rp-color-input-preview-inset) - var(--rp-border-width-thin));
     }
 
     :deep(.rp-color-picker) {
@@ -63,9 +66,12 @@
     }
 
     &__preview {
+        --_rp-color-swatch-radius: 50%;
+
         width: var(--_rp-color-input-preview-size);
         height: var(--_rp-color-input-preview-size);
         flex-shrink: 0;
+        border-radius: 50%;
         pointer-events: none;
     }
 
@@ -76,6 +82,5 @@
         background-size: calc(var(--_rp-color-input-preview-size) / 2)
             calc(var(--_rp-color-input-preview-size) / 2);
         border: var(--rp-border-width-thin) dashed var(--rp-color-control-border);
-        border-radius: var(--rp-radius-sm);
     }
 }

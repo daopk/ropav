@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
-import { click, flush, input, mountDom } from '../../../tests/utils/vue';
+import { click, flush, input, mountDom, waitTransition } from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
 
 describe('ColorInput', () => {
@@ -142,6 +142,41 @@ describe('ColorInput', () => {
 
         expect(onUpdate).toHaveBeenCalledOnce();
         expect(onUpdate).toHaveBeenCalledWith('#00ff00');
+    });
+
+    it('closes the picker when focus leaves the color input', async () => {
+        const onOpen = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorInput, {
+                        modelValue: '#4992d1',
+                        'onUpdate:open': onOpen,
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const picker = container.querySelector('.rp-popover__content') as HTMLElement;
+        const outside = document.createElement('button');
+        container.append(outside);
+
+        native.focus();
+        await flush();
+
+        const saturation = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        saturation.focus();
+        await flush();
+
+        expect(picker.style.display).not.toBe('none');
+        expect(onOpen).toHaveBeenLastCalledWith(true);
+
+        outside.focus();
+        await waitTransition();
+
+        expect(picker.style.display).toBe('none');
+        expect(onOpen).toHaveBeenLastCalledWith(false);
     });
 
     it('keeps the picker closed and controls disabled when disabled', async () => {

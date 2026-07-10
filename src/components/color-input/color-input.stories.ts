@@ -98,15 +98,22 @@ export const Default: Story = {
     play: async ({ canvasElement }) => {
         const input = canvasElement.querySelector<HTMLInputElement>('.rp-input__native')!;
         const inputControl = canvasElement.querySelector<HTMLElement>('.rp-input')!;
+        const preview = canvasElement.querySelector<HTMLElement>('.rp-color-input__preview')!;
         const picker = canvasElement.querySelector<HTMLElement>('.rp-popover__content')!;
+        const pickerSurface = canvasElement.querySelector<HTMLElement>(
+            '.rp-color-picker__surface',
+        )!;
 
         await userEvent.click(input);
         await waitFor(() => expect(picker).toBeVisible());
 
         const inputRect = inputControl.getBoundingClientRect();
+        const previewRect = preview.getBoundingClientRect();
         const pickerRect = picker.getBoundingClientRect();
+        const pickerSurfaceRect = pickerSurface.getBoundingClientRect();
 
         expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThan(0.5);
+        expect(Math.abs(pickerSurfaceRect.left - previewRect.left)).toBeLessThan(0.5);
     },
 };
 
