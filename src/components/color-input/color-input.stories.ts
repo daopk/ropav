@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
-import { computed, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import Field from '../field/field.vue';
 import { popoverPlacements } from '../popover/types';
 import Radio from '../radio/radio.vue';
@@ -15,6 +15,7 @@ import {
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+type ColorInputSize = (typeof sizes)[number];
 const colorInputSwatches = [
     '#25262b',
     '#f8f9fa',
@@ -143,20 +144,41 @@ export const Sizes: Story = {
     render: (args) => ({
         components: { ColorInput },
         setup() {
-            return { args, sizes };
+            const values = reactive<Record<ColorInputSize, ColorPickerValue>>(
+                Object.fromEntries(
+                    sizes.map((size) => [size, args.modelValue ?? '#4992d1']),
+                ) as Record<ColorInputSize, ColorPickerValue>,
+            );
+            const inputArgs = computed(() => {
+                const { modelValue: _modelValue, size: _size, ...rest } = args;
+                return rest;
+            });
+
+            return { inputArgs, sizes, values };
         },
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
                 <ColorInput
                     v-for="size in sizes"
                     :key="size"
-                    v-bind="args"
+                    v-bind="inputArgs"
+                    v-model="values[size]"
                     :size="size"
-                    :model-value="args.modelValue"
                 />
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const inputs = [...canvasElement.querySelectorAll<HTMLInputElement>('.rp-input__native')];
+
+        expect(inputs).toHaveLength(sizes.length);
+
+        await userEvent.clear(inputs[0]);
+        await userEvent.type(inputs[0], '#ff0000');
+
+        await expect(inputs[0]).toHaveValue('#ff0000');
+        await expect(inputs[1]).toHaveValue('#4992d1');
+    },
 };
 
 export const WithFormats: Story = {

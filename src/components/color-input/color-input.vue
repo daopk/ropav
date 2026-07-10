@@ -4,7 +4,7 @@
         :class="rootClass"
         :placement="placement"
         :open="open"
-        :disabled="control.disabled"
+        :disabled="control.disabled || readonly"
         :aria-label="resolvedPickerAriaLabel"
         @focusout="onFocusOut"
         @update:open="onOpenUpdate"

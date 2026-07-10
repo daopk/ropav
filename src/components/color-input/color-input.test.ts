@@ -217,8 +217,8 @@ describe('ColorInput', () => {
         expect(container.querySelector('.rp-color-input__preview--empty')).toBeTruthy();
     });
 
-    it('opens readonly picker content without emitting picker changes', async () => {
-        const onUpdate = vi.fn();
+    it('keeps the picker closed when readonly', async () => {
+        const onOpen = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
@@ -226,7 +226,7 @@ describe('ColorInput', () => {
                         readonly: true,
                         modelValue: '#4992d1',
                         swatches: ['#00ff00'],
-                        'onUpdate:modelValue': onUpdate,
+                        'onUpdate:open': onOpen,
                     });
                 },
             }),
@@ -237,14 +237,12 @@ describe('ColorInput', () => {
         const native = container.querySelector('input') as HTMLInputElement;
 
         native.focus();
+        click(native);
         await flush();
 
         expect(native.readOnly).toBe(true);
-        expect(container.querySelector('.rp-color-picker--readonly')).toBeTruthy();
-
-        click(container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement);
-        await flush();
-
-        expect(onUpdate).not.toHaveBeenCalled();
+        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(container.querySelector('.rp-color-picker')).toBeNull();
+        expect(onOpen).not.toHaveBeenCalled();
     });
 });
