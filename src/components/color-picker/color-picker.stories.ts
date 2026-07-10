@@ -276,7 +276,7 @@ export const WithField: Story = {
                     v-slot="{ controlProps }"
                     style="max-width: 260px;"
                 >
-                    <ColorPicker v-bind="controlProps" v-bind="args" v-model="value" />
+                    <ColorPicker v-bind="{ ...args, ...controlProps }" v-model="value" />
                 </Field>
                 <span :title="currentValue">{{ currentValue }}</span>
             </div>

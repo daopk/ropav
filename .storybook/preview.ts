@@ -17,7 +17,7 @@ const preview: Preview = {
         },
         controls: {
             matchers: {
-                color: /(background|color)$/i,
+                color: /(^color$|(?:background|foreground|border|text)color$)/i,
                 date: /Date$/i,
             },
         },

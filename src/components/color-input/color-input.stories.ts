@@ -53,6 +53,7 @@ const meta = {
     tags: ['autodocs'],
     argTypes: {
         format: { control: 'select', options: colorPickerFormats },
+        validateColor: { control: 'boolean' },
         radius: {
             control: 'select',
             options: [undefined, ...radii],
@@ -72,6 +73,7 @@ const meta = {
     },
     args: {
         modelValue: '#4992d1',
+        ariaLabel: 'Color',
         format: 'hex',
         radius: undefined,
         size: undefined,
@@ -256,7 +258,7 @@ export const WithField: Story = {
                 v-slot="{ controlProps }"
                 style="max-width: 320px;"
             >
-                <ColorInput v-bind="controlProps" v-bind="args" v-model="value" />
+                <ColorInput v-bind="{ ...args, ...controlProps }" v-model="value" />
             </Field>
         `,
     }),
