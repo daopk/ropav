@@ -51,7 +51,7 @@ export function useRangeSliderTooltipCollision(root: Ref<HTMLElement | null>) {
         if (destroyed) return;
 
         const el = root.value;
-        if (!el?.classList.contains('rp-range-slider--tooltip-always-visible')) {
+        if (!el) {
             setOverlapping(false);
             return;
         }

@@ -392,39 +392,27 @@ export function useRangeSlider(
     const tooltipOptions = computed(() => getRangeSliderTooltipOptions(props.tooltip));
     const tooltipMode = computed(() => getRangeSliderTooltipMode(props.tooltip));
     const tooltipOpenDelay = computed(() => tooltipOptions.value.openDelay ?? 0);
-    const lowerTooltip = useDelayedOpen({
+    const delayedTooltip = useDelayedOpen({
         openDelay: () => tooltipOpenDelay.value,
         disabled: () => tooltipMode.value !== 'hover' || control.disabled,
     });
-    const upperTooltip = useDelayedOpen({
-        openDelay: () => tooltipOpenDelay.value,
-        disabled: () => tooltipMode.value !== 'hover' || control.disabled,
-    });
-    const tooltipStates = [lowerTooltip, upperTooltip] as const;
     const tooltipInteractionReasons = ref<Record<RangeSliderThumb, TooltipInteractionReasons>>({
         lower: { hover: false, focus: false, drag: false },
         upper: { hover: false, focus: false, drag: false },
     });
-    const tooltipDismissed = ref<Record<RangeSliderThumb, boolean>>({
-        lower: false,
-        upper: false,
-    });
+    const tooltipBarHovered = ref(false);
+    const tooltipDismissed = ref(false);
     const tooltipVisible = computed(() => tooltipMode.value !== false);
     const tooltipAlwaysVisible = computed(() => tooltipMode.value === 'always');
-    const tooltipOpen = computed<[boolean, boolean]>(() => [
-        tooltipAlwaysVisible.value ||
+    const tooltipOpen = computed(
+        () =>
+            tooltipAlwaysVisible.value ||
             (tooltipMode.value === 'hover' &&
-                lowerTooltip.isOpen.value &&
-                hasTooltipInteractionReason('lower') &&
-                !tooltipDismissed.value.lower &&
+                delayedTooltip.isOpen.value &&
+                hasAnyTooltipInteractionReason() &&
+                !tooltipDismissed.value &&
                 !control.disabled),
-        tooltipAlwaysVisible.value ||
-            (tooltipMode.value === 'hover' &&
-                upperTooltip.isOpen.value &&
-                hasTooltipInteractionReason('upper') &&
-                !tooltipDismissed.value.upper &&
-                !control.disabled),
-    ]);
+    );
     const tooltipPlacement = computed(
         () => tooltipOptions.value.placement ?? (props.orientation === 'vertical' ? 'left' : 'top'),
     );
@@ -482,60 +470,71 @@ export function useRangeSlider(
         updateThumb(thumb, input.valueAsNumber);
     }
 
-    function hasTooltipInteractionReason(thumb: RangeSliderThumb) {
+    function hasThumbTooltipInteractionReason(thumb: RangeSliderThumb) {
         const reasons = tooltipInteractionReasons.value[thumb];
         return reasons.hover || reasons.focus || reasons.drag;
     }
 
-    function syncTooltip(thumb: RangeSliderThumb) {
-        const tooltip = tooltipStates[getThumbIndex(thumb)];
+    function hasAnyTooltipInteractionReason() {
+        return (
+            tooltipBarHovered.value ||
+            hasThumbTooltipInteractionReason('lower') ||
+            hasThumbTooltipInteractionReason('upper')
+        );
+    }
+
+    function syncTooltip() {
         if (
             tooltipMode.value === 'hover' &&
             !control.disabled &&
-            hasTooltipInteractionReason(thumb) &&
-            !tooltipDismissed.value[thumb]
+            hasAnyTooltipInteractionReason() &&
+            !tooltipDismissed.value
         ) {
-            tooltip.open();
+            delayedTooltip.open();
             return;
         }
 
-        tooltip.closeImmediate();
+        delayedTooltip.closeImmediate();
     }
 
     function startTooltipInteraction(thumb: RangeSliderThumb, reason: TooltipInteractionReason) {
         activeThumb.value = thumb;
-        const wasActive = hasTooltipInteractionReason(thumb);
-        const wasDismissed = tooltipDismissed.value[thumb];
+        const wasActive = hasAnyTooltipInteractionReason();
+        const wasDismissed = tooltipDismissed.value;
         tooltipInteractionReasons.value[thumb][reason] = true;
-        tooltipDismissed.value[thumb] = false;
+        tooltipDismissed.value = false;
 
-        if (!wasActive || wasDismissed) syncTooltip(thumb);
+        if (!wasActive || wasDismissed) syncTooltip();
     }
 
     function endTooltipInteraction(thumb: RangeSliderThumb, reason: TooltipInteractionReason) {
         tooltipInteractionReasons.value[thumb][reason] = false;
-        if (!hasTooltipInteractionReason(thumb)) syncTooltip(thumb);
+        if (!hasAnyTooltipInteractionReason()) syncTooltip();
     }
 
-    function clearTooltipInteractions(thumb: RangeSliderThumb) {
+    function resetTooltipInteractionReasons(thumb: RangeSliderThumb) {
         const reasons = tooltipInteractionReasons.value[thumb];
         reasons.hover = false;
         reasons.focus = false;
         reasons.drag = false;
-        syncTooltip(thumb);
+    }
+
+    function clearTooltipInteractions(thumb: RangeSliderThumb) {
+        resetTooltipInteractionReasons(thumb);
+        syncTooltip();
     }
 
     function resumeDismissedTooltip(thumb: RangeSliderThumb) {
         activeThumb.value = thumb;
-        if (!tooltipDismissed.value[thumb]) return;
+        if (!tooltipDismissed.value) return;
 
-        tooltipDismissed.value[thumb] = false;
-        syncTooltip(thumb);
+        tooltipDismissed.value = false;
+        syncTooltip();
     }
 
-    function dismissTooltip(thumb: RangeSliderThumb) {
-        tooltipDismissed.value[thumb] = true;
-        tooltipStates[getThumbIndex(thumb)].closeImmediate();
+    function dismissTooltip() {
+        tooltipDismissed.value = true;
+        delayedTooltip.closeImmediate();
     }
 
     function onTooltipFocus(thumb: RangeSliderThumb) {
@@ -544,6 +543,20 @@ export function useRangeSlider(
 
     function onTooltipBlur(thumb: RangeSliderThumb) {
         endTooltipInteraction(thumb, 'focus');
+    }
+
+    function onTooltipBarMouseEnter() {
+        const wasActive = hasAnyTooltipInteractionReason();
+        const wasDismissed = tooltipDismissed.value;
+        tooltipBarHovered.value = true;
+        tooltipDismissed.value = false;
+
+        if (!wasActive || wasDismissed) syncTooltip();
+    }
+
+    function onTooltipBarMouseLeave() {
+        tooltipBarHovered.value = false;
+        if (!hasAnyTooltipInteractionReason()) syncTooltip();
     }
 
     function onTooltipMouseEnter(thumb: RangeSliderThumb) {
@@ -564,14 +577,16 @@ export function useRangeSlider(
             return;
         }
 
-        clearTooltipInteractions('lower');
-        clearTooltipInteractions('upper');
+        resetTooltipInteractionReasons('lower');
+        resetTooltipInteractionReasons('upper');
+        tooltipBarHovered.value = false;
+        syncTooltip();
     }
 
     function onTooltipKeydown(thumb: RangeSliderThumb, event: KeyboardEvent) {
         activeThumb.value = thumb;
         if (event.key === 'Escape') {
-            dismissTooltip(thumb);
+            dismissTooltip();
             return;
         }
 
@@ -705,8 +720,7 @@ export function useRangeSlider(
     }
 
     watch([tooltipMode, () => control.disabled], () => {
-        syncTooltip('lower');
-        syncTooltip('upper');
+        syncTooltip();
     });
 
     onBeforeUnmount(stopDragging);
@@ -740,6 +754,8 @@ export function useRangeSlider(
         onTrackPointerDown,
         onTooltipFocus,
         onTooltipBlur,
+        onTooltipBarMouseEnter,
+        onTooltipBarMouseLeave,
         onTooltipMouseEnter,
         onTooltipMouseLeave,
         openTooltip,

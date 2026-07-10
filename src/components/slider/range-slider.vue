@@ -32,7 +32,12 @@
         </span>
 
         <span class="rp-range-slider__track" @pointerdown="onTrackPointerDown">
-            <span class="rp-range-slider__bar" aria-hidden="true" />
+            <span
+                class="rp-range-slider__bar"
+                aria-hidden="true"
+                @mouseenter="onTooltipBarMouseEnter"
+                @mouseleave="onTooltipBarMouseLeave"
+            />
 
             <input
                 :id="nativeIds[0]"
@@ -123,7 +128,7 @@
                         :placement="tooltipPlacement"
                         :color="tooltipColor"
                         :offset="tooltipOffset"
-                        :open="tooltipOpen[0]"
+                        :open="tooltipOpen"
                         :open-delay="tooltipOpenDelay"
                         :arrow="tooltipArrow"
                         decorative
@@ -157,7 +162,7 @@
                         :placement="tooltipPlacement"
                         :color="tooltipColor"
                         :offset="tooltipOffset"
-                        :open="tooltipOpen[1]"
+                        :open="tooltipOpen"
                         :open-delay="tooltipOpenDelay"
                         :arrow="tooltipArrow"
                         decorative
@@ -232,6 +237,8 @@ const {
     onTrackPointerDown,
     onTooltipFocus,
     onTooltipBlur,
+    onTooltipBarMouseEnter,
+    onTooltipBarMouseLeave,
     onTooltipMouseEnter,
     onTooltipMouseLeave,
     onTooltipKeydown,

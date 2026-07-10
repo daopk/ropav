@@ -118,7 +118,7 @@
         display: block;
         width: 100%;
         height: var(--_rp-range-slider-track-height);
-        pointer-events: none;
+        pointer-events: auto;
         background: linear-gradient(
             to right,
             var(--_rp-range-slider-track-bg) 0 var(--_rp-range-slider-lower-fill-position),
@@ -554,31 +554,25 @@
         margin-left: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-top)
-        &__tooltip--upper {
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-top) &__tooltip--upper {
         --_rp-range-slider-tooltip-stagger: calc(
             0px - var(--_rp-range-slider-tooltip-reserved-space)
         );
     }
 
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-bottom)
-        &__tooltip--upper {
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-bottom) &__tooltip--upper {
         --_rp-range-slider-tooltip-stagger: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-left)
-        &__tooltip--lower,
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-right)
-        &__tooltip--lower {
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-left) &__tooltip--lower,
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-right) &__tooltip--lower {
         --_rp-range-slider-tooltip-stagger: calc(
             var(--_rp-range-slider-tooltip-reserved-space) / 2
         );
     }
 
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-left)
-        &__tooltip--upper,
-    &--tooltip-always-visible#{&}--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-right)
-        &__tooltip--upper {
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-left) &__tooltip--upper,
+    &--tooltips-overlapping:has(&__tooltip.rp-tooltip--placement-right) &__tooltip--upper {
         --_rp-range-slider-tooltip-stagger: calc(
             0px - var(--_rp-range-slider-tooltip-reserved-space) / 2
         );

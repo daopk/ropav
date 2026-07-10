@@ -212,6 +212,47 @@ export const CollapsedAlwaysTooltips: Story = {
     },
 };
 
+export const CollapsedHoverTooltips: Story = {
+    tags: ['test'],
+    args: {
+        modelValue: [50, 50],
+        tooltip: 'hover',
+        formatValue: percentFormatter,
+    },
+    play: async ({ canvasElement }) => {
+        const root = canvasElement.querySelector('.rp-range-slider')!;
+        const bar = canvasElement.querySelector<HTMLElement>('.rp-range-slider__bar')!;
+        const tooltips = [
+            ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip'),
+        ];
+        const contents = [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
+
+        await userEvent.hover(bar);
+        await waitFor(() =>
+            expect(
+                tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open')),
+            ).toBe(true),
+        );
+        await waitFor(() =>
+            expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(true),
+        );
+
+        expect(root.classList.contains('rp-range-slider--tooltip-always-visible')).toBe(false);
+        const [lowerRect, upperRect] = contents.map((content) => content.getBoundingClientRect());
+        expect(lowerRect.bottom <= upperRect.top || upperRect.bottom <= lowerRect.top).toBe(true);
+
+        await userEvent.unhover(bar);
+        await waitFor(() =>
+            expect(
+                tooltips.every((tooltip) => !tooltip.classList.contains('rp-tooltip--open')),
+            ).toBe(true),
+        );
+        await waitFor(() =>
+            expect(root.classList.contains('rp-range-slider--tooltips-overlapping')).toBe(false),
+        );
+    },
+};
+
 export const BottomTooltipsWithLabeledMarks: Story = {
     argTypes: {
         tooltip: { control: 'object' },

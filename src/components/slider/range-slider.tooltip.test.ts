@@ -12,6 +12,10 @@ function getTooltipContents(container: Element) {
     return [...container.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
 }
 
+function getTooltipOpenStates(tooltips: HTMLElement[]) {
+    return tooltips.map((tooltip) => tooltip.classList.contains('rp-tooltip--open'));
+}
+
 describe('RangeSlider tooltip', () => {
     afterEach(() => {
         vi.useRealTimers();
@@ -44,7 +48,7 @@ describe('RangeSlider tooltip', () => {
         expect(contents.every((content) => content.style.display === 'none')).toBe(true);
     });
 
-    it('opens only the tooltip belonging to the focused thumb', async () => {
+    it('opens and dismisses both tooltips together when either thumb is focused', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -60,21 +64,23 @@ describe('RangeSlider tooltip', () => {
 
         inputs[0].focus();
         await flush();
-        expect(tooltips[0].classList.contains('rp-tooltip--open')).toBe(true);
-        expect(tooltips[1].classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
 
         inputs[0].blur();
         inputs[1].focus();
         await flush();
-        expect(tooltips[0].classList.contains('rp-tooltip--open')).toBe(false);
-        expect(tooltips[1].classList.contains('rp-tooltip--open')).toBe(true);
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
 
         keydown(inputs[1], 'Escape');
         await flush();
-        expect(tooltips[1].classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
+
+        keydown(inputs[1], 'ArrowRight');
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
     });
 
-    it('keeps a tooltip open while either focus or hover is still active', async () => {
+    it('opens both tooltips while the bar is hovered', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -88,30 +94,68 @@ describe('RangeSlider tooltip', () => {
         const lowerInput = container.querySelector<HTMLInputElement>(
             '.rp-range-slider__native--lower',
         )!;
-        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
-        const lowerTooltip = container.querySelector('.rp-range-slider__tooltip--lower')!;
+        const root = container.querySelector('.rp-range-slider')!;
+        const bar = container.querySelector('.rp-range-slider__bar')!;
+        const tooltips = getTooltips(container);
         const mouse = (type: 'mouseenter' | 'mouseleave') =>
-            lowerThumb.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+            bar.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+
+        lowerInput.focus();
+        lowerInput.blur();
+        mouse('mouseenter');
+        await flush();
+        expect(root.getAttribute('data-active-thumb')).toBe('lower');
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
+
+        mouse('mouseleave');
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
 
         lowerInput.focus();
         mouse('mouseenter');
         mouse('mouseleave');
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
+    });
+
+    it('keeps both tooltips open while either focus or hover is still active', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, { modelValue: [20, 80] });
+                },
+            }),
+        );
+
+        await flush();
+
+        const lowerInput = container.querySelector<HTMLInputElement>(
+            '.rp-range-slider__native--lower',
+        )!;
+        const upperThumb = container.querySelector('.rp-range-slider__thumb--upper')!;
+        const tooltips = getTooltips(container);
+        const mouse = (type: 'mouseenter' | 'mouseleave') =>
+            upperThumb.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+
+        lowerInput.focus();
+        mouse('mouseenter');
+        mouse('mouseleave');
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
 
         lowerInput.blur();
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
 
         lowerInput.focus();
         mouse('mouseenter');
         lowerInput.blur();
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
 
         mouse('mouseleave');
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
     });
 
     it('derives endpoint IDs and applies shared custom tooltip options', async () => {
@@ -138,6 +182,7 @@ describe('RangeSlider tooltip', () => {
         await flush();
 
         const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
+        const upperThumb = container.querySelector('.rp-range-slider__thumb--upper')!;
         const tooltips = getTooltips(container);
         const contents = getTooltipContents(container);
 
@@ -161,12 +206,17 @@ describe('RangeSlider tooltip', () => {
 
         lowerThumb.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
-        expect(tooltips[0].classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
 
-        vi.advanceTimersByTime(100);
+        vi.advanceTimersByTime(50);
+        upperThumb.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        vi.advanceTimersByTime(49);
         await flush();
-        expect(tooltips[0].classList.contains('rp-tooltip--open')).toBe(true);
-        expect(tooltips[1].classList.contains('rp-tooltip--open')).toBe(false);
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
+
+        vi.advanceTimersByTime(1);
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
     });
 
     it('formats both visible tooltip values independently from aria-valuetext', async () => {
@@ -232,9 +282,6 @@ describe('RangeSlider tooltip', () => {
         const tooltips = getTooltips(container);
 
         expect(root.classList.contains('rp-range-slider--tooltip-always-visible')).toBe(true);
-        expect(tooltips).toHaveLength(2);
-        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
-            true,
-        );
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
     });
 });

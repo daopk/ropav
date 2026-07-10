@@ -243,7 +243,7 @@ describe('RangeSlider pointer interaction', () => {
         expect(onUpdate).toHaveBeenCalledTimes(callsAfterPointerUp);
     });
 
-    it('keeps the active tooltip open until a pointer drag ends', async () => {
+    it('keeps both tooltips open until a pointer drag ends', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -259,22 +259,28 @@ describe('RangeSlider pointer interaction', () => {
             '.rp-range-slider__native--lower',
         )!;
         const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
-        const lowerTooltip = container.querySelector('.rp-range-slider__tooltip--lower')!;
+        const tooltips = [...container.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip')];
         mockTrackRect(track);
 
         dispatchPointer(track, 'pointerdown', 30, 10, { pointerId: 9 });
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
 
         lowerInput.blur();
         lowerThumb.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, cancelable: true }));
         dispatchPointer(window, 'pointermove', 40, 10, { pointerId: 9 });
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(true);
+        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
 
         dispatchPointer(window, 'pointerup', 40, 10, { pointerId: 9 });
         await flush();
-        expect(lowerTooltip.classList.contains('rp-tooltip--open')).toBe(false);
+        expect(tooltips.every((tooltip) => !tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
     });
 
     it('ignores track pointer interaction when disabled', async () => {
