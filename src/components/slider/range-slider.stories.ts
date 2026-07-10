@@ -43,7 +43,10 @@ const meta = {
         minRange: { control: 'number' },
         marks: { control: 'object' },
         thumbStyle: { control: 'object' },
-        tooltip: { control: 'object' },
+        tooltip: {
+            control: 'select',
+            options: [false, 'hover', 'always'],
+        },
         formatValue: { control: false },
         ariaValueText: { control: false },
         disabled: { control: 'boolean' },
@@ -210,6 +213,9 @@ export const CollapsedAlwaysTooltips: Story = {
 };
 
 export const BottomTooltipsWithLabeledMarks: Story = {
+    argTypes: {
+        tooltip: { control: 'object' },
+    },
     args: {
         modelValue: [25, 75],
         marks: [
@@ -277,6 +283,9 @@ export const FormattedValue: Story = {
 };
 
 export const CustomTooltip: Story = {
+    argTypes: {
+        tooltip: { control: 'object' },
+    },
     args: {
         tooltip: {
             id: 'price-range-tooltip',
