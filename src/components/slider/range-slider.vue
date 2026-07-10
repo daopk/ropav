@@ -31,13 +31,13 @@
             </span>
         </span>
 
-        <span class="rp-range-slider__track" @pointerdown="onTrackPointerDown">
-            <span
-                class="rp-range-slider__bar"
-                aria-hidden="true"
-                @mouseenter="onTooltipBarMouseEnter"
-                @mouseleave="onTooltipBarMouseLeave"
-            />
+        <span
+            class="rp-range-slider__track"
+            @pointerdown="onTrackPointerDown"
+            @mouseenter="onTooltipTrackMouseEnter"
+            @mouseleave="onTooltipTrackMouseLeave"
+        >
+            <span class="rp-range-slider__bar" aria-hidden="true" />
 
             <input
                 :id="nativeIds[0]"
@@ -106,8 +106,6 @@
                 <span
                     class="rp-range-slider__thumb rp-range-slider__thumb--lower"
                     data-range-slider-thumb="lower"
-                    @mouseenter="onTooltipMouseEnter('lower')"
-                    @mouseleave="onTooltipMouseLeave('lower')"
                 >
                     <span class="rp-range-slider__thumb-content">
                         <slot
@@ -140,8 +138,6 @@
                 <span
                     class="rp-range-slider__thumb rp-range-slider__thumb--upper"
                     data-range-slider-thumb="upper"
-                    @mouseenter="onTooltipMouseEnter('upper')"
-                    @mouseleave="onTooltipMouseLeave('upper')"
                 >
                     <span class="rp-range-slider__thumb-content">
                         <slot
@@ -237,10 +233,8 @@ const {
     onTrackPointerDown,
     onTooltipFocus,
     onTooltipBlur,
-    onTooltipBarMouseEnter,
-    onTooltipBarMouseLeave,
-    onTooltipMouseEnter,
-    onTooltipMouseLeave,
+    onTooltipTrackMouseEnter,
+    onTooltipTrackMouseLeave,
     onTooltipKeydown,
 } = useRangeSlider(props, (value) => {
     emit('update:modelValue', value);

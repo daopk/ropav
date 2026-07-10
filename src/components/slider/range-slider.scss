@@ -118,7 +118,7 @@
         display: block;
         width: 100%;
         height: var(--_rp-range-slider-track-height);
-        pointer-events: auto;
+        pointer-events: none;
         background: linear-gradient(
             to right,
             var(--_rp-range-slider-track-bg) 0 var(--_rp-range-slider-lower-fill-position),

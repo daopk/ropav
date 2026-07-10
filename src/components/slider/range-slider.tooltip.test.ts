@@ -80,7 +80,7 @@ describe('RangeSlider tooltip', () => {
         expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
     });
 
-    it('opens both tooltips while the bar is hovered', async () => {
+    it('opens both tooltips while the track is hovered', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -95,10 +95,10 @@ describe('RangeSlider tooltip', () => {
             '.rp-range-slider__native--lower',
         )!;
         const root = container.querySelector('.rp-range-slider')!;
-        const bar = container.querySelector('.rp-range-slider__bar')!;
+        const track = container.querySelector('.rp-range-slider__track')!;
         const tooltips = getTooltips(container);
         const mouse = (type: 'mouseenter' | 'mouseleave') =>
-            bar.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+            track.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
 
         lowerInput.focus();
         lowerInput.blur();
@@ -132,10 +132,10 @@ describe('RangeSlider tooltip', () => {
         const lowerInput = container.querySelector<HTMLInputElement>(
             '.rp-range-slider__native--lower',
         )!;
-        const upperThumb = container.querySelector('.rp-range-slider__thumb--upper')!;
+        const track = container.querySelector('.rp-range-slider__track')!;
         const tooltips = getTooltips(container);
         const mouse = (type: 'mouseenter' | 'mouseleave') =>
-            upperThumb.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
+            track.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true }));
 
         lowerInput.focus();
         mouse('mouseenter');
@@ -181,8 +181,10 @@ describe('RangeSlider tooltip', () => {
 
         await flush();
 
-        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
-        const upperThumb = container.querySelector('.rp-range-slider__thumb--upper')!;
+        const lowerInput = container.querySelector<HTMLInputElement>(
+            '.rp-range-slider__native--lower',
+        )!;
+        const track = container.querySelector('.rp-range-slider__track')!;
         const tooltips = getTooltips(container);
         const contents = getTooltipContents(container);
 
@@ -204,12 +206,12 @@ describe('RangeSlider tooltip', () => {
             );
         }
 
-        lowerThumb.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        track.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
         expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
 
         vi.advanceTimersByTime(50);
-        upperThumb.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        lowerInput.focus();
         vi.advanceTimersByTime(49);
         await flush();
         expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
@@ -217,6 +219,42 @@ describe('RangeSlider tooltip', () => {
         vi.advanceTimersByTime(1);
         await flush();
         expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
+    });
+
+    it('keeps both tooltips open when the pointer moves from the bar to a thumb', async () => {
+        vi.useFakeTimers();
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        tooltip: { openDelay: 100 },
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-range-slider__track')!;
+        const bar = container.querySelector('.rp-range-slider__bar')!;
+        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
+        const tooltips = getTooltips(container);
+
+        track.dispatchEvent(new MouseEvent('mouseenter', { cancelable: true }));
+        vi.advanceTimersByTime(100);
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
+
+        bar.dispatchEvent(new MouseEvent('mouseleave', { cancelable: true }));
+        lowerThumb.dispatchEvent(new MouseEvent('mouseenter', { cancelable: true }));
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([true, true]);
+
+        track.dispatchEvent(new MouseEvent('mouseleave', { cancelable: true }));
+        await flush();
+        expect(getTooltipOpenStates(tooltips)).toEqual([false, false]);
     });
 
     it('formats both visible tooltip values independently from aria-valuetext', async () => {

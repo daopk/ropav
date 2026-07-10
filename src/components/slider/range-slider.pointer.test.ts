@@ -258,7 +258,6 @@ describe('RangeSlider pointer interaction', () => {
         const lowerInput = container.querySelector<HTMLInputElement>(
             '.rp-range-slider__native--lower',
         )!;
-        const lowerThumb = container.querySelector('.rp-range-slider__thumb--lower')!;
         const tooltips = [...container.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip')];
         mockTrackRect(track);
 
@@ -269,7 +268,6 @@ describe('RangeSlider pointer interaction', () => {
         );
 
         lowerInput.blur();
-        lowerThumb.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, cancelable: true }));
         dispatchPointer(window, 'pointermove', 40, 10, { pointerId: 9 });
         await flush();
         expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(

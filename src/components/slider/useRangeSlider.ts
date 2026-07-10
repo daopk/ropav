@@ -32,10 +32,9 @@ type RangeSliderStateProps = Readonly<
     }
 >;
 
-type TooltipInteractionReason = 'hover' | 'focus' | 'drag';
+type TooltipInteractionReason = 'focus' | 'drag';
 
 interface TooltipInteractionReasons {
-    hover: boolean;
     focus: boolean;
     drag: boolean;
 }
@@ -397,10 +396,10 @@ export function useRangeSlider(
         disabled: () => tooltipMode.value !== 'hover' || control.disabled,
     });
     const tooltipInteractionReasons = ref<Record<RangeSliderThumb, TooltipInteractionReasons>>({
-        lower: { hover: false, focus: false, drag: false },
-        upper: { hover: false, focus: false, drag: false },
+        lower: { focus: false, drag: false },
+        upper: { focus: false, drag: false },
     });
-    const tooltipBarHovered = ref(false);
+    const tooltipTrackHovered = ref(false);
     const tooltipDismissed = ref(false);
     const tooltipVisible = computed(() => tooltipMode.value !== false);
     const tooltipAlwaysVisible = computed(() => tooltipMode.value === 'always');
@@ -472,12 +471,12 @@ export function useRangeSlider(
 
     function hasThumbTooltipInteractionReason(thumb: RangeSliderThumb) {
         const reasons = tooltipInteractionReasons.value[thumb];
-        return reasons.hover || reasons.focus || reasons.drag;
+        return reasons.focus || reasons.drag;
     }
 
     function hasAnyTooltipInteractionReason() {
         return (
-            tooltipBarHovered.value ||
+            tooltipTrackHovered.value ||
             hasThumbTooltipInteractionReason('lower') ||
             hasThumbTooltipInteractionReason('upper')
         );
@@ -514,7 +513,6 @@ export function useRangeSlider(
 
     function resetTooltipInteractionReasons(thumb: RangeSliderThumb) {
         const reasons = tooltipInteractionReasons.value[thumb];
-        reasons.hover = false;
         reasons.focus = false;
         reasons.drag = false;
     }
@@ -545,26 +543,18 @@ export function useRangeSlider(
         endTooltipInteraction(thumb, 'focus');
     }
 
-    function onTooltipBarMouseEnter() {
+    function onTooltipTrackMouseEnter() {
         const wasActive = hasAnyTooltipInteractionReason();
         const wasDismissed = tooltipDismissed.value;
-        tooltipBarHovered.value = true;
+        tooltipTrackHovered.value = true;
         tooltipDismissed.value = false;
 
         if (!wasActive || wasDismissed) syncTooltip();
     }
 
-    function onTooltipBarMouseLeave() {
-        tooltipBarHovered.value = false;
+    function onTooltipTrackMouseLeave() {
+        tooltipTrackHovered.value = false;
         if (!hasAnyTooltipInteractionReason()) syncTooltip();
-    }
-
-    function onTooltipMouseEnter(thumb: RangeSliderThumb) {
-        startTooltipInteraction(thumb, 'hover');
-    }
-
-    function onTooltipMouseLeave(thumb: RangeSliderThumb) {
-        endTooltipInteraction(thumb, 'hover');
     }
 
     function openTooltip(thumb: RangeSliderThumb) {
@@ -579,7 +569,7 @@ export function useRangeSlider(
 
         resetTooltipInteractionReasons('lower');
         resetTooltipInteractionReasons('upper');
-        tooltipBarHovered.value = false;
+        tooltipTrackHovered.value = false;
         syncTooltip();
     }
 
@@ -754,10 +744,8 @@ export function useRangeSlider(
         onTrackPointerDown,
         onTooltipFocus,
         onTooltipBlur,
-        onTooltipBarMouseEnter,
-        onTooltipBarMouseLeave,
-        onTooltipMouseEnter,
-        onTooltipMouseLeave,
+        onTooltipTrackMouseEnter,
+        onTooltipTrackMouseLeave,
         openTooltip,
         closeTooltip,
         onTooltipKeydown,

@@ -221,13 +221,16 @@ export const CollapsedHoverTooltips: Story = {
     },
     play: async ({ canvasElement }) => {
         const root = canvasElement.querySelector('.rp-range-slider')!;
-        const bar = canvasElement.querySelector<HTMLElement>('.rp-range-slider__bar')!;
+        const track = canvasElement.querySelector<HTMLElement>('.rp-range-slider__track')!;
+        const lowerThumb = canvasElement.querySelector<HTMLElement>(
+            '.rp-range-slider__thumb--lower',
+        )!;
         const tooltips = [
             ...canvasElement.querySelectorAll<HTMLElement>('.rp-range-slider__tooltip'),
         ];
         const contents = [...canvasElement.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
 
-        await userEvent.hover(bar);
+        await userEvent.hover(track);
         await waitFor(() =>
             expect(
                 tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open')),
@@ -241,7 +244,12 @@ export const CollapsedHoverTooltips: Story = {
         const [lowerRect, upperRect] = contents.map((content) => content.getBoundingClientRect());
         expect(lowerRect.bottom <= upperRect.top || upperRect.bottom <= lowerRect.top).toBe(true);
 
-        await userEvent.unhover(bar);
+        await userEvent.hover(lowerThumb);
+        expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
+            true,
+        );
+
+        await userEvent.unhover(lowerThumb);
         await waitFor(() =>
             expect(
                 tooltips.every((tooltip) => !tooltip.classList.contains('rp-tooltip--open')),
