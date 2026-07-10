@@ -36,7 +36,7 @@
         </template>
 
         <div
-            v-if="swatches.length"
+            v-if="validSwatches.length"
             class="rp-color-picker__swatches"
             :style="swatchesStyle"
             :data-fill="normalizedSwatchesPerRow ? true : undefined"
@@ -48,7 +48,7 @@
             :aria-labelledby="withPicker ? undefined : labelledby"
         >
             <button
-                v-for="(swatch, index) in swatches"
+                v-for="(swatch, index) in validSwatches"
                 :key="`${swatch}-${index}`"
                 class="rp-color-picker__swatch"
                 type="button"
@@ -123,6 +123,9 @@ const rootAttrs = computed(() => {
 });
 
 const normalizedSwatchesPerRow = computed(() => normalizeSwatchesPerRow(props.swatchesPerRow));
+const validSwatches = computed(() =>
+    props.swatches.filter((swatch) => Boolean(parseColorPickerValue(swatch))),
+);
 const swatchesStyle = computed(() => {
     const swatchesPerRow = normalizedSwatchesPerRow.value;
     if (!swatchesPerRow) return undefined;

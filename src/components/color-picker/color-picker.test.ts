@@ -805,6 +805,26 @@ describe('ColorPicker', () => {
         expect(onUpdate).toHaveBeenCalledWith('#008000');
     });
 
+    it('omits invalid swatches instead of rendering enabled no-op buttons', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        swatches: ['#ff0000', 'not-a-color', 'rgb(255oops, 0, 0)'],
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelectorAll('.rp-color-picker__swatch');
+
+        expect(swatches).toHaveLength(1);
+        expect(swatches[0].getAttribute('aria-label')).toBe('Select color #ff0000');
+    });
+
     it('renders selectable swatches without picker controls', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
