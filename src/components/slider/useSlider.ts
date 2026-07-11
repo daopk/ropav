@@ -3,13 +3,27 @@ import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
-import type {
-    SliderMark,
-    SliderMarkInput,
-    SliderProps,
-    SliderTooltipMode,
-    SliderTooltipOptions,
-} from './types';
+import {
+    applySliderThumbStyle,
+    createSliderMarkItems,
+    getFormattedSliderValue,
+    getSliderAriaValueText,
+    getSliderTooltipMode,
+    getSliderTooltipOptions,
+    getSliderValuePercent,
+    normalizeSliderBounds,
+    normalizeSliderStep,
+    normalizeSliderValue,
+    setSliderStyleValue,
+} from './sliderCore';
+import type { SliderProps } from './types';
+
+export {
+    getSliderValuePercent,
+    normalizeSliderBounds,
+    normalizeSliderStep,
+    normalizeSliderValue,
+} from './sliderCore';
 
 type SliderStateProps = Readonly<
     SliderProps & {
@@ -21,134 +35,9 @@ type SliderStateProps = Readonly<
     }
 >;
 
-const sliderMarkColorProperties = [
-    '--_rp-slider-mark-color',
-    '--_rp-slider-mark-label-color',
-    '--_rp-slider-mark-filled-label-color',
-    '--_rp-slider-mark-ring-color',
-] as const;
-
-export function normalizeSliderValue(
-    value: number,
-    min: number,
-    max: number,
-    step: number | 'any',
-) {
-    const bounds = normalizeSliderBounds(min, max);
-    const safeStep = normalizeSliderStep(step);
-    const safeValue = Number.isFinite(value) ? value : bounds.min;
-    const clamped = Math.min(bounds.max, Math.max(bounds.min, safeValue));
-
-    if (safeStep === 'any') return clamped;
-
-    const steps = Math.round((clamped - bounds.min) / safeStep);
-    const snapped = bounds.min + steps * safeStep;
-
-    return Math.min(bounds.max, Math.max(bounds.min, Number(snapped.toFixed(10))));
-}
-
-export function normalizeSliderBounds(min: number, max: number) {
-    const safeMin = Number.isFinite(min) ? min : 0;
-    const safeMax = Number.isFinite(max) ? max : safeMin;
-
-    return safeMax >= safeMin ? { min: safeMin, max: safeMax } : { min: safeMax, max: safeMin };
-}
-
-export function normalizeSliderStep(step: number | 'any') {
-    return step === 'any' || (Number.isFinite(step) && step > 0) ? step : 'any';
-}
-
-export function getSliderValuePercent(value: number, min: number, max: number) {
-    if (max <= min) return 0;
-
-    const percent = ((value - min) / (max - min)) * 100;
-    return Math.min(100, Math.max(0, percent));
-}
-
-function getSliderMarkColorValue(color: SliderMark['color']) {
-    return getComponentColorValue(color);
-}
-
 function getSliderColorValue(color: SliderProps['color']) {
     return getComponentColorValue(color);
 }
-
-function setSliderStyleValue(
-    style: CSSProperties,
-    property: `--_rp-slider-${string}`,
-    value: string | undefined,
-) {
-    if (value) {
-        style[property] = value;
-    }
-}
-
-function getSliderMarkStyle(percent: number, color: SliderMark['color']) {
-    const style: CSSProperties = {
-        '--_rp-slider-mark-position': `${percent}%`,
-    };
-    const colorValue = getSliderMarkColorValue(color);
-
-    for (const property of sliderMarkColorProperties) {
-        setSliderStyleValue(style, property, colorValue);
-    }
-
-    return style;
-}
-
-function normalizeSliderMark(mark: SliderMarkInput): SliderMark {
-    return typeof mark === 'number' ? { value: mark } : mark;
-}
-
-function normalizeSliderMarks(
-    marks: SliderMarkInput[] | undefined,
-    min: number,
-    max: number,
-    valuePercent: number,
-) {
-    return (marks ?? []).flatMap((markInput, index) => {
-        const mark = normalizeSliderMark(markInput);
-        if (mark.hidden) return [];
-
-        const value = Number(mark.value);
-        if (!Number.isFinite(value)) return [];
-
-        const percent = getSliderValuePercent(value, min, max);
-
-        return {
-            key: `${value}-${index}`,
-            value,
-            label: mark.label,
-            hasLabel: mark.label != null,
-            filled: percent <= valuePercent,
-            style: getSliderMarkStyle(percent, mark.color),
-        };
-    });
-}
-
-function getSliderLengthValue(value: number | string | undefined) {
-    if (value == null || value === '') return undefined;
-    if (typeof value === 'number') return Number.isFinite(value) ? `${value}px` : undefined;
-
-    return value;
-}
-
-function getSliderBorderValue(value: number | string | undefined) {
-    if (value == null || value === '') return undefined;
-    if (typeof value === 'number') {
-        return Number.isFinite(value)
-            ? `${value}px solid var(--_rp-slider-thumb-border)`
-            : undefined;
-    }
-
-    return value;
-}
-
-const sliderThumbStyleProps = [
-    ['--_rp-slider-thumb-size', 'size', getSliderLengthValue],
-    ['--_rp-slider-thumb-border-style', 'border', getSliderBorderValue],
-    ['--_rp-slider-thumb-padding', 'padding', getSliderLengthValue],
-] as const;
 
 function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
     const style: CSSProperties = {
@@ -158,42 +47,14 @@ function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
 
     setSliderStyleValue(style, '--_rp-slider-color', getSliderColorValue(props.color));
 
-    for (const [property, propName, getValue] of sliderThumbStyleProps) {
-        setSliderStyleValue(style, property, getValue(props.thumbStyle?.[propName]));
-    }
+    applySliderThumbStyle(style, props.thumbStyle, {
+        size: '--_rp-slider-thumb-size',
+        border: '--_rp-slider-thumb-border-style',
+        padding: '--_rp-slider-thumb-padding',
+        borderColor: '--_rp-slider-thumb-border',
+    });
 
     return style;
-}
-
-function getFormattedSliderValue(value: number, formatter: SliderProps['formatValue']) {
-    return formatter ? formatter(value) : value;
-}
-
-function getSliderAriaValueText(
-    value: number,
-    ariaValueText: SliderProps['ariaValueText'],
-    formatter: SliderProps['formatValue'],
-) {
-    if (typeof ariaValueText === 'function') return String(ariaValueText(value));
-    if (ariaValueText != null && ariaValueText !== '') return String(ariaValueText);
-    if (formatter) return String(formatter(value));
-
-    return undefined;
-}
-
-function getSliderTooltipOptions(
-    tooltip: NonNullable<SliderProps['tooltip']>,
-): SliderTooltipOptions {
-    return typeof tooltip === 'object' ? tooltip : {};
-}
-
-function getSliderTooltipMode(
-    tooltip: NonNullable<SliderProps['tooltip']>,
-): SliderTooltipMode | false {
-    if (tooltip === false) return false;
-    if (typeof tooltip === 'object') return tooltip.mode ?? 'hover';
-
-    return tooltip;
 }
 
 export function useSlider(props: SliderStateProps, emitUpdate: (value: number) => void) {
@@ -224,7 +85,21 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
     );
 
     const markItems = computed(() =>
-        normalizeSliderMarks(props.marks, bounds.value.min, bounds.value.max, valuePercent.value),
+        createSliderMarkItems(
+            props.marks,
+            bounds.value.min,
+            bounds.value.max,
+            (_value, percent) => percent <= valuePercent.value,
+            {
+                position: '--_rp-slider-mark-position',
+                colors: [
+                    '--_rp-slider-mark-color',
+                    '--_rp-slider-mark-label-color',
+                    '--_rp-slider-mark-filled-label-color',
+                    '--_rp-slider-mark-ring-color',
+                ],
+            },
+        ),
     );
 
     const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));

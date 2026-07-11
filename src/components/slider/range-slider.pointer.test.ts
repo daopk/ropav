@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, ref } from 'vue';
 
-import { flush, mountDom } from '../../../tests/utils/vue';
+import { flush, mountDom, mountDomWithApp } from '../../../tests/utils/vue';
 import RangeSlider from './range-slider.vue';
 
 function mockTrackRect(track: HTMLElement, rect: Partial<DOMRect> = {}) {
@@ -460,5 +460,36 @@ describe('RangeSlider pointer interaction', () => {
         await flush();
 
         expect(onUpdate).not.toHaveBeenCalled();
+    });
+
+    it('removes an active pointer session when unmounted', async () => {
+        const onUpdate = vi.fn();
+        const removeEventListener = vi.spyOn(window, 'removeEventListener');
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        mockTrackRect(track);
+        dispatchPointer(track, 'pointerdown', 30, 10, { pointerId: 21 });
+        const updatesBeforeUnmount = onUpdate.mock.calls.length;
+
+        unmount();
+
+        expect(removeEventListener).toHaveBeenCalledWith('pointermove', expect.any(Function));
+        expect(removeEventListener).toHaveBeenCalledWith('pointerup', expect.any(Function));
+        expect(removeEventListener).toHaveBeenCalledWith('pointercancel', expect.any(Function));
+
+        dispatchPointer(window, 'pointermove', 60, 10, { pointerId: 21 });
+        expect(onUpdate).toHaveBeenCalledTimes(updatesBeforeUnmount);
     });
 });

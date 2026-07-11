@@ -1,6 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { defineComponent, h, ref, type Ref } from 'vue';
 
+import { flush, mountDom } from '../../../tests/utils/vue';
 import { areRangeSliderTooltipRectsOverlapping } from './useRangeSliderTooltipCollision';
+import { useRangeSliderTooltipCollision } from './useRangeSliderTooltipCollision';
 
 function rect(left: number, top: number, width: number, height: number) {
     return {
@@ -41,5 +44,59 @@ describe('RangeSlider tooltip collision', () => {
         expect(areRangeSliderTooltipRectsOverlapping(rect(0, 0, 0, 28), rect(0, 0, 32, 28))).toBe(
             false,
         );
+    });
+
+    it('remeasures from explicit dependencies instead of unrelated component updates', async () => {
+        const dependency = ref(0);
+        const unrelated = ref(0);
+        let overlapping: Ref<boolean> | undefined;
+        const frames: FrameRequestCallback[] = [];
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+            frames.push(callback);
+            return frames.length;
+        });
+
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const root = ref<HTMLElement | null>(null);
+                    overlapping = useRangeSliderTooltipCollision(root, [
+                        dependency,
+                    ]).tooltipsOverlapping;
+
+                    return () =>
+                        h('div', { ref: root, 'data-unrelated': unrelated.value }, [
+                            h('div', { class: 'rp-range-slider__tooltip--lower' }, [
+                                h('div', { class: 'rp-tooltip__content' }),
+                            ]),
+                            h('div', { class: 'rp-range-slider__tooltip--upper' }, [
+                                h('div', { class: 'rp-tooltip__content' }),
+                            ]),
+                        ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lower, upper] = [...container.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
+        vi.spyOn(lower, 'getBoundingClientRect').mockReturnValue(rect(0, 0, 20, 20) as DOMRect);
+        const upperRect = vi
+            .spyOn(upper, 'getBoundingClientRect')
+            .mockReturnValue(rect(80, 0, 20, 20) as DOMRect);
+
+        frames.shift()?.(0);
+        expect(overlapping?.value).toBe(false);
+
+        unrelated.value += 1;
+        await flush();
+        expect(frames).toHaveLength(0);
+
+        upperRect.mockReturnValue(rect(10, 0, 20, 20) as DOMRect);
+        dependency.value += 1;
+        await flush();
+        expect(frames).toHaveLength(1);
+        frames.shift()?.(0);
+        expect(overlapping?.value).toBe(true);
     });
 });

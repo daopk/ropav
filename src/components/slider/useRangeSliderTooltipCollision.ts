@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, onUpdated, ref, type Ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch, type Ref, type WatchSource } from 'vue';
 
 const TOOLTIP_COLLISION_GAP = 4;
 const TOOLTIP_COLLISION_RELEASE_GAP = 8;
@@ -23,7 +23,10 @@ export function areRangeSliderTooltipRectsOverlapping(
     );
 }
 
-export function useRangeSliderTooltipCollision(root: Ref<HTMLElement | null>) {
+export function useRangeSliderTooltipCollision(
+    root: Ref<HTMLElement | null>,
+    dependencies: readonly WatchSource[] = [],
+) {
     const tooltipsOverlapping = ref(false);
     const observedElements = new Set<Element>();
     let resizeObserver: ResizeObserver | undefined;
@@ -137,10 +140,14 @@ export function useRangeSliderTooltipCollision(root: Ref<HTMLElement | null>) {
         scheduleMeasure();
     });
 
-    onUpdated(() => {
-        refreshObservedElements();
-        scheduleMeasure();
-    });
+    watch(
+        dependencies,
+        () => {
+            refreshObservedElements();
+            scheduleMeasure();
+        },
+        { flush: 'post' },
+    );
 
     onBeforeUnmount(() => {
         destroyed = true;

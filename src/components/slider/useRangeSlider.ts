@@ -1,5 +1,4 @@
-import { computed, onBeforeUnmount, ref, watch, type CSSProperties } from 'vue';
-import { useDelayedOpen } from '@/composables/useDelayedOpen';
+import { computed, ref, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
@@ -8,17 +7,22 @@ import type {
     RangeSliderProps,
     RangeSliderThumb,
     RangeSliderValue,
-    SliderMark,
-    SliderMarkInput,
-    SliderTooltipMode,
-    SliderTooltipOptions,
 } from './types';
 import {
+    applySliderThumbStyle,
+    createSliderMarkItems,
+    getFormattedSliderValue,
+    getSliderAriaValueText,
+    getSliderTooltipMode,
+    getSliderTooltipOptions,
     getSliderValuePercent,
     normalizeSliderBounds,
     normalizeSliderStep,
     normalizeSliderValue,
-} from './useSlider';
+    setSliderStyleValue,
+} from './sliderCore';
+import { useRangeSliderPointer } from './useRangeSliderPointer';
+import { useRangeSliderTooltipState } from './useRangeSliderTooltipState';
 
 type RangeSliderStateProps = Readonly<
     RangeSliderProps & {
@@ -31,20 +35,6 @@ type RangeSliderStateProps = Readonly<
         ariaLabel: [string, string];
     }
 >;
-
-type TooltipInteractionReason = 'focus' | 'drag';
-
-interface TooltipInteractionReasons {
-    focus: boolean;
-    drag: boolean;
-}
-
-const rangeSliderMarkColorProperties = [
-    '--_rp-range-slider-mark-color',
-    '--_rp-range-slider-mark-label-color',
-    '--_rp-range-slider-mark-filled-label-color',
-    '--_rp-range-slider-mark-ring-color',
-] as const;
 
 function roundSliderNumber(value: number) {
     return Number(value.toFixed(10));
@@ -136,38 +126,6 @@ export function getClosestRangeSliderThumb(
     return activeThumb ?? 'upper';
 }
 
-function setRangeSliderStyleValue(
-    style: CSSProperties,
-    property: `--_rp-range-slider-${string}`,
-    value: string | undefined,
-) {
-    if (value) style[property] = value;
-}
-
-function getRangeSliderLengthValue(value: number | string | undefined) {
-    if (value == null || value === '') return undefined;
-    if (typeof value === 'number') return Number.isFinite(value) ? `${value}px` : undefined;
-
-    return value;
-}
-
-function getRangeSliderBorderValue(value: number | string | undefined) {
-    if (value == null || value === '') return undefined;
-    if (typeof value === 'number') {
-        return Number.isFinite(value)
-            ? `${value}px solid var(--_rp-range-slider-thumb-border)`
-            : undefined;
-    }
-
-    return value;
-}
-
-const rangeSliderThumbStyleProps = [
-    ['--_rp-range-slider-thumb-size', 'size', getRangeSliderLengthValue],
-    ['--_rp-range-slider-thumb-border-style', 'border', getRangeSliderBorderValue],
-    ['--_rp-range-slider-thumb-padding', 'padding', getRangeSliderLengthValue],
-] as const;
-
 function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: RangeSliderValue) {
     const [lowerPercent, upperPercent] = valuePercent;
     const style: CSSProperties = {
@@ -178,79 +136,26 @@ function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: Ra
         '--_rp-range-slider-tooltip-merged-percent': `${(lowerPercent + upperPercent) / 2}%`,
     };
 
-    setRangeSliderStyleValue(
-        style,
-        '--_rp-range-slider-color',
-        getComponentColorValue(props.color),
-    );
+    setSliderStyleValue(style, '--_rp-range-slider-color', getComponentColorValue(props.color));
 
-    for (const [property, propName, getValue] of rangeSliderThumbStyleProps) {
-        setRangeSliderStyleValue(style, property, getValue(props.thumbStyle?.[propName]));
-    }
-
-    return style;
-}
-
-function getRangeSliderMarkStyle(percent: number, color: SliderMark['color']) {
-    const style: CSSProperties = {
-        '--_rp-range-slider-mark-position': `${percent}%`,
-    };
-    const colorValue = getComponentColorValue(color);
-
-    for (const property of rangeSliderMarkColorProperties) {
-        setRangeSliderStyleValue(style, property, colorValue);
-    }
-
-    return style;
-}
-
-function normalizeRangeSliderMark(mark: SliderMarkInput): SliderMark {
-    return typeof mark === 'number' ? { value: mark } : mark;
-}
-
-function normalizeRangeSliderMarks(
-    marks: SliderMarkInput[] | undefined,
-    min: number,
-    max: number,
-    value: RangeSliderValue,
-) {
-    return (marks ?? []).flatMap((markInput, index) => {
-        const mark = normalizeRangeSliderMark(markInput);
-        if (mark.hidden) return [];
-
-        const markValue = Number(mark.value);
-        if (!Number.isFinite(markValue)) return [];
-
-        const percent = getSliderValuePercent(markValue, min, max);
-
-        return {
-            key: `${markValue}-${index}`,
-            value: markValue,
-            label: mark.label,
-            hasLabel: mark.label != null,
-            filled: markValue >= value[0] && markValue <= value[1],
-            style: getRangeSliderMarkStyle(percent, mark.color),
-        };
+    applySliderThumbStyle(style, props.thumbStyle, {
+        size: '--_rp-range-slider-thumb-size',
+        border: '--_rp-range-slider-thumb-border-style',
+        padding: '--_rp-range-slider-thumb-padding',
+        borderColor: '--_rp-range-slider-thumb-border',
     });
+
+    return style;
 }
 
 function getFormattedRangeSliderValue(
     value: RangeSliderValue,
     formatter: RangeSliderProps['formatValue'],
 ): [string | number, string | number] {
-    return formatter ? [formatter(value[0]), formatter(value[1])] : value;
-}
-
-function getRangeSliderEndpointValueText(
-    value: number,
-    ariaValueText: RangeSliderEndpointValueText | undefined,
-    formatter: RangeSliderProps['formatValue'],
-) {
-    if (typeof ariaValueText === 'function') return String(ariaValueText(value));
-    if (ariaValueText != null && ariaValueText !== '') return String(ariaValueText);
-    if (formatter) return String(formatter(value));
-
-    return undefined;
+    return [
+        getFormattedSliderValue(value[0], formatter),
+        getFormattedSliderValue(value[1], formatter),
+    ];
 }
 
 function getRangeSliderAriaValueText(
@@ -264,24 +169,9 @@ function getRangeSliderAriaValueText(
     ] = Array.isArray(ariaValueText) ? ariaValueText : [ariaValueText, ariaValueText];
 
     return [
-        getRangeSliderEndpointValueText(value[0], endpointValues[0], formatter),
-        getRangeSliderEndpointValueText(value[1], endpointValues[1], formatter),
+        getSliderAriaValueText(value[0], endpointValues[0], formatter),
+        getSliderAriaValueText(value[1], endpointValues[1], formatter),
     ];
-}
-
-function getRangeSliderTooltipOptions(
-    tooltip: NonNullable<RangeSliderProps['tooltip']>,
-): SliderTooltipOptions {
-    return typeof tooltip === 'object' ? tooltip : {};
-}
-
-function getRangeSliderTooltipMode(
-    tooltip: NonNullable<RangeSliderProps['tooltip']>,
-): SliderTooltipMode | false {
-    if (tooltip === false) return false;
-    if (typeof tooltip === 'object') return tooltip.mode ?? 'hover';
-
-    return tooltip;
 }
 
 function getThumbIndex(thumb: RangeSliderThumb) {
@@ -397,11 +287,20 @@ export function useRangeSlider(
         ];
     });
     const markItems = computed(() =>
-        normalizeRangeSliderMarks(
+        createSliderMarkItems(
             props.marks,
             bounds.value.min,
             bounds.value.max,
-            normalizedValue.value,
+            (value) => value >= normalizedValue.value[0] && value <= normalizedValue.value[1],
+            {
+                position: '--_rp-range-slider-mark-position',
+                colors: [
+                    '--_rp-range-slider-mark-color',
+                    '--_rp-range-slider-mark-label-color',
+                    '--_rp-range-slider-mark-filled-label-color',
+                    '--_rp-range-slider-mark-ring-color',
+                ],
+            },
         ),
     );
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
@@ -409,30 +308,20 @@ export function useRangeSlider(
         getRangeSliderTrackStyle(props, valuePercent.value),
     );
 
-    const tooltipOptions = computed(() => getRangeSliderTooltipOptions(props.tooltip));
-    const tooltipMode = computed(() => getRangeSliderTooltipMode(props.tooltip));
+    const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));
+    const tooltipMode = computed(() => getSliderTooltipMode(props.tooltip));
     const tooltipOpenDelay = computed(() => tooltipOptions.value.openDelay ?? 0);
-    const delayedTooltip = useDelayedOpen({
-        openDelay: () => tooltipOpenDelay.value,
-        disabled: () => tooltipMode.value !== 'hover' || control.disabled,
+    const tooltipState = useRangeSliderTooltipState({
+        mode: tooltipMode,
+        openDelay: tooltipOpenDelay,
+        disabled: () => control.disabled,
+        setActiveThumb: (thumb) => {
+            activeThumb.value = thumb;
+        },
     });
-    const tooltipInteractionReasons = ref<Record<RangeSliderThumb, TooltipInteractionReasons>>({
-        lower: { focus: false, drag: false },
-        upper: { focus: false, drag: false },
-    });
-    const tooltipTrackHovered = ref(false);
-    const tooltipDismissed = ref(false);
-    const tooltipVisible = computed(() => tooltipMode.value !== false);
-    const tooltipAlwaysVisible = computed(() => tooltipMode.value === 'always');
-    const tooltipOpen = computed(
-        () =>
-            tooltipAlwaysVisible.value ||
-            (tooltipMode.value === 'hover' &&
-                delayedTooltip.isOpen.value &&
-                hasAnyTooltipInteractionReason() &&
-                !tooltipDismissed.value &&
-                !control.disabled),
-    );
+    const tooltipVisible = tooltipState.visible;
+    const tooltipAlwaysVisible = tooltipState.alwaysVisible;
+    const tooltipOpen = tooltipState.open;
     const tooltipPlacement = computed(
         () => tooltipOptions.value.placement ?? (props.orientation === 'vertical' ? 'left' : 'top'),
     );
@@ -516,48 +405,6 @@ export function useRangeSlider(
         transferFocusedThumb(input, thumb, nextThumb);
     }
 
-    function hasThumbTooltipInteractionReason(thumb: RangeSliderThumb) {
-        const reasons = tooltipInteractionReasons.value[thumb];
-        return reasons.focus || reasons.drag;
-    }
-
-    function hasAnyTooltipInteractionReason() {
-        return (
-            tooltipTrackHovered.value ||
-            hasThumbTooltipInteractionReason('lower') ||
-            hasThumbTooltipInteractionReason('upper')
-        );
-    }
-
-    function syncTooltip() {
-        if (
-            tooltipMode.value === 'hover' &&
-            !control.disabled &&
-            hasAnyTooltipInteractionReason() &&
-            !tooltipDismissed.value
-        ) {
-            delayedTooltip.open();
-            return;
-        }
-
-        delayedTooltip.closeImmediate();
-    }
-
-    function startTooltipInteraction(thumb: RangeSliderThumb, reason: TooltipInteractionReason) {
-        activeThumb.value = thumb;
-        const wasActive = hasAnyTooltipInteractionReason();
-        const wasDismissed = tooltipDismissed.value;
-        tooltipInteractionReasons.value[thumb][reason] = true;
-        tooltipDismissed.value = false;
-
-        if (!wasActive || wasDismissed) syncTooltip();
-    }
-
-    function endTooltipInteraction(thumb: RangeSliderThumb, reason: TooltipInteractionReason) {
-        tooltipInteractionReasons.value[thumb][reason] = false;
-        if (!hasAnyTooltipInteractionReason()) syncTooltip();
-    }
-
     function transferFocusedThumb(
         input: HTMLInputElement,
         thumb: RangeSliderThumb,
@@ -571,85 +418,14 @@ export function useRangeSlider(
         const nextInput = getThumbInput(track, nextThumb);
         if (!nextInput) return;
 
-        const currentReasons = tooltipInteractionReasons.value[thumb];
-        if (currentReasons.focus) {
-            currentReasons.focus = false;
-            tooltipInteractionReasons.value[nextThumb].focus = true;
-        }
+        tooltipState.transferInteraction(thumb, nextThumb, 'focus');
 
         nextInput.focus({ preventScroll: true });
     }
 
-    function resetTooltipInteractionReasons(thumb: RangeSliderThumb) {
-        const reasons = tooltipInteractionReasons.value[thumb];
-        reasons.focus = false;
-        reasons.drag = false;
-    }
-
-    function clearTooltipInteractions(thumb: RangeSliderThumb) {
-        resetTooltipInteractionReasons(thumb);
-        syncTooltip();
-    }
-
-    function resumeDismissedTooltip(thumb: RangeSliderThumb) {
-        activeThumb.value = thumb;
-        if (!tooltipDismissed.value) return;
-
-        tooltipDismissed.value = false;
-        syncTooltip();
-    }
-
-    function dismissTooltip() {
-        tooltipDismissed.value = true;
-        delayedTooltip.closeImmediate();
-    }
-
-    function onTooltipFocus(thumb: RangeSliderThumb) {
-        startTooltipInteraction(thumb, 'focus');
-    }
-
-    function onTooltipBlur(thumb: RangeSliderThumb) {
-        endTooltipInteraction(thumb, 'focus');
-    }
-
-    function onTooltipTrackMouseEnter() {
-        const wasActive = hasAnyTooltipInteractionReason();
-        const wasDismissed = tooltipDismissed.value;
-        tooltipTrackHovered.value = true;
-        tooltipDismissed.value = false;
-
-        if (!wasActive || wasDismissed) syncTooltip();
-    }
-
-    function onTooltipTrackMouseLeave() {
-        tooltipTrackHovered.value = false;
-        if (!hasAnyTooltipInteractionReason()) syncTooltip();
-    }
-
-    function openTooltip(thumb: RangeSliderThumb) {
-        startTooltipInteraction(thumb, 'focus');
-    }
-
-    function closeTooltip(thumb?: RangeSliderThumb) {
-        if (thumb) {
-            clearTooltipInteractions(thumb);
-            return;
-        }
-
-        resetTooltipInteractionReasons('lower');
-        resetTooltipInteractionReasons('upper');
-        tooltipTrackHovered.value = false;
-        syncTooltip();
-    }
-
     function onTooltipKeydown(thumb: RangeSliderThumb, event: KeyboardEvent) {
-        activeThumb.value = thumb;
-        if (event.key === 'Escape') {
-            dismissTooltip();
-            return;
-        }
+        if (tooltipState.onKeydown(thumb, event)) return;
 
-        resumeDismissedTooltip(thumb);
         if (!hasManualNativeKeyboard.value || valueStep.value === 'any') return;
 
         const index = getThumbIndex(thumb);
@@ -705,106 +481,26 @@ export function useRangeSlider(
         return bounds.value.min + ratio * (bounds.value.max - bounds.value.min);
     }
 
-    let dragWindow: Window | null = null;
-    let dragTrack: HTMLElement | null = null;
-    let dragThumb: RangeSliderThumb | null = null;
-    let dragAnchorValue: number | null = null;
-    let dragPointerId: number | undefined;
-
-    function stopDragging() {
-        const stoppedThumb = dragThumb;
-        if (dragWindow) {
-            dragWindow.removeEventListener('pointermove', onPointerMove);
-            dragWindow.removeEventListener('pointerup', onPointerEnd);
-            dragWindow.removeEventListener('pointercancel', onPointerEnd);
-        }
-
-        dragWindow = null;
-        dragTrack = null;
-        dragThumb = null;
-        dragAnchorValue = null;
-        dragPointerId = undefined;
-
-        if (stoppedThumb) endTooltipInteraction(stoppedThumb, 'drag');
-    }
-
-    function switchDraggingThumb(track: HTMLElement, nextThumb: RangeSliderThumb) {
-        const previousThumb = dragThumb;
-        if (!previousThumb || previousThumb === nextThumb) return;
-
-        tooltipInteractionReasons.value[previousThumb].drag = false;
-        tooltipInteractionReasons.value[nextThumb].drag = true;
-        dragThumb = nextThumb;
-        activeThumb.value = nextThumb;
-
-        const previousInput = getThumbInput(track, previousThumb);
-        if (previousInput) transferFocusedThumb(previousInput, previousThumb, nextThumb);
-    }
-
-    function updateFromPointer(event: PointerEvent, track: HTMLElement) {
-        const value = getValueFromPointer(event, track);
-        if (value == null || !dragThumb) return;
-
-        const nextThumb = updateThumb(
-            dragThumb,
-            value,
-            dragAnchorValue ?? normalizedValue.value[getThumbIndex(getOppositeThumb(dragThumb))],
-        );
-        switchDraggingThumb(track, nextThumb);
-    }
-
-    function onPointerMove(event: PointerEvent) {
-        if (dragPointerId !== undefined && event.pointerId !== dragPointerId) return;
-
-        if (!dragTrack || !dragThumb) {
-            stopDragging();
-            return;
-        }
-
-        updateFromPointer(event, dragTrack);
-    }
-
-    function onPointerEnd(event: PointerEvent) {
-        if (dragPointerId !== undefined && event.pointerId !== dragPointerId) return;
-
-        stopDragging();
-    }
-
-    function onTrackPointerDown(event: PointerEvent) {
-        if (control.disabled || event.button !== 0 || event.isPrimary === false) return;
-
-        const track = event.currentTarget as HTMLElement | null;
-        if (!track) return;
-
-        const pointerValue = getValueFromPointer(event, track);
-        if (pointerValue == null) return;
-
-        const thumb =
+    const { onTrackPointerDown } = useRangeSliderPointer({
+        disabled: () => control.disabled,
+        getPointerValue: getValueFromPointer,
+        getThumb: (event, value) =>
             getThumbFromTarget(event.target) ??
-            getClosestRangeSliderThumb(pointerValue, normalizedValue.value, activeThumb.value);
-
-        event.preventDefault();
-        stopDragging();
-        activeThumb.value = thumb;
-        focusThumb(track, thumb);
-
-        dragTrack = track;
-        dragThumb = thumb;
-        dragAnchorValue = normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))];
-        dragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : undefined;
-        dragWindow = track.ownerDocument.defaultView;
-        startTooltipInteraction(thumb, 'drag');
-        updateFromPointer(event, track);
-        dragWindow?.addEventListener('pointermove', onPointerMove);
-        dragWindow?.addEventListener('pointerup', onPointerEnd);
-        dragWindow?.addEventListener('pointercancel', onPointerEnd);
-    }
-
-    watch([tooltipMode, () => control.disabled], () => {
-        syncTooltip();
+            getClosestRangeSliderThumb(value, normalizedValue.value, activeThumb.value),
+        getAnchorValue: (thumb) => normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))],
+        setActiveThumb: (thumb) => {
+            activeThumb.value = thumb;
+        },
+        focusThumb,
+        updateThumb,
+        transferFocusedThumb: (track, from, to) => {
+            const input = getThumbInput(track, from);
+            if (input) transferFocusedThumb(input, from, to);
+        },
+        startDrag: (thumb) => tooltipState.startInteraction(thumb, 'drag'),
+        endDrag: (thumb) => tooltipState.endInteraction(thumb, 'drag'),
+        transferDrag: (from, to) => tooltipState.transferInteraction(from, to, 'drag'),
     });
-
-    onBeforeUnmount(stopDragging);
 
     return {
         control,
@@ -835,12 +531,10 @@ export function useRangeSlider(
         mergedTooltipContent,
         onInput,
         onTrackPointerDown,
-        onTooltipFocus,
-        onTooltipBlur,
-        onTooltipTrackMouseEnter,
-        onTooltipTrackMouseLeave,
-        openTooltip,
-        closeTooltip,
+        onTooltipFocus: tooltipState.onFocus,
+        onTooltipBlur: tooltipState.onBlur,
+        onTooltipTrackMouseEnter: tooltipState.onTrackMouseEnter,
+        onTooltipTrackMouseLeave: tooltipState.onTrackMouseLeave,
         onTooltipKeydown,
     };
 }
