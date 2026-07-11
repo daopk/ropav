@@ -4,5 +4,15 @@ const config: StorybookConfig = {
     stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
     addons: ['@storybook/addon-themes', '@storybook/addon-vitest'],
     framework: '@storybook/vue3-vite',
+    viteFinal: async (viteConfig) => ({
+        ...viteConfig,
+        plugins: viteConfig.plugins?.filter(
+            (plugin) =>
+                !plugin ||
+                typeof plugin !== 'object' ||
+                !('name' in plugin) ||
+                plugin.name !== 'unplugin-dts',
+        ),
+    }),
 };
 export default config;

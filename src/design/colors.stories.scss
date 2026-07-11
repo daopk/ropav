@@ -79,20 +79,6 @@
     border-radius: var(--rp-radius-lg);
 }
 
-.rp-color-token__swatch {
-    width: 56px;
-    height: 56px;
-    border: var(--rp-border-width-thin) solid
-        color-mix(in srgb, var(--rp-color-black) 14%, transparent);
-    border-radius: var(--rp-radius-md);
-}
-
-.rp-color-token__swatch--small {
-    flex: 0 0 auto;
-    width: 32px;
-    height: 32px;
-}
-
 .rp-color-token__meta,
 .rp-color-table__value,
 .rp-color-variant__item > span {

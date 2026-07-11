@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import coreTokensSource from '../../tokens/default/core.tokens.json?raw';
+import ColorSwatch from '../components/color-swatch/color-swatch.vue';
 import { componentColors, componentColorShades } from '../utils/componentColors';
 import './colors.stories.scss';
 
@@ -98,6 +99,7 @@ const meta = {
         controls: { disable: true },
     },
     render: () => ({
+        components: { ColorSwatch },
         setup() {
             const computedValues = ref<Record<string, string>>({});
             const themeName = ref('Light');
@@ -164,9 +166,10 @@ const meta = {
                             :key="color.variable"
                             class="rp-color-token"
                         >
-                            <span
-                                class="rp-color-token__swatch"
-                                :style="{ backgroundColor: color.value }"
+                            <ColorSwatch
+                                :color="color.value"
+                                :size="56"
+                                aria-hidden="true"
                             />
                             <span class="rp-color-token__meta">
                                 <strong>{{ color.label }}</strong>
@@ -215,9 +218,10 @@ const meta = {
                                     :key="variable.name"
                                     class="rp-color-variant__item"
                                 >
-                                    <span
-                                        class="rp-color-token__swatch rp-color-token__swatch--small"
-                                        :style="{ backgroundColor: 'var(' + variable.name + ')' }"
+                                    <ColorSwatch
+                                        :color="'var(' + variable.name + ')'"
+                                        :size="32"
+                                        aria-hidden="true"
                                     />
                                     <span>
                                         <strong>{{ variable.label }}</strong>
@@ -243,9 +247,10 @@ const meta = {
                             role="row"
                         >
                             <span class="rp-color-table__token" role="cell">
-                                <span
-                                    class="rp-color-token__swatch rp-color-token__swatch--small"
-                                    :style="{ backgroundColor: 'var(' + variable + ')' }"
+                                <ColorSwatch
+                                    :color="'var(' + variable + ')'"
+                                    :size="32"
+                                    aria-hidden="true"
                                 />
                                 <code>{{ variable }}</code>
                             </span>
@@ -260,9 +265,10 @@ const meta = {
                             role="row"
                         >
                             <span class="rp-color-table__token" role="cell">
-                                <span
-                                    class="rp-color-token__swatch rp-color-token__swatch--small"
-                                    :style="{ backgroundColor: 'var(' + variable + ')' }"
+                                <ColorSwatch
+                                    :color="'var(' + variable + ')'"
+                                    :size="32"
+                                    aria-hidden="true"
                                 />
                                 <code>{{ variable }}</code>
                             </span>
