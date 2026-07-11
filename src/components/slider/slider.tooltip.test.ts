@@ -94,6 +94,44 @@ describe('Slider tooltip', () => {
         expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
     });
 
+    it('shows the tooltip for the duration of a touch drag', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Slider, {
+                        modelValue: 44,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-slider__track') as HTMLElement;
+        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
+        const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
+        Object.defineProperties(pointerDown, {
+            button: { value: 0 },
+            isPrimary: { value: true },
+            pointerId: { value: 7 },
+            pointerType: { value: 'touch' },
+        });
+
+        track.dispatchEvent(pointerDown);
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
+
+        track.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
+
+        const pointerUp = new Event('pointerup');
+        Object.defineProperty(pointerUp, 'pointerId', { value: 7 });
+        window.dispatchEvent(pointerUp);
+        await flush();
+        expect(tooltip.classList.contains('rp-tooltip--open')).toBe(false);
+    });
+
     it('supports formatting the thumb tooltip value', async () => {
         const container = mountDom(
             defineComponent({

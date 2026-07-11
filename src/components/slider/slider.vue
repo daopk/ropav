@@ -19,10 +19,11 @@
         </span>
         <span
             class="rp-slider__track"
-            @mouseenter="openTooltip"
-            @mouseleave="closeTooltip"
-            @focusin="openTooltip"
-            @focusout="closeTooltip"
+            @pointerdown="onTooltipPointerDown"
+            @mouseenter="onTooltipMouseEnter"
+            @mouseleave="onTooltipMouseLeave"
+            @focusin="onTooltipFocusIn"
+            @focusout="onTooltipFocusOut"
             @keydown="onTooltipKeydown"
         >
             <span class="rp-slider__bar" aria-hidden="true" />
@@ -140,8 +141,11 @@ const {
     tooltipArrow,
     tooltipContent,
     onInput,
-    openTooltip,
-    closeTooltip,
+    onTooltipPointerDown,
+    onTooltipMouseEnter,
+    onTooltipMouseLeave,
+    onTooltipFocusIn,
+    onTooltipFocusOut,
     onTooltipKeydown,
 } = useSlider(props, (value) => {
     emit('update:modelValue', value);

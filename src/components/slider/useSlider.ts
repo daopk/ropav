@@ -1,4 +1,4 @@
-import { computed, type CSSProperties } from 'vue';
+import { computed, onBeforeUnmount, ref, type CSSProperties } from 'vue';
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { useControlState } from '@/composables/useControlState';
 import { bem } from '@/utils/bem';
@@ -113,6 +113,12 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         openDelay: () => tooltipOpenDelay.value,
         disabled: () => tooltipMode.value !== 'hover' || control.disabled,
     });
+    const trackHovered = ref(false);
+    const focusWithin = ref(false);
+    const dragging = ref(false);
+    let dismissed = false;
+    let dragView: Window | null = null;
+    let dragPointerId: number | undefined;
 
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
     const tooltipVisible = computed(() => tooltipMode.value !== false);
@@ -162,17 +168,82 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         );
     }
 
-    function openTooltip() {
-        if (tooltipMode.value === 'hover' && !control.disabled) openDelayedTooltip();
+    function hasTooltipInteraction() {
+        return trackHovered.value || focusWithin.value || dragging.value;
     }
 
-    function closeTooltip() {
+    function syncTooltip() {
+        if (
+            tooltipMode.value === 'hover' &&
+            !control.disabled &&
+            hasTooltipInteraction() &&
+            !dismissed
+        ) {
+            openDelayedTooltip();
+            return;
+        }
+
         closeDelayedTooltip();
     }
 
-    function onTooltipKeydown(event: KeyboardEvent) {
-        if (event.key === 'Escape') closeTooltip();
+    function onTooltipMouseEnter() {
+        trackHovered.value = true;
+        dismissed = false;
+        syncTooltip();
     }
+
+    function onTooltipMouseLeave() {
+        trackHovered.value = false;
+        syncTooltip();
+    }
+
+    function onTooltipFocusIn() {
+        focusWithin.value = true;
+        dismissed = false;
+        syncTooltip();
+    }
+
+    function onTooltipFocusOut() {
+        focusWithin.value = false;
+        syncTooltip();
+    }
+
+    function removeDragListeners() {
+        dragView?.removeEventListener('pointerup', onTooltipPointerEnd);
+        dragView?.removeEventListener('pointercancel', onTooltipPointerEnd);
+        dragView = null;
+        dragPointerId = undefined;
+    }
+
+    function onTooltipPointerEnd(event: PointerEvent) {
+        if (dragPointerId !== undefined && event.pointerId !== dragPointerId) return;
+
+        dragging.value = false;
+        removeDragListeners();
+        syncTooltip();
+    }
+
+    function onTooltipPointerDown(event: PointerEvent) {
+        if (control.disabled || event.button !== 0 || event.isPrimary === false) return;
+
+        removeDragListeners();
+        dismissed = false;
+        dragging.value = true;
+        dragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : undefined;
+        dragView = (event.currentTarget as HTMLElement | null)?.ownerDocument.defaultView ?? null;
+        dragView?.addEventListener('pointerup', onTooltipPointerEnd);
+        dragView?.addEventListener('pointercancel', onTooltipPointerEnd);
+        syncTooltip();
+    }
+
+    function onTooltipKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            dismissed = true;
+            closeDelayedTooltip();
+        }
+    }
+
+    onBeforeUnmount(removeDragListeners);
 
     return {
         control,
@@ -196,8 +267,11 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
         tooltipArrow,
         tooltipContent,
         onInput,
-        openTooltip,
-        closeTooltip,
+        onTooltipPointerDown,
+        onTooltipMouseEnter,
+        onTooltipMouseLeave,
+        onTooltipFocusIn,
+        onTooltipFocusOut,
         onTooltipKeydown,
     };
 }
