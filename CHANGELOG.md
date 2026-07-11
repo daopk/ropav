@@ -1,3 +1,63 @@
+## [0.0.9](https://github.com/daopk/ropav/compare/v0.0.8...v0.0.9) (2026-07-11)
+
+### ⚠ BREAKING CHANGES
+
+* **tokens:** replace legacy base/2xl/3xl font tokens and semantic line-height tokens with Mantine-style runtime sizing tokens.
+* **color-input:** Use pickerAriaLabel instead of triggerAriaLabel.
+
+### Features
+
+* add alert component ([145aa7b](https://github.com/daopk/ropav/commit/145aa7bbed732ef2abb1d49f5f86739553ebbc23))
+* add button link component ([fbbacb9](https://github.com/daopk/ropav/commit/fbbacb9aab043ff7d346bc4cb902211419abf696))
+* add color input component ([0f0fa4d](https://github.com/daopk/ropav/commit/0f0fa4d5f3eb04d65f2b3124daba068835f297e7))
+* **aspect-ratio:** add aspect ratio component ([0739353](https://github.com/daopk/ropav/commit/073935349d4d674096cc249eeb94ba86985d7240))
+* **avatar:** add avatar component ([4b14b75](https://github.com/daopk/ropav/commit/4b14b751c1ba752e5327355d75c28cc883cdd50d))
+* **avatar:** add icon fallback demo ([af0e19e](https://github.com/daopk/ropav/commit/af0e19e1f937fdb7a2b144c149e5c098b00b797a))
+* **avatar:** support color variants ([a2b406b](https://github.com/daopk/ropav/commit/a2b406b2801ea015daf5ad5b3bbc2f5d508b7ce7))
+* **color-input:** add restricted input modes ([73daa45](https://github.com/daopk/ropav/commit/73daa458a870144a8422598ece490fb107801b6a))
+* **color-input:** remove trigger aria label prop ([10a5790](https://github.com/daopk/ropav/commit/10a5790f2bd49ae323b96fc5abc7e2fb4fcb6cbc))
+* **color-input:** show preview and open picker on focus ([0a48836](https://github.com/daopk/ropav/commit/0a4883667f9391c0e07e83a7ba33175a9195db2f))
+* **color-input:** support eye dropper ([bae6f7c](https://github.com/daopk/ropav/commit/bae6f7c98efeca19da3278ba214b83652eaa2fb4))
+* **color-input:** support native attrs and validation ([cafa9bd](https://github.com/daopk/ropav/commit/cafa9bdde3654f49aff78ebc5fb675f0f12f974c))
+* **color-picker:** add color picker component ([d37b8c8](https://github.com/daopk/ropav/commit/d37b8c8f41653260d5906833383244f689bea218))
+* **color-picker:** add color swatches ([e2de1da](https://github.com/daopk/ropav/commit/e2de1dadf7078377e6cba67ea55807b02ad22793))
+* **color-picker:** simplify value and swatches ([46e3176](https://github.com/daopk/ropav/commit/46e317699dada95c72289df5f837b508a9418de3))
+* **color-picker:** support keyboard swatch navigation ([b9382d8](https://github.com/daopk/ropav/commit/b9382d8a3110fbf19f957127d5ef6eb8e22efe30))
+* **color-picker:** support size presets ([6378955](https://github.com/daopk/ropav/commit/6378955fff35a339f8674444dee058acef1c9d65))
+* **color-picker:** support swatches-only mode ([d82dc35](https://github.com/daopk/ropav/commit/d82dc3580a4c4674031fcc87d41278e7f43d67c5))
+* **input:** support native attributes and validation ([e0d097e](https://github.com/daopk/ropav/commit/e0d097e42aafcd52eeec788836ac835408b8a56f))
+* **number-input:** add number input component ([056366d](https://github.com/daopk/ropav/commit/056366dc8a31bfdd8343a28f0a82753ca2c21270))
+* **number-input:** support control positions ([aed0496](https://github.com/daopk/ropav/commit/aed049630e4ab910825446e45c0407d3480c96d1))
+* **number-input:** support text alignment ([3fd3585](https://github.com/daopk/ropav/commit/3fd358564d76b4b46a30dfefe0648f502af5192b))
+* **popover:** support aligned placements ([f818229](https://github.com/daopk/ropav/commit/f8182291b5e1c950cbed5ca0bdf1d0d41f70c135))
+* **slider:** add range slider component ([8386b51](https://github.com/daopk/ropav/commit/8386b51e20c17b726f5ddeb8faee3f0a2fc82c5d))
+* **slider:** add thumb crossover and merged tooltips ([c822cb3](https://github.com/daopk/ropav/commit/c822cb3eb025ba7e9ae9ebfb77d47b856f16385d))
+* **tokens:** add derived color system ([f280e1c](https://github.com/daopk/ropav/commit/f280e1cfd71227e26a32d052250b3b77a6cce67c))
+* **tokens:** add xs and xl control sizes ([df84253](https://github.com/daopk/ropav/commit/df842530a42f6857425b98837e9ca32bd91cba03))
+* **tokens:** align sizing scale with mantine ([7b44e0e](https://github.com/daopk/ropav/commit/7b44e0ed0b9facb79db86bcaa102b8ee0b0e7711))
+
+### Bug Fixes
+
+* **button:** keep default border color on hover ([8d9f84b](https://github.com/daopk/ropav/commit/8d9f84b44eac8ad6f8f85f7732109c28c83d5de4))
+* **color-input:** align preview inset ([be63a06](https://github.com/daopk/ropav/commit/be63a069446c0c30fe3a328be20e4dad4f02a8e1))
+* **color-input:** correct readonly and story interactions ([9b6106a](https://github.com/daopk/ropav/commit/9b6106a4a8ebbc7f0c1027d8c6ca203db6a84c9d))
+* **color-input:** refine preview and picker behavior ([78d71eb](https://github.com/daopk/ropav/commit/78d71ebe39d630796306636331d97a1e82a9dda4))
+* **color-input:** wire popover trigger semantics ([4cd73a9](https://github.com/daopk/ropav/commit/4cd73a99b87490220413614457166a33745a1331))
+* **color-picker:** expose color area axes ([2307b94](https://github.com/daopk/ropav/commit/2307b9449d965e3280a501195e5da53cb9c03be5))
+* **color-picker:** meet minimum pointer target size ([7b3ebab](https://github.com/daopk/ropav/commit/7b3ebab5cacb0783883b4a06cd9d2ba2c604ec6c))
+* **color-picker:** omit invalid swatches ([2969d49](https://github.com/daopk/ropav/commit/2969d49476839b467a2cb7d0181bc4f79e983868))
+* **color-picker:** show keyboard focus indicators ([87afcca](https://github.com/daopk/ropav/commit/87afcca8cdb213750ed5ea80a01e57cc6babd10c))
+* **color:** share strict CSS color parsing ([1dce67d](https://github.com/daopk/ropav/commit/1dce67d2c778f0325b8d886ce0421b0690e009d7))
+* **input:** correct dark validation colors ([87a9b7f](https://github.com/daopk/ropav/commit/87a9b7f1fb8eb14dd0ff70eced8fab0462fb06e7))
+* **select:** refine dropdown option styling ([369d544](https://github.com/daopk/ropav/commit/369d5445bc5689198f08f9677a3788dcf2b3360e))
+* **slider:** align tooltip anchor with thumb ([5bba94b](https://github.com/daopk/ropav/commit/5bba94b9c8e6997d10e946ecf2414e170e19b87e))
+* **slider:** improve range slider tooltip controls ([fa42c73](https://github.com/daopk/ropav/commit/fa42c7368c608772ad9d087f30e085e27043d717))
+* **slider:** prevent range tooltip hover flicker ([04dea77](https://github.com/daopk/ropav/commit/04dea7769e704db4a92d6d2e2e5f82cc4ea70ff5))
+* **slider:** remove range tooltip transition ([4d440a6](https://github.com/daopk/ropav/commit/4d440a6091d4968a03ca72588935eec3133c51aa))
+* **slider:** smooth range tooltip handoff ([e3e923b](https://github.com/daopk/ropav/commit/e3e923b0f9ddbb294d6bc9f6ab4ca3a9fdd59fc2))
+* **slider:** synchronize range tooltip visibility ([0b6f0d9](https://github.com/daopk/ropav/commit/0b6f0d93dd832c295d45aaf4b97838cc2145e17f))
+* **storybook:** clean color component examples ([4b5bd88](https://github.com/daopk/ropav/commit/4b5bd8861d531131f99dcbc1c35eca7bb8e76592))
+
 ## [0.0.8](https://github.com/daopk/ropav/compare/v0.0.7...v0.0.8) (2026-07-07)
 
 ### ⚠ BREAKING CHANGES
