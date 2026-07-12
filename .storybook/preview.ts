@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/vue3-vite';
+import type { Decorator, Preview } from '@storybook/vue3-vite';
 import { setup } from '@storybook/vue3-vite';
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { vaporInteropPlugin } from 'vue';
@@ -6,6 +6,12 @@ import '../src/styles/base.scss';
 import './preview.scss';
 
 const defaultTheme = 'dark';
+
+const withSynchronousThemeClass: Decorator = (story, { globals }) => {
+    document.documentElement.classList.toggle('dark', (globals.theme || defaultTheme) === 'dark');
+
+    return story();
+};
 
 const preview: Preview = {
     initialGlobals: {
@@ -23,13 +29,13 @@ const preview: Preview = {
         },
     },
     decorators: [
+        withSynchronousThemeClass,
         withThemeByClassName({
             themes: {
                 light: '',
                 dark: 'dark',
             },
             defaultTheme,
-            parentSelector: 'html',
         }),
     ],
 };
