@@ -36,6 +36,12 @@ type RangeSliderStateProps = Readonly<
     }
 >;
 
+interface RangeSliderPointerGeometry {
+    length: number;
+    start: number;
+    vertical: boolean;
+}
+
 function roundSliderNumber(value: number) {
     return Number(value.toFixed(10));
 }
@@ -462,26 +468,37 @@ export function useRangeSlider(
         transferFocusedThumb(event.target as HTMLInputElement, thumb, nextThumb);
     }
 
-    function getValueFromPointer(event: PointerEvent, track: HTMLElement) {
+    function getPointerGeometry(track: HTMLElement): RangeSliderPointerGeometry | undefined {
         const vertical = props.orientation === 'vertical';
-        const trackRect = track.getBoundingClientRect();
         const thumbsRect = track
             .querySelector<HTMLElement>('.rp-range-slider__thumbs')
             ?.getBoundingClientRect();
         const rect =
             thumbsRect && (vertical ? thumbsRect.height > 0 : thumbsRect.width > 0)
                 ? thumbsRect
-                : trackRect;
+                : track.getBoundingClientRect();
         const length = vertical ? rect.height : rect.width;
         if (length <= 0) return undefined;
 
-        const offset = vertical ? rect.bottom - event.clientY : event.clientX - rect.left;
-        const ratio = clamp(offset / length, 0, 1);
+        return {
+            length,
+            start: vertical ? rect.bottom : rect.left,
+            vertical,
+        };
+    }
+
+    function getValueFromPointer(event: PointerEvent, geometry: RangeSliderPointerGeometry) {
+        const pointerPosition = geometry.vertical ? event.clientY : event.clientX;
+        const offset = geometry.vertical
+            ? geometry.start - pointerPosition
+            : pointerPosition - geometry.start;
+        const ratio = clamp(offset / geometry.length, 0, 1);
         return bounds.value.min + ratio * (bounds.value.max - bounds.value.min);
     }
 
     const { onTrackPointerDown } = useRangeSliderPointer({
         disabled: () => control.disabled,
+        getPointerGeometry,
         getPointerValue: getValueFromPointer,
         getThumb: (event, value) =>
             getThumbFromTarget(event.target) ??

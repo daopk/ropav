@@ -5,7 +5,7 @@ import { flush, mountDom, mountDomWithApp } from '../../../tests/utils/vue';
 import RangeSlider from './range-slider.vue';
 
 function mockTrackRect(track: HTMLElement, rect: Partial<DOMRect> = {}) {
-    vi.spyOn(track, 'getBoundingClientRect').mockReturnValue({
+    return vi.spyOn(track, 'getBoundingClientRect').mockReturnValue({
         bottom: 20,
         height: 20,
         left: 0,
@@ -17,6 +17,11 @@ function mockTrackRect(track: HTMLElement, rect: Partial<DOMRect> = {}) {
         toJSON: () => ({}),
         ...rect,
     });
+}
+
+async function flushPointerUpdates() {
+    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+    await flush();
 }
 
 function dispatchPointer(
@@ -81,20 +86,20 @@ describe('RangeSlider pointer interaction', () => {
         expect(document.activeElement).toBe(lowerInput);
 
         dispatchPointer(window, 'pointermove', 90, 10, { pointerId: 11 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([80, 90]);
         expect(value.value).toEqual([80, 90]);
         expect(root.getAttribute('data-active-thumb')).toBe('upper');
         expect(document.activeElement).toBe(upperInput);
 
         dispatchPointer(window, 'pointermove', 95, 10, { pointerId: 11 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([80, 95]);
         expect(value.value).toEqual([80, 95]);
         expect(root.getAttribute('data-active-thumb')).toBe('upper');
 
         dispatchPointer(window, 'pointermove', 70, 10, { pointerId: 11 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([70, 80]);
         expect(value.value).toEqual([70, 80]);
         expect(root.getAttribute('data-active-thumb')).toBe('lower');
@@ -143,7 +148,7 @@ describe('RangeSlider pointer interaction', () => {
 
         dispatchPointer(lowerThumb, 'pointerdown', 20, 10, { pointerId: 12 });
         dispatchPointer(window, 'pointermove', 100, 10, { pointerId: 12 });
-        await flush();
+        await flushPointerUpdates();
 
         expect(onUpdate).toHaveBeenLastCalledWith([70, 80]);
         expect(value.value).toEqual([70, 80]);
@@ -189,14 +194,14 @@ describe('RangeSlider pointer interaction', () => {
 
         dispatchPointer(lowerThumb, 'pointerdown', 10, 260, { pointerId: 13 });
         dispatchPointer(window, 'pointermove', 10, 120, { pointerId: 13 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([80, 90]);
         expect(value.value).toEqual([80, 90]);
         expect(root.getAttribute('data-active-thumb')).toBe('upper');
         expect(document.activeElement).toBe(upperInput);
 
         dispatchPointer(window, 'pointermove', 10, 180, { pointerId: 13 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([60, 80]);
         expect(value.value).toEqual([60, 80]);
         expect(root.getAttribute('data-active-thumb')).toBe('lower');
@@ -233,7 +238,7 @@ describe('RangeSlider pointer interaction', () => {
         expect(document.activeElement).toBe(inputs[0]);
 
         dispatchPointer(window, 'pointermove', 65);
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([65, 80]);
 
         dispatchPointer(window, 'pointerup', 65);
@@ -241,6 +246,119 @@ describe('RangeSlider pointer interaction', () => {
         dispatchPointer(window, 'pointermove', 10);
         await flush();
         expect(onUpdate).toHaveBeenCalledTimes(callCount);
+    });
+
+    it('caches drag geometry and refreshes it only when the viewport changes', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        tooltip: false,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        const getTrackRect = mockTrackRect(track);
+
+        dispatchPointer(track, 'pointerdown', 30, 10, { pointerId: 31 });
+        expect(getTrackRect).toHaveBeenCalledTimes(1);
+
+        dispatchPointer(window, 'pointermove', 40, 10, { pointerId: 31 });
+        dispatchPointer(window, 'pointermove', 50, 10, { pointerId: 31 });
+        await flushPointerUpdates();
+        expect(getTrackRect).toHaveBeenCalledTimes(1);
+
+        window.dispatchEvent(new Event('resize'));
+        await flushPointerUpdates();
+        expect(getTrackRect).toHaveBeenCalledTimes(2);
+
+        getTrackRect.mockReturnValue({
+            bottom: 20,
+            height: 20,
+            left: 100,
+            right: 300,
+            top: 0,
+            width: 200,
+            x: 100,
+            y: 0,
+            toJSON: () => ({}),
+        });
+        track.dispatchEvent(new Event('scroll'));
+        await flushPointerUpdates();
+        expect(getTrackRect).toHaveBeenCalledTimes(3);
+
+        onUpdate.mockClear();
+        dispatchPointer(window, 'pointermove', 200, 10, { pointerId: 31 });
+        await flushPointerUpdates();
+        expect(onUpdate).toHaveBeenLastCalledWith([50, 80]);
+        expect(getTrackRect).toHaveBeenCalledTimes(3);
+
+        dispatchPointer(window, 'pointerup', 200, 10, { pointerId: 31 });
+    });
+
+    it('coalesces pointer moves per frame and flushes the latest move on pointerup', async () => {
+        let queuedFrame: FrameRequestCallback | undefined;
+        let nextFrameId = 0;
+        const requestFrame = vi
+            .spyOn(window, 'requestAnimationFrame')
+            .mockImplementation((callback) => {
+                queuedFrame = callback;
+                nextFrameId += 1;
+                return nextFrameId;
+            });
+        const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        tooltip: false,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        mockTrackRect(track);
+        dispatchPointer(track, 'pointerdown', 30, 10, { pointerId: 32 });
+        onUpdate.mockClear();
+
+        dispatchPointer(window, 'pointermove', 40, 10, { pointerId: 32 });
+        dispatchPointer(window, 'pointermove', 50, 10, { pointerId: 32 });
+        dispatchPointer(window, 'pointermove', 60, 10, { pointerId: 32 });
+
+        expect(requestFrame).toHaveBeenCalledTimes(1);
+        expect(onUpdate).not.toHaveBeenCalled();
+
+        const firstFrame = queuedFrame;
+        queuedFrame = undefined;
+        firstFrame?.(0);
+        await flush();
+        expect(onUpdate).toHaveBeenCalledTimes(1);
+        expect(onUpdate).toHaveBeenLastCalledWith([60, 80]);
+
+        dispatchPointer(window, 'pointermove', 65, 10, { pointerId: 32 });
+        dispatchPointer(window, 'pointermove', 70, 10, { pointerId: 32 });
+        dispatchPointer(window, 'pointerup', 70, 10, { pointerId: 32 });
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledTimes(2);
+        expect(onUpdate).toHaveBeenLastCalledWith([70, 80]);
+        expect(cancelFrame).toHaveBeenCalled();
+
+        requestFrame.mockRestore();
+        cancelFrame.mockRestore();
     });
 
     it('uses an explicitly targeted visual thumb even when the other thumb is nearer', async () => {
@@ -389,7 +507,7 @@ describe('RangeSlider pointer interaction', () => {
         expect(onUpdate).toHaveBeenCalledTimes(callsAfterPointerDown);
 
         dispatchPointer(window, 'pointermove', 50, 10, { pointerId: 7 });
-        await flush();
+        await flushPointerUpdates();
         expect(onUpdate).toHaveBeenLastCalledWith([50, 80]);
 
         dispatchPointer(window, 'pointerup', 50, 10, { pointerId: 7 });
@@ -425,7 +543,7 @@ describe('RangeSlider pointer interaction', () => {
 
         lowerInput.blur();
         dispatchPointer(window, 'pointermove', 40, 10, { pointerId: 9 });
-        await flush();
+        await flushPointerUpdates();
         expect(tooltips.every((tooltip) => tooltip.classList.contains('rp-tooltip--open'))).toBe(
             true,
         );
