@@ -10,6 +10,7 @@
             },
         ]"
         aria-hidden="true"
+        :style="layerStyle"
     >
         <span
             :class="[
@@ -133,7 +134,7 @@ const contentStyle = computed(() => ({
     ...resolveTooltipColorStyleWithContrast(props.color, undefined),
 }));
 
-const { tooltipsOverlapping } = useRangeSliderTooltipCollision({
+const { tooltipsOverlapping, mergedArrowOffset } = useRangeSliderTooltipCollision({
     enabled: toRef(props, 'open'),
     lower: lowerContentRef,
     orientation: toRef(props, 'orientation'),
@@ -143,6 +144,10 @@ const { tooltipsOverlapping } = useRangeSliderTooltipCollision({
     upper: upperContentRef,
     valuePercent: toRef(props, 'valuePercent'),
 });
+
+const layerStyle = computed(() => ({
+    '--_rp-range-slider-tooltip-merged-arrow-offset': `${mergedArrowOffset.value}px`,
+}));
 
 watch(
     tooltipsOverlapping,

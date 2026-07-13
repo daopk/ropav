@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, ref, watch, type Ref, type WatchSource } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref, type WatchSource } from 'vue';
 import type { TooltipPlacement } from '../tooltip/types';
 import type { RangeSliderValue, SliderOrientation } from './types';
 
@@ -285,6 +285,21 @@ export function useRangeSliderTooltipCollision({
         { flush: 'post' },
     );
 
+    const mergedArrowOffset = computed(() => {
+        const trackLength =
+            orientation.value === 'horizontal' ? rootSize.value.width : rootSize.value.height;
+        if (trackLength <= 0) return 0;
+
+        const arrowAlongTrackAxis =
+            orientation.value === 'horizontal'
+                ? placement.value === 'top' || placement.value === 'bottom'
+                : placement.value === 'left' || placement.value === 'right';
+        if (!arrowAlongTrackAxis) return 0;
+
+        const [lowerPercent, upperPercent] = valuePercent.value;
+        return (Math.abs(upperPercent - lowerPercent) / 100) * trackLength * 0.5;
+    });
+
     onBeforeUnmount(() => {
         destroyed = true;
         const view = root.value?.ownerDocument.defaultView;
@@ -293,5 +308,5 @@ export function useRangeSliderTooltipCollision({
         if (frameId != null) frameWindow?.cancelAnimationFrame(frameId);
     });
 
-    return { tooltipsOverlapping };
+    return { tooltipsOverlapping, mergedArrowOffset };
 }
