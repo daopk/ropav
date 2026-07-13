@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, ref, type Ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
+import type { TooltipPlacement } from '../tooltip/types';
+import { areRangeSliderTooltipLayoutsOverlapping } from './useRangeSliderTooltipCollision';
 import { areRangeSliderTooltipRectsOverlapping } from './useRangeSliderTooltipCollision';
 import { useRangeSliderTooltipCollision } from './useRangeSliderTooltipCollision';
 
@@ -14,6 +16,14 @@ function rect(left: number, top: number, width: number, height: number) {
         top,
         width,
     };
+}
+
+function resizeEntry(target: Element, width: number, height: number) {
+    return {
+        borderBoxSize: [{ blockSize: height, inlineSize: width }],
+        contentRect: { height, width },
+        target,
+    } as unknown as ResizeObserverEntry;
 }
 
 describe('RangeSlider tooltip collision', () => {
@@ -46,32 +56,126 @@ describe('RangeSlider tooltip collision', () => {
         );
     });
 
-    it('remeasures from explicit dependencies instead of unrelated component updates', async () => {
-        const dependency = ref(0);
-        const unrelated = ref(0);
+    it('calculates horizontal collisions for every placement', () => {
+        const placements: TooltipPlacement[] = ['top', 'right', 'bottom', 'left'];
+
+        for (const placement of placements) {
+            const layout = {
+                lowerSize: { width: 20, height: 20 },
+                orientation: 'horizontal' as const,
+                placement,
+                trackLength: 100,
+                upperSize: { width: 20, height: 20 },
+            };
+
+            expect(
+                areRangeSliderTooltipLayoutsOverlapping({
+                    ...layout,
+                    lowerPercent: 10,
+                    upperPercent: 90,
+                }),
+            ).toBe(false);
+            expect(
+                areRangeSliderTooltipLayoutsOverlapping({
+                    ...layout,
+                    lowerPercent: 45,
+                    upperPercent: 55,
+                }),
+            ).toBe(true);
+        }
+    });
+
+    it('calculates vertical collisions for every placement', () => {
+        const placements: TooltipPlacement[] = ['top', 'right', 'bottom', 'left'];
+
+        for (const placement of placements) {
+            const layout = {
+                lowerSize: { width: 20, height: 20 },
+                orientation: 'vertical' as const,
+                placement,
+                trackLength: 100,
+                upperSize: { width: 20, height: 20 },
+            };
+
+            expect(
+                areRangeSliderTooltipLayoutsOverlapping({
+                    ...layout,
+                    lowerPercent: 10,
+                    upperPercent: 90,
+                }),
+            ).toBe(false);
+            expect(
+                areRangeSliderTooltipLayoutsOverlapping({
+                    ...layout,
+                    lowerPercent: 45,
+                    upperPercent: 55,
+                }),
+            ).toBe(true);
+        }
+    });
+
+    it('accounts for different content sizes and preserves the release gap', () => {
+        const layout = {
+            lowerPercent: 20,
+            lowerSize: { width: 20, height: 20 },
+            orientation: 'horizontal' as const,
+            placement: 'top' as const,
+            trackLength: 100,
+            upperPercent: 44,
+            upperSize: { width: 20, height: 20 },
+        };
+
+        expect(areRangeSliderTooltipLayoutsOverlapping({ ...layout, gap: 4 })).toBe(false);
+        expect(areRangeSliderTooltipLayoutsOverlapping({ ...layout, gap: 8 })).toBe(true);
+        expect(
+            areRangeSliderTooltipLayoutsOverlapping({
+                ...layout,
+                lowerSize: { width: 70, height: 20 },
+                upperPercent: 80,
+                upperSize: { width: 70, height: 20 },
+            }),
+        ).toBe(true);
+    });
+
+    it('uses cached ResizeObserver sizes during value updates', async () => {
+        let resizeCallback: ResizeObserverCallback | undefined;
+        const originalResizeObserver = window.ResizeObserver;
+
+        class FakeResizeObserver {
+            constructor(callback: ResizeObserverCallback) {
+                resizeCallback = callback;
+            }
+
+            disconnect() {}
+            observe() {}
+            unobserve() {}
+        }
+
+        window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+
+        const valuePercent = ref<[number, number]>([10, 90]);
         let overlapping: Ref<boolean> | undefined;
-        const frames: FrameRequestCallback[] = [];
-        vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
-            frames.push(callback);
-            return frames.length;
-        });
 
         const container = mountDom(
             defineComponent({
                 setup() {
                     const root = ref<HTMLElement | null>(null);
-                    overlapping = useRangeSliderTooltipCollision(root, [
-                        dependency,
-                    ]).tooltipsOverlapping;
+                    const lower = ref<HTMLElement | null>(null);
+                    const upper = ref<HTMLElement | null>(null);
+                    overlapping = useRangeSliderTooltipCollision({
+                        enabled: ref(true),
+                        lower,
+                        orientation: ref<'horizontal' | 'vertical'>('horizontal'),
+                        placement: ref<TooltipPlacement>('top'),
+                        root,
+                        upper,
+                        valuePercent,
+                    }).tooltipsOverlapping;
 
                     return () =>
-                        h('div', { ref: root, 'data-unrelated': unrelated.value }, [
-                            h('div', { class: 'rp-range-slider__tooltip--lower' }, [
-                                h('div', { class: 'rp-tooltip__content' }),
-                            ]),
-                            h('div', { class: 'rp-range-slider__tooltip--upper' }, [
-                                h('div', { class: 'rp-tooltip__content' }),
-                            ]),
+                        h('div', { ref: root }, [
+                            h('div', { ref: lower }),
+                            h('div', { ref: upper }),
                         ]);
                 },
             }),
@@ -79,24 +183,29 @@ describe('RangeSlider tooltip collision', () => {
 
         await flush();
 
-        const [lower, upper] = [...container.querySelectorAll<HTMLElement>('.rp-tooltip__content')];
-        vi.spyOn(lower, 'getBoundingClientRect').mockReturnValue(rect(0, 0, 20, 20) as DOMRect);
-        const upperRect = vi
-            .spyOn(upper, 'getBoundingClientRect')
-            .mockReturnValue(rect(80, 0, 20, 20) as DOMRect);
-
-        frames.shift()?.(0);
+        const root = container.firstElementChild as HTMLElement;
+        const [lower, upper] = [...root.children] as HTMLElement[];
+        const rootRect = vi.spyOn(root, 'getBoundingClientRect');
+        const lowerRect = vi.spyOn(lower, 'getBoundingClientRect');
+        const upperRect = vi.spyOn(upper, 'getBoundingClientRect');
+        resizeCallback?.(
+            [resizeEntry(root, 100, 20), resizeEntry(lower, 20, 20), resizeEntry(upper, 20, 20)],
+            {} as ResizeObserver,
+        );
         expect(overlapping?.value).toBe(false);
 
-        unrelated.value += 1;
+        valuePercent.value = [20, 80];
         await flush();
-        expect(frames).toHaveLength(0);
+        valuePercent.value = [30, 70];
+        await flush();
+        expect(rootRect).not.toHaveBeenCalled();
+        expect(lowerRect).not.toHaveBeenCalled();
+        expect(upperRect).not.toHaveBeenCalled();
 
-        upperRect.mockReturnValue(rect(10, 0, 20, 20) as DOMRect);
-        dependency.value += 1;
+        valuePercent.value = [45, 55];
         await flush();
-        expect(frames).toHaveLength(1);
-        frames.shift()?.(0);
         expect(overlapping?.value).toBe(true);
+
+        window.ResizeObserver = originalResizeObserver;
     });
 });

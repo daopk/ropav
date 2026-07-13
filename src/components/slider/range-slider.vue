@@ -1,6 +1,5 @@
 <template>
     <div
-        ref="rangeSliderRef"
         :class="[
             rootClass,
             {
@@ -97,39 +96,23 @@
                             :percent="valuePercent[index]"
                         />
                     </span>
-
-                    <Tooltip
-                        v-if="tooltipVisible"
-                        :id="tooltipIds[index]"
-                        :class="['rp-range-slider__tooltip', `rp-range-slider__tooltip--${thumb}`]"
-                        :content="tooltipContent[index]"
-                        :placement="tooltipPlacement"
-                        :color="tooltipColor"
-                        :offset="tooltipOffset"
-                        :open="tooltipOpen"
-                        :open-delay="tooltipOpenDelay"
-                        :arrow="tooltipArrow"
-                        decorative
-                    >
-                        <span class="rp-range-slider__tooltip-anchor" />
-                    </Tooltip>
                 </span>
 
-                <Tooltip
+                <RangeSliderTooltip
                     v-if="tooltipVisible"
-                    :id="mergedTooltipId"
-                    class="rp-range-slider__tooltip rp-range-slider__tooltip--merged"
-                    :content="mergedTooltipContent"
-                    :placement="tooltipPlacement"
+                    :arrow="tooltipArrow"
                     :color="tooltipColor"
+                    :content="tooltipContent"
+                    :ids="tooltipIds"
+                    :merged-content="mergedTooltipContent"
+                    :merged-id="mergedTooltipId"
                     :offset="tooltipOffset"
                     :open="tooltipOpen"
-                    :open-delay="tooltipOpenDelay"
-                    :arrow="tooltipArrow"
-                    decorative
-                >
-                    <span class="rp-range-slider__tooltip-anchor" />
-                </Tooltip>
+                    :orientation="orientation"
+                    :placement="tooltipPlacement"
+                    :value-percent="valuePercent"
+                    @update:overlapping="tooltipsOverlapping = $event"
+                />
             </span>
         </span>
     </div>
@@ -137,11 +120,9 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, useId, useSlots } from 'vue';
-import Tooltip from '../tooltip/tooltip.vue';
+import RangeSliderTooltip from './range-slider-tooltip.vue';
 import type { RangeSliderProps } from './types';
 import { useRangeSlider } from './useRangeSlider';
-import { useRangeSliderTooltipCollision } from './useRangeSliderTooltipCollision';
-import { useRangeSliderTooltipTransition } from './useRangeSliderTooltipTransition';
 
 defineOptions({ name: 'RpRangeSlider' });
 
@@ -166,7 +147,7 @@ const emit = defineEmits<{
 
 const slots = useSlots();
 const generatedId = useId();
-const rangeSliderRef = ref<HTMLElement | null>(null);
+const tooltipsOverlapping = ref(false);
 const rangeSliderThumbs = ['lower', 'upper'] as const;
 const labelId = computed(() => `${props.id ?? generatedId}-label`);
 
@@ -193,7 +174,6 @@ const {
     mergedTooltipId,
     tooltipColor,
     tooltipOffset,
-    tooltipOpenDelay,
     tooltipArrow,
     tooltipContent,
     mergedTooltipContent,
@@ -207,16 +187,6 @@ const {
 } = useRangeSlider(props, (value) => {
     emit('update:modelValue', value);
 });
-
-const { tooltipsOverlapping } = useRangeSliderTooltipCollision(rangeSliderRef, [
-    normalizedValue,
-    formattedValue,
-    tooltipVisible,
-    tooltipOpen,
-    tooltipPlacement,
-    () => props.orientation,
-]);
-useRangeSliderTooltipTransition(rangeSliderRef, tooltipsOverlapping, normalizedValue, activeThumb);
 
 const groupLabelledby = computed(() => {
     const values = [control.ariaLabelledby, slots.default ? labelId.value : undefined]

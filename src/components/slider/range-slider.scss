@@ -164,38 +164,6 @@
 
     @include slider-shared.thumb-content('range-slider', 0);
 
-    &__tooltip {
-        --_rp-range-slider-tooltip-translate-x: -50%;
-        --_rp-range-slider-tooltip-translate-y: 0%;
-
-        position: absolute;
-        z-index: 5;
-        top: 0;
-        left: 0;
-        width: var(--_rp-range-slider-thumb-size);
-        height: var(--_rp-range-slider-thumb-size);
-        opacity: 1;
-        pointer-events: none;
-        translate: var(--_rp-range-slider-tooltip-translate-x)
-            var(--_rp-range-slider-tooltip-translate-y);
-    }
-
-    &__tooltip--merged {
-        left: var(--_rp-range-slider-tooltip-merged-percent);
-        opacity: 0;
-    }
-
-    @include slider-shared.tooltip-content;
-
-    &--tooltips-overlapping &__tooltip--lower,
-    &--tooltips-overlapping &__tooltip--upper {
-        opacity: 0;
-    }
-
-    &--tooltips-overlapping &__tooltip--merged {
-        opacity: 1;
-    }
-
     &__native--lower:focus-visible ~ &__thumbs &__thumb--lower,
     &__native--upper:focus-visible ~ &__thumbs &__thumb--upper {
         z-index: 2;
@@ -361,36 +329,24 @@
         left: 50%;
     }
 
-    &--vertical &__tooltip {
-        --_rp-range-slider-tooltip-translate-x: 0%;
-        --_rp-range-slider-tooltip-translate-y: -50%;
-
-        top: 0;
-        left: 0;
-    }
-
-    &--vertical &__tooltip--merged {
-        top: calc(100% - var(--_rp-range-slider-tooltip-merged-percent));
-    }
-
-    &--tooltip-always-visible:has(&__tooltip.rp-tooltip--placement-top) &__track {
+    &--tooltip-always-visible:has(&__tooltips--placement-top) &__track {
         margin-top: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
-    &--tooltip-always-visible:has(&__tooltip.rp-tooltip--placement-right) &__track {
+    &--tooltip-always-visible:has(&__tooltips--placement-right) &__track {
         margin-right: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
-    &--tooltip-always-visible:has(&__tooltip.rp-tooltip--placement-bottom) &__track {
+    &--tooltip-always-visible:has(&__tooltips--placement-bottom) &__track {
         margin-bottom: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
-    &--tooltip-always-visible:has(&__tooltip.rp-tooltip--placement-left) &__track {
+    &--tooltip-always-visible:has(&__tooltips--placement-left) &__track {
         margin-left: var(--_rp-range-slider-tooltip-reserved-space);
     }
 
     &--tooltip-always-visible#{&}--marks-with-labels:not(.rp-range-slider--vertical):has(
-            &__tooltip.rp-tooltip--placement-bottom
+            &__tooltips--placement-bottom
         )
         &__track {
         padding-bottom: calc(
@@ -401,7 +357,7 @@
     }
 
     &--tooltip-always-visible#{&}--marks-with-labels:not(.rp-range-slider--vertical):has(
-            &__tooltip.rp-tooltip--placement-bottom
+            &__tooltips--placement-bottom
         )
         &__mark-label {
         margin-top: calc(
@@ -410,9 +366,7 @@
         );
     }
 
-    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(
-            &__tooltip.rp-tooltip--placement-right
-        )
+    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(&__tooltips--placement-right)
         &__track {
         padding-right: 0;
         margin-left: calc(
@@ -420,9 +374,7 @@
         );
     }
 
-    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(
-            &__tooltip.rp-tooltip--placement-right
-        )
+    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(&__tooltips--placement-right)
         &__mark {
         left: calc((var(--_rp-range-slider-thumb-size) + var(--_rp-range-slider-mark-size)) / 2);
         flex-direction: row-reverse;
@@ -433,20 +385,14 @@
         transform: translate(-100%, -50%);
     }
 
-    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(
-            &__tooltip.rp-tooltip--placement-right
-        )
+    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(&__tooltips--placement-right)
         &__mark-dot,
-    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(
-            &__tooltip.rp-tooltip--placement-right
-        )
+    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(&__tooltips--placement-right)
         &__mark-label {
         margin-left: 0;
     }
 
-    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(
-            &__tooltip.rp-tooltip--placement-right
-        )
+    &--vertical#{&}--tooltip-always-visible#{&}--marks-with-labels:has(&__tooltips--placement-right)
         &__mark-label {
         text-align: right;
     }

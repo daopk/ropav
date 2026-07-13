@@ -1,10 +1,82 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref, type WatchSource } from 'vue';
+import type { TooltipPlacement } from '../tooltip/types';
+import type { RangeSliderValue, SliderOrientation } from './types';
 
 const TOOLTIP_COLLISION_GAP = 4;
 const TOOLTIP_COLLISION_RELEASE_GAP = 8;
-const TOOLTIP_CONTENT_SELECTOR = '.rp-tooltip__content';
 
 type TooltipRect = Pick<DOMRect, 'bottom' | 'height' | 'left' | 'right' | 'top' | 'width'>;
+
+export interface RangeSliderTooltipSize {
+    width: number;
+    height: number;
+}
+
+interface TooltipInterval {
+    end: number;
+    start: number;
+}
+
+export interface RangeSliderTooltipCollisionLayout {
+    gap?: number;
+    lowerPercent: number;
+    lowerSize: RangeSliderTooltipSize;
+    orientation: SliderOrientation;
+    placement: TooltipPlacement;
+    trackLength: number;
+    upperPercent: number;
+    upperSize: RangeSliderTooltipSize;
+}
+
+interface UseRangeSliderTooltipCollisionOptions {
+    enabled: Ref<boolean>;
+    lower: Ref<HTMLElement | null>;
+    orientation: Ref<SliderOrientation>;
+    placement: Ref<TooltipPlacement>;
+    root: Ref<HTMLElement | null>;
+    sizeDependencies?: readonly WatchSource[];
+    upper: Ref<HTMLElement | null>;
+    valuePercent: Ref<RangeSliderValue>;
+}
+
+function getAxisSize(size: RangeSliderTooltipSize, orientation: SliderOrientation) {
+    return orientation === 'horizontal' ? size.width : size.height;
+}
+
+function getTooltipInterval(
+    anchor: number,
+    size: RangeSliderTooltipSize,
+    orientation: SliderOrientation,
+    placement: TooltipPlacement,
+): TooltipInterval {
+    const axisSize = getAxisSize(size, orientation);
+    const centeredOnAnchor =
+        orientation === 'horizontal'
+            ? placement === 'top' || placement === 'bottom'
+            : placement === 'left' || placement === 'right';
+
+    if (centeredOnAnchor) {
+        return {
+            start: anchor - axisSize / 2,
+            end: anchor + axisSize / 2,
+        };
+    }
+
+    const growsBeforeAnchor =
+        orientation === 'horizontal' ? placement === 'left' : placement === 'top';
+
+    return growsBeforeAnchor
+        ? { start: anchor - axisSize, end: anchor }
+        : { start: anchor, end: anchor + axisSize };
+}
+
+function areTooltipIntervalsOverlapping(
+    lower: TooltipInterval,
+    upper: TooltipInterval,
+    gap: number,
+) {
+    return lower.start < upper.end + gap && lower.end + gap > upper.start;
+}
 
 export function areRangeSliderTooltipRectsOverlapping(
     lower: TooltipRect,
@@ -23,109 +95,162 @@ export function areRangeSliderTooltipRectsOverlapping(
     );
 }
 
-export function useRangeSliderTooltipCollision(
-    root: Ref<HTMLElement | null>,
-    dependencies: readonly WatchSource[] = [],
-) {
+export function areRangeSliderTooltipLayoutsOverlapping({
+    gap = TOOLTIP_COLLISION_GAP,
+    lowerPercent,
+    lowerSize,
+    orientation,
+    placement,
+    trackLength,
+    upperPercent,
+    upperSize,
+}: RangeSliderTooltipCollisionLayout) {
+    if (
+        trackLength <= 0 ||
+        lowerSize.width <= 0 ||
+        lowerSize.height <= 0 ||
+        upperSize.width <= 0 ||
+        upperSize.height <= 0
+    ) {
+        return false;
+    }
+
+    const getAnchor = (percent: number) => {
+        const ratio = percent / 100;
+        return orientation === 'vertical' ? trackLength * (1 - ratio) : trackLength * ratio;
+    };
+    const lowerInterval = getTooltipInterval(
+        getAnchor(lowerPercent),
+        lowerSize,
+        orientation,
+        placement,
+    );
+    const upperInterval = getTooltipInterval(
+        getAnchor(upperPercent),
+        upperSize,
+        orientation,
+        placement,
+    );
+
+    return areTooltipIntervalsOverlapping(lowerInterval, upperInterval, gap);
+}
+
+function getObservedSize(entry: ResizeObserverEntry): RangeSliderTooltipSize {
+    const borderBoxSize = Array.isArray(entry.borderBoxSize)
+        ? entry.borderBoxSize[0]
+        : entry.borderBoxSize;
+
+    if (borderBoxSize) {
+        return {
+            width: borderBoxSize.inlineSize,
+            height: borderBoxSize.blockSize,
+        };
+    }
+
+    return {
+        width: entry.contentRect.width,
+        height: entry.contentRect.height,
+    };
+}
+
+function getElementSize(element: HTMLElement): RangeSliderTooltipSize {
+    const rect = element.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+}
+
+export function useRangeSliderTooltipCollision({
+    enabled,
+    lower,
+    orientation,
+    placement,
+    root,
+    sizeDependencies = [],
+    upper,
+    valuePercent,
+}: UseRangeSliderTooltipCollisionOptions) {
     const tooltipsOverlapping = ref(false);
-    const observedElements = new Set<Element>();
+    const rootSize = ref<RangeSliderTooltipSize>({ width: 0, height: 0 });
+    const lowerSize = ref<RangeSliderTooltipSize>({ width: 0, height: 0 });
+    const upperSize = ref<RangeSliderTooltipSize>({ width: 0, height: 0 });
+
     let resizeObserver: ResizeObserver | undefined;
     let frameWindow: Window | undefined;
     let frameId: number | undefined;
-    let microtaskQueued = false;
     let destroyed = false;
 
     function setOverlapping(value: boolean) {
         if (tooltipsOverlapping.value !== value) tooltipsOverlapping.value = value;
     }
 
-    function getTooltipContents(el: HTMLElement) {
-        return [
-            el.querySelector<HTMLElement>(
-                `.rp-range-slider__tooltip--lower ${TOOLTIP_CONTENT_SELECTOR}`,
-            ),
-            el.querySelector<HTMLElement>(
-                `.rp-range-slider__tooltip--upper ${TOOLTIP_CONTENT_SELECTOR}`,
-            ),
-        ] as const;
-    }
-
-    function measure() {
-        if (destroyed) return;
-
-        const el = root.value;
-        if (!el) {
+    function updateCollision() {
+        if (!enabled.value) {
             setOverlapping(false);
             return;
         }
 
-        const [lower, upper] = getTooltipContents(el);
-        if (!lower || !upper) {
-            setOverlapping(false);
-            return;
-        }
-
-        const view = el.ownerDocument.defaultView;
-        if (
-            !view ||
-            view.getComputedStyle(lower).display === 'none' ||
-            view.getComputedStyle(upper).display === 'none'
-        ) {
-            setOverlapping(false);
-            return;
-        }
+        const trackLength =
+            orientation.value === 'horizontal' ? rootSize.value.width : rootSize.value.height;
 
         setOverlapping(
-            areRangeSliderTooltipRectsOverlapping(
-                lower.getBoundingClientRect(),
-                upper.getBoundingClientRect(),
-                tooltipsOverlapping.value ? TOOLTIP_COLLISION_RELEASE_GAP : TOOLTIP_COLLISION_GAP,
-            ),
+            areRangeSliderTooltipLayoutsOverlapping({
+                gap: tooltipsOverlapping.value
+                    ? TOOLTIP_COLLISION_RELEASE_GAP
+                    : TOOLTIP_COLLISION_GAP,
+                lowerPercent: valuePercent.value[0],
+                lowerSize: lowerSize.value,
+                orientation: orientation.value,
+                placement: placement.value,
+                trackLength,
+                upperPercent: valuePercent.value[1],
+                upperSize: upperSize.value,
+            }),
         );
     }
 
+    function measureSizes() {
+        if (destroyed) return;
+
+        rootSize.value = root.value ? getElementSize(root.value) : { width: 0, height: 0 };
+        lowerSize.value = lower.value ? getElementSize(lower.value) : { width: 0, height: 0 };
+        upperSize.value = upper.value ? getElementSize(upper.value) : { width: 0, height: 0 };
+        updateCollision();
+    }
+
     function scheduleMeasure() {
-        if (destroyed || frameId != null || microtaskQueued) return;
+        if (destroyed || frameId != null) return;
 
         const view = root.value?.ownerDocument.defaultView;
-        if (view?.requestAnimationFrame) {
-            frameWindow = view;
-            frameId = view.requestAnimationFrame(() => {
-                frameId = undefined;
-                frameWindow = undefined;
-                measure();
-            });
+        if (!view?.requestAnimationFrame) {
+            measureSizes();
             return;
         }
 
-        microtaskQueued = true;
-        queueMicrotask(() => {
-            microtaskQueued = false;
-            measure();
+        frameWindow = view;
+        frameId = view.requestAnimationFrame(() => {
+            frameId = undefined;
+            frameWindow = undefined;
+            measureSizes();
         });
     }
 
     function refreshObservedElements() {
         if (!resizeObserver) return;
 
-        const el = root.value;
-        const nextElements = new Set<Element>();
-        if (el) {
-            nextElements.add(el);
-            for (const tooltip of getTooltipContents(el)) {
-                if (tooltip) nextElements.add(tooltip);
-            }
+        resizeObserver.disconnect();
+        for (const element of [root.value, lower.value, upper.value]) {
+            if (element) resizeObserver.observe(element);
+        }
+    }
+
+    function onResize(entries: ResizeObserverEntry[]) {
+        for (const entry of entries) {
+            const size = getObservedSize(entry);
+            if (entry.target === root.value) rootSize.value = size;
+            else if (entry.target === lower.value) lowerSize.value = size;
+            else if (entry.target === upper.value) upperSize.value = size;
         }
 
-        for (const observed of observedElements) {
-            if (!nextElements.has(observed)) resizeObserver.unobserve(observed);
-        }
-        for (const next of nextElements) {
-            if (!observedElements.has(next)) resizeObserver.observe(next);
-        }
-
-        observedElements.clear();
-        for (const next of nextElements) observedElements.add(next);
+        updateCollision();
     }
 
     function onWindowResize() {
@@ -134,17 +259,28 @@ export function useRangeSliderTooltipCollision(
 
     onMounted(() => {
         const view = root.value?.ownerDocument.defaultView;
-        if (view?.ResizeObserver) resizeObserver = new view.ResizeObserver(scheduleMeasure);
+        if (view?.ResizeObserver) resizeObserver = new view.ResizeObserver(onResize);
         view?.addEventListener('resize', onWindowResize);
         refreshObservedElements();
-        scheduleMeasure();
+
+        // ResizeObserver supplies cached sizes without forcing layout. The fallback measurement
+        // runs only when no observer is available or an explicit size dependency changes.
+        if (!resizeObserver) scheduleMeasure();
     });
 
     watch(
-        dependencies,
+        [root, lower, upper],
         () => {
             refreshObservedElements();
-            scheduleMeasure();
+            if (!resizeObserver) scheduleMeasure();
+        },
+        { flush: 'post' },
+    );
+    watch([valuePercent, orientation, placement, enabled], updateCollision, { flush: 'sync' });
+    watch(
+        sizeDependencies,
+        () => {
+            if (!resizeObserver) scheduleMeasure();
         },
         { flush: 'post' },
     );
@@ -154,7 +290,6 @@ export function useRangeSliderTooltipCollision(
         const view = root.value?.ownerDocument.defaultView;
         view?.removeEventListener('resize', onWindowResize);
         resizeObserver?.disconnect();
-        observedElements.clear();
         if (frameId != null) frameWindow?.cancelAnimationFrame(frameId);
     });
 

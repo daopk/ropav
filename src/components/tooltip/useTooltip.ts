@@ -37,7 +37,9 @@ function getTargetPosition(rect: DOMRect, placement: TooltipPlacement): TooltipP
     }
 }
 
-function resolveOffsetStyle(offset: TooltipOffset | undefined): CSSProperties | undefined {
+export function resolveTooltipOffsetStyle(
+    offset: TooltipOffset | undefined,
+): CSSProperties | undefined {
     if (offset == null) return undefined;
 
     if (typeof offset === 'number') {
@@ -59,7 +61,7 @@ function resolveOffsetStyle(offset: TooltipOffset | undefined): CSSProperties | 
     return Object.keys(style).length > 0 ? style : undefined;
 }
 
-function resolveTooltipColorStyleWithContrast(
+export function resolveTooltipColorStyleWithContrast(
     color: TooltipProps['color'],
     autoContrast: TooltipProps['autoContrast'],
 ): CSSProperties | undefined {
@@ -130,7 +132,7 @@ export function useTooltip(
 
     const contentStyle = computed<CSSProperties | undefined>(() => {
         const style: CSSProperties = {
-            ...resolveOffsetStyle(props.offset),
+            ...resolveTooltipOffsetStyle(props.offset),
             ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast),
         };
 
