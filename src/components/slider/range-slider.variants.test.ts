@@ -77,9 +77,7 @@ describe('RangeSlider variants', () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h('div', [
-                        h(RangeSlider, { disabled: true, modelValue: [25, 75] }),
-                    ]);
+                    return h('div', [h(RangeSlider, { disabled: true, modelValue: [25, 75] })]);
                 },
             }),
         );
