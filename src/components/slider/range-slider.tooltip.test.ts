@@ -71,6 +71,56 @@ describe('RangeSlider tooltip', () => {
         expect(mergedTooltip.classList.contains('rp-tooltip--open')).toBe(false);
     });
 
+    it('stacks the merged tooltip values (upper over lower) when vertical', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [55, 67],
+                        orientation: 'vertical',
+                        tooltip: 'always',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const mergedContent = getTooltipContent(getMergedTooltip(container));
+        const stacked = [
+            ...mergedContent.querySelectorAll<HTMLElement>(
+                '.rp-range-slider__tooltip-merged-value',
+            ),
+        ];
+
+        expect(stacked.map((line) => line.textContent)).toEqual(['67', '55']);
+    });
+
+    it('collapses the merged tooltip to a single value when both thumbs are equal', async () => {
+        for (const orientation of ['horizontal', 'vertical'] as const) {
+            const container = mountDom(
+                defineComponent({
+                    render() {
+                        return h(RangeSlider, {
+                            modelValue: [50, 50],
+                            orientation,
+                            tooltip: 'always',
+                        });
+                    },
+                }),
+            );
+
+            await flush();
+
+            const mergedContent = getTooltipContent(getMergedTooltip(container));
+
+            expect(mergedContent.textContent?.trim()).toBe('50');
+            expect(
+                mergedContent.querySelectorAll('.rp-range-slider__tooltip-merged-value'),
+            ).toHaveLength(0);
+        }
+    });
+
     it('opens and dismisses both tooltips together when either thumb is focused', async () => {
         const container = mountDom(
             defineComponent({

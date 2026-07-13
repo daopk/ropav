@@ -340,9 +340,10 @@ export function useRangeSlider(
         String(formattedValue.value[0]),
         String(formattedValue.value[1]),
     ]);
-    const mergedTooltipContent = computed(
-        () => `${tooltipContent.value[0]}–${tooltipContent.value[1]}`,
-    );
+    const mergedTooltipContent = computed(() => {
+        const [lower, upper] = tooltipContent.value;
+        return lower === upper ? lower : `${lower}–${upper}`;
+    });
 
     const rootClass = computed(() =>
         bem('rp-range-slider', {

@@ -146,5 +146,15 @@
 
     .rp-range-slider__tooltip--merged {
         top: calc(100% - var(--_rp-range-slider-tooltip-merged-percent));
+
+        // Stack the endpoints (upper on top, lower below) so the taller merged box
+        // reads as two values aligned with their thumbs instead of one centred line
+        // floating in empty space.
+        .rp-tooltip__content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }

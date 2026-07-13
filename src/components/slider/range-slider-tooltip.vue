@@ -67,7 +67,11 @@
                 aria-hidden="true"
                 :style="contentStyle"
             >
-                {{ mergedContent }}
+                <template v-if="orientation === 'vertical' && content[0] !== content[1]">
+                    <span class="rp-range-slider__tooltip-merged-value">{{ content[1] }}</span>
+                    <span class="rp-range-slider__tooltip-merged-value">{{ content[0] }}</span>
+                </template>
+                <template v-else>{{ mergedContent }}</template>
             </span>
         </span>
     </span>
