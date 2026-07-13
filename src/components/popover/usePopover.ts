@@ -1,5 +1,16 @@
-import { computed, isRef, onMounted, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
+import {
+    computed,
+    isRef,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    useId,
+    useSlots,
+    watch,
+    type CSSProperties,
+} from 'vue';
 import { bem } from '@/utils/bem';
+import { createRafScheduler } from '@/utils/rafScheduler';
 import type {
     PopoverContentSlotProps,
     PopoverOffset,
@@ -144,6 +155,10 @@ export function usePopover(
     const targetElement = ref<HTMLElement | null>(null);
     const targetPosition = ref<PopoverPosition | null>(null);
     const uncontrolledOpen = ref(false);
+    const positionScheduler = createRafScheduler(
+        updateTargetPosition,
+        () => targetElement.value?.ownerDocument.defaultView,
+    );
 
     const popoverId = computed(() => props.id ?? `${generatedId}-popover`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
@@ -214,7 +229,6 @@ export function usePopover(
 
     function openPopover() {
         if (isDisabled.value) return;
-        updateTargetPosition();
         setOpen(true);
     }
 
@@ -277,6 +291,7 @@ export function usePopover(
     }
 
     function syncTargetElement() {
+        positionScheduler.cancel();
         const nextTarget = isTargetMode.value ? resolveTargetElement(readTarget()) : null;
 
         if (targetElement.value !== nextTarget) {
@@ -287,8 +302,6 @@ export function usePopover(
             targetPosition.value = null;
             return;
         }
-
-        if (isVisible.value) updateTargetPosition();
     }
 
     watch(isDisabled, (disabled) => {
@@ -336,14 +349,16 @@ export function usePopover(
     watch(
         [isVisible, isTargetMode, targetElement],
         ([visible, targetMode, target], _previous, onCleanup) => {
-            if (!visible || !targetMode || !target || typeof window === 'undefined') return;
+            const view = target?.ownerDocument.defaultView;
+            if (!visible || !targetMode || !view) return;
 
-            window.addEventListener('resize', updateTargetPosition);
-            window.addEventListener('scroll', updateTargetPosition, true);
+            view.addEventListener('resize', positionScheduler.schedule);
+            view.addEventListener('scroll', positionScheduler.schedule, true);
 
             onCleanup(() => {
-                window.removeEventListener('resize', updateTargetPosition);
-                window.removeEventListener('scroll', updateTargetPosition, true);
+                view.removeEventListener('resize', positionScheduler.schedule);
+                view.removeEventListener('scroll', positionScheduler.schedule, true);
+                positionScheduler.cancel();
             });
         },
         { flush: 'sync' },
@@ -368,12 +383,14 @@ export function usePopover(
     watch(
         [targetElement, placement, isVisible],
         () => {
+            positionScheduler.cancel();
             if (isVisible.value) updateTargetPosition();
         },
         { flush: 'sync' },
     );
 
     onMounted(syncTargetElement);
+    onBeforeUnmount(positionScheduler.cancel);
 
     return {
         rootRef,

@@ -9,6 +9,7 @@ import {
     mountDomWithApp,
     waitTransition,
 } from '../../../tests/utils/vue';
+import { mockAnimationFrames } from '../../../tests/utils/raf';
 import Popover from './popover.vue';
 import { popoverPlacements } from './types';
 import type {
@@ -395,10 +396,94 @@ describe('Popover', () => {
             height: 40,
         };
         window.dispatchEvent(new Event('resize'));
+        await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
         await flush();
 
         expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('120px');
         expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('88px');
+    });
+
+    it('coalesces viewport repositioning and cancels pending work when closed', async () => {
+        const target = document.createElement('button');
+        let targetRect = {
+            top: 20,
+            right: 90,
+            bottom: 50,
+            left: 10,
+            width: 80,
+            height: 30,
+        };
+        const getTargetRect = vi.fn(
+            () =>
+                ({
+                    ...targetRect,
+                    x: targetRect.left,
+                    y: targetRect.top,
+                    toJSON: () => ({}),
+                }) as DOMRect,
+        );
+        target.getBoundingClientRect = getTargetRect;
+        document.body.append(target);
+
+        const props = reactive<PopoverProps>({
+            id: 'throttled-popover',
+            open: true,
+            target,
+        });
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(Popover, props, {
+                        default: () => h('p', 'Throttled content'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const popover = container.querySelector('#throttled-popover') as HTMLElement;
+        const frames = mockAnimationFrames();
+
+        try {
+            getTargetRect.mockClear();
+            targetRect = {
+                top: 40,
+                right: 180,
+                bottom: 80,
+                left: 100,
+                width: 80,
+                height: 40,
+            };
+            window.dispatchEvent(new Event('scroll'));
+            window.dispatchEvent(new Event('resize'));
+            window.dispatchEvent(new Event('scroll'));
+
+            expect(frames.request).toHaveBeenCalledOnce();
+            expect(frames.pendingCount()).toBe(1);
+            expect(getTargetRect).not.toHaveBeenCalled();
+
+            frames.flushFrame();
+            await flush();
+
+            expect(getTargetRect).toHaveBeenCalledOnce();
+            expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('140px');
+            expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('80px');
+
+            window.dispatchEvent(new Event('scroll'));
+            expect(frames.pendingCount()).toBe(1);
+            const pendingPositionFrame = frames.request.mock.results.at(-1)?.value;
+
+            props.open = false;
+            await flush();
+            expect(frames.cancel).toHaveBeenCalledWith(pendingPositionFrame);
+
+            frames.flushFrame();
+            expect(getTargetRect).toHaveBeenCalledOnce();
+        } finally {
+            unmount();
+            frames.restore();
+        }
     });
 
     it('emits update:open from trigger interactions when controlled', async () => {

@@ -8,6 +8,7 @@ import {
     mountDomWithApp,
     waitTransition,
 } from '../../../tests/utils/vue';
+import { mockAnimationFrames } from '../../../tests/utils/raf';
 import Tooltip from './tooltip.vue';
 import type { TooltipPlacement, TooltipProps } from './types';
 
@@ -257,6 +258,89 @@ describe('Tooltip targets', () => {
 
             expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-x')).toBe(x);
             expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-y')).toBe(y);
+        }
+    });
+
+    it('coalesces viewport repositioning and cancels pending work when hidden', async () => {
+        const target = document.createElement('button');
+        let targetRect = {
+            top: 20,
+            right: 90,
+            bottom: 50,
+            left: 10,
+            width: 80,
+            height: 30,
+        };
+        const getTargetRect = vi.fn(
+            () =>
+                ({
+                    ...targetRect,
+                    x: targetRect.left,
+                    y: targetRect.top,
+                    toJSON: () => ({}),
+                }) as DOMRect,
+        );
+        target.getBoundingClientRect = getTargetRect;
+        document.body.append(target);
+
+        const props = reactive<TooltipProps>({
+            content: 'Throttled help',
+            id: 'throttled-tooltip',
+            open: true,
+            openDelay: 0,
+            target,
+        });
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(Tooltip, props);
+                },
+            }),
+        );
+
+        await flush();
+
+        const tooltip = container.querySelector('#throttled-tooltip') as HTMLElement;
+        const frames = mockAnimationFrames();
+
+        try {
+            getTargetRect.mockClear();
+            targetRect = {
+                top: 40,
+                right: 180,
+                bottom: 80,
+                left: 100,
+                width: 80,
+                height: 40,
+            };
+            window.dispatchEvent(new Event('scroll'));
+            window.dispatchEvent(new Event('resize'));
+            window.dispatchEvent(new Event('scroll'));
+
+            expect(frames.request).toHaveBeenCalledOnce();
+            expect(frames.pendingCount()).toBe(1);
+            expect(getTargetRect).not.toHaveBeenCalled();
+
+            frames.flushFrame();
+            await flush();
+
+            expect(getTargetRect).toHaveBeenCalledOnce();
+            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-x')).toBe('140px');
+            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-y')).toBe('40px');
+
+            window.dispatchEvent(new Event('scroll'));
+            expect(frames.pendingCount()).toBe(1);
+            const pendingPositionFrame = frames.request.mock.results.at(-1)?.value;
+
+            props.open = false;
+            await flush();
+            expect(frames.cancel).toHaveBeenCalledWith(pendingPositionFrame);
+
+            frames.flushFrame();
+            expect(getTargetRect).toHaveBeenCalledOnce();
+        } finally {
+            unmount();
+            frames.restore();
         }
     });
 });

@@ -12,6 +12,7 @@ import {
 import { useDelayedOpen } from '@/composables/useDelayedOpen';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
+import { createRafScheduler } from '@/utils/rafScheduler';
 import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
 
 interface TooltipPosition {
@@ -88,6 +89,10 @@ export function useTooltip(
     const generatedId = useId();
     const targetElement = ref<HTMLElement | null>(null);
     const targetPosition = ref<TooltipPosition | null>(null);
+    const positionScheduler = createRafScheduler(
+        updateTargetPosition,
+        () => targetElement.value?.ownerDocument.defaultView,
+    );
 
     let isMounted = false;
     let removeTargetListeners: (() => void) | undefined;
@@ -220,7 +225,6 @@ export function useTooltip(
     }
 
     function onTargetOpen() {
-        updateTargetPosition();
         openTooltip();
     }
 
@@ -246,21 +250,24 @@ export function useTooltip(
     function removeViewportListeners() {
         removePositionListeners?.();
         removePositionListeners = undefined;
+        positionScheduler.cancel();
     }
 
     function bindViewportListeners() {
-        if (typeof window === 'undefined' || removePositionListeners) return;
+        const view = targetElement.value?.ownerDocument.defaultView;
+        if (!view || removePositionListeners) return;
 
-        window.addEventListener('resize', updateTargetPosition);
-        window.addEventListener('scroll', updateTargetPosition, true);
+        view.addEventListener('resize', positionScheduler.schedule);
+        view.addEventListener('scroll', positionScheduler.schedule, true);
 
         removePositionListeners = () => {
-            window.removeEventListener('resize', updateTargetPosition);
-            window.removeEventListener('scroll', updateTargetPosition, true);
+            view.removeEventListener('resize', positionScheduler.schedule);
+            view.removeEventListener('scroll', positionScheduler.schedule, true);
         };
     }
 
     function syncTarget() {
+        positionScheduler.cancel();
         if (!isTargetMode.value) {
             removeTargetListeners?.();
             removeViewportListeners();
@@ -274,6 +281,7 @@ export function useTooltip(
         if (targetElement.value === nextTarget) {
             syncTargetDescription();
             updateTargetPosition();
+            if (isVisible.value) bindViewportListeners();
             return;
         }
 
@@ -290,6 +298,7 @@ export function useTooltip(
         bindTargetListeners(nextTarget);
         syncTargetDescription();
         updateTargetPosition();
+        if (isVisible.value) bindViewportListeners();
     }
 
     watch(isDisabled, (disabled) => {
@@ -308,7 +317,7 @@ export function useTooltip(
         if (isMounted) syncTargetDescription();
     });
 
-    watch([placement, isVisible], () => {
+    watch(placement, () => {
         if (isMounted && isVisible.value) updateTargetPosition();
     });
 
@@ -316,6 +325,7 @@ export function useTooltip(
         if (!isMounted || !isTargetMode.value) return;
 
         if (visible) {
+            positionScheduler.cancel();
             updateTargetPosition();
             bindViewportListeners();
         } else {
