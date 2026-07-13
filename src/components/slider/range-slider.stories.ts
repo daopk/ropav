@@ -4,6 +4,13 @@ import RangeSlider from './range-slider.vue';
 import { sliderColors, sliderOrientations, sliderSizes } from './types';
 
 const percentFormatter = (value: number) => `${value}%`;
+const tooltipPlacements = ['top', 'right', 'bottom', 'left'] as const;
+const tooltipPlacementOrientations = {
+    top: 'horizontal',
+    right: 'vertical',
+    bottom: 'horizontal',
+    left: 'vertical',
+} as const;
 const storyWrapperStyle = {
     boxSizing: 'border-box',
     width: 'min(420px, 100%)',
@@ -176,6 +183,44 @@ export const TooltipArrow: Story = {
             arrow: true,
         },
     },
+};
+
+export const TooltipArrowPlacements: Story = {
+    args: {
+        modelValue: [45, 55],
+    },
+    render: (args) => ({
+        components: { RangeSlider },
+        setup() {
+            const values = reactive(
+                Object.fromEntries(
+                    tooltipPlacements.map((placement) => [placement, [...args.modelValue]]),
+                ) as Record<(typeof tooltipPlacements)[number], [number, number]>,
+            );
+
+            return { args, tooltipPlacementOrientations, tooltipPlacements, values };
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 32px; width: min(720px, 100%); padding: 48px;">
+                <div
+                    v-for="placement in tooltipPlacements"
+                    :key="placement"
+                    style="display: grid; min-height: 240px; gap: 16px; place-items: center;"
+                >
+                    <strong style="text-transform: capitalize;">{{ placement }}</strong>
+                    <RangeSlider
+                        v-bind="args"
+                        v-model="values[placement]"
+                        :orientation="tooltipPlacementOrientations[placement]"
+                        :style="tooltipPlacementOrientations[placement] === 'horizontal'
+                            ? { width: '100%' }
+                            : { height: '180px' }"
+                        :tooltip="{ mode: 'always', placement, arrow: true }"
+                    />
+                </div>
+            </div>
+        `,
+    }),
 };
 
 export const CustomThumb: Story = {
