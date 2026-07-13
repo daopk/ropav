@@ -11,21 +11,59 @@ import {
 import { colorPickerSizes, type ColorPickerFormat, type ColorPickerValue } from './types';
 
 function setRect(el: Element, rect: Partial<DOMRect>) {
+    const getBoundingClientRect = vi.fn(() => ({
+        bottom: 0,
+        height: 100,
+        left: 0,
+        right: 0,
+        top: 0,
+        width: 100,
+        x: 0,
+        y: 0,
+        toJSON: () => ({}),
+        ...rect,
+    }));
     Object.defineProperty(el, 'getBoundingClientRect', {
         configurable: true,
-        value: () => ({
-            bottom: 0,
-            height: 100,
-            left: 0,
-            right: 0,
-            top: 0,
-            width: 100,
-            x: 0,
-            y: 0,
-            toJSON: () => ({}),
-            ...rect,
-        }),
+        value: getBoundingClientRect,
     });
+    return getBoundingClientRect;
+}
+
+async function flushPointerUpdates() {
+    await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+    await flush();
+}
+
+function dispatchPointer(
+    target: EventTarget,
+    type: 'pointerdown' | 'pointermove' | 'pointerup' | 'pointercancel',
+    {
+        button = 0,
+        clientX = 0,
+        clientY = 0,
+        isPrimary = true,
+        pointerId = 1,
+    }: {
+        button?: number;
+        clientX?: number;
+        clientY?: number;
+        isPrimary?: boolean;
+        pointerId?: number;
+    } = {},
+) {
+    const init = { bubbles: true, button, cancelable: true, clientX, clientY };
+    const event =
+        typeof window.PointerEvent === 'function'
+            ? new PointerEvent(type, { ...init, isPrimary, pointerId })
+            : new MouseEvent(type, init);
+    if (!('pointerId' in event)) {
+        Object.defineProperties(event, {
+            isPrimary: { value: isPrimary },
+            pointerId: { value: pointerId },
+        });
+    }
+    target.dispatchEvent(event);
 }
 
 function formatHsvColor(color: Partial<ColorPickerHsvColor>, format: ColorPickerFormat = 'hex') {
@@ -207,6 +245,237 @@ describe('ColorPicker', () => {
         expect(onUpdate).toHaveBeenCalledTimes(2);
         expect(onUpdate).toHaveBeenNthCalledWith(1, formatHsvColor({ saturation: 50, value: 75 }));
         expect(onUpdate).toHaveBeenNthCalledWith(2, formatHsvColor({ saturation: 100, value: 0 }));
+    });
+
+    it('coalesces drag updates per frame and flushes the latest pointer on release', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        let queuedFrame: FrameRequestCallback | undefined;
+        let nextFrameId = 0;
+        const requestFrame = vi
+            .spyOn(window, 'requestAnimationFrame')
+            .mockImplementation((callback) => {
+                queuedFrame = callback;
+                nextFrameId += 1;
+                return nextFrameId;
+            });
+        const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+
+        try {
+            const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+            setRect(panel, { left: 10, top: 20, width: 200, height: 100 });
+            dispatchPointer(panel, 'pointerdown', {
+                clientX: 110,
+                clientY: 45,
+                pointerId: 7,
+            });
+            expect(onUpdate).toHaveBeenCalledOnce();
+            onUpdate.mockClear();
+
+            dispatchPointer(window, 'pointermove', {
+                clientX: 150,
+                clientY: 50,
+                pointerId: 7,
+            });
+            dispatchPointer(window, 'pointermove', {
+                clientX: 170,
+                clientY: 60,
+                pointerId: 7,
+            });
+
+            expect(requestFrame).toHaveBeenCalledOnce();
+            expect(onUpdate).not.toHaveBeenCalled();
+
+            const firstFrame = queuedFrame;
+            queuedFrame = undefined;
+            firstFrame?.(0);
+            await flush();
+            expect(onUpdate).toHaveBeenCalledOnce();
+            expect(onUpdate).toHaveBeenLastCalledWith(
+                formatHsvColor({ saturation: 80, value: 60 }),
+            );
+
+            dispatchPointer(window, 'pointermove', {
+                clientX: 190,
+                clientY: 70,
+                pointerId: 7,
+            });
+            dispatchPointer(window, 'pointermove', {
+                clientX: 210,
+                clientY: 80,
+                pointerId: 7,
+            });
+            dispatchPointer(window, 'pointerup', { pointerId: 7 });
+            await flush();
+
+            expect(onUpdate).toHaveBeenCalledTimes(2);
+            expect(onUpdate).toHaveBeenLastCalledWith(
+                formatHsvColor({ saturation: 100, value: 40 }),
+            );
+            expect(cancelFrame).toHaveBeenCalledOnce();
+        } finally {
+            requestFrame.mockRestore();
+            cancelFrame.mockRestore();
+        }
+    });
+
+    it('caches drag geometry and refreshes it after scrolling', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const getPanelRect = setRect(panel, {
+            left: 0,
+            top: 0,
+            width: 100,
+            height: 100,
+        });
+        dispatchPointer(panel, 'pointerdown', { clientX: 20, clientY: 20, pointerId: 8 });
+        expect(getPanelRect).toHaveBeenCalledOnce();
+
+        dispatchPointer(window, 'pointermove', { clientX: 30, clientY: 30, pointerId: 8 });
+        dispatchPointer(window, 'pointermove', { clientX: 40, clientY: 40, pointerId: 8 });
+        await flushPointerUpdates();
+        expect(getPanelRect).toHaveBeenCalledOnce();
+
+        getPanelRect.mockReturnValue({
+            bottom: 300,
+            height: 200,
+            left: 100,
+            right: 300,
+            top: 100,
+            width: 200,
+            x: 100,
+            y: 100,
+            toJSON: () => ({}),
+        });
+        panel.dispatchEvent(new Event('scroll'));
+        await flushPointerUpdates();
+        expect(getPanelRect).toHaveBeenCalledTimes(2);
+
+        onUpdate.mockClear();
+        dispatchPointer(window, 'pointermove', { clientX: 250, clientY: 150, pointerId: 8 });
+        await flushPointerUpdates();
+        expect(onUpdate).toHaveBeenLastCalledWith(formatHsvColor({ saturation: 75, value: 75 }));
+        expect(getPanelRect).toHaveBeenCalledTimes(2);
+
+        dispatchPointer(window, 'pointerup', { pointerId: 8 });
+    });
+
+    it('retries geometry measurement after a transient zero-sized layout', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const getPanelRect = setRect(panel, { width: 100, height: 100 });
+        dispatchPointer(panel, 'pointerdown', { clientX: 20, clientY: 20, pointerId: 11 });
+        onUpdate.mockClear();
+
+        getPanelRect.mockReturnValue({
+            bottom: 0,
+            height: 0,
+            left: 0,
+            right: 0,
+            top: 0,
+            width: 0,
+            x: 0,
+            y: 0,
+            toJSON: () => ({}),
+        });
+        window.dispatchEvent(new Event('resize'));
+        await flushPointerUpdates();
+        expect(getPanelRect).toHaveBeenCalledTimes(2);
+
+        getPanelRect.mockReturnValue({
+            bottom: 300,
+            height: 200,
+            left: 100,
+            right: 300,
+            top: 100,
+            width: 200,
+            x: 100,
+            y: 100,
+            toJSON: () => ({}),
+        });
+        dispatchPointer(window, 'pointermove', { clientX: 250, clientY: 150, pointerId: 11 });
+        await flushPointerUpdates();
+
+        expect(getPanelRect).toHaveBeenCalledTimes(3);
+        expect(onUpdate).toHaveBeenLastCalledWith(formatHsvColor({ saturation: 75, value: 75 }));
+
+        dispatchPointer(window, 'pointerup', { pointerId: 11 });
+    });
+
+    it('ignores secondary pointers without interrupting the active drag', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const panel = container.querySelector('.rp-color-picker__saturation') as HTMLElement;
+        const getPanelRect = setRect(panel, { width: 100, height: 100 });
+        dispatchPointer(panel, 'pointerdown', { button: 2, clientX: 20, clientY: 20 });
+        dispatchPointer(panel, 'pointerdown', {
+            clientX: 20,
+            clientY: 20,
+            isPrimary: false,
+        });
+        expect(getPanelRect).not.toHaveBeenCalled();
+        expect(onUpdate).not.toHaveBeenCalled();
+
+        dispatchPointer(panel, 'pointerdown', { clientX: 20, clientY: 20, pointerId: 9 });
+        onUpdate.mockClear();
+        dispatchPointer(window, 'pointermove', { clientX: 90, clientY: 10, pointerId: 10 });
+        dispatchPointer(window, 'pointerup', { pointerId: 10 });
+        dispatchPointer(window, 'pointermove', { clientX: 75, clientY: 25, pointerId: 9 });
+        dispatchPointer(window, 'pointerup', { pointerId: 9 });
+        await flush();
+
+        expect(onUpdate).toHaveBeenCalledOnce();
+        expect(onUpdate).toHaveBeenLastCalledWith(formatHsvColor({ saturation: 75, value: 75 }));
     });
 
     it('does not emit saturation and value when normalized selection is unchanged', async () => {
@@ -640,7 +909,7 @@ describe('ColorPicker', () => {
                 clientY: 100,
             }),
         );
-        await flush();
+        await flushPointerUpdates();
 
         expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-x')).toBe('75%');
         expect(panel.style.getPropertyValue('--_rp-color-picker-saturation-y')).toBe('100%');

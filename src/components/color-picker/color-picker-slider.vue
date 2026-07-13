@@ -34,7 +34,7 @@ import {
     roundPercent,
 } from './color-picker-utils';
 import type { ColorPickerSliderProps } from './types';
-import { useColorPickerDrag } from './useColorPickerDrag';
+import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 
 defineOptions({ name: 'RpColorPickerSlider' });
 
@@ -95,8 +95,7 @@ function updateValue(nextValue: number) {
     emit('update:value', normalizedNextValue);
 }
 
-function updateFromPointer(e: PointerEvent, el: HTMLElement) {
-    const rect = el.getBoundingClientRect();
+function updateFromPointer(e: ColorPickerPointerCoordinates, rect: DOMRect) {
     if (rect.width <= 0) return;
 
     updateValue(((e.clientX - rect.left) / rect.width) * max.value);
@@ -105,6 +104,7 @@ function updateFromPointer(e: PointerEvent, el: HTMLElement) {
 const { onPointerDown } = useColorPickerDrag({
     target: sliderRef,
     readonly: () => props.readonly,
+    isGeometryValid: (rect) => rect.width > 0,
     updateFromPointer,
 });
 

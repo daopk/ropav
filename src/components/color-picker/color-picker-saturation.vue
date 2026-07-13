@@ -63,7 +63,7 @@ import {
     roundPercent,
 } from './color-picker-utils';
 import type { ColorPickerSaturationProps, ColorPickerSelection } from './types';
-import { useColorPickerDrag } from './useColorPickerDrag';
+import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 
 type ColorPickerAxis = 'saturation' | 'value';
 
@@ -114,8 +114,7 @@ function updateValue(nextSaturation: number, nextValue: number) {
     });
 }
 
-function updateFromPointer(e: PointerEvent, el: HTMLElement) {
-    const rect = el.getBoundingClientRect();
+function updateFromPointer(e: ColorPickerPointerCoordinates, rect: DOMRect) {
     if (rect.width <= 0 || rect.height <= 0) return;
 
     const nextSaturation = ((e.clientX - rect.left) / rect.width) * 100;
@@ -128,6 +127,7 @@ const { onPointerDown } = useColorPickerDrag({
     target: saturationRef,
     focusTarget: saturationInputRef,
     readonly: () => props.readonly,
+    isGeometryValid: (rect) => rect.width > 0 && rect.height > 0,
     updateFromPointer,
 });
 
