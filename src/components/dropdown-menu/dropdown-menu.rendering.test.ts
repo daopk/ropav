@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 
-import { click, mountDom } from '../../../tests/utils/vue';
+import { click, keydown, mountDom } from '../../../tests/utils/vue';
 import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type {
+    DropdownMenuItem,
     DropdownMenuItemSlotProps,
     DropdownMenuPlacement,
     DropdownMenuSlotProps,
@@ -114,6 +115,164 @@ describe('DropdownMenu rendering', () => {
 
         expect(onSelect).toHaveBeenCalledWith(items[0]);
         expect(container.querySelector('[role="menu"]')).not.toBeNull();
+    });
+
+    it('does not evaluate descendants of collapsed submenus', async () => {
+        const readFirstChildValue = vi.fn();
+        const readSecondChildValue = vi.fn();
+        const lazyItems: DropdownMenuItem[] = [
+            {
+                label: 'First branch',
+                value: 'first',
+                children: [
+                    {
+                        label: 'First child',
+                        get value() {
+                            readFirstChildValue();
+                            return 'first-child';
+                        },
+                    },
+                ],
+            },
+            {
+                label: 'Second branch',
+                value: 'second',
+                children: [
+                    {
+                        label: 'Second child',
+                        get value() {
+                            readSecondChildValue();
+                            return 'second-child';
+                        },
+                    },
+                ],
+            },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'lazy-menu', items: lazyItems },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+
+        expect(readFirstChildValue).not.toHaveBeenCalled();
+        expect(readSecondChildValue).not.toHaveBeenCalled();
+
+        click(document.getElementById('lazy-menu-item-0') as HTMLButtonElement);
+        await nextTick();
+
+        expect(readFirstChildValue).toHaveBeenCalled();
+        expect(readSecondChildValue).not.toHaveBeenCalled();
+    });
+
+    it('rerenders only item rows whose focus state changes', async () => {
+        const focusItems: DropdownMenuItem[] = [
+            { label: 'First', value: 'first' },
+            { label: 'Second', value: 'second' },
+            { label: 'Third', value: 'third' },
+        ];
+        const renderItem = vi.fn((slotProps: DropdownMenuItemSlotProps) =>
+            h('span', slotProps.item.label),
+        );
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'focused-menu', items: focusItems },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                            item: renderItem,
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const thirdItem = document.getElementById('focused-menu-item-2');
+        renderItem.mockClear();
+
+        keydown(menu, 'ArrowDown');
+        await nextTick();
+
+        expect(renderItem.mock.calls.map(([slotProps]) => slotProps.item.value)).toEqual([
+            'first',
+            'second',
+        ]);
+        expect(document.getElementById('focused-menu-item-2')).toBe(thirdItem);
+    });
+
+    it('preserves open submenu nodes while focus moves inside them', async () => {
+        const nestedFocusItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'backlog' },
+                    { label: 'Done', value: 'done' },
+                    { label: 'Later', value: 'later' },
+                ],
+            },
+            { label: 'Archive', value: 'archive' },
+        ];
+        const renderItem = vi.fn((slotProps: DropdownMenuItemSlotProps) =>
+            h('span', slotProps.item.label),
+        );
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'stable-submenu', items: nestedFocusItems },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                            item: renderItem,
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+
+        const submenu = document.getElementById('stable-submenu-submenu-0') as HTMLElement;
+        const unaffectedRootItem = document.getElementById('stable-submenu-item-1');
+        const unaffectedChild = document.getElementById('stable-submenu-item-0-2');
+        renderItem.mockClear();
+
+        keydown(menu, 'ArrowDown');
+        await nextTick();
+
+        expect(document.getElementById('stable-submenu-submenu-0')).toBe(submenu);
+        expect(document.getElementById('stable-submenu-item-1')).toBe(unaffectedRootItem);
+        expect(document.getElementById('stable-submenu-item-0-2')).toBe(unaffectedChild);
+        expect(submenu.getAttribute('aria-activedescendant')).toBe('stable-submenu-item-0-1');
+        expect(renderItem.mock.calls.map(([slotProps]) => slotProps.item.value)).toEqual([
+            'backlog',
+            'done',
+        ]);
     });
 
     it('renders an empty state when no items are available', async () => {

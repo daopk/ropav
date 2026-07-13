@@ -164,20 +164,21 @@ export function useDropdownMenu(
         toggle,
     }));
 
-    const { renderedItems, getItemProps, getItemSlotProps } = useDropdownMenuRenderItems({
-        items: visibleItems,
-        getItemId,
-        getSubmenuId,
-        getMenuActiveDescendant,
-        isItemFocused,
-        isSubmenuOpen,
-        activateItem,
-        focusHoveredItem,
-        selectItem,
-        openSubmenu,
-        closeSubmenu,
-        close,
-    });
+    const { renderedItems, renderContext, getItemProps, getItemSlotProps } =
+        useDropdownMenuRenderItems({
+            items: visibleItems,
+            getItemId,
+            getSubmenuId,
+            getMenuActiveDescendant,
+            isItemFocused,
+            isSubmenuOpen,
+            activateItem,
+            focusHoveredItem,
+            selectItem,
+            openSubmenu,
+            closeSubmenu,
+            close,
+        });
 
     return {
         rootRef,
@@ -187,6 +188,7 @@ export function useDropdownMenu(
         isEmpty,
         visibleItems,
         renderedItems,
+        renderContext,
         focusedIndex,
         focusedPath,
         activeDescendantId,

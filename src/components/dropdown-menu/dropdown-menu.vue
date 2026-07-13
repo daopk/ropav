@@ -8,7 +8,7 @@
                     <slot name="empty">No actions</slot>
                 </div>
 
-                <DropdownMenuItems :items="renderedItems">
+                <DropdownMenuItems :items="visibleItems" :context="renderContext">
                     <template #item="itemSlotProps">
                         <slot name="item" v-bind="itemSlotProps">
                             <span class="rp-dropdown-menu__label">{{
@@ -72,7 +72,8 @@ const {
     menuRef,
     isVisible,
     isEmpty,
-    renderedItems,
+    visibleItems,
+    renderContext,
     rootClass,
     contentClass,
     contentProps,

@@ -46,7 +46,7 @@ export function hasItemSubmenu(item: DropdownMenuItem) {
 }
 
 export function hasNestedItems(items: DropdownMenuItem[]): boolean {
-    return items.some((item) => hasItemSubmenu(item) || hasNestedItems(item.children ?? []));
+    return items.some(hasItemSubmenu);
 }
 
 export function getPathKey(path: ItemPath) {

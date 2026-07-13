@@ -42,6 +42,30 @@ type UseDropdownMenuRenderItemsOptions = {
     close: (options?: DropdownMenuCloseOptions) => void;
 };
 
+export interface DropdownMenuRenderContext {
+    isItemFocused: (indexOrPath: number | ItemPath) => boolean;
+    isSubmenuOpen: (path: ItemPath) => boolean;
+    getItemProps: (
+        item: DropdownMenuItem,
+        indexOrPath: number | ItemPath,
+        focused?: boolean,
+        disabled?: boolean,
+        submenuOpen?: boolean,
+    ) => DropdownMenuItemProps;
+    getSubmenuProps: (
+        item: DropdownMenuItem,
+        path: ItemPath,
+        submenuOpen?: boolean,
+    ) => DropdownMenuSubmenuProps;
+    getItemSlotProps: (
+        item: DropdownMenuItem,
+        indexOrPath: number | ItemPath,
+        focused?: boolean,
+        disabled?: boolean,
+        submenuOpen?: boolean,
+    ) => DropdownMenuItemSlotProps;
+}
+
 export function useDropdownMenuRenderItems({
     items,
     getItemId,
@@ -80,10 +104,10 @@ export function useDropdownMenuRenderItems({
                 disabled,
                 hasSubmenu,
                 submenuOpen,
-                props: getItemProps(item, path, focused, disabled),
-                submenuProps: hasSubmenu ? getSubmenuProps(item, path) : undefined,
-                slotProps: getItemSlotProps(item, path, focused, disabled),
-                children: hasSubmenu ? getRenderedItems(item.children ?? [], path) : [],
+                props: getItemProps(item, path, focused, disabled, submenuOpen),
+                submenuProps: submenuOpen ? getSubmenuProps(item, path, true) : undefined,
+                slotProps: getItemSlotProps(item, path, focused, disabled, submenuOpen),
+                children: submenuOpen ? getRenderedItems(item.children ?? [], path) : [],
             };
         });
     }
@@ -93,19 +117,20 @@ export function useDropdownMenuRenderItems({
         indexOrPath: number | ItemPath,
         focused = isItemFocused(indexOrPath),
         disabled = Boolean(item.disabled),
+        submenuOpen?: boolean,
     ): DropdownMenuItemProps {
         const path = normalizePath(indexOrPath);
         const hasSubmenu = hasItemSubmenu(item);
-        const submenuOpen = hasSubmenu && isSubmenuOpen(path);
+        const resolvedSubmenuOpen = submenuOpen ?? (hasSubmenu ? isSubmenuOpen(path) : false);
 
         return {
             id: getItemId(path),
             type: 'button',
             role: 'menuitem',
             tabindex: -1,
-            class: getItemClass(item, focused, disabled, hasSubmenu, submenuOpen),
+            class: getItemClass(item, focused, disabled, hasSubmenu, resolvedSubmenuOpen),
             'aria-controls': hasSubmenu ? getSubmenuId(path) : undefined,
-            'aria-expanded': hasSubmenu ? submenuOpen : undefined,
+            'aria-expanded': hasSubmenu ? resolvedSubmenuOpen : undefined,
             'aria-haspopup': hasSubmenu ? 'menu' : undefined,
             'aria-disabled': disabled || undefined,
             'data-disabled': disabled || undefined,
@@ -116,12 +141,16 @@ export function useDropdownMenuRenderItems({
         };
     }
 
-    function getSubmenuProps(item: DropdownMenuItem, path: ItemPath): DropdownMenuSubmenuProps {
+    function getSubmenuProps(
+        item: DropdownMenuItem,
+        path: ItemPath,
+        submenuOpen = isSubmenuOpen(path),
+    ): DropdownMenuSubmenuProps {
         return {
             id: getSubmenuId(path),
             role: 'menu',
             class: bem('rp-dropdown-menu__submenu', {
-                open: isSubmenuOpen(path),
+                open: submenuOpen,
                 'has-submenu': hasNestedItems(item.children ?? []),
             }),
             'aria-label': item.label,
@@ -134,9 +163,11 @@ export function useDropdownMenuRenderItems({
         indexOrPath: number | ItemPath,
         focused = isItemFocused(indexOrPath),
         disabled = Boolean(item.disabled),
+        submenuOpen?: boolean,
     ): DropdownMenuItemSlotProps {
         const path = normalizePath(indexOrPath);
         const hasSubmenu = hasItemSubmenu(item);
+        const resolvedSubmenuOpen = submenuOpen ?? (hasSubmenu ? isSubmenuOpen(path) : false);
 
         return {
             item,
@@ -146,7 +177,7 @@ export function useDropdownMenuRenderItems({
             focused,
             disabled,
             hasSubmenu,
-            isSubmenuOpen: hasSubmenu && isSubmenuOpen(path),
+            isSubmenuOpen: resolvedSubmenuOpen,
             select: () => selectItem(item),
             openSubmenu: (focus = DEFAULT_FOCUS_TARGET) => openSubmenu(path, focus),
             closeSubmenu: () => closeSubmenu(path),
@@ -154,8 +185,17 @@ export function useDropdownMenuRenderItems({
         };
     }
 
+    const renderContext: DropdownMenuRenderContext = {
+        isItemFocused,
+        isSubmenuOpen,
+        getItemProps,
+        getSubmenuProps,
+        getItemSlotProps,
+    };
+
     return {
         renderedItems,
+        renderContext,
         getItemProps,
         getItemSlotProps,
     };
