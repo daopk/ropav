@@ -39,13 +39,10 @@
                 :step="nativeStep"
                 :orient="orientation === 'vertical' ? 'vertical' : undefined"
                 :disabled="control.disabled || undefined"
-                :required="control.required || undefined"
                 :aria-label="ariaLabel || undefined"
                 :aria-labelledby="control.ariaLabelledby"
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
-                :aria-invalid="control.invalid || undefined"
-                :aria-required="control.required || undefined"
                 :aria-valuetext="ariaValueText"
                 @input="onInput"
             />
@@ -110,9 +107,6 @@ const props = withDefaults(defineProps<SliderProps>(), {
     tooltip: 'hover',
     orientation: 'horizontal',
     disabled: undefined,
-    required: undefined,
-    invalid: undefined,
-    valid: undefined,
 });
 
 const emit = defineEmits<{

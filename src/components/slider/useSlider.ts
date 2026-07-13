@@ -145,8 +145,6 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
             'marks-with-labels': hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
             disabled: control.disabled,
-            invalid: control.invalid,
-            valid: control.valid && !control.invalid,
         }),
     );
 

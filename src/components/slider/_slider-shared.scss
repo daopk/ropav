@@ -18,10 +18,6 @@
     --_rp-#{$prefix}-mark-label-color: var(--rp-color-dimmed);
     --_rp-#{$prefix}-mark-filled-label-color: var(--rp-color-text);
     --_rp-#{$prefix}-mark-ring-color: var(--_rp-#{$prefix}-color);
-    --_rp-#{$prefix}-valid-color: var(--rp-color-green-filled);
-    --_rp-#{$prefix}-valid-ring: color-mix(in srgb, var(--rp-color-green-filled) 32%, transparent);
-    --_rp-#{$prefix}-invalid-color: var(--rp-color-red-filled);
-    --_rp-#{$prefix}-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
 }
 
 @mixin foundation-structure($prefix) {

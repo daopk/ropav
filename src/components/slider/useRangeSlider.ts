@@ -352,8 +352,6 @@ export function useRangeSlider(
             'marks-with-labels': hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
             disabled: control.disabled,
-            invalid: control.invalid,
-            valid: control.valid && !control.invalid,
         }),
     );
 

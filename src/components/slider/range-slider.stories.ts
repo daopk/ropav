@@ -74,9 +74,6 @@ const meta = {
         formatValue: { control: false },
         ariaValueText: { control: false },
         disabled: { control: 'boolean' },
-        required: { control: 'boolean' },
-        invalid: { control: 'boolean' },
-        valid: { control: 'boolean' },
     },
     args: {
         modelValue: [25, 75],
@@ -92,9 +89,6 @@ const meta = {
         size: undefined,
         orientation: 'horizontal',
         disabled: false,
-        required: false,
-        invalid: false,
-        valid: false,
     },
     render: (args) => ({
         components: { RangeSlider },

@@ -70,9 +70,6 @@ export interface SliderProps {
     size?: SliderSize;
     orientation?: SliderOrientation;
     disabled?: boolean;
-    required?: boolean;
-    invalid?: boolean;
-    valid?: boolean;
     ariaLabel?: string;
     ariaValueText?: string | SliderValueFormatter;
     describedby?: string;

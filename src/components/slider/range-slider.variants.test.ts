@@ -73,14 +73,12 @@ describe('RangeSlider variants', () => {
         }
     });
 
-    it('applies disabled, valid, and invalid state modifiers', async () => {
+    it('applies disabled state modifier', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
                     return h('div', [
                         h(RangeSlider, { disabled: true, modelValue: [25, 75] }),
-                        h(RangeSlider, { valid: true, modelValue: [25, 75] }),
-                        h(RangeSlider, { invalid: true, modelValue: [25, 75] }),
                     ]);
                 },
             }),
@@ -92,7 +90,5 @@ describe('RangeSlider variants', () => {
 
         expect(sliders[0].classList.contains('rp-range-slider--disabled')).toBe(true);
         expect(sliders[0].getAttribute('data-disabled')).toBe('true');
-        expect(sliders[1].classList.contains('rp-range-slider--valid')).toBe(true);
-        expect(sliders[2].classList.contains('rp-range-slider--invalid')).toBe(true);
     });
 });

@@ -255,8 +255,6 @@ describe('RangeSlider input', () => {
                         describedby: 'price-help price-error',
                         labelledby: 'price-label',
                         modelValue: [20, 80],
-                        required: true,
-                        invalid: true,
                         ariaLabel: ['Minimum price', 'Maximum price'],
                         ariaValueText: [
                             '20 dollars minimum',
@@ -272,7 +270,6 @@ describe('RangeSlider input', () => {
         const root = container.querySelector('.rp-range-slider')!;
         const [lower, upper] = getNativeInputs(container);
 
-        expect(root.classList.contains('rp-range-slider--invalid')).toBe(true);
         expect(root.getAttribute('aria-labelledby')).toBe('price-label');
         expect(lower.id).toBe('price-range');
         expect(upper.id).toBe('price-range-upper');
@@ -284,9 +281,6 @@ describe('RangeSlider input', () => {
         expect(upper.getAttribute('aria-valuetext')).toBe('80 dollars maximum');
 
         for (const native of [lower, upper]) {
-            expect(native.required).toBe(true);
-            expect(native.getAttribute('aria-required')).toBe('true');
-            expect(native.getAttribute('aria-invalid')).toBe('true');
             expect(native.getAttribute('aria-labelledby')).toBeNull();
             expect(native.getAttribute('aria-describedby')).toBe('price-help price-error');
         }

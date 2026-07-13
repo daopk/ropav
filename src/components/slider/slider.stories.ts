@@ -49,9 +49,6 @@ const meta = {
         },
         formatValue: { control: false },
         disabled: { control: 'boolean' },
-        required: { control: 'boolean' },
-        invalid: { control: 'boolean' },
-        valid: { control: 'boolean' },
     },
     args: {
         modelValue: 40,
@@ -66,9 +63,6 @@ const meta = {
         size: undefined,
         orientation: 'horizontal',
         disabled: false,
-        required: false,
-        invalid: false,
-        valid: false,
     },
     render: (args) => ({
         components: { Slider },

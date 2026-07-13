@@ -61,8 +61,6 @@ describe('Slider input', () => {
                         min: 10,
                         max: 90,
                         step: 5,
-                        required: true,
-                        invalid: true,
                         ariaValueText: '35 percent',
                     });
                 },
@@ -74,16 +72,13 @@ describe('Slider input', () => {
         const root = container.querySelector('.rp-slider')!;
         const native = container.querySelector('input') as HTMLInputElement;
 
-        expect(root.classList.contains('rp-slider--invalid')).toBe(true);
+        expect(root).toBeTruthy();
         expect(native.id).toBe('volume-control');
         expect(native.name).toBe('volume');
         expect(native.value).toBe('35');
         expect(native.min).toBe('10');
         expect(native.max).toBe('90');
         expect(native.step).toBe('5');
-        expect(native.required).toBe(true);
-        expect(native.getAttribute('aria-required')).toBe('true');
-        expect(native.getAttribute('aria-invalid')).toBe('true');
         expect(native.getAttribute('aria-valuetext')).toBe('35 percent');
         expect(native.getAttribute('aria-labelledby')).toBe('volume-label');
         expect(native.getAttribute('aria-describedby')).toBe('volume-help volume-error');

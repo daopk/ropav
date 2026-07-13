@@ -13,8 +13,6 @@
         role="group"
         :aria-labelledby="groupLabelledby"
         :aria-describedby="control.ariaDescribedby"
-        :aria-invalid="control.invalid || undefined"
-        :aria-required="control.required || undefined"
     >
         <span v-if="$slots.default || $slots.value" class="rp-range-slider__header">
             <span v-if="$slots.default" :id="labelId" class="rp-range-slider__label">
@@ -51,12 +49,9 @@
                 :step="nativeStep"
                 :orient="orientation === 'vertical' ? 'vertical' : undefined"
                 :disabled="control.disabled || undefined"
-                :required="control.required || undefined"
                 :aria-label="ariaLabels[index]"
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
-                :aria-invalid="control.invalid || undefined"
-                :aria-required="control.required || undefined"
                 :aria-valuetext="ariaValueText[index]"
                 @input="onInput(thumb, $event)"
                 @focus="onTooltipFocus(thumb)"
@@ -136,9 +131,6 @@ const props = withDefaults(defineProps<RangeSliderProps>(), {
     orientation: 'horizontal',
     ariaLabel: () => ['Minimum', 'Maximum'],
     disabled: undefined,
-    required: undefined,
-    invalid: undefined,
-    valid: undefined,
 });
 
 const emit = defineEmits<{
