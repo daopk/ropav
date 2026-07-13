@@ -50,21 +50,21 @@ describe('Popover', () => {
 
         const root = container.querySelector('.rp-popover') as HTMLElement;
         const trigger = container.querySelector('.trigger') as HTMLButtonElement;
-        const popover = container.querySelector('#account-popover') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-popover', 'rp-popover--placement-bottom']);
         expect(trigger.getAttribute('aria-controls')).toBe('account-popover');
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
-        expect(popover.getAttribute('role')).toBe('dialog');
-        expect(popover.getAttribute('aria-label')).toBe('Account actions');
-        expect(popover.style.display).toBe('none');
+        expect(container.querySelector('#account-popover')).toBeNull();
 
         click(trigger);
         await flush();
 
+        const popover = container.querySelector('#account-popover') as HTMLElement;
         expect(root.classList.contains('rp-popover--open')).toBe(true);
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        expect(popover.getAttribute('role')).toBe('dialog');
+        expect(popover.getAttribute('aria-label')).toBe('Account actions');
         expect(popover.style.display).not.toBe('none');
 
         click(container.querySelector('.inside') as HTMLButtonElement);
@@ -72,7 +72,53 @@ describe('Popover', () => {
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(container.querySelector('#account-popover')).toBeNull();
+    });
+
+    it('keeps mounted content hidden and preserves its state when requested', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        {
+                            id: 'persistent-popover',
+                            keepMounted: true,
+                        },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Toggle'),
+                            content: () =>
+                                h('input', { class: 'persistent-input', value: 'Initial' }),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const popover = container.querySelector('#persistent-popover') as HTMLElement;
+        const input = container.querySelector('.persistent-input') as HTMLInputElement;
+
         expect(popover.style.display).toBe('none');
+        input.value = 'Edited';
+
+        click(trigger);
+        await flush();
+
+        expect(container.querySelector('#persistent-popover')).toBe(popover);
+        expect(popover.style.display).not.toBe('none');
+
+        click(trigger);
+        await waitTransition();
+
+        expect(container.querySelector('#persistent-popover')).toBe(popover);
+        expect(popover.style.display).toBe('none');
+        expect((container.querySelector('.persistent-input') as HTMLInputElement).value).toBe(
+            'Edited',
+        );
     });
 
     it('supports labelled and described dialog content', async () => {
@@ -135,12 +181,12 @@ describe('Popover', () => {
 
         const root = container.querySelector('.rp-popover') as HTMLElement;
         const trigger = container.querySelector('.trigger') as HTMLButtonElement;
-        const inside = container.querySelector('.inside') as HTMLButtonElement;
 
         click(trigger);
         await flush();
         expect(root.classList.contains('rp-popover--open')).toBe(true);
 
+        const inside = container.querySelector('.inside') as HTMLButtonElement;
         click(inside);
         await flush();
         expect(root.classList.contains('rp-popover--open')).toBe(true);
@@ -181,7 +227,6 @@ describe('Popover', () => {
 
         const target = container.querySelector('#selector-target') as HTMLButtonElement;
         const root = container.querySelector('.rp-popover') as HTMLElement;
-        const popover = container.querySelector('#selector-popover') as HTMLElement;
 
         expect(target.getAttribute('aria-controls')).toBe('selector-popover');
         expect(target.getAttribute('aria-expanded')).toBe('false');
@@ -191,14 +236,15 @@ describe('Popover', () => {
             'rp-popover--placement-bottom',
             'rp-popover--target',
         ]);
-        expect(popover.textContent).toBe('Selector popover body');
-        expect(popover.style.display).toBe('none');
+        expect(container.querySelector('#selector-popover')).toBeNull();
 
         click(target);
         await flush();
 
+        const popover = container.querySelector('#selector-popover') as HTMLElement;
         expect(root.classList.contains('rp-popover--open')).toBe(true);
         expect(target.getAttribute('aria-expanded')).toBe('true');
+        expect(popover.textContent).toBe('Selector popover body');
         expect(popover.style.display).not.toBe('none');
 
         click(target);
@@ -206,7 +252,7 @@ describe('Popover', () => {
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(target.getAttribute('aria-expanded')).toBe('false');
-        expect(popover.style.display).toBe('none');
+        expect(container.querySelector('#selector-popover')).toBeNull();
     });
 
     it('positions target content from the target rect for each placement', async () => {

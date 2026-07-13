@@ -109,13 +109,15 @@ export const Default: Story = {
         const input = canvasElement.querySelector<HTMLInputElement>('.rp-input__native')!;
         const inputControl = canvasElement.querySelector<HTMLElement>('.rp-input')!;
         const preview = canvasElement.querySelector<HTMLElement>('.rp-color-input__preview')!;
+
+        await userEvent.click(input);
+        await waitFor(() =>
+            expect(canvasElement.querySelector<HTMLElement>('.rp-popover__content')).toBeVisible(),
+        );
         const picker = canvasElement.querySelector<HTMLElement>('.rp-popover__content')!;
         const pickerSurface = canvasElement.querySelector<HTMLElement>(
             '.rp-color-picker__surface',
         )!;
-
-        await userEvent.click(input);
-        await waitFor(() => expect(picker).toBeVisible());
 
         const inputRect = inputControl.getBoundingClientRect();
         const previewRect = preview.getBoundingClientRect();

@@ -64,4 +64,5 @@ export interface PopoverProps {
     ariaDescribedby?: string;
     closeOnOutsideClick?: boolean;
     closeOnEscape?: boolean;
+    keepMounted?: boolean;
 }

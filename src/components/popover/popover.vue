@@ -12,7 +12,7 @@
         <Transition name="rp-popover-content">
             <section
                 v-if="shouldRenderContent"
-                v-show="isVisible"
+                v-show="shouldShowContent"
                 :id="popoverId"
                 class="rp-popover__content"
                 :role="popoverRole"
@@ -54,6 +54,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
     role: 'dialog',
     closeOnOutsideClick: true,
     closeOnEscape: true,
+    keepMounted: false,
 });
 
 const emit = defineEmits<{
@@ -63,13 +64,13 @@ const emit = defineEmits<{
 const {
     rootRef,
     popoverId,
-    isVisible,
     isTargetMode,
     popoverRole,
     ariaLabel,
     ariaLabelledby,
     ariaDescribedby,
     shouldRenderContent,
+    shouldShowContent,
     rootClass,
     contentStyle,
     slotProps,

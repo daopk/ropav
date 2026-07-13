@@ -155,7 +155,10 @@ export function usePopover(
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
-    const shouldRenderContent = computed(() => !isDisabled.value);
+    const shouldRenderContent = computed(
+        () => !isDisabled.value && (Boolean(props.keepMounted) || isVisible.value),
+    );
+    const shouldShowContent = computed(() => !props.keepMounted || isVisible.value);
     const shouldWireTarget = computed(() => isTargetMode.value && !isDisabled.value);
     const ariaLabel = computed(() => props.ariaLabel || undefined);
     const ariaLabelledby = computed(() => props.ariaLabelledby || undefined);
@@ -383,6 +386,7 @@ export function usePopover(
         ariaLabelledby,
         ariaDescribedby,
         shouldRenderContent,
+        shouldShowContent,
         rootClass,
         contentStyle,
         triggerProps,

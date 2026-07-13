@@ -28,6 +28,7 @@ export interface ColorInputProps {
     swatchesPerRow?: number;
     placement?: PopoverPlacement;
     open?: boolean;
+    keepMounted?: boolean;
     popoverId?: string;
     pickerAriaLabel?: string;
     withEyeDropper?: boolean;

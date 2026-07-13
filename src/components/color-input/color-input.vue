@@ -4,6 +4,7 @@
         :class="rootClass"
         :placement="placement"
         :open="open"
+        :keep-mounted="keepMounted"
         :disabled="popoverDisabled"
         :aria-label="pickerAriaLabel"
         @focusout="onFocusOut"
@@ -107,6 +108,7 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
     swatchesOnly: false,
     placement: 'bottom-start',
     open: undefined,
+    keepMounted: false,
     pickerAriaLabel: 'Choose color',
     validateColor: false,
     invalidColorMessage: 'Enter a valid color.',
