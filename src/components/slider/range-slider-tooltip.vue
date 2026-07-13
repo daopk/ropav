@@ -71,6 +71,11 @@
                     <span class="rp-range-slider__tooltip-merged-value">{{ content[1] }}</span>
                     <span class="rp-range-slider__tooltip-merged-value">{{ content[0] }}</span>
                 </template>
+                <template v-else-if="content[0] !== content[1]">
+                    <span class="rp-range-slider__tooltip-merged-value">{{ content[0] }}</span>
+                    <span class="rp-range-slider__tooltip-merged-separator">–</span>
+                    <span class="rp-range-slider__tooltip-merged-value">{{ content[1] }}</span>
+                </template>
                 <template v-else>{{ mergedContent }}</template>
             </span>
         </span>

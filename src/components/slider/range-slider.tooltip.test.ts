@@ -59,6 +59,14 @@ describe('RangeSlider tooltip', () => {
         expect(endpointContents.map((content) => content.textContent)).toEqual(['50', '75']);
         expect(mergedContent.textContent).toBe('50–75');
         expect(
+            [...mergedContent.querySelectorAll('.rp-range-slider__tooltip-merged-value')].map(
+                (value) => value.textContent,
+            ),
+        ).toEqual(['50', '75']);
+        expect(
+            mergedContent.querySelector('.rp-range-slider__tooltip-merged-separator')?.textContent,
+        ).toBe('–');
+        expect(
             [...endpointContents, mergedContent].every(
                 (content) => content.getAttribute('aria-hidden') === 'true',
             ),
@@ -94,6 +102,9 @@ describe('RangeSlider tooltip', () => {
         ];
 
         expect(stacked.map((line) => line.textContent)).toEqual(['67', '55']);
+        expect(
+            mergedContent.querySelector('.rp-range-slider__tooltip-merged-separator'),
+        ).toBeNull();
     });
 
     it('collapses the merged tooltip to a single value when both thumbs are equal', async () => {
@@ -118,6 +129,9 @@ describe('RangeSlider tooltip', () => {
             expect(
                 mergedContent.querySelectorAll('.rp-range-slider__tooltip-merged-value'),
             ).toHaveLength(0);
+            expect(
+                mergedContent.querySelector('.rp-range-slider__tooltip-merged-separator'),
+            ).toBeNull();
         }
     });
 

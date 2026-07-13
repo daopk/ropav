@@ -46,6 +46,11 @@
     height: 100%;
 }
 
+.rp-range-slider__tooltip-merged-separator {
+    margin-inline: var(--rp-spacing-1);
+    opacity: 0.64;
+}
+
 // When the endpoint tooltips merge into one box, keep a distinct arrow pointing
 // at each thumb instead of a single arrow centred on the merged box. The offset
 // is half the on-track distance between the two thumbs (0 when the arrow axis
