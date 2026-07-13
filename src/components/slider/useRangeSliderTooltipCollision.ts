@@ -3,7 +3,6 @@ import type { TooltipPlacement } from '../tooltip/types';
 import type { RangeSliderValue, SliderOrientation } from './types';
 
 const TOOLTIP_COLLISION_GAP = 4;
-const TOOLTIP_COLLISION_RELEASE_GAP = 8;
 
 type TooltipRect = Pick<DOMRect, 'bottom' | 'height' | 'left' | 'right' | 'top' | 'width'>;
 
@@ -193,9 +192,7 @@ export function useRangeSliderTooltipCollision({
 
         setOverlapping(
             areRangeSliderTooltipLayoutsOverlapping({
-                gap: tooltipsOverlapping.value
-                    ? TOOLTIP_COLLISION_RELEASE_GAP
-                    : TOOLTIP_COLLISION_GAP,
+                gap: TOOLTIP_COLLISION_GAP,
                 lowerPercent: valuePercent.value[0],
                 lowerSize: lowerSize.value,
                 orientation: orientation.value,
@@ -285,19 +282,38 @@ export function useRangeSliderTooltipCollision({
         { flush: 'post' },
     );
 
-    const mergedArrowOffset = computed(() => {
-        const trackLength =
-            orientation.value === 'horizontal' ? rootSize.value.width : rootSize.value.height;
-        if (trackLength <= 0) return 0;
-
-        const arrowAlongTrackAxis =
-            orientation.value === 'horizontal'
-                ? placement.value === 'top' || placement.value === 'bottom'
-                : placement.value === 'left' || placement.value === 'right';
-        if (!arrowAlongTrackAxis) return 0;
-
+    const arrowAlongTrackAxis = computed(() =>
+        orientation.value === 'horizontal'
+            ? placement.value === 'top' || placement.value === 'bottom'
+            : placement.value === 'left' || placement.value === 'right',
+    );
+    const trackAxisLength = computed(() =>
+        orientation.value === 'horizontal' ? rootSize.value.width : rootSize.value.height,
+    );
+    const thumbDistance = computed(() => {
         const [lowerPercent, upperPercent] = valuePercent.value;
-        return (Math.abs(upperPercent - lowerPercent) / 100) * trackLength * 0.5;
+        return (Math.abs(upperPercent - lowerPercent) / 100) * trackAxisLength.value;
+    });
+
+    const mergedArrowOffset = computed(() => {
+        if (trackAxisLength.value <= 0 || !arrowAlongTrackAxis.value) return 0;
+        return thumbDistance.value * 0.5;
+    });
+
+    // Widen the merged box as the thumbs separate so each arrow keeps at least the
+    // distance-to-edge it had before merging. With the box centred on the midpoint,
+    // arrow-to-edge resolves to max(lower, upper) / 2 — half the wider endpoint tooltip,
+    // i.e. the pre-merge value used as the floor. A naturally wider box (short values)
+    // keeps its larger margin. Only while merged: the hidden merged box must not inflate
+    // to the full thumb span when the endpoint tooltips are the ones on screen.
+    const mergedMinSize = computed(() => {
+        if (!tooltipsOverlapping.value || trackAxisLength.value <= 0 || !arrowAlongTrackAxis.value)
+            return 0;
+        const maxEndpoint = Math.max(
+            getAxisSize(lowerSize.value, orientation.value),
+            getAxisSize(upperSize.value, orientation.value),
+        );
+        return thumbDistance.value + maxEndpoint;
     });
 
     onBeforeUnmount(() => {
@@ -308,5 +324,5 @@ export function useRangeSliderTooltipCollision({
         if (frameId != null) frameWindow?.cancelAnimationFrame(frameId);
     });
 
-    return { tooltipsOverlapping, mergedArrowOffset };
+    return { tooltipsOverlapping, mergedArrowOffset, mergedMinSize };
 }

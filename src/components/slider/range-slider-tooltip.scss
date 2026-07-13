@@ -63,6 +63,10 @@
 
     &.rp-tooltip--placement-top,
     &.rp-tooltip--placement-bottom {
+        .rp-tooltip__content {
+            min-width: var(--_rp-range-slider-tooltip-merged-min-size, 0px);
+        }
+
         .rp-tooltip__content::before {
             left: calc(50% - var(--_rp-range-slider-tooltip-merged-arrow-offset, 0px));
             translate: -50% 0;
@@ -86,6 +90,10 @@
 
     &.rp-tooltip--placement-left,
     &.rp-tooltip--placement-right {
+        .rp-tooltip__content {
+            min-height: var(--_rp-range-slider-tooltip-merged-min-size, 0px);
+        }
+
         .rp-tooltip__content::before {
             top: calc(50% + var(--_rp-range-slider-tooltip-merged-arrow-offset, 0px));
             translate: 0 -50%;

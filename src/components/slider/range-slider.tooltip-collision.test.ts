@@ -42,7 +42,7 @@ describe('RangeSlider tooltip collision', () => {
         );
     });
 
-    it('supports a wider release gap to prevent collision state chatter', () => {
+    it('treats a larger gap as a wider collision zone', () => {
         const lower = rect(0, 0, 32, 28);
         const upper = rect(38, 0, 32, 28);
 
@@ -114,7 +114,7 @@ describe('RangeSlider tooltip collision', () => {
         }
     });
 
-    it('accounts for different content sizes and preserves the release gap', () => {
+    it('accounts for different content sizes and gap width', () => {
         const layout = {
             lowerPercent: 20,
             lowerSize: { width: 20, height: 20 },
@@ -205,6 +205,75 @@ describe('RangeSlider tooltip collision', () => {
         valuePercent.value = [45, 55];
         await flush();
         expect(overlapping?.value).toBe(true);
+
+        window.ResizeObserver = originalResizeObserver;
+    });
+
+    it('sizes the merged box to preserve the pre-merge arrow-to-edge distance', async () => {
+        let resizeCallback: ResizeObserverCallback | undefined;
+        const originalResizeObserver = window.ResizeObserver;
+
+        class FakeResizeObserver {
+            constructor(callback: ResizeObserverCallback) {
+                resizeCallback = callback;
+            }
+
+            disconnect() {}
+            observe() {}
+            unobserve() {}
+        }
+
+        window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+
+        const valuePercent = ref<[number, number]>([10, 90]);
+        let collision: ReturnType<typeof useRangeSliderTooltipCollision> | undefined;
+
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    const root = ref<HTMLElement | null>(null);
+                    const lower = ref<HTMLElement | null>(null);
+                    const upper = ref<HTMLElement | null>(null);
+                    collision = useRangeSliderTooltipCollision({
+                        enabled: ref(true),
+                        lower,
+                        orientation: ref<'horizontal' | 'vertical'>('horizontal'),
+                        placement: ref<TooltipPlacement>('top'),
+                        root,
+                        upper,
+                        valuePercent,
+                    });
+
+                    return () =>
+                        h('div', { ref: root }, [
+                            h('div', { ref: lower }),
+                            h('div', { ref: upper }),
+                        ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.firstElementChild as HTMLElement;
+        const [lower, upper] = [...root.children] as HTMLElement[];
+        // Track 100px wide, each endpoint tooltip 40px wide (arrow-to-edge = 20px).
+        resizeCallback?.(
+            [resizeEntry(root, 100, 20), resizeEntry(lower, 40, 20), resizeEntry(upper, 40, 20)],
+            {} as ResizeObserver,
+        );
+
+        // Separated: merged box must not inflate while the endpoint tooltips are shown.
+        expect(collision?.tooltipsOverlapping.value).toBe(false);
+        expect(collision?.mergedMinSize.value).toBe(0);
+
+        // Merged: min size = thumb distance + widest endpoint, so each arrow keeps its
+        // pre-merge 20px margin (min size / 2 - arrow offset).
+        valuePercent.value = [45, 55];
+        await flush();
+        expect(collision?.tooltipsOverlapping.value).toBe(true);
+        expect(collision?.mergedArrowOffset.value).toBe(5);
+        expect(collision?.mergedMinSize.value).toBe(50);
 
         window.ResizeObserver = originalResizeObserver;
     });

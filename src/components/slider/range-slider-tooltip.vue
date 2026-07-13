@@ -134,7 +134,7 @@ const contentStyle = computed(() => ({
     ...resolveTooltipColorStyleWithContrast(props.color, undefined),
 }));
 
-const { tooltipsOverlapping, mergedArrowOffset } = useRangeSliderTooltipCollision({
+const { tooltipsOverlapping, mergedArrowOffset, mergedMinSize } = useRangeSliderTooltipCollision({
     enabled: toRef(props, 'open'),
     lower: lowerContentRef,
     orientation: toRef(props, 'orientation'),
@@ -147,6 +147,7 @@ const { tooltipsOverlapping, mergedArrowOffset } = useRangeSliderTooltipCollisio
 
 const layerStyle = computed(() => ({
     '--_rp-range-slider-tooltip-merged-arrow-offset': `${mergedArrowOffset.value}px`,
+    '--_rp-range-slider-tooltip-merged-min-size': `${mergedMinSize.value}px`,
 }));
 
 watch(
