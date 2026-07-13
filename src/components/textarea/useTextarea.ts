@@ -82,6 +82,7 @@ function resetTextareaHeight(textarea: HTMLTextAreaElement) {
 export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: string) => void) {
     const textareaRef = ref<HTMLTextAreaElement | null>(null);
     const control = useControlState(props);
+    let heightSyncPending = false;
 
     const autosizeRows = computed<AutosizeRows>(() => {
         const minRows =
@@ -142,12 +143,18 @@ export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: 
     }
 
     function scheduleTextareaHeightSync() {
-        void nextTick(syncTextareaHeight);
+        if (heightSyncPending) return;
+
+        heightSyncPending = true;
+        void nextTick(() => {
+            heightSyncPending = false;
+            syncTextareaHeight();
+        });
     }
 
     function onInput(e: Event) {
         emitUpdate((e.target as HTMLTextAreaElement).value);
-        syncTextareaHeight();
+        if (props.autosize) scheduleTextareaHeightSync();
     }
 
     function focusTextarea(e: MouseEvent) {

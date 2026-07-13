@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Textarea from './textarea.vue';
@@ -354,5 +354,43 @@ describe('Textarea', () => {
         expect(native.rows).toBe(2);
         expect(native.style.height).toBe('160px');
         expect(native.style.overflowY).toBe('hidden');
+    });
+
+    it('measures autosize only once for a controlled input update', async () => {
+        mockTextareaMetrics();
+
+        const value = ref('');
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        autosize: true,
+                        minRows: 1,
+                        modelValue: value.value,
+                        'onUpdate:modelValue': (nextValue: string) => {
+                            value.value = nextValue;
+                        },
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+        const readScrollHeight = vi.fn(() => 48);
+        Object.defineProperty(native, 'scrollHeight', {
+            configurable: true,
+            get: readScrollHeight,
+        });
+        vi.mocked(window.getComputedStyle).mockClear();
+
+        typeTextarea(native, 'One update');
+        await flush();
+
+        expect(value.value).toBe('One update');
+        expect(readScrollHeight).toHaveBeenCalledOnce();
+        expect(window.getComputedStyle).toHaveBeenCalledOnce();
+        expect(native.style.height).toBe('48px');
     });
 });
