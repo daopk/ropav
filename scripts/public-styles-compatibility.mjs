@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 
 const manifestPath = 'src/styles/styles-manifest.json';
-const bootstrapManifestRef = 'f2f7a815b6699365f0f47c114f74207877218f33';
+const bootstrapManifestRef = 'f16e826a64fb30a6c3403b42ffcaea358bcbfec5';
 const releaseTagPattern = /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
 const tokenSemanticFields = ['sourcePath', 'type', 'category', 'themeApplicability'];

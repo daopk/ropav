@@ -126,7 +126,7 @@ Layer adoption changes cascade precedence. Consumers whose reset cannot yet be l
 - Typed parts, state attributes, manifest entries, geometry variables and cascade layers form the current Public Styles API.
 - Renaming or removing a documented part, state attribute or variable changes the public contract.
 - Adding a public part, state attribute or variable extends the public contract.
-- `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Until the first such release, it uses the immutable manifest from the initial Public Styles API hardening commit (`f2f7a81`). Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
+- `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Until the first such release, it uses the immutable manifest from the initial Public Styles API commit (`f16e826`). Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
 - Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly pin a commit or tag that contains a manifest.
 - Internal DOM, selectors and undocumented variables are outside the public contract.
 - `Card.bodyClass` is a deprecated compatibility escape hatch; prefer `classNames.body`.
