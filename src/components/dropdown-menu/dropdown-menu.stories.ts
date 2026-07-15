@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import type { VirtualElement } from '@floating-ui/dom';
 import { ref, shallowRef } from 'vue';
 import Button from '../button/button.vue';
@@ -183,6 +184,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
+    tags: ['test'],
     render: (args) => ({
         components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args }),
@@ -196,6 +198,27 @@ export const Basic: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await userEvent.click(canvas.getByRole('button', { name: 'Actions' }));
+
+        const body = within(canvasElement.ownerDocument.body);
+        const menu = await body.findByRole('menu', { name: 'Project actions' });
+        const item = within(menu).getByRole('menuitem', { name: /Duplicate/ });
+        await userEvent.hover(item);
+
+        await waitFor(() => {
+            expect(item).toHaveClass('rp-dropdown-menu__item--focused');
+            expect(
+                getComputedStyle(menu).getPropertyValue('--_rp-dropdown-menu-focused-bg').trim(),
+            ).not.toBe('');
+            expect(getComputedStyle(item).backgroundColor).not.toBe(
+                getComputedStyle(menu).backgroundColor,
+            );
+        });
+
+        await userEvent.click(canvas.getByRole('button', { name: 'Actions' }));
+    },
 };
 
 export const Placements: Story = {
@@ -378,6 +401,7 @@ export const SafeTriangle: Story = {
 };
 
 export const CompoundPrimitives: Story = {
+    tags: ['test'],
     render: () => ({
         components: {
             DropdownMenuCheckboxItem,
@@ -435,6 +459,30 @@ export const CompoundPrimitives: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await userEvent.click(canvas.getByRole('button', { name: 'Preferences' }));
+
+        const body = within(canvasElement.ownerDocument.body);
+        const menu = await body.findByRole('menu', { name: 'Preferences' });
+        await userEvent.hover(within(menu).getByRole('menuitem', { name: 'Move to…' }));
+
+        const submenu = await body.findByRole('menu', { name: 'Move to' });
+        const item = within(submenu).getByRole('menuitem', { name: 'Done' });
+        await userEvent.hover(item);
+
+        await waitFor(() => {
+            expect(item).toHaveClass('rp-dropdown-menu__item--focused');
+            expect(
+                getComputedStyle(submenu).getPropertyValue('--_rp-dropdown-menu-focused-bg').trim(),
+            ).not.toBe('');
+            expect(getComputedStyle(item).backgroundColor).not.toBe(
+                getComputedStyle(submenu).backgroundColor,
+            );
+        });
+
+        await userEvent.click(canvas.getByRole('button', { name: 'Preferences' }));
+    },
 };
 
 export const ContextMenu: Story = {

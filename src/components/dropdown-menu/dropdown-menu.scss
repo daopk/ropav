@@ -1,16 +1,14 @@
 .rp-dropdown-menu {
-    --_rp-dropdown-menu-radius: var(--rp-radius-sm);
-    --_rp-dropdown-menu-focused-bg: var(--rp-color-default-hover);
-    --_rp-dropdown-menu-arrow-size: 0.5rem;
-
     position: relative;
     display: inline-flex;
     font-family: var(--rp-font-family);
     vertical-align: middle;
 
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
-        --_rp-dropdown-menu-focused-bg: var(--rp-color-disabled);
+    &__content,
+    &__submenu {
+        --_rp-dropdown-menu-radius: var(--rp-radius-sm);
+        --_rp-dropdown-menu-focused-bg: var(--rp-color-default-hover);
+        --_rp-dropdown-menu-arrow-size: 0.5rem;
     }
 
     &--disabled {
