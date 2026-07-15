@@ -70,7 +70,7 @@
 import { computed } from 'vue';
 import IconChevronRight from '~icons/lucide/chevron-right';
 import { presence, useStylesApi } from '@/styles-api';
-import DropdownMenuItems from './dropdown-menu-items';
+import DropdownMenuItems from './dropdown-menu-items.vue';
 import { useDropdownMenu } from './useDropdownMenu';
 import type {
     DropdownMenuItem,
