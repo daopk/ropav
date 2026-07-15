@@ -1,3 +1,37 @@
+## [0.0.10](https://github.com/daopk/ropav/compare/v0.0.9...v0.0.10) (2026-07-15)
+
+### ⚠ BREAKING CHANGES
+
+* **slider:** remove validation state props
+
+### Features
+
+* **toast:** add notification system ([482b7e4](https://github.com/daopk/ropav/commit/482b7e402706ec205435ffb3cb7a82b7b5cb257c))
+
+### Bug Fixes
+
+* **slider:** align merged tooltip arrows with thumbs ([d9fb2c2](https://github.com/daopk/ropav/commit/d9fb2c293c6e766df3898c3440e2fcc8c1095b71))
+* **slider:** improve merged tooltip separator ([5fdf4f1](https://github.com/daopk/ropav/commit/5fdf4f126b111f42787086bf6dd63e746beafc2f))
+* **slider:** preserve merged tooltip arrow margins ([8b0019c](https://github.com/daopk/ropav/commit/8b0019c8c27fedb2d33ddeff2585ffd0bc8635b6))
+* **slider:** remove range tooltip transitions ([4340919](https://github.com/daopk/ropav/commit/43409191bec37e22aa6f4a051682d8dc7ebcdb75))
+* **slider:** show tooltip during touch drag ([a53bada](https://github.com/daopk/ropav/commit/a53bada7af37fc9acd473ebf0fb5d5b8fe20cf33))
+* **slider:** stack merged vertical tooltip values ([8f5e1d2](https://github.com/daopk/ropav/commit/8f5e1d249146e0f2ca3fc9597605e60db0e2e290))
+* **storybook:** apply theme before initial render ([153c3b3](https://github.com/daopk/ropav/commit/153c3b3b46ac552c3cc4ab139c654d427dfaf271))
+* **toast:** prevent transition layout shifts ([cab3b70](https://github.com/daopk/ropav/commit/cab3b7000196b5e55722e01641c62409c3737acb))
+
+### Performance Improvements
+
+* **color-picker:** optimize pointer dragging ([6d9c88a](https://github.com/daopk/ropav/commit/6d9c88ae069303641a9110d4b8a7eb22f055084d))
+* **dropdown-menu:** isolate item rendering ([a1e2387](https://github.com/daopk/ropav/commit/a1e23871d0b084b1f988c5c72a3282cfba20ddc7))
+* **overlay:** throttle target repositioning ([6a5e30a](https://github.com/daopk/ropav/commit/6a5e30a63c969804d1489252d425699b6c6b8ced))
+* **popover:** lazy mount content ([32712ec](https://github.com/daopk/ropav/commit/32712eca1cb151136b43bae518d3998bf83cebf9))
+* **slider:** optimize range pointer dragging ([c757141](https://github.com/daopk/ropav/commit/c757141299e403c171062c1a6efe59f0c5cedfeb))
+* **textarea:** coalesce autosize measurements ([691b3a6](https://github.com/daopk/ropav/commit/691b3a64fd4a535b3478b994b8072a1cf07f0b85))
+
+### Code Refactoring
+
+* **slider:** remove validation state props ([299f08e](https://github.com/daopk/ropav/commit/299f08ec9bc54e55028d767157a66228d66ad855))
+
 ## [0.0.9](https://github.com/daopk/ropav/compare/v0.0.8...v0.0.9) (2026-07-11)
 
 ### ⚠ BREAKING CHANGES
