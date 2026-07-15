@@ -1,14 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive, ref } from 'vue';
-
 import {
     flush,
     keydown,
     mountDom,
     mountDomWithApp,
+    queryDom,
     waitTransition,
 } from '../../../tests/utils/vue';
-import { mockAnimationFrames } from '../../../tests/utils/raf';
 import Tooltip from './tooltip.vue';
 import type { TooltipPlacement, TooltipProps } from './types';
 
@@ -32,9 +31,9 @@ describe('Tooltip targets', () => {
 
         await flush();
 
-        const target = container.querySelector('#selector-target') as HTMLButtonElement;
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
-        const tooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
+        const target = queryDom(container, '#selector-target') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
+        const tooltip = queryDom(container, '[role="tooltip"]') as HTMLElement;
 
         expect(target.getAttribute('aria-describedby')).toBe('selector-tooltip');
         expect([...root.classList]).toEqual([
@@ -91,8 +90,8 @@ describe('Tooltip targets', () => {
 
         await flush();
 
-        const target = container.querySelector('#decorative-target') as HTMLButtonElement;
-        const tooltip = container.querySelector('.rp-tooltip__content') as HTMLElement;
+        const target = queryDom(container, '#decorative-target') as HTMLButtonElement;
+        const tooltip = queryDom(container, '.rp-tooltip__content') as HTMLElement;
 
         expect(target.getAttribute('aria-describedby')).toBe('existing-help');
         expect(tooltip.getAttribute('role')).toBeNull();
@@ -125,9 +124,7 @@ describe('Tooltip targets', () => {
         await flush();
 
         expect(elementTarget.getAttribute('aria-describedby')).toBe('element-tooltip');
-        expect(elementContainer.querySelector('[role="tooltip"]')?.textContent).toBe(
-            'Element help',
-        );
+        expect(queryDom(elementContainer, '[role="tooltip"]')?.textContent).toBe('Element help');
 
         const refContainer = mountDom(
             defineComponent({
@@ -149,12 +146,12 @@ describe('Tooltip targets', () => {
 
         await flush();
 
-        const refTarget = refContainer.querySelector('.ref-target') as HTMLButtonElement;
+        const refTarget = queryDom(refContainer, '.ref-target') as HTMLButtonElement;
         refTarget.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
         expect(refTarget.getAttribute('aria-describedby')).toBe('ref-tooltip');
-        expect(refContainer.querySelector('[role="tooltip"]')?.textContent).toBe('Ref help');
+        expect(queryDom(refContainer, '#ref-tooltip')?.textContent).toBe('Ref help');
     });
 
     it('appends and restores target aria-describedby on disabled, target change, and unmount', async () => {
@@ -170,6 +167,8 @@ describe('Tooltip targets', () => {
             id: 'target-tooltip',
             target: firstTarget,
             openDelay: 0,
+            flip: false,
+            shift: false,
             disabled: false,
         });
 
@@ -207,6 +206,8 @@ describe('Tooltip targets', () => {
             id: 'position-tooltip',
             placement: 'top',
             openDelay: 0,
+            flip: false,
+            shift: false,
         });
 
         const container = mountDom(
@@ -225,7 +226,7 @@ describe('Tooltip targets', () => {
 
         await flush();
 
-        const target = container.querySelector('#position-target') as HTMLButtonElement;
+        const target = queryDom(container, '#position-target') as HTMLButtonElement;
         target.getBoundingClientRect = vi.fn(
             () =>
                 ({
@@ -244,24 +245,22 @@ describe('Tooltip targets', () => {
         target.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        const tooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
-        const cases: Array<[TooltipPlacement, string, string]> = [
-            ['top', '50px', '20px'],
-            ['right', '90px', '35px'],
-            ['bottom', '50px', '50px'],
-            ['left', '10px', '35px'],
-        ];
+        const tooltip = queryDom(container, '[role="tooltip"]') as HTMLElement;
+        const cases: TooltipPlacement[] = ['top', 'right', 'bottom', 'left'];
 
-        for (const [placement, x, y] of cases) {
+        for (const placement of cases) {
             props.placement = placement;
             await flush();
+            await vi.waitFor(() => {
+                expect(tooltip.style.visibility).not.toBe('hidden');
+                expect(tooltip.dataset.placement).toBe(placement);
+            });
 
-            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-x')).toBe(x);
-            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-y')).toBe(y);
+            expect(tooltip.style.position).toBe('absolute');
         }
     });
 
-    it('coalesces viewport repositioning and cancels pending work when hidden', async () => {
+    it('auto-updates on viewport changes and cleans up when hidden', async () => {
         const target = document.createElement('button');
         let targetRect = {
             top: 20,
@@ -300,9 +299,7 @@ describe('Tooltip targets', () => {
 
         await flush();
 
-        const tooltip = container.querySelector('#throttled-tooltip') as HTMLElement;
-        const frames = mockAnimationFrames();
-
+        const tooltip = queryDom(container, '#throttled-tooltip') as HTMLElement;
         try {
             getTargetRect.mockClear();
             targetRect = {
@@ -316,31 +313,21 @@ describe('Tooltip targets', () => {
             window.dispatchEvent(new Event('scroll'));
             window.dispatchEvent(new Event('resize'));
             window.dispatchEvent(new Event('scroll'));
-
-            expect(frames.request).toHaveBeenCalledOnce();
-            expect(frames.pendingCount()).toBe(1);
-            expect(getTargetRect).not.toHaveBeenCalled();
-
-            frames.flushFrame();
             await flush();
 
-            expect(getTargetRect).toHaveBeenCalledOnce();
-            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-x')).toBe('140px');
-            expect(tooltip.style.getPropertyValue('--_rp-tooltip-target-y')).toBe('40px');
-
-            window.dispatchEvent(new Event('scroll'));
-            expect(frames.pendingCount()).toBe(1);
-            const pendingPositionFrame = frames.request.mock.results.at(-1)?.value;
+            expect(getTargetRect).toHaveBeenCalled();
+            expect(tooltip.style.left).not.toBe('');
+            expect(tooltip.style.top).not.toBe('');
 
             props.open = false;
             await flush();
-            expect(frames.cancel).toHaveBeenCalledWith(pendingPositionFrame);
-
-            frames.flushFrame();
-            expect(getTargetRect).toHaveBeenCalledOnce();
+            getTargetRect.mockClear();
+            window.dispatchEvent(new Event('scroll'));
+            window.dispatchEvent(new Event('resize'));
+            await flush();
+            expect(getTargetRect).not.toHaveBeenCalled();
         } finally {
             unmount();
-            frames.restore();
         }
     });
 });

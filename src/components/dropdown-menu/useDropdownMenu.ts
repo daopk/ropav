@@ -1,5 +1,7 @@
-import { computed, ref, useId } from 'vue';
+import { computed, ref, useId, watch } from 'vue';
 import { bem } from '@/utils/bem';
+import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
     DropdownMenuContentProps,
     DropdownMenuItem,
@@ -27,17 +29,39 @@ export function useDropdownMenu(
 ) {
     const rootRef = ref<HTMLElement | null>(null);
     const menuRef = ref<HTMLElement | null>(null);
+    const arrowRef = ref<HTMLElement | null>(null);
     const uncontrolledOpen = ref(false);
 
     const generatedId = useId();
     const menuId = computed(() => props.id ?? `${generatedId}-menu`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
+    const requestedTeleportTarget = computed(() => props.portalTo ?? props.teleportTo);
+    const teleportTo = useTeleportTarget(() => requestedTeleportTarget.value);
+    const shouldTeleport = computed(() => props.portal ?? props.teleport !== false);
+    const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
+        () => props.target,
+        rootRef,
+    );
+    const targetElement = computed(() =>
+        isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
+    );
     const visibleItems = computed(() => props.items ?? []);
     const isDisabled = computed(() => Boolean(props.disabled));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
     const contentHasSubmenu = computed(() => hasNestedItems(visibleItems.value));
     const isEmpty = computed(() => visibleItems.value.length === 0);
+
+    const { actualPlacement, arrowStyle, contentStyle } = useDropdownMenuPortalPosition({
+        props,
+        reference,
+        menuRef,
+        arrowRef,
+        isVisible,
+        placement,
+        restartKey: () => [shouldTeleport.value, teleportTo.value],
+    });
+    const placementSide = computed(() => actualPlacement.value.split('-')[0]);
 
     const {
         focusedPath,
@@ -70,7 +94,8 @@ export function useDropdownMenu(
         menuId,
         rootRef,
         menuRef,
-        placement,
+        targetRef: targetElement,
+        placement: actualPlacement,
         focusedPath,
     });
 
@@ -85,6 +110,7 @@ export function useDropdownMenu(
         emit,
         rootRef,
         menuRef,
+        targetRef: targetElement,
         uncontrolledOpen,
         isDisabled,
         isOpen,
@@ -127,7 +153,8 @@ export function useDropdownMenu(
 
     const rootClass = computed(() =>
         bem('rp-dropdown-menu', {
-            [`placement-${placement.value}`]: true,
+            [`placement-${actualPlacement.value}`]: true,
+            target: isExplicitTarget.value,
             open: isVisible.value,
             disabled: isDisabled.value,
         }),
@@ -159,14 +186,6 @@ export function useDropdownMenu(
         onMouseleave: onMenuMouseleave,
     }));
 
-    const { contentStyle } = useDropdownMenuPortalPosition({
-        props,
-        rootRef,
-        menuRef,
-        isVisible,
-        placement,
-    });
-
     const slotProps = computed<DropdownMenuSlotProps>(() => ({
         triggerProps: triggerProps.value,
         isOpen: isVisible.value,
@@ -177,10 +196,13 @@ export function useDropdownMenu(
 
     const { renderedItems, renderContext, getItemProps, getItemSlotProps } =
         useDropdownMenuRenderItems({
+            props,
+            actualPlacement,
             items: visibleItems,
             getItemId,
             getSubmenuId,
             getMenuActiveDescendant,
+            getItemElement,
             isItemFocused,
             isSubmenuOpen,
             activateItem,
@@ -191,9 +213,53 @@ export function useDropdownMenu(
             close,
         });
 
+    watch(
+        [isExplicitTarget, targetElement],
+        ([explicit, target], _previous, onCleanup) => {
+            if (!explicit || !target) return;
+            target.addEventListener('click', onTriggerClick);
+            target.addEventListener('keydown', onTriggerKeydown as EventListener);
+            onCleanup(() => {
+                target.removeEventListener('click', onTriggerClick);
+                target.removeEventListener('keydown', onTriggerKeydown as EventListener);
+            });
+        },
+        { flush: 'sync' },
+    );
+
+    watch(
+        [isExplicitTarget, targetElement, menuId, isVisible, isDisabled],
+        ([explicit, target, id, visible, disabled], _previous, onCleanup) => {
+            if (!explicit || !target) return;
+            const attributes = ['aria-controls', 'aria-expanded', 'aria-haspopup', 'aria-disabled'];
+            const snapshot = new Map(
+                attributes.map((attribute) => [attribute, target.getAttribute(attribute)]),
+            );
+            if (disabled) {
+                target.removeAttribute('aria-controls');
+                target.removeAttribute('aria-expanded');
+                target.removeAttribute('aria-haspopup');
+                target.setAttribute('aria-disabled', 'true');
+            } else {
+                target.setAttribute('aria-controls', id);
+                target.setAttribute('aria-expanded', String(visible));
+                target.setAttribute('aria-haspopup', 'menu');
+                target.removeAttribute('aria-disabled');
+            }
+            onCleanup(() => {
+                for (const [attribute, value] of snapshot) {
+                    if (value == null) target.removeAttribute(attribute);
+                    else target.setAttribute(attribute, value);
+                }
+            });
+        },
+        { flush: 'sync' },
+    );
+
     return {
         rootRef,
         menuRef,
+        arrowRef,
         menuId,
         isVisible,
         isEmpty,
@@ -206,6 +272,12 @@ export function useDropdownMenu(
         rootClass,
         contentClass,
         contentStyle,
+        arrowStyle,
+        actualPlacement,
+        placementSide,
+        isTargetMode: isExplicitTarget,
+        teleportTo,
+        shouldTeleport,
         triggerProps,
         contentProps,
         slotProps,

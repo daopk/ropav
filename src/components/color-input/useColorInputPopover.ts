@@ -15,9 +15,12 @@ function onInputKeydown(event: KeyboardEvent, popover: PopoverSlotProps) {
 }
 
 function focusPickerFromTrigger(trigger: HTMLElement | null) {
-    const picker = trigger
-        ?.closest('.rp-color-input')
-        ?.querySelector<HTMLElement>('.rp-color-picker');
+    const contentId = trigger?.getAttribute('aria-controls')?.split(/\s+/).find(Boolean);
+    const picker = contentId
+        ? trigger?.ownerDocument
+              .getElementById(contentId)
+              ?.querySelector<HTMLElement>('.rp-color-picker')
+        : null;
     if (!picker) return;
 
     const hasColorArea = Boolean(picker.querySelector('.rp-color-picker__saturation'));
@@ -35,12 +38,13 @@ function onPickerKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps)
     if (event.key !== 'Escape') return;
 
     const pickerRoot = event.currentTarget;
-    const focusTarget =
-        pickerRoot instanceof Element
-            ? pickerRoot
-                  .closest('.rp-color-input')
-                  ?.querySelector<HTMLInputElement>('.rp-input__native')
-            : undefined;
+    const content = pickerRoot instanceof Element ? pickerRoot.closest('[role="dialog"]') : null;
+    const contentId = content?.id;
+    const focusTarget = contentId
+        ? [...content.ownerDocument.querySelectorAll<HTMLElement>('[aria-controls]')].find(
+              (element) => element.getAttribute('aria-controls')?.split(/\s+/).includes(contentId),
+          )
+        : undefined;
 
     event.stopPropagation();
     focusTarget?.focus({ preventScroll: true });

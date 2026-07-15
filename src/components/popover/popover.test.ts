@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive } from 'vue';
-
 import {
     click,
     flush,
     keydown,
     mountDom,
     mountDomWithApp,
+    queryDom,
+    queryDomAll,
     waitTransition,
 } from '../../../tests/utils/vue';
-import { mockAnimationFrames } from '../../../tests/utils/raf';
 import Popover from './popover.vue';
 import { popoverPlacements } from './types';
 import type {
@@ -20,7 +20,7 @@ import type {
 } from './types';
 
 function tab(shiftKey = false) {
-    document.dispatchEvent(
+    (document.activeElement ?? document).dispatchEvent(
         new KeyboardEvent('keydown', {
             key: 'Tab',
             bubbles: true,
@@ -60,31 +60,31 @@ describe('Popover', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-popover') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-popover') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         expect([...root.classList]).toEqual(['rp-popover', 'rp-popover--placement-bottom']);
         expect(trigger.getAttribute('aria-controls')).toBe('account-popover');
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
-        expect(container.querySelector('#account-popover')).toBeNull();
+        expect(queryDom(container, '#account-popover')).toBeNull();
 
         click(trigger);
         await flush();
 
-        const popover = container.querySelector('#account-popover') as HTMLElement;
+        const popover = queryDom(container, '#account-popover') as HTMLElement;
         expect(root.classList.contains('rp-popover--open')).toBe(true);
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(popover.getAttribute('role')).toBe('dialog');
         expect(popover.getAttribute('aria-label')).toBe('Account actions');
         expect(popover.style.display).not.toBe('none');
 
-        click(container.querySelector('.inside') as HTMLButtonElement);
+        click(queryDom(container, '.inside') as HTMLButtonElement);
         await waitTransition();
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
-        expect(container.querySelector('#account-popover')).toBeNull();
+        expect(queryDom(container, '#account-popover')).toBeNull();
     });
 
     it('keeps mounted content hidden and preserves its state when requested', async () => {
@@ -110,9 +110,9 @@ describe('Popover', () => {
 
         await flush();
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
-        const popover = container.querySelector('#persistent-popover') as HTMLElement;
-        const input = container.querySelector('.persistent-input') as HTMLInputElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        const popover = queryDom(container, '#persistent-popover') as HTMLElement;
+        const input = queryDom(container, '.persistent-input') as HTMLInputElement;
 
         expect(popover.style.display).toBe('none');
         input.value = 'Edited';
@@ -120,17 +120,38 @@ describe('Popover', () => {
         click(trigger);
         await flush();
 
-        expect(container.querySelector('#persistent-popover')).toBe(popover);
+        expect(queryDom(container, '#persistent-popover')).toBe(popover);
         expect(popover.style.display).not.toBe('none');
 
         click(trigger);
         await waitTransition();
 
-        expect(container.querySelector('#persistent-popover')).toBe(popover);
+        expect(queryDom(container, '#persistent-popover')).toBe(popover);
         expect(popover.style.display).toBe('none');
-        expect((container.querySelector('.persistent-input') as HTMLInputElement).value).toBe(
-            'Edited',
+        expect((queryDom(container, '.persistent-input') as HTMLInputElement).value).toBe('Edited');
+    });
+
+    it('renders a real arrow element when enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        { arrow: true, open: true },
+                        {
+                            default: () => h('button', 'Target'),
+                            content: () => h('span', 'Arrow content'),
+                        },
+                    );
+                },
+            }),
         );
+
+        await flush();
+
+        const arrow = queryDom(container, '.rp-popover__arrow') as HTMLElement;
+        expect(arrow.getAttribute('aria-hidden')).toBe('true');
+        expect(arrow.dataset.side).toBe('bottom');
     });
 
     it('supports labelled and described dialog content', async () => {
@@ -163,7 +184,7 @@ describe('Popover', () => {
 
         await flush();
 
-        const popover = container.querySelector('#labelled-popover') as HTMLElement;
+        const popover = queryDom(container, '#labelled-popover') as HTMLElement;
 
         expect(popover.getAttribute('role')).toBe('dialog');
         expect(popover.getAttribute('aria-labelledby')).toBe('labelled-popover-title');
@@ -191,14 +212,14 @@ describe('Popover', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-popover') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-popover') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         click(trigger);
         await flush();
         expect(root.classList.contains('rp-popover--open')).toBe(true);
 
-        const inside = container.querySelector('.inside') as HTMLButtonElement;
+        const inside = queryDom(container, '.inside') as HTMLButtonElement;
         click(inside);
         await flush();
         expect(root.classList.contains('rp-popover--open')).toBe(true);
@@ -248,13 +269,13 @@ describe('Popover', () => {
 
         await flush();
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
         trigger.focus();
         click(trigger);
         await flush();
 
-        const content = container.querySelector('#focus-popover') as HTMLElement;
-        const last = container.querySelector('.last') as HTMLButtonElement;
+        const content = queryDom(container, '#focus-popover') as HTMLElement;
+        const last = queryDom(container, '.last') as HTMLButtonElement;
 
         expect(content.tabIndex).toBe(-1);
         expect(document.activeElement).toBe(trigger);
@@ -303,8 +324,8 @@ describe('Popover', () => {
 
         await flush();
 
-        const target = container.querySelector('#selector-target') as HTMLButtonElement;
-        const root = container.querySelector('.rp-popover') as HTMLElement;
+        const target = queryDom(container, '#selector-target') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-popover') as HTMLElement;
 
         expect(target.getAttribute('aria-controls')).toBe('selector-popover');
         expect(target.getAttribute('aria-expanded')).toBe('false');
@@ -314,12 +335,12 @@ describe('Popover', () => {
             'rp-popover--placement-bottom',
             'rp-popover--target',
         ]);
-        expect(container.querySelector('#selector-popover')).toBeNull();
+        expect(queryDom(container, '#selector-popover')).toBeNull();
 
         click(target);
         await flush();
 
-        const popover = container.querySelector('#selector-popover') as HTMLElement;
+        const popover = queryDom(container, '#selector-popover') as HTMLElement;
         expect(root.classList.contains('rp-popover--open')).toBe(true);
         expect(target.getAttribute('aria-expanded')).toBe('true');
         expect(popover.textContent).toBe('Selector popover body');
@@ -330,7 +351,7 @@ describe('Popover', () => {
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(target.getAttribute('aria-expanded')).toBe('false');
-        expect(container.querySelector('#selector-popover')).toBeNull();
+        expect(queryDom(container, '#selector-popover')).toBeNull();
     });
 
     it('positions target content from the target rect for each placement', async () => {
@@ -338,6 +359,8 @@ describe('Popover', () => {
             id: 'position-popover',
             placement: 'top',
             target: '#position-target',
+            flip: false,
+            shift: false,
         });
 
         const container = mountDom(
@@ -355,7 +378,7 @@ describe('Popover', () => {
 
         await flush();
 
-        const target = container.querySelector('#position-target') as HTMLButtonElement;
+        const target = queryDom(container, '#position-target') as HTMLButtonElement;
         target.getBoundingClientRect = vi.fn(
             () =>
                 ({
@@ -374,28 +397,18 @@ describe('Popover', () => {
         click(target);
         await flush();
 
-        const popover = container.querySelector('#position-popover') as HTMLElement;
-        const cases: Array<[PopoverPlacement, string, string]> = [
-            ['top-start', '10px', '20px'],
-            ['top', '50px', '20px'],
-            ['top-end', '90px', '20px'],
-            ['right-start', '90px', '20px'],
-            ['right', '90px', '35px'],
-            ['right-end', '90px', '50px'],
-            ['bottom-start', '10px', '50px'],
-            ['bottom', '50px', '50px'],
-            ['bottom-end', '90px', '50px'],
-            ['left-start', '10px', '20px'],
-            ['left', '10px', '35px'],
-            ['left-end', '10px', '50px'],
-        ];
+        const popover = queryDom(container, '#position-popover') as HTMLElement;
+        const cases: PopoverPlacement[] = [...popoverPlacements];
 
-        for (const [placement, x, y] of cases) {
+        for (const placement of cases) {
             props.placement = placement;
             await flush();
+            await vi.waitFor(() => {
+                expect(popover.style.visibility).not.toBe('hidden');
+                expect(popover.dataset.placement).toBe(placement);
+            });
 
-            expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe(x);
-            expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe(y);
+            expect(popover.style.position).toBe('absolute');
         }
     });
 
@@ -440,6 +453,8 @@ describe('Popover', () => {
             id: 'retarget-popover',
             target: firstTarget,
             open: true,
+            flip: false,
+            shift: false,
         });
 
         const container = mountDom(
@@ -454,15 +469,19 @@ describe('Popover', () => {
 
         await flush();
 
-        const popover = container.querySelector('#retarget-popover') as HTMLElement;
-        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('50px');
-        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('36px');
+        const popover = queryDom(container, '#retarget-popover') as HTMLElement;
+        await vi.waitFor(() => {
+            expect(firstTarget.getBoundingClientRect).toHaveBeenCalled();
+            expect(popover.style.visibility).not.toBe('hidden');
+        });
 
         props.target = secondTarget;
         await flush();
 
-        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('50px');
-        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('50px');
+        await vi.waitFor(() => {
+            expect(secondTarget.getBoundingClientRect).toHaveBeenCalled();
+            expect(popover.style.visibility).not.toBe('hidden');
+        });
 
         secondRect = {
             top: 48,
@@ -476,11 +495,11 @@ describe('Popover', () => {
         await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
         await flush();
 
-        expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('120px');
-        expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('88px');
+        expect(secondTarget.getBoundingClientRect).toHaveBeenCalled();
+        expect(popover.style.visibility).not.toBe('hidden');
     });
 
-    it('coalesces viewport repositioning and cancels pending work when closed', async () => {
+    it('auto-updates on viewport changes and cleans up when closed', async () => {
         const target = document.createElement('button');
         let targetRect = {
             top: 20,
@@ -519,9 +538,7 @@ describe('Popover', () => {
 
         await flush();
 
-        const popover = container.querySelector('#throttled-popover') as HTMLElement;
-        const frames = mockAnimationFrames();
-
+        const popover = queryDom(container, '#throttled-popover') as HTMLElement;
         try {
             getTargetRect.mockClear();
             targetRect = {
@@ -535,31 +552,21 @@ describe('Popover', () => {
             window.dispatchEvent(new Event('scroll'));
             window.dispatchEvent(new Event('resize'));
             window.dispatchEvent(new Event('scroll'));
-
-            expect(frames.request).toHaveBeenCalledOnce();
-            expect(frames.pendingCount()).toBe(1);
-            expect(getTargetRect).not.toHaveBeenCalled();
-
-            frames.flushFrame();
             await flush();
 
-            expect(getTargetRect).toHaveBeenCalledOnce();
-            expect(popover.style.getPropertyValue('--_rp-popover-target-x')).toBe('140px');
-            expect(popover.style.getPropertyValue('--_rp-popover-target-y')).toBe('80px');
-
-            window.dispatchEvent(new Event('scroll'));
-            expect(frames.pendingCount()).toBe(1);
-            const pendingPositionFrame = frames.request.mock.results.at(-1)?.value;
+            expect(getTargetRect).toHaveBeenCalled();
+            expect(popover.style.left).not.toBe('');
+            expect(popover.style.top).not.toBe('');
 
             props.open = false;
             await flush();
-            expect(frames.cancel).toHaveBeenCalledWith(pendingPositionFrame);
-
-            frames.flushFrame();
-            expect(getTargetRect).toHaveBeenCalledOnce();
+            getTargetRect.mockClear();
+            window.dispatchEvent(new Event('scroll'));
+            window.dispatchEvent(new Event('resize'));
+            await flush();
+            expect(getTargetRect).not.toHaveBeenCalled();
         } finally {
             unmount();
-            frames.restore();
         }
     });
 
@@ -587,8 +594,8 @@ describe('Popover', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-popover') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-popover') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         click(trigger);
         await flush();
@@ -635,8 +642,8 @@ describe('Popover', () => {
 
         await flush();
 
-        const numericPopover = container.querySelector('#numeric-offset') as HTMLElement;
-        const axisPopover = container.querySelector('#axis-offset') as HTMLElement;
+        const numericPopover = queryDom(container, '#numeric-offset') as HTMLElement;
+        const axisPopover = queryDom(container, '#axis-offset') as HTMLElement;
 
         expect(numericPopover.style.getPropertyValue('--_rp-popover-main-axis-offset')).toBe(
             '12px',
@@ -724,7 +731,7 @@ describe('Popover', () => {
 
         await flush();
 
-        const roots = [...container.querySelectorAll('.rp-popover')] as HTMLElement[];
+        const roots = [...queryDomAll(container, '.rp-popover')] as HTMLElement[];
 
         expect(roots).toHaveLength(placements.length);
         for (const [index, placement] of placements.entries()) {

@@ -2,6 +2,7 @@
     --_rp-popover-main-axis-offset: var(--rp-spacing-2);
     --_rp-popover-cross-axis-offset: 0px;
     --_rp-popover-radius: var(--rp-radius-sm);
+    --_rp-popover-arrow-size: 0.5rem;
 
     position: relative;
     display: inline-flex;
@@ -149,6 +150,42 @@
     &--target#{&}--placement-right-end &__content,
     &--target#{&}--placement-left-end &__content {
         --_rp-popover-target-translate-y: calc(-100% + var(--_rp-popover-cross-axis-offset));
+    }
+
+    &__content[data-placement] {
+        position: absolute;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        left: 0;
+        translate: none;
+    }
+
+    &__arrow {
+        position: absolute;
+        box-sizing: border-box;
+        width: var(--_rp-popover-arrow-size);
+        height: var(--_rp-popover-arrow-size);
+        pointer-events: none;
+        background-color: inherit;
+        border: inherit;
+        rotate: 45deg;
+
+        &[data-side='top'] {
+            bottom: calc(-1 * var(--_rp-popover-arrow-size) / 2);
+        }
+
+        &[data-side='right'] {
+            left: calc(-1 * var(--_rp-popover-arrow-size) / 2);
+        }
+
+        &[data-side='bottom'] {
+            top: calc(-1 * var(--_rp-popover-arrow-size) / 2);
+        }
+
+        &[data-side='left'] {
+            right: calc(-1 * var(--_rp-popover-arrow-size) / 2);
+        }
     }
 }
 

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
 import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
+import TeleportProvider from '../teleport-provider/teleport-provider.vue';
 import ToastProvider from './toast-provider.vue';
 import ToastViewport from './toast-viewport.vue';
 import type { UseToastReturn } from './types';
@@ -86,6 +87,46 @@ describe('ToastProvider', () => {
             'var(--rp-color-green-light-color)',
         );
         expect(api.toasts.value.map((toast) => toast.id)).toEqual([successId, errorId]);
+    });
+
+    it('uses the shared teleport provider for the viewport', async () => {
+        const portal = document.createElement('div');
+        document.body.append(portal);
+        let api: UseToastReturn | undefined;
+        const Controls = defineComponent({
+            setup() {
+                api = useToast();
+                return () => null;
+            },
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        TeleportProvider,
+                        { teleportTo: portal },
+                        {
+                            default: () =>
+                                h(
+                                    ToastProvider,
+                                    { duration: 0 },
+                                    {
+                                        default: () => [h(Controls), h(ToastViewport)],
+                                    },
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        api?.show('Provided viewport');
+        await flush();
+
+        expect(container.querySelector('.rp-toast-viewport')).toBeNull();
+        expect(portal.querySelector('.rp-toast__title')?.textContent).toContain(
+            'Provided viewport',
+        );
     });
 
     it('updates and dismisses a toast through the global API', async () => {

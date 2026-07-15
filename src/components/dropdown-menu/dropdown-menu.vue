@@ -1,16 +1,26 @@
 <template>
     <span ref="rootRef" :class="rootClass">
-        <slot v-bind="slotProps" />
+        <slot v-if="!isTargetMode" v-bind="slotProps" />
 
-        <Teleport :to="portalTo" :disabled="!portal">
+        <Teleport :to="teleportTo" :disabled="!shouldTeleport">
             <Transition name="rp-dropdown-menu-content">
                 <div
                     v-if="isVisible"
                     ref="menuRef"
                     :class="contentClass"
                     :style="contentStyle"
+                    :data-placement="actualPlacement"
+                    :data-side="placementSide"
                     v-bind="contentProps"
                 >
+                    <span
+                        v-if="arrow"
+                        ref="arrowRef"
+                        class="rp-dropdown-menu__arrow"
+                        :data-side="placementSide"
+                        :style="arrowStyle"
+                        aria-hidden="true"
+                    />
                     <div v-if="isEmpty" class="rp-dropdown-menu__empty">
                         <slot name="empty">No actions</slot>
                     </div>
@@ -64,8 +74,13 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
     disabled: false,
     closeOnSelect: true,
     modal: false,
-    portal: false,
-    portalTo: 'body',
+    strategy: 'absolute',
+    flip: true,
+    shift: true,
+    collisionPadding: 8,
+    arrow: false,
+    teleport: true,
+    portal: undefined,
 });
 
 const emit = defineEmits<{
@@ -82,6 +97,7 @@ defineSlots<{
 const {
     rootRef,
     menuRef,
+    arrowRef,
     isVisible,
     isEmpty,
     visibleItems,
@@ -89,6 +105,12 @@ const {
     rootClass,
     contentClass,
     contentStyle,
+    arrowStyle,
+    actualPlacement,
+    placementSide,
+    isTargetMode,
+    teleportTo,
+    shouldTeleport,
     contentProps,
     slotProps,
 } = useDropdownMenu(props, {
@@ -98,6 +120,7 @@ const {
 
 void rootRef;
 void menuRef;
+void arrowRef;
 </script>
 
 <style src="./dropdown-menu.scss" lang="scss"></style>

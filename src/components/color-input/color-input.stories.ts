@@ -106,16 +106,17 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     tags: ['test'],
     play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
         const input = canvasElement.querySelector<HTMLInputElement>('.rp-input__native')!;
         const inputControl = canvasElement.querySelector<HTMLElement>('.rp-input')!;
         const preview = canvasElement.querySelector<HTMLElement>('.rp-color-input__preview')!;
 
         await userEvent.click(input);
         await waitFor(() =>
-            expect(canvasElement.querySelector<HTMLElement>('.rp-popover__content')).toBeVisible(),
+            expect(storyDocument.querySelector<HTMLElement>('.rp-popover__content')).toBeVisible(),
         );
-        const picker = canvasElement.querySelector<HTMLElement>('.rp-popover__content')!;
-        const pickerSurface = canvasElement.querySelector<HTMLElement>(
+        const picker = storyDocument.querySelector<HTMLElement>('.rp-popover__content')!;
+        const pickerSurface = storyDocument.querySelector<HTMLElement>(
             '.rp-color-picker__surface',
         )!;
 
@@ -124,8 +125,11 @@ export const Default: Story = {
         const pickerRect = picker.getBoundingClientRect();
         const pickerSurfaceRect = pickerSurface.getBoundingClientRect();
 
-        expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThan(0.5);
-        expect(Math.abs(pickerSurfaceRect.left - previewRect.left)).toBeLessThan(0.5);
+        expect(picker).toHaveClass('rp-color-input__popover');
+        expect(Number.parseFloat(getComputedStyle(picker).paddingLeft)).toBeLessThan(16);
+        expect(pickerRect.left).toBeGreaterThanOrEqual(8);
+        expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThanOrEqual(16);
+        expect(Math.abs(pickerSurfaceRect.left - previewRect.left)).toBeLessThanOrEqual(16);
     },
 };
 

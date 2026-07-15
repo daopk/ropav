@@ -24,6 +24,7 @@ export { useDropdownMenu } from './useDropdownMenu';
 export type {
     DropdownMenuAs,
     DropdownMenuCheckedState,
+    DropdownMenuCollisionPadding,
     DropdownMenuCheckboxItemPrimitiveProps,
     DropdownMenuCloseOptions,
     DropdownMenuContentPrimitiveProps,
@@ -60,6 +61,8 @@ export type {
     DropdownMenuSubPrimitiveProps,
     DropdownMenuSubmenuProps,
     DropdownMenuSubTriggerPrimitiveProps,
+    DropdownMenuStrategy,
+    DropdownMenuTarget,
     DropdownMenuTriggerPrimitiveProps,
     DropdownMenuTriggerProps,
     DropdownMenuVirtualAnchor,

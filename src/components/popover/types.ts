@@ -1,5 +1,10 @@
-import type { Ref } from 'vue';
 import type { FocusTrapInitialFocus, FocusTrapOptions } from '../focus-trap/types';
+import type {
+    FloatingOffset,
+    FloatingOffsetOptions,
+    FloatingPositionProps,
+    FloatingTarget,
+} from '../floating/types';
 
 export const popoverPlacements = [
     'top-start',
@@ -18,14 +23,11 @@ export const popoverPlacements = [
 
 export type PopoverPlacement = (typeof popoverPlacements)[number];
 
-export type PopoverTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
+export type PopoverTarget = FloatingTarget;
 
-export interface PopoverOffsetOptions {
-    mainAxis?: number;
-    crossAxis?: number;
-}
+export type PopoverOffsetOptions = FloatingOffsetOptions;
 
-export type PopoverOffset = number | PopoverOffsetOptions;
+export type PopoverOffset = FloatingOffset;
 
 export type PopoverRole = 'dialog';
 
@@ -62,11 +64,9 @@ export interface PopoverContentSlotProps {
     toggle: () => void;
 }
 
-export interface PopoverProps {
+export interface PopoverProps extends FloatingPositionProps<PopoverPlacement> {
     id?: string;
-    target?: PopoverTarget | null;
-    placement?: PopoverPlacement;
-    offset?: PopoverOffset;
+    contentClass?: string;
     open?: boolean;
     disabled?: boolean;
     role?: PopoverRole;

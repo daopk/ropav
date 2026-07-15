@@ -50,6 +50,7 @@ const publicComponents = [
     'TabsContent',
     'TabsList',
     'TabsTrigger',
+    'TeleportProvider',
     'Textarea',
     'Toast',
     'ToastProvider',

@@ -20,6 +20,7 @@ type UseDropdownMenuDisclosureOptions = {
     };
     rootRef: Ref<HTMLElement | null>;
     menuRef: Ref<HTMLElement | null>;
+    targetRef: Readonly<Ref<Element | null>>;
     uncontrolledOpen: Ref<boolean>;
     isDisabled: BooleanSource;
     isOpen: BooleanSource;
@@ -38,6 +39,7 @@ export function useDropdownMenuDisclosure({
     emit,
     rootRef,
     menuRef,
+    targetRef,
     uncontrolledOpen,
     isDisabled,
     isOpen,
@@ -101,7 +103,7 @@ export function useDropdownMenuDisclosure({
         }
     });
 
-    useClickOutside([rootRef, menuRef], isVisible, (event) => {
+    useClickOutside([rootRef, menuRef, targetRef], isVisible, (event) => {
         if (props.modal) {
             event.preventDefault();
             event.stopPropagation();

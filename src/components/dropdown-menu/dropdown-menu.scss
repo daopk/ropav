@@ -1,6 +1,7 @@
 .rp-dropdown-menu {
     --_rp-dropdown-menu-radius: var(--rp-radius-sm);
     --_rp-dropdown-menu-focused-bg: var(--rp-color-default-hover);
+    --_rp-dropdown-menu-arrow-size: 0.5rem;
 
     position: relative;
     display: inline-flex;
@@ -16,9 +17,14 @@
         @include disabled-state;
     }
 
+    &--target {
+        display: contents;
+    }
+
     &__content {
         @include menu-surface($radius: var(--_rp-dropdown-menu-radius));
         position: absolute;
+        z-index: $z-index-dropdown;
         min-width: $component-menu-min-width;
         max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
         max-height: $component-menu-max-height;
@@ -56,6 +62,41 @@
     &--placement-top-end &__content {
         right: 0;
         bottom: calc(100% + var(--rp-spacing-2));
+    }
+
+    &__content[data-placement] {
+        position: absolute;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        left: 0;
+    }
+
+    &__arrow {
+        position: absolute;
+        box-sizing: border-box;
+        width: var(--_rp-dropdown-menu-arrow-size);
+        height: var(--_rp-dropdown-menu-arrow-size);
+        pointer-events: none;
+        background-color: inherit;
+        border: inherit;
+        rotate: 45deg;
+
+        &[data-side='top'] {
+            bottom: calc(-1 * var(--_rp-dropdown-menu-arrow-size) / 2);
+        }
+
+        &[data-side='right'] {
+            left: calc(-1 * var(--_rp-dropdown-menu-arrow-size) / 2);
+        }
+
+        &[data-side='bottom'] {
+            top: calc(-1 * var(--_rp-dropdown-menu-arrow-size) / 2);
+        }
+
+        &[data-side='left'] {
+            right: calc(-1 * var(--_rp-dropdown-menu-arrow-size) / 2);
+        }
     }
 
     &__item-wrap {
@@ -152,6 +193,14 @@
     &--placement-top-end &__submenu {
         right: calc(100% + var(--rp-spacing-1));
         left: auto;
+    }
+
+    &__submenu[data-placement] {
+        position: absolute;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        left: 0;
     }
 
     &__empty {

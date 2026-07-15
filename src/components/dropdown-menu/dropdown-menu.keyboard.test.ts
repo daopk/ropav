@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-
-import { keydown, mountDom } from '../../../tests/utils/vue';
+import { keydown, mountDom, queryDom } from '../../../tests/utils/vue';
 import { items, nestedItems, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuItem, DropdownMenuSlotProps } from './types';
@@ -27,12 +26,12 @@ describe('DropdownMenu keyboard navigation', () => {
             }),
         );
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         keydown(trigger, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         expect(menu.getAttribute('aria-activedescendant')).toMatch(/-item-0$/);
 
         keydown(menu, 'ArrowDown');
@@ -43,7 +42,7 @@ describe('DropdownMenu keyboard navigation', () => {
         await waitDropdownTransition();
 
         expect(onSelect).toHaveBeenCalledWith(items[2], expect.any(CustomEvent));
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
     it('keeps focus on a submenu trigger when all child items are disabled', async () => {
@@ -76,22 +75,22 @@ describe('DropdownMenu keyboard navigation', () => {
             }),
         );
 
-        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
 
         keydown(menu, 'ArrowRight');
         await nextTick();
 
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).not.toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
 
         keydown(menu, 'ArrowLeft');
         await nextTick();
 
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
     });
 
@@ -117,26 +116,26 @@ describe('DropdownMenu keyboard navigation', () => {
             }),
         );
 
-        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         keydown(menu, 'ArrowDown');
         await nextTick();
         expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1');
 
         keydown(menu, 'ArrowRight');
         await nextTick();
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
 
         keydown(menu, 'ArrowLeft');
         await nextTick();
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).not.toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1-0');
 
         keydown(menu, 'ArrowRight');
         await nextTick();
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('end-menu-item-1');
         expect(onSelect).not.toHaveBeenCalled();
     });
@@ -173,25 +172,25 @@ describe('DropdownMenu keyboard navigation', () => {
             }),
         );
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         keydown(trigger, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0');
 
         keydown(menu, 'ArrowRight');
         await nextTick();
 
-        const submenu = container.querySelector('.rp-dropdown-menu__submenu') as HTMLElement;
+        const submenu = queryDom(container, '.rp-dropdown-menu__submenu') as HTMLElement;
         expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0-0');
         expect(submenu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0-0');
 
         keydown(menu, 'ArrowLeft');
         await nextTick();
 
-        expect(container.querySelector('.rp-dropdown-menu__submenu')).toBeNull();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
         expect(menu.getAttribute('aria-activedescendant')).toBe('keyboard-menu-item-0');
 
         keydown(menu, 'ArrowRight');
@@ -205,6 +204,6 @@ describe('DropdownMenu keyboard navigation', () => {
             keyboardItems[0].children![1],
             expect.any(CustomEvent),
         );
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 });

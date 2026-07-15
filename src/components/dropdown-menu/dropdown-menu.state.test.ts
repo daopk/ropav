@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
-
-import { click, keydown, mountDom } from '../../../tests/utils/vue';
+import { click, keydown, mountDom, queryDom } from '../../../tests/utils/vue';
 import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuSlotProps } from './types';
@@ -28,8 +27,8 @@ describe('DropdownMenu state', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-dropdown-menu') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-dropdown-menu') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         click(trigger);
         keydown(trigger, 'ArrowDown');
@@ -38,7 +37,7 @@ describe('DropdownMenu state', () => {
         expect(root.classList.contains('rp-dropdown-menu--disabled')).toBe(true);
         expect(trigger.disabled).toBe(true);
         expect(trigger.getAttribute('aria-controls')).toBeNull();
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
         expect(onSelect).not.toHaveBeenCalled();
     });
 
@@ -58,24 +57,24 @@ describe('DropdownMenu state', () => {
             }),
         );
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         click(trigger);
         await nextTick();
-        expect(container.querySelector('[role="menu"]')).not.toBeNull();
+        expect(queryDom(container, '[role="menu"]')).not.toBeNull();
 
         click(document.body);
         await waitDropdownTransition();
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
 
         click(trigger);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         keydown(menu, 'Escape');
         await waitDropdownTransition();
 
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
     it('supports controlled open state through the update event', async () => {
@@ -105,12 +104,12 @@ describe('DropdownMenu state', () => {
             }),
         );
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         click(trigger);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         expect(menu).not.toBeNull();
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
@@ -119,7 +118,7 @@ describe('DropdownMenu state', () => {
 
         expect(onOpen).toHaveBeenNthCalledWith(1, true);
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -140,14 +139,14 @@ describe('DropdownMenu state', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
         document.body.addEventListener('click', outsideClick);
         click(document.body);
         await waitDropdownTransition();
 
         expect(outsideClick).not.toHaveBeenCalled();
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
         document.body.removeEventListener('click', outsideClick);
     });
 });

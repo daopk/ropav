@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, type Ref } from 'vue';
 import { bem } from '@/utils/bem';
 import type {
     DropdownMenuCloseOptions,
@@ -7,6 +7,8 @@ import type {
     DropdownMenuItemProps,
     DropdownMenuItemSlotProps,
     DropdownMenuRenderedItem,
+    DropdownMenuPlacement,
+    DropdownMenuProps,
     DropdownMenuSubmenuProps,
 } from './types';
 import {
@@ -24,10 +26,13 @@ type DropdownMenuItemsSource = {
 };
 
 type UseDropdownMenuRenderItemsOptions = {
+    props: Readonly<DropdownMenuProps>;
+    actualPlacement: Readonly<Ref<DropdownMenuPlacement>>;
     items: DropdownMenuItemsSource;
     getItemId: (path: ItemPath) => string;
     getSubmenuId: (path: ItemPath) => string;
     getMenuActiveDescendant: (path: ItemPath) => string | undefined;
+    getItemElement: (path: ItemPath) => HTMLElement | null;
     isItemFocused: (indexOrPath: number | ItemPath) => boolean;
     isSubmenuOpen: (path: ItemPath) => boolean;
     activateItem: (item: DropdownMenuItem, path: ItemPath, event?: MouseEvent) => void;
@@ -64,13 +69,22 @@ export interface DropdownMenuRenderContext {
         disabled?: boolean,
         submenuOpen?: boolean,
     ) => DropdownMenuItemSlotProps;
+    getItemElement: (path: ItemPath) => HTMLElement | null;
+    getSubmenuPlacement: () => DropdownMenuPlacement;
+    getStrategy: () => NonNullable<DropdownMenuProps['strategy']>;
+    getFlip: () => boolean;
+    getShift: () => boolean;
+    getCollisionPadding: () => NonNullable<DropdownMenuProps['collisionPadding']>;
 }
 
 export function useDropdownMenuRenderItems({
+    props,
+    actualPlacement,
     items,
     getItemId,
     getSubmenuId,
     getMenuActiveDescendant,
+    getItemElement,
     isItemFocused,
     isSubmenuOpen,
     activateItem,
@@ -191,6 +205,13 @@ export function useDropdownMenuRenderItems({
         getItemProps,
         getSubmenuProps,
         getItemSlotProps,
+        getItemElement,
+        getSubmenuPlacement: () =>
+            actualPlacement.value.endsWith('end') ? 'left-start' : 'right-start',
+        getStrategy: () => props.strategy ?? 'absolute',
+        getFlip: () => props.flip !== false,
+        getShift: () => props.shift !== false,
+        getCollisionPadding: () => props.collisionPadding ?? 8,
     };
 
     return {

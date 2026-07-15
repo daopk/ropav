@@ -28,6 +28,16 @@ export function mountDom(component: Component) {
     return mountDomWithApp(component).container;
 }
 
+export function queryDom<T extends Element = HTMLElement>(container: Element, selector: string) {
+    return (container.querySelector(selector) ?? document.querySelector(selector)) as T | null;
+}
+
+export function queryDomAll<T extends Element = HTMLElement>(container: Element, selector: string) {
+    const local = [...container.querySelectorAll<T>(selector)];
+    if (local.length > 0) return local;
+    return [...document.querySelectorAll<T>(selector)];
+}
+
 export function click(el: Element) {
     el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 }

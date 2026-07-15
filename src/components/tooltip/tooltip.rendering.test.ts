@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h } from 'vue';
-
 import { colors, placements } from '../../../tests/fixtures/tooltip';
-import { flush, mountDom } from '../../../tests/utils/vue';
+import { flush, mountDom, queryDom, queryDomAll } from '../../../tests/utils/vue';
 import Tooltip from './tooltip.vue';
 import type { TooltipSlotProps } from './types';
 
@@ -27,9 +26,9 @@ describe('Tooltip rendering', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
-        const hiddenTooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        const hiddenTooltip = queryDom(container, '[role="tooltip"]') as HTMLElement;
 
         expect(trigger.getAttribute('aria-describedby')).toBe('copy-tooltip');
         expect(hiddenTooltip.id).toBe('copy-tooltip');
@@ -38,7 +37,7 @@ describe('Tooltip rendering', () => {
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        const tooltip = container.querySelector('[role="tooltip"]') as HTMLElement;
+        const tooltip = queryDom(container, '[role="tooltip"]') as HTMLElement;
 
         expect(trigger.getAttribute('aria-describedby')).toBe('copy-tooltip');
         expect(tooltip.id).toBe('copy-tooltip');
@@ -73,14 +72,34 @@ describe('Tooltip rendering', () => {
 
         await flush();
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
-        const tooltip = container.querySelector('.rp-tooltip__content') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        const tooltip = queryDom(container, '.rp-tooltip__content') as HTMLElement;
 
         expect(trigger.getAttribute('aria-describedby')).toBeNull();
         expect(tooltip.id).toBe('decorative-tooltip');
         expect(tooltip.getAttribute('role')).toBeNull();
         expect(tooltip.getAttribute('aria-hidden')).toBe('true');
         expect(tooltip.textContent).toBe('Visual value');
+    });
+
+    it('renders a real arrow element when enabled', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        { arrow: true, content: 'Arrow help', open: true },
+                        { default: () => h('button', 'Target') },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const arrow = queryDom(container, '.rp-tooltip__arrow') as HTMLElement;
+        expect(arrow.getAttribute('aria-hidden')).toBe('true');
+        expect(arrow.dataset.side).toBe('top');
     });
 
     it('resolves final color variables for each supported color', async () => {
@@ -108,8 +127,8 @@ describe('Tooltip rendering', () => {
 
         await flush();
 
-        const roots = [...container.querySelectorAll('.rp-tooltip')] as HTMLElement[];
-        const contents = [...container.querySelectorAll('[role="tooltip"]')] as HTMLElement[];
+        const roots = [...queryDomAll(container, '.rp-tooltip')] as HTMLElement[];
+        const contents = [...queryDomAll(container, '[role="tooltip"]')] as HTMLElement[];
 
         expect(roots).toHaveLength(colors.length);
         expect(contents).toHaveLength(colors.length);
@@ -147,8 +166,8 @@ describe('Tooltip rendering', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
-        const content = container.querySelector('[role="tooltip"]') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
+        const content = queryDom(container, '[role="tooltip"]') as HTMLElement;
 
         expect([...root.classList]).toEqual(['rp-tooltip', 'rp-tooltip--placement-top']);
         expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#ff3366');
@@ -176,7 +195,7 @@ describe('Tooltip rendering', () => {
 
         await flush();
 
-        const content = container.querySelector('[role="tooltip"]') as HTMLElement;
+        const content = queryDom(container, '[role="tooltip"]') as HTMLElement;
 
         expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#fab005');
         expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe('var(--rp-color-black)');
@@ -218,7 +237,7 @@ describe('Tooltip rendering', () => {
         await flush();
 
         const [numericTooltip, axisTooltip] = [
-            ...container.querySelectorAll('[role="tooltip"]'),
+            ...queryDomAll(container, '[role="tooltip"]'),
         ] as HTMLElement[];
 
         expect(numericTooltip.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe(
@@ -254,7 +273,7 @@ describe('Tooltip rendering', () => {
             }),
         );
 
-        const roots = [...container.querySelectorAll('.rp-tooltip')] as HTMLElement[];
+        const roots = [...queryDomAll(container, '.rp-tooltip')] as HTMLElement[];
 
         expect(roots).toHaveLength(placements.length);
         for (const [index, placement] of placements.entries()) {
@@ -267,6 +286,6 @@ describe('Tooltip rendering', () => {
         roots[2].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        expect(roots[2].querySelector('[role="tooltip"]')?.textContent).toBe('bottom slot');
+        expect(document.querySelectorAll('[role="tooltip"]')[2]?.textContent).toBe('bottom slot');
     });
 });

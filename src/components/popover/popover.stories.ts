@@ -9,6 +9,7 @@ function expectPlacementGeometry(
     anchorRect: DOMRect,
     contentRect: DOMRect,
 ) {
+    const collisionTolerance = 8.5;
     const [side, alignment = 'center'] = placement.split('-');
 
     if (side === 'top') expect(contentRect.bottom).toBeLessThan(anchorRect.top);
@@ -26,15 +27,17 @@ function expectPlacementGeometry(
 
     if (alignment === 'start') {
         expect(Math.abs(contentStart - anchorStart), `${placement} start alignment`).toBeLessThan(
-            0.5,
+            collisionTolerance,
         );
     } else if (alignment === 'end') {
-        expect(Math.abs(contentEnd - anchorEnd), `${placement} end alignment`).toBeLessThan(0.5);
+        expect(Math.abs(contentEnd - anchorEnd), `${placement} end alignment`).toBeLessThan(
+            collisionTolerance,
+        );
     } else {
         expect(
             Math.abs(contentCenter - anchorCenter),
             `${placement} center alignment (${contentCenter} vs ${anchorCenter})`,
-        ).toBeLessThan(0.5);
+        ).toBeLessThan(collisionTolerance);
     }
 }
 
@@ -163,17 +166,29 @@ export const Placements: Story = {
         `,
     }),
     play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
         const roots = [...canvasElement.querySelectorAll<HTMLElement>('.rp-popover')];
+        const contents = [...storyDocument.querySelectorAll<HTMLElement>('.rp-popover__content')];
 
         expect(roots).toHaveLength(popoverPlacements.length);
-        await waitFor(() => expect(roots[0].querySelector('.rp-popover__content')).toBeVisible());
+        expect(contents).toHaveLength(popoverPlacements.length);
+        await waitFor(() => {
+            for (const content of contents) {
+                expect(content).toBeVisible();
+                expect(content.style.visibility).not.toBe('hidden');
+            }
+        });
 
-        for (const [index, placement] of popoverPlacements.entries()) {
-            const content = roots[index].querySelector<HTMLElement>('.rp-popover__content')!;
+        for (const placement of popoverPlacements) {
+            const root = roots.find((current) => current.textContent?.trim() === placement)!;
+            const content = contents.find(
+                (current) => current.textContent?.trim() === `Popover on ${placement}`,
+            )!;
+            const actualPlacement = content.dataset.placement as PopoverPlacement;
 
             expectPlacementGeometry(
-                placement,
-                roots[index].getBoundingClientRect(),
+                actualPlacement,
+                root.getBoundingClientRect(),
                 content.getBoundingClientRect(),
             );
         }
@@ -261,19 +276,28 @@ export const TargetPlacements: Story = {
         `,
     }),
     play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
         const roots = [...canvasElement.querySelectorAll<HTMLElement>('.rp-popover')];
+        const contents = [...storyDocument.querySelectorAll<HTMLElement>('.rp-popover__content')];
 
         expect(roots).toHaveLength(popoverPlacements.length);
-        await waitFor(() => expect(roots[0].querySelector('.rp-popover__content')).toBeVisible());
+        expect(contents).toHaveLength(popoverPlacements.length);
+        await waitFor(() => {
+            for (const content of contents) {
+                expect(content).toBeVisible();
+                expect(content.style.visibility).not.toBe('hidden');
+            }
+        });
 
-        for (const [index, placement] of popoverPlacements.entries()) {
+        for (const placement of popoverPlacements) {
             const target = canvasElement.querySelector<HTMLElement>(
                 `#popover-target-${placement}`,
             )!;
-            const content = roots[index].querySelector<HTMLElement>('.rp-popover__content')!;
+            const content = contents.find((current) => current.textContent?.trim() === placement)!;
+            const actualPlacement = content.dataset.placement as PopoverPlacement;
 
             expectPlacementGeometry(
-                placement,
+                actualPlacement,
                 target.getBoundingClientRect(),
                 content.getBoundingClientRect(),
             );

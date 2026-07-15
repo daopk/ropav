@@ -1,4 +1,14 @@
 import type { Component } from 'vue';
+import type {
+    FloatingCollisionPadding,
+    FloatingOffset,
+    FloatingOffsetOptions,
+    FloatingPositionProps,
+    FloatingStrategy,
+    FloatingTarget,
+    FloatingVirtualElement,
+    TeleportProps,
+} from '../floating/types';
 
 export type DropdownMenuPlacement =
     | 'top-start'
@@ -13,6 +23,12 @@ export type DropdownMenuPlacement =
     | 'left-start'
     | 'left'
     | 'left-end';
+
+export type DropdownMenuTarget = FloatingTarget;
+
+export type DropdownMenuStrategy = FloatingStrategy;
+
+export type DropdownMenuCollisionPadding = FloatingCollisionPadding;
 
 export type DropdownMenuItemValue = string | number;
 
@@ -121,16 +137,17 @@ export interface DropdownMenuRenderedItem {
     children: DropdownMenuRenderedItem[];
 }
 
-export interface DropdownMenuProps {
+export interface DropdownMenuProps extends FloatingPositionProps<DropdownMenuPlacement> {
     id?: string;
     items?: DropdownMenuItem[];
-    placement?: DropdownMenuPlacement;
     open?: boolean;
     disabled?: boolean;
     closeOnSelect?: boolean;
     ariaLabel?: string;
     modal?: boolean;
+    /** @deprecated Use `teleport` instead. */
     portal?: boolean;
+    /** @deprecated Use `teleportTo` instead. */
     portalTo?: string | HTMLElement;
 }
 
@@ -143,10 +160,7 @@ export interface DropdownMenuPoint {
     y: number;
 }
 
-export interface DropdownMenuVirtualAnchor {
-    getBoundingClientRect: () => DOMRect | DOMRectReadOnly;
-    contextElement?: Element;
-}
+export type DropdownMenuVirtualAnchor = FloatingVirtualElement;
 
 export interface DropdownMenuSelectDetail {
     originalEvent: Event;
@@ -161,12 +175,9 @@ export interface DropdownMenuInteractOutsideDetail {
 
 export type DropdownMenuInteractOutsideEvent = CustomEvent<DropdownMenuInteractOutsideDetail>;
 
-export interface DropdownMenuOffsetOptions {
-    mainAxis?: number;
-    crossAxis?: number;
-}
+export type DropdownMenuOffsetOptions = FloatingOffsetOptions;
 
-export type DropdownMenuOffset = number | DropdownMenuOffsetOptions;
+export type DropdownMenuOffset = FloatingOffset;
 
 export interface DropdownMenuRootPrimitiveProps {
     id?: string;
@@ -174,6 +185,7 @@ export interface DropdownMenuRootPrimitiveProps {
     defaultOpen?: boolean;
     disabled?: boolean;
     modal?: boolean;
+    target?: FloatingTarget | null;
     virtualAnchor?: DropdownMenuVirtualAnchor | null;
 }
 
@@ -202,7 +214,7 @@ export interface DropdownMenuContextTriggerPrimitiveProps {
     longPressTolerance?: number;
 }
 
-export interface DropdownMenuPortalPrimitiveProps {
+export interface DropdownMenuPortalPrimitiveProps extends TeleportProps {
     to?: string | HTMLElement;
     disabled?: boolean;
 }
@@ -212,7 +224,12 @@ export interface DropdownMenuContentPrimitiveProps {
     as?: DropdownMenuAs;
     placement?: DropdownMenuPlacement;
     offset?: DropdownMenuOffset;
-    collisionPadding?: number;
+    strategy?: FloatingStrategy;
+    flip?: boolean;
+    shift?: boolean;
+    collisionPadding?: FloatingCollisionPadding;
+    arrow?: boolean;
+    /** @deprecated Use `flip` and `shift` instead. */
     avoidCollisions?: boolean;
     forceMount?: boolean;
     ariaLabel?: string;
@@ -288,7 +305,7 @@ export interface DropdownMenuSubTriggerPrimitiveProps {
 
 export interface DropdownMenuSubContentPrimitiveProps extends Omit<
     DropdownMenuContentPrimitiveProps,
-    'placement'
+    'arrow' | 'placement'
 > {
     placement?: DropdownMenuPlacement;
 }

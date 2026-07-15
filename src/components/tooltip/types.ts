@@ -1,18 +1,20 @@
-import type { Ref } from 'vue';
 import type { ComponentColorValue } from '../../utils/componentColors';
+import type {
+    FloatingOffset,
+    FloatingOffsetOptions,
+    FloatingPositionProps,
+    FloatingTarget,
+} from '../floating/types';
 
 export type TooltipPlacement = 'top' | 'right' | 'bottom' | 'left';
 
 export type TooltipColor = ComponentColorValue;
 
-export type TooltipTarget = string | HTMLElement | Ref<HTMLElement | null | undefined>;
+export type TooltipTarget = FloatingTarget;
 
-export interface TooltipOffsetOptions {
-    mainAxis?: number;
-    crossAxis?: number;
-}
+export type TooltipOffsetOptions = FloatingOffsetOptions;
 
-export type TooltipOffset = number | TooltipOffsetOptions;
+export type TooltipOffset = FloatingOffset;
 
 export interface TooltipTriggerProps {
     'aria-describedby'?: string;
@@ -22,17 +24,13 @@ export interface TooltipSlotProps {
     triggerProps: TooltipTriggerProps;
 }
 
-export interface TooltipProps {
+export interface TooltipProps extends FloatingPositionProps<TooltipPlacement> {
     id?: string;
     content?: string;
-    target?: TooltipTarget | null;
-    placement?: TooltipPlacement;
     color?: TooltipColor;
     autoContrast?: boolean;
-    offset?: TooltipOffset;
     open?: boolean;
     openDelay?: number;
-    arrow?: boolean;
     disabled?: boolean;
     decorative?: boolean;
 }

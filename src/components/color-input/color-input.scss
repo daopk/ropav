@@ -117,3 +117,38 @@
         }
     }
 }
+
+:global(.rp-popover__content.rp-color-input__popover) {
+    --_rp-color-input-height: var(--rp-size-control-md);
+    --_rp-color-input-preview-size: calc(var(--_rp-color-input-height) / 2);
+    --_rp-color-input-preview-inset: calc(
+        (var(--_rp-color-input-height) - var(--_rp-color-input-preview-size)) / 2
+    );
+
+    min-width: auto;
+    padding: var(--rp-spacing-3);
+    padding-inline: calc(var(--_rp-color-input-preview-inset) - var(--rp-border-width-thin));
+}
+
+:global(.rp-color-input__popover--size-xs) {
+    --_rp-color-input-height: var(--rp-size-control-xs);
+}
+
+:global(.rp-color-input__popover--size-sm) {
+    --_rp-color-input-height: var(--rp-size-control-sm);
+}
+
+:global(.rp-color-input__popover--size-lg) {
+    --_rp-color-input-height: var(--rp-size-control-lg);
+}
+
+:global(.rp-color-input__popover--size-xl) {
+    --_rp-color-input-height: var(--rp-size-control-xl);
+}
+
+:global(.rp-color-input__popover .rp-color-picker) {
+    --_rp-color-picker-size: min(
+        var(--_rp-color-picker-saturation-width),
+        calc(100vw - var(--rp-spacing-12))
+    );
+}

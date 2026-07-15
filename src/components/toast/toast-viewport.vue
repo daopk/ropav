@@ -1,5 +1,5 @@
 <template>
-    <Teleport :to="teleportTo" :disabled="!teleport">
+    <Teleport :to="resolvedTeleportTo" :disabled="!teleport">
         <TransitionGroup
             tag="ol"
             name="rp-toast-viewport-item"
@@ -39,6 +39,7 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import Toast from './toast.vue';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type { ToastItem, ToastViewportProps } from './types';
 import { useToastContext } from './useToast';
 
@@ -48,8 +49,9 @@ const props = withDefaults(defineProps<ToastViewportProps>(), {
     position: 'top-right',
     label: 'Notifications',
     teleport: true,
-    teleportTo: 'body',
 });
+
+const resolvedTeleportTo = useTeleportTarget(() => props.teleportTo);
 
 const context = useToastContext('<ToastViewport>');
 function reverseToasts(toasts: readonly ToastItem[]) {

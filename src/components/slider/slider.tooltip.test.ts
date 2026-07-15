@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
-
-import { flush, mountDom } from '../../../tests/utils/vue';
+import { flush, mountDom, queryDom } from '../../../tests/utils/vue';
 import Slider from './slider.vue';
 
 describe('Slider tooltip', () => {
@@ -25,8 +24,8 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
-        const tooltipContent = tooltip.querySelector('.rp-tooltip__content') as HTMLElement;
+        const tooltip = queryDom(container, '.rp-slider__tooltip') as HTMLElement;
+        const tooltipContent = queryDom(container, '.rp-tooltip__content') as HTMLElement;
 
         expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--placement-top')).toBe(true);
@@ -60,9 +59,9 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const track = container.querySelector('.rp-slider__track') as HTMLElement;
-        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
-        const tooltipContent = tooltip.querySelector('.rp-tooltip__content') as HTMLElement;
+        const track = queryDom(container, '.rp-slider__track') as HTMLElement;
+        const tooltip = queryDom(container, '.rp-slider__tooltip') as HTMLElement;
+        const tooltipContent = queryDom(container, '.rp-tooltip__content') as HTMLElement;
 
         expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--placement-bottom')).toBe(true);
@@ -107,8 +106,8 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const track = container.querySelector('.rp-slider__track') as HTMLElement;
-        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
+        const track = queryDom(container, '.rp-slider__track') as HTMLElement;
+        const tooltip = queryDom(container, '.rp-slider__tooltip') as HTMLElement;
         const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true });
         Object.defineProperties(pointerDown, {
             button: { value: 0 },
@@ -146,8 +145,8 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
-        const tooltipContent = container.querySelector('.rp-tooltip__content')!;
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        const tooltipContent = queryDom(container, '.rp-tooltip__content')!;
 
         expect(native.getAttribute('aria-valuetext')).toBe('44%');
         expect(tooltipContent.textContent).toBe('44%');
@@ -168,8 +167,8 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
-        const tooltipContent = container.querySelector('.rp-tooltip__content')!;
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        const tooltipContent = queryDom(container, '.rp-tooltip__content')!;
 
         expect(native.getAttribute('aria-valuetext')).toBe('44 percent selected');
         expect(tooltipContent.textContent).toBe('44%');
@@ -189,7 +188,7 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        expect(container.querySelector('.rp-slider__tooltip')).toBeNull();
+        expect(queryDom(container, '.rp-slider__tooltip')).toBeNull();
     });
 
     it('supports always showing the thumb tooltip', async () => {
@@ -206,9 +205,9 @@ describe('Slider tooltip', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-slider')!;
-        const tooltip = container.querySelector('.rp-slider__tooltip') as HTMLElement;
-        const tooltipContent = tooltip.querySelector('.rp-tooltip__content')!;
+        const root = queryDom(container, '.rp-slider')!;
+        const tooltip = queryDom(container, '.rp-slider__tooltip') as HTMLElement;
+        const tooltipContent = queryDom(container, '.rp-tooltip__content')!;
 
         expect(root.classList.contains('rp-slider--tooltip-always-visible')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);

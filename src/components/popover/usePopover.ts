@@ -2,18 +2,22 @@ import {
     computed,
     isRef,
     nextTick,
-    onBeforeUnmount,
-    onMounted,
     ref,
+    useAttrs,
     useId,
     useSlots,
     watch,
     type CSSProperties,
 } from 'vue';
 import { bem } from '@/utils/bem';
-import { createRafScheduler } from '@/utils/rafScheduler';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
+import {
+    isElementReference,
+    useFloatingPosition,
+    useFloatingTarget,
+} from '../floating/useFloatingPosition';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
     PopoverContentSlotProps,
     PopoverOffset,
@@ -24,77 +28,19 @@ import type {
     PopoverTriggerProps,
 } from './types';
 
-interface PopoverPosition {
-    x: number;
-    y: number;
-}
-
-type PopoverSide = 'top' | 'right' | 'bottom' | 'left';
-type PopoverAlignment = 'start' | 'center' | 'end';
-
-type PopoverCssVariable =
-    | '--_rp-popover-main-axis-offset'
-    | '--_rp-popover-cross-axis-offset'
-    | '--_rp-popover-target-x'
-    | '--_rp-popover-target-y';
-
 const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
 const DEFAULT_ROLE: PopoverRole = 'dialog';
 const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
+const TABBABLE_SELECTOR = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+].join(',');
 
 type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
-
-function isHTMLElement(value: unknown): value is HTMLElement {
-    return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
-}
-
-function getTargetPosition(rect: DOMRect, placement: PopoverPlacement): PopoverPosition {
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const [side, alignment = 'center'] = placement.split('-') as [PopoverSide, PopoverAlignment?];
-    const alignedX = alignment === 'start' ? rect.left : alignment === 'end' ? rect.right : centerX;
-    const alignedY = alignment === 'start' ? rect.top : alignment === 'end' ? rect.bottom : centerY;
-
-    switch (side) {
-        case 'right':
-            return { x: rect.right, y: alignedY };
-        case 'bottom':
-            return { x: alignedX, y: rect.bottom };
-        case 'left':
-            return { x: rect.left, y: alignedY };
-        case 'top':
-        default:
-            return { x: alignedX, y: rect.top };
-    }
-}
-
-function setPixelVar(
-    style: CSSProperties,
-    variable: PopoverCssVariable,
-    value: number | undefined,
-) {
-    if (value != null) style[variable] = `${value}px`;
-}
-
-function styleOrUndefined(style: CSSProperties): CSSProperties | undefined {
-    return Object.keys(style).length > 0 ? style : undefined;
-}
-
-function resolveOffsetStyle(offset: PopoverOffset | undefined): CSSProperties | undefined {
-    if (offset == null) return undefined;
-
-    const style: CSSProperties = {};
-
-    if (typeof offset === 'number') {
-        setPixelVar(style, '--_rp-popover-main-axis-offset', offset);
-        return style;
-    }
-
-    setPixelVar(style, '--_rp-popover-main-axis-offset', offset.mainAxis);
-    setPixelVar(style, '--_rp-popover-cross-axis-offset', offset.crossAxis);
-
-    return styleOrUndefined(style);
-}
 
 function addIdReference(currentValue: string | null, id: string) {
     const ids = (currentValue ?? '').split(/\s+/).filter(Boolean);
@@ -102,17 +48,14 @@ function addIdReference(currentValue: string | null, id: string) {
     return ids.join(' ');
 }
 
-function snapshotAttributes(element: HTMLElement) {
+function snapshotAttributes(element: Element) {
     const snapshot = {} as Record<TargetAttribute, string | null>;
-
-    for (const attribute of TARGET_ATTRIBUTES) {
+    for (const attribute of TARGET_ATTRIBUTES)
         snapshot[attribute] = element.getAttribute(attribute);
-    }
-
     return snapshot;
 }
 
-function restoreAttributes(element: HTMLElement, snapshot: Record<TargetAttribute, string | null>) {
+function restoreAttributes(element: Element, snapshot: Record<TargetAttribute, string | null>) {
     for (const attribute of TARGET_ATTRIBUTES) {
         const value = snapshot[attribute];
         if (value == null) element.removeAttribute(attribute);
@@ -121,31 +64,36 @@ function restoreAttributes(element: HTMLElement, snapshot: Record<TargetAttribut
 }
 
 function applyTargetAttributes(
-    element: HTMLElement,
+    element: Element,
     snapshot: Record<TargetAttribute, string | null>,
-    options: {
-        id: string;
-        expanded: boolean;
-        role: PopoverRole;
-    },
+    options: { id: string; expanded: boolean; role: PopoverRole },
 ) {
     element.setAttribute('aria-controls', addIdReference(snapshot['aria-controls'], options.id));
     element.setAttribute('aria-expanded', String(options.expanded));
     element.setAttribute('aria-haspopup', options.role);
 }
 
-function resolveTargetElement(target: string | HTMLElement | null | undefined): HTMLElement | null {
-    if (!target) return null;
+function isFocusTrapContainer(value: Element | null): value is HTMLElement | SVGElement {
+    return (
+        (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) ||
+        (typeof SVGElement !== 'undefined' && value instanceof SVGElement)
+    );
+}
 
-    if (typeof target !== 'string') return isHTMLElement(target) ? target : null;
-    if (typeof document === 'undefined') return null;
-
-    try {
-        const element = document.querySelector(target);
-        return isHTMLElement(element) ? element : null;
-    } catch {
-        return null;
+function resolveOffsetStyle(offset: PopoverOffset | undefined): CSSProperties | undefined {
+    if (offset == null) return undefined;
+    if (typeof offset === 'number') {
+        return { '--_rp-popover-main-axis-offset': `${offset}px` };
     }
+
+    const style: CSSProperties = {};
+    if (offset.mainAxis != null) {
+        style['--_rp-popover-main-axis-offset'] = `${offset.mainAxis}px`;
+    }
+    if (offset.crossAxis != null) {
+        style['--_rp-popover-cross-axis-offset'] = `${offset.crossAxis}px`;
+    }
+    return Object.keys(style).length > 0 ? style : undefined;
 }
 
 export function usePopover(
@@ -153,23 +101,25 @@ export function usePopover(
     emitOpenChange?: (open: boolean) => void,
 ) {
     const slots = useSlots();
+    const attrs = useAttrs();
     const generatedId = useId();
     const rootRef = ref<HTMLElement | null>(null);
     const contentRef = ref<HTMLElement | null>(null);
-    const targetElement = ref<HTMLElement | null>(null);
-    const targetPosition = ref<PopoverPosition | null>(null);
+    const arrowRef = ref<HTMLElement | null>(null);
     const uncontrolledOpen = ref(false);
-    const positionScheduler = createRafScheduler(
-        updateTargetPosition,
-        () => targetElement.value?.ownerDocument.defaultView,
-    );
-
     const popoverId = computed(() => props.id ?? `${generatedId}-popover`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
-    const isTargetMode = computed(() => props.target != null && props.target !== '');
+    const teleportTo = useTeleportTarget(() => props.teleportTo);
+    const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
+        () => props.target,
+        rootRef,
+    );
+    const targetElement = computed(() =>
+        isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
+    );
     const hasContent = computed(() =>
-        Boolean(slots.content || (isTargetMode.value && slots.default)),
+        Boolean(slots.content || (isExplicitTarget.value && slots.default)),
     );
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
@@ -178,40 +128,49 @@ export function usePopover(
         () => !isDisabled.value && (Boolean(props.keepMounted) || isVisible.value),
     );
     const shouldShowContent = computed(() => !props.keepMounted || isVisible.value);
-    const shouldWireTarget = computed(() => isTargetMode.value && !isDisabled.value);
-    const focusTrapContainers = computed<FocusTrapContainers | null>(() => {
-        const root = rootRef.value;
-        if (!root) return null;
-
-        const target = targetElement.value;
-        return isTargetMode.value && target ? [target, root] : root;
-    });
     const ariaLabel = computed(() => props.ariaLabel || undefined);
     const ariaLabelledby = computed(() => props.ariaLabelledby || undefined);
     const ariaDescribedby = computed(() => props.ariaDescribedby || undefined);
+    const rootAttrs = computed(() => {
+        const { onFocusout: _onFocusout, ...rest } = attrs;
+        return rest;
+    });
+    const focusTrapContainers = computed<FocusTrapContainers | null>(() => {
+        const content = contentRef.value;
+        if (!content) return null;
 
-    const rootClass = computed(() =>
-        bem('rp-popover', {
-            [`placement-${placement.value}`]: true,
-            target: isTargetMode.value,
-            open: isVisible.value,
-            disabled: props.disabled,
-        }),
-    );
-
-    const contentStyle = computed<CSSProperties | undefined>(() => {
-        const style: CSSProperties = {
-            ...resolveOffsetStyle(props.offset),
-        };
-
-        if (isTargetMode.value && targetPosition.value) {
-            setPixelVar(style, '--_rp-popover-target-x', targetPosition.value.x);
-            setPixelVar(style, '--_rp-popover-target-y', targetPosition.value.y);
-        }
-
-        return styleOrUndefined(style);
+        const trigger = targetElement.value ?? rootRef.value;
+        return isFocusTrapContainer(trigger) ? [trigger, content] : content;
     });
 
+    const floating = useFloatingPosition<PopoverPlacement>({
+        reference,
+        floating: contentRef,
+        arrow: arrowRef,
+        open: isVisible,
+        placement: () => placement.value,
+        strategy: () => props.strategy ?? 'absolute',
+        offset: () => props.offset,
+        flip: () => props.flip !== false,
+        shift: () => props.shift !== false,
+        collisionPadding: () => props.collisionPadding ?? 8,
+        arrowEnabled: () => Boolean(props.arrow),
+        restartKey: () => teleportTo.value,
+    });
+    const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
+    const rootClass = computed(() =>
+        bem('rp-popover', {
+            [`placement-${floating.actualPlacement.value}`]: true,
+            target: isExplicitTarget.value,
+            open: isVisible.value,
+            disabled: props.disabled,
+            arrow: props.arrow,
+        }),
+    );
+    const contentStyle = computed<CSSProperties>(() => ({
+        ...floating.floatingStyle.value,
+        ...resolveOffsetStyle(props.offset),
+    }));
     const triggerProps = computed<PopoverTriggerProps>(() => ({
         'aria-controls': isDisabled.value ? undefined : popoverId.value,
         'aria-expanded': isDisabled.value ? undefined : isVisible.value,
@@ -219,21 +178,18 @@ export function usePopover(
         onClick: onTriggerClick,
         onKeydown: onTriggerKeydown,
     }));
-
     const contentSlotProps = computed<PopoverContentSlotProps>(() => ({
         isOpen: isVisible.value,
         open: openPopover,
         close: closePopover,
         toggle: togglePopover,
     }));
-
     const slotProps = computed<PopoverSlotProps>(() => ({
         triggerProps: triggerProps.value,
         ...contentSlotProps.value,
     }));
 
     let shouldReturnFocus = props.returnFocus !== false;
-
     const focusTrap = useFocusTrap(focusTrapContainers, {
         ...props.focusTrapOptions,
         initialFocus: () => {
@@ -242,7 +198,7 @@ export function usePopover(
                 ? (initialFocus.value ?? undefined)
                 : (initialFocus ?? undefined);
         },
-        fallbackFocus: () => contentRef.value ?? rootRef.value!,
+        fallbackFocus: () => contentRef.value!,
         returnFocusOnDeactivate: props.returnFocus !== false,
         escapeDeactivates: false,
         allowOutsideClick: true,
@@ -255,8 +211,7 @@ export function usePopover(
     }
 
     function openPopover() {
-        if (isDisabled.value) return;
-        setOpen(true);
+        if (!isDisabled.value) setOpen(true);
     }
 
     function closePopover() {
@@ -268,7 +223,6 @@ export function usePopover(
         shouldReturnFocus = false;
         if (props.trapFocus) focusTrap.deactivate({ returnFocus: false });
         setOpen(false);
-
         void nextTick(() => {
             if (props.trapFocus && isVisible.value) focusTrap.activate();
         });
@@ -289,33 +243,32 @@ export function usePopover(
         closePopover();
     }
 
-    function onTargetClick() {
-        togglePopover();
-    }
-
-    function readTarget() {
-        return isRef(props.target) ? props.target.value : props.target;
-    }
-
-    function updateTargetPosition() {
-        if (!isTargetMode.value || !targetElement.value) {
-            targetPosition.value = null;
-            return;
-        }
-
-        targetPosition.value = getTargetPosition(
-            targetElement.value.getBoundingClientRect(),
-            placement.value,
-        );
-    }
-
     function isEventInsidePopover(event: Event) {
         const eventTarget = event.target;
         if (typeof Node === 'undefined' || !(eventTarget instanceof Node)) return false;
-
         return Boolean(
-            rootRef.value?.contains(eventTarget) || targetElement.value?.contains(eventTarget),
+            rootRef.value?.contains(eventTarget) ||
+            contentRef.value?.contains(eventTarget) ||
+            targetElement.value?.contains(eventTarget),
         );
+    }
+
+    function onCompositeFocusout(event: FocusEvent) {
+        const nextTarget = event.relatedTarget;
+        if (
+            nextTarget instanceof Node &&
+            (rootRef.value?.contains(nextTarget) ||
+                contentRef.value?.contains(nextTarget) ||
+                targetElement.value?.contains(nextTarget))
+        ) {
+            return;
+        }
+
+        const listener = attrs.onFocusout;
+        const listeners = Array.isArray(listener) ? listener : [listener];
+        for (const current of listeners) {
+            if (typeof current === 'function') current(event);
+        }
     }
 
     function onDocumentClick(event: MouseEvent) {
@@ -330,22 +283,32 @@ export function usePopover(
     }
 
     function onDocumentKeydown(event: KeyboardEvent) {
+        if (props.trapFocus && event.key === 'Tab') {
+            const containers = [targetElement.value ?? rootRef.value, contentRef.value];
+            const tabbables: HTMLElement[] = [];
+            for (const container of containers) {
+                if (!container) continue;
+                if (container instanceof HTMLElement && container.matches(TABBABLE_SELECTOR)) {
+                    tabbables.push(container);
+                }
+                tabbables.push(...container.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR));
+            }
+            const active = event.target;
+            const first = tabbables[0];
+            const last = tabbables[tabbables.length - 1];
+            if (event.shiftKey && active === first && last) {
+                event.preventDefault();
+                last.focus();
+                return;
+            }
+            if (!event.shiftKey && active === last && first) {
+                event.preventDefault();
+                first.focus();
+                return;
+            }
+        }
         if (props.closeOnEscape === false || event.key !== 'Escape') return;
         closePopover();
-    }
-
-    function syncTargetElement() {
-        positionScheduler.cancel();
-        const nextTarget = isTargetMode.value ? resolveTargetElement(readTarget()) : null;
-
-        if (targetElement.value !== nextTarget) {
-            targetElement.value = nextTarget;
-        }
-
-        if (!nextTarget) {
-            targetPosition.value = null;
-            return;
-        }
     }
 
     watch(isDisabled, (disabled) => {
@@ -360,7 +323,6 @@ export function usePopover(
                 focusTrap.activate();
                 return;
             }
-
             focusTrap.deactivate({ returnFocus: shouldReturnFocus && props.returnFocus !== false });
             shouldReturnFocus = props.returnFocus !== false;
         },
@@ -368,57 +330,22 @@ export function usePopover(
     );
 
     watch(
-        () => readTarget(),
-        () => syncTargetElement(),
-        { flush: 'post' },
-    );
-
-    watch(
-        [shouldWireTarget, targetElement],
-        ([shouldWire, target], _previous, onCleanup) => {
-            if (!shouldWire || !target) return;
-
-            target.addEventListener('click', onTargetClick);
-            onCleanup(() => {
-                target.removeEventListener('click', onTargetClick);
-            });
+        [isExplicitTarget, targetElement],
+        ([explicit, target], _previous, onCleanup) => {
+            if (!explicit || !target) return;
+            target.addEventListener('click', onTriggerClick);
+            onCleanup(() => target.removeEventListener('click', onTriggerClick));
         },
         { flush: 'sync' },
     );
 
     watch(
-        [shouldWireTarget, targetElement, popoverId, popoverRole, isVisible],
-        ([shouldWire, target], _previous, onCleanup) => {
-            if (!shouldWire || !target) return;
-
+        [isExplicitTarget, targetElement, popoverId, popoverRole, isVisible, isDisabled],
+        ([explicit, target, id, role, visible, disabled], _previous, onCleanup) => {
+            if (!explicit || !target || disabled) return;
             const snapshot = snapshotAttributes(target);
-            applyTargetAttributes(target, snapshot, {
-                id: popoverId.value,
-                expanded: isVisible.value,
-                role: popoverRole.value,
-            });
-
-            onCleanup(() => {
-                restoreAttributes(target, snapshot);
-            });
-        },
-        { flush: 'sync' },
-    );
-
-    watch(
-        [isVisible, isTargetMode, targetElement],
-        ([visible, targetMode, target], _previous, onCleanup) => {
-            const view = target?.ownerDocument.defaultView;
-            if (!visible || !targetMode || !view) return;
-
-            view.addEventListener('resize', positionScheduler.schedule);
-            view.addEventListener('scroll', positionScheduler.schedule, true);
-
-            onCleanup(() => {
-                view.removeEventListener('resize', positionScheduler.schedule);
-                view.removeEventListener('scroll', positionScheduler.schedule, true);
-                positionScheduler.cancel();
-            });
+            applyTargetAttributes(target, snapshot, { id, expanded: visible, role });
+            onCleanup(() => restoreAttributes(target, snapshot));
         },
         { flush: 'sync' },
     );
@@ -427,12 +354,10 @@ export function usePopover(
         isVisible,
         (visible, _previous, onCleanup) => {
             if (!visible || typeof document === 'undefined') return;
-
             document.addEventListener('click', onDocumentClick, true);
             document.addEventListener('mousedown', onDocumentPointerDown, true);
             document.addEventListener('touchstart', onDocumentPointerDown, true);
             document.addEventListener('keydown', onDocumentKeydown);
-
             onCleanup(() => {
                 document.removeEventListener('click', onDocumentClick, true);
                 document.removeEventListener('mousedown', onDocumentPointerDown, true);
@@ -443,25 +368,14 @@ export function usePopover(
         { flush: 'sync', immediate: true },
     );
 
-    watch(
-        [targetElement, placement, isVisible],
-        () => {
-            positionScheduler.cancel();
-            if (isVisible.value) updateTargetPosition();
-        },
-        { flush: 'sync' },
-    );
-
-    onMounted(syncTargetElement);
-    onBeforeUnmount(positionScheduler.cancel);
-
     return {
         rootRef,
         contentRef,
+        arrowRef,
         popoverId,
         isOpen,
         isVisible,
-        isTargetMode,
+        isTargetMode: isExplicitTarget,
         popoverRole,
         ariaLabel,
         ariaLabelledby,
@@ -469,13 +383,19 @@ export function usePopover(
         shouldRenderContent,
         shouldShowContent,
         rootClass,
+        rootAttrs,
         contentStyle,
         triggerProps,
         slotProps,
         contentSlotProps,
+        actualPlacement: floating.actualPlacement,
+        placementSide,
+        arrowStyle: floating.arrowStyle,
+        teleportTo,
         openPopover,
         closePopover,
         togglePopover,
         onTriggerKeydown,
+        onCompositeFocusout,
     };
 }

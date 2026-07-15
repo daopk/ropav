@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive } from 'vue';
-
-import { click, flush, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
+import {
+    click,
+    flush,
+    keydown,
+    mountDom,
+    queryDom,
+    waitTransition,
+} from '../../../tests/utils/vue';
 import Button from '../button/button.vue';
 import Modal from './modal.vue';
 import type { ModalSlotProps } from './types';
@@ -50,11 +56,11 @@ describe('Modal', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-modal') as HTMLElement;
-        const overlay = container.querySelector('.rp-modal__overlay') as HTMLElement;
-        const panel = container.querySelector('#invite-modal') as HTMLElement;
-        const title = container.querySelector('#invite-modal-title') as HTMLElement;
-        const description = container.querySelector('#invite-modal-description') as HTMLElement;
+        const root = queryDom(container, '.rp-modal') as HTMLElement;
+        const overlay = queryDom(container, '.rp-modal__overlay') as HTMLElement;
+        const panel = queryDom(container, '#invite-modal') as HTMLElement;
+        const title = queryDom(container, '#invite-modal-title') as HTMLElement;
+        const description = queryDom(container, '#invite-modal-description') as HTMLElement;
 
         expect([...root.classList]).toEqual([
             'rp-modal',
@@ -70,12 +76,40 @@ describe('Modal', () => {
         expect(panel.getAttribute('aria-describedby')).toBe(description.id);
         expect(document.body.style.overflow).toBe('hidden');
 
-        click(container.querySelector('.done') as HTMLButtonElement);
+        click(queryDom(container, '.done') as HTMLButtonElement);
         await waitTransition();
 
         expect(props.open).toBe(false);
-        expect(container.querySelector('.rp-modal')).toBeNull();
+        expect(queryDom(container, '.rp-modal')).toBeNull();
         expect(document.body.style.overflow).toBe('');
+    });
+
+    it('teleports the complete dialog root to an explicit target', async () => {
+        const portal = document.createElement('div');
+        document.body.append(portal);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Modal,
+                        {
+                            open: true,
+                            ariaLabel: 'Portalled modal',
+                            teleportTo: portal,
+                            preventScroll: false,
+                        },
+                        { default: () => h('p', 'Portalled content') },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        expect(container.querySelector('.rp-modal')).toBeNull();
+        expect(portal.querySelector('.rp-modal__panel')?.textContent).toContain(
+            'Portalled content',
+        );
     });
 
     it('emits update:open from close button when controlled', async () => {
@@ -100,11 +134,11 @@ describe('Modal', () => {
 
         await flush();
 
-        click(container.querySelector('.rp-modal__close') as HTMLButtonElement);
+        click(queryDom(container, '.rp-modal__close') as HTMLButtonElement);
         await flush();
 
         expect(onUpdate).toHaveBeenCalledWith(false);
-        expect(container.querySelector('.rp-modal')).toBeTruthy();
+        expect(queryDom(container, '.rp-modal')).toBeTruthy();
     });
 
     it('supports custom CSS size values', async () => {
@@ -128,7 +162,7 @@ describe('Modal', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-modal') as HTMLElement;
+        const root = queryDom(container, '.rp-modal') as HTMLElement;
 
         expect(root.classList.contains('rp-modal--size-custom')).toBe(true);
         expect(root.classList.contains('rp-modal--size-55%')).toBe(false);
@@ -160,7 +194,7 @@ describe('Modal', () => {
 
         await flush();
 
-        const overlay = container.querySelector('.rp-modal__overlay') as HTMLElement;
+        const overlay = queryDom(container, '.rp-modal__overlay') as HTMLElement;
 
         expect(overlay.classList.contains('rp-overlay')).toBe(true);
         expect(overlay.classList.contains('rp-overlay--blurred')).toBe(true);
@@ -211,14 +245,14 @@ describe('Modal', () => {
 
         await flush();
 
-        expect(document.activeElement).toBe(container.querySelector('.primary-action'));
+        expect(document.activeElement).toBe(queryDom(container, '.primary-action'));
         expect(document.body.style.overflow).toBe('hidden');
 
-        click(container.querySelector('.rp-modal__overlay') as HTMLElement);
+        click(queryDom(container, '.rp-modal__overlay') as HTMLElement);
         await waitTransition();
 
         expect(props.open).toBe(false);
-        expect(container.querySelector('.rp-modal')).toBeNull();
+        expect(queryDom(container, '.rp-modal')).toBeNull();
         expect(document.activeElement).toBe(trigger);
         expect(document.body.style.overflow).toBe('');
 
@@ -259,8 +293,8 @@ describe('Modal', () => {
 
         await flush();
 
-        const first = container.querySelector('.first') as HTMLButtonElement;
-        const last = container.querySelector('.last') as HTMLButtonElement;
+        const first = queryDom(container, '.first') as HTMLButtonElement;
+        const last = queryDom(container, '.last') as HTMLButtonElement;
 
         last.focus();
         tab();
@@ -301,7 +335,7 @@ describe('Modal', () => {
 
         await flush();
 
-        click(container.querySelector('.rp-modal__overlay') as HTMLElement);
+        click(queryDom(container, '.rp-modal__overlay') as HTMLElement);
         keydown(document, 'Escape');
         await flush();
 
@@ -310,8 +344,8 @@ describe('Modal', () => {
         props.open = false;
         await waitTransition();
 
-        const root = container.querySelector('.rp-modal') as HTMLElement;
-        const panel = container.querySelector('.rp-modal__panel') as HTMLElement;
+        const root = queryDom(container, '.rp-modal') as HTMLElement;
+        const panel = queryDom(container, '.rp-modal__panel') as HTMLElement;
 
         expect(root).toBeTruthy();
         expect(root.style.display).toBe('none');

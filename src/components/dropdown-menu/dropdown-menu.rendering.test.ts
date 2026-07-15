@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick } from 'vue';
-
-import { click, keydown, mountDom } from '../../../tests/utils/vue';
+import { defineComponent, h, nextTick, ref, shallowRef } from 'vue';
+import { click, keydown, mountDom, queryDom, queryDomAll } from '../../../tests/utils/vue';
 import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
+import type { FloatingReference } from '../floating/types';
 import DropdownMenu from './dropdown-menu.vue';
 import type {
     DropdownMenuItem,
@@ -40,8 +40,8 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-dropdown-menu') as HTMLElement;
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const root = queryDom(container, '.rp-dropdown-menu') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         expect([...root.classList]).toEqual([
             'rp-dropdown-menu',
@@ -50,13 +50,13 @@ describe('DropdownMenu rendering', () => {
         expect(trigger.getAttribute('aria-controls')).toBe('project-menu');
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
 
         click(trigger);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
-        const menuItems = [...container.querySelectorAll('[role="menuitem"]')];
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        const menuItems = [...queryDomAll(container, '[role="menuitem"]')];
 
         expect(root.classList.contains('rp-dropdown-menu--open')).toBe(true);
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -68,7 +68,7 @@ describe('DropdownMenu rendering', () => {
         expect(menuItems[0].getAttribute('tabindex')).toBe('-1');
         expect(menuItems[1].getAttribute('aria-disabled')).toBe('true');
         expect(menuItems[3].classList.contains('rp-dropdown-menu__item--destructive')).toBe(true);
-        expect(container.querySelector('.rp-dropdown-menu__item-wrap')?.getAttribute('role')).toBe(
+        expect(queryDom(container, '.rp-dropdown-menu__item-wrap')?.getAttribute('role')).toBe(
             'none',
         );
 
@@ -78,7 +78,7 @@ describe('DropdownMenu rendering', () => {
         expect(onOpen).toHaveBeenNthCalledWith(1, true);
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
     it('supports custom item rendering and opt-out close on select', async () => {
@@ -104,17 +104,17 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
-        const firstItem = container.querySelector('[role="menuitem"]') as HTMLButtonElement;
+        const firstItem = queryDom(container, '[role="menuitem"]') as HTMLButtonElement;
         expect(firstItem.textContent).toBe('rename');
 
         click(firstItem);
         await nextTick();
 
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
-        expect(container.querySelector('[role="menu"]')).not.toBeNull();
+        expect(queryDom(container, '[role="menu"]')).not.toBeNull();
     });
 
     it('keeps the convenience menu open when the select event is canceled', async () => {
@@ -136,23 +136,23 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
-        click(container.querySelector('[role="menuitem"]') as HTMLButtonElement);
+        click(queryDom(container, '[role="menuitem"]') as HTMLButtonElement);
         await nextTick();
 
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
-        expect(container.querySelector('[role="menu"]')).not.toBeNull();
+        expect(queryDom(container, '[role="menu"]')).not.toBeNull();
     });
 
-    it('supports opt-in portal positioning without treating menu items as outside clicks', async () => {
+    it('teleports by default without treating menu items as outside clicks', async () => {
         const onSelect = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(
                         DropdownMenu,
-                        { id: 'portal-menu', items, portal: true, onSelect },
+                        { id: 'portal-menu', items, arrow: true, onSelect },
                         {
                             default: ({ triggerProps }: DropdownMenuSlotProps) =>
                                 h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
@@ -162,18 +162,92 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         expect(container.querySelector('[role="menu"]')).toBeNull();
         const menu = document.getElementById('portal-menu') as HTMLElement;
-        expect(menu.style.position).toBe('fixed');
+        expect(menu.style.position).toBe('absolute');
+        expect(menu.querySelector('.rp-dropdown-menu__arrow')).not.toBeNull();
 
         click(menu.querySelector('[role="menuitem"]') as HTMLButtonElement);
         await waitDropdownTransition();
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(document.getElementById('portal-menu')).toBeNull();
+    });
+
+    it('positions a controlled context menu from a reactive virtual target', async () => {
+        const target = shallowRef<FloatingReference | null>(null);
+        const open = ref(false);
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    function openAt(event: MouseEvent) {
+                        target.value = {
+                            contextElement: event.currentTarget as Element,
+                            getBoundingClientRect: () =>
+                                new DOMRect(event.clientX, event.clientY, 0, 0),
+                        };
+                        open.value = true;
+                    }
+
+                    return () =>
+                        h(
+                            'div',
+                            { class: 'context-target', onContextmenu: openAt },
+                            h(
+                                DropdownMenu,
+                                {
+                                    id: 'virtual-menu',
+                                    items,
+                                    target,
+                                    open: open.value,
+                                    strategy: 'fixed',
+                                    flip: false,
+                                    shift: false,
+                                    'onUpdate:open': (value: boolean) => {
+                                        open.value = value;
+                                    },
+                                },
+                                { default: () => null },
+                            ),
+                        );
+                },
+            }),
+        );
+
+        const contextTarget = container.querySelector('.context-target') as HTMLElement;
+        contextTarget.dispatchEvent(
+            new MouseEvent('contextmenu', {
+                bubbles: true,
+                cancelable: true,
+                clientX: 42,
+                clientY: 33,
+            }),
+        );
+
+        await vi.waitFor(() => {
+            const menu = document.getElementById('virtual-menu') as HTMLElement;
+            expect(menu.style.position).toBe('fixed');
+            expect(menu.style.left).toBe('42px');
+            expect(menu.style.top).toBe('41px');
+        });
+        expect(contextTarget.hasAttribute('aria-controls')).toBe(false);
+
+        contextTarget.dispatchEvent(
+            new MouseEvent('contextmenu', {
+                bubbles: true,
+                cancelable: true,
+                clientX: 80,
+                clientY: 60,
+            }),
+        );
+        await vi.waitFor(() => {
+            const menu = document.getElementById('virtual-menu') as HTMLElement;
+            expect(menu.style.left).toBe('80px');
+            expect(menu.style.top).toBe('68px');
+        });
     });
 
     it('does not evaluate descendants of collapsed submenus', async () => {
@@ -222,7 +296,7 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
         expect(readFirstChildValue).not.toHaveBeenCalled();
@@ -260,10 +334,10 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         const thirdItem = document.getElementById('focused-menu-item-2');
         renderItem.mockClear();
 
@@ -309,10 +383,10 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        keydown(container.querySelector('.trigger') as HTMLButtonElement, 'ArrowDown');
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         keydown(menu, 'ArrowRight');
         await nextTick();
 
@@ -351,14 +425,14 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
 
         expect(menu.getAttribute('aria-activedescendant')).toBeNull();
-        expect(container.querySelectorAll('[role="menuitem"]')).toHaveLength(0);
-        expect(container.querySelector('.empty-slot')?.textContent).toBe('Nothing here');
+        expect(queryDomAll(container, '[role="menuitem"]')).toHaveLength(0);
+        expect(queryDom(container, '.empty-slot')?.textContent).toBe('Nothing here');
     });
 
     it('adds a placement modifier for each supported placement', () => {
@@ -388,7 +462,7 @@ describe('DropdownMenu rendering', () => {
             }),
         );
 
-        const roots = [...container.querySelectorAll('.rp-dropdown-menu')];
+        const roots = [...queryDomAll(container, '.rp-dropdown-menu')];
 
         expect(roots).toHaveLength(placements.length);
         for (const [index, placement] of placements.entries()) {

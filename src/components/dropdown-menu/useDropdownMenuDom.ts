@@ -20,6 +20,7 @@ type UseDropdownMenuDomOptions = {
     menuId: StringSource;
     rootRef: Ref<HTMLElement | null>;
     menuRef: Ref<HTMLElement | null>;
+    targetRef: Readonly<Ref<Element | null>>;
     placement: PlacementSource;
     focusedPath: Ref<ItemPath>;
 };
@@ -28,6 +29,7 @@ export function useDropdownMenuDom({
     menuId,
     rootRef,
     menuRef,
+    targetRef,
     placement,
     focusedPath,
 }: UseDropdownMenuDomOptions) {
@@ -41,6 +43,10 @@ export function useDropdownMenuDom({
 
     function focusTrigger() {
         nextTick(() => {
+            if (targetRef.value instanceof HTMLElement) {
+                targetRef.value.focus();
+                return;
+            }
             const trigger = rootRef.value?.querySelector<HTMLElement>('[aria-haspopup="menu"]');
             trigger?.focus();
         });

@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-
-import { click, mountDom } from '../../../tests/utils/vue';
+import { click, mountDom, queryDom, queryDomAll } from '../../../tests/utils/vue';
 import {
     createRect,
     mouseenter,
@@ -35,10 +34,10 @@ describe('DropdownMenu submenus', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
-        const moveTrigger = [...container.querySelectorAll('[role="menuitem"]')].find((item) =>
+        const moveTrigger = [...queryDomAll(container, '[role="menuitem"]')].find((item) =>
             item.textContent?.includes('Move to'),
         ) as HTMLButtonElement;
 
@@ -48,7 +47,7 @@ describe('DropdownMenu submenus', () => {
         click(moveTrigger);
         await nextTick();
 
-        const submenu = container.querySelector('.rp-dropdown-menu__submenu') as HTMLElement;
+        const submenu = queryDom(container, '.rp-dropdown-menu__submenu') as HTMLElement;
         const progressItem = [...submenu.querySelectorAll('[role="menuitem"]')].find((item) =>
             item.textContent?.includes('In progress'),
         ) as HTMLButtonElement;
@@ -62,7 +61,7 @@ describe('DropdownMenu submenus', () => {
         await waitDropdownTransition();
 
         expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1], expect.any(CustomEvent));
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
     it('opens second-level submenus and lets their flyout escape the parent submenu', async () => {
@@ -104,7 +103,7 @@ describe('DropdownMenu submenus', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
         click(document.getElementById('deep-menu-item-0') as HTMLButtonElement);
@@ -132,7 +131,7 @@ describe('DropdownMenu submenus', () => {
             deepNestedItems[0].children![1]!.children![0],
             expect.any(CustomEvent),
         );
-        expect(container.querySelector('[role="menu"]')).toBeNull();
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
     it('keeps submenus open while the pointer crosses the safe triangle', async () => {
@@ -164,10 +163,10 @@ describe('DropdownMenu submenus', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         const moveTrigger = document.getElementById('safe-menu-item-0') as HTMLButtonElement;
         const archiveItem = document.getElementById('safe-menu-item-1') as HTMLButtonElement;
 
@@ -251,10 +250,10 @@ describe('DropdownMenu submenus', () => {
             }),
         );
 
-        click(container.querySelector('.trigger') as HTMLButtonElement);
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
 
-        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         const moveTrigger = document.getElementById(
             'refresh-safe-menu-item-0',
         ) as HTMLButtonElement;

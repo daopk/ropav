@@ -89,6 +89,10 @@
       "types": "./dist/components/focus-trap/index.d.ts",
       "import": "./dist/components/focus-trap/index.js"
     },
+    "./floating": {
+      "types": "./dist/components/floating/index.d.ts",
+      "import": "./dist/components/floating/index.js"
+    },
     "./icon-button": {
       "types": "./dist/components/icon-button/index.d.ts",
       "import": "./dist/components/icon-button/index.js"
@@ -136,6 +140,10 @@
     "./tabs": {
       "types": "./dist/components/tabs/index.d.ts",
       "import": "./dist/components/tabs/index.js"
+    },
+    "./teleport-provider": {
+      "types": "./dist/components/teleport-provider/index.d.ts",
+      "import": "./dist/components/teleport-provider/index.js"
     },
     "./textarea": {
       "types": "./dist/components/textarea/index.d.ts",

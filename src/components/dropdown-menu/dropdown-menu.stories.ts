@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { ref } from 'vue';
+import type { VirtualElement } from '@floating-ui/dom';
+import { ref, shallowRef } from 'vue';
 import Button from '../button/button.vue';
 import DropdownMenu from './dropdown-menu.vue';
 import {
@@ -363,6 +364,7 @@ export const SafeTriangle: Story = {
                     v-bind="args"
                     :items="safeTriangleItems"
                     :open="true"
+                    :teleport="false"
                     aria-label="Project actions"
                     style="position: relative; z-index: 2;"
                 >
@@ -461,6 +463,45 @@ export const ContextMenu: Story = {
                         </DropdownMenuContent>
                     </DropdownMenuPortal>
                 </DropdownMenuRoot>
+            </div>
+        `,
+    }),
+};
+
+export const VirtualReferenceContextMenu: Story = {
+    render: () => ({
+        components: { DropdownMenu: StoryDropdownMenu },
+        setup() {
+            const open = ref(false);
+            const target = shallowRef<VirtualElement | null>(null);
+
+            function openContextMenu(event: MouseEvent) {
+                const { clientX, clientY } = event;
+                target.value = {
+                    contextElement: event.currentTarget as Element,
+                    getBoundingClientRect: () => new DOMRect(clientX, clientY, 0, 0),
+                };
+                open.value = true;
+            }
+
+            return { defaultItems, open, openContextMenu, target };
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 96px;">
+                <div
+                    tabindex="0"
+                    style="display: grid; min-width: 280px; min-height: 160px; place-items: center; border: 1px dashed var(--rp-color-default-border); border-radius: var(--rp-radius-md);"
+                    @contextmenu.prevent="openContextMenu"
+                >
+                    Right-click for a controlled virtual-reference menu
+                    <DropdownMenu
+                        v-model:open="open"
+                        :items="defaultItems"
+                        :target="target"
+                        strategy="fixed"
+                        aria-label="Virtual context actions"
+                    />
+                </div>
             </div>
         `,
     }),

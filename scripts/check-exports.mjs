@@ -65,6 +65,7 @@ const expectedFiles = [
     'dist/components/dropdown-menu/index.js',
     'dist/components/field/index.js',
     'dist/components/focus-trap/index.js',
+    'dist/components/floating/index.js',
     'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
     'dist/components/modal/index.js',
@@ -77,6 +78,7 @@ const expectedFiles = [
     'dist/components/slider/index.js',
     'dist/components/switch/index.js',
     'dist/components/tabs/index.js',
+    'dist/components/teleport-provider/index.js',
     'dist/components/textarea/index.js',
     'dist/components/toast/index.js',
     'dist/components/tooltip/index.js',
@@ -168,6 +170,7 @@ try {
             'TabsContent',
             'TabsList',
             'TabsTrigger',
+            'TeleportProvider',
             'Textarea',
             'Toast',
             'ToastProvider',
@@ -308,6 +311,15 @@ try {
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');
+
+    const teleportProvider = await server.ssrLoadModule(
+        '/dist/components/teleport-provider/index.js',
+    );
+    assertExports(
+        teleportProvider,
+        ['TeleportProvider'],
+        'dist/components/teleport-provider/index.js',
+    );
 
     const toast = await server.ssrLoadModule('/dist/components/toast/index.js');
     assertExports(

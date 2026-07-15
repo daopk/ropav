@@ -4,6 +4,7 @@ import {
     DropdownMenuRoot as RootDropdownMenuRoot,
     DropdownMenuTrigger as RootDropdownMenuTrigger,
     FocusTrap as RootFocusTrap,
+    TeleportProvider as RootTeleportProvider,
     Toast as RootToast,
     ToastProvider as RootToastProvider,
     ToastViewport as RootToastViewport,
@@ -16,6 +17,9 @@ import {
     type ToastProps as RootToastProps,
     type ToastUpdateOptions as RootToastUpdateOptions,
     type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
+    type FloatingStrategy as RootFloatingStrategy,
+    type FloatingTarget as RootFloatingTarget,
+    type TeleportTarget as RootTeleportTarget,
     useFocusTrap as useRootFocusTrap,
     useToast as useRootToast,
 } from 'ropav';
@@ -26,11 +30,19 @@ import {
     DropdownMenuTrigger,
     type DropdownMenuCheckedState,
     type DropdownMenuContentPrimitiveProps,
+    type DropdownMenuProps,
     type DropdownMenuItem as DropdownMenuDataItem,
     type DropdownMenuRootPrimitiveProps,
     type DropdownMenuSelectEvent,
     type DropdownMenuVirtualAnchor,
 } from 'ropav/dropdown-menu';
+import type {
+    FloatingCollisionPadding,
+    FloatingOffset,
+    FloatingStrategy,
+    FloatingTarget,
+    TeleportTarget,
+} from 'ropav/floating';
 import {
     FocusTrap,
     type FocusTrapOptions,
@@ -53,6 +65,10 @@ import {
     useToast,
 } from 'ropav/toast';
 import { h } from 'vue';
+import { TeleportProvider, type TeleportProviderProps } from 'ropav/teleport-provider';
+import { type ModalProps } from 'ropav/modal';
+import { type PopoverProps, type PopoverTarget } from 'ropav/popover';
+import { type TooltipOffset, type TooltipProps, type TooltipTarget } from 'ropav/tooltip';
 import { type CheckboxProps } from 'ropav/checkbox';
 import { Radio, type RadioGroupOrientation, type RadioProps } from 'ropav/radio';
 import {
@@ -92,6 +108,33 @@ const dropdownChecked: DropdownMenuCheckedState = 'indeterminate';
 const virtualAnchor: DropdownMenuVirtualAnchor = {
     getBoundingClientRect: () => new DOMRect(10, 20, 0, 0),
 };
+const floatingTarget: FloatingTarget = virtualAnchor;
+const rootFloatingTarget: RootFloatingTarget = floatingTarget;
+const popoverTarget: PopoverTarget = floatingTarget;
+const tooltipTarget: TooltipTarget = floatingTarget;
+const floatingStrategy: FloatingStrategy = 'fixed';
+const rootFloatingStrategy: RootFloatingStrategy = floatingStrategy;
+const floatingOffset: FloatingOffset = { mainAxis: 12, crossAxis: 4 };
+const tooltipOffset: TooltipOffset = floatingOffset;
+const collisionPadding: FloatingCollisionPadding = { top: 4, right: 8 };
+const teleportTarget: TeleportTarget = 'body';
+const rootTeleportTarget: RootTeleportTarget = teleportTarget;
+const teleportProviderProps: TeleportProviderProps = { teleportTo: teleportTarget };
+const tooltipProps: TooltipProps = {
+    target: tooltipTarget,
+    strategy: floatingStrategy,
+    offset: tooltipOffset,
+    collisionPadding,
+    teleportTo: teleportTarget,
+};
+const popoverProps: PopoverProps = { target: popoverTarget, arrow: true, shift: false };
+const dropdownProps: DropdownMenuProps = {
+    target: floatingTarget,
+    strategy: 'fixed',
+    flip: false,
+};
+const modalProps: ModalProps = { teleport: true, teleportTo: teleportTarget };
+const teleportProviderVNode = h(TeleportProvider, teleportProviderProps);
 const onDropdownSelect = (event: DropdownMenuSelectEvent) => event.preventDefault();
 const sliderInputAttrs: SliderInputAttrs = { form: 'slider-form', onChange: () => undefined };
 const rangeSliderInputAttrs: RangeSliderInputAttrs = [
@@ -132,6 +175,7 @@ void [
     RootDropdownMenuRoot,
     RootDropdownMenuTrigger,
     RootFocusTrap,
+    RootTeleportProvider,
     RootToastProvider,
     RootToastViewport,
     rootToastColors,
@@ -171,6 +215,24 @@ void [
     dropdownDataItem,
     dropdownChecked,
     virtualAnchor,
+    floatingTarget,
+    rootFloatingTarget,
+    popoverTarget,
+    tooltipTarget,
+    floatingStrategy,
+    rootFloatingStrategy,
+    floatingOffset,
+    tooltipOffset,
+    collisionPadding,
+    teleportTarget,
+    rootTeleportTarget,
+    teleportProviderProps,
+    tooltipProps,
+    popoverProps,
+    dropdownProps,
+    modalProps,
+    TeleportProvider,
+    teleportProviderVNode,
     onDropdownSelect,
     sliderInputAttrs,
     rangeSliderInputAttrs,

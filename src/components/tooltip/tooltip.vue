@@ -1,5 +1,6 @@
 <template>
     <span
+        ref="rootRef"
         :class="rootClass"
         @mouseenter="openTooltip"
         @mouseleave="closeTooltip"
@@ -9,19 +10,32 @@
     >
         <slot v-if="!isTargetMode" :trigger-props="triggerProps" />
 
-        <Transition name="rp-tooltip-content">
-            <span
-                v-if="shouldRenderContent"
-                v-show="isVisible"
-                :id="tooltipId"
-                class="rp-tooltip__content"
-                :role="contentRole"
-                :aria-hidden="contentAriaHidden"
-                :style="contentStyle"
-            >
-                <slot name="content">{{ content }}</slot>
-            </span>
-        </Transition>
+        <Teleport :to="teleportTo" :disabled="!teleport">
+            <Transition name="rp-tooltip-content">
+                <span
+                    v-if="shouldRenderContent"
+                    v-show="isVisible"
+                    :id="tooltipId"
+                    ref="contentRef"
+                    class="rp-tooltip__content"
+                    :role="contentRole"
+                    :aria-hidden="contentAriaHidden"
+                    :data-placement="actualPlacement"
+                    :data-side="placementSide"
+                    :style="contentStyle"
+                >
+                    <span
+                        v-if="arrow"
+                        ref="arrowRef"
+                        class="rp-tooltip__arrow"
+                        :data-side="placementSide"
+                        :style="arrowStyle"
+                        aria-hidden="true"
+                    />
+                    <slot name="content">{{ content }}</slot>
+                </span>
+            </Transition>
+        </Teleport>
     </span>
 </template>
 
@@ -37,6 +51,11 @@ const props = withDefaults(defineProps<TooltipProps>(), {
     open: undefined,
     openDelay: 300,
     arrow: false,
+    strategy: 'absolute',
+    flip: true,
+    shift: true,
+    collisionPadding: 8,
+    teleport: true,
     disabled: false,
     decorative: false,
 });
@@ -46,6 +65,9 @@ const emit = defineEmits<{
 }>();
 
 const {
+    rootRef,
+    contentRef,
+    arrowRef,
     tooltipId,
     isVisible,
     isTargetMode,
@@ -55,12 +77,20 @@ const {
     contentRole,
     contentAriaHidden,
     contentStyle,
+    actualPlacement,
+    placementSide,
+    arrowStyle,
+    teleportTo,
     openTooltip,
     closeTooltip,
     onKeydown,
 } = useTooltip(props, (open) => {
     emit('update:open', open);
 });
+
+void rootRef;
+void contentRef;
+void arrowRef;
 </script>
 
 <style src="./tooltip.scss" lang="scss" scoped></style>

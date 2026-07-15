@@ -1,4 +1,5 @@
-import { computed, defineComponent, h, type PropType, type VNode } from 'vue';
+import { computed, defineComponent, h, ref, type PropType, type VNode } from 'vue';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { DropdownMenuItem, DropdownMenuItemSlotProps } from './types';
 import { getPathKey, hasItemSubmenu, type ItemPath } from './dropdown-menu-utils';
 import type { DropdownMenuRenderContext } from './useDropdownMenuRenderItems';
@@ -146,15 +147,41 @@ const DropdownMenuSubmenu = defineComponent({
         renderItem: renderItemProp,
     },
     setup(props) {
+        const element = ref<HTMLElement | null>(null);
+        const reference = computed(() => props.context.getItemElement(props.path));
+        const open = computed(() => props.context.isSubmenuOpen(props.path));
+        const floating = useFloatingPosition({
+            reference,
+            floating: element,
+            open,
+            placement: props.context.getSubmenuPlacement,
+            strategy: props.context.getStrategy,
+            offset: () => 4,
+            flip: props.context.getFlip,
+            shift: props.context.getShift,
+            collisionPadding: props.context.getCollisionPadding,
+            arrowEnabled: () => false,
+        });
+
         return () =>
-            h('div', props.context.getSubmenuProps(props.item, props.path, true), [
-                h(DropdownMenuItemsList, {
-                    context: props.context,
-                    items: props.item.children ?? [],
-                    parentPath: props.path,
-                    renderItem: props.renderItem,
-                }),
-            ]);
+            h(
+                'div',
+                {
+                    ...props.context.getSubmenuProps(props.item, props.path, true),
+                    ref: element,
+                    style: floating.floatingStyle.value,
+                    'data-placement': floating.actualPlacement.value,
+                    'data-side': floating.actualPlacement.value.split('-')[0],
+                },
+                [
+                    h(DropdownMenuItemsList, {
+                        context: props.context,
+                        items: props.item.children ?? [],
+                        parentPath: props.path,
+                        renderItem: props.renderItem,
+                    }),
+                ],
+            );
     },
 });
 

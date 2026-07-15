@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter } from 'vue';
+import type { TeleportProps } from '../floating/types';
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
 
 export const toastColors = componentColors;
@@ -89,11 +90,9 @@ export interface ToastProviderProps {
     closeLabel?: string;
 }
 
-export interface ToastViewportProps {
+export interface ToastViewportProps extends TeleportProps {
     position?: ToastPosition;
     label?: string;
-    teleport?: boolean;
-    teleportTo?: string | HTMLElement;
 }
 
 export interface ToastOptions extends Omit<ToastProps, 'open'> {

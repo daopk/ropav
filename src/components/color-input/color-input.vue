@@ -7,6 +7,7 @@
         :keep-mounted="keepMounted"
         :disabled="popoverDisabled"
         :aria-label="pickerAriaLabel"
+        :content-class="`rp-color-input__popover rp-color-input__popover--size-${size ?? 'md'}`"
         @focusout="onFocusOut"
         @update:open="onOpenUpdate"
     >

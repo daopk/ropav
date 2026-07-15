@@ -1,13 +1,4 @@
 import {
-    autoUpdate,
-    computePosition,
-    flip,
-    offset as floatingOffset,
-    shift,
-    type Placement,
-    type VirtualElement,
-} from '@floating-ui/dom';
-import {
     computed,
     defineComponent,
     h,
@@ -23,18 +14,22 @@ import {
     watch,
     type ComponentPublicInstance,
     type ComputedRef,
-    type CSSProperties,
     type InjectionKey,
     type PropType,
     type Ref,
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
+import type { FloatingCollisionPadding, FloatingReference } from '../floating/types';
+import {
+    useFloatingPosition as useSharedFloatingPosition,
+    useFloatingTarget,
+} from '../floating/useFloatingPosition';
+import { provideTeleportTarget, useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
     DropdownMenuAs,
     DropdownMenuCheckedState,
     DropdownMenuCloseOptions,
-    DropdownMenuContentPrimitiveProps,
     DropdownMenuFocusTarget,
     DropdownMenuInteractOutsideEvent,
     DropdownMenuItemPrimitiveProps,
@@ -43,12 +38,14 @@ import type {
     DropdownMenuOpenOptions,
     DropdownMenuPlacement,
     DropdownMenuPoint,
+    DropdownMenuPortalPrimitiveProps,
+    DropdownMenuRootPrimitiveProps,
     DropdownMenuRootSlotProps,
     DropdownMenuSelectEvent,
     DropdownMenuVirtualAnchor,
 } from './types';
 
-type ElementReference = Element | VirtualElement;
+type ElementReference = FloatingReference;
 type OpenFocusTarget = DropdownMenuFocusTarget | false;
 
 interface MenuItemRegistration {
@@ -403,84 +400,6 @@ function createMenuContext(options: {
     return context;
 }
 
-function useFloatingPosition(
-    props: Readonly<DropdownMenuContentPrimitiveProps>,
-    isOpen: Readonly<Ref<boolean>>,
-    reference: Readonly<Ref<ElementReference | null>>,
-    floating: Ref<HTMLElement | null>,
-    actualPlacement: Ref<DropdownMenuPlacement>,
-) {
-    const style = ref<CSSProperties>({ position: 'fixed', visibility: 'hidden' });
-    let cleanup: (() => void) | undefined;
-    let generation = 0;
-
-    function stop() {
-        cleanup?.();
-        cleanup = undefined;
-        generation += 1;
-    }
-
-    async function update() {
-        const currentReference = reference.value;
-        const currentFloating = floating.value;
-        if (!currentReference || !currentFloating || !isOpen.value) return;
-
-        const currentGeneration = generation;
-        const middleware = [floatingOffset(props.offset ?? 8)];
-        if (props.avoidCollisions !== false) {
-            middleware.push(
-                flip({ padding: props.collisionPadding ?? 8 }),
-                shift({ padding: props.collisionPadding ?? 8 }),
-            );
-        }
-
-        const result = await computePosition(currentReference, currentFloating, {
-            placement: (props.placement ?? 'bottom-start') as Placement,
-            strategy: 'fixed',
-            middleware,
-        });
-
-        if (currentGeneration !== generation) return;
-        actualPlacement.value = result.placement as DropdownMenuPlacement;
-        style.value = {
-            position: result.strategy,
-            top: `${result.y}px`,
-            left: `${result.x}px`,
-        };
-    }
-
-    function start() {
-        stop();
-        if (!isOpen.value) return;
-
-        void nextTick(() => {
-            const currentReference = reference.value;
-            const currentFloating = floating.value;
-            if (!currentReference || !currentFloating || !isOpen.value) return;
-
-            void update();
-            cleanup = autoUpdate(currentReference, currentFloating, () => void update());
-        });
-    }
-
-    watch(
-        [
-            isOpen,
-            reference,
-            floating,
-            () => props.placement,
-            () => props.offset,
-            () => props.collisionPadding,
-            () => props.avoidCollisions,
-        ],
-        start,
-        { flush: 'post', immediate: true },
-    );
-    onBeforeUnmount(stop);
-
-    return style;
-}
-
 function primitiveAsProp(defaultValue: string) {
     return {
         type: [String, Object, Function] as PropType<DropdownMenuAs>,
@@ -496,6 +415,10 @@ export const DropdownMenuRoot = defineComponent({
         defaultOpen: { type: Boolean, default: false },
         disabled: { type: Boolean, default: false },
         modal: { type: Boolean, default: true },
+        target: {
+            type: [String, Object] as PropType<DropdownMenuRootPrimitiveProps['target']>,
+            default: null,
+        },
         virtualAnchor: {
             type: Object as PropType<DropdownMenuVirtualAnchor | null>,
             default: null,
@@ -513,8 +436,12 @@ export const DropdownMenuRoot = defineComponent({
         const triggerId = ref<string>();
         const contentId = ref<string>();
         const activeReference = shallowRef<ElementReference | null>(null);
+        const { reference: configuredReference } = useFloatingTarget(
+            () => props.target ?? props.virtualAnchor,
+            trigger,
+        );
         const reference = computed<ElementReference | null>(
-            () => activeReference.value ?? props.virtualAnchor ?? trigger.value,
+            () => activeReference.value ?? configuredReference.value,
         );
         const pendingFocus = ref<OpenFocusTarget>('first');
         const inside = new Set<HTMLElement>();
@@ -843,12 +770,26 @@ export const DropdownMenuContextTrigger = defineComponent({
 export const DropdownMenuPortal = defineComponent({
     name: 'RpDropdownMenuPortal',
     props: {
-        to: { type: [String, Object] as PropType<string | HTMLElement>, default: 'body' },
+        to: { type: [String, Object] as PropType<string | HTMLElement>, default: undefined },
+        teleportTo: {
+            type: [String, Object] as PropType<DropdownMenuPortalPrimitiveProps['teleportTo']>,
+            default: undefined,
+        },
+        teleport: { type: Boolean, default: true },
         disabled: { type: Boolean, default: false },
     },
     setup(props, { slots }) {
+        const teleportTo = provideTeleportTarget({
+            get teleportTo() {
+                return props.to ?? props.teleportTo;
+            },
+        });
         return () =>
-            h(Teleport as any, { to: props.to, disabled: props.disabled }, slots.default?.());
+            h(
+                Teleport as any,
+                { to: teleportTo.value, disabled: props.disabled || !props.teleport },
+                slots.default?.(),
+            );
     },
 });
 
@@ -867,7 +808,17 @@ function createContentComponent(submenu: boolean) {
                 type: [Number, Object] as PropType<DropdownMenuOffset>,
                 default: undefined,
             },
-            collisionPadding: { type: Number, default: 8 },
+            strategy: {
+                type: String as PropType<'absolute' | 'fixed'>,
+                default: 'absolute',
+            },
+            flip: { type: Boolean, default: true },
+            shift: { type: Boolean, default: true },
+            collisionPadding: {
+                type: [Number, Object] as PropType<FloatingCollisionPadding>,
+                default: 8,
+            },
+            arrow: { type: Boolean, default: false },
             avoidCollisions: { type: Boolean, default: true },
             forceMount: { type: Boolean, default: false },
             ariaLabel: String,
@@ -884,11 +835,13 @@ function createContentComponent(submenu: boolean) {
             const generatedId = useId();
             const id = computed(() => props.id ?? `${generatedId}-${submenu ? 'submenu' : 'menu'}`);
             const element = ref<HTMLElement | null>(null);
+            const arrowElement = ref<HTMLElement | null>(null);
             const actualPlacement = ref<DropdownMenuPlacement>(props.placement);
             const isOpen = computed(() => (sub ? sub.isOpen.value : root.isOpen.value));
             const reference = computed<ElementReference | null>(() =>
                 sub ? sub.trigger.value : root.reference.value,
             );
+            const teleportTo = useTeleportTarget(() => undefined);
             const menu = createMenuContext({
                 root,
                 element,
@@ -906,7 +859,27 @@ function createContentComponent(submenu: boolean) {
                     else root.close({ returnFocus: true });
                 },
             });
-            const style = useFloatingPosition(props, isOpen, reference, element, actualPlacement);
+            const floating = useSharedFloatingPosition<DropdownMenuPlacement>({
+                reference,
+                floating: element,
+                arrow: arrowElement,
+                open: isOpen,
+                placement: () => props.placement,
+                strategy: () => props.strategy,
+                offset: () => props.offset,
+                flip: () => props.avoidCollisions !== false && props.flip,
+                shift: () => props.avoidCollisions !== false && props.shift,
+                collisionPadding: () => props.collisionPadding,
+                arrowEnabled: () => !submenu && props.arrow,
+                restartKey: () => teleportTo.value,
+            });
+            watch(
+                floating.actualPlacement,
+                (value) => {
+                    actualPlacement.value = value;
+                },
+                { immediate: true },
+            );
             const shouldRender = computed(() => props.forceMount || isOpen.value);
 
             provide(menuKey, menu);
@@ -995,7 +968,7 @@ function createContentComponent(submenu: boolean) {
 
             return () => {
                 if (!shouldRender.value) return null;
-                const placement = actualPlacement.value.split('-');
+                const placement = floating.actualPlacement.value.split('-');
                 const className = submenu
                     ? bem('rp-dropdown-menu__submenu', { compound: true, open: isOpen.value })
                     : bem('rp-dropdown-menu__content', { compound: true, open: isOpen.value });
@@ -1008,22 +981,38 @@ function createContentComponent(submenu: boolean) {
                         tabindex: -1,
                         hidden: optionalAttr(!isOpen.value),
                         class: className,
-                        style: [style.value, !isOpen.value ? { display: 'none' } : undefined],
+                        style: [
+                            floating.floatingStyle.value,
+                            !isOpen.value ? { display: 'none' } : undefined,
+                        ],
                         'aria-label': props.ariaLabel,
                         'aria-labelledby':
                             props.ariaLabelledby ?? (submenu ? undefined : root.triggerId.value),
                         'aria-describedby': props.ariaDescribedby,
                         'aria-activedescendant': menu.activeId.value ?? undefined,
                         'data-state': isOpen.value ? 'open' : 'closed',
+                        'data-placement': floating.actualPlacement.value,
                         'data-side': placement[0],
                         'data-align': placement[1] ?? 'center',
                         onKeydown: menu.onKeydown,
                     }),
-                    slots.default?.({
-                        isOpen: isOpen.value,
-                        placement: actualPlacement.value,
-                        close: () => (sub ? sub.close(true) : root.close({ returnFocus: true })),
-                    }),
+                    [
+                        !submenu && props.arrow
+                            ? h('span', {
+                                  ref: arrowElement,
+                                  class: 'rp-dropdown-menu__arrow',
+                                  'data-side': placement[0],
+                                  style: floating.arrowStyle.value,
+                                  'aria-hidden': 'true',
+                              })
+                            : null,
+                        slots.default?.({
+                            isOpen: isOpen.value,
+                            placement: floating.actualPlacement.value,
+                            close: () =>
+                                sub ? sub.close(true) : root.close({ returnFocus: true }),
+                        }),
+                    ],
                 );
             };
         },

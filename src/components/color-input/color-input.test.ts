@@ -1,7 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
-
-import { click, flush, input, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
+import {
+    click,
+    flush,
+    input,
+    keydown,
+    mountDom,
+    queryDom,
+    queryDomAll,
+    waitTransition,
+} from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
 
 afterEach(() => {
@@ -25,9 +33,9 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-color-input')!;
-        const native = container.querySelector('input') as HTMLInputElement;
-        const preview = container.querySelector('.rp-color-input__preview') as HTMLElement;
+        const root = queryDom(container, '.rp-color-input')!;
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        const preview = queryDom(container, '.rp-color-input__preview') as HTMLElement;
 
         expect(root.classList.contains('rp-popover')).toBe(true);
         expect(root.classList.contains('rp-popover--placement-bottom-start')).toBe(true);
@@ -38,12 +46,12 @@ describe('ColorInput', () => {
         expect(native.getAttribute('aria-controls')).toBe('brand-color-picker');
         expect(native.getAttribute('aria-expanded')).toBe('false');
         expect(native.getAttribute('aria-haspopup')).toBe('dialog');
-        expect(container.querySelector('.rp-input__left .rp-color-input__preview')).toBe(preview);
+        expect(queryDom(container, '.rp-input__left .rp-color-input__preview')).toBe(preview);
         expect(preview.style.getPropertyValue('--_rp-color-swatch-color')).toBe('#4992d1');
-        expect(container.querySelector('.rp-color-input__trigger')).toBeNull();
-        expect(container.querySelector('.rp-input__right')).toBeNull();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
-        expect(container.querySelector('.rp-color-picker')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__trigger')).toBeNull();
+        expect(queryDom(container, '.rp-input__right')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-color-picker')).toBeNull();
     });
 
     it('can keep the picker mounted while it is closed', async () => {
@@ -60,24 +68,24 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
-        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
-        const picker = container.querySelector('.rp-color-picker') as HTMLElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        const popover = queryDom(container, '.rp-popover__content') as HTMLElement;
+        const picker = queryDom(container, '.rp-color-picker') as HTMLElement;
 
         expect(popover.style.display).toBe('none');
 
         native.focus();
         await flush();
 
-        expect(container.querySelector('.rp-popover__content')).toBe(popover);
-        expect(container.querySelector('.rp-color-picker')).toBe(picker);
+        expect(queryDom(container, '.rp-popover__content')).toBe(popover);
+        expect(queryDom(container, '.rp-color-picker')).toBe(picker);
         expect(popover.style.display).not.toBe('none');
 
         keydown(native, 'Escape');
         await waitTransition();
 
-        expect(container.querySelector('.rp-popover__content')).toBe(popover);
-        expect(container.querySelector('.rp-color-picker')).toBe(picker);
+        expect(queryDom(container, '.rp-popover__content')).toBe(popover);
+        expect(queryDom(container, '.rp-color-picker')).toBe(picker);
         expect(popover.style.display).toBe('none');
     });
 
@@ -110,9 +118,9 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const button = container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement;
+        const button = queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement;
 
-        expect(container.querySelector('.rp-input__right button')).toBe(button);
+        expect(queryDom(container, '.rp-input__right button')).toBe(button);
         expect(button.getAttribute('aria-label')).toBe('Sample a screen color');
         expect(button.type).toBe('button');
         expect(button.querySelector('svg')).toBeTruthy();
@@ -125,7 +133,7 @@ describe('ColorInput', () => {
         expect(onUpdate).toHaveBeenCalledOnce();
         expect(onUpdate).toHaveBeenCalledWith('rgb(18, 52, 86)');
         expect(onOpen).not.toHaveBeenCalled();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
     });
 
     it('renders a custom eye dropper icon', async () => {
@@ -148,7 +156,7 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const button = container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement;
+        const button = queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement;
         const icon = button.querySelector('.rp-color-input__eye-dropper-icon') as HTMLElement;
 
         expect(icon.getAttribute('aria-hidden')).toBe('true');
@@ -181,19 +189,19 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
         native.focus();
         await flush();
 
-        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+        const popover = queryDom(container, '.rp-popover__content') as HTMLElement;
         expect(popover.style.display).not.toBe('none');
         expect(onOpen).toHaveBeenLastCalledWith(true);
 
-        click(container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement);
+        click(queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement);
         await waitTransition();
 
         expect(openEyeDropper).toHaveBeenCalledOnce();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(onOpen).toHaveBeenLastCalledWith(false);
     });
 
@@ -223,7 +231,7 @@ describe('ColorInput', () => {
         );
 
         await flush();
-        click(container.querySelector('.rp-color-input__eye-dropper') as HTMLButtonElement);
+        click(queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement);
         await flush();
 
         expect(openEyeDropper).toHaveBeenCalledOnce();
@@ -246,8 +254,8 @@ describe('ColorInput', () => {
 
         await flush();
 
-        expect(container.querySelector('.rp-color-input__eye-dropper')).toBeNull();
-        expect(container.querySelector('.rp-input__right')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__eye-dropper')).toBeNull();
+        expect(queryDom(container, '.rp-input__right')).toBeNull();
     });
 
     it.each(['disabled', 'readonly'] as const)(
@@ -276,9 +284,7 @@ describe('ColorInput', () => {
 
             await flush();
 
-            const button = container.querySelector(
-                '.rp-color-input__eye-dropper',
-            ) as HTMLButtonElement;
+            const button = queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement;
             expect(button.disabled).toBe(true);
 
             click(button);
@@ -302,13 +308,13 @@ describe('ColorInput', () => {
 
         await flush();
 
-        expect(container.querySelector('.rp-input--size-lg')).toBeTruthy();
-        expect(container.querySelector('.rp-color-picker--size-lg')).toBeNull();
+        expect(queryDom(container, '.rp-input--size-lg')).toBeTruthy();
+        expect(queryDom(container, '.rp-color-picker--size-lg')).toBeNull();
 
-        (container.querySelector('input') as HTMLInputElement).focus();
+        (queryDom(container, 'input') as HTMLInputElement).focus();
         await flush();
 
-        expect(container.querySelector('.rp-color-picker--size-lg')).toBeTruthy();
+        expect(queryDom(container, '.rp-color-picker--size-lg')).toBeTruthy();
     });
 
     it('forwards native input attrs and events while preserving trigger semantics', async () => {
@@ -334,7 +340,7 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         expect(native.getAttribute('autocomplete')).toBe('off');
         expect(native.getAttribute('inputmode')).toBe('text');
@@ -364,13 +370,13 @@ describe('ColorInput', () => {
             }),
         );
 
-        const button = container.querySelector('.preview-action') as HTMLButtonElement;
+        const button = queryDom(container, '.preview-action') as HTMLButtonElement;
 
         button.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
         click(button);
         await flush();
 
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
     });
 
     it('can opt into native validity for non-empty invalid colors', async () => {
@@ -392,8 +398,8 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
-        const control = container.querySelector('.rp-input') as HTMLElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        const control = queryDom(container, '.rp-input') as HTMLElement;
 
         expect(native.checkValidity()).toBe(false);
         expect(native.validationMessage).toBe('Use a supported CSS color.');
@@ -422,7 +428,7 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
         input(native, '#abcdef');
         await flush();
 
@@ -445,7 +451,7 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         expect(native.readOnly).toBe(true);
         expect(native.disabled).toBe(false);
@@ -454,12 +460,12 @@ describe('ColorInput', () => {
         native.focus();
         await flush();
 
-        const picker = container.querySelector('.rp-color-picker') as HTMLElement;
+        const picker = queryDom(container, '.rp-color-picker') as HTMLElement;
         expect(onUpdate).not.toHaveBeenCalled();
         expect(native.getAttribute('aria-expanded')).toBe('true');
         expect(picker.classList.contains('rp-color-picker--readonly')).toBe(false);
 
-        click(container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement);
+        click(queryDom(container, '.rp-color-picker__swatch') as HTMLButtonElement);
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
@@ -486,27 +492,25 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         expect(native.readOnly).toBe(true);
         expect(native.disabled).toBe(false);
-        expect(container.querySelector('.rp-color-input__eye-dropper')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__eye-dropper')).toBeNull();
 
         input(native, '#abcdef');
         native.focus();
         await flush();
 
-        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+        const popover = queryDom(container, '.rp-popover__content') as HTMLElement;
         expect(onUpdate).not.toHaveBeenCalled();
         expect(native.getAttribute('aria-expanded')).toBe('true');
         expect(popover.style.display).not.toBe('none');
-        expect(container.querySelector('.rp-color-picker__saturation')).toBeNull();
-        expect(container.querySelector('.rp-color-picker__hue')).toBeNull();
-        expect(container.querySelector('.rp-color-picker__opacity')).toBeNull();
+        expect(queryDom(container, '.rp-color-picker__saturation')).toBeNull();
+        expect(queryDom(container, '.rp-color-picker__hue')).toBeNull();
+        expect(queryDom(container, '.rp-color-picker__opacity')).toBeNull();
 
-        const swatches = container.querySelectorAll(
-            '.rp-color-picker__swatch',
-        ) as NodeListOf<HTMLButtonElement>;
+        const swatches = queryDomAll<HTMLButtonElement>(container, '.rp-color-picker__swatch');
         expect(swatches).toHaveLength(1);
 
         keydown(native, 'ArrowDown');
@@ -525,7 +529,7 @@ describe('ColorInput', () => {
         await waitTransition();
 
         expect(document.activeElement).toBe(native);
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(native.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -546,7 +550,7 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         native.focus();
         click(native);
@@ -558,7 +562,7 @@ describe('ColorInput', () => {
         expect(native.getAttribute('aria-controls')).toBeNull();
         expect(native.getAttribute('aria-expanded')).toBeNull();
         expect(native.getAttribute('aria-haspopup')).toBeNull();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(onOpen).not.toHaveBeenCalled();
     });
 
@@ -590,11 +594,11 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const customLeft = container.querySelector('.rp-input__left .custom-left') as HTMLElement;
+        const customLeft = queryDom(container, '.rp-input__left .custom-left') as HTMLElement;
 
         expect(customLeft.dataset.color).toBe('#4992d1');
         expect(customLeft.dataset.empty).toBe('false');
-        expect(container.querySelector('.rp-color-input__preview')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__preview')).toBeNull();
     });
 
     it('opens the picker on input focus and emits selected swatch colors', async () => {
@@ -615,16 +619,16 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
         native.focus();
         await flush();
 
-        const popover = container.querySelector('.rp-popover__content') as HTMLElement;
+        const popover = queryDom(container, '.rp-popover__content') as HTMLElement;
         expect(popover.style.display).not.toBe('none');
         expect(onOpen).toHaveBeenLastCalledWith(true);
         expect(native.getAttribute('aria-expanded')).toBe('true');
 
-        click(container.querySelector('.rp-color-picker__swatch') as HTMLButtonElement);
+        click(queryDom(container, '.rp-color-picker__swatch') as HTMLButtonElement);
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
@@ -642,41 +646,41 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         native.focus();
         await flush();
 
-        const firstPicker = container.querySelector('.rp-popover__content') as HTMLElement;
+        const firstPicker = queryDom(container, '.rp-popover__content') as HTMLElement;
 
         keydown(native, 'Escape');
         await waitTransition();
 
         expect(document.activeElement).toBe(native);
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(native.getAttribute('aria-expanded')).toBe('false');
 
         click(native);
         await flush();
 
-        const secondPicker = container.querySelector('.rp-popover__content') as HTMLElement;
+        const secondPicker = queryDom(container, '.rp-popover__content') as HTMLElement;
         expect(secondPicker).not.toBe(firstPicker);
         expect(secondPicker.style.display).not.toBe('none');
         expect(native.getAttribute('aria-expanded')).toBe('true');
 
         keydown(native, 'Escape');
         await waitTransition();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
 
         keydown(native, 'ArrowDown');
         await flush();
 
-        expect(
-            (container.querySelector('.rp-popover__content') as HTMLElement).style.display,
-        ).not.toBe('none');
+        expect((queryDom(container, '.rp-popover__content') as HTMLElement).style.display).not.toBe(
+            'none',
+        );
         expect(native.getAttribute('aria-expanded')).toBe('true');
         expect(document.activeElement).toBe(
-            container.querySelector('.rp-color-picker__axis-input--saturation'),
+            queryDom(container, '.rp-color-picker__axis-input--saturation'),
         );
     });
 
@@ -691,12 +695,13 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         native.focus();
         await flush();
 
-        const saturation = container.querySelector(
+        const saturation = queryDom(
+            container,
             '.rp-color-picker__axis-input--saturation',
         ) as HTMLElement;
         saturation.focus();
@@ -704,7 +709,7 @@ describe('ColorInput', () => {
         await waitTransition();
 
         expect(document.activeElement).toBe(native);
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(native.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -726,7 +731,8 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const saturation = container.querySelector(
+        const saturation = queryDom(
+            container,
             '.rp-color-picker__axis-input--saturation',
         ) as HTMLElement;
         saturation.focus();
@@ -749,27 +755,28 @@ describe('ColorInput', () => {
             }),
         );
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
         const outside = document.createElement('button');
         container.append(outside);
 
         native.focus();
         await flush();
 
-        const saturation = container.querySelector(
+        const saturation = queryDom(
+            container,
             '.rp-color-picker__axis-input--saturation',
         ) as HTMLElement;
         saturation.focus();
         await flush();
 
-        const picker = container.querySelector('.rp-popover__content') as HTMLElement;
+        const picker = queryDom(container, '.rp-popover__content') as HTMLElement;
         expect(picker.style.display).not.toBe('none');
         expect(onOpen).toHaveBeenLastCalledWith(true);
 
         outside.focus();
         await waitTransition();
 
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(onOpen).toHaveBeenLastCalledWith(false);
     });
 
@@ -787,11 +794,11 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         expect(native.disabled).toBe(true);
-        expect(container.querySelector('.rp-color-input__trigger')).toBeNull();
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__trigger')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
     });
 
     it('renders an empty preview for unsupported color strings', async () => {
@@ -807,9 +814,9 @@ describe('ColorInput', () => {
 
         await flush();
 
-        expect(container.querySelector('.rp-color-swatch')).toBeNull();
-        expect(container.querySelector('.rp-color-input__preview--empty')).toBeTruthy();
-        expect((container.querySelector('input') as HTMLInputElement).checkValidity()).toBe(true);
+        expect(queryDom(container, '.rp-color-swatch')).toBeNull();
+        expect(queryDom(container, '.rp-color-input__preview--empty')).toBeTruthy();
+        expect((queryDom(container, 'input') as HTMLInputElement).checkValidity()).toBe(true);
     });
 
     it('keeps the picker closed when readonly', async () => {
@@ -829,15 +836,15 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const native = container.querySelector('input') as HTMLInputElement;
+        const native = queryDom(container, 'input') as HTMLInputElement;
 
         native.focus();
         click(native);
         await flush();
 
         expect(native.readOnly).toBe(true);
-        expect(container.querySelector('.rp-popover__content')).toBeNull();
-        expect(container.querySelector('.rp-color-picker')).toBeNull();
+        expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        expect(queryDom(container, '.rp-color-picker')).toBeNull();
         expect(onOpen).not.toHaveBeenCalled();
     });
 
@@ -860,20 +867,19 @@ describe('ColorInput', () => {
 
         await flush();
 
-        const roots = container.querySelectorAll('.rp-color-input');
-        const inputs = container.querySelectorAll<HTMLInputElement>('.rp-input__native');
+        const inputs = queryDomAll<HTMLInputElement>(container, '.rp-input__native');
 
         inputs[0]!.focus();
         await flush();
 
-        expect(roots[0]!.querySelector('.rp-popover__content')?.getAttribute('aria-label')).toBe(
+        expect(queryDom(container, '.rp-popover__content')?.getAttribute('aria-label')).toBe(
             'Brand color picker',
         );
 
         inputs[1]!.focus();
         await flush();
 
-        expect(roots[1]!.querySelector('.rp-popover__content')?.getAttribute('aria-label')).toBe(
+        expect(queryDom(container, '.rp-popover__content')?.getAttribute('aria-label')).toBe(
             'Choose color',
         );
     });

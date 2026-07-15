@@ -1,70 +1,77 @@
 <template>
-    <Transition name="rp-modal">
-        <div
-            v-if="shouldRender"
-            v-show="isOpen"
-            :class="[rootClass, stateClass]"
-            :style="rootStyle"
-        >
-            <Overlay
-                v-bind="overlayProps"
-                class="rp-modal__overlay"
-                :z-index="0"
-                interactive
-                @click="onOverlayClick"
-            />
-
-            <section
-                :id="modalId"
-                ref="panelRef"
-                class="rp-modal__panel"
-                :role="role"
-                aria-modal="true"
-                :aria-label="ariaLabel"
-                :aria-labelledby="ariaLabelledby"
-                :aria-describedby="ariaDescribedby"
-                tabindex="-1"
+    <Teleport :to="teleportTo" :disabled="!teleport">
+        <Transition name="rp-modal">
+            <div
+                v-if="shouldRender"
+                v-show="isOpen"
+                :class="[rootClass, stateClass]"
+                :style="rootStyle"
             >
-                <div v-if="hasHeader" class="rp-modal__header" :id="headerId">
-                    <slot name="header" v-bind="slotProps">
-                        <div class="rp-modal__heading">
-                            <h2 v-if="title" :id="titleId" class="rp-modal__title">
-                                {{ title }}
-                            </h2>
-                            <p v-if="description" :id="descriptionId" class="rp-modal__description">
-                                {{ description }}
-                            </p>
-                        </div>
-                    </slot>
-                </div>
+                <Overlay
+                    v-bind="overlayProps"
+                    class="rp-modal__overlay"
+                    :z-index="0"
+                    interactive
+                    @click="onOverlayClick"
+                />
 
-                <IconButton
-                    v-if="showCloseButton"
-                    class="rp-modal__close"
-                    :ariaLabel="closeLabel"
-                    variant="ghost"
-                    size="sm"
-                    @click="closeModal"
+                <section
+                    :id="modalId"
+                    ref="panelRef"
+                    class="rp-modal__panel"
+                    :role="role"
+                    aria-modal="true"
+                    :aria-label="ariaLabel"
+                    :aria-labelledby="ariaLabelledby"
+                    :aria-describedby="ariaDescribedby"
+                    tabindex="-1"
                 >
-                    <IconX />
-                </IconButton>
+                    <div v-if="hasHeader" class="rp-modal__header" :id="headerId">
+                        <slot name="header" v-bind="slotProps">
+                            <div class="rp-modal__heading">
+                                <h2 v-if="title" :id="titleId" class="rp-modal__title">
+                                    {{ title }}
+                                </h2>
+                                <p
+                                    v-if="description"
+                                    :id="descriptionId"
+                                    class="rp-modal__description"
+                                >
+                                    {{ description }}
+                                </p>
+                            </div>
+                        </slot>
+                    </div>
 
-                <div v-if="$slots.default" class="rp-modal__body">
-                    <slot v-bind="slotProps" />
-                </div>
+                    <IconButton
+                        v-if="showCloseButton"
+                        class="rp-modal__close"
+                        :ariaLabel="closeLabel"
+                        variant="ghost"
+                        size="sm"
+                        @click="closeModal"
+                    >
+                        <IconX />
+                    </IconButton>
 
-                <div v-if="hasFooter" class="rp-modal__footer">
-                    <slot name="footer" v-bind="slotProps" />
-                </div>
-            </section>
-        </div>
-    </Transition>
+                    <div v-if="$slots.default" class="rp-modal__body">
+                        <slot v-bind="slotProps" />
+                    </div>
+
+                    <div v-if="hasFooter" class="rp-modal__footer">
+                        <slot name="footer" v-bind="slotProps" />
+                    </div>
+                </section>
+            </div>
+        </Transition>
+    </Teleport>
 </template>
 
 <script lang="ts" setup vapor>
 import IconX from '~icons/lucide/x';
 import IconButton from '../icon-button/icon-button.vue';
 import Overlay from '../overlay/overlay.vue';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useModal } from './useModal';
 import type { ModalProps } from './types';
 
@@ -86,8 +93,11 @@ const props = withDefaults(defineProps<ModalProps>(), {
     preventScroll: true,
     returnFocus: true,
     keepMounted: false,
+    teleport: true,
     focusTrapOptions: () => ({}),
 });
+
+const teleportTo = useTeleportTarget(() => props.teleportTo);
 
 const emit = defineEmits<{
     'update:open': [value: boolean];

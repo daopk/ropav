@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-
-import { flush, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { flush, keydown, mountDom, queryDom, waitTransition } from '../../../tests/utils/vue';
 import Tooltip from './tooltip.vue';
 import type { TooltipSlotProps } from './types';
 
@@ -31,9 +30,9 @@ describe('Tooltip interactions', () => {
 
         await flush();
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
         expect(root.classList.contains('rp-tooltip--open')).toBe(true);
-        expect(container.querySelector('[role="tooltip"]')?.textContent).toBe('Pinned help');
+        expect(queryDom(container, '[role="tooltip"]')?.textContent).toBe('Pinned help');
     });
 
     it('emits update:open from trigger interactions when controlled', async () => {
@@ -57,15 +56,13 @@ describe('Tooltip interactions', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
         expect(onUpdate).toHaveBeenCalledWith(true);
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
-        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
-            'none',
-        );
+        expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe('none');
     });
 
     it('honors openDelay before showing content', async () => {
@@ -88,23 +85,19 @@ describe('Tooltip interactions', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await nextTick();
 
-        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
-            'none',
-        );
+        expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe('none');
 
         vi.advanceTimersByTime(149);
         await nextTick();
-        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
-            'none',
-        );
+        expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe('none');
 
         vi.advanceTimersByTime(1);
         await flush();
-        expect(container.querySelector('[role="tooltip"]')?.textContent).toBe('Delayed help');
+        expect(queryDom(container, '[role="tooltip"]')?.textContent).toBe('Delayed help');
     });
 
     it('opens on focus and closes on Escape', async () => {
@@ -125,7 +118,7 @@ describe('Tooltip interactions', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
         root.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
         await flush();
         expect(root.classList.contains('rp-tooltip--open')).toBe(true);
@@ -133,9 +126,7 @@ describe('Tooltip interactions', () => {
         keydown(root, 'Escape');
         await waitTransition();
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
-        expect((container.querySelector('[role="tooltip"]') as HTMLElement).style.display).toBe(
-            'none',
-        );
+        expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe('none');
     });
 
     it('does not open when disabled', async () => {
@@ -158,13 +149,13 @@ describe('Tooltip interactions', () => {
             }),
         );
 
-        const root = container.querySelector('.rp-tooltip') as HTMLElement;
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
         await flush();
 
-        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
         expect(trigger.getAttribute('aria-describedby')).toBeNull();
-        expect(container.querySelector('[role="tooltip"]')).toBeNull();
+        expect(queryDom(container, '[role="tooltip"]')).toBeNull();
         expect([...root.classList]).toEqual([
             'rp-tooltip',
             'rp-tooltip--placement-top',

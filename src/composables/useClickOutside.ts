@@ -1,7 +1,7 @@
 import { watch, onMounted, onBeforeUnmount, type Ref } from 'vue';
 
 export function useClickOutside(
-    target: Ref<HTMLElement | null> | Ref<HTMLElement | null>[],
+    target: Ref<Element | null> | Ref<Element | null>[],
     active: Readonly<Ref<boolean>>,
     callback: (event: MouseEvent) => void,
 ) {
