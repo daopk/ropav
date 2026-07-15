@@ -1,4 +1,7 @@
 .rp-toast-viewport {
+    --_rp-toast-viewport-shift-x: 0;
+    --_rp-toast-viewport-shift-y: calc(var(--rp-spacing-3) * -1);
+
     position: fixed;
     z-index: $z-index-tooltip + 1;
     display: flex;
@@ -15,6 +18,9 @@
     pointer-events: none;
 
     &--top-left {
+        --_rp-toast-viewport-shift-x: calc(var(--rp-spacing-3) * -1);
+        --_rp-toast-viewport-shift-y: 0;
+
         top: 0;
         left: 0;
     }
@@ -26,22 +32,33 @@
     }
 
     &--top-right {
+        --_rp-toast-viewport-shift-x: var(--rp-spacing-3);
+        --_rp-toast-viewport-shift-y: 0;
+
         top: 0;
         right: 0;
     }
 
     &--bottom-left {
+        --_rp-toast-viewport-shift-x: calc(var(--rp-spacing-3) * -1);
+        --_rp-toast-viewport-shift-y: 0;
+
         bottom: 0;
         left: 0;
     }
 
     &--bottom-center {
+        --_rp-toast-viewport-shift-y: var(--rp-spacing-3);
+
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
     }
 
     &--bottom-right {
+        --_rp-toast-viewport-shift-x: var(--rp-spacing-3);
+        --_rp-toast-viewport-shift-y: 0;
+
         right: 0;
         bottom: 0;
     }
@@ -59,29 +76,43 @@
 }
 
 .rp-toast-viewport-item-enter-active,
-.rp-toast-viewport-item-leave-active,
-.rp-toast-viewport-item-move {
+.rp-toast-viewport-item-leave-active {
+    will-change: opacity, transform;
+}
+
+.rp-toast-viewport-item-enter-active {
     transition:
-        opacity var(--rp-transition-fast),
-        transform var(--rp-transition-fast);
+        opacity 180ms ease-out,
+        transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rp-toast-viewport-item-leave-active {
+    position: absolute;
+    right: var(--rp-spacing-4);
+    left: var(--rp-spacing-4);
+    width: auto;
+    pointer-events: none;
+    transition:
+        opacity 120ms ease-in,
+        transform 180ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+.rp-toast-viewport--empty .rp-toast-viewport-item-leave-active {
+    position: relative;
+    right: auto;
+    left: auto;
+    width: 100%;
+}
+
+.rp-toast-viewport-item-move {
+    transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .rp-toast-viewport-item-enter-from,
 .rp-toast-viewport-item-leave-to {
     opacity: 0;
-    transform: translateY(calc(var(--rp-spacing-2) * -1));
-}
-
-.rp-toast-viewport-item-leave-active {
-    position: absolute;
-    pointer-events: none;
-}
-
-.rp-toast-viewport[data-position^='bottom'] {
-    .rp-toast-viewport-item-enter-from,
-    .rp-toast-viewport-item-leave-to {
-        transform: translateY(var(--rp-spacing-2));
-    }
+    transform: translate3d(var(--_rp-toast-viewport-shift-x), var(--_rp-toast-viewport-shift-y), 0)
+        scale(0.98);
 }
 
 @media (prefers-reduced-motion: reduce) {

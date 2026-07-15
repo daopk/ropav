@@ -271,18 +271,44 @@ export const Basic: Story = {
     render: (args) => ({
         components: { Button, IconBell, Toast },
         setup() {
-            const { isOpen, open, toastProps } = useToastState({ defaultOpen: true });
-            return { args, isOpen, open, toastProps };
+            const { open, toastProps } = useToastState({ defaultOpen: true });
+            const isPresent = ref(true);
+
+            function showAgain() {
+                isPresent.value = true;
+                open();
+            }
+
+            return {
+                args,
+                isPresent,
+                onAfterLeave: () => (isPresent.value = false),
+                showAgain,
+                toastProps,
+            };
         },
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 280px; place-items: center; padding: 40px;">
-                <Button v-if="!isOpen" variant="outline" @click="open()">Show again</Button>
-                <Toast v-bind="{ ...args, ...toastProps }">
+                <Button v-if="!isPresent" variant="outline" @click="showAgain()">Show again</Button>
+                <Toast v-bind="{ ...args, ...toastProps }" @after-leave="onAfterLeave()">
                     <template #icon><IconBell /></template>
                 </Toast>
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const toast = canvas.getByRole('status');
+        const initialTop = toast.getBoundingClientRect().top;
+
+        await userEvent.click(within(toast).getByRole('button', { name: 'Close toast' }));
+
+        expect(canvas.queryByRole('button', { name: 'Show again' })).not.toBeInTheDocument();
+        expect(toast.getBoundingClientRect().top).toBe(initialTop);
+        await waitFor(() =>
+            expect(canvas.getByRole('button', { name: 'Show again' })).toBeInTheDocument(),
+        );
+    },
 };
 
 export const Notifications: Story = {
@@ -409,13 +435,27 @@ export const CustomContent: Story = {
     render: (args) => ({
         components: { Button, IconTrash2, Toast },
         setup() {
-            const { close, isOpen, open, toastProps } = useToastState({ defaultOpen: true });
-            return { args, close, isOpen, open, toastProps };
+            const { close, open, toastProps } = useToastState({ defaultOpen: true });
+            const isPresent = ref(true);
+
+            function showAgain() {
+                isPresent.value = true;
+                open();
+            }
+
+            return {
+                args,
+                close,
+                isPresent,
+                onAfterLeave: () => (isPresent.value = false),
+                showAgain,
+                toastProps,
+            };
         },
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 280px; place-items: center; padding: 40px;">
-                <Button v-if="!isOpen" variant="outline" @click="open()">Show again</Button>
-                <Toast v-bind="{ ...args, ...toastProps }">
+                <Button v-if="!isPresent" variant="outline" @click="showAgain()">Show again</Button>
+                <Toast v-bind="{ ...args, ...toastProps }" @after-leave="onAfterLeave()">
                     <template #icon><IconTrash2 /></template>
                     <template #title>File moved to trash</template>
                     The file will be permanently deleted in 30 days.

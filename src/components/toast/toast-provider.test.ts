@@ -218,6 +218,13 @@ describe('ToastProvider', () => {
         expect(container.querySelector('.rp-toast')).not.toBeNull();
 
         await flush();
+        expect(
+            container
+                .querySelector('.rp-toast-viewport')
+                ?.classList.contains('rp-toast-viewport--empty'),
+        ).toBe(true);
+        expect(container.querySelector('.rp-toast-viewport-item-leave-active')).not.toBeNull();
+
         vi.advanceTimersByTime(1100);
         await flush();
 

@@ -3,7 +3,11 @@
         <TransitionGroup
             tag="ol"
             name="rp-toast-viewport-item"
-            :class="['rp-toast-viewport', `rp-toast-viewport--${position}`]"
+            :class="[
+                'rp-toast-viewport',
+                `rp-toast-viewport--${position}`,
+                { 'rp-toast-viewport--empty': orderedToasts.length === 0 },
+            ]"
             :data-position="position"
             :aria-label="label"
         >
