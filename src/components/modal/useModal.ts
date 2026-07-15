@@ -1,7 +1,6 @@
 import {
     computed,
     isRef,
-    nextTick,
     onBeforeUnmount,
     onMounted,
     ref,
@@ -11,6 +10,7 @@ import {
     type CSSProperties,
 } from 'vue';
 import { bem } from '@/utils/bem';
+import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type {
     ModalInitialFocus,
     ModalPresetSize,
@@ -22,21 +22,11 @@ import type {
 
 let bodyScrollLockCount = 0;
 let previousBodyOverflow = '';
-const activeModalStack: symbol[] = [];
 
 type Cleanup = () => void;
 
 const DEFAULT_ROLE: ModalRole = 'dialog';
 const DEFAULT_SIZE: ModalSize = 'md';
-
-const FOCUSABLE_SELECTOR = [
-    'a[href]',
-    'button:not([disabled])',
-    'textarea:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-].join(',');
 
 const MODAL_PRESET_SIZES = new Set<ModalPresetSize>(['sm', 'md', 'lg', 'xl', 'full']);
 
@@ -46,27 +36,6 @@ function isHTMLElement(value: unknown): value is HTMLElement {
 
 function isModalPresetSize(size: string): size is ModalPresetSize {
     return MODAL_PRESET_SIZES.has(size as ModalPresetSize);
-}
-
-function isFocusable(element: HTMLElement) {
-    if (element.getAttribute('aria-hidden') === 'true') return false;
-    if (element.hasAttribute('disabled')) return false;
-    return element.tabIndex >= 0;
-}
-
-function getFocusableElements(panel: HTMLElement | null) {
-    if (!panel) return [];
-    return [...panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(isFocusable);
-}
-
-function focusElement(element: HTMLElement | null | undefined) {
-    if (!element) return;
-
-    try {
-        element.focus({ preventScroll: true });
-    } catch {
-        element.focus();
-    }
 }
 
 function lockBodyScroll(): Cleanup | undefined {
@@ -103,12 +72,9 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     const generatedId = useId();
     const panelRef = ref<HTMLElement | null>(null);
     const uncontrolledOpen = ref(false);
-    const modalToken = Symbol('modal');
 
     let isMounted = false;
     let isActiveModal = false;
-    let previousActiveElement: HTMLElement | null = null;
-    let removeDocumentListeners: Cleanup | undefined;
     let unlockScroll: Cleanup | undefined;
 
     const modalId = computed(() => props.id ?? `${generatedId}-modal`);
@@ -198,119 +164,38 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         return panel.contains(initialFocus) ? initialFocus : null;
     }
 
-    function focusInitialElement() {
-        const firstFocusable = getFocusableElements(panelRef.value)[0];
-        focusElement(resolveInitialFocus() ?? firstFocusable ?? panelRef.value);
-    }
-
-    function addToStack() {
-        if (!activeModalStack.includes(modalToken)) activeModalStack.push(modalToken);
-    }
-
-    function removeFromStack() {
-        const index = activeModalStack.indexOf(modalToken);
-        if (index !== -1) activeModalStack.splice(index, 1);
-    }
-
-    function isTopModal() {
-        return activeModalStack[activeModalStack.length - 1] === modalToken;
-    }
-
-    function trapFocus(event: KeyboardEvent) {
-        const panel = panelRef.value;
-        if (!panel) return;
-
-        const focusableElements = getFocusableElements(panel);
-        if (focusableElements.length === 0) {
-            event.preventDefault();
-            focusElement(panel);
-            return;
-        }
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-        const activeElement = document.activeElement;
-        const isInsidePanel = activeElement instanceof Node && panel.contains(activeElement);
-
-        if (!isInsidePanel) {
-            event.preventDefault();
-            focusElement(firstElement);
-            return;
-        }
-
-        if (event.shiftKey && activeElement === firstElement) {
-            event.preventDefault();
-            focusElement(lastElement);
-            return;
-        }
-
-        if (!event.shiftKey && activeElement === lastElement) {
-            event.preventDefault();
-            focusElement(firstElement);
-        }
-    }
-
-    function onDocumentKeydown(event: KeyboardEvent) {
-        if (!isOpen.value || !isTopModal()) return;
-
-        if (event.key === 'Escape') {
-            if (props.closeOnEscape === false) return;
+    const focusTrap = useFocusTrap(panelRef, {
+        ...props.focusTrapOptions,
+        initialFocus: () => resolveInitialFocus() ?? undefined,
+        fallbackFocus: () => panelRef.value!,
+        returnFocusOnDeactivate: props.returnFocus !== false,
+        escapeDeactivates: (event) => {
+            if (props.closeOnEscape === false) return false;
             event.preventDefault();
             closeModal();
-            return;
-        }
-
-        if (event.key === 'Tab') trapFocus(event);
-    }
-
-    function bindDocumentListeners() {
-        if (typeof document === 'undefined' || removeDocumentListeners) return;
-
-        document.addEventListener('keydown', onDocumentKeydown);
-
-        removeDocumentListeners = () => {
-            document.removeEventListener('keydown', onDocumentKeydown);
-            removeDocumentListeners = undefined;
-        };
-    }
-
-    function restoreFocus() {
-        if (props.returnFocus === false) {
-            previousActiveElement = null;
-            return;
-        }
-
-        if (previousActiveElement?.isConnected) focusElement(previousActiveElement);
-        previousActiveElement = null;
-    }
+            return false;
+        },
+        allowOutsideClick: true,
+        preventScroll: true,
+        delayInitialFocus: props.focusTrapOptions?.delayInitialFocus ?? false,
+        delayReturnFocus: props.focusTrapOptions?.delayReturnFocus ?? false,
+    });
 
     function activateModal() {
         if (isActiveModal) return;
 
         isActiveModal = true;
-        addToStack();
-
-        if (typeof document !== 'undefined') {
-            const activeElement = document.activeElement;
-            previousActiveElement = isHTMLElement(activeElement) ? activeElement : null;
-        }
-
-        bindDocumentListeners();
         if (props.preventScroll !== false) unlockScroll = lockBodyScroll();
-        void nextTick(() => {
-            if (isActiveModal) focusInitialElement();
-        });
+        focusTrap.activate();
     }
 
     function deactivateModal() {
         if (!isActiveModal) return;
 
         isActiveModal = false;
-        removeFromStack();
-        removeDocumentListeners?.();
+        focusTrap.deactivate({ returnFocus: props.returnFocus !== false });
         unlockScroll?.();
         unlockScroll = undefined;
-        restoreFocus();
     }
 
     function onOverlayClick(event: MouseEvent) {

@@ -18,6 +18,7 @@ const publicComponents = [
     'ColorSwatch',
     'DropdownMenu',
     'Field',
+    'FocusTrap',
     'IconButton',
     'Input',
     'Modal',
@@ -52,6 +53,8 @@ describe('public source exports', () => {
     it('exposes public composables from src/index.ts', () => {
         expect(Ropav).toHaveProperty('useCollapse');
         expect(Ropav.useCollapse).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('useFocusTrap');
+        expect(Ropav.useFocusTrap).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useToast');
         expect(Ropav.useToast).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useToastState');

@@ -52,13 +52,19 @@ const meta = {
         offset: { control: 'object' },
         closeOnOutsideClick: { control: 'boolean' },
         closeOnEscape: { control: 'boolean' },
+        trapFocus: { control: 'boolean' },
+        returnFocus: { control: 'boolean' },
         target: { control: false },
+        initialFocus: { control: false },
+        focusTrapOptions: { control: false },
     },
     args: {
         placement: 'bottom',
         disabled: false,
         closeOnOutsideClick: true,
         closeOnEscape: true,
+        trapFocus: false,
+        returnFocus: true,
     },
     parameters: {
         layout: 'fullscreen',
@@ -89,6 +95,33 @@ export const Basic: Story = {
                                     Review is complete and ready for release.
                                 </span>
                             </div>
+                            <Button size="sm" @click="close">Done</Button>
+                        </div>
+                    </template>
+                </Popover>
+            </div>
+        `,
+    }),
+};
+
+export const TrappedFocus: Story = {
+    args: {
+        ariaLabel: 'Trapped actions',
+        trapFocus: true,
+    },
+    render: (args) => ({
+        components: { Button, Popover },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Popover v-bind="args">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">Open actions</Button>
+                    </template>
+                    <template #content="{ close }">
+                        <div style="display: grid; gap: 8px; width: 220px;">
+                            <Button size="sm" variant="ghost">First action</Button>
+                            <Button size="sm" variant="ghost">Second action</Button>
                             <Button size="sm" @click="close">Done</Button>
                         </div>
                     </template>

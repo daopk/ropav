@@ -1,5 +1,6 @@
 export { default as Modal } from './modal.vue';
 export type {
+    ModalFocusTrapOptions,
     ModalInitialFocus,
     ModalPresetSize,
     ModalProps,

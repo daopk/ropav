@@ -19,6 +19,17 @@ import type {
     PopoverSlotProps,
 } from './types';
 
+function tab(shiftKey = false) {
+    document.dispatchEvent(
+        new KeyboardEvent('keydown', {
+            key: 'Tab',
+            bubbles: true,
+            cancelable: true,
+            shiftKey,
+        }),
+    );
+}
+
 describe('Popover', () => {
     const placements: readonly PopoverPlacement[] = popoverPlacements;
 
@@ -201,6 +212,72 @@ describe('Popover', () => {
         keydown(document, 'Escape');
         await waitTransition();
         expect(root.classList.contains('rp-popover--open')).toBe(false);
+    });
+
+    it('optionally traps focus across the trigger and content', async () => {
+        const outside = document.createElement('button');
+        outside.textContent = 'Outside';
+        document.body.append(outside);
+
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        {
+                            id: 'focus-popover',
+                            trapFocus: true,
+                            focusTrapOptions: {
+                                delayInitialFocus: false,
+                                delayReturnFocus: false,
+                                tabbableOptions: { displayCheck: 'none' },
+                            },
+                        },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Open'),
+                            content: () => [
+                                h('button', { class: 'first' }, 'First action'),
+                                h('button', { class: 'last' }, 'Last action'),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const trigger = container.querySelector('.trigger') as HTMLButtonElement;
+        trigger.focus();
+        click(trigger);
+        await flush();
+
+        const content = container.querySelector('#focus-popover') as HTMLElement;
+        const last = container.querySelector('.last') as HTMLButtonElement;
+
+        expect(content.tabIndex).toBe(-1);
+        expect(document.activeElement).toBe(trigger);
+
+        last.focus();
+        tab();
+        expect(document.activeElement).toBe(trigger);
+
+        tab(true);
+        expect(document.activeElement).toBe(last);
+
+        keydown(document, 'Escape');
+        await waitTransition();
+        expect(document.activeElement).toBe(trigger);
+
+        click(trigger);
+        await flush();
+        outside.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        outside.focus();
+        click(outside);
+        await waitTransition();
+
+        expect(document.activeElement).toBe(outside);
     });
 
     it('supports a selector target as the trigger and renders default content in target mode', async () => {

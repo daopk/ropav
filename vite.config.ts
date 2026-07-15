@@ -78,7 +78,7 @@ export default defineConfig({
         sourcemap: false,
         cssCodeSplit: true,
         rolldownOptions: {
-            external: ['vue'],
+            external: ['focus-trap', 'vue'],
             output: {
                 chunkFileNames: '[name].js',
             },

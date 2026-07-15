@@ -1,4 +1,5 @@
 import type { Ref } from 'vue';
+import type { FocusTrapInitialFocus, FocusTrapOptions } from '../focus-trap/types';
 
 export const popoverPlacements = [
     'top-start',
@@ -27,6 +28,16 @@ export interface PopoverOffsetOptions {
 export type PopoverOffset = number | PopoverOffsetOptions;
 
 export type PopoverRole = 'dialog';
+
+export type PopoverFocusTrapOptions = Omit<
+    FocusTrapOptions,
+    | 'allowOutsideClick'
+    | 'clickOutsideDeactivates'
+    | 'escapeDeactivates'
+    | 'fallbackFocus'
+    | 'initialFocus'
+    | 'returnFocusOnDeactivate'
+>;
 
 export interface PopoverTriggerProps {
     'aria-controls'?: string;
@@ -65,4 +76,8 @@ export interface PopoverProps {
     closeOnOutsideClick?: boolean;
     closeOnEscape?: boolean;
     keepMounted?: boolean;
+    trapFocus?: boolean;
+    initialFocus?: FocusTrapInitialFocus | null;
+    returnFocus?: boolean;
+    focusTrapOptions?: PopoverFocusTrapOptions;
 }

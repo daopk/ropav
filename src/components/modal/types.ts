@@ -1,4 +1,5 @@
 import type { Ref } from 'vue';
+import type { FocusTrapOptions } from '../focus-trap/types';
 import type { OverlayProps } from '../overlay/types';
 
 export type ModalPresetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -10,6 +11,17 @@ export type ModalRole = 'dialog' | 'alertdialog';
 export type ModalInitialFocus = string | HTMLElement | Ref<HTMLElement | null | undefined>;
 
 export type ModalOverlayProps = Pick<OverlayProps, 'color' | 'opacity' | 'gradient' | 'blur'>;
+
+export type ModalFocusTrapOptions = Omit<
+    FocusTrapOptions,
+    | 'allowOutsideClick'
+    | 'clickOutsideDeactivates'
+    | 'escapeDeactivates'
+    | 'fallbackFocus'
+    | 'initialFocus'
+    | 'preventScroll'
+    | 'returnFocusOnDeactivate'
+>;
 
 export interface ModalSlotProps {
     isOpen: boolean;
@@ -35,4 +47,5 @@ export interface ModalProps {
     preventScroll?: boolean;
     returnFocus?: boolean;
     keepMounted?: boolean;
+    focusTrapOptions?: ModalFocusTrapOptions;
 }

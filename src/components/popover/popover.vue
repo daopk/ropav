@@ -14,12 +14,14 @@
                 v-if="shouldRenderContent"
                 v-show="shouldShowContent"
                 :id="popoverId"
+                ref="contentRef"
                 class="rp-popover__content"
                 :role="popoverRole"
                 :aria-label="ariaLabel"
                 :aria-labelledby="ariaLabelledby"
                 :aria-describedby="ariaDescribedby"
                 :style="contentStyle"
+                :tabindex="trapFocus ? -1 : undefined"
             >
                 <slot
                     name="content"
@@ -55,6 +57,10 @@ const props = withDefaults(defineProps<PopoverProps>(), {
     closeOnOutsideClick: true,
     closeOnEscape: true,
     keepMounted: false,
+    trapFocus: false,
+    initialFocus: null,
+    returnFocus: true,
+    focusTrapOptions: () => ({}),
 });
 
 const emit = defineEmits<{
@@ -63,6 +69,7 @@ const emit = defineEmits<{
 
 const {
     rootRef,
+    contentRef,
     popoverId,
     isTargetMode,
     popoverRole,
@@ -80,6 +87,7 @@ const {
 });
 
 void rootRef;
+void contentRef;
 </script>
 
 <style src="./popover.scss" lang="scss" scoped></style>

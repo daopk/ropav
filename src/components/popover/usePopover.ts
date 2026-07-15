@@ -1,6 +1,7 @@
 import {
     computed,
     isRef,
+    nextTick,
     onBeforeUnmount,
     onMounted,
     ref,
@@ -11,6 +12,8 @@ import {
 } from 'vue';
 import { bem } from '@/utils/bem';
 import { createRafScheduler } from '@/utils/rafScheduler';
+import { useFocusTrap } from '../focus-trap/useFocusTrap';
+import type { FocusTrapContainers } from '../focus-trap/types';
 import type {
     PopoverContentSlotProps,
     PopoverOffset,
@@ -152,6 +155,7 @@ export function usePopover(
     const slots = useSlots();
     const generatedId = useId();
     const rootRef = ref<HTMLElement | null>(null);
+    const contentRef = ref<HTMLElement | null>(null);
     const targetElement = ref<HTMLElement | null>(null);
     const targetPosition = ref<PopoverPosition | null>(null);
     const uncontrolledOpen = ref(false);
@@ -175,6 +179,13 @@ export function usePopover(
     );
     const shouldShowContent = computed(() => !props.keepMounted || isVisible.value);
     const shouldWireTarget = computed(() => isTargetMode.value && !isDisabled.value);
+    const focusTrapContainers = computed<FocusTrapContainers | null>(() => {
+        const root = rootRef.value;
+        if (!root) return null;
+
+        const target = targetElement.value;
+        return isTargetMode.value && target ? [target, root] : root;
+    });
     const ariaLabel = computed(() => props.ariaLabel || undefined);
     const ariaLabelledby = computed(() => props.ariaLabelledby || undefined);
     const ariaDescribedby = computed(() => props.ariaDescribedby || undefined);
@@ -221,6 +232,22 @@ export function usePopover(
         ...contentSlotProps.value,
     }));
 
+    let shouldReturnFocus = props.returnFocus !== false;
+
+    const focusTrap = useFocusTrap(focusTrapContainers, {
+        ...props.focusTrapOptions,
+        initialFocus: () => {
+            const initialFocus = props.initialFocus;
+            return isRef(initialFocus)
+                ? (initialFocus.value ?? undefined)
+                : (initialFocus ?? undefined);
+        },
+        fallbackFocus: () => contentRef.value ?? rootRef.value!,
+        returnFocusOnDeactivate: props.returnFocus !== false,
+        escapeDeactivates: false,
+        allowOutsideClick: true,
+    });
+
     function setOpen(nextOpen: boolean) {
         const previousOpen = isOpen.value;
         if (props.open === undefined) uncontrolledOpen.value = nextOpen;
@@ -233,7 +260,18 @@ export function usePopover(
     }
 
     function closePopover() {
+        shouldReturnFocus = props.returnFocus !== false;
         setOpen(false);
+    }
+
+    function closePopoverWithoutReturnFocus() {
+        shouldReturnFocus = false;
+        if (props.trapFocus) focusTrap.deactivate({ returnFocus: false });
+        setOpen(false);
+
+        void nextTick(() => {
+            if (props.trapFocus && isVisible.value) focusTrap.activate();
+        });
     }
 
     function togglePopover() {
@@ -282,7 +320,13 @@ export function usePopover(
 
     function onDocumentClick(event: MouseEvent) {
         if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
-        closePopover();
+        closePopoverWithoutReturnFocus();
+    }
+
+    function onDocumentPointerDown(event: MouseEvent | TouchEvent) {
+        if (!props.trapFocus) return;
+        if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
+        closePopoverWithoutReturnFocus();
     }
 
     function onDocumentKeydown(event: KeyboardEvent) {
@@ -307,6 +351,21 @@ export function usePopover(
     watch(isDisabled, (disabled) => {
         if (disabled) closePopover();
     });
+
+    watch(
+        [isVisible, () => props.trapFocus],
+        ([visible, trapFocus]) => {
+            if (visible && trapFocus) {
+                shouldReturnFocus = props.returnFocus !== false;
+                focusTrap.activate();
+                return;
+            }
+
+            focusTrap.deactivate({ returnFocus: shouldReturnFocus && props.returnFocus !== false });
+            shouldReturnFocus = props.returnFocus !== false;
+        },
+        { flush: 'post', immediate: true },
+    );
 
     watch(
         () => readTarget(),
@@ -370,10 +429,14 @@ export function usePopover(
             if (!visible || typeof document === 'undefined') return;
 
             document.addEventListener('click', onDocumentClick, true);
+            document.addEventListener('mousedown', onDocumentPointerDown, true);
+            document.addEventListener('touchstart', onDocumentPointerDown, true);
             document.addEventListener('keydown', onDocumentKeydown);
 
             onCleanup(() => {
                 document.removeEventListener('click', onDocumentClick, true);
+                document.removeEventListener('mousedown', onDocumentPointerDown, true);
+                document.removeEventListener('touchstart', onDocumentPointerDown, true);
                 document.removeEventListener('keydown', onDocumentKeydown);
             });
         },
@@ -394,6 +457,7 @@ export function usePopover(
 
     return {
         rootRef,
+        contentRef,
         popoverId,
         isOpen,
         isVisible,

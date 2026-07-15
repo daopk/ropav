@@ -190,6 +190,9 @@ describe('Modal', () => {
                         Modal,
                         {
                             ...props,
+                            focusTrapOptions: {
+                                tabbableOptions: { displayCheck: 'none' },
+                            },
                             'onUpdate:open': (value: boolean) => {
                                 props.open = value;
                             },
@@ -238,6 +241,9 @@ describe('Modal', () => {
                             open: true,
                             title: 'Focus trap',
                             showCloseButton: false,
+                            focusTrapOptions: {
+                                tabbableOptions: { displayCheck: 'none' },
+                            },
                         },
                         {
                             default: () =>

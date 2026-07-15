@@ -86,6 +86,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
     preventScroll: true,
     returnFocus: true,
     keepMounted: false,
+    focusTrapOptions: () => ({}),
 });
 
 const emit = defineEmits<{

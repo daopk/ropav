@@ -85,6 +85,10 @@
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"
     },
+    "./focus-trap": {
+      "types": "./dist/components/focus-trap/index.d.ts",
+      "import": "./dist/components/focus-trap/index.js"
+    },
     "./icon-button": {
       "types": "./dist/components/icon-button/index.d.ts",
       "import": "./dist/components/icon-button/index.js"
@@ -179,6 +183,9 @@
   },
   "peerDependencies": {
     "vue": "^3.6.0-beta.4"
+  },
+  "dependencies": {
+    "focus-trap": "^8.2.2"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.116",

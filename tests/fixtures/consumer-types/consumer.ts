@@ -1,4 +1,5 @@
 import {
+    FocusTrap as RootFocusTrap,
     Toast as RootToast,
     ToastProvider as RootToastProvider,
     ToastViewport as RootToastViewport,
@@ -10,8 +11,15 @@ import {
     type ToastColor as RootToastColor,
     type ToastProps as RootToastProps,
     type ToastUpdateOptions as RootToastUpdateOptions,
+    useFocusTrap as useRootFocusTrap,
     useToast as useRootToast,
 } from 'ropav';
+import {
+    FocusTrap,
+    type FocusTrapOptions,
+    type UseFocusTrapOptions,
+    useFocusTrap,
+} from 'ropav/focus-trap';
 import {
     Toast,
     ToastProvider,
@@ -43,9 +51,12 @@ const rootToastColorIsTyped: RootToastColorIsTyped = true;
 const toastUpdateIdIsExcluded: ToastUpdateIdIsExcluded = true;
 const rootToastUpdateIdIsExcluded: RootToastUpdateIdIsExcluded = true;
 const options: ToastOptions = { title: 'Saved', type: 'success' };
+const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
+const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
 
 void [
     RootToast,
+    RootFocusTrap,
     RootToastProvider,
     RootToastViewport,
     rootToastColors,
@@ -68,6 +79,11 @@ void [
     toastUpdateIdIsExcluded,
     rootToastUpdateIdIsExcluded,
     options,
+    FocusTrap,
+    focusTrapOptions,
+    useFocusTrapOptions,
+    useFocusTrap,
+    useRootFocusTrap,
     useRootToast,
     useToast,
 ];

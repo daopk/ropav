@@ -32,6 +32,7 @@ const meta = {
         returnFocus: { control: 'boolean' },
         keepMounted: { control: 'boolean' },
         initialFocus: { control: false },
+        focusTrapOptions: { control: false },
     },
     args: {
         role: 'dialog',

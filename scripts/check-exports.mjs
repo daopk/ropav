@@ -64,6 +64,7 @@ const expectedFiles = [
     'dist/components/color-swatch/index.js',
     'dist/components/dropdown-menu/index.js',
     'dist/components/field/index.js',
+    'dist/components/focus-trap/index.js',
     'dist/components/icon-button/index.js',
     'dist/components/input/index.js',
     'dist/components/modal/index.js',
@@ -133,6 +134,7 @@ try {
             'ColorSwatch',
             'DropdownMenu',
             'Field',
+            'FocusTrap',
             'IconButton',
             'Input',
             'Modal',
@@ -164,6 +166,7 @@ try {
             'useAccordion',
             'useAccordionItem',
             'useCollapse',
+            'useFocusTrap',
             'useTabs',
             'useTabsContent',
             'useTabsList',
@@ -226,6 +229,9 @@ try {
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');
     assertExports(field, ['Field'], 'dist/components/field/index.js');
+
+    const focusTrap = await server.ssrLoadModule('/dist/components/focus-trap/index.js');
+    assertExports(focusTrap, ['FocusTrap', 'useFocusTrap'], 'dist/components/focus-trap/index.js');
 
     const iconButton = await server.ssrLoadModule('/dist/components/icon-button/index.js');
     assertExports(iconButton, ['IconButton'], 'dist/components/icon-button/index.js');
