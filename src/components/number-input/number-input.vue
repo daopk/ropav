@@ -1,6 +1,6 @@
 <template>
     <Input
-        :class="rootClass"
+        v-bind="attrs"
         :id="control.id"
         :name="name"
         :model-value="modelInputValue"
@@ -17,6 +17,8 @@
         :describedby="describedby"
         :labelledby="labelledby"
         :input-attrs="nativeInputAttrs"
+        :class-names="inputClassNames"
+        :styles="inputStyles"
         :validation-message="validationMessage"
         @update:model-value="onInputUpdate"
     >
@@ -27,10 +29,7 @@
                     :key="controlType"
                     type="button"
                     tabindex="-1"
-                    :class="[
-                        'rp-number-input__control',
-                        `rp-number-input__control--${controlType}`,
-                    ]"
+                    v-bind="getControlAttrs(controlType)"
                     :aria-label="getControlLabel(controlType)"
                     :disabled="isControlDisabled(controlType)"
                     @mousedown.prevent
@@ -52,10 +51,7 @@
                     :key="controlType"
                     type="button"
                     tabindex="-1"
-                    :class="[
-                        'rp-number-input__control',
-                        `rp-number-input__control--${controlType}`,
-                    ]"
+                    v-bind="getControlAttrs(controlType)"
                     :aria-label="getControlLabel(controlType)"
                     :disabled="isControlDisabled(controlType)"
                     @mousedown.prevent
@@ -74,13 +70,15 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
 import IconMinus from '~icons/lucide/minus';
 import IconPlus from '~icons/lucide/plus';
+import { presence, useStylesApi } from '@/styles-api';
 import Input from '../input/input.vue';
-import type { NumberInputProps, NumberInputValue } from './types';
+import type { NumberInputPart, NumberInputProps, NumberInputValue } from './types';
 import { useNumberInput, type NumberInputControl } from './useNumberInput';
 
-defineOptions({ name: 'RpNumberInput' });
+defineOptions({ name: 'RpNumberInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<NumberInputProps>(), {
     step: 1,
@@ -115,6 +113,26 @@ const {
     decrement,
     onInputUpdate,
 } = useNumberInput(props, (value) => emit('update:modelValue', value));
+
+const { attrs, getPartAttrs } = useStylesApi<NumberInputPart>(props, 'root');
+const inputClassNames = computed(() => ({
+    root: [rootClass.value, props.classNames?.root],
+    input: props.classNames?.input,
+}));
+const inputStyles = computed(() => ({
+    root: props.styles?.root,
+    input: props.styles?.input,
+}));
+
+function getControlAttrs(controlType: NumberInputControl) {
+    return {
+        ...getPartAttrs('control', {
+            class: ['rp-number-input__control', `rp-number-input__control--${controlType}`],
+        }),
+        'data-control': controlType,
+        'data-disabled': presence(isControlDisabled(controlType)),
+    };
+}
 
 function focusNativeInput(event: MouseEvent) {
     const target = event.currentTarget;

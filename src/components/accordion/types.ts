@@ -1,4 +1,5 @@
-import type { ComputedRef, InjectionKey } from 'vue';
+import type { ComputedRef, HTMLAttributes, InjectionKey } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
 import type {
     CollapseContentProps,
     CollapseContentRole,
@@ -13,7 +14,13 @@ export type AccordionOrientation = 'vertical' | 'horizontal';
 
 export type AccordionState = 'open' | 'closed';
 
-export interface AccordionProps {
+export const accordionParts = ['root'] as const;
+export const accordionItemParts = ['root', 'trigger', 'title', 'icon', 'content'] as const;
+
+export type AccordionPart = (typeof accordionParts)[number];
+export type AccordionItemPart = (typeof accordionItemParts)[number];
+
+export interface AccordionProps extends StylesApiProps<AccordionPart> {
     id?: string;
     modelValue?: AccordionModelValue;
     defaultValue?: AccordionModelValue;
@@ -27,7 +34,7 @@ export interface AccordionProps {
     labelledby?: string;
 }
 
-export interface AccordionItemProps {
+export interface AccordionItemProps extends StylesApiProps<AccordionItemPart> {
     id?: string;
     value: AccordionItemValue;
     title?: string;
@@ -59,7 +66,7 @@ export interface AccordionItemRootProps {
 
 export interface AccordionTriggerProps extends CollapseTriggerProps {
     id: string;
-    class: string;
+    class: HTMLAttributes['class'];
     'aria-disabled'?: boolean;
 }
 

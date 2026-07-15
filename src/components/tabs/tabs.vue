@@ -1,14 +1,16 @@
 <template>
-    <div v-bind="rootProps">
+    <div v-bind="rootAttrs">
         <slot v-bind="slotProps" />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useTabs } from './useTabs';
-import type { TabsProps, TabsValue } from './types';
+import type { TabsPart, TabsProps, TabsValue } from './types';
 
-defineOptions({ name: 'RpTabs' });
+defineOptions({ name: 'RpTabs', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TabsProps>(), {
     modelValue: undefined,
@@ -26,9 +28,16 @@ const emit = defineEmits<{
     'update:modelValue': [value: TabsValue];
 }>();
 
-const { rootProps, slotProps } = useTabs(props, (value) => {
+const { rootProps: internalRootProps, slotProps } = useTabs(props, (value) => {
     emit('update:modelValue', value);
 });
+const { getRootAttrs } = useStylesApi<TabsPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        ...internalRootProps.value,
+        'data-disabled': presence(props.disabled),
+    }),
+);
 </script>
 
 <style src="./tabs.scss" lang="scss" scoped></style>

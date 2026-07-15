@@ -1,4 +1,8 @@
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const badgeParts = ['root', 'left', 'label', 'right'] as const;
+export type BadgePart = (typeof badgeParts)[number];
 
 export const badgeColors = componentColors;
 
@@ -16,7 +20,7 @@ export type BadgeRadius = (typeof badgeRadiuses)[number];
 
 export type BadgeVariant = (typeof badgeVariants)[number];
 
-export interface BadgeProps {
+export interface BadgeProps extends StylesApiProps<BadgePart> {
     variant?: BadgeVariant;
     color?: BadgeColor;
     autoContrast?: boolean;

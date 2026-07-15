@@ -1,0 +1,90 @@
+export const publicComponentVariables = [
+    {
+        name: '--rp-switch-track-width',
+        component: 'Switch',
+        acceptedValue: '<length>',
+        fallback: 'size preset track width',
+        description: 'Width shared by the Switch track and thumb travel calculation.',
+    },
+    {
+        name: '--rp-switch-track-height',
+        component: 'Switch',
+        acceptedValue: '<length>',
+        fallback: 'size preset track height',
+        description: 'Height of the Switch track.',
+    },
+    {
+        name: '--rp-switch-thumb-size',
+        component: 'Switch',
+        acceptedValue: '<length>',
+        fallback: 'size preset thumb size',
+        description: 'Diameter of the Switch thumb.',
+    },
+    {
+        name: '--rp-switch-thumb-offset',
+        component: 'Switch',
+        acceptedValue: '<length>',
+        fallback: '2px',
+        description: 'Inset used for the Switch thumb at both ends of the track.',
+    },
+    {
+        name: '--rp-slider-track-length',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<length>',
+        fallback: '160px',
+        description: 'Minimum track length for a horizontal or vertical slider.',
+    },
+    {
+        name: '--rp-slider-track-thickness',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<length>',
+        fallback: 'size preset track thickness',
+        description: 'Thickness shared by the track and native range pseudo-elements.',
+    },
+    {
+        name: '--rp-slider-thumb-size',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<length>',
+        fallback: 'size preset thumb size',
+        description: 'Diameter shared by native and custom slider thumbs.',
+    },
+    {
+        name: '--rp-slider-thumb-border-width',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<line-width>',
+        fallback: 'size preset thumb border width',
+        description: 'Border width shared by native and custom slider thumbs.',
+    },
+    {
+        name: '--rp-slider-thumb-padding',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<length>',
+        fallback: '0',
+        description: 'Inner padding for custom slider thumb content.',
+    },
+    {
+        name: '--rp-slider-mark-size',
+        component: 'Slider, RangeSlider',
+        acceptedValue: '<length>',
+        fallback: 'size preset mark size',
+        description: 'Diameter of slider marks.',
+    },
+    {
+        name: '--rp-radio-control-size',
+        component: 'Radio',
+        acceptedValue: '<length>',
+        fallback: 'size preset control size',
+        description: 'Diameter of the Radio control.',
+    },
+    {
+        name: '--rp-radio-dot-size',
+        component: 'Radio',
+        acceptedValue: '<length>',
+        fallback: 'size preset dot size',
+        description: 'Diameter of the checked Radio dot.',
+    },
+];
+
+export const publicComponentVariableNames = new Set(
+    publicComponentVariables.map(({ name }) => name),
+);

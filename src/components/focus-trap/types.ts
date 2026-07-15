@@ -4,6 +4,10 @@ import type {
     Options as FocusTrapOptions,
 } from 'focus-trap';
 import type { MaybeRefOrGetter, Ref, ShallowRef } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const focusTrapParts = ['root'] as const;
+export type FocusTrapPart = (typeof focusTrapParts)[number];
 
 export type { FocusTrapOptions };
 
@@ -29,7 +33,7 @@ export interface UseFocusTrapOptions extends FocusTrapOptions {
     immediate?: boolean;
 }
 
-export interface FocusTrapProps {
+export interface FocusTrapProps extends StylesApiProps<FocusTrapPart> {
     active?: boolean;
     paused?: boolean;
     as?: keyof HTMLElementTagNameMap;

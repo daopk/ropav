@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, reactive, ref } from 'vue';
+import { defineComponent, h, ref, shallowReactive } from 'vue';
 import {
     flush,
     keydown,
@@ -162,7 +162,7 @@ describe('Tooltip targets', () => {
         secondTarget.setAttribute('aria-describedby', 'second-help');
         document.body.append(firstTarget, secondTarget);
 
-        const props = reactive<TooltipProps>({
+        const props = shallowReactive<TooltipProps>({
             content: 'Target help',
             id: 'target-tooltip',
             target: firstTarget,
@@ -175,7 +175,7 @@ describe('Tooltip targets', () => {
         const { unmount } = mountDomWithApp(
             defineComponent({
                 render() {
-                    return h(Tooltip, props);
+                    return h(Tooltip, { ...props });
                 },
             }),
         );
@@ -201,7 +201,7 @@ describe('Tooltip targets', () => {
     });
 
     it('positions target content from the target rect for each placement', async () => {
-        const props = reactive<TooltipProps>({
+        const props = shallowReactive<TooltipProps>({
             content: 'Positioned help',
             id: 'position-tooltip',
             placement: 'top',
@@ -282,7 +282,7 @@ describe('Tooltip targets', () => {
         target.getBoundingClientRect = getTargetRect;
         document.body.append(target);
 
-        const props = reactive<TooltipProps>({
+        const props = shallowReactive<TooltipProps>({
             content: 'Throttled help',
             id: 'throttled-tooltip',
             open: true,
@@ -292,7 +292,7 @@ describe('Tooltip targets', () => {
         const { container, unmount } = mountDomWithApp(
             defineComponent({
                 render() {
-                    return h(Tooltip, props);
+                    return h(Tooltip, { ...props });
                 },
             }),
         );

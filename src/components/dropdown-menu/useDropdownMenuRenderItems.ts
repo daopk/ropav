@@ -1,5 +1,6 @@
 import { computed, type Ref } from 'vue';
 import { bem } from '@/utils/bem';
+import type { StylesApiPartOptions } from '../../styles-api';
 import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
@@ -8,6 +9,7 @@ import type {
     DropdownMenuItemSlotProps,
     DropdownMenuRenderedItem,
     DropdownMenuPlacement,
+    DropdownMenuPart,
     DropdownMenuProps,
     DropdownMenuSubmenuProps,
 } from './types';
@@ -48,6 +50,7 @@ type UseDropdownMenuRenderItemsOptions = {
 };
 
 export interface DropdownMenuRenderContext {
+    getPublicPartAttrs?: (part: DropdownMenuPart, options?: StylesApiPartOptions) => object;
     isItemFocused: (indexOrPath: number | ItemPath) => boolean;
     isSubmenuOpen: (path: ItemPath) => boolean;
     getItemProps: (
@@ -147,9 +150,9 @@ export function useDropdownMenuRenderItems({
             'aria-expanded': hasSubmenu ? resolvedSubmenuOpen : undefined,
             'aria-haspopup': hasSubmenu ? 'menu' : undefined,
             'aria-disabled': disabled || undefined,
-            'data-disabled': disabled || undefined,
-            'data-focused': focused || undefined,
-            'data-submenu': hasSubmenu || undefined,
+            'data-disabled': disabled ? '' : undefined,
+            'data-highlighted': focused ? '' : undefined,
+            'data-submenu': hasSubmenu ? '' : undefined,
             onClick: (event) => activateItem(item, path, event),
             onMouseenter: (event) => focusHoveredItem(item, path, event),
         };

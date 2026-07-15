@@ -41,6 +41,10 @@ export function hasCssCustomProperty(token) {
     return false;
 }
 
+export function isPublicToken(token) {
+    return ropavExtension(token).public === true;
+}
+
 function ropavExtension(token) {
     return token.extensions?.ropav ?? token.$extensions?.ropav ?? {};
 }

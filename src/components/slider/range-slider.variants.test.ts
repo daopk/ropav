@@ -87,6 +87,6 @@ describe('RangeSlider variants', () => {
         const sliders = [...container.querySelectorAll('.rp-range-slider')];
 
         expect(sliders[0].classList.contains('rp-range-slider--disabled')).toBe(true);
-        expect(sliders[0].getAttribute('data-disabled')).toBe('true');
+        expect(sliders[0].getAttribute('data-disabled')).toBe('');
     });
 });

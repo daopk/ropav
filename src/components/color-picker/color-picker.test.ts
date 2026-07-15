@@ -746,7 +746,7 @@ describe('ColorPicker', () => {
 
         expect(onUpdate).not.toHaveBeenCalled();
         expect(root.classList.contains('rp-color-picker--readonly')).toBe(true);
-        expect(root.getAttribute('data-readonly')).toBe('true');
+        expect(root.getAttribute('data-readonly')).toBe('');
         expect(panel.hasAttribute('tabindex')).toBe(false);
         expect(saturationAxis.tabIndex).toBe(0);
         expect(valueAxis.tabIndex).toBe(0);
@@ -755,11 +755,11 @@ describe('ColorPicker', () => {
         expect(saturationAxis.getAttribute('aria-readonly')).toBe('true');
         expect(valueAxis.getAttribute('aria-readonly')).toBe('true');
         expect(hueBar.getAttribute('aria-readonly')).toBe('true');
-        expect(panel.getAttribute('data-readonly')).toBe('true');
-        expect(hueBar.getAttribute('data-readonly')).toBe('true');
+        expect(panel.getAttribute('data-readonly')).toBe('');
+        expect(hueBar.getAttribute('data-readonly')).toBe('');
     });
 
-    it('filters unsupported control state attrs from the root element', async () => {
+    it('forwards control state attrs to the root element exactly once', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -778,9 +778,12 @@ describe('ColorPicker', () => {
 
         const root = container.querySelector('.rp-color-picker') as HTMLElement;
 
-        expect(root.hasAttribute('disabled')).toBe(false);
-        expect(root.hasAttribute('invalid')).toBe(false);
-        expect(root.hasAttribute('required')).toBe(false);
+        expect(root.hasAttribute('disabled')).toBe(true);
+        expect(root.hasAttribute('invalid')).toBe(true);
+        expect(root.hasAttribute('required')).toBe(true);
+        expect(container.querySelectorAll('[disabled]')).toHaveLength(1);
+        expect(container.querySelectorAll('[invalid]')).toHaveLength(1);
+        expect(container.querySelectorAll('[required]')).toHaveLength(1);
         expect(root.classList.contains('custom-color-picker')).toBe(true);
     });
 
@@ -1251,6 +1254,29 @@ describe('ColorPicker', () => {
         for (const colorSwatch of colorSwatches) {
             expect(colorSwatch.style.getPropertyValue('--_rp-color-swatch-size')).toBe('100%');
         }
+    });
+
+    it('lets styles.swatches override the internal swatches style', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(ColorPicker, {
+                        modelValue: '#000000',
+                        swatches: ['#ff0000'],
+                        swatchesPerRow: 3,
+                        styles: {
+                            swatches: { '--_rp-color-picker-swatches-per-row': '7' },
+                        },
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const swatches = container.querySelector('.rp-color-picker__swatches') as HTMLElement;
+
+        expect(swatches.style.getPropertyValue('--_rp-color-picker-swatches-per-row')).toBe('7');
     });
 
     it('caps swatchesPerRow at 15', async () => {

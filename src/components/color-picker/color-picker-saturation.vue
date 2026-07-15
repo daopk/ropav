@@ -1,14 +1,15 @@
 <template>
     <div
         ref="saturationRef"
-        class="rp-color-picker__saturation"
+        :class="['rp-color-picker__saturation', controlClass]"
         role="group"
-        :style="saturationStyle"
+        :style="[saturationStyle, controlStyle]"
         :aria-label="groupAriaLabel"
         :aria-labelledby="labelledby"
         :aria-describedby="describedby"
         :aria-readonly="readonly || undefined"
-        :data-readonly="readonly || undefined"
+        :data-readonly="presence(readonly)"
+        data-control="saturation"
         @pointerdown="onPointerDown"
     >
         <input
@@ -47,12 +48,18 @@
             @keydown="onAxisKeydown($event, 'value')"
         />
         <span class="rp-color-picker__surface" aria-hidden="true" />
-        <span class="rp-color-picker__handle" aria-hidden="true" />
+        <span
+            :class="['rp-color-picker__handle', handleClass]"
+            :style="handleStyle"
+            data-control="saturation"
+            aria-hidden="true"
+        />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, ref, type CSSProperties } from 'vue';
+import { presence } from '@/styles-api';
 import {
     clampPercent,
     getHsvCssColor,

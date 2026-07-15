@@ -1,6 +1,30 @@
-import type { ComputedRef, InjectionKey, MaybeRefOrGetter } from 'vue';
+import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Raw } from 'vue';
 import type { TeleportProps } from '../floating/types';
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const toastParts = [
+    'root',
+    'icon',
+    'title',
+    'description',
+    'body',
+    'action',
+    'close',
+] as const;
+export const toastViewportParts = [
+    'root',
+    'item',
+    'toast',
+    'toastIcon',
+    'toastTitle',
+    'toastDescription',
+    'toastBody',
+    'toastAction',
+    'toastClose',
+] as const;
+export type ToastPart = (typeof toastParts)[number];
+export type ToastViewportPart = (typeof toastViewportParts)[number];
 
 export const toastColors = componentColors;
 
@@ -37,7 +61,7 @@ export type ToastStateOption<T> = MaybeRefOrGetter<T>;
 
 export type ToastId = string;
 
-export interface ToastProps {
+export interface ToastProps extends StylesApiProps<ToastPart> {
     open?: boolean;
     title?: string;
     description?: string;
@@ -90,7 +114,7 @@ export interface ToastProviderProps {
     closeLabel?: string;
 }
 
-export interface ToastViewportProps extends TeleportProps {
+export interface ToastViewportProps extends TeleportProps, StylesApiProps<ToastViewportPart> {
     position?: ToastPosition;
     label?: string;
 }
@@ -111,7 +135,7 @@ export interface ToastItem {
     /** A unique key for this rendered instance, including replacements that reuse an id. */
     readonly instanceId: string;
     readonly type: ToastType;
-    readonly props: Readonly<Omit<ToastProps, 'open'>>;
+    readonly props: Readonly<Raw<Omit<ToastProps, 'open'>>>;
     readonly onClose?: (reason: ToastCloseReason) => void;
 }
 

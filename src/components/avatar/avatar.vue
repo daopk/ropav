@@ -1,20 +1,19 @@
 <template>
-    <span
-        v-bind="attrs"
-        :class="rootClass"
-        :style="rootStyle"
-        :role="rootRole"
-        :aria-label="rootAriaLabel"
-    >
+    <span v-bind="rootAttrs">
         <img
             v-if="showsImage"
-            class="rp-avatar__image"
+            :class="getPartAttrs('image', { class: 'rp-avatar__image' }).class"
+            :style="getPartAttrs('image').style"
             :src="src || undefined"
             :alt.attr="imageAlt"
             @load="handleImageLoad"
             @error="handleImageError"
         />
-        <span v-else class="rp-avatar__fallback" :aria-hidden="fallbackAriaHidden">
+        <span
+            v-else
+            v-bind="getPartAttrs('fallback', { class: 'rp-avatar__fallback' })"
+            :aria-hidden="fallbackAriaHidden"
+        >
             <slot>
                 <span v-if="initials" class="rp-avatar__initials">{{ initials }}</span>
                 <IconUser v-else class="rp-avatar__icon" aria-hidden="true" />
@@ -24,10 +23,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useAttrs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import IconUser from '~icons/lucide/user';
 import { bem } from '@/utils/bem';
-import type { AvatarProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { AvatarPart, AvatarProps } from './types';
 import { getAvatarColorStyle } from './useAvatarColor';
 
 defineOptions({ name: 'RpAvatar', inheritAttrs: false });
@@ -38,7 +38,7 @@ const emit = defineEmits<{
     error: [event: Event];
 }>();
 
-const attrs = useAttrs();
+const { attrs, getPartAttrs, getRootAttrs } = useStylesApi<AvatarPart>(props, 'root');
 const imageFailed = ref(false);
 
 const isHidden = computed(() => attrs['aria-hidden'] === true || attrs['aria-hidden'] === 'true');
@@ -65,6 +65,14 @@ const rootClass = computed(() =>
 
 const rootStyle = computed(() =>
     getAvatarColorStyle(props.color, props.variant, props.autoContrast),
+);
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        role: rootRole.value,
+        'aria-label': rootAriaLabel.value,
+    }),
 );
 
 watch(

@@ -1,3 +1,16 @@
+import type { HTMLAttributes } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const colorPickerParts = [
+    'root',
+    'label',
+    'control',
+    'handle',
+    'swatches',
+    'swatch',
+] as const;
+export type ColorPickerPart = (typeof colorPickerParts)[number];
+
 export const colorPickerFormats = ['hex', 'hexa', 'rgb', 'rgba', 'hsl', 'hsla'] as const;
 
 export const colorPickerSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -14,7 +27,7 @@ export interface ColorPickerSelection {
 
 export type ColorPickerValue = string;
 
-export interface ColorPickerProps {
+export interface ColorPickerProps extends StylesApiProps<ColorPickerPart> {
     id?: string;
     modelValue: ColorPickerValue;
     format?: ColorPickerFormat;
@@ -36,6 +49,10 @@ export interface ColorPickerSaturationProps {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    controlClass?: HTMLAttributes['class'];
+    controlStyle?: HTMLAttributes['style'];
+    handleClass?: HTMLAttributes['class'];
+    handleStyle?: HTMLAttributes['style'];
 }
 
 export type ColorPickerSliderVariant = 'hue' | 'opacity';
@@ -45,4 +62,8 @@ export interface ColorPickerSliderProps {
     value?: number;
     color?: string;
     readonly?: boolean;
+    controlClass?: HTMLAttributes['class'];
+    controlStyle?: HTMLAttributes['style'];
+    handleClass?: HTMLAttributes['class'];
+    handleStyle?: HTMLAttributes['style'];
 }

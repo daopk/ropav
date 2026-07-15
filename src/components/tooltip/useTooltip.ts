@@ -10,6 +10,8 @@ import {
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
 
+type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
+
 export function resolveTooltipOffsetStyle(
     offset: TooltipOffset | undefined,
 ): CSSProperties | undefined {
@@ -49,7 +51,7 @@ export function resolveTooltipColorStyleWithContrast(
 }
 
 export function useTooltip(
-    props: Readonly<TooltipProps>,
+    props: Readonly<TooltipBehaviorProps>,
     emitOpenChange?: (open: boolean) => void,
 ) {
     const slots = useSlots();
@@ -179,6 +181,7 @@ export function useTooltip(
         arrowRef,
         tooltipId,
         isOpen,
+        isDisabled,
         isVisible,
         isTargetMode: isExplicitTarget,
         shouldRenderContent,

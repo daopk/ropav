@@ -1,10 +1,17 @@
 export { default as Slider } from './slider.vue';
 export { default as RangeSlider } from './range-slider.vue';
-export { sliderColors, sliderOrientations, sliderSizes } from './types';
+export {
+    rangeSliderParts,
+    sliderColors,
+    sliderOrientations,
+    sliderParts,
+    sliderSizes,
+} from './types';
 export type {
     RangeSliderAriaValueText,
     RangeSliderEndpointValueText,
     RangeSliderInputAttrs,
+    RangeSliderPart,
     RangeSliderProps,
     RangeSliderThumb,
     RangeSliderValue,
@@ -14,6 +21,7 @@ export type {
     SliderMarkColor,
     SliderMarkInput,
     SliderOrientation,
+    SliderPart,
     SliderProps,
     SliderPresetColor,
     SliderSize,

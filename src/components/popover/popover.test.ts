@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, reactive } from 'vue';
+import { defineComponent, h, shallowReactive } from 'vue';
 import {
     click,
     flush,
@@ -32,6 +32,31 @@ function tab(shiftKey = false) {
 
 describe('Popover', () => {
     const placements: readonly PopoverPlacement[] = popoverPlacements;
+
+    it('marks the root and trigger disabled when content is missing', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        {},
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Target'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = queryDom(container, '.rp-popover') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+
+        expect(root.getAttribute('data-disabled')).toBe('');
+        expect(trigger.getAttribute('data-disabled')).toBe('');
+    });
 
     it('renders trigger slot props and toggles interactive content', async () => {
         const container = mountDom(
@@ -355,7 +380,7 @@ describe('Popover', () => {
     });
 
     it('positions target content from the target rect for each placement', async () => {
-        const props = reactive<PopoverProps>({
+        const props = shallowReactive<PopoverProps>({
             id: 'position-popover',
             placement: 'top',
             target: '#position-target',
@@ -368,9 +393,13 @@ describe('Popover', () => {
                 render() {
                     return h('div', [
                         h('button', { id: 'position-target' }, 'Position target'),
-                        h(Popover, props, {
-                            default: () => h('p', 'Positioned content'),
-                        }),
+                        h(
+                            Popover,
+                            { ...props },
+                            {
+                                default: () => h('p', 'Positioned content'),
+                            },
+                        ),
                     ]);
                 },
             }),
@@ -449,7 +478,7 @@ describe('Popover', () => {
 
         document.body.append(firstTarget, secondTarget);
 
-        const props = reactive<PopoverProps>({
+        const props = shallowReactive<PopoverProps>({
             id: 'retarget-popover',
             target: firstTarget,
             open: true,
@@ -460,9 +489,13 @@ describe('Popover', () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h(Popover, props, {
-                        default: () => h('p', 'Retargeted content'),
-                    });
+                    return h(
+                        Popover,
+                        { ...props },
+                        {
+                            default: () => h('p', 'Retargeted content'),
+                        },
+                    );
                 },
             }),
         );
@@ -521,7 +554,7 @@ describe('Popover', () => {
         target.getBoundingClientRect = getTargetRect;
         document.body.append(target);
 
-        const props = reactive<PopoverProps>({
+        const props = shallowReactive<PopoverProps>({
             id: 'throttled-popover',
             open: true,
             target,
@@ -529,9 +562,13 @@ describe('Popover', () => {
         const { container, unmount } = mountDomWithApp(
             defineComponent({
                 render() {
-                    return h(Popover, props, {
-                        default: () => h('p', 'Throttled content'),
-                    });
+                    return h(
+                        Popover,
+                        { ...props },
+                        {
+                            default: () => h('p', 'Throttled content'),
+                        },
+                    );
                 },
             }),
         );
@@ -664,7 +701,7 @@ describe('Popover', () => {
 
         document.body.append(firstTarget, secondTarget);
 
-        const props = reactive<PopoverProps>({
+        const props = shallowReactive<PopoverProps>({
             id: 'restore-popover',
             target: firstTarget,
             disabled: false,
@@ -673,9 +710,13 @@ describe('Popover', () => {
         const { unmount } = mountDomWithApp(
             defineComponent({
                 render() {
-                    return h(Popover, props, {
-                        default: () => h('p', 'Restored content'),
-                    });
+                    return h(
+                        Popover,
+                        { ...props },
+                        {
+                            default: () => h('p', 'Restored content'),
+                        },
+                    );
                 },
             }),
         );

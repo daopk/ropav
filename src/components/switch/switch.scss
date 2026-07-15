@@ -1,17 +1,27 @@
 @mixin switch-size($track-w, $track-h, $thumb-size, $font-size) {
-    --_rp-switch-track-width: #{$track-w};
-    --_rp-switch-track-height: #{$track-h};
-    --_rp-switch-thumb-size: #{$thumb-size};
+    --_rp-switch-default-track-width: #{$track-w};
+    --_rp-switch-default-track-height: #{$track-h};
+    --_rp-switch-default-thumb-size: #{$thumb-size};
     --_rp-switch-font-size: #{$font-size};
 }
 
 .rp-switch {
     --_rp-switch-color: var(--rp-color-control-selected-bg);
     --_rp-switch-font-size: var(--rp-font-size-md);
-    --_rp-switch-track-width: 46px;
-    --_rp-switch-track-height: 24px;
-    --_rp-switch-thumb-size: 18px;
-    --_rp-switch-thumb-offset: 2px;
+    --_rp-switch-default-track-width: 46px;
+    --_rp-switch-default-track-height: 24px;
+    --_rp-switch-default-thumb-size: 18px;
+    --_rp-switch-default-thumb-offset: 2px;
+    --_rp-switch-track-width: var(--rp-switch-track-width, var(--_rp-switch-default-track-width));
+    --_rp-switch-track-height: var(
+        --rp-switch-track-height,
+        var(--_rp-switch-default-track-height)
+    );
+    --_rp-switch-thumb-size: var(--rp-switch-thumb-size, var(--_rp-switch-default-thumb-size));
+    --_rp-switch-thumb-offset: var(
+        --rp-switch-thumb-offset,
+        var(--_rp-switch-default-thumb-offset)
+    );
     --_rp-switch-track-bg: var(--rp-color-control-track-bg);
     --_rp-switch-thumb-bg: var(--rp-color-control-thumb-bg);
     --_rp-switch-invalid-border: var(--rp-color-red-filled);

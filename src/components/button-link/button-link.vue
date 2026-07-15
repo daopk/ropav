@@ -1,30 +1,22 @@
 <template>
-    <a
-        :class="rootClass"
-        :style="rootStyle"
-        :href="resolvedHref"
-        :target="resolvedTarget"
-        :rel="resolvedRel"
-        :download="resolvedDownload"
-        :hreflang="resolvedHrefLang"
-        :aria-disabled="isUnavailable || undefined"
-        :aria-busy="loading || undefined"
-        :tabindex="isUnavailable ? -1 : undefined"
-        @click.capture="onDisabledClick"
-    >
-        <span v-if="loading" class="rp-button__loading" aria-hidden="true">
+    <a v-bind="rootAttrs">
+        <span
+            v-if="loading"
+            v-bind="getPartAttrs('loader', { class: 'rp-button__loading' })"
+            aria-hidden="true"
+        >
             <slot name="loading">
                 <IconLoaderCircle class="rp-button__spinner" />
             </slot>
         </span>
         <span class="rp-button__content">
-            <span v-if="$slots.left" class="rp-button__left">
+            <span v-if="$slots.left" v-bind="getPartAttrs('left', { class: 'rp-button__left' })">
                 <slot name="left" />
             </span>
-            <span class="rp-button__label">
+            <span v-bind="getPartAttrs('label', { class: 'rp-button__label' })">
                 <slot />
             </span>
-            <span v-if="$slots.right" class="rp-button__right">
+            <span v-if="$slots.right" v-bind="getPartAttrs('right', { class: 'rp-button__right' })">
                 <slot name="right" />
             </span>
         </span>
@@ -35,10 +27,11 @@
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
 import { bem } from '@/utils/bem';
+import { presence, useStylesApi } from '@/styles-api';
 import { getButtonColorStyle } from '../button/useButtonColor';
-import type { ButtonLinkProps } from './types';
+import type { ButtonLinkPart, ButtonLinkProps } from './types';
 
-defineOptions({ name: 'RpButtonLink' });
+defineOptions({ name: 'RpButtonLink', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ButtonLinkProps>(), {
     disabled: false,
@@ -72,6 +65,25 @@ const resolvedDownload = computed(() => {
     return props.download === true ? '' : props.download;
 });
 const resolvedHrefLang = computed(() => (isUnavailable.value ? undefined : props.hreflang));
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<ButtonLinkPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        href: resolvedHref.value,
+        target: resolvedTarget.value,
+        rel: resolvedRel.value,
+        download: resolvedDownload.value,
+        hreflang: resolvedHrefLang.value,
+        'aria-disabled': isUnavailable.value || undefined,
+        'aria-busy': props.loading || undefined,
+        tabindex: isUnavailable.value ? -1 : undefined,
+        'data-disabled': presence(isUnavailable.value),
+        'data-loading': presence(props.loading),
+        onClickCapture: onDisabledClick,
+    }),
+);
 
 function onDisabledClick(event: MouseEvent) {
     if (!isUnavailable.value) return;

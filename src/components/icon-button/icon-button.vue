@@ -1,14 +1,15 @@
 <template>
-    <button
-        :class="rootClass"
-        :style="rootStyle"
-        :disabled="disabled || loading || undefined"
-        :type="type"
-        :aria-label="ariaLabel || undefined"
-        :aria-busy="loading || undefined"
-    >
-        <IconLoaderCircle v-if="loading" class="rp-icon-button__spinner" aria-hidden="true" />
-        <span v-else class="rp-icon-button__icon" aria-hidden="true">
+    <button v-bind="rootAttrs">
+        <IconLoaderCircle
+            v-if="loading"
+            v-bind="getPartAttrs('loader', { class: 'rp-icon-button__spinner' })"
+            aria-hidden="true"
+        />
+        <span
+            v-else
+            v-bind="getPartAttrs('icon', { class: 'rp-icon-button__icon' })"
+            aria-hidden="true"
+        >
             <slot />
         </span>
     </button>
@@ -18,10 +19,11 @@
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
 import { bem } from '@/utils/bem';
+import { presence, useStylesApi } from '@/styles-api';
 import { getButtonColorStyle } from '../button/useButtonColor';
-import type { IconButtonProps } from './types';
+import type { IconButtonPart, IconButtonProps } from './types';
 
-defineOptions({ name: 'RpIconButton' });
+defineOptions({ name: 'RpIconButton', inheritAttrs: false });
 
 const props = withDefaults(defineProps<IconButtonProps>(), {
     type: 'button',
@@ -40,6 +42,19 @@ const rootClass = computed(() => [
 
 const rootStyle = computed(() =>
     getButtonColorStyle(props.color, props.variant, props.autoContrast),
+);
+const { getPartAttrs, getRootAttrs } = useStylesApi<IconButtonPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        disabled: props.disabled || props.loading || undefined,
+        type: props.type,
+        'aria-label': props.ariaLabel || undefined,
+        'aria-busy': props.loading || undefined,
+        'data-disabled': presence(props.disabled || props.loading),
+        'data-loading': presence(props.loading),
+    }),
 );
 </script>
 

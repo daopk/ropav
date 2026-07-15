@@ -1,4 +1,14 @@
 import type { ComputedRef } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const tabsParts = ['root'] as const;
+export const tabsListParts = ['root'] as const;
+export const tabsTriggerParts = ['root'] as const;
+export const tabsContentParts = ['root'] as const;
+export type TabsPart = (typeof tabsParts)[number];
+export type TabsListPart = (typeof tabsListParts)[number];
+export type TabsTriggerPart = (typeof tabsTriggerParts)[number];
+export type TabsContentPart = (typeof tabsContentParts)[number];
 
 export type TabsValue = string | number;
 
@@ -16,7 +26,7 @@ export type TabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type TabsVariant = 'line' | 'pills' | 'outline';
 
-export interface TabsProps {
+export interface TabsProps extends StylesApiProps<TabsPart> {
     id?: string;
     modelValue?: TabsValue | null;
     defaultValue?: TabsValue | null;
@@ -33,21 +43,21 @@ export interface TabsProps {
     labelledby?: string;
 }
 
-export interface TabsListProps {
+export interface TabsListProps extends StylesApiProps<TabsListPart> {
     id?: string;
     ariaLabel?: string;
     ariaDescribedby?: string;
     ariaLabelledby?: string;
 }
 
-export interface TabsTriggerProps {
+export interface TabsTriggerProps extends StylesApiProps<TabsTriggerPart> {
     id?: string;
     value: TabsValue;
     disabled?: boolean;
     align?: TabsTriggerAlign;
 }
 
-export interface TabsContentProps {
+export interface TabsContentProps extends StylesApiProps<TabsContentPart> {
     id?: string;
     value: TabsValue;
     unmountOnExit?: boolean;

@@ -1,17 +1,11 @@
 <template>
-    <label
-        :class="rootClass"
-        :style="rootStyle"
-        :data-disabled="control.disabled || undefined"
-        :data-state="indeterminate ? 'indeterminate' : modelValue ? 'checked' : 'unchecked'"
-    >
+    <label v-bind="rootAttrs">
         <input
             v-bind="nativeInputAttrs"
             :id="control.id"
             ref="inputRef"
             :name="name"
             type="checkbox"
-            class="rp-checkbox__native"
             :checked="modelValue"
             :disabled="control.disabled || undefined"
             :required="control.required || undefined"
@@ -22,14 +16,17 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
+            :data-disabled="presence(control.disabled)"
+            :data-invalid="presence(control.invalid)"
+            :data-state="state"
         />
-        <span class="rp-checkbox__box">
+        <span v-bind="getPartAttrs('indicator', { class: 'rp-checkbox__box' })">
             <Transition name="rp-checkbox-icon" mode="out-in">
                 <MinusIcon v-if="indeterminate" key="minus" class="rp-checkbox__icon" />
                 <CheckIcon v-else-if="modelValue" key="check" class="rp-checkbox__icon" />
             </Transition>
         </span>
-        <span v-if="$slots.default" class="rp-checkbox__label">
+        <span v-if="$slots.default" v-bind="getPartAttrs('label', { class: 'rp-checkbox__label' })">
             <slot />
         </span>
     </label>
@@ -39,10 +36,11 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
+import { presence, useStylesApi } from '@/styles-api';
 import { useCheckbox } from './useCheckbox';
-import type { CheckboxProps } from './types';
+import type { CheckboxPart, CheckboxProps } from './types';
 
-defineOptions({ name: 'RpCheckbox' });
+defineOptions({ name: 'RpCheckbox', inheritAttrs: false });
 
 const props = withDefaults(defineProps<CheckboxProps>(), {
     disabled: undefined,
@@ -58,15 +56,38 @@ const emit = defineEmits<{
 const { inputRef, control, rootClass, rootStyle, onChange, focus } = useCheckbox(props, (value) => {
     emit('update:modelValue', value);
 });
+const state = computed(() =>
+    props.indeterminate ? 'indeterminate' : props.modelValue ? 'checked' : 'unchecked',
+);
+const { getPartAttrs, getRootAttrs } = useStylesApi<CheckboxPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
+        'data-state': state.value,
+    }),
+);
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
-    const attrs = props.inputAttrs ?? {};
+    const {
+        class: compatibilityClass,
+        style: compatibilityStyle,
+        onChange: compatibilityOnChange,
+        ...attrs
+    } = props.inputAttrs ?? {};
 
     return {
         ...attrs,
+        ...getPartAttrs('input', {
+            class: 'rp-checkbox__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
         onChange(event) {
             onChange(event);
-            attrs.onChange?.(event);
+            compatibilityOnChange?.(event);
         },
     };
 });

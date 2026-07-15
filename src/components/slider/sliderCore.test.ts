@@ -44,4 +44,21 @@ describe('slider core', () => {
             '--_rp-test-thumb-padding': '0.25rem',
         });
     });
+
+    it('preserves a thumb border shorthand as the complete border style', () => {
+        const style: CSSProperties = {};
+
+        applySliderThumbStyle(
+            style,
+            { border: '2px dashed red' },
+            {
+                size: '--_rp-test-thumb-size',
+                border: '--_rp-test-thumb-border-style',
+                padding: '--_rp-test-thumb-padding',
+                borderColor: '--_rp-test-thumb-border',
+            },
+        );
+
+        expect(style['--_rp-test-thumb-border-style']).toBe('2px dashed red');
+    });
 });

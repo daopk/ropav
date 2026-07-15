@@ -62,7 +62,7 @@ describe('Switch', () => {
 
         expect(native.disabled).toBe(true);
         expect(root.classList.contains('rp-switch--disabled')).toBe(true);
-        expect(root.getAttribute('data-disabled')).toBe('true');
+        expect(root.getAttribute('data-disabled')).toBe('');
         expect(onUpdate).not.toHaveBeenCalled();
     });
 

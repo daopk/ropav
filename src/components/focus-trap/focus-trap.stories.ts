@@ -71,7 +71,7 @@ export const Basic: Story = {
         const deactivate = canvas.getByRole('button', { name: 'Deactivate' });
 
         await waitFor(() => expect(first).toHaveFocus());
-        expect(root).toHaveAttribute('data-active', 'true');
+        expect(root).toHaveAttribute('data-active', '');
         expect(activate).toBeDisabled();
 
         await userEvent.tab({ shift: true });
@@ -85,7 +85,7 @@ export const Basic: Story = {
         await waitFor(() => expect(activate).toBeEnabled());
 
         await userEvent.click(activate);
-        await waitFor(() => expect(root).toHaveAttribute('data-active', 'true'));
+        await waitFor(() => expect(root).toHaveAttribute('data-active', ''));
         await waitFor(() => expect(first).toHaveFocus());
     },
 };

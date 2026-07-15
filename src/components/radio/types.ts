@@ -1,5 +1,11 @@
 import type { InjectionKey, InputHTMLAttributes } from 'vue';
 import type { ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const radioParts = ['root', 'input', 'indicator', 'label'] as const;
+export const radioGroupParts = ['root'] as const;
+export type RadioPart = (typeof radioParts)[number];
+export type RadioGroupPart = (typeof radioGroupParts)[number];
 
 export type RadioColor = ComponentColorValue;
 
@@ -9,7 +15,7 @@ export type RadioVariant = 'solid' | 'outline';
 
 export type RadioGroupOrientation = 'horizontal' | 'vertical';
 
-export interface RadioProps {
+export interface RadioProps extends StylesApiProps<RadioPart> {
     id?: string;
     name?: string;
     value: string | number;
@@ -27,7 +33,7 @@ export interface RadioProps {
     inputAttrs?: InputHTMLAttributes;
 }
 
-export interface RadioGroupProps {
+export interface RadioGroupProps extends StylesApiProps<RadioGroupPart> {
     id?: string;
     name?: string;
     modelValue: string | number | null;

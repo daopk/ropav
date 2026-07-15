@@ -1,24 +1,18 @@
 <template>
     <Teleport :to="resolvedTeleportTo" :disabled="!teleport">
-        <TransitionGroup
-            tag="ol"
-            name="rp-toast-viewport-item"
-            :class="[
-                'rp-toast-viewport',
-                `rp-toast-viewport--${position}`,
-                { 'rp-toast-viewport--empty': orderedToasts.length === 0 },
-            ]"
-            :data-position="position"
-            :aria-label="label"
-        >
+        <TransitionGroup tag="ol" name="rp-toast-viewport-item" v-bind="rootAttrs">
             <li
                 v-for="toast in orderedToasts"
                 :key="toast.instanceId"
-                class="rp-toast-viewport__item"
+                v-bind="getPartAttrs('item', { class: 'rp-toast-viewport__item' })"
+                :data-type="toast.type"
             >
                 <Toast
                     v-bind="toast.props"
                     :open="true"
+                    :class-names="getToastClassNames(toast)"
+                    :styles="getToastStyles(toast)"
+                    :data-type="toast.type"
                     @close="context.dismissInstance(toast.instanceId, $event)"
                 >
                     <template v-if="$slots.icon" #icon>
@@ -38,12 +32,13 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
+import { useStylesApi, type StylesApiClassNames, type StylesApiStyles } from '@/styles-api';
 import Toast from './toast.vue';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
-import type { ToastItem, ToastViewportProps } from './types';
+import type { ToastItem, ToastPart, ToastViewportPart, ToastViewportProps } from './types';
 import { useToastContext } from './useToast';
 
-defineOptions({ name: 'RpToastViewport' });
+defineOptions({ name: 'RpToastViewport', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ToastViewportProps>(), {
     position: 'top-right',
@@ -61,6 +56,47 @@ function reverseToasts(toasts: readonly ToastItem[]) {
 const orderedToasts = computed(() =>
     props.position.startsWith('top') ? reverseToasts(context.toasts.value) : context.toasts.value,
 );
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<ToastViewportPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: [
+            'rp-toast-viewport',
+            `rp-toast-viewport--${props.position}`,
+            { 'rp-toast-viewport--empty': orderedToasts.value.length === 0 },
+        ],
+        'data-position': props.position,
+        'aria-label': props.label,
+    }),
+);
+
+const viewportToastPartMap: Record<ToastPart, ToastViewportPart> = {
+    root: 'toast',
+    icon: 'toastIcon',
+    title: 'toastTitle',
+    description: 'toastDescription',
+    body: 'toastBody',
+    action: 'toastAction',
+    close: 'toastClose',
+};
+
+function getToastClassNames(toast: ToastItem): StylesApiClassNames<ToastPart> {
+    return Object.fromEntries(
+        Object.entries(viewportToastPartMap).map(([toastPart, viewportPart]) => [
+            toastPart,
+            [toast.props.classNames?.[toastPart as ToastPart], props.classNames?.[viewportPart]],
+        ]),
+    ) as StylesApiClassNames<ToastPart>;
+}
+
+function getToastStyles(toast: ToastItem): StylesApiStyles<ToastPart> {
+    return Object.fromEntries(
+        Object.entries(viewportToastPartMap).map(([toastPart, viewportPart]) => [
+            toastPart,
+            [toast.props.styles?.[toastPart as ToastPart], props.styles?.[viewportPart]],
+        ]),
+    ) as StylesApiStyles<ToastPart>;
+}
 
 function dismiss(toast: ToastItem) {
     context.dismissInstance(toast.instanceId);

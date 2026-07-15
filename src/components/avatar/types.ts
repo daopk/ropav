@@ -1,4 +1,8 @@
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const avatarParts = ['root', 'image', 'fallback'] as const;
+export type AvatarPart = (typeof avatarParts)[number];
 
 export const avatarColors = componentColors;
 
@@ -16,7 +20,7 @@ export type AvatarRadius = (typeof avatarRadiuses)[number];
 
 export type AvatarVariant = (typeof avatarVariants)[number];
 
-export interface AvatarProps {
+export interface AvatarProps extends StylesApiProps<AvatarPart> {
     src?: string | null;
     alt?: string;
     ariaLabel?: string;

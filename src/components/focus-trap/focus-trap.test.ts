@@ -63,7 +63,7 @@ describe('FocusTrap', () => {
         const first = container.querySelector('.first') as HTMLButtonElement;
         const last = container.querySelector('.last') as HTMLButtonElement;
 
-        expect(root.dataset.active).toBe('true');
+        expect(root.dataset.active).toBe('');
         expect(document.activeElement).toBe(first);
 
         last.focus();
@@ -72,7 +72,7 @@ describe('FocusTrap', () => {
 
         state.paused = true;
         await flush();
-        expect(root.dataset.paused).toBe('true');
+        expect(root.dataset.paused).toBe('');
 
         state.paused = false;
         await flush();

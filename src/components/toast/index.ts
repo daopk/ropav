@@ -1,7 +1,15 @@
 export { default as Toast } from './toast.vue';
 export { default as ToastProvider } from './toast-provider.vue';
 export { default as ToastViewport } from './toast-viewport.vue';
-export { toastColors, toastPositions, toastRadiuses, toastTypes, toastVariants } from './types';
+export {
+    toastColors,
+    toastParts,
+    toastPositions,
+    toastRadiuses,
+    toastTypes,
+    toastVariants,
+    toastViewportParts,
+} from './types';
 export { useToast } from './useToast';
 export { useToastState } from './useToastState';
 export type {
@@ -12,6 +20,7 @@ export type {
     ToastInput,
     ToastItem,
     ToastOptions,
+    ToastPart,
     ToastPosition,
     ToastProps,
     ToastProviderContext,
@@ -24,6 +33,7 @@ export type {
     ToastUpdateOptions,
     ToastVariant,
     ToastViewportProps,
+    ToastViewportPart,
     ToastViewportSlotProps,
     UseToastReturn,
     UseToastStateOptions,

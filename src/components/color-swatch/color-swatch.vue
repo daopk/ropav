@@ -1,11 +1,5 @@
 <template>
-    <span
-        v-bind="attrs"
-        class="rp-color-swatch"
-        :style="rootStyle"
-        :role="rootRole"
-        :aria-label="rootAriaLabel"
-    >
+    <span v-bind="rootAttrs">
         <span class="rp-color-swatch__icon" aria-hidden="true">
             <slot />
         </span>
@@ -13,14 +7,15 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, useAttrs, type CSSProperties } from 'vue';
-import type { ColorSwatchProps, ColorSwatchSize } from './types';
+import { computed, type CSSProperties } from 'vue';
+import { useStylesApi } from '@/styles-api';
+import type { ColorSwatchPart, ColorSwatchProps, ColorSwatchSize } from './types';
 import { getColorSwatchForeground, getColorSwatchOverlay } from './useColorSwatchColor';
 
 defineOptions({ name: 'RpColorSwatch', inheritAttrs: false });
 
 const props = defineProps<ColorSwatchProps>();
-const attrs = useAttrs();
+const { attrs, getRootAttrs } = useStylesApi<ColorSwatchPart>(props, 'root');
 
 const isHidden = computed(() => attrs['aria-hidden'] === true || attrs['aria-hidden'] === 'true');
 
@@ -44,6 +39,14 @@ const rootStyle = computed(() => {
 
     return style;
 });
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: 'rp-color-swatch',
+        style: rootStyle.value,
+        role: rootRole.value,
+        'aria-label': rootAriaLabel.value,
+    }),
+);
 
 function normalizeSize(size: ColorSwatchSize) {
     return typeof size === 'number' ? `${size}px` : size;

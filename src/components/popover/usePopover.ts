@@ -131,10 +131,6 @@ export function usePopover(
     const ariaLabel = computed(() => props.ariaLabel || undefined);
     const ariaLabelledby = computed(() => props.ariaLabelledby || undefined);
     const ariaDescribedby = computed(() => props.ariaDescribedby || undefined);
-    const rootAttrs = computed(() => {
-        const { onFocusout: _onFocusout, ...rest } = attrs;
-        return rest;
-    });
     const focusTrapContainers = computed<FocusTrapContainers | null>(() => {
         const content = contentRef.value;
         if (!content) return null;
@@ -374,6 +370,7 @@ export function usePopover(
         arrowRef,
         popoverId,
         isOpen,
+        isDisabled,
         isVisible,
         isTargetMode: isExplicitTarget,
         popoverRole,
@@ -383,7 +380,6 @@ export function usePopover(
         shouldRenderContent,
         shouldShowContent,
         rootClass,
-        rootAttrs,
         contentStyle,
         triggerProps,
         slotProps,

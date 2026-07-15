@@ -1,0 +1,41 @@
+@layer reset, ropav.tokens, ropav.components, app;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+}
+
+@layer app {
+  :root {
+    --rp-switch-track-width: 3rem;
+    --rp-switch-track-height: 1.5rem;
+    --rp-switch-thumb-size: 1rem;
+    --rp-switch-thumb-offset: 0.25rem;
+    --rp-slider-track-length: 14rem;
+    --rp-slider-track-thickness: 0.5rem;
+    --rp-slider-thumb-size: 1.25rem;
+    --rp-slider-thumb-border-width: 0.2rem;
+    --rp-slider-thumb-padding: 0;
+    --rp-slider-mark-size: 0.3rem;
+    --rp-radio-control-size: 1.25rem;
+    --rp-radio-dot-size: 0.5rem;
+  }
+
+  [data-consumer-theme='dark'] {
+    --rp-color-body: var(--rp-color-dark-7);
+    --rp-color-default: var(--rp-color-dark-6);
+    --rp-color-text: var(--rp-color-dark-0);
+  }
+}

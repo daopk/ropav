@@ -20,12 +20,31 @@ const componentEntries = readdirSync(resolve(__dirname, 'src/components'), { wit
 
 const declarationRoot = resolve(__dirname, 'dist');
 const sourceRoot = resolve(__dirname, 'src');
+const scssPrelude = `@use "@/styles/variables" as *;\n@use "@/styles/mixins" as *;\n`;
+
+function addRopavScssLayers(source: string, filename: string) {
+    const isComponentStyle =
+        filename.includes('/src/components/') &&
+        !filename.endsWith('.stories.scss') &&
+        !filename.split('/').at(-1)?.startsWith('_');
+    if (!isComponentStyle) return `${scssPrelude}${source}`;
+
+    const uses: string[] = [];
+    let body = source;
+    let match: RegExpMatchArray | null;
+    while ((match = body.match(/^\s*@use\s+[^;]+;\s*/))) {
+        uses.push(match[0].trim());
+        body = body.slice(match[0].length);
+    }
+
+    return `${scssPrelude}${uses.join('\n')}\n@layer ropav.components {\n${body}\n}\n`;
+}
 
 export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@use "@/styles/variables" as *;\n@use "@/styles/mixins" as *;\n`,
+                additionalData: addRopavScssLayers,
             },
         },
     },
@@ -44,6 +63,7 @@ export default defineConfig({
             cleanVueFileName: true,
             include: [
                 'src/index.ts',
+                'src/styles-api.ts',
                 'src/components/**/*.vue',
                 'src/components/**/*.ts',
                 'src/utils/componentColors.ts',

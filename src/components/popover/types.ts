@@ -1,3 +1,5 @@
+import type { HTMLAttributes } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
 import type { FocusTrapInitialFocus, FocusTrapOptions } from '../focus-trap/types';
 import type {
     FloatingOffset,
@@ -20,6 +22,10 @@ export const popoverPlacements = [
     'left',
     'left-end',
 ] as const;
+
+export const popoverParts = ['root', 'trigger', 'content'] as const;
+
+export type PopoverPart = (typeof popoverParts)[number];
 
 export type PopoverPlacement = (typeof popoverPlacements)[number];
 
@@ -45,6 +51,10 @@ export interface PopoverTriggerProps {
     'aria-controls'?: string;
     'aria-expanded'?: boolean;
     'aria-haspopup'?: PopoverRole;
+    class?: HTMLAttributes['class'];
+    style?: HTMLAttributes['style'];
+    'data-state'?: 'open' | 'closed';
+    'data-disabled'?: '';
     onClick: (event: MouseEvent) => void;
     onKeydown: (event: KeyboardEvent) => void;
 }
@@ -64,7 +74,8 @@ export interface PopoverContentSlotProps {
     toggle: () => void;
 }
 
-export interface PopoverProps extends FloatingPositionProps<PopoverPlacement> {
+export interface PopoverProps
+    extends FloatingPositionProps<PopoverPlacement>, StylesApiProps<PopoverPart> {
     id?: string;
     contentClass?: string;
     open?: boolean;

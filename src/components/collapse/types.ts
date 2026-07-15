@@ -1,4 +1,8 @@
-import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import type { ComputedRef, HTMLAttributes, MaybeRefOrGetter } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const collapseParts = ['root', 'trigger', 'content'] as const;
+export type CollapsePart = (typeof collapseParts)[number];
 
 export type CollapseState = 'open' | 'closed';
 
@@ -18,6 +22,10 @@ export interface CollapseTriggerProps {
     'aria-controls': string;
     'aria-expanded': boolean;
     'aria-disabled'?: boolean;
+    class?: HTMLAttributes['class'];
+    style?: HTMLAttributes['style'];
+    'data-state'?: CollapseState;
+    'data-disabled'?: '';
     onClick: (event: MouseEvent) => void;
 }
 
@@ -43,7 +51,7 @@ export interface CollapseTriggerSlotProps extends CollapseSlotProps {
     triggerProps: CollapseTriggerProps;
 }
 
-export interface CollapseProps {
+export interface CollapseProps extends StylesApiProps<CollapsePart> {
     id?: string;
     open?: boolean;
     disabled?: boolean;

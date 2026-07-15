@@ -1,12 +1,5 @@
 <template>
-    <div
-        :id="id"
-        :class="rootClass"
-        role="group"
-        :aria-label="ariaLabel || undefined"
-        :aria-labelledby="labelledby"
-        :aria-describedby="describedby"
-    >
+    <div v-bind="rootAttrs">
         <slot />
     </div>
 </template>
@@ -14,9 +7,10 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import { bem } from '@/utils/bem';
-import type { ButtonGroupProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { ButtonGroupPart, ButtonGroupProps } from './types';
 
-defineOptions({ name: 'RpButtonGroup' });
+defineOptions({ name: 'RpButtonGroup', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ButtonGroupProps>(), {
     orientation: 'horizontal',
@@ -29,6 +23,18 @@ const rootClass = computed(() =>
         vertical: props.orientation === 'vertical',
         attached: props.attached,
         wrap: props.wrap,
+    }),
+);
+const { getRootAttrs } = useStylesApi<ButtonGroupPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        id: props.id,
+        class: rootClass.value,
+        role: 'group',
+        'data-orientation': props.orientation,
+        'aria-label': props.ariaLabel || undefined,
+        'aria-labelledby': props.labelledby,
+        'aria-describedby': props.describedby,
     }),
 );
 </script>

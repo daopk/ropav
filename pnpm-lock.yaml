@@ -63,6 +63,9 @@ importers:
       playwright:
         specifier: ^1.61.1
         version: 1.61.1
+      postcss:
+        specifier: ^8.5.16
+        version: 8.5.16
       sass-embedded:
         specifier: ^1.100.0
         version: 1.100.0

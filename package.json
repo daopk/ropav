@@ -8,7 +8,9 @@
   },
   "files": [
     "dist",
-    "src/styles"
+    "docs",
+    "src/styles/**/*.scss",
+    "src/styles/styles-manifest.json"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -158,12 +160,16 @@
       "import": "./dist/components/tooltip/index.js"
     },
     "./base.css": "./dist/base.css",
-    "./scss/*": "./src/styles/*"
+    "./legacy-unlayered.css": "./dist/legacy-unlayered.css",
+    "./styles-manifest": "./src/styles/styles-manifest.json",
+    "./styles-manifest.json": "./src/styles/styles-manifest.json",
+    "./scss/*.scss": "./src/styles/*.scss"
   },
   "scripts": {
     "dev": "pnpm run storybook",
     "tokens:build": "style-dictionary build --config scripts/tokens.config.mjs --silent",
     "tokens:check": "node scripts/check-tokens.mjs",
+    "styles:manifest:bootstrap": "node scripts/bootstrap-public-styles-manifest.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
     "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
     "lint": "oxlint",
@@ -175,7 +181,8 @@
     "test:consumer-types:built": "tsc -p tests/fixtures/consumer-types/tsconfig.bundler.json && tsc -p tests/fixtures/consumer-types/tsconfig.nodenext.json",
     "test:exports": "pnpm run test:package",
     "test:exports:built": "node scripts/check-exports.mjs",
-    "test:package": "pnpm run build && pnpm run test:exports:built && pnpm run test:consumer-types:built",
+    "test:consumer-fixture:built": "node tests/fixtures/consumer-app/check.mjs && vue-tsc -p tests/fixtures/consumer-app/tsconfig.json --noEmit && vite build --config tests/fixtures/consumer-app/vite.config.ts && node tests/fixtures/consumer-app/assertions.mjs",
+    "test:package": "pnpm run build && pnpm run test:exports:built && pnpm run test:consumer-types:built && pnpm run test:consumer-fixture:built",
     "test:watch": "vitest --project=unit",
     "test:typecheck": "vitest run --project=unit --typecheck",
     "test:storybook": "vitest run --project=storybook",
@@ -187,7 +194,7 @@
     "build-storybook": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck:storybook && storybook build",
     "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md",
     "changelog:all": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md -r 0",
-    "release": "bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
+    "release": "pnpm run test:package && bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
   },
   "peerDependencies": {
     "vue": "^3.6.0-beta.4"
@@ -213,6 +220,7 @@
     "oxfmt": "^0.58.0",
     "oxlint": "^1.73.0",
     "playwright": "^1.61.1",
+    "postcss": "^8.5.16",
     "sass-embedded": "^1.100.0",
     "storybook": "^10.5.0",
     "style-dictionary": "5.5.0",

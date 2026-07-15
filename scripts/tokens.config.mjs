@@ -128,7 +128,15 @@ function renderVariablesScss(dictionary) {
 }
 
 function renderTokensScss(dictionary) {
-    const lines = [...fileHeaderLines, "@use 'variables' as *;", '', ':root {'];
+    const lines = [
+        ...fileHeaderLines,
+        "@use 'variables' as *;",
+        '',
+        '@layer ropav.tokens, ropav.components;',
+        '',
+        '@layer ropav.tokens {',
+        ':root {',
+    ];
 
     for (const section of sectionOrder) {
         const tokens = dictionary.allTokens.filter(
@@ -164,6 +172,7 @@ function renderTokensScss(dictionary) {
         lines.push('');
     }
 
+    lines.push('}', '');
     lines.push('}', '');
     return lines.join('\n');
 }

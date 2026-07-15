@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
@@ -6,19 +6,32 @@ import {
     cssCustomProperty,
     hasCssCustomProperty,
     hasScssVariable,
+    isPublicToken,
     scssName,
     tokenPath,
 } from './token-output-policy.mjs';
 import {
     colorNames,
     colorShades,
-    getAllDerivedColorVariableNames,
     getDerivedColorVariables,
     oldSemanticColorVariables,
 } from './color-system.mjs';
+import {
+    publicComponentVariableNames,
+    publicComponentVariables,
+} from './public-styles-contract.mjs';
+import { createPublicStylesManifest, renderPublicTokenDocs } from './public-styles-manifest.mjs';
+import { checkReleasedPublicStylesCompatibility } from './public-styles-compatibility.mjs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(projectRoot);
+const publicStylesManifest = JSON.parse(
+    readFileSync(join(projectRoot, 'src/styles/styles-manifest.json'), 'utf8'),
+);
+const publicTokenDocs = readFileSync(join(projectRoot, 'docs/public-tokens.md'), 'utf8');
+const documentedPublicVariables = new Set(
+    [...publicTokenDocs.matchAll(/^\|\s+`(--rp-[^`]+)`\s+\|/gm)].map((match) => match[1]),
+);
 
 const { default: config } = await import('./tokens.config.mjs');
 const dictionary = new StyleDictionary(config, { verbosity: 'silent' });
@@ -26,6 +39,10 @@ await dictionary.hasInitialized;
 
 const defaultTokenFiles = ['tokens/default/core.tokens.json'];
 const darkOverrideTokenFiles = ['tokens/dark/overrides.tokens.json'];
+const expectedPublicStylesManifest = createPublicStylesManifest(
+    dictionary,
+    new Set(collectTokenValuesFromFiles(darkOverrideTokenFiles).keys()),
+);
 
 const staleFiles = [];
 const platformOutputs = await dictionary.formatAllPlatforms();
@@ -54,7 +71,15 @@ const tokenStructureFailures = [
     ...checkPaletteStructure(defaultTokenFiles),
     ...checkUnknownThemeOverrides(defaultTokenFiles, darkOverrideTokenFiles),
     ...checkDuplicateOutputNames(dictionary),
-    ...checkGeneratedCssCustomProperties(dictionary),
+    ...checkPublicTokenMetadata(dictionary),
+    ...checkGeneratedCssCustomProperties(),
+    ...checkPublicStylesManifest(),
+    ...checkReleasedPublicStylesCompatibility({
+        currentManifest: publicStylesManifest,
+        projectRoot,
+    }),
+    ...checkPublicComponentVariables(),
+    ...checkPublicDocumentationPatterns(),
 ];
 if (tokenStructureFailures.length > 0) {
     console.error('Token structure checks failed:');
@@ -212,14 +237,21 @@ function checkDuplicateOutputNames(tokenDictionary) {
     return failures;
 }
 
-function checkGeneratedCssCustomProperties(tokenDictionary) {
-    const allowedNames = new Set(
-        tokenDictionary.allTokens.filter(hasCssCustomProperty).map(cssCustomProperty),
-    );
-    for (const name of getAllDerivedColorVariableNames()) {
-        allowedNames.add(name);
+function checkPublicTokenMetadata(tokenDictionary) {
+    const failures = [];
+
+    for (const token of tokenDictionary.allTokens.filter(isPublicToken)) {
+        if (!hasCssCustomProperty(token)) {
+            failures.push(
+                `public token ${tokenPathString(token)} must also emit a CSS custom property`,
+            );
+        }
     }
 
+    return failures;
+}
+
+function checkGeneratedCssCustomProperties() {
     const tokenCss = readFileSync(join(projectRoot, 'src/styles/_tokens.scss'), 'utf8');
     const generatedNames = new Set();
     const failures = [];
@@ -231,19 +263,152 @@ function checkGeneratedCssCustomProperties(tokenDictionary) {
             failures.push(`old semantic CSS custom property ${name} was generated`);
             continue;
         }
+    }
 
-        if (!allowedNames.has(name)) {
-            failures.push(`CSS custom property ${name} is not part of the public token API`);
+    const manifestNames = new Set((publicStylesManifest.tokens ?? []).map(({ name }) => name));
+    for (const name of manifestNames) {
+        if (!generatedNames.has(name)) {
+            failures.push(`manifest token ${name} is not generated`);
+        }
+    }
+    return failures;
+}
+
+function checkPublicStylesManifest() {
+    const failures = [];
+    const seen = new Set();
+
+    if (JSON.stringify(publicStylesManifest) !== JSON.stringify(expectedPublicStylesManifest)) {
+        failures.push(
+            'public styles manifest is out of date; run `pnpm styles:manifest:bootstrap`',
+        );
+    }
+    if (
+        normalizeMarkdownTables(publicTokenDocs) !==
+        normalizeMarkdownTables(renderPublicTokenDocs(expectedPublicStylesManifest))
+    ) {
+        failures.push(
+            'public token documentation is out of date; run `pnpm styles:manifest:bootstrap`',
+        );
+    }
+
+    if (publicStylesManifest.schemaVersion !== 1) {
+        failures.push('public styles manifest has an unsupported schemaVersion');
+    }
+    if (!Number.isSafeInteger(publicStylesManifest.contractVersion)) {
+        failures.push('public styles manifest has an invalid contractVersion');
+    }
+    if (publicStylesManifest.baseline !== '5102a40') {
+        failures.push('public styles manifest baseline must remain 5102a40 for this rollout');
+    }
+
+    for (const token of publicStylesManifest.tokens ?? []) {
+        for (const field of [
+            'name',
+            'sourcePath',
+            'type',
+            'category',
+            'description',
+            'themeApplicability',
+        ]) {
+            if (!token[field])
+                failures.push(`manifest token ${token.name ?? '<unknown>'} misses ${field}`);
+        }
+        if (seen.has(token.name)) failures.push(`manifest contains duplicate token ${token.name}`);
+        seen.add(token.name);
+        if (!documentedPublicVariables.has(token.name)) {
+            failures.push(`public token documentation is missing ${token.name}`);
         }
     }
 
-    for (const name of allowedNames) {
-        if (!generatedNames.has(name)) {
-            failures.push(`public CSS custom property ${name} is not generated`);
+    const expectedDocumentedNames = new Set([
+        ...(publicStylesManifest.tokens ?? []).map(({ name }) => name),
+        ...publicComponentVariableNames,
+    ]);
+    for (const name of documentedPublicVariables) {
+        if (!expectedDocumentedNames.has(name)) {
+            failures.push(`public token documentation contains non-manifest variable ${name}`);
         }
     }
 
     return failures;
+}
+
+function normalizeMarkdownTables(contents) {
+    return contents.replace(/^\|.*\|$/gm, (line) => {
+        const cells = line
+            .slice(1, -1)
+            .split('|')
+            .map((cell) => {
+                const value = cell.trim();
+                return /^-+$/.test(value) ? '---' : value;
+            });
+        return `| ${cells.join(' | ')} |`;
+    });
+}
+
+function checkPublicComponentVariables() {
+    const failures = [];
+    const manifestNames = new Set(
+        (publicStylesManifest.componentVariables ?? []).map(({ name }) => name),
+    );
+    if (
+        manifestNames.size !== publicComponentVariableNames.size ||
+        [...publicComponentVariableNames].some((name) => !manifestNames.has(name))
+    ) {
+        failures.push('manifest componentVariables do not match the public geometry allowlist');
+    }
+
+    const componentSources = collectFiles(join(projectRoot, 'src/components'))
+        .filter((file) => /\.(?:scss|ts|vue)$/.test(file))
+        .map((file) => readFileSync(file, 'utf8'))
+        .join('\n');
+    const geometryNames = new Set(
+        componentSources.match(/--rp-(?:switch|slider|radio)-[a-z0-9-]+/g) ?? [],
+    );
+    for (const name of geometryNames) {
+        if (!publicComponentVariableNames.has(name)) {
+            failures.push(`component source uses non-allowlisted public geometry variable ${name}`);
+        }
+    }
+    for (const { name } of publicComponentVariables) {
+        if (!geometryNames.has(name)) failures.push(`public geometry variable ${name} is unused`);
+        if (!documentedPublicVariables.has(name)) {
+            failures.push(`public component-variable documentation is missing ${name}`);
+        }
+    }
+    return failures;
+}
+
+function checkPublicDocumentationPatterns() {
+    const failures = [];
+    const roots = ['docs', 'examples', 'tests/fixtures/consumer-app/src'].map((path) =>
+        join(projectRoot, path),
+    );
+    for (const root of roots) {
+        if (!existsSync(root)) continue;
+        for (const file of collectFiles(root)) {
+            if (!/\.(?:css|html|js|json|md|scss|ts|tsx|vue)$/.test(file)) continue;
+            const contents = readFileSync(file, 'utf8');
+            if (contents.includes('--_rp-')) {
+                failures.push(
+                    `${relative(projectRoot, file)} documents or consumes a private variable`,
+                );
+            }
+            if (/\.[a-z0-9_-]*rp-[a-z0-9_-]*/i.test(contents)) {
+                failures.push(
+                    `${relative(projectRoot, file)} consumes an internal Ropav class selector`,
+                );
+            }
+        }
+    }
+    return failures;
+}
+
+function collectFiles(root) {
+    if (!existsSync(root)) return [];
+    if (!statSync(root).isDirectory()) return [root];
+    return readdirSync(root).flatMap((entry) => collectFiles(join(root, entry)));
 }
 
 function assertUniqueTokenNames(nameKind, tokens, getName, failures) {

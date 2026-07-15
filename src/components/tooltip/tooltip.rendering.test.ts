@@ -6,6 +6,31 @@ import Tooltip from './tooltip.vue';
 import type { TooltipSlotProps } from './types';
 
 describe('Tooltip rendering', () => {
+    it('marks the root and trigger disabled when content is missing', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tooltip,
+                        {},
+                        {
+                            default: ({ triggerProps }: TooltipSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Target'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = queryDom(container, '.rp-tooltip') as HTMLElement;
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+
+        expect(root.getAttribute('data-disabled')).toBe('');
+        expect(trigger.getAttribute('data-disabled')).toBe('');
+    });
+
     it('renders the trigger slot and exposes trigger props for accessible wiring', async () => {
         const container = mountDom(
             defineComponent({

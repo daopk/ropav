@@ -1,3 +1,10 @@
 export { default as Alert } from './alert.vue';
-export { alertColors, alertRadiuses, alertVariants } from './types';
-export type { AlertColor, AlertProps, AlertRadius, AlertRole, AlertVariant } from './types';
+export { alertColors, alertParts, alertRadiuses, alertVariants } from './types';
+export type {
+    AlertColor,
+    AlertPart,
+    AlertProps,
+    AlertRadius,
+    AlertRole,
+    AlertVariant,
+} from './types';

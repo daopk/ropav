@@ -8,7 +8,7 @@ export type SelectRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type SelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export interface SelectProps {
+export interface SelectProps extends StylesApiProps<SelectPart> {
     id?: string;
     name?: string;
     modelValue: string | number | null;
@@ -25,3 +25,17 @@ export interface SelectProps {
     describedby?: string;
     labelledby?: string;
 }
+import type { StylesApiProps } from '../../styles-api';
+
+export const selectParts = [
+    'root',
+    'trigger',
+    'value',
+    'indicator',
+    'clear',
+    'content',
+    'option',
+    'empty',
+] as const;
+
+export type SelectPart = (typeof selectParts)[number];

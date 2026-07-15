@@ -1,9 +1,9 @@
 <template>
     <div
         ref="sliderRef"
-        :class="rootClass"
+        :class="[rootClass, controlClass]"
         role="slider"
-        :style="sliderStyle"
+        :style="[sliderStyle, controlStyle]"
         :tabindex="0"
         :aria-label="ariaLabel"
         aria-orientation="horizontal"
@@ -12,17 +12,24 @@
         :aria-valuenow="Math.round(normalizedValue)"
         :aria-valuetext="ariaValueText"
         :aria-readonly="readonly || undefined"
-        :data-readonly="readonly || undefined"
+        :data-readonly="presence(readonly)"
+        :data-control="variant"
         @pointerdown="onPointerDown"
         @keydown="onKeydown"
     >
         <span :class="surfaceClass" aria-hidden="true" />
-        <span :class="handleClass" aria-hidden="true" />
+        <span
+            :class="[internalHandleClass, handleClass]"
+            :style="handleStyle"
+            :data-control="variant"
+            aria-hidden="true"
+        />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, ref, type CSSProperties } from 'vue';
+import { presence } from '@/styles-api';
 import {
     clampHue,
     clampOpacity,
@@ -55,7 +62,7 @@ const surfaceClass = computed(() => [
     'rp-color-picker__slider-surface',
     `rp-color-picker__${props.variant}-surface`,
 ]);
-const handleClass = computed(() => [
+const internalHandleClass = computed(() => [
     'rp-color-picker__slider-handle',
     `rp-color-picker__${props.variant}-handle`,
 ]);

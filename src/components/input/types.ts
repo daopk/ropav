@@ -1,10 +1,15 @@
 import type { InputHTMLAttributes } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const inputParts = ['root', 'input', 'left', 'right'] as const;
+
+export type InputPart = (typeof inputParts)[number];
 
 export type InputRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type InputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export interface InputProps {
+export interface InputProps extends StylesApiProps<InputPart> {
     id?: string;
     name?: string;
     modelValue: string;

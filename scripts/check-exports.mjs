@@ -48,6 +48,7 @@ const expectedFiles = [
     'dist/textarea.css',
     'dist/toast.css',
     'dist/tooltip.css',
+    'dist/legacy-unlayered.css',
     'dist/components/alert/index.js',
     'dist/components/accordion/index.js',
     'dist/components/aspect-ratio/index.js',
@@ -91,11 +92,23 @@ for (const file of expectedFiles) {
 }
 
 const baseCss = readFileSync(join(projectRoot, 'dist/base.css'), 'utf8');
+const legacyCss = readFileSync(join(projectRoot, 'dist/legacy-unlayered.css'), 'utf8');
 
 for (const selector of ['.rp-spinner', '@keyframes rp-spinner-spin']) {
     if (!baseCss.includes(selector)) {
         throw new Error(`dist/base.css does not include ${selector}`);
     }
+}
+
+for (const layer of [
+    '@layer ropav.tokens, ropav.components',
+    '@layer ropav.tokens',
+    '@layer ropav.components',
+]) {
+    if (!baseCss.includes(layer)) throw new Error(`dist/base.css does not include ${layer}`);
+}
+if (legacyCss.includes('@layer ropav.tokens') || legacyCss.includes('@layer ropav.components')) {
+    throw new Error('dist/legacy-unlayered.css must not contain Ropav layer wrappers');
 }
 
 const server = await createServer({
@@ -120,21 +133,37 @@ try {
         [
             'Accordion',
             'AccordionItem',
+            'accordionItemParts',
+            'accordionParts',
             'Alert',
+            'alertParts',
             'AspectRatio',
+            'aspectRatioParts',
             'Avatar',
+            'avatarParts',
             'avatarVariants',
             'Badge',
+            'badgeParts',
             'Button',
+            'buttonParts',
             'ButtonLink',
+            'buttonLinkParts',
             'ButtonGroup',
+            'buttonGroupParts',
             'Card',
+            'cardParts',
             'Checkbox',
+            'checkboxParts',
             'Collapse',
+            'collapseParts',
             'ColorInput',
+            'colorInputParts',
             'ColorPicker',
+            'colorPickerParts',
             'ColorSwatch',
+            'colorSwatchParts',
             'DropdownMenu',
+            'dropdownMenuParts',
             'DropdownMenuCheckboxItem',
             'DropdownMenuContent',
             'DropdownMenuContextTrigger',
@@ -151,36 +180,59 @@ try {
             'DropdownMenuSubTrigger',
             'DropdownMenuTrigger',
             'Field',
+            'fieldParts',
             'FocusTrap',
+            'focusTrapParts',
             'IconButton',
+            'iconButtonParts',
             'Input',
+            'inputParts',
             'Modal',
+            'modalParts',
             'NumberInput',
+            'numberInputParts',
             'Overlay',
+            'overlayParts',
             'Popover',
+            'popoverParts',
             'popoverPlacements',
             'Progress',
+            'progressParts',
             'Radio',
+            'radioParts',
             'RadioGroup',
+            'radioGroupParts',
             'RangeSlider',
+            'rangeSliderParts',
             'Select',
+            'selectParts',
             'Slider',
+            'sliderParts',
             'Switch',
+            'switchParts',
             'Tabs',
+            'tabsParts',
             'TabsContent',
+            'tabsContentParts',
             'TabsList',
+            'tabsListParts',
             'TabsTrigger',
+            'tabsTriggerParts',
             'TeleportProvider',
             'Textarea',
+            'textareaParts',
             'Toast',
+            'toastParts',
             'ToastProvider',
             'ToastViewport',
+            'toastViewportParts',
             'toastColors',
             'toastPositions',
             'toastRadiuses',
             'toastTypes',
             'toastVariants',
             'Tooltip',
+            'tooltipParts',
             'useAccordion',
             'useAccordionItem',
             'useCollapse',
@@ -196,47 +248,89 @@ try {
     );
 
     const alert = await server.ssrLoadModule('/dist/components/alert/index.js');
-    assertExports(alert, ['Alert'], 'dist/components/alert/index.js');
+    assertExports(alert, ['Alert', 'alertParts'], 'dist/components/alert/index.js');
 
     const accordion = await server.ssrLoadModule('/dist/components/accordion/index.js');
     assertExports(
         accordion,
-        ['Accordion', 'AccordionItem', 'useAccordion', 'useAccordionItem'],
+        [
+            'Accordion',
+            'AccordionItem',
+            'accordionParts',
+            'accordionItemParts',
+            'useAccordion',
+            'useAccordionItem',
+        ],
         'dist/components/accordion/index.js',
     );
 
     const aspectRatio = await server.ssrLoadModule('/dist/components/aspect-ratio/index.js');
-    assertExports(aspectRatio, ['AspectRatio'], 'dist/components/aspect-ratio/index.js');
+    assertExports(
+        aspectRatio,
+        ['AspectRatio', 'aspectRatioParts'],
+        'dist/components/aspect-ratio/index.js',
+    );
 
     const avatar = await server.ssrLoadModule('/dist/components/avatar/index.js');
-    assertExports(avatar, ['Avatar', 'avatarVariants'], 'dist/components/avatar/index.js');
+    assertExports(
+        avatar,
+        ['Avatar', 'avatarParts', 'avatarVariants'],
+        'dist/components/avatar/index.js',
+    );
 
     const badge = await server.ssrLoadModule('/dist/components/badge/index.js');
-    assertExports(badge, ['Badge'], 'dist/components/badge/index.js');
+    assertExports(badge, ['Badge', 'badgeParts'], 'dist/components/badge/index.js');
 
     const button = await server.ssrLoadModule('/dist/components/button/index.js');
-    assertExports(button, ['Button'], 'dist/components/button/index.js');
+    assertExports(button, ['Button', 'buttonParts'], 'dist/components/button/index.js');
 
     const buttonLink = await server.ssrLoadModule('/dist/components/button-link/index.js');
-    assertExports(buttonLink, ['ButtonLink'], 'dist/components/button-link/index.js');
+    assertExports(
+        buttonLink,
+        ['ButtonLink', 'buttonLinkParts'],
+        'dist/components/button-link/index.js',
+    );
 
     const buttonGroup = await server.ssrLoadModule('/dist/components/button-group/index.js');
-    assertExports(buttonGroup, ['ButtonGroup'], 'dist/components/button-group/index.js');
+    assertExports(
+        buttonGroup,
+        ['ButtonGroup', 'buttonGroupParts'],
+        'dist/components/button-group/index.js',
+    );
 
     const card = await server.ssrLoadModule('/dist/components/card/index.js');
-    assertExports(card, ['Card'], 'dist/components/card/index.js');
+    assertExports(card, ['Card', 'cardParts'], 'dist/components/card/index.js');
+
+    const checkbox = await server.ssrLoadModule('/dist/components/checkbox/index.js');
+    assertExports(checkbox, ['Checkbox', 'checkboxParts'], 'dist/components/checkbox/index.js');
 
     const collapse = await server.ssrLoadModule('/dist/components/collapse/index.js');
-    assertExports(collapse, ['Collapse', 'useCollapse'], 'dist/components/collapse/index.js');
+    assertExports(
+        collapse,
+        ['Collapse', 'collapseParts', 'useCollapse'],
+        'dist/components/collapse/index.js',
+    );
 
     const colorInput = await server.ssrLoadModule('/dist/components/color-input/index.js');
-    assertExports(colorInput, ['ColorInput'], 'dist/components/color-input/index.js');
+    assertExports(
+        colorInput,
+        ['ColorInput', 'colorInputParts'],
+        'dist/components/color-input/index.js',
+    );
 
     const colorPicker = await server.ssrLoadModule('/dist/components/color-picker/index.js');
-    assertExports(colorPicker, ['ColorPicker'], 'dist/components/color-picker/index.js');
+    assertExports(
+        colorPicker,
+        ['ColorPicker', 'colorPickerParts'],
+        'dist/components/color-picker/index.js',
+    );
 
     const colorSwatch = await server.ssrLoadModule('/dist/components/color-swatch/index.js');
-    assertExports(colorSwatch, ['ColorSwatch'], 'dist/components/color-swatch/index.js');
+    assertExports(
+        colorSwatch,
+        ['ColorSwatch', 'colorSwatchParts'],
+        'dist/components/color-swatch/index.js',
+    );
 
     const dropdownMenu = await server.ssrLoadModule('/dist/components/dropdown-menu/index.js');
     assertExports(
@@ -258,40 +352,74 @@ try {
             'DropdownMenuSubContent',
             'DropdownMenuSubTrigger',
             'DropdownMenuTrigger',
+            'dropdownMenuParts',
             'useDropdownMenu',
         ],
         'dist/components/dropdown-menu/index.js',
     );
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');
-    assertExports(field, ['Field'], 'dist/components/field/index.js');
+    assertExports(field, ['Field', 'fieldParts'], 'dist/components/field/index.js');
 
     const focusTrap = await server.ssrLoadModule('/dist/components/focus-trap/index.js');
-    assertExports(focusTrap, ['FocusTrap', 'useFocusTrap'], 'dist/components/focus-trap/index.js');
+    assertExports(
+        focusTrap,
+        ['FocusTrap', 'focusTrapParts', 'useFocusTrap'],
+        'dist/components/focus-trap/index.js',
+    );
 
     const iconButton = await server.ssrLoadModule('/dist/components/icon-button/index.js');
-    assertExports(iconButton, ['IconButton'], 'dist/components/icon-button/index.js');
+    assertExports(
+        iconButton,
+        ['IconButton', 'iconButtonParts'],
+        'dist/components/icon-button/index.js',
+    );
+
+    const input = await server.ssrLoadModule('/dist/components/input/index.js');
+    assertExports(input, ['Input', 'inputParts'], 'dist/components/input/index.js');
 
     const modal = await server.ssrLoadModule('/dist/components/modal/index.js');
-    assertExports(modal, ['Modal'], 'dist/components/modal/index.js');
+    assertExports(modal, ['Modal', 'modalParts'], 'dist/components/modal/index.js');
 
     const numberInput = await server.ssrLoadModule('/dist/components/number-input/index.js');
-    assertExports(numberInput, ['NumberInput'], 'dist/components/number-input/index.js');
+    assertExports(
+        numberInput,
+        ['NumberInput', 'numberInputParts'],
+        'dist/components/number-input/index.js',
+    );
 
     const overlay = await server.ssrLoadModule('/dist/components/overlay/index.js');
-    assertExports(overlay, ['Overlay'], 'dist/components/overlay/index.js');
+    assertExports(overlay, ['Overlay', 'overlayParts'], 'dist/components/overlay/index.js');
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
-    assertExports(select, ['Select'], 'dist/components/select/index.js');
+    assertExports(select, ['Select', 'selectParts'], 'dist/components/select/index.js');
 
     const popover = await server.ssrLoadModule('/dist/components/popover/index.js');
-    assertExports(popover, ['Popover', 'popoverPlacements'], 'dist/components/popover/index.js');
+    assertExports(
+        popover,
+        ['Popover', 'popoverParts', 'popoverPlacements'],
+        'dist/components/popover/index.js',
+    );
 
     const progress = await server.ssrLoadModule('/dist/components/progress/index.js');
-    assertExports(progress, ['Progress'], 'dist/components/progress/index.js');
+    assertExports(progress, ['Progress', 'progressParts'], 'dist/components/progress/index.js');
+
+    const radio = await server.ssrLoadModule('/dist/components/radio/index.js');
+    assertExports(
+        radio,
+        ['Radio', 'RadioGroup', 'radioParts', 'radioGroupParts'],
+        'dist/components/radio/index.js',
+    );
 
     const slider = await server.ssrLoadModule('/dist/components/slider/index.js');
-    assertExports(slider, ['RangeSlider', 'Slider'], 'dist/components/slider/index.js');
+    assertExports(
+        slider,
+        ['RangeSlider', 'Slider', 'rangeSliderParts', 'sliderParts'],
+        'dist/components/slider/index.js',
+    );
+
+    const switchModule = await server.ssrLoadModule('/dist/components/switch/index.js');
+    assertExports(switchModule, ['Switch', 'switchParts'], 'dist/components/switch/index.js');
 
     const tabs = await server.ssrLoadModule('/dist/components/tabs/index.js');
     assertExports(
@@ -301,6 +429,10 @@ try {
             'TabsContent',
             'TabsList',
             'TabsTrigger',
+            'tabsParts',
+            'tabsContentParts',
+            'tabsListParts',
+            'tabsTriggerParts',
             'useTabs',
             'useTabsContent',
             'useTabsList',
@@ -310,7 +442,7 @@ try {
     );
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
-    assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');
+    assertExports(textarea, ['Textarea', 'textareaParts'], 'dist/components/textarea/index.js');
 
     const teleportProvider = await server.ssrLoadModule(
         '/dist/components/teleport-provider/index.js',
@@ -328,6 +460,8 @@ try {
             'Toast',
             'ToastProvider',
             'ToastViewport',
+            'toastParts',
+            'toastViewportParts',
             'toastColors',
             'toastPositions',
             'toastRadiuses',
@@ -340,7 +474,7 @@ try {
     );
 
     const tooltip = await server.ssrLoadModule('/dist/components/tooltip/index.js');
-    assertExports(tooltip, ['Tooltip'], 'dist/components/tooltip/index.js');
+    assertExports(tooltip, ['Tooltip', 'tooltipParts'], 'dist/components/tooltip/index.js');
 } finally {
     await server.close();
 }

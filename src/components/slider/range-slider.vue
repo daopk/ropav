@@ -1,24 +1,18 @@
 <template>
-    <div
-        :class="[
-            rootClass,
-            {
-                'rp-range-slider--custom-thumb': $slots.thumb,
-                'rp-range-slider--tooltips-overlapping': tooltipsOverlapping,
-            },
-        ]"
-        :data-active-thumb="activeThumb"
-        :data-disabled="control.disabled || undefined"
-        :style="trackStyle"
-        role="group"
-        :aria-labelledby="groupLabelledby"
-        :aria-describedby="control.ariaDescribedby"
-    >
+    <div v-bind="rootAttrs">
         <span v-if="$slots.default || $slots.value" class="rp-range-slider__header">
-            <span v-if="$slots.default" :id="labelId" class="rp-range-slider__label">
+            <span
+                v-if="$slots.default"
+                :id="labelId"
+                v-bind="getPartAttrs('label', { class: 'rp-range-slider__label' })"
+            >
                 <slot />
             </span>
-            <span v-if="$slots.value" class="rp-range-slider__value" aria-hidden="true">
+            <span
+                v-if="$slots.value"
+                v-bind="getPartAttrs('value', { class: 'rp-range-slider__value' })"
+                aria-hidden="true"
+            >
                 <slot
                     name="value"
                     :value="normalizedValue"
@@ -29,12 +23,15 @@
         </span>
 
         <span
-            class="rp-range-slider__track"
+            v-bind="getPartAttrs('track', { class: 'rp-range-slider__track' })"
             @pointerdown="onTrackPointerDown"
             @mouseenter="onTooltipTrackMouseEnter"
             @mouseleave="onTooltipTrackMouseLeave"
         >
-            <span class="rp-range-slider__bar" aria-hidden="true" />
+            <span
+                v-bind="getPartAttrs('range', { class: 'rp-range-slider__bar' })"
+                aria-hidden="true"
+            />
 
             <input
                 v-for="(thumb, index) in rangeSliderThumbs"
@@ -43,7 +40,6 @@
                 :key="thumb"
                 :ref="(element) => setInputRef(index, element)"
                 :name="nativeNames[index]"
-                :class="['rp-range-slider__native', `rp-range-slider__native--${thumb}`]"
                 type="range"
                 :value="normalizedValue[index]"
                 :min="nativeMin[index]"
@@ -55,18 +51,34 @@
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText[index]"
+                :data-thumb="thumb"
+                :data-disabled="presence(control.disabled)"
             />
 
             <span v-if="markItems.length" class="rp-range-slider__marks" aria-hidden="true">
                 <span
                     v-for="mark in markItems"
                     :key="mark.key"
-                    class="rp-range-slider__mark"
-                    :class="{ 'rp-range-slider__mark--filled': mark.filled }"
-                    :style="mark.style"
+                    v-bind="
+                        getPartAttrs('mark', {
+                            class: [
+                                'rp-range-slider__mark',
+                                { 'rp-range-slider__mark--filled': mark.filled },
+                            ],
+                            style: mark.style,
+                        })
+                    "
+                    :data-filled="presence(mark.filled)"
                 >
                     <span class="rp-range-slider__mark-dot" />
-                    <span v-if="mark.hasLabel" class="rp-range-slider__mark-label">
+                    <span
+                        v-if="mark.hasLabel"
+                        v-bind="
+                            getPartAttrs('markLabel', {
+                                class: 'rp-range-slider__mark-label',
+                            })
+                        "
+                    >
                         {{ mark.label }}
                     </span>
                 </span>
@@ -76,8 +88,13 @@
                 <span
                     v-for="(thumb, index) in rangeSliderThumbs"
                     :key="thumb"
-                    :class="['rp-range-slider__thumb', `rp-range-slider__thumb--${thumb}`]"
+                    v-bind="
+                        getPartAttrs('thumb', {
+                            class: ['rp-range-slider__thumb', `rp-range-slider__thumb--${thumb}`],
+                        })
+                    "
                     :data-range-slider-thumb="thumb"
+                    :data-thumb="thumb"
                 >
                     <span class="rp-range-slider__thumb-content">
                         <slot
@@ -104,6 +121,8 @@
                     :orientation="orientation"
                     :placement="tooltipPlacement"
                     :value-percent="valuePercent"
+                    :tooltip-class="classNames?.tooltip"
+                    :tooltip-style="styles?.tooltip"
                     @update:overlapping="tooltipsOverlapping = $event"
                 />
             </span>
@@ -113,11 +132,12 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, useId, useSlots, type InputHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
-import type { RangeSliderProps } from './types';
+import type { RangeSliderPart, RangeSliderProps } from './types';
 import { useRangeSlider } from './useRangeSlider';
 
-defineOptions({ name: 'RpRangeSlider' });
+defineOptions({ name: 'RpRangeSlider', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RangeSliderProps>(), {
     min: 0,
@@ -180,6 +200,26 @@ const {
     emit('update:modelValue', value);
 });
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<RangeSliderPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: [
+            rootClass.value,
+            {
+                'rp-range-slider--custom-thumb': Boolean(slots.thumb),
+                'rp-range-slider--tooltips-overlapping': tooltipsOverlapping.value,
+            },
+        ],
+        style: trackStyle.value,
+        role: 'group',
+        'data-active-thumb': activeThumb.value || undefined,
+        'data-disabled': presence(control.disabled),
+        'data-orientation': props.orientation,
+        'aria-labelledby': groupLabelledby.value,
+        'aria-describedby': control.ariaDescribedby,
+    }),
+);
+
 const inputAttrsByThumb = computed<
     [InputHTMLAttributes | undefined, InputHTMLAttributes | undefined]
 >(() => {
@@ -190,24 +230,37 @@ const inputAttrsByThumb = computed<
 const nativeInputAttrs = computed<[InputHTMLAttributes, InputHTMLAttributes]>(
     () =>
         rangeSliderThumbs.map((thumb, index) => {
-            const attrs = inputAttrsByThumb.value[index] ?? {};
+            const {
+                class: compatibilityClass,
+                style: compatibilityStyle,
+                onInput: compatibilityOnInput,
+                onFocus: compatibilityOnFocus,
+                onBlur: compatibilityOnBlur,
+                onKeydown: compatibilityOnKeydown,
+                ...attrs
+            } = inputAttrsByThumb.value[index] ?? {};
 
             return Object.assign({}, attrs, {
+                ...getPartAttrs('input', {
+                    class: ['rp-range-slider__native', `rp-range-slider__native--${thumb}`],
+                    compatibilityClass,
+                    compatibilityStyle,
+                }),
                 onInput(event: InputEvent) {
                     onInput(thumb, event);
-                    attrs.onInput?.(event);
+                    compatibilityOnInput?.(event);
                 },
                 onFocus(event: FocusEvent) {
                     onTooltipFocus(thumb);
-                    attrs.onFocus?.(event);
+                    compatibilityOnFocus?.(event);
                 },
                 onBlur(event: FocusEvent) {
                     onTooltipBlur(thumb);
-                    attrs.onBlur?.(event);
+                    compatibilityOnBlur?.(event);
                 },
                 onKeydown(event: KeyboardEvent) {
                     onTooltipKeydown(thumb, event);
-                    attrs.onKeydown?.(event);
+                    compatibilityOnKeydown?.(event);
                 },
             });
         }) as [InputHTMLAttributes, InputHTMLAttributes],

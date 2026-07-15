@@ -1,0 +1,4125 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 1,
+  "baseline": "5102a40",
+  "tokens": [
+    {
+      "name": "--rp-border-width-medium",
+      "sourcePath": "border.width.medium",
+      "type": "dimension",
+      "category": "border",
+      "description": "Public Ropav border token for border.width.medium.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-border-width-thin",
+      "sourcePath": "border.width.thin",
+      "type": "dimension",
+      "category": "border",
+      "description": "Public Ropav border token for border.width.thin.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-black",
+      "sourcePath": "color.black",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.black.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-0",
+      "sourcePath": "color.blue.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-0-contrast",
+      "sourcePath": "derived.color.blue.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-1",
+      "sourcePath": "color.blue.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-1-contrast",
+      "sourcePath": "derived.color.blue.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-2",
+      "sourcePath": "color.blue.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-2-contrast",
+      "sourcePath": "derived.color.blue.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-3",
+      "sourcePath": "color.blue.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-3-contrast",
+      "sourcePath": "derived.color.blue.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-4",
+      "sourcePath": "color.blue.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-4-contrast",
+      "sourcePath": "derived.color.blue.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-5",
+      "sourcePath": "color.blue.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-5-contrast",
+      "sourcePath": "derived.color.blue.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-6",
+      "sourcePath": "color.blue.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-6-contrast",
+      "sourcePath": "derived.color.blue.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-7",
+      "sourcePath": "color.blue.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-7-contrast",
+      "sourcePath": "derived.color.blue.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-8",
+      "sourcePath": "color.blue.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-8-contrast",
+      "sourcePath": "derived.color.blue.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-9",
+      "sourcePath": "color.blue.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.blue.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-blue-9-contrast",
+      "sourcePath": "derived.color.blue.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-contrast",
+      "sourcePath": "derived.color.blue.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-filled",
+      "sourcePath": "derived.color.blue.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-filled-hover",
+      "sourcePath": "derived.color.blue.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-light",
+      "sourcePath": "derived.color.blue.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-light-color",
+      "sourcePath": "derived.color.blue.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-light-hover",
+      "sourcePath": "derived.color.blue.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-outline",
+      "sourcePath": "derived.color.blue.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-blue-outline-hover",
+      "sourcePath": "derived.color.blue.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-blue-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-body",
+      "sourcePath": "derived.color.body",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-body.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-bright",
+      "sourcePath": "derived.color.bright",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-bright.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-bg",
+      "sourcePath": "derived.color.control.bg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-bg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-border",
+      "sourcePath": "derived.color.control.border",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-border.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-border-focus",
+      "sourcePath": "derived.color.control.border.focus",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-border-focus.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-border-hover",
+      "sourcePath": "derived.color.control.border.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-border-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-fg",
+      "sourcePath": "derived.color.control.fg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-fg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-icon",
+      "sourcePath": "derived.color.control.icon",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-icon.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-placeholder",
+      "sourcePath": "derived.color.control.placeholder",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-placeholder.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-readonly-bg",
+      "sourcePath": "derived.color.control.readonly.bg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-readonly-bg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-selected-bg",
+      "sourcePath": "derived.color.control.selected.bg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-selected-bg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-selected-fg",
+      "sourcePath": "derived.color.control.selected.fg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-selected-fg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-thumb-bg",
+      "sourcePath": "derived.color.control.thumb.bg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-thumb-bg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-control-track-bg",
+      "sourcePath": "derived.color.control.track.bg",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-control-track-bg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-0",
+      "sourcePath": "color.cyan.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-0-contrast",
+      "sourcePath": "derived.color.cyan.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-1",
+      "sourcePath": "color.cyan.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-1-contrast",
+      "sourcePath": "derived.color.cyan.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-2",
+      "sourcePath": "color.cyan.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-2-contrast",
+      "sourcePath": "derived.color.cyan.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-3",
+      "sourcePath": "color.cyan.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-3-contrast",
+      "sourcePath": "derived.color.cyan.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-4",
+      "sourcePath": "color.cyan.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-4-contrast",
+      "sourcePath": "derived.color.cyan.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-5",
+      "sourcePath": "color.cyan.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-5-contrast",
+      "sourcePath": "derived.color.cyan.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-6",
+      "sourcePath": "color.cyan.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-6-contrast",
+      "sourcePath": "derived.color.cyan.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-7",
+      "sourcePath": "color.cyan.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-7-contrast",
+      "sourcePath": "derived.color.cyan.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-8",
+      "sourcePath": "color.cyan.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-8-contrast",
+      "sourcePath": "derived.color.cyan.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-9",
+      "sourcePath": "color.cyan.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.cyan.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-cyan-9-contrast",
+      "sourcePath": "derived.color.cyan.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-contrast",
+      "sourcePath": "derived.color.cyan.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-filled",
+      "sourcePath": "derived.color.cyan.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-filled-hover",
+      "sourcePath": "derived.color.cyan.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-light",
+      "sourcePath": "derived.color.cyan.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-light-color",
+      "sourcePath": "derived.color.cyan.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-light-hover",
+      "sourcePath": "derived.color.cyan.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-outline",
+      "sourcePath": "derived.color.cyan.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-cyan-outline-hover",
+      "sourcePath": "derived.color.cyan.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-cyan-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-0",
+      "sourcePath": "color.dark.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-0-contrast",
+      "sourcePath": "derived.color.dark.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-1",
+      "sourcePath": "color.dark.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-1-contrast",
+      "sourcePath": "derived.color.dark.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-2",
+      "sourcePath": "color.dark.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-2-contrast",
+      "sourcePath": "derived.color.dark.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-3",
+      "sourcePath": "color.dark.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-3-contrast",
+      "sourcePath": "derived.color.dark.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-4",
+      "sourcePath": "color.dark.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-4-contrast",
+      "sourcePath": "derived.color.dark.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-5",
+      "sourcePath": "color.dark.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-5-contrast",
+      "sourcePath": "derived.color.dark.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-6",
+      "sourcePath": "color.dark.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-6-contrast",
+      "sourcePath": "derived.color.dark.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-7",
+      "sourcePath": "color.dark.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-7-contrast",
+      "sourcePath": "derived.color.dark.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-8",
+      "sourcePath": "color.dark.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-8-contrast",
+      "sourcePath": "derived.color.dark.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-9",
+      "sourcePath": "color.dark.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.dark.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-dark-9-contrast",
+      "sourcePath": "derived.color.dark.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-contrast",
+      "sourcePath": "derived.color.dark.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-filled",
+      "sourcePath": "derived.color.dark.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-filled-hover",
+      "sourcePath": "derived.color.dark.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-light",
+      "sourcePath": "derived.color.dark.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-light-color",
+      "sourcePath": "derived.color.dark.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-light-hover",
+      "sourcePath": "derived.color.dark.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-outline",
+      "sourcePath": "derived.color.dark.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dark-outline-hover",
+      "sourcePath": "derived.color.dark.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dark-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-default",
+      "sourcePath": "derived.color.default",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-default.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-default-border",
+      "sourcePath": "derived.color.default.border",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-default-border.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-default-border-hover",
+      "sourcePath": "derived.color.default.border.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-default-border-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-default-color",
+      "sourcePath": "derived.color.default.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-default-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-default-hover",
+      "sourcePath": "derived.color.default.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-default-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-dimmed",
+      "sourcePath": "derived.color.dimmed",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-dimmed.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-disabled",
+      "sourcePath": "derived.color.disabled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-disabled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-disabled-border",
+      "sourcePath": "derived.color.disabled.border",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-disabled-border.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-disabled-color",
+      "sourcePath": "derived.color.disabled.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-disabled-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-focus-ring",
+      "sourcePath": "derived.color.focus.ring",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-focus-ring.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-0",
+      "sourcePath": "color.grape.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-0-contrast",
+      "sourcePath": "derived.color.grape.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-1",
+      "sourcePath": "color.grape.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-1-contrast",
+      "sourcePath": "derived.color.grape.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-2",
+      "sourcePath": "color.grape.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-2-contrast",
+      "sourcePath": "derived.color.grape.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-3",
+      "sourcePath": "color.grape.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-3-contrast",
+      "sourcePath": "derived.color.grape.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-4",
+      "sourcePath": "color.grape.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-4-contrast",
+      "sourcePath": "derived.color.grape.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-5",
+      "sourcePath": "color.grape.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-5-contrast",
+      "sourcePath": "derived.color.grape.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-6",
+      "sourcePath": "color.grape.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-6-contrast",
+      "sourcePath": "derived.color.grape.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-7",
+      "sourcePath": "color.grape.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-7-contrast",
+      "sourcePath": "derived.color.grape.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-8",
+      "sourcePath": "color.grape.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-8-contrast",
+      "sourcePath": "derived.color.grape.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-9",
+      "sourcePath": "color.grape.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.grape.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-grape-9-contrast",
+      "sourcePath": "derived.color.grape.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-contrast",
+      "sourcePath": "derived.color.grape.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-filled",
+      "sourcePath": "derived.color.grape.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-filled-hover",
+      "sourcePath": "derived.color.grape.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-light",
+      "sourcePath": "derived.color.grape.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-light-color",
+      "sourcePath": "derived.color.grape.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-light-hover",
+      "sourcePath": "derived.color.grape.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-outline",
+      "sourcePath": "derived.color.grape.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-grape-outline-hover",
+      "sourcePath": "derived.color.grape.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-grape-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-0",
+      "sourcePath": "color.gray.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-0-contrast",
+      "sourcePath": "derived.color.gray.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-1",
+      "sourcePath": "color.gray.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-1-contrast",
+      "sourcePath": "derived.color.gray.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-2",
+      "sourcePath": "color.gray.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-2-contrast",
+      "sourcePath": "derived.color.gray.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-3",
+      "sourcePath": "color.gray.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-3-contrast",
+      "sourcePath": "derived.color.gray.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-4",
+      "sourcePath": "color.gray.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-4-contrast",
+      "sourcePath": "derived.color.gray.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-5",
+      "sourcePath": "color.gray.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-5-contrast",
+      "sourcePath": "derived.color.gray.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-6",
+      "sourcePath": "color.gray.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-6-contrast",
+      "sourcePath": "derived.color.gray.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-7",
+      "sourcePath": "color.gray.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-7-contrast",
+      "sourcePath": "derived.color.gray.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-8",
+      "sourcePath": "color.gray.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-8-contrast",
+      "sourcePath": "derived.color.gray.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-9",
+      "sourcePath": "color.gray.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.gray.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-gray-9-contrast",
+      "sourcePath": "derived.color.gray.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-contrast",
+      "sourcePath": "derived.color.gray.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-filled",
+      "sourcePath": "derived.color.gray.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-filled-hover",
+      "sourcePath": "derived.color.gray.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-light",
+      "sourcePath": "derived.color.gray.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-light-color",
+      "sourcePath": "derived.color.gray.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-light-hover",
+      "sourcePath": "derived.color.gray.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-outline",
+      "sourcePath": "derived.color.gray.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-gray-outline-hover",
+      "sourcePath": "derived.color.gray.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-gray-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-0",
+      "sourcePath": "color.green.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-0-contrast",
+      "sourcePath": "derived.color.green.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-1",
+      "sourcePath": "color.green.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-1-contrast",
+      "sourcePath": "derived.color.green.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-2",
+      "sourcePath": "color.green.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-2-contrast",
+      "sourcePath": "derived.color.green.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-3",
+      "sourcePath": "color.green.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-3-contrast",
+      "sourcePath": "derived.color.green.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-4",
+      "sourcePath": "color.green.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-4-contrast",
+      "sourcePath": "derived.color.green.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-5",
+      "sourcePath": "color.green.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-5-contrast",
+      "sourcePath": "derived.color.green.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-6",
+      "sourcePath": "color.green.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-6-contrast",
+      "sourcePath": "derived.color.green.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-7",
+      "sourcePath": "color.green.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-7-contrast",
+      "sourcePath": "derived.color.green.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-8",
+      "sourcePath": "color.green.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-8-contrast",
+      "sourcePath": "derived.color.green.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-9",
+      "sourcePath": "color.green.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.green.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-green-9-contrast",
+      "sourcePath": "derived.color.green.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-contrast",
+      "sourcePath": "derived.color.green.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-filled",
+      "sourcePath": "derived.color.green.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-filled-hover",
+      "sourcePath": "derived.color.green.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-light",
+      "sourcePath": "derived.color.green.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-light-color",
+      "sourcePath": "derived.color.green.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-light-hover",
+      "sourcePath": "derived.color.green.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-outline",
+      "sourcePath": "derived.color.green.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-green-outline-hover",
+      "sourcePath": "derived.color.green.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-green-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-0",
+      "sourcePath": "color.indigo.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-0-contrast",
+      "sourcePath": "derived.color.indigo.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-1",
+      "sourcePath": "color.indigo.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-1-contrast",
+      "sourcePath": "derived.color.indigo.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-2",
+      "sourcePath": "color.indigo.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-2-contrast",
+      "sourcePath": "derived.color.indigo.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-3",
+      "sourcePath": "color.indigo.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-3-contrast",
+      "sourcePath": "derived.color.indigo.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-4",
+      "sourcePath": "color.indigo.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-4-contrast",
+      "sourcePath": "derived.color.indigo.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-5",
+      "sourcePath": "color.indigo.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-5-contrast",
+      "sourcePath": "derived.color.indigo.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-6",
+      "sourcePath": "color.indigo.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-6-contrast",
+      "sourcePath": "derived.color.indigo.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-7",
+      "sourcePath": "color.indigo.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-7-contrast",
+      "sourcePath": "derived.color.indigo.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-8",
+      "sourcePath": "color.indigo.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-8-contrast",
+      "sourcePath": "derived.color.indigo.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-9",
+      "sourcePath": "color.indigo.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.indigo.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-indigo-9-contrast",
+      "sourcePath": "derived.color.indigo.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-contrast",
+      "sourcePath": "derived.color.indigo.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-filled",
+      "sourcePath": "derived.color.indigo.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-filled-hover",
+      "sourcePath": "derived.color.indigo.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-light",
+      "sourcePath": "derived.color.indigo.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-light-color",
+      "sourcePath": "derived.color.indigo.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-light-hover",
+      "sourcePath": "derived.color.indigo.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-outline",
+      "sourcePath": "derived.color.indigo.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-indigo-outline-hover",
+      "sourcePath": "derived.color.indigo.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-indigo-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-0",
+      "sourcePath": "color.lime.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-0-contrast",
+      "sourcePath": "derived.color.lime.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-1",
+      "sourcePath": "color.lime.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-1-contrast",
+      "sourcePath": "derived.color.lime.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-2",
+      "sourcePath": "color.lime.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-2-contrast",
+      "sourcePath": "derived.color.lime.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-3",
+      "sourcePath": "color.lime.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-3-contrast",
+      "sourcePath": "derived.color.lime.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-4",
+      "sourcePath": "color.lime.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-4-contrast",
+      "sourcePath": "derived.color.lime.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-5",
+      "sourcePath": "color.lime.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-5-contrast",
+      "sourcePath": "derived.color.lime.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-6",
+      "sourcePath": "color.lime.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-6-contrast",
+      "sourcePath": "derived.color.lime.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-7",
+      "sourcePath": "color.lime.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-7-contrast",
+      "sourcePath": "derived.color.lime.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-8",
+      "sourcePath": "color.lime.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-8-contrast",
+      "sourcePath": "derived.color.lime.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-9",
+      "sourcePath": "color.lime.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.lime.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-lime-9-contrast",
+      "sourcePath": "derived.color.lime.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-contrast",
+      "sourcePath": "derived.color.lime.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-filled",
+      "sourcePath": "derived.color.lime.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-filled-hover",
+      "sourcePath": "derived.color.lime.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-light",
+      "sourcePath": "derived.color.lime.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-light-color",
+      "sourcePath": "derived.color.lime.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-light-hover",
+      "sourcePath": "derived.color.lime.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-outline",
+      "sourcePath": "derived.color.lime.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-lime-outline-hover",
+      "sourcePath": "derived.color.lime.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-lime-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-0",
+      "sourcePath": "color.orange.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-0-contrast",
+      "sourcePath": "derived.color.orange.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-1",
+      "sourcePath": "color.orange.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-1-contrast",
+      "sourcePath": "derived.color.orange.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-2",
+      "sourcePath": "color.orange.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-2-contrast",
+      "sourcePath": "derived.color.orange.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-3",
+      "sourcePath": "color.orange.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-3-contrast",
+      "sourcePath": "derived.color.orange.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-4",
+      "sourcePath": "color.orange.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-4-contrast",
+      "sourcePath": "derived.color.orange.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-5",
+      "sourcePath": "color.orange.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-5-contrast",
+      "sourcePath": "derived.color.orange.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-6",
+      "sourcePath": "color.orange.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-6-contrast",
+      "sourcePath": "derived.color.orange.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-7",
+      "sourcePath": "color.orange.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-7-contrast",
+      "sourcePath": "derived.color.orange.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-8",
+      "sourcePath": "color.orange.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-8-contrast",
+      "sourcePath": "derived.color.orange.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-9",
+      "sourcePath": "color.orange.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.orange.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-orange-9-contrast",
+      "sourcePath": "derived.color.orange.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-contrast",
+      "sourcePath": "derived.color.orange.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-filled",
+      "sourcePath": "derived.color.orange.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-filled-hover",
+      "sourcePath": "derived.color.orange.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-light",
+      "sourcePath": "derived.color.orange.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-light-color",
+      "sourcePath": "derived.color.orange.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-light-hover",
+      "sourcePath": "derived.color.orange.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-outline",
+      "sourcePath": "derived.color.orange.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-orange-outline-hover",
+      "sourcePath": "derived.color.orange.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-orange-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-0",
+      "sourcePath": "color.pink.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-0-contrast",
+      "sourcePath": "derived.color.pink.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-1",
+      "sourcePath": "color.pink.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-1-contrast",
+      "sourcePath": "derived.color.pink.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-2",
+      "sourcePath": "color.pink.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-2-contrast",
+      "sourcePath": "derived.color.pink.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-3",
+      "sourcePath": "color.pink.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-3-contrast",
+      "sourcePath": "derived.color.pink.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-4",
+      "sourcePath": "color.pink.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-4-contrast",
+      "sourcePath": "derived.color.pink.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-5",
+      "sourcePath": "color.pink.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-5-contrast",
+      "sourcePath": "derived.color.pink.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-6",
+      "sourcePath": "color.pink.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-6-contrast",
+      "sourcePath": "derived.color.pink.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-7",
+      "sourcePath": "color.pink.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-7-contrast",
+      "sourcePath": "derived.color.pink.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-8",
+      "sourcePath": "color.pink.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-8-contrast",
+      "sourcePath": "derived.color.pink.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-9",
+      "sourcePath": "color.pink.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.pink.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-pink-9-contrast",
+      "sourcePath": "derived.color.pink.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-contrast",
+      "sourcePath": "derived.color.pink.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-filled",
+      "sourcePath": "derived.color.pink.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-filled-hover",
+      "sourcePath": "derived.color.pink.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-light",
+      "sourcePath": "derived.color.pink.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-light-color",
+      "sourcePath": "derived.color.pink.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-light-hover",
+      "sourcePath": "derived.color.pink.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-outline",
+      "sourcePath": "derived.color.pink.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-pink-outline-hover",
+      "sourcePath": "derived.color.pink.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-pink-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-placeholder",
+      "sourcePath": "derived.color.placeholder",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-placeholder.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-0",
+      "sourcePath": "color.red.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-0-contrast",
+      "sourcePath": "derived.color.red.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-1",
+      "sourcePath": "color.red.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-1-contrast",
+      "sourcePath": "derived.color.red.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-2",
+      "sourcePath": "color.red.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-2-contrast",
+      "sourcePath": "derived.color.red.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-3",
+      "sourcePath": "color.red.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-3-contrast",
+      "sourcePath": "derived.color.red.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-4",
+      "sourcePath": "color.red.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-4-contrast",
+      "sourcePath": "derived.color.red.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-5",
+      "sourcePath": "color.red.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-5-contrast",
+      "sourcePath": "derived.color.red.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-6",
+      "sourcePath": "color.red.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-6-contrast",
+      "sourcePath": "derived.color.red.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-7",
+      "sourcePath": "color.red.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-7-contrast",
+      "sourcePath": "derived.color.red.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-8",
+      "sourcePath": "color.red.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-8-contrast",
+      "sourcePath": "derived.color.red.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-9",
+      "sourcePath": "color.red.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.red.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-red-9-contrast",
+      "sourcePath": "derived.color.red.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-contrast",
+      "sourcePath": "derived.color.red.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-filled",
+      "sourcePath": "derived.color.red.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-filled-hover",
+      "sourcePath": "derived.color.red.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-light",
+      "sourcePath": "derived.color.red.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-light-color",
+      "sourcePath": "derived.color.red.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-light-hover",
+      "sourcePath": "derived.color.red.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-outline",
+      "sourcePath": "derived.color.red.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-red-outline-hover",
+      "sourcePath": "derived.color.red.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-red-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-scheme",
+      "sourcePath": "derived.color.scheme",
+      "type": "string",
+      "category": "color",
+      "description": "Active Ropav color scheme (`light` or `dark`).",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-0",
+      "sourcePath": "color.teal.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-0-contrast",
+      "sourcePath": "derived.color.teal.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-1",
+      "sourcePath": "color.teal.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-1-contrast",
+      "sourcePath": "derived.color.teal.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-2",
+      "sourcePath": "color.teal.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-2-contrast",
+      "sourcePath": "derived.color.teal.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-3",
+      "sourcePath": "color.teal.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-3-contrast",
+      "sourcePath": "derived.color.teal.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-4",
+      "sourcePath": "color.teal.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-4-contrast",
+      "sourcePath": "derived.color.teal.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-5",
+      "sourcePath": "color.teal.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-5-contrast",
+      "sourcePath": "derived.color.teal.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-6",
+      "sourcePath": "color.teal.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-6-contrast",
+      "sourcePath": "derived.color.teal.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-7",
+      "sourcePath": "color.teal.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-7-contrast",
+      "sourcePath": "derived.color.teal.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-8",
+      "sourcePath": "color.teal.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-8-contrast",
+      "sourcePath": "derived.color.teal.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-9",
+      "sourcePath": "color.teal.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.teal.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-teal-9-contrast",
+      "sourcePath": "derived.color.teal.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-contrast",
+      "sourcePath": "derived.color.teal.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-filled",
+      "sourcePath": "derived.color.teal.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-filled-hover",
+      "sourcePath": "derived.color.teal.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-light",
+      "sourcePath": "derived.color.teal.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-light-color",
+      "sourcePath": "derived.color.teal.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-light-hover",
+      "sourcePath": "derived.color.teal.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-outline",
+      "sourcePath": "derived.color.teal.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-teal-outline-hover",
+      "sourcePath": "derived.color.teal.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-teal-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-text",
+      "sourcePath": "derived.color.text",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-text.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-0",
+      "sourcePath": "color.violet.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-0-contrast",
+      "sourcePath": "derived.color.violet.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-1",
+      "sourcePath": "color.violet.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-1-contrast",
+      "sourcePath": "derived.color.violet.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-2",
+      "sourcePath": "color.violet.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-2-contrast",
+      "sourcePath": "derived.color.violet.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-3",
+      "sourcePath": "color.violet.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-3-contrast",
+      "sourcePath": "derived.color.violet.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-4",
+      "sourcePath": "color.violet.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-4-contrast",
+      "sourcePath": "derived.color.violet.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-5",
+      "sourcePath": "color.violet.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-5-contrast",
+      "sourcePath": "derived.color.violet.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-6",
+      "sourcePath": "color.violet.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-6-contrast",
+      "sourcePath": "derived.color.violet.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-7",
+      "sourcePath": "color.violet.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-7-contrast",
+      "sourcePath": "derived.color.violet.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-8",
+      "sourcePath": "color.violet.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-8-contrast",
+      "sourcePath": "derived.color.violet.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-9",
+      "sourcePath": "color.violet.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.violet.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-violet-9-contrast",
+      "sourcePath": "derived.color.violet.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-contrast",
+      "sourcePath": "derived.color.violet.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-filled",
+      "sourcePath": "derived.color.violet.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-filled-hover",
+      "sourcePath": "derived.color.violet.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-light",
+      "sourcePath": "derived.color.violet.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-light-color",
+      "sourcePath": "derived.color.violet.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-light-hover",
+      "sourcePath": "derived.color.violet.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-outline",
+      "sourcePath": "derived.color.violet.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-violet-outline-hover",
+      "sourcePath": "derived.color.violet.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-violet-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-white",
+      "sourcePath": "color.white",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.white.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-0",
+      "sourcePath": "color.yellow.0",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-0-contrast",
+      "sourcePath": "derived.color.yellow.0.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-0-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-1",
+      "sourcePath": "color.yellow.1",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-1-contrast",
+      "sourcePath": "derived.color.yellow.1.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-1-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-2",
+      "sourcePath": "color.yellow.2",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-2-contrast",
+      "sourcePath": "derived.color.yellow.2.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-2-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-3",
+      "sourcePath": "color.yellow.3",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-3-contrast",
+      "sourcePath": "derived.color.yellow.3.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-3-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-4",
+      "sourcePath": "color.yellow.4",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-4-contrast",
+      "sourcePath": "derived.color.yellow.4.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-4-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-5",
+      "sourcePath": "color.yellow.5",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-5-contrast",
+      "sourcePath": "derived.color.yellow.5.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-5-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-6",
+      "sourcePath": "color.yellow.6",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-6-contrast",
+      "sourcePath": "derived.color.yellow.6.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-6-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-7",
+      "sourcePath": "color.yellow.7",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.7.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-7-contrast",
+      "sourcePath": "derived.color.yellow.7.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-7-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-8",
+      "sourcePath": "color.yellow.8",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-8-contrast",
+      "sourcePath": "derived.color.yellow.8.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-8-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-9",
+      "sourcePath": "color.yellow.9",
+      "type": "color",
+      "category": "color",
+      "description": "Public Ropav color token for color.yellow.9.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-color-yellow-9-contrast",
+      "sourcePath": "derived.color.yellow.9.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-9-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-contrast",
+      "sourcePath": "derived.color.yellow.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-filled",
+      "sourcePath": "derived.color.yellow.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-filled-hover",
+      "sourcePath": "derived.color.yellow.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-light",
+      "sourcePath": "derived.color.yellow.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-light-color",
+      "sourcePath": "derived.color.yellow.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-light-hover",
+      "sourcePath": "derived.color.yellow.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-outline",
+      "sourcePath": "derived.color.yellow.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-color-yellow-outline-hover",
+      "sourcePath": "derived.color.yellow.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-color-yellow-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-font-family",
+      "sourcePath": "font.family.base",
+      "type": "fontFamily",
+      "category": "font",
+      "description": "Public Ropav font token for font.family.base.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-size-lg",
+      "sourcePath": "font.size.lg",
+      "type": "dimension",
+      "category": "font",
+      "description": "Public Ropav font token for font.size.lg.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-size-md",
+      "sourcePath": "font.size.md",
+      "type": "dimension",
+      "category": "font",
+      "description": "Public Ropav font token for font.size.md.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-size-sm",
+      "sourcePath": "font.size.sm",
+      "type": "dimension",
+      "category": "font",
+      "description": "Public Ropav font token for font.size.sm.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-size-xl",
+      "sourcePath": "font.size.xl",
+      "type": "dimension",
+      "category": "font",
+      "description": "Public Ropav font token for font.size.xl.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-size-xs",
+      "sourcePath": "font.size.xs",
+      "type": "dimension",
+      "category": "font",
+      "description": "Public Ropav font token for font.size.xs.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-weight-bold",
+      "sourcePath": "font.weight.bold",
+      "type": "fontWeight",
+      "category": "font",
+      "description": "Public Ropav font token for font.weight.bold.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-weight-medium",
+      "sourcePath": "font.weight.medium",
+      "type": "fontWeight",
+      "category": "font",
+      "description": "Public Ropav font token for font.weight.medium.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-weight-normal",
+      "sourcePath": "font.weight.normal",
+      "type": "fontWeight",
+      "category": "font",
+      "description": "Public Ropav font token for font.weight.normal.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-font-weight-semibold",
+      "sourcePath": "font.weight.semibold",
+      "type": "fontWeight",
+      "category": "font",
+      "description": "Public Ropav font token for font.weight.semibold.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h1-font-size",
+      "sourcePath": "heading.h1.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h1.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h1-font-weight",
+      "sourcePath": "heading.h1.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h1.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h1-line-height",
+      "sourcePath": "heading.h1.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h1.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h2-font-size",
+      "sourcePath": "heading.h2.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h2.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h2-font-weight",
+      "sourcePath": "heading.h2.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h2.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h2-line-height",
+      "sourcePath": "heading.h2.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h2.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h3-font-size",
+      "sourcePath": "heading.h3.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h3.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h3-font-weight",
+      "sourcePath": "heading.h3.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h3.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h3-line-height",
+      "sourcePath": "heading.h3.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h3.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h4-font-size",
+      "sourcePath": "heading.h4.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h4.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h4-font-weight",
+      "sourcePath": "heading.h4.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h4.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h4-line-height",
+      "sourcePath": "heading.h4.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h4.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h5-font-size",
+      "sourcePath": "heading.h5.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h5.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h5-font-weight",
+      "sourcePath": "heading.h5.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h5.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h5-line-height",
+      "sourcePath": "heading.h5.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h5.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h6-font-size",
+      "sourcePath": "heading.h6.font-size",
+      "type": "dimension",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h6.font-size.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h6-font-weight",
+      "sourcePath": "heading.h6.font-weight",
+      "type": "fontWeight",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h6.font-weight.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-h6-line-height",
+      "sourcePath": "heading.h6.line-height",
+      "type": "number",
+      "category": "heading",
+      "description": "Public Ropav heading token for heading.h6.line-height.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-line-height-lg",
+      "sourcePath": "line-height.lg",
+      "type": "number",
+      "category": "line-height",
+      "description": "Public Ropav line-height token for line-height.lg.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-line-height-md",
+      "sourcePath": "line-height.md",
+      "type": "number",
+      "category": "line-height",
+      "description": "Public Ropav line-height token for line-height.md.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-line-height-sm",
+      "sourcePath": "line-height.sm",
+      "type": "number",
+      "category": "line-height",
+      "description": "Public Ropav line-height token for line-height.sm.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-line-height-xl",
+      "sourcePath": "line-height.xl",
+      "type": "number",
+      "category": "line-height",
+      "description": "Public Ropav line-height token for line-height.xl.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-line-height-xs",
+      "sourcePath": "line-height.xs",
+      "type": "number",
+      "category": "line-height",
+      "description": "Public Ropav line-height token for line-height.xs.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-opacity-disabled",
+      "sourcePath": "opacity.disabled",
+      "type": "number",
+      "category": "opacity",
+      "description": "Public Ropav opacity token for opacity.disabled.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-primary-color-0",
+      "sourcePath": "derived.primary.color.0",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-0.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-1",
+      "sourcePath": "derived.primary.color.1",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-1.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-2",
+      "sourcePath": "derived.primary.color.2",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-2.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-3",
+      "sourcePath": "derived.primary.color.3",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-3.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-4",
+      "sourcePath": "derived.primary.color.4",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-4.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-5",
+      "sourcePath": "derived.primary.color.5",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-5.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-6",
+      "sourcePath": "derived.primary.color.6",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-6.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-7",
+      "sourcePath": "derived.primary.color.7",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-7.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-8",
+      "sourcePath": "derived.primary.color.8",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-8.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-9",
+      "sourcePath": "derived.primary.color.9",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-9.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-contrast",
+      "sourcePath": "derived.primary.color.contrast",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-contrast.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-filled",
+      "sourcePath": "derived.primary.color.filled",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-filled.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-filled-hover",
+      "sourcePath": "derived.primary.color.filled.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-filled-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-light",
+      "sourcePath": "derived.primary.color.light",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-light.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-light-color",
+      "sourcePath": "derived.primary.color.light.color",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-light-color.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-light-hover",
+      "sourcePath": "derived.primary.color.light.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-light-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-outline",
+      "sourcePath": "derived.primary.color.outline",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-outline.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-primary-color-outline-hover",
+      "sourcePath": "derived.primary.color.outline.hover",
+      "type": "color",
+      "category": "color",
+      "description": "Derived public Ropav color token --rp-primary-color-outline-hover.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-radius-full",
+      "sourcePath": "radius.full",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.full.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-lg",
+      "sourcePath": "radius.lg",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.lg.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-md",
+      "sourcePath": "radius.md",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.md.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-none",
+      "sourcePath": "radius.none",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.none.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-sm",
+      "sourcePath": "radius.sm",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.sm.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-xl",
+      "sourcePath": "radius.xl",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.xl.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-radius-xs",
+      "sourcePath": "radius.xs",
+      "type": "dimension",
+      "category": "radius",
+      "description": "Public Ropav radius token for radius.xs.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-shadow-base",
+      "sourcePath": "shadow.base",
+      "type": "shadow",
+      "category": "shadow",
+      "description": "Public Ropav shadow token for shadow.base.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-shadow-lg",
+      "sourcePath": "shadow.lg",
+      "type": "shadow",
+      "category": "shadow",
+      "description": "Public Ropav shadow token for shadow.lg.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-shadow-md",
+      "sourcePath": "shadow.md",
+      "type": "shadow",
+      "category": "shadow",
+      "description": "Public Ropav shadow token for shadow.md.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-shadow-sm",
+      "sourcePath": "shadow.sm",
+      "type": "shadow",
+      "category": "shadow",
+      "description": "Public Ropav shadow token for shadow.sm.",
+      "themeApplicability": "light-and-dark"
+    },
+    {
+      "name": "--rp-size-control-lg",
+      "sourcePath": "size.control.lg",
+      "type": "dimension",
+      "category": "size",
+      "description": "Public Ropav size token for size.control.lg.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-size-control-md",
+      "sourcePath": "size.control.md",
+      "type": "dimension",
+      "category": "size",
+      "description": "Public Ropav size token for size.control.md.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-size-control-sm",
+      "sourcePath": "size.control.sm",
+      "type": "dimension",
+      "category": "size",
+      "description": "Public Ropav size token for size.control.sm.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-size-control-xl",
+      "sourcePath": "size.control.xl",
+      "type": "dimension",
+      "category": "size",
+      "description": "Public Ropav size token for size.control.xl.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-size-control-xs",
+      "sourcePath": "size.control.xs",
+      "type": "dimension",
+      "category": "size",
+      "description": "Public Ropav size token for size.control.xs.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-0",
+      "sourcePath": "spacing.0",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.0.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-1",
+      "sourcePath": "spacing.1",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.1.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-10",
+      "sourcePath": "spacing.10",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.10.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-12",
+      "sourcePath": "spacing.12",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.12.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-2",
+      "sourcePath": "spacing.2",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.2.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-3",
+      "sourcePath": "spacing.3",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.3.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-4",
+      "sourcePath": "spacing.4",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.4.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-5",
+      "sourcePath": "spacing.5",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.5.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-6",
+      "sourcePath": "spacing.6",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.6.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-spacing-8",
+      "sourcePath": "spacing.8",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Public Ropav spacing token for spacing.8.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-transition-base",
+      "sourcePath": "transition.base",
+      "type": "transition",
+      "category": "transition",
+      "description": "Public Ropav transition token for transition.base.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-transition-fast",
+      "sourcePath": "transition.fast",
+      "type": "transition",
+      "category": "transition",
+      "description": "Public Ropav transition token for transition.fast.",
+      "themeApplicability": "all-themes"
+    },
+    {
+      "name": "--rp-transition-slow",
+      "sourcePath": "transition.slow",
+      "type": "transition",
+      "category": "transition",
+      "description": "Public Ropav transition token for transition.slow.",
+      "themeApplicability": "all-themes"
+    }
+  ],
+  "componentVariables": [
+    {
+      "name": "--rp-switch-track-width",
+      "component": "Switch",
+      "acceptedValue": "<length>",
+      "fallback": "size preset track width",
+      "description": "Width shared by the Switch track and thumb travel calculation."
+    },
+    {
+      "name": "--rp-switch-track-height",
+      "component": "Switch",
+      "acceptedValue": "<length>",
+      "fallback": "size preset track height",
+      "description": "Height of the Switch track."
+    },
+    {
+      "name": "--rp-switch-thumb-size",
+      "component": "Switch",
+      "acceptedValue": "<length>",
+      "fallback": "size preset thumb size",
+      "description": "Diameter of the Switch thumb."
+    },
+    {
+      "name": "--rp-switch-thumb-offset",
+      "component": "Switch",
+      "acceptedValue": "<length>",
+      "fallback": "2px",
+      "description": "Inset used for the Switch thumb at both ends of the track."
+    },
+    {
+      "name": "--rp-slider-track-length",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<length>",
+      "fallback": "160px",
+      "description": "Minimum track length for a horizontal or vertical slider."
+    },
+    {
+      "name": "--rp-slider-track-thickness",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<length>",
+      "fallback": "size preset track thickness",
+      "description": "Thickness shared by the track and native range pseudo-elements."
+    },
+    {
+      "name": "--rp-slider-thumb-size",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<length>",
+      "fallback": "size preset thumb size",
+      "description": "Diameter shared by native and custom slider thumbs."
+    },
+    {
+      "name": "--rp-slider-thumb-border-width",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<line-width>",
+      "fallback": "size preset thumb border width",
+      "description": "Border width shared by native and custom slider thumbs."
+    },
+    {
+      "name": "--rp-slider-thumb-padding",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<length>",
+      "fallback": "0",
+      "description": "Inner padding for custom slider thumb content."
+    },
+    {
+      "name": "--rp-slider-mark-size",
+      "component": "Slider, RangeSlider",
+      "acceptedValue": "<length>",
+      "fallback": "size preset mark size",
+      "description": "Diameter of slider marks."
+    },
+    {
+      "name": "--rp-radio-control-size",
+      "component": "Radio",
+      "acceptedValue": "<length>",
+      "fallback": "size preset control size",
+      "description": "Diameter of the Radio control."
+    },
+    {
+      "name": "--rp-radio-dot-size",
+      "component": "Radio",
+      "acceptedValue": "<length>",
+      "fallback": "size preset dot size",
+      "description": "Diameter of the checked Radio dot."
+    }
+  ]
+}

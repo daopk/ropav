@@ -1,14 +1,15 @@
 <template>
     <Popover
+        v-bind="rootAttrs"
         :id="popoverId"
-        :class="rootClass"
+        :class-names="popoverClassNames"
+        :styles="popoverStyles"
         :placement="placement"
         :open="open"
         :keep-mounted="keepMounted"
         :disabled="popoverDisabled"
         :aria-label="pickerAriaLabel"
         :content-class="`rp-color-input__popover rp-color-input__popover--size-${size ?? 'md'}`"
-        @focusout="onFocusOut"
         @update:open="onOpenUpdate"
     >
         <template #default="slotProps">
@@ -29,6 +30,8 @@
                 :describedby="describedby"
                 :labelledby="labelledby"
                 :input-attrs="getInputTriggerAttrs(slotProps)"
+                :class-names="inputClassNames"
+                :styles="inputStyles"
                 :validation-message="colorValidationMessage"
                 @update:model-value="onInputUpdate"
             >
@@ -36,21 +39,31 @@
                     <slot name="left" :color="previewColor" :empty="!previewColor">
                         <ColorSwatch
                             v-if="previewColor"
-                            class="rp-color-input__preview"
+                            :class-names="previewClassNames"
+                            :styles="previewStyles"
                             :color="previewColor"
                             size="var(--_rp-color-input-preview-size)"
                             aria-hidden="true"
                         />
                         <span
                             v-else
-                            class="rp-color-input__preview rp-color-input__preview--empty"
+                            v-bind="
+                                getPartAttrs('preview', {
+                                    class: [
+                                        'rp-color-input__preview',
+                                        'rp-color-input__preview--empty',
+                                    ],
+                                })
+                            "
                             aria-hidden="true"
                         />
                     </slot>
                 </template>
                 <template v-if="showEyeDropper" #right>
                     <button
-                        class="rp-color-input__eye-dropper"
+                        v-bind="
+                            getPartAttrs('eyeDropper', { class: 'rp-color-input__eye-dropper' })
+                        "
                         type="button"
                         :disabled="control.disabled || readonly || isPickingColor"
                         :aria-label="eyeDropperAriaLabel"
@@ -77,6 +90,8 @@
                 :swatches="swatches"
                 :swatches-per-row="swatchesPerRow"
                 :aria-label="pickerAriaLabel"
+                :class-names="pickerClassNames"
+                :styles="pickerStyles"
                 @focusin="rememberClose(slotProps)"
                 @keydown="onPickerKeydown($event, slotProps)"
                 @update:model-value="onPickerUpdate"
@@ -86,16 +101,18 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
 import IconCrosshair from '~icons/lucide/crosshair';
+import { presence, useStylesApi } from '@/styles-api';
 import ColorPicker from '../color-picker/color-picker.vue';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
 import Input from '../input/input.vue';
 import Popover from '../popover/popover.vue';
 import type { ColorPickerValue } from '../color-picker/types';
-import type { ColorInputProps } from './types';
+import type { ColorInputPart, ColorInputProps } from './types';
 import { useColorInput } from './useColorInput';
 
-defineOptions({ name: 'RpColorInput' });
+defineOptions({ name: 'RpColorInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorInputProps>(), {
     format: 'hex',
@@ -143,6 +160,47 @@ const {
     modelValue: (value) => emit('update:modelValue', value),
     open: (value) => emit('update:open', value),
 });
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<ColorInputPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        'data-disabled': presence(control.disabled),
+        'data-readonly': presence(props.readonly),
+        'data-invalid': presence(isInvalid.value),
+        onFocusout: onFocusOut,
+    }),
+);
+const popoverClassNames = computed(() => ({
+    root: rootClass.value,
+    content: props.classNames?.content,
+}));
+const popoverStyles = computed(() => ({ content: props.styles?.content }));
+const inputClassNames = computed(() => ({
+    root: props.classNames?.control,
+    input: props.classNames?.input,
+}));
+const inputStyles = computed(() => ({
+    root: props.styles?.control,
+    input: props.styles?.input,
+}));
+const previewClassNames = computed(() => ({
+    root: ['rp-color-input__preview', props.classNames?.preview],
+}));
+const previewStyles = computed(() => ({ root: props.styles?.preview }));
+const pickerClassNames = computed(() => ({
+    root: props.classNames?.picker,
+    control: props.classNames?.pickerControl,
+    handle: props.classNames?.pickerHandle,
+    swatches: props.classNames?.pickerSwatches,
+    swatch: props.classNames?.pickerSwatch,
+}));
+const pickerStyles = computed(() => ({
+    root: props.styles?.picker,
+    control: props.styles?.pickerControl,
+    handle: props.styles?.pickerHandle,
+    swatches: props.styles?.pickerSwatches,
+    swatch: props.styles?.pickerSwatch,
+}));
 </script>
 
 <style src="./color-input.scss" lang="scss" scoped></style>

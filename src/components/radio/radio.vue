@@ -1,17 +1,10 @@
 <template>
-    <label
-        :class="rootClass"
-        :style="rootStyle"
-        :data-disabled="isDisabled || undefined"
-        :data-invalid="isInvalid || undefined"
-        :data-state="isChecked ? 'checked' : 'unchecked'"
-    >
+    <label v-bind="rootAttrs">
         <input
             v-bind="nativeInputAttrs"
             :id="control.id"
             ref="inputRef"
             type="radio"
-            class="rp-radio__native"
             :name="name"
             :value="value"
             :checked="isChecked"
@@ -22,9 +15,12 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="isInvalid || undefined"
             :aria-required="isRequired || undefined"
+            :data-disabled="presence(isDisabled)"
+            :data-invalid="presence(isInvalid)"
+            :data-state="isChecked ? 'checked' : 'unchecked'"
         />
-        <span class="rp-radio__dot" />
-        <span v-if="$slots.default" class="rp-radio__label">
+        <span v-bind="getPartAttrs('indicator', { class: 'rp-radio__dot' })" />
+        <span v-if="$slots.default" v-bind="getPartAttrs('label', { class: 'rp-radio__label' })">
             <slot />
         </span>
     </label>
@@ -32,10 +28,11 @@
 
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useRadio } from './useRadio';
-import type { RadioProps } from './types';
+import type { RadioPart, RadioProps } from './types';
 
-defineOptions({ name: 'RpRadio' });
+defineOptions({ name: 'RpRadio', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RadioProps>(), {
     variant: undefined,
@@ -66,14 +63,35 @@ const {
     focus,
 } = useRadio(props, (event) => emit('change', event));
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<RadioPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        'data-disabled': presence(isDisabled.value),
+        'data-invalid': presence(isInvalid.value),
+        'data-state': isChecked.value ? 'checked' : 'unchecked',
+    }),
+);
+
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
-    const attrs = props.inputAttrs ?? {};
+    const {
+        class: compatibilityClass,
+        style: compatibilityStyle,
+        onChange: compatibilityOnChange,
+        ...attrs
+    } = props.inputAttrs ?? {};
 
     return {
         ...attrs,
+        ...getPartAttrs('input', {
+            class: 'rp-radio__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
         onChange(event) {
             onSelect(event);
-            attrs.onChange?.(event);
+            compatibilityOnChange?.(event);
         },
     };
 });

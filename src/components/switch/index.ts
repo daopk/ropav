@@ -1,2 +1,3 @@
 export { default as Switch } from './switch.vue';
-export type { SwitchColor, SwitchProps, SwitchSize } from './types';
+export { switchParts } from './types';
+export type { SwitchColor, SwitchPart, SwitchProps, SwitchSize } from './types';

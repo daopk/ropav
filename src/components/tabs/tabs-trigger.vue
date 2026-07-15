@@ -1,20 +1,29 @@
 <template>
-    <button v-bind="rootProps">
+    <button v-bind="rootAttrs">
         <slot v-bind="slotProps" />
     </button>
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useTabsTrigger } from './useTabs';
-import type { TabsTriggerProps } from './types';
+import type { TabsTriggerPart, TabsTriggerProps } from './types';
 
-defineOptions({ name: 'RpTabsTrigger' });
+defineOptions({ name: 'RpTabsTrigger', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TabsTriggerProps>(), {
     disabled: false,
 });
 
-const { rootProps, slotProps } = useTabsTrigger(props);
+const { rootProps: internalRootProps, slotProps } = useTabsTrigger(props);
+const { getRootAttrs } = useStylesApi<TabsTriggerPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        ...internalRootProps.value,
+        'data-disabled': presence(internalRootProps.value['data-disabled']),
+    }),
+);
 </script>
 
 <style src="./tabs-trigger.scss" lang="scss" scoped></style>

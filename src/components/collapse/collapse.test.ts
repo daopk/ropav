@@ -175,7 +175,7 @@ describe('Collapse', () => {
         await flush();
 
         expect(root.classList.contains('rp-collapse--disabled')).toBe(true);
-        expect(root.getAttribute('data-disabled')).toBe('true');
+        expect(root.getAttribute('data-disabled')).toBe('');
         expect(trigger.disabled).toBe(true);
         expect(trigger.getAttribute('aria-disabled')).toBe('true');
         expect(trigger.getAttribute('aria-expanded')).toBe('false');

@@ -1,17 +1,11 @@
 <template>
-    <label
-        :class="rootClass"
-        :style="rootStyle"
-        :data-disabled="control.disabled || undefined"
-        :data-state="modelValue ? 'checked' : 'unchecked'"
-    >
+    <label v-bind="rootAttrs">
         <input
             v-bind="nativeInputAttrs"
             :id="control.id"
             ref="inputRef"
             :name="name"
             type="checkbox"
-            class="rp-switch__native"
             role="switch"
             :checked="modelValue"
             :disabled="control.disabled || undefined"
@@ -23,10 +17,10 @@
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
         />
-        <span class="rp-switch__track">
-            <span class="rp-switch__thumb" />
+        <span v-bind="getPartAttrs('track', { class: 'rp-switch__track' })">
+            <span v-bind="getPartAttrs('thumb', { class: 'rp-switch__thumb' })" />
         </span>
-        <span v-if="$slots.default" class="rp-switch__label">
+        <span v-if="$slots.default" v-bind="getPartAttrs('label', { class: 'rp-switch__label' })">
             <slot />
         </span>
     </label>
@@ -34,10 +28,11 @@
 
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useSwitch } from './useSwitch';
-import type { SwitchProps } from './types';
+import type { SwitchPart, SwitchProps } from './types';
 
-defineOptions({ name: 'RpSwitch' });
+defineOptions({ name: 'RpSwitch', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SwitchProps>(), {
     disabled: undefined,
@@ -53,11 +48,30 @@ const { inputRef, control, rootClass, rootStyle, onChange, focus } = useSwitch(p
     emit('update:modelValue', value);
 });
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<SwitchPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
+        'data-state': props.modelValue ? 'checked' : 'unchecked',
+    }),
+);
+
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     const attrs = props.inputAttrs ?? {};
+    const { class: compatibilityClass, style: compatibilityStyle, ...forwardedAttrs } = attrs;
 
     return {
-        ...attrs,
+        ...forwardedAttrs,
+        ...getPartAttrs('input', {
+            class: 'rp-switch__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
+        'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
         onChange(event) {
             onChange(event);
             attrs.onChange?.(event);

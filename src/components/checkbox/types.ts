@@ -1,5 +1,9 @@
 import type { InputHTMLAttributes } from 'vue';
 import type { ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const checkboxParts = ['root', 'input', 'indicator', 'label'] as const;
+export type CheckboxPart = (typeof checkboxParts)[number];
 
 export type CheckboxColor = ComponentColorValue;
 
@@ -9,7 +13,7 @@ export type CheckboxRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type CheckboxVariant = 'solid' | 'outline';
 
-export interface CheckboxProps {
+export interface CheckboxProps extends StylesApiProps<CheckboxPart> {
     id?: string;
     name?: string;
     modelValue: boolean;

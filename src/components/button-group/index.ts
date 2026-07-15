@@ -1,2 +1,3 @@
 export { default as ButtonGroup } from './button-group.vue';
-export type { ButtonGroupOrientation, ButtonGroupProps } from './types';
+export { buttonGroupParts } from './types';
+export type { ButtonGroupOrientation, ButtonGroupPart, ButtonGroupProps } from './types';

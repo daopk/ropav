@@ -1,40 +1,44 @@
 <template>
     <Transition name="rp-toast" @after-leave="emit('after-leave')">
-        <div
-            v-if="isOpen"
-            :class="rootClass"
-            :style="rootStyle"
-            :role="resolvedRole"
-            @mouseenter="onMouseenter"
-            @mouseleave="onMouseleave"
-            @focusin="onFocusin"
-            @focusout="onFocusout"
-        >
-            <div v-if="hasIcon" class="rp-toast__icon" aria-hidden="true">
+        <div v-if="isOpen" v-bind="rootAttrs">
+            <div
+                v-if="hasIcon"
+                v-bind="getPartAttrs('icon', { class: 'rp-toast__icon' })"
+                aria-hidden="true"
+            >
                 <slot name="icon" />
             </div>
 
             <div v-if="hasContent" class="rp-toast__content">
-                <div v-if="hasTitle" class="rp-toast__title">
+                <div v-if="hasTitle" v-bind="getPartAttrs('title', { class: 'rp-toast__title' })">
                     <slot name="title">
                         {{ title }}
                     </slot>
                 </div>
-                <p v-if="hasDescription" class="rp-toast__description">
+                <p
+                    v-if="hasDescription"
+                    v-bind="getPartAttrs('description', { class: 'rp-toast__description' })"
+                >
                     {{ description }}
                 </p>
-                <div v-if="$slots.default" class="rp-toast__body">
+                <div
+                    v-if="$slots.default"
+                    v-bind="getPartAttrs('body', { class: 'rp-toast__body' })"
+                >
                     <slot />
                 </div>
             </div>
 
-            <div v-if="$slots.action" class="rp-toast__action">
+            <div
+                v-if="$slots.action"
+                v-bind="getPartAttrs('action', { class: 'rp-toast__action' })"
+            >
                 <slot name="action" />
             </div>
 
             <button
                 v-if="closable"
-                class="rp-toast__close"
+                v-bind="getPartAttrs('close', { class: 'rp-toast__close' })"
                 type="button"
                 :aria-label="closeLabel"
                 @click="closeToast('dismiss')"
@@ -49,6 +53,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue';
 import IconX from '~icons/lucide/x';
 import { bem } from '@/utils/bem';
+import { useStylesApi } from '@/styles-api';
 import {
     DEFAULT_TOAST_CLOSE_LABEL,
     DEFAULT_TOAST_CLOSABLE,
@@ -57,10 +62,10 @@ import {
     DEFAULT_TOAST_PAUSE_ON_HOVER,
     DEFAULT_TOAST_ROLE,
 } from './defaults';
-import type { ToastCloseReason, ToastProps } from './types';
+import type { ToastCloseReason, ToastPart, ToastProps } from './types';
 import { getToastColorStyle } from './useToastColor';
 
-defineOptions({ name: 'RpToast' });
+defineOptions({ name: 'RpToast', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ToastProps>(), {
     open: undefined,
@@ -136,6 +141,18 @@ const rootClass = computed(() =>
 
 const rootStyle = computed(() =>
     getToastColorStyle(props.color, props.variant, props.autoContrast),
+);
+const { getPartAttrs, getRootAttrs } = useStylesApi<ToastPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        role: resolvedRole.value,
+        onMouseenter,
+        onMouseleave,
+        onFocusin,
+        onFocusout,
+    }),
 );
 
 watch([isOpen, () => props.duration], ([open], [wasOpen]) => {

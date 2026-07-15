@@ -1,8 +1,8 @@
 <template>
-    <span ref="rootRef" v-bind="rootAttrs" :class="rootClass" @focusout="onCompositeFocusout">
+    <span ref="rootRef" v-bind="publicRootAttrs">
         <slot
             v-if="!isTargetMode"
-            :trigger-props="slotProps.triggerProps"
+            :trigger-props="styledTriggerProps"
             :is-open="slotProps.isOpen"
             :open="slotProps.open"
             :close="slotProps.close"
@@ -16,14 +16,12 @@
                     v-show="shouldShowContent"
                     :id="popoverId"
                     ref="contentRef"
-                    :class="['rp-popover__content', contentClass]"
+                    v-bind="contentAttrs"
                     :role="popoverRole"
                     :aria-label="ariaLabel"
                     :aria-labelledby="ariaLabelledby"
                     :aria-describedby="ariaDescribedby"
-                    :data-placement="actualPlacement"
                     :data-side="placementSide"
-                    :style="contentStyle"
                     :tabindex="trapFocus ? -1 : undefined"
                     @focusout="onCompositeFocusout"
                 >
@@ -57,8 +55,10 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { usePopover } from './usePopover';
-import type { PopoverProps } from './types';
+import type { PopoverPart, PopoverProps, PopoverTriggerProps } from './types';
 
 defineOptions({ name: 'RpPopover', inheritAttrs: false });
 
@@ -91,6 +91,7 @@ const {
     contentRef,
     arrowRef,
     popoverId,
+    isDisabled,
     isTargetMode,
     popoverRole,
     ariaLabel,
@@ -99,7 +100,6 @@ const {
     shouldRenderContent,
     shouldShowContent,
     rootClass,
-    rootAttrs,
     contentStyle,
     slotProps,
     contentSlotProps,
@@ -115,6 +115,39 @@ const {
 void rootRef;
 void contentRef;
 void arrowRef;
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<PopoverPart>(props, 'root');
+const publicRootAttrs = computed(() =>
+    getRootAttrs(
+        {
+            class: rootClass.value,
+            onFocusout: onCompositeFocusout,
+            'data-state': slotProps.value.isOpen ? 'open' : 'closed',
+            'data-disabled': presence(isDisabled.value),
+        },
+        {},
+        ['onFocusout'],
+    ),
+);
+const styledTriggerProps = computed<PopoverTriggerProps>(() => {
+    const partAttrs = getPartAttrs('trigger');
+    return {
+        ...slotProps.value.triggerProps,
+        ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
+        ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
+        'data-state': slotProps.value.isOpen ? 'open' : 'closed',
+        'data-disabled': presence(isDisabled.value),
+    };
+});
+const contentAttrs = computed(() => ({
+    ...getPartAttrs('content', {
+        class: 'rp-popover__content',
+        compatibilityClass: props.contentClass,
+        style: contentStyle.value,
+    }),
+    'data-state': slotProps.value.isOpen ? 'open' : 'closed',
+    'data-placement': actualPlacement.value,
+}));
 </script>
 
 <style src="./popover.scss" lang="scss" scoped></style>

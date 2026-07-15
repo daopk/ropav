@@ -1,30 +1,37 @@
 <template>
-    <div v-if="isOpen" :class="rootClass" :style="rootStyle" :role="resolvedRole">
-        <div v-if="hasIcon" class="rp-alert__icon" aria-hidden="true">
+    <div v-if="isOpen" v-bind="rootAttrs">
+        <div
+            v-if="hasIcon"
+            v-bind="getPartAttrs('icon', { class: 'rp-alert__icon' })"
+            aria-hidden="true"
+        >
             <slot name="icon" />
         </div>
 
         <div v-if="hasContent" class="rp-alert__content">
-            <div v-if="hasTitle" class="rp-alert__title">
+            <div v-if="hasTitle" v-bind="getPartAttrs('title', { class: 'rp-alert__title' })">
                 <slot name="title">
                     {{ title }}
                 </slot>
             </div>
-            <p v-if="hasDescription" class="rp-alert__description">
+            <p
+                v-if="hasDescription"
+                v-bind="getPartAttrs('description', { class: 'rp-alert__description' })"
+            >
                 {{ description }}
             </p>
-            <div v-if="$slots.default" class="rp-alert__body">
+            <div v-if="$slots.default" v-bind="getPartAttrs('body', { class: 'rp-alert__body' })">
                 <slot />
             </div>
         </div>
 
-        <div v-if="$slots.action" class="rp-alert__action">
+        <div v-if="$slots.action" v-bind="getPartAttrs('action', { class: 'rp-alert__action' })">
             <slot name="action" />
         </div>
 
         <button
             v-if="closable"
-            class="rp-alert__close"
+            v-bind="getPartAttrs('close', { class: 'rp-alert__close' })"
             type="button"
             :aria-label="closeLabel"
             @click="closeAlert"
@@ -38,10 +45,11 @@
 import { computed, ref, useSlots, watch } from 'vue';
 import IconX from '~icons/lucide/x';
 import { bem } from '@/utils/bem';
-import type { AlertProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { AlertPart, AlertProps } from './types';
 import { getAlertColorStyle } from './useAlertColor';
 
-defineOptions({ name: 'RpAlert' });
+defineOptions({ name: 'RpAlert', inheritAttrs: false });
 
 const props = withDefaults(defineProps<AlertProps>(), {
     open: undefined,
@@ -83,6 +91,11 @@ const rootClass = computed(() =>
 
 const rootStyle = computed(() =>
     getAlertColorStyle(props.color, props.variant, props.autoContrast),
+);
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<AlertPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({ class: rootClass.value, style: rootStyle.value, role: resolvedRole.value }),
 );
 
 function closeAlert() {

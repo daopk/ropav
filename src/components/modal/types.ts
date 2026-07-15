@@ -2,6 +2,20 @@ import type { Ref } from 'vue';
 import type { FocusTrapOptions } from '../focus-trap/types';
 import type { TeleportProps } from '../floating/types';
 import type { OverlayProps } from '../overlay/types';
+import type { StylesApiProps } from '../../styles-api';
+
+export const modalParts = [
+    'root',
+    'overlay',
+    'panel',
+    'header',
+    'title',
+    'description',
+    'body',
+    'footer',
+    'close',
+] as const;
+export type ModalPart = (typeof modalParts)[number];
 
 export type ModalPresetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -31,7 +45,7 @@ export interface ModalSlotProps {
     toggle: () => void;
 }
 
-export interface ModalProps extends TeleportProps {
+export interface ModalProps extends TeleportProps, StylesApiProps<ModalPart> {
     id?: string;
     open?: boolean;
     title?: string;

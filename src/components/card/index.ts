@@ -1,2 +1,3 @@
 export { default as Card } from './card.vue';
-export type { CardLayer, CardPadding, CardProps, CardRadius } from './types';
+export { cardParts } from './types';
+export type { CardLayer, CardPadding, CardPart, CardProps, CardRadius } from './types';

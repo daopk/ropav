@@ -52,16 +52,22 @@ const DropdownMenuItemRow = defineComponent({
         return () => {
             const currentPath = path.value;
             const hasSubmenu = hasItemSubmenu(props.item);
+            const itemProps = props.context.getItemProps(
+                props.item,
+                currentPath,
+                props.focused,
+                props.disabled,
+                props.submenuOpen,
+            );
             const children: VNode[] = [
                 h(
                     'button',
-                    props.context.getItemProps(
-                        props.item,
-                        currentPath,
-                        props.focused,
-                        props.disabled,
-                        props.submenuOpen,
-                    ),
+                    {
+                        ...itemProps,
+                        ...props.context.getPublicPartAttrs?.('item', {
+                            class: itemProps.class,
+                        }),
+                    },
                     props.renderItem(
                         props.context.getItemSlotProps(
                             props.item,
@@ -163,14 +169,19 @@ const DropdownMenuSubmenu = defineComponent({
             arrowEnabled: () => false,
         });
 
-        return () =>
-            h(
+        return () => {
+            const submenuProps = props.context.getSubmenuProps(props.item, props.path, true);
+            return h(
                 'div',
                 {
-                    ...props.context.getSubmenuProps(props.item, props.path, true),
+                    ...submenuProps,
+                    ...props.context.getPublicPartAttrs?.('submenu', {
+                        class: submenuProps.class,
+                        style: floating.floatingStyle.value,
+                    }),
                     ref: element,
-                    style: floating.floatingStyle.value,
-                    'data-placement': floating.actualPlacement.value,
+                    'data-state': 'open',
+                    'data-placement': floating.actualPlacement.value.split('-')[0],
                     'data-side': floating.actualPlacement.value.split('-')[0],
                 },
                 [
@@ -182,6 +193,7 @@ const DropdownMenuSubmenu = defineComponent({
                     }),
                 ],
             );
+        };
     },
 });
 

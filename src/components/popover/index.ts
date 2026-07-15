@@ -1,10 +1,11 @@
 export { default as Popover } from './popover.vue';
-export { popoverPlacements } from './types';
+export { popoverParts, popoverPlacements } from './types';
 export type {
     PopoverContentSlotProps,
     PopoverFocusTrapOptions,
     PopoverOffset,
     PopoverOffsetOptions,
+    PopoverPart,
     PopoverPlacement,
     PopoverProps,
     PopoverRole,

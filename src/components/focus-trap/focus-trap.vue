@@ -1,26 +1,22 @@
 <template>
-    <component
-        :is="as"
-        ref="containerRef"
-        class="rp-focus-trap"
-        :data-active="isActive || undefined"
-        :data-paused="isPaused || undefined"
-    >
+    <component :is="as" ref="containerRef" v-bind="rootAttrs">
         <slot v-bind="slotProps" />
     </component>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, ref, watch } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useFocusTrap } from './useFocusTrap';
 import type {
     FocusTrapPauseOptions,
+    FocusTrapPart,
     FocusTrapProps,
     FocusTrapSlotProps,
     FocusTrapUnpauseOptions,
 } from './types';
 
-defineOptions({ name: 'RpFocusTrap' });
+defineOptions({ name: 'RpFocusTrap', inheritAttrs: false });
 
 const props = withDefaults(defineProps<FocusTrapProps>(), {
     active: true,
@@ -48,6 +44,14 @@ const slotProps = computed<FocusTrapSlotProps>(() => ({
     pause: pauseTrap,
     unpause: unpauseTrap,
 }));
+const { getRootAttrs } = useStylesApi<FocusTrapPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: 'rp-focus-trap',
+        'data-active': presence(isActive.value),
+        'data-paused': presence(isPaused.value),
+    }),
+);
 
 function pauseTrap(options?: FocusTrapPauseOptions) {
     pause(options);

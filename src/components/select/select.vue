@@ -1,5 +1,5 @@
 <template>
-    <div :class="rootClass" ref="selectRef">
+    <div v-bind="rootAttrs" ref="selectRef">
         <input
             v-if="name"
             type="hidden"
@@ -10,7 +10,7 @@
         <div
             :id="control.id"
             ref="triggerRef"
-            class="rp-select__trigger"
+            v-bind="getPartAttrs('trigger', { class: 'rp-select__trigger' })"
             role="combobox"
             :aria-expanded="isOpen"
             aria-haspopup="listbox"
@@ -23,20 +23,27 @@
             :aria-labelledby="control.ariaLabelledby"
             :aria-describedby="control.ariaDescribedby"
             :data-state="isOpen ? 'open' : 'closed'"
-            :data-disabled="control.disabled || undefined"
+            :data-disabled="presence(control.disabled)"
+            :data-invalid="presence(control.invalid)"
             :tabindex="control.disabled ? -1 : 0"
             @click="toggle"
             @keydown="onTriggerKeydown"
         >
-            <span class="rp-select__value" :class="{ 'rp-select__placeholder': !hasValue }">
+            <span
+                v-bind="
+                    getPartAttrs('value', {
+                        class: ['rp-select__value', { 'rp-select__placeholder': !hasValue }],
+                    })
+                "
+            >
                 {{ displayLabel || placeholder }}
             </span>
 
-            <span class="rp-select__indicator">
+            <span v-bind="getPartAttrs('indicator', { class: 'rp-select__indicator' })">
                 <button
                     v-if="canClear"
                     type="button"
-                    class="rp-select__clear"
+                    v-bind="getPartAttrs('clear', { class: 'rp-select__clear' })"
                     :aria-label="clearLabel"
                     tabindex="-1"
                     @mousedown.prevent
@@ -51,8 +58,17 @@
         </div>
 
         <Transition name="rp-select-dropdown">
-            <div v-if="isOpen" class="rp-select__dropdown" role="listbox" :id="listboxId">
-                <div v-if="visibleOptions.length === 0" class="rp-select__empty">
+            <div
+                v-if="isOpen"
+                v-bind="getPartAttrs('content', { class: 'rp-select__dropdown' })"
+                role="listbox"
+                :id="listboxId"
+                :data-state="isOpen ? 'open' : 'closed'"
+            >
+                <div
+                    v-if="visibleOptions.length === 0"
+                    v-bind="getPartAttrs('empty', { class: 'rp-select__empty' })"
+                >
                     <slot name="empty">No options</slot>
                 </div>
                 <div
@@ -62,16 +78,21 @@
                     :id="`${selectId}-option-${index}`"
                     :aria-selected="option.value === modelValue"
                     :aria-disabled="option.disabled || undefined"
-                    :data-selected="option.value === modelValue || undefined"
-                    :data-disabled="option.disabled || undefined"
-                    :class="[
-                        'rp-select__option',
-                        {
-                            'rp-select__option--selected': option.value === modelValue,
-                            'rp-select__option--focused': index === focusedIndex,
-                            'rp-select__option--disabled': option.disabled,
-                        },
-                    ]"
+                    :data-selected="presence(option.value === modelValue)"
+                    :data-highlighted="presence(index === focusedIndex)"
+                    :data-disabled="presence(option.disabled)"
+                    v-bind="
+                        getPartAttrs('option', {
+                            class: [
+                                'rp-select__option',
+                                {
+                                    'rp-select__option--selected': option.value === modelValue,
+                                    'rp-select__option--focused': index === focusedIndex,
+                                    'rp-select__option--disabled': option.disabled,
+                                },
+                            ],
+                        })
+                    "
                     @click="selectOption(option)"
                     @mouseenter="onOptionMouseenter(option, index)"
                 >
@@ -83,12 +104,14 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
+import { presence, useStylesApi } from '@/styles-api';
 import { useSelect } from './useSelect';
-import type { SelectProps } from './types';
+import type { SelectPart, SelectProps } from './types';
 
-defineOptions({ name: 'RpSelect' });
+defineOptions({ name: 'RpSelect', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SelectProps>(), {
     options: () => [],
@@ -129,6 +152,16 @@ const {
 
 void selectRef;
 void triggerRef;
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<SelectPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        'data-state': isOpen.value ? 'open' : 'closed',
+        'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
+    }),
+);
 </script>
 
 <style src="./select.scss" lang="scss" scoped></style>

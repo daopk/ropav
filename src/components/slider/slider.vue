@@ -1,14 +1,17 @@
 <template>
-    <label
-        :class="[rootClass, { 'rp-slider--custom-thumb': $slots.thumb }]"
-        :data-disabled="control.disabled || undefined"
-        :style="trackStyle"
-    >
+    <label v-bind="rootAttrs">
         <span v-if="$slots.default || $slots.value" class="rp-slider__header">
-            <span v-if="$slots.default" class="rp-slider__label">
+            <span
+                v-if="$slots.default"
+                v-bind="getPartAttrs('label', { class: 'rp-slider__label' })"
+            >
                 <slot />
             </span>
-            <span v-if="$slots.value" class="rp-slider__value" aria-hidden="true">
+            <span
+                v-if="$slots.value"
+                v-bind="getPartAttrs('value', { class: 'rp-slider__value' })"
+                aria-hidden="true"
+            >
                 <slot
                     name="value"
                     :value="normalizedValue"
@@ -18,7 +21,7 @@
             </span>
         </span>
         <span
-            class="rp-slider__track"
+            v-bind="getPartAttrs('track', { class: 'rp-slider__track' })"
             @pointerdown="onTooltipPointerDown"
             @mouseenter="onTooltipMouseEnter"
             @mouseleave="onTooltipMouseLeave"
@@ -26,14 +29,13 @@
             @focusout="onTooltipFocusOut"
             @keydown="onTooltipKeydown"
         >
-            <span class="rp-slider__bar" aria-hidden="true" />
+            <span v-bind="getPartAttrs('range', { class: 'rp-slider__bar' })" aria-hidden="true" />
 
             <input
                 v-bind="nativeInputAttrs"
                 :id="control.id"
                 ref="inputRef"
                 :name="name"
-                class="rp-slider__native"
                 type="range"
                 :value="normalizedValue"
                 :min="nativeMin"
@@ -46,24 +48,36 @@
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText"
+                :data-disabled="presence(control.disabled)"
             />
 
             <span v-if="markItems.length" class="rp-slider__marks" aria-hidden="true">
                 <span
                     v-for="mark in markItems"
                     :key="mark.key"
-                    class="rp-slider__mark"
-                    :class="{ 'rp-slider__mark--filled': mark.filled }"
-                    :style="mark.style"
+                    v-bind="
+                        getPartAttrs('mark', {
+                            class: ['rp-slider__mark', { 'rp-slider__mark--filled': mark.filled }],
+                            style: mark.style,
+                        })
+                    "
+                    :data-filled="presence(mark.filled)"
                 >
                     <span class="rp-slider__mark-dot" />
-                    <span v-if="mark.hasLabel" class="rp-slider__mark-label">
+                    <span
+                        v-if="mark.hasLabel"
+                        v-bind="getPartAttrs('markLabel', { class: 'rp-slider__mark-label' })"
+                    >
                         {{ mark.label }}
                     </span>
                 </span>
             </span>
 
-            <span v-if="$slots.thumb" class="rp-slider__thumb" aria-hidden="true">
+            <span
+                v-if="$slots.thumb"
+                v-bind="getPartAttrs('thumb', { class: 'rp-slider__thumb' })"
+                aria-hidden="true"
+            >
                 <span class="rp-slider__thumb-content">
                     <slot
                         name="thumb"
@@ -77,7 +91,8 @@
             <Tooltip
                 v-if="tooltipVisible"
                 :id="tooltipId"
-                class="rp-slider__tooltip"
+                :class-names="tooltipClassNames"
+                :styles="tooltipStyles"
                 :content="tooltipContent"
                 :placement="tooltipPlacement"
                 :color="tooltipColor"
@@ -94,12 +109,13 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, type InputHTMLAttributes } from 'vue';
+import { computed, ref, useSlots, type InputHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import Tooltip from '../tooltip/tooltip.vue';
-import type { SliderProps } from './types';
+import type { SliderPart, SliderProps } from './types';
 import { useSlider } from './useSlider';
 
-defineOptions({ name: 'RpSlider' });
+defineOptions({ name: 'RpSlider', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SliderProps>(), {
     min: 0,
@@ -116,6 +132,7 @@ const emit = defineEmits<{
 }>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
+const slots = useSlots();
 
 const {
     control,
@@ -149,14 +166,38 @@ const {
     emit('update:modelValue', value);
 });
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<SliderPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: [rootClass.value, { 'rp-slider--custom-thumb': Boolean(slots.thumb) }],
+        style: trackStyle.value,
+        'data-disabled': presence(control.disabled),
+        'data-orientation': props.orientation,
+    }),
+);
+const tooltipClassNames = computed(() => ({
+    root: ['rp-slider__tooltip', props.classNames?.tooltip],
+}));
+const tooltipStyles = computed(() => ({ root: props.styles?.tooltip }));
+
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
-    const attrs = props.inputAttrs ?? {};
+    const {
+        class: compatibilityClass,
+        style: compatibilityStyle,
+        onInput: compatibilityOnInput,
+        ...attrs
+    } = props.inputAttrs ?? {};
 
     return {
         ...attrs,
+        ...getPartAttrs('input', {
+            class: 'rp-slider__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
         onInput(event) {
             onInput(event);
-            attrs.onInput?.(event);
+            compatibilityOnInput?.(event);
         },
     };
 });

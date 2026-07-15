@@ -1,2 +1,3 @@
 export { default as Overlay } from './overlay.vue';
-export type { OverlayBlur, OverlayProps, OverlayZIndex } from './types';
+export { overlayParts } from './types';
+export type { OverlayBlur, OverlayPart, OverlayProps, OverlayZIndex } from './types';

@@ -114,7 +114,7 @@ describe('RangeSlider layout', () => {
                     return h(RangeSlider, {
                         modelValue: [25, 75],
                         thumbStyle: {
-                            border: 2,
+                            border: '2px solid red',
                             padding: 4,
                             size: 28,
                         },
@@ -127,11 +127,11 @@ describe('RangeSlider layout', () => {
 
         const root = container.querySelector('.rp-range-slider') as HTMLElement;
 
-        expect(root.style.getPropertyValue('--_rp-range-slider-thumb-size')).toBe('28px');
+        expect(root.style.getPropertyValue('--rp-slider-thumb-size')).toBe('28px');
         expect(root.style.getPropertyValue('--_rp-range-slider-thumb-border-style')).toBe(
-            '2px solid var(--_rp-range-slider-thumb-border)',
+            '2px solid red',
         );
-        expect(root.style.getPropertyValue('--_rp-range-slider-thumb-padding')).toBe('4px');
+        expect(root.style.getPropertyValue('--rp-slider-thumb-padding')).toBe('4px');
     });
 
     it('renders the custom thumb slot twice with endpoint-specific slot props', async () => {

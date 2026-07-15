@@ -7,13 +7,34 @@
     --_rp-#{$prefix}-thumb-border: var(--_rp-#{$prefix}-color);
     --_rp-#{$prefix}-thumb-border-style: var(--_rp-#{$prefix}-thumb-border-width) solid
         var(--_rp-#{$prefix}-thumb-border);
-    --_rp-#{$prefix}-thumb-padding: 0;
-    --_rp-#{$prefix}-track-length: 160px;
-    --_rp-#{$prefix}-track-height: 8px;
-    --_rp-#{$prefix}-thumb-size: 16px;
-    --_rp-#{$prefix}-thumb-border-width: 4px;
+    --_rp-#{$prefix}-default-thumb-padding: 0;
+    --_rp-#{$prefix}-default-track-length: 160px;
+    --_rp-#{$prefix}-default-track-height: 8px;
+    --_rp-#{$prefix}-default-thumb-size: 16px;
+    --_rp-#{$prefix}-default-thumb-border-width: 4px;
     --_rp-#{$prefix}-font-size: var(--rp-font-size-md);
-    --_rp-#{$prefix}-mark-size: 4px;
+    --_rp-#{$prefix}-default-mark-size: 4px;
+    --_rp-#{$prefix}-thumb-padding: var(
+        --rp-slider-thumb-padding,
+        var(--_rp-#{$prefix}-default-thumb-padding)
+    );
+    --_rp-#{$prefix}-track-length: var(
+        --rp-slider-track-length,
+        var(--_rp-#{$prefix}-default-track-length)
+    );
+    --_rp-#{$prefix}-track-height: var(
+        --rp-slider-track-thickness,
+        var(--_rp-#{$prefix}-default-track-height)
+    );
+    --_rp-#{$prefix}-thumb-size: var(
+        --rp-slider-thumb-size,
+        var(--_rp-#{$prefix}-default-thumb-size)
+    );
+    --_rp-#{$prefix}-thumb-border-width: var(
+        --rp-slider-thumb-border-width,
+        var(--_rp-#{$prefix}-default-thumb-border-width)
+    );
+    --_rp-#{$prefix}-mark-size: var(--rp-slider-mark-size, var(--_rp-#{$prefix}-default-mark-size));
     --_rp-#{$prefix}-mark-color: var(--rp-color-control-thumb-bg);
     --_rp-#{$prefix}-mark-label-color: var(--rp-color-dimmed);
     --_rp-#{$prefix}-mark-filled-label-color: var(--rp-color-text);
@@ -179,11 +200,11 @@
 }
 
 @mixin size($prefix, $track-height, $thumb-size, $thumb-border-width, $font-size, $mark-size) {
-    --_rp-#{$prefix}-track-height: #{$track-height};
-    --_rp-#{$prefix}-thumb-size: #{$thumb-size};
-    --_rp-#{$prefix}-thumb-border-width: #{$thumb-border-width};
+    --_rp-#{$prefix}-default-track-height: #{$track-height};
+    --_rp-#{$prefix}-default-thumb-size: #{$thumb-size};
+    --_rp-#{$prefix}-default-thumb-border-width: #{$thumb-border-width};
     --_rp-#{$prefix}-font-size: #{$font-size};
-    --_rp-#{$prefix}-mark-size: #{$mark-size};
+    --_rp-#{$prefix}-default-mark-size: #{$mark-size};
 }
 
 @mixin size-variants($prefix) {

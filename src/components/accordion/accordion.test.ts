@@ -284,7 +284,7 @@ describe('Accordion', () => {
         click(itemButton);
         await flush();
 
-        expect(groupRoot.getAttribute('data-disabled')).toBe('true');
+        expect(groupRoot.getAttribute('data-disabled')).toBe('');
         expect(groupButton.disabled).toBe(true);
         expect(itemButton.disabled).toBe(true);
         expect(disabledGroupUpdate).not.toHaveBeenCalled();

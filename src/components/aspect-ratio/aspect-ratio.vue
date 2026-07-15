@@ -1,14 +1,15 @@
 <template>
-    <div class="rp-aspect-ratio" :style="rootStyle">
+    <div v-bind="rootAttrs">
         <slot />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, type CSSProperties } from 'vue';
-import type { AspectRatioProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { AspectRatioPart, AspectRatioProps } from './types';
 
-defineOptions({ name: 'RpAspectRatio' });
+defineOptions({ name: 'RpAspectRatio', inheritAttrs: false });
 
 const props = withDefaults(defineProps<AspectRatioProps>(), {
     ratio: 1,
@@ -17,6 +18,11 @@ const props = withDefaults(defineProps<AspectRatioProps>(), {
 const rootStyle = computed<CSSProperties>(() => ({
     '--_rp-aspect-ratio': String(normalizeAspectRatio(props.ratio)),
 }));
+
+const { getRootAttrs } = useStylesApi<AspectRatioPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({ class: 'rp-aspect-ratio', style: rootStyle.value }),
+);
 
 function normalizeAspectRatio(ratio: number) {
     return Number.isFinite(ratio) && ratio > 0 ? ratio : 1;

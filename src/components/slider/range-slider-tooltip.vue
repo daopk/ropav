@@ -17,7 +17,10 @@
                 tooltipRootClass,
                 'rp-range-slider__tooltip',
                 'rp-range-slider__tooltip--lower',
+                tooltipClass,
             ]"
+            :style="tooltipStyle"
+            data-thumb="lower"
         >
             <span class="rp-range-slider__tooltip-anchor" />
             <span
@@ -37,7 +40,10 @@
                 tooltipRootClass,
                 'rp-range-slider__tooltip',
                 'rp-range-slider__tooltip--upper',
+                tooltipClass,
             ]"
+            :style="tooltipStyle"
+            data-thumb="upper"
         >
             <span class="rp-range-slider__tooltip-anchor" />
             <span
@@ -57,7 +63,10 @@
                 tooltipRootClass,
                 'rp-range-slider__tooltip',
                 'rp-range-slider__tooltip--merged',
+                tooltipClass,
             ]"
+            :style="tooltipStyle"
+            data-thumb="merged"
         >
             <span class="rp-range-slider__tooltip-anchor" />
             <span
@@ -83,7 +92,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, onBeforeUnmount, ref, toRef, useId, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, toRef, useId, watch, type HTMLAttributes } from 'vue';
 import { bem } from '@/utils/bem';
 import {
     resolveTooltipColorStyleWithContrast,
@@ -108,6 +117,8 @@ const props = withDefaults(
         orientation: SliderOrientation;
         placement: TooltipPlacement;
         valuePercent: RangeSliderValue;
+        tooltipClass?: HTMLAttributes['class'];
+        tooltipStyle?: HTMLAttributes['style'];
     }>(),
     {
         arrow: false,

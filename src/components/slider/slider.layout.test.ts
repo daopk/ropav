@@ -93,7 +93,7 @@ describe('Slider layout', () => {
                     return h(Slider, {
                         modelValue: 50,
                         thumbStyle: {
-                            border: 2,
+                            border: '2px solid red',
                             padding: 4,
                             size: 28,
                         },
@@ -106,11 +106,11 @@ describe('Slider layout', () => {
 
         const root = container.querySelector('.rp-slider') as HTMLElement;
 
-        expect(root.style.getPropertyValue('--_rp-slider-thumb-size')).toBe('28px');
+        expect(root.style.getPropertyValue('--rp-slider-thumb-size')).toBe('28px');
         expect(root.style.getPropertyValue('--_rp-slider-thumb-border-style')).toBe(
-            '2px solid var(--_rp-slider-thumb-border)',
+            '2px solid red',
         );
-        expect(root.style.getPropertyValue('--_rp-slider-thumb-padding')).toBe('4px');
+        expect(root.style.getPropertyValue('--rp-slider-thumb-padding')).toBe('4px');
     });
 
     it('renders a custom thumb slot with value and percent slot props', async () => {

@@ -1,4 +1,18 @@
-import type { Component } from 'vue';
+import type { Component, HTMLAttributes } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
+export const dropdownMenuParts = [
+    'root',
+    'trigger',
+    'content',
+    'item',
+    'label',
+    'shortcut',
+    'submenu',
+    'submenuIndicator',
+    'empty',
+] as const;
+export type DropdownMenuPart = (typeof dropdownMenuParts)[number];
 import type {
     FloatingCollisionPadding,
     FloatingOffset,
@@ -58,6 +72,10 @@ export interface DropdownMenuTriggerProps {
     'aria-expanded'?: boolean;
     'aria-haspopup': 'menu';
     disabled?: boolean;
+    class?: HTMLAttributes['class'];
+    style?: HTMLAttributes['style'];
+    'data-state'?: 'open' | 'closed';
+    'data-disabled'?: '';
     onClick: (event: MouseEvent) => void;
     onKeydown: (event: KeyboardEvent) => void;
 }
@@ -106,9 +124,9 @@ export interface DropdownMenuItemProps {
     'aria-expanded'?: boolean;
     'aria-haspopup'?: 'menu';
     'aria-disabled'?: true;
-    'data-disabled'?: true;
-    'data-focused'?: true;
-    'data-submenu'?: true;
+    'data-disabled'?: '';
+    'data-highlighted'?: '';
+    'data-submenu'?: '';
     onClick: (event: MouseEvent) => void;
     onMouseenter: (event: MouseEvent) => void;
 }
@@ -137,7 +155,8 @@ export interface DropdownMenuRenderedItem {
     children: DropdownMenuRenderedItem[];
 }
 
-export interface DropdownMenuProps extends FloatingPositionProps<DropdownMenuPlacement> {
+export interface DropdownMenuProps
+    extends FloatingPositionProps<DropdownMenuPlacement>, StylesApiProps<DropdownMenuPart> {
     id?: string;
     items?: DropdownMenuItem[];
     open?: boolean;

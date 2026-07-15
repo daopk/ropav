@@ -1,7 +1,7 @@
 <template>
-    <div v-bind="rootAttrs" :class="rootClass" :data-readonly="readonly || undefined">
+    <div v-bind="rootAttrs">
         <div v-if="$slots.default" class="rp-color-picker__header">
-            <span class="rp-color-picker__label">
+            <span v-bind="getPartAttrs('label', { class: 'rp-color-picker__label' })">
                 <slot />
             </span>
         </div>
@@ -15,6 +15,10 @@
                 :aria-label="ariaLabel"
                 :describedby="describedby"
                 :labelledby="labelledby"
+                :control-class="classNames?.control"
+                :control-style="styles?.control"
+                :handle-class="classNames?.handle"
+                :handle-style="styles?.handle"
                 @update:model-value="updateSelection"
             />
 
@@ -22,6 +26,10 @@
                 variant="hue"
                 :value="selectedColor.hue"
                 :readonly="readonly"
+                :control-class="classNames?.control"
+                :control-style="styles?.control"
+                :handle-class="classNames?.handle"
+                :handle-style="styles?.handle"
                 @update:value="updateHue"
             />
 
@@ -31,6 +39,10 @@
                 :color="opacityColor"
                 :value="selectedColor.opacity"
                 :readonly="readonly"
+                :control-class="classNames?.control"
+                :control-style="styles?.control"
+                :handle-class="classNames?.handle"
+                :handle-style="styles?.handle"
                 @update:value="updateOpacity"
             />
         </template>
@@ -38,8 +50,12 @@
         <div
             v-if="validSwatches.length"
             ref="swatchesRef"
-            class="rp-color-picker__swatches"
-            :style="swatchesStyle"
+            v-bind="
+                getPartAttrs('swatches', {
+                    class: 'rp-color-picker__swatches',
+                    style: swatchesStyle,
+                })
+            "
             :data-fill="normalizedSwatchesPerRow ? true : undefined"
             :data-with-picker="withPicker || undefined"
             :id="withPicker ? undefined : id"
@@ -52,7 +68,7 @@
             <button
                 v-for="(swatch, index) in validSwatches"
                 :key="`${swatch}-${index}`"
-                class="rp-color-picker__swatch"
+                v-bind="getPartAttrs('swatch', { class: 'rp-color-picker__swatch' })"
                 type="button"
                 role="radio"
                 :disabled="readonly"
@@ -60,6 +76,8 @@
                 :aria-checked="isSwatchSelected(index)"
                 :aria-label="`Select color ${swatch}`"
                 :title="swatch"
+                :data-selected="presence(isSwatchSelected(index))"
+                :data-readonly="presence(readonly)"
                 @click="selectSwatch(swatch)"
                 @focus="onSwatchFocus(index)"
                 @keydown="onSwatchKeydown($event, index)"
@@ -76,13 +94,14 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, useAttrs } from 'vue';
+import { computed } from 'vue';
 import IconCheck from '~icons/lucide/check';
 import { bem } from '@/utils/bem';
+import { presence, useStylesApi } from '@/styles-api';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
 import ColorPickerSaturation from './color-picker-saturation.vue';
 import ColorPickerSlider from './color-picker-slider.vue';
-import type { ColorPickerProps, ColorPickerValue } from './types';
+import type { ColorPickerPart, ColorPickerProps, ColorPickerValue } from './types';
 import { useColorPickerSwatches } from './useColorPickerSwatches';
 import { useColorPickerValue } from './useColorPickerValue';
 
@@ -105,11 +124,13 @@ const rootClass = computed(() =>
         readonly: props.readonly,
     }),
 );
-const attrs = useAttrs();
-const rootAttrs = computed(() => {
-    const { disabled: _disabled, invalid: _invalid, required: _required, ...filteredAttrs } = attrs;
-    return filteredAttrs;
-});
+const { getPartAttrs, getRootAttrs } = useStylesApi<ColorPickerPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        'data-readonly': presence(props.readonly),
+    }),
+);
 
 const {
     selectedColor,

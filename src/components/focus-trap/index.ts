@@ -1,4 +1,5 @@
 export { default as FocusTrap } from './focus-trap.vue';
+export { focusTrapParts } from './types';
 export { useFocusTrap } from './useFocusTrap';
 export type {
     FocusTrapActivateOptions,
@@ -8,6 +9,7 @@ export type {
     FocusTrapInitialFocus,
     FocusTrapOptions,
     FocusTrapPauseOptions,
+    FocusTrapPart,
     FocusTrapProps,
     FocusTrapSlotProps,
     FocusTrapTarget,

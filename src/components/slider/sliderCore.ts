@@ -20,9 +20,9 @@ interface SliderMarkStyleProperties {
 }
 
 interface SliderThumbStyleProperties {
-    size: `--_rp-${string}`;
-    border: `--_rp-${string}`;
-    padding: `--_rp-${string}`;
+    size: `--${string}`;
+    border: `--${string}`;
+    padding: `--${string}`;
     borderColor: `--_rp-${string}`;
 }
 
@@ -65,7 +65,7 @@ export function getSliderValuePercent(value: number, min: number, max: number) {
 
 export function setSliderStyleValue(
     style: CSSProperties,
-    property: `--_rp-${string}`,
+    property: `--${string}`,
     value: string | undefined,
 ) {
     if (value) style[property] = value;

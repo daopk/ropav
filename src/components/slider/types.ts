@@ -1,6 +1,34 @@
 import type { InputHTMLAttributes } from 'vue';
 import type { TooltipProps } from '../tooltip/types';
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const sliderParts = [
+    'root',
+    'label',
+    'value',
+    'track',
+    'range',
+    'input',
+    'thumb',
+    'mark',
+    'markLabel',
+    'tooltip',
+] as const;
+export const rangeSliderParts = [
+    'root',
+    'label',
+    'value',
+    'track',
+    'range',
+    'input',
+    'thumb',
+    'mark',
+    'markLabel',
+    'tooltip',
+] as const;
+export type SliderPart = (typeof sliderParts)[number];
+export type RangeSliderPart = (typeof rangeSliderParts)[number];
 
 export const sliderColors = componentColors;
 
@@ -62,7 +90,7 @@ export interface SliderThumbStyle {
     padding?: number | string;
 }
 
-export interface SliderProps {
+export interface SliderProps extends StylesApiProps<SliderPart> {
     id?: string;
     name?: string;
     modelValue: number;
@@ -84,10 +112,19 @@ export interface SliderProps {
     inputAttrs?: SliderInputAttrs;
 }
 
-export interface RangeSliderProps extends Omit<
-    SliderProps,
-    'modelValue' | 'name' | 'ariaLabel' | 'ariaValueText' | 'inputAttrs'
-> {
+export interface RangeSliderProps
+    extends
+        Omit<
+            SliderProps,
+            | 'modelValue'
+            | 'name'
+            | 'ariaLabel'
+            | 'ariaValueText'
+            | 'inputAttrs'
+            | 'classNames'
+            | 'styles'
+        >,
+        StylesApiProps<RangeSliderPart> {
     modelValue: RangeSliderValue;
     minRange?: number;
     name?: string | [string, string];

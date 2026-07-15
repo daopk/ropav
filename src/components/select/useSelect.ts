@@ -7,6 +7,8 @@ import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
 
+type SelectBehaviorProps = Omit<SelectProps, 'classNames' | 'styles'>;
+
 function hasSelectValue(value: SelectValue) {
     return value != null && value !== '';
 }
@@ -20,7 +22,10 @@ function getSelectActiveDescendantId(baseId: string, focusedIndex: number) {
     return focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
 }
 
-export function useSelect(props: Readonly<SelectProps>, emitUpdate: (value: SelectValue) => void) {
+export function useSelect(
+    props: Readonly<SelectBehaviorProps>,
+    emitUpdate: (value: SelectValue) => void,
+) {
     const selectRef = ref<HTMLElement | null>(null);
     const triggerRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);

@@ -2,8 +2,24 @@ import type { InputHTMLAttributes } from 'vue';
 import type { ColorPickerFormat, ColorPickerValue } from '../color-picker/types';
 import type { InputRadius, InputSize } from '../input/types';
 import type { PopoverPlacement } from '../popover/types';
+import type { StylesApiProps } from '../../styles-api';
 
-export interface ColorInputProps {
+export const colorInputParts = [
+    'root',
+    'control',
+    'input',
+    'preview',
+    'eyeDropper',
+    'content',
+    'picker',
+    'pickerControl',
+    'pickerHandle',
+    'pickerSwatches',
+    'pickerSwatch',
+] as const;
+export type ColorInputPart = (typeof colorInputParts)[number];
+
+export interface ColorInputProps extends StylesApiProps<ColorInputPart> {
     id?: string;
     name?: string;
     modelValue: ColorPickerValue;

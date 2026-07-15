@@ -1,12 +1,12 @@
 <template>
-    <span :class="rootClass" :style="rootStyle" :aria-label="ariaLabel || undefined">
-        <span v-if="$slots.left" class="rp-badge__left">
+    <span v-bind="rootAttrs">
+        <span v-if="$slots.left" v-bind="getPartAttrs('left', { class: 'rp-badge__left' })">
             <slot name="left" />
         </span>
-        <span v-if="$slots.default" class="rp-badge__label">
+        <span v-if="$slots.default" v-bind="getPartAttrs('label', { class: 'rp-badge__label' })">
             <slot />
         </span>
-        <span v-if="$slots.right" class="rp-badge__right">
+        <span v-if="$slots.right" v-bind="getPartAttrs('right', { class: 'rp-badge__right' })">
             <slot name="right" />
         </span>
     </span>
@@ -15,10 +15,11 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import { bem } from '@/utils/bem';
-import type { BadgeProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { BadgePart, BadgeProps } from './types';
 import { getBadgeColorStyle } from './useBadgeColor';
 
-defineOptions({ name: 'RpBadge' });
+defineOptions({ name: 'RpBadge', inheritAttrs: false });
 
 const props = defineProps<BadgeProps>();
 
@@ -32,6 +33,14 @@ const rootClass = computed(() =>
 
 const rootStyle = computed(() =>
     getBadgeColorStyle(props.color, props.variant, props.autoContrast),
+);
+const { getPartAttrs, getRootAttrs } = useStylesApi<BadgePart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        style: rootStyle.value,
+        'aria-label': props.ariaLabel || undefined,
+    }),
 );
 </script>
 

@@ -136,7 +136,7 @@ export function getColorVariantVariables(color, scheme) {
     const primaryShade = isDark ? darkPrimaryShade : lightPrimaryShade;
     const outlineShade = isDark ? Math.max(primaryShade - 4, 0) : primaryShade;
     const hoverShade = Math.min(primaryShade + 1, 9);
-    const contrast = getReadableColorVariable(getColorTokenValue(color, primaryShade));
+    const contrast = `var(--rp-color-${color}-${primaryShade}-contrast)`;
 
     if (!isDark) {
         return {

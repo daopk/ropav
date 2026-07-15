@@ -1,21 +1,32 @@
 <template>
-    <div :class="rootClass">
-        <div v-if="hasHeader" class="rp-card__header">
+    <div v-bind="rootAttrs">
+        <div v-if="hasHeader" v-bind="getPartAttrs('header', { class: 'rp-card__header' })">
             <slot name="header">
-                <div v-if="hasTitle" class="rp-card__title">
+                <div v-if="hasTitle" v-bind="getPartAttrs('title', { class: 'rp-card__title' })">
                     {{ title }}
                 </div>
-                <p v-if="hasDescription" class="rp-card__description">
+                <p
+                    v-if="hasDescription"
+                    v-bind="getPartAttrs('description', { class: 'rp-card__description' })"
+                >
                     {{ description }}
                 </p>
             </slot>
         </div>
 
-        <div v-if="hasBody" :class="['rp-card__body', bodyClass]">
+        <div
+            v-if="hasBody"
+            v-bind="
+                getPartAttrs('body', {
+                    class: 'rp-card__body',
+                    compatibilityClass: bodyClass,
+                })
+            "
+        >
             <slot />
         </div>
 
-        <div v-if="hasFooter" class="rp-card__footer">
+        <div v-if="hasFooter" v-bind="getPartAttrs('footer', { class: 'rp-card__footer' })">
             <slot name="footer" />
         </div>
     </div>
@@ -24,9 +35,10 @@
 <script lang="ts" setup vapor>
 import { computed, useSlots } from 'vue';
 import { bem } from '@/utils/bem';
-import type { CardProps } from './types';
+import { useStylesApi } from '@/styles-api';
+import type { CardPart, CardProps } from './types';
 
-defineOptions({ name: 'RpCard' });
+defineOptions({ name: 'RpCard', inheritAttrs: false });
 
 const props = withDefaults(defineProps<CardProps>(), {
     border: true,
@@ -61,6 +73,8 @@ const rootClass = computed(() =>
         'footer-compact': hasCompactFooterSpacing.value,
     }),
 );
+const { getPartAttrs, getRootAttrs } = useStylesApi<CardPart>(props, 'root');
+const rootAttrs = computed(() => getRootAttrs({ class: rootClass.value }));
 </script>
 
 <style src="./card.scss" lang="scss" scoped></style>

@@ -19,8 +19,8 @@
         }
     }
 
-    &__hue[data-readonly='true'],
-    &__opacity[data-readonly='true'] {
+    &__hue[data-readonly],
+    &__opacity[data-readonly] {
         cursor: default;
     }
 

@@ -1,14 +1,6 @@
 <template>
-    <span
-        ref="rootRef"
-        :class="rootClass"
-        @mouseenter="openTooltip"
-        @mouseleave="closeTooltip"
-        @focusin="openTooltip"
-        @focusout="closeTooltip"
-        @keydown="onKeydown"
-    >
-        <slot v-if="!isTargetMode" :trigger-props="triggerProps" />
+    <span ref="rootRef" v-bind="rootAttrs">
+        <slot v-if="!isTargetMode" :trigger-props="publicTriggerProps" />
 
         <Teleport :to="teleportTo" :disabled="!teleport">
             <Transition name="rp-tooltip-content">
@@ -17,12 +9,10 @@
                     v-show="isVisible"
                     :id="tooltipId"
                     ref="contentRef"
-                    class="rp-tooltip__content"
+                    v-bind="contentAttrs"
                     :role="contentRole"
                     :aria-hidden="contentAriaHidden"
-                    :data-placement="actualPlacement"
                     :data-side="placementSide"
-                    :style="contentStyle"
                 >
                     <span
                         v-if="arrow"
@@ -40,10 +30,12 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useTooltip } from './useTooltip';
-import type { TooltipProps } from './types';
+import type { TooltipPart, TooltipProps, TooltipTriggerProps } from './types';
 
-defineOptions({ name: 'RpTooltip' });
+defineOptions({ name: 'RpTooltip', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TooltipProps>(), {
     content: '',
@@ -69,6 +61,7 @@ const {
     contentRef,
     arrowRef,
     tooltipId,
+    isDisabled,
     isVisible,
     isTargetMode,
     shouldRenderContent,
@@ -91,6 +84,39 @@ const {
 void rootRef;
 void contentRef;
 void arrowRef;
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<TooltipPart>(props, 'root');
+const state = computed(() => (isVisible.value ? 'open' : 'closed'));
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        'data-state': state.value,
+        'data-disabled': presence(isDisabled.value),
+        onMouseenter: openTooltip,
+        onMouseleave: closeTooltip,
+        onFocusin: openTooltip,
+        onFocusout: closeTooltip,
+        onKeydown,
+    }),
+);
+const publicTriggerProps = computed<TooltipTriggerProps>(() => {
+    const partAttrs = getPartAttrs('trigger');
+    return {
+        ...triggerProps.value,
+        ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
+        ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
+        'data-state': state.value,
+        'data-disabled': presence(isDisabled.value),
+    };
+});
+const contentAttrs = computed(() => ({
+    ...getPartAttrs('content', {
+        class: 'rp-tooltip__content',
+        style: contentStyle.value,
+    }),
+    'data-state': state.value,
+    'data-placement': actualPlacement.value,
+}));
 </script>
 
 <style src="./tooltip.scss" lang="scss" scoped></style>

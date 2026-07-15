@@ -1,5 +1,9 @@
 import type { InputHTMLAttributes } from 'vue';
 import type { InputRadius, InputSize } from '../input/types';
+import type { StylesApiProps } from '../../styles-api';
+
+export const numberInputParts = ['root', 'input', 'control'] as const;
+export type NumberInputPart = (typeof numberInputParts)[number];
 
 export type NumberInputValue = number | null;
 
@@ -11,7 +15,7 @@ export type NumberInputControlsPosition = 'left' | 'right' | 'split';
 
 export type NumberInputTextAlign = 'left' | 'center' | 'right';
 
-export interface NumberInputProps {
+export interface NumberInputProps extends StylesApiProps<NumberInputPart> {
     id?: string;
     name?: string;
     modelValue: NumberInputValue;

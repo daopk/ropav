@@ -1,15 +1,11 @@
 <template>
     <Teleport :to="teleportTo" :disabled="!teleport">
         <Transition name="rp-modal">
-            <div
-                v-if="shouldRender"
-                v-show="isOpen"
-                :class="[rootClass, stateClass]"
-                :style="rootStyle"
-            >
+            <div v-if="shouldRender" v-show="isOpen" v-bind="rootAttrs">
                 <Overlay
                     v-bind="overlayProps"
-                    class="rp-modal__overlay"
+                    :class-names="overlayClassNames"
+                    :styles="overlayStyles"
                     :z-index="0"
                     interactive
                     @click="onOverlayClick"
@@ -18,7 +14,7 @@
                 <section
                     :id="modalId"
                     ref="panelRef"
-                    class="rp-modal__panel"
+                    v-bind="panelAttrs"
                     :role="role"
                     aria-modal="true"
                     :aria-label="ariaLabel"
@@ -26,16 +22,28 @@
                     :aria-describedby="ariaDescribedby"
                     tabindex="-1"
                 >
-                    <div v-if="hasHeader" class="rp-modal__header" :id="headerId">
+                    <div
+                        v-if="hasHeader"
+                        :id="headerId"
+                        v-bind="getPartAttrs('header', { class: 'rp-modal__header' })"
+                    >
                         <slot name="header" v-bind="slotProps">
                             <div class="rp-modal__heading">
-                                <h2 v-if="title" :id="titleId" class="rp-modal__title">
+                                <h2
+                                    v-if="title"
+                                    :id="titleId"
+                                    v-bind="getPartAttrs('title', { class: 'rp-modal__title' })"
+                                >
                                     {{ title }}
                                 </h2>
                                 <p
                                     v-if="description"
                                     :id="descriptionId"
-                                    class="rp-modal__description"
+                                    v-bind="
+                                        getPartAttrs('description', {
+                                            class: 'rp-modal__description',
+                                        })
+                                    "
                                 >
                                     {{ description }}
                                 </p>
@@ -45,7 +53,8 @@
 
                     <IconButton
                         v-if="showCloseButton"
-                        class="rp-modal__close"
+                        :class-names="closeClassNames"
+                        :styles="closeStyles"
                         :ariaLabel="closeLabel"
                         variant="ghost"
                         size="sm"
@@ -54,11 +63,17 @@
                         <IconX />
                     </IconButton>
 
-                    <div v-if="$slots.default" class="rp-modal__body">
+                    <div
+                        v-if="$slots.default"
+                        v-bind="getPartAttrs('body', { class: 'rp-modal__body' })"
+                    >
                         <slot v-bind="slotProps" />
                     </div>
 
-                    <div v-if="hasFooter" class="rp-modal__footer">
+                    <div
+                        v-if="hasFooter"
+                        v-bind="getPartAttrs('footer', { class: 'rp-modal__footer' })"
+                    >
                         <slot name="footer" v-bind="slotProps" />
                     </div>
                 </section>
@@ -68,14 +83,16 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed } from 'vue';
 import IconX from '~icons/lucide/x';
+import { useStylesApi } from '@/styles-api';
 import IconButton from '../icon-button/icon-button.vue';
 import Overlay from '../overlay/overlay.vue';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useModal } from './useModal';
-import type { ModalProps } from './types';
+import type { ModalPart, ModalProps } from './types';
 
-defineOptions({ name: 'RpModal' });
+defineOptions({ name: 'RpModal', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ModalProps>(), {
     open: undefined,
@@ -129,6 +146,28 @@ const {
 });
 
 void panelRef;
+
+const { getPartAttrs, getRootAttrs } = useStylesApi<ModalPart>(props, 'root');
+const state = computed(() => (isOpen.value ? 'open' : 'closed'));
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: [rootClass.value, stateClass.value],
+        style: rootStyle.value,
+        'data-state': state.value,
+    }),
+);
+const overlayClassNames = computed(() => ({
+    root: ['rp-modal__overlay', props.classNames?.overlay],
+}));
+const overlayStyles = computed(() => ({ root: props.styles?.overlay }));
+const panelAttrs = computed(() => ({
+    ...getPartAttrs('panel', { class: 'rp-modal__panel' }),
+    'data-state': state.value,
+}));
+const closeClassNames = computed(() => ({
+    root: ['rp-modal__close', props.classNames?.close],
+}));
+const closeStyles = computed(() => ({ root: props.styles?.close }));
 </script>
 
 <style src="./modal.scss" lang="scss" scoped></style>

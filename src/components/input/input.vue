@@ -1,27 +1,10 @@
 <template>
-    <label :class="rootClass" @mousedown="focusInput">
-        <span v-if="$slots.left" class="rp-input__left">
+    <label v-bind="rootAttrs">
+        <span v-if="$slots.left" v-bind="getPartAttrs('left', { class: 'rp-input__left' })">
             <slot name="left" />
         </span>
-        <input
-            v-bind="nativeInputAttrs"
-            :id="control.id"
-            ref="inputRef"
-            :name="name"
-            class="rp-input__native"
-            :type="type"
-            :value="modelValue"
-            :placeholder="placeholder"
-            :disabled="control.disabled || undefined"
-            :readonly="readonly || undefined"
-            :required="control.required || undefined"
-            :aria-label="ariaLabel || undefined"
-            :aria-labelledby="control.ariaLabelledby"
-            :aria-describedby="control.ariaDescribedby"
-            :aria-invalid="control.invalid || undefined"
-            :aria-required="control.required || undefined"
-        />
-        <span v-if="$slots.right" class="rp-input__right">
+        <input v-bind="nativeInputAttrs" ref="inputRef" />
+        <span v-if="$slots.right" v-bind="getPartAttrs('right', { class: 'rp-input__right' })">
             <slot name="right" />
         </span>
     </label>
@@ -29,10 +12,11 @@
 
 <script lang="ts" setup vapor>
 import { computed, watch, type InputHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useInput } from './useInput';
-import type { InputProps } from './types';
+import type { InputPart, InputProps } from './types';
 
-defineOptions({ name: 'RpInput' });
+defineOptions({ name: 'RpInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<InputProps>(), {
     type: 'text',
@@ -52,11 +36,44 @@ const { inputRef, control, rootClass, onInput, focusInput } = useInput(props, (v
     emit('update:modelValue', value);
 });
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<InputPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        onMousedown: focusInput,
+        'data-disabled': presence(control.disabled),
+        'data-readonly': presence(props.readonly),
+        'data-invalid': presence(control.invalid),
+    }),
+);
+
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     const attrs = props.inputAttrs ?? {};
+    const { class: compatibilityClass, style: compatibilityStyle, ...forwardedAttrs } = attrs;
 
     return {
-        ...attrs,
+        ...forwardedAttrs,
+        ...getPartAttrs('input', {
+            class: 'rp-input__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
+        id: control.id,
+        name: props.name,
+        type: props.type,
+        value: props.modelValue,
+        placeholder: props.placeholder,
+        disabled: control.disabled || undefined,
+        readonly: props.readonly || undefined,
+        required: control.required || undefined,
+        'aria-label': props.ariaLabel || undefined,
+        'aria-labelledby': control.ariaLabelledby,
+        'aria-describedby': control.ariaDescribedby,
+        'aria-invalid': control.invalid || undefined,
+        'aria-required': control.required || undefined,
+        'data-disabled': presence(control.disabled),
+        'data-readonly': presence(props.readonly),
+        'data-invalid': presence(control.invalid),
         onInput(event) {
             onInput(event);
             attrs.onInput?.(event);

@@ -1,11 +1,10 @@
 <template>
-    <div :class="rootClass" @mousedown="focusTextarea">
+    <div v-bind="rootAttrs">
         <textarea
             v-bind="nativeInputAttrs"
             :id="control.id"
             ref="textareaRef"
             :name="name"
-            class="rp-textarea__native"
             :value="modelValue"
             :placeholder="placeholder"
             :rows="nativeRows"
@@ -17,16 +16,20 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
+            :data-disabled="presence(control.disabled)"
+            :data-readonly="presence(readonly)"
+            :data-invalid="presence(control.invalid)"
         />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, type TextareaHTMLAttributes } from 'vue';
+import { presence, useStylesApi } from '@/styles-api';
 import { useTextarea } from './useTextarea';
-import type { TextareaProps } from './types';
+import type { TextareaPart, TextareaProps } from './types';
 
-defineOptions({ name: 'RpTextarea' });
+defineOptions({ name: 'RpTextarea', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TextareaProps>(), {
     placeholder: '',
@@ -53,14 +56,35 @@ const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea, foc
     },
 );
 
+const { getPartAttrs, getRootAttrs } = useStylesApi<TextareaPart>(props, 'root');
+const rootAttrs = computed(() =>
+    getRootAttrs({
+        class: rootClass.value,
+        onMousedown: focusTextarea,
+        'data-disabled': presence(control.disabled),
+        'data-readonly': presence(props.readonly),
+        'data-invalid': presence(control.invalid),
+    }),
+);
+
 const nativeInputAttrs = computed<TextareaHTMLAttributes>(() => {
-    const attrs = props.inputAttrs ?? {};
+    const {
+        class: compatibilityClass,
+        style: compatibilityStyle,
+        onInput: compatibilityOnInput,
+        ...attrs
+    } = props.inputAttrs ?? {};
 
     return {
         ...attrs,
+        ...getPartAttrs('input', {
+            class: 'rp-textarea__native',
+            compatibilityClass,
+            compatibilityStyle,
+        }),
         onInput(event) {
             onInput(event);
-            attrs.onInput?.(event);
+            compatibilityOnInput?.(event);
         },
     };
 });

@@ -2,6 +2,7 @@ import { DropdownMenuItem as DropdownMenuItemPrimitive } from './dropdown-menu-p
 import type { DropdownMenuItem as DropdownMenuDataItem } from './types';
 
 export { default as DropdownMenu } from './dropdown-menu.vue';
+export { dropdownMenuParts } from './types';
 export {
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
@@ -44,6 +45,7 @@ export type {
     DropdownMenuOffset,
     DropdownMenuOffsetOptions,
     DropdownMenuOpenOptions,
+    DropdownMenuPart,
     DropdownMenuPlacement,
     DropdownMenuPoint,
     DropdownMenuPortalPrimitiveProps,

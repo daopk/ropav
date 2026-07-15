@@ -1,4 +1,17 @@
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
+import type { StylesApiProps } from '../../styles-api';
+
+export const alertParts = [
+    'root',
+    'icon',
+    'title',
+    'description',
+    'body',
+    'action',
+    'close',
+] as const;
+
+export type AlertPart = (typeof alertParts)[number];
 
 export const alertColors = componentColors;
 
@@ -14,7 +27,7 @@ export type AlertRadius = (typeof alertRadiuses)[number];
 
 export type AlertRole = 'alert' | 'status' | 'none';
 
-export interface AlertProps {
+export interface AlertProps extends StylesApiProps<AlertPart> {
     open?: boolean;
     title?: string;
     description?: string;
