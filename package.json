@@ -1,6 +1,6 @@
 {
   "name": "ropav",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "packageManager": "pnpm@11.10.0",
   "engines": {

@@ -1,3 +1,21 @@
+## [0.0.11](https://github.com/daopk/ropav/compare/v0.0.10...v0.0.11) (2026-07-15)
+
+### ⚠ BREAKING CHANGES
+
+* **styles:** Ropav token and component CSS now uses named cascade layers, which changes precedence for unlayered resets.
+
+### Features
+
+* **dropdown-menu:** add compound primitives ([aeba601](https://github.com/daopk/ropav/commit/aeba60160cdbf3fdac8f8dcaf66ac7350a761ee5))
+* **focus-trap:** add focus trapping primitives ([5102a40](https://github.com/daopk/ropav/commit/5102a4099d4f05bfb4a9e3c08521d4290a40217d))
+* **forms:** expose native control APIs ([c7e001f](https://github.com/daopk/ropav/commit/c7e001f278d70c81ecfc4921f9d8f5ea9ad55542))
+* **overlays:** unify floating positioning and teleport ([7e44636](https://github.com/daopk/ropav/commit/7e4463653a3e9cb3ed57e4e8f36dd045a1097c8b))
+* **styles:** add public styles API ([f16e826](https://github.com/daopk/ropav/commit/f16e826a64fb30a6c3403b42ffcaea358bcbfec5))
+
+### Bug Fixes
+
+* **styles:** update bootstrap manifest ref ([6f9f55e](https://github.com/daopk/ropav/commit/6f9f55e4aa6ab2d2c52d5e4da8842cbb3627c02b))
+
 ## [0.0.10](https://github.com/daopk/ropav/compare/v0.0.9...v0.0.10) (2026-07-15)
 
 ### ⚠ BREAKING CHANGES
