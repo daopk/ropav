@@ -137,6 +137,10 @@
       "types": "./dist/components/textarea/index.d.ts",
       "import": "./dist/components/textarea/index.js"
     },
+    "./toast": {
+      "types": "./dist/components/toast/index.d.ts",
+      "import": "./dist/components/toast/index.js"
+    },
     "./tooltip": {
       "types": "./dist/components/tooltip/index.d.ts",
       "import": "./dist/components/tooltip/index.js"
@@ -155,13 +159,17 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "vitest run --project=unit",
-    "test:exports": "node scripts/check-exports.mjs",
+    "test:consumer-types": "pnpm run test:package",
+    "test:consumer-types:built": "tsc -p tests/fixtures/consumer-types/tsconfig.bundler.json && tsc -p tests/fixtures/consumer-types/tsconfig.nodenext.json",
+    "test:exports": "pnpm run test:package",
+    "test:exports:built": "node scripts/check-exports.mjs",
+    "test:package": "pnpm run build && pnpm run test:exports:built && pnpm run test:consumer-types:built",
     "test:watch": "vitest --project=unit",
     "test:typecheck": "vitest run --project=unit --typecheck",
     "test:storybook": "vitest run --project=storybook",
     "test:all": "pnpm run tokens:check && pnpm test && pnpm test:storybook",
     "build": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
-    "prepublishOnly": "pnpm run build && pnpm run tokens:check",
+    "prepublishOnly": "pnpm run test:package",
     "preview": "vite preview",
     "storybook": "pnpm run tokens:build && storybook dev -p 6006 --no-open",
     "build-storybook": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck:storybook && storybook build",

@@ -46,6 +46,7 @@ const expectedFiles = [
     'dist/switch.css',
     'dist/tabs.css',
     'dist/textarea.css',
+    'dist/toast.css',
     'dist/tooltip.css',
     'dist/components/alert/index.js',
     'dist/components/accordion/index.js',
@@ -76,6 +77,7 @@ const expectedFiles = [
     'dist/components/switch/index.js',
     'dist/components/tabs/index.js',
     'dist/components/textarea/index.js',
+    'dist/components/toast/index.js',
     'dist/components/tooltip/index.js',
 ];
 
@@ -150,6 +152,14 @@ try {
             'TabsList',
             'TabsTrigger',
             'Textarea',
+            'Toast',
+            'ToastProvider',
+            'ToastViewport',
+            'toastColors',
+            'toastPositions',
+            'toastRadiuses',
+            'toastTypes',
+            'toastVariants',
             'Tooltip',
             'useAccordion',
             'useAccordionItem',
@@ -158,6 +168,8 @@ try {
             'useTabsContent',
             'useTabsList',
             'useTabsTrigger',
+            'useToast',
+            'useToastState',
         ],
         'dist/index.js',
     );
@@ -257,6 +269,24 @@ try {
 
     const textarea = await server.ssrLoadModule('/dist/components/textarea/index.js');
     assertExports(textarea, ['Textarea'], 'dist/components/textarea/index.js');
+
+    const toast = await server.ssrLoadModule('/dist/components/toast/index.js');
+    assertExports(
+        toast,
+        [
+            'Toast',
+            'ToastProvider',
+            'ToastViewport',
+            'toastColors',
+            'toastPositions',
+            'toastRadiuses',
+            'toastTypes',
+            'toastVariants',
+            'useToast',
+            'useToastState',
+        ],
+        'dist/components/toast/index.js',
+    );
 
     const tooltip = await server.ssrLoadModule('/dist/components/tooltip/index.js');
     assertExports(tooltip, ['Tooltip'], 'dist/components/tooltip/index.js');

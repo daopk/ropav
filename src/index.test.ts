@@ -35,6 +35,9 @@ const publicComponents = [
     'TabsList',
     'TabsTrigger',
     'Textarea',
+    'Toast',
+    'ToastProvider',
+    'ToastViewport',
     'Tooltip',
 ] as const satisfies readonly (keyof typeof Ropav)[];
 
@@ -49,6 +52,10 @@ describe('public source exports', () => {
     it('exposes public composables from src/index.ts', () => {
         expect(Ropav).toHaveProperty('useCollapse');
         expect(Ropav.useCollapse).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('useToast');
+        expect(Ropav.useToast).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('useToastState');
+        expect(Ropav.useToastState).toBeTypeOf('function');
     });
 
     it('exposes popover placement options from src/index.ts', () => {
