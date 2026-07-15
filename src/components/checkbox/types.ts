@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'vue';
 import type { ComponentColorValue } from '../../utils/componentColors';
 
 export type CheckboxColor = ComponentColorValue;
@@ -24,4 +25,5 @@ export interface CheckboxProps {
     describedby?: string;
     labelledby?: string;
     indeterminate?: boolean;
+    inputAttrs?: InputHTMLAttributes;
 }

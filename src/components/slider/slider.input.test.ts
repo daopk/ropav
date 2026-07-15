@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, input, mountDom } from '../../../tests/utils/vue';
 import Slider from './slider.vue';
@@ -82,5 +82,69 @@ describe('Slider input', () => {
         expect(native.getAttribute('aria-valuetext')).toBe('35 percent');
         expect(native.getAttribute('aria-labelledby')).toBe('volume-label');
         expect(native.getAttribute('aria-describedby')).toBe('volume-help volume-error');
+    });
+
+    it('forwards native attrs/events and exposes the native range input', async () => {
+        const calls: string[] = [];
+        const onChange = vi.fn();
+        const sliderRef = ref<{
+            nativeElement: HTMLInputElement | null;
+            focus: (options?: FocusOptions) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Slider, {
+                        ref: sliderRef,
+                        id: 'owned-id',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            type: 'text',
+                            value: 99,
+                            min: -100,
+                            max: 100,
+                            step: 10,
+                            disabled: true,
+                            autocomplete: 'off',
+                            class: 'native-class',
+                            form: 'volume-form',
+                            onChange,
+                            onInput: () => calls.push('native-input'),
+                        },
+                        max: 50,
+                        min: 10,
+                        modelValue: 20,
+                        step: 5,
+                        'onUpdate:modelValue': () => calls.push('update'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        expect(native.id).toBe('owned-id');
+        expect(native.type).toBe('range');
+        expect(native.value).toBe('20');
+        expect(native.min).toBe('10');
+        expect(native.max).toBe('50');
+        expect(native.step).toBe('5');
+        expect(native.disabled).toBe(false);
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('form')).toBe('volume-form');
+        expect(native.classList.contains('native-class')).toBe(true);
+        expect(sliderRef.value?.nativeElement).toBe(native);
+
+        sliderRef.value?.focus({ preventScroll: true });
+        expect(document.activeElement).toBe(native);
+
+        input(native, '35');
+        native.dispatchEvent(new Event('change', { bubbles: true }));
+        await flush();
+
+        expect(calls).toEqual(['update', 'native-input']);
+        expect(onChange).toHaveBeenCalledOnce();
+        expect(onChange.mock.calls[0]?.[0].target).toBe(native);
     });
 });

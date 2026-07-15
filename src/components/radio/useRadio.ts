@@ -1,6 +1,5 @@
-import { computed, provide, useId, type CSSProperties } from 'vue';
+import { computed, inject, provide, ref, useId, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
-import { useRequiredInject } from '@/composables/useRequiredInject';
 import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
@@ -22,19 +21,27 @@ function getRadioColorStyle(color: RadioProps['color'], autoContrast: RadioProps
     return style;
 }
 
-export function useRadio(props: Readonly<RadioProps>) {
-    const group = useRequiredInject(radioGroupKey, 'RpRadio');
-    const isChecked = computed(() => group.modelValue === props.value);
-    const isDisabled = computed(() => props.disabled || group.disabled);
-    const variant = computed(() => props.variant ?? group.variant);
-    const color = computed(() => props.color ?? group.color);
-    const autoContrast = computed(() => props.autoContrast ?? group.autoContrast);
-    const size = computed(() => props.size ?? group.size);
+export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event) => void) {
+    const inputRef = ref<HTMLInputElement | null>(null);
+    const control = useControlState(props);
+    const group = inject(radioGroupKey, null);
+    const isChecked = computed(
+        () => props.checked ?? (group ? group.modelValue === props.value : false),
+    );
+    const isDisabled = computed(() => Boolean(props.disabled || group?.disabled));
+    const isRequired = computed(() => props.required ?? group?.required ?? false);
+    const isInvalid = computed(() => props.invalid ?? group?.invalid ?? false);
+    const name = computed(() => props.name ?? group?.name);
+    const variant = computed(() => props.variant ?? group?.variant);
+    const color = computed(() => props.color ?? group?.color);
+    const autoContrast = computed(() => props.autoContrast ?? group?.autoContrast);
+    const size = computed(() => props.size ?? group?.size);
 
     const rootClass = computed(() =>
         bem('rp-radio', {
             checked: isChecked.value,
             disabled: isDisabled.value,
+            invalid: isInvalid.value,
             [variant.value ?? '']: Boolean(variant.value),
             [`size-${size.value}`]: Boolean(size.value),
         }),
@@ -42,18 +49,28 @@ export function useRadio(props: Readonly<RadioProps>) {
 
     const rootStyle = computed(() => getRadioColorStyle(color.value, autoContrast.value));
 
-    function onSelect() {
+    function onSelect(event: Event) {
         if (isDisabled.value) return;
-        group.select(props.value);
+        group?.select(props.value);
+        emitChange(event);
+    }
+
+    function focus(options?: FocusOptions) {
+        inputRef.value?.focus(options);
     }
 
     return {
-        group,
+        inputRef,
+        control,
+        name,
         isChecked,
         isDisabled,
+        isRequired,
+        isInvalid,
         rootClass,
         rootStyle,
         onSelect,
+        focus,
     };
 }
 
@@ -85,6 +102,9 @@ export function useRadioGroup(
         },
         get required() {
             return control.required;
+        },
+        get invalid() {
+            return control.invalid;
         },
         get variant() {
             return props.variant;

@@ -115,6 +115,59 @@ describe('Textarea', () => {
         expect(root.classList.contains('rp-textarea--readonly')).toBe(true);
     });
 
+    it('forwards native attrs and exposes focus without overriding owned props', async () => {
+        const calls: string[] = [];
+        const textareaRef = ref<{
+            nativeElement: HTMLTextAreaElement | null;
+            focus: (options?: FocusOptions) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Textarea, {
+                        ref: textareaRef,
+                        id: 'owned-id',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            value: 'ignored-value',
+                            rows: 12,
+                            disabled: true,
+                            autocomplete: 'off',
+                            class: 'native-class',
+                            form: 'notes-form',
+                            maxlength: 120,
+                            onInput: () => calls.push('native'),
+                        },
+                        modelValue: 'Owned value',
+                        rows: 4,
+                        'onUpdate:modelValue': () => calls.push('update'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('textarea') as HTMLTextAreaElement;
+        expect(native.id).toBe('owned-id');
+        expect(native.value).toBe('Owned value');
+        expect(native.rows).toBe(4);
+        expect(native.disabled).toBe(false);
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('form')).toBe('notes-form');
+        expect(native.maxLength).toBe(120);
+        expect(native.classList.contains('native-class')).toBe(true);
+        expect(textareaRef.value?.nativeElement).toBe(native);
+
+        textareaRef.value?.focus({ preventScroll: true });
+        expect(document.activeElement).toBe(native);
+
+        typeTextarea(native, 'Updated value');
+        await flush();
+
+        expect(calls).toEqual(['update', 'native']);
+    });
+
     it('applies valid state without ARIA invalid', async () => {
         const container = mountDom(
             defineComponent({

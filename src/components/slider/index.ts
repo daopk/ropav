@@ -4,10 +4,12 @@ export { sliderColors, sliderOrientations, sliderSizes } from './types';
 export type {
     RangeSliderAriaValueText,
     RangeSliderEndpointValueText,
+    RangeSliderInputAttrs,
     RangeSliderProps,
     RangeSliderThumb,
     RangeSliderValue,
     SliderColor,
+    SliderInputAttrs,
     SliderMark,
     SliderMarkColor,
     SliderMarkInput,

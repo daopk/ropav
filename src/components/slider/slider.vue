@@ -29,7 +29,9 @@
             <span class="rp-slider__bar" aria-hidden="true" />
 
             <input
+                v-bind="nativeInputAttrs"
                 :id="control.id"
+                ref="inputRef"
                 :name="name"
                 class="rp-slider__native"
                 type="range"
@@ -44,7 +46,6 @@
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText"
-                @input="onInput"
             />
 
             <span v-if="markItems.length" class="rp-slider__marks" aria-hidden="true">
@@ -93,6 +94,7 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed, ref, type InputHTMLAttributes } from 'vue';
 import Tooltip from '../tooltip/tooltip.vue';
 import type { SliderProps } from './types';
 import { useSlider } from './useSlider';
@@ -112,6 +114,8 @@ const props = withDefaults(defineProps<SliderProps>(), {
 const emit = defineEmits<{
     'update:modelValue': [value: number];
 }>();
+
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const {
     control,
@@ -144,6 +148,24 @@ const {
 } = useSlider(props, (value) => {
     emit('update:modelValue', value);
 });
+
+const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
+    const attrs = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        onInput(event) {
+            onInput(event);
+            attrs.onInput?.(event);
+        },
+    };
+});
+
+function focus(options?: FocusOptions) {
+    inputRef.value?.focus(options);
+}
+
+defineExpose({ nativeElement: inputRef, focus });
 </script>
 
 <style src="./slider.scss" lang="scss" scoped></style>

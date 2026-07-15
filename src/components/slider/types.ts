@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'vue';
 import type { TooltipProps } from '../tooltip/types';
 import { componentColors, type ComponentColorValue } from '../../utils/componentColors';
 
@@ -20,6 +21,12 @@ export type SliderValueFormatter = (value: number) => string | number;
 export type RangeSliderValue = [number, number];
 
 export type RangeSliderThumb = 'lower' | 'upper';
+
+export type SliderInputAttrs = InputHTMLAttributes;
+
+export type RangeSliderInputAttrs =
+    | SliderInputAttrs
+    | [SliderInputAttrs | undefined, SliderInputAttrs | undefined];
 
 export type RangeSliderEndpointValueText = string | SliderValueFormatter;
 
@@ -74,15 +81,17 @@ export interface SliderProps {
     ariaValueText?: string | SliderValueFormatter;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: SliderInputAttrs;
 }
 
 export interface RangeSliderProps extends Omit<
     SliderProps,
-    'modelValue' | 'name' | 'ariaLabel' | 'ariaValueText'
+    'modelValue' | 'name' | 'ariaLabel' | 'ariaValueText' | 'inputAttrs'
 > {
     modelValue: RangeSliderValue;
     minRange?: number;
     name?: string | [string, string];
     ariaLabel?: [string, string];
     ariaValueText?: RangeSliderAriaValueText;
+    inputAttrs?: RangeSliderInputAttrs;
 }

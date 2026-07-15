@@ -6,7 +6,9 @@
         :data-state="indeterminate ? 'indeterminate' : modelValue ? 'checked' : 'unchecked'"
     >
         <input
+            v-bind="nativeInputAttrs"
             :id="control.id"
+            ref="inputRef"
             :name="name"
             type="checkbox"
             class="rp-checkbox__native"
@@ -20,7 +22,6 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            @change="onChange"
         />
         <span class="rp-checkbox__box">
             <Transition name="rp-checkbox-icon" mode="out-in">
@@ -35,6 +36,7 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed, type InputHTMLAttributes } from 'vue';
 import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
 import { useCheckbox } from './useCheckbox';
@@ -53,9 +55,23 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { control, rootClass, rootStyle, onChange } = useCheckbox(props, (value) => {
+const { inputRef, control, rootClass, rootStyle, onChange, focus } = useCheckbox(props, (value) => {
     emit('update:modelValue', value);
 });
+
+const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
+    const attrs = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        onChange(event) {
+            onChange(event);
+            attrs.onChange?.(event);
+        },
+    };
+});
+
+defineExpose({ nativeElement: inputRef, focus });
 </script>
 
 <style src="./checkbox.scss" lang="scss" scoped></style>

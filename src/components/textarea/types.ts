@@ -1,3 +1,5 @@
+import type { TextareaHTMLAttributes } from 'vue';
+
 export type TextareaRadius = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type TextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -24,4 +26,5 @@ export interface TextareaProps {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: TextareaHTMLAttributes;
 }

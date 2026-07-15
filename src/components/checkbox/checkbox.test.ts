@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Checkbox from './checkbox.vue';
@@ -119,6 +119,58 @@ describe('Checkbox', () => {
         expect(native.getAttribute('aria-labelledby')).toBe('terms-label');
         expect(native.getAttribute('aria-describedby')).toBe('terms-description terms-message');
         expect(root.classList.contains('rp-checkbox--invalid')).toBe(true);
+    });
+
+    it('forwards native attrs and exposes focus without overriding owned state', async () => {
+        const calls: string[] = [];
+        const checkboxRef = ref<{
+            nativeElement: HTMLInputElement | null;
+            focus: (options?: FocusOptions) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Checkbox, {
+                        ref: checkboxRef,
+                        id: 'owned-id',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            type: 'text',
+                            checked: true,
+                            disabled: true,
+                            autocomplete: 'off',
+                            class: 'native-class',
+                            form: 'terms-form',
+                            onChange: () => calls.push('native'),
+                        },
+                        modelValue: false,
+                        required: true,
+                        'onUpdate:modelValue': () => calls.push('update'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        expect(native.id).toBe('owned-id');
+        expect(native.type).toBe('checkbox');
+        expect(native.checked).toBe(false);
+        expect(native.disabled).toBe(false);
+        expect(native.required).toBe(true);
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('form')).toBe('terms-form');
+        expect(native.classList.contains('native-class')).toBe(true);
+        expect(checkboxRef.value?.nativeElement).toBe(native);
+
+        checkboxRef.value?.focus({ preventScroll: true });
+        expect(document.activeElement).toBe(native);
+
+        native.click();
+        await flush();
+
+        expect(calls).toEqual(['update', 'native']);
     });
 
     it('adds variant, color, size, and radius modifiers when requested', async () => {

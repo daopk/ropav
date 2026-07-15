@@ -3,6 +3,7 @@
         :id="control.id"
         :class="rootClass"
         role="radiogroup"
+        :data-orientation="orientation"
         :data-disabled="control.disabled || undefined"
         :data-invalid="control.invalid || undefined"
         :aria-label="ariaLabel || undefined"
@@ -10,6 +11,7 @@
         :aria-describedby="control.ariaDescribedby"
         :aria-invalid="control.invalid || undefined"
         :aria-required="control.required || undefined"
+        :aria-orientation="orientation"
     >
         <slot />
     </div>
@@ -26,6 +28,7 @@ const props = withDefaults(defineProps<RadioGroupProps>(), {
     color: undefined,
     autoContrast: undefined,
     size: undefined,
+    orientation: 'vertical',
     disabled: undefined,
     required: undefined,
     invalid: undefined,

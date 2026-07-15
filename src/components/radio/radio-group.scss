@@ -4,3 +4,7 @@
     gap: var(--rp-spacing-3);
     font-family: var(--rp-font-family);
 }
+
+.rp-radio-group[data-orientation='horizontal'] {
+    flex-flow: row wrap;
+}

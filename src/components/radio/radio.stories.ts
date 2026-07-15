@@ -25,12 +25,17 @@ const meta = {
             control: 'select',
             options: [undefined, ...sizes],
         },
+        orientation: {
+            control: 'inline-radio',
+            options: ['vertical', 'horizontal'],
+        },
         disabled: { control: 'boolean' },
     },
     args: {
         autoContrast: false,
         disabled: false,
         modelValue: 'apple',
+        orientation: 'vertical',
     },
     render: (args) => ({
         components: { Radio, RadioGroup },
@@ -65,6 +70,53 @@ export const Default: Story = {
         await expect(apple).not.toBeChecked();
         await expect(banana).toBeChecked();
     },
+};
+
+export const StandaloneControlled: Story = {
+    render: (args) => ({
+        components: { Radio },
+        setup() {
+            const checked = ref(false);
+            const onChange = (event: Event) => {
+                checked.value = (event.target as HTMLInputElement).checked;
+            };
+
+            return { args, checked, onChange };
+        },
+        template: `
+            <Radio
+                :checked="checked"
+                :disabled="args.disabled"
+                name="standalone-example"
+                value="standalone"
+                @change="onChange"
+            >
+                Standalone controlled radio
+            </Radio>
+        `,
+    }),
+};
+
+export const Orientations: Story = {
+    render: (args) => ({
+        components: { Radio, RadioGroup },
+        setup() {
+            const values = reactive({ horizontal: 'apple', vertical: 'apple' });
+            return { args, values };
+        },
+        template: `
+            <div style="display: grid; gap: 24px;">
+                <RadioGroup v-bind="args" v-model="values.vertical" orientation="vertical">
+                    <Radio value="apple">Apple</Radio>
+                    <Radio value="banana">Banana</Radio>
+                </RadioGroup>
+                <RadioGroup v-bind="args" v-model="values.horizontal" orientation="horizontal">
+                    <Radio value="apple">Apple</Radio>
+                    <Radio value="banana">Banana</Radio>
+                </RadioGroup>
+            </div>
+        `,
+    }),
 };
 
 export const Variants: Story = {

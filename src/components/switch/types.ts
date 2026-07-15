@@ -1,3 +1,4 @@
+import type { InputHTMLAttributes } from 'vue';
 import type { ComponentColorValue } from '../../utils/componentColors';
 
 export type SwitchColor = ComponentColorValue;
@@ -16,4 +17,5 @@ export interface SwitchProps {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: InputHTMLAttributes;
 }

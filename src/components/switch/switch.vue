@@ -6,7 +6,9 @@
         :data-state="modelValue ? 'checked' : 'unchecked'"
     >
         <input
+            v-bind="nativeInputAttrs"
             :id="control.id"
+            ref="inputRef"
             :name="name"
             type="checkbox"
             class="rp-switch__native"
@@ -20,7 +22,6 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            @change="onChange"
         />
         <span class="rp-switch__track">
             <span class="rp-switch__thumb" />
@@ -32,6 +33,7 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { computed, type InputHTMLAttributes } from 'vue';
 import { useSwitch } from './useSwitch';
 import type { SwitchProps } from './types';
 
@@ -47,9 +49,23 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { control, rootClass, rootStyle, onChange } = useSwitch(props, (value) => {
+const { inputRef, control, rootClass, rootStyle, onChange, focus } = useSwitch(props, (value) => {
     emit('update:modelValue', value);
 });
+
+const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
+    const attrs = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        onChange(event) {
+            onChange(event);
+            attrs.onChange?.(event);
+        },
+    };
+});
+
+defineExpose({ nativeElement: inputRef, focus });
 </script>
 
 <style src="./switch.scss" lang="scss" scoped></style>

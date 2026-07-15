@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, input, keydown, mountDom } from '../../../tests/utils/vue';
 import RangeSlider from './range-slider.vue';
@@ -309,5 +309,121 @@ describe('RangeSlider input', () => {
         expect(upper.getAttribute('aria-label')).toBe('Maximum');
         expect(lower.getAttribute('aria-valuetext')).toBe('20 dollars');
         expect(upper.getAttribute('aria-valuetext')).toBe('80 dollars');
+    });
+
+    it('applies shared native attrs and exposes both native inputs', async () => {
+        const calls: string[] = [];
+        const onChange = vi.fn();
+        const sliderRef = ref<{
+            nativeElements: [HTMLInputElement | null, HTMLInputElement | null];
+            focus: (options?: FocusOptions) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        ref: sliderRef,
+                        id: 'owned-range',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            type: 'text',
+                            value: 99,
+                            min: -100,
+                            max: 100,
+                            step: 10,
+                            disabled: true,
+                            autocomplete: 'off',
+                            class: 'shared-native-class',
+                            form: 'range-form',
+                            onChange,
+                            onInput: () => calls.push('native-input'),
+                        },
+                        max: 90,
+                        min: 10,
+                        modelValue: [20, 80],
+                        step: 5,
+                        'onUpdate:modelValue': () => calls.push('update'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lower, upper] = getNativeInputs(container);
+        expect(sliderRef.value?.nativeElements).toEqual([lower, upper]);
+        expect(lower.id).toBe('owned-range');
+        expect(upper.id).toBe('owned-range-upper');
+        for (const [native, value] of [
+            [lower, '20'],
+            [upper, '80'],
+        ] as const) {
+            expect(native.type).toBe('range');
+            expect(native.value).toBe(value);
+            expect(native.min).toBe('10');
+            expect(native.max).toBe('90');
+            expect(native.step).toBe('5');
+            expect(native.disabled).toBe(false);
+            expect(native.getAttribute('autocomplete')).toBe('off');
+            expect(native.getAttribute('form')).toBe('range-form');
+            expect(native.classList.contains('shared-native-class')).toBe(true);
+        }
+
+        sliderRef.value?.focus({ preventScroll: true });
+        expect(document.activeElement).toBe(lower);
+
+        input(lower, '25');
+        lower.dispatchEvent(new Event('change', { bubbles: true }));
+        await flush();
+
+        expect(calls).toEqual(['update', 'native-input']);
+        expect(onChange).toHaveBeenCalledOnce();
+        expect(onChange.mock.calls[0]?.[0].target).toBe(lower);
+    });
+
+    it('applies per-thumb native attrs and composes interaction handlers', async () => {
+        const lowerFocus = vi.fn();
+        const lowerKeydown = vi.fn();
+        const upperBlur = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        inputAttrs: [
+                            {
+                                class: 'lower-native-class',
+                                title: 'Lower native input',
+                                onFocus: lowerFocus,
+                                onKeydown: lowerKeydown,
+                            },
+                            {
+                                class: 'upper-native-class',
+                                title: 'Upper native input',
+                                onBlur: upperBlur,
+                            },
+                        ],
+                        modelValue: [20, 80],
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const [lower, upper] = getNativeInputs(container);
+        expect(lower.classList.contains('lower-native-class')).toBe(true);
+        expect(lower.title).toBe('Lower native input');
+        expect(upper.classList.contains('upper-native-class')).toBe(true);
+        expect(upper.title).toBe('Upper native input');
+
+        lower.focus();
+        keydown(lower, 'A');
+        upper.focus();
+        upper.blur();
+        await flush();
+
+        expect(lowerFocus).toHaveBeenCalledOnce();
+        expect(lowerKeydown).toHaveBeenCalledOnce();
+        expect(upperBlur).toHaveBeenCalledOnce();
     });
 });

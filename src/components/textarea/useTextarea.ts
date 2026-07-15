@@ -166,6 +166,10 @@ export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: 
         textareaRef.value?.focus();
     }
 
+    function focus(options?: FocusOptions) {
+        textareaRef.value?.focus(options);
+    }
+
     onMounted(scheduleTextareaHeightSync);
 
     watch(autosizeWatchSource, scheduleTextareaHeightSync);
@@ -177,5 +181,6 @@ export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: 
         nativeRows,
         onInput,
         focusTextarea,
+        focus,
     };
 }

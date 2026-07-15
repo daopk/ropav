@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Switch from './switch.vue';
@@ -126,6 +126,58 @@ describe('Switch', () => {
             'notifications-description notifications-message',
         );
         expect(root.classList.contains('rp-switch--invalid')).toBe(true);
+    });
+
+    it('forwards native attrs and exposes focus without overriding owned state', async () => {
+        const calls: string[] = [];
+        const switchRef = ref<{
+            nativeElement: HTMLInputElement | null;
+            focus: (options?: FocusOptions) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Switch, {
+                        ref: switchRef,
+                        id: 'owned-id',
+                        inputAttrs: {
+                            id: 'ignored-id',
+                            type: 'text',
+                            checked: true,
+                            disabled: true,
+                            autocomplete: 'off',
+                            class: 'native-class',
+                            form: 'settings-form',
+                            onChange: () => calls.push('native'),
+                        },
+                        modelValue: false,
+                        required: true,
+                        'onUpdate:modelValue': () => calls.push('update'),
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        expect(native.id).toBe('owned-id');
+        expect(native.type).toBe('checkbox');
+        expect(native.checked).toBe(false);
+        expect(native.disabled).toBe(false);
+        expect(native.required).toBe(true);
+        expect(native.getAttribute('autocomplete')).toBe('off');
+        expect(native.getAttribute('form')).toBe('settings-form');
+        expect(native.classList.contains('native-class')).toBe(true);
+        expect(switchRef.value?.nativeElement).toBe(native);
+
+        switchRef.value?.focus({ preventScroll: true });
+        expect(document.activeElement).toBe(native);
+
+        native.click();
+        await flush();
+
+        expect(calls).toEqual(['update', 'native']);
     });
 
     it('adds color and size modifiers when requested', async () => {

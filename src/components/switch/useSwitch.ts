@@ -1,4 +1,4 @@
-import { computed, type CSSProperties } from 'vue';
+import { computed, ref, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
@@ -14,6 +14,7 @@ function getSwitchColorStyle(color: SwitchProps['color']) {
 }
 
 export function useSwitch(props: Readonly<SwitchProps>, emitUpdate: (value: boolean) => void) {
+    const inputRef = ref<HTMLInputElement | null>(null);
     const control = useControlState(props);
 
     const rootClass = computed(() =>
@@ -31,10 +32,16 @@ export function useSwitch(props: Readonly<SwitchProps>, emitUpdate: (value: bool
         emitUpdate((e.target as HTMLInputElement).checked);
     }
 
+    function focus(options?: FocusOptions) {
+        inputRef.value?.focus(options);
+    }
+
     return {
+        inputRef,
         control,
         rootClass,
         rootStyle,
         onChange,
+        focus,
     };
 }

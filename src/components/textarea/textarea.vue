@@ -1,6 +1,7 @@
 <template>
     <div :class="rootClass" @mousedown="focusTextarea">
         <textarea
+            v-bind="nativeInputAttrs"
             :id="control.id"
             ref="textareaRef"
             :name="name"
@@ -16,12 +17,12 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            @input="onInput"
         />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
+import { computed, type TextareaHTMLAttributes } from 'vue';
 import { useTextarea } from './useTextarea';
 import type { TextareaProps } from './types';
 
@@ -45,14 +46,26 @@ const emit = defineEmits<{
     'update:modelValue': [value: string];
 }>();
 
-const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea } = useTextarea(
+const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea, focus } = useTextarea(
     props,
     (value) => {
         emit('update:modelValue', value);
     },
 );
 
-void textareaRef;
+const nativeInputAttrs = computed<TextareaHTMLAttributes>(() => {
+    const attrs = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        onInput(event) {
+            onInput(event);
+            attrs.onInput?.(event);
+        },
+    };
+});
+
+defineExpose({ nativeElement: textareaRef, focus });
 </script>
 
 <style src="./textarea.scss" lang="scss" scoped></style>

@@ -38,8 +38,10 @@
 
             <input
                 v-for="(thumb, index) in rangeSliderThumbs"
+                v-bind="nativeInputAttrs[index]"
                 :id="nativeIds[index]"
                 :key="thumb"
+                :ref="(element) => setInputRef(index, element)"
                 :name="nativeNames[index]"
                 :class="['rp-range-slider__native', `rp-range-slider__native--${thumb}`]"
                 type="range"
@@ -53,10 +55,6 @@
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText[index]"
-                @input="onInput(thumb, $event)"
-                @focus="onTooltipFocus(thumb)"
-                @blur="onTooltipBlur(thumb)"
-                @keydown="onTooltipKeydown(thumb, $event)"
             />
 
             <span v-if="markItems.length" class="rp-range-slider__marks" aria-hidden="true">
@@ -114,7 +112,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useId, useSlots } from 'vue';
+import { computed, ref, useId, useSlots, type InputHTMLAttributes } from 'vue';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
 import type { RangeSliderProps } from './types';
 import { useRangeSlider } from './useRangeSlider';
@@ -141,6 +139,8 @@ const slots = useSlots();
 const generatedId = useId();
 const tooltipsOverlapping = ref(false);
 const rangeSliderThumbs = ['lower', 'upper'] as const;
+const lowerInputRef = ref<HTMLInputElement | null>(null);
+const upperInputRef = ref<HTMLInputElement | null>(null);
 const labelId = computed(() => `${props.id ?? generatedId}-label`);
 
 const {
@@ -180,6 +180,54 @@ const {
     emit('update:modelValue', value);
 });
 
+const inputAttrsByThumb = computed<
+    [InputHTMLAttributes | undefined, InputHTMLAttributes | undefined]
+>(() => {
+    if (Array.isArray(props.inputAttrs)) return props.inputAttrs;
+    return [props.inputAttrs, props.inputAttrs];
+});
+
+const nativeInputAttrs = computed<[InputHTMLAttributes, InputHTMLAttributes]>(
+    () =>
+        rangeSliderThumbs.map((thumb, index) => {
+            const attrs = inputAttrsByThumb.value[index] ?? {};
+
+            return Object.assign({}, attrs, {
+                onInput(event: InputEvent) {
+                    onInput(thumb, event);
+                    attrs.onInput?.(event);
+                },
+                onFocus(event: FocusEvent) {
+                    onTooltipFocus(thumb);
+                    attrs.onFocus?.(event);
+                },
+                onBlur(event: FocusEvent) {
+                    onTooltipBlur(thumb);
+                    attrs.onBlur?.(event);
+                },
+                onKeydown(event: KeyboardEvent) {
+                    onTooltipKeydown(thumb, event);
+                    attrs.onKeydown?.(event);
+                },
+            });
+        }) as [InputHTMLAttributes, InputHTMLAttributes],
+);
+
+const nativeElements = computed<[HTMLInputElement | null, HTMLInputElement | null]>(() => [
+    lowerInputRef.value,
+    upperInputRef.value,
+]);
+
+function setInputRef(index: number, element: unknown) {
+    const input = element instanceof HTMLInputElement ? element : null;
+    if (index === 0) lowerInputRef.value = input;
+    else upperInputRef.value = input;
+}
+
+function focus(options?: FocusOptions) {
+    lowerInputRef.value?.focus(options);
+}
+
 const groupLabelledby = computed(() => {
     const values = [control.ariaLabelledby, slots.default ? labelId.value : undefined]
         .flatMap((value) => value?.split(/\s+/) ?? [])
@@ -187,6 +235,8 @@ const groupLabelledby = computed(() => {
 
     return values.length ? Array.from(new Set(values)).join(' ') : undefined;
 });
+
+defineExpose({ nativeElements, focus });
 </script>
 
 <style src="./range-slider.scss" lang="scss" scoped></style>
