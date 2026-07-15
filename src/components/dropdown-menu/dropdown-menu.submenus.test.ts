@@ -61,7 +61,7 @@ describe('DropdownMenu submenus', () => {
         click(progressItem);
         await waitDropdownTransition();
 
-        expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1]);
+        expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1], expect.any(CustomEvent));
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 
@@ -128,7 +128,10 @@ describe('DropdownMenu submenus', () => {
         click(document.getElementById('deep-menu-item-0-1-0') as HTMLButtonElement);
         await waitDropdownTransition();
 
-        expect(onSelect).toHaveBeenCalledWith(deepNestedItems[0].children![1]!.children![0]);
+        expect(onSelect).toHaveBeenCalledWith(
+            deepNestedItems[0].children![1]!.children![0],
+            expect.any(CustomEvent),
+        );
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 

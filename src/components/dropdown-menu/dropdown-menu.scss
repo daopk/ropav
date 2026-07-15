@@ -32,6 +32,10 @@
         &--has-submenu {
             overflow: visible;
         }
+
+        &--compound {
+            overflow: visible;
+        }
     }
 
     &--placement-bottom-start &__content {
@@ -74,6 +78,12 @@
             color var(--rp-transition-fast);
         user-select: none;
         white-space: nowrap;
+
+        &[data-state='checked'],
+        &[data-state='indeterminate'] {
+            position: relative;
+            padding-left: var(--rp-spacing-8);
+        }
 
         &:focus-visible,
         &--focused {
@@ -132,6 +142,10 @@
         &--has-submenu {
             overflow: visible;
         }
+
+        &--compound {
+            overflow: visible;
+        }
     }
 
     &--placement-bottom-end &__submenu,
@@ -148,6 +162,42 @@
         padding: var(--rp-spacing-2) var(--rp-spacing-4);
         color: var(--rp-color-dimmed);
         font-size: var(--rp-font-size-md);
+    }
+
+    &__group-label {
+        padding: var(--rp-spacing-2) var(--rp-spacing-3);
+        color: var(--rp-color-dimmed);
+        font-size: var(--rp-font-size-sm);
+        font-weight: var(--rp-font-weight-semibold);
+        line-height: var(--rp-line-height-sm);
+        user-select: none;
+    }
+
+    &__separator {
+        height: 1px;
+        margin: var(--rp-spacing-1) var(--rp-spacing-2);
+        background: var(--rp-color-default-border);
+
+        &[data-orientation='vertical'] {
+            width: 1px;
+            height: auto;
+            align-self: stretch;
+        }
+    }
+
+    &__indicator {
+        position: absolute;
+        left: var(--rp-spacing-3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+    }
+
+    &__radio-group {
+        display: contents;
     }
 }
 

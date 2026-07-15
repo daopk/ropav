@@ -2,7 +2,24 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import Button from '../button/button.vue';
 import DropdownMenu from './dropdown-menu.vue';
-import type { DropdownMenuItem } from './types';
+import {
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuContextTrigger,
+    DropdownMenuItem,
+    DropdownMenuItemIndicator,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuRoot,
+    DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from './dropdown-menu-primitives';
+import type { DropdownMenuItem as DropdownMenuDataItem } from './types';
 import { getDropdownMenuSafeTriangle } from './useDropdownMenuHoverIntent';
 
 const placements = ['bottom-start', 'bottom-end', 'top-start', 'top-end'] as const;
@@ -20,7 +37,7 @@ const defaultItems = [
     { label: 'Delete', value: 'delete', destructive: true },
 ];
 
-const submenuItems: DropdownMenuItem[] = [
+const submenuItems: DropdownMenuDataItem[] = [
     { label: 'Rename', value: 'rename', shortcut: 'R' },
     {
         label: 'Move to',
@@ -49,7 +66,7 @@ const submenuItems: DropdownMenuItem[] = [
     { label: 'Delete', value: 'delete', destructive: true },
 ];
 
-const safeTriangleItems: DropdownMenuItem[] = [
+const safeTriangleItems: DropdownMenuDataItem[] = [
     {
         label: 'Move to',
         value: 'move',
@@ -353,6 +370,97 @@ export const SafeTriangle: Story = {
                         <Button v-bind="triggerProps" variant="outline">Actions</Button>
                     </template>
                 </DropdownMenu>
+            </div>
+        `,
+    }),
+};
+
+export const CompoundPrimitives: Story = {
+    render: () => ({
+        components: {
+            DropdownMenuCheckboxItem,
+            DropdownMenuContent,
+            DropdownMenuItem,
+            DropdownMenuItemIndicator,
+            DropdownMenuLabel,
+            DropdownMenuPortal,
+            DropdownMenuRadioGroup,
+            DropdownMenuRadioItem,
+            DropdownMenuRoot,
+            DropdownMenuSeparator,
+            DropdownMenuSub,
+            DropdownMenuSubContent,
+            DropdownMenuSubTrigger,
+            DropdownMenuTrigger,
+        },
+        setup() {
+            const notifications = ref(true);
+            const density = ref('comfortable');
+            return { density, notifications };
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 96px;">
+                <DropdownMenuRoot>
+                    <DropdownMenuTrigger class="rp-button rp-button--variant-outline">Preferences</DropdownMenuTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuContent aria-label="Preferences">
+                            <DropdownMenuLabel>Workspace</DropdownMenuLabel>
+                            <DropdownMenuCheckboxItem v-model="notifications">
+                                <DropdownMenuItemIndicator>✓</DropdownMenuItemIndicator>
+                                Notifications
+                            </DropdownMenuCheckboxItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuRadioGroup v-model="density" aria-label="Density">
+                                <DropdownMenuRadioItem value="compact">
+                                    <DropdownMenuItemIndicator>●</DropdownMenuItemIndicator>
+                                    Compact
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="comfortable">
+                                    <DropdownMenuItemIndicator>●</DropdownMenuItemIndicator>
+                                    Comfortable
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>Move to…</DropdownMenuSubTrigger>
+                                <DropdownMenuSubContent aria-label="Move to">
+                                    <DropdownMenuItem>Backlog</DropdownMenuItem>
+                                    <DropdownMenuItem>Done</DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+                        </DropdownMenuContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuRoot>
+            </div>
+        `,
+    }),
+};
+
+export const ContextMenu: Story = {
+    render: () => ({
+        components: {
+            DropdownMenuContent,
+            DropdownMenuContextTrigger,
+            DropdownMenuItem,
+            DropdownMenuPortal,
+            DropdownMenuRoot,
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 96px;">
+                <DropdownMenuRoot :modal="false">
+                    <DropdownMenuContextTrigger
+                        tabindex="0"
+                        style="display: grid; min-width: 280px; min-height: 160px; place-items: center; border: 1px dashed var(--rp-color-default-border); border-radius: var(--rp-radius-md);"
+                    >
+                        Right-click or long-press
+                    </DropdownMenuContextTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuContent aria-label="Context actions">
+                            <DropdownMenuItem>Cut</DropdownMenuItem>
+                            <DropdownMenuItem>Copy</DropdownMenuItem>
+                            <DropdownMenuItem>Paste</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenuPortal>
+                </DropdownMenuRoot>
             </div>
         `,
     }),

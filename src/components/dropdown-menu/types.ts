@@ -1,4 +1,18 @@
-export type DropdownMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+import type { Component } from 'vue';
+
+export type DropdownMenuPlacement =
+    | 'top-start'
+    | 'top'
+    | 'top-end'
+    | 'right-start'
+    | 'right'
+    | 'right-end'
+    | 'bottom-start'
+    | 'bottom'
+    | 'bottom-end'
+    | 'left-start'
+    | 'left'
+    | 'left-end';
 
 export type DropdownMenuItemValue = string | number;
 
@@ -115,4 +129,166 @@ export interface DropdownMenuProps {
     disabled?: boolean;
     closeOnSelect?: boolean;
     ariaLabel?: string;
+    modal?: boolean;
+    portal?: boolean;
+    portalTo?: string | HTMLElement;
+}
+
+export type DropdownMenuAs = string | Component;
+
+export type DropdownMenuCheckedState = boolean | 'indeterminate';
+
+export interface DropdownMenuPoint {
+    x: number;
+    y: number;
+}
+
+export interface DropdownMenuVirtualAnchor {
+    getBoundingClientRect: () => DOMRect | DOMRectReadOnly;
+    contextElement?: Element;
+}
+
+export interface DropdownMenuSelectDetail {
+    originalEvent: Event;
+    value?: DropdownMenuItemValue;
+}
+
+export type DropdownMenuSelectEvent = CustomEvent<DropdownMenuSelectDetail>;
+
+export interface DropdownMenuInteractOutsideDetail {
+    originalEvent: Event;
+}
+
+export type DropdownMenuInteractOutsideEvent = CustomEvent<DropdownMenuInteractOutsideDetail>;
+
+export interface DropdownMenuOffsetOptions {
+    mainAxis?: number;
+    crossAxis?: number;
+}
+
+export type DropdownMenuOffset = number | DropdownMenuOffsetOptions;
+
+export interface DropdownMenuRootPrimitiveProps {
+    id?: string;
+    open?: boolean;
+    defaultOpen?: boolean;
+    disabled?: boolean;
+    modal?: boolean;
+    virtualAnchor?: DropdownMenuVirtualAnchor | null;
+}
+
+export interface DropdownMenuRootSlotProps {
+    isOpen: boolean;
+    open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
+    close: (options?: DropdownMenuCloseOptions) => void;
+    toggle: () => void;
+    openAt: (
+        point: DropdownMenuPoint,
+        options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget,
+    ) => void;
+}
+
+export interface DropdownMenuTriggerPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    disabled?: boolean;
+}
+
+export interface DropdownMenuContextTriggerPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    disabled?: boolean;
+    longPressDelay?: number;
+    longPressTolerance?: number;
+}
+
+export interface DropdownMenuPortalPrimitiveProps {
+    to?: string | HTMLElement;
+    disabled?: boolean;
+}
+
+export interface DropdownMenuContentPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    placement?: DropdownMenuPlacement;
+    offset?: DropdownMenuOffset;
+    collisionPadding?: number;
+    avoidCollisions?: boolean;
+    forceMount?: boolean;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+    ariaDescribedby?: string;
+}
+
+export interface DropdownMenuItemPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    value?: DropdownMenuItemValue;
+    disabled?: boolean;
+    destructive?: boolean;
+    closeOnSelect?: boolean;
+}
+
+export interface DropdownMenuItemPrimitiveSlotProps {
+    focused: boolean;
+    disabled: boolean;
+    select: () => void;
+}
+
+export interface DropdownMenuSeparatorPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    orientation?: 'horizontal' | 'vertical';
+}
+
+export interface DropdownMenuLabelPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+}
+
+export interface DropdownMenuCheckboxItemPrimitiveProps extends Omit<
+    DropdownMenuItemPrimitiveProps,
+    'value'
+> {
+    modelValue?: DropdownMenuCheckedState;
+    defaultValue?: DropdownMenuCheckedState;
+}
+
+export interface DropdownMenuRadioGroupPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    modelValue?: DropdownMenuItemValue | null;
+    defaultValue?: DropdownMenuItemValue | null;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
+}
+
+export interface DropdownMenuRadioItemPrimitiveProps extends Omit<
+    DropdownMenuItemPrimitiveProps,
+    'value'
+> {
+    value: DropdownMenuItemValue;
+}
+
+export interface DropdownMenuItemIndicatorPrimitiveProps {
+    as?: DropdownMenuAs;
+    forceMount?: boolean;
+}
+
+export interface DropdownMenuSubPrimitiveProps {
+    open?: boolean;
+    defaultOpen?: boolean;
+}
+
+export interface DropdownMenuSubTriggerPrimitiveProps {
+    id?: string;
+    as?: DropdownMenuAs;
+    disabled?: boolean;
+}
+
+export interface DropdownMenuSubContentPrimitiveProps extends Omit<
+    DropdownMenuContentPrimitiveProps,
+    'placement'
+> {
+    placement?: DropdownMenuPlacement;
 }

@@ -6,6 +6,7 @@ import type {
     DropdownMenuItem,
     DropdownMenuOpenOptions,
     DropdownMenuProps,
+    DropdownMenuSelectEvent,
 } from './types';
 import { DEFAULT_FOCUS_TARGET, getOpenFocusTarget, type ItemPath } from './dropdown-menu-utils';
 
@@ -15,9 +16,10 @@ type UseDropdownMenuDisclosureOptions = {
     props: Readonly<DropdownMenuProps>;
     emit: {
         openChange?: (open: boolean) => void;
-        select?: (item: DropdownMenuItem) => void;
+        select?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
     };
     rootRef: Ref<HTMLElement | null>;
+    menuRef: Ref<HTMLElement | null>;
     uncontrolledOpen: Ref<boolean>;
     isDisabled: BooleanSource;
     isOpen: BooleanSource;
@@ -35,6 +37,7 @@ export function useDropdownMenuDisclosure({
     props,
     emit,
     rootRef,
+    menuRef,
     uncontrolledOpen,
     isDisabled,
     isOpen,
@@ -98,7 +101,13 @@ export function useDropdownMenuDisclosure({
         }
     });
 
-    useClickOutside(rootRef, isVisible, () => close());
+    useClickOutside([rootRef, menuRef], isVisible, (event) => {
+        if (props.modal) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        close({ focusTrigger: Boolean(props.modal) });
+    });
 
     return {
         open,

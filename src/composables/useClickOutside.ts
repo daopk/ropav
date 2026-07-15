@@ -1,17 +1,17 @@
 import { watch, onMounted, onBeforeUnmount, type Ref } from 'vue';
 
 export function useClickOutside(
-    target: Ref<HTMLElement | null>,
+    target: Ref<HTMLElement | null> | Ref<HTMLElement | null>[],
     active: Readonly<Ref<boolean>>,
-    callback: () => void,
+    callback: (event: MouseEvent) => void,
 ) {
     let isListening = false;
     let stopWatch: (() => void) | undefined;
 
     function handler(e: MouseEvent) {
-        if (target.value && !target.value.contains(e.target as Node)) {
-            callback();
-        }
+        const targets = Array.isArray(target) ? target : [target];
+        const isInside = targets.some((current) => current.value?.contains(e.target as Node));
+        if (!isInside) callback(e);
     }
 
     function setListening(value: boolean) {

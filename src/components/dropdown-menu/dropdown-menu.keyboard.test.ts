@@ -42,7 +42,7 @@ describe('DropdownMenu keyboard navigation', () => {
         keydown(menu, 'Enter');
         await waitDropdownTransition();
 
-        expect(onSelect).toHaveBeenCalledWith(items[2]);
+        expect(onSelect).toHaveBeenCalledWith(items[2], expect.any(CustomEvent));
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 
@@ -201,7 +201,10 @@ describe('DropdownMenu keyboard navigation', () => {
         keydown(menu, 'Enter');
         await waitDropdownTransition();
 
-        expect(onSelect).toHaveBeenCalledWith(keyboardItems[0].children![1]);
+        expect(onSelect).toHaveBeenCalledWith(
+            keyboardItems[0].children![1],
+            expect.any(CustomEvent),
+        );
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 });

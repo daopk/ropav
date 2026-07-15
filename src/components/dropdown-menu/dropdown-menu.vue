@@ -2,36 +2,44 @@
     <span ref="rootRef" :class="rootClass">
         <slot v-bind="slotProps" />
 
-        <Transition name="rp-dropdown-menu-content">
-            <div v-if="isVisible" ref="menuRef" :class="contentClass" v-bind="contentProps">
-                <div v-if="isEmpty" class="rp-dropdown-menu__empty">
-                    <slot name="empty">No actions</slot>
-                </div>
+        <Teleport :to="portalTo" :disabled="!portal">
+            <Transition name="rp-dropdown-menu-content">
+                <div
+                    v-if="isVisible"
+                    ref="menuRef"
+                    :class="contentClass"
+                    :style="contentStyle"
+                    v-bind="contentProps"
+                >
+                    <div v-if="isEmpty" class="rp-dropdown-menu__empty">
+                        <slot name="empty">No actions</slot>
+                    </div>
 
-                <DropdownMenuItems :items="visibleItems" :context="renderContext">
-                    <template #item="itemSlotProps">
-                        <slot name="item" v-bind="itemSlotProps">
-                            <span class="rp-dropdown-menu__label">{{
-                                itemSlotProps.item.label
-                            }}</span>
-                            <kbd
-                                v-if="itemSlotProps.item.shortcut"
-                                class="rp-dropdown-menu__shortcut"
+                    <DropdownMenuItems :items="visibleItems" :context="renderContext">
+                        <template #item="itemSlotProps">
+                            <slot name="item" v-bind="itemSlotProps">
+                                <span class="rp-dropdown-menu__label">{{
+                                    itemSlotProps.item.label
+                                }}</span>
+                                <kbd
+                                    v-if="itemSlotProps.item.shortcut"
+                                    class="rp-dropdown-menu__shortcut"
+                                >
+                                    {{ itemSlotProps.item.shortcut }}
+                                </kbd>
+                            </slot>
+                            <span
+                                v-if="itemSlotProps.hasSubmenu"
+                                class="rp-dropdown-menu__submenu-icon"
+                                aria-hidden="true"
                             >
-                                {{ itemSlotProps.item.shortcut }}
-                            </kbd>
-                        </slot>
-                        <span
-                            v-if="itemSlotProps.hasSubmenu"
-                            class="rp-dropdown-menu__submenu-icon"
-                            aria-hidden="true"
-                        >
-                            <IconChevronRight />
-                        </span>
-                    </template>
-                </DropdownMenuItems>
-            </div>
-        </Transition>
+                                <IconChevronRight />
+                            </span>
+                        </template>
+                    </DropdownMenuItems>
+                </div>
+            </Transition>
+        </Teleport>
     </span>
 </template>
 
@@ -43,6 +51,7 @@ import type {
     DropdownMenuItem,
     DropdownMenuItemSlotProps,
     DropdownMenuProps,
+    DropdownMenuSelectEvent,
     DropdownMenuSlotProps,
 } from './types';
 
@@ -54,11 +63,14 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
     open: undefined,
     disabled: false,
     closeOnSelect: true,
+    modal: false,
+    portal: false,
+    portalTo: 'body',
 });
 
 const emit = defineEmits<{
     'update:open': [value: boolean];
-    select: [item: DropdownMenuItem];
+    select: [item: DropdownMenuItem, event: DropdownMenuSelectEvent];
 }>();
 
 defineSlots<{
@@ -76,11 +88,12 @@ const {
     renderContext,
     rootClass,
     contentClass,
+    contentStyle,
     contentProps,
     slotProps,
 } = useDropdownMenu(props, {
     openChange: (open) => emit('update:open', open),
-    select: (item) => emit('select', item),
+    select: (item, event) => emit('select', item, event),
 });
 
 void rootRef;

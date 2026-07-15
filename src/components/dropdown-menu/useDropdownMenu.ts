@@ -4,6 +4,7 @@ import type {
     DropdownMenuContentProps,
     DropdownMenuItem,
     DropdownMenuProps,
+    DropdownMenuSelectEvent,
     DropdownMenuSlotProps,
     DropdownMenuTriggerProps,
 } from './types';
@@ -13,6 +14,7 @@ import { useDropdownMenuDom } from './useDropdownMenuDom';
 import { useDropdownMenuHoverIntent } from './useDropdownMenuHoverIntent';
 import { useDropdownMenuInteractions } from './useDropdownMenuInteractions';
 import { useDropdownMenuNavigation } from './useDropdownMenuNavigation';
+import { useDropdownMenuPortalPosition } from './useDropdownMenuPortalPosition';
 import { useDropdownMenuRenderItems } from './useDropdownMenuRenderItems';
 import { useDropdownSubmenus } from './useDropdownSubmenus';
 
@@ -20,7 +22,7 @@ export function useDropdownMenu(
     props: Readonly<DropdownMenuProps>,
     emit: {
         openChange?: (open: boolean) => void;
-        select?: (item: DropdownMenuItem) => void;
+        select?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
     } = {},
 ) {
     const rootRef = ref<HTMLElement | null>(null);
@@ -82,6 +84,7 @@ export function useDropdownMenu(
         props,
         emit,
         rootRef,
+        menuRef,
         uncontrolledOpen,
         isDisabled,
         isOpen,
@@ -156,6 +159,14 @@ export function useDropdownMenu(
         onMouseleave: onMenuMouseleave,
     }));
 
+    const { contentStyle } = useDropdownMenuPortalPosition({
+        props,
+        rootRef,
+        menuRef,
+        isVisible,
+        placement,
+    });
+
     const slotProps = computed<DropdownMenuSlotProps>(() => ({
         triggerProps: triggerProps.value,
         isOpen: isVisible.value,
@@ -194,6 +205,7 @@ export function useDropdownMenu(
         activeDescendantId,
         rootClass,
         contentClass,
+        contentStyle,
         triggerProps,
         contentProps,
         slotProps,

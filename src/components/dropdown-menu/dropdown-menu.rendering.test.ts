@@ -77,7 +77,7 @@ describe('DropdownMenu rendering', () => {
 
         expect(onOpen).toHaveBeenNthCalledWith(1, true);
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
-        expect(onSelect).toHaveBeenCalledWith(items[0]);
+        expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(container.querySelector('[role="menu"]')).toBeNull();
     });
 
@@ -113,8 +113,67 @@ describe('DropdownMenu rendering', () => {
         click(firstItem);
         await nextTick();
 
-        expect(onSelect).toHaveBeenCalledWith(items[0]);
+        expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(container.querySelector('[role="menu"]')).not.toBeNull();
+    });
+
+    it('keeps the convenience menu open when the select event is canceled', async () => {
+        const onSelect = vi.fn((_item: DropdownMenuItem, event: CustomEvent) => {
+            event.preventDefault();
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { items, onSelect },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+        click(container.querySelector('[role="menuitem"]') as HTMLButtonElement);
+        await nextTick();
+
+        expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
+        expect(container.querySelector('[role="menu"]')).not.toBeNull();
+    });
+
+    it('supports opt-in portal positioning without treating menu items as outside clicks', async () => {
+        const onSelect = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'portal-menu', items, portal: true, onSelect },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+        const menu = document.getElementById('portal-menu') as HTMLElement;
+        expect(menu.style.position).toBe('fixed');
+
+        click(menu.querySelector('[role="menuitem"]') as HTMLButtonElement);
+        await waitDropdownTransition();
+        expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
+        expect(document.getElementById('portal-menu')).toBeNull();
     });
 
     it('does not evaluate descendants of collapsed submenus', async () => {

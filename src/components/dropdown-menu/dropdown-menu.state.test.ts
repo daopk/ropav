@@ -122,4 +122,32 @@ describe('DropdownMenu state', () => {
         expect(container.querySelector('[role="menu"]')).toBeNull();
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
+
+    it('blocks the outside click target in modal mode', async () => {
+        const outsideClick = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { items, modal: true },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(container.querySelector('.trigger') as HTMLButtonElement);
+        await nextTick();
+        document.body.addEventListener('click', outsideClick);
+        click(document.body);
+        await waitDropdownTransition();
+
+        expect(outsideClick).not.toHaveBeenCalled();
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+        document.body.removeEventListener('click', outsideClick);
+    });
 });

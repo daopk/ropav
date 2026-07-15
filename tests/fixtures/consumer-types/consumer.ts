@@ -1,4 +1,8 @@
 import {
+    DropdownMenuContent as RootDropdownMenuContent,
+    DropdownMenuItem as RootDropdownMenuItem,
+    DropdownMenuRoot as RootDropdownMenuRoot,
+    DropdownMenuTrigger as RootDropdownMenuTrigger,
     FocusTrap as RootFocusTrap,
     Toast as RootToast,
     ToastProvider as RootToastProvider,
@@ -11,9 +15,22 @@ import {
     type ToastColor as RootToastColor,
     type ToastProps as RootToastProps,
     type ToastUpdateOptions as RootToastUpdateOptions,
+    type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
     useFocusTrap as useRootFocusTrap,
     useToast as useRootToast,
 } from 'ropav';
+import {
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuRoot,
+    DropdownMenuTrigger,
+    type DropdownMenuCheckedState,
+    type DropdownMenuContentPrimitiveProps,
+    type DropdownMenuItem as DropdownMenuDataItem,
+    type DropdownMenuRootPrimitiveProps,
+    type DropdownMenuSelectEvent,
+    type DropdownMenuVirtualAnchor,
+} from 'ropav/dropdown-menu';
 import {
     FocusTrap,
     type FocusTrapOptions,
@@ -64,6 +81,18 @@ const rootToastUpdateIdIsExcluded: RootToastUpdateIdIsExcluded = true;
 const options: ToastOptions = { title: 'Saved', type: 'success' };
 const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
+const dropdownRootProps: DropdownMenuRootPrimitiveProps = { defaultOpen: true, modal: false };
+const rootDropdownRootProps: RootDropdownMenuRootPrimitiveProps = { modal: true };
+const dropdownContentProps: DropdownMenuContentPrimitiveProps = {
+    collisionPadding: 12,
+    placement: 'right-start',
+};
+const dropdownDataItem: DropdownMenuDataItem = { label: 'Rename', value: 'rename' };
+const dropdownChecked: DropdownMenuCheckedState = 'indeterminate';
+const virtualAnchor: DropdownMenuVirtualAnchor = {
+    getBoundingClientRect: () => new DOMRect(10, 20, 0, 0),
+};
+const onDropdownSelect = (event: DropdownMenuSelectEvent) => event.preventDefault();
 const sliderInputAttrs: SliderInputAttrs = { form: 'slider-form', onChange: () => undefined };
 const rangeSliderInputAttrs: RangeSliderInputAttrs = [
     { title: 'Lower input' },
@@ -98,6 +127,10 @@ const radioVNode = h(Radio, {
 
 void [
     RootToast,
+    RootDropdownMenuContent,
+    RootDropdownMenuItem,
+    RootDropdownMenuRoot,
+    RootDropdownMenuTrigger,
     RootFocusTrap,
     RootToastProvider,
     RootToastViewport,
@@ -107,6 +140,10 @@ void [
     rootToastTypes,
     rootToastVariants,
     Toast,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuRoot,
+    DropdownMenuTrigger,
     ToastProvider,
     ToastViewport,
     toastColors,
@@ -128,6 +165,13 @@ void [
     useRootFocusTrap,
     useRootToast,
     useToast,
+    dropdownRootProps,
+    rootDropdownRootProps,
+    dropdownContentProps,
+    dropdownDataItem,
+    dropdownChecked,
+    virtualAnchor,
+    onDropdownSelect,
     sliderInputAttrs,
     rangeSliderInputAttrs,
     sliderProps,

@@ -5,6 +5,7 @@ import type {
     DropdownMenuItem,
     DropdownMenuOpenOptions,
     DropdownMenuProps,
+    DropdownMenuSelectEvent,
 } from './types';
 import {
     arePathsEqual,
@@ -52,7 +53,7 @@ type HoverIntentControls = {
 type UseDropdownMenuInteractionsOptions = {
     props: Readonly<DropdownMenuProps>;
     emit: {
-        select?: (item: DropdownMenuItem) => void;
+        select?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
     };
     isDisabled: BooleanSource;
     focusedPath: Ref<ItemPath>;
@@ -80,22 +81,37 @@ export function useDropdownMenuInteractions({
     disclosure,
     isSubmenuOpeningLeft,
 }: UseDropdownMenuInteractionsOptions) {
-    function activateItem(item: DropdownMenuItem, path: ItemPath, event?: MouseEvent) {
+    function activateItem(
+        item: DropdownMenuItem,
+        path: ItemPath,
+        event?: MouseEvent | KeyboardEvent,
+    ) {
         if (item.disabled) return;
 
         if (hasItemSubmenu(item)) {
-            openSubmenu(path, DEFAULT_FOCUS_TARGET, event ? getEventPoint(event) : undefined);
+            openSubmenu(
+                path,
+                DEFAULT_FOCUS_TARGET,
+                event instanceof MouseEvent ? getEventPoint(event) : undefined,
+            );
             return;
         }
 
-        selectItem(item);
+        selectItem(item, event);
     }
 
-    function selectItem(item: DropdownMenuItem) {
+    function selectItem(item: DropdownMenuItem, originalEvent: Event = new Event('select')) {
         if (item.disabled) return;
 
-        emit.select?.(item);
-        if (props.closeOnSelect !== false) {
+        const event = new CustomEvent('dropdown-menu-select', {
+            cancelable: true,
+            detail: {
+                originalEvent,
+                value: item.value,
+            },
+        }) as DropdownMenuSelectEvent;
+        emit.select?.(item, event);
+        if (!event.defaultPrevented && props.closeOnSelect !== false) {
             disclosure.close({ focusTrigger: true });
         }
     }
@@ -149,10 +165,10 @@ export function useDropdownMenuInteractions({
         hoverIntent.handleItemHover(item, path, event, commitHoveredItem);
     }
 
-    function selectFocusedItem() {
+    function selectFocusedItem(event: KeyboardEvent) {
         const item = getItemAtPath(focusedPath.value);
         if (!item) return;
-        activateItem(item, focusedPath.value);
+        activateItem(item, focusedPath.value, event);
     }
 
     function moveFocusedItem(direction: 1 | -1) {
@@ -211,7 +227,7 @@ export function useDropdownMenuInteractions({
             case 'Enter':
             case ' ':
                 event.preventDefault();
-                selectFocusedItem();
+                selectFocusedItem(event);
                 break;
             case 'Escape':
                 event.preventDefault();
