@@ -107,6 +107,49 @@ export const Basic: Story = {
     }),
 };
 
+export const TeleportedStyles: Story = {
+    tags: ['test'],
+    args: {
+        id: 'teleported-popover-styles',
+        ariaLabel: 'Teleported popover styles',
+        open: true,
+        arrow: true,
+    },
+    render: (args) => ({
+        components: { Button, Popover },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Popover v-bind="args">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">Inspect styles</Button>
+                    </template>
+                    <template #content>Teleported popover content</template>
+                </Popover>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const content = storyDocument.querySelector<HTMLElement>('#teleported-popover-styles')!;
+        const arrow = content.querySelector<HTMLElement>('.rp-popover__arrow')!;
+
+        await waitFor(() => {
+            expect(content).toBeVisible();
+            expect(content.style.visibility).not.toBe('hidden');
+        });
+
+        const contentStyle = getComputedStyle(content);
+        const arrowRect = arrow.getBoundingClientRect();
+
+        expect(contentStyle.getPropertyValue('--_rp-popover-radius').trim()).not.toBe('');
+        expect(contentStyle.getPropertyValue('--_rp-popover-arrow-size').trim()).not.toBe('');
+        expect(Number.parseFloat(contentStyle.borderRadius)).toBeGreaterThan(0);
+        expect(arrowRect.width).toBeGreaterThan(0);
+        expect(arrowRect.height).toBeGreaterThan(0);
+    },
+};
+
 export const TrappedFocus: Story = {
     args: {
         ariaLabel: 'Trapped actions',

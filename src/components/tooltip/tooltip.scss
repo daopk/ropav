@@ -1,16 +1,16 @@
 .rp-tooltip {
-    --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
-    --_rp-tooltip-cross-axis-offset: 0px;
-    --_rp-tooltip-arrow-size: 0.4375rem;
-    --_rp-tooltip-bg: var(--rp-color-bright);
-    --_rp-tooltip-fg: var(--rp-color-default);
-
     position: relative;
     display: inline-flex;
     font-family: var(--rp-font-family);
     vertical-align: middle;
 
     &__content {
+        --_rp-tooltip-main-axis-offset: var(--rp-spacing-2);
+        --_rp-tooltip-cross-axis-offset: 0px;
+        --_rp-tooltip-arrow-size: 0.4375rem;
+        --_rp-tooltip-bg: var(--rp-color-bright);
+        --_rp-tooltip-fg: var(--rp-color-default);
+
         position: absolute;
         z-index: $z-index-tooltip;
         box-sizing: border-box;

@@ -1,15 +1,15 @@
 .rp-popover {
-    --_rp-popover-main-axis-offset: var(--rp-spacing-2);
-    --_rp-popover-cross-axis-offset: 0px;
-    --_rp-popover-radius: var(--rp-radius-sm);
-    --_rp-popover-arrow-size: 0.5rem;
-
     position: relative;
     display: inline-flex;
     font-family: var(--rp-font-family);
     vertical-align: middle;
 
     &__content {
+        --_rp-popover-main-axis-offset: var(--rp-spacing-2);
+        --_rp-popover-cross-axis-offset: 0px;
+        --_rp-popover-radius: var(--rp-radius-sm);
+        --_rp-popover-arrow-size: 0.5rem;
+
         position: absolute;
         z-index: $z-index-dropdown;
         box-sizing: border-box;

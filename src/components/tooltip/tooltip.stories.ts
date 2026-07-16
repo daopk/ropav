@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, waitFor } from 'storybook/test';
 import Button from '../button/button.vue';
 import Tooltip from './tooltip.vue';
 
@@ -58,6 +59,48 @@ export const Basic: Story = {
             </div>
         `,
     }),
+};
+
+export const TeleportedStyles: Story = {
+    tags: ['test'],
+    args: {
+        id: 'teleported-tooltip-styles',
+        open: true,
+        arrow: true,
+    },
+    render: (args) => ({
+        components: { Button, Tooltip },
+        setup: () => ({ args }),
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 96px;">
+                <Tooltip v-bind="args">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps">Inspect styles</Button>
+                    </template>
+                </Tooltip>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const content = storyDocument.querySelector<HTMLElement>('#teleported-tooltip-styles')!;
+        const arrow = content.querySelector<HTMLElement>('.rp-tooltip__arrow')!;
+
+        await waitFor(() => {
+            expect(content).toBeVisible();
+            expect(content.style.visibility).not.toBe('hidden');
+        });
+
+        const contentStyle = getComputedStyle(content);
+        const arrowRect = arrow.getBoundingClientRect();
+
+        expect(contentStyle.getPropertyValue('--_rp-tooltip-bg').trim()).not.toBe('');
+        expect(contentStyle.getPropertyValue('--_rp-tooltip-fg').trim()).not.toBe('');
+        expect(contentStyle.getPropertyValue('--_rp-tooltip-arrow-size').trim()).not.toBe('');
+        expect(contentStyle.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+        expect(arrowRect.width).toBeGreaterThan(0);
+        expect(arrowRect.height).toBeGreaterThan(0);
+    },
 };
 
 export const Placements: Story = {
