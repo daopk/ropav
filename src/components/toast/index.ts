@@ -12,6 +12,7 @@ export {
 } from './types';
 export { useToast } from './useToast';
 export { useToastState } from './useToastState';
+export { createToastStore } from './toast-store';
 export type {
     ToastCloseReason,
     ToastColor,
@@ -29,6 +30,8 @@ export type {
     ToastRole,
     ToastStateBindingProps,
     ToastStateOption,
+    ToastStore,
+    ToastStoreOptions,
     ToastType,
     ToastUpdateOptions,
     ToastVariant,

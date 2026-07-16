@@ -87,6 +87,8 @@ describe('public source exports', () => {
         expect(Ropav.useToast).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useToastState');
         expect(Ropav.useToastState).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('createToastStore');
+        expect(Ropav.createToastStore).toBeTypeOf('function');
     });
 
     it('exposes popover placement options from src/index.ts', () => {

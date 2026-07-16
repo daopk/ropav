@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 
 import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
 import TeleportProvider from '../teleport-provider/teleport-provider.vue';
 import ToastProvider from './toast-provider.vue';
+import { createToastStore } from './toast-store';
 import ToastViewport from './toast-viewport.vue';
 import type { UseToastReturn } from './types';
 import { useToast } from './useToast';
@@ -189,7 +190,7 @@ describe('ToastProvider', () => {
         });
     });
 
-    it('enforces the provider maximum and dismisses the oldest toast', async () => {
+    it('enforces the provider maximum and overflows the oldest toast', async () => {
         const onOldestClose = vi.fn();
         const { api, container } = mountToastSystem({ duration: 0, max: 2 });
 
@@ -202,7 +203,7 @@ describe('ToastProvider', () => {
             title.textContent?.trim(),
         );
         expect(titles).toEqual(['Third', 'Second']);
-        expect(onOldestClose).toHaveBeenCalledWith('dismiss');
+        expect(onOldestClose).toHaveBeenCalledWith('overflow');
         expect(api.toasts.value).toHaveLength(2);
     });
 
@@ -298,7 +299,7 @@ describe('ToastProvider', () => {
         await flush();
 
         expect(displacedClose).toHaveBeenCalledOnce();
-        expect(displacedClose).toHaveBeenCalledWith('dismiss');
+        expect(displacedClose).toHaveBeenCalledWith('replace');
         expect(api.toasts.value[0].instanceId).not.toBe(firstInstanceId);
         expect(api.toasts.value[0].props.title).toBe('Replacement');
 
@@ -325,5 +326,109 @@ describe('ToastProvider', () => {
 
         expect(onClose).toHaveBeenCalledWith('dismiss');
         expect(api.toasts.value).toHaveLength(0);
+    });
+
+    it('renders a pre-mount external store and starts its timer only after mount', async () => {
+        vi.useFakeTimers();
+        const onClose = vi.fn();
+        const store = createToastStore({ color: 'green', duration: 1000 });
+        const id = store.show('Before mount', { onClose });
+
+        store.update(id, { description: 'Updated before mount' });
+        vi.advanceTimersByTime(5000);
+
+        expect(onClose).not.toHaveBeenCalled();
+        expect(store.toasts.value).toHaveLength(1);
+
+        const { api, container } = mountToastSystem({
+            color: 'red',
+            duration: 1,
+            store,
+        });
+        await flush();
+
+        expect(api.toasts).toBe(store.toasts);
+        expect(container.querySelector('.rp-toast__title')?.textContent).toContain('Before mount');
+        expect(container.querySelector('.rp-toast__description')?.textContent).toContain(
+            'Updated before mount',
+        );
+        expect(store.toasts.value[0].props).toMatchObject({ color: 'green', duration: 1000 });
+
+        vi.advanceTimersByTime(999);
+        await flush();
+        expect(onClose).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(1);
+        await flush();
+        expect(onClose).toHaveBeenCalledOnce();
+        expect(onClose).toHaveBeenCalledWith('timeout');
+        expect(store.toasts.value).toHaveLength(0);
+    });
+
+    it('retains external store state while its provider is unmounted', async () => {
+        const store = createToastStore({ duration: 0 });
+        const providerMounted = ref(true);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return providerMounted.value
+                        ? h(
+                              ToastProvider,
+                              { store },
+                              { default: () => h(ToastViewport, { teleport: false }) },
+                          )
+                        : null;
+                },
+            }),
+        );
+
+        store.show('Persistent');
+        await flush();
+        expect(container.querySelector('.rp-toast__title')?.textContent).toContain('Persistent');
+
+        providerMounted.value = false;
+        await flush();
+        expect(container.querySelector('.rp-toast')).toBeNull();
+        expect(store.toasts.value).toHaveLength(1);
+
+        providerMounted.value = true;
+        await flush();
+        expect(container.querySelector('.rp-toast__title')?.textContent).toContain('Persistent');
+    });
+
+    it('keeps a provider-scoped store in sync with reactive max props', async () => {
+        const max = ref(3);
+        const onFirstClose = vi.fn();
+        const onSecondClose = vi.fn();
+        let api: UseToastReturn | undefined;
+
+        const Consumer = defineComponent({
+            setup() {
+                api = useToast();
+                return () => null;
+            },
+        });
+
+        mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        ToastProvider,
+                        { duration: 0, max: max.value },
+                        { default: () => h(Consumer) },
+                    );
+                },
+            }),
+        );
+
+        api?.show('First', { onClose: onFirstClose });
+        api?.show('Second', { onClose: onSecondClose });
+        api?.show('Third');
+        max.value = 1;
+        await flush();
+
+        expect(api?.toasts.value.map((toast) => toast.props.title)).toEqual(['Third']);
+        expect(onFirstClose).toHaveBeenCalledWith('overflow');
+        expect(onSecondClose).toHaveBeenCalledWith('overflow');
     });
 });

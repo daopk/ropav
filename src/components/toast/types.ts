@@ -55,7 +55,7 @@ export type ToastType = (typeof toastTypes)[number];
 
 export type ToastRole = 'alert' | 'status' | 'none';
 
-export type ToastCloseReason = 'dismiss' | 'timeout';
+export type ToastCloseReason = 'dismiss' | 'overflow' | 'replace' | 'timeout';
 
 export type ToastStateOption<T> = MaybeRefOrGetter<T>;
 
@@ -100,7 +100,7 @@ export interface UseToastStateReturn {
     toggle: () => void;
 }
 
-export interface ToastProviderProps {
+export interface ToastStoreOptions {
     max?: number;
     duration?: number;
     variant?: ToastVariant;
@@ -112,6 +112,11 @@ export interface ToastProviderProps {
     pauseOnFocus?: boolean;
     closable?: boolean;
     closeLabel?: string;
+}
+
+export interface ToastProviderProps extends ToastStoreOptions {
+    /** Uses an existing store and its options instead of creating a provider-scoped store. */
+    store?: ToastStore;
 }
 
 export interface ToastViewportProps extends TeleportProps, StylesApiProps<ToastViewportPart> {
@@ -146,7 +151,7 @@ export interface ToastViewportSlotProps {
 
 export type ToastCreate = (input: ToastInput, options?: ToastOptions) => ToastId;
 
-export interface UseToastReturn {
+export interface ToastStore {
     toasts: ComputedRef<readonly ToastItem[]>;
     show: ToastCreate;
     success: ToastCreate;
@@ -158,7 +163,9 @@ export interface UseToastReturn {
     dismissAll: (reason?: ToastCloseReason) => void;
 }
 
-export interface ToastProviderContext extends UseToastReturn {
+export interface UseToastReturn extends ToastStore {}
+
+export interface ToastProviderContext extends ToastStore {
     dismissInstance: (instanceId: string, reason?: ToastCloseReason) => void;
 }
 

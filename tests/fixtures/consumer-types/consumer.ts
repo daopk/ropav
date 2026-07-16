@@ -10,6 +10,7 @@ import {
     Toast as RootToast,
     ToastProvider as RootToastProvider,
     ToastViewport as RootToastViewport,
+    createToastStore as createRootToastStore,
     toastColors as rootToastColors,
     toastPositions as rootToastPositions,
     toastRadiuses as rootToastRadiuses,
@@ -17,6 +18,9 @@ import {
     toastVariants as rootToastVariants,
     type ToastColor as RootToastColor,
     type ToastProps as RootToastProps,
+    type ToastProviderProps as RootToastProviderProps,
+    type ToastStore as RootToastStore,
+    type ToastStoreOptions as RootToastStoreOptions,
     type ToastUpdateOptions as RootToastUpdateOptions,
     type DialogCloseReason as RootDialogCloseReason,
     type DialogRootProps as RootDialogRootProps,
@@ -83,6 +87,7 @@ import {
     Toast,
     ToastProvider,
     ToastViewport,
+    createToastStore,
     toastColors,
     toastPositions,
     toastRadiuses,
@@ -91,6 +96,9 @@ import {
     type ToastColor,
     type ToastOptions,
     type ToastProps,
+    type ToastProviderProps,
+    type ToastStore,
+    type ToastStoreOptions,
     type ToastUpdateOptions,
     useToast,
 } from 'ropav/toast';
@@ -129,6 +137,12 @@ const rootToastColorIsTyped: RootToastColorIsTyped = true;
 const toastUpdateIdIsExcluded: ToastUpdateIdIsExcluded = true;
 const rootToastUpdateIdIsExcluded: RootToastUpdateIdIsExcluded = true;
 const options: ToastOptions = { title: 'Saved', type: 'success' };
+const toastStoreOptions: ToastStoreOptions = { duration: 0, max: 5 };
+const toastStore: ToastStore = createToastStore(toastStoreOptions);
+const toastProviderProps: ToastProviderProps = { store: toastStore };
+const rootToastStoreOptions: RootToastStoreOptions = toastStoreOptions;
+const rootToastStore: RootToastStore = createRootToastStore(rootToastStoreOptions);
+const rootToastProviderProps: RootToastProviderProps = { store: rootToastStore };
 const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
 const dropdownRootProps: DropdownMenuRootPrimitiveProps = { defaultOpen: true, modal: false };
@@ -259,6 +273,7 @@ void [
     RootTeleportProvider,
     RootToastProvider,
     RootToastViewport,
+    createRootToastStore,
     rootToastColors,
     rootToastPositions,
     rootToastRadiuses,
@@ -279,6 +294,7 @@ void [
     DropdownMenuTrigger,
     ToastProvider,
     ToastViewport,
+    createToastStore,
     toastColors,
     toastPositions,
     toastRadiuses,
@@ -291,6 +307,12 @@ void [
     toastUpdateIdIsExcluded,
     rootToastUpdateIdIsExcluded,
     options,
+    toastStore,
+    toastStoreOptions,
+    toastProviderProps,
+    rootToastStore,
+    rootToastStoreOptions,
+    rootToastProviderProps,
     FocusTrap,
     focusTrapOptions,
     useFocusTrapOptions,

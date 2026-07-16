@@ -9,6 +9,7 @@ import IconTrash2 from '~icons/lucide/trash-2';
 import IconTriangleAlert from '~icons/lucide/triangle-alert';
 import Button from '../button/button.vue';
 import ToastProvider from './toast-provider.vue';
+import { createToastStore } from './toast-store';
 import ToastViewport from './toast-viewport.vue';
 import Toast from './toast.vue';
 import { toastPositions, toastRadiuses, toastVariants, type ToastPosition } from './types';
@@ -406,6 +407,40 @@ export const QueueManagement: Story = {
             </ToastProvider>
         `,
     }),
+};
+
+export const StandaloneStore: Story = {
+    parameters: {
+        controls: { disable: true },
+    },
+    render: () => {
+        const store = createToastStore({ duration: 0, max: 3 });
+        store.info('Created before provider mount', {
+            description:
+                'The standalone store retains notifications until a viewport renders them.',
+            variant: 'surface',
+        });
+
+        return {
+            components: { Button, ToastProvider, ToastViewport },
+            setup: () => ({
+                dismissAll: store.dismissAll,
+                showSuccess: () => store.success('Called outside component setup'),
+                store,
+            }),
+            template: `
+                <ToastProvider :store="store">
+                    <div style="box-sizing: border-box; display: flex; min-height: 440px; place-content: center; align-items: center; gap: 8px; padding: 48px;">
+                        <Button color="green" variant="outline" @click="showSuccess()">
+                            Show success
+                        </Button>
+                        <Button variant="plain" @click="dismissAll()">Dismiss all</Button>
+                    </div>
+                    <ToastViewport :teleport="false" />
+                </ToastProvider>
+            `,
+        };
+    },
 };
 
 export const CustomContent: Story = {

@@ -11,6 +11,7 @@ import {
     DEFAULT_TOAST_PAUSE_ON_FOCUS,
     DEFAULT_TOAST_PAUSE_ON_HOVER,
 } from './defaults';
+import { createToastStore } from './toast-store';
 import { provideToast } from './useToast';
 import type { ToastProviderProps } from './types';
 
@@ -30,5 +31,5 @@ const props = withDefaults(defineProps<ToastProviderProps>(), {
     closeLabel: DEFAULT_TOAST_CLOSE_LABEL,
 });
 
-provideToast(props);
+provideToast(props.store ?? createToastStore(props));
 </script>
