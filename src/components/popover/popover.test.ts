@@ -387,6 +387,7 @@ describe('Popover', () => {
 
         expect(content.tabIndex).toBe(-1);
         expect(document.activeElement).toBe(trigger);
+        await vi.waitFor(() => expect(content.style.visibility).not.toBe('hidden'));
 
         last.focus();
         tab();

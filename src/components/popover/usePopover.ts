@@ -35,14 +35,6 @@ import type {
 const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
 const DEFAULT_ROLE: PopoverRole = 'dialog';
 const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
-const TABBABLE_SELECTOR = [
-    'a[href]',
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-].join(',');
 
 type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
 
@@ -287,30 +279,6 @@ export function usePopover(
 
     function onDocumentKeydown(event: KeyboardEvent) {
         if (!layer.isTopLayer()) return;
-        if (props.trapFocus && event.key === 'Tab') {
-            const containers = [targetElement.value ?? rootRef.value, contentRef.value];
-            const tabbables: HTMLElement[] = [];
-            for (const container of containers) {
-                if (!container) continue;
-                if (container instanceof HTMLElement && container.matches(TABBABLE_SELECTOR)) {
-                    tabbables.push(container);
-                }
-                tabbables.push(...container.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR));
-            }
-            const active = event.target;
-            const first = tabbables[0];
-            const last = tabbables[tabbables.length - 1];
-            if (event.shiftKey && active === first && last) {
-                event.preventDefault();
-                last.focus();
-                return;
-            }
-            if (!event.shiftKey && active === last && first) {
-                event.preventDefault();
-                first.focus();
-                return;
-            }
-        }
         if (props.closeOnEscape === false || event.key !== 'Escape') return;
         closePopover();
     }
