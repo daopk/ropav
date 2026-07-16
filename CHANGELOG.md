@@ -1,3 +1,35 @@
+## [0.0.12](https://github.com/daopk/ropav/compare/v0.0.11...v0.0.12) (2026-07-16)
+
+### ⚠ BREAKING CHANGES
+
+* **dropdown-menu:** DropdownMenu data-placement now contains the full final placement. Use data-side for side-only selectors.
+* **toast:** Toast callbacks now receive replace when a duplicate ID displaces a toast and overflow when the maximum evicts a toast, instead of dismiss.
+
+### Features
+
+* **dialog:** add composable dialog primitives ([43c7f59](https://github.com/daopk/ropav/commit/43c7f597a99b735f4c456e4ad2c990f1d7c34c70))
+* **dropdown-menu:** harden outside interactions ([d5f7960](https://github.com/daopk/ropav/commit/d5f7960d6e2cc3482c1052d4bbb23aecb7423ddc))
+* **floating:** add hover disclosure interactions ([296dab3](https://github.com/daopk/ropav/commit/296dab30dbd5570a1b6dafaeb23984247c2464ce))
+* **floating:** expose positioning composables ([3365151](https://github.com/daopk/ropav/commit/33651517f3ce6e90ecd7f6ffb76f2427c83b8ab4))
+* **form-controls:** standardize native form behavior ([f27bb63](https://github.com/daopk/ropav/commit/f27bb638cb3a2e1143aab8e58d5ca25be616c6ad))
+* **toast:** add standalone store ([bd24a2b](https://github.com/daopk/ropav/commit/bd24a2bfbc44dbf0a82d1e550ce5f9782bc334bb))
+
+### Bug Fixes
+
+* **dialog:** preserve content ids while closed ([b09f0ae](https://github.com/daopk/ropav/commit/b09f0aeea766da5f88e45ee1c1cce09ccadcbddc))
+* **dialog:** reserve overlay z-index planes ([75e3958](https://github.com/daopk/ropav/commit/75e395816bc4b92c8663aa3c9204f6700adc5be7))
+* **dropdown-menu:** expose final aligned placement ([3d12a54](https://github.com/daopk/ropav/commit/3d12a5451f578eb1cd95f3e24b8d78b41bce56ce))
+* **dropdown-menu:** reset stale virtual reference ([2a7e942](https://github.com/daopk/ropav/commit/2a7e942a96907b18924236e370740b24a15230e2))
+* **dropdown-menu:** restore hover background in portals ([a27aad9](https://github.com/daopk/ropav/commit/a27aad92a98e960a5687ba3114d5c78f7ab2742b))
+* **dropdown-menu:** support Vapor component hosts ([888de0c](https://github.com/daopk/ropav/commit/888de0c879606cd19a02e1710c4fa5fe52b37f9a))
+* **floating:** preserve position during leave transitions ([0047d53](https://github.com/daopk/ropav/commit/0047d5376e0d685301ed5ea79f29a45b0e26f2c4))
+* **floating:** rebind after ancestor teleport moves ([2f0bb2c](https://github.com/daopk/ropav/commit/2f0bb2cc4a88c6c66a5e8f6ca0e4fae43f9629c2))
+* **floating:** restart positioning after teleport moves ([00e18ed](https://github.com/daopk/ropav/commit/00e18ed0fca22d519d6795f67192ee7eef86b951))
+* **modal:** stack active modal roots ([5f433d8](https://github.com/daopk/ropav/commit/5f433d8273f9d68c46dacb54c11c2245c266995c))
+* preserve floating styles when teleported ([850770b](https://github.com/daopk/ropav/commit/850770b7f33a43b9fe30428e9075e09144fb07df))
+* **slider:** style teleported tooltip content ([fd2d66b](https://github.com/daopk/ropav/commit/fd2d66bc89d788d36e1e30f06a1cb0054c58118e))
+* **tooltip:** remove legacy positioning ([219f27c](https://github.com/daopk/ropav/commit/219f27c3f27a1afea2784b6f722bc6fb72b31716))
+
 ## [0.0.11](https://github.com/daopk/ropav/compare/v0.0.10...v0.0.11) (2026-07-15)
 
 ### ⚠ BREAKING CHANGES
