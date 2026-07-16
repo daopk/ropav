@@ -229,6 +229,11 @@ export const Offset: Story = {
 };
 
 export const Target: Story = {
+    tags: ['test'],
+    args: {
+        open: true,
+        teleport: false,
+    },
     render: (args) => ({
         components: { Button, Tooltip },
         setup: () => ({ args }),
@@ -244,4 +249,14 @@ export const Target: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const content = canvasElement.querySelector<HTMLElement>('[role="tooltip"]')!;
+
+        await waitFor(() => {
+            expect(content).toBeVisible();
+            expect(content.style.visibility).not.toBe('hidden');
+        });
+
+        expect(getComputedStyle(content).translate).toBe('none');
+    },
 };

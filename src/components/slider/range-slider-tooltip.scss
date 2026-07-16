@@ -38,6 +38,63 @@
         white-space: nowrap;
         font-variant-numeric: tabular-nums;
     }
+
+    &.rp-tooltip--placement-top .rp-tooltip__content {
+        bottom: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        left: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        translate: -50% 0;
+    }
+
+    &.rp-tooltip--placement-right .rp-tooltip__content {
+        top: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        left: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        translate: 0 -50%;
+    }
+
+    &.rp-tooltip--placement-bottom .rp-tooltip__content {
+        top: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        left: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        translate: -50% 0;
+    }
+
+    &.rp-tooltip--placement-left .rp-tooltip__content {
+        top: calc(50% + var(--_rp-tooltip-cross-axis-offset));
+        right: calc(100% + var(--_rp-tooltip-main-axis-offset));
+        translate: 0 -50%;
+    }
+
+    &.rp-tooltip--arrow .rp-tooltip__content::before {
+        position: absolute;
+        width: var(--_rp-tooltip-arrow-size);
+        height: var(--_rp-tooltip-arrow-size);
+        content: '';
+        background-color: inherit;
+        rotate: 45deg;
+    }
+
+    &.rp-tooltip--arrow.rp-tooltip--placement-top .rp-tooltip__content::before {
+        top: calc(100% - var(--_rp-tooltip-arrow-size) / 2);
+        left: 50%;
+        translate: -50% 0;
+    }
+
+    &.rp-tooltip--arrow.rp-tooltip--placement-right .rp-tooltip__content::before {
+        top: 50%;
+        right: calc(100% - var(--_rp-tooltip-arrow-size) / 2);
+        translate: 0 -50%;
+    }
+
+    &.rp-tooltip--arrow.rp-tooltip--placement-bottom .rp-tooltip__content::before {
+        bottom: calc(100% - var(--_rp-tooltip-arrow-size) / 2);
+        left: 50%;
+        translate: -50% 0;
+    }
+
+    &.rp-tooltip--arrow.rp-tooltip--placement-left .rp-tooltip__content::before {
+        top: 50%;
+        left: calc(100% - var(--_rp-tooltip-arrow-size) / 2);
+        translate: 0 -50%;
+    }
 }
 
 .rp-range-slider__tooltip-anchor {
