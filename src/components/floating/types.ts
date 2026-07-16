@@ -46,6 +46,7 @@ export interface UseFloatingPositionOptions {
     flip?: MaybeRefOrGetter<boolean | undefined>;
     shift?: MaybeRefOrGetter<boolean | undefined>;
     collisionPadding?: MaybeRefOrGetter<FloatingCollisionPadding | undefined>;
+    restartKey?: MaybeRefOrGetter<unknown>;
 }
 
 export interface UseFloatingPositionReturn {

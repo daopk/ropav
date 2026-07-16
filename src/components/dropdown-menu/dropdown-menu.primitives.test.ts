@@ -149,18 +149,24 @@ describe('DropdownMenu compound primitives', () => {
     });
 
     it('teleports content through Portal and preserves injected context', async () => {
+        const portalDisabled = ref(false);
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(DropdownMenuRoot, null, {
                         default: () => [
                             h(DropdownMenuTrigger, { class: 'portal-trigger' }, () => 'Open'),
-                            h(DropdownMenuPortal, null, {
-                                default: () =>
-                                    h(DropdownMenuContent, null, {
-                                        default: () => h(DropdownMenuItem, null, () => 'Portalled'),
-                                    }),
-                            }),
+                            h(
+                                DropdownMenuPortal,
+                                { disabled: portalDisabled.value },
+                                {
+                                    default: () =>
+                                        h(DropdownMenuContent, null, {
+                                            default: () =>
+                                                h(DropdownMenuItem, null, () => 'Portalled'),
+                                        }),
+                                },
+                            ),
                         ],
                     });
                 },
@@ -170,7 +176,17 @@ describe('DropdownMenu compound primitives', () => {
         click(container.querySelector('.portal-trigger') as HTMLButtonElement);
         await nextTick();
 
-        const portalledItem = document.body.querySelector('[role="menuitem"]') as HTMLElement;
+        const menu = document.body.querySelector('[role="menu"]') as HTMLElement;
+        const portalledItem = menu.querySelector('[role="menuitem"]') as HTMLElement;
+
+        portalDisabled.value = true;
+        await nextTick();
+        expect(container.querySelector('[role="menu"]')).toBe(menu);
+
+        portalDisabled.value = false;
+        await nextTick();
+        expect(document.body.querySelector('[role="menu"]')).toBe(menu);
+
         portalledItem.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         await nextTick();
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defineComponent, h, shallowRef, type ComputedRef } from 'vue';
+import { defineComponent, h, ref, shallowRef, type ComputedRef } from 'vue';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Tooltip from '../tooltip/tooltip.vue';
 import TeleportProvider from './teleport-provider.vue';
@@ -70,6 +70,30 @@ describe('TeleportProvider', () => {
         expect(document.body.querySelector('#body-tooltip')).not.toBeNull();
         expect(container.querySelector('#inline-tooltip')).not.toBeNull();
         expect(document.querySelector('#app-overlays')).toBeNull();
+    });
+
+    it('moves an open tooltip when teleport is toggled', async () => {
+        const teleport = ref(true);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return tooltip('toggle-tooltip', { teleport: teleport.value });
+                },
+            }),
+        );
+
+        await flush();
+        const content = document.body.querySelector('#toggle-tooltip');
+        expect(content).not.toBeNull();
+        expect(container.querySelector('#toggle-tooltip')).toBeNull();
+
+        teleport.value = false;
+        await flush();
+        expect(container.querySelector('#toggle-tooltip')).toBe(content);
+
+        teleport.value = true;
+        await flush();
+        expect(document.body.querySelector('#toggle-tooltip')).toBe(content);
     });
 
     it('uses the nearest provider and lets a component prop override it', async () => {

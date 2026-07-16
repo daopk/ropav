@@ -20,7 +20,6 @@ import {
     toValue,
     watch,
     type CSSProperties,
-    type MaybeRefOrGetter,
     type Ref,
 } from 'vue';
 import type {
@@ -99,10 +98,7 @@ export function useFloatingTarget(
     };
 }
 
-function createFloatingPosition(
-    options: UseFloatingPositionOptions,
-    restartKey?: MaybeRefOrGetter<unknown>,
-): UseFloatingPositionReturn {
+function createFloatingPosition(options: UseFloatingPositionOptions): UseFloatingPositionReturn {
     const actualPlacement = ref<FloatingPlacement>(getPlacement());
     const isPositioned = ref(false);
     const floatingStyle = ref<CSSProperties>(getHiddenStyle());
@@ -252,7 +248,7 @@ function createFloatingPosition(
             getFlip,
             getShift,
             getCollisionPadding,
-            () => toValue(restartKey),
+            () => toValue(options.restartKey),
         ],
         start,
         { flush: 'post', immediate: true },
@@ -273,11 +269,4 @@ export function useFloatingPosition(
     options: UseFloatingPositionOptions,
 ): UseFloatingPositionReturn {
     return createFloatingPosition(options);
-}
-
-export function useFloatingPositionInternal(
-    options: UseFloatingPositionOptions,
-    restartKey: MaybeRefOrGetter<unknown>,
-): UseFloatingPositionReturn {
-    return createFloatingPosition(options, restartKey);
 }

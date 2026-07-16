@@ -11,9 +11,12 @@ import {
 import type { TeleportTarget, TeleportTargetValue } from '../floating/types';
 import type { TeleportProviderProps } from './types';
 
-const teleportTargetKey = Symbol('teleport-target') as InjectionKey<
-    ComputedRef<TeleportTargetValue>
->;
+interface TeleportContext {
+    target: ComputedRef<TeleportTargetValue>;
+    positioningKey: ComputedRef<unknown>;
+}
+
+const teleportTargetKey = Symbol('teleport-target') as InjectionKey<TeleportContext>;
 
 function readTeleportTarget(target: TeleportTarget | null | undefined) {
     return isRef(target) ? target.value : target;
@@ -23,24 +26,37 @@ function hasTarget(target: TeleportTargetValue | null | undefined): target is Te
     return target != null && target !== '';
 }
 
-export function provideTeleportTarget(props: Readonly<TeleportProviderProps>) {
-    const parentTarget = inject(teleportTargetKey, undefined);
+export function provideTeleportTarget(
+    props: Readonly<TeleportProviderProps>,
+    positioningKey?: MaybeRefOrGetter<unknown>,
+) {
+    const parentContext = inject(teleportTargetKey, undefined);
     const target = computed<TeleportTargetValue>(() => {
         const ownTarget = readTeleportTarget(props.teleportTo);
         if (hasTarget(ownTarget)) return ownTarget;
-        return parentTarget?.value ?? 'body';
+        return parentContext?.target.value ?? 'body';
     });
+    const resolvedPositioningKey = computed(() => [
+        target.value,
+        toValue(positioningKey),
+        parentContext?.positioningKey.value,
+    ]);
 
-    provide(teleportTargetKey, target);
+    provide(teleportTargetKey, { target, positioningKey: resolvedPositioningKey });
     return target;
 }
 
 export function useTeleportTarget(target?: MaybeRefOrGetter<TeleportTarget | null | undefined>) {
-    const providedTarget = inject(teleportTargetKey, undefined);
+    const providedContext = inject(teleportTargetKey, undefined);
 
     return computed<TeleportTargetValue>(() => {
         const ownTarget = readTeleportTarget(toValue(target));
         if (hasTarget(ownTarget)) return ownTarget;
-        return providedTarget?.value ?? 'body';
+        return providedContext?.target.value ?? 'body';
     });
+}
+
+export function useTeleportPositioningKey() {
+    const providedContext = inject(teleportTargetKey, undefined);
+    return computed(() => providedContext?.positioningKey.value);
 }

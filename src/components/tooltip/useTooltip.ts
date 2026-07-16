@@ -4,7 +4,7 @@ import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import {
     isElementReference,
-    useFloatingPositionInternal,
+    useFloatingPosition,
     useFloatingTarget,
 } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
@@ -83,21 +83,19 @@ export function useTooltip(
     });
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
 
-    const floating = useFloatingPositionInternal(
-        {
-            reference,
-            floating: contentRef,
-            arrow: arrowRef,
-            open: isVisible,
-            placement: () => placement.value,
-            strategy: () => props.strategy ?? 'absolute',
-            offset: () => props.offset,
-            flip: () => props.flip !== false,
-            shift: () => props.shift !== false,
-            collisionPadding: () => props.collisionPadding ?? 8,
-        },
-        () => teleportTo.value,
-    );
+    const floating = useFloatingPosition({
+        reference,
+        floating: contentRef,
+        arrow: arrowRef,
+        open: isVisible,
+        placement: () => placement.value,
+        strategy: () => props.strategy ?? 'absolute',
+        offset: () => props.offset,
+        flip: () => props.flip !== false,
+        shift: () => props.shift !== false,
+        collisionPadding: () => props.collisionPadding ?? 8,
+        restartKey: () => [Boolean(props.teleport), teleportTo.value],
+    });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
 
     const rootClass = computed(() =>

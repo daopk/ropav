@@ -33,6 +33,38 @@ function tab(shiftKey = false) {
 describe('Popover', () => {
     const placements: readonly PopoverPlacement[] = popoverPlacements;
 
+    it('moves open content when teleport is toggled', async () => {
+        const state = shallowReactive({ teleport: true });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        { id: 'toggle-popover', open: true, teleport: state.teleport },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', triggerProps, 'Target'),
+                            content: () => 'Content',
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const content = document.body.querySelector('#toggle-popover');
+        expect(content).not.toBeNull();
+        expect(container.querySelector('#toggle-popover')).toBeNull();
+
+        state.teleport = false;
+        await flush();
+        expect(container.querySelector('#toggle-popover')).toBe(content);
+
+        state.teleport = true;
+        await flush();
+        expect(document.body.querySelector('#toggle-popover')).toBe(content);
+    });
+
     it('marks the root and trigger disabled when content is missing', async () => {
         const container = mountDom(
             defineComponent({

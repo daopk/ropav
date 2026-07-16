@@ -17,9 +17,12 @@ const props = withDefaults(defineProps<DropdownMenuPortalPrimitiveProps>(), {
     disabled: false,
 });
 
-const teleportTo = provideTeleportTarget({
-    get teleportTo() {
-        return props.to ?? props.teleportTo;
+const teleportTo = provideTeleportTarget(
+    {
+        get teleportTo() {
+            return props.to ?? props.teleportTo;
+        },
     },
-});
+    () => Boolean(props.teleport && !props.disabled),
+);
 </script>

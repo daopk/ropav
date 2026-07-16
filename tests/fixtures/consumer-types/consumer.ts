@@ -176,6 +176,7 @@ const floatingPositionOptions: UseFloatingPositionOptions = {
     placement: () => 'bottom-start',
     offset: floatingOffset,
     collisionPadding: () => collisionPadding,
+    restartKey: () => floatingOpen.value,
 };
 const rootFloatingPositionOptions: RootUseFloatingPositionOptions = floatingPositionOptions;
 const publicFloatingComposable: (options: UseFloatingPositionOptions) => UseFloatingPositionReturn =

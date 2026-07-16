@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 import type { FloatingReference } from '../floating/types';
-import { useFloatingPositionInternal } from '../floating/useFloatingPosition';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { DropdownMenuPlacement, DropdownMenuProps } from './types';
 
 type BooleanSource = Readonly<Ref<boolean>>;
@@ -15,21 +15,19 @@ export function useDropdownMenuPortalPosition(options: {
     placement: PlacementSource;
     restartKey: () => unknown;
 }) {
-    const floating = useFloatingPositionInternal(
-        {
-            reference: options.reference,
-            floating: options.menuRef,
-            arrow: options.arrowRef,
-            open: options.isVisible,
-            placement: () => options.placement.value,
-            strategy: () => options.props.strategy ?? 'absolute',
-            offset: () => options.props.offset,
-            flip: () => options.props.flip !== false,
-            shift: () => options.props.shift !== false,
-            collisionPadding: () => options.props.collisionPadding ?? 8,
-        },
-        options.restartKey,
-    );
+    const floating = useFloatingPosition({
+        reference: options.reference,
+        floating: options.menuRef,
+        arrow: options.arrowRef,
+        open: options.isVisible,
+        placement: () => options.placement.value,
+        strategy: () => options.props.strategy ?? 'absolute',
+        offset: () => options.props.offset,
+        flip: () => options.props.flip !== false,
+        shift: () => options.props.shift !== false,
+        collisionPadding: () => options.props.collisionPadding ?? 8,
+        restartKey: options.restartKey,
+    });
 
     return {
         actualPlacement: floating.actualPlacement,

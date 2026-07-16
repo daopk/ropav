@@ -11,7 +11,6 @@ import {
     readFloatingTarget,
     resolveFloatingTarget,
     useFloatingPosition,
-    useFloatingPositionInternal,
     useFloatingTarget,
 } from './useFloatingPosition';
 
@@ -161,21 +160,19 @@ describe('floating positioning', () => {
                     const content = ref<HTMLElement | null>(null);
                     const arrow = ref<HTMLElement | null>(null);
                     const open = computed(() => state.open);
-                    floating = useFloatingPositionInternal(
-                        {
-                            reference,
-                            floating: content,
-                            arrow,
-                            open,
-                            placement: () => state.placement,
-                            strategy: () => state.strategy,
-                            offset: () => state.offset,
-                            flip: () => state.flip,
-                            shift: () => state.shift,
-                            collisionPadding: () => state.collisionPadding,
-                        },
-                        () => state.restartKey,
-                    );
+                    floating = useFloatingPosition({
+                        reference,
+                        floating: content,
+                        arrow,
+                        open,
+                        placement: () => state.placement,
+                        strategy: () => state.strategy,
+                        offset: () => state.offset,
+                        flip: () => state.flip,
+                        shift: () => state.shift,
+                        collisionPadding: () => state.collisionPadding,
+                        restartKey: () => state.restartKey,
+                    });
                     return () =>
                         h('div', { ref: content }, state.arrow ? [h('span', { ref: arrow })] : []);
                 },

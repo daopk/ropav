@@ -12,8 +12,8 @@ import {
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
-import { useFloatingPositionInternal } from '../floating/useFloatingPosition';
-import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
+import { useTeleportPositioningKey } from '../teleport-provider/useTeleportTarget';
 import { isEventWithinTargets } from './dropdown-menu-outside';
 import {
     blockNextDocumentClick,
@@ -61,7 +61,7 @@ export function useDropdownMenuPrimitiveContent(
     const reference = computed<ElementReference | null>(() =>
         sub ? sub.trigger.value : root.reference.value,
     );
-    const teleportTo = useTeleportTarget(() => undefined);
+    const teleportPositioningKey = useTeleportPositioningKey();
     const menu = createMenuContext({
         root,
         element,
@@ -79,21 +79,19 @@ export function useDropdownMenuPrimitiveContent(
             else root.close({ returnFocus: true });
         },
     });
-    const floating = useFloatingPositionInternal(
-        {
-            reference,
-            floating: element,
-            arrow: arrowElement,
-            open: isOpen,
-            placement: () => props.placement ?? defaultPlacement,
-            strategy: () => props.strategy ?? 'absolute',
-            offset: () => props.offset,
-            flip: () => props.avoidCollisions !== false && props.flip !== false,
-            shift: () => props.avoidCollisions !== false && props.shift !== false,
-            collisionPadding: () => props.collisionPadding ?? 8,
-        },
-        () => teleportTo.value,
-    );
+    const floating = useFloatingPosition({
+        reference,
+        floating: element,
+        arrow: arrowElement,
+        open: isOpen,
+        placement: () => props.placement ?? defaultPlacement,
+        strategy: () => props.strategy ?? 'absolute',
+        offset: () => props.offset,
+        flip: () => props.avoidCollisions !== false && props.flip !== false,
+        shift: () => props.avoidCollisions !== false && props.shift !== false,
+        collisionPadding: () => props.collisionPadding ?? 8,
+        restartKey: teleportPositioningKey,
+    });
     watch(
         floating.actualPlacement,
         (value) => {
