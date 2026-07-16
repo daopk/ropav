@@ -30,6 +30,8 @@ describe('Slider tooltip', () => {
         expect(tooltip.classList.contains('rp-tooltip')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--placement-top')).toBe(true);
         expect(tooltip.classList.contains('rp-tooltip--arrow')).toBe(false);
+        expect(tooltipContent.classList.contains('rp-slider__tooltip-content')).toBe(true);
+        expect(tooltip.contains(tooltipContent)).toBe(false);
         expect(tooltipContent.getAttribute('role')).toBeNull();
         expect(tooltipContent.getAttribute('aria-hidden')).toBe('true');
         expect(tooltipContent.style.display).toBe('none');

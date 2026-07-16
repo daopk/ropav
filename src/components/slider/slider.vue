@@ -177,6 +177,7 @@ const rootAttrs = computed(() =>
 );
 const tooltipClassNames = computed(() => ({
     root: ['rp-slider__tooltip', props.classNames?.tooltip],
+    content: 'rp-slider__tooltip-content',
 }));
 const tooltipStyles = computed(() => ({ root: props.styles?.tooltip }));
 

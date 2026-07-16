@@ -180,14 +180,14 @@
     }
 }
 
-@mixin tooltip-content($min-width: null) {
+@mixin tooltip-content($prefix, $min-width: null) {
     &__tooltip-anchor {
         display: block;
         width: 100%;
         height: 100%;
     }
 
-    &__tooltip :deep(.rp-tooltip__content) {
+    @at-root :global(.rp-tooltip__content.rp-#{$prefix}__tooltip-content) {
         @if $min-width {
             min-width: $min-width;
         }

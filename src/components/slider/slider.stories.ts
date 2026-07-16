@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, waitFor } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import IconVolume2 from '~icons/lucide/volume-2';
 import Slider from './slider.vue';
@@ -141,6 +142,7 @@ export const FormatValue: Story = {
 };
 
 export const CustomTooltip: Story = {
+    tags: ['test'],
     args: {
         tooltip: {
             mode: 'always',
@@ -149,6 +151,22 @@ export const CustomTooltip: Story = {
             offset: 12,
             arrow: true,
         },
+    },
+    play: async ({ canvasElement }) => {
+        const content = canvasElement.ownerDocument.querySelector<HTMLElement>(
+            '.rp-slider__tooltip-content',
+        )!;
+
+        await waitFor(() => expect(content).toBeVisible());
+
+        const contentStyle = getComputedStyle(content);
+
+        expect(canvasElement.querySelector('.rp-slider__tooltip-content')).toBeNull();
+        expect(contentStyle.minWidth).toBe('32px');
+        expect(contentStyle.paddingTop).toBe('4px');
+        expect(contentStyle.paddingRight).toBe('8px');
+        expect(contentStyle.whiteSpace).toBe('nowrap');
+        expect(contentStyle.fontVariantNumeric).toContain('tabular-nums');
     },
 };
 

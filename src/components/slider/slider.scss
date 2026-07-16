@@ -74,7 +74,7 @@
         translate: -50% 0;
     }
 
-    @include slider-shared.tooltip-content(2rem);
+    @include slider-shared.tooltip-content('slider', 2rem);
 
     &__native:disabled {
         cursor: not-allowed;
