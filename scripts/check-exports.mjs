@@ -247,6 +247,7 @@ try {
             'useAccordionItem',
             'useCollapse',
             'useFloatingPosition',
+            'useHoverDisclosure',
             'useFocusTrap',
             'useTabs',
             'useTabsContent',
@@ -397,7 +398,11 @@ try {
     );
 
     const floating = await server.ssrLoadModule('/dist/components/floating/index.js');
-    assertExports(floating, ['useFloatingPosition'], 'dist/components/floating/index.js');
+    assertExports(
+        floating,
+        ['useFloatingPosition', 'useHoverDisclosure'],
+        'dist/components/floating/index.js',
+    );
 
     const iconButton = await server.ssrLoadModule('/dist/components/icon-button/index.js');
     assertExports(

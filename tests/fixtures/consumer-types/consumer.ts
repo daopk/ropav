@@ -27,10 +27,13 @@ import {
     type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
+    type UseHoverDisclosureOptions as RootUseHoverDisclosureOptions,
+    type UseHoverDisclosureReturn as RootUseHoverDisclosureReturn,
     type TeleportTarget as RootTeleportTarget,
     type UseFloatingPositionOptions as RootUseFloatingPositionOptions,
     type UseFloatingPositionReturn as RootUseFloatingPositionReturn,
     useFloatingPosition as useRootFloatingPosition,
+    useHoverDisclosure as useRootHoverDisclosure,
     useFocusTrap as useRootFocusTrap,
     useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
@@ -72,10 +75,14 @@ import {
     type FloatingReference,
     type FloatingStrategy,
     type FloatingTarget,
+    type HoverDisclosureOpenChangeReason,
     type TeleportTarget,
+    type UseHoverDisclosureOptions,
+    type UseHoverDisclosureReturn,
     type UseFloatingPositionOptions,
     type UseFloatingPositionReturn,
     useFloatingPosition,
+    useHoverDisclosure,
 } from 'ropav/floating';
 import {
     FocusTrap,
@@ -198,6 +205,23 @@ const publicFloatingComposable: (options: UseFloatingPositionOptions) => UseFloa
 const rootFloatingComposable: (
     options: RootUseFloatingPositionOptions,
 ) => RootUseFloatingPositionReturn = useRootFloatingPosition;
+const hoverDisclosureOptions: UseHoverDisclosureOptions = {
+    interactionTarget: floatingReference,
+    openDelay: 600,
+    closeDelay: 150,
+    touchBehavior: 'toggle',
+    onOpenChange(_open, details) {
+        const reason: HoverDisclosureOpenChangeReason = details.reason;
+        void reason;
+    },
+};
+const rootHoverDisclosureOptions: RootUseHoverDisclosureOptions = hoverDisclosureOptions;
+const publicHoverDisclosureComposable: (
+    options?: Readonly<UseHoverDisclosureOptions>,
+) => UseHoverDisclosureReturn = useHoverDisclosure;
+const rootHoverDisclosureComposable: (
+    options?: Readonly<RootUseHoverDisclosureOptions>,
+) => RootUseHoverDisclosureReturn = useRootHoverDisclosure;
 const publicTeleportComposable: typeof useTeleportTarget = useTeleportTarget;
 const rootTeleportComposable: typeof useTeleportTarget = useRootTeleportTarget;
 
@@ -350,6 +374,10 @@ void [
     rootFloatingPositionOptions,
     publicFloatingComposable,
     rootFloatingComposable,
+    hoverDisclosureOptions,
+    rootHoverDisclosureOptions,
+    publicHoverDisclosureComposable,
+    rootHoverDisclosureComposable,
     publicTeleportComposable,
     rootTeleportComposable,
     verifyFloatingReturn,

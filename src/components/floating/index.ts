@@ -1,3 +1,4 @@
+export { useHoverDisclosure } from './useHoverDisclosure';
 export { useFloatingPosition } from './useFloatingPosition';
 export type {
     FloatingAlignment,
@@ -11,9 +12,20 @@ export type {
     FloatingStrategy,
     FloatingTarget,
     FloatingVirtualElement,
+    HoverDisclosureContentProps,
+    HoverDisclosureContentTarget,
+    HoverDisclosureInteractionTarget,
+    HoverDisclosureOpenChangeDetails,
+    HoverDisclosureOpenChangeReason,
+    HoverDisclosureOption,
+    HoverDisclosureState,
+    HoverDisclosureTouchBehavior,
+    HoverDisclosureTriggerProps,
     TeleportProps,
     TeleportTarget,
     TeleportTargetValue,
+    UseHoverDisclosureOptions,
+    UseHoverDisclosureReturn,
     UseFloatingPositionOptions,
     UseFloatingPositionReturn,
 } from './types';

@@ -73,3 +73,76 @@ floating element is open.
 
 Positioning does not add interaction or accessibility behavior. Custom overlays remain responsible
 for keyboard handling, focus management, roles, labels, outside interaction and dismissal.
+
+## Hover disclosure interactions
+
+`useHoverDisclosure` manages hover and focus state without rendering DOM or positioning content. It
+coordinates the trigger and floating content, so a close delay started when the pointer leaves the
+trigger is cancelled when the pointer enters the content.
+
+```vue
+<template>
+  <a ref="reference" href="/people/ada" v-bind="triggerProps">Ada Lovelace</a>
+
+  <Teleport to="body">
+    <section
+      v-if="isOpen"
+      ref="floating"
+      v-bind="contentProps"
+      :style="floatingStyle"
+      :data-placement="actualPlacement"
+    >
+      Mathematician and writer
+    </section>
+  </Teleport>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useFloatingPosition, useHoverDisclosure } from 'ropav/floating';
+
+const reference = ref<HTMLElement | null>(null);
+const floating = ref<HTMLElement | null>(null);
+
+const { isOpen, triggerProps, contentProps } = useHoverDisclosure({
+  openDelay: 600,
+  closeDelay: 150,
+});
+
+const { actualPlacement, floatingStyle } = useFloatingPosition({
+  reference,
+  floating,
+  open: isOpen,
+  placement: 'bottom-start',
+});
+</script>
+```
+
+Focus opens immediately by default. Hover uses `openDelay`; leaving the combined trigger/content
+area uses `closeDelay`. Escape dismisses an open disclosure even when keyboard focus is elsewhere.
+The return value also contains `state`, `isDisabled`, and immediate `open()`, `close()` and
+`toggle()` controls.
+
+| Option              | Default | Description                                                                 |
+| ------------------- | ------- | --------------------------------------------------------------------------- |
+| `open`              | —       | Controlled open state. Omit it for internal state.                          |
+| `defaultOpen`       | `false` | Initial internal state.                                                     |
+| `openDelay`         | `0`     | Delay in milliseconds before pointer hover opens the disclosure.            |
+| `closeDelay`        | `0`     | Delay before closing after pointer and focus leave trigger and content.     |
+| `disabled`          | `false` | Prevents opening and closes pending/open internal state.                    |
+| `openOnFocus`       | `true`  | Opens immediately when focus enters the trigger.                            |
+| `closeOnEscape`     | `true`  | Allows Escape to dismiss the disclosure.                                    |
+| `touchBehavior`     | `none`  | `toggle` opts into tap-to-toggle and prevents the activating click default. |
+| `interactionTarget` | —       | External element, selector or virtual reference that owns trigger events.   |
+| `contentTarget`     | —       | External element or selector that owns content events.                      |
+| `onOpenChange`      | —       | Receives the requested state and its interaction reason.                    |
+
+When `interactionTarget` or `contentTarget` is supplied, the composable attaches the corresponding
+listeners directly; do not also bind the matching props to that same element. An element reference
+is used directly. A virtual reference uses its `contextElement` for events. A virtual reference
+without `contextElement` cannot receive pointer or focus events, so control it with `open` or the
+imperative methods instead.
+
+The composable only owns disclosure interaction. Consumers remain responsible for content roles,
+labels and deciding whether the revealed information is appropriate for hover/focus. Interactive
+dialogs and focus-trapped content should use `Popover` or `Dialog` instead.

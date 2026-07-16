@@ -81,6 +81,8 @@ describe('public source exports', () => {
         expect(Ropav.useFocusTrap).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useFloatingPosition');
         expect(Ropav.useFloatingPosition).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('useHoverDisclosure');
+        expect(Ropav.useHoverDisclosure).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useTeleportTarget');
         expect(Ropav.useTeleportTarget).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useToast');
