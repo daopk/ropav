@@ -43,7 +43,7 @@ import { computed, type InputHTMLAttributes } from 'vue';
 import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useCheckedFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxPart, CheckboxProps } from './types';
@@ -78,20 +78,11 @@ const state = computed(() =>
     props.indeterminate ? 'indeterminate' : controllable.value.value ? 'checked' : 'unchecked',
 );
 
-useFormControl({
-    elements: () => [inputRef.value],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLInputElement).defaultChecked = controllable.initialValue;
-    },
-    validationMessage: () => props.validationMessage,
-    readResetValue(elements) {
-        controllable.resetValue((elements[0] as HTMLInputElement).checked);
-    },
-    syncControlledValue(elements) {
-        (elements[0] as HTMLInputElement).checked = controllable.value.value;
-    },
-});
+useCheckedFormControl(
+    () => inputRef.value,
+    controllable,
+    () => props.validationMessage,
+);
 const { getPartAttrs, getRootAttrs } = useStylesApi<CheckboxPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({

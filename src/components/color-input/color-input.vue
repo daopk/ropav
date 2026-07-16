@@ -103,10 +103,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, provide, ref } from 'vue';
+import { computed, ref } from 'vue';
 import IconCrosshair from '~icons/lucide/crosshair';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
+import { provideNestedFormControlOwner, useTextFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import ColorPicker from '../color-picker/color-picker.vue';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
@@ -151,12 +151,7 @@ const controllable = useControllableValue<ColorPickerValue>({
     onChange: (value) => emit('update:modelValue', value),
 });
 const inputComponentRef = ref<{ nativeElement: HTMLInputElement | null } | null>(null);
-let nestedFormControlClaimed = false;
-provide(nestedFormControlOwnerKey, () => {
-    if (nestedFormControlClaimed) return false;
-    nestedFormControlClaimed = true;
-    return true;
-});
+provideNestedFormControlOwner();
 
 const {
     control,
@@ -187,20 +182,11 @@ const effectiveValidationMessage = computed(() =>
     props.validationMessage !== undefined ? props.validationMessage : colorValidationMessage.value,
 );
 
-useFormControl({
-    elements: () => [inputComponentRef.value?.nativeElement],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLInputElement).defaultValue = controllable.initialValue;
-    },
-    validationMessage: () => effectiveValidationMessage.value,
-    readResetValue(elements) {
-        controllable.resetValue((elements[0] as HTMLInputElement).value);
-    },
-    syncControlledValue(elements) {
-        (elements[0] as HTMLInputElement).value = controllable.value.value;
-    },
-});
+useTextFormControl(
+    () => inputComponentRef.value?.nativeElement,
+    controllable,
+    () => effectiveValidationMessage.value,
+);
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<ColorInputPart>(props, 'root');
 const rootAttrs = computed(() =>

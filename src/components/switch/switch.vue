@@ -31,7 +31,7 @@
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useCheckedFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useSwitch } from './useSwitch';
 import type { SwitchPart, SwitchProps } from './types';
@@ -62,20 +62,11 @@ const { inputRef, control, rootClass, rootStyle, onChange, focus } = useSwitch(
     () => controllable.value.value,
 );
 
-useFormControl({
-    elements: () => [inputRef.value],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLInputElement).defaultChecked = controllable.initialValue;
-    },
-    validationMessage: () => props.validationMessage,
-    readResetValue(elements) {
-        controllable.resetValue((elements[0] as HTMLInputElement).checked);
-    },
-    syncControlledValue(elements) {
-        (elements[0] as HTMLInputElement).checked = controllable.value.value;
-    },
-});
+useCheckedFormControl(
+    () => inputRef.value,
+    controllable,
+    () => props.validationMessage,
+);
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SwitchPart>(props, 'root');
 const rootAttrs = computed(() =>

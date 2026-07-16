@@ -72,11 +72,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, provide, ref } from 'vue';
+import { computed, ref } from 'vue';
 import IconMinus from '~icons/lucide/minus';
 import IconPlus from '~icons/lucide/plus';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
+import { provideNestedFormControlOwner, useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Input from '../input/input.vue';
 import type { NumberInputPart, NumberInputProps, NumberInputValue } from './types';
@@ -117,12 +117,7 @@ const controllable = useControllableValue<NumberInputValue>({
     onChange: (value) => emit('update:modelValue', value),
 });
 const inputComponentRef = ref<{ nativeElement: HTMLInputElement | null } | null>(null);
-let nestedFormControlClaimed = false;
-provide(nestedFormControlOwnerKey, () => {
-    if (nestedFormControlClaimed) return false;
-    nestedFormControlClaimed = true;
-    return true;
-});
+provideNestedFormControlOwner();
 
 const {
     control,

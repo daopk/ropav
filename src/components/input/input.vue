@@ -11,10 +11,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, inject, type InputHTMLAttributes } from 'vue';
+import { computed, type InputHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
+import { claimNestedFormControlOwner, useTextFormControl } from '@/composables/useFormControl';
 import { useInput } from './useInput';
 import type { InputPart, InputProps } from './types';
 
@@ -44,24 +44,14 @@ const controllable = useControllableValue({
 const { inputRef, control, rootClass, onInput, focusInput } = useInput(props, (value) => {
     controllable.setValue(value);
 });
-const claimNestedFormControlOwner = inject(nestedFormControlOwnerKey, undefined);
-const hasNestedFormControlOwner = claimNestedFormControlOwner?.() ?? false;
+const hasNestedFormControlOwner = claimNestedFormControlOwner();
 
 if (!hasNestedFormControlOwner) {
-    useFormControl({
-        elements: () => [inputRef.value],
-        isControlled: () => controllable.isControlled.value,
-        initializeDefault(element) {
-            (element as HTMLInputElement).defaultValue = controllable.initialValue;
-        },
-        validationMessage: () => props.validationMessage,
-        readResetValue(elements) {
-            controllable.resetValue((elements[0] as HTMLInputElement).value);
-        },
-        syncControlledValue(elements) {
-            (elements[0] as HTMLInputElement).value = controllable.value.value;
-        },
-    });
+    useTextFormControl(
+        () => inputRef.value,
+        controllable,
+        () => props.validationMessage,
+    );
 }
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<InputPart>(props, 'root');

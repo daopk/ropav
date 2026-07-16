@@ -28,7 +28,7 @@
 import { computed, type TextareaHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useTextFormControl } from '@/composables/useFormControl';
 import { useTextarea } from './useTextarea';
 import type { TextareaPart, TextareaProps } from './types';
 
@@ -65,20 +65,11 @@ const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea, foc
     () => controllable.value.value,
 );
 
-useFormControl({
-    elements: () => [textareaRef.value],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLTextAreaElement).defaultValue = controllable.initialValue;
-    },
-    validationMessage: () => props.validationMessage,
-    readResetValue(elements) {
-        controllable.resetValue((elements[0] as HTMLTextAreaElement).value);
-    },
-    syncControlledValue(elements) {
-        (elements[0] as HTMLTextAreaElement).value = controllable.value.value;
-    },
-});
+useTextFormControl(
+    () => textareaRef.value,
+    controllable,
+    () => props.validationMessage,
+);
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<TextareaPart>(props, 'root');
 const rootAttrs = computed(() =>
