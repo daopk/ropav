@@ -169,6 +169,55 @@ describe('Dialog primitives', () => {
         expect(container.querySelector('[role="dialog"]')).toBe(content);
     });
 
+    it('stacks each dialog overlay above the preceding dialog content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            DialogRoot,
+                            { defaultOpen: true, modal: false },
+                            {
+                                default: () => [
+                                    h(DialogOverlay, { class: 'first-overlay' }),
+                                    h(DialogContent, {
+                                        ariaLabel: 'First dialog',
+                                        class: 'first-content',
+                                    }),
+                                ],
+                            },
+                        ),
+                        h(
+                            DialogRoot,
+                            { defaultOpen: true, modal: false },
+                            {
+                                default: () => [
+                                    h(DialogOverlay, { class: 'second-overlay' }),
+                                    h(DialogContent, {
+                                        ariaLabel: 'Second dialog',
+                                        class: 'second-content',
+                                    }),
+                                ],
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const firstContent = container.querySelector('.first-content') as HTMLElement;
+        const secondOverlay = container.querySelector('.second-overlay') as HTMLElement;
+        const secondContent = container.querySelector('.second-content') as HTMLElement;
+        expect(Number(secondOverlay.style.zIndex)).toBeGreaterThan(
+            Number(firstContent.style.zIndex),
+        );
+        expect(Number(secondContent.style.zIndex)).toBeGreaterThan(
+            Number(secondOverlay.style.zIndex),
+        );
+    });
+
     it('treats a portalled dropdown as part of the dialog focus scope and top layer', async () => {
         const closeReasons: DialogCloseReason[] = [];
         const container = mountDom(

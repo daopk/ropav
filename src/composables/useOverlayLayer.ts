@@ -100,7 +100,7 @@ function syncLayerZIndices(state: OverlayLayerState) {
     for (const layer of state.layers) {
         const metadata = layerMetadata.get(layer);
         if (!metadata) continue;
-        const zIndex = Math.max(metadata.baseZIndex, highestZIndex + 1);
+        const zIndex = Math.max(metadata.baseZIndex, highestZIndex + 2);
         metadata.setZIndex(zIndex);
         highestZIndex = zIndex;
     }
