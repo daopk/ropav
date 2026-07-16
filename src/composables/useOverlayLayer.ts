@@ -278,6 +278,11 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         };
     }
 
+    function replaceParentBranch(element: HTMLElement | null) {
+        parentBranchCleanup?.();
+        parentBranchCleanup = element ? parent?.registerBranch(element) : undefined;
+    }
+
     const context: OverlayLayerContext = {
         id: Symbol('overlay-layer'),
         element: options.element,
@@ -310,8 +315,7 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
     });
 
     function unregister() {
-        parentBranchCleanup?.();
-        parentBranchCleanup = undefined;
+        replaceParentBranch(null);
         if (!registeredDocument) return;
         const document = registeredDocument;
         registeredDocument = null;
@@ -323,8 +327,7 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         const document = element.ownerDocument;
         if (registeredDocument === document) {
             if (registeredElement !== element) {
-                parentBranchCleanup?.();
-                parentBranchCleanup = parent?.registerBranch(element, { focus: true });
+                replaceParentBranch(element);
                 registeredElement = element;
                 syncModalEffects(document, getState(document));
             }
@@ -341,7 +344,7 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         else state.layers.push(context);
         registeredDocument = document;
         registeredElement = element;
-        parentBranchCleanup = parent?.registerBranch(element, { focus: true });
+        replaceParentBranch(element);
         syncLayerZIndices(state);
         syncModalEffects(document, state);
     }

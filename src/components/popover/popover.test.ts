@@ -343,6 +343,57 @@ describe('Popover', () => {
         expect(root.classList.contains('rp-popover--open')).toBe(false);
     });
 
+    it('keeps a parent open when clicking teleported child content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        { id: 'parent-popover' },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h(
+                                    'button',
+                                    { class: 'parent-trigger', ...triggerProps },
+                                    'Open parent',
+                                ),
+                            content: () =>
+                                h(
+                                    Popover,
+                                    { id: 'child-popover' },
+                                    {
+                                        default: ({ triggerProps }: PopoverSlotProps) =>
+                                            h(
+                                                'button',
+                                                { class: 'child-trigger', ...triggerProps },
+                                                'Open child',
+                                            ),
+                                        content: () =>
+                                            h(
+                                                'button',
+                                                { class: 'child-content' },
+                                                'Child action',
+                                            ),
+                                    },
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        click(queryDom(container, '.parent-trigger') as HTMLButtonElement);
+        await flush();
+        click(queryDom(container, '.child-trigger') as HTMLButtonElement);
+        await flush();
+        click(queryDom(container, '.child-content') as HTMLButtonElement);
+        await flush();
+
+        expect(queryDom(container, '#parent-popover')?.getAttribute('data-state')).toBe('open');
+        expect(queryDom(container, '#child-popover')?.getAttribute('data-state')).toBe('open');
+    });
+
     it('optionally traps focus across the trigger and content', async () => {
         const outside = document.createElement('button');
         outside.textContent = 'Outside';
