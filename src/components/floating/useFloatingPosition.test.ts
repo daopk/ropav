@@ -229,12 +229,19 @@ describe('floating positioning', () => {
             ]);
         });
 
+        const cleanupCalls = floatingMocks.cleanup.mock.calls.length;
+        const autoUpdateCallsBeforeClose = floatingMocks.autoUpdate.mock.calls.length;
+
         state.open = false;
         await flush();
-        expect(floating.isPositioned.value).toBe(false);
-        expect(floating.floatingStyle.value).toMatchObject({
+        expect(floating.isPositioned.value).toBe(true);
+        expect(floating.actualPlacement.value).toBe('left');
+        expect(floating.floatingStyle.value).toEqual({
             position: 'fixed',
-            visibility: 'hidden',
+            top: '34px',
+            left: '12px',
         });
+        expect(floatingMocks.cleanup).toHaveBeenCalledTimes(cleanupCalls + 1);
+        expect(floatingMocks.autoUpdate).toHaveBeenCalledTimes(autoUpdateCallsBeforeClose);
     });
 });

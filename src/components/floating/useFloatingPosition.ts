@@ -220,8 +220,8 @@ function createFloatingPosition(options: UseFloatingPositionOptions): UseFloatin
 
     function start() {
         stop();
-        resetPosition();
         if (!getOpen()) return;
+        resetPosition();
 
         const currentGeneration = generation;
 
