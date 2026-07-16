@@ -126,6 +126,7 @@ const {
     contentClass,
     contentStyle,
     arrowStyle,
+    actualPlacement,
     placementSide,
     isTargetMode,
     teleportTo,
@@ -173,7 +174,7 @@ const publicContentProps = computed(() => ({
         style: contentStyle.value,
     }),
     'data-state': state.value,
-    'data-placement': placementSide.value,
+    'data-placement': actualPlacement.value,
 }));
 const publicRenderContext = computed(() => ({
     ...renderContext,

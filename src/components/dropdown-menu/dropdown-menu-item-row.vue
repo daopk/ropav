@@ -1,6 +1,6 @@
 <template>
     <div class="rp-dropdown-menu__item-wrap" role="none">
-        <button v-bind="publicItemProps">
+        <button ref="itemElement" v-bind="publicItemProps">
             <slot name="item" v-bind="slotProps" />
         </button>
 
@@ -9,7 +9,7 @@
             ref="submenuElement"
             v-bind="publicSubmenuProps"
             data-state="open"
-            :data-placement="placementSide"
+            :data-placement="actualPlacement"
             :data-side="placementSide"
         >
             <DropdownMenuItemRow
@@ -78,10 +78,10 @@ const slotProps = computed(() =>
     ),
 );
 
+const itemElement = ref<HTMLElement | null>(null);
 const submenuElement = ref<HTMLElement | null>(null);
-const reference = computed(() => props.context.getItemElement(path.value));
-const floating = useFloatingPosition({
-    reference,
+const { actualPlacement, floatingStyle } = useFloatingPosition({
+    reference: itemElement,
     floating: submenuElement,
     open: submenuOpen,
     placement: props.context.getSubmenuPlacement,
@@ -96,14 +96,15 @@ const publicSubmenuProps = computed(() => ({
     ...submenuProps.value,
     ...props.context.getPublicPartAttrs?.('submenu', {
         class: submenuProps.value.class,
-        style: floating.floatingStyle.value,
+        style: floatingStyle.value,
     }),
 }));
-const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
+const placementSide = computed(() => actualPlacement.value.split('-')[0]);
 
 function getChildKey(index: number, child: DropdownMenuItem) {
     return `${getPathKey([...path.value, index])}:${String(child.value)}`;
 }
 
+void itemElement;
 void submenuElement;
 </script>
