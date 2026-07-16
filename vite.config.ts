@@ -54,7 +54,11 @@ export default defineConfig({
         },
     },
     plugins: [
-        vue(),
+        vue({
+            features: {
+                vapor: true,
+            },
+        }),
         Icons({
             compiler: createVaporIconCompiler(),
         }),

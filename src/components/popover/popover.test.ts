@@ -369,11 +369,7 @@ describe('Popover', () => {
                                                 'Open child',
                                             ),
                                         content: () =>
-                                            h(
-                                                'button',
-                                                { class: 'child-content' },
-                                                'Child action',
-                                            ),
+                                            h('button', { class: 'child-content' }, 'Child action'),
                                     },
                                 ),
                         },
