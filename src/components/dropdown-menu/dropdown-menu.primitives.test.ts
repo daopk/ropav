@@ -16,7 +16,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from './dropdown-menu-primitives';
-import type { DropdownMenuSelectEvent } from './types';
+import type { DropdownMenuRootSlotProps, DropdownMenuSelectEvent } from './types';
 
 function mountBasicMenu(onSelect?: (event: DropdownMenuSelectEvent) => void) {
     return mountDom(
@@ -395,6 +395,50 @@ describe('DropdownMenu compound primitives', () => {
         const content = container.querySelector('[role="menu"]') as HTMLElement;
         expect(content.style.left).toBe('42px');
         expect(content.style.top).toBe('41px');
+    });
+
+    it('restores the configured reference after closing a point-anchored menu', async () => {
+        const configuredReference = {
+            getBoundingClientRect: () => new DOMRect(120, 80, 0, 0),
+        };
+        let controls: DropdownMenuRootSlotProps | undefined;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenuRoot,
+                        { modal: false, target: configuredReference },
+                        {
+                            default: (slotProps: DropdownMenuRootSlotProps) => {
+                                controls = slotProps;
+                                return h(
+                                    DropdownMenuContent,
+                                    { avoidCollisions: false, offset: 0 },
+                                    () => h(DropdownMenuItem, null, () => 'Inspect'),
+                                );
+                            },
+                        },
+                    );
+                },
+            }),
+        );
+
+        controls?.openAt({ x: 42, y: 33 });
+        await nextTick();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        let content = container.querySelector('[role="menu"]') as HTMLElement;
+        expect(content.style.left).toBe('42px');
+        expect(content.style.top).toBe('33px');
+
+        controls?.close();
+        controls?.open();
+        await nextTick();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        content = container.querySelector('[role="menu"]') as HTMLElement;
+        expect(content.style.left).toBe('120px');
+        expect(content.style.top).toBe('80px');
     });
 
     it('supports cancelable outside interaction', async () => {

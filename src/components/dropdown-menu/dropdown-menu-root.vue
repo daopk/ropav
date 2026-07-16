@@ -165,6 +165,13 @@ const slotProps = computed<DropdownMenuRootSlotProps>(() => ({
 watch(disabled, (value) => {
     if (value) close();
 });
+watch(
+    isOpen,
+    (value) => {
+        if (!value) activeReference.value = null;
+    },
+    { flush: 'sync' },
+);
 provide(rootKey, context);
 defineExpose({ open, close, toggle, openAt });
 </script>
