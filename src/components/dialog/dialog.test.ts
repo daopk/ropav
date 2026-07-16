@@ -25,6 +25,86 @@ function pointerdown(element: Element) {
 }
 
 describe('Dialog primitives', () => {
+    it('rebinds nested floating content when its portal is toggled', async () => {
+        const teleport = ref(true);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        { class: 'dialog-scroll-host', style: { overflow: 'auto' } },
+                        h(
+                            DialogRoot,
+                            { defaultOpen: true, modal: false },
+                            {
+                                default: () =>
+                                    h(
+                                        DialogPortal,
+                                        { teleport: teleport.value },
+                                        {
+                                            default: () =>
+                                                h(
+                                                    DialogContent,
+                                                    { ariaLabel: 'Actions' },
+                                                    {
+                                                        default: () =>
+                                                            h(
+                                                                DropdownMenuRoot,
+                                                                {
+                                                                    defaultOpen: true,
+                                                                    modal: false,
+                                                                },
+                                                                {
+                                                                    default: () => [
+                                                                        h(
+                                                                            DropdownMenuTrigger,
+                                                                            {
+                                                                                class: 'dialog-menu-trigger',
+                                                                            },
+                                                                            () => 'Actions',
+                                                                        ),
+                                                                        h(
+                                                                            DropdownMenuContent,
+                                                                            {
+                                                                                avoidCollisions: false,
+                                                                            },
+                                                                            () =>
+                                                                                h(
+                                                                                    DropdownMenuItem,
+                                                                                    null,
+                                                                                    () => 'Rename',
+                                                                                ),
+                                                                        ),
+                                                                    ],
+                                                                },
+                                                            ),
+                                                    },
+                                                ),
+                                        },
+                                    ),
+                            },
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const host = container.querySelector('.dialog-scroll-host') as HTMLElement;
+        const trigger = document.body.querySelector('.dialog-menu-trigger') as HTMLElement;
+        const getReferenceRect = vi.spyOn(trigger, 'getBoundingClientRect');
+
+        teleport.value = false;
+        await flush();
+        await vi.waitFor(() => expect(getReferenceRect).toHaveBeenCalled());
+
+        getReferenceRect.mockClear();
+        host.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(getReferenceRect).toHaveBeenCalled();
+    });
+
     it('composes accessible portalled content and reports every close reason', async () => {
         const portal = document.createElement('div');
         document.body.append(portal);

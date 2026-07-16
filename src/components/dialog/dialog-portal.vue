@@ -15,5 +15,5 @@ const props = withDefaults(defineProps<DialogPortalProps>(), {
     teleportTo: undefined,
 });
 
-const teleportTo = provideTeleportTarget(props);
+const teleportTo = provideTeleportTarget(props, () => Boolean(props.teleport));
 </script>

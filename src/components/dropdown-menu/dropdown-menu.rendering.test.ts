@@ -4,6 +4,7 @@ import { click, keydown, mountDom, queryDom, queryDomAll } from '../../../tests/
 import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
 import type { FloatingReference } from '../floating/types';
 import DropdownMenu from './dropdown-menu.vue';
+import DropdownMenuPortal from './dropdown-menu-portal.vue';
 import type {
     DropdownMenuItem,
     DropdownMenuItemSlotProps,
@@ -12,6 +13,60 @@ import type {
 } from './types';
 
 describe('DropdownMenu rendering', () => {
+    it('rebinds positioning when an ancestor portal moves the reference', async () => {
+        const portalDisabled = ref(false);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        { class: 'dropdown-scroll-host', style: { overflow: 'auto' } },
+                        h(
+                            DropdownMenuPortal,
+                            { disabled: portalDisabled.value },
+                            {
+                                default: () =>
+                                    h(
+                                        DropdownMenu,
+                                        {
+                                            id: 'ancestor-move-menu',
+                                            items: [{ label: 'Rename', value: 'rename' }],
+                                            open: true,
+                                            flip: false,
+                                            shift: false,
+                                        },
+                                        {
+                                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                                h('button', triggerProps, 'Actions'),
+                                        },
+                                    ),
+                            },
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await nextTick();
+        await nextTick();
+        const host = container.querySelector('.dropdown-scroll-host') as HTMLElement;
+        const root = document.body.querySelector('.rp-dropdown-menu') as HTMLElement;
+        const addHostListener = vi.spyOn(host, 'addEventListener');
+        const getReferenceRect = vi.spyOn(root, 'getBoundingClientRect');
+
+        portalDisabled.value = true;
+        await nextTick();
+        await nextTick();
+        await vi.waitFor(() => expect(getReferenceRect).toHaveBeenCalled());
+
+        expect(host.contains(root)).toBe(true);
+        expect(addHostListener).toHaveBeenCalledWith('scroll', expect.any(Function));
+
+        getReferenceRect.mockClear();
+        host.dispatchEvent(new Event('scroll'));
+        await vi.waitFor(() => expect(getReferenceRect).toHaveBeenCalled());
+    });
+
     it('renders trigger props, opens items, selects an item, and closes', async () => {
         const onOpen = vi.fn();
         const onSelect = vi.fn();

@@ -10,6 +10,7 @@ import {
     queryDomAll,
     waitTransition,
 } from '../../../tests/utils/vue';
+import DropdownMenuPortal from '../dropdown-menu/dropdown-menu-portal.vue';
 import Popover from './popover.vue';
 import { popoverPlacements } from './types';
 import type {
@@ -63,6 +64,56 @@ describe('Popover', () => {
         state.teleport = true;
         await flush();
         expect(document.body.querySelector('#toggle-popover')).toBe(content);
+    });
+
+    it('rebinds positioning when an ancestor portal moves the reference', async () => {
+        const state = shallowReactive({ portalDisabled: false });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        { class: 'popover-scroll-host', style: { overflow: 'auto' } },
+                        h(
+                            DropdownMenuPortal,
+                            { disabled: state.portalDisabled },
+                            {
+                                default: () =>
+                                    h(
+                                        Popover,
+                                        {
+                                            id: 'ancestor-move-popover',
+                                            open: true,
+                                            flip: false,
+                                            shift: false,
+                                        },
+                                        {
+                                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                                h('button', triggerProps, 'Target'),
+                                            content: () => 'Content',
+                                        },
+                                    ),
+                            },
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const host = container.querySelector('.popover-scroll-host') as HTMLElement;
+        const root = document.body.querySelector('.rp-popover') as HTMLElement;
+        const getReferenceRect = vi.spyOn(root, 'getBoundingClientRect');
+
+        state.portalDisabled = true;
+        await flush();
+        await vi.waitFor(() => expect(getReferenceRect).toHaveBeenCalled());
+
+        getReferenceRect.mockClear();
+        host.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(getReferenceRect).toHaveBeenCalled();
     });
 
     it('marks the root and trigger disabled when content is missing', async () => {

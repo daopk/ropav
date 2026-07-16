@@ -18,7 +18,10 @@ import {
     useFloatingPosition,
     useFloatingTarget,
 } from '../floating/useFloatingPosition';
-import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
+import {
+    useTeleportPositioningKey,
+    useTeleportTarget,
+} from '../teleport-provider/useTeleportTarget';
 import type {
     PopoverContentSlotProps,
     PopoverOffset,
@@ -112,6 +115,7 @@ export function usePopover(
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
+    const teleportPositioningKey = useTeleportPositioningKey();
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
         rootRef,
@@ -158,7 +162,7 @@ export function usePopover(
         flip: () => props.flip !== false,
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
-        restartKey: () => [Boolean(props.teleport), teleportTo.value],
+        restartKey: () => [Boolean(props.teleport), teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
     const rootClass = computed(() =>

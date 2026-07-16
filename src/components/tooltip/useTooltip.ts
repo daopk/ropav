@@ -7,7 +7,10 @@ import {
     useFloatingPosition,
     useFloatingTarget,
 } from '../floating/useFloatingPosition';
-import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
+import {
+    useTeleportPositioningKey,
+    useTeleportTarget,
+} from '../teleport-provider/useTeleportTarget';
 import type { TooltipOffset, TooltipProps, TooltipTriggerProps } from './types';
 
 type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
@@ -67,6 +70,7 @@ export function useTooltip(
     const shouldRenderContent = computed(() => !isDisabled.value);
     const shouldDescribeContent = computed(() => shouldRenderContent.value && !isDecorative.value);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
+    const teleportPositioningKey = useTeleportPositioningKey();
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
         rootRef,
@@ -94,7 +98,7 @@ export function useTooltip(
         flip: () => props.flip !== false,
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
-        restartKey: () => [Boolean(props.teleport), teleportTo.value],
+        restartKey: () => [Boolean(props.teleport), teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
 

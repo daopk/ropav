@@ -3,7 +3,10 @@ import type { CSSProperties } from 'vue';
 import { useOverlayLayer } from '@/composables/useOverlayLayer';
 import { bem } from '@/utils/bem';
 import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
-import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
+import {
+    useTeleportPositioningKey,
+    useTeleportTarget,
+} from '../teleport-provider/useTeleportTarget';
 import type {
     DropdownMenuContentProps,
     DropdownMenuInteractOutsideEvent,
@@ -43,6 +46,7 @@ export function useDropdownMenu(
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const requestedTeleportTarget = computed(() => props.portalTo ?? props.teleportTo);
     const teleportTo = useTeleportTarget(() => requestedTeleportTarget.value);
+    const teleportPositioningKey = useTeleportPositioningKey();
     const shouldTeleport = computed(() => props.portal ?? props.teleport !== false);
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
@@ -70,7 +74,7 @@ export function useDropdownMenu(
         arrowRef,
         isVisible,
         placement,
-        restartKey: () => [shouldTeleport.value, teleportTo.value],
+        restartKey: () => [shouldTeleport.value, teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => actualPlacement.value.split('-')[0]);
 

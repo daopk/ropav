@@ -8,10 +8,55 @@ import {
     queryDom,
     waitTransition,
 } from '../../../tests/utils/vue';
+import DropdownMenuPortal from '../dropdown-menu/dropdown-menu-portal.vue';
 import Tooltip from './tooltip.vue';
 import type { TooltipPlacement, TooltipProps } from './types';
 
 describe('Tooltip targets', () => {
+    it('rebinds positioning when an ancestor portal moves the reference', async () => {
+        const portalDisabled = ref(false);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        'div',
+                        { class: 'tooltip-scroll-host', style: { overflow: 'auto' } },
+                        h(
+                            DropdownMenuPortal,
+                            { disabled: portalDisabled.value },
+                            {
+                                default: () =>
+                                    h(Tooltip, {
+                                        id: 'ancestor-move-tooltip',
+                                        content: 'Content',
+                                        open: true,
+                                        openDelay: 0,
+                                        flip: false,
+                                        shift: false,
+                                    }),
+                            },
+                        ),
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const host = container.querySelector('.tooltip-scroll-host') as HTMLElement;
+        const root = document.body.querySelector('.rp-tooltip') as HTMLElement;
+        const getReferenceRect = vi.spyOn(root, 'getBoundingClientRect');
+
+        portalDisabled.value = true;
+        await flush();
+        await vi.waitFor(() => expect(getReferenceRect).toHaveBeenCalled());
+
+        getReferenceRect.mockClear();
+        host.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(getReferenceRect).toHaveBeenCalled();
+    });
+
     it('supports a selector target as an alternative trigger', async () => {
         const container = mountDom(
             defineComponent({
