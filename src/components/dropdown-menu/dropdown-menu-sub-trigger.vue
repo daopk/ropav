@@ -17,8 +17,9 @@ import { bem } from '@/utils/bem';
 import {
     menuKey,
     optionalAttr,
+    resolveHTMLElementRef,
     subKey,
-    toHTMLElement,
+    type ComponentRefValue,
     type MenuItemRegistration,
     type OpenFocusTarget,
 } from './dropdown-menu-primitive-core';
@@ -62,8 +63,10 @@ const registration: MenuItemRegistration = {
 menu.registerItem(registration);
 onBeforeUnmount(() => menu.unregisterItem(id.value));
 
-function setElement(value: Element | null) {
-    sub.trigger.value = toHTMLElement(value);
+function setElement(value: ComponentRefValue) {
+    resolveHTMLElementRef(value, id.value, (resolved) => {
+        sub.trigger.value = resolved;
+    });
 }
 
 function onMouseenter() {

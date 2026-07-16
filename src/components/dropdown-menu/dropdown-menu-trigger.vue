@@ -7,7 +7,12 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, ref, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
-import { optionalAttr, rootKey, toHTMLElement } from './dropdown-menu-primitive-core';
+import {
+    optionalAttr,
+    resolveHTMLElementRef,
+    rootKey,
+    type ComponentRefValue,
+} from './dropdown-menu-primitive-core';
 import type { DropdownMenuFocusTarget, DropdownMenuTriggerPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuTrigger', inheritAttrs: false });
@@ -28,9 +33,11 @@ const id = computed(() => props.id ?? `${generatedId}-trigger`);
 const element = ref<HTMLElement | null>(null);
 const isDisabled = computed(() => root.disabled.value || props.disabled);
 
-function setElement(value: Element | null) {
-    element.value = toHTMLElement(value);
-    root.setTrigger(element.value, id.value);
+function setElement(value: ComponentRefValue) {
+    resolveHTMLElementRef(value, id.value, (resolved) => {
+        element.value = resolved;
+        root.setTrigger(resolved, id.value);
+    });
 }
 
 function openWithReference(focus: DropdownMenuFocusTarget = 'first') {

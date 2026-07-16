@@ -10,6 +10,7 @@ import {
     type ComputedRef,
     type InjectionKey,
     type Ref,
+    type VaporComponentInstance,
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
@@ -29,6 +30,7 @@ import type {
 
 export type ElementReference = FloatingReference;
 export type OpenFocusTarget = DropdownMenuFocusTarget | false;
+export type ComponentRefValue = Element | ComponentPublicInstance | VaporComponentInstance | null;
 
 export interface MenuItemRegistration {
     id: string;
@@ -124,10 +126,30 @@ export function getFocusTarget(
     return options?.focus ?? 'first';
 }
 
-export function toHTMLElement(value: Element | ComponentPublicInstance | null): HTMLElement | null {
+export function toHTMLElement(value: ComponentRefValue, fallbackId?: string): HTMLElement | null {
     if (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) return value;
-    const element = (value as ComponentPublicInstance | null)?.$el;
-    return typeof HTMLElement !== 'undefined' && element instanceof HTMLElement ? element : null;
+    if (typeof HTMLElement === 'undefined') return null;
+
+    const vdomElement = (value as ComponentPublicInstance | null)?.$el;
+    if (vdomElement instanceof HTMLElement) return vdomElement;
+
+    const vaporBlock = (value as VaporComponentInstance | null)?.block;
+    if (vaporBlock instanceof HTMLElement) return vaporBlock;
+
+    return fallbackId && typeof document !== 'undefined'
+        ? document.getElementById(fallbackId)
+        : null;
+}
+
+export function resolveHTMLElementRef(
+    value: ComponentRefValue,
+    fallbackId: string,
+    resolve: (element: HTMLElement | null) => void,
+) {
+    const element = toHTMLElement(value, fallbackId);
+    resolve(element);
+    if (element || !value) return;
+    void nextTick(() => resolve(toHTMLElement(value, fallbackId)));
 }
 
 function createPointRect(point: DropdownMenuPoint): DOMRect {
@@ -419,8 +441,10 @@ export function usePrimitiveItem(
     });
     onBeforeUnmount(() => menu.unregisterItem(id.value));
 
-    function setElement(value: Element | ComponentPublicInstance | null) {
-        element.value = toHTMLElement(value);
+    function setElement(value: ComponentRefValue) {
+        resolveHTMLElementRef(value, id.value, (resolved) => {
+            element.value = resolved;
+        });
     }
 
     function onPointerenter() {

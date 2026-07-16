@@ -7,7 +7,12 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, ref, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
-import { optionalAttr, rootKey, toHTMLElement } from './dropdown-menu-primitive-core';
+import {
+    optionalAttr,
+    resolveHTMLElementRef,
+    rootKey,
+    type ComponentRefValue,
+} from './dropdown-menu-primitive-core';
 import type { DropdownMenuContextTriggerPrimitiveProps, DropdownMenuPoint } from './types';
 
 defineOptions({ name: 'RpDropdownMenuContextTrigger', inheritAttrs: false });
@@ -35,12 +40,14 @@ let startPoint: DropdownMenuPoint | undefined;
 let longPressOpened = false;
 let suppressUntil = 0;
 
-function setElement(value: Element | null) {
-    const previous = element.value;
-    if (previous) root.unregisterInside(previous);
-    element.value = toHTMLElement(value);
-    if (element.value) root.registerInside(element.value);
-    if (!root.triggerId.value) root.triggerId.value = id.value;
+function setElement(value: ComponentRefValue) {
+    resolveHTMLElementRef(value, id.value, (resolved) => {
+        const previous = element.value;
+        if (previous) root.unregisterInside(previous);
+        element.value = resolved;
+        if (resolved) root.registerInside(resolved);
+        if (!root.triggerId.value) root.triggerId.value = id.value;
+    });
 }
 
 function clearLongPress() {

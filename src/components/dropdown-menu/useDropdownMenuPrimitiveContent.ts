@@ -8,7 +8,6 @@ import {
     ref,
     useId,
     watch,
-    type ComponentPublicInstance,
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
@@ -22,9 +21,10 @@ import {
     createOutsideEvent,
     menuKey,
     optionalAttr,
+    resolveHTMLElementRef,
     rootKey,
     subKey,
-    toHTMLElement,
+    type ComponentRefValue,
     type ElementReference,
 } from './dropdown-menu-primitive-core';
 import type {
@@ -105,15 +105,17 @@ export function useDropdownMenuPrimitiveContent(
     provide(menuKey, menu);
     if (sub) sub.menu = menu;
 
-    function setElement(value: Element | ComponentPublicInstance | null) {
-        const previous = element.value;
-        if (previous) root.unregisterInside(previous);
-        layerBranchCleanup?.();
-        layerBranchCleanup = undefined;
-        element.value = toHTMLElement(value);
-        if (element.value) root.registerInside(element.value);
-        if (!sub) root.layer.element.value = element.value;
-        else if (element.value) layerBranchCleanup = root.layer.registerBranch(element.value);
+    function setElement(value: ComponentRefValue) {
+        resolveHTMLElementRef(value, id.value, (resolved) => {
+            const previous = element.value;
+            if (previous) root.unregisterInside(previous);
+            layerBranchCleanup?.();
+            layerBranchCleanup = undefined;
+            element.value = resolved;
+            if (resolved) root.registerInside(resolved);
+            if (!sub) root.layer.element.value = resolved;
+            else if (resolved) layerBranchCleanup = root.layer.registerBranch(resolved);
+        });
     }
 
     function emitOutside(type: 'pointer' | 'focus', originalEvent: Event) {
