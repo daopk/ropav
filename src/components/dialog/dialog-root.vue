@@ -99,7 +99,7 @@ function setTrigger(element: HTMLElement | null) {
 
 function setContent(element: HTMLElement | null, id: string) {
     contentRef.value = element;
-    contentId.value = element ? id : defaultContentId;
+    contentId.value = id;
 }
 
 function registerId(target: typeof titleIds, id: string) {

@@ -151,9 +151,13 @@ watch(
     { flush: 'post', immediate: true },
 );
 
-watch(id, (nextId) => {
-    if (root.contentRef.value) root.setContent(root.contentRef.value, nextId);
-});
+watch(
+    id,
+    (nextId) => {
+        root.setContent(root.contentRef.value, nextId);
+    },
+    { immediate: true },
+);
 
 onBeforeUnmount(() => {
     setDocumentListeners(false);

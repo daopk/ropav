@@ -169,6 +169,52 @@ describe('Dialog primitives', () => {
         expect(container.querySelector('[role="dialog"]')).toBe(content);
     });
 
+    it('keeps an explicit content id wired to the trigger while closed', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        { modal: false },
+                        {
+                            default: () => [
+                                h(
+                                    DialogTrigger,
+                                    { class: 'custom-id-trigger' },
+                                    () => 'Open settings',
+                                ),
+                                h(
+                                    DialogContent,
+                                    { id: 'settings-dialog', ariaLabel: 'Settings' },
+                                    () =>
+                                        h(
+                                            DialogClose,
+                                            { class: 'custom-id-close' },
+                                            () => 'Close settings',
+                                        ),
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const trigger = container.querySelector('.custom-id-trigger') as HTMLButtonElement;
+        expect(trigger.getAttribute('aria-controls')).toBe('settings-dialog');
+
+        click(trigger);
+        await flush();
+        expect(container.querySelector('[role="dialog"]')?.id).toBe('settings-dialog');
+
+        click(container.querySelector('.custom-id-close') as HTMLButtonElement);
+        await flush();
+        expect(container.querySelector('[role="dialog"]')).toBeNull();
+        expect(trigger.getAttribute('aria-controls')).toBe('settings-dialog');
+    });
+
     it('stacks each dialog overlay above the preceding dialog content', async () => {
         const container = mountDom(
             defineComponent({
