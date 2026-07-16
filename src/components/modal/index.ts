@@ -3,6 +3,7 @@ export { modalParts } from './types';
 export type {
     ModalFocusTrapOptions,
     ModalInitialFocus,
+    ModalCloseReason,
     ModalPart,
     ModalPresetSize,
     ModalProps,

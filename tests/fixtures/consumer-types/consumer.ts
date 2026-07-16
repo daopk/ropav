@@ -1,4 +1,6 @@
 import {
+    DialogContent as RootDialogContent,
+    DialogRoot as RootDialogRoot,
     DropdownMenuContent as RootDropdownMenuContent,
     DropdownMenuItem as RootDropdownMenuItem,
     DropdownMenuRoot as RootDropdownMenuRoot,
@@ -16,6 +18,8 @@ import {
     type ToastColor as RootToastColor,
     type ToastProps as RootToastProps,
     type ToastUpdateOptions as RootToastUpdateOptions,
+    type DialogCloseReason as RootDialogCloseReason,
+    type DialogRootProps as RootDialogRootProps,
     type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
@@ -27,6 +31,22 @@ import {
     useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
 } from 'ropav';
+import {
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogOverlay,
+    DialogPortal,
+    DialogRoot,
+    DialogTitle,
+    DialogTrigger,
+    type DialogCloseReason,
+    type DialogContentProps,
+    type DialogFocusTrapOptions,
+    type DialogInteractOutsideEvent,
+    type DialogPortalProps,
+    type DialogRootProps,
+} from 'ropav/dialog';
 import {
     DropdownMenuContent,
     DropdownMenuItem,
@@ -113,6 +133,20 @@ const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
 const dropdownRootProps: DropdownMenuRootPrimitiveProps = { defaultOpen: true, modal: false };
 const rootDropdownRootProps: RootDropdownMenuRootPrimitiveProps = { modal: true };
+const dialogRootProps: DialogRootProps = { defaultOpen: true, modal: false };
+const rootDialogRootProps: RootDialogRootProps = { modal: true };
+const dialogPortalProps: DialogPortalProps = { teleportTo: 'body' };
+const dialogFocusTrapOptions: DialogFocusTrapOptions = {
+    tabbableOptions: { displayCheck: 'none' },
+};
+const dialogContentProps: DialogContentProps = {
+    ariaLabel: 'Settings',
+    initialFocus: '.save',
+    focusTrapOptions: dialogFocusTrapOptions,
+};
+const dialogCloseReason: DialogCloseReason = 'outside';
+const rootDialogCloseReason: RootDialogCloseReason = dialogCloseReason;
+const onDialogOutside = (event: DialogInteractOutsideEvent) => event.preventDefault();
 const dropdownContentProps: DropdownMenuContentPrimitiveProps = {
     collisionPadding: 12,
     ignore: ['[data-dropdown-ignore]'],
@@ -213,6 +247,8 @@ const radioVNode = h(Radio, {
 });
 
 void [
+    RootDialogContent,
+    RootDialogRoot,
     RootToast,
     RootDropdownMenuContent,
     RootDropdownMenuItem,
@@ -228,6 +264,14 @@ void [
     rootToastTypes,
     rootToastVariants,
     Toast,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogOverlay,
+    DialogPortal,
+    DialogRoot,
+    DialogTitle,
+    DialogTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuRoot,
@@ -255,6 +299,14 @@ void [
     useToast,
     dropdownRootProps,
     rootDropdownRootProps,
+    dialogRootProps,
+    rootDialogRootProps,
+    dialogPortalProps,
+    dialogFocusTrapOptions,
+    dialogContentProps,
+    dialogCloseReason,
+    rootDialogCloseReason,
+    onDialogOutside,
     dropdownContentProps,
     dropdownDataItem,
     dropdownChecked,

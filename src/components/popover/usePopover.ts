@@ -10,6 +10,7 @@ import {
     type CSSProperties,
 } from 'vue';
 import { bem } from '@/utils/bem';
+import { useOverlayLayer } from '@/composables/useOverlayLayer';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
 import {
@@ -124,6 +125,11 @@ export function usePopover(
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
+    const layer = useOverlayLayer({
+        active: isVisible,
+        element: contentRef,
+        baseZIndex: 100,
+    });
     const shouldRenderContent = computed(
         () => !isDisabled.value && (Boolean(props.keepMounted) || isVisible.value),
     );
@@ -136,7 +142,9 @@ export function usePopover(
         if (!content) return null;
 
         const trigger = targetElement.value ?? rootRef.value;
-        return isFocusTrapContainer(trigger) ? [trigger, content] : content;
+        return isFocusTrapContainer(trigger)
+            ? [trigger, content, ...layer.focusBranches.value]
+            : [content, ...layer.focusBranches.value];
     });
 
     const floating = useFloatingPositionInternal(
@@ -167,6 +175,7 @@ export function usePopover(
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
         ...resolveOffsetStyle(props.offset),
+        zIndex: layer.zIndex.value,
     }));
     const triggerProps = computed<PopoverTriggerProps>(() => ({
         'aria-controls': isDisabled.value ? undefined : popoverId.value,
@@ -235,19 +244,13 @@ export function usePopover(
     }
 
     function onTriggerKeydown(event: KeyboardEvent) {
-        if (event.key !== 'Escape') return;
+        if (event.key !== 'Escape' || !isVisible.value) return;
         event.stopPropagation();
         closePopover();
     }
 
     function isEventInsidePopover(event: Event) {
-        const eventTarget = event.target;
-        if (typeof Node === 'undefined' || !(eventTarget instanceof Node)) return false;
-        return Boolean(
-            rootRef.value?.contains(eventTarget) ||
-            contentRef.value?.contains(eventTarget) ||
-            targetElement.value?.contains(eventTarget),
-        );
+        return layer.isInside(event, [rootRef.value, targetElement.value]);
     }
 
     function onCompositeFocusout(event: FocusEvent) {
@@ -269,17 +272,19 @@ export function usePopover(
     }
 
     function onDocumentClick(event: MouseEvent) {
+        if (!layer.isTopLayer()) return;
         if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
         closePopoverWithoutReturnFocus();
     }
 
     function onDocumentPointerDown(event: MouseEvent | TouchEvent) {
-        if (!props.trapFocus) return;
+        if (!layer.isTopLayer()) return;
         if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
         closePopoverWithoutReturnFocus();
     }
 
     function onDocumentKeydown(event: KeyboardEvent) {
+        if (!layer.isTopLayer()) return;
         if (props.trapFocus && event.key === 'Tab') {
             const containers = [targetElement.value ?? rootRef.value, contentRef.value];
             const tabbables: HTMLElement[] = [];

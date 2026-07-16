@@ -3,6 +3,7 @@ import type { FocusTrapOptions } from '../focus-trap/types';
 import type { TeleportProps } from '../floating/types';
 import type { OverlayProps } from '../overlay/types';
 import type { StylesApiProps } from '../../styles-api';
+import type { DialogCloseReason } from '../dialog/types';
 
 export const modalParts = [
     'root',
@@ -62,5 +63,8 @@ export interface ModalProps extends TeleportProps, StylesApiProps<ModalPart> {
     preventScroll?: boolean;
     returnFocus?: boolean;
     keepMounted?: boolean;
+    modal?: boolean;
     focusTrapOptions?: ModalFocusTrapOptions;
 }
+
+export type { DialogCloseReason as ModalCloseReason };

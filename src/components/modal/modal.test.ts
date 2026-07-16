@@ -23,8 +23,13 @@ function tab(shiftKey = false) {
     );
 }
 
+function pointerdown(element: Element) {
+    element.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+}
+
 describe('Modal', () => {
     it('renders an accessible modal and closes with controlled state', async () => {
+        const onClose = vi.fn();
         const props = reactive({
             open: true,
             id: 'invite-modal',
@@ -42,6 +47,7 @@ describe('Modal', () => {
                             'onUpdate:open': (value: boolean) => {
                                 props.open = value;
                             },
+                            onClose,
                         },
                         {
                             default: ({ close }: ModalSlotProps) =>
@@ -80,6 +86,7 @@ describe('Modal', () => {
         await waitTransition();
 
         expect(props.open).toBe(false);
+        expect(onClose).toHaveBeenCalledWith('programmatic');
         expect(queryDom(container, '.rp-modal')).toBeNull();
         expect(document.body.style.overflow).toBe('');
     });
@@ -205,7 +212,8 @@ describe('Modal', () => {
         expect(overlay.style.getPropertyValue('--_rp-overlay-z-index')).toBe('0');
     });
 
-    it('closes on overlay click and Escape, then restores focus and scroll', async () => {
+    it('closes on overlay pointerdown and Escape, then restores focus and scroll', async () => {
+        const onClose = vi.fn();
         const trigger = document.createElement('button');
         trigger.textContent = 'Open settings';
         document.body.append(trigger);
@@ -230,6 +238,7 @@ describe('Modal', () => {
                             'onUpdate:open': (value: boolean) => {
                                 props.open = value;
                             },
+                            onClose,
                         },
                         {
                             default: () =>
@@ -248,10 +257,11 @@ describe('Modal', () => {
         expect(document.activeElement).toBe(queryDom(container, '.primary-action'));
         expect(document.body.style.overflow).toBe('hidden');
 
-        click(queryDom(container, '.rp-modal__overlay') as HTMLElement);
+        pointerdown(queryDom(container, '.rp-modal__overlay') as HTMLElement);
         await waitTransition();
 
         expect(props.open).toBe(false);
+        expect(onClose).toHaveBeenNthCalledWith(1, 'outside');
         expect(queryDom(container, '.rp-modal')).toBeNull();
         expect(document.activeElement).toBe(trigger);
         expect(document.body.style.overflow).toBe('');
@@ -263,6 +273,39 @@ describe('Modal', () => {
         await waitTransition();
 
         expect(props.open).toBe(false);
+        expect(onClose).toHaveBeenNthCalledWith(2, 'escape');
+    });
+
+    it('supports non-modal behavior without focus, scroll, or background isolation', async () => {
+        const background = document.createElement('button');
+        background.textContent = 'Background';
+        document.body.append(background);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Modal,
+                        {
+                            open: true,
+                            modal: false,
+                            ariaLabel: 'Non-modal panel',
+                        },
+                        { default: () => h('button', { class: 'inside' }, 'Save') },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const panel = queryDom(container, '.rp-modal__panel') as HTMLElement;
+        expect(panel.getAttribute('aria-modal')).toBeNull();
+        expect(document.body.style.overflow).toBe('');
+        expect(background.inert).not.toBe(true);
+        expect(background.getAttribute('aria-hidden')).toBeNull();
+
+        background.focus();
+        expect(document.activeElement).toBe(background);
     });
 
     it('keeps focus inside the active modal', async () => {
@@ -335,7 +378,7 @@ describe('Modal', () => {
 
         await flush();
 
-        click(queryDom(container, '.rp-modal__overlay') as HTMLElement);
+        pointerdown(queryDom(container, '.rp-modal__overlay') as HTMLElement);
         keydown(document, 'Escape');
         await flush();
 

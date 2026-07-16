@@ -1,81 +1,28 @@
-import {
-    computed,
-    isRef,
-    onBeforeUnmount,
-    onMounted,
-    ref,
-    useSlots,
-    useId,
-    watch,
-    type CSSProperties,
-} from 'vue';
+import { computed, ref, useSlots, useId, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
-import { useFocusTrap } from '../focus-trap/useFocusTrap';
-import type {
-    ModalInitialFocus,
-    ModalPresetSize,
-    ModalProps,
-    ModalRole,
-    ModalSize,
-    ModalSlotProps,
-} from './types';
-
-let bodyScrollLockCount = 0;
-let previousBodyOverflow = '';
-
-type Cleanup = () => void;
+import { resolveDialogCloseReason } from '../dialog/dialog-core';
+import type { DialogCloseReason } from '../dialog/types';
+import type { ModalPresetSize, ModalProps, ModalRole, ModalSize, ModalSlotProps } from './types';
 
 const DEFAULT_ROLE: ModalRole = 'dialog';
 const DEFAULT_SIZE: ModalSize = 'md';
 
 const MODAL_PRESET_SIZES = new Set<ModalPresetSize>(['sm', 'md', 'lg', 'xl', 'full']);
 
-function isHTMLElement(value: unknown): value is HTMLElement {
-    return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
-}
-
 function isModalPresetSize(size: string): size is ModalPresetSize {
     return MODAL_PRESET_SIZES.has(size as ModalPresetSize);
 }
 
-function lockBodyScroll(): Cleanup | undefined {
-    if (typeof document === 'undefined') return undefined;
-
-    if (bodyScrollLockCount === 0) {
-        previousBodyOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-    }
-
-    bodyScrollLockCount += 1;
-
-    return () => {
-        bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
-        if (bodyScrollLockCount === 0) document.body.style.overflow = previousBodyOverflow;
-    };
-}
-
-function readInitialFocus(initialFocus: ModalInitialFocus | null | undefined) {
-    return isRef(initialFocus) ? initialFocus.value : initialFocus;
-}
-
-function queryPanelElement(panel: HTMLElement, selector: string) {
-    try {
-        const element = panel.querySelector(selector);
-        return isHTMLElement(element) ? element : null;
-    } catch {
-        return null;
-    }
-}
-
-export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: boolean) => void) {
+export function useModal(
+    props: Readonly<ModalProps>,
+    emit: {
+        openChange?: (open: boolean) => void;
+        close?: (reason: DialogCloseReason) => void;
+    } = {},
+) {
     const slots = useSlots();
     const generatedId = useId();
-    const panelRef = ref<HTMLElement | null>(null);
     const uncontrolledOpen = ref(false);
-
-    let isMounted = false;
-    let isActiveModal = false;
-    let unlockScroll: Cleanup | undefined;
 
     const modalId = computed(() => props.id ?? `${generatedId}-modal`);
     const titleId = computed(() => `${modalId.value}-title`);
@@ -137,89 +84,25 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
     function setOpen(nextOpen: boolean) {
         if (nextOpen === isOpen.value) return;
         if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        emitOpenChange?.(nextOpen);
+        emit.openChange?.(nextOpen);
     }
 
     function openModal() {
         setOpen(true);
     }
 
-    function closeModal() {
+    function closeModal(reason: DialogCloseReason = 'programmatic') {
+        if (!isOpen.value) return;
         setOpen(false);
+        emit.close?.(resolveDialogCloseReason(reason));
     }
 
     function toggleModal() {
-        setOpen(!isOpen.value);
+        if (isOpen.value) closeModal('programmatic');
+        else openModal();
     }
-
-    function resolveInitialFocus() {
-        const initialFocus = readInitialFocus(props.initialFocus);
-        const panel = panelRef.value;
-        if (!initialFocus || !panel) return null;
-
-        if (typeof initialFocus === 'string') {
-            return queryPanelElement(panel, initialFocus);
-        }
-
-        return panel.contains(initialFocus) ? initialFocus : null;
-    }
-
-    const focusTrap = useFocusTrap(panelRef, {
-        ...props.focusTrapOptions,
-        initialFocus: () => resolveInitialFocus() ?? undefined,
-        fallbackFocus: () => panelRef.value!,
-        returnFocusOnDeactivate: props.returnFocus !== false,
-        escapeDeactivates: (event) => {
-            if (props.closeOnEscape === false) return false;
-            event.preventDefault();
-            closeModal();
-            return false;
-        },
-        allowOutsideClick: true,
-        preventScroll: true,
-        delayInitialFocus: props.focusTrapOptions?.delayInitialFocus ?? false,
-        delayReturnFocus: props.focusTrapOptions?.delayReturnFocus ?? false,
-    });
-
-    function activateModal() {
-        if (isActiveModal) return;
-
-        isActiveModal = true;
-        if (props.preventScroll !== false) unlockScroll = lockBodyScroll();
-        focusTrap.activate();
-    }
-
-    function deactivateModal() {
-        if (!isActiveModal) return;
-
-        isActiveModal = false;
-        focusTrap.deactivate({ returnFocus: props.returnFocus !== false });
-        unlockScroll?.();
-        unlockScroll = undefined;
-    }
-
-    function onOverlayClick(event: MouseEvent) {
-        if (props.closeOnOverlayClick === false || event.target !== event.currentTarget) return;
-        closeModal();
-    }
-
-    onMounted(() => {
-        isMounted = true;
-        if (isOpen.value) activateModal();
-    });
-
-    onBeforeUnmount(() => {
-        deactivateModal();
-    });
-
-    watch(isOpen, (nextOpen) => {
-        if (!isMounted) return;
-        if (nextOpen) activateModal();
-        else deactivateModal();
-    });
 
     return {
-        panelRef,
         modalId,
         titleId,
         descriptionId,
@@ -240,6 +123,6 @@ export function useModal(props: Readonly<ModalProps>, emitOpenChange?: (open: bo
         openModal,
         closeModal,
         toggleModal,
-        onOverlayClick,
+        setOpen,
     };
 }

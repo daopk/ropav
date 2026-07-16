@@ -12,6 +12,7 @@ import {
     type Ref,
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
+import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
 import type { FloatingReference } from '../floating/types';
 import type {
     DropdownMenuCloseOptions,
@@ -76,6 +77,7 @@ export interface DropdownMenuRootContext {
     contentId: Ref<string | undefined>;
     reference: ComputedRef<ElementReference | null>;
     pendingFocus: Ref<OpenFocusTarget>;
+    layer: OverlayLayerContext;
     open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
     close: (options?: DropdownMenuCloseOptions & { returnFocus?: boolean }) => void;
     toggle: () => void;
@@ -110,8 +112,6 @@ export const radioGroupKey = Symbol(
 export const checkedKey = Symbol(
     'dropdown-menu-checked',
 ) as InjectionKey<DropdownMenuCheckedContext>;
-
-const openLayers: DropdownMenuRootContext[] = [];
 
 export function optionalAttr<T extends boolean | string | undefined>(value: T): T | undefined {
     return value || undefined;
@@ -196,21 +196,6 @@ function getOpenDirection(sub: DropdownMenuSubContext) {
 
 function getCloseDirection(menu: DropdownMenuContext) {
     return getPlacementSide(menu.actualPlacement.value) === 'left' ? 'ArrowRight' : 'ArrowLeft';
-}
-
-export function addOpenLayer(root: DropdownMenuRootContext) {
-    const index = openLayers.indexOf(root);
-    if (index >= 0) openLayers.splice(index, 1);
-    openLayers.push(root);
-}
-
-export function removeOpenLayer(root: DropdownMenuRootContext) {
-    const index = openLayers.indexOf(root);
-    if (index >= 0) openLayers.splice(index, 1);
-}
-
-export function isTopLayer(root: DropdownMenuRootContext) {
-    return openLayers[openLayers.length - 1] === root;
 }
 
 function blockDocumentClick(event: Event) {

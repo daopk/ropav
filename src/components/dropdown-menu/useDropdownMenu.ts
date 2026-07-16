@@ -1,4 +1,6 @@
 import { computed, ref, useId, watch } from 'vue';
+import type { CSSProperties } from 'vue';
+import { useOverlayLayer } from '@/composables/useOverlayLayer';
 import { bem } from '@/utils/bem';
 import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
@@ -53,6 +55,11 @@ export function useDropdownMenu(
     const isDisabled = computed(() => Boolean(props.disabled));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
+    const layer = useOverlayLayer({
+        active: isVisible,
+        element: menuRef,
+        baseZIndex: 100,
+    });
     const contentHasSubmenu = computed(() => hasNestedItems(visibleItems.value));
     const isEmpty = computed(() => visibleItems.value.length === 0);
 
@@ -126,6 +133,7 @@ export function useDropdownMenu(
         focusItem,
         focusMenu,
         focusTrigger,
+        layer,
     });
     const { open, close, toggle } = disclosure;
 
@@ -260,6 +268,11 @@ export function useDropdownMenu(
         { flush: 'sync' },
     );
 
+    const layeredContentStyle = computed<CSSProperties>(() => ({
+        ...contentStyle.value,
+        zIndex: layer.zIndex.value,
+    }));
+
     return {
         rootRef,
         menuRef,
@@ -275,7 +288,7 @@ export function useDropdownMenu(
         activeDescendantId,
         rootClass,
         contentClass,
-        contentStyle,
+        contentStyle: layeredContentStyle,
         arrowStyle,
         actualPlacement,
         placementSide,

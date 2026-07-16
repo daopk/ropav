@@ -64,6 +64,7 @@ const expectedFiles = [
     'dist/components/color-picker/index.js',
     'dist/components/color-swatch/index.js',
     'dist/components/dropdown-menu/index.js',
+    'dist/components/dialog/index.js',
     'dist/components/field/index.js',
     'dist/components/focus-trap/index.js',
     'dist/components/floating/index.js',
@@ -179,6 +180,14 @@ try {
             'DropdownMenuSubContent',
             'DropdownMenuSubTrigger',
             'DropdownMenuTrigger',
+            'DialogClose',
+            'DialogContent',
+            'DialogDescription',
+            'DialogOverlay',
+            'DialogPortal',
+            'DialogRoot',
+            'DialogTitle',
+            'DialogTrigger',
             'Field',
             'fieldParts',
             'FocusTrap',
@@ -358,6 +367,22 @@ try {
             'useDropdownMenu',
         ],
         'dist/components/dropdown-menu/index.js',
+    );
+
+    const dialog = await server.ssrLoadModule('/dist/components/dialog/index.js');
+    assertExports(
+        dialog,
+        [
+            'DialogClose',
+            'DialogContent',
+            'DialogDescription',
+            'DialogOverlay',
+            'DialogPortal',
+            'DialogRoot',
+            'DialogTitle',
+            'DialogTrigger',
+        ],
+        'dist/components/dialog/index.js',
     );
 
     const field = await server.ssrLoadModule('/dist/components/field/index.js');

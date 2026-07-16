@@ -31,6 +31,7 @@ const meta = {
         preventScroll: { control: 'boolean' },
         returnFocus: { control: 'boolean' },
         keepMounted: { control: 'boolean' },
+        modal: { control: 'boolean' },
         initialFocus: { control: false },
         focusTrapOptions: { control: false },
     },
@@ -47,6 +48,7 @@ const meta = {
         preventScroll: true,
         returnFocus: true,
         keepMounted: false,
+        modal: true,
     },
     parameters: {
         layout: 'fullscreen',

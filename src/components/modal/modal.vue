@@ -1,94 +1,118 @@
 <template>
-    <Teleport :to="teleportTo" :disabled="!teleport">
-        <Transition name="rp-modal">
-            <div v-if="shouldRender" v-show="isOpen" v-bind="rootAttrs">
-                <Overlay
-                    v-bind="overlayProps"
-                    :class-names="overlayClassNames"
-                    :styles="overlayStyles"
-                    :z-index="0"
-                    interactive
-                    @click="onOverlayClick"
-                />
+    <DialogRoot
+        :open="isOpen"
+        :modal="modal"
+        :close-on-escape="closeOnEscape"
+        :close-on-outside-click="closeOnOverlayClick"
+        :prevent-scroll="preventScroll"
+        :return-focus="returnFocus"
+        @update:open="setOpen"
+        @close="onDialogClose"
+    >
+        <DialogPortal :teleport="teleport" :teleport-to="teleportTo">
+            <Transition name="rp-modal">
+                <div v-if="shouldRender" v-show="isOpen" v-bind="rootAttrs">
+                    <DialogOverlay
+                        :as="Overlay"
+                        :force-mount="keepMounted"
+                        v-bind="overlayProps"
+                        :class-names="overlayClassNames"
+                        :styles="overlayStyles"
+                        :z-index="0"
+                        interactive
+                    />
 
-                <section
-                    :id="modalId"
-                    ref="panelRef"
-                    v-bind="panelAttrs"
-                    :role="role"
-                    aria-modal="true"
-                    :aria-label="ariaLabel"
-                    :aria-labelledby="ariaLabelledby"
-                    :aria-describedby="ariaDescribedby"
-                    tabindex="-1"
-                >
-                    <div
-                        v-if="hasHeader"
-                        :id="headerId"
-                        v-bind="getPartAttrs('header', { class: 'rp-modal__header' })"
+                    <DialogContent
+                        :id="modalId"
+                        as="section"
+                        :force-mount="keepMounted"
+                        v-bind="panelAttrs"
+                        :role="role"
+                        :aria-label="ariaLabel"
+                        :aria-labelledby="ariaLabelledby"
+                        :aria-describedby="ariaDescribedby"
+                        :initial-focus="initialFocus"
+                        :focus-trap-options="focusTrapOptions"
                     >
-                        <slot name="header" v-bind="slotProps">
-                            <div class="rp-modal__heading">
-                                <h2
-                                    v-if="title"
-                                    :id="titleId"
-                                    v-bind="getPartAttrs('title', { class: 'rp-modal__title' })"
-                                >
-                                    {{ title }}
-                                </h2>
-                                <p
-                                    v-if="description"
-                                    :id="descriptionId"
-                                    v-bind="
-                                        getPartAttrs('description', {
-                                            class: 'rp-modal__description',
-                                        })
-                                    "
-                                >
-                                    {{ description }}
-                                </p>
-                            </div>
-                        </slot>
-                    </div>
+                        <div
+                            v-if="hasHeader"
+                            :id="headerId"
+                            v-bind="getPartAttrs('header', { class: 'rp-modal__header' })"
+                        >
+                            <slot name="header" v-bind="slotProps">
+                                <div class="rp-modal__heading">
+                                    <DialogTitle
+                                        v-if="title"
+                                        :id="titleId"
+                                        as="h2"
+                                        v-bind="getPartAttrs('title', { class: 'rp-modal__title' })"
+                                    >
+                                        {{ title }}
+                                    </DialogTitle>
+                                    <DialogDescription
+                                        v-if="description"
+                                        :id="descriptionId"
+                                        as="p"
+                                        v-bind="
+                                            getPartAttrs('description', {
+                                                class: 'rp-modal__description',
+                                            })
+                                        "
+                                    >
+                                        {{ description }}
+                                    </DialogDescription>
+                                </div>
+                            </slot>
+                        </div>
 
-                    <IconButton
-                        v-if="showCloseButton"
-                        :class-names="closeClassNames"
-                        :styles="closeStyles"
-                        :ariaLabel="closeLabel"
-                        variant="ghost"
-                        size="sm"
-                        @click="closeModal"
-                    >
-                        <IconX />
-                    </IconButton>
+                        <DialogClose
+                            v-if="showCloseButton"
+                            :as="IconButton"
+                            :class-names="closeClassNames"
+                            :styles="closeStyles"
+                            :ariaLabel="closeLabel"
+                            variant="ghost"
+                            size="sm"
+                        >
+                            <IconX />
+                        </DialogClose>
 
-                    <div
-                        v-if="$slots.default"
-                        v-bind="getPartAttrs('body', { class: 'rp-modal__body' })"
-                    >
-                        <slot v-bind="slotProps" />
-                    </div>
+                        <div
+                            v-if="$slots.default"
+                            v-bind="getPartAttrs('body', { class: 'rp-modal__body' })"
+                        >
+                            <slot v-bind="slotProps" />
+                        </div>
 
-                    <div
-                        v-if="hasFooter"
-                        v-bind="getPartAttrs('footer', { class: 'rp-modal__footer' })"
-                    >
-                        <slot name="footer" v-bind="slotProps" />
-                    </div>
-                </section>
-            </div>
-        </Transition>
-    </Teleport>
+                        <div
+                            v-if="hasFooter"
+                            v-bind="getPartAttrs('footer', { class: 'rp-modal__footer' })"
+                        >
+                            <slot name="footer" v-bind="slotProps" />
+                        </div>
+                    </DialogContent>
+                </div>
+            </Transition>
+        </DialogPortal>
+    </DialogRoot>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconX from '~icons/lucide/x';
 import { useStylesApi } from '@/styles-api';
+import {
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogOverlay,
+    DialogPortal,
+    DialogRoot,
+    DialogTitle,
+    type DialogCloseReason,
+} from '../dialog';
 import IconButton from '../icon-button/icon-button.vue';
 import Overlay from '../overlay/overlay.vue';
-import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useModal } from './useModal';
 import type { ModalPart, ModalProps } from './types';
 
@@ -110,18 +134,17 @@ const props = withDefaults(defineProps<ModalProps>(), {
     preventScroll: true,
     returnFocus: true,
     keepMounted: false,
+    modal: true,
     teleport: true,
     focusTrapOptions: () => ({}),
 });
 
-const teleportTo = useTeleportTarget(() => props.teleportTo);
-
 const emit = defineEmits<{
     'update:open': [value: boolean];
+    close: [reason: DialogCloseReason];
 }>();
 
 const {
-    panelRef,
     modalId,
     titleId,
     descriptionId,
@@ -139,13 +162,15 @@ const {
     rootStyle,
     stateClass,
     slotProps,
-    closeModal,
-    onOverlayClick,
-} = useModal(props, (open) => {
-    emit('update:open', open);
+    setOpen,
+} = useModal(props, {
+    openChange: (open) => emit('update:open', open),
+    close: (reason) => emit('close', reason),
 });
 
-void panelRef;
+function onDialogClose(reason: DialogCloseReason) {
+    emit('close', reason);
+}
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<ModalPart>(props, 'root');
 const state = computed(() => (isOpen.value ? 'open' : 'closed'));

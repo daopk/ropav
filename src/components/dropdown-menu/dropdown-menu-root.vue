@@ -3,14 +3,13 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, watch, useId } from 'vue';
+import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
+import { useOverlayLayer } from '@/composables/useOverlayLayer';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
 import { isEventWithinElement } from './dropdown-menu-outside';
 import {
-    addOpenLayer,
     createVirtualAnchor,
     getFocusTarget,
-    removeOpenLayer,
     rootKey,
     type DropdownMenuRootContext,
     type ElementReference,
@@ -62,8 +61,14 @@ const reference = computed<ElementReference | null>(
     () => activeReference.value ?? configuredReference.value,
 );
 const pendingFocus = ref<OpenFocusTarget>('first');
+const contentElement = ref<HTMLElement | null>(null);
 const inside = new Set<HTMLElement>();
 let returnFocusElement: HTMLElement | null = null;
+const layer = useOverlayLayer({
+    active: computed(() => isOpen.value && !disabled.value),
+    element: contentElement,
+    baseZIndex: 100,
+});
 
 function setOpen(value: boolean) {
     if (value && disabled.value) return;
@@ -126,6 +131,7 @@ const context: DropdownMenuRootContext = {
     contentId,
     reference,
     pendingFocus,
+    layer,
     open,
     close,
     toggle,
@@ -159,16 +165,6 @@ const slotProps = computed<DropdownMenuRootSlotProps>(() => ({
 watch(disabled, (value) => {
     if (value) close();
 });
-watch(
-    isOpen,
-    (value) => {
-        if (value) addOpenLayer(context);
-        else removeOpenLayer(context);
-    },
-    { immediate: true },
-);
-onBeforeUnmount(() => removeOpenLayer(context));
-
 provide(rootKey, context);
 defineExpose({ open, close, toggle, openAt });
 </script>

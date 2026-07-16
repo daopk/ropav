@@ -66,6 +66,7 @@ export default defineConfig({
                 'src/styles-api.ts',
                 'src/components/**/*.vue',
                 'src/components/**/*.ts',
+                'src/composables/useOverlayLayer.ts',
                 'src/utils/componentColors.ts',
             ],
             exclude: [

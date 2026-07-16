@@ -1,4 +1,5 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
+import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
 import { blockNextDocumentClick, createOutsideEvent } from './dropdown-menu-primitive-core';
 import { isEventWithinTargets } from './dropdown-menu-outside';
 import type {
@@ -37,6 +38,7 @@ type UseDropdownMenuDisclosureOptions = {
     focusItem: (target: DropdownMenuFocusTarget, menuPath?: ItemPath) => boolean;
     focusMenu: () => void;
     focusTrigger: () => void;
+    layer: OverlayLayerContext;
 };
 
 export function useDropdownMenuDisclosure({
@@ -56,6 +58,7 @@ export function useDropdownMenuDisclosure({
     focusItem,
     focusMenu,
     focusTrigger,
+    layer,
 }: UseDropdownMenuDisclosureOptions) {
     function setOpen(nextOpen: boolean) {
         if (nextOpen && isDisabled.value) return;
@@ -128,6 +131,7 @@ export function useDropdownMenuDisclosure({
     }
 
     function onDocumentPointerdown(event: Event) {
+        if (!layer.isTopLayer()) return;
         if (isInside(event)) return;
         const outsideEvent = emitOutside('pointer', event);
         blockModalInteraction(event);
@@ -135,6 +139,7 @@ export function useDropdownMenuDisclosure({
     }
 
     function onDocumentFocus(event: Event) {
+        if (!layer.isTopLayer()) return;
         if (isInside(event)) return;
         const outsideEvent = emitOutside('focus', event);
         blockModalInteraction(event);

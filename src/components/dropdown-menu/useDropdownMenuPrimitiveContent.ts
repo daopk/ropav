@@ -20,7 +20,6 @@ import {
     createCustomEvent,
     createMenuContext,
     createOutsideEvent,
-    isTopLayer,
     menuKey,
     optionalAttr,
     rootKey,
@@ -103,6 +102,7 @@ export function useDropdownMenuPrimitiveContent(
         { immediate: true },
     );
     const shouldRender = computed(() => props.forceMount === true || isOpen.value);
+    let layerBranchCleanup: (() => void) | undefined;
 
     provide(menuKey, menu);
     if (sub) sub.menu = menu;
@@ -110,8 +110,12 @@ export function useDropdownMenuPrimitiveContent(
     function setElement(value: Element | ComponentPublicInstance | null) {
         const previous = element.value;
         if (previous) root.unregisterInside(previous);
+        layerBranchCleanup?.();
+        layerBranchCleanup = undefined;
         element.value = toHTMLElement(value);
         if (element.value) root.registerInside(element.value);
+        if (!sub) root.layer.element.value = element.value;
+        else if (element.value) layerBranchCleanup = root.layer.registerBranch(element.value);
     }
 
     function emitOutside(type: 'pointer' | 'focus', originalEvent: Event) {
@@ -124,7 +128,7 @@ export function useDropdownMenuPrimitiveContent(
 
     function onDocumentPointer(event: Event) {
         if (
-            !isTopLayer(root) ||
+            !root.layer.isTopLayer() ||
             root.isInside(event) ||
             isEventWithinTargets(event, props.ignore ?? [])
         ) {
@@ -143,7 +147,7 @@ export function useDropdownMenuPrimitiveContent(
 
     function onDocumentFocus(event: Event) {
         if (
-            !isTopLayer(root) ||
+            !root.layer.isTopLayer() ||
             root.isInside(event) ||
             isEventWithinTargets(event, props.ignore ?? [])
         ) {
@@ -195,7 +199,9 @@ export function useDropdownMenuPrimitiveContent(
     });
     onBeforeUnmount(() => {
         setDocumentListeners(false);
+        layerBranchCleanup?.();
         if (element.value) root.unregisterInside(element.value);
+        if (!sub && root.layer.element.value === element.value) root.layer.element.value = null;
         if (sub) sub.menu = null;
         else if (root.contentId.value === id.value) root.contentId.value = undefined;
     });
@@ -211,7 +217,11 @@ export function useDropdownMenuPrimitiveContent(
             class: submenu
                 ? bem('rp-dropdown-menu__submenu', { compound: true, open: isOpen.value })
                 : bem('rp-dropdown-menu__content', { compound: true, open: isOpen.value }),
-            style: [floating.floatingStyle.value, !isOpen.value ? { display: 'none' } : undefined],
+            style: [
+                floating.floatingStyle.value,
+                { zIndex: root.layer.zIndex.value },
+                !isOpen.value ? { display: 'none' } : undefined,
+            ],
             'aria-label': props.ariaLabel,
             'aria-labelledby': props.ariaLabelledby ?? (submenu ? undefined : root.triggerId.value),
             'aria-describedby': props.ariaDescribedby,
