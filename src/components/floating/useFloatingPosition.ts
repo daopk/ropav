@@ -98,7 +98,9 @@ export function useFloatingTarget(
     };
 }
 
-function createFloatingPosition(options: UseFloatingPositionOptions): UseFloatingPositionReturn {
+export function useFloatingPosition(
+    options: UseFloatingPositionOptions,
+): UseFloatingPositionReturn {
     const actualPlacement = ref<FloatingPlacement>(getPlacement());
     const isPositioned = ref(false);
     const floatingStyle = ref<CSSProperties>(getHiddenStyle());
@@ -263,10 +265,4 @@ function createFloatingPosition(options: UseFloatingPositionOptions): UseFloatin
         isPositioned: readonly(isPositioned),
         update,
     };
-}
-
-export function useFloatingPosition(
-    options: UseFloatingPositionOptions,
-): UseFloatingPositionReturn {
-    return createFloatingPosition(options);
 }
