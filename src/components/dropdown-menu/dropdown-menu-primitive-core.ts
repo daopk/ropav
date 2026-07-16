@@ -88,7 +88,7 @@ export interface DropdownMenuRootContext {
     setReturnFocus: (element: HTMLElement | null) => void;
     registerInside: (element: HTMLElement) => void;
     unregisterInside: (element: HTMLElement) => void;
-    isInside: (target: EventTarget | null) => boolean;
+    isInside: (event: Event) => boolean;
 }
 
 export interface DropdownMenuRadioGroupContext {

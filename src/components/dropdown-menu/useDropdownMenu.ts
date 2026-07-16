@@ -4,6 +4,7 @@ import { isElementReference, useFloatingTarget } from '../floating/useFloatingPo
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
     DropdownMenuContentProps,
+    DropdownMenuInteractOutsideEvent,
     DropdownMenuItem,
     DropdownMenuProps,
     DropdownMenuSelectEvent,
@@ -25,6 +26,9 @@ export function useDropdownMenu(
     emit: {
         openChange?: (open: boolean) => void;
         select?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
+        pointerDownOutside?: (event: DropdownMenuInteractOutsideEvent) => void;
+        focusOutside?: (event: DropdownMenuInteractOutsideEvent) => void;
+        interactOutside?: (event: DropdownMenuInteractOutsideEvent) => void;
     } = {},
 ) {
     const rootRef = ref<HTMLElement | null>(null);

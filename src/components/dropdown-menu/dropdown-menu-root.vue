@@ -5,6 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
+import { isEventWithinElement } from './dropdown-menu-outside';
 import {
     addOpenLayer,
     createVirtualAnchor,
@@ -142,8 +143,8 @@ const context: DropdownMenuRootContext = {
     unregisterInside(element) {
         inside.delete(element);
     },
-    isInside(target) {
-        return target instanceof Node && [...inside].some((element) => element.contains(target));
+    isInside(event) {
+        return [...inside].some((element) => isEventWithinElement(event, element));
     },
 };
 

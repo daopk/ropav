@@ -170,6 +170,10 @@ describe('DropdownMenu compound primitives', () => {
         click(container.querySelector('.portal-trigger') as HTMLButtonElement);
         await nextTick();
 
+        const portalledItem = document.body.querySelector('[role="menuitem"]') as HTMLElement;
+        portalledItem.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await nextTick();
+
         expect(container.querySelector('[role="menu"]')).toBeNull();
         expect(document.body.querySelector('[role="menu"]')?.textContent).toContain('Portalled');
     });
@@ -378,6 +382,7 @@ describe('DropdownMenu compound primitives', () => {
     });
 
     it('supports cancelable outside interaction', async () => {
+        const onInteractOutside = vi.fn((event: CustomEvent) => event.preventDefault());
         const container = mountDom(
             defineComponent({
                 render() {
@@ -390,8 +395,7 @@ describe('DropdownMenu compound primitives', () => {
                                     DropdownMenuContent,
                                     {
                                         avoidCollisions: false,
-                                        onInteractOutside: (event: CustomEvent) =>
-                                            event.preventDefault(),
+                                        onInteractOutside,
                                     },
                                     () => h(DropdownMenuItem, null, () => 'Stay open'),
                                 ),
@@ -407,9 +411,58 @@ describe('DropdownMenu compound primitives', () => {
         await nextTick();
 
         expect(container.querySelector('[role="menu"]')).not.toBeNull();
+        expect(onInteractOutside).toHaveBeenCalledOnce();
+        expect(onInteractOutside.mock.calls[0]?.[0].detail.originalEvent.type).toBe('pointerdown');
     });
 
-    it('blocks modal outside clicks but lets non-modal clicks continue', async () => {
+    it('ignores pointer and focus interactions from configured outside targets', async () => {
+        const ignored = ref<HTMLElement | null>(null);
+        const onInteractOutside = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    return () => [
+                        h('button', { ref: ignored, class: 'ignored-outside' }, 'Ignored'),
+                        h(
+                            DropdownMenuRoot,
+                            { defaultOpen: true, modal: false },
+                            {
+                                default: () =>
+                                    h(
+                                        DropdownMenuContent,
+                                        {
+                                            avoidCollisions: false,
+                                            ignore: [ignored, '.also-ignored'],
+                                            onInteractOutside,
+                                        },
+                                        () => h(DropdownMenuItem, null, () => 'Stay open'),
+                                    ),
+                            },
+                        ),
+                        h('button', { class: 'also-ignored' }, 'Also ignored'),
+                    ];
+                },
+            }),
+        );
+        await nextTick();
+
+        ignored.value?.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        container
+            .querySelector('.also-ignored')
+            ?.dispatchEvent(new FocusEvent('focusin', { bubbles: true, cancelable: true }));
+        await nextTick();
+
+        expect(onInteractOutside).not.toHaveBeenCalled();
+        expect(container.querySelector('[role="menu"]')).not.toBeNull();
+
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await nextTick();
+
+        expect(onInteractOutside).toHaveBeenCalledOnce();
+        expect(container.querySelector('[role="menu"]')).toBeNull();
+    });
+
+    it('blocks modal outside clicks', async () => {
         const outsideClick = vi.fn();
         document.body.addEventListener('click', outsideClick);
         const container = mountDom(

@@ -34,6 +34,7 @@ import {
     DropdownMenuTrigger,
     type DropdownMenuCheckedState,
     type DropdownMenuContentPrimitiveProps,
+    type DropdownMenuInteractOutsideTarget,
     type DropdownMenuProps,
     type DropdownMenuItem as DropdownMenuDataItem,
     type DropdownMenuRootPrimitiveProps,
@@ -114,6 +115,7 @@ const dropdownRootProps: DropdownMenuRootPrimitiveProps = { defaultOpen: true, m
 const rootDropdownRootProps: RootDropdownMenuRootPrimitiveProps = { modal: true };
 const dropdownContentProps: DropdownMenuContentPrimitiveProps = {
     collisionPadding: 12,
+    ignore: ['[data-dropdown-ignore]'],
     placement: 'right-start',
 };
 const dropdownDataItem: DropdownMenuDataItem = { label: 'Rename', value: 'rename' };
@@ -168,7 +170,9 @@ const tooltipProps: TooltipProps = {
     teleportTo: teleportTarget,
 };
 const popoverProps: PopoverProps = { target: popoverTarget, arrow: true, shift: false };
+const dropdownIgnoreTarget: DropdownMenuInteractOutsideTarget = ref<Element | null>(null);
 const dropdownProps: DropdownMenuProps = {
+    ignore: [dropdownIgnoreTarget],
     target: floatingTarget,
     strategy: 'fixed',
     flip: false,
@@ -279,6 +283,7 @@ void [
     teleportProviderProps,
     tooltipProps,
     popoverProps,
+    dropdownIgnoreTarget,
     dropdownProps,
     modalProps,
     TeleportProvider,

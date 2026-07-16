@@ -1,4 +1,4 @@
-import type { Component, HTMLAttributes } from 'vue';
+import type { Component, HTMLAttributes, Ref } from 'vue';
 import type { StylesApiProps } from '../../styles-api';
 
 export const dropdownMenuParts = [
@@ -164,6 +164,7 @@ export interface DropdownMenuProps
     closeOnSelect?: boolean;
     ariaLabel?: string;
     modal?: boolean;
+    ignore?: readonly DropdownMenuInteractOutsideTarget[];
     /** @deprecated Use `teleport` instead. */
     portal?: boolean;
     /** @deprecated Use `teleportTo` instead. */
@@ -193,6 +194,13 @@ export interface DropdownMenuInteractOutsideDetail {
 }
 
 export type DropdownMenuInteractOutsideEvent = CustomEvent<DropdownMenuInteractOutsideDetail>;
+
+export type DropdownMenuInteractOutsideTarget =
+    | string
+    | Element
+    | null
+    | undefined
+    | Readonly<Ref<Element | null | undefined>>;
 
 export type DropdownMenuOffsetOptions = FloatingOffsetOptions;
 
@@ -251,6 +259,7 @@ export interface DropdownMenuContentPrimitiveProps {
     /** @deprecated Use `flip` and `shift` instead. */
     avoidCollisions?: boolean;
     forceMount?: boolean;
+    ignore?: readonly DropdownMenuInteractOutsideTarget[];
     ariaLabel?: string;
     ariaLabelledby?: string;
     ariaDescribedby?: string;
@@ -324,7 +333,7 @@ export interface DropdownMenuSubTriggerPrimitiveProps {
 
 export interface DropdownMenuSubContentPrimitiveProps extends Omit<
     DropdownMenuContentPrimitiveProps,
-    'arrow' | 'placement'
+    'arrow' | 'ignore' | 'placement'
 > {
     placement?: DropdownMenuPlacement;
 }

@@ -34,6 +34,7 @@ export type {
     DropdownMenuFocusTarget,
     DropdownMenuInteractOutsideDetail,
     DropdownMenuInteractOutsideEvent,
+    DropdownMenuInteractOutsideTarget,
     DropdownMenuItemIndicatorPrimitiveProps,
     DropdownMenuItemPath,
     DropdownMenuItemPrimitiveProps,

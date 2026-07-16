@@ -14,6 +14,7 @@ import { useRequiredInject } from '@/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import { useFloatingPositionInternal } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
+import { isEventWithinTargets } from './dropdown-menu-outside';
 import {
     blockNextDocumentClick,
     createCustomEvent,
@@ -122,7 +123,13 @@ export function useDropdownMenuPrimitiveContent(
     }
 
     function onDocumentPointer(event: Event) {
-        if (!isTopLayer(root) || root.isInside(event.target)) return;
+        if (
+            !isTopLayer(root) ||
+            root.isInside(event) ||
+            isEventWithinTargets(event, props.ignore ?? [])
+        ) {
+            return;
+        }
         const outsideEvent = emitOutside('pointer', event);
         if (root.modal.value) {
             if (event.cancelable) event.preventDefault();
@@ -135,7 +142,13 @@ export function useDropdownMenuPrimitiveContent(
     }
 
     function onDocumentFocus(event: Event) {
-        if (!isTopLayer(root) || root.isInside(event.target)) return;
+        if (
+            !isTopLayer(root) ||
+            root.isInside(event) ||
+            isEventWithinTargets(event, props.ignore ?? [])
+        ) {
+            return;
+        }
         const outsideEvent = emitOutside('focus', event);
         if (root.modal.value) {
             if (event.cancelable) event.preventDefault();
@@ -152,7 +165,6 @@ export function useDropdownMenuPrimitiveContent(
         if (submenu || typeof document === 'undefined') return;
         const method = active ? 'addEventListener' : 'removeEventListener';
         document[method]('pointerdown', onDocumentPointer, true);
-        document[method]('click', onDocumentPointer, true);
         document[method]('focusin', onDocumentFocus, true);
     }
 

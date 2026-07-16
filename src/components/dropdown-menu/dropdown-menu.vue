@@ -75,6 +75,7 @@ import { useDropdownMenu } from './useDropdownMenu';
 import type {
     DropdownMenuItem,
     DropdownMenuItemSlotProps,
+    DropdownMenuInteractOutsideEvent,
     DropdownMenuPart,
     DropdownMenuProps,
     DropdownMenuSelectEvent,
@@ -102,6 +103,9 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
 const emit = defineEmits<{
     'update:open': [value: boolean];
     select: [item: DropdownMenuItem, event: DropdownMenuSelectEvent];
+    pointerDownOutside: [event: DropdownMenuInteractOutsideEvent];
+    focusOutside: [event: DropdownMenuInteractOutsideEvent];
+    interactOutside: [event: DropdownMenuInteractOutsideEvent];
 }>();
 
 defineSlots<{
@@ -131,6 +135,9 @@ const {
 } = useDropdownMenu(props, {
     openChange: (open) => emit('update:open', open),
     select: (item, event) => emit('select', item, event),
+    pointerDownOutside: (event) => emit('pointerDownOutside', event),
+    focusOutside: (event) => emit('focusOutside', event),
+    interactOutside: (event) => emit('interactOutside', event),
 });
 
 void rootRef;

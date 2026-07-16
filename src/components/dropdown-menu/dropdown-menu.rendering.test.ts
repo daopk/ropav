@@ -171,7 +171,12 @@ describe('DropdownMenu rendering', () => {
         expect(menu.style.position).toBe('absolute');
         expect(menu.querySelector('.rp-dropdown-menu__arrow')).not.toBeNull();
 
-        click(menu.querySelector('[role="menuitem"]') as HTMLButtonElement);
+        const portalledItem = menu.querySelector('[role="menuitem"]') as HTMLButtonElement;
+        portalledItem.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await nextTick();
+        expect(document.getElementById('portal-menu')).toBe(menu);
+
+        click(portalledItem);
         await waitDropdownTransition();
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(document.getElementById('portal-menu')).toBeNull();

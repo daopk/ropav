@@ -41,7 +41,8 @@ describe('DropdownMenu state', () => {
         expect(onSelect).not.toHaveBeenCalled();
     });
 
-    it('closes on outside click and Escape', async () => {
+    it('closes on outside pointerdown and Escape', async () => {
+        const outsideClick = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
@@ -63,9 +64,13 @@ describe('DropdownMenu state', () => {
         await nextTick();
         expect(queryDom(container, '[role="menu"]')).not.toBeNull();
 
+        document.body.addEventListener('click', outsideClick);
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         click(document.body);
         await waitDropdownTransition();
+        expect(outsideClick).toHaveBeenCalledOnce();
         expect(queryDom(container, '[role="menu"]')).toBeNull();
+        document.body.removeEventListener('click', outsideClick);
 
         click(trigger);
         await nextTick();
@@ -74,6 +79,69 @@ describe('DropdownMenu state', () => {
         keydown(menu, 'Escape');
         await waitDropdownTransition();
 
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
+    });
+
+    it('supports cancelable outside interaction without a duplicate click event', async () => {
+        const onInteractOutside = vi.fn((event: CustomEvent) => event.preventDefault());
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { items, onInteractOutside },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
+        await nextTick();
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        click(document.body);
+        await nextTick();
+
+        expect(onInteractOutside).toHaveBeenCalledOnce();
+        expect(queryDom(container, '[role="menu"]')).not.toBeNull();
+    });
+
+    it('ignores configured outside targets', async () => {
+        const ignored = ref<HTMLElement | null>(null);
+        const onInteractOutside = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    return () => [
+                        h('button', { ref: ignored, class: 'ignored-outside' }, 'Ignored'),
+                        h(
+                            DropdownMenu,
+                            { items, ignore: [ignored], onInteractOutside },
+                            {
+                                default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                    h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                            },
+                        ),
+                    ];
+                },
+            }),
+        );
+
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
+        await nextTick();
+        ignored.value?.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await nextTick();
+
+        expect(onInteractOutside).not.toHaveBeenCalled();
+        expect(queryDom(container, '[role="menu"]')).not.toBeNull();
+
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await waitDropdownTransition();
+
+        expect(onInteractOutside).toHaveBeenCalledOnce();
         expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
@@ -142,6 +210,7 @@ describe('DropdownMenu state', () => {
         click(queryDom(container, '.trigger') as HTMLButtonElement);
         await nextTick();
         document.body.addEventListener('click', outsideClick);
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         click(document.body);
         await waitDropdownTransition();
 
