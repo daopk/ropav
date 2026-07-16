@@ -236,6 +236,7 @@ try {
             'useAccordion',
             'useAccordionItem',
             'useCollapse',
+            'useFloatingPosition',
             'useFocusTrap',
             'useTabs',
             'useTabsContent',
@@ -243,6 +244,7 @@ try {
             'useTabsTrigger',
             'useToast',
             'useToastState',
+            'useTeleportTarget',
         ],
         'dist/index.js',
     );
@@ -368,6 +370,9 @@ try {
         'dist/components/focus-trap/index.js',
     );
 
+    const floating = await server.ssrLoadModule('/dist/components/floating/index.js');
+    assertExports(floating, ['useFloatingPosition'], 'dist/components/floating/index.js');
+
     const iconButton = await server.ssrLoadModule('/dist/components/icon-button/index.js');
     assertExports(
         iconButton,
@@ -449,7 +454,7 @@ try {
     );
     assertExports(
         teleportProvider,
-        ['TeleportProvider'],
+        ['TeleportProvider', 'useTeleportTarget'],
         'dist/components/teleport-provider/index.js',
     );
 

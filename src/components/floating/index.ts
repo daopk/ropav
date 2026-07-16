@@ -1,3 +1,4 @@
+export { useFloatingPosition } from './useFloatingPosition';
 export type {
     FloatingAlignment,
     FloatingCollisionPadding,
@@ -13,4 +14,6 @@ export type {
     TeleportProps,
     TeleportTarget,
     TeleportTargetValue,
+    UseFloatingPositionOptions,
+    UseFloatingPositionReturn,
 } from './types';

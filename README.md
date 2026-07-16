@@ -42,3 +42,6 @@ import { Button } from 'ropav';
 Use typed `classNames` and `styles`, documented state attributes, and variables listed in the packaged styles manifest. DOM nesting, internal selectors and undocumented variables are private implementation details.
 
 See the [Public Styles API](./docs/public-styles-api.md) and [public token table](./docs/public-tokens.md). Layered consumers should declare `reset, ropav.tokens, ropav.components, app`; `ropav/legacy-unlayered.css` is the temporary compatibility import for unlayered resets.
+
+For headless Tooltip, HoverCard and custom menu markup, see the
+[public floating API](./docs/public-floating-api.md).

@@ -90,7 +90,6 @@ const floating = useFloatingPosition({
     flip: props.context.getFlip,
     shift: props.context.getShift,
     collisionPadding: props.context.getCollisionPadding,
-    arrowEnabled: () => false,
 });
 const submenuProps = computed(() => props.context.getSubmenuProps(props.item, path.value, true));
 const publicSubmenuProps = computed(() => ({

@@ -14,10 +14,13 @@ import {
     nextTick,
     onBeforeUnmount,
     onMounted,
+    readonly,
     ref,
     shallowRef,
+    toValue,
     watch,
     type CSSProperties,
+    type MaybeRefOrGetter,
     type Ref,
 } from 'vue';
 import type {
@@ -27,36 +30,17 @@ import type {
     FloatingReference,
     FloatingStrategy,
     FloatingTarget,
+    UseFloatingPositionOptions,
+    UseFloatingPositionReturn,
 } from './types';
 
 type Source<T> = () => T;
 
-export interface UseFloatingPositionOptions<TPlacement extends FloatingPlacement> {
-    reference: Readonly<Ref<FloatingReference | null>>;
-    floating: Ref<HTMLElement | null>;
-    arrow?: Ref<HTMLElement | null>;
-    open: Readonly<Ref<boolean>>;
-    placement: Source<TPlacement>;
-    strategy: Source<FloatingStrategy>;
-    offset: Source<FloatingOffset | undefined>;
-    flip: Source<boolean>;
-    shift: Source<boolean>;
-    collisionPadding: Source<FloatingCollisionPadding>;
-    arrowEnabled: Source<boolean>;
-    restartKey?: Source<unknown>;
-}
-
-export interface UseFloatingPositionReturn<TPlacement extends FloatingPlacement> {
-    actualPlacement: Ref<TPlacement>;
-    arrowStyle: Ref<CSSProperties | undefined>;
-    floatingStyle: Ref<CSSProperties>;
-    isPositioned: Ref<boolean>;
-    start: () => void;
-    stop: () => void;
-    update: () => Promise<void>;
-}
-
 const DEFAULT_ARROW_PADDING = 4;
+const DEFAULT_COLLISION_PADDING = 8;
+const DEFAULT_OFFSET = 8;
+const DEFAULT_PLACEMENT: FloatingPlacement = 'bottom';
+const DEFAULT_STRATEGY: FloatingStrategy = 'absolute';
 
 export function readFloatingTarget(target: FloatingTarget | null | undefined) {
     return isRef(target) ? target.value : target;
@@ -115,10 +99,11 @@ export function useFloatingTarget(
     };
 }
 
-export function useFloatingPosition<TPlacement extends FloatingPlacement>(
-    options: UseFloatingPositionOptions<TPlacement>,
-): UseFloatingPositionReturn<TPlacement> {
-    const actualPlacement = ref<TPlacement>(options.placement()) as Ref<TPlacement>;
+function createFloatingPosition(
+    options: UseFloatingPositionOptions,
+    restartKey?: MaybeRefOrGetter<unknown>,
+): UseFloatingPositionReturn {
+    const actualPlacement = ref<FloatingPlacement>(getPlacement());
     const isPositioned = ref(false);
     const floatingStyle = ref<CSSProperties>(getHiddenStyle());
     const arrowStyle = ref<CSSProperties>();
@@ -127,9 +112,49 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
     let generation = 0;
     let request = 0;
 
+    function getReference() {
+        return toValue(options.reference);
+    }
+
+    function getFloating() {
+        return toValue(options.floating);
+    }
+
+    function getArrow() {
+        return toValue(options.arrow);
+    }
+
+    function getOpen() {
+        return toValue(options.open) !== false;
+    }
+
+    function getPlacement(): FloatingPlacement {
+        return toValue(options.placement) ?? DEFAULT_PLACEMENT;
+    }
+
+    function getStrategy(): FloatingStrategy {
+        return toValue(options.strategy) ?? DEFAULT_STRATEGY;
+    }
+
+    function getOffset(): FloatingOffset {
+        return toValue(options.offset) ?? DEFAULT_OFFSET;
+    }
+
+    function getFlip() {
+        return toValue(options.flip) !== false;
+    }
+
+    function getShift() {
+        return toValue(options.shift) !== false;
+    }
+
+    function getCollisionPadding(): FloatingCollisionPadding {
+        return toValue(options.collisionPadding) ?? DEFAULT_COLLISION_PADDING;
+    }
+
     function getHiddenStyle(): CSSProperties {
         return {
-            position: options.strategy(),
+            position: getStrategy(),
             top: '0',
             left: '0',
             visibility: 'hidden',
@@ -137,7 +162,7 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
     }
 
     function resetPosition() {
-        actualPlacement.value = options.placement();
+        actualPlacement.value = getPlacement();
         isPositioned.value = false;
         floatingStyle.value = getHiddenStyle();
         arrowStyle.value = undefined;
@@ -151,38 +176,37 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
     }
 
     function getMiddleware(): Middleware[] {
-        const middleware: Middleware[] = [floatingOffset(options.offset() ?? 8)];
-        const padding = options.collisionPadding();
+        const middleware: Middleware[] = [floatingOffset(getOffset())];
+        const padding = getCollisionPadding();
 
-        if (options.flip()) middleware.push(floatingFlip({ padding }));
-        if (options.shift()) middleware.push(floatingShift({ padding }));
-        if (options.arrowEnabled() && options.arrow?.value) {
-            middleware.push(
-                floatingArrow({ element: options.arrow.value, padding: DEFAULT_ARROW_PADDING }),
-            );
+        if (getFlip()) middleware.push(floatingFlip({ padding }));
+        if (getShift()) middleware.push(floatingShift({ padding }));
+        const arrow = getArrow();
+        if (arrow) {
+            middleware.push(floatingArrow({ element: arrow, padding: DEFAULT_ARROW_PADDING }));
         }
 
         return middleware;
     }
 
     async function update() {
-        const reference = options.reference.value;
-        const floating = options.floating.value;
-        if (!reference || !floating || !options.open.value) return;
+        const reference = getReference();
+        const floating = getFloating();
+        if (!reference || !floating || !getOpen()) return;
 
         const currentGeneration = generation;
         const currentRequest = ++request;
         const result = await computePosition(reference, floating, {
-            placement: options.placement() as Placement,
-            strategy: options.strategy(),
+            placement: getPlacement() as Placement,
+            strategy: getStrategy(),
             middleware: getMiddleware(),
         });
 
-        if (currentGeneration !== generation || currentRequest !== request || !options.open.value) {
+        if (currentGeneration !== generation || currentRequest !== request || !getOpen()) {
             return;
         }
 
-        actualPlacement.value = result.placement as TPlacement;
+        actualPlacement.value = result.placement as FloatingPlacement;
         floatingStyle.value = {
             position: result.strategy,
             top: `${result.y}px`,
@@ -201,12 +225,16 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
     function start() {
         stop();
         resetPosition();
-        if (!options.open.value) return;
+        if (!getOpen()) return;
+
+        const currentGeneration = generation;
 
         void nextTick(() => {
-            const reference = options.reference.value;
-            const floating = options.floating.value;
-            if (!reference || !floating || !options.open.value) return;
+            const reference = getReference();
+            const floating = getFloating();
+            if (currentGeneration !== generation || !reference || !floating || !getOpen()) {
+                return;
+            }
 
             cleanup = autoUpdate(reference, floating, () => void update());
         });
@@ -214,18 +242,17 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
 
     watch(
         [
-            options.open,
-            options.reference,
-            options.floating,
-            () => options.arrow?.value,
-            options.placement,
-            options.strategy,
-            options.offset,
-            options.flip,
-            options.shift,
-            options.collisionPadding,
-            options.arrowEnabled,
-            () => options.restartKey?.(),
+            getOpen,
+            getReference,
+            getFloating,
+            getArrow,
+            getPlacement,
+            getStrategy,
+            getOffset,
+            getFlip,
+            getShift,
+            getCollisionPadding,
+            () => toValue(restartKey),
         ],
         start,
         { flush: 'post', immediate: true },
@@ -234,12 +261,23 @@ export function useFloatingPosition<TPlacement extends FloatingPlacement>(
     onBeforeUnmount(stop);
 
     return {
-        actualPlacement,
-        arrowStyle,
-        floatingStyle,
-        isPositioned,
-        start,
-        stop,
+        actualPlacement: readonly(actualPlacement),
+        arrowStyle: readonly(arrowStyle),
+        floatingStyle: readonly(floatingStyle),
+        isPositioned: readonly(isPositioned),
         update,
     };
+}
+
+export function useFloatingPosition(
+    options: UseFloatingPositionOptions,
+): UseFloatingPositionReturn {
+    return createFloatingPosition(options);
+}
+
+export function useFloatingPositionInternal(
+    options: UseFloatingPositionOptions,
+    restartKey: MaybeRefOrGetter<unknown>,
+): UseFloatingPositionReturn {
+    return createFloatingPosition(options, restartKey);
 }

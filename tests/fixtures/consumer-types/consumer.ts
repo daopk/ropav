@@ -20,7 +20,11 @@ import {
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
     type TeleportTarget as RootTeleportTarget,
+    type UseFloatingPositionOptions as RootUseFloatingPositionOptions,
+    type UseFloatingPositionReturn as RootUseFloatingPositionReturn,
+    useFloatingPosition as useRootFloatingPosition,
     useFocusTrap as useRootFocusTrap,
+    useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
 } from 'ropav';
 import {
@@ -36,12 +40,17 @@ import {
     type DropdownMenuSelectEvent,
     type DropdownMenuVirtualAnchor,
 } from 'ropav/dropdown-menu';
-import type {
-    FloatingCollisionPadding,
-    FloatingOffset,
-    FloatingStrategy,
-    FloatingTarget,
-    TeleportTarget,
+import {
+    type FloatingCollisionPadding,
+    type FloatingOffset,
+    type FloatingPlacement,
+    type FloatingReference,
+    type FloatingStrategy,
+    type FloatingTarget,
+    type TeleportTarget,
+    type UseFloatingPositionOptions,
+    type UseFloatingPositionReturn,
+    useFloatingPosition,
 } from 'ropav/floating';
 import {
     FocusTrap,
@@ -64,8 +73,12 @@ import {
     type ToastUpdateOptions,
     useToast,
 } from 'ropav/toast';
-import { h } from 'vue';
-import { TeleportProvider, type TeleportProviderProps } from 'ropav/teleport-provider';
+import { h, ref } from 'vue';
+import {
+    TeleportProvider,
+    type TeleportProviderProps,
+    useTeleportTarget,
+} from 'ropav/teleport-provider';
 import { type ModalProps } from 'ropav/modal';
 import { type PopoverProps, type PopoverTarget } from 'ropav/popover';
 import { type TooltipOffset, type TooltipProps, type TooltipTarget } from 'ropav/tooltip';
@@ -117,6 +130,33 @@ const rootFloatingStrategy: RootFloatingStrategy = floatingStrategy;
 const floatingOffset: FloatingOffset = { mainAxis: 12, crossAxis: 4 };
 const tooltipOffset: TooltipOffset = floatingOffset;
 const collisionPadding: FloatingCollisionPadding = { top: 4, right: 8 };
+const floatingReference = ref<FloatingReference | null>(virtualAnchor);
+const floatingElement = ref<HTMLElement | null>(null);
+const floatingOpen = ref(true);
+const floatingPositionOptions: UseFloatingPositionOptions = {
+    reference: floatingReference,
+    floating: floatingElement,
+    open: floatingOpen,
+    placement: () => 'bottom-start',
+    offset: floatingOffset,
+    collisionPadding: () => collisionPadding,
+};
+const rootFloatingPositionOptions: RootUseFloatingPositionOptions = floatingPositionOptions;
+const publicFloatingComposable: (options: UseFloatingPositionOptions) => UseFloatingPositionReturn =
+    useFloatingPosition;
+const rootFloatingComposable: (
+    options: RootUseFloatingPositionOptions,
+) => RootUseFloatingPositionReturn = useRootFloatingPosition;
+const publicTeleportComposable: typeof useTeleportTarget = useTeleportTarget;
+const rootTeleportComposable: typeof useTeleportTarget = useRootTeleportTarget;
+
+function verifyFloatingReturn(result: UseFloatingPositionReturn) {
+    const placement: FloatingPlacement = result.actualPlacement.value;
+    // @ts-expect-error Public positioning state is readonly.
+    result.isPositioned.value = false;
+    return placement;
+}
+
 const teleportTarget: TeleportTarget = 'body';
 const rootTeleportTarget: RootTeleportTarget = teleportTarget;
 const teleportProviderProps: TeleportProviderProps = { teleportTo: teleportTarget };
@@ -224,6 +264,16 @@ void [
     floatingOffset,
     tooltipOffset,
     collisionPadding,
+    floatingReference,
+    floatingElement,
+    floatingOpen,
+    floatingPositionOptions,
+    rootFloatingPositionOptions,
+    publicFloatingComposable,
+    rootFloatingComposable,
+    publicTeleportComposable,
+    rootTeleportComposable,
+    verifyFloatingReturn,
     teleportTarget,
     rootTeleportTarget,
     teleportProviderProps,

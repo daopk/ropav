@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { defineComponent, h, shallowRef } from 'vue';
+import { defineComponent, h, shallowRef, type ComputedRef } from 'vue';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Tooltip from '../tooltip/tooltip.vue';
 import TeleportProvider from './teleport-provider.vue';
+import { useTeleportTarget } from './useTeleportTarget';
 
 function tooltip(id: string, props: Record<string, unknown> = {}) {
     return h(Tooltip, {
@@ -15,6 +16,42 @@ function tooltip(id: string, props: Record<string, unknown> = {}) {
 }
 
 describe('TeleportProvider', () => {
+    it('exposes the nearest target through the public composable', async () => {
+        const providedTarget = document.createElement('div');
+        const overrideTarget = shallowRef<Element | null>(null);
+        let inherited!: ComputedRef<string | Element>;
+        let resolvedOverride!: ComputedRef<string | Element>;
+
+        const Consumer = defineComponent({
+            setup() {
+                inherited = useTeleportTarget();
+                resolvedOverride = useTeleportTarget(overrideTarget);
+                return () => null;
+            },
+        });
+
+        mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        TeleportProvider,
+                        { teleportTo: providedTarget },
+                        { default: () => h(Consumer) },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        expect(inherited.value).toBe(providedTarget);
+        expect(resolvedOverride.value).toBe(providedTarget);
+
+        const explicitTarget = document.createElement('div');
+        overrideTarget.value = explicitTarget;
+        await flush();
+        expect(resolvedOverride.value).toBe(explicitTarget);
+    });
+
     it('teleports to body by default and renders inline when teleport is disabled', async () => {
         const container = mountDom(
             defineComponent({

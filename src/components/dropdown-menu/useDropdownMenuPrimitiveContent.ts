@@ -12,7 +12,7 @@ import {
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
-import { useFloatingPosition } from '../floating/useFloatingPosition';
+import { useFloatingPositionInternal } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import {
     blockNextDocumentClick,
@@ -79,20 +79,21 @@ export function useDropdownMenuPrimitiveContent(
             else root.close({ returnFocus: true });
         },
     });
-    const floating = useFloatingPosition<DropdownMenuPlacement>({
-        reference,
-        floating: element,
-        arrow: arrowElement,
-        open: isOpen,
-        placement: () => props.placement ?? defaultPlacement,
-        strategy: () => props.strategy ?? 'absolute',
-        offset: () => props.offset,
-        flip: () => props.avoidCollisions !== false && props.flip !== false,
-        shift: () => props.avoidCollisions !== false && props.shift !== false,
-        collisionPadding: () => props.collisionPadding ?? 8,
-        arrowEnabled: () => !submenu && props.arrow === true,
-        restartKey: () => teleportTo.value,
-    });
+    const floating = useFloatingPositionInternal(
+        {
+            reference,
+            floating: element,
+            arrow: arrowElement,
+            open: isOpen,
+            placement: () => props.placement ?? defaultPlacement,
+            strategy: () => props.strategy ?? 'absolute',
+            offset: () => props.offset,
+            flip: () => props.avoidCollisions !== false && props.flip !== false,
+            shift: () => props.avoidCollisions !== false && props.shift !== false,
+            collisionPadding: () => props.collisionPadding ?? 8,
+        },
+        () => teleportTo.value,
+    );
     watch(
         floating.actualPlacement,
         (value) => {

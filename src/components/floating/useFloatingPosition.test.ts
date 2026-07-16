@@ -11,6 +11,7 @@ import {
     readFloatingTarget,
     resolveFloatingTarget,
     useFloatingPosition,
+    useFloatingPositionInternal,
     useFloatingTarget,
 } from './useFloatingPosition';
 
@@ -111,6 +112,34 @@ describe('floating positioning', () => {
         expect(floatingTarget.reference.value).toBeInstanceOf(HTMLElement);
     });
 
+    it('applies public defaults and positions without an explicit open option', async () => {
+        const reference = createVirtualReference(10, 20);
+        let floating!: ReturnType<typeof useFloatingPosition>;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    const content = ref<HTMLElement | null>(null);
+                    floating = useFloatingPosition({ reference, floating: content });
+                    return () => h('div', { ref: content });
+                },
+            }),
+        );
+
+        await vi.waitFor(() => expect(floating.isPositioned.value).toBe(true));
+
+        const computeOptions = floatingMocks.computePosition.mock.lastCall?.[2];
+        expect(computeOptions).toMatchObject({ placement: 'bottom', strategy: 'absolute' });
+        expect(computeOptions.middleware.map((item: { name: string }) => item.name)).toEqual([
+            'offset',
+            'flip',
+            'shift',
+        ]);
+        expect(floatingMocks.offset).toHaveBeenLastCalledWith(8);
+        expect(floatingMocks.flip).toHaveBeenLastCalledWith({ padding: 8 });
+        expect(floatingMocks.shift).toHaveBeenLastCalledWith({ padding: 8 });
+    });
+
     it('uses ordered middleware, final placement, arrow data, and auto-update lifecycle', async () => {
         const state = reactive({
             open: true,
@@ -121,6 +150,7 @@ describe('floating positioning', () => {
             shift: true,
             collisionPadding: { top: 4, right: 6, bottom: 8, left: 10 },
             arrow: true,
+            restartKey: 0,
         });
         const reference = shallowRef<FloatingReference | null>(createVirtualReference(10, 20));
         let floating!: ReturnType<typeof useFloatingPosition>;
@@ -131,20 +161,23 @@ describe('floating positioning', () => {
                     const content = ref<HTMLElement | null>(null);
                     const arrow = ref<HTMLElement | null>(null);
                     const open = computed(() => state.open);
-                    floating = useFloatingPosition({
-                        reference,
-                        floating: content,
-                        arrow,
-                        open,
-                        placement: () => state.placement,
-                        strategy: () => state.strategy,
-                        offset: () => state.offset,
-                        flip: () => state.flip,
-                        shift: () => state.shift,
-                        collisionPadding: () => state.collisionPadding,
-                        arrowEnabled: () => state.arrow,
-                    });
-                    return () => h('div', { ref: content }, [h('span', { ref: arrow })]);
+                    floating = useFloatingPositionInternal(
+                        {
+                            reference,
+                            floating: content,
+                            arrow,
+                            open,
+                            placement: () => state.placement,
+                            strategy: () => state.strategy,
+                            offset: () => state.offset,
+                            flip: () => state.flip,
+                            shift: () => state.shift,
+                            collisionPadding: () => state.collisionPadding,
+                        },
+                        () => state.restartKey,
+                    );
+                    return () =>
+                        h('div', { ref: content }, state.arrow ? [h('span', { ref: arrow })] : []);
                 },
             }),
         );
@@ -180,6 +213,14 @@ describe('floating positioning', () => {
             expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(autoUpdateCalls);
         });
         expect(floatingMocks.cleanup).toHaveBeenCalled();
+
+        const restartedAutoUpdateCalls = floatingMocks.autoUpdate.mock.calls.length;
+        state.restartKey += 1;
+        await vi.waitFor(() => {
+            expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(
+                restartedAutoUpdateCalls,
+            );
+        });
 
         state.flip = false;
         state.shift = false;

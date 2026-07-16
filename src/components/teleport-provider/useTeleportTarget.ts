@@ -1,4 +1,13 @@
-import { computed, inject, isRef, provide, type ComputedRef, type InjectionKey } from 'vue';
+import {
+    computed,
+    inject,
+    isRef,
+    provide,
+    toValue,
+    type ComputedRef,
+    type InjectionKey,
+    type MaybeRefOrGetter,
+} from 'vue';
 import type { TeleportTarget, TeleportTargetValue } from '../floating/types';
 import type { TeleportProviderProps } from './types';
 
@@ -26,11 +35,11 @@ export function provideTeleportTarget(props: Readonly<TeleportProviderProps>) {
     return target;
 }
 
-export function useTeleportTarget(getTarget: () => TeleportTarget | null | undefined) {
+export function useTeleportTarget(target?: MaybeRefOrGetter<TeleportTarget | null | undefined>) {
     const providedTarget = inject(teleportTargetKey, undefined);
 
     return computed<TeleportTargetValue>(() => {
-        const ownTarget = readTeleportTarget(getTarget());
+        const ownTarget = readTeleportTarget(toValue(target));
         if (hasTarget(ownTarget)) return ownTarget;
         return providedTarget?.value ?? 'body';
     });

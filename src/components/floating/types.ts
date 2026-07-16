@@ -1,5 +1,5 @@
 import type { VirtualElement } from '@floating-ui/dom';
-import type { Ref } from 'vue';
+import type { CSSProperties, MaybeRefOrGetter, Ref } from 'vue';
 
 export type FloatingSide = 'top' | 'right' | 'bottom' | 'left';
 
@@ -33,6 +33,27 @@ export interface FloatingPositionProps<
     shift?: boolean;
     collisionPadding?: FloatingCollisionPadding;
     arrow?: boolean;
+}
+
+export interface UseFloatingPositionOptions {
+    reference: MaybeRefOrGetter<FloatingReference | null | undefined>;
+    floating: MaybeRefOrGetter<HTMLElement | null | undefined>;
+    arrow?: MaybeRefOrGetter<HTMLElement | null | undefined>;
+    open?: MaybeRefOrGetter<boolean | undefined>;
+    placement?: MaybeRefOrGetter<FloatingPlacement | undefined>;
+    strategy?: MaybeRefOrGetter<FloatingStrategy | undefined>;
+    offset?: MaybeRefOrGetter<FloatingOffset | undefined>;
+    flip?: MaybeRefOrGetter<boolean | undefined>;
+    shift?: MaybeRefOrGetter<boolean | undefined>;
+    collisionPadding?: MaybeRefOrGetter<FloatingCollisionPadding | undefined>;
+}
+
+export interface UseFloatingPositionReturn {
+    actualPlacement: Readonly<Ref<FloatingPlacement>>;
+    arrowStyle: Readonly<Ref<CSSProperties | undefined>>;
+    floatingStyle: Readonly<Ref<CSSProperties>>;
+    isPositioned: Readonly<Ref<boolean>>;
+    update: () => Promise<void>;
 }
 
 export type TeleportTargetValue = string | Element;

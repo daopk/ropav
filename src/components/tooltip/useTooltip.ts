@@ -4,11 +4,11 @@ import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import {
     isElementReference,
-    useFloatingPosition,
+    useFloatingPositionInternal,
     useFloatingTarget,
 } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
-import type { TooltipOffset, TooltipPlacement, TooltipProps, TooltipTriggerProps } from './types';
+import type { TooltipOffset, TooltipProps, TooltipTriggerProps } from './types';
 
 type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
 
@@ -83,20 +83,21 @@ export function useTooltip(
     });
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
 
-    const floating = useFloatingPosition<TooltipPlacement>({
-        reference,
-        floating: contentRef,
-        arrow: arrowRef,
-        open: isVisible,
-        placement: () => placement.value,
-        strategy: () => props.strategy ?? 'absolute',
-        offset: () => props.offset,
-        flip: () => props.flip !== false,
-        shift: () => props.shift !== false,
-        collisionPadding: () => props.collisionPadding ?? 8,
-        arrowEnabled: () => Boolean(props.arrow),
-        restartKey: () => teleportTo.value,
-    });
+    const floating = useFloatingPositionInternal(
+        {
+            reference,
+            floating: contentRef,
+            arrow: arrowRef,
+            open: isVisible,
+            placement: () => placement.value,
+            strategy: () => props.strategy ?? 'absolute',
+            offset: () => props.offset,
+            flip: () => props.flip !== false,
+            shift: () => props.shift !== false,
+            collisionPadding: () => props.collisionPadding ?? 8,
+        },
+        () => teleportTo.value,
+    );
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
 
     const rootClass = computed(() =>
