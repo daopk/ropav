@@ -132,6 +132,7 @@ const context: DialogRootContext = {
 
 const slotProps = computed<DialogRootSlotProps>(() => ({
     isOpen: isOpen.value,
+    zIndex: layer.zIndex.value,
     open,
     close,
     toggle,

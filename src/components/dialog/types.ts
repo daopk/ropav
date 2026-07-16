@@ -37,6 +37,7 @@ export interface DialogRootProps {
 
 export interface DialogRootSlotProps {
     isOpen: boolean;
+    zIndex: number;
     open: () => void;
     close: (reason?: DialogCloseReason) => void;
     toggle: () => void;

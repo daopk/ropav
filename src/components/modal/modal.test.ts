@@ -308,6 +308,49 @@ describe('Modal', () => {
         expect(document.activeElement).toBe(background);
     });
 
+    it('stacks the most recently opened modal root above later DOM siblings', async () => {
+        const state = reactive({ first: false, second: false });
+        mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(
+                            Modal,
+                            {
+                                open: state.first,
+                                keepMounted: true,
+                                ariaLabel: 'First modal',
+                                class: 'first-modal',
+                            },
+                            { default: () => 'First content' },
+                        ),
+                        h(
+                            Modal,
+                            {
+                                open: state.second,
+                                keepMounted: true,
+                                ariaLabel: 'Second modal',
+                                class: 'second-modal',
+                            },
+                            { default: () => 'Second content' },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        state.second = true;
+        await flush();
+        state.first = true;
+        await flush();
+
+        const first = document.querySelector('.first-modal') as HTMLElement;
+        const second = document.querySelector('.second-modal') as HTMLElement;
+        expect(Number(first.style.zIndex)).toBeGreaterThan(Number(second.style.zIndex));
+        expect(first.inert).toBe(false);
+        expect(second.inert).toBe(true);
+    });
+
     it('keeps focus inside the active modal', async () => {
         const container = mountDom(
             defineComponent({

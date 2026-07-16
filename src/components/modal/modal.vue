@@ -1,5 +1,6 @@
 <template>
     <DialogRoot
+        v-slot="{ zIndex }"
         :open="isOpen"
         :modal="modal"
         :close-on-escape="closeOnEscape"
@@ -11,7 +12,7 @@
     >
         <DialogPortal :teleport="teleport" :teleport-to="teleportTo">
             <Transition name="rp-modal">
-                <div v-if="shouldRender" v-show="isOpen" v-bind="rootAttrs">
+                <div v-if="shouldRender" v-show="isOpen" v-bind="getLayeredRootAttrs(zIndex)">
                     <DialogOverlay
                         :as="Overlay"
                         :force-mount="keepMounted"
@@ -98,7 +99,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, mergeProps } from 'vue';
 import IconX from '~icons/lucide/x';
 import { useStylesApi } from '@/styles-api';
 import {
@@ -181,6 +182,9 @@ const rootAttrs = computed(() =>
         'data-state': state.value,
     }),
 );
+function getLayeredRootAttrs(zIndex: number) {
+    return mergeProps(rootAttrs.value, { style: { zIndex } });
+}
 const overlayClassNames = computed(() => ({
     root: ['rp-modal__overlay', props.classNames?.overlay],
 }));
