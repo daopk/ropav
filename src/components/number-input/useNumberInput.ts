@@ -102,18 +102,20 @@ export function normalizeNumberInputTextAlign(
     return textAlign === 'center' || textAlign === 'right' ? textAlign : 'left';
 }
 
-function getModelInputValue(value: NumberInputValue) {
+export function getModelInputValue(value: NumberInputValue) {
     return value !== null && Number.isFinite(value) ? String(normalizeZero(value)) : '';
 }
 
 export function useNumberInput(
     props: Readonly<NumberInputProps>,
     emitUpdate: (value: NumberInputValue) => void,
+    getValue: () => NumberInputValue = () => props.modelValue ?? null,
 ) {
     const control = useControlState(props);
     const bounds = computed(() => normalizeNumberInputBounds(props.min, props.max));
     const nativeStep = computed(() => normalizeNumberInputStep(props.step));
-    const modelInputValue = computed(() => getModelInputValue(props.modelValue));
+    const currentValue = computed(getValue);
+    const modelInputValue = computed(() => getModelInputValue(currentValue.value));
     const isInteractive = computed(() => !control.disabled && !props.readonly);
     const controlsPosition = computed(() =>
         normalizeNumberInputControlsPosition(props.controlsPosition),
@@ -148,23 +150,23 @@ export function useNumberInput(
 
     const canIncrement = computed(() => {
         if (!isInteractive.value) return false;
-        if (props.modelValue === null || !Number.isFinite(props.modelValue)) return true;
+        if (currentValue.value === null || !Number.isFinite(currentValue.value)) return true;
 
-        return bounds.value.max === undefined || props.modelValue < bounds.value.max;
+        return bounds.value.max === undefined || currentValue.value < bounds.value.max;
     });
 
     const canDecrement = computed(() => {
         if (!isInteractive.value) return false;
-        if (props.modelValue === null || !Number.isFinite(props.modelValue)) return true;
+        if (currentValue.value === null || !Number.isFinite(currentValue.value)) return true;
 
-        return bounds.value.min === undefined || props.modelValue > bounds.value.min;
+        return bounds.value.min === undefined || currentValue.value > bounds.value.min;
     });
 
     function emitStep(direction: StepDirection) {
         const canStep = direction === 1 ? canIncrement.value : canDecrement.value;
         if (!canStep) return false;
 
-        const current = Number.isFinite(props.modelValue) ? props.modelValue : null;
+        const current = Number.isFinite(currentValue.value) ? currentValue.value : null;
         const next = stepNumberInputValue(current, direction, nativeStep.value, bounds.value);
         if (current !== null && next === current) return false;
 

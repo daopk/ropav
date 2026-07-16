@@ -194,7 +194,10 @@ export const TooltipArrowPlacements: Story = {
         setup() {
             const values = reactive(
                 Object.fromEntries(
-                    tooltipPlacements.map((placement) => [placement, [...args.modelValue]]),
+                    tooltipPlacements.map((placement) => [
+                        placement,
+                        [...(args.modelValue ?? [45, 55])],
+                    ]),
                 ) as Record<(typeof tooltipPlacements)[number], [number, number]>,
             );
 

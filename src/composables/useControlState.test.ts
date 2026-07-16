@@ -13,6 +13,7 @@ describe('useControlState', () => {
                 setup() {
                     control = useControlState({
                         id: 'control-id',
+                        form: 'control-form',
                         disabled: true,
                         describedby: 'local-help local-help',
                         labelledby: 'local-label',
@@ -23,6 +24,7 @@ describe('useControlState', () => {
         );
 
         expect(control.id).toBe('control-id');
+        expect(control.form).toBe('control-form');
         expect(control.disabled).toBe(true);
         expect(control.required).toBe(false);
         expect(control.invalid).toBe(false);

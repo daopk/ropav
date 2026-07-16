@@ -62,6 +62,8 @@ export type RangeSliderAriaValueText =
     | RangeSliderEndpointValueText
     | [RangeSliderEndpointValueText, RangeSliderEndpointValueText];
 
+export type RangeSliderValidationMessage = string | [string | undefined, string | undefined];
+
 export type SliderTooltipMode = 'hover' | 'always';
 
 export type SliderTooltipOptions = Pick<
@@ -93,7 +95,9 @@ export interface SliderThumbStyle {
 export interface SliderProps extends StylesApiProps<SliderPart> {
     id?: string;
     name?: string;
-    modelValue: number;
+    form?: string;
+    modelValue?: number;
+    defaultValue?: number;
     min?: number;
     max?: number;
     step?: number | 'any';
@@ -105,11 +109,14 @@ export interface SliderProps extends StylesApiProps<SliderPart> {
     size?: SliderSize;
     orientation?: SliderOrientation;
     disabled?: boolean;
+    required?: boolean;
+    invalid?: boolean;
     ariaLabel?: string;
     ariaValueText?: string | SliderValueFormatter;
     describedby?: string;
     labelledby?: string;
     inputAttrs?: SliderInputAttrs;
+    validationMessage?: string;
 }
 
 export interface RangeSliderProps
@@ -117,18 +124,22 @@ export interface RangeSliderProps
         Omit<
             SliderProps,
             | 'modelValue'
+            | 'defaultValue'
             | 'name'
             | 'ariaLabel'
             | 'ariaValueText'
             | 'inputAttrs'
+            | 'validationMessage'
             | 'classNames'
             | 'styles'
         >,
         StylesApiProps<RangeSliderPart> {
-    modelValue: RangeSliderValue;
+    modelValue?: RangeSliderValue;
+    defaultValue?: RangeSliderValue;
     minRange?: number;
     name?: string | [string, string];
     ariaLabel?: [string, string];
     ariaValueText?: RangeSliderAriaValueText;
     inputAttrs?: RangeSliderInputAttrs;
+    validationMessage?: RangeSliderValidationMessage;
 }

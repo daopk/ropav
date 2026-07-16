@@ -80,7 +80,7 @@ const meta = {
     render: (args) => ({
         components: { NumberInput },
         setup() {
-            const value = ref<number | null>(args.modelValue);
+            const value = ref<number | null>(args.modelValue ?? null);
             return { args, value };
         },
         template: '<NumberInput v-bind="args" v-model="value" />',
@@ -130,9 +130,9 @@ export const ControlPositions: Story = {
         components: { NumberInput },
         setup() {
             const values = ref<Record<(typeof controlsPositions)[number], number | null>>({
-                left: args.modelValue,
-                right: args.modelValue,
-                split: args.modelValue,
+                left: args.modelValue ?? null,
+                right: args.modelValue ?? null,
+                split: args.modelValue ?? null,
             });
 
             return { args, controlsPositions, values };
@@ -167,9 +167,9 @@ export const TextAlignments: Story = {
         components: { NumberInput },
         setup() {
             const values = ref<Record<(typeof textAlignments)[number], number | null>>({
-                left: args.modelValue,
-                center: args.modelValue,
-                right: args.modelValue,
+                left: args.modelValue ?? null,
+                center: args.modelValue ?? null,
+                right: args.modelValue ?? null,
             });
 
             return { args, textAlignments, values };

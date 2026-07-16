@@ -79,7 +79,11 @@ function resetTextareaHeight(textarea: HTMLTextAreaElement) {
     textarea.style.overflowY = '';
 }
 
-export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: string) => void) {
+export function useTextarea(
+    props: Readonly<TextareaProps>,
+    emitUpdate: (value: string) => void,
+    getValue: () => string = () => props.modelValue ?? '',
+) {
     const textareaRef = ref<HTMLTextAreaElement | null>(null);
     const control = useControlState(props);
     let heightSyncPending = false;
@@ -111,7 +115,7 @@ export function useTextarea(props: Readonly<TextareaProps>, emitUpdate: (value: 
     );
 
     const autosizeWatchSource = computed(() => [
-        props.modelValue,
+        getValue(),
         props.autosize,
         props.minRows,
         props.maxRows,

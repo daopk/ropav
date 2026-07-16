@@ -13,7 +13,9 @@ export type TextareaResize = 'none' | 'vertical' | 'both';
 export interface TextareaProps extends StylesApiProps<TextareaPart> {
     id?: string;
     name?: string;
-    modelValue: string;
+    form?: string;
+    modelValue?: string;
+    defaultValue?: string;
     size?: TextareaSize;
     radius?: TextareaRadius;
     resize?: TextareaResize;
@@ -31,4 +33,5 @@ export interface TextareaProps extends StylesApiProps<TextareaPart> {
     describedby?: string;
     labelledby?: string;
     inputAttrs?: TextareaHTMLAttributes;
+    validationMessage?: string;
 }

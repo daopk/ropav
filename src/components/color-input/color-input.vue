@@ -14,9 +14,11 @@
     >
         <template #default="slotProps">
             <Input
+                ref="inputComponentRef"
                 :id="control.id"
                 :name="name"
-                :model-value="modelValue"
+                :form="control.form"
+                :model-value="controllable.value.value"
                 type="text"
                 :size="size"
                 :radius="radius"
@@ -32,7 +34,7 @@
                 :input-attrs="getInputTriggerAttrs(slotProps)"
                 :class-names="inputClassNames"
                 :styles="inputStyles"
-                :validation-message="colorValidationMessage"
+                :validation-message="effectiveValidationMessage"
                 @update:model-value="onInputUpdate"
             >
                 <template #left>
@@ -82,7 +84,7 @@
 
         <template #content="slotProps">
             <ColorPicker
-                :model-value="modelValue"
+                :model-value="controllable.value.value"
                 :format="format"
                 :size="size"
                 :readonly="readonly"
@@ -101,8 +103,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, provide, ref } from 'vue';
 import IconCrosshair from '~icons/lucide/crosshair';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import ColorPicker from '../color-picker/color-picker.vue';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
@@ -115,6 +119,8 @@ import { useColorInput } from './useColorInput';
 defineOptions({ name: 'RpColorInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorInputProps>(), {
+    modelValue: undefined,
+    defaultValue: '',
     format: 'hex',
     placeholder: '',
     disabled: undefined,
@@ -139,6 +145,19 @@ const emit = defineEmits<{
     'update:open': [value: boolean];
 }>();
 
+const controllable = useControllableValue<ColorPickerValue>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
+const inputComponentRef = ref<{ nativeElement: HTMLInputElement | null } | null>(null);
+let nestedFormControlClaimed = false;
+provide(nestedFormControlOwnerKey, () => {
+    if (nestedFormControlClaimed) return false;
+    nestedFormControlClaimed = true;
+    return true;
+});
+
 const {
     control,
     rootClass,
@@ -156,9 +175,31 @@ const {
     onInputUpdate,
     onPickerUpdate,
     onOpenUpdate,
-} = useColorInput(props, {
-    modelValue: (value) => emit('update:modelValue', value),
-    open: (value) => emit('update:open', value),
+} = useColorInput(
+    props,
+    {
+        modelValue: (value) => controllable.setValue(value),
+        open: (value) => emit('update:open', value),
+    },
+    () => controllable.value.value,
+);
+const effectiveValidationMessage = computed(() =>
+    props.validationMessage !== undefined ? props.validationMessage : colorValidationMessage.value,
+);
+
+useFormControl({
+    elements: () => [inputComponentRef.value?.nativeElement],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLInputElement).defaultValue = controllable.initialValue;
+    },
+    validationMessage: () => effectiveValidationMessage.value,
+    readResetValue(elements) {
+        controllable.resetValue((elements[0] as HTMLInputElement).value);
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLInputElement).value = controllable.value.value;
+    },
 });
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<ColorInputPart>(props, 'root');

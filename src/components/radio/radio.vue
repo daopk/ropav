@@ -6,6 +6,7 @@
             ref="inputRef"
             type="radio"
             :name="name"
+            :form="form ?? nativeInputAttrs.form"
             :value="value"
             :checked="isChecked"
             :disabled="isDisabled || undefined"
@@ -53,6 +54,8 @@ const {
     inputRef,
     control,
     name,
+    form,
+    groupInputAttrs,
     isChecked,
     isDisabled,
     isRequired,
@@ -75,23 +78,32 @@ const rootAttrs = computed(() =>
 );
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
+    const groupAttrs = groupInputAttrs.value ?? {};
     const {
-        class: compatibilityClass,
-        style: compatibilityStyle,
-        onChange: compatibilityOnChange,
-        ...attrs
+        class: groupClass,
+        style: groupStyle,
+        onChange: groupOnChange,
+        ...groupForwardedAttrs
+    } = groupAttrs;
+    const {
+        class: itemClass,
+        style: itemStyle,
+        onChange: itemOnChange,
+        ...itemForwardedAttrs
     } = props.inputAttrs ?? {};
 
     return {
-        ...attrs,
+        ...groupForwardedAttrs,
+        ...itemForwardedAttrs,
         ...getPartAttrs('input', {
             class: 'rp-radio__native',
-            compatibilityClass,
-            compatibilityStyle,
+            compatibilityClass: [groupClass, itemClass],
+            compatibilityStyle: [groupStyle, itemStyle],
         }),
         onChange(event) {
             onSelect(event);
-            compatibilityOnChange?.(event);
+            groupOnChange?.(event);
+            itemOnChange?.(event);
         },
     };
 });

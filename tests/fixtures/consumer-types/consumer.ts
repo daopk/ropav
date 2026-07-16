@@ -119,10 +119,20 @@ import { type ModalProps } from 'ropav/modal';
 import { type PopoverProps, type PopoverTarget } from 'ropav/popover';
 import { type TooltipOffset, type TooltipProps, type TooltipTarget } from 'ropav/tooltip';
 import { type CheckboxProps } from 'ropav/checkbox';
-import { Radio, type RadioGroupOrientation, type RadioProps } from 'ropav/radio';
+import { type ColorInputProps } from 'ropav/color-input';
+import { type InputProps } from 'ropav/input';
+import { type NumberInputProps } from 'ropav/number-input';
+import {
+    Radio,
+    type RadioGroupOrientation,
+    type RadioGroupProps,
+    type RadioProps,
+} from 'ropav/radio';
+import { type SelectProps } from 'ropav/select';
 import {
     type RangeSliderInputAttrs,
     type RangeSliderProps,
+    type RangeSliderValidationMessage,
     type SliderInputAttrs,
     type SliderProps,
 } from 'ropav/slider';
@@ -258,16 +268,58 @@ const rangeSliderInputAttrs: RangeSliderInputAttrs = [
     { title: 'Lower input' },
     { title: 'Upper input' },
 ];
-const sliderProps: SliderProps = { inputAttrs: sliderInputAttrs, modelValue: 50 };
-const rangeSliderProps: RangeSliderProps = {
-    inputAttrs: rangeSliderInputAttrs,
-    modelValue: [25, 75],
+const rangeValidationMessage: RangeSliderValidationMessage = ['Choose a lower value.', undefined];
+const sliderProps: SliderProps = {
+    defaultValue: 50,
+    form: 'slider-form',
+    inputAttrs: sliderInputAttrs,
+    invalid: true,
+    required: true,
+    validationMessage: 'Choose a value.',
 };
-const switchProps: SwitchProps = { inputAttrs: { autocomplete: 'off' }, modelValue: false };
-const checkboxProps: CheckboxProps = { inputAttrs: { form: 'terms-form' }, modelValue: false };
+const rangeSliderProps: RangeSliderProps = {
+    defaultValue: [25, 75],
+    form: 'slider-form',
+    inputAttrs: rangeSliderInputAttrs,
+    validationMessage: rangeValidationMessage,
+};
+const switchProps: SwitchProps = {
+    defaultValue: false,
+    form: 'settings-form',
+    inputAttrs: { autocomplete: 'off' },
+    value: 'enabled',
+};
+const checkboxProps: CheckboxProps = {
+    defaultValue: false,
+    form: 'terms-form',
+    inputAttrs: { form: 'legacy-form' },
+    value: 'accepted',
+};
 const textareaProps: TextareaProps = {
+    defaultValue: '',
+    form: 'notes-form',
     inputAttrs: { autocomplete: 'off', maxlength: 500 },
-    modelValue: '',
+    validationMessage: 'Enter notes.',
+};
+const inputProps: InputProps = { defaultValue: '', form: 'profile-form' };
+const numberInputProps: NumberInputProps = { defaultValue: null, form: 'profile-form' };
+const colorInputProps: ColorInputProps = {
+    defaultValue: '#4992d1',
+    form: 'profile-form',
+    validationMessage: 'Choose a color.',
+};
+const selectProps: SelectProps = {
+    defaultValue: null,
+    form: 'profile-form',
+    inputAttrs: { autocomplete: 'off' },
+    options: [{ label: 'One', value: 1 }],
+    required: true,
+};
+const radioGroupProps: RadioGroupProps = {
+    defaultValue: null,
+    form: 'profile-form',
+    inputAttrs: { autocomplete: 'off' },
+    validationMessage: 'Choose one.',
 };
 const radioOrientation: RadioGroupOrientation = 'horizontal';
 const radioProps: RadioProps = {
@@ -396,9 +448,15 @@ void [
     rangeSliderInputAttrs,
     sliderProps,
     rangeSliderProps,
+    rangeValidationMessage,
     switchProps,
     checkboxProps,
     textareaProps,
+    inputProps,
+    numberInputProps,
+    colorInputProps,
+    selectProps,
+    radioGroupProps,
     radioOrientation,
     radioProps,
     radioVNode,

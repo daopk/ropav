@@ -23,13 +23,17 @@ function getCheckboxColorStyle(
     return style;
 }
 
-export function useCheckbox(props: Readonly<CheckboxProps>, emitUpdate: (value: boolean) => void) {
+export function useCheckbox(
+    props: Readonly<CheckboxProps>,
+    emitUpdate: (value: boolean) => void,
+    getValue: () => boolean = () => props.modelValue ?? false,
+) {
     const inputRef = ref<HTMLInputElement | null>(null);
     const control = useControlState(props);
 
     const rootClass = computed(() =>
         bem('rp-checkbox', {
-            checked: props.modelValue,
+            checked: getValue(),
             indeterminate: props.indeterminate,
             disabled: control.disabled,
             invalid: control.invalid,

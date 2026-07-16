@@ -18,7 +18,9 @@ export type NumberInputTextAlign = 'left' | 'center' | 'right';
 export interface NumberInputProps extends StylesApiProps<NumberInputPart> {
     id?: string;
     name?: string;
-    modelValue: NumberInputValue;
+    form?: string;
+    modelValue?: NumberInputValue;
+    defaultValue?: NumberInputValue;
     min?: number;
     max?: number;
     step?: number;

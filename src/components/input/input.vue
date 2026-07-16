@@ -11,14 +11,18 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, watch, type InputHTMLAttributes } from 'vue';
+import { computed, inject, type InputHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
 import { useInput } from './useInput';
 import type { InputPart, InputProps } from './types';
 
 defineOptions({ name: 'RpInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<InputProps>(), {
+    modelValue: undefined,
+    defaultValue: '',
     type: 'text',
     placeholder: '',
     disabled: undefined,
@@ -32,9 +36,33 @@ const emit = defineEmits<{
     'update:modelValue': [value: string];
 }>();
 
-const { inputRef, control, rootClass, onInput, focusInput } = useInput(props, (value) => {
-    emit('update:modelValue', value);
+const controllable = useControllableValue({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
 });
+const { inputRef, control, rootClass, onInput, focusInput } = useInput(props, (value) => {
+    controllable.setValue(value);
+});
+const claimNestedFormControlOwner = inject(nestedFormControlOwnerKey, undefined);
+const hasNestedFormControlOwner = claimNestedFormControlOwner?.() ?? false;
+
+if (!hasNestedFormControlOwner) {
+    useFormControl({
+        elements: () => [inputRef.value],
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element) {
+            (element as HTMLInputElement).defaultValue = controllable.initialValue;
+        },
+        validationMessage: () => props.validationMessage,
+        readResetValue(elements) {
+            controllable.resetValue((elements[0] as HTMLInputElement).value);
+        },
+        syncControlledValue(elements) {
+            (elements[0] as HTMLInputElement).value = controllable.value.value;
+        },
+    });
+}
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<InputPart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -60,8 +88,9 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         }),
         id: control.id,
         name: props.name,
+        form: control.form ?? forwardedAttrs.form,
         type: props.type,
-        value: props.modelValue,
+        value: controllable.value.value,
         placeholder: props.placeholder,
         disabled: control.disabled || undefined,
         readonly: props.readonly || undefined,
@@ -81,13 +110,7 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     };
 });
 
-watch(
-    [inputRef, () => props.validationMessage],
-    ([input, validationMessage]) => input?.setCustomValidity(validationMessage ?? ''),
-    { flush: 'post', immediate: true },
-);
-
-void inputRef;
+defineExpose({ nativeElement: inputRef, focus: () => inputRef.value?.focus() });
 </script>
 
 <style src="./input.scss" lang="scss" scoped></style>

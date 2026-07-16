@@ -7,7 +7,7 @@ import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
 
-type SelectBehaviorProps = Omit<SelectProps, 'classNames' | 'styles'>;
+type SelectBehaviorProps = Omit<SelectProps, 'classNames' | 'styles' | 'inputAttrs'>;
 
 function hasSelectValue(value: SelectValue) {
     return value != null && value !== '';
@@ -25,6 +25,7 @@ function getSelectActiveDescendantId(baseId: string, focusedIndex: number) {
 export function useSelect(
     props: Readonly<SelectBehaviorProps>,
     emitUpdate: (value: SelectValue) => void,
+    getValue: () => SelectValue = () => props.modelValue ?? null,
 ) {
     const selectRef = ref<HTMLElement | null>(null);
     const triggerRef = ref<HTMLElement | null>(null);
@@ -35,10 +36,11 @@ export function useSelect(
 
     const control = useControlState(props);
     const visibleOptions = computed(() => props.options ?? []);
+    const value = computed(getValue);
 
     const navigation = useListNavigation<SelectOption>({
         items: () => visibleOptions.value,
-        isSelected: (item) => item.value === props.modelValue,
+        isSelected: (item) => item.value === value.value,
     });
 
     const focusedIndex = navigation.focusedIndex;
@@ -56,8 +58,8 @@ export function useSelect(
         }),
     );
 
-    const hasValue = computed(() => hasSelectValue(props.modelValue));
-    const displayLabel = computed(() => getSelectDisplayLabel(props.options, props.modelValue));
+    const hasValue = computed(() => hasSelectValue(value.value));
+    const displayLabel = computed(() => getSelectDisplayLabel(props.options, value.value));
     const canClear = computed(() =>
         Boolean(props.clearable && hasValue.value && !control.disabled),
     );
@@ -180,6 +182,7 @@ export function useSelect(
         rootClass,
         hasValue,
         displayLabel,
+        value,
         canClear,
         toggle,
         selectOption,

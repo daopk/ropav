@@ -5,14 +5,16 @@ import type { ColorInputProps } from './types';
 export function useColorInputValue(
     props: Readonly<ColorInputProps>,
     isControlInvalid: () => boolean,
+    getValue: () => string = () => props.modelValue ?? '',
 ) {
-    const parsedColor = computed(() => parseColorPickerValue(props.modelValue));
-    const previewColor = computed(() => (parsedColor.value ? props.modelValue : undefined));
+    const currentValue = computed(getValue);
+    const parsedColor = computed(() => parseColorPickerValue(currentValue.value));
+    const previewColor = computed(() => (parsedColor.value ? currentValue.value : undefined));
     const hasValidSwatches = computed(() =>
         Boolean(props.swatches?.some((swatch) => parseColorPickerValue(swatch))),
     );
     const hasInvalidColor = computed(
-        () => props.validateColor && props.modelValue.trim().length > 0 && !parsedColor.value,
+        () => props.validateColor && currentValue.value.trim().length > 0 && !parsedColor.value,
     );
     const isInvalid = computed(() => isControlInvalid() || hasInvalidColor.value);
     const colorValidationMessage = computed(() =>

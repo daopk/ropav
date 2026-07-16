@@ -12,7 +12,9 @@ export type InputSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export interface InputProps extends StylesApiProps<InputPart> {
     id?: string;
     name?: string;
-    modelValue: string;
+    form?: string;
+    modelValue?: string;
+    defaultValue?: string;
     type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url';
     size?: InputSize;
     radius?: InputRadius;

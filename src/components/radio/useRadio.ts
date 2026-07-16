@@ -1,9 +1,26 @@
-import { computed, inject, provide, ref, useId, type CSSProperties } from 'vue';
+import {
+    computed,
+    inject,
+    onBeforeUnmount,
+    onMounted,
+    provide,
+    ref,
+    shallowRef,
+    useId,
+    type CSSProperties,
+} from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState } from '@/composables/useControlState';
+import { useFormControl } from '@/composables/useFormControl';
 import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
-import type { RadioGroupContext, RadioGroupProps, RadioProps } from './types';
+import type {
+    RadioGroupContext,
+    RadioGroupProps,
+    RadioGroupRegistration,
+    RadioProps,
+} from './types';
 
 function getRadioColorStyle(color: RadioProps['color'], autoContrast: RadioProps['autoContrast']) {
     const colorValue = getComponentColorValue(color);
@@ -32,6 +49,7 @@ export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event)
     const isRequired = computed(() => props.required ?? group?.required ?? false);
     const isInvalid = computed(() => props.invalid ?? group?.invalid ?? false);
     const name = computed(() => props.name ?? group?.name);
+    const form = computed(() => props.form ?? group?.form);
     const variant = computed(() => props.variant ?? group?.variant);
     const color = computed(() => props.color ?? group?.color);
     const autoContrast = computed(() => props.autoContrast ?? group?.autoContrast);
@@ -59,10 +77,39 @@ export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event)
         inputRef.value?.focus(options);
     }
 
+    let unregister: (() => void) | undefined;
+    onMounted(() => {
+        if (group && inputRef.value) {
+            unregister = group.register({
+                input: inputRef.value,
+                value: () => props.value,
+                disabled: () => isDisabled.value,
+                checked: () => isChecked.value,
+                validationMessage: () => props.validationMessage,
+            });
+        }
+    });
+    onBeforeUnmount(() => unregister?.());
+
+    useFormControl({
+        elements: () => (group ? [] : [inputRef.value]),
+        isControlled: () => true,
+        initializeDefault(element) {
+            (element as HTMLInputElement).defaultChecked = isChecked.value;
+        },
+        validationMessage: () => props.validationMessage,
+        readResetValue() {},
+        syncControlledValue(elements) {
+            (elements[0] as HTMLInputElement).checked = isChecked.value;
+        },
+    });
+
     return {
         inputRef,
         control,
         name,
+        form,
+        groupInputAttrs: computed(() => group?.inputAttrs),
         isChecked,
         isDisabled,
         isRequired,
@@ -79,6 +126,12 @@ export function useRadioGroup(
     emitUpdate: (value: string | number | null) => void,
 ) {
     const control = useControlState(props);
+    const registrations = shallowRef<RadioGroupRegistration[]>([]);
+    const controllable = useControllableValue<string | number | null>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? null,
+        onChange: emitUpdate,
+    });
 
     const rootClass = computed(() =>
         bem('rp-radio-group', {
@@ -90,12 +143,53 @@ export function useRadioGroup(
     const generatedName = useId();
     const groupName = computed(() => props.name ?? `${control.id ?? generatedName}-radio`);
 
+    function register(registration: RadioGroupRegistration) {
+        registrations.value = [...registrations.value, registration];
+        return () => {
+            registrations.value = registrations.value.filter((item) => item !== registration);
+        };
+    }
+
+    useFormControl({
+        elements: () => registrations.value.map((registration) => registration.input),
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element) {
+            const registration = registrations.value.find((item) => item.input === element);
+            (element as HTMLInputElement).defaultChecked =
+                registration?.value() === controllable.initialValue;
+        },
+        validationMessage(element) {
+            const enabled = registrations.value.filter((registration) => !registration.disabled());
+            const anchor = enabled.find((registration) => registration.checked()) ?? enabled[0];
+            const registration = registrations.value.find((item) => item.input === element);
+            return (
+                registration?.validationMessage() ??
+                (registration === anchor ? props.validationMessage : undefined)
+            );
+        },
+        readResetValue(elements) {
+            const checked = registrations.value.find(
+                (registration) =>
+                    elements.includes(registration.input) && registration.input.checked,
+            );
+            controllable.resetValue(checked?.value() ?? null);
+        },
+        syncControlledValue() {
+            for (const registration of registrations.value) {
+                registration.input.checked = registration.value() === controllable.value.value;
+            }
+        },
+    });
+
     provide<RadioGroupContext>(radioGroupKey, {
         get modelValue() {
-            return props.modelValue;
+            return controllable.value.value;
         },
         get name() {
             return groupName.value;
+        },
+        get form() {
+            return control.form;
         },
         get disabled() {
             return control.disabled;
@@ -118,13 +212,18 @@ export function useRadioGroup(
         get size() {
             return props.size;
         },
-        select(value) {
-            emitUpdate(value);
+        get inputAttrs() {
+            return props.inputAttrs;
         },
+        select(value) {
+            controllable.setValue(value);
+        },
+        register,
     });
 
     return {
         control,
         rootClass,
+        value: controllable.value,
     };
 }

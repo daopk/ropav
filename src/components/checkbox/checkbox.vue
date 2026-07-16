@@ -5,12 +5,14 @@
             :id="control.id"
             ref="inputRef"
             :name="name"
+            :form="control.form ?? nativeInputAttrs.form"
             type="checkbox"
-            :checked="modelValue"
+            :value="value"
+            :checked="controllable.value.value"
             :disabled="control.disabled || undefined"
             :required="control.required || undefined"
             :indeterminate="indeterminate"
-            :aria-checked="indeterminate ? 'mixed' : modelValue"
+            :aria-checked="indeterminate ? 'mixed' : controllable.value.value"
             :aria-label="ariaLabel || undefined"
             :aria-labelledby="control.ariaLabelledby"
             :aria-describedby="control.ariaDescribedby"
@@ -23,7 +25,11 @@
         <span v-bind="getPartAttrs('indicator', { class: 'rp-checkbox__box' })">
             <Transition name="rp-checkbox-icon" mode="out-in">
                 <MinusIcon v-if="indeterminate" key="minus" class="rp-checkbox__icon" />
-                <CheckIcon v-else-if="modelValue" key="check" class="rp-checkbox__icon" />
+                <CheckIcon
+                    v-else-if="controllable.value.value"
+                    key="check"
+                    class="rp-checkbox__icon"
+                />
             </Transition>
         </span>
         <span v-if="$slots.default" v-bind="getPartAttrs('label', { class: 'rp-checkbox__label' })">
@@ -36,6 +42,8 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxPart, CheckboxProps } from './types';
@@ -43,6 +51,9 @@ import type { CheckboxPart, CheckboxProps } from './types';
 defineOptions({ name: 'RpCheckbox', inheritAttrs: false });
 
 const props = withDefaults(defineProps<CheckboxProps>(), {
+    modelValue: undefined,
+    defaultValue: false,
+    value: 'on',
     disabled: undefined,
     required: undefined,
     invalid: undefined,
@@ -53,12 +64,34 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { inputRef, control, rootClass, rootStyle, onChange, focus } = useCheckbox(props, (value) => {
-    emit('update:modelValue', value);
+const controllable = useControllableValue({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
 });
-const state = computed(() =>
-    props.indeterminate ? 'indeterminate' : props.modelValue ? 'checked' : 'unchecked',
+const { inputRef, control, rootClass, rootStyle, onChange, focus } = useCheckbox(
+    props,
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
 );
+const state = computed(() =>
+    props.indeterminate ? 'indeterminate' : controllable.value.value ? 'checked' : 'unchecked',
+);
+
+useFormControl({
+    elements: () => [inputRef.value],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLInputElement).defaultChecked = controllable.initialValue;
+    },
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue((elements[0] as HTMLInputElement).checked);
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLInputElement).checked = controllable.value.value;
+    },
+});
 const { getPartAttrs, getRootAttrs } = useStylesApi<CheckboxPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({

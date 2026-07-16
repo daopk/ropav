@@ -13,13 +13,17 @@ function getSwitchColorStyle(color: SwitchProps['color']) {
     } as CSSProperties;
 }
 
-export function useSwitch(props: Readonly<SwitchProps>, emitUpdate: (value: boolean) => void) {
+export function useSwitch(
+    props: Readonly<SwitchProps>,
+    emitUpdate: (value: boolean) => void,
+    getValue: () => boolean = () => props.modelValue ?? false,
+) {
     const inputRef = ref<HTMLInputElement | null>(null);
     const control = useControlState(props);
 
     const rootClass = computed(() =>
         bem('rp-switch', {
-            checked: props.modelValue,
+            checked: getValue(),
             disabled: control.disabled,
             invalid: control.invalid,
             [`size-${props.size}`]: Boolean(props.size),

@@ -1,3 +1,6 @@
+import type { SelectHTMLAttributes } from 'vue';
+import type { StylesApiProps } from '../../styles-api';
+
 export interface SelectOption {
     label: string;
     value: string | number;
@@ -11,7 +14,9 @@ export type SelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export interface SelectProps extends StylesApiProps<SelectPart> {
     id?: string;
     name?: string;
-    modelValue: string | number | null;
+    form?: string;
+    modelValue?: string | number | null;
+    defaultValue?: string | number | null;
     options?: SelectOption[];
     size?: SelectSize;
     radius?: SelectRadius;
@@ -24,8 +29,9 @@ export interface SelectProps extends StylesApiProps<SelectPart> {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: SelectHTMLAttributes;
+    validationMessage?: string;
 }
-import type { StylesApiProps } from '../../styles-api';
 
 export const selectParts = [
     'root',

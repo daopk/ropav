@@ -57,19 +57,18 @@ function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
     return style;
 }
 
-export function useSlider(props: SliderStateProps, emitUpdate: (value: number) => void) {
+export function useSlider(
+    props: SliderStateProps,
+    emitUpdate: (value: number) => void,
+    getValue: () => number = () => props.modelValue ?? props.min,
+) {
     const control = useControlState(props);
 
     const bounds = computed(() => normalizeSliderBounds(props.min, props.max));
     const nativeStep = computed(() => normalizeSliderStep(props.step));
 
     const normalizedValue = computed(() =>
-        normalizeSliderValue(
-            props.modelValue,
-            bounds.value.min,
-            bounds.value.max,
-            nativeStep.value,
-        ),
+        normalizeSliderValue(getValue(), bounds.value.min, bounds.value.max, nativeStep.value),
     );
 
     const valuePercent = computed(() =>
@@ -145,6 +144,7 @@ export function useSlider(props: SliderStateProps, emitUpdate: (value: number) =
             'marks-with-labels': hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
             disabled: control.disabled,
+            invalid: control.invalid,
         }),
     );
 

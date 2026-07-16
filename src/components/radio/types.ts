@@ -18,6 +18,7 @@ export type RadioGroupOrientation = 'horizontal' | 'vertical';
 export interface RadioProps extends StylesApiProps<RadioPart> {
     id?: string;
     name?: string;
+    form?: string;
     value: string | number;
     checked?: boolean;
     variant?: RadioVariant;
@@ -31,12 +32,15 @@ export interface RadioProps extends StylesApiProps<RadioPart> {
     describedby?: string;
     labelledby?: string;
     inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
 }
 
 export interface RadioGroupProps extends StylesApiProps<RadioGroupPart> {
     id?: string;
     name?: string;
-    modelValue: string | number | null;
+    form?: string;
+    modelValue?: string | number | null;
+    defaultValue?: string | number | null;
     variant?: RadioVariant;
     color?: RadioColor;
     autoContrast?: boolean;
@@ -48,11 +52,22 @@ export interface RadioGroupProps extends StylesApiProps<RadioGroupPart> {
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
+    inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
+}
+
+export interface RadioGroupRegistration {
+    input: HTMLInputElement;
+    value: () => string | number;
+    disabled: () => boolean;
+    checked: () => boolean;
+    validationMessage: () => string | undefined;
 }
 
 export interface RadioGroupContext {
     modelValue: string | number | null;
     name: string;
+    form: string | undefined;
     disabled: boolean;
     required: boolean;
     invalid: boolean;
@@ -60,7 +75,9 @@ export interface RadioGroupContext {
     color?: RadioColor;
     autoContrast?: boolean;
     size?: RadioSize;
+    inputAttrs: InputHTMLAttributes | undefined;
     select: (value: string | number) => void;
+    register: (registration: RadioGroupRegistration) => () => void;
 }
 
 export const radioGroupKey = Symbol('radioGroup') as InjectionKey<RadioGroupContext>;

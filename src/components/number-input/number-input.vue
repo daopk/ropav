@@ -1,8 +1,10 @@
 <template>
     <Input
+        ref="inputComponentRef"
         v-bind="attrs"
         :id="control.id"
         :name="name"
+        :form="control.form"
         :model-value="modelInputValue"
         type="number"
         :size="size"
@@ -70,17 +72,26 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, provide, ref } from 'vue';
 import IconMinus from '~icons/lucide/minus';
 import IconPlus from '~icons/lucide/plus';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { nestedFormControlOwnerKey, useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Input from '../input/input.vue';
 import type { NumberInputPart, NumberInputProps, NumberInputValue } from './types';
-import { useNumberInput, type NumberInputControl } from './useNumberInput';
+import {
+    getModelInputValue,
+    parseNumberInputValue,
+    useNumberInput,
+    type NumberInputControl,
+} from './useNumberInput';
 
 defineOptions({ name: 'RpNumberInput', inheritAttrs: false });
 
 const props = withDefaults(defineProps<NumberInputProps>(), {
+    modelValue: undefined,
+    defaultValue: null,
     step: 1,
     placeholder: '',
     controls: true,
@@ -100,6 +111,19 @@ const emit = defineEmits<{
     'update:modelValue': [value: NumberInputValue];
 }>();
 
+const controllable = useControllableValue<NumberInputValue>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
+const inputComponentRef = ref<{ nativeElement: HTMLInputElement | null } | null>(null);
+let nestedFormControlClaimed = false;
+provide(nestedFormControlOwnerKey, () => {
+    if (nestedFormControlClaimed) return false;
+    nestedFormControlClaimed = true;
+    return true;
+});
+
 const {
     control,
     rootClass,
@@ -112,7 +136,26 @@ const {
     increment,
     decrement,
     onInputUpdate,
-} = useNumberInput(props, (value) => emit('update:modelValue', value));
+} = useNumberInput(
+    props,
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
+);
+
+useFormControl({
+    elements: () => [inputComponentRef.value?.nativeElement],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLInputElement).defaultValue = getModelInputValue(controllable.initialValue);
+    },
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue(parseNumberInputValue((elements[0] as HTMLInputElement).value));
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLInputElement).value = getModelInputValue(controllable.value.value);
+    },
+});
 
 const { attrs, getPartAttrs } = useStylesApi<NumberInputPart>(props, 'root');
 const inputClassNames = computed(() => ({

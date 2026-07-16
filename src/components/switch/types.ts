@@ -13,7 +13,10 @@ export type SwitchSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export interface SwitchProps extends StylesApiProps<SwitchPart> {
     id?: string;
     name?: string;
-    modelValue: boolean;
+    form?: string;
+    modelValue?: boolean;
+    defaultValue?: boolean;
+    value?: string | number;
     color?: SwitchColor;
     size?: SwitchSize;
     disabled?: boolean;
@@ -23,4 +26,5 @@ export interface SwitchProps extends StylesApiProps<SwitchPart> {
     describedby?: string;
     labelledby?: string;
     inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
 }

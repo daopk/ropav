@@ -5,12 +5,14 @@
             :id="control.id"
             ref="inputRef"
             :name="name"
+            :form="control.form ?? nativeInputAttrs.form"
             type="checkbox"
             role="switch"
-            :checked="modelValue"
+            :value="value"
+            :checked="controllable.value.value"
             :disabled="control.disabled || undefined"
             :required="control.required || undefined"
-            :aria-checked="modelValue"
+            :aria-checked="controllable.value.value"
             :aria-label="ariaLabel || undefined"
             :aria-labelledby="control.ariaLabelledby"
             :aria-describedby="control.ariaDescribedby"
@@ -28,6 +30,8 @@
 
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useSwitch } from './useSwitch';
 import type { SwitchPart, SwitchProps } from './types';
@@ -35,6 +39,9 @@ import type { SwitchPart, SwitchProps } from './types';
 defineOptions({ name: 'RpSwitch', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SwitchProps>(), {
+    modelValue: undefined,
+    defaultValue: false,
+    value: 'on',
     disabled: undefined,
     required: undefined,
     invalid: undefined,
@@ -44,8 +51,30 @@ const emit = defineEmits<{
     'update:modelValue': [value: boolean];
 }>();
 
-const { inputRef, control, rootClass, rootStyle, onChange, focus } = useSwitch(props, (value) => {
-    emit('update:modelValue', value);
+const controllable = useControllableValue({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
+const { inputRef, control, rootClass, rootStyle, onChange, focus } = useSwitch(
+    props,
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
+);
+
+useFormControl({
+    elements: () => [inputRef.value],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLInputElement).defaultChecked = controllable.initialValue;
+    },
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue((elements[0] as HTMLInputElement).checked);
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLInputElement).checked = controllable.value.value;
+    },
 });
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SwitchPart>(props, 'root');
@@ -55,7 +84,7 @@ const rootAttrs = computed(() =>
         style: rootStyle.value,
         'data-disabled': presence(control.disabled),
         'data-invalid': presence(control.invalid),
-        'data-state': props.modelValue ? 'checked' : 'unchecked',
+        'data-state': controllable.value.value ? 'checked' : 'unchecked',
     }),
 );
 

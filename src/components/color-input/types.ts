@@ -22,7 +22,9 @@ export type ColorInputPart = (typeof colorInputParts)[number];
 export interface ColorInputProps extends StylesApiProps<ColorInputPart> {
     id?: string;
     name?: string;
-    modelValue: ColorPickerValue;
+    form?: string;
+    modelValue?: ColorPickerValue;
+    defaultValue?: ColorPickerValue;
     format?: ColorPickerFormat;
     size?: InputSize;
     radius?: InputRadius;
@@ -38,6 +40,7 @@ export interface ColorInputProps extends StylesApiProps<ColorInputPart> {
     describedby?: string;
     labelledby?: string;
     inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
     validateColor?: boolean;
     invalidColorMessage?: string;
     swatches?: string[];

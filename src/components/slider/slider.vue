@@ -36,6 +36,7 @@
                 :id="control.id"
                 ref="inputRef"
                 :name="name"
+                :form="control.form ?? nativeInputAttrs.form"
                 type="range"
                 :value="normalizedValue"
                 :min="nativeMin"
@@ -43,12 +44,20 @@
                 :step="nativeStep"
                 :orient="orientation === 'vertical' ? 'vertical' : undefined"
                 :disabled="control.disabled || undefined"
+                :required="props.required ?? nativeInputAttrs.required"
                 :aria-label="ariaLabel || undefined"
                 :aria-labelledby="control.ariaLabelledby"
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText"
+                :aria-invalid="
+                    props.invalid === undefined
+                        ? nativeInputAttrs['aria-invalid']
+                        : control.invalid || undefined
+                "
+                :aria-required="props.required ?? nativeInputAttrs.required"
                 :data-disabled="presence(control.disabled)"
+                :data-invalid="presence(control.invalid)"
             />
 
             <span v-if="markItems.length" class="rp-slider__marks" aria-hidden="true">
@@ -110,14 +119,18 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, useSlots, type InputHTMLAttributes } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Tooltip from '../tooltip/tooltip.vue';
 import type { SliderPart, SliderProps } from './types';
-import { useSlider } from './useSlider';
+import { normalizeSliderValue, useSlider } from './useSlider';
 
 defineOptions({ name: 'RpSlider', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SliderProps>(), {
+    modelValue: undefined,
+    defaultValue: undefined,
     min: 0,
     max: 100,
     step: 1,
@@ -125,6 +138,8 @@ const props = withDefaults(defineProps<SliderProps>(), {
     tooltip: 'hover',
     orientation: 'horizontal',
     disabled: undefined,
+    required: undefined,
+    invalid: undefined,
 });
 
 const emit = defineEmits<{
@@ -133,6 +148,11 @@ const emit = defineEmits<{
 
 const inputRef = ref<HTMLInputElement | null>(null);
 const slots = useSlots();
+const controllable = useControllableValue<number>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue ?? props.min,
+    onChange: (value) => emit('update:modelValue', value),
+});
 
 const {
     control,
@@ -162,8 +182,32 @@ const {
     onTooltipFocusIn,
     onTooltipFocusOut,
     onTooltipKeydown,
-} = useSlider(props, (value) => {
-    emit('update:modelValue', value);
+} = useSlider(
+    props,
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
+);
+
+useFormControl({
+    elements: () => [inputRef.value],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLInputElement).defaultValue = String(
+            normalizeSliderValue(
+                controllable.initialValue,
+                nativeMin.value,
+                nativeMax.value,
+                nativeStep.value,
+            ),
+        );
+    },
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue((elements[0] as HTMLInputElement).valueAsNumber);
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLInputElement).value = String(normalizedValue.value);
+    },
 });
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SliderPart>(props, 'root');
@@ -172,6 +216,7 @@ const rootAttrs = computed(() =>
         class: [rootClass.value, { 'rp-slider--custom-thumb': Boolean(slots.thumb) }],
         style: trackStyle.value,
         'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
         'data-orientation': props.orientation,
     }),
 );

@@ -40,6 +40,7 @@
                 :key="thumb"
                 :ref="(element) => setInputRef(index, element)"
                 :name="nativeNames[index]"
+                :form="control.form ?? nativeInputAttrs[index]?.form"
                 type="range"
                 :value="normalizedValue[index]"
                 :min="nativeMin[index]"
@@ -47,12 +48,20 @@
                 :step="nativeStep"
                 :orient="orientation === 'vertical' ? 'vertical' : undefined"
                 :disabled="control.disabled || undefined"
+                :required="props.required ?? nativeInputAttrs[index]?.required"
                 :aria-label="ariaLabels[index]"
                 :aria-describedby="control.ariaDescribedby"
                 :aria-orientation="orientation === 'vertical' ? 'vertical' : undefined"
                 :aria-valuetext="ariaValueText[index]"
+                :aria-invalid="
+                    props.invalid === undefined
+                        ? nativeInputAttrs[index]?.['aria-invalid']
+                        : control.invalid || undefined
+                "
+                :aria-required="props.required ?? nativeInputAttrs[index]?.required"
                 :data-thumb="thumb"
                 :data-disabled="presence(control.disabled)"
+                :data-invalid="presence(control.invalid)"
             />
 
             <span v-if="markItems.length" class="rp-range-slider__marks" aria-hidden="true">
@@ -131,15 +140,19 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useId, useSlots, type InputHTMLAttributes } from 'vue';
+import { computed, nextTick, ref, useId, useSlots, type InputHTMLAttributes } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
-import type { RangeSliderPart, RangeSliderProps } from './types';
-import { useRangeSlider } from './useRangeSlider';
+import type { RangeSliderPart, RangeSliderProps, RangeSliderValue } from './types';
+import { normalizeRangeSliderValue, useRangeSlider } from './useRangeSlider';
 
 defineOptions({ name: 'RpRangeSlider', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RangeSliderProps>(), {
+    modelValue: undefined,
+    defaultValue: undefined,
     min: 0,
     max: 100,
     step: 1,
@@ -149,6 +162,8 @@ const props = withDefaults(defineProps<RangeSliderProps>(), {
     orientation: 'horizontal',
     ariaLabel: () => ['Minimum', 'Maximum'],
     disabled: undefined,
+    required: undefined,
+    invalid: undefined,
 });
 
 const emit = defineEmits<{
@@ -162,6 +177,11 @@ const rangeSliderThumbs = ['lower', 'upper'] as const;
 const lowerInputRef = ref<HTMLInputElement | null>(null);
 const upperInputRef = ref<HTMLInputElement | null>(null);
 const labelId = computed(() => `${props.id ?? generatedId}-label`);
+const controllable = useControllableValue<RangeSliderValue>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue ?? [props.min, props.max],
+    onChange: (value) => emit('update:modelValue', value),
+});
 
 const {
     control,
@@ -196,8 +216,51 @@ const {
     onTooltipTrackMouseEnter,
     onTooltipTrackMouseLeave,
     onTooltipKeydown,
-} = useRangeSlider(props, (value) => {
-    emit('update:modelValue', value);
+} = useRangeSlider(
+    props,
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
+);
+
+const validationMessages = computed<[string | undefined, string | undefined]>(() =>
+    Array.isArray(props.validationMessage)
+        ? props.validationMessage
+        : [props.validationMessage, props.validationMessage],
+);
+
+function normalizeInitialValue(value: RangeSliderValue = controllable.initialValue) {
+    return normalizeRangeSliderValue(value, props.min, props.max, props.step, props.minRange);
+}
+
+useFormControl({
+    elements: () => [lowerInputRef.value, upperInputRef.value],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element, index) {
+        const initialValue = normalizeInitialValue();
+        (element as HTMLInputElement).defaultValue = String(initialValue[index]);
+    },
+    validationMessage: (_element, index) => validationMessages.value[index],
+    readResetValue(elements) {
+        const resetValue: RangeSliderValue = [normalizedValue.value[0], normalizedValue.value[1]];
+
+        for (const element of elements) {
+            const index = element === upperInputRef.value ? 1 : 0;
+            resetValue[index] = Number((element as HTMLInputElement).defaultValue);
+        }
+
+        const nextValue = normalizeInitialValue(resetValue);
+        controllable.resetValue(nextValue);
+        void nextTick(() => {
+            if (lowerInputRef.value) lowerInputRef.value.value = String(nextValue[0]);
+            if (upperInputRef.value) upperInputRef.value.value = String(nextValue[1]);
+        });
+    },
+    syncControlledValue(elements) {
+        for (const element of elements) {
+            const index = element === upperInputRef.value ? 1 : 0;
+            (element as HTMLInputElement).value = String(normalizedValue.value[index]);
+        }
+    },
 });
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<RangeSliderPart>(props, 'root');
@@ -214,9 +277,12 @@ const rootAttrs = computed(() =>
         role: 'group',
         'data-active-thumb': activeThumb.value || undefined,
         'data-disabled': presence(control.disabled),
+        'data-invalid': presence(control.invalid),
         'data-orientation': props.orientation,
         'aria-labelledby': groupLabelledby.value,
         'aria-describedby': control.ariaDescribedby,
+        'aria-invalid': control.invalid || undefined,
+        'aria-required': control.required || undefined,
     }),
 );
 

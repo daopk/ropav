@@ -5,7 +5,8 @@
             :id="control.id"
             ref="textareaRef"
             :name="name"
-            :value="modelValue"
+            :form="control.form ?? nativeInputAttrs.form"
+            :value="controllable.value.value"
             :placeholder="placeholder"
             :rows="nativeRows"
             :disabled="control.disabled || undefined"
@@ -26,12 +27,16 @@
 <script lang="ts" setup vapor>
 import { computed, type TextareaHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { useTextarea } from './useTextarea';
 import type { TextareaPart, TextareaProps } from './types';
 
 defineOptions({ name: 'RpTextarea', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TextareaProps>(), {
+    modelValue: undefined,
+    defaultValue: '',
     placeholder: '',
     rows: 3,
     resize: 'none',
@@ -49,12 +54,31 @@ const emit = defineEmits<{
     'update:modelValue': [value: string];
 }>();
 
+const controllable = useControllableValue({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
 const { textareaRef, control, rootClass, nativeRows, onInput, focusTextarea, focus } = useTextarea(
     props,
-    (value) => {
-        emit('update:modelValue', value);
-    },
+    (value) => controllable.setValue(value),
+    () => controllable.value.value,
 );
+
+useFormControl({
+    elements: () => [textareaRef.value],
+    isControlled: () => controllable.isControlled.value,
+    initializeDefault(element) {
+        (element as HTMLTextAreaElement).defaultValue = controllable.initialValue;
+    },
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue((elements[0] as HTMLTextAreaElement).value);
+    },
+    syncControlledValue(elements) {
+        (elements[0] as HTMLTextAreaElement).value = controllable.value.value;
+    },
+});
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<TextareaPart>(props, 'root');
 const rootAttrs = computed(() =>

@@ -16,7 +16,10 @@ export type CheckboxVariant = 'solid' | 'outline';
 export interface CheckboxProps extends StylesApiProps<CheckboxPart> {
     id?: string;
     name?: string;
-    modelValue: boolean;
+    form?: string;
+    modelValue?: boolean;
+    defaultValue?: boolean;
+    value?: string | number;
     variant?: CheckboxVariant;
     color?: CheckboxColor;
     autoContrast?: boolean;
@@ -30,4 +33,5 @@ export interface CheckboxProps extends StylesApiProps<CheckboxPart> {
     labelledby?: string;
     indeterminate?: boolean;
     inputAttrs?: InputHTMLAttributes;
+    validationMessage?: string;
 }

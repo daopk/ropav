@@ -1,12 +1,25 @@
 <template>
     <div v-bind="rootAttrs" ref="selectRef">
-        <input
-            v-if="name"
-            type="hidden"
+        <select
+            v-bind="nativeInputAttrs"
+            ref="nativeSelectRef"
             :name="name"
-            :value="modelValue ?? ''"
+            :form="control.form ?? nativeInputAttrs.form"
             :disabled="control.disabled || undefined"
-        />
+            :required="control.required || undefined"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <option value="" />
+            <option
+                v-for="option in visibleOptions"
+                :key="option.value"
+                :value="String(option.value)"
+                :disabled="option.disabled || undefined"
+            >
+                {{ option.label }}
+            </option>
+        </select>
         <div
             :id="control.id"
             ref="triggerRef"
@@ -76,9 +89,9 @@
                     :key="option.value"
                     role="option"
                     :id="`${selectId}-option-${index}`"
-                    :aria-selected="option.value === modelValue"
+                    :aria-selected="option.value === controllable.value.value"
                     :aria-disabled="option.disabled || undefined"
-                    :data-selected="presence(option.value === modelValue)"
+                    :data-selected="presence(option.value === controllable.value.value)"
                     :data-highlighted="presence(index === focusedIndex)"
                     :data-disabled="presence(option.disabled)"
                     v-bind="
@@ -86,7 +99,8 @@
                             class: [
                                 'rp-select__option',
                                 {
-                                    'rp-select__option--selected': option.value === modelValue,
+                                    'rp-select__option--selected':
+                                        option.value === controllable.value.value,
                                     'rp-select__option--focused': index === focusedIndex,
                                     'rp-select__option--disabled': option.disabled,
                                 },
@@ -104,9 +118,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, ref, watchEffect, type SelectHTMLAttributes } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
+import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useSelect } from './useSelect';
 import type { SelectPart, SelectProps } from './types';
@@ -114,6 +130,8 @@ import type { SelectPart, SelectProps } from './types';
 defineOptions({ name: 'RpSelect', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SelectProps>(), {
+    modelValue: undefined,
+    defaultValue: null,
     options: () => [],
     placeholder: 'Select...',
     clearable: false,
@@ -126,6 +144,53 @@ const props = withDefaults(defineProps<SelectProps>(), {
 const emit = defineEmits<{
     'update:modelValue': [value: string | number | null];
 }>();
+
+const nativeSelectRef = ref<HTMLSelectElement | null>(null);
+const controllable = useControllableValue<string | number | null>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
+
+function getNativeValue(select: HTMLSelectElement) {
+    if (select.selectedIndex <= 0) return null;
+    return props.options?.[select.selectedIndex - 1]?.value ?? null;
+}
+
+function syncNativeSelection(value: string | number | null) {
+    const select = nativeSelectRef.value;
+    if (!select) return;
+
+    const optionIndex = props.options?.findIndex((option) => option.value === value) ?? -1;
+    select.selectedIndex = optionIndex + 1;
+}
+
+function syncNativeDefaultSelection() {
+    const select = nativeSelectRef.value;
+    if (!select) return;
+
+    const optionIndex =
+        props.options?.findIndex((option) => option.value === controllable.initialValue) ?? -1;
+    for (const [index, option] of [...select.options].entries()) {
+        option.defaultSelected = index === optionIndex + 1;
+    }
+}
+
+function requestValueUpdate(value: string | number | null) {
+    const select = nativeSelectRef.value;
+    if (!select) {
+        controllable.setValue(value);
+        return;
+    }
+
+    syncNativeSelection(value);
+    select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+
+    if (controllable.isControlled.value) {
+        queueMicrotask(() => syncNativeSelection(controllable.value.value));
+    }
+}
 
 const {
     selectRef,
@@ -146,12 +211,53 @@ const {
     clearSelection,
     onOptionMouseenter,
     onTriggerKeydown,
-} = useSelect(props, (value) => {
-    emit('update:modelValue', value);
+} = useSelect(props, requestValueUpdate, () => controllable.value.value);
+
+useFormControl({
+    elements: () => [nativeSelectRef.value],
+    isControlled: () => controllable.isControlled.value,
+    validationMessage: () => props.validationMessage,
+    readResetValue(elements) {
+        controllable.resetValue(getNativeValue(elements[0] as HTMLSelectElement));
+    },
+    syncControlledValue() {
+        syncNativeSelection(controllable.value.value);
+    },
+});
+
+watchEffect(syncNativeDefaultSelection, { flush: 'post' });
+watchEffect(() => syncNativeSelection(controllable.value.value), { flush: 'post' });
+
+const nativeInputAttrs = computed<SelectHTMLAttributes>(() => {
+    const {
+        class: compatibilityClass,
+        style: compatibilityStyle,
+        onInput: compatibilityOnInput,
+        onChange: compatibilityOnChange,
+        onInvalid: compatibilityOnInvalid,
+        ...attrs
+    } = props.inputAttrs ?? {};
+
+    return {
+        ...attrs,
+        class: ['rp-select__native', compatibilityClass],
+        style: compatibilityStyle,
+        onInput(event) {
+            controllable.setValue(getNativeValue(event.currentTarget as HTMLSelectElement));
+            compatibilityOnInput?.(event);
+        },
+        onChange(event) {
+            compatibilityOnChange?.(event);
+        },
+        onInvalid(event) {
+            event.preventDefault();
+            triggerRef.value?.focus();
+            compatibilityOnInvalid?.(event);
+        },
+    };
 });
 
 void selectRef;
-void triggerRef;
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SelectPart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -162,6 +268,8 @@ const rootAttrs = computed(() =>
         'data-invalid': presence(control.invalid),
     }),
 );
+
+defineExpose({ nativeElement: nativeSelectRef, focus: () => triggerRef.value?.focus() });
 </script>
 
 <style src="./select.scss" lang="scss" scoped></style>

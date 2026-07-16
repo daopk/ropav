@@ -12,9 +12,13 @@ interface UseColorInputEmitters {
     open: (value: boolean) => void;
 }
 
-export function useColorInput(props: Readonly<ColorInputProps>, emit: UseColorInputEmitters) {
+export function useColorInput(
+    props: Readonly<ColorInputProps>,
+    emit: UseColorInputEmitters,
+    getValue: () => string = () => props.modelValue ?? '',
+) {
     const control = useControlState(props);
-    const value = useColorInputValue(props, () => control.invalid);
+    const value = useColorInputValue(props, () => control.invalid, getValue);
     const popover = useColorInputPopover(() => props.inputAttrs);
     const popoverDisabled = computed(
         () =>

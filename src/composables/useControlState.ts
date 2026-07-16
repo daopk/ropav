@@ -2,6 +2,7 @@ import { computed } from 'vue';
 
 export interface ControlStateOptions {
     id?: string;
+    form?: string;
     disabled?: boolean;
     required?: boolean;
     invalid?: boolean;
@@ -12,6 +13,7 @@ export interface ControlStateOptions {
 
 export interface ControlState {
     id: string | undefined;
+    form: string | undefined;
     disabled: boolean;
     required: boolean;
     invalid: boolean;
@@ -27,6 +29,7 @@ function mergeIds(...values: Array<string | undefined>): string | undefined {
 
 export function useControlState(options: ControlStateOptions = {}): ControlState {
     const id = computed(() => options.id);
+    const form = computed(() => options.form);
     const disabled = computed(() => options.disabled ?? false);
     const required = computed(() => options.required ?? false);
     const invalid = computed(() => options.invalid ?? false);
@@ -38,6 +41,9 @@ export function useControlState(options: ControlStateOptions = {}): ControlState
     return {
         get id() {
             return id.value;
+        },
+        get form() {
+            return form.value;
         },
         get disabled() {
             return disabled.value;

@@ -23,6 +23,10 @@
     font-weight: var(--rp-font-weight-normal);
     line-height: 1;
 
+    &__native {
+        @include visually-hidden;
+    }
+
     &--size-xs {
         @include select-size(
             var(--rp-size-control-xs),

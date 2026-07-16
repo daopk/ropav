@@ -211,6 +211,7 @@ function focusThumb(track: HTMLElement, thumb: RangeSliderThumb) {
 export function useRangeSlider(
     props: RangeSliderStateProps,
     emitUpdate: (value: RangeSliderValue) => void,
+    getValue: () => RangeSliderValue = () => props.modelValue ?? [props.min, props.max],
 ) {
     const control = useControlState(props);
     const activeThumb = ref<RangeSliderThumb>();
@@ -231,7 +232,7 @@ export function useRangeSlider(
     );
     const normalizedValue = computed(() =>
         normalizeRangeSliderValue(
-            props.modelValue,
+            getValue(),
             bounds.value.min,
             bounds.value.max,
             valueStep.value,
@@ -359,6 +360,7 @@ export function useRangeSlider(
             'marks-with-labels': hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
             disabled: control.disabled,
+            invalid: control.invalid,
         }),
     );
 

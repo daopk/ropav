@@ -13,6 +13,8 @@ import type { RadioGroupPart, RadioGroupProps } from './types';
 defineOptions({ name: 'RpRadioGroup', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RadioGroupProps>(), {
+    modelValue: undefined,
+    defaultValue: null,
     variant: undefined,
     color: undefined,
     autoContrast: undefined,

@@ -39,6 +39,7 @@
     --_rp-#{$prefix}-mark-label-color: var(--rp-color-dimmed);
     --_rp-#{$prefix}-mark-filled-label-color: var(--rp-color-text);
     --_rp-#{$prefix}-mark-ring-color: var(--_rp-#{$prefix}-color);
+    --_rp-#{$prefix}-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 48%, transparent);
 }
 
 @mixin foundation-structure($prefix) {
@@ -65,6 +66,10 @@
 
     &--disabled {
         @include disabled-state;
+    }
+
+    &--invalid &__bar {
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-#{$prefix}-invalid-ring);
     }
 
     &__header {

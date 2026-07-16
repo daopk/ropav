@@ -15,6 +15,7 @@ export type {
     RangeSliderProps,
     RangeSliderThumb,
     RangeSliderValue,
+    RangeSliderValidationMessage,
     SliderColor,
     SliderInputAttrs,
     SliderMark,
