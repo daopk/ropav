@@ -1,6 +1,7 @@
 {
   "name": "ropav",
   "version": "0.0.13",
+  "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@11.10.0",
   "engines": {
