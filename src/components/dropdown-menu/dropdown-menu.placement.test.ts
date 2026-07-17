@@ -11,7 +11,12 @@ const floatingMocks = vi.hoisted(() => {
         cleanup,
         computePosition: vi.fn(),
         autoUpdate: vi.fn(
-            (_reference: unknown, _floating: unknown, update: () => void | Promise<void>) => {
+            (
+                _reference: unknown,
+                _floating: unknown,
+                update: () => void | Promise<void>,
+                _options?: { animationFrame?: boolean },
+            ) => {
                 void update();
                 return cleanup;
             },
@@ -71,6 +76,8 @@ describe('DropdownMenu placement attributes', () => {
                             open: true,
                             placement: 'bottom-start',
                             teleport: false,
+                            flipOptions: { fallbackStrategy: 'initialPlacement' },
+                            autoUpdateOptions: { animationFrame: true },
                         },
                         {
                             default: ({ triggerProps }: DropdownMenuSlotProps) =>
@@ -96,5 +103,24 @@ describe('DropdownMenu placement attributes', () => {
         );
         await vi.waitFor(() => expect(submenu.dataset.placement).toBe('right-end'));
         expect(submenu.dataset.side).toBe('right');
+
+        for (const id of ['placement-menu', 'placement-menu-submenu-1']) {
+            const computeCall = floatingMocks.computePosition.mock.calls.find(
+                ([, floating]) => (floating as HTMLElement).id === id,
+            );
+            const flipMiddleware = computeCall?.[2].middleware.find(
+                (middleware: { name: string }) => middleware.name === 'flip',
+            );
+
+            expect(flipMiddleware?.options).toEqual({
+                padding: 8,
+                fallbackStrategy: 'initialPlacement',
+            });
+            expect(
+                floatingMocks.autoUpdate.mock.calls.find(
+                    ([, floating]) => (floating as HTMLElement).id === id,
+                )?.[3],
+            ).toEqual({ animationFrame: true });
+        }
     });
 });

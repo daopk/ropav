@@ -168,6 +168,8 @@ const meta = {
         disabled: { control: 'boolean' },
         closeOnSelect: { control: 'boolean' },
         items: { control: 'object' },
+        flipOptions: { control: 'object' },
+        autoUpdateOptions: { control: 'object' },
     },
     args: {
         placement: 'bottom-start',

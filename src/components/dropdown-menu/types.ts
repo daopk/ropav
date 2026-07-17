@@ -14,7 +14,9 @@ export const dropdownMenuParts = [
 ] as const;
 export type DropdownMenuPart = (typeof dropdownMenuParts)[number];
 import type {
+    FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
+    FloatingFlipOptions,
     FloatingOffset,
     FloatingOffsetOptions,
     FloatingPositionProps,
@@ -253,8 +255,10 @@ export interface DropdownMenuContentPrimitiveProps {
     offset?: DropdownMenuOffset;
     strategy?: FloatingStrategy;
     flip?: boolean;
+    flipOptions?: FloatingFlipOptions;
     shift?: boolean;
     collisionPadding?: FloatingCollisionPadding;
+    autoUpdateOptions?: FloatingAutoUpdateOptions;
     arrow?: boolean;
     /** @deprecated Use `flip` and `shift` instead. */
     avoidCollisions?: boolean;

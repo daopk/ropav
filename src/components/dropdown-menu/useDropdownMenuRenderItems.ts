@@ -76,8 +76,10 @@ export interface DropdownMenuRenderContext {
     getSubmenuPlacement: () => DropdownMenuPlacement;
     getStrategy: () => NonNullable<DropdownMenuProps['strategy']>;
     getFlip: () => boolean;
+    getFlipOptions: () => DropdownMenuProps['flipOptions'];
     getShift: () => boolean;
     getCollisionPadding: () => NonNullable<DropdownMenuProps['collisionPadding']>;
+    getAutoUpdateOptions: () => DropdownMenuProps['autoUpdateOptions'];
 }
 
 export function useDropdownMenuRenderItems({
@@ -213,8 +215,10 @@ export function useDropdownMenuRenderItems({
             actualPlacement.value.endsWith('end') ? 'left-start' : 'right-start',
         getStrategy: () => props.strategy ?? 'absolute',
         getFlip: () => props.flip !== false,
+        getFlipOptions: () => props.flipOptions,
         getShift: () => props.shift !== false,
         getCollisionPadding: () => props.collisionPadding ?? 8,
+        getAutoUpdateOptions: () => props.autoUpdateOptions,
     };
 
     return {

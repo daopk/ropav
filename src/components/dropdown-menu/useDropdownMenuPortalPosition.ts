@@ -24,8 +24,10 @@ export function useDropdownMenuPortalPosition(options: {
         strategy: () => options.props.strategy ?? 'absolute',
         offset: () => options.props.offset,
         flip: () => options.props.flip !== false,
+        flipOptions: () => options.props.flipOptions,
         shift: () => options.props.shift !== false,
         collisionPadding: () => options.props.collisionPadding ?? 8,
+        autoUpdateOptions: () => options.props.autoUpdateOptions,
         restartKey: options.restartKey,
     });
 

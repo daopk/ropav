@@ -69,6 +69,7 @@ import {
     type DropdownMenuItem as DropdownMenuDataItem,
     type DropdownMenuRootPrimitiveProps,
     type DropdownMenuSelectEvent,
+    type DropdownMenuSubContentPrimitiveProps,
     type DropdownMenuVirtualAnchor,
 } from 'ropav/dropdown-menu';
 import {
@@ -186,8 +187,14 @@ const rootDialogCloseReason: RootDialogCloseReason = dialogCloseReason;
 const onDialogOutside = (event: DialogInteractOutsideEvent) => event.preventDefault();
 const dropdownContentProps: DropdownMenuContentPrimitiveProps = {
     collisionPadding: 12,
+    flipOptions: { fallbackStrategy: 'initialPlacement' },
+    autoUpdateOptions: { animationFrame: true },
     ignore: ['[data-dropdown-ignore]'],
     placement: 'right-start',
+};
+const dropdownSubContentProps: DropdownMenuSubContentPrimitiveProps = {
+    flipOptions: { fallbackStrategy: 'initialPlacement' },
+    autoUpdateOptions: { animationFrame: true },
 };
 const dropdownDataItem: DropdownMenuDataItem = { label: 'Rename', value: 'rename' };
 const dropdownChecked: DropdownMenuCheckedState = 'indeterminate';
@@ -272,16 +279,26 @@ const tooltipProps: TooltipProps = {
     target: tooltipTarget,
     strategy: floatingStrategy,
     offset: tooltipOffset,
+    flipOptions: floatingFlipOptions,
     collisionPadding,
+    autoUpdateOptions: floatingAutoUpdateOptions,
     teleportTo: teleportTarget,
 };
-const popoverProps: PopoverProps = { target: popoverTarget, arrow: true, shift: false };
+const popoverProps: PopoverProps = {
+    target: popoverTarget,
+    arrow: true,
+    shift: false,
+    flipOptions: floatingFlipOptions,
+    autoUpdateOptions: floatingAutoUpdateOptions,
+};
 const dropdownIgnoreTarget: DropdownMenuInteractOutsideTarget = ref<Element | null>(null);
 const dropdownProps: DropdownMenuProps = {
     ignore: [dropdownIgnoreTarget],
     target: floatingTarget,
     strategy: 'fixed',
     flip: false,
+    flipOptions: floatingFlipOptions,
+    autoUpdateOptions: floatingAutoUpdateOptions,
 };
 const modalProps: ModalProps = { teleport: true, teleportTo: teleportTarget };
 const teleportProviderVNode = h(TeleportProvider, teleportProviderProps);
@@ -430,6 +447,7 @@ void [
     rootDialogCloseReason,
     onDialogOutside,
     dropdownContentProps,
+    dropdownSubContentProps,
     dropdownDataItem,
     dropdownChecked,
     virtualAnchor,

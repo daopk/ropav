@@ -26,6 +26,8 @@ const meta = {
         disabled: { control: 'boolean' },
         decorative: { control: 'boolean' },
         offset: { control: 'object' },
+        flipOptions: { control: 'object' },
+        autoUpdateOptions: { control: 'object' },
         target: { control: false },
     },
     args: {

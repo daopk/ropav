@@ -88,8 +88,10 @@ const { actualPlacement, floatingStyle } = useFloatingPosition({
     strategy: props.context.getStrategy,
     offset: () => 4,
     flip: props.context.getFlip,
+    flipOptions: props.context.getFlipOptions,
     shift: props.context.getShift,
     collisionPadding: props.context.getCollisionPadding,
+    autoUpdateOptions: props.context.getAutoUpdateOptions,
 });
 const submenuProps = computed(() => props.context.getSubmenuProps(props.item, path.value, true));
 const publicSubmenuProps = computed(() => ({

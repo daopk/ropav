@@ -40,8 +40,10 @@ export interface FloatingPositionProps<
     strategy?: FloatingStrategy;
     offset?: FloatingOffset;
     flip?: boolean;
+    flipOptions?: FloatingFlipOptions;
     shift?: boolean;
     collisionPadding?: FloatingCollisionPadding;
+    autoUpdateOptions?: FloatingAutoUpdateOptions;
     arrow?: boolean;
 }
 

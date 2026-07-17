@@ -152,8 +152,10 @@ export function usePopover(
         strategy: () => props.strategy ?? 'absolute',
         offset: () => props.offset,
         flip: () => props.flip !== false,
+        flipOptions: () => props.flipOptions,
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
+        autoUpdateOptions: () => props.autoUpdateOptions,
         restartKey: () => [Boolean(props.teleport), teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);

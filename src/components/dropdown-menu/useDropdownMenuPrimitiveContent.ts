@@ -88,8 +88,10 @@ export function useDropdownMenuPrimitiveContent(
         strategy: () => props.strategy ?? 'absolute',
         offset: () => props.offset,
         flip: () => props.avoidCollisions !== false && props.flip !== false,
+        flipOptions: () => props.flipOptions,
         shift: () => props.avoidCollisions !== false && props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
+        autoUpdateOptions: () => props.autoUpdateOptions,
         restartKey: teleportPositioningKey,
     });
     watch(

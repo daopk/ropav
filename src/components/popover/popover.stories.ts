@@ -53,6 +53,8 @@ const meta = {
         open: { control: 'boolean' },
         disabled: { control: 'boolean' },
         offset: { control: 'object' },
+        flipOptions: { control: 'object' },
+        autoUpdateOptions: { control: 'object' },
         closeOnOutsideClick: { control: 'boolean' },
         closeOnEscape: { control: 'boolean' },
         trapFocus: { control: 'boolean' },
