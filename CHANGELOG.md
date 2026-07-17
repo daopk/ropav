@@ -1,3 +1,17 @@
+## [0.1.0](https://github.com/daopk/ropav/compare/v0.0.13...v0.1.0) (2026-07-17)
+
+### ⚠ BREAKING CHANGES
+
+* remove the deprecated compatibility APIs. Replace Card.bodyClass with classNames.body, DropdownMenu.portal with teleport, and DropdownMenu.portalTo with teleportTo. Replace avoidCollisions: false with flip: false and shift: false; the true behavior remains the default. The ropav/legacy-unlayered.css export is removed; import ropav/base.css and use the documented cascade layers instead.
+
+### Features
+
+* **overlay:** support configurable layer z-index ([c136a23](https://github.com/daopk/ropav/commit/c136a23f52f43271a8bb936e559aa1d6d797b3c9))
+
+### Code Refactoring
+
+* remove deprecated compatibility APIs ([1d225bb](https://github.com/daopk/ropav/commit/1d225bbf3f46a47858db2a85a50adc766872b42f))
+
 ## [0.0.13](https://github.com/daopk/ropav/compare/v0.0.12...v0.0.13) (2026-07-17)
 
 ### Features
