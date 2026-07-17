@@ -1,3 +1,10 @@
+## [0.0.13](https://github.com/daopk/ropav/compare/v0.0.12...v0.0.13) (2026-07-17)
+
+### Features
+
+* **floating:** expose advanced options on components ([d9f5cd6](https://github.com/daopk/ropav/commit/d9f5cd6ceecedeece683fca0aa254cc955fb2f67))
+* **floating:** expose advanced positioning options ([47d509c](https://github.com/daopk/ropav/commit/47d509c8a63cf3ccd48fbadd8c2a81c615ef294f))
+
 ## [0.0.12](https://github.com/daopk/ropav/compare/v0.0.11...v0.0.12) (2026-07-16)
 
 ### ⚠ BREAKING CHANGES
