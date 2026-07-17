@@ -164,7 +164,6 @@
       "import": "./dist/components/tooltip/index.js"
     },
     "./base.css": "./dist/base.css",
-    "./legacy-unlayered.css": "./dist/legacy-unlayered.css",
     "./styles-manifest": "./src/styles/styles-manifest.json",
     "./styles-manifest.json": "./src/styles/styles-manifest.json",
     "./scss/*.scss": "./src/styles/*.scss"
@@ -224,7 +223,6 @@
     "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "playwright": "^1.61.1",
-    "postcss": "^8.5.19",
     "sass-embedded": "^1.100.0",
     "storybook": "^10.5.0",
     "style-dictionary": "5.5.0",

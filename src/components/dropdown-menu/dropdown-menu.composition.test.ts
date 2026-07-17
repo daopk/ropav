@@ -52,7 +52,7 @@ describe('DropdownMenu composition contracts', () => {
                                                 throughSlotWrappers(() =>
                                                     h(
                                                         DropdownMenuContent,
-                                                        { avoidCollisions: false },
+                                                        { flip: false, shift: false },
                                                         {
                                                             default: () =>
                                                                 throughSlotWrappers(() =>
@@ -115,7 +115,7 @@ describe('DropdownMenu composition contracts', () => {
                                 ),
                                 h(
                                     DropdownMenuContent,
-                                    { avoidCollisions: false },
+                                    { flip: false, shift: false },
                                     {
                                         default: () =>
                                             h(

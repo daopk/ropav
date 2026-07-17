@@ -14,15 +14,7 @@
             </slot>
         </div>
 
-        <div
-            v-if="hasBody"
-            v-bind="
-                getPartAttrs('body', {
-                    class: 'rp-card__body',
-                    compatibilityClass: bodyClass,
-                })
-            "
-        >
+        <div v-if="hasBody" v-bind="getPartAttrs('body', { class: 'rp-card__body' })">
             <slot />
         </div>
 

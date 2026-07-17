@@ -28,7 +28,7 @@ function mountBasicMenu(onSelect?: (event: DropdownMenuSelectEvent) => void) {
                     {
                         default: () => [
                             h(DropdownMenuTrigger, { class: 'trigger' }, () => 'Actions'),
-                            h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                            h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                 h(DropdownMenuItem, { class: 'item', onSelect }, () => 'Rename'),
                             ),
                         ],
@@ -96,7 +96,7 @@ describe('DropdownMenu compound primitives', () => {
                                         { class: 'controlled-trigger' },
                                         () => 'Controlled',
                                     ),
-                                    h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                                    h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                         h(DropdownMenuItem, null, () => 'Action'),
                                     ),
                                 ],
@@ -208,7 +208,7 @@ describe('DropdownMenu compound primitives', () => {
                                 default: () =>
                                     h(
                                         DropdownMenuContent,
-                                        { avoidCollisions: false },
+                                        { flip: false, shift: false },
                                         {
                                             default: () => [
                                                 h(
@@ -285,7 +285,7 @@ describe('DropdownMenu compound primitives', () => {
                             default: () =>
                                 h(
                                     DropdownMenuContent,
-                                    { avoidCollisions: false },
+                                    { flip: false, shift: false },
                                     {
                                         default: () =>
                                             h(DropdownMenuSub, null, {
@@ -297,7 +297,7 @@ describe('DropdownMenu compound primitives', () => {
                                                     ),
                                                     h(
                                                         DropdownMenuSubContent,
-                                                        { avoidCollisions: false },
+                                                        { flip: false, shift: false },
                                                         () =>
                                                             h(
                                                                 DropdownMenuItem,
@@ -341,7 +341,7 @@ describe('DropdownMenu compound primitives', () => {
                                     { class: 'context-trigger', tabindex: 0 },
                                     () => 'Target',
                                 ),
-                                h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                     h(DropdownMenuItem, null, () => 'Inspect'),
                                 ),
                             ],
@@ -372,7 +372,7 @@ describe('DropdownMenu compound primitives', () => {
                                     { class: 'position-target' },
                                     () => 'Target',
                                 ),
-                                h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                     h(DropdownMenuItem, null, () => 'Inspect'),
                                 ),
                             ],
@@ -414,7 +414,7 @@ describe('DropdownMenu compound primitives', () => {
                                 controls = slotProps;
                                 return h(
                                     DropdownMenuContent,
-                                    { avoidCollisions: false, offset: 0 },
+                                    { flip: false, shift: false, offset: 0 },
                                     () => h(DropdownMenuItem, null, () => 'Inspect'),
                                 );
                             },
@@ -455,7 +455,8 @@ describe('DropdownMenu compound primitives', () => {
                                 h(
                                     DropdownMenuContent,
                                     {
-                                        avoidCollisions: false,
+                                        flip: false,
+                                        shift: false,
                                         onInteractOutside,
                                     },
                                     () => h(DropdownMenuItem, null, () => 'Stay open'),
@@ -492,7 +493,8 @@ describe('DropdownMenu compound primitives', () => {
                                     h(
                                         DropdownMenuContent,
                                         {
-                                            avoidCollisions: false,
+                                            flip: false,
+                                            shift: false,
                                             ignore: [ignored, '.also-ignored'],
                                             onInteractOutside,
                                         },
@@ -534,7 +536,7 @@ describe('DropdownMenu compound primitives', () => {
                         { defaultOpen: true, modal: true },
                         {
                             default: () =>
-                                h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                     h(DropdownMenuItem, null, () => 'Modal item'),
                                 ),
                         },
@@ -568,7 +570,7 @@ describe('DropdownMenu compound primitives', () => {
                                     { class: 'long-press', longPressDelay: 700 },
                                     () => 'Target',
                                 ),
-                                h(DropdownMenuContent, { avoidCollisions: false }, () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () =>
                                     h(DropdownMenuItem, null, () => 'Inspect'),
                                 ),
                             ],

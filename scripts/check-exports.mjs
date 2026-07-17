@@ -48,7 +48,6 @@ const expectedFiles = [
     'dist/textarea.css',
     'dist/toast.css',
     'dist/tooltip.css',
-    'dist/legacy-unlayered.css',
     'dist/components/alert/index.js',
     'dist/components/accordion/index.js',
     'dist/components/aspect-ratio/index.js',
@@ -93,7 +92,6 @@ for (const file of expectedFiles) {
 }
 
 const baseCss = readFileSync(join(projectRoot, 'dist/base.css'), 'utf8');
-const legacyCss = readFileSync(join(projectRoot, 'dist/legacy-unlayered.css'), 'utf8');
 
 for (const selector of ['.rp-spinner', '@keyframes rp-spinner-spin']) {
     if (!baseCss.includes(selector)) {
@@ -108,10 +106,6 @@ for (const layer of [
 ]) {
     if (!baseCss.includes(layer)) throw new Error(`dist/base.css does not include ${layer}`);
 }
-if (legacyCss.includes('@layer ropav.tokens') || legacyCss.includes('@layer ropav.components')) {
-    throw new Error('dist/legacy-unlayered.css must not contain Ropav layer wrappers');
-}
-
 const server = await createServer({
     configFile: false,
     root: projectRoot,

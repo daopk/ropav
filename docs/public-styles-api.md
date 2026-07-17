@@ -26,7 +26,7 @@ Ropav does not expose a `vars` prop. Public CSS variables are set through CSS, t
 
 - Classes merge as internal classes, compatibility classes, `classNames`, then root `class` attributes.
 - Styles merge as internal styles, compatibility styles, `styles`, then root `style` attributes. Later stages win a duplicate property.
-- `Card.bodyClass`, `inputAttrs` styling and `thumbStyle` are compatibility stages. `Card.bodyClass` is deprecated; the other escape hatches remain because they also carry non-styling behavior.
+- `inputAttrs` styling and `thumbStyle` are compatibility stages because these escape hatches also carry non-styling behavior.
 - Attributes and native listeners are forwarded exactly once to the public root host. Internal native handlers run before consumer handlers.
 - Declared component events remain component events. Component-owned roles, ARIA and behavioral attributes remain authoritative.
 - Composite components do not copy root attributes into their child components. Teleported roots receive attributes on the rendered host, not on the virtual teleport node.
@@ -120,8 +120,6 @@ The layered stylesheet declares `ropav.tokens` before `ropav.components`. A laye
 
 Place global resets in `reset` and application overrides in `app`. Import order does not change precedence once the order is declared. Unlayered application rules still outrank named Ropav layers.
 
-Layer adoption changes cascade precedence. Consumers whose reset cannot yet be layered can temporarily import `ropav/legacy-unlayered.css` after that reset. The aggregate fallback is deprecated from its introduction and is intended only as a migration aid.
-
 ## Compatibility
 
 - Typed parts, state attributes, manifest entries, geometry variables and cascade layers form the current Public Styles API.
@@ -130,5 +128,3 @@ Layer adoption changes cascade precedence. Consumers whose reset cannot yet be l
 - `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Until the first such release, it uses the immutable manifest from the initial Public Styles API commit (`f16e826`). Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
 - Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly pin a commit or tag that contains a manifest.
 - Internal DOM, selectors and undocumented variables are outside the public contract.
-- `Card.bodyClass` is a deprecated compatibility escape hatch; prefer `classNames.body`.
-- The legacy unlayered stylesheet is a temporary migration fallback for consumers that cannot yet adopt cascade layers.

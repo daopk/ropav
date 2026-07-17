@@ -45,10 +45,9 @@ export function useDropdownMenu(
     const generatedId = useId();
     const menuId = computed(() => props.id ?? `${generatedId}-menu`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
-    const requestedTeleportTarget = computed(() => props.portalTo ?? props.teleportTo);
-    const teleportTo = useTeleportTarget(() => requestedTeleportTarget.value);
+    const teleportTo = useTeleportTarget(() => props.teleportTo);
     const teleportPositioningKey = useTeleportPositioningKey();
-    const shouldTeleport = computed(() => props.portal ?? props.teleport !== false);
+    const shouldTeleport = computed(() => props.teleport !== false);
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
         rootRef,

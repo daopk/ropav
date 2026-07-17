@@ -239,7 +239,8 @@ describe('OverlayLayerProvider', () => {
                                                 DropdownMenuContent,
                                                 {
                                                     id: 'provider-primitive-menu',
-                                                    avoidCollisions: false,
+                                                    flip: false,
+                                                    shift: false,
                                                 },
                                                 () => h(DropdownMenuItem, null, () => 'Rename'),
                                             ),

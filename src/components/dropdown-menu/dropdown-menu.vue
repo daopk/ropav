@@ -97,7 +97,6 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
     collisionPadding: 8,
     arrow: false,
     teleport: true,
-    portal: undefined,
 });
 
 const emit = defineEmits<{

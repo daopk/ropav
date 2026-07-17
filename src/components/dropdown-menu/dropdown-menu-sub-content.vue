@@ -22,7 +22,6 @@ const props = withDefaults(defineProps<DropdownMenuSubContentPrimitiveProps>(), 
     flip: true,
     shift: true,
     collisionPadding: 8,
-    avoidCollisions: true,
     forceMount: false,
 });
 

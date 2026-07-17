@@ -299,7 +299,9 @@ describe('Card', () => {
                     return h(
                         Card,
                         {
-                            bodyClass: ['custom-body', { 'custom-body--active': true }],
+                            classNames: {
+                                body: ['custom-body', { 'custom-body--active': true }],
+                            },
                         },
                         {
                             default: () => 'Custom body',

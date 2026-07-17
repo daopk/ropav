@@ -60,7 +60,6 @@ const meta = {
         footerBorder: { control: 'boolean' },
         title: { control: 'text' },
         description: { control: 'text' },
-        bodyClass: { control: 'text' },
     },
     args: {
         border: true,
@@ -68,7 +67,6 @@ const meta = {
         footerBorder: false,
         title: 'Project health',
         description: 'Last updated just now',
-        bodyClass: '',
     },
 } satisfies Meta<typeof Card>;
 

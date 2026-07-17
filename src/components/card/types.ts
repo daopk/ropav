@@ -1,4 +1,3 @@
-import type { HTMLAttributes } from 'vue';
 import type { StylesApiProps } from '../../styles-api';
 
 export const cardParts = ['root', 'header', 'title', 'description', 'body', 'footer'] as const;
@@ -19,6 +18,4 @@ export interface CardProps extends StylesApiProps<CardPart> {
     footerBorder?: boolean;
     title?: string;
     description?: string;
-    /** @deprecated Use `classNames.body` instead. */
-    bodyClass?: HTMLAttributes['class'];
 }

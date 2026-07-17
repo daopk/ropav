@@ -168,10 +168,6 @@ export interface DropdownMenuProps
     ariaLabel?: string;
     modal?: boolean;
     ignore?: readonly DropdownMenuInteractOutsideTarget[];
-    /** @deprecated Use `teleport` instead. */
-    portal?: boolean;
-    /** @deprecated Use `teleportTo` instead. */
-    portalTo?: string | HTMLElement;
 }
 
 export type DropdownMenuAs = string | Component;
@@ -262,8 +258,6 @@ export interface DropdownMenuContentPrimitiveProps {
     collisionPadding?: FloatingCollisionPadding;
     autoUpdateOptions?: FloatingAutoUpdateOptions;
     arrow?: boolean;
-    /** @deprecated Use `flip` and `shift` instead. */
-    avoidCollisions?: boolean;
     forceMount?: boolean;
     ignore?: readonly DropdownMenuInteractOutsideTarget[];
     ariaLabel?: string;

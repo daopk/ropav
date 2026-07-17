@@ -66,7 +66,8 @@ describe('Dialog primitives', () => {
                                                                         h(
                                                                             DropdownMenuContent,
                                                                             {
-                                                                                avoidCollisions: false,
+                                                                                flip: false,
+                                                                                shift: false,
                                                                             },
                                                                             () =>
                                                                                 h(
@@ -383,7 +384,7 @@ describe('Dialog primitives', () => {
                                                         default: () =>
                                                             h(
                                                                 DropdownMenuContent,
-                                                                { avoidCollisions: false },
+                                                                { flip: false, shift: false },
                                                                 () =>
                                                                     h(
                                                                         DropdownMenuItem,
