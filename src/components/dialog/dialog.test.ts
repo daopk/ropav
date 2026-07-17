@@ -174,12 +174,15 @@ describe('Dialog primitives', () => {
         await flush();
 
         let content = portal.querySelector('.dialog-content') as HTMLElement;
+        const overlay = portal.querySelector('.dialog-overlay') as HTMLElement;
         const title = portal.querySelector('h2') as HTMLElement;
         const description = portal.querySelector('p') as HTMLElement;
         expect(content.id).toBe(contentId);
         expect(content.getAttribute('aria-modal')).toBe('true');
         expect(content.getAttribute('aria-labelledby')).toBe(title.id);
         expect(content.getAttribute('aria-describedby')).toBe(description.id);
+        expect(content.style.zIndex).toBe('1000');
+        expect(overlay.style.zIndex).toBe('999');
         expect(document.body.style.overflow).toBe('hidden');
         expect(container.inert).toBe(true);
 

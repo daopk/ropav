@@ -57,6 +57,7 @@ describe('Tooltip rendering', () => {
 
         expect(trigger.getAttribute('aria-describedby')).toBe('copy-tooltip');
         expect(hiddenTooltip.id).toBe('copy-tooltip');
+        expect(hiddenTooltip.style.zIndex).toBe('1000');
         expect(hiddenTooltip.style.display).toBe('none');
 
         root.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));

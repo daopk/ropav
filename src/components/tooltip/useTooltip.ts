@@ -11,6 +11,7 @@ import {
     useTeleportPositioningKey,
     useTeleportTarget,
 } from '../teleport-provider/useTeleportTarget';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type { TooltipOffset, TooltipProps, TooltipTriggerProps } from './types';
 
 type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
@@ -78,6 +79,10 @@ export function useTooltip(
     const targetElement = computed(() =>
         isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
     );
+    const zIndex = useOverlayZIndex({
+        baseZIndex: () => props.baseZIndex,
+        defaultBaseZIndex: 1000,
+    });
 
     const { isOpen, open, closeImmediate } = useDelayedOpen({
         open: () => props.open,
@@ -122,6 +127,7 @@ export function useTooltip(
         ...floating.floatingStyle.value,
         ...resolveTooltipOffsetStyle(props.offset),
         ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast),
+        zIndex: zIndex.value,
     }));
 
     function openTooltip() {

@@ -117,6 +117,7 @@ describe('DropdownMenu rendering', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(menu.id).toBe('project-menu');
         expect(menu.getAttribute('aria-label')).toBe('Project actions');
+        expect(menu.style.zIndex).toBe('100');
         expect(menuItems).toHaveLength(items.length);
         expect(menuItems[0].textContent).toContain('Rename');
         expect(menuItems[0].textContent).toContain('R');

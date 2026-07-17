@@ -36,6 +36,7 @@ export interface TooltipSlotProps {
 export interface TooltipProps
     extends FloatingPositionProps<TooltipPlacement>, StylesApiProps<TooltipPart> {
     id?: string;
+    baseZIndex?: number;
     content?: string;
     color?: TooltipColor;
     autoContrast?: boolean;

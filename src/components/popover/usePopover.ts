@@ -22,6 +22,7 @@ import {
     useTeleportPositioningKey,
     useTeleportTarget,
 } from '../teleport-provider/useTeleportTarget';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
     PopoverContentSlotProps,
     PopoverOffset,
@@ -121,10 +122,15 @@ export function usePopover(
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
+    const baseZIndex = useOverlayZIndex({
+        baseZIndex: () => props.baseZIndex,
+        defaultBaseZIndex: 100,
+        aboveParent: false,
+    });
     const layer = useOverlayLayer({
         active: isVisible,
         element: contentRef,
-        baseZIndex: 100,
+        baseZIndex,
     });
     const shouldRenderContent = computed(
         () => !isDisabled.value && (Boolean(props.keepMounted) || isVisible.value),

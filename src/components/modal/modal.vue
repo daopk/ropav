@@ -2,6 +2,7 @@
     <DialogRoot
         v-slot="{ zIndex }"
         :open="isOpen"
+        :base-z-index="baseZIndex"
         :modal="modal"
         :close-on-escape="closeOnEscape"
         :close-on-outside-click="closeOnOverlayClick"

@@ -28,6 +28,7 @@ export type DialogFocusTrapOptions = Omit<
 export interface DialogRootProps {
     open?: boolean;
     defaultOpen?: boolean;
+    baseZIndex?: number;
     modal?: boolean;
     closeOnEscape?: boolean;
     closeOnOutsideClick?: boolean;

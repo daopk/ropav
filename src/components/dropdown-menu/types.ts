@@ -160,6 +160,7 @@ export interface DropdownMenuRenderedItem {
 export interface DropdownMenuProps
     extends FloatingPositionProps<DropdownMenuPlacement>, StylesApiProps<DropdownMenuPart> {
     id?: string;
+    baseZIndex?: number;
     items?: DropdownMenuItem[];
     open?: boolean;
     disabled?: boolean;
@@ -212,6 +213,7 @@ export interface DropdownMenuRootPrimitiveProps {
     id?: string;
     open?: boolean;
     defaultOpen?: boolean;
+    baseZIndex?: number;
     disabled?: boolean;
     modal?: boolean;
     target?: FloatingTarget | null;

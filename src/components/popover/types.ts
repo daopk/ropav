@@ -77,6 +77,7 @@ export interface PopoverContentSlotProps {
 export interface PopoverProps
     extends FloatingPositionProps<PopoverPlacement>, StylesApiProps<PopoverPart> {
     id?: string;
+    baseZIndex?: number;
     contentClass?: string;
     open?: boolean;
     disabled?: boolean;

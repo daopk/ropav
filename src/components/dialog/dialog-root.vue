@@ -5,6 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, useId, watch } from 'vue';
 import { useOverlayLayer } from '@/composables/useOverlayLayer';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { dialogRootKey, resolveDialogCloseReason, type DialogRootContext } from './dialog-core';
 import type { DialogCloseReason, DialogRootProps, DialogRootSlotProps } from './types';
 
@@ -43,13 +44,19 @@ const titleIds = shallowRef<readonly string[]>([]);
 const descriptionIds = shallowRef<readonly string[]>([]);
 let restoreFocusTo: HTMLElement | null = null;
 
+const baseZIndex = useOverlayZIndex({
+    baseZIndex: () => props.baseZIndex,
+    defaultBaseZIndex: 1000,
+    aboveParent: false,
+});
+
 const layer = useOverlayLayer({
     active: isOpen,
     element: contentRef,
     modal,
     modalEffects: true,
     preventScroll,
-    baseZIndex: 1000,
+    baseZIndex,
 });
 
 function setOpen(value: boolean) {

@@ -185,6 +185,7 @@ describe('Popover', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(popover.getAttribute('role')).toBe('dialog');
         expect(popover.getAttribute('aria-label')).toBe('Account actions');
+        expect(popover.style.zIndex).toBe('100');
         expect(popover.style.display).not.toBe('none');
 
         click(queryDom(container, '.inside') as HTMLButtonElement);

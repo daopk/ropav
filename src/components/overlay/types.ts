@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, MaybeRefOrGetter } from 'vue';
 import type { StylesApiProps } from '../../styles-api';
 
 export const overlayParts = ['root'] as const;
@@ -16,4 +16,15 @@ export interface OverlayProps extends StylesApiProps<OverlayPart> {
     zIndex?: OverlayZIndex;
     interactive?: boolean;
     disabled?: boolean;
+}
+
+export interface OverlayLayerProviderProps {
+    baseZIndex: number;
+}
+
+export interface UseOverlayZIndexOptions {
+    baseZIndex?: MaybeRefOrGetter<number | null | undefined>;
+    defaultBaseZIndex?: number;
+    offset?: MaybeRefOrGetter<number>;
+    aboveParent?: MaybeRefOrGetter<boolean>;
 }

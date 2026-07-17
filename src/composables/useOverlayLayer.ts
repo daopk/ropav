@@ -53,7 +53,7 @@ export interface UseOverlayLayerOptions {
     modal?: MaybeRefOrGetter<boolean>;
     modalEffects?: boolean;
     preventScroll?: MaybeRefOrGetter<boolean>;
-    baseZIndex?: number;
+    baseZIndex?: MaybeRefOrGetter<number>;
 }
 
 const overlayLayerKey = Symbol('overlay-layer') as InjectionKey<OverlayLayerContext>;
@@ -61,7 +61,7 @@ const documentStates = new WeakMap<Document, OverlayLayerState>();
 const layerMetadata = new WeakMap<
     OverlayLayerContext,
     {
-        baseZIndex: number;
+        baseZIndex: ComputedRef<number>;
         parent: OverlayLayerContext | null;
         setZIndex: (value: number) => void;
     }
@@ -100,7 +100,7 @@ function syncLayerZIndices(state: OverlayLayerState) {
     for (const layer of state.layers) {
         const metadata = layerMetadata.get(layer);
         if (!metadata) continue;
-        const zIndex = Math.max(metadata.baseZIndex, highestZIndex + 2);
+        const zIndex = Math.max(metadata.baseZIndex.value, highestZIndex + 2);
         metadata.setZIndex(zIndex);
         highestZIndex = zIndex;
     }
@@ -247,7 +247,8 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
     const branchSet = new Set<HTMLElement>();
     const focusBranchSet = new Set<HTMLElement>();
     const insideBranchSet = new Set<HTMLElement>();
-    const zIndex = ref(options.baseZIndex ?? 100);
+    const baseZIndex = computed(() => toValue(options.baseZIndex ?? 100));
+    const zIndex = ref(baseZIndex.value);
     let registeredDocument: Document | null = null;
     let registeredElement: HTMLElement | null = null;
     let parentBranchCleanup: (() => void) | undefined;
@@ -307,7 +308,7 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         registerBranch,
     };
     layerMetadata.set(context, {
-        baseZIndex: options.baseZIndex ?? 100,
+        baseZIndex,
         parent,
         setZIndex(value) {
             zIndex.value = value;
@@ -360,6 +361,13 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
     watch([modal, preventScroll], () => {
         if (registeredDocument) {
             syncModalEffects(registeredDocument, getState(registeredDocument));
+        }
+    });
+    watch(baseZIndex, (value) => {
+        if (registeredDocument) {
+            syncLayerZIndices(getState(registeredDocument));
+        } else {
+            zIndex.value = value;
         }
     });
 

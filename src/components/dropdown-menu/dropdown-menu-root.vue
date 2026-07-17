@@ -6,6 +6,7 @@
 import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useOverlayLayer } from '@/composables/useOverlayLayer';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { isEventWithinElement } from './dropdown-menu-outside';
 import {
     createVirtualAnchor,
@@ -64,10 +65,15 @@ const pendingFocus = ref<OpenFocusTarget>('first');
 const contentElement = ref<HTMLElement | null>(null);
 const inside = new Set<HTMLElement>();
 let returnFocusElement: HTMLElement | null = null;
+const baseZIndex = useOverlayZIndex({
+    baseZIndex: () => props.baseZIndex,
+    defaultBaseZIndex: 100,
+    aboveParent: false,
+});
 const layer = useOverlayLayer({
     active: computed(() => isOpen.value && !disabled.value),
     element: contentElement,
-    baseZIndex: 100,
+    baseZIndex,
 });
 
 function setOpen(value: boolean) {

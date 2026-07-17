@@ -6,6 +6,7 @@ import {
     DropdownMenuRoot as RootDropdownMenuRoot,
     DropdownMenuTrigger as RootDropdownMenuTrigger,
     FocusTrap as RootFocusTrap,
+    OverlayLayerProvider as RootOverlayLayerProvider,
     TeleportProvider as RootTeleportProvider,
     Toast as RootToast,
     ToastProvider as RootToastProvider,
@@ -30,14 +31,17 @@ import {
     type FloatingFlipOptions as RootFloatingFlipOptions,
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
+    type OverlayLayerProviderProps as RootOverlayLayerProviderProps,
     type UseHoverDisclosureOptions as RootUseHoverDisclosureOptions,
     type UseHoverDisclosureReturn as RootUseHoverDisclosureReturn,
     type TeleportTarget as RootTeleportTarget,
     type UseFloatingPositionOptions as RootUseFloatingPositionOptions,
     type UseFloatingPositionReturn as RootUseFloatingPositionReturn,
+    type UseOverlayZIndexOptions as RootUseOverlayZIndexOptions,
     useFloatingPosition as useRootFloatingPosition,
     useHoverDisclosure as useRootHoverDisclosure,
     useFocusTrap as useRootFocusTrap,
+    useOverlayZIndex as useRootOverlayZIndex,
     useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
 } from 'ropav';
@@ -114,9 +118,16 @@ import {
     type ToastStore,
     type ToastStoreOptions,
     type ToastUpdateOptions,
+    type ToastViewportProps,
     useToast,
 } from 'ropav/toast';
-import { h, ref } from 'vue';
+import { h, ref, type ComputedRef } from 'vue';
+import {
+    OverlayLayerProvider,
+    type OverlayLayerProviderProps,
+    type UseOverlayZIndexOptions,
+    useOverlayZIndex,
+} from 'ropav/overlay';
 import {
     TeleportProvider,
     type TeleportProviderProps,
@@ -169,10 +180,17 @@ const rootToastStore: RootToastStore = createRootToastStore(rootToastStoreOption
 const rootToastProviderProps: RootToastProviderProps = { store: rootToastStore };
 const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
-const dropdownRootProps: DropdownMenuRootPrimitiveProps = { defaultOpen: true, modal: false };
-const rootDropdownRootProps: RootDropdownMenuRootPrimitiveProps = { modal: true };
-const dialogRootProps: DialogRootProps = { defaultOpen: true, modal: false };
-const rootDialogRootProps: RootDialogRootProps = { modal: true };
+const dropdownRootProps: DropdownMenuRootPrimitiveProps = {
+    defaultOpen: true,
+    baseZIndex: 2000,
+    modal: false,
+};
+const rootDropdownRootProps: RootDropdownMenuRootPrimitiveProps = {
+    baseZIndex: 2000,
+    modal: true,
+};
+const dialogRootProps: DialogRootProps = { defaultOpen: true, baseZIndex: 2000, modal: false };
+const rootDialogRootProps: RootDialogRootProps = { baseZIndex: 2000, modal: true };
 const dialogPortalProps: DialogPortalProps = { teleportTo: 'body' };
 const dialogFocusTrapOptions: DialogFocusTrapOptions = {
     tabbableOptions: { displayCheck: 'none' },
@@ -275,7 +293,23 @@ function verifyFloatingReturn(result: UseFloatingPositionReturn) {
 const teleportTarget: TeleportTarget = 'body';
 const rootTeleportTarget: RootTeleportTarget = teleportTarget;
 const teleportProviderProps: TeleportProviderProps = { teleportTo: teleportTarget };
+const overlayLayerProviderProps: OverlayLayerProviderProps = { baseZIndex: 5000 };
+const rootOverlayLayerProviderProps: RootOverlayLayerProviderProps = overlayLayerProviderProps;
+const overlayLayerProviderVNode = h(OverlayLayerProvider, overlayLayerProviderProps);
+const rootOverlayLayerProviderVNode = h(RootOverlayLayerProvider, rootOverlayLayerProviderProps);
+const overlayZIndexOptions: UseOverlayZIndexOptions = {
+    baseZIndex: ref<number | undefined>(),
+    defaultBaseZIndex: 1000,
+    offset: () => 1,
+    aboveParent: true,
+};
+const rootOverlayZIndexOptions: RootUseOverlayZIndexOptions = overlayZIndexOptions;
+const publicOverlayZIndexComposable: (options?: UseOverlayZIndexOptions) => ComputedRef<number> =
+    useOverlayZIndex;
+const rootOverlayZIndexComposable: (options?: RootUseOverlayZIndexOptions) => ComputedRef<number> =
+    useRootOverlayZIndex;
 const tooltipProps: TooltipProps = {
+    baseZIndex: 2000,
     target: tooltipTarget,
     strategy: floatingStrategy,
     offset: tooltipOffset,
@@ -285,6 +319,7 @@ const tooltipProps: TooltipProps = {
     teleportTo: teleportTarget,
 };
 const popoverProps: PopoverProps = {
+    baseZIndex: 2000,
     target: popoverTarget,
     arrow: true,
     shift: false,
@@ -293,6 +328,7 @@ const popoverProps: PopoverProps = {
 };
 const dropdownIgnoreTarget: DropdownMenuInteractOutsideTarget = ref<Element | null>(null);
 const dropdownProps: DropdownMenuProps = {
+    baseZIndex: 2000,
     ignore: [dropdownIgnoreTarget],
     target: floatingTarget,
     strategy: 'fixed',
@@ -300,7 +336,12 @@ const dropdownProps: DropdownMenuProps = {
     flipOptions: floatingFlipOptions,
     autoUpdateOptions: floatingAutoUpdateOptions,
 };
-const modalProps: ModalProps = { teleport: true, teleportTo: teleportTarget };
+const modalProps: ModalProps = {
+    baseZIndex: 2000,
+    teleport: true,
+    teleportTo: teleportTarget,
+};
+const toastViewportProps: ToastViewportProps = { baseZIndex: 2000 };
 const teleportProviderVNode = h(TeleportProvider, teleportProviderProps);
 const onDropdownSelect = (event: DropdownMenuSelectEvent) => event.preventDefault();
 const sliderInputAttrs: SliderInputAttrs = { form: 'slider-form', onChange: () => undefined };
@@ -386,6 +427,7 @@ void [
     RootDropdownMenuRoot,
     RootDropdownMenuTrigger,
     RootFocusTrap,
+    RootOverlayLayerProvider,
     RootTeleportProvider,
     RootToastProvider,
     RootToastViewport,
@@ -410,6 +452,7 @@ void [
     DropdownMenuTrigger,
     ToastProvider,
     ToastViewport,
+    OverlayLayerProvider,
     createToastStore,
     toastColors,
     toastPositions,
@@ -429,6 +472,14 @@ void [
     rootToastStore,
     rootToastStoreOptions,
     rootToastProviderProps,
+    overlayLayerProviderProps,
+    rootOverlayLayerProviderProps,
+    overlayLayerProviderVNode,
+    rootOverlayLayerProviderVNode,
+    overlayZIndexOptions,
+    rootOverlayZIndexOptions,
+    publicOverlayZIndexComposable,
+    rootOverlayZIndexComposable,
     FocusTrap,
     focusTrapOptions,
     useFocusTrapOptions,
@@ -482,6 +533,7 @@ void [
     dropdownIgnoreTarget,
     dropdownProps,
     modalProps,
+    toastViewportProps,
     TeleportProvider,
     teleportProviderVNode,
     onDropdownSelect,

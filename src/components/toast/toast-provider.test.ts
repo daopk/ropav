@@ -76,7 +76,9 @@ describe('ToastProvider', () => {
         await flush();
 
         const toasts = [...container.querySelectorAll<HTMLElement>('.rp-toast')];
+        const viewport = container.querySelector('.rp-toast-viewport') as HTMLElement;
         expect(toasts).toHaveLength(2);
+        expect(viewport.style.zIndex).toBe('1001');
         expect(
             toasts.map((toast) => toast.querySelector('.rp-toast__title')?.textContent?.trim()),
         ).toEqual(['Save failed', 'Changes saved']);

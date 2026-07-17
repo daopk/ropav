@@ -122,6 +122,7 @@ export interface ToastProviderProps extends ToastStoreOptions {
 export interface ToastViewportProps extends TeleportProps, StylesApiProps<ToastViewportPart> {
     position?: ToastPosition;
     label?: string;
+    baseZIndex?: number;
 }
 
 export interface ToastOptions extends Omit<ToastProps, 'open'> {

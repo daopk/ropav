@@ -55,6 +55,7 @@ describe('DropdownMenu compound primitives', () => {
 
         const content = container.querySelector('[role="menu"]') as HTMLElement;
         const item = container.querySelector('[role="menuitem"]') as HTMLButtonElement;
+        expect(content.style.zIndex).toBe('100');
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(trigger.getAttribute('aria-controls')).toBe(content.id);
         expect([

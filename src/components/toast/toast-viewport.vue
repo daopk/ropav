@@ -34,6 +34,7 @@
 import { computed } from 'vue';
 import { useStylesApi, type StylesApiClassNames, type StylesApiStyles } from '@/styles-api';
 import Toast from './toast.vue';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type { ToastItem, ToastPart, ToastViewportPart, ToastViewportProps } from './types';
 import { useToastContext } from './useToast';
@@ -47,6 +48,11 @@ const props = withDefaults(defineProps<ToastViewportProps>(), {
 });
 
 const resolvedTeleportTo = useTeleportTarget(() => props.teleportTo);
+const zIndex = useOverlayZIndex({
+    baseZIndex: () => props.baseZIndex,
+    defaultBaseZIndex: 1000,
+    offset: 1,
+});
 
 const context = useToastContext('<ToastViewport>');
 function reverseToasts(toasts: readonly ToastItem[]) {
@@ -65,6 +71,7 @@ const rootAttrs = computed(() =>
             `rp-toast-viewport--${props.position}`,
             { 'rp-toast-viewport--empty': orderedToasts.value.length === 0 },
         ],
+        style: { zIndex: zIndex.value },
         'data-position': props.position,
         'aria-label': props.label,
     }),

@@ -7,6 +7,7 @@ import {
     useTeleportPositioningKey,
     useTeleportTarget,
 } from '../teleport-provider/useTeleportTarget';
+import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
     DropdownMenuContentProps,
     DropdownMenuInteractOutsideEvent,
@@ -59,10 +60,15 @@ export function useDropdownMenu(
     const isDisabled = computed(() => Boolean(props.disabled));
     const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
+    const baseZIndex = useOverlayZIndex({
+        baseZIndex: () => props.baseZIndex,
+        defaultBaseZIndex: 100,
+        aboveParent: false,
+    });
     const layer = useOverlayLayer({
         active: isVisible,
         element: menuRef,
-        baseZIndex: 100,
+        baseZIndex,
     });
     const contentHasSubmenu = computed(() => hasNestedItems(visibleItems.value));
     const isEmpty = computed(() => visibleItems.value.length === 0);

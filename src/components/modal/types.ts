@@ -49,6 +49,7 @@ export interface ModalSlotProps {
 export interface ModalProps extends TeleportProps, StylesApiProps<ModalPart> {
     id?: string;
     open?: boolean;
+    baseZIndex?: number;
     title?: string;
     description?: string;
     ariaLabel?: string;

@@ -201,6 +201,7 @@ try {
             'NumberInput',
             'numberInputParts',
             'Overlay',
+            'OverlayLayerProvider',
             'overlayParts',
             'Popover',
             'popoverParts',
@@ -248,6 +249,7 @@ try {
             'useCollapse',
             'useFloatingPosition',
             'useHoverDisclosure',
+            'useOverlayZIndex',
             'useFocusTrap',
             'useTabs',
             'useTabsContent',
@@ -425,7 +427,11 @@ try {
     );
 
     const overlay = await server.ssrLoadModule('/dist/components/overlay/index.js');
-    assertExports(overlay, ['Overlay', 'overlayParts'], 'dist/components/overlay/index.js');
+    assertExports(
+        overlay,
+        ['Overlay', 'OverlayLayerProvider', 'overlayParts', 'useOverlayZIndex'],
+        'dist/components/overlay/index.js',
+    );
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
     assertExports(select, ['Select', 'selectParts'], 'dist/components/select/index.js');
