@@ -25,6 +25,9 @@ import {
     type DialogCloseReason as RootDialogCloseReason,
     type DialogRootProps as RootDialogRootProps,
     type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
+    type FloatingAutoUpdateOptions as RootFloatingAutoUpdateOptions,
+    type FloatingFlipFallbackStrategy as RootFloatingFlipFallbackStrategy,
+    type FloatingFlipOptions as RootFloatingFlipOptions,
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
     type UseHoverDisclosureOptions as RootUseHoverDisclosureOptions,
@@ -69,7 +72,10 @@ import {
     type DropdownMenuVirtualAnchor,
 } from 'ropav/dropdown-menu';
 import {
+    type FloatingAutoUpdateOptions,
     type FloatingCollisionPadding,
+    type FloatingFlipFallbackStrategy,
+    type FloatingFlipOptions,
     type FloatingOffset,
     type FloatingPlacement,
     type FloatingReference,
@@ -197,6 +203,17 @@ const rootFloatingStrategy: RootFloatingStrategy = floatingStrategy;
 const floatingOffset: FloatingOffset = { mainAxis: 12, crossAxis: 4 };
 const tooltipOffset: TooltipOffset = floatingOffset;
 const collisionPadding: FloatingCollisionPadding = { top: 4, right: 8 };
+const floatingFlipFallbackStrategy: FloatingFlipFallbackStrategy = 'initialPlacement';
+const floatingFlipOptions: FloatingFlipOptions = {
+    fallbackStrategy: floatingFlipFallbackStrategy,
+};
+const floatingAutoUpdateOptions: FloatingAutoUpdateOptions = { animationFrame: true };
+const rootFloatingFlipFallbackStrategy: RootFloatingFlipFallbackStrategy =
+    floatingFlipFallbackStrategy;
+const rootFloatingFlipOptions: RootFloatingFlipOptions = {
+    fallbackStrategy: rootFloatingFlipFallbackStrategy,
+};
+const rootFloatingAutoUpdateOptions: RootFloatingAutoUpdateOptions = floatingAutoUpdateOptions;
 const floatingReference = ref<FloatingReference | null>(virtualAnchor);
 const floatingElement = ref<HTMLElement | null>(null);
 const floatingOpen = ref(true);
@@ -206,10 +223,16 @@ const floatingPositionOptions: UseFloatingPositionOptions = {
     open: floatingOpen,
     placement: () => 'bottom-start',
     offset: floatingOffset,
+    flipOptions: () => floatingFlipOptions,
     collisionPadding: () => collisionPadding,
+    autoUpdateOptions: () => floatingAutoUpdateOptions,
     restartKey: () => floatingOpen.value,
 };
-const rootFloatingPositionOptions: RootUseFloatingPositionOptions = floatingPositionOptions;
+const rootFloatingPositionOptions: RootUseFloatingPositionOptions = {
+    ...floatingPositionOptions,
+    flipOptions: rootFloatingFlipOptions,
+    autoUpdateOptions: rootFloatingAutoUpdateOptions,
+};
 const publicFloatingComposable: (options: UseFloatingPositionOptions) => UseFloatingPositionReturn =
     useFloatingPosition;
 const rootFloatingComposable: (

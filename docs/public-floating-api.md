@@ -49,19 +49,25 @@ const { actualPlacement, arrowStyle, floatingStyle } = useFloatingPosition({
 
 The composable accepts plain values, refs, computed refs or getters for reactive options.
 
-| Option             | Default    | Description                                                    |
-| ------------------ | ---------- | -------------------------------------------------------------- |
-| `reference`        | required   | Element or virtual element used as the anchor.                 |
-| `floating`         | required   | Floating HTML element.                                         |
-| `arrow`            | —          | Optional arrow HTML element.                                   |
-| `open`             | `true`     | Suspends positioning and auto-updates when false.              |
-| `placement`        | `bottom`   | Preferred side and optional alignment.                         |
-| `strategy`         | `absolute` | CSS positioning strategy: `absolute` or `fixed`.               |
-| `offset`           | `8`        | Main/cross-axis distance from the reference.                   |
-| `flip`             | `true`     | Tries the opposite side when space is insufficient.            |
-| `shift`            | `true`     | Keeps the floating element inside the collision boundary.      |
-| `collisionPadding` | `8`        | Padding between the floating element and viewport boundary.    |
-| `restartKey`       | —          | Rebinds auto-update observers when its reactive value changes. |
+| Option                             | Default    | Description                                                            |
+| ---------------------------------- | ---------- | ---------------------------------------------------------------------- |
+| `reference`                        | required   | Element or virtual element used as the anchor.                         |
+| `floating`                         | required   | Floating HTML element.                                                 |
+| `arrow`                            | —          | Optional arrow HTML element.                                           |
+| `open`                             | `true`     | Suspends positioning and auto-updates when false.                      |
+| `placement`                        | `bottom`   | Preferred side and optional alignment.                                 |
+| `strategy`                         | `absolute` | CSS positioning strategy: `absolute` or `fixed`.                       |
+| `offset`                           | `8`        | Main/cross-axis distance from the reference.                           |
+| `flip`                             | `true`     | Tries the opposite side when space is insufficient.                    |
+| `flipOptions.fallbackStrategy`     | `bestFit`  | Chooses the best fit or preserves the initial placement when none fit. |
+| `shift`                            | `true`     | Keeps the floating element inside the collision boundary.              |
+| `collisionPadding`                 | `8`        | Padding between the floating element and viewport boundary.            |
+| `autoUpdateOptions.animationFrame` | `false`    | Tracks transform animations and detached nested floating contexts.     |
+| `restartKey`                       | —          | Rebinds auto-update observers when its reactive value changes.         |
+
+Use `autoUpdateOptions.animationFrame` sparingly. It checks the reference position every animation
+frame and is intended for references moving with CSS transforms or nested floating elements outside
+their ancestor's scrolling context. The animation-frame loop only runs while positioning is open.
 
 The return value contains readonly `actualPlacement`, `floatingStyle`, `arrowStyle` and
 `isPositioned` refs, plus an async `update()` method for content-driven layout changes.

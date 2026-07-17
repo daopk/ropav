@@ -2,7 +2,10 @@ export { useHoverDisclosure } from './useHoverDisclosure';
 export { useFloatingPosition } from './useFloatingPosition';
 export type {
     FloatingAlignment,
+    FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
+    FloatingFlipFallbackStrategy,
+    FloatingFlipOptions,
     FloatingOffset,
     FloatingOffsetOptions,
     FloatingPlacement,

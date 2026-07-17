@@ -23,7 +23,9 @@ import {
     type Ref,
 } from 'vue';
 import type {
+    FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
+    FloatingFlipFallbackStrategy,
     FloatingOffset,
     FloatingPlacement,
     FloatingReference,
@@ -142,12 +144,20 @@ export function useFloatingPosition(
         return toValue(options.flip) !== false;
     }
 
+    function getFlipFallbackStrategy(): FloatingFlipFallbackStrategy | undefined {
+        return toValue(options.flipOptions)?.fallbackStrategy;
+    }
+
     function getShift() {
         return toValue(options.shift) !== false;
     }
 
     function getCollisionPadding(): FloatingCollisionPadding {
         return toValue(options.collisionPadding) ?? DEFAULT_COLLISION_PADDING;
+    }
+
+    function getAutoUpdateAnimationFrame(): boolean | undefined {
+        return toValue(options.autoUpdateOptions)?.animationFrame;
     }
 
     function getHiddenStyle(): CSSProperties {
@@ -177,7 +187,15 @@ export function useFloatingPosition(
         const middleware: Middleware[] = [floatingOffset(getOffset())];
         const padding = getCollisionPadding();
 
-        if (getFlip()) middleware.push(floatingFlip({ padding }));
+        const fallbackStrategy = getFlipFallbackStrategy();
+        if (getFlip()) {
+            middleware.push(
+                floatingFlip({
+                    padding,
+                    ...(fallbackStrategy == null ? {} : { fallbackStrategy }),
+                }),
+            );
+        }
         if (getShift()) middleware.push(floatingShift({ padding }));
         const arrow = getArrow();
         if (arrow) {
@@ -234,7 +252,14 @@ export function useFloatingPosition(
                 return;
             }
 
-            cleanup = autoUpdate(reference, floating, () => void update());
+            const updatePosition = () => void update();
+            const animationFrame = getAutoUpdateAnimationFrame();
+            cleanup =
+                animationFrame == null
+                    ? autoUpdate(reference, floating, updatePosition)
+                    : autoUpdate(reference, floating, updatePosition, {
+                          animationFrame,
+                      } satisfies FloatingAutoUpdateOptions);
         });
     }
 
@@ -248,8 +273,10 @@ export function useFloatingPosition(
             getStrategy,
             getOffset,
             getFlip,
+            getFlipFallbackStrategy,
             getShift,
             getCollisionPadding,
+            getAutoUpdateAnimationFrame,
             () => toValue(options.restartKey),
         ],
         start,

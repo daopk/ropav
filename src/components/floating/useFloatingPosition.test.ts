@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, defineComponent, h, reactive, ref, shallowReactive, shallowRef } from 'vue';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import type {
+    FloatingFlipFallbackStrategy,
     FloatingPlacement,
     FloatingReference,
     FloatingStrategy,
@@ -20,7 +21,12 @@ const floatingMocks = vi.hoisted(() => {
         cleanup,
         computePosition: vi.fn(),
         autoUpdate: vi.fn(
-            (_reference: unknown, _floating: unknown, update: () => void | Promise<void>) => {
+            (
+                _reference: unknown,
+                _floating: unknown,
+                update: () => void | Promise<void>,
+                _options?: { animationFrame?: boolean },
+            ) => {
                 void update();
                 return cleanup;
             },
@@ -137,6 +143,62 @@ describe('floating positioning', () => {
         expect(floatingMocks.offset).toHaveBeenLastCalledWith(8);
         expect(floatingMocks.flip).toHaveBeenLastCalledWith({ padding: 8 });
         expect(floatingMocks.shift).toHaveBeenLastCalledWith({ padding: 8 });
+        expect(floatingMocks.autoUpdate.mock.lastCall).toHaveLength(3);
+    });
+
+    it('reacts to flip and auto-update options', async () => {
+        const state = reactive({
+            fallbackStrategy: 'initialPlacement' as FloatingFlipFallbackStrategy,
+            animationFrame: true,
+        });
+        const reference = createVirtualReference(10, 20);
+        let floating!: ReturnType<typeof useFloatingPosition>;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    const content = ref<HTMLElement | null>(null);
+                    floating = useFloatingPosition({
+                        reference,
+                        floating: content,
+                        flipOptions: () => ({
+                            fallbackStrategy: state.fallbackStrategy,
+                        }),
+                        autoUpdateOptions: () => ({
+                            animationFrame: state.animationFrame,
+                        }),
+                    });
+                    return () => h('div', { ref: content });
+                },
+            }),
+        );
+
+        await vi.waitFor(() => expect(floating.isPositioned.value).toBe(true));
+        expect(floatingMocks.flip).toHaveBeenLastCalledWith({
+            padding: 8,
+            fallbackStrategy: 'initialPlacement',
+        });
+        expect(floatingMocks.autoUpdate.mock.lastCall?.[3]).toEqual({
+            animationFrame: true,
+        });
+
+        state.fallbackStrategy = 'bestFit';
+        await vi.waitFor(() => {
+            expect(floatingMocks.flip).toHaveBeenLastCalledWith({
+                padding: 8,
+                fallbackStrategy: 'bestFit',
+            });
+        });
+
+        const autoUpdateCalls = floatingMocks.autoUpdate.mock.calls.length;
+        state.animationFrame = false;
+        await vi.waitFor(() => {
+            expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(autoUpdateCalls);
+            expect(floatingMocks.autoUpdate.mock.lastCall?.[3]).toEqual({
+                animationFrame: false,
+            });
+        });
+        expect(floatingMocks.cleanup).toHaveBeenCalled();
     });
 
     it('uses ordered middleware, final placement, arrow data, and auto-update lifecycle', async () => {

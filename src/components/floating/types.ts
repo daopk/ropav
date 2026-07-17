@@ -18,6 +18,16 @@ export type FloatingOffset = number | FloatingOffsetOptions;
 
 export type FloatingCollisionPadding = number | Partial<Record<FloatingSide, number>>;
 
+export type FloatingFlipFallbackStrategy = 'bestFit' | 'initialPlacement';
+
+export interface FloatingFlipOptions {
+    fallbackStrategy?: FloatingFlipFallbackStrategy;
+}
+
+export interface FloatingAutoUpdateOptions {
+    animationFrame?: boolean;
+}
+
 export type FloatingReference = Element | VirtualElement;
 
 export type FloatingTarget = string | FloatingReference | Ref<FloatingReference | null | undefined>;
@@ -44,8 +54,10 @@ export interface UseFloatingPositionOptions {
     strategy?: MaybeRefOrGetter<FloatingStrategy | undefined>;
     offset?: MaybeRefOrGetter<FloatingOffset | undefined>;
     flip?: MaybeRefOrGetter<boolean | undefined>;
+    flipOptions?: MaybeRefOrGetter<FloatingFlipOptions | undefined>;
     shift?: MaybeRefOrGetter<boolean | undefined>;
     collisionPadding?: MaybeRefOrGetter<FloatingCollisionPadding | undefined>;
+    autoUpdateOptions?: MaybeRefOrGetter<FloatingAutoUpdateOptions | undefined>;
     restartKey?: MaybeRefOrGetter<unknown>;
 }
 
