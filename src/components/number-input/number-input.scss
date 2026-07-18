@@ -3,10 +3,13 @@
     --_rp-number-input-text-align: left;
 
     overflow: hidden;
+    gap: 0;
+    padding-inline: 0;
     vertical-align: middle;
 
     :deep(.rp-input__native) {
         appearance: textfield;
+        padding-inline: var(--_rp-input-padding-x);
         text-align: var(--_rp-number-input-text-align);
     }
 
@@ -28,14 +31,6 @@
     :deep(.rp-input__right) {
         align-self: stretch;
         margin-block: calc(-1 * var(--rp-border-width-thin));
-    }
-
-    :deep(.rp-input__left) {
-        margin-inline-start: calc(-1 * var(--_rp-input-padding-x));
-    }
-
-    :deep(.rp-input__right) {
-        margin-inline-end: calc(-1 * var(--_rp-input-padding-x));
     }
 
     &__controls {
