@@ -17,6 +17,13 @@ try {
     page.setDefaultTimeout(10_000);
     await page.goto(url);
 
+    const vaporIconTag = await page
+        .getByTestId('consumer-vapor-icon')
+        .evaluate((element) => element.tagName.toLowerCase());
+    if (vaporIconTag !== 'svg') {
+        throw new Error(`Vapor icon did not render as SVG: ${vaporIconTag}`);
+    }
+
     const buttonTypography = await page.getByTestId('theme-toggle').evaluate((element) => {
         const styles = getComputedStyle(element);
         return {

@@ -156,6 +156,7 @@ import {
 } from 'ropav/slider';
 import { type SwitchProps } from 'ropav/switch';
 import { type TextareaProps } from 'ropav/textarea';
+import { vaporIconCompiler } from 'ropav/unplugin-icons';
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
 type ToastColorIsTyped = IsAny<ToastProps['color']> extends false ? true : never;
@@ -164,6 +165,7 @@ type ToastUpdateIdIsExcluded = 'id' extends keyof ToastUpdateOptions ? never : t
 type RootToastUpdateIdIsExcluded = 'id' extends keyof RootToastUpdateOptions ? never : true;
 
 const props: ToastProps = { color: 'blue.5' };
+const iconCompiler = vaporIconCompiler();
 const color: ToastColor | undefined = props.color;
 const toastColorIsTyped: ToastColorIsTyped = true;
 const rootProps: RootToastProps = { color: 'cyan.5' };
@@ -419,6 +421,7 @@ const radioVNode = h(Radio, {
 });
 
 void [
+    iconCompiler,
     RootDialogContent,
     RootDialogRoot,
     RootToast,

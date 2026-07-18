@@ -1,5 +1,8 @@
-import type { CustomCompiler } from 'unplugin-icons';
 import { compile } from '@vue/compiler-vapor';
+
+export interface VaporIconCompiler {
+    compiler(svg: string, collection: string, icon: string): string;
+}
 
 const randomIdHelper = 'const __randId = () => Math.random().toString(36).substr(2, 10);';
 
@@ -25,13 +28,15 @@ function handleSVGId(svg: string) {
     };
 }
 
-export function createVaporIconCompiler(): CustomCompiler {
+/** An unplugin-icons compiler that emits zero-VDOM Vue Vapor components. */
+export function vaporIconCompiler(): VaporIconCompiler {
     return {
         compiler(svg, collection, icon) {
             const name = `${collection}-${icon}`;
             const { injectScripts, svg: handled } = handleSVGId(svg);
             let { code } = compile(handled, {
                 filename: `${name}.vue`,
+                prefixIdentifiers: true,
             });
 
             code = code.replace(/^export /gm, '');

@@ -83,6 +83,7 @@ const expectedFiles = [
     'dist/components/textarea/index.js',
     'dist/components/toast/index.js',
     'dist/components/tooltip/index.js',
+    'dist/unplugin-icons.js',
 ];
 
 for (const file of expectedFiles) {
@@ -255,6 +256,9 @@ try {
         ],
         'dist/index.js',
     );
+
+    const iconsCompiler = await server.ssrLoadModule('/dist/unplugin-icons.js');
+    assertExports(iconsCompiler, ['vaporIconCompiler'], 'dist/unplugin-icons.js');
 
     const alert = await server.ssrLoadModule('/dist/components/alert/index.js');
     assertExports(alert, ['Alert', 'alertParts'], 'dist/components/alert/index.js');

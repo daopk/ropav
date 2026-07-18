@@ -11,6 +11,7 @@
                 Toggle theme
             </Button>
             <Button data-testid="public-color-contrast" color="blue" variant="solid" auto-contrast>
+                <IconSearch data-testid="consumer-vapor-icon" aria-hidden="true" />
                 Public color contrast
             </Button>
         </header>
@@ -33,6 +34,7 @@
 <script lang="ts" setup vapor>
 import { ref, useCssModule } from 'vue';
 import { Button, ToastProvider, ToastViewport } from 'ropav';
+import IconSearch from '~icons/lucide/search';
 import SettingsPanel from './SettingsPanel.vue';
 
 const dark = ref(false);

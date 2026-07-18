@@ -7,7 +7,7 @@ import Icons from 'unplugin-icons/vite';
 
 import { injectComponentCss } from './config/inject-component-css';
 import { rewriteDeclarationImportExtensions } from './config/rewrite-declaration-import-extensions';
-import { createVaporIconCompiler } from './config/vapor-icon-compiler';
+import { vaporIconCompiler } from './src/unplugin-icons';
 
 const componentEntries = readdirSync(resolve(__dirname, 'src/components'), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -60,7 +60,7 @@ export default defineConfig({
             },
         }),
         Icons({
-            compiler: createVaporIconCompiler(),
+            compiler: vaporIconCompiler(),
         }),
         dts({
             tsconfigPath: './tsconfig.app.json',
@@ -68,6 +68,7 @@ export default defineConfig({
             include: [
                 'src/index.ts',
                 'src/styles-api.ts',
+                'src/unplugin-icons.ts',
                 'src/components/**/*.vue',
                 'src/components/**/*.ts',
                 'src/composables/useOverlayLayer.ts',
@@ -95,6 +96,7 @@ export default defineConfig({
             entry: {
                 index: resolve(__dirname, 'src/index.ts'),
                 base: resolve(__dirname, 'src/styles/base.scss'),
+                'unplugin-icons': resolve(__dirname, 'src/unplugin-icons.ts'),
                 ...componentEntries,
             },
             formats: ['es'],
@@ -103,7 +105,7 @@ export default defineConfig({
         sourcemap: false,
         cssCodeSplit: true,
         rolldownOptions: {
-            external: ['focus-trap', 'vue'],
+            external: ['@vue/compiler-vapor', 'focus-trap', 'vue'],
             output: {
                 chunkFileNames: '[name].js',
             },

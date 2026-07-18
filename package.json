@@ -164,6 +164,10 @@
       "types": "./dist/components/tooltip/index.d.ts",
       "import": "./dist/components/tooltip/index.js"
     },
+    "./unplugin-icons": {
+      "types": "./dist/unplugin-icons.d.ts",
+      "import": "./dist/unplugin-icons.js"
+    },
     "./base.css": "./dist/base.css",
     "./styles-manifest": "./src/styles/styles-manifest.json",
     "./styles-manifest.json": "./src/styles/styles-manifest.json",
@@ -201,7 +205,17 @@
     "release": "pnpm run test:package && bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
   },
   "peerDependencies": {
+    "@vue/compiler-vapor": "3.6.0-beta.17",
+    "unplugin-icons": "^23.0.1",
     "vue": "^3.6.0-beta.4"
+  },
+  "peerDependenciesMeta": {
+    "@vue/compiler-vapor": {
+      "optional": true
+    },
+    "unplugin-icons": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
