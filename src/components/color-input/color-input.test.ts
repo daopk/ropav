@@ -872,14 +872,18 @@ describe('ColorInput', () => {
         inputs[0]!.focus();
         await flush();
 
-        expect(queryDom(container, '.rp-popover__content')?.getAttribute('aria-label')).toBe(
+        const firstContentId = inputs[0]!.getAttribute('aria-controls');
+        expect(firstContentId).toBeTruthy();
+        expect(document.getElementById(firstContentId!)?.getAttribute('aria-label')).toBe(
             'Brand color picker',
         );
 
         inputs[1]!.focus();
         await flush();
 
-        expect(queryDom(container, '.rp-popover__content')?.getAttribute('aria-label')).toBe(
+        const secondContentId = inputs[1]!.getAttribute('aria-controls');
+        expect(secondContentId).toBeTruthy();
+        expect(document.getElementById(secondContentId!)?.getAttribute('aria-label')).toBe(
             'Choose color',
         );
     });

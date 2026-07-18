@@ -205,9 +205,9 @@
     "release": "pnpm run test:package && bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
   },
   "peerDependencies": {
-    "@vue/compiler-vapor": "3.6.0-beta.17",
+    "@vue/compiler-vapor": "3.6.0-rc.1",
     "unplugin-icons": "^23.0.1",
-    "vue": "^3.6.0-beta.4"
+    "vue": "^3.6.0-rc.1"
   },
   "peerDependenciesMeta": {
     "@vue/compiler-vapor": {
@@ -229,7 +229,7 @@
     "@types/node": "^26.1.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/browser-playwright": "^4.1.10",
-    "@vue/compiler-vapor": "3.6.0-beta.17",
+    "@vue/compiler-vapor": "3.6.0-rc.1",
     "@vue/tsconfig": "^0.9.1",
     "bumpp": "^11.1.0",
     "conventional-changelog": "^8.1.0",
@@ -246,7 +246,7 @@
     "vite": "^8.1.5",
     "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.10",
-    "vue": "3.6.0-beta.17",
+    "vue": "3.6.0-rc.1",
     "vue-tsc": "^3.3.7"
   },
   "repository": {
