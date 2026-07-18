@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'vue';
 import { getComponentColorValue } from '@/utils/componentColors';
 import type {
+    RangeSliderTooltip,
     RangeSliderThumbOptions,
     SliderMark,
     SliderMarkInput,
@@ -8,6 +9,8 @@ import type {
     SliderThumb,
     SliderThumbMode,
     SliderThumbOptions,
+    SliderTooltip,
+    SliderTooltipAnchor,
     SliderTooltipMode,
     SliderTooltipOptions,
 } from './types';
@@ -177,16 +180,23 @@ export function getSliderAriaValueText(
 }
 
 export function getSliderTooltipOptions(
-    tooltip: NonNullable<SliderProps['tooltip']>,
-): SliderTooltipOptions {
+    tooltip: SliderTooltip | RangeSliderTooltip,
+): SliderTooltipOptions | Exclude<RangeSliderTooltip, false | SliderTooltipMode> {
     return typeof tooltip === 'object' ? tooltip : {};
 }
 
 export function getSliderTooltipMode(
-    tooltip: NonNullable<SliderProps['tooltip']>,
+    tooltip: SliderTooltip | RangeSliderTooltip,
 ): SliderTooltipMode | false {
     if (tooltip === false) return false;
-    if (typeof tooltip === 'object') return tooltip.mode ?? 'hover';
+    if (typeof tooltip === 'object') {
+        if ('anchor' in tooltip && tooltip.anchor === 'pointer') return 'hover';
+        return tooltip.mode ?? 'hover';
+    }
 
     return tooltip;
+}
+
+export function getSliderTooltipAnchor(tooltip: SliderTooltip): SliderTooltipAnchor {
+    return typeof tooltip === 'object' && tooltip.anchor === 'pointer' ? 'pointer' : 'thumb';
 }

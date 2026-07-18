@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { reactive, ref } from 'vue';
 import RangeSlider from './range-slider.vue';
-import { sliderColors, sliderOrientations, sliderSizes } from './types';
+import { sliderColors, sliderOrientations, sliderSizes, type RangeSliderProps } from './types';
 
 const percentFormatter = (value: number) => `${value}%`;
 const tooltipPlacements = ['top', 'right', 'bottom', 'left'] as const;
@@ -81,7 +81,7 @@ const meta = {
             </div>
         `,
     }),
-} satisfies Meta<typeof RangeSlider>;
+} satisfies Meta<RangeSliderProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

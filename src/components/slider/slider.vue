@@ -23,8 +23,9 @@
         <span
             v-bind="getPartAttrs('track', { class: 'rp-slider__track' })"
             @pointerdown="onTooltipPointerDown"
-            @mouseenter="onTooltipMouseEnter"
-            @mouseleave="onTooltipMouseLeave"
+            @pointerenter="onTooltipTrackEnter"
+            @pointerleave="onTooltipTrackLeave"
+            @pointermove="onTooltipPointerMove"
             @focusin="onTooltipFocusIn"
             @focusout="onTooltipFocusOut"
             @keydown="onTooltipKeydown"
@@ -45,6 +46,8 @@
             >
                 <slot name="track-overlay" v-bind="trackSlotProps" />
             </span>
+
+            <span v-if="tooltipAnchor === 'pointer'" class="rp-slider__travel" aria-hidden="true" />
 
             <input
                 v-bind="nativeInputAttrs"
@@ -123,6 +126,17 @@
                 decorative
             >
                 <span class="rp-slider__tooltip-anchor" aria-hidden="true" />
+                <template #content>
+                    <slot
+                        name="tooltip-content"
+                        :value="tooltipValue"
+                        :formatted-value="tooltipFormattedValue"
+                        :percent="tooltipPercent"
+                        :anchor="tooltipAnchor"
+                    >
+                        {{ tooltipContent }}
+                    </slot>
+                </template>
             </Tooltip>
         </span>
     </label>
@@ -134,7 +148,12 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Tooltip from '../tooltip/tooltip.vue';
-import type { SliderPart, SliderProps, SliderTrackSlotProps } from './types';
+import type {
+    SliderPart,
+    SliderProps,
+    SliderTooltipSlotProps,
+    SliderTrackSlotProps,
+} from './types';
 import { normalizeSliderValue, useSlider } from './useSlider';
 
 defineOptions({ name: 'RpSlider', inheritAttrs: false });
@@ -145,6 +164,7 @@ const slots = defineSlots<{
     'track-underlay'?(props: SliderTrackSlotProps): unknown;
     'track-overlay'?(props: SliderTrackSlotProps): unknown;
     thumb?(props: Pick<SliderTrackSlotProps, 'value' | 'formattedValue' | 'percent'>): unknown;
+    'tooltip-content'?(props: SliderTooltipSlotProps): unknown;
 }>();
 
 const props = withDefaults(defineProps<SliderProps>(), {
@@ -191,17 +211,22 @@ const {
     dragging,
     tooltipVisible,
     tooltipOpen,
+    tooltipAnchor,
     tooltipPlacement,
     tooltipId,
     tooltipColor,
     tooltipOffset,
     tooltipOpenDelay,
     tooltipArrow,
+    tooltipValue,
+    tooltipPercent,
+    tooltipFormattedValue,
     tooltipContent,
     onInput,
     onTooltipPointerDown,
-    onTooltipMouseEnter,
-    onTooltipMouseLeave,
+    onTooltipPointerMove,
+    onTooltipTrackEnter,
+    onTooltipTrackLeave,
     onTooltipFocusIn,
     onTooltipFocusOut,
     onTooltipKeydown,

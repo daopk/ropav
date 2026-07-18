@@ -152,6 +152,7 @@ import {
     type RangeSliderProps,
     type RangeSliderThumbOptions,
     type RangeSliderTrackSlotProps,
+    type RangeSliderTooltip,
     type RangeSliderValidationMessage,
     type SliderInputAttrs,
     type SliderProps,
@@ -159,6 +160,8 @@ import {
     type SliderThumbMode,
     type SliderThumbOptions,
     type SliderTrackSlotProps,
+    type SliderTooltipAnchor,
+    type SliderTooltipSlotProps,
 } from 'ropav/slider';
 import { type SwitchProps } from 'ropav/switch';
 import { type TextareaProps } from 'ropav/textarea';
@@ -365,6 +368,7 @@ const sliderProps: SliderProps = {
     invalid: true,
     required: true,
     thumb: 'interaction',
+    tooltip: { anchor: 'pointer' },
     validationMessage: 'Choose a value.',
 };
 const sliderThumb: SliderThumb = false;
@@ -385,6 +389,14 @@ const sliderTrackSlotProps: SliderTrackSlotProps = {
     orientation: 'horizontal',
     getPercent: (value) => value,
 };
+const sliderTooltipAnchor: SliderTooltipAnchor = 'pointer';
+const sliderTooltipSlotProps: SliderTooltipSlotProps = {
+    anchor: sliderTooltipAnchor,
+    formattedValue: '00:42',
+    percent: 42,
+    value: 42,
+};
+const rangeSliderTooltip: RangeSliderTooltip = { mode: 'always' };
 const rangeSliderTrackSlotProps: RangeSliderTrackSlotProps = {
     value: [25, 75],
     formattedValue: ['25%', '75%'],
@@ -400,6 +412,7 @@ const rangeSliderProps: RangeSliderProps = {
     inputAttrs: rangeSliderInputAttrs,
     thumb: rangeSliderThumbOptions,
     validationMessage: rangeValidationMessage,
+    tooltip: rangeSliderTooltip,
 };
 const switchProps: SwitchProps = {
     defaultValue: false,
@@ -583,6 +596,9 @@ void [
     sliderThumbOptions,
     rangeSliderThumbOptions,
     sliderTrackSlotProps,
+    sliderTooltipAnchor,
+    sliderTooltipSlotProps,
+    rangeSliderTooltip,
     rangeSliderTrackSlotProps,
     rangeSliderProps,
     rangeValidationMessage,

@@ -7,6 +7,7 @@ import {
     getSliderThumbMode,
     getSliderThumbOptions,
     getSliderValuePercent,
+    getSliderTooltipMode,
 } from './sliderCore';
 
 describe('slider core', () => {
@@ -15,6 +16,16 @@ describe('slider core', () => {
         expect(getSliderValuePercent(-10, 0, 100)).toBe(0);
         expect(getSliderValuePercent(140, 0, 100)).toBe(100);
         expect(getSliderValuePercent(Number.NaN, 0, 100)).toBe(0);
+    });
+
+    it('normalizes pointer-anchored tooltips to hover mode at runtime', () => {
+        expect(getSliderTooltipMode({ anchor: 'pointer' })).toBe('hover');
+        expect(
+            getSliderTooltipMode({ anchor: 'pointer', mode: 'always' } as {
+                anchor: 'pointer';
+                mode: 'always';
+            }),
+        ).toBe('hover');
     });
 
     it('normalizes shorthand and object thumb configuration', () => {

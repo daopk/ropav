@@ -1,11 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import IconVolume2 from '~icons/lucide/volume-2';
 import Slider from './slider.vue';
-import { sliderColors, sliderOrientations, sliderSizes } from './types';
+import { sliderColors, sliderOrientations, sliderSizes, type SliderProps } from './types';
 
 const percentFormatter = (value: number) => `${value}%`;
+const timeFormatter = (value: number) => {
+    const seconds = Math.max(0, Math.round(value));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+};
+const bufferedRanges = [
+    [0, 185],
+    [210, 225],
+] as const;
+const chapterMarkers = [60, 120, 180];
 const sliderHitSizes = {
     xs: 8,
     sm: 12,
@@ -18,6 +27,17 @@ const hitRegionDebugStyle = {
     outline: '1px dashed var(--rp-color-blue-filled)',
     outlineOffset: '-1px',
 };
+const getTrackRangeStyle = (
+    getPercent: (value: number) => number,
+    range: readonly [number, number],
+) => ({
+    position: 'absolute' as const,
+    insetBlock: 0,
+    left: `${getPercent(range[0])}%`,
+    width: `${getPercent(range[1]) - getPercent(range[0])}%`,
+    background: 'color-mix(in srgb, var(--rp-color-control-selected-bg) 32%, transparent)',
+    borderRadius: 'var(--rp-radius-full)',
+});
 const storyWrapperStyle = {
     boxSizing: 'border-box',
     width: 'min(360px, 100%)',
@@ -89,7 +109,7 @@ const meta = {
             </div>
         `,
     }),
-} satisfies Meta<typeof Slider>;
+} satisfies Meta<SliderProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -214,6 +234,121 @@ export const CustomThumb: Story = {
             </div>
         `,
     }),
+};
+
+export const MediaSeek: Story = {
+    tags: ['test'],
+    args: {
+        formatValue: timeFormatter,
+        max: 240,
+        min: 0,
+        modelValue: 72,
+        step: 1,
+        thumb: 'interaction',
+        tooltip: { anchor: 'pointer' },
+    },
+    render: (args) => ({
+        components: { Slider },
+        setup() {
+            const currentTime = ref(args.modelValue ?? 0);
+            return {
+                args,
+                bufferedRanges,
+                chapterMarkers,
+                currentTime,
+                getTrackRangeStyle,
+                storyWrapperStyle,
+            };
+        },
+        template: `
+            <div :style="storyWrapperStyle">
+                <Slider
+                    v-bind="args"
+                    v-model="currentTime"
+                    aria-label="Playback position"
+                >
+                    <template #track-underlay="{ getPercent }">
+                        <span
+                            v-for="range in bufferedRanges"
+                            :key="range[0]"
+                            class="media-buffered-range"
+                            :style="getTrackRangeStyle(getPercent, range)"
+                        />
+                    </template>
+                    <template #track-overlay="{ getPercent }">
+                        <span
+                            v-for="chapter in chapterMarkers"
+                            :key="chapter"
+                            class="media-chapter-marker"
+                            :style="{
+                                position: 'absolute',
+                                top: '-2px',
+                                bottom: '-2px',
+                                left: getPercent(chapter) + '%',
+                                width: '1px',
+                                background: 'var(--rp-color-control-thumb-bg)',
+                            }"
+                        />
+                    </template>
+                    <template #tooltip-content="{ formattedValue }">
+                        <strong>{{ formattedValue }}</strong>
+                    </template>
+                </Slider>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const root = canvasElement.querySelector<HTMLElement>('.rp-slider')!;
+        const track = canvasElement.querySelector<HTMLElement>('.rp-slider__track')!;
+        const input = canvasElement.querySelector<HTMLInputElement>('.rp-slider__native')!;
+        const buffered = [...canvasElement.querySelectorAll<HTMLElement>('.media-buffered-range')];
+        const chapters = canvasElement.querySelectorAll('.media-chapter-marker');
+        const inputStyle = getComputedStyle(input);
+        const nativeTrackStyle = getComputedStyle(input, '::-webkit-slider-runnable-track');
+        const thumb = root.querySelector<HTMLElement>('.rp-slider__thumb-content')!;
+
+        expect(root.dataset.thumbVisibility).toBe('interaction');
+        expect(track.getBoundingClientRect().height).toBe(input.getBoundingClientRect().height);
+        expect(input.getBoundingClientRect().height).toBe(16);
+        expect(nativeTrackStyle.height).toBe(inputStyle.height);
+        expect(buffered).toHaveLength(2);
+        expect(Number.parseFloat(buffered[0].style.width)).toBeCloseTo((185 / 240) * 100);
+        expect(buffered[1].style.left).toBe('87.5%');
+        expect(chapters).toHaveLength(3);
+
+        input.blur();
+        track.dispatchEvent(new PointerEvent('pointerleave'));
+        await waitFor(() => expect(root.hasAttribute('data-track-hovered')).toBe(false));
+        expect(root.hasAttribute('data-dragging')).toBe(false);
+        await waitFor(() => expect(getComputedStyle(thumb).opacity).toBe('0'));
+
+        await userEvent.hover(track);
+        await waitFor(() => expect(root.hasAttribute('data-track-hovered')).toBe(true));
+        await waitFor(() => expect(getComputedStyle(thumb).opacity).toBe('1'));
+        const trackRect = track.getBoundingClientRect();
+        track.dispatchEvent(
+            new PointerEvent('pointermove', {
+                bubbles: true,
+                clientX: trackRect.right,
+                clientY: trackRect.top + trackRect.height / 2,
+            }),
+        );
+        const tooltipContent = canvasElement.ownerDocument.querySelector<HTMLElement>(
+            '.rp-slider__tooltip-content',
+        )!;
+        await waitFor(() => expect(tooltipContent.textContent).toBe('4:00'));
+
+        track.dispatchEvent(new PointerEvent('pointerleave'));
+        await waitFor(() => expect(root.hasAttribute('data-track-hovered')).toBe(false));
+        expect(tooltipContent.textContent).toBe('4:00');
+
+        input.focus();
+        expect(document.activeElement).toBe(input);
+        await waitFor(() => expect(getComputedStyle(thumb).opacity).toBe('1'));
+        input.blur();
+        expect(document.activeElement).not.toBe(input);
+        await waitFor(() => expect(getComputedStyle(thumb).opacity).toBe('0'));
+    },
 };
 
 export const HiddenThumb: Story = {

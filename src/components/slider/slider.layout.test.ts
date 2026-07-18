@@ -99,11 +99,11 @@ describe('Slider layout', () => {
         expect(root.hasAttribute('data-track-hovered')).toBe(false);
         expect(root.hasAttribute('data-dragging')).toBe(false);
 
-        track.dispatchEvent(new Event('mouseenter'));
+        track.dispatchEvent(new Event('pointerenter'));
         await flush();
         expect(root.hasAttribute('data-track-hovered')).toBe(true);
 
-        track.dispatchEvent(new Event('mouseleave'));
+        track.dispatchEvent(new Event('pointerleave'));
         await flush();
         expect(root.hasAttribute('data-track-hovered')).toBe(false);
     });

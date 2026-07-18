@@ -4,12 +4,19 @@
     @include slider-shared.foundation-variables('slider');
 
     --_rp-slider-ratio: 0;
+    --_rp-slider-tooltip-ratio: var(--_rp-slider-ratio);
     --_rp-slider-fill-position: calc(
         var(--_rp-slider-thumb-size) / 2 + (100% - var(--_rp-slider-thumb-size)) *
             var(--_rp-slider-ratio)
     );
+    --_rp-slider-tooltip-fill-position: calc(
+        var(--_rp-slider-thumb-size) / 2 + (100% - var(--_rp-slider-thumb-size)) *
+            var(--_rp-slider-tooltip-ratio)
+    );
+
     &--thumb-hidden {
         --_rp-slider-fill-position: calc(100% * var(--_rp-slider-ratio));
+        --_rp-slider-tooltip-fill-position: calc(100% * var(--_rp-slider-tooltip-ratio));
     }
 
     @include slider-shared.foundation-structure('slider');
@@ -100,11 +107,20 @@
 
     @include slider-shared.thumb-content('slider', var(--_rp-slider-percent));
 
+    &__travel {
+        position: absolute;
+        top: 0;
+        right: calc(var(--_rp-slider-thumb-size) / 2);
+        left: calc(var(--_rp-slider-thumb-size) / 2);
+        height: var(--_rp-slider-hit-size);
+        pointer-events: none;
+    }
+
     &__tooltip {
         position: absolute;
         z-index: 5;
         top: calc((var(--_rp-slider-hit-size) - var(--_rp-slider-thumb-size)) / 2);
-        left: var(--_rp-slider-fill-position);
+        left: var(--_rp-slider-tooltip-fill-position);
         width: var(--_rp-slider-thumb-size);
         height: var(--_rp-slider-thumb-size);
         pointer-events: none;
@@ -271,8 +287,17 @@
         left: 50%;
     }
 
+    &--vertical &__travel {
+        top: calc(var(--_rp-slider-thumb-size) / 2);
+        right: auto;
+        bottom: calc(var(--_rp-slider-thumb-size) / 2);
+        left: 0;
+        width: var(--_rp-slider-hit-size);
+        height: auto;
+    }
+
     &--vertical &__tooltip {
-        top: calc(100% - var(--_rp-slider-fill-position));
+        top: calc(100% - var(--_rp-slider-tooltip-fill-position));
         left: calc((var(--_rp-slider-hit-size) - var(--_rp-slider-thumb-size)) / 2);
         translate: 0 -50%;
     }

@@ -68,14 +68,37 @@ export type RangeSliderValidationMessage = string | [string | undefined, string 
 
 export type SliderTooltipMode = 'hover' | 'always';
 
-export type SliderTooltipOptions = Pick<
+type SliderTooltipBaseOptions = Pick<
     TooltipProps,
     'id' | 'placement' | 'color' | 'offset' | 'openDelay' | 'arrow'
-> & {
+>;
+
+export type SliderTooltipAnchor = 'thumb' | 'pointer';
+
+export type SliderTooltipOptions =
+    | (SliderTooltipBaseOptions & {
+          anchor?: 'thumb';
+          mode?: SliderTooltipMode;
+      })
+    | (SliderTooltipBaseOptions & {
+          anchor: 'pointer';
+          mode?: 'hover';
+      });
+
+export type RangeSliderTooltipOptions = SliderTooltipBaseOptions & {
     mode?: SliderTooltipMode;
 };
 
 export type SliderTooltip = false | SliderTooltipMode | SliderTooltipOptions;
+
+export type RangeSliderTooltip = false | SliderTooltipMode | RangeSliderTooltipOptions;
+
+export interface SliderTooltipSlotProps {
+    value: number;
+    formattedValue: string | number;
+    percent: number;
+    anchor: SliderTooltipAnchor;
+}
 
 export interface SliderTrackSlotProps {
     value: number;
@@ -159,6 +182,7 @@ export interface RangeSliderProps
             | 'inputAttrs'
             | 'validationMessage'
             | 'thumb'
+            | 'tooltip'
             | 'classNames'
             | 'styles'
         >,
@@ -167,6 +191,7 @@ export interface RangeSliderProps
     defaultValue?: RangeSliderValue;
     minRange?: number;
     thumb?: RangeSliderThumbOptions;
+    tooltip?: RangeSliderTooltip;
     name?: string | [string, string];
     ariaLabel?: [string, string];
     ariaValueText?: RangeSliderAriaValueText;

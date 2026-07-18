@@ -10,6 +10,7 @@ import {
     getSliderAriaValueText,
     getSliderThumbMode,
     getSliderThumbOptions,
+    getSliderTooltipAnchor,
     getSliderTooltipMode,
     getSliderTooltipOptions,
     getSliderValuePercent,
@@ -42,10 +43,16 @@ function getSliderColorValue(color: SliderProps['color']) {
     return getComponentColorValue(color);
 }
 
-function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
+function getSliderTrackStyle(
+    props: SliderStateProps,
+    valuePercent: number,
+    tooltipPercent: number,
+) {
     const style: CSSProperties = {
         '--_rp-slider-percent': `${valuePercent}%`,
         '--_rp-slider-ratio': `${valuePercent / 100}`,
+        '--_rp-slider-tooltip-percent': `${tooltipPercent}%`,
+        '--_rp-slider-tooltip-ratio': `${tooltipPercent / 100}`,
     };
 
     setSliderStyleValue(style, '--_rp-slider-color', getSliderColorValue(props.color));
@@ -105,6 +112,7 @@ export function useSlider(
     );
 
     const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));
+    const tooltipAnchor = computed(() => getSliderTooltipAnchor(props.tooltip));
     const tooltipMode = computed(() => getSliderTooltipMode(props.tooltip));
     const tooltipOpenDelay = computed(() => tooltipOptions.value.openDelay ?? 0);
     const {
@@ -118,9 +126,15 @@ export function useSlider(
     const trackHovered = ref(false);
     const focusWithin = ref(false);
     const dragging = ref(false);
+    const previewAvailable = ref(false);
+    const previewValue = ref(normalizedValue.value);
     let dismissed = false;
     let dragView: Window | null = null;
     let dragPointerId: number | undefined;
+    let dragTrack: HTMLElement | null = null;
+    let previewFrameView: Window | null = null;
+    let previewFrameId: number | undefined;
+    let pendingPreview: { clientX: number; clientY: number; track: HTMLElement } | undefined;
 
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
     const thumbMode = computed(() => getSliderThumbMode(props.thumb));
@@ -149,7 +163,18 @@ export function useSlider(
     const tooltipColor = computed(() => tooltipOptions.value.color);
     const tooltipOffset = computed(() => tooltipOptions.value.offset);
     const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
-    const tooltipContent = computed(() => String(formattedValue.value));
+    const tooltipValue = computed(() =>
+        tooltipAnchor.value === 'pointer' && previewAvailable.value
+            ? previewValue.value
+            : normalizedValue.value,
+    );
+    const tooltipPercent = computed(() =>
+        getSliderValuePercent(tooltipValue.value, bounds.value.min, bounds.value.max),
+    );
+    const tooltipFormattedValue = computed(() =>
+        getFormattedSliderValue(tooltipValue.value, props.formatValue),
+    );
+    const tooltipContent = computed(() => String(tooltipFormattedValue.value));
 
     const rootClass = computed(() =>
         bem('rp-slider', {
@@ -166,7 +191,7 @@ export function useSlider(
     );
 
     const trackStyle = computed<CSSProperties>(() =>
-        getSliderTrackStyle(props, valuePercent.value),
+        getSliderTrackStyle(props, valuePercent.value, tooltipPercent.value),
     );
 
     function onInput(e: Event) {
@@ -184,6 +209,10 @@ export function useSlider(
     }
 
     function hasTooltipInteraction() {
+        if (tooltipAnchor.value === 'pointer') {
+            return previewAvailable.value && (trackHovered.value || dragging.value);
+        }
+
         return trackHovered.value || focusWithin.value || dragging.value;
     }
 
@@ -201,14 +230,25 @@ export function useSlider(
         closeDelayedTooltip();
     }
 
-    function onTooltipMouseEnter() {
+    function onTooltipTrackEnter(event: PointerEvent) {
+        if (control.disabled) return;
+
+        if (tooltipAnchor.value === 'pointer') {
+            cancelScheduledPreview();
+            previewAvailable.value = false;
+            const track = event.currentTarget as HTMLElement | null;
+            if (track) updatePreviewFromPointer(event, track);
+        }
         trackHovered.value = true;
         dismissed = false;
         syncTooltip();
     }
 
-    function onTooltipMouseLeave() {
+    function onTooltipTrackLeave() {
         trackHovered.value = false;
+        if (!dragging.value && tooltipAnchor.value === 'pointer') {
+            cancelScheduledPreview();
+        }
         syncTooltip();
     }
 
@@ -224,15 +264,100 @@ export function useSlider(
     }
 
     function removeDragListeners() {
+        dragView?.removeEventListener('pointermove', onTooltipWindowPointerMove);
         dragView?.removeEventListener('pointerup', onTooltipPointerEnd);
         dragView?.removeEventListener('pointercancel', onTooltipPointerEnd);
         dragView = null;
         dragPointerId = undefined;
+        dragTrack = null;
+    }
+
+    function cancelScheduledPreview() {
+        if (previewFrameId !== undefined) {
+            previewFrameView?.cancelAnimationFrame(previewFrameId);
+        }
+        previewFrameView = null;
+        previewFrameId = undefined;
+        pendingPreview = undefined;
+    }
+
+    function updatePreviewFromPointer(
+        pointer: { clientX: number; clientY: number },
+        track: HTMLElement,
+    ) {
+        if (tooltipAnchor.value !== 'pointer' || control.disabled) return false;
+
+        const vertical = props.orientation === 'vertical';
+        const travelRect = track
+            .querySelector<HTMLElement>('.rp-slider__travel')
+            ?.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        const rect =
+            travelRect && (vertical ? travelRect.height > 0 : travelRect.width > 0)
+                ? travelRect
+                : trackRect;
+        const length = vertical ? rect.height : rect.width;
+        if (length <= 0) return false;
+
+        const offset = vertical ? rect.bottom - pointer.clientY : pointer.clientX - rect.left;
+        const ratio = Math.min(1, Math.max(0, offset / length));
+        const rawValue = bounds.value.min + ratio * (bounds.value.max - bounds.value.min);
+        previewValue.value = normalizeSliderValue(
+            rawValue,
+            bounds.value.min,
+            bounds.value.max,
+            nativeStep.value,
+        );
+        previewAvailable.value = true;
+        return true;
+    }
+
+    function applyScheduledPreview() {
+        const pending = pendingPreview;
+        pendingPreview = undefined;
+        if (pending && updatePreviewFromPointer(pending, pending.track)) syncTooltip();
+    }
+
+    function onPreviewAnimationFrame() {
+        previewFrameView = null;
+        previewFrameId = undefined;
+        applyScheduledPreview();
+    }
+
+    function schedulePreview(event: PointerEvent, track: HTMLElement) {
+        if (tooltipAnchor.value !== 'pointer' || control.disabled) return;
+
+        pendingPreview = { clientX: event.clientX, clientY: event.clientY, track };
+        const view = track.ownerDocument.defaultView;
+        if (!view?.requestAnimationFrame) {
+            applyScheduledPreview();
+            return;
+        }
+        if (previewFrameId !== undefined) return;
+
+        previewFrameView = view;
+        previewFrameId = view.requestAnimationFrame(onPreviewAnimationFrame);
+    }
+
+    function onTooltipPointerMove(event: PointerEvent) {
+        if (dragPointerId !== undefined && dragging.value && event.pointerId !== dragPointerId) {
+            return;
+        }
+
+        const track = event.currentTarget as HTMLElement | null;
+        if (track) schedulePreview(event, track);
+    }
+
+    function onTooltipWindowPointerMove(event: PointerEvent) {
+        if (dragPointerId !== undefined && event.pointerId !== dragPointerId) return;
+        if (dragTrack) schedulePreview(event, dragTrack);
     }
 
     function onTooltipPointerEnd(event: PointerEvent) {
         if (dragPointerId !== undefined && event.pointerId !== dragPointerId) return;
 
+        cancelScheduledPreview();
+        if (dragTrack) updatePreviewFromPointer(event, dragTrack);
         dragging.value = false;
         removeDragListeners();
         syncTooltip();
@@ -245,7 +370,10 @@ export function useSlider(
         dismissed = false;
         dragging.value = true;
         dragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : undefined;
-        dragView = (event.currentTarget as HTMLElement | null)?.ownerDocument.defaultView ?? null;
+        dragTrack = event.currentTarget as HTMLElement | null;
+        if (dragTrack) updatePreviewFromPointer(event, dragTrack);
+        dragView = dragTrack?.ownerDocument.defaultView ?? null;
+        dragView?.addEventListener('pointermove', onTooltipWindowPointerMove);
         dragView?.addEventListener('pointerup', onTooltipPointerEnd);
         dragView?.addEventListener('pointercancel', onTooltipPointerEnd);
         syncTooltip();
@@ -258,7 +386,10 @@ export function useSlider(
         }
     }
 
-    onBeforeUnmount(removeDragListeners);
+    onBeforeUnmount(() => {
+        removeDragListeners();
+        cancelScheduledPreview();
+    });
 
     return {
         control,
@@ -278,17 +409,22 @@ export function useSlider(
         dragging,
         tooltipVisible,
         tooltipOpen,
+        tooltipAnchor,
         tooltipPlacement,
         tooltipId,
         tooltipColor,
         tooltipOffset,
         tooltipOpenDelay,
         tooltipArrow,
+        tooltipValue,
+        tooltipPercent,
+        tooltipFormattedValue,
         tooltipContent,
         onInput,
         onTooltipPointerDown,
-        onTooltipMouseEnter,
-        onTooltipMouseLeave,
+        onTooltipPointerMove,
+        onTooltipTrackEnter,
+        onTooltipTrackLeave,
         onTooltipFocusIn,
         onTooltipFocusOut,
         onTooltipKeydown,

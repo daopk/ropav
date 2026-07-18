@@ -37,6 +37,45 @@ Import the components you need:
 import { Button } from 'ropav';
 ```
 
+## Progress and interactive ranges
+
+Use `Progress` for read-only status and `Slider` when the user can change the value. A media seek
+control can draw buffered ranges below the played range, reveal its thumb during interaction, and
+preview the value under the pointer:
+
+```vue
+<Slider
+  v-model="currentTime"
+  :max="duration"
+  thumb="interaction"
+  :tooltip="{ anchor: 'pointer' }"
+  :format-value="formatTime"
+>
+  <template #track-underlay="{ getPercent }">
+    <span
+      v-for="range in bufferedRanges"
+      :key="range.start"
+      class="buffered-range"
+      :style="{
+        left: `${getPercent(range.start)}%`,
+        width: `${getPercent(range.end) - getPercent(range.start)}%`,
+      }"
+    />
+  </template>
+  <template #tooltip-content="{ formattedValue }">
+    {{ formattedValue }}
+  </template>
+</Slider>
+```
+
+`track-underlay` and `track-overlay` are decorative layers below and above the selected range. Both
+receive the normalized slider state and a clamped `getPercent(value)` helper, so consumers can draw
+segments, markers, waveforms, or other track content without replacing slider behavior. Their
+coordinate space follows the thumb travel, so percentage positions stay aligned with the control.
+Set `:thumb="false"` to hide only the visual thumb while preserving the native input, hit area, and
+keyboard behavior. An object can combine visibility and geometry, for example
+`:thumb="{ visibility: 'interaction', size: 20 }"`.
+
 ## Icons
 
 Ropav provides a compiler for

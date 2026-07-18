@@ -16,6 +16,8 @@ export type {
     RangeSliderThumb,
     RangeSliderThumbOptions,
     RangeSliderTrackSlotProps,
+    RangeSliderTooltip,
+    RangeSliderTooltipOptions,
     RangeSliderValue,
     RangeSliderValidationMessage,
     SliderColor,
@@ -33,7 +35,9 @@ export type {
     SliderThumbOptions,
     SliderTrackSlotProps,
     SliderTooltip,
+    SliderTooltipAnchor,
     SliderTooltipMode,
     SliderTooltipOptions,
+    SliderTooltipSlotProps,
     SliderValueFormatter,
 } from './types';
