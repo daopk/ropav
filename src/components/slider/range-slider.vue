@@ -28,10 +28,25 @@
             @mouseenter="onTooltipTrackMouseEnter"
             @mouseleave="onTooltipTrackMouseLeave"
         >
+            <span class="rp-range-slider__rail" aria-hidden="true" />
+            <span
+                v-if="$slots['track-underlay']"
+                class="rp-range-slider__track-layer rp-range-slider__track-underlay"
+                aria-hidden="true"
+            >
+                <slot name="track-underlay" v-bind="trackSlotProps" />
+            </span>
             <span
                 v-bind="getPartAttrs('range', { class: 'rp-range-slider__bar' })"
                 aria-hidden="true"
             />
+            <span
+                v-if="$slots['track-overlay']"
+                class="rp-range-slider__track-layer rp-range-slider__track-overlay"
+                aria-hidden="true"
+            >
+                <slot name="track-overlay" v-bind="trackSlotProps" />
+            </span>
 
             <input
                 v-for="(thumb, index) in rangeSliderThumbs"
@@ -140,15 +155,34 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, ref, useId, useSlots, type InputHTMLAttributes } from 'vue';
+import { computed, nextTick, ref, useId, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
-import type { RangeSliderPart, RangeSliderProps, RangeSliderValue } from './types';
+import type {
+    RangeSliderPart,
+    RangeSliderProps,
+    RangeSliderTrackSlotProps,
+    RangeSliderValue,
+} from './types';
 import { normalizeRangeSliderValue, useRangeSlider } from './useRangeSlider';
 
 defineOptions({ name: 'RpRangeSlider', inheritAttrs: false });
+
+const slots = defineSlots<{
+    default?(): unknown;
+    value?(props: Pick<RangeSliderTrackSlotProps, 'value' | 'formattedValue' | 'percent'>): unknown;
+    'track-underlay'?(props: RangeSliderTrackSlotProps): unknown;
+    'track-overlay'?(props: RangeSliderTrackSlotProps): unknown;
+    thumb?(props: {
+        thumb: 'lower' | 'upper';
+        index: number;
+        value: number;
+        formattedValue: string | number;
+        percent: number;
+    }): unknown;
+}>();
 
 const props = withDefaults(defineProps<RangeSliderProps>(), {
     modelValue: undefined,
@@ -170,7 +204,6 @@ const emit = defineEmits<{
     'update:modelValue': [value: [number, number]];
 }>();
 
-const slots = useSlots();
 const generatedId = useId();
 const tooltipsOverlapping = ref(false);
 const rangeSliderThumbs = ['lower', 'upper'] as const;
@@ -197,6 +230,7 @@ const {
     ariaLabels,
     ariaValueText,
     markItems,
+    trackSlotProps,
     trackStyle,
     activeThumb,
     tooltipVisible,

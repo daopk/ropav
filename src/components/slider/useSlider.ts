@@ -16,7 +16,7 @@ import {
     normalizeSliderValue,
     setSliderStyleValue,
 } from './sliderCore';
-import type { SliderProps } from './types';
+import type { SliderProps, SliderTrackSlotProps } from './types';
 
 export {
     getSliderValuePercent,
@@ -120,6 +120,17 @@ export function useSlider(
     let dragPointerId: number | undefined;
 
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
+    const trackSlotProps = computed<SliderTrackSlotProps>(() => ({
+        value: normalizedValue.value,
+        formattedValue: formattedValue.value,
+        percent: valuePercent.value,
+        min: bounds.value.min,
+        max: bounds.value.max,
+        orientation: props.orientation,
+        getPercent(value) {
+            return getSliderValuePercent(value, bounds.value.min, bounds.value.max);
+        },
+    }));
     const tooltipVisible = computed(() => tooltipMode.value !== false);
     const tooltipAlwaysVisible = computed(() => tooltipMode.value === 'always');
     const tooltipOpen = computed(
@@ -254,6 +265,7 @@ export function useSlider(
         formattedValue,
         ariaValueText,
         markItems,
+        trackSlotProps,
         trackStyle,
         tooltipVisible,
         tooltipOpen,

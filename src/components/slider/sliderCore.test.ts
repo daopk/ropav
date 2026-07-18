@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import type { CSSProperties } from 'vue';
 
-import { applySliderThumbStyle, createSliderMarkItems } from './sliderCore';
+import { applySliderThumbStyle, createSliderMarkItems, getSliderValuePercent } from './sliderCore';
 
 describe('slider core', () => {
+    it('maps arbitrary finite track values to a clamped percentage', () => {
+        expect(getSliderValuePercent(44.4, 0, 200)).toBe(22.2);
+        expect(getSliderValuePercent(-10, 0, 100)).toBe(0);
+        expect(getSliderValuePercent(140, 0, 100)).toBe(100);
+        expect(getSliderValuePercent(Number.NaN, 0, 100)).toBe(0);
+    });
+
     it('builds shared mark items with component-specific fill and style properties', () => {
         const items = createSliderMarkItems(
             [0, { value: 40, label: 'Middle' }, { value: 60, hidden: true }, Number.NaN],

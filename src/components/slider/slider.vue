@@ -29,7 +29,22 @@
             @focusout="onTooltipFocusOut"
             @keydown="onTooltipKeydown"
         >
+            <span class="rp-slider__rail" aria-hidden="true" />
+            <span
+                v-if="$slots['track-underlay']"
+                class="rp-slider__track-layer rp-slider__track-underlay"
+                aria-hidden="true"
+            >
+                <slot name="track-underlay" v-bind="trackSlotProps" />
+            </span>
             <span v-bind="getPartAttrs('range', { class: 'rp-slider__bar' })" aria-hidden="true" />
+            <span
+                v-if="$slots['track-overlay']"
+                class="rp-slider__track-layer rp-slider__track-overlay"
+                aria-hidden="true"
+            >
+                <slot name="track-overlay" v-bind="trackSlotProps" />
+            </span>
 
             <input
                 v-bind="nativeInputAttrs"
@@ -118,15 +133,23 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useSlots, type InputHTMLAttributes } from 'vue';
+import { computed, ref, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Tooltip from '../tooltip/tooltip.vue';
-import type { SliderPart, SliderProps } from './types';
+import type { SliderPart, SliderProps, SliderTrackSlotProps } from './types';
 import { normalizeSliderValue, useSlider } from './useSlider';
 
 defineOptions({ name: 'RpSlider', inheritAttrs: false });
+
+const slots = defineSlots<{
+    default?(): unknown;
+    value?(props: Pick<SliderTrackSlotProps, 'value' | 'formattedValue' | 'percent'>): unknown;
+    'track-underlay'?(props: SliderTrackSlotProps): unknown;
+    'track-overlay'?(props: SliderTrackSlotProps): unknown;
+    thumb?(props: Pick<SliderTrackSlotProps, 'value' | 'formattedValue' | 'percent'>): unknown;
+}>();
 
 const props = withDefaults(defineProps<SliderProps>(), {
     modelValue: undefined,
@@ -147,7 +170,6 @@ const emit = defineEmits<{
 }>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
-const slots = useSlots();
 const controllable = useControllableValue<number>({
     modelValue: () => props.modelValue,
     defaultValue: () => props.defaultValue ?? props.min,
@@ -165,6 +187,7 @@ const {
     formattedValue,
     ariaValueText,
     markItems,
+    trackSlotProps,
     trackStyle,
     tooltipVisible,
     tooltipOpen,

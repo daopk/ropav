@@ -150,9 +150,11 @@ import { type SelectProps } from 'ropav/select';
 import {
     type RangeSliderInputAttrs,
     type RangeSliderProps,
+    type RangeSliderTrackSlotProps,
     type RangeSliderValidationMessage,
     type SliderInputAttrs,
     type SliderProps,
+    type SliderTrackSlotProps,
 } from 'ropav/slider';
 import { type SwitchProps } from 'ropav/switch';
 import { type TextareaProps } from 'ropav/textarea';
@@ -360,6 +362,24 @@ const sliderProps: SliderProps = {
     required: true,
     validationMessage: 'Choose a value.',
 };
+const sliderTrackSlotProps: SliderTrackSlotProps = {
+    value: 42,
+    formattedValue: '42%',
+    percent: 42,
+    min: 0,
+    max: 100,
+    orientation: 'horizontal',
+    getPercent: (value) => value,
+};
+const rangeSliderTrackSlotProps: RangeSliderTrackSlotProps = {
+    value: [25, 75],
+    formattedValue: ['25%', '75%'],
+    percent: [25, 75],
+    min: 0,
+    max: 100,
+    orientation: 'horizontal',
+    getPercent: (value) => value,
+};
 const rangeSliderProps: RangeSliderProps = {
     defaultValue: [25, 75],
     form: 'slider-form',
@@ -543,6 +563,8 @@ void [
     sliderInputAttrs,
     rangeSliderInputAttrs,
     sliderProps,
+    sliderTrackSlotProps,
+    rangeSliderTrackSlotProps,
     rangeSliderProps,
     rangeValidationMessage,
     switchProps,

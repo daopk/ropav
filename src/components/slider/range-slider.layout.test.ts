@@ -3,8 +3,64 @@ import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import RangeSlider from './range-slider.vue';
+import type { RangeSliderTrackSlotProps } from './types';
 
 describe('RangeSlider layout', () => {
+    it('renders shared custom track layers with tuple slot props', async () => {
+        let slotProps: RangeSliderTrackSlotProps | undefined;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        RangeSlider,
+                        {
+                            formatValue: (value: number) => `$${value}`,
+                            max: 200,
+                            modelValue: [40, 160],
+                        },
+                        {
+                            'track-underlay': (props: RangeSliderTrackSlotProps) => {
+                                slotProps = props;
+                                return h('span', { class: 'distribution' });
+                            },
+                            'track-overlay': () => h('span', { class: 'thresholds' }),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const rail = container.querySelector('.rp-range-slider__rail')!;
+        const underlay = container.querySelector('.rp-range-slider__track-underlay')!;
+        const bar = container.querySelector('.rp-range-slider__bar')!;
+        const overlay = container.querySelector('.rp-range-slider__track-overlay')!;
+        const input = container.querySelector('.rp-range-slider__native')!;
+
+        expect(rail.compareDocumentPosition(underlay) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(underlay.compareDocumentPosition(bar) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(bar.compareDocumentPosition(overlay) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(overlay.compareDocumentPosition(input) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(slotProps).toMatchObject({
+            value: [40, 160],
+            formattedValue: ['$40', '$160'],
+            percent: [20, 80],
+            min: 0,
+            max: 200,
+            orientation: 'horizontal',
+        });
+        expect(slotProps?.getPercent(50)).toBe(25);
+    });
+
     it('renders label and tuple value slots around the two native inputs', async () => {
         const container = mountDom(
             defineComponent({

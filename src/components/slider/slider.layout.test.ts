@@ -3,8 +3,79 @@ import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Slider from './slider.vue';
+import type { SliderTrackSlotProps } from './types';
 
 describe('Slider layout', () => {
+    it('renders custom track layers around the selected range with normalized slot props', async () => {
+        let underlayProps: SliderTrackSlotProps | undefined;
+        let overlayProps: SliderTrackSlotProps | undefined;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Slider,
+                        {
+                            formatValue: (value: number) => `${value}s`,
+                            max: 200,
+                            min: 0,
+                            modelValue: 140,
+                        },
+                        {
+                            'track-underlay': (props: SliderTrackSlotProps) => {
+                                underlayProps = props;
+                                return h('span', {
+                                    class: 'buffered-range',
+                                    style: { width: `${props.getPercent(44.4)}%` },
+                                });
+                            },
+                            'track-overlay': (props: SliderTrackSlotProps) => {
+                                overlayProps = props;
+                                return h('span', { class: 'waveform' });
+                            },
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const rail = container.querySelector('.rp-slider__rail')!;
+        const underlay = container.querySelector('.rp-slider__track-underlay')!;
+        const bar = container.querySelector('.rp-slider__bar')!;
+        const overlay = container.querySelector('.rp-slider__track-overlay')!;
+        const input = container.querySelector('.rp-slider__native')!;
+        const bufferedRange = container.querySelector('.buffered-range') as HTMLElement;
+
+        expect(underlay.getAttribute('aria-hidden')).toBe('true');
+        expect(overlay.getAttribute('aria-hidden')).toBe('true');
+        expect(rail.compareDocumentPosition(underlay) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(underlay.compareDocumentPosition(bar) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(bar.compareDocumentPosition(overlay) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(overlay.compareDocumentPosition(input) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+            Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+        expect(bufferedRange.style.width).toBe('22.2%');
+        expect(underlayProps).toMatchObject({
+            value: 140,
+            formattedValue: '140s',
+            percent: 70,
+            min: 0,
+            max: 200,
+            orientation: 'horizontal',
+        });
+        expect(overlayProps).toMatchObject(underlayProps!);
+        expect(underlayProps?.getPercent(-10)).toBe(0);
+        expect(underlayProps?.getPercent(300)).toBe(100);
+        expect(underlayProps?.getPercent(Number.NaN)).toBe(0);
+    });
+
     it('renders label and value slots around the native input', async () => {
         const container = mountDom(
             defineComponent({

@@ -5,6 +5,7 @@ import { getComponentColorValue } from '@/utils/componentColors';
 import type {
     RangeSliderEndpointValueText,
     RangeSliderProps,
+    RangeSliderTrackSlotProps,
     RangeSliderThumb,
     RangeSliderValue,
 } from './types';
@@ -311,6 +312,17 @@ export function useRangeSlider(
         ),
     );
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
+    const trackSlotProps = computed<RangeSliderTrackSlotProps>(() => ({
+        value: normalizedValue.value,
+        formattedValue: formattedValue.value,
+        percent: valuePercent.value,
+        min: bounds.value.min,
+        max: bounds.value.max,
+        orientation: props.orientation,
+        getPercent(value) {
+            return getSliderValuePercent(value, bounds.value.min, bounds.value.max);
+        },
+    }));
     const trackStyle = computed<CSSProperties>(() =>
         getRangeSliderTrackStyle(props, valuePercent.value),
     );
@@ -534,6 +546,7 @@ export function useRangeSlider(
         ariaLabels,
         ariaValueText,
         markItems,
+        trackSlotProps,
         trackStyle,
         activeThumb,
         tooltipVisible,

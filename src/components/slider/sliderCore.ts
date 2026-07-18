@@ -57,7 +57,7 @@ export function normalizeSliderValue(
 }
 
 export function getSliderValuePercent(value: number, min: number, max: number) {
-    if (max <= min) return 0;
+    if (!Number.isFinite(value) || max <= min) return 0;
 
     const percent = ((value - min) / (max - min)) * 100;
     return Math.min(100, Math.max(0, percent));

@@ -75,6 +75,26 @@ export type SliderTooltipOptions = Pick<
 
 export type SliderTooltip = false | SliderTooltipMode | SliderTooltipOptions;
 
+export interface SliderTrackSlotProps {
+    value: number;
+    formattedValue: string | number;
+    percent: number;
+    min: number;
+    max: number;
+    orientation: SliderOrientation;
+    getPercent: (value: number) => number;
+}
+
+export interface RangeSliderTrackSlotProps {
+    value: RangeSliderValue;
+    formattedValue: [string | number, string | number];
+    percent: RangeSliderValue;
+    min: number;
+    max: number;
+    orientation: SliderOrientation;
+    getPercent: (value: number) => number;
+}
+
 export type SliderMarkColor = SliderColor;
 
 export interface SliderMark {
