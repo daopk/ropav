@@ -92,6 +92,7 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         }),
         'data-disabled': presence(control.disabled),
         'data-invalid': presence(control.invalid),
+        'data-state': controllable.value.value ? 'checked' : 'unchecked',
         onChange(event) {
             onChange(event);
             attrs.onChange?.(event);

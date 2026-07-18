@@ -8,7 +8,7 @@ describe('Switch', () => {
     const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
-    it('emits model updates from native switch changes', async () => {
+    it('emits requested updates while preserving controlled state', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
@@ -26,14 +26,48 @@ describe('Switch', () => {
         );
 
         const native = container.querySelector('input') as HTMLInputElement;
+        const root = container.querySelector('.rp-switch')!;
         expect(native.getAttribute('role')).toBe('switch');
         expect(native.getAttribute('aria-checked')).toBe('false');
+        expect(native.getAttribute('data-state')).toBe('unchecked');
 
         native.click();
         await flush();
 
         expect(onUpdate).toHaveBeenCalledOnce();
         expect(onUpdate).toHaveBeenCalledWith(true);
+        expect(native.checked).toBe(false);
+        expect(native.getAttribute('aria-checked')).toBe('false');
+        expect(native.getAttribute('data-state')).toBe('unchecked');
+        expect(root.getAttribute('data-state')).toBe('unchecked');
+    });
+
+    it('reflects controlled updates accepted by the parent', async () => {
+        const value = ref(false);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Switch, {
+                        modelValue: value.value,
+                        'onUpdate:modelValue': (nextValue) => {
+                            value.value = nextValue;
+                        },
+                    });
+                },
+            }),
+        );
+
+        const native = container.querySelector('input') as HTMLInputElement;
+        const root = container.querySelector('.rp-switch')!;
+
+        native.click();
+        await flush();
+
+        expect(value.value).toBe(true);
+        expect(native.checked).toBe(true);
+        expect(native.getAttribute('aria-checked')).toBe('true');
+        expect(native.getAttribute('data-state')).toBe('checked');
+        expect(root.getAttribute('data-state')).toBe('checked');
     });
 
     it('does not emit updates when disabled', async () => {
@@ -90,6 +124,7 @@ describe('Switch', () => {
         expect(root.getAttribute('data-state')).toBe('checked');
         expect(native.checked).toBe(true);
         expect(native.getAttribute('aria-checked')).toBe('true');
+        expect(native.getAttribute('data-state')).toBe('checked');
     });
 
     it('applies direct state and ARIA props', async () => {

@@ -1,4 +1,4 @@
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, nextTick, ref, type CSSProperties } from 'vue';
 import { useControlState } from '@/composables/useControlState';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
@@ -33,7 +33,12 @@ export function useSwitch(
     const rootStyle = computed(() => getSwitchColorStyle(props.color));
 
     function onChange(e: Event) {
-        emitUpdate((e.target as HTMLInputElement).checked);
+        const input = e.target as HTMLInputElement;
+        emitUpdate(input.checked);
+
+        void nextTick(() => {
+            input.checked = getValue();
+        });
     }
 
     function focus(options?: FocusOptions) {
