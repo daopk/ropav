@@ -1,3 +1,24 @@
+## [0.1.2](https://github.com/daopk/ropav/compare/v0.1.1...v0.1.2) (2026-07-18)
+
+### ⚠ BREAKING CHANGES
+
+* **slider:** replace the thumbStyle prop with thumb and the SliderThumbStyle type with SliderThumbOptions.
+
+### Features
+
+* **icons:** expose Vapor compiler for unplugin-icons ([0fcdf00](https://github.com/daopk/ropav/commit/0fcdf00651b3bfa9f72384e60606e63630cb8f5a))
+* **slider:** add custom track layers ([2b0361d](https://github.com/daopk/ropav/commit/2b0361d5fe56df8c9ce3c4d0b023c04f0b9b2f6e))
+* **slider:** add thumb visibility modes ([e5df54d](https://github.com/daopk/ropav/commit/e5df54d6e19730464f99b12a72cf9565fc0bda9a))
+* **slider:** support media seek controls ([ab6e073](https://github.com/daopk/ropav/commit/ab6e07301d16c64e8bd68cca473d14385c4c89fe))
+
+### Bug Fixes
+
+* **switch:** preserve controlled native state ([8341d45](https://github.com/daopk/ropav/commit/8341d457c0662430db4ba0acfe54f6c3ea514f34))
+
+### Code Refactoring
+
+* **slider:** replace thumb style API ([c430cc9](https://github.com/daopk/ropav/commit/c430cc918b336ea53ded828372ea772edc053fe3))
+
 ## [0.1.1](https://github.com/daopk/ropav/compare/v0.1.0...v0.1.1) (2026-07-17)
 
 ## [0.1.0](https://github.com/daopk/ropav/compare/v0.0.13...v0.1.0) (2026-07-17)
