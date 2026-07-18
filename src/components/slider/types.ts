@@ -86,7 +86,7 @@ export interface SliderMark {
 
 export type SliderMarkInput = number | SliderMark;
 
-export interface SliderThumbStyle {
+export interface SliderThumbOptions {
     size?: number | string;
     border?: number | string;
     padding?: number | string;
@@ -102,7 +102,7 @@ export interface SliderProps extends StylesApiProps<SliderPart> {
     max?: number;
     step?: number | 'any';
     marks?: SliderMarkInput[];
-    thumbStyle?: SliderThumbStyle;
+    thumb?: SliderThumbOptions;
     tooltip?: SliderTooltip;
     formatValue?: SliderValueFormatter;
     color?: SliderColor;

@@ -26,7 +26,7 @@ Ropav does not expose a `vars` prop. Public CSS variables are set through CSS, t
 
 - Classes merge as internal classes, compatibility classes, `classNames`, then root `class` attributes.
 - Styles merge as internal styles, compatibility styles, `styles`, then root `style` attributes. Later stages win a duplicate property.
-- `inputAttrs` styling and `thumbStyle` are compatibility stages because these escape hatches also carry non-styling behavior.
+- `inputAttrs` styling is a compatibility stage because this escape hatch also carries non-styling behavior.
 - Attributes and native listeners are forwarded exactly once to the public root host. Internal native handlers run before consumer handlers.
 - Declared component events remain component events. Component-owned roles, ARIA and behavioral attributes remain authoritative.
 - Composite components do not copy root attributes into their child components. Teleported roots receive attributes on the rendered host, not on the virtual teleport node.

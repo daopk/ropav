@@ -26,7 +26,7 @@ export type {
     SliderProps,
     SliderPresetColor,
     SliderSize,
-    SliderThumbStyle,
+    SliderThumbOptions,
     SliderTooltip,
     SliderTooltipMode,
     SliderTooltipOptions,

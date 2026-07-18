@@ -47,7 +47,7 @@ function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
 
     setSliderStyleValue(style, '--_rp-slider-color', getSliderColorValue(props.color));
 
-    applySliderThumbStyle(style, props.thumbStyle, {
+    applySliderThumbStyle(style, props.thumb, {
         size: '--rp-slider-thumb-size',
         border: '--_rp-slider-thumb-border-style',
         padding: '--rp-slider-thumb-padding',

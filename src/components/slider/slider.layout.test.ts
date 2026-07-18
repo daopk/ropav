@@ -92,7 +92,7 @@ describe('Slider layout', () => {
                 render() {
                     return h(Slider, {
                         modelValue: 50,
-                        thumbStyle: {
+                        thumb: {
                             border: '2px solid red',
                             padding: 4,
                             size: 28,

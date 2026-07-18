@@ -113,7 +113,7 @@ describe('RangeSlider layout', () => {
                 render() {
                     return h(RangeSlider, {
                         modelValue: [25, 75],
-                        thumbStyle: {
+                        thumb: {
                             border: '2px solid red',
                             padding: 4,
                             size: 28,

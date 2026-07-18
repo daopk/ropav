@@ -44,7 +44,7 @@ const meta = {
         max: { control: 'number' },
         step: { control: 'number' },
         marks: { control: 'object' },
-        thumbStyle: { control: 'object' },
+        thumb: { control: 'object' },
         tooltip: {
             control: 'object',
         },
@@ -57,7 +57,7 @@ const meta = {
         max: 100,
         step: 1,
         marks: [],
-        thumbStyle: undefined,
+        thumb: undefined,
         tooltip: 'hover',
         formatValue: undefined,
         color: undefined,
@@ -172,7 +172,7 @@ export const CustomTooltip: Story = {
 
 export const CustomThumb: Story = {
     args: {
-        thumbStyle: {
+        thumb: {
             size: 28,
             border: '2px solid var(--rp-color-control-thumb-bg)',
             padding: 4,

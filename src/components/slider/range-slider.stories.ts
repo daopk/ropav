@@ -48,7 +48,7 @@ const meta = {
         step: { control: 'number' },
         minRange: { control: 'number' },
         marks: { control: 'object' },
-        thumbStyle: { control: 'object' },
+        thumb: { control: 'object' },
         tooltip: { control: 'object' },
         formatValue: { control: false },
         ariaValueText: { control: false },
@@ -61,7 +61,7 @@ const meta = {
         step: 1,
         minRange: 0,
         marks: [],
-        thumbStyle: undefined,
+        thumb: undefined,
         tooltip: 'hover',
         formatValue: undefined,
         color: undefined,
@@ -228,7 +228,7 @@ export const TooltipArrowPlacements: Story = {
 
 export const CustomThumb: Story = {
     args: {
-        thumbStyle: {
+        thumb: {
             size: 30,
             border: '2px solid var(--rp-color-control-thumb-bg)',
             padding: 3,

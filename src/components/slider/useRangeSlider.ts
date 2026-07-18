@@ -144,7 +144,7 @@ function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: Ra
 
     setSliderStyleValue(style, '--_rp-range-slider-color', getComponentColorValue(props.color));
 
-    applySliderThumbStyle(style, props.thumbStyle, {
+    applySliderThumbStyle(style, props.thumb, {
         size: '--rp-slider-thumb-size',
         border: '--_rp-range-slider-thumb-border-style',
         padding: '--rp-slider-thumb-padding',

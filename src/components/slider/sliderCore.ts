@@ -4,7 +4,7 @@ import type {
     SliderMark,
     SliderMarkInput,
     SliderProps,
-    SliderThumbStyle,
+    SliderThumbOptions,
     SliderTooltipMode,
     SliderTooltipOptions,
 } from './types';
@@ -92,16 +92,16 @@ function getSliderBorderValue(
 
 export function applySliderThumbStyle(
     style: CSSProperties,
-    thumbStyle: SliderThumbStyle | undefined,
+    thumb: SliderThumbOptions | undefined,
     properties: SliderThumbStyleProperties,
 ) {
-    setSliderStyleValue(style, properties.size, getSliderLengthValue(thumbStyle?.size));
+    setSliderStyleValue(style, properties.size, getSliderLengthValue(thumb?.size));
     setSliderStyleValue(
         style,
         properties.border,
-        getSliderBorderValue(thumbStyle?.border, properties.borderColor),
+        getSliderBorderValue(thumb?.border, properties.borderColor),
     );
-    setSliderStyleValue(style, properties.padding, getSliderLengthValue(thumbStyle?.padding));
+    setSliderStyleValue(style, properties.padding, getSliderLengthValue(thumb?.padding));
 }
 
 function getSliderMarkStyle(
