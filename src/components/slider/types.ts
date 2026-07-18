@@ -46,6 +46,8 @@ export type SliderOrientation = (typeof sliderOrientations)[number];
 
 export type SliderValueFormatter = (value: number) => string | number;
 
+export type SliderThumbMode = 'always' | 'interaction';
+
 export type RangeSliderValue = [number, number];
 
 export type RangeSliderThumb = 'lower' | 'upper';
@@ -106,11 +108,17 @@ export interface SliderMark {
 
 export type SliderMarkInput = number | SliderMark;
 
-export interface SliderThumbOptions {
+export interface RangeSliderThumbOptions {
     size?: number | string;
     border?: number | string;
     padding?: number | string;
 }
+
+export interface SliderThumbOptions extends RangeSliderThumbOptions {
+    visibility?: SliderThumbMode;
+}
+
+export type SliderThumb = false | SliderThumbMode | SliderThumbOptions;
 
 export interface SliderProps extends StylesApiProps<SliderPart> {
     id?: string;
@@ -122,7 +130,7 @@ export interface SliderProps extends StylesApiProps<SliderPart> {
     max?: number;
     step?: number | 'any';
     marks?: SliderMarkInput[];
-    thumb?: SliderThumbOptions;
+    thumb?: SliderThumb;
     tooltip?: SliderTooltip;
     formatValue?: SliderValueFormatter;
     color?: SliderColor;
@@ -150,6 +158,7 @@ export interface RangeSliderProps
             | 'ariaValueText'
             | 'inputAttrs'
             | 'validationMessage'
+            | 'thumb'
             | 'classNames'
             | 'styles'
         >,
@@ -157,6 +166,7 @@ export interface RangeSliderProps
     modelValue?: RangeSliderValue;
     defaultValue?: RangeSliderValue;
     minRange?: number;
+    thumb?: RangeSliderThumbOptions;
     name?: string | [string, string];
     ariaLabel?: [string, string];
     ariaValueText?: RangeSliderAriaValueText;

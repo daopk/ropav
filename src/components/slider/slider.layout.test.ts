@@ -76,6 +76,59 @@ describe('Slider layout', () => {
         expect(underlayProps?.getPercent(Number.NaN)).toBe(0);
     });
 
+    it('exposes interaction-only thumb state on the root', async () => {
+        const container = mountDom(
+            defineComponent({
+                render: () =>
+                    h(Slider, {
+                        modelValue: 20,
+                        thumb: 'interaction',
+                    }),
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-slider')!;
+        const track = container.querySelector('.rp-slider__track')!;
+        const thumb = container.querySelector('.rp-slider__thumb-content')!;
+
+        expect(root.classList.contains('rp-slider--thumb-interaction')).toBe(true);
+        expect(thumb).toBeTruthy();
+        expect(root.getAttribute('data-thumb-visibility')).toBe('interaction');
+        expect(root.hasAttribute('data-track-hovered')).toBe(false);
+        expect(root.hasAttribute('data-dragging')).toBe(false);
+
+        track.dispatchEvent(new Event('mouseenter'));
+        await flush();
+        expect(root.hasAttribute('data-track-hovered')).toBe(true);
+
+        track.dispatchEvent(new Event('mouseleave'));
+        await flush();
+        expect(root.hasAttribute('data-track-hovered')).toBe(false);
+    });
+
+    it('hides only the visual thumb when thumb is false', async () => {
+        const container = mountDom(
+            defineComponent({
+                render: () => h(Slider, { modelValue: 20, thumb: false }),
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-slider')!;
+        const input = container.querySelector('.rp-slider__native') as HTMLInputElement;
+        const thumb = container.querySelector('.rp-slider__thumb-content');
+
+        expect(root.classList.contains('rp-slider--thumb-hidden')).toBe(true);
+        expect(root.getAttribute('data-thumb-visibility')).toBe('hidden');
+        expect(thumb).toBeTruthy();
+
+        input.focus();
+        expect(document.activeElement).toBe(input);
+    });
+
     it('renders label and value slots around the native input', async () => {
         const container = mountDom(
             defineComponent({

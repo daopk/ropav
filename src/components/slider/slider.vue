@@ -97,11 +97,7 @@
                 </span>
             </span>
 
-            <span
-                v-if="$slots.thumb"
-                v-bind="getPartAttrs('thumb', { class: 'rp-slider__thumb' })"
-                aria-hidden="true"
-            >
+            <span v-bind="getPartAttrs('thumb', { class: 'rp-slider__thumb' })" aria-hidden="true">
                 <span class="rp-slider__thumb-content">
                     <slot
                         name="thumb"
@@ -159,6 +155,7 @@ const props = withDefaults(defineProps<SliderProps>(), {
     step: 1,
     marks: () => [],
     tooltip: 'hover',
+    thumb: 'always',
     orientation: 'horizontal',
     disabled: undefined,
     required: undefined,
@@ -187,8 +184,11 @@ const {
     formattedValue,
     ariaValueText,
     markItems,
+    thumbMode,
     trackSlotProps,
     trackStyle,
+    trackHovered,
+    dragging,
     tooltipVisible,
     tooltipOpen,
     tooltipPlacement,
@@ -241,6 +241,9 @@ const rootAttrs = computed(() =>
         'data-disabled': presence(control.disabled),
         'data-invalid': presence(control.invalid),
         'data-orientation': props.orientation,
+        'data-track-hovered': presence(trackHovered.value),
+        'data-dragging': presence(dragging.value),
+        'data-thumb-visibility': thumbMode.value === false ? 'hidden' : thumbMode.value,
     }),
 );
 const tooltipClassNames = computed(() => ({

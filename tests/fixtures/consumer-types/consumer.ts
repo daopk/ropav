@@ -150,10 +150,14 @@ import { type SelectProps } from 'ropav/select';
 import {
     type RangeSliderInputAttrs,
     type RangeSliderProps,
+    type RangeSliderThumbOptions,
     type RangeSliderTrackSlotProps,
     type RangeSliderValidationMessage,
     type SliderInputAttrs,
     type SliderProps,
+    type SliderThumb,
+    type SliderThumbMode,
+    type SliderThumbOptions,
     type SliderTrackSlotProps,
 } from 'ropav/slider';
 import { type SwitchProps } from 'ropav/switch';
@@ -360,8 +364,18 @@ const sliderProps: SliderProps = {
     inputAttrs: sliderInputAttrs,
     invalid: true,
     required: true,
+    thumb: 'interaction',
     validationMessage: 'Choose a value.',
 };
+const sliderThumb: SliderThumb = false;
+const sliderThumbMode: SliderThumbMode = 'interaction';
+const sliderThumbOptions: SliderThumbOptions = {
+    border: 2,
+    padding: 4,
+    size: 24,
+    visibility: sliderThumbMode,
+};
+const rangeSliderThumbOptions: RangeSliderThumbOptions = { size: 24 };
 const sliderTrackSlotProps: SliderTrackSlotProps = {
     value: 42,
     formattedValue: '42%',
@@ -384,6 +398,7 @@ const rangeSliderProps: RangeSliderProps = {
     defaultValue: [25, 75],
     form: 'slider-form',
     inputAttrs: rangeSliderInputAttrs,
+    thumb: rangeSliderThumbOptions,
     validationMessage: rangeValidationMessage,
 };
 const switchProps: SwitchProps = {
@@ -563,6 +578,10 @@ void [
     sliderInputAttrs,
     rangeSliderInputAttrs,
     sliderProps,
+    sliderThumb,
+    sliderThumbMode,
+    sliderThumbOptions,
+    rangeSliderThumbOptions,
     sliderTrackSlotProps,
     rangeSliderTrackSlotProps,
     rangeSliderProps,

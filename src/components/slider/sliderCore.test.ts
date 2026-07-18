@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { CSSProperties } from 'vue';
 
-import { applySliderThumbStyle, createSliderMarkItems, getSliderValuePercent } from './sliderCore';
+import {
+    applySliderThumbStyle,
+    createSliderMarkItems,
+    getSliderThumbMode,
+    getSliderThumbOptions,
+    getSliderValuePercent,
+} from './sliderCore';
 
 describe('slider core', () => {
     it('maps arbitrary finite track values to a clamped percentage', () => {
@@ -9,6 +15,19 @@ describe('slider core', () => {
         expect(getSliderValuePercent(-10, 0, 100)).toBe(0);
         expect(getSliderValuePercent(140, 0, 100)).toBe(100);
         expect(getSliderValuePercent(Number.NaN, 0, 100)).toBe(0);
+    });
+
+    it('normalizes shorthand and object thumb configuration', () => {
+        expect(getSliderThumbMode('always')).toBe('always');
+        expect(getSliderThumbMode('interaction')).toBe('interaction');
+        expect(getSliderThumbMode(false)).toBe(false);
+        expect(getSliderThumbMode({ size: 24 })).toBe('always');
+        expect(getSliderThumbMode({ visibility: 'interaction' })).toBe('interaction');
+        expect(getSliderThumbOptions('interaction')).toEqual({});
+        expect(getSliderThumbOptions({ size: 24, visibility: 'interaction' })).toEqual({
+            size: 24,
+            visibility: 'interaction',
+        });
     });
 
     it('builds shared mark items with component-specific fill and style properties', () => {

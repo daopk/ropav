@@ -1,9 +1,12 @@
 import type { CSSProperties } from 'vue';
 import { getComponentColorValue } from '@/utils/componentColors';
 import type {
+    RangeSliderThumbOptions,
     SliderMark,
     SliderMarkInput,
     SliderProps,
+    SliderThumb,
+    SliderThumbMode,
     SliderThumbOptions,
     SliderTooltipMode,
     SliderTooltipOptions,
@@ -92,7 +95,7 @@ function getSliderBorderValue(
 
 export function applySliderThumbStyle(
     style: CSSProperties,
-    thumb: SliderThumbOptions | undefined,
+    thumb: RangeSliderThumbOptions | undefined,
     properties: SliderThumbStyleProperties,
 ) {
     setSliderStyleValue(style, properties.size, getSliderLengthValue(thumb?.size));
@@ -102,6 +105,17 @@ export function applySliderThumbStyle(
         getSliderBorderValue(thumb?.border, properties.borderColor),
     );
     setSliderStyleValue(style, properties.padding, getSliderLengthValue(thumb?.padding));
+}
+
+export function getSliderThumbOptions(thumb: SliderThumb): SliderThumbOptions {
+    return typeof thumb === 'object' ? thumb : {};
+}
+
+export function getSliderThumbMode(thumb: SliderThumb): SliderThumbMode | false {
+    if (thumb === false) return false;
+    if (typeof thumb === 'object') return thumb.visibility ?? 'always';
+
+    return thumb;
 }
 
 function getSliderMarkStyle(

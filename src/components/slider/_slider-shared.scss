@@ -30,6 +30,7 @@
         --rp-slider-thumb-size,
         var(--_rp-#{$prefix}-default-thumb-size)
     );
+    --_rp-#{$prefix}-hit-size: var(--_rp-#{$prefix}-thumb-size);
     --_rp-#{$prefix}-thumb-border-width: var(
         --rp-slider-thumb-border-width,
         var(--_rp-#{$prefix}-default-thumb-border-width)
@@ -48,7 +49,6 @@
     min-width: var(--_rp-#{$prefix}-track-length);
     max-width: 100%;
     gap: var(--rp-spacing-2);
-    cursor: pointer;
     font-family: var(--rp-font-family);
     font-size: var(--_rp-#{$prefix}-font-size);
     line-height: var(--rp-line-height-md);
@@ -175,6 +175,7 @@
         box-shadow: var(--rp-shadow-sm);
         transform: translate(-50%, -50%);
         transition:
+            opacity var(--rp-transition-fast),
             border-color var(--rp-transition-fast),
             box-shadow var(--rp-transition-fast);
     }

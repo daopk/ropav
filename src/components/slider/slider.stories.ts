@@ -6,6 +6,18 @@ import Slider from './slider.vue';
 import { sliderColors, sliderOrientations, sliderSizes } from './types';
 
 const percentFormatter = (value: number) => `${value}%`;
+const sliderHitSizes = {
+    xs: 8,
+    sm: 12,
+    md: 16,
+    lg: 20,
+    xl: 24,
+} as const;
+const hitRegionDebugStyle = {
+    background: 'color-mix(in srgb, var(--rp-color-blue-filled) 18%, transparent)',
+    outline: '1px dashed var(--rp-color-blue-filled)',
+    outlineOffset: '-1px',
+};
 const storyWrapperStyle = {
     boxSizing: 'border-box',
     width: 'min(360px, 100%)',
@@ -57,7 +69,7 @@ const meta = {
         max: 100,
         step: 1,
         marks: [],
-        thumb: undefined,
+        thumb: 'always',
         tooltip: 'hover',
         formatValue: undefined,
         color: undefined,
@@ -121,6 +133,14 @@ export const Vertical: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('.rp-slider__native')!;
+        const inputStyle = getComputedStyle(input);
+        const nativeTrackStyle = getComputedStyle(input, '::-webkit-slider-runnable-track');
+
+        expect(input.getBoundingClientRect().width).toBe(16);
+        expect(nativeTrackStyle.width).toBe(inputStyle.width);
+    },
 };
 
 export const FormatValue: Story = {
@@ -196,6 +216,30 @@ export const CustomThumb: Story = {
     }),
 };
 
+export const HiddenThumb: Story = {
+    tags: ['test'],
+    args: {
+        modelValue: 100,
+        thumb: false,
+        tooltip: false,
+    },
+    play: async ({ canvasElement }) => {
+        const root = canvasElement.querySelector<HTMLElement>('.rp-slider')!;
+        const input = canvasElement.querySelector<HTMLInputElement>('.rp-slider__native')!;
+        const thumb = canvasElement.querySelector<HTMLElement>('.rp-slider__thumb-content')!;
+        const fillPosition = getComputedStyle(root).getPropertyValue('--_rp-slider-fill-position');
+
+        expect(root.dataset.thumbVisibility).toBe('hidden');
+        expect(fillPosition.replaceAll(' ', '')).toBe('calc(100%*1)');
+        expect(getComputedStyle(thumb).opacity).toBe('0');
+
+        input.focus();
+        expect(document.activeElement).toBe(input);
+        expect(getComputedStyle(input).boxShadow).not.toBe('none');
+        expect(getComputedStyle(thumb).opacity).toBe('0');
+    },
+};
+
 export const Colors: Story = {
     render: (args) => ({
         components: { Slider },
@@ -257,4 +301,58 @@ export const Sizes: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const inputs = [...canvasElement.querySelectorAll<HTMLInputElement>('.rp-slider__native')];
+
+        expect(inputs.map((input) => input.getBoundingClientRect().height)).toEqual([
+            8, 12, 16, 20, 24,
+        ]);
+    },
+};
+
+export const HitRegions: Story = {
+    args: {
+        thumb: 'interaction',
+    },
+    render: (args) => ({
+        components: { Slider },
+        setup() {
+            const values = reactive(
+                Object.fromEntries(sliderSizes.map((size) => [size, 60])) as Record<
+                    (typeof sliderSizes)[number],
+                    number
+                >,
+            );
+
+            return {
+                args,
+                hitRegionDebugStyle,
+                hitSizes: sliderHitSizes,
+                sizes: sliderSizes,
+                stackedStoryWrapperStyle,
+                values,
+            };
+        },
+        template: `
+            <div :style="stackedStoryWrapperStyle">
+                <Slider
+                    v-for="size in sizes"
+                    :key="size"
+                    v-bind="args"
+                    v-model="values[size]"
+                    :size="size"
+                    :styles="{ track: hitRegionDebugStyle }"
+                >
+                    {{ size }} · {{ hitSizes[size] }}px hit region
+                </Slider>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const labels = [...canvasElement.querySelectorAll<HTMLElement>('.rp-slider__label')];
+        const inputs = [...canvasElement.querySelectorAll<HTMLInputElement>('.rp-slider__native')];
+
+        expect(labels.every((label) => getComputedStyle(label).cursor !== 'pointer')).toBe(true);
+        expect(inputs.every((input) => getComputedStyle(input).cursor === 'pointer')).toBe(true);
+    },
 };

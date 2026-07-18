@@ -8,6 +8,8 @@ import {
     createSliderMarkItems,
     getFormattedSliderValue,
     getSliderAriaValueText,
+    getSliderThumbMode,
+    getSliderThumbOptions,
     getSliderTooltipMode,
     getSliderTooltipOptions,
     getSliderValuePercent,
@@ -31,6 +33,7 @@ type SliderStateProps = Readonly<
         max: number;
         step: number | 'any';
         tooltip: NonNullable<SliderProps['tooltip']>;
+        thumb: NonNullable<SliderProps['thumb']>;
         orientation: NonNullable<SliderProps['orientation']>;
     }
 >;
@@ -47,7 +50,7 @@ function getSliderTrackStyle(props: SliderStateProps, valuePercent: number) {
 
     setSliderStyleValue(style, '--_rp-slider-color', getSliderColorValue(props.color));
 
-    applySliderThumbStyle(style, props.thumb, {
+    applySliderThumbStyle(style, getSliderThumbOptions(props.thumb), {
         size: '--rp-slider-thumb-size',
         border: '--_rp-slider-thumb-border-style',
         padding: '--rp-slider-thumb-padding',
@@ -120,6 +123,7 @@ export function useSlider(
     let dragPointerId: number | undefined;
 
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
+    const thumbMode = computed(() => getSliderThumbMode(props.thumb));
     const trackSlotProps = computed<SliderTrackSlotProps>(() => ({
         value: normalizedValue.value,
         formattedValue: formattedValue.value,
@@ -154,6 +158,8 @@ export function useSlider(
             marked: markItems.value.length > 0,
             'marks-with-labels': hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
+            'thumb-interaction': thumbMode.value === 'interaction',
+            'thumb-hidden': thumbMode.value === false,
             disabled: control.disabled,
             invalid: control.invalid,
         }),
@@ -265,8 +271,11 @@ export function useSlider(
         formattedValue,
         ariaValueText,
         markItems,
+        thumbMode,
         trackSlotProps,
         trackStyle,
+        trackHovered,
+        dragging,
         tooltipVisible,
         tooltipOpen,
         tooltipPlacement,

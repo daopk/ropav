@@ -64,7 +64,8 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | Radio                                    | `root`, `input`, `indicator`, `label`                                                                                                       |
 | RadioGroup                               | `root`                                                                                                                                      |
 | Select                                   | `root`, `trigger`, `value`, `indicator`, `clear`, `content`, `option`, `empty`                                                              |
-| Slider, RangeSlider                      | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
+| Slider                                   | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
+| RangeSlider                              | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
 | Switch                                   | `root`, `input`, `track`, `thumb`, `label`                                                                                                  |
 | Tabs, TabsList, TabsTrigger, TabsContent | `root` on each component                                                                                                                    |
 | Textarea                                 | `root`, `input`                                                                                                                             |
@@ -90,6 +91,8 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-selected`: Select options and ColorPicker swatches.
 - `data-highlighted`: Select options and DropdownMenu items.
 - `data-filled`: Slider and RangeSlider marks.
+- `data-track-hovered` and `data-dragging`: Slider track pointer interaction.
+- `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.
 - `data-orientation="horizontal|vertical"`: Accordion, ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
 - `data-placement`: the final placement after collision handling; twelve placements for Popover and DropdownMenu, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
