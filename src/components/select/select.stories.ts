@@ -13,6 +13,25 @@ const fruitOptions = [
     { label: 'Elderberry', value: 'elderberry' },
 ];
 
+const manyFruitOptions = [
+    ...fruitOptions,
+    { label: 'Fig', value: 'fig' },
+    { label: 'Grape', value: 'grape' },
+    { label: 'Honeydew', value: 'honeydew' },
+    { label: 'Jackfruit', value: 'jackfruit' },
+    { label: 'Kiwi', value: 'kiwi' },
+    { label: 'Lemon', value: 'lemon' },
+    { label: 'Mango', value: 'mango' },
+    { label: 'Nectarine', value: 'nectarine' },
+    { label: 'Orange', value: 'orange' },
+    { label: 'Papaya', value: 'papaya' },
+    { label: 'Quince', value: 'quince' },
+    { label: 'Raspberry', value: 'raspberry' },
+    { label: 'Strawberry', value: 'strawberry' },
+    { label: 'Tangerine', value: 'tangerine' },
+    { label: 'Watermelon', value: 'watermelon' },
+];
+
 const meta = {
     title: 'Components/Select',
     component: Select as any,
@@ -66,6 +85,12 @@ export const WithValue: Story = {
         },
         template: '<Select v-bind="args" v-model="value" />',
     }),
+};
+
+export const ManyOptions: Story = {
+    args: {
+        options: manyFruitOptions,
+    },
 };
 
 export const Clearable: Story = {

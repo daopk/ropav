@@ -210,6 +210,7 @@
         max-height: $component-menu-max-height;
         overflow-y: auto;
         padding: var(--rp-spacing-1);
+        scroll-padding-block: var(--rp-spacing-1);
     }
 
     &__option {

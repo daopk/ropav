@@ -1,4 +1,4 @@
-import { computed, nextTick, ref, useId } from 'vue';
+import { computed, nextTick, ref, useId, watch } from 'vue';
 import { useClickOutside } from '@/composables/useClickOutside';
 import { useControlState } from '@/composables/useControlState';
 import { useListNavigation } from '@/composables/useListNavigation';
@@ -166,6 +166,18 @@ export function useSelect(
                 break;
         }
     }
+
+    watch(focusedIndex, (index) => {
+        if (!isOpen.value || index < 0) return;
+
+        void nextTick(() => {
+            if (!isOpen.value || focusedIndex.value !== index) return;
+
+            selectRef.value
+                ?.querySelector<HTMLElement>(`[id="${selectId}-option-${index}"]`)
+                ?.scrollIntoView?.({ block: 'nearest' });
+        });
+    });
 
     useClickOutside(selectRef, isOpen, close);
 

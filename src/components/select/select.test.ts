@@ -73,6 +73,40 @@ describe('Select', () => {
         expect(onUpdate).toHaveBeenCalledWith('c');
     });
 
+    it('scrolls the selected option into view when opened', async () => {
+        const scrollIntoView = vi.fn();
+        const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+        HTMLElement.prototype.scrollIntoView = scrollIntoView;
+
+        try {
+            const options = Array.from({ length: 20 }, (_, index) => ({
+                label: `Option ${index + 1}`,
+                value: index + 1,
+            }));
+            const container = mountDom(
+                defineComponent({
+                    render() {
+                        return h(Select, {
+                            modelValue: 20,
+                            options,
+                        });
+                    },
+                }),
+            );
+
+            click(container.querySelector('[role="combobox"]')!);
+            await nextTick();
+            await nextTick();
+
+            expect(
+                container.querySelector('[role="option"][data-highlighted]')?.textContent,
+            ).toBe('Option 20');
+            expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
+        } finally {
+            HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+        }
+    });
+
     it('keeps disabled select closed and non-interactive', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
