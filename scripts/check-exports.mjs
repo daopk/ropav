@@ -41,6 +41,7 @@ const expectedFiles = [
     'dist/popover.css',
     'dist/progress.css',
     'dist/radio.css',
+    'dist/scroll-area.css',
     'dist/select.css',
     'dist/slider.css',
     'dist/switch.css',
@@ -75,6 +76,7 @@ const expectedFiles = [
     'dist/components/popover/index.js',
     'dist/components/progress/index.js',
     'dist/components/radio/index.js',
+    'dist/components/scroll-area/index.js',
     'dist/components/select/index.js',
     'dist/components/slider/index.js',
     'dist/components/switch/index.js',
@@ -207,6 +209,10 @@ try {
             'radioParts',
             'RadioGroup',
             'radioGroupParts',
+            'ScrollArea',
+            'scrollAreaParts',
+            'scrollAreaScrollbars',
+            'scrollAreaTypes',
             'RangeSlider',
             'rangeSliderParts',
             'Select',
@@ -449,6 +455,13 @@ try {
         radio,
         ['Radio', 'RadioGroup', 'radioParts', 'radioGroupParts'],
         'dist/components/radio/index.js',
+    );
+
+    const scrollArea = await server.ssrLoadModule('/dist/components/scroll-area/index.js');
+    assertExports(
+        scrollArea,
+        ['ScrollArea', 'scrollAreaParts', 'scrollAreaScrollbars', 'scrollAreaTypes'],
+        'dist/components/scroll-area/index.js',
     );
 
     const slider = await server.ssrLoadModule('/dist/components/slider/index.js');

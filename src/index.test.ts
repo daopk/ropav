@@ -50,6 +50,7 @@ const publicComponents = [
     'Popover',
     'Radio',
     'RadioGroup',
+    'ScrollArea',
     'RangeSlider',
     'Select',
     'Slider',

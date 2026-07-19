@@ -28,6 +28,7 @@ import {
     radioGroupParts,
     radioParts,
     rangeSliderParts,
+    scrollAreaParts,
     selectParts,
     sliderParts,
     switchParts,
@@ -72,6 +73,7 @@ describe('public semantic part catalog', () => {
             Radio: radioParts,
             RadioGroup: radioGroupParts,
             RangeSlider: rangeSliderParts,
+            ScrollArea: scrollAreaParts,
             Select: selectParts,
             Slider: sliderParts,
             Switch: switchParts,
@@ -155,6 +157,7 @@ describe('public semantic part catalog', () => {
                 'markLabel',
                 'tooltip',
             ],
+            ScrollArea: ['root', 'viewport', 'content', 'scrollbar', 'thumb', 'corner'],
             Select: [
                 'root',
                 'trigger',
