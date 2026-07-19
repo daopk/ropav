@@ -33,18 +33,29 @@
 </template>
 
 <script lang="ts" setup vapor>
-import type { ScrollAreaProps } from './types';
+import type { PropType } from 'vue';
+import type { ScrollAreaProps, ScrollAreaScrollbars } from './types';
 import { useScrollArea } from './useScrollArea';
 import { useScrollAreaPresentation } from './useScrollAreaPresentation';
 
 defineOptions({ name: 'RpScrollArea', inheritAttrs: false });
 
-const props = withDefaults(defineProps<ScrollAreaProps>(), {
-    embedded: false,
-    type: 'hover',
-    scrollbars: 'both',
-    scrollbarSize: 10,
-    scrollHideDelay: 600,
+const props = defineProps({
+    id: String,
+    embedded: { type: Boolean, default: false },
+    type: { type: String as PropType<ScrollAreaProps['type']>, default: 'hover' },
+    scrollbars: {
+        type: [String, Boolean] as PropType<ScrollAreaScrollbars | false>,
+        default: 'both',
+    },
+    scrollbarSize: { type: [Number, String], default: 10 },
+    scrollHideDelay: { type: Number, default: 600 },
+    ariaLabel: String,
+    ariaLabelledby: String,
+    ariaDescribedby: String,
+    viewportAttrs: Object as PropType<ScrollAreaProps['viewportAttrs']>,
+    classNames: Object as PropType<ScrollAreaProps['classNames']>,
+    styles: Object as PropType<ScrollAreaProps['styles']>,
 });
 
 const emit = defineEmits<{

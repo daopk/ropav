@@ -108,6 +108,22 @@ describe('ScrollArea', () => {
         expect(container.querySelector('.rp-scroll-area__corner')).toBeTruthy();
     });
 
+    it.each(['x', 'y'] as const)(
+        'accepts the %s scrollbar axis without a runtime prop warning',
+        async (scrollbars) => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                mountScrollArea({ scrollbars });
+                await flush();
+
+                expect(warn.mock.calls.flat().join(' ')).not.toContain('Invalid prop');
+            } finally {
+                warn.mockRestore();
+            }
+        },
+    );
+
     it('measures both axes and exposes accessible scrollbar values', async () => {
         const { container, instance } = mountScrollArea({ type: 'auto' });
         await flush();
