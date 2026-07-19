@@ -18,6 +18,11 @@ const people = [
     ['Ken Thompson', 'Computer scientist'],
 ] as const;
 
+interface ScrollAreaInstance {
+    viewport: HTMLElement;
+    scrollTo: (options: ScrollToOptions) => void;
+}
+
 const meta = {
     title: 'Components/ScrollArea',
     component: ScrollArea as any,
@@ -138,6 +143,131 @@ export const BothAxes: Story = {
             </ScrollArea>
         `,
     }),
+};
+
+export const ProgrammaticScrolling: Story = {
+    tags: ['test'],
+    args: { scrollbars: 'y', type: 'always' },
+    render: (args) => ({
+        components: { Button, ScrollArea },
+        setup() {
+            const scrollAreaRef = ref<ScrollAreaInstance | null>(null);
+            const positionY = ref(0);
+
+            const scrollTo = (top: number) => {
+                scrollAreaRef.value?.scrollTo({ top, behavior: 'smooth' });
+            };
+            const scrollToBottom = () => {
+                const viewport = scrollAreaRef.value?.viewport;
+                if (!viewport) return;
+
+                viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
+            };
+            const onPositionChange = (position: { y: number }) => {
+                positionY.value = Math.round(position.y);
+            };
+
+            return {
+                args,
+                onPositionChange,
+                positionY,
+                scrollAreaRef,
+                scrollTo,
+                scrollToBottom,
+            };
+        },
+        template: `
+            <div style="display: grid; gap: 16px; width: min(420px, 100%);">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        data-testid="scroll-top"
+                        @click="scrollTo(0)"
+                    >
+                        Top
+                    </Button>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        data-testid="scroll-middle"
+                        @click="scrollTo(440)"
+                    >
+                        Middle
+                    </Button>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        data-testid="scroll-bottom"
+                        @click="scrollToBottom"
+                    >
+                        Bottom via viewport
+                    </Button>
+                    <span
+                        data-testid="scroll-position"
+                        aria-live="polite"
+                        style="margin-inline-start: auto; color: var(--rp-color-dimmed); font-size: 14px; font-variant-numeric: tabular-nums;"
+                    >
+                        y: {{ positionY }}px
+                    </span>
+                </div>
+
+                <ScrollArea
+                    ref="scrollAreaRef"
+                    v-bind="args"
+                    aria-label="Programmatically controlled list"
+                    style="height: 220px; border: 1px solid var(--rp-color-default-border); border-radius: var(--rp-radius-md);"
+                    @scroll-position-change="onPositionChange"
+                >
+                    <div
+                        v-for="item in 24"
+                        :key="item"
+                        :style="{
+                            boxSizing: 'border-box',
+                            height: '52px',
+                            padding: '15px 16px',
+                            color: 'var(--rp-color-text)',
+                            borderBottom: item < 24 ? '1px solid var(--rp-color-default-border)' : undefined,
+                        }"
+                    >
+                        Item {{ item }}
+                    </div>
+                </ScrollArea>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const viewport = canvasElement.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
+        const position = canvasElement.querySelector<HTMLElement>(
+            '[data-testid="scroll-position"]',
+        )!;
+        const topButton = canvasElement.querySelector<HTMLButtonElement>(
+            '[data-testid="scroll-top"]',
+        )!;
+        const middleButton = canvasElement.querySelector<HTMLButtonElement>(
+            '[data-testid="scroll-middle"]',
+        )!;
+        const bottomButton = canvasElement.querySelector<HTMLButtonElement>(
+            '[data-testid="scroll-bottom"]',
+        )!;
+
+        await userEvent.click(middleButton);
+        await waitFor(() => expect(viewport.scrollTop).toBe(440));
+        await waitFor(() => expect(position).toHaveTextContent('y: 440px'));
+
+        await userEvent.click(bottomButton);
+        await waitFor(() =>
+            expect(viewport.scrollTop).toBe(viewport.scrollHeight - viewport.clientHeight),
+        );
+
+        await userEvent.click(topButton);
+        await waitFor(() => expect(viewport.scrollTop).toBe(0));
+        await waitFor(() => expect(position).toHaveTextContent('y: 0px'));
+        topButton.blur();
+    },
 };
 
 export const Sizing: Story = {
