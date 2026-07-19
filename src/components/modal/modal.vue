@@ -79,12 +79,14 @@
                             <IconX />
                         </DialogClose>
 
-                        <div
+                        <ScrollArea
                             v-if="$slots.default"
                             v-bind="getPartAttrs('body', { class: 'rp-modal__body' })"
+                            embedded
+                            scrollbars="y"
                         >
                             <slot v-bind="slotProps" />
-                        </div>
+                        </ScrollArea>
 
                         <div
                             v-if="hasFooter"
@@ -115,6 +117,7 @@ import {
 } from '../dialog';
 import IconButton from '../icon-button/icon-button.vue';
 import Overlay from '../overlay/overlay.vue';
+import ScrollArea from '../scroll-area/scroll-area.vue';
 import { useModal } from './useModal';
 import type { ModalPart, ModalProps } from './types';
 

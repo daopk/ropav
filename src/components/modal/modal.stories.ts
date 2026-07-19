@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, waitFor } from 'storybook/test';
 import { ref } from 'vue';
 import Button from '../button/button.vue';
 import Input from '../input/input.vue';
@@ -83,6 +84,60 @@ export const Basic: Story = {
             </div>
         `,
     }),
+};
+
+export const ScrollableBody: Story = {
+    tags: ['test'],
+    args: {
+        size: 'sm',
+        title: 'Activity history',
+        description: 'The header and footer remain fixed while the body scrolls.',
+    },
+    render: (args) => ({
+        components: { Button, Modal },
+        setup() {
+            const open = ref(true);
+            return { args, open };
+        },
+        template: `
+            <div style="box-sizing: border-box; display: grid; min-height: 640px; place-items: center; padding: 48px;">
+                <Button variant="outline" @click="open = true">Open activity history</Button>
+                <Modal v-bind="args" v-model:open="open">
+                    <div style="display: grid; gap: 12px;">
+                        <div
+                            v-for="item in 24"
+                            :key="item"
+                            style="padding-bottom: 12px; color: var(--rp-color-text); border-bottom: 1px solid var(--rp-color-default-border);"
+                        >
+                            <strong>Activity {{ item }}</strong>
+                            <div style="margin-top: 4px; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
+                                A project event was recorded for this workspace.
+                            </div>
+                        </div>
+                    </div>
+                    <template #footer="{ close }">
+                        <Button variant="ghost" @click="close">Cancel</Button>
+                        <Button variant="solid" @click="close">Done</Button>
+                    </template>
+                </Modal>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const body = storyDocument.querySelector<HTMLElement>('.rp-modal__body')!;
+        const viewport = body.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
+        const scrollbar = body.querySelector<HTMLElement>('.rp-scroll-area__scrollbar--vertical')!;
+        const footer = storyDocument.querySelector<HTMLElement>('.rp-modal__footer')!;
+
+        await waitFor(() => expect(body).toHaveAttribute('data-overflow-y'));
+        expect(body).toHaveClass('rp-scroll-area');
+        expect(body).toHaveAttribute('data-scrollbars', 'y');
+        expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
+        expect(scrollbar).toHaveAttribute('aria-hidden', 'true');
+        expect(scrollbar.tabIndex).toBe(-1);
+        expect(footer).toBeVisible();
+    },
 };
 
 export const Sizes: Story = {

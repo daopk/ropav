@@ -27,6 +27,15 @@ function pointerdown(element: Element) {
     element.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
 }
 
+function setGeometry(
+    element: HTMLElement,
+    geometry: Partial<Record<'clientHeight' | 'scrollHeight', number>>,
+) {
+    for (const [name, value] of Object.entries(geometry)) {
+        Object.defineProperty(element, name, { configurable: true, value });
+    }
+}
+
 describe('Modal', () => {
     it('renders an accessible modal and closes with controlled state', async () => {
         const onClose = vi.fn();
@@ -174,6 +183,52 @@ describe('Modal', () => {
         expect(root.classList.contains('rp-modal--size-custom')).toBe(true);
         expect(root.classList.contains('rp-modal--size-55%')).toBe(false);
         expect(root.style.getPropertyValue('--_rp-modal-width')).toBe('55%');
+    });
+
+    it('uses an embedded vertical ScrollArea for the body', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Modal,
+                        {
+                            open: true,
+                            ariaLabel: 'Scrollable modal',
+                            classNames: { body: 'custom-body' },
+                            styles: { body: { maxHeight: '120px' } },
+                        },
+                        {
+                            default: () => h('div', { class: 'long-content' }, 'Long content'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const body = queryDom(container, '.rp-modal__body') as HTMLElement;
+        const viewport = body.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const content = body.querySelector('.rp-scroll-area__content') as HTMLElement;
+        const scrollbar = body.querySelector('.rp-scroll-area__scrollbar--vertical') as HTMLElement;
+
+        expect(body.classList.contains('rp-scroll-area')).toBe(true);
+        expect(body.classList.contains('custom-body')).toBe(true);
+        expect(body.dataset.scrollbars).toBe('y');
+        expect(body.style.maxHeight).toBe('120px');
+        expect(viewport.tabIndex).toBe(0);
+        expect(content.querySelector('.long-content')).toBeTruthy();
+        expect(scrollbar.tabIndex).toBe(-1);
+        expect(scrollbar.getAttribute('aria-hidden')).toBe('true');
+        expect(body.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
+
+        setGeometry(viewport, { clientHeight: 120, scrollHeight: 320 });
+        viewport.scrollTop = 40;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(body).toHaveProperty('dataset.overflowY', '');
+        expect(viewport.scrollTop).toBe(40);
     });
 
     it('passes visual overlay props to the built-in overlay', async () => {
@@ -381,6 +436,7 @@ describe('Modal', () => {
 
         const first = queryDom(container, '.first') as HTMLButtonElement;
         const last = queryDom(container, '.last') as HTMLButtonElement;
+        const viewport = queryDom(container, '.rp-scroll-area__viewport') as HTMLElement;
 
         last.focus();
         tab();
@@ -388,7 +444,7 @@ describe('Modal', () => {
 
         first.focus();
         tab(true);
-        expect(document.activeElement).toBe(last);
+        expect(document.activeElement).toBe(viewport);
     });
 
     it('respects disabled dismissal props and keeps mounted content hidden', async () => {
