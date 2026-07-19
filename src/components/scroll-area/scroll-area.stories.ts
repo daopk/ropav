@@ -1,4 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, waitFor } from 'storybook/test';
+import { ref } from 'vue';
+import Button from '../button/button.vue';
 import ScrollArea from './scroll-area.vue';
 import { scrollAreaScrollbars, scrollAreaTypes } from './types';
 
@@ -135,6 +138,132 @@ export const BothAxes: Story = {
             </ScrollArea>
         `,
     }),
+};
+
+export const Sizing: Story = {
+    tags: ['test'],
+    args: { scrollbars: 'y', type: 'auto' },
+    render: (args) => ({
+        components: { Button, ScrollArea },
+        setup() {
+            const itemCount = ref(3);
+            const addItem = () => {
+                itemCount.value = Math.min(12, itemCount.value + 1);
+            };
+            const removeItem = () => {
+                itemCount.value = Math.max(1, itemCount.value - 1);
+            };
+
+            return { addItem, args, itemCount, removeItem };
+        },
+        template: `
+            <div style="display: grid; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        data-testid="remove-item"
+                        :disabled="itemCount <= 1"
+                        @click="removeItem"
+                    >
+                        Remove item
+                    </Button>
+                    <span
+                        data-testid="item-count"
+                        aria-live="polite"
+                        style="min-width: 4.5rem; color: var(--rp-color-text); text-align: center; font-variant-numeric: tabular-nums;"
+                    >
+                        {{ itemCount }} items
+                    </span>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        data-testid="add-item"
+                        :disabled="itemCount >= 12"
+                        @click="addItem"
+                    >
+                        Add item
+                    </Button>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px;">
+                    <div>
+                        <div style="margin-bottom: 6px; color: var(--rp-color-text); font-weight: 600;">Auto height, max-height: 140px</div>
+                        <ScrollArea
+                            v-bind="args"
+                            data-testid="auto-max-height"
+                            aria-label="Auto-height activity list capped at 140 pixels"
+                            style="width: 300px; max-height: 140px; outline: 1px solid var(--rp-color-default-border); border-radius: var(--rp-radius-sm);"
+                        >
+                            <div v-for="item in itemCount" :key="item" style="box-sizing: border-box; height: 40px; padding: 10px 12px; color: var(--rp-color-text);">
+                                Item {{ item }}
+                            </div>
+                        </ScrollArea>
+                    </div>
+
+                    <div>
+                        <div style="margin-bottom: 6px; color: var(--rp-color-text); font-weight: 600;">Fixed height: 160px</div>
+                        <ScrollArea
+                            v-bind="args"
+                            data-testid="fixed-height"
+                            aria-label="Fixed-height activity list"
+                            style="width: 300px; height: 160px; outline: 1px solid var(--rp-color-default-border); border-radius: var(--rp-radius-sm);"
+                        >
+                            <div v-for="item in itemCount" :key="item" style="box-sizing: border-box; height: 40px; padding: 10px 12px; color: var(--rp-color-text);">
+                                Item {{ item }}
+                            </div>
+                        </ScrollArea>
+                    </div>
+                </div>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const adaptiveRoot = canvasElement.querySelector<HTMLElement>(
+            '[data-testid="auto-max-height"]',
+        )!;
+        const adaptiveViewport = adaptiveRoot.querySelector<HTMLElement>(
+            '.rp-scroll-area__viewport',
+        )!;
+        const fixedRoot = canvasElement.querySelector<HTMLElement>('[data-testid="fixed-height"]')!;
+        const fixedViewport = fixedRoot.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
+
+        await waitFor(() => expect(adaptiveRoot.clientHeight).toBe(120));
+        expect(adaptiveViewport.clientHeight).toBe(120);
+        expect(adaptiveViewport.scrollHeight).toBe(120);
+        expect(adaptiveRoot).not.toHaveAttribute('data-overflow-y');
+        expect(fixedRoot.clientHeight).toBe(160);
+        expect(fixedViewport.clientHeight).toBe(160);
+        expect(fixedViewport.scrollHeight).toBe(160);
+        expect(fixedRoot).not.toHaveAttribute('data-overflow-y');
+
+        const addButton = canvasElement.querySelector<HTMLButtonElement>(
+            '[data-testid="add-item"]',
+        )!;
+        const removeButton = canvasElement.querySelector<HTMLButtonElement>(
+            '[data-testid="remove-item"]',
+        )!;
+        await userEvent.click(addButton);
+        await userEvent.click(addButton);
+
+        await waitFor(() => expect(adaptiveRoot).toHaveAttribute('data-overflow-y'));
+        expect(adaptiveRoot.clientHeight).toBe(140);
+        expect(adaptiveViewport.clientHeight).toBe(140);
+        expect(adaptiveViewport.scrollHeight).toBe(200);
+        await waitFor(() => expect(fixedRoot).toHaveAttribute('data-overflow-y'));
+        expect(fixedRoot.clientHeight).toBe(160);
+        expect(fixedViewport.clientHeight).toBe(160);
+        expect(fixedViewport.scrollHeight).toBe(200);
+
+        await userEvent.click(removeButton);
+        await userEvent.click(removeButton);
+        await waitFor(() => expect(adaptiveRoot.clientHeight).toBe(120));
+        await waitFor(() => expect(adaptiveRoot).not.toHaveAttribute('data-overflow-y'));
+        await waitFor(() => expect(fixedRoot).not.toHaveAttribute('data-overflow-y'));
+        removeButton.blur();
+    },
 };
 
 export const VisibilityTypes: Story = {
