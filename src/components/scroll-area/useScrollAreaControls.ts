@@ -9,17 +9,79 @@ interface UseScrollAreaControlsOptions {
     showDuringScroll: () => void;
     emitScroll: (event: Event) => void;
     emitPositionChange: (position: ScrollAreaPosition) => void;
+    emitReachTop: (event: Event) => void;
+    emitReachBottom: (event: Event) => void;
+    emitReachLeft: (event: Event) => void;
+    emitReachRight: (event: Event) => void;
 }
 
 export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
+    let previousPosition: ScrollAreaPosition = { x: 0, y: 0 };
+
     function onViewportScroll(event: Event) {
         options.metrics.update();
         options.showDuringScroll();
+
+        const position = {
+            x: options.metrics.getPosition('x'),
+            y: options.metrics.getPosition('y'),
+        };
+        const reachedBoundaries = getReachedBoundaries(position);
+        previousPosition = position;
+
         options.emitScroll(event);
         options.emitPositionChange({
             x: options.metrics.metrics.x,
             y: options.metrics.metrics.y,
         });
+        for (const boundary of reachedBoundaries) emitReachedBoundary(boundary, event);
+    }
+
+    function getReachedBoundaries(position: ScrollAreaPosition) {
+        const boundaries: Array<'top' | 'bottom' | 'left' | 'right'> = [];
+
+        if (options.metrics.getOverflow('y')) {
+            const maxPosition = options.metrics.getMaxPosition('y');
+            if (position.y <= 1 && previousPosition.y > 1) boundaries.push('top');
+            if (position.y >= maxPosition - 1 && previousPosition.y < maxPosition - 1) {
+                boundaries.push('bottom');
+            }
+        }
+
+        if (options.metrics.getOverflow('x')) {
+            const maxPosition = options.metrics.getMaxPosition('x');
+            const reachedStart = position.x <= 1 && previousPosition.x > 1;
+            const reachedEnd =
+                position.x >= maxPosition - 1 && previousPosition.x < maxPosition - 1;
+
+            if (reachedStart || reachedEnd) {
+                const viewport = options.viewportRef.value;
+                const view = viewport?.ownerDocument.defaultView;
+                const rtl = viewport ? view?.getComputedStyle(viewport).direction === 'rtl' : false;
+
+                if (reachedStart) boundaries.push(rtl ? 'right' : 'left');
+                if (reachedEnd) boundaries.push(rtl ? 'left' : 'right');
+            }
+        }
+
+        return boundaries;
+    }
+
+    function emitReachedBoundary(boundary: 'top' | 'bottom' | 'left' | 'right', event: Event) {
+        switch (boundary) {
+            case 'top':
+                options.emitReachTop(event);
+                break;
+            case 'bottom':
+                options.emitReachBottom(event);
+                break;
+            case 'left':
+                options.emitReachLeft(event);
+                break;
+            case 'right':
+                options.emitReachRight(event);
+                break;
+        }
     }
 
     function writeAxisPosition(axis: ScrollAxis, value: number) {

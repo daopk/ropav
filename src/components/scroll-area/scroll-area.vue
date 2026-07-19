@@ -62,12 +62,20 @@ const props = defineProps({
 const emit = defineEmits<{
     scroll: [event: Event];
     scrollPositionChange: [position: { x: number; y: number }];
+    reachTop: [event: Event];
+    reachBottom: [event: Event];
+    reachLeft: [event: Event];
+    reachRight: [event: Event];
 }>();
 
 const scrollArea = useScrollArea({
     props,
     emitScroll: (event) => emit('scroll', event),
     emitPositionChange: (position) => emit('scrollPositionChange', position),
+    emitReachTop: (event) => emit('reachTop', event),
+    emitReachBottom: (event) => emit('reachBottom', event),
+    emitReachLeft: (event) => emit('reachLeft', event),
+    emitReachRight: (event) => emit('reachRight', event),
 });
 const {
     rootRef,

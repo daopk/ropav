@@ -10,6 +10,10 @@ interface UseScrollAreaOptions {
     props: Readonly<ScrollAreaProps>;
     emitScroll: (event: Event) => void;
     emitPositionChange: (position: ScrollAreaPosition) => void;
+    emitReachTop: (event: Event) => void;
+    emitReachBottom: (event: Event) => void;
+    emitReachLeft: (event: Event) => void;
+    emitReachRight: (event: Event) => void;
 }
 
 export function useScrollArea(options: UseScrollAreaOptions) {
@@ -44,6 +48,10 @@ export function useScrollArea(options: UseScrollAreaOptions) {
         showDuringScroll: visibility.showDuringScroll,
         emitScroll: options.emitScroll,
         emitPositionChange: options.emitPositionChange,
+        emitReachTop: options.emitReachTop,
+        emitReachBottom: options.emitReachBottom,
+        emitReachLeft: options.emitReachLeft,
+        emitReachRight: options.emitReachRight,
     });
     const pointer = useScrollAreaPointer({
         horizontalScrollbarRef,

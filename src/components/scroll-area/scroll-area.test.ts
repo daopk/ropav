@@ -254,6 +254,96 @@ describe('ScrollArea', () => {
         expect(onPositionChange).toHaveBeenLastCalledWith({ x: 25, y: 60 });
     });
 
+    it('emits each boundary event once when the viewport reaches that boundary', async () => {
+        const onReachTop = vi.fn();
+        const onReachBottom = vi.fn();
+        const onReachLeft = vi.fn();
+        const onReachRight = vi.fn();
+        const { container, instance } = mountScrollArea({
+            onReachTop,
+            onReachBottom,
+            onReachLeft,
+            onReachRight,
+        });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        setGeometry(viewport, {
+            clientWidth: 100,
+            clientHeight: 100,
+            scrollWidth: 300,
+            scrollHeight: 400,
+        });
+        instance.value?.update();
+
+        viewport.scrollLeft = 25;
+        viewport.scrollTop = 60;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(onReachTop).not.toHaveBeenCalled();
+        expect(onReachBottom).not.toHaveBeenCalled();
+        expect(onReachLeft).not.toHaveBeenCalled();
+        expect(onReachRight).not.toHaveBeenCalled();
+
+        viewport.scrollLeft = 200;
+        viewport.scrollTop = 300;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(onReachBottom).toHaveBeenCalledOnce();
+        expect(onReachRight).toHaveBeenCalledOnce();
+
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+        expect(onReachBottom).toHaveBeenCalledOnce();
+        expect(onReachRight).toHaveBeenCalledOnce();
+
+        viewport.scrollLeft = 0;
+        viewport.scrollTop = 0;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(onReachTop).toHaveBeenCalledOnce();
+        expect(onReachLeft).toHaveBeenCalledOnce();
+        expect(onReachTop).toHaveBeenCalledWith(expect.any(Event));
+        expect(onReachLeft).toHaveBeenCalledWith(expect.any(Event));
+
+        viewport.scrollLeft = 50;
+        viewport.scrollTop = 100;
+        viewport.dispatchEvent(new Event('scroll'));
+        viewport.scrollLeft = 200;
+        viewport.scrollTop = 300;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(onReachBottom).toHaveBeenCalledTimes(2);
+        expect(onReachRight).toHaveBeenCalledTimes(2);
+    });
+
+    it('maps horizontal boundary events to physical edges in RTL', async () => {
+        const onReachLeft = vi.fn();
+        const onReachRight = vi.fn();
+        const { container, instance } = mountScrollArea({ onReachLeft, onReachRight });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        viewport.style.direction = 'rtl';
+        setGeometry(viewport, { clientWidth: 100, scrollWidth: 300 });
+        instance.value?.update();
+
+        viewport.scrollLeft = -200;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+        expect(onReachLeft).toHaveBeenCalledOnce();
+        expect(onReachRight).not.toHaveBeenCalled();
+
+        viewport.scrollLeft = 0;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+        expect(onReachRight).toHaveBeenCalledOnce();
+    });
+
     it('supports keyboard scrolling on the custom scrollbar', async () => {
         const { container, instance } = mountScrollArea({ type: 'always', scrollbars: 'y' });
         await flush();
