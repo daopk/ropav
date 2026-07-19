@@ -89,9 +89,9 @@
                     :key="option.value"
                     role="option"
                     :id="`${selectId}-option-${index}`"
-                    :aria-selected="option.value === controllable.value.value"
+                    :aria-selected="option.value === selectedValue"
                     :aria-disabled="option.disabled || undefined"
-                    :data-selected="presence(option.value === controllable.value.value)"
+                    :data-selected="presence(option.value === selectedValue)"
                     :data-highlighted="presence(index === focusedIndex)"
                     :data-disabled="presence(option.disabled)"
                     v-bind="
@@ -100,7 +100,7 @@
                                 'rp-select__option',
                                 {
                                     'rp-select__option--selected':
-                                        option.value === controllable.value.value,
+                                        option.value === selectedValue,
                                     'rp-select__option--focused': index === focusedIndex,
                                     'rp-select__option--disabled': option.disabled,
                                 },
@@ -118,13 +118,12 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, watchEffect, type SelectHTMLAttributes } from 'vue';
+import { computed, ref } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
-import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useSelect } from './useSelect';
+import { useSelectNativeControl } from './useSelectNativeControl';
 import type { SelectPart, SelectProps } from './types';
 
 defineOptions({ name: 'RpSelect', inheritAttrs: false });
@@ -145,56 +144,16 @@ const emit = defineEmits<{
     'update:modelValue': [value: string | number | null];
 }>();
 
-const nativeSelectRef = ref<HTMLSelectElement | null>(null);
-const controllable = useControllableValue<string | number | null>({
-    modelValue: () => props.modelValue,
-    defaultValue: () => props.defaultValue,
-    onChange: (value) => emit('update:modelValue', value),
-});
-
-function getNativeValue(select: HTMLSelectElement) {
-    if (select.selectedIndex <= 0) return null;
-    return props.options?.[select.selectedIndex - 1]?.value ?? null;
-}
-
-function syncNativeSelection(value: string | number | null) {
-    const select = nativeSelectRef.value;
-    if (!select) return;
-
-    const optionIndex = props.options?.findIndex((option) => option.value === value) ?? -1;
-    select.selectedIndex = optionIndex + 1;
-}
-
-function syncNativeDefaultSelection() {
-    const select = nativeSelectRef.value;
-    if (!select) return;
-
-    const optionIndex =
-        props.options?.findIndex((option) => option.value === controllable.initialValue) ?? -1;
-    for (const [index, option] of [...select.options].entries()) {
-        option.defaultSelected = index === optionIndex + 1;
-    }
-}
-
-function requestValueUpdate(value: string | number | null) {
-    const select = nativeSelectRef.value;
-    if (!select) {
-        controllable.setValue(value);
-        return;
-    }
-
-    syncNativeSelection(value);
-    select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-    if (controllable.isControlled.value) {
-        queueMicrotask(() => syncNativeSelection(controllable.value.value));
-    }
-}
+const triggerRef = ref<HTMLElement | null>(null);
+const { nativeSelectRef, selectedValue, nativeInputAttrs, requestValueUpdate } =
+    useSelectNativeControl(
+        props,
+        (value) => emit('update:modelValue', value),
+        triggerRef,
+    );
 
 const {
     selectRef,
-    triggerRef,
     isOpen,
     selectId,
     listboxId,
@@ -210,52 +169,9 @@ const {
     selectOption,
     clearSelection,
     onOptionMouseenter,
+    onFocusout,
     onTriggerKeydown,
-} = useSelect(props, requestValueUpdate, () => controllable.value.value);
-
-useFormControl({
-    elements: () => [nativeSelectRef.value],
-    isControlled: () => controllable.isControlled.value,
-    validationMessage: () => props.validationMessage,
-    readResetValue(elements) {
-        controllable.resetValue(getNativeValue(elements[0] as HTMLSelectElement));
-    },
-    syncControlledValue() {
-        syncNativeSelection(controllable.value.value);
-    },
-});
-
-watchEffect(syncNativeDefaultSelection, { flush: 'post' });
-watchEffect(() => syncNativeSelection(controllable.value.value), { flush: 'post' });
-
-const nativeInputAttrs = computed<SelectHTMLAttributes>(() => {
-    const {
-        class: compatibilityClass,
-        style: compatibilityStyle,
-        onInput: compatibilityOnInput,
-        onChange: compatibilityOnChange,
-        onInvalid: compatibilityOnInvalid,
-        ...attrs
-    } = props.inputAttrs ?? {};
-
-    return {
-        ...attrs,
-        class: ['rp-select__native', compatibilityClass],
-        style: compatibilityStyle,
-        onInput(event) {
-            controllable.setValue(getNativeValue(event.currentTarget as HTMLSelectElement));
-            compatibilityOnInput?.(event);
-        },
-        onChange(event) {
-            compatibilityOnChange?.(event);
-        },
-        onInvalid(event) {
-            event.preventDefault();
-            triggerRef.value?.focus();
-            compatibilityOnInvalid?.(event);
-        },
-    };
-});
+} = useSelect(props, requestValueUpdate, () => selectedValue.value, triggerRef);
 
 void selectRef;
 
@@ -263,6 +179,7 @@ const { getPartAttrs, getRootAttrs } = useStylesApi<SelectPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
+        onFocusout,
         'data-state': isOpen.value ? 'open' : 'closed',
         'data-disabled': presence(control.disabled),
         'data-invalid': presence(control.invalid),

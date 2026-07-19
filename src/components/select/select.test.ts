@@ -107,6 +107,38 @@ describe('Select', () => {
         }
     });
 
+    it('closes the dropdown when focus leaves the select', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Select, {
+                            modelValue: 'a',
+                            options: [
+                                { label: 'Alpha', value: 'a' },
+                                { label: 'Beta', value: 'b' },
+                            ],
+                        }),
+                        h('button', { class: 'next-control' }, 'Next control'),
+                    ]);
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]') as HTMLElement;
+        trigger.focus();
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+        (container.querySelector('.next-control') as HTMLButtonElement).focus();
+        await waitTransition();
+
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
     it('keeps disabled select closed and non-interactive', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

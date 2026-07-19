@@ -1,4 +1,4 @@
-import { computed, nextTick, ref, useId, watch } from 'vue';
+import { computed, nextTick, ref, useId, watch, type Ref } from 'vue';
 import { useClickOutside } from '@/composables/useClickOutside';
 import { useControlState } from '@/composables/useControlState';
 import { useListNavigation } from '@/composables/useListNavigation';
@@ -26,9 +26,9 @@ export function useSelect(
     props: Readonly<SelectBehaviorProps>,
     emitUpdate: (value: SelectValue) => void,
     getValue: () => SelectValue = () => props.modelValue ?? null,
+    triggerRef: Ref<HTMLElement | null> = ref(null),
 ) {
     const selectRef = ref<HTMLElement | null>(null);
-    const triggerRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);
 
     const selectId = useId();
@@ -105,6 +105,12 @@ export function useSelect(
 
     function onOptionMouseenter(option: SelectOption, index: number) {
         if (!option.disabled) focusedIndex.value = index;
+    }
+
+    function onFocusout(event: FocusEvent) {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Node && selectRef.value?.contains(nextTarget)) return;
+        close();
     }
 
     function selectFocusedOption() {
@@ -200,6 +206,7 @@ export function useSelect(
         selectOption,
         clearSelection,
         onOptionMouseenter,
+        onFocusout,
         onTriggerKeydown,
     };
 }
