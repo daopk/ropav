@@ -71,11 +71,15 @@
         </div>
 
         <Transition name="rp-select-dropdown">
-            <div
+            <ScrollArea
                 v-if="isOpen"
                 v-bind="getPartAttrs('content', { class: 'rp-select__dropdown' })"
                 role="listbox"
                 :id="listboxId"
+                embedded
+                type="auto"
+                scrollbars="y"
+                :viewport-attrs="{ tabindex: -1 }"
                 :data-state="isOpen ? 'open' : 'closed'"
             >
                 <div
@@ -99,8 +103,7 @@
                             class: [
                                 'rp-select__option',
                                 {
-                                    'rp-select__option--selected':
-                                        option.value === selectedValue,
+                                    'rp-select__option--selected': option.value === selectedValue,
                                     'rp-select__option--focused': index === focusedIndex,
                                     'rp-select__option--disabled': option.disabled,
                                 },
@@ -112,7 +115,7 @@
                 >
                     {{ option.label }}
                 </div>
-            </div>
+            </ScrollArea>
         </Transition>
     </div>
 </template>
@@ -122,6 +125,7 @@ import { computed, ref } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
 import { presence, useStylesApi } from '@/styles-api';
+import ScrollArea from '../scroll-area/scroll-area.vue';
 import { useSelect } from './useSelect';
 import { useSelectNativeControl } from './useSelectNativeControl';
 import type { SelectPart, SelectProps } from './types';
@@ -146,11 +150,7 @@ const emit = defineEmits<{
 
 const triggerRef = ref<HTMLElement | null>(null);
 const { nativeSelectRef, selectedValue, nativeInputAttrs, requestValueUpdate } =
-    useSelectNativeControl(
-        props,
-        (value) => emit('update:modelValue', value),
-        triggerRef,
-    );
+    useSelectNativeControl(props, (value) => emit('update:modelValue', value), triggerRef);
 
 const {
     selectRef,

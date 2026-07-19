@@ -208,8 +208,10 @@
         right: 0;
         @include menu-surface($radius: var(--_rp-select-radius));
         max-height: $component-menu-max-height;
-        overflow-y: auto;
         padding: var(--rp-spacing-1);
+    }
+
+    &__dropdown :deep(.rp-scroll-area__viewport) {
         scroll-padding-block: var(--rp-spacing-1);
     }
 

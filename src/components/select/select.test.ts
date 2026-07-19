@@ -1,10 +1,26 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, reactive } from 'vue';
 
-import { click, keydown, keyEvent, mountDom, waitTransition } from '../../../tests/utils/vue';
+import {
+    click,
+    flush,
+    keydown,
+    keyEvent,
+    mountDom,
+    waitTransition,
+} from '../../../tests/utils/vue';
 import Select from './select.vue';
 import { useSelect } from './useSelect';
 import type { SelectProps } from './types';
+
+function setGeometry(
+    element: HTMLElement,
+    geometry: Partial<Record<'clientHeight' | 'scrollHeight', number>>,
+) {
+    for (const [name, value] of Object.entries(geometry)) {
+        Object.defineProperty(element, name, { configurable: true, value });
+    }
+}
 
 describe('Select', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -98,13 +114,66 @@ describe('Select', () => {
             await nextTick();
             await nextTick();
 
-            expect(
-                container.querySelector('[role="option"][data-highlighted]')?.textContent,
-            ).toBe('Option 20');
+            expect(container.querySelector('[role="option"][data-highlighted]')?.textContent).toBe(
+                'Option 20',
+            );
             expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
         } finally {
             HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
         }
+    });
+
+    it('uses an embedded vertical ScrollArea for the dropdown', async () => {
+        const options = Array.from({ length: 20 }, (_, index) => ({
+            label: `Option ${index + 1}`,
+            value: index + 1,
+        }));
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        id: 'fruit-select',
+                        modelValue: null,
+                        options,
+                        classNames: { content: 'custom-dropdown' },
+                        styles: { content: { maxHeight: '120px' } },
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]') as HTMLElement;
+        trigger.focus();
+        click(trigger);
+        await flush();
+
+        const listbox = container.querySelector('[role="listbox"]') as HTMLElement;
+        const viewport = listbox.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const content = listbox.querySelector('.rp-scroll-area__content') as HTMLElement;
+        const scrollbar = listbox.querySelector(
+            '.rp-scroll-area__scrollbar--vertical',
+        ) as HTMLElement;
+
+        expect(trigger.getAttribute('aria-controls')).toBe(listbox.id);
+        expect(document.activeElement).toBe(trigger);
+        expect(listbox.classList.contains('rp-scroll-area')).toBe(true);
+        expect(listbox.classList.contains('custom-dropdown')).toBe(true);
+        expect(listbox.dataset.type).toBe('auto');
+        expect(listbox.dataset.scrollbars).toBe('y');
+        expect(listbox.style.maxHeight).toBe('120px');
+        expect(viewport.tabIndex).toBe(-1);
+        expect(content.querySelectorAll('[role="option"]')).toHaveLength(options.length);
+        expect(scrollbar.tabIndex).toBe(-1);
+        expect(scrollbar.getAttribute('aria-hidden')).toBe('true');
+        expect(listbox.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
+
+        setGeometry(viewport, { clientHeight: 120, scrollHeight: 320 });
+        viewport.scrollTop = 40;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(listbox).toHaveProperty('dataset.overflowY', '');
+        expect(viewport.scrollTop).toBe(40);
     });
 
     it('closes the dropdown when focus leaves the select', async () => {
