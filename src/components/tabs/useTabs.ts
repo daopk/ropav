@@ -38,7 +38,7 @@ import type {
     UseTabsTriggerReturn,
 } from './types';
 
-const TABLIST_SELECTOR = '.rp-tabs-list';
+const TABLIST_SELECTOR = '[role="tablist"]';
 const TRIGGER_SELECTOR = '.rp-tabs-trigger';
 
 const DEFAULT_SIZE: TabsSize = 'md';

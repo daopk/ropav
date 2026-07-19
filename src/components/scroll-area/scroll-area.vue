@@ -54,6 +54,7 @@ const props = defineProps({
     ariaLabelledby: String,
     ariaDescribedby: String,
     viewportAttrs: Object as PropType<ScrollAreaProps['viewportAttrs']>,
+    contentAttrs: Object as PropType<ScrollAreaProps['contentAttrs']>,
     classNames: Object as PropType<ScrollAreaProps['classNames']>,
     styles: Object as PropType<ScrollAreaProps['styles']>,
 });

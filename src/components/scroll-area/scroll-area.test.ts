@@ -344,6 +344,7 @@ describe('ScrollArea', () => {
     });
 
     it('supports axis selection, never mode, forwarded attributes, and Styles API parts', async () => {
+        const contentOnKeydown = vi.fn();
         const { container } = mountScrollArea({
             type: 'never',
             scrollbars: 'x',
@@ -358,6 +359,12 @@ describe('ScrollArea', () => {
                 class: 'viewport-compatibility',
                 'data-testid': 'viewport',
                 tabindex: -1,
+            },
+            contentAttrs: {
+                class: 'content-compatibility',
+                'data-testid': 'content',
+                role: 'group',
+                onKeydown: contentOnKeydown,
             },
         });
         await flush();
@@ -375,7 +382,12 @@ describe('ScrollArea', () => {
         expect(viewport.dataset.testid).toBe('viewport');
         expect(viewport.tabIndex).toBe(-1);
         expect(content.classList.contains('custom-content')).toBe(true);
+        expect(content.classList.contains('content-compatibility')).toBe(true);
+        expect(content.dataset.testid).toBe('content');
+        expect(content.getAttribute('role')).toBe('group');
         expect(content.style.padding).toBe('12px');
+        content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+        expect(contentOnKeydown).toHaveBeenCalledOnce();
         expect(container.querySelector('.rp-scroll-area__scrollbar')).toBeNull();
     });
 

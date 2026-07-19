@@ -63,9 +63,22 @@ export function useScrollAreaPresentation(
             },
         };
     });
-    const contentAttrs = computed(() =>
-        getPartAttrs('content', { class: 'rp-scroll-area__content' }),
-    );
+    const contentAttrs = computed<HTMLAttributes>(() => {
+        const {
+            class: compatibilityClass,
+            style: compatibilityStyle,
+            ...attrs
+        } = props.contentAttrs ?? {};
+
+        return {
+            ...attrs,
+            ...getPartAttrs('content', {
+                class: 'rp-scroll-area__content',
+                compatibilityClass,
+                compatibilityStyle,
+            }),
+        };
+    });
     const horizontalScrollbarAttrs = computed(() => getScrollbarAttrs('x'));
     const verticalScrollbarAttrs = computed(() => getScrollbarAttrs('y'));
     const horizontalThumbAttrs = computed(() => getThumbAttrs('x'));

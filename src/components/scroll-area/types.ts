@@ -44,4 +44,5 @@ export interface ScrollAreaProps extends StylesApiProps<ScrollAreaPart> {
     ariaLabelledby?: string;
     ariaDescribedby?: string;
     viewportAttrs?: HTMLAttributes;
+    contentAttrs?: HTMLAttributes;
 }

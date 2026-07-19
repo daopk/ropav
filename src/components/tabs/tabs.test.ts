@@ -127,9 +127,15 @@ describe('Tabs', () => {
         expect(root.getAttribute('data-variant')).toBe('line');
         expect(root.getAttribute('data-orientation')).toBe('horizontal');
         expect(root.getAttribute('aria-label')).toBe('Project sections');
-        expect(list.getAttribute('role')).toBe('tablist');
+        expect(list.getAttribute('role')).toBeNull();
         expect(list.getAttribute('data-variant')).toBe('line');
-        expect(list.getAttribute('aria-orientation')).toBe('horizontal');
+        expect(list.getAttribute('aria-orientation')).toBeNull();
+        expect(list.getAttribute('aria-label')).toBeNull();
+        const tablist = list.querySelector('.rp-scroll-area__content') as HTMLElement;
+        expect(tablist.getAttribute('role')).toBe('tablist');
+        expect(tablist.getAttribute('aria-orientation')).toBe('horizontal');
+        expect(tablist.getAttribute('aria-label')).toBe('Project sections');
+        expect(Array.from(tablist.children)).toEqual(triggers);
         expect(triggers[0].getAttribute('role')).toBe('tab');
         expect(triggers[0].getAttribute('data-variant')).toBe('line');
         expect(triggers[0].getAttribute('aria-selected')).toBe('true');
@@ -153,6 +159,7 @@ describe('Tabs', () => {
     });
 
     it('uses an embedded ScrollArea along the tab list orientation', async () => {
+        const onListKeydown = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
@@ -168,6 +175,7 @@ describe('Tabs', () => {
                                             id: 'horizontal-tabs',
                                             classNames: { root: 'custom-tabs-list' },
                                             styles: { root: { maxWidth: '120px' } },
+                                            onKeydown: onListKeydown,
                                         },
                                         () => [
                                             h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
@@ -206,21 +214,29 @@ describe('Tabs', () => {
         ) as HTMLElement;
         const vertical = container.querySelector('#vertical-tabs') as HTMLElement;
         const verticalViewport = vertical.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const verticalContent = vertical.querySelector('.rp-scroll-area__content') as HTMLElement;
         const verticalScrollbar = vertical.querySelector(
             '.rp-scroll-area__scrollbar--vertical',
         ) as HTMLElement;
 
         expect(horizontal.classList.contains('rp-scroll-area')).toBe(true);
-        expect(horizontal.getAttribute('role')).toBe('tablist');
+        expect(horizontal.getAttribute('role')).toBeNull();
         expect(horizontal.classList.contains('custom-tabs-list')).toBe(true);
         expect(horizontal.dataset.type).toBe('auto');
         expect(horizontal.dataset.scrollbars).toBe('x');
         expect(horizontal.style.maxWidth).toBe('120px');
         expect(horizontalViewport.tabIndex).toBe(-1);
+        expect(horizontalContent.getAttribute('role')).toBe('tablist');
+        expect(horizontalContent.getAttribute('aria-orientation')).toBe('horizontal');
         expect(horizontalContent.querySelectorAll('[role="tab"]')).toHaveLength(2);
         expect(horizontalScrollbar.tabIndex).toBe(-1);
         expect(horizontalScrollbar.getAttribute('aria-hidden')).toBe('true');
         expect(horizontal.querySelector('.rp-scroll-area__scrollbar--vertical')).toBeNull();
+
+        keydown(horizontalScrollbar, 'ArrowRight');
+        expect(onListKeydown).not.toHaveBeenCalled();
+        keydown(horizontalContent, 'ArrowRight');
+        expect(onListKeydown).toHaveBeenCalledOnce();
 
         setGeometry(horizontalViewport, { clientWidth: 120, scrollWidth: 320 });
         horizontalViewport.scrollLeft = 40;
@@ -231,9 +247,11 @@ describe('Tabs', () => {
         expect(horizontalViewport.scrollLeft).toBe(40);
 
         expect(vertical.classList.contains('rp-scroll-area')).toBe(true);
-        expect(vertical.getAttribute('role')).toBe('tablist');
+        expect(vertical.getAttribute('role')).toBeNull();
         expect(vertical.dataset.scrollbars).toBe('y');
         expect(verticalViewport.tabIndex).toBe(-1);
+        expect(verticalContent.getAttribute('role')).toBe('tablist');
+        expect(verticalContent.getAttribute('aria-orientation')).toBe('vertical');
         expect(verticalScrollbar.tabIndex).toBe(-1);
         expect(verticalScrollbar.getAttribute('aria-hidden')).toBe('true');
         expect(vertical.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
