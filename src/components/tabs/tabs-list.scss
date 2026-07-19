@@ -1,42 +1,47 @@
 .rp-tabs-list {
     box-sizing: border-box;
     display: flex;
+    flex-direction: column;
     align-items: stretch;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     padding: 0;
-    gap: 0;
     font-family: var(--rp-font-family);
     background-color: transparent;
     border: 0;
 
+    :deep(.rp-scroll-area__content) {
+        display: flex;
+        align-items: stretch;
+        width: max-content;
+        min-width: 100%;
+        gap: 0;
+    }
+
     &--vertical {
-        flex-direction: column;
         width: max-content;
     }
 
-    &--line {
+    &--vertical :deep(.rp-scroll-area__content) {
+        flex-direction: column;
+    }
+
+    &--line :deep(.rp-scroll-area__content) {
         border-bottom: var(--rp-border-width-medium) solid var(--rp-color-default-border);
     }
 
-    &--line#{&}--vertical {
+    &--line#{&}--vertical :deep(.rp-scroll-area__content) {
         border-bottom: 0;
         border-left: var(--rp-border-width-medium) solid var(--rp-color-default-border);
     }
 
-    &--line#{&}--vertical#{&}--placement-right {
+    &--line#{&}--vertical#{&}--placement-right :deep(.rp-scroll-area__content) {
         border-right: var(--rp-border-width-medium) solid var(--rp-color-default-border);
         border-left: 0;
     }
 
-    &--pills,
-    &--outline {
-        max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-    }
-
-    &--pills {
+    &--pills :deep(.rp-scroll-area__content) {
         gap: var(--rp-spacing-2);
     }
 

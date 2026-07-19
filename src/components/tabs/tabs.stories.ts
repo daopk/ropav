@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import IconImage from '~icons/lucide/image';
 import IconMessageCircle from '~icons/lucide/message-circle';
 import IconSettings from '~icons/lucide/settings';
 import { ref } from 'vue';
-import { componentColors } from '../../utils/componentColors';
+import { componentColors, getComponentColorRoles } from '../../utils/componentColors';
 import Card from '../card/card.vue';
 import Tabs from './tabs.vue';
 import TabsContent from './tabs-content.vue';
@@ -79,10 +80,11 @@ const colorStoryStyle = {
 type TabColor = (typeof componentColors)[number];
 
 function getTabColorStyle(color: TabColor) {
-    if (color === 'blue') return {};
+    const roles = getComponentColorRoles(color)!;
 
     return {
-        '--rp-blue-color-filled': `var(--rp-color-${color})`,
+        '--rp-primary-color-filled': roles.filled,
+        '--rp-primary-color-filled-hover': roles.hover,
     };
 }
 
@@ -102,6 +104,17 @@ const tabs = [
         label: 'Settings',
         body: 'Settings tab content',
     },
+] as const;
+
+const overflowTabs = [
+    { value: 'overview', label: 'Overview' },
+    { value: 'activity', label: 'Recent activity' },
+    { value: 'analytics', label: 'Analytics dashboard' },
+    { value: 'automations', label: 'Automations' },
+    { value: 'integrations', label: 'Integrations' },
+    { value: 'permissions', label: 'Permissions' },
+    { value: 'notifications', label: 'Notifications' },
+    { value: 'settings', label: 'Workspace settings' },
 ] as const;
 
 const variants = ['line', 'pills', 'outline'] as const;
@@ -301,6 +314,70 @@ export const ManualActivation: Story = {
     },
 };
 
+export const Overflow: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Tabs, TabsContent, TabsList, TabsTrigger },
+        setup() {
+            return { overflowTabs, panelStyle };
+        },
+        template: `
+            <div style="box-sizing: border-box; width: 320px; padding: 24px;">
+                <Tabs default-value="overview" variant="line" aria-label="Overflowing sections">
+                    <TabsList data-testid="overflow-list">
+                        <TabsTrigger
+                            v-for="tab in overflowTabs"
+                            :key="tab.value"
+                            :value="tab.value"
+                        >
+                            {{ tab.label }}
+                        </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent
+                        v-for="tab in overflowTabs"
+                        :key="tab.value"
+                        :value="tab.value"
+                    >
+                        <div :style="panelStyle">{{ tab.label }} content</div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const list = canvasElement.querySelector<HTMLElement>('[data-testid="overflow-list"]')!;
+        const viewport = list.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
+        const content = list.querySelector<HTMLElement>('.rp-scroll-area__content')!;
+        const scrollbar = list.querySelector<HTMLElement>(
+            '.rp-scroll-area__scrollbar--horizontal',
+        )!;
+        const triggers = [...list.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+        expect(list).toHaveAttribute('role', 'tablist');
+        expect(list).toHaveAttribute('data-scrollbars', 'x');
+        expect(viewport.tabIndex).toBe(-1);
+        expect(scrollbar).toHaveAttribute('aria-hidden', 'true');
+        await waitFor(() => expect(list).toHaveAttribute('data-overflow-x'));
+        expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+
+        await userEvent.click(triggers[0]!);
+        await userEvent.keyboard('{End}');
+
+        await waitFor(() => expect(triggers.at(-1)).toHaveFocus());
+        await waitFor(() => expect(viewport.scrollLeft).toBeGreaterThan(0));
+
+        const activeTrigger = triggers.at(-1)!;
+        const contentRect = content.getBoundingClientRect();
+        const activeTriggerRect = activeTrigger.getBoundingClientRect();
+        const contentBorderWidth = Number.parseFloat(getComputedStyle(content).borderBottomWidth);
+
+        expect(activeTrigger).toHaveAttribute('data-state', 'active');
+        expect(contentBorderWidth).toBeGreaterThan(0);
+        expect(contentRect.bottom - activeTriggerRect.bottom).toBe(contentBorderWidth);
+    },
+};
+
 export const Vertical: Story = {
     args: {
         orientation: 'vertical',
@@ -377,6 +454,7 @@ export const WithDisabledTrigger: Story = {
 };
 
 export const Colors: Story = {
+    tags: ['test'],
     render: () => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
         setup() {
@@ -393,6 +471,7 @@ export const Colors: Story = {
                 <div
                     v-for="color in tabColors"
                     :key="color"
+                    :data-tab-color="color"
                     :style="getTabColorStyle(color)"
                 >
                     <Tabs default-value="gallery" size="sm" :aria-label="color + ' tabs'">
@@ -420,6 +499,26 @@ export const Colors: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        for (const color of componentColors) {
+            const colorRow = canvasElement.querySelector<HTMLElement>(
+                `[data-tab-color="${color}"]`,
+            )!;
+            const activeTrigger = colorRow.querySelector<HTMLElement>(
+                '[role="tab"][data-state="active"]',
+            )!;
+            const colorProbe = document.createElement('span');
+
+            colorProbe.style.backgroundColor = `var(--rp-color-${color}-filled)`;
+            colorRow.append(colorProbe);
+
+            const expectedColor = getComputedStyle(colorProbe).backgroundColor;
+            const indicatorColor = getComputedStyle(activeTrigger, '::after').backgroundColor;
+
+            colorProbe.remove();
+            expect(indicatorColor).toBe(expectedColor);
+        }
+    },
 };
 
 export const Icons: Story = {

@@ -8,6 +8,17 @@ import TabsList from './tabs-list.vue';
 import TabsTrigger from './tabs-trigger.vue';
 import type { TabsPlacement, TabsTriggerAlign, TabsValue, TabsVariant } from './types';
 
+function setGeometry(
+    element: HTMLElement,
+    geometry: Partial<
+        Record<'clientWidth' | 'clientHeight' | 'scrollWidth' | 'scrollHeight', number>
+    >,
+) {
+    for (const [name, value] of Object.entries(geometry)) {
+        Object.defineProperty(element, name, { configurable: true, value });
+    }
+}
+
 function renderVerticalTabsPlacement(placement: TabsPlacement) {
     return h(
         Tabs,
@@ -139,6 +150,93 @@ describe('Tabs', () => {
         expect(triggers[1].getAttribute('aria-selected')).toBe('true');
         expect(overviewPanel.hidden).toBe(true);
         expect(activityPanel.hidden).toBe(false);
+    });
+
+    it('uses an embedded ScrollArea along the tab list orientation', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', null, [
+                        h(
+                            Tabs,
+                            { defaultValue: 'overview' },
+                            {
+                                default: () =>
+                                    h(
+                                        TabsList,
+                                        {
+                                            id: 'horizontal-tabs',
+                                            classNames: { root: 'custom-tabs-list' },
+                                            styles: { root: { maxWidth: '120px' } },
+                                        },
+                                        () => [
+                                            h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                            h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                        ],
+                                    ),
+                            },
+                        ),
+                        h(
+                            Tabs,
+                            { defaultValue: 'overview', orientation: 'vertical' },
+                            {
+                                default: () =>
+                                    h(TabsList, { id: 'vertical-tabs' }, () => [
+                                        h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                        h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                    ]),
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const horizontal = container.querySelector('#horizontal-tabs') as HTMLElement;
+        const horizontalViewport = horizontal.querySelector(
+            '.rp-scroll-area__viewport',
+        ) as HTMLElement;
+        const horizontalContent = horizontal.querySelector(
+            '.rp-scroll-area__content',
+        ) as HTMLElement;
+        const horizontalScrollbar = horizontal.querySelector(
+            '.rp-scroll-area__scrollbar--horizontal',
+        ) as HTMLElement;
+        const vertical = container.querySelector('#vertical-tabs') as HTMLElement;
+        const verticalViewport = vertical.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const verticalScrollbar = vertical.querySelector(
+            '.rp-scroll-area__scrollbar--vertical',
+        ) as HTMLElement;
+
+        expect(horizontal.classList.contains('rp-scroll-area')).toBe(true);
+        expect(horizontal.getAttribute('role')).toBe('tablist');
+        expect(horizontal.classList.contains('custom-tabs-list')).toBe(true);
+        expect(horizontal.dataset.type).toBe('auto');
+        expect(horizontal.dataset.scrollbars).toBe('x');
+        expect(horizontal.style.maxWidth).toBe('120px');
+        expect(horizontalViewport.tabIndex).toBe(-1);
+        expect(horizontalContent.querySelectorAll('[role="tab"]')).toHaveLength(2);
+        expect(horizontalScrollbar.tabIndex).toBe(-1);
+        expect(horizontalScrollbar.getAttribute('aria-hidden')).toBe('true');
+        expect(horizontal.querySelector('.rp-scroll-area__scrollbar--vertical')).toBeNull();
+
+        setGeometry(horizontalViewport, { clientWidth: 120, scrollWidth: 320 });
+        horizontalViewport.scrollLeft = 40;
+        horizontalViewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(horizontal).toHaveProperty('dataset.overflowX', '');
+        expect(horizontalViewport.scrollLeft).toBe(40);
+
+        expect(vertical.classList.contains('rp-scroll-area')).toBe(true);
+        expect(vertical.getAttribute('role')).toBe('tablist');
+        expect(vertical.dataset.scrollbars).toBe('y');
+        expect(verticalViewport.tabIndex).toBe(-1);
+        expect(verticalScrollbar.tabIndex).toBe(-1);
+        expect(verticalScrollbar.getAttribute('aria-hidden')).toBe('true');
+        expect(vertical.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
     });
 
     it('supports controlled model values', async () => {
