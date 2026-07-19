@@ -23,6 +23,48 @@ function setGeometry(
     }
 }
 
+function setRect(element: Element, rect: Partial<DOMRect>) {
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({
+        bottom: 100,
+        height: 100,
+        left: 0,
+        right: 10,
+        top: 0,
+        width: 10,
+        x: 0,
+        y: 0,
+        toJSON: () => ({}),
+        ...rect,
+    });
+}
+
+function dispatchPointer(
+    target: EventTarget,
+    type: 'pointerdown' | 'pointermove' | 'pointerup',
+    clientY: number,
+) {
+    const init = {
+        bubbles: true,
+        button: 0,
+        cancelable: true,
+        clientX: 5,
+        clientY,
+        isPrimary: true,
+        pointerId: 1,
+    };
+    const event =
+        typeof window.PointerEvent === 'function'
+            ? new PointerEvent(type, init)
+            : new MouseEvent(type, init);
+    if (!('pointerId' in event)) {
+        Object.defineProperties(event, {
+            isPrimary: { value: true },
+            pointerId: { value: 1 },
+        });
+    }
+    target.dispatchEvent(event);
+}
+
 function mountScrollArea(
     props: Record<string, unknown> = {},
     slot: () => unknown = () => h('div', { class: 'content' }, 'Scrollable content'),
@@ -95,6 +137,8 @@ describe('ScrollArea', () => {
         expect(root.dataset.scrollbarXVisible).toBe('');
         expect(root.dataset.scrollbarYVisible).toBe('');
         expect(horizontal.getAttribute('role')).toBe('scrollbar');
+        expect(horizontal.tabIndex).toBe(0);
+        expect(horizontal.getAttribute('aria-hidden')).toBeNull();
         expect(horizontal.getAttribute('aria-orientation')).toBe('horizontal');
         expect(horizontal.getAttribute('aria-valuemax')).toBe('300');
         expect(horizontal.getAttribute('aria-controls')).toBe(viewport.id);
@@ -214,6 +258,48 @@ describe('ScrollArea', () => {
         keydown(scrollbar, 'Home');
         await flush();
         expect(viewport.scrollTop).toBe(0);
+    });
+
+    it('keeps embedded scrollbars hidden from focus and accessibility while pointer and wheel scrolling work', async () => {
+        const { container, instance } = mountScrollArea({
+            embedded: true,
+            type: 'always',
+            scrollbars: 'y',
+        });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--vertical',
+        ) as HTMLElement;
+        const thumb = scrollbar.firstElementChild as HTMLElement;
+        setGeometry(viewport, { clientHeight: 100, scrollHeight: 400 });
+        setGeometry(scrollbar, { clientHeight: 100 });
+        setRect(scrollbar, { height: 100 });
+        setRect(thumb, { bottom: 25, height: 25 });
+        instance.value?.update();
+        await flush();
+
+        expect(scrollbar.tabIndex).toBe(-1);
+        expect(scrollbar.getAttribute('aria-hidden')).toBe('true');
+
+        const wheel = new WheelEvent('wheel', {
+            bubbles: true,
+            cancelable: true,
+            deltaY: 40,
+        });
+        scrollbar.dispatchEvent(wheel);
+        await flush();
+        expect(wheel.defaultPrevented).toBe(true);
+        expect(viewport.scrollTop).toBe(40);
+
+        dispatchPointer(thumb, 'pointerdown', 10);
+        dispatchPointer(window, 'pointermove', 35);
+        await flush();
+        expect(viewport.scrollTop).toBe(140);
+        expect(document.activeElement).not.toBe(scrollbar);
+
+        dispatchPointer(window, 'pointerup', 35);
     });
 
     it('exposes scroll methods and an update method', async () => {

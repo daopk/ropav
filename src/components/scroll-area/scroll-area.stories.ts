@@ -30,12 +30,14 @@ const meta = {
         },
         scrollbarSize: { control: 'text' },
         scrollHideDelay: { control: 'number' },
+        embedded: { control: 'boolean' },
     },
     args: {
         type: 'hover',
         scrollbars: 'both',
         scrollbarSize: 10,
         scrollHideDelay: 600,
+        embedded: false,
     },
     render: (args) => ({
         components: { ScrollArea },

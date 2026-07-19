@@ -35,6 +35,7 @@ export interface ScrollAreaSlotProps {
 
 export interface ScrollAreaProps extends StylesApiProps<ScrollAreaPart> {
     id?: string;
+    embedded?: boolean;
     type?: ScrollAreaType;
     scrollbars?: ScrollAreaScrollbars | false;
     scrollbarSize?: number | string;

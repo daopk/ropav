@@ -51,6 +51,7 @@ export function useScrollArea(options: UseScrollAreaOptions) {
         metrics: measurements,
         controls,
         setDraggingAxis: visibility.setDraggingAxis,
+        shouldFocusScrollbar: () => !options.props.embedded,
     });
 
     watch(

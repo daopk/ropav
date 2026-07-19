@@ -40,6 +40,7 @@ import { useScrollAreaPresentation } from './useScrollAreaPresentation';
 defineOptions({ name: 'RpScrollArea', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ScrollAreaProps>(), {
+    embedded: false,
     type: 'hover',
     scrollbars: 'both',
     scrollbarSize: 10,

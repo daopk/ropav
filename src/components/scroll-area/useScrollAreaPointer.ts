@@ -19,6 +19,7 @@ interface UseScrollAreaPointerOptions {
     metrics: ScrollAreaMetricsController;
     controls: ScrollAreaControlsController;
     setDraggingAxis: (axis: ScrollAxis | null) => void;
+    shouldFocusScrollbar: () => boolean;
 }
 
 export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
@@ -62,7 +63,7 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         event.preventDefault();
         event.stopPropagation();
         stopDragging();
-        scrollbar.focus({ preventScroll: true });
+        if (options.shouldFocusScrollbar()) scrollbar.focus({ preventScroll: true });
         startDragging(axis, event, scrollbar, travel);
     }
 
