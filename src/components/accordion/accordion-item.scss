@@ -85,7 +85,7 @@
         display: grid;
         min-width: 0;
         overflow: hidden;
-        padding: 0 var(--rp-spacing-4) var(--rp-spacing-4);
+        padding: var(--rp-spacing-3) var(--rp-spacing-4) var(--rp-spacing-4);
         color: var(--rp-color-text);
         font-size: var(--rp-font-size-md);
         line-height: var(--rp-line-height-md);
@@ -93,6 +93,7 @@
         transition:
             grid-template-rows var(--_rp-accordion-duration),
             opacity var(--_rp-accordion-duration),
+            padding-top var(--_rp-accordion-duration),
             padding-bottom var(--_rp-accordion-duration);
     }
 
@@ -107,5 +108,6 @@
 .rp-accordion-content-leave-to {
     opacity: 0;
     grid-template-rows: 0fr;
+    padding-top: 0;
     padding-bottom: 0;
 }
