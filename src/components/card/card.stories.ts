@@ -292,7 +292,7 @@ export const Padding: Story = {
                     :padding="example.padding"
                     style="min-height: 160px;"
                 >
-                    <div style="display: grid; height: 100%; min-height: 96px; place-items: center; background: var(--rp-blue-color-light); color: var(--rp-blue-color-light-color); font-weight: var(--rp-font-weight-semibold);">
+                    <div style="display: grid; height: 100%; min-height: 96px; place-items: center; background: var(--rp-color-blue-light); color: var(--rp-color-blue-light-color); font-weight: var(--rp-font-weight-semibold);">
                         {{ example.label }}
                     </div>
                 </Card>
