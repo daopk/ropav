@@ -12,7 +12,6 @@ export type {
     AccordionItemTriggerSlotProps,
     AccordionItemValue,
     AccordionModelValue,
-    AccordionOrientation,
     AccordionPart,
     AccordionProps,
     AccordionRootProps,

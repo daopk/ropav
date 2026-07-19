@@ -94,7 +94,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-track-hovered` and `data-dragging`: Slider track pointer interaction.
 - `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.
-- `data-orientation="horizontal|vertical"`: Accordion, ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
+- `data-orientation="horizontal|vertical"`: ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
 - `data-placement`: the final placement after collision handling; twelve placements for Popover and DropdownMenu, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
 - `data-side="top|right|bottom|left"`: the side component of the final placement for Popover, DropdownMenu and Tooltip.
 - `data-control="increment|decrement"`: NumberInput controls.

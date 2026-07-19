@@ -62,8 +62,8 @@ describe('Accordion', () => {
         const profileContent = container.querySelector('#profile-item-content') as HTMLElement;
         const billingContent = container.querySelector('#billing-item-content') as HTMLElement;
 
-        expect([...root.classList]).toEqual(['rp-accordion', 'rp-accordion--vertical']);
-        expect(root.getAttribute('data-orientation')).toBe('vertical');
+        expect([...root.classList]).toEqual(['rp-accordion']);
+        expect(root.hasAttribute('data-orientation')).toBe(false);
         expect(buttons[0].getAttribute('aria-controls')).toBe('profile-item-content');
         expect(buttons[0].getAttribute('aria-expanded')).toBe('true');
         expect(buttons[1].getAttribute('aria-expanded')).toBe('false');
@@ -384,6 +384,9 @@ describe('Accordion', () => {
         keydown(buttons[2], 'ArrowUp');
         expect(document.activeElement).toBe(buttons[0]);
 
+        keydown(buttons[0], 'ArrowRight');
+        expect(document.activeElement).toBe(buttons[0]);
+
         keydown(buttons[0], 'End');
         expect(document.activeElement).toBe(buttons[2]);
 
@@ -479,48 +482,5 @@ describe('Accordion', () => {
         innerOne.focus();
         keydown(innerOne, 'ArrowDown');
         expect(document.activeElement).toBe(innerTwo);
-    });
-
-    it('uses horizontal arrow keys for horizontal accordions', async () => {
-        const container = mountDom(
-            defineComponent({
-                render() {
-                    return h(
-                        Accordion,
-                        { orientation: 'horizontal' },
-                        {
-                            default: () => [
-                                h(
-                                    AccordionItem,
-                                    { value: 'one', title: 'One' },
-                                    { default: () => h('p', 'One body') },
-                                ),
-                                h(
-                                    AccordionItem,
-                                    { value: 'two', title: 'Two' },
-                                    { default: () => h('p', 'Two body') },
-                                ),
-                            ],
-                        },
-                    );
-                },
-            }),
-        );
-
-        await flush();
-
-        const buttons = Array.from(
-            container.querySelectorAll<HTMLButtonElement>('.rp-accordion-item__trigger'),
-        );
-
-        buttons[0].focus();
-        keydown(buttons[0], 'ArrowDown');
-        expect(document.activeElement).toBe(buttons[0]);
-
-        keydown(buttons[0], 'ArrowRight');
-        expect(document.activeElement).toBe(buttons[1]);
-
-        keydown(buttons[1], 'ArrowLeft');
-        expect(document.activeElement).toBe(buttons[0]);
     });
 });

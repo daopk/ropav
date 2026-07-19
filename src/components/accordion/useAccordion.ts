@@ -12,7 +12,6 @@ import type {
     AccordionItemTriggerSlotProps,
     AccordionItemValue,
     AccordionModelValue,
-    AccordionOrientation,
     AccordionProps,
     AccordionRootProps,
     AccordionState,
@@ -44,18 +43,9 @@ function withoutValue(values: AccordionItemValue[], value: AccordionItemValue) {
 
 type NavigationDirection = 1 | -1;
 
-const ORIENTATION_NAVIGATION_KEYS: Record<
-    AccordionOrientation,
-    Partial<Record<string, NavigationDirection>>
-> = {
-    vertical: {
-        ArrowDown: 1,
-        ArrowUp: -1,
-    },
-    horizontal: {
-        ArrowRight: 1,
-        ArrowLeft: -1,
-    },
+const NAVIGATION_KEYS: Partial<Record<string, NavigationDirection>> = {
+    ArrowDown: 1,
+    ArrowUp: -1,
 };
 
 function getAccordionTrigger(event: KeyboardEvent, root: HTMLElement) {
@@ -74,12 +64,7 @@ function getAccordionTriggers(root: HTMLElement) {
     );
 }
 
-function getNextTrigger(
-    root: HTMLElement,
-    currentTrigger: HTMLButtonElement,
-    key: string,
-    orientation: AccordionOrientation,
-) {
+function getNextTrigger(root: HTMLElement, currentTrigger: HTMLButtonElement, key: string) {
     const triggers = getAccordionTriggers(root);
     const currentIndex = triggers.indexOf(currentTrigger);
     if (currentIndex === -1 || triggers.length === 0) return undefined;
@@ -87,7 +72,7 @@ function getNextTrigger(
     if (key === 'Home') return triggers[0];
     if (key === 'End') return triggers[triggers.length - 1];
 
-    const direction = ORIENTATION_NAVIGATION_KEYS[orientation][key];
+    const direction = NAVIGATION_KEYS[key];
     if (!direction) return undefined;
 
     return triggers[(currentIndex + direction + triggers.length) % triggers.length];
@@ -100,7 +85,6 @@ export function useAccordion(
     const isMultiple = computed(() => Boolean(props.multiple));
     const isCollapsible = computed(() => props.collapsible !== false);
     const isDisabled = computed(() => Boolean(props.disabled));
-    const orientation = computed(() => props.orientation ?? 'vertical');
     const isControlled = computed(() => props.modelValue !== undefined);
     const uncontrolledValue = ref<AccordionModelValue>(props.defaultValue ?? null);
 
@@ -115,7 +99,6 @@ export function useAccordion(
         bem('rp-accordion', {
             disabled: isDisabled.value,
             multiple: isMultiple.value,
-            [`${orientation.value}`]: true,
         }),
     );
 
@@ -123,7 +106,6 @@ export function useAccordion(
         id: props.id,
         class: rootClass.value,
         'data-disabled': isDisabled.value || undefined,
-        'data-orientation': orientation.value,
         'aria-label': props.ariaLabel || undefined,
         'aria-labelledby': props.labelledby || undefined,
         'aria-describedby': props.describedby || undefined,
@@ -160,7 +142,7 @@ export function useAccordion(
         const trigger = getAccordionTrigger(event, root);
         if (!trigger) return;
 
-        const nextTrigger = getNextTrigger(root, trigger, event.key, orientation.value);
+        const nextTrigger = getNextTrigger(root, trigger, event.key);
         if (!nextTrigger) return;
 
         event.preventDefault();
@@ -179,9 +161,6 @@ export function useAccordion(
         },
         get unmountOnExit() {
             return Boolean(props.unmountOnExit);
-        },
-        get orientation() {
-            return orientation.value;
         },
         isItemOpen(value) {
             return hasValue(openValues.value, value);
@@ -233,7 +212,6 @@ export function useAccordionItem(props: Readonly<AccordionItemProps>): UseAccord
             open: isOpen.value,
             closed: !isOpen.value,
             disabled: isDisabled.value,
-            [`${group.orientation}`]: true,
         }),
     );
 

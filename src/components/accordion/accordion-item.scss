@@ -9,16 +9,6 @@
         border-top: 0;
     }
 
-    &--horizontal {
-        flex: 1 1 0;
-        border-top: 0;
-        border-left: var(--rp-border-width-thin) solid var(--rp-color-default-border);
-
-        &:first-child {
-            border-left: 0;
-        }
-    }
-
     &--disabled {
         @include disabled-state;
     }

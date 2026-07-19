@@ -45,10 +45,6 @@ const meta = {
         collapsible: { control: 'boolean' },
         disabled: { control: 'boolean' },
         unmountOnExit: { control: 'boolean' },
-        orientation: {
-            control: 'select',
-            options: ['vertical', 'horizontal'],
-        },
     },
     args: {
         modelValue: undefined,
@@ -57,7 +53,6 @@ const meta = {
         collapsible: true,
         disabled: false,
         unmountOnExit: false,
-        orientation: 'vertical',
     },
     render: (args) => ({
         components: { Accordion, AccordionItem },

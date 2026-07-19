@@ -19,7 +19,6 @@ const props = withDefaults(defineProps<AccordionProps>(), {
     collapsible: true,
     disabled: false,
     unmountOnExit: false,
-    orientation: 'vertical',
 });
 
 const emit = defineEmits<{

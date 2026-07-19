@@ -10,8 +10,6 @@ export type AccordionItemValue = string | number;
 
 export type AccordionModelValue = AccordionItemValue | AccordionItemValue[] | null;
 
-export type AccordionOrientation = 'vertical' | 'horizontal';
-
 export type AccordionState = 'open' | 'closed';
 
 export const accordionParts = ['root'] as const;
@@ -28,7 +26,6 @@ export interface AccordionProps extends StylesApiProps<AccordionPart> {
     collapsible?: boolean;
     disabled?: boolean;
     unmountOnExit?: boolean;
-    orientation?: AccordionOrientation;
     ariaLabel?: string;
     describedby?: string;
     labelledby?: string;
@@ -50,7 +47,6 @@ export interface AccordionRootProps {
     id?: string;
     class: string[];
     'data-disabled'?: boolean;
-    'data-orientation': AccordionOrientation;
     'aria-label'?: string;
     'aria-labelledby'?: string;
     'aria-describedby'?: string;
@@ -92,7 +88,6 @@ export interface AccordionContext {
     collapsible: boolean;
     disabled: boolean;
     unmountOnExit: boolean;
-    orientation: AccordionOrientation;
     isItemOpen: (value: AccordionItemValue) => boolean;
     setItemOpen: (value: AccordionItemValue, open: boolean) => void;
 }
