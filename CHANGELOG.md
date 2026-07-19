@@ -1,3 +1,15 @@
+## [0.1.4](https://github.com/daopk/ropav/compare/v0.1.3...v0.1.4) (2026-07-19)
+
+### Features
+
+* **scroll-area:** emit boundary events ([dfcac9d](https://github.com/daopk/ropav/commit/dfcac9d147cacca47811aa79e9ea28898eb747b8))
+
+### Bug Fixes
+
+* **package:** update pnpm version to 11.14.0 ([98dd473](https://github.com/daopk/ropav/commit/98dd473c854ccab74685d33c48757d1ed0cac9cc))
+* **scroll-area:** accept axis scrollbar props ([33549f7](https://github.com/daopk/ropav/commit/33549f72ad820fc44deac8794e03c8b3d18abe4b))
+* **tabs:** correct tablist aria structure ([dbf2c9a](https://github.com/daopk/ropav/commit/dbf2c9a1b9e029afda07423c5fc8cf132da620d8))
+
 ## [0.1.3](https://github.com/daopk/ropav/compare/v0.1.2...v0.1.3) (2026-07-19)
 
 ### ⚠ BREAKING CHANGES
