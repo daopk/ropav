@@ -108,8 +108,8 @@ describe('ScrollArea', () => {
         expect(container.querySelector('.rp-scroll-area__corner')).toBeTruthy();
     });
 
-    it.each(['x', 'y'] as const)(
-        'accepts the %s scrollbar axis without a runtime prop warning',
+    it.each(['x', 'y', 'both', false] as const)(
+        'accepts scrollbars=%s without a Vue warning',
         async (scrollbars) => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
@@ -117,7 +117,7 @@ describe('ScrollArea', () => {
                 mountScrollArea({ scrollbars });
                 await flush();
 
-                expect(warn.mock.calls.flat().join(' ')).not.toContain('Invalid prop');
+                expect(warn).not.toHaveBeenCalled();
             } finally {
                 warn.mockRestore();
             }
