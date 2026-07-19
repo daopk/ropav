@@ -1,3 +1,31 @@
+## [0.1.3](https://github.com/daopk/ropav/compare/v0.1.2...v0.1.3) (2026-07-19)
+
+### ⚠ BREAKING CHANGES
+
+* **accordion:** Accordion no longer accepts the orientation prop or exports AccordionOrientation.
+
+### Features
+
+* **modal:** use scroll area for body ([63ca5d4](https://github.com/daopk/ropav/commit/63ca5d465c4256e75eb5f0d67cc383fe0927fd9b))
+* **scroll-area:** add embedded mode ([6f876da](https://github.com/daopk/ropav/commit/6f876daab9e643d4b5f3923382bb97359556f270))
+* **scroll-area:** add scroll area component ([9b1e78f](https://github.com/daopk/ropav/commit/9b1e78f69589029bc2b84cdc4ba1c8c02eaf223f))
+* **scroll-area:** support intrinsic height sizing ([90a7693](https://github.com/daopk/ropav/commit/90a76938977d7c735b1caaf22951679933daf6e3))
+* **select:** use scroll area for dropdown ([43ea070](https://github.com/daopk/ropav/commit/43ea070a7b6683698fc2119105f68c7ec8f44c6d))
+* **tabs:** add scrollable tab list ([49bef7c](https://github.com/daopk/ropav/commit/49bef7c357105794d694a5558650b2b3adfbf88a))
+
+### Bug Fixes
+
+* **accordion:** balance content spacing ([a8df8e0](https://github.com/daopk/ropav/commit/a8df8e05712b2e0c903fdc5d9e5ca44146c704fc))
+* **card:** restore padding story demo colors ([0e28736](https://github.com/daopk/ropav/commit/0e28736dc5f2212a3720752fda3a8cae347f2a6b))
+* **dialog:** resolve Vapor component element refs ([30a5032](https://github.com/daopk/ropav/commit/30a5032064d20f90d65a5a08ef29885718e3b2e9))
+* **number-input:** refine input spacing ([9b067a4](https://github.com/daopk/ropav/commit/9b067a471c63bf685af2bceceddea5773cc0ccd5))
+* **select:** close dropdown when focus leaves ([d1d6ba1](https://github.com/daopk/ropav/commit/d1d6ba126cc4430059baec5bde24dffcdfc9ebc9))
+* **select:** keep focused options within view ([8a5a9a2](https://github.com/daopk/ropav/commit/8a5a9a29178b7a111ea8f57788748a639490ff1f))
+
+### Code Refactoring
+
+* **accordion:** remove orientation support ([dab0c12](https://github.com/daopk/ropav/commit/dab0c129029e5a80b2b3102e4cd35f64dc4a3a63))
+
 ## [0.1.2](https://github.com/daopk/ropav/compare/v0.1.1...v0.1.2) (2026-07-18)
 
 ### ⚠ BREAKING CHANGES
