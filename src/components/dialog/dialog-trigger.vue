@@ -5,9 +5,13 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, mergeProps, onBeforeUnmount, useAttrs, type ComponentPublicInstance } from 'vue';
+import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
-import { dialogRootKey, toDialogHTMLElement } from './dialog-core';
+import {
+    dialogRootKey,
+    resolveDialogHTMLElementRef,
+    type DialogElementRefValue,
+} from './dialog-core';
 import type { DialogTriggerProps } from './types';
 
 defineOptions({ name: 'RpDialogTrigger', inheritAttrs: false });
@@ -21,9 +25,11 @@ defineSlots<{ default?(props: { isOpen: boolean }): unknown }>();
 
 const attrs = useAttrs();
 const root = useRequiredInject(dialogRootKey, 'RpDialogTrigger');
+const generatedId = `${useId()}-trigger`;
+const id = computed(() => props.id ?? generatedId);
 
-function setElement(value: Element | ComponentPublicInstance | null) {
-    root.setTrigger(toDialogHTMLElement(value));
+function setElement(value: DialogElementRefValue) {
+    resolveDialogHTMLElementRef(value, id.value, root.setTrigger);
 }
 
 function onClick(event: MouseEvent) {
@@ -33,7 +39,7 @@ function onClick(event: MouseEvent) {
 
 const rootAttrs = computed(() =>
     mergeProps(attrs, {
-        id: props.id,
+        id: id.value,
         type: props.as === 'button' ? 'button' : undefined,
         disabled: props.as === 'button' ? props.disabled || undefined : undefined,
         'aria-controls': root.contentId.value,

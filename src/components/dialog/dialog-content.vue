@@ -11,19 +11,16 @@
 </template>
 
 <script lang="ts" setup vapor>
-import {
-    computed,
-    isRef,
-    mergeProps,
-    onBeforeUnmount,
-    useAttrs,
-    watch,
-    type ComponentPublicInstance,
-} from 'vue';
+import { computed, isRef, mergeProps, onBeforeUnmount, useAttrs, watch } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
-import { createDialogEvent, dialogRootKey, toDialogHTMLElement } from './dialog-core';
+import {
+    createDialogEvent,
+    dialogRootKey,
+    resolveDialogHTMLElementRef,
+    type DialogElementRefValue,
+} from './dialog-core';
 import type { DialogCloseReason, DialogContentProps, DialogInteractOutsideEvent } from './types';
 
 defineOptions({ name: 'RpDialogContent', inheritAttrs: false });
@@ -85,8 +82,8 @@ const focusTrap = useFocusTrap(focusTrapContainers, {
     delayInitialFocus: props.focusTrapOptions.delayInitialFocus ?? false,
 });
 
-function setElement(value: Element | ComponentPublicInstance | null) {
-    root.setContent(toDialogHTMLElement(value), id.value);
+function setElement(value: DialogElementRefValue) {
+    resolveDialogHTMLElementRef(value, id.value, (element) => root.setContent(element, id.value));
 }
 
 function onDocumentKeydown(event: KeyboardEvent) {

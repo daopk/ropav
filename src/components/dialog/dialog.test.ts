@@ -13,6 +13,7 @@ import type { PopoverSlotProps } from '../popover/types';
 import DialogClose from './dialog-close.vue';
 import DialogContent from './dialog-content.vue';
 import DialogDescription from './dialog-description.vue';
+import DialogForwardingElement from './dialog-forwarding-element.test.vue';
 import DialogOverlay from './dialog-overlay.vue';
 import DialogPortal from './dialog-portal.vue';
 import DialogRoot from './dialog-root.vue';
@@ -25,6 +26,62 @@ function pointerdown(element: Element) {
 }
 
 describe('Dialog primitives', () => {
+    it('resolves Vapor component hosts for content and programmatic focus restoration', async () => {
+        const dialogRef = ref<{
+            open: () => void;
+            close: (reason?: DialogCloseReason) => void;
+        } | null>(null);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        { ref: dialogRef },
+                        {
+                            default: () => [
+                                h(
+                                    DialogTrigger,
+                                    {
+                                        as: DialogForwardingElement,
+                                        class: 'vapor-dialog-trigger',
+                                        tabindex: 0,
+                                    },
+                                    () => 'Open dialog',
+                                ),
+                                h(
+                                    DialogContent,
+                                    {
+                                        as: DialogForwardingElement,
+                                        ariaLabel: 'Vapor-hosted dialog',
+                                        class: 'vapor-dialog-content',
+                                        focusTrapOptions: {
+                                            tabbableOptions: { displayCheck: 'none' },
+                                        },
+                                    },
+                                    () => h('button', { class: 'vapor-dialog-action' }, 'Save'),
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const trigger = container.querySelector('.vapor-dialog-trigger') as HTMLElement;
+
+        dialogRef.value?.open();
+        await flush();
+
+        const content = container.querySelector('.vapor-dialog-content') as HTMLElement;
+        expect(content.getAttribute('role')).toBe('dialog');
+        keydown(content, 'Escape');
+        await flush();
+
+        expect(container.querySelector('.vapor-dialog-content')).toBeNull();
+        expect(document.activeElement).toBe(trigger);
+    });
+
     it('rebinds nested floating content when its portal is toggled', async () => {
         const teleport = ref(true);
         const container = mountDom(

@@ -1,4 +1,11 @@
-import type { ComponentPublicInstance, ComputedRef, InjectionKey, Ref } from 'vue';
+import {
+    nextTick,
+    type ComponentPublicInstance,
+    type ComputedRef,
+    type InjectionKey,
+    type Ref,
+    type VaporComponentInstance,
+} from 'vue';
 import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
 import type { DialogCloseReason } from './types';
 
@@ -25,19 +32,45 @@ export interface DialogRootContext {
 
 export const dialogRootKey = Symbol('dialog-root') as InjectionKey<DialogRootContext>;
 
+export type DialogElementRefValue =
+    | Element
+    | ComponentPublicInstance
+    | VaporComponentInstance
+    | null;
+
 export function resolveDialogCloseReason(reason: unknown): DialogCloseReason {
     return reason === 'escape' || reason === 'outside' || reason === 'programmatic'
         ? reason
         : 'programmatic';
 }
 
-export function toDialogHTMLElement(
-    value: Element | ComponentPublicInstance | null,
-): HTMLElement | null {
+export function toDialogHTMLElement(value: DialogElementRefValue): HTMLElement | null {
     if (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) return value;
     if (value == null || (typeof Element !== 'undefined' && value instanceof Element)) return null;
-    const element = (value as ComponentPublicInstance).$el;
-    return element instanceof HTMLElement ? element : null;
+
+    const vdomElement = (value as ComponentPublicInstance).$el;
+    if (vdomElement instanceof HTMLElement) return vdomElement;
+
+    const vaporBlock = (value as VaporComponentInstance).block;
+    return vaporBlock instanceof HTMLElement ? vaporBlock : null;
+}
+
+export function resolveDialogHTMLElementRef(
+    value: DialogElementRefValue,
+    fallbackId: string,
+    resolve: (element: HTMLElement | null) => void,
+) {
+    const element =
+        toDialogHTMLElement(value) ??
+        (typeof document !== 'undefined' ? document.getElementById(fallbackId) : null);
+    resolve(element);
+    if (element || !value) return;
+    void nextTick(() => {
+        resolve(
+            toDialogHTMLElement(value) ??
+                (typeof document !== 'undefined' ? document.getElementById(fallbackId) : null),
+        );
+    });
 }
 
 export function createDialogEvent<T>(type: string, detail: T, originalEvent: Event) {
