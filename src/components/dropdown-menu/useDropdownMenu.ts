@@ -96,6 +96,13 @@ export function useDropdownMenu(
         moveFocus,
     } = useDropdownMenuNavigation(visibleItems);
 
+    const submenus = useDropdownSubmenus({
+        focusedPath,
+        getItemAtPath,
+        focusItem,
+    });
+    const { openSubmenuPath, isSubmenuOpen } = submenus;
+
     const activeMenuPath = computed(() => getParentPath(focusedPath.value));
     const typeahead = useTypeahead<DropdownMenuItem>({
         items: () => getItemsAtPath(activeMenuPath.value),
@@ -105,16 +112,10 @@ export function useDropdownMenu(
         isDisabled: (item) => Boolean(item.disabled),
         scopeKey: () => activeMenuPath.value.join('/'),
         onMatch(_item, index) {
-            setFocusedIndex(index, activeMenuPath.value);
+            const menuPath = activeMenuPath.value;
+            if (setFocusedIndex(index, menuPath)) submenus.closeSubmenusAfter(menuPath);
         },
     });
-
-    const submenus = useDropdownSubmenus({
-        focusedPath,
-        getItemAtPath,
-        focusItem,
-    });
-    const { openSubmenuPath, isSubmenuOpen } = submenus;
 
     const {
         activeDescendantId,

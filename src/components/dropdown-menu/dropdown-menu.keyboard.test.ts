@@ -212,6 +212,53 @@ describe('DropdownMenu keyboard navigation', () => {
         expect(menu.getAttribute('aria-activedescendant')).toBe('disabled-children-menu-item-0');
     });
 
+    it('closes an all-disabled submenu when typeahead moves to a root sibling', async () => {
+        const typeaheadItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'move-backlog', disabled: true },
+                    { label: 'Done', value: 'move-done', disabled: true },
+                ],
+            },
+            { label: 'Archive', value: 'archive' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'disabled-submenu-typeahead',
+                            items: typeaheadItems,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).not.toBeNull();
+
+        keydown(menu, 'a');
+        await nextTick();
+
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+            'disabled-submenu-typeahead-item-1',
+        );
+    });
+
     it('uses the visual submenu direction for horizontal keyboard navigation', async () => {
         const onSelect = vi.fn();
         const container = mountDom(
