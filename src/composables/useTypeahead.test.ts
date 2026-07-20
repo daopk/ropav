@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { mountDom } from '../../tests/utils/vue';
-import { useTypeahead } from './useTypeahead';
+import { normalizeTypeaheadText, useTypeahead } from './useTypeahead';
 
 interface Item {
     label: string;
@@ -55,6 +55,12 @@ function createTypeahead(
 afterEach(() => vi.useRealTimers());
 
 describe('useTypeahead', () => {
+    it('case-folds locale-specific letters before stripping combining marks', () => {
+        expect(normalizeTypeaheadText('İstanbul', 'tr')).toBe(
+            normalizeTypeaheadText('istanbul', 'tr'),
+        );
+    });
+
     it('matches case and accents, skips disabled items, wraps, and cycles repeated keys', () => {
         const { typeahead, matches } = createTypeahead([
             { label: 'Éclair', disabled: true },

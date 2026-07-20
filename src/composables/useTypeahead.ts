@@ -15,11 +15,11 @@ export interface UseTypeaheadOptions<T> {
     timeout?: number;
 }
 
-export function normalizeTypeaheadText(value: string) {
+export function normalizeTypeaheadText(value: string, locales?: Intl.LocalesArgument) {
     return value
+        .toLocaleLowerCase(locales)
         .normalize('NFKD')
         .replace(COMBINING_MARKS, '')
-        .toLocaleLowerCase()
         .replace(WHITESPACE, ' ')
         .trim();
 }
