@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { computed, reactive, ref } from 'vue';
 import Select from './select.vue';
 
@@ -90,6 +91,34 @@ export const WithValue: Story = {
 export const ManyOptions: Story = {
     args: {
         options: manyFruitOptions,
+    },
+};
+
+export const Typeahead: Story = {
+    tags: ['test'],
+    args: {
+        options: manyFruitOptions,
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const trigger = canvas.getByRole('combobox');
+        trigger.focus();
+
+        await userEvent.keyboard('g');
+        await waitFor(() => {
+            expect(trigger).toHaveTextContent('Grape');
+            expect(trigger).toHaveAttribute('aria-expanded', 'false');
+            expect(trigger).not.toHaveAttribute('aria-activedescendant');
+        });
+
+        await userEvent.keyboard('{ArrowDown}');
+        await canvas.findByRole('listbox');
+        await userEvent.keyboard('m');
+
+        const mango = canvas.getByRole('option', { name: 'Mango' });
+        await waitFor(() => expect(mango).toHaveAttribute('data-highlighted'));
+        await userEvent.keyboard('{Enter}');
+        await waitFor(() => expect(trigger).toHaveTextContent('Mango'));
     },
 };
 

@@ -55,6 +55,7 @@ const registration: MenuItemRegistration = {
         return id.value;
     },
     element: () => sub.trigger.value,
+    textValue: () => props.textValue ?? sub.trigger.value?.textContent?.trim() ?? '',
     disabled: () => isDisabled.value,
     activate: () => sub.open('first'),
     submenu: sub,

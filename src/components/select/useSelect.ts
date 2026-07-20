@@ -1,7 +1,8 @@
 import { computed, nextTick, ref, useId, watch, type Ref } from 'vue';
 import { useClickOutside } from '@/composables/useClickOutside';
+import { useCollectionNavigation } from '@/composables/useCollectionNavigation';
 import { useControlState } from '@/composables/useControlState';
-import { useListNavigation } from '@/composables/useListNavigation';
+import { useTypeahead } from '@/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import type { SelectOption, SelectProps } from './types';
 
@@ -18,8 +19,8 @@ function getSelectDisplayLabel(options: SelectOption[] | undefined, value: Selec
     return options?.find((option) => option.value === value)?.label ?? '';
 }
 
-function getSelectActiveDescendantId(baseId: string, focusedIndex: number) {
-    return focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
+function getSelectActiveDescendantId(baseId: string, focusedIndex: number, isOpen: boolean) {
+    return !isOpen || focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
 }
 
 export function useSelect(
@@ -38,15 +39,37 @@ export function useSelect(
     const visibleOptions = computed(() => props.options ?? []);
     const value = computed(getValue);
 
-    const navigation = useListNavigation<SelectOption>({
+    const navigation = useCollectionNavigation<SelectOption, string | number>({
         items: () => visibleOptions.value,
+        getKey: (item) => item.value,
+        isDisabled: (item) => Boolean(item.disabled),
         isSelected: (item) => item.value === value.value,
     });
 
-    const focusedIndex = navigation.focusedIndex;
-    const activeDescendantId = computed(() =>
-        getSelectActiveDescendantId(selectId, focusedIndex.value),
+    const focusedIndex = navigation.activeIndex;
+    const selectedIndex = computed(() =>
+        visibleOptions.value.findIndex(
+            (option) => option.value === value.value && !option.disabled,
+        ),
     );
+    const activeDescendantId = computed(() =>
+        getSelectActiveDescendantId(selectId, focusedIndex.value, isOpen.value),
+    );
+
+    const typeahead = useTypeahead<SelectOption>({
+        items: () => visibleOptions.value,
+        activeIndex: () => (isOpen.value ? focusedIndex.value : selectedIndex.value),
+        getKey: (item) => item.value,
+        getTextValue: (item) => item.label,
+        isDisabled: (item) => Boolean(item.disabled),
+        onMatch(item, index) {
+            if (isOpen.value) {
+                navigation.setActiveIndex(index);
+            } else if (item.value !== value.value) {
+                emitUpdate(item.value);
+            }
+        },
+    });
 
     const rootClass = computed(() =>
         bem('rp-select', {
@@ -70,13 +93,15 @@ export function useSelect(
 
     function open() {
         if (control.disabled || isOpen.value) return;
+        typeahead.reset();
         isOpen.value = true;
         navigation.focusSelected();
     }
 
     function close() {
         isOpen.value = false;
-        navigation.resetFocus();
+        navigation.resetActive();
+        typeahead.reset();
     }
 
     function toggle() {
@@ -104,7 +129,7 @@ export function useSelect(
     }
 
     function onOptionMouseenter(option: SelectOption, index: number) {
-        if (!option.disabled) focusedIndex.value = index;
+        if (!option.disabled) navigation.setActiveIndex(index);
     }
 
     function onFocusout(event: FocusEvent) {
@@ -120,6 +145,7 @@ export function useSelect(
 
     function onTriggerKeydown(e: KeyboardEvent) {
         if (control.disabled) return;
+        if (typeahead.handleKey(e)) return;
 
         switch (e.key) {
             case 'Enter':

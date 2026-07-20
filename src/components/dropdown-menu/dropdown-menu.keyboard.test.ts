@@ -45,6 +45,124 @@ describe('DropdownMenu keyboard navigation', () => {
         expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
+    it('typeaheads within the active menu, cycles matches, and skips disabled items', async () => {
+        const onSelect = vi.fn();
+        const typeaheadItems: DropdownMenuItem[] = [
+            { label: 'Alpha', value: 'alpha' },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Apricot', value: 'apricot', disabled: true },
+            { label: 'Beta', value: 'beta' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'typeahead-menu', items: typeaheadItems, onSelect },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+
+        keydown(menu, 'a');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('typeahead-menu-item-1');
+
+        keydown(menu, 'a');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('typeahead-menu-item-0');
+        expect(onSelect).not.toHaveBeenCalled();
+    });
+
+    it('resets typeahead when the menu closes', async () => {
+        const typeaheadItems: DropdownMenuItem[] = [
+            { label: 'Alpha', value: 'alpha' },
+            { label: 'Beta', value: 'beta' },
+            { label: 'Bravo', value: 'bravo' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'reset-typeahead-menu', items: typeaheadItems },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+        let menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        keydown(menu, 'b');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('reset-typeahead-menu-item-1');
+
+        keydown(menu, 'Escape');
+        await waitDropdownTransition();
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+        menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        keydown(menu, 'b');
+        await nextTick();
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe('reset-typeahead-menu-item-1');
+    });
+
+    it('scopes typeahead to the currently active submenu', async () => {
+        const onSelect = vi.fn();
+        const typeaheadItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [
+                    { label: 'Backlog', value: 'backlog' },
+                    { label: 'Beta', value: 'beta', disabled: true },
+                    { label: 'Bravo', value: 'bravo' },
+                ],
+            },
+            { label: 'Billing', value: 'billing' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'scoped-typeahead-menu', items: typeaheadItems, onSelect },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        keydown(menu, 'b');
+        await nextTick();
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe('scoped-typeahead-menu-item-0-2');
+        expect(onSelect).not.toHaveBeenCalled();
+    });
+
     it('keeps focus on a submenu trigger when all child items are disabled', async () => {
         const disabledChildrenItems: DropdownMenuItem[] = [
             {

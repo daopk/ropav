@@ -88,23 +88,3 @@ export function isPointInRect(point: PointerPoint, rect: DOMRect, padding = 0) {
         point.y <= rect.bottom + padding
     );
 }
-
-export function getEnabledIndexes(items: DropdownMenuItem[]) {
-    return items.map((item, index) => (item.disabled ? -1 : index)).filter((index) => index >= 0);
-}
-
-export function getNextEnabledIndex(items: DropdownMenuItem[], index: number, direction: 1 | -1) {
-    const enabledIndexes = getEnabledIndexes(items);
-    if (enabledIndexes.length === 0) return undefined;
-
-    if (direction === 1) {
-        return enabledIndexes.find((candidate) => candidate > index) ?? enabledIndexes[0];
-    }
-
-    for (let i = enabledIndexes.length - 1; i >= 0; i -= 1) {
-        const candidate = enabledIndexes[i]!;
-        if (candidate < index) return candidate;
-    }
-
-    return enabledIndexes[enabledIndexes.length - 1];
-}

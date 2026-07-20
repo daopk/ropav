@@ -89,6 +89,161 @@ describe('Select', () => {
         expect(onUpdate).toHaveBeenCalledWith('c');
     });
 
+    it('commits closed typeahead matches without opening and cycles in controlled mode', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        modelValue: null,
+                        options: [
+                            { label: 'Apple', value: 'apple' },
+                            { label: 'Avocado', value: 'avocado', disabled: true },
+                            { label: 'Apricot', value: 'apricot' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'a');
+        keydown(trigger, 'a');
+        keydown(trigger, 'a');
+        await nextTick();
+
+        expect(onUpdate.mock.calls.map(([value]) => value)).toEqual(['apple', 'apricot', 'apple']);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(trigger.getAttribute('aria-activedescendant')).toBeNull();
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('only highlights open typeahead matches until they are committed', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        modelValue: null,
+                        options: [
+                            { label: 'Alpha', value: 'alpha' },
+                            { label: 'Beta', value: 'beta', disabled: true },
+                            { label: 'Gamma', value: 'gamma' },
+                        ],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+        keydown(trigger, 'g');
+        await nextTick();
+
+        expect(container.querySelector('[role="option"][data-highlighted]')?.textContent).toBe(
+            'Gamma',
+        );
+        expect(onUpdate).not.toHaveBeenCalled();
+
+        keydown(trigger, 'Enter');
+        await waitTransition();
+        expect(onUpdate).toHaveBeenCalledWith('gamma');
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('keeps the highlighted option stable when options are reordered', async () => {
+        const state = reactive<SelectProps>({
+            modelValue: 'gamma',
+            options: [
+                { label: 'Alpha', value: 'alpha' },
+                { label: 'Gamma', value: 'gamma' },
+            ],
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        modelValue: state.modelValue,
+                        options: state.options,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+        state.options = [
+            { label: 'Gamma', value: 'gamma' },
+            { label: 'Alpha', value: 'alpha' },
+        ];
+        await nextTick();
+
+        expect(container.querySelector('[role="option"][data-highlighted]')?.textContent).toBe(
+            'Gamma',
+        );
+    });
+
+    it('ignores unmatched and disabled closed typeahead options', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        modelValue: null,
+                        options: [{ label: 'Beta', value: 'beta', disabled: true }],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        keydown(trigger, 'b');
+        keydown(trigger, 'z');
+        await nextTick();
+
+        expect(onUpdate).not.toHaveBeenCalled();
+        expect(container.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('resets closed typeahead after Escape and focus leaves the control', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', [
+                        h(Select, {
+                            modelValue: null,
+                            options: [
+                                { label: 'Beta', value: 'beta' },
+                                { label: 'Bravo', value: 'bravo' },
+                            ],
+                            'onUpdate:modelValue': onUpdate,
+                        }),
+                        h('button', { class: 'next-control' }, 'Next'),
+                    ]);
+                },
+            }),
+        );
+
+        const trigger = container.querySelector('[role="combobox"]') as HTMLElement;
+        trigger.focus();
+        keydown(trigger, 'b');
+        keydown(trigger, 'Escape');
+        keydown(trigger, 'b');
+
+        (container.querySelector('.next-control') as HTMLButtonElement).focus();
+        trigger.focus();
+        keydown(trigger, 'b');
+        await nextTick();
+
+        expect(onUpdate.mock.calls.map(([value]) => value)).toEqual(['beta', 'beta', 'beta']);
+    });
+
     it('scrolls the selected option into view when opened', async () => {
         const scrollIntoView = vi.fn();
         const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;

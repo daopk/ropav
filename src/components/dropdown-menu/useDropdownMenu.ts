@@ -1,6 +1,7 @@
 import { computed, ref, useId, watch } from 'vue';
 import type { CSSProperties } from 'vue';
 import { useOverlayLayer } from '@/composables/useOverlayLayer';
+import { useTypeahead } from '@/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
 import {
@@ -17,7 +18,7 @@ import type {
     DropdownMenuSlotProps,
     DropdownMenuTriggerProps,
 } from './types';
-import { DEFAULT_PLACEMENT, hasNestedItems } from './dropdown-menu-utils';
+import { DEFAULT_PLACEMENT, getParentPath, hasNestedItems } from './dropdown-menu-utils';
 import { useDropdownMenuDisclosure } from './useDropdownMenuDisclosure';
 import { useDropdownMenuDom } from './useDropdownMenuDom';
 import { useDropdownMenuHoverIntent } from './useDropdownMenuHoverIntent';
@@ -86,12 +87,27 @@ export function useDropdownMenu(
     const {
         focusedPath,
         focusedIndex,
+        getItemsAtPath,
         getItemAtPath,
         focusItem,
         resetFocus,
+        setFocusedIndex,
         isItemFocused,
         moveFocus,
     } = useDropdownMenuNavigation(visibleItems);
+
+    const activeMenuPath = computed(() => getParentPath(focusedPath.value));
+    const typeahead = useTypeahead<DropdownMenuItem>({
+        items: () => getItemsAtPath(activeMenuPath.value),
+        activeIndex: () => focusedPath.value.at(-1) ?? -1,
+        getKey: (item) => item.value,
+        getTextValue: (item) => item.label,
+        isDisabled: (item) => Boolean(item.disabled),
+        scopeKey: () => activeMenuPath.value.join('/'),
+        onMatch(_item, index) {
+            setFocusedIndex(index, activeMenuPath.value);
+        },
+    });
 
     const submenus = useDropdownSubmenus({
         focusedPath,
@@ -166,6 +182,7 @@ export function useDropdownMenu(
         getItemAtPath,
         focusItem,
         moveFocus,
+        handleTypeahead: typeahead.handleKey,
         submenus,
         hoverIntent,
         disclosure,
@@ -244,6 +261,14 @@ export function useDropdownMenu(
                 target.removeEventListener('click', onTriggerClick);
                 target.removeEventListener('keydown', onTriggerKeydown as EventListener);
             });
+        },
+        { flush: 'sync' },
+    );
+
+    watch(
+        isVisible,
+        (visible) => {
+            if (!visible) typeahead.reset();
         },
         { flush: 'sync' },
     );

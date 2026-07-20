@@ -61,6 +61,7 @@ type UseDropdownMenuInteractionsOptions = {
     getItemAtPath: (path: ItemPath) => DropdownMenuItem | undefined;
     focusItem: (target: DropdownMenuFocusTarget, menuPath?: ItemPath) => boolean;
     moveFocus: (direction: 1 | -1) => ItemPath | undefined;
+    handleTypeahead: (event: KeyboardEvent) => boolean;
     submenus: SubmenuControls;
     hoverIntent: HoverIntentControls;
     disclosure: DisclosureControls;
@@ -76,6 +77,7 @@ export function useDropdownMenuInteractions({
     getItemAtPath,
     focusItem,
     moveFocus,
+    handleTypeahead,
     submenus,
     hoverIntent,
     disclosure,
@@ -202,6 +204,7 @@ export function useDropdownMenuInteractions({
 
     function onMenuKeydown(event: KeyboardEvent) {
         hoverIntent.resetHoverIntent();
+        if (handleTypeahead(event)) return;
 
         switch (event.key) {
             case 'ArrowDown':

@@ -354,7 +354,7 @@ export const Overflow: Story = {
         )!;
         const triggers = [...list.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
 
-        expect(list).toHaveAttribute('role', 'tablist');
+        expect(content).toHaveAttribute('role', 'tablist');
         expect(list).toHaveAttribute('data-scrollbars', 'x');
         expect(viewport.tabIndex).toBe(-1);
         expect(scrollbar).toHaveAttribute('aria-hidden', 'true');

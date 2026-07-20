@@ -149,6 +149,82 @@ describe('DropdownMenu compound primitives', () => {
         expect(container.querySelector('[role="menu"]')).not.toBeNull();
     });
 
+    it('uses explicit text values and DOM text fallback for primitive typeahead', async () => {
+        vi.useFakeTimers();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenuRoot,
+                        { defaultOpen: true, modal: false },
+                        {
+                            default: () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () => [
+                                    h(
+                                        DropdownMenuItem,
+                                        { class: 'custom-label', textValue: 'Beta' },
+                                        () => 'Custom action',
+                                    ),
+                                    h(
+                                        DropdownMenuItem,
+                                        { class: 'fallback-label' },
+                                        () => 'Charlie',
+                                    ),
+                                ]),
+                        },
+                    );
+                },
+            }),
+        );
+        await nextTick();
+
+        const menu = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(menu, 'b');
+        await nextTick();
+        expect(container.querySelector('.custom-label')?.hasAttribute('data-highlighted')).toBe(
+            true,
+        );
+
+        vi.advanceTimersByTime(1000);
+        keydown(menu, 'c');
+        await nextTick();
+        expect(container.querySelector('.fallback-label')?.hasAttribute('data-highlighted')).toBe(
+            true,
+        );
+    });
+
+    it('uses current DOM order after primitive items register dynamically', async () => {
+        const showBravo = ref(false);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenuRoot,
+                        { defaultOpen: true, modal: false },
+                        {
+                            default: () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () => [
+                                    h(DropdownMenuItem, { class: 'alpha' }, () => 'Alpha'),
+                                    showBravo.value
+                                        ? h(DropdownMenuItem, { class: 'bravo' }, () => 'Bravo')
+                                        : null,
+                                    h(DropdownMenuItem, { class: 'beta' }, () => 'Beta'),
+                                ]),
+                        },
+                    );
+                },
+            }),
+        );
+        await nextTick();
+        showBravo.value = true;
+        await nextTick();
+
+        keydown(container.querySelector('[role="menu"]') as HTMLElement, 'b');
+        await nextTick();
+
+        expect(container.querySelector('.bravo')?.hasAttribute('data-highlighted')).toBe(true);
+    });
+
     it('teleports content through Portal and preserves injected context', async () => {
         const portalDisabled = ref(false);
         const container = mountDom(
@@ -196,6 +272,7 @@ describe('DropdownMenu compound primitives', () => {
     });
 
     it('updates checkbox and radio state while keeping the menu open', async () => {
+        vi.useFakeTimers();
         const container = mountDom(
             defineComponent({
                 setup() {
@@ -213,7 +290,11 @@ describe('DropdownMenu compound primitives', () => {
                                             default: () => [
                                                 h(
                                                     DropdownMenuCheckboxItem,
-                                                    { class: 'checkbox', defaultValue: false },
+                                                    {
+                                                        class: 'checkbox',
+                                                        defaultValue: false,
+                                                        textValue: 'Alerts',
+                                                    },
                                                     {
                                                         default: () => [
                                                             h(
@@ -262,6 +343,16 @@ describe('DropdownMenu compound primitives', () => {
         await nextTick();
 
         const checkbox = container.querySelector('.checkbox') as HTMLButtonElement;
+        const content = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(content, 'a');
+        await nextTick();
+        expect(checkbox.hasAttribute('data-highlighted')).toBe(true);
+
+        vi.advanceTimersByTime(1000);
+        keydown(content, 't');
+        await nextTick();
+        expect(container.querySelector('.radio-two')?.hasAttribute('data-highlighted')).toBe(true);
+
         click(checkbox);
         await nextTick();
         expect(checkbox.getAttribute('aria-checked')).toBe('true');
@@ -287,13 +378,14 @@ describe('DropdownMenu compound primitives', () => {
                                     DropdownMenuContent,
                                     { flip: false, shift: false },
                                     {
-                                        default: () =>
+                                        default: () => [
+                                            h(DropdownMenuItem, null, () => 'Archive'),
                                             h(DropdownMenuSub, null, {
                                                 default: () => [
                                                     h(
                                                         DropdownMenuSubTrigger,
-                                                        null,
-                                                        () => 'Move to',
+                                                        { textValue: 'Move to' },
+                                                        () => 'Transfer ownership',
                                                     ),
                                                     h(
                                                         DropdownMenuSubContent,
@@ -307,6 +399,7 @@ describe('DropdownMenu compound primitives', () => {
                                                     ),
                                                 ],
                                             }),
+                                        ],
                                     },
                                 ),
                         },
@@ -317,6 +410,13 @@ describe('DropdownMenu compound primitives', () => {
         await nextTick();
 
         const content = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(content, 'm');
+        await nextTick();
+        expect(
+            container.querySelector('[aria-haspopup="menu"]')?.hasAttribute('data-highlighted'),
+        ).toBe(true);
+        expect(container.querySelectorAll('[role="menu"]')).toHaveLength(1);
+
         keydown(content, 'ArrowRight');
         await nextTick();
         expect(container.querySelectorAll('[role="menu"]')).toHaveLength(2);

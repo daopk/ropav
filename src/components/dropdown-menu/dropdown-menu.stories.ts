@@ -207,7 +207,8 @@ export const Basic: Story = {
         const body = within(canvasElement.ownerDocument.body);
         const menu = await body.findByRole('menu', { name: 'Project actions' });
         const item = within(menu).getByRole('menuitem', { name: /Duplicate/ });
-        await userEvent.hover(item);
+        menu.focus();
+        await userEvent.keyboard('d');
 
         await waitFor(() => {
             expect(item).toHaveClass('rp-dropdown-menu__item--focused');
@@ -449,7 +450,9 @@ export const CompoundPrimitives: Story = {
                                 </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                             <DropdownMenuSub>
-                                <DropdownMenuSubTrigger>Move to…</DropdownMenuSubTrigger>
+                                <DropdownMenuSubTrigger text-value="Move to">
+                                    Transfer ownership
+                                </DropdownMenuSubTrigger>
                                 <DropdownMenuSubContent aria-label="Move to">
                                     <DropdownMenuItem>Backlog</DropdownMenuItem>
                                     <DropdownMenuItem>Done</DropdownMenuItem>
@@ -467,11 +470,16 @@ export const CompoundPrimitives: Story = {
 
         const body = within(canvasElement.ownerDocument.body);
         const menu = await body.findByRole('menu', { name: 'Preferences' });
-        await userEvent.hover(within(menu).getByRole('menuitem', { name: 'Move to…' }));
+        const trigger = within(menu).getByRole('menuitem', { name: 'Transfer ownership' });
+        menu.focus();
+        await userEvent.keyboard('m');
+        await waitFor(() => expect(trigger).toHaveAttribute('data-highlighted'));
+        await userEvent.keyboard('{ArrowRight}');
 
         const submenu = await body.findByRole('menu', { name: 'Move to' });
         const item = within(submenu).getByRole('menuitem', { name: 'Done' });
-        await userEvent.hover(item);
+        submenu.focus();
+        await userEvent.keyboard('d');
 
         await waitFor(() => {
             expect(item).toHaveClass('rp-dropdown-menu__item--focused');

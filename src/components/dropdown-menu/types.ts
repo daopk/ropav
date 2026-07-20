@@ -269,6 +269,8 @@ export interface DropdownMenuItemPrimitiveProps {
     id?: string;
     as?: DropdownMenuAs;
     value?: DropdownMenuItemValue;
+    /** Text used for keyboard typeahead. Falls back to the rendered text content. */
+    textValue?: string;
     disabled?: boolean;
     destructive?: boolean;
     closeOnSelect?: boolean;
@@ -328,6 +330,8 @@ export interface DropdownMenuSubPrimitiveProps {
 export interface DropdownMenuSubTriggerPrimitiveProps {
     id?: string;
     as?: DropdownMenuAs;
+    /** Text used for keyboard typeahead. Falls back to the rendered text content. */
+    textValue?: string;
     disabled?: boolean;
 }
 

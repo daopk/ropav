@@ -1,13 +1,7 @@
 import { computed, ref } from 'vue';
+import { getEnabledIndexes, getNextEnabledIndex } from '@/composables/collectionNavigation';
 import type { DropdownMenuFocusTarget, DropdownMenuItem } from './types';
-import {
-    arePathsEqual,
-    getEnabledIndexes,
-    getNextEnabledIndex,
-    getParentPath,
-    normalizePath,
-    type ItemPath,
-} from './dropdown-menu-utils';
+import { arePathsEqual, getParentPath, normalizePath, type ItemPath } from './dropdown-menu-utils';
 
 type DropdownMenuItemsSource = {
     readonly value: DropdownMenuItem[];
@@ -34,7 +28,9 @@ export function useDropdownMenuNavigation(items: DropdownMenuItemsSource) {
     }
 
     function focusItem(target: DropdownMenuFocusTarget, menuPath: ItemPath = []) {
-        const enabledIndexes = getEnabledIndexes(getItemsAtPath(menuPath));
+        const enabledIndexes = getEnabledIndexes(getItemsAtPath(menuPath), (item) =>
+            Boolean(item.disabled),
+        );
         const index =
             target === 'last' ? enabledIndexes[enabledIndexes.length - 1] : enabledIndexes[0];
 
@@ -51,6 +47,13 @@ export function useDropdownMenuNavigation(items: DropdownMenuItemsSource) {
         focusedPath.value = [];
     }
 
+    function setFocusedIndex(index: number, menuPath: ItemPath = []) {
+        const item = getItemsAtPath(menuPath)[index];
+        if (!item || item.disabled) return false;
+        focusedPath.value = [...menuPath, index];
+        return true;
+    }
+
     function isItemFocused(indexOrPath: number | ItemPath) {
         return arePathsEqual(normalizePath(indexOrPath), focusedPath.value);
     }
@@ -64,7 +67,9 @@ export function useDropdownMenuNavigation(items: DropdownMenuItemsSource) {
                     ? -1
                     : itemsAtPath.length
                 : focusedPath.value[focusedPath.value.length - 1]!;
-        const nextIndex = getNextEnabledIndex(itemsAtPath, currentIndex, direction);
+        const nextIndex = getNextEnabledIndex(itemsAtPath, currentIndex, direction, (item) =>
+            Boolean(item.disabled),
+        );
 
         if (nextIndex === undefined) {
             focusedPath.value = [];
@@ -82,6 +87,7 @@ export function useDropdownMenuNavigation(items: DropdownMenuItemsSource) {
         getItemAtPath,
         focusItem,
         resetFocus,
+        setFocusedIndex,
         isItemFocused,
         moveFocus,
     };

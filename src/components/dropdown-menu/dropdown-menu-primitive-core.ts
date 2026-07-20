@@ -14,6 +14,7 @@ import {
 } from 'vue';
 import { useRequiredInject } from '@/composables/useRequiredInject';
 import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
+import { useTypeahead } from '@/composables/useTypeahead';
 import type { FloatingReference } from '../floating/types';
 import type {
     DropdownMenuCloseOptions,
@@ -35,6 +36,7 @@ export type ComponentRefValue = Element | ComponentPublicInstance | VaporCompone
 export interface MenuItemRegistration {
     id: string;
     element: () => HTMLElement | null;
+    textValue: () => string;
     disabled: () => boolean;
     activate: (event: Event) => void;
     submenu?: DropdownMenuSubContext;
@@ -314,6 +316,23 @@ export function createMenuContext(options: {
         if (item) setActive(item.id);
     }
 
+    const typeahead = useTypeahead<MenuItemRegistration>({
+        items: () => sortItems(items.value),
+        activeIndex: () => sortItems(items.value).findIndex((item) => item.id === activeId.value),
+        getKey: (item) => item.id,
+        getTextValue: (item) => item.textValue(),
+        isDisabled: (item) => item.disabled(),
+        onMatch: (item) => setActive(item.id),
+    });
+    const isOpen = computed(() => options.parentSub?.isOpen.value ?? options.root.isOpen.value);
+    watch(
+        isOpen,
+        (open) => {
+            if (!open) typeahead.reset();
+        },
+        { flush: 'sync' },
+    );
+
     function onHorizontalKeydown(event: KeyboardEvent, active?: MenuItemRegistration) {
         if (options.parentSub && event.key === getCloseDirection(context)) {
             event.preventDefault();
@@ -329,6 +348,10 @@ export function createMenuContext(options: {
     }
 
     function onKeydown(event: KeyboardEvent) {
+        if (typeahead.handleKey(event)) {
+            event.stopPropagation();
+            return;
+        }
         const active = items.value.find((item) => item.id === activeId.value);
 
         switch (event.key) {
@@ -429,6 +452,7 @@ export function usePrimitiveItem(
             return id.value;
         },
         element: () => element.value,
+        textValue: () => props.textValue ?? element.value?.textContent?.trim() ?? '',
         disabled: () => isDisabled.value,
         activate,
     };
