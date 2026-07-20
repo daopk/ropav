@@ -51,7 +51,9 @@ export interface ComponentVariantColorRoles {
 }
 
 export interface ComponentContrastColorOptions {
+    /** Automatically selects a readable foreground for preset and opaque custom colors. */
     autoContrast?: boolean;
+    /** Required when an automatically contrasted custom color is translucent. */
     contrastColor?: string;
 }
 
@@ -71,6 +73,7 @@ export type ParsedComponentColor =
 
 const componentColorNames = new Set<string>(componentColors);
 const componentColorShadeNames = new Set<string>(componentColorShades);
+const warnedTranslucentContrastColors = new Set<string>();
 
 export function isComponentPresetColor(
     color: ComponentColorValue | undefined,
@@ -123,7 +126,7 @@ export function getComponentContrastColor(
     if (parsed.kind === 'primary') return 'var(--rp-primary-color-contrast)';
     if (parsed.kind === 'preset') return `var(--rp-color-${parsed.color}-contrast)`;
     if (parsed.kind === 'shade') return `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`;
-    if (parsed.kind === 'custom') return getReadableColorVariable(parsed.value);
+    if (parsed.kind === 'custom') return getReadableColorVariable(parsed.value, true);
 
     return 'var(--rp-color-white)';
 }
@@ -185,12 +188,12 @@ export function getComponentVariantColorRoles({
     const roles = getComponentColorRoles(color ?? defaultColor);
     if (!roles) return undefined;
 
-    const contrast = getComponentContrastColor(color ?? defaultColor, {
-        autoContrast,
-        contrastColor,
-    });
-
     if (variant === 'solid') {
+        const contrast = getComponentContrastColor(color ?? defaultColor, {
+            autoContrast,
+            contrastColor,
+        });
+
         return {
             background: roles.filled,
             hover: roles.hover,
@@ -294,14 +297,30 @@ function createComponentColorRoles(
 
 type RgbColor = Pick<ParsedCssColor, 'red' | 'green' | 'blue'>;
 
-function getReadableColorVariable(color: string) {
+function getReadableColorVariable(color: string, warnForTranslucentColor = false) {
     const parsed = parseCssColor(color);
     if (!parsed) return 'var(--rp-color-white)';
+    if (parsed.opacity < 100) {
+        if (warnForTranslucentColor) warnAboutTranslucentAutoContrast(color);
+        return 'var(--rp-color-white)';
+    }
 
     const blackContrast = contrastRatio({ red: 0, green: 0, blue: 0 }, parsed);
     const whiteContrast = contrastRatio({ red: 255, green: 255, blue: 255 }, parsed);
 
     return blackContrast >= whiteContrast ? 'var(--rp-color-black)' : 'var(--rp-color-white)';
+}
+
+function warnAboutTranslucentAutoContrast(color: string) {
+    if (!import.meta.env.DEV) return;
+
+    const warningKey = color.trim().toLowerCase();
+    if (warnedTranslucentContrastColors.has(warningKey)) return;
+
+    warnedTranslucentContrastColors.add(warningKey);
+    console.warn(
+        `[Ropav] autoContrast cannot determine a readable foreground for translucent custom color "${color}" without knowing the underlying surface. Pass contrastColor explicitly.`,
+    );
 }
 
 function contrastRatio(foreground: RgbColor, background: RgbColor) {

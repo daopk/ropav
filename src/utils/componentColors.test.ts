@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
     getComponentContrastColor,
     getComponentColorRoles,
@@ -91,9 +91,66 @@ describe('component color resolver', () => {
         expect(getComponentContrastColor('#141414', { autoContrast: true })).toBe(
             'var(--rp-color-white)',
         );
+        expect(getComponentContrastColor('rgba(255, 255, 255, 1)')).toBe('var(--rp-color-black)');
         expect(getComponentContrastColor('#fab005', { autoContrast: false })).toBe(
             'var(--rp-color-white)',
         );
+    });
+
+    it('requires explicit contrast for translucent custom colors', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const translucentColors = [
+            'rgba(255, 255, 255, .2)',
+            'hsla(0, 0%, 100%, 20%)',
+            '#fff3',
+            '#ffffff33',
+            'transparent',
+        ];
+
+        for (const color of translucentColors) {
+            expect(getComponentContrastColor(color)).toBe('var(--rp-color-white)');
+            expect(getComponentContrastColor(color)).toBe('var(--rp-color-white)');
+            expect(getComponentColorRoles(color)).toMatchObject({
+                contrast: 'var(--rp-color-white)',
+            });
+        }
+
+        expect(warn).toHaveBeenCalledTimes(translucentColors.length);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Pass contrastColor explicitly'));
+        warn.mockRestore();
+    });
+
+    it('does not warn when translucent custom contrast is explicit or disabled', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        expect(
+            getComponentContrastColor('rgb(255 255 255 / 20%)', {
+                contrastColor: 'var(--brand-on-color)',
+            }),
+        ).toBe('var(--brand-on-color)');
+        expect(getComponentContrastColor('rgb(254 254 254 / 20%)', { autoContrast: false })).toBe(
+            'var(--rp-color-white)',
+        );
+        expect(getComponentContrastColor('var(--brand-color)')).toBe('var(--rp-color-white)');
+
+        expect(warn).not.toHaveBeenCalled();
+        warn.mockRestore();
+    });
+
+    it('does not resolve translucent contrast for non-solid variants', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+        for (const variant of ['subtle', 'surface', 'outline', 'ghost', 'plain'] as const) {
+            expect(
+                getComponentVariantColorRoles({
+                    color: 'rgba(255, 255, 255, 0.19)',
+                    variant,
+                }),
+            ).toBeDefined();
+        }
+
+        expect(warn).not.toHaveBeenCalled();
+        warn.mockRestore();
     });
 
     it('accepts explicit contrast for custom CSS variables', () => {

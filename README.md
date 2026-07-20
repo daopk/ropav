@@ -37,6 +37,22 @@ Import the components you need:
 import { Button } from 'ropav';
 ```
 
+## Custom color contrast
+
+`autoContrast` selects foreground colors for preset colors and opaque custom color literals. A
+translucent custom color depends on the surface behind the component, so its contrast cannot be
+determined from the color alone. Pass `contrastColor` explicitly whenever a custom background has
+alpha:
+
+```vue
+<Button color="rgba(255, 255, 255, 0.2)" contrast-color="var(--rp-color-white)" variant="solid">
+  Continue
+</Button>
+```
+
+In development, Ropav warns when auto contrast receives a translucent custom color without an
+explicit `contrastColor`. The production fallback remains `var(--rp-color-white)`.
+
 ## Progress and interactive ranges
 
 Use `Progress` for read-only status and `Slider` when the user can change the value. A media seek

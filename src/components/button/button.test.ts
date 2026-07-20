@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
 import { flush, mountDom } from '../../../tests/utils/vue';
@@ -332,6 +332,33 @@ describe('Button', () => {
 
         expect(lightButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
         expect(darkButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+    });
+
+    it('falls back to white for translucent custom colors without a contrast color', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            color: 'rgba(255, 255, 255, .2)',
+                            variant: 'solid',
+                        },
+                        { default: () => 'Translucent' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('rgba(255, 255, 255, .2)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(warn).toHaveBeenCalledOnce();
+        warn.mockRestore();
     });
 
     it('uses an explicit contrast color with a custom CSS variable', async () => {
