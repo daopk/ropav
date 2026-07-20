@@ -106,7 +106,7 @@ export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
             event.metaKey ||
             event.altKey ||
             event.isComposing ||
-            event.key.length !== 1 ||
+            [...event.key].length !== 1 ||
             (event.key === ' ' && !hasBuffer())
         ) {
             return false;
@@ -123,7 +123,7 @@ export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
         const items = options.items();
         const lastMatchIndex = getLastMatchIndex(items);
         const activeIndex = lastMatchIndex >= 0 ? lastMatchIndex : options.activeIndex();
-        const matchIndex = getMatchIndex(query, activeIndex, !repeated && query.length > 1);
+        const matchIndex = getMatchIndex(query, activeIndex, !repeated && [...query].length > 1);
         if (matchIndex < 0) return true;
 
         const item = items[matchIndex];

@@ -116,6 +116,18 @@ describe('useTypeahead', () => {
         expect(matches.map(({ index }) => index)).toEqual([0, 1, 2]);
     });
 
+    it('handles a supplementary-plane printable key as one character', () => {
+        const { typeahead, matches } = createTypeahead(
+            [{ label: '😀 Alpha' }, { label: '😀 Beta' }],
+            { activeIndex: () => 0 },
+        );
+        const event = keyboardEvent('😀');
+
+        expect(typeahead.handleKey(event)).toBe(true);
+        expect(event.defaultPrevented).toBe(true);
+        expect(matches.at(-1)).toMatchObject({ index: 1 });
+    });
+
     it('starts a new search after the timeout and when the scope changes', () => {
         vi.useFakeTimers();
         let scope = 'root';
