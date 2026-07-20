@@ -1,3 +1,22 @@
+## [0.1.5](https://github.com/daopk/ropav/compare/v0.1.4...v0.1.5) (2026-07-20)
+
+### Features
+
+* add shared typeahead collection navigation ([384826e](https://github.com/daopk/ropav/commit/384826e5b25e781c0d2c48e4b6cf4daea329d6d1))
+* **pagination:** add pagination component ([070608c](https://github.com/daopk/ropav/commit/070608c9db386f28cfb2659805db4f86fd353df5))
+
+### Bug Fixes
+
+* **button:** preserve contrast across state changes ([bb4562c](https://github.com/daopk/ropav/commit/bb4562cec1287e0436b77c32150159d1d806fd30))
+* **colors:** handle translucent auto contrast ([301f5a6](https://github.com/daopk/ropav/commit/301f5a600001bf3868ac2a0f9703fd98bd1b1419))
+* **colors:** improve accessible contrast defaults ([e5c3a21](https://github.com/daopk/ropav/commit/e5c3a214a8694a352dc84d2135fb469c77b7e254))
+* **colors:** preserve contrast across interaction states ([8c5d9eb](https://github.com/daopk/ropav/commit/8c5d9eb521e50edf45858266be16394f73ef2c43))
+* **dropdown-menu:** close stale submenu after typeahead ([912bbe8](https://github.com/daopk/ropav/commit/912bbe807c84c909b904f2198e36011157eadd23))
+* **icons:** avoid vapor setup state for gradients ([346fa24](https://github.com/daopk/ropav/commit/346fa249207ece1347c0fa6805de87baaf8c4737))
+* **typeahead:** cycle items with duplicate keys ([314e6c1](https://github.com/daopk/ropav/commit/314e6c1cd7b585e4b563b3b64ce47b36a6285664))
+* **typeahead:** normalize locale case before accents ([d5a2566](https://github.com/daopk/ropav/commit/d5a256646add7a2948a5f93ea00716999a437967))
+* **typeahead:** support supplementary unicode keys ([94ee50d](https://github.com/daopk/ropav/commit/94ee50d42804b4e575c808ac569525cc606021f5))
+
 ## [0.1.4](https://github.com/daopk/ropav/compare/v0.1.3...v0.1.4) (2026-07-19)
 
 ### Features
