@@ -18,6 +18,9 @@ const preview: Preview = {
         theme: defaultTheme,
     },
     parameters: {
+        a11y: {
+            test: 'todo',
+        },
         backgrounds: {
             disable: true,
         },
