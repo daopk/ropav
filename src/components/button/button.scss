@@ -35,9 +35,8 @@
     color: var(--_rp-button-fg);
     cursor: pointer;
     text-decoration: none;
+    // Foreground can switch contrast anchors between states; keep it and the background atomic.
     transition:
-        background-color var(--rp-transition-fast),
-        color var(--rp-transition-fast),
         border-color var(--rp-transition-fast),
         box-shadow var(--rp-transition-fast),
         transform var(--rp-transition-fast);
