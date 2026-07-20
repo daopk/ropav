@@ -46,7 +46,7 @@ export function createPublicStylesManifest(dictionary, darkTokenPaths) {
 
     return {
         schemaVersion: 1,
-        contractVersion: 1,
+        contractVersion: 2,
         baseline: '5102a40',
         tokens,
         componentVariables: publicComponentVariables,
@@ -65,7 +65,7 @@ export function renderPublicTokenDocs(manifest) {
         '',
         '## Color override contract',
         '',
-        '`autoContrast` reads public `*-contrast` companion tokens. Browsers do not recompute those build-time choices after a consumer changes a background token, so each background role and its contrast companion form one required override group. For a preset solid role, declare the normal, hover, and contrast values in the same selector and cascade layer:',
+        '`autoContrast` reads public state-specific `*-contrast` companion tokens. Browsers do not recompute those build-time choices after a consumer changes a background token, so each background role and its contrast companions form one required override group. For a preset solid role, declare the normal, hover, and contrast values in the same selector and cascade layer:',
         '',
         '```css',
         '@layer app {',
@@ -77,7 +77,7 @@ export function renderPublicTokenDocs(manifest) {
         '}',
         '```',
         '',
-        'Choose a companion with sufficient contrast against both normal and hover backgrounds. A palette shade is supported for consumer overrides only when its exact name is in this manifest; in that case, override the shade and its `*-contrast` companion together. Built-in preset solid roles prefer white text and select or darken their filled backgrounds accordingly; high-luminance lime and yellow roles retain black text. Keep `--rp-color-black` and `--rp-color-white` as readable dark and light contrast anchors.',
+        "Choose a preset companion with sufficient contrast against its normal, hover, and derived active backgrounds. For a palette shade, normal uses its `*-contrast` companion, hover uses the next shade and that shade's companion, and active uses its `*-active-contrast` companion. Override a shade, its normal companion, and its active companion together; override the next shade pair too when customizing hover. Built-in preset solid roles prefer white text and select or darken their filled backgrounds accordingly; high-luminance lime and yellow roles retain black text. Keep `--rp-color-black` and `--rp-color-white` as readable dark and light contrast anchors.",
         '',
         '## Design tokens',
         '',

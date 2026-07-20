@@ -30,6 +30,7 @@ export const whiteContrastColorNames = colorNames.filter(
 
 const minimumTextContrast = 4.5;
 const filledHoverDarkenPercent = 10;
+export const filledActiveColorPercent = 80;
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultCoreTokens = JSON.parse(
@@ -324,12 +325,21 @@ export function getAllDerivedColorVariableNames() {
 
 export function getColorShadeContrastVariables() {
     const variables = {};
+    const black = colorFromHex(getCoreColorTokenValue('black'));
 
     for (const color of colorNames) {
         for (const shade of colorShades) {
-            variables[`--rp-color-${color}-${shade}-contrast`] = getReadableColorVariable(
-                getColorTokenValue(color, shade),
+            const background = colorFromHex(getColorTokenValue(color, shade));
+            const activeBackground = mixOpaqueColors(
+                background,
+                filledActiveColorPercent / 100,
+                black,
             );
+
+            variables[`--rp-color-${color}-${shade}-contrast`] =
+                getReadableColorVariableForBackground(background);
+            variables[`--rp-color-${color}-${shade}-active-contrast`] =
+                getReadableColorVariableForBackground(activeBackground);
         }
     }
 
@@ -338,6 +348,11 @@ export function getColorShadeContrastVariables() {
 
 export function getReadableColorVariable(color) {
     const background = colorFromHex(color);
+
+    return getReadableColorVariableForBackground(background);
+}
+
+function getReadableColorVariableForBackground(background) {
     const black = colorFromHex(getCoreColorTokenValue('black'));
     const white = colorFromHex(getCoreColorTokenValue('white'));
     const blackContrast = contrastRatio(black, background);

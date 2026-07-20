@@ -21,5 +21,7 @@ export function getButtonColorStyle(
         '--_rp-button-border-hover': roles.borderHover,
         '--_rp-button-border-active': roles.borderActive,
         '--_rp-button-fg': roles.color,
+        '--_rp-button-fg-hover': roles.colorHover,
+        '--_rp-button-fg-active': roles.colorActive,
     } as CSSProperties;
 }

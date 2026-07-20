@@ -111,7 +111,7 @@ The exact entries in [`styles-manifest.json`](../src/styles/styles-manifest.json
 
 The manifest contains design tokens plus a deliberately small component-geometry allowlist. Slider and RangeSlider share the `--rp-slider-*` namespace. Size presets provide fallbacks, while a consumer value wins for the individual dimension. See the generated [token table](./public-tokens.md).
 
-Palette shades and their `*-contrast` companions are required override groups because `autoContrast` consumes the companion selected at build time. The [color override contract](./public-tokens.md#color-override-contract) documents the paired override and preset-role requirements.
+Palette shades and their normal and active `*-contrast` companions are required override groups because `autoContrast` consumes state-specific companions selected at build time. The [color override contract](./public-tokens.md#color-override-contract) documents the state pairings and preset-role requirements.
 
 ## Cascade layers and migration
 

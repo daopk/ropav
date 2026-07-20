@@ -32,6 +32,8 @@ export interface ComponentColorRoles {
     hover: string;
     active: string;
     contrast: string;
+    contrastHover: string;
+    contrastActive: string;
     light: string;
     lightHover: string;
     lightActive: string;
@@ -45,6 +47,8 @@ export interface ComponentVariantColorRoles {
     hover: string;
     active: string;
     color: string;
+    colorHover: string;
+    colorActive: string;
     border: string;
     borderHover: string;
     borderActive: string;
@@ -55,6 +59,12 @@ export interface ComponentContrastColorOptions {
     autoContrast?: boolean;
     /** Required when an automatically contrasted custom color is translucent. */
     contrastColor?: string;
+}
+
+export interface ComponentContrastColorRoles {
+    color: string;
+    hover: string;
+    active: string;
 }
 
 export interface ComponentVariantColorOptions extends ComponentContrastColorOptions {
@@ -118,17 +128,29 @@ export function getComponentContrastColor(
     color: ComponentColorValue | undefined,
     options: ComponentContrastColorOptions = {},
 ) {
-    if (options.contrastColor !== undefined) return options.contrastColor;
-    if (options.autoContrast === false) return 'var(--rp-color-white)';
+    return getComponentContrastColorRoles(color, options).color;
+}
+
+export function getComponentContrastColorRoles(
+    color: ComponentColorValue | undefined,
+    options: ComponentContrastColorOptions = {},
+): ComponentContrastColorRoles {
+    if (options.contrastColor !== undefined) {
+        return createContrastColorRoles(options.contrastColor);
+    }
+    if (options.autoContrast === false) return createContrastColorRoles('var(--rp-color-white)');
 
     const parsed = parseComponentColor(color);
+    if (parsed.kind === 'custom') return getCustomContrastColorRoles(parsed.value, true);
 
-    if (parsed.kind === 'primary') return 'var(--rp-primary-color-contrast)';
-    if (parsed.kind === 'preset') return `var(--rp-color-${parsed.color}-contrast)`;
-    if (parsed.kind === 'shade') return `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`;
-    if (parsed.kind === 'custom') return getReadableColorVariable(parsed.value, true);
+    const roles = getComponentColorRoles(color);
+    if (!roles) return createContrastColorRoles('var(--rp-color-white)');
 
-    return 'var(--rp-color-white)';
+    return {
+        color: roles.contrast,
+        hover: roles.contrastHover,
+        active: roles.contrastActive,
+    };
 }
 
 export function getComponentColorRoles(color: ComponentColorValue | undefined) {
@@ -164,17 +186,23 @@ export function getComponentColorRoles(color: ComponentColorValue | undefined) {
 
     if (parsed.kind === 'shade') {
         const base = `var(--rp-color-${parsed.color}-${parsed.shade})`;
-        const hover = `var(--rp-color-${parsed.color}-${Math.min(Number(parsed.shade) + 1, 9)})`;
+        const hoverShade = Math.min(Number(parsed.shade) + 1, 9);
+        const hover = `var(--rp-color-${parsed.color}-${hoverShade})`;
 
         return createComponentColorRoles(base, {
             hover,
             contrast: `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`,
+            contrastHover: `var(--rp-color-${parsed.color}-${hoverShade}-contrast)`,
+            contrastActive: `var(--rp-color-${parsed.color}-${parsed.shade}-active-contrast)`,
             foreground: base,
         });
     }
 
+    const contrast = getCustomContrastColorRoles(parsed.value);
     return createComponentColorRoles(parsed.value, {
-        contrast: getReadableColorVariable(parsed.value),
+        contrast: contrast.color,
+        contrastHover: contrast.hover,
+        contrastActive: contrast.active,
     });
 }
 
@@ -189,7 +217,7 @@ export function getComponentVariantColorRoles({
     if (!roles) return undefined;
 
     if (variant === 'solid') {
-        const contrast = getComponentContrastColor(color ?? defaultColor, {
+        const contrast = getComponentContrastColorRoles(color ?? defaultColor, {
             autoContrast,
             contrastColor,
         });
@@ -198,7 +226,9 @@ export function getComponentVariantColorRoles({
             background: roles.filled,
             hover: roles.hover,
             active: roles.active,
-            color: contrast,
+            color: contrast.color,
+            colorHover: contrast.hover,
+            colorActive: contrast.active,
             border: roles.filled,
             borderHover: roles.hover,
             borderActive: roles.active,
@@ -211,6 +241,8 @@ export function getComponentVariantColorRoles({
             hover: roles.lightHover,
             active: roles.lightActive,
             color: roles.foreground,
+            colorHover: roles.foreground,
+            colorActive: roles.foreground,
             border: 'transparent',
             borderHover: 'transparent',
             borderActive: 'transparent',
@@ -223,6 +255,8 @@ export function getComponentVariantColorRoles({
             hover: roles.lightHover,
             active: roles.lightActive,
             color: roles.foreground,
+            colorHover: roles.foreground,
+            colorActive: roles.foreground,
             border: roles.outline,
             borderHover: roles.lightHover,
             borderActive: roles.outlineHover,
@@ -235,6 +269,8 @@ export function getComponentVariantColorRoles({
             hover: roles.lightHover,
             active: roles.lightActive,
             color: roles.foreground,
+            colorHover: roles.foreground,
+            colorActive: roles.foreground,
             border: roles.outline,
             borderHover: roles.outlineHover,
             borderActive: roles.outlineHover,
@@ -247,6 +283,8 @@ export function getComponentVariantColorRoles({
             hover: roles.lightHover,
             active: roles.lightActive,
             color: roles.foreground,
+            colorHover: roles.foreground,
+            colorActive: roles.foreground,
             border: 'transparent',
             borderHover: 'transparent',
             borderActive: 'transparent',
@@ -259,6 +297,8 @@ export function getComponentVariantColorRoles({
             hover: 'transparent',
             active: 'transparent',
             color: roles.foreground,
+            colorHover: roles.foreground,
+            colorActive: roles.foreground,
             border: 'transparent',
             borderHover: 'transparent',
             borderActive: 'transparent',
@@ -270,6 +310,8 @@ export function getComponentVariantColorRoles({
         hover: roles.lightHover,
         active: roles.lightActive,
         color: roles.foreground,
+        colorHover: roles.foreground,
+        colorActive: roles.foreground,
         border: roles.outline,
         borderHover: roles.outlineHover,
         borderActive: roles.outlineHover,
@@ -280,11 +322,13 @@ function createComponentColorRoles(
     color: string,
     overrides: Partial<ComponentColorRoles> = {},
 ): ComponentColorRoles {
-    return {
+    const roles = {
         filled: color,
         hover: `color-mix(in srgb, ${color} 90%, var(--rp-color-black))`,
         active: `color-mix(in srgb, ${color} 80%, var(--rp-color-black))`,
         contrast: 'var(--rp-color-white)',
+        contrastHover: 'var(--rp-color-white)',
+        contrastActive: 'var(--rp-color-white)',
         light: `color-mix(in srgb, ${color} 12%, transparent)`,
         lightHover: `color-mix(in srgb, ${color} 18%, transparent)`,
         lightActive: `color-mix(in srgb, ${color} 24%, transparent)`,
@@ -293,22 +337,54 @@ function createComponentColorRoles(
         foreground: color,
         ...overrides,
     };
+
+    return {
+        ...roles,
+        contrastHover: overrides.contrastHover ?? roles.contrast,
+        contrastActive: overrides.contrastActive ?? roles.contrast,
+    };
 }
 
 type RgbColor = Pick<ParsedCssColor, 'red' | 'green' | 'blue'>;
 
-function getReadableColorVariable(color: string, warnForTranslucentColor = false) {
+function getCustomContrastColorRoles(
+    color: string,
+    warnForTranslucentColor = false,
+): ComponentContrastColorRoles {
     const parsed = parseCssColor(color);
-    if (!parsed) return 'var(--rp-color-white)';
+    if (!parsed) return createContrastColorRoles('var(--rp-color-white)');
     if (parsed.opacity < 100) {
         if (warnForTranslucentColor) warnAboutTranslucentAutoContrast(color);
-        return 'var(--rp-color-white)';
+        return createContrastColorRoles('var(--rp-color-white)');
     }
 
+    const black = { red: 0, green: 0, blue: 0 };
+
+    return {
+        color: getReadableParsedColorVariable(parsed),
+        hover: getReadableParsedColorVariable(mixOpaqueColors(parsed, 0.9, black)),
+        active: getReadableParsedColorVariable(mixOpaqueColors(parsed, 0.8, black)),
+    };
+}
+
+function getReadableParsedColorVariable(parsed: RgbColor) {
     const blackContrast = contrastRatio({ red: 0, green: 0, blue: 0 }, parsed);
     const whiteContrast = contrastRatio({ red: 255, green: 255, blue: 255 }, parsed);
 
     return blackContrast >= whiteContrast ? 'var(--rp-color-black)' : 'var(--rp-color-white)';
+}
+
+function createContrastColorRoles(color: string): ComponentContrastColorRoles {
+    return { color, hover: color, active: color };
+}
+
+function mixOpaqueColors(first: RgbColor, firstWeight: number, second: RgbColor): RgbColor {
+    const secondWeight = 1 - firstWeight;
+    return {
+        red: first.red * firstWeight + second.red * secondWeight,
+        green: first.green * firstWeight + second.green * secondWeight,
+        blue: first.blue * firstWeight + second.blue * secondWeight,
+    };
 }
 
 function warnAboutTranslucentAutoContrast(color: string) {

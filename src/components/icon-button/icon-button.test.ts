@@ -248,6 +248,39 @@ describe('IconButton', () => {
         expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
     });
 
+    it('uses readable foregrounds for every solid interaction state', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(IconButton, {
+                        ariaLabel: 'State contrast',
+                        color: '#ff3366',
+                        variant: 'solid',
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
+            'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
+        );
+        expect(button.style.getPropertyValue('--_rp-button-bg-active')).toBe(
+            'color-mix(in srgb, #ff3366 80%, var(--rp-color-black))',
+        );
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
+        expect(button.style.getPropertyValue('--_rp-button-fg-hover')).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(button.style.getPropertyValue('--_rp-button-fg-active')).toBe(
+            'var(--rp-color-white)',
+        );
+    });
+
     it('adds a radius modifier for each supported radius', async () => {
         const container = mountDom(
             defineComponent({

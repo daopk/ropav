@@ -6,6 +6,7 @@
     --_rp-pagination-active-bg: var(--rp-color-control-selected-bg);
     --_rp-pagination-active-bg-hover: var(--rp-primary-color-filled-hover);
     --_rp-pagination-active-fg: var(--rp-color-control-selected-fg);
+    --_rp-pagination-active-fg-hover: var(--_rp-pagination-active-fg);
 
     display: inline-flex;
     max-width: 100%;
@@ -82,6 +83,7 @@
         &--active:hover:not(:disabled) {
             background-color: var(--_rp-pagination-active-bg-hover);
             border-color: var(--_rp-pagination-active-bg-hover);
+            color: var(--_rp-pagination-active-fg-hover);
         }
     }
 

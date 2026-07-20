@@ -1,6 +1,6 @@
 import { computed, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
-import { getComponentColorRoles, getComponentContrastColor } from '@/utils/componentColors';
+import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import type { PaginationItem, PaginationProps } from './types';
 
 function normalizeCount(value: number, fallback: number) {
@@ -100,16 +100,19 @@ function getPaginationColorStyle(
 ): CSSProperties | undefined {
     const resolvedColor = color ?? 'primary';
 
-    const roles = getComponentColorRoles(resolvedColor);
+    const roles = getComponentVariantColorRoles({
+        color: resolvedColor,
+        variant: 'solid',
+        autoContrast,
+        contrastColor,
+    });
     if (!roles) return undefined;
 
     return {
-        '--_rp-pagination-active-bg': roles.filled,
+        '--_rp-pagination-active-bg': roles.background,
         '--_rp-pagination-active-bg-hover': roles.hover,
-        '--_rp-pagination-active-fg': getComponentContrastColor(resolvedColor, {
-            autoContrast,
-            contrastColor,
-        }),
+        '--_rp-pagination-active-fg': roles.color,
+        '--_rp-pagination-active-fg-hover': roles.colorHover,
     } as CSSProperties;
 }
 

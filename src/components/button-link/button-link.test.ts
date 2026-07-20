@@ -299,8 +299,13 @@ describe('ButtonLink', () => {
         expect(link.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
             'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
         );
+        expect(link.style.getPropertyValue('--_rp-button-bg-active')).toBe(
+            'color-mix(in srgb, #ff3366 80%, var(--rp-color-black))',
+        );
         expect(link.style.getPropertyValue('--_rp-button-border')).toBe('#ff3366');
         expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
+        expect(link.style.getPropertyValue('--_rp-button-fg-hover')).toBe('var(--rp-color-black)');
+        expect(link.style.getPropertyValue('--_rp-button-fg-active')).toBe('var(--rp-color-white)');
     });
 
     it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {

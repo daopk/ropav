@@ -236,4 +236,33 @@ describe('Pagination', () => {
         expect(active.getAttribute('aria-label')).toBe('Order page 2, selected');
         expect(active.querySelector('.page-slot')?.textContent).toBe('2:true');
     });
+
+    it('uses readable foregrounds for active page hover', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Pagination, {
+                        total: 2,
+                        color: '#e03131',
+                        autoContrast: true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-pagination') as HTMLElement;
+
+        expect(root.style.getPropertyValue('--_rp-pagination-active-bg')).toBe('#e03131');
+        expect(root.style.getPropertyValue('--_rp-pagination-active-bg-hover')).toBe(
+            'color-mix(in srgb, #e03131 90%, var(--rp-color-black))',
+        );
+        expect(root.style.getPropertyValue('--_rp-pagination-active-fg')).toBe(
+            'var(--rp-color-black)',
+        );
+        expect(root.style.getPropertyValue('--_rp-pagination-active-fg-hover')).toBe(
+            'var(--rp-color-white)',
+        );
+    });
 });

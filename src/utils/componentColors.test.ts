@@ -35,6 +35,8 @@ describe('component color resolver', () => {
             filled: 'var(--rp-color-blue-6)',
             hover: 'var(--rp-color-blue-7)',
             contrast: 'var(--rp-color-blue-6-contrast)',
+            contrastHover: 'var(--rp-color-blue-7-contrast)',
+            contrastActive: 'var(--rp-color-blue-6-active-contrast)',
             foreground: 'var(--rp-color-blue-6)',
         });
     });
@@ -77,6 +79,8 @@ describe('component color resolver', () => {
             light: 'color-mix(in srgb, #ff3366 12%, transparent)',
             outline: '#ff3366',
             contrast: 'var(--rp-color-black)',
+            contrastHover: 'var(--rp-color-black)',
+            contrastActive: 'var(--rp-color-white)',
             foreground: '#ff3366',
         });
     });
@@ -183,6 +187,8 @@ describe('component color resolver', () => {
             background: 'var(--rp-color-blue-filled)',
             hover: 'var(--rp-color-blue-filled-hover)',
             color: 'var(--rp-color-white)',
+            colorHover: 'var(--rp-color-white)',
+            colorActive: 'var(--rp-color-white)',
             border: 'var(--rp-color-blue-filled)',
         });
         expect(
@@ -204,6 +210,35 @@ describe('component color resolver', () => {
         ).toMatchObject({
             background: 'var(--brand-color)',
             color: 'var(--brand-contrast)',
+            colorHover: 'var(--brand-contrast)',
+            colorActive: 'var(--brand-contrast)',
+        });
+    });
+
+    it('resolves solid foregrounds against each interactive background state', () => {
+        expect(
+            getComponentVariantColorRoles({
+                color: 'red.8',
+                variant: 'solid',
+            }),
+        ).toMatchObject({
+            background: 'var(--rp-color-red-8)',
+            hover: 'var(--rp-color-red-9)',
+            active: 'color-mix(in srgb, var(--rp-color-red-8) 80%, var(--rp-color-black))',
+            color: 'var(--rp-color-red-8-contrast)',
+            colorHover: 'var(--rp-color-red-9-contrast)',
+            colorActive: 'var(--rp-color-red-8-active-contrast)',
+        });
+
+        expect(
+            getComponentVariantColorRoles({
+                color: '#ff3366',
+                variant: 'solid',
+            }),
+        ).toMatchObject({
+            color: 'var(--rp-color-black)',
+            colorHover: 'var(--rp-color-black)',
+            colorActive: 'var(--rp-color-white)',
         });
     });
 

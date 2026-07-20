@@ -12,6 +12,8 @@
     --_rp-button-border-hover: var(--_rp-button-border);
     --_rp-button-border-active: var(--_rp-button-border-hover);
     --_rp-button-fg: var(--rp-color-default-color);
+    --_rp-button-fg-hover: var(--_rp-button-fg);
+    --_rp-button-fg-active: var(--_rp-button-fg-hover);
     --_rp-button-height: var(--rp-size-control-md);
     --_rp-button-padding-x: 22px;
     --_rp-button-font-size: var(--rp-font-size-md);
@@ -50,12 +52,14 @@
         background-color: var(--_rp-button-bg-hover);
         border-color: var(--_rp-button-border-hover);
         box-shadow: var(--_rp-button-shadow-hover);
+        color: var(--_rp-button-fg-hover);
     }
 
     &:active:not(:disabled):not(&--disabled) {
         background-color: var(--_rp-button-bg-active);
         border-color: var(--_rp-button-border-active);
         box-shadow: var(--_rp-button-shadow-active);
+        color: var(--_rp-button-fg-active);
         transform: translateY(1px);
     }
 

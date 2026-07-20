@@ -13,6 +13,7 @@ import {
 import {
     colorNames,
     colorShades,
+    filledActiveColorPercent,
     getDerivedColorVariables,
     oldSemanticColorVariables,
     whiteContrastColorNames,
@@ -146,6 +147,15 @@ function checkThemeContrast(themeName) {
         '--rp-primary-color-contrast',
         '--rp-primary-color-filled',
     );
+    assertContrastValue(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-primary-color-contrast',
+        getActiveBackgroundValue('--rp-primary-color-filled'),
+        '--rp-primary-color-filled active state',
+        4.5,
+    );
 
     for (const color of colorNames) {
         assertContrast(
@@ -162,6 +172,15 @@ function checkThemeContrast(themeName) {
             failures,
             `--rp-color-${color}-contrast`,
             `--rp-color-${color}-filled-hover`,
+            4.5,
+        );
+        assertContrastValue(
+            themeName,
+            cssValues,
+            failures,
+            `--rp-color-${color}-contrast`,
+            getActiveBackgroundValue(`--rp-color-${color}-filled`),
+            `--rp-color-${color}-filled active state`,
             4.5,
         );
         if (whiteContrastColorNames.includes(color)) {
@@ -183,12 +202,32 @@ function checkThemeContrast(themeName) {
         }
 
         for (const shade of colorShades) {
+            const hoverShade = Math.min(Number(shade) + 1, 9);
+
             assertContrast(
                 themeName,
                 cssValues,
                 failures,
                 `--rp-color-${color}-${shade}-contrast`,
                 `--rp-color-${color}-${shade}`,
+                4.5,
+            );
+            assertContrastValue(
+                themeName,
+                cssValues,
+                failures,
+                `--rp-color-${color}-${hoverShade}-contrast`,
+                `var(--rp-color-${color}-${hoverShade})`,
+                `--rp-color-${color}-${shade} hover state`,
+                4.5,
+            );
+            assertContrastValue(
+                themeName,
+                cssValues,
+                failures,
+                `--rp-color-${color}-${shade}-active-contrast`,
+                getActiveBackgroundValue(`--rp-color-${color}-${shade}`),
+                `--rp-color-${color}-${shade} active state`,
                 4.5,
             );
             assertBestContrast(
@@ -522,6 +561,36 @@ function assertContrast(themeName, cssValues, failures, foregroundName, backgrou
     }
 }
 
+function assertContrastValue(
+    themeName,
+    cssValues,
+    failures,
+    foregroundName,
+    backgroundValue,
+    backgroundLabel,
+    minRatio,
+) {
+    const foreground = resolveCssColor(cssValues, foregroundName);
+    const background = resolveCssColorValue(cssValues, backgroundValue, new Set());
+    if (!isOpaqueColor(foreground) || !isOpaqueColor(background)) {
+        failures.push(
+            `${themeName}: ${foregroundName} on ${backgroundLabel} could not be resolved to opaque colors`,
+        );
+        return;
+    }
+
+    const ratio = contrastRatio(foreground, background);
+    if (ratio < minRatio) {
+        failures.push(
+            `${themeName}: ${foregroundName} on ${backgroundLabel} is ${ratio.toFixed(2)}:1, expected at least ${minRatio}:1`,
+        );
+    }
+}
+
+function getActiveBackgroundValue(backgroundName) {
+    return `color-mix(in srgb, var(${backgroundName}) ${filledActiveColorPercent}%, var(--rp-color-black))`;
+}
+
 function assertBestContrast(themeName, cssValues, failures, foregroundName, backgroundName) {
     const foreground = resolveCssColor(cssValues, foregroundName);
     const background = resolveCssColor(cssValues, backgroundName);
@@ -601,8 +670,8 @@ function resolveCssColorValue(cssValues, value, seen) {
     );
     if (colorMix) {
         const [, firstValue, firstWeight, secondValue] = colorMix;
-        const firstColor = resolveCssColorValue(cssValues, firstValue, seen);
-        const secondColor = resolveCssColorValue(cssValues, secondValue, seen);
+        const firstColor = resolveCssColorValue(cssValues, firstValue, new Set(seen));
+        const secondColor = resolveCssColorValue(cssValues, secondValue, new Set(seen));
         if (!firstColor || !secondColor) return undefined;
 
         return mixColors(firstColor, Number.parseFloat(firstWeight) / 100, secondColor);
