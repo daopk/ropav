@@ -19,7 +19,12 @@ function keyboardEvent(key: string, init: KeyboardEventInit = {}) {
 
 function createTypeahead(
     items: Item[],
-    options: { activeIndex?: () => number; scopeKey?: () => unknown; timeout?: number } = {},
+    options: {
+        activeIndex?: () => number;
+        getKey?: (item: Item) => PropertyKey;
+        scopeKey?: () => unknown;
+        timeout?: number;
+    } = {},
 ) {
     const matches: Array<{ item: Item; index: number }> = [];
     let typeahead!: ReturnType<typeof useTypeahead<Item>>;
@@ -30,7 +35,7 @@ function createTypeahead(
                 typeahead = useTypeahead({
                     items: () => items,
                     activeIndex: options.activeIndex ?? (() => -1),
-                    getKey: (item) => item.label,
+                    getKey: options.getKey ?? ((item) => item.label),
                     getTextValue: (item) => item.label,
                     isDisabled: (item) => Boolean(item.disabled),
                     onMatch(item, index) {
@@ -90,6 +95,19 @@ describe('useTypeahead', () => {
         typeahead.handleKey(keyboardEvent('a'));
 
         expect(matches.at(-1)?.item.label).toBe('Aster');
+    });
+
+    it('cycles distinct matches that share a key', () => {
+        const { typeahead, matches } = createTypeahead(
+            [{ label: 'Alpha' }, { label: 'Apple' }, { label: 'Apricot' }],
+            { getKey: () => 'shared' },
+        );
+
+        typeahead.handleKey(keyboardEvent('a'));
+        typeahead.handleKey(keyboardEvent('a'));
+        typeahead.handleKey(keyboardEvent('a'));
+
+        expect(matches.map(({ index }) => index)).toEqual([0, 1, 2]);
     });
 
     it('starts a new search after the timeout and when the scope changes', () => {

@@ -82,6 +82,45 @@ describe('DropdownMenu keyboard navigation', () => {
         expect(onSelect).not.toHaveBeenCalled();
     });
 
+    it('cycles typeahead matches with duplicate values', async () => {
+        const typeaheadItems: DropdownMenuItem[] = [
+            { label: 'Alpha', value: 'shared' },
+            { label: 'Apple', value: 'shared' },
+            { label: 'Apricot', value: 'other' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { id: 'duplicate-value-typeahead', items: typeaheadItems },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+
+        keydown(menu, 'a');
+        keydown(menu, 'a');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+            'duplicate-value-typeahead-item-2',
+        );
+
+        keydown(menu, 'a');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+            'duplicate-value-typeahead-item-0',
+        );
+    });
+
     it('resets typeahead when the menu closes', async () => {
         const typeaheadItems: DropdownMenuItem[] = [
             { label: 'Alpha', value: 'alpha' },

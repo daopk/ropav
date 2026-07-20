@@ -32,7 +32,7 @@ function isRepeatedQuery(query: string) {
 export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
     let buffer = '';
     let timer: ReturnType<typeof setTimeout> | undefined;
-    let lastMatchKey: PropertyKey | null = null;
+    let lastMatch: { item: T; index: number; key: PropertyKey } | undefined;
     let currentScope = options.scopeKey?.();
     const isDisabled = options.isDisabled ?? (() => false);
 
@@ -44,7 +44,7 @@ export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
     function reset() {
         clearTimer();
         buffer = '';
-        lastMatchKey = null;
+        lastMatch = undefined;
         currentScope = options.scopeKey?.();
     }
 
@@ -79,6 +79,23 @@ export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
         return -1;
     }
 
+    function getLastMatchIndex(items: readonly T[]) {
+        const match = lastMatch;
+        if (!match) return -1;
+        if (Object.is(items[match.index], match.item)) return match.index;
+
+        const identityIndex = items.findIndex((item) => Object.is(item, match.item));
+        if (identityIndex >= 0) return identityIndex;
+
+        let keyIndex = -1;
+        for (let index = 0; index < items.length; index += 1) {
+            if (!Object.is(options.getKey(items[index]!), match.key)) continue;
+            if (keyIndex >= 0) return -1;
+            keyIndex = index;
+        }
+        return keyIndex;
+    }
+
     function handleKey(event: KeyboardEvent) {
         const nextScope = options.scopeKey?.();
         if (!Object.is(currentScope, nextScope)) reset();
@@ -104,17 +121,14 @@ export function useTypeahead<T>(options: UseTypeaheadOptions<T>) {
         const repeated = isRepeatedQuery(normalizedBuffer);
         const query = repeated ? [...normalizedBuffer][0]! : normalizedBuffer;
         const items = options.items();
-        const lastMatchIndex =
-            lastMatchKey == null
-                ? -1
-                : items.findIndex((item) => options.getKey(item) === lastMatchKey);
+        const lastMatchIndex = getLastMatchIndex(items);
         const activeIndex = lastMatchIndex >= 0 ? lastMatchIndex : options.activeIndex();
         const matchIndex = getMatchIndex(query, activeIndex, !repeated && query.length > 1);
         if (matchIndex < 0) return true;
 
         const item = items[matchIndex];
         if (!item) return true;
-        lastMatchKey = options.getKey(item);
+        lastMatch = { item, index: matchIndex, key: options.getKey(item) };
         options.onMatch(item, matchIndex);
         return true;
     }
