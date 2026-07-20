@@ -14,6 +14,8 @@
                 <IconSearch data-testid="consumer-vapor-icon" aria-hidden="true" />
                 Public color contrast
             </Button>
+            <IconGradient data-testid="consumer-gradient-icon" aria-hidden="true" />
+            <IconGradient data-testid="consumer-gradient-icon" aria-hidden="true" />
         </header>
 
         <ToastProvider>
@@ -35,6 +37,7 @@
 import { ref, useCssModule } from 'vue';
 import { Button, ToastProvider, ToastViewport } from 'ropav';
 import IconSearch from '~icons/lucide/search';
+import IconGradient from '~icons/regression/gradient';
 import SettingsPanel from './SettingsPanel.vue';
 
 const dark = ref(false);

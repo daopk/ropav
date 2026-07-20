@@ -24,6 +24,25 @@ try {
         throw new Error(`Vapor icon did not render as SVG: ${vaporIconTag}`);
     }
 
+    const gradientPaintServers = await page
+        .getByTestId('consumer-gradient-icon')
+        .evaluateAll((icons) =>
+            icons.map((icon) => {
+                const id = icon.querySelector('[id]')?.id;
+                const fill = icon.querySelector('path')?.getAttribute('fill');
+                return { id, fill };
+            }),
+        );
+    if (
+        gradientPaintServers.length !== 2 ||
+        gradientPaintServers.some(({ id, fill }) => !id || fill !== `url(#${id})`) ||
+        gradientPaintServers[0].id === gradientPaintServers[1].id
+    ) {
+        throw new Error(
+            `Vapor gradient icon IDs were not isolated per instance: ${JSON.stringify(gradientPaintServers)}`,
+        );
+    }
+
     const buttonTypography = await page.getByTestId('theme-toggle').evaluate((element) => {
         const styles = getComputedStyle(element);
         return {

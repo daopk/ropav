@@ -23,8 +23,11 @@ describe('vaporIconCompiler', () => {
             'gradient-icon',
         );
 
-        expect(code).toContain('_ctx.idMap');
-        expect(code).toContain("'gradient':'uicons-'+__randId()");
-        expect(code).toContain('setup()');
+        expect(code).toContain(
+            "const __ropavIconIdMap = {'gradient':'uicons-'+__ropavIconRandomId()}",
+        );
+        expect(code).toContain("__ropavIconIdMap['gradient']");
+        expect(code).not.toContain('_ctx.__ropavIconIdMap');
+        expect(code).not.toContain('setup()');
     });
 });
