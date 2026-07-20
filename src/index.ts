@@ -23,6 +23,7 @@ export * from './components/input';
 export * from './components/modal';
 export * from './components/number-input';
 export * from './components/overlay';
+export * from './components/pagination';
 export * from './components/popover';
 export * from './components/progress';
 export * from './components/radio';

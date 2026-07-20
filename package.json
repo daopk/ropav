@@ -120,6 +120,10 @@
       "types": "./dist/components/overlay/index.d.ts",
       "import": "./dist/components/overlay/index.js"
     },
+    "./pagination": {
+      "types": "./dist/components/pagination/index.d.ts",
+      "import": "./dist/components/pagination/index.js"
+    },
     "./popover": {
       "types": "./dist/components/popover/index.d.ts",
       "import": "./dist/components/popover/index.js"

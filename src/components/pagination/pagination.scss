@@ -1,0 +1,146 @@
+.rp-pagination {
+    --_rp-pagination-item-size: var(--rp-size-control-md);
+    --_rp-pagination-font-size: var(--rp-font-size-md);
+    --_rp-pagination-radius: var(--rp-radius-sm);
+    --_rp-pagination-gap: var(--rp-spacing-1);
+    --_rp-pagination-active-bg: var(--rp-color-control-selected-bg);
+    --_rp-pagination-active-bg-hover: var(--rp-primary-color-filled-hover);
+    --_rp-pagination-active-fg: var(--rp-color-control-selected-fg);
+
+    display: inline-flex;
+    max-width: 100%;
+    color: var(--rp-color-control-fg);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-pagination-font-size);
+    line-height: 1;
+    vertical-align: middle;
+
+    &__items {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+        gap: var(--_rp-pagination-gap);
+        list-style: none;
+    }
+
+    &__item {
+        display: flex;
+        flex: 0 0 auto;
+    }
+
+    &__page,
+    &__control,
+    &__ellipsis {
+        @include flex-center;
+        box-sizing: border-box;
+        width: var(--_rp-pagination-item-size);
+        min-width: var(--_rp-pagination-item-size);
+        height: var(--_rp-pagination-item-size);
+        padding: 0;
+        color: inherit;
+        font: inherit;
+        line-height: 1;
+        background: transparent;
+        border: var(--rp-border-width-thin) solid transparent;
+        border-radius: var(--_rp-pagination-radius);
+    }
+
+    &__page,
+    &__control {
+        appearance: none;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            background-color: var(--rp-color-default-hover);
+        }
+
+        &:focus-visible {
+            outline: none;
+            @include focus-ring;
+        }
+
+        &:disabled {
+            @include disabled-state;
+        }
+    }
+
+    &__page {
+        width: auto;
+        padding-inline: var(--rp-spacing-2);
+        font-variant-numeric: tabular-nums;
+        transition: box-shadow var(--rp-transition-fast);
+
+        &--active {
+            color: var(--_rp-pagination-active-fg);
+            font-weight: var(--rp-font-weight-medium);
+            background-color: var(--_rp-pagination-active-bg);
+            border-color: var(--_rp-pagination-active-bg);
+        }
+
+        &--active:hover:not(:disabled) {
+            background-color: var(--_rp-pagination-active-bg-hover);
+            border-color: var(--_rp-pagination-active-bg-hover);
+        }
+    }
+
+    &__control {
+        transition:
+            color var(--rp-transition-fast),
+            background-color var(--rp-transition-fast),
+            border-color var(--rp-transition-fast),
+            box-shadow var(--rp-transition-fast);
+    }
+
+    &__control-icon,
+    &__ellipsis > :deep(svg) {
+        display: block;
+        width: 1em;
+        height: 1em;
+    }
+
+    &__ellipsis {
+        color: var(--rp-color-dimmed);
+    }
+
+    &:dir(rtl) &__control-icon {
+        transform: rotate(180deg);
+    }
+
+    &--disabled &__page:not(:disabled),
+    &--disabled &__control:not(:disabled) {
+        @include disabled-state;
+    }
+
+    &--size-xs {
+        --_rp-pagination-item-size: var(--rp-size-control-xs);
+        --_rp-pagination-font-size: var(--rp-font-size-xs);
+    }
+
+    &--size-sm {
+        --_rp-pagination-item-size: var(--rp-size-control-sm);
+        --_rp-pagination-font-size: var(--rp-font-size-sm);
+    }
+
+    &--size-md {
+        --_rp-pagination-item-size: var(--rp-size-control-md);
+        --_rp-pagination-font-size: var(--rp-font-size-md);
+    }
+
+    &--size-lg {
+        --_rp-pagination-item-size: var(--rp-size-control-lg);
+        --_rp-pagination-font-size: var(--rp-font-size-lg);
+    }
+
+    &--size-xl {
+        --_rp-pagination-item-size: var(--rp-size-control-xl);
+        --_rp-pagination-font-size: var(--rp-font-size-xl);
+    }
+
+    @each $radius in none, xs, sm, md, lg, xl, full {
+        &--radius-#{$radius} {
+            --_rp-pagination-radius: var(--rp-radius-#{$radius});
+        }
+    }
+}

@@ -38,6 +38,7 @@ const expectedFiles = [
     'dist/modal.css',
     'dist/number-input.css',
     'dist/overlay.css',
+    'dist/pagination.css',
     'dist/popover.css',
     'dist/progress.css',
     'dist/radio.css',
@@ -73,6 +74,7 @@ const expectedFiles = [
     'dist/components/modal/index.js',
     'dist/components/number-input/index.js',
     'dist/components/overlay/index.js',
+    'dist/components/pagination/index.js',
     'dist/components/popover/index.js',
     'dist/components/progress/index.js',
     'dist/components/radio/index.js',
@@ -200,6 +202,8 @@ try {
             'Overlay',
             'OverlayLayerProvider',
             'overlayParts',
+            'Pagination',
+            'paginationParts',
             'Popover',
             'popoverParts',
             'popoverPlacements',
@@ -251,6 +255,7 @@ try {
             'useFloatingPosition',
             'useHoverDisclosure',
             'useOverlayZIndex',
+            'usePagination',
             'useFocusTrap',
             'useTabs',
             'useTabsContent',
@@ -435,6 +440,23 @@ try {
         overlay,
         ['Overlay', 'OverlayLayerProvider', 'overlayParts', 'useOverlayZIndex'],
         'dist/components/overlay/index.js',
+    );
+
+    const pagination = await server.ssrLoadModule('/dist/components/pagination/index.js');
+    assertExports(
+        pagination,
+        [
+            'Pagination',
+            'getPaginationItems',
+            'normalizePaginationPage',
+            'normalizePaginationTotal',
+            'paginationColors',
+            'paginationParts',
+            'paginationRadiuses',
+            'paginationSizes',
+            'usePagination',
+        ],
+        'dist/components/pagination/index.js',
     );
 
     const select = await server.ssrLoadModule('/dist/components/select/index.js');
