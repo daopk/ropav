@@ -110,15 +110,11 @@ describe('DropdownMenu keyboard navigation', () => {
         keydown(menu, 'a');
         keydown(menu, 'a');
         await nextTick();
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
-            'duplicate-value-typeahead-item-2',
-        );
+        expect(menu.getAttribute('aria-activedescendant')).toBe('duplicate-value-typeahead-item-2');
 
         keydown(menu, 'a');
         await nextTick();
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
-            'duplicate-value-typeahead-item-0',
-        );
+        expect(menu.getAttribute('aria-activedescendant')).toBe('duplicate-value-typeahead-item-0');
     });
 
     it('resets typeahead when the menu closes', async () => {
