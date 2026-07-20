@@ -29,7 +29,7 @@ const meta = {
         ariaLabel: { control: 'text' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
     },
 } satisfies Meta<typeof Badge>;
 

@@ -17,6 +17,7 @@ export interface IconButtonProps extends StylesApiProps<IconButtonPart> {
     variant?: IconButtonVariant;
     color?: IconButtonColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: IconButtonSize;
     radius?: IconButtonRadius;
     type?: 'button' | 'submit' | 'reset';

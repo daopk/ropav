@@ -22,16 +22,21 @@ import type {
     RadioProps,
 } from './types';
 
-function getRadioColorStyle(color: RadioProps['color'], autoContrast: RadioProps['autoContrast']) {
+function getRadioColorStyle(
+    color: RadioProps['color'],
+    autoContrast: RadioProps['autoContrast'],
+    contrastColor: RadioProps['contrastColor'],
+) {
     const colorValue = getComponentColorValue(color);
     if (color && !colorValue) return undefined;
-    if (!colorValue && !autoContrast) return undefined;
+    if (!colorValue && autoContrast === false && contrastColor === undefined) return undefined;
 
     const style: CSSProperties = {};
     if (colorValue) style['--_rp-radio-color'] = colorValue;
-    if (autoContrast) {
+    if (autoContrast !== false || contrastColor !== undefined) {
         style['--_rp-radio-on-color'] = getComponentContrastColor(color ?? 'primary', {
             autoContrast,
+            contrastColor,
         });
     }
 
@@ -53,6 +58,7 @@ export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event)
     const variant = computed(() => props.variant ?? group?.variant);
     const color = computed(() => props.color ?? group?.color);
     const autoContrast = computed(() => props.autoContrast ?? group?.autoContrast);
+    const contrastColor = computed(() => props.contrastColor ?? group?.contrastColor);
     const size = computed(() => props.size ?? group?.size);
 
     const rootClass = computed(() =>
@@ -65,7 +71,9 @@ export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event)
         }),
     );
 
-    const rootStyle = computed(() => getRadioColorStyle(color.value, autoContrast.value));
+    const rootStyle = computed(() =>
+        getRadioColorStyle(color.value, autoContrast.value, contrastColor.value),
+    );
 
     function onSelect(event: Event) {
         if (isDisabled.value) return;
@@ -208,6 +216,9 @@ export function useRadioGroup(
         },
         get autoContrast() {
             return props.autoContrast;
+        },
+        get contrastColor() {
+            return props.contrastColor;
         },
         get size() {
             return props.size;

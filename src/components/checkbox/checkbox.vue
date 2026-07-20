@@ -54,6 +54,7 @@ const props = withDefaults(defineProps<CheckboxProps>(), {
     modelValue: undefined,
     defaultValue: false,
     value: 'on',
+    autoContrast: true,
     disabled: undefined,
     required: undefined,
     invalid: undefined,

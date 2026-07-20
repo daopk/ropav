@@ -38,6 +38,7 @@ export function resolveTooltipOffsetStyle(
 export function resolveTooltipColorStyleWithContrast(
     color: TooltipProps['color'],
     autoContrast: TooltipProps['autoContrast'],
+    contrastColor?: TooltipProps['contrastColor'],
 ): CSSProperties | undefined {
     if (!color) return undefined;
 
@@ -45,6 +46,7 @@ export function resolveTooltipColorStyleWithContrast(
         color,
         variant: 'solid',
         autoContrast,
+        contrastColor,
     });
     if (!roles) return undefined;
 
@@ -126,7 +128,11 @@ export function useTooltip(
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
         ...resolveTooltipOffsetStyle(props.offset),
-        ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast),
+        ...resolveTooltipColorStyleWithContrast(
+            props.color,
+            props.autoContrast,
+            props.contrastColor,
+        ),
         zIndex: zIndex.value,
     }));
 

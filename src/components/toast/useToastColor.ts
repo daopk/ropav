@@ -6,6 +6,7 @@ export function getToastColorStyle(
     color: ToastColor | undefined,
     variant: ToastVariant | undefined,
     autoContrast: boolean | undefined,
+    contrastColor?: string,
 ) {
     if (!color && !variant) return undefined;
 
@@ -15,6 +16,7 @@ export function getToastColorStyle(
         variant: resolvedVariant,
         defaultColor: 'cyan',
         autoContrast,
+        contrastColor,
     });
     if (!roles) return undefined;
 

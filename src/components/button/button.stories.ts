@@ -38,7 +38,7 @@ const meta = {
         loading: { control: 'boolean' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         disabled: false,
         loading: false,
     },

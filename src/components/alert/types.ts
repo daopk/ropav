@@ -34,6 +34,7 @@ export interface AlertProps extends StylesApiProps<AlertPart> {
     variant?: AlertVariant;
     color?: AlertColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     radius?: AlertRadius;
     role?: AlertRole;
     closable?: boolean;

@@ -58,6 +58,7 @@ function getStoreDefaults(options: Readonly<ToastStoreOptions>) {
         variant: options.variant,
         color: options.color,
         autoContrast: options.autoContrast,
+        contrastColor: options.contrastColor,
         radius: options.radius,
         role: options.role,
         pauseOnHover: options.pauseOnHover ?? DEFAULT_TOAST_PAUSE_ON_HOVER,

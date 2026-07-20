@@ -21,8 +21,15 @@ export const colorNames = [
 
 export const colorShades = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 export const primaryColor = 'blue';
-export const lightPrimaryShade = 6;
+export const lightColorShade = 6;
+export const lightPrimaryShade = 8;
 export const darkPrimaryShade = 8;
+export const whiteContrastColorNames = colorNames.filter(
+    (color) => color !== 'lime' && color !== 'yellow',
+);
+
+const minimumTextContrast = 4.5;
+const filledHoverDarkenPercent = 10;
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultCoreTokens = JSON.parse(
@@ -133,16 +140,19 @@ export function getPrimaryColorVariables() {
 
 export function getColorVariantVariables(color, scheme) {
     const isDark = scheme === 'dark';
-    const primaryShade = isDark ? darkPrimaryShade : lightPrimaryShade;
-    const outlineShade = isDark ? Math.max(primaryShade - 4, 0) : primaryShade;
-    const hoverShade = Math.min(primaryShade + 1, 9);
-    const contrast = `var(--rp-color-${color}-${primaryShade}-contrast)`;
+    const startingShade = isDark
+        ? darkPrimaryShade
+        : color === primaryColor
+          ? lightPrimaryShade
+          : lightColorShade;
+    const outlineShade = isDark ? Math.max(darkPrimaryShade - 4, 0) : lightColorShade;
+    const filled = getFilledColorVariables(color, startingShade);
 
     if (!isDark) {
         return {
-            [`--rp-color-${color}-filled`]: `var(--rp-color-${color}-${primaryShade})`,
-            [`--rp-color-${color}-filled-hover`]: `var(--rp-color-${color}-${hoverShade})`,
-            [`--rp-color-${color}-contrast`]: contrast,
+            [`--rp-color-${color}-filled`]: filled.background,
+            [`--rp-color-${color}-filled-hover`]: filled.hover,
+            [`--rp-color-${color}-contrast`]: filled.contrast,
             [`--rp-color-${color}-light`]: `var(--rp-color-${color}-1)`,
             [`--rp-color-${color}-light-hover`]: `var(--rp-color-${color}-2)`,
             [`--rp-color-${color}-light-color`]: `var(--rp-color-${color}-9)`,
@@ -152,15 +162,72 @@ export function getColorVariantVariables(color, scheme) {
     }
 
     return {
-        [`--rp-color-${color}-filled`]: `var(--rp-color-${color}-${primaryShade})`,
-        [`--rp-color-${color}-filled-hover`]: `var(--rp-color-${color}-${hoverShade})`,
-        [`--rp-color-${color}-contrast`]: contrast,
+        [`--rp-color-${color}-filled`]: filled.background,
+        [`--rp-color-${color}-filled-hover`]: filled.hover,
+        [`--rp-color-${color}-contrast`]: filled.contrast,
         [`--rp-color-${color}-light`]: `color-mix(in srgb, var(--rp-color-${color}-9) 50%, var(--rp-color-black))`,
         [`--rp-color-${color}-light-hover`]: `color-mix(in srgb, var(--rp-color-${color}-9) 70%, var(--rp-color-black))`,
         [`--rp-color-${color}-light-color`]: `var(--rp-color-${color}-0)`,
         [`--rp-color-${color}-outline`]: `var(--rp-color-${color}-${outlineShade})`,
         [`--rp-color-${color}-outline-hover`]: `color-mix(in srgb, var(--rp-color-${color}-${outlineShade}) 5%, transparent)`,
     };
+}
+
+function getFilledColorVariables(color, startingShade) {
+    if (!whiteContrastColorNames.includes(color)) {
+        const hoverShade = Math.min(startingShade + 1, 9);
+        return {
+            background: `var(--rp-color-${color}-${startingShade})`,
+            hover: `var(--rp-color-${color}-${hoverShade})`,
+            contrast: `var(--rp-color-${color}-${startingShade}-contrast)`,
+        };
+    }
+
+    const white = colorFromHex(getCoreColorTokenValue('white'));
+    for (let shade = startingShade; shade <= 9; shade += 1) {
+        if (
+            contrastRatio(white, colorFromHex(getColorTokenValue(color, shade))) <
+            minimumTextContrast
+        ) {
+            continue;
+        }
+
+        return {
+            background: `var(--rp-color-${color}-${shade})`,
+            hover:
+                shade < 9
+                    ? `var(--rp-color-${color}-${shade + 1})`
+                    : getDarkenedColorVariable(color, shade, 100 - filledHoverDarkenPercent),
+            contrast: 'var(--rp-color-white)',
+        };
+    }
+
+    const shade = 9;
+    const background = colorFromHex(getColorTokenValue(color, shade));
+    const black = colorFromHex(getCoreColorTokenValue('black'));
+    let colorPercent = 99;
+
+    while (
+        colorPercent > 0 &&
+        contrastRatio(white, mixOpaqueColors(background, colorPercent / 100, black)) <
+            minimumTextContrast
+    ) {
+        colorPercent -= 1;
+    }
+
+    return {
+        background: getDarkenedColorVariable(color, shade, colorPercent),
+        hover: getDarkenedColorVariable(
+            color,
+            shade,
+            Math.max(colorPercent - filledHoverDarkenPercent, 0),
+        ),
+        contrast: 'var(--rp-color-white)',
+    };
+}
+
+function getDarkenedColorVariable(color, shade, colorPercent) {
+    return `color-mix(in srgb, var(--rp-color-${color}-${shade}) ${colorPercent}%, var(--rp-color-black))`;
 }
 
 export function getSchemeColorVariables(scheme) {
@@ -176,7 +243,7 @@ export function getSchemeColorVariables(scheme) {
             '--rp-color-default-color': 'var(--rp-color-white)',
             '--rp-color-default-border': 'var(--rp-color-dark-4)',
             '--rp-color-default-border-hover': 'var(--rp-color-dark-3)',
-            '--rp-color-dimmed': 'var(--rp-color-dark-2)',
+            '--rp-color-dimmed': 'var(--rp-color-dark-1)',
             '--rp-color-disabled': 'var(--rp-color-dark-6)',
             '--rp-color-disabled-color': 'var(--rp-color-dark-3)',
             '--rp-color-disabled-border': 'var(--rp-color-dark-4)',
@@ -193,7 +260,7 @@ export function getSchemeColorVariables(scheme) {
             '--rp-color-control-track-bg': 'var(--rp-color-disabled-border)',
             '--rp-color-control-thumb-bg': 'var(--rp-color-white)',
             '--rp-color-control-selected-bg': 'var(--rp-primary-color-filled)',
-            '--rp-color-control-selected-fg': 'var(--rp-color-white)',
+            '--rp-color-control-selected-fg': 'var(--rp-primary-color-contrast)',
         };
     }
 
@@ -208,7 +275,7 @@ export function getSchemeColorVariables(scheme) {
         '--rp-color-default-color': 'var(--rp-color-black)',
         '--rp-color-default-border': 'var(--rp-color-gray-4)',
         '--rp-color-default-border-hover': 'var(--rp-color-gray-5)',
-        '--rp-color-dimmed': 'var(--rp-color-gray-6)',
+        '--rp-color-dimmed': 'var(--rp-color-gray-7)',
         '--rp-color-disabled': 'var(--rp-color-gray-2)',
         '--rp-color-disabled-color': 'var(--rp-color-gray-5)',
         '--rp-color-disabled-border': 'var(--rp-color-gray-3)',
@@ -225,7 +292,7 @@ export function getSchemeColorVariables(scheme) {
         '--rp-color-control-track-bg': 'var(--rp-color-disabled-border)',
         '--rp-color-control-thumb-bg': 'var(--rp-color-white)',
         '--rp-color-control-selected-bg': 'var(--rp-primary-color-filled)',
-        '--rp-color-control-selected-fg': 'var(--rp-color-white)',
+        '--rp-color-control-selected-fg': 'var(--rp-primary-color-contrast)',
     };
 }
 
@@ -329,6 +396,16 @@ function contrastRatio(foreground, background) {
     const darker = Math.min(foregroundLuminance, backgroundLuminance);
 
     return (lighter + 0.05) / (darker + 0.05);
+}
+
+function mixOpaqueColors(firstColor, firstWeight, secondColor) {
+    const secondWeight = 1 - firstWeight;
+    return {
+        red: firstColor.red * firstWeight + secondColor.red * secondWeight,
+        green: firstColor.green * firstWeight + secondColor.green * secondWeight,
+        blue: firstColor.blue * firstWeight + secondColor.blue * secondWeight,
+        alpha: 1,
+    };
 }
 
 function relativeLuminance(color) {

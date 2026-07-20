@@ -68,6 +68,7 @@ export interface ToastProps extends StylesApiProps<ToastPart> {
     variant?: ToastVariant;
     color?: ToastColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     radius?: ToastRadius;
     role?: ToastRole;
     duration?: number;
@@ -106,6 +107,7 @@ export interface ToastStoreOptions {
     variant?: ToastVariant;
     color?: ToastColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     radius?: ToastRadius;
     role?: ToastRole;
     pauseOnHover?: boolean;

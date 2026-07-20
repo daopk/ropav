@@ -33,7 +33,7 @@ const meta = {
         indeterminate: { control: 'boolean' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         disabled: false,
         indeterminate: false,
         modelValue: false,

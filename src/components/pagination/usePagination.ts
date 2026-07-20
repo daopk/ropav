@@ -96,16 +96,20 @@ export function getPaginationItems(
 function getPaginationColorStyle(
     color: PaginationProps['color'],
     autoContrast: boolean,
+    contrastColor: PaginationProps['contrastColor'],
 ): CSSProperties | undefined {
-    if (!color) return undefined;
+    const resolvedColor = color ?? 'primary';
 
-    const roles = getComponentColorRoles(color);
+    const roles = getComponentColorRoles(resolvedColor);
     if (!roles) return undefined;
 
     return {
         '--_rp-pagination-active-bg': roles.filled,
         '--_rp-pagination-active-bg-hover': roles.hover,
-        '--_rp-pagination-active-fg': getComponentContrastColor(color, { autoContrast }),
+        '--_rp-pagination-active-fg': getComponentContrastColor(resolvedColor, {
+            autoContrast,
+            contrastColor,
+        }),
     } as CSSProperties;
 }
 
@@ -134,7 +138,7 @@ export function usePagination(
         }),
     );
     const rootStyle = computed(() =>
-        getPaginationColorStyle(props.color, props.autoContrast ?? false),
+        getPaginationColorStyle(props.color, props.autoContrast ?? true, props.contrastColor),
     );
     const firstPage = computed(() => 1);
     const previousPage = computed(() => Math.max(1, currentPage.value - 1));

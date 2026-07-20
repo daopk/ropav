@@ -255,7 +255,7 @@ const meta = {
         description: { control: 'text' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         closable: true,
         description: 'You have a new message from the project team.',
         duration: 0,

@@ -111,7 +111,9 @@ describe('Badge', () => {
             expect(badge.style.getPropertyValue('--_rp-badge-bg')).toBe(
                 `var(--rp-color-${color}-filled)`,
             );
-            expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-white)');
+            expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe(
+                `var(--rp-color-${color}-contrast)`,
+            );
             expect(badge.style.getPropertyValue('--_rp-badge-border')).toBe(
                 `var(--rp-color-${color}-filled)`,
             );
@@ -163,7 +165,7 @@ describe('Badge', () => {
 
         expect([...badge.classList]).toEqual(['rp-badge']);
         expect(badge.style.getPropertyValue('--_rp-badge-bg')).toBe('#ff3366');
-        expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-white)');
+        expect(badge.style.getPropertyValue('--_rp-badge-fg')).toBe('var(--rp-color-black)');
         expect(badge.style.getPropertyValue('--_rp-badge-border')).toBe('#ff3366');
     });
 

@@ -32,7 +32,9 @@ import { getAvatarColorStyle } from './useAvatarColor';
 
 defineOptions({ name: 'RpAvatar', inheritAttrs: false });
 
-const props = defineProps<AvatarProps>();
+const props = withDefaults(defineProps<AvatarProps>(), {
+    autoContrast: true,
+});
 const emit = defineEmits<{
     load: [event: Event];
     error: [event: Event];
@@ -64,7 +66,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getAvatarColorStyle(props.color, props.variant, props.autoContrast),
+    getAvatarColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 const rootAttrs = computed(() =>
     getRootAttrs({

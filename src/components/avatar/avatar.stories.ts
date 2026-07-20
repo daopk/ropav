@@ -32,7 +32,7 @@ const meta = {
     },
     args: {
         name: 'Ada Lovelace',
-        autoContrast: false,
+        autoContrast: true,
     },
 } satisfies Meta<typeof Avatar>;
 

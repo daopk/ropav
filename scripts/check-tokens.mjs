@@ -15,6 +15,7 @@ import {
     colorShades,
     getDerivedColorVariables,
     oldSemanticColorVariables,
+    whiteContrastColorNames,
 } from './color-system.mjs';
 import {
     publicComponentVariableNames,
@@ -103,6 +104,9 @@ function checkThemeContrast(themeName) {
     const failures = [];
 
     assertContrast(themeName, cssValues, failures, '--rp-color-text', '--rp-color-body', 4.5);
+    for (const surface of ['--rp-color-body', '--rp-color-default', '--rp-color-default-hover']) {
+        assertContrast(themeName, cssValues, failures, '--rp-color-dimmed', surface, 4.5);
+    }
     assertContrast(
         themeName,
         cssValues,
@@ -117,6 +121,14 @@ function checkThemeContrast(themeName) {
         failures,
         '--rp-color-control-fg',
         '--rp-color-control-bg',
+        4.5,
+    );
+    assertContrast(
+        themeName,
+        cssValues,
+        failures,
+        '--rp-color-control-selected-fg',
+        '--rp-color-control-selected-bg',
         4.5,
     );
     assertContrast(
@@ -144,13 +156,31 @@ function checkThemeContrast(themeName) {
             `--rp-color-${color}-filled`,
             4.5,
         );
-        assertBestContrast(
+        assertContrast(
             themeName,
             cssValues,
             failures,
             `--rp-color-${color}-contrast`,
-            `--rp-color-${color}-filled`,
+            `--rp-color-${color}-filled-hover`,
+            4.5,
         );
+        if (whiteContrastColorNames.includes(color)) {
+            assertSameResolvedColor(
+                themeName,
+                cssValues,
+                failures,
+                `--rp-color-${color}-contrast`,
+                '--rp-color-white',
+            );
+        } else {
+            assertBestContrast(
+                themeName,
+                cssValues,
+                failures,
+                `--rp-color-${color}-contrast`,
+                `--rp-color-${color}-filled`,
+            );
+        }
 
         for (const shade of colorShades) {
             assertContrast(
@@ -519,6 +549,19 @@ function assertBestContrast(themeName, cssValues, failures, foregroundName, back
         failures.push(
             `${themeName}: ${foregroundName} on ${backgroundName} should resolve to ${expectedName}`,
         );
+    }
+}
+
+function assertSameResolvedColor(themeName, cssValues, failures, actualName, expectedName) {
+    const actual = resolveCssColor(cssValues, actualName);
+    const expected = resolveCssColor(cssValues, expectedName);
+    if (!isOpaqueColor(actual) || !isOpaqueColor(expected)) {
+        failures.push(`${themeName}: ${actualName} or ${expectedName} could not be resolved`);
+        return;
+    }
+
+    if (!sameColor(actual, expected)) {
+        failures.push(`${themeName}: ${actualName} should resolve to ${expectedName}`);
     }
 }
 

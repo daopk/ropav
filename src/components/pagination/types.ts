@@ -49,6 +49,7 @@ export interface PaginationProps extends StylesApiProps<PaginationPart> {
     disabled?: boolean;
     color?: PaginationColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: PaginationSize;
     radius?: PaginationRadius;
     ariaLabel?: string;

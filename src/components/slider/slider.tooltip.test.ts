@@ -307,7 +307,7 @@ describe('Slider tooltip', () => {
             'var(--rp-color-orange-filled)',
         );
         expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-fg')).toBe(
-            'var(--rp-color-white)',
+            'var(--rp-color-orange-contrast)',
         );
         expect(tooltipContent.style.getPropertyValue('--_rp-tooltip-main-axis-offset')).toBe(
             '12px',

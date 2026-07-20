@@ -24,6 +24,7 @@ export interface RadioProps extends StylesApiProps<RadioPart> {
     variant?: RadioVariant;
     color?: RadioColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: RadioSize;
     disabled?: boolean;
     required?: boolean;
@@ -44,6 +45,7 @@ export interface RadioGroupProps extends StylesApiProps<RadioGroupPart> {
     variant?: RadioVariant;
     color?: RadioColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: RadioSize;
     orientation?: RadioGroupOrientation;
     disabled?: boolean;
@@ -74,6 +76,7 @@ export interface RadioGroupContext {
     variant?: RadioVariant;
     color?: RadioColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: RadioSize;
     inputAttrs: InputHTMLAttributes | undefined;
     select: (value: string | number) => void;

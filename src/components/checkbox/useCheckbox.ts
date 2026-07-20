@@ -7,16 +7,18 @@ import type { CheckboxProps } from './types';
 function getCheckboxColorStyle(
     color: CheckboxProps['color'],
     autoContrast: CheckboxProps['autoContrast'],
+    contrastColor: CheckboxProps['contrastColor'],
 ) {
     const colorValue = getComponentColorValue(color);
     if (color && !colorValue) return undefined;
-    if (!colorValue && !autoContrast) return undefined;
+    if (!colorValue && autoContrast === false && contrastColor === undefined) return undefined;
 
     const style: CSSProperties = {};
     if (colorValue) style['--_rp-checkbox-color'] = colorValue;
-    if (autoContrast) {
+    if (autoContrast !== false || contrastColor !== undefined) {
         style['--_rp-checkbox-on-color'] = getComponentContrastColor(color ?? 'primary', {
             autoContrast,
+            contrastColor,
         });
     }
 
@@ -43,7 +45,9 @@ export function useCheckbox(
         }),
     );
 
-    const rootStyle = computed(() => getCheckboxColorStyle(props.color, props.autoContrast));
+    const rootStyle = computed(() =>
+        getCheckboxColorStyle(props.color, props.autoContrast, props.contrastColor),
+    );
 
     function onChange(e: Event) {
         emitUpdate((e.target as HTMLInputElement).checked);

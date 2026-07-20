@@ -71,6 +71,7 @@ const props = withDefaults(defineProps<ToastProps>(), {
     open: undefined,
     title: '',
     description: '',
+    autoContrast: true,
     role: DEFAULT_TOAST_ROLE,
     duration: DEFAULT_TOAST_DURATION,
     pauseOnHover: DEFAULT_TOAST_PAUSE_ON_HOVER,
@@ -140,7 +141,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getToastColorStyle(props.color, props.variant, props.autoContrast),
+    getToastColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 const { getPartAttrs, getRootAttrs } = useStylesApi<ToastPart>(props, 'root');
 const rootAttrs = computed(() =>

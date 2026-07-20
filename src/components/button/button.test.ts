@@ -225,7 +225,9 @@ describe('Button', () => {
         expect(button.style.getPropertyValue('--_rp-button-bg-hover')).toBe(
             'var(--rp-color-red-filled-hover)',
         );
-        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
+            'var(--rp-color-red-contrast)',
+        );
         expect(button.style.getPropertyValue('--_rp-button-border')).toBe(
             'var(--rp-color-red-filled)',
         );
@@ -293,10 +295,10 @@ describe('Button', () => {
             'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
         );
         expect(button.style.getPropertyValue('--_rp-button-border')).toBe('#ff3366');
-        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
     });
 
-    it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {
+    it('uses readable arbitrary color contrast by default', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -304,7 +306,6 @@ describe('Button', () => {
                         h(
                             Button,
                             {
-                                autoContrast: true,
                                 color: '#fab005',
                                 variant: 'solid',
                             },
@@ -313,7 +314,6 @@ describe('Button', () => {
                         h(
                             Button,
                             {
-                                autoContrast: true,
                                 color: '#141414',
                                 variant: 'solid',
                             },
@@ -332,6 +332,31 @@ describe('Button', () => {
 
         expect(lightButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
         expect(darkButton.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+    });
+
+    it('uses an explicit contrast color with a custom CSS variable', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Button,
+                        {
+                            color: 'var(--brand-color)',
+                            contrastColor: 'var(--brand-on-color)',
+                            variant: 'solid',
+                        },
+                        { default: () => 'Brand' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const button = container.querySelector('button') as HTMLButtonElement;
+
+        expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('var(--brand-color)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--brand-on-color)');
     });
 
     it('adds size modifiers when requested', async () => {

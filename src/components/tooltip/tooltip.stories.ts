@@ -31,7 +31,7 @@ const meta = {
         target: { control: false },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         arrow: false,
         content: 'Create a new project',
         decorative: false,

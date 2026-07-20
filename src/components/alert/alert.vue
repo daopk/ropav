@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<AlertProps>(), {
     open: undefined,
     title: '',
     description: '',
+    autoContrast: true,
     role: 'alert',
     closable: false,
     closeLabel: 'Close alert',
@@ -90,7 +91,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getAlertColorStyle(props.color, props.variant, props.autoContrast),
+    getAlertColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<AlertPart>(props, 'root');

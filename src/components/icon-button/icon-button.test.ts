@@ -130,7 +130,9 @@ describe('IconButton', () => {
             'rp-icon-button',
         ]);
         expect(button.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-red-filled)');
-        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
+            'var(--rp-color-red-contrast)',
+        );
     });
 
     it('adds a variant modifier for each supported variant', async () => {

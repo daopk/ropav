@@ -41,7 +41,7 @@ const meta = {
         loading: { control: 'boolean' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         color: 'blue',
         disabled: false,
         href: '#',

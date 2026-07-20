@@ -206,7 +206,7 @@ describe('ButtonLink', () => {
             'rp-button--radius-lg',
         ]);
         expect(link.style.getPropertyValue('--_rp-button-bg')).toBe('var(--rp-color-red-filled)');
-        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-red-contrast)');
     });
 
     it('adds a variant modifier for each supported variant', async () => {
@@ -300,7 +300,7 @@ describe('ButtonLink', () => {
             'color-mix(in srgb, #ff3366 90%, var(--rp-color-black))',
         );
         expect(link.style.getPropertyValue('--_rp-button-border')).toBe('#ff3366');
-        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-white)');
+        expect(link.style.getPropertyValue('--_rp-button-fg')).toBe('var(--rp-color-black)');
     });
 
     it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {

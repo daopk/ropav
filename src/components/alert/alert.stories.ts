@@ -31,7 +31,7 @@ const meta = {
         description: { control: 'text' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         closable: false,
         description: 'The production rollout will start soon.',
         title: 'Deployment queued',

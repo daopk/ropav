@@ -6,6 +6,7 @@ export function getBadgeColorStyle(
     color: BadgeColor | undefined,
     variant: BadgeVariant | undefined,
     autoContrast: boolean | undefined,
+    contrastColor?: string,
 ) {
     if (!color && !variant) return undefined;
 
@@ -13,6 +14,7 @@ export function getBadgeColorStyle(
         color,
         variant: variant ?? 'solid',
         autoContrast,
+        contrastColor,
     });
     if (!roles) return undefined;
 

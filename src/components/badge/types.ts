@@ -24,6 +24,7 @@ export interface BadgeProps extends StylesApiProps<BadgePart> {
     variant?: BadgeVariant;
     color?: BadgeColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: BadgeSize;
     radius?: BadgeRadius;
     ariaLabel?: string;

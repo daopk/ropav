@@ -23,6 +23,7 @@ export interface ButtonLinkProps extends StylesApiProps<ButtonLinkPart> {
     variant?: ButtonLinkVariant;
     color?: ButtonLinkColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: ButtonLinkSize;
     radius?: ButtonLinkRadius;
     disabled?: boolean;

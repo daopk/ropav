@@ -6,10 +6,11 @@ export function getButtonColorStyle(
     color: ButtonColor | undefined,
     variant: ButtonVariant | undefined,
     autoContrast: boolean | undefined,
+    contrastColor?: string,
 ) {
     if (!color && !variant) return undefined;
 
-    const roles = getComponentVariantColorRoles({ color, variant, autoContrast });
+    const roles = getComponentVariantColorRoles({ color, variant, autoContrast, contrastColor });
     if (!roles) return undefined;
 
     return {

@@ -105,7 +105,7 @@ const props = withDefaults(defineProps<PaginationProps>(), {
     withControls: true,
     withEdges: false,
     disabled: false,
-    autoContrast: false,
+    autoContrast: true,
     size: 'md',
     radius: 'sm',
     ariaLabel: 'Pagination',

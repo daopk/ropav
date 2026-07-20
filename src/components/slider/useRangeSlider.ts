@@ -353,6 +353,8 @@ export function useRangeSlider(
         return baseId ? `${baseId}-merged` : undefined;
     });
     const tooltipColor = computed(() => tooltipOptions.value.color);
+    const tooltipAutoContrast = computed(() => tooltipOptions.value.autoContrast);
+    const tooltipContrastColor = computed(() => tooltipOptions.value.contrastColor);
     const tooltipOffset = computed(() => tooltipOptions.value.offset);
     const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
     const tooltipContent = computed<[string, string]>(() => [
@@ -555,6 +557,8 @@ export function useRangeSlider(
         tooltipIds,
         mergedTooltipId,
         tooltipColor,
+        tooltipAutoContrast,
+        tooltipContrastColor,
         tooltipOffset,
         tooltipOpenDelay,
         tooltipArrow,

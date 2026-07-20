@@ -17,6 +17,7 @@ export interface ButtonProps extends StylesApiProps<ButtonPart> {
     variant?: ButtonVariant;
     color?: ButtonColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: ButtonSize;
     radius?: ButtonRadius;
     type?: 'button' | 'submit' | 'reset';

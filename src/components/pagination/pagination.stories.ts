@@ -31,7 +31,7 @@ const meta = {
         withEdges: false,
         disabled: false,
         color: undefined,
-        autoContrast: false,
+        autoContrast: true,
         size: 'md',
         radius: 'sm',
     },

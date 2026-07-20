@@ -40,6 +40,7 @@ export interface TooltipProps
     content?: string;
     color?: TooltipColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     open?: boolean;
     openDelay?: number;
     disabled?: boolean;

@@ -23,6 +23,7 @@ export interface CheckboxProps extends StylesApiProps<CheckboxPart> {
     variant?: CheckboxVariant;
     color?: CheckboxColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: CheckboxSize;
     radius?: CheckboxRadius;
     disabled?: boolean;

@@ -167,7 +167,7 @@ describe('Tooltip rendering', () => {
                 `var(--rp-color-${color}-filled)`,
             );
             expect(contents[index].style.getPropertyValue('--_rp-tooltip-fg')).toBe(
-                'var(--rp-color-white)',
+                `var(--rp-color-${color}-contrast)`,
             );
         }
     });
@@ -197,7 +197,7 @@ describe('Tooltip rendering', () => {
 
         expect([...root.classList]).toEqual(['rp-tooltip', 'rp-tooltip--placement-top']);
         expect(content.style.getPropertyValue('--_rp-tooltip-bg')).toBe('#ff3366');
-        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe('var(--rp-color-white)');
+        expect(content.style.getPropertyValue('--_rp-tooltip-fg')).toBe('var(--rp-color-black)');
     });
 
     it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {

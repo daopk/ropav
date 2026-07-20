@@ -108,6 +108,8 @@ const props = withDefaults(
     defineProps<{
         arrow?: boolean;
         color?: TooltipColor;
+        autoContrast?: boolean;
+        contrastColor?: string;
         content: [string, string];
         ids: [string | undefined, string | undefined];
         mergedContent: string;
@@ -123,6 +125,8 @@ const props = withDefaults(
     {
         arrow: false,
         color: undefined,
+        autoContrast: true,
+        contrastColor: undefined,
         mergedId: undefined,
         offset: undefined,
     },
@@ -151,7 +155,7 @@ const tooltipRootClass = computed(() =>
 );
 const contentStyle = computed(() => ({
     ...resolveTooltipOffsetStyle(props.offset),
-    ...resolveTooltipColorStyleWithContrast(props.color, undefined),
+    ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast, props.contrastColor),
 }));
 
 const { tooltipsOverlapping, mergedArrowOffset, mergedMinSize } = useRangeSliderTooltipCollision({

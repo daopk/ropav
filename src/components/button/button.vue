@@ -35,6 +35,7 @@ defineOptions({ name: 'RpButton', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ButtonProps>(), {
     type: 'button',
+    autoContrast: true,
     disabled: false,
     loading: false,
 });
@@ -49,7 +50,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getButtonColorStyle(props.color, props.variant, props.autoContrast),
+    getButtonColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<ButtonPart>(props, 'root');

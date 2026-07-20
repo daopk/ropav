@@ -70,7 +70,14 @@ export type SliderTooltipMode = 'hover' | 'always';
 
 type SliderTooltipBaseOptions = Pick<
     TooltipProps,
-    'id' | 'placement' | 'color' | 'offset' | 'openDelay' | 'arrow'
+    | 'id'
+    | 'placement'
+    | 'color'
+    | 'autoContrast'
+    | 'contrastColor'
+    | 'offset'
+    | 'openDelay'
+    | 'arrow'
 >;
 
 export type SliderTooltipAnchor = 'thumb' | 'pointer';

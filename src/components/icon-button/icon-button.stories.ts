@@ -42,7 +42,7 @@ const meta = {
     },
     args: {
         ariaLabel: 'Search',
-        autoContrast: false,
+        autoContrast: true,
         disabled: false,
         loading: false,
     },

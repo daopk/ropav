@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<ToastProviderProps>(), {
     variant: undefined,
     color: undefined,
     autoContrast: undefined,
+    contrastColor: undefined,
     radius: undefined,
     role: undefined,
     pauseOnHover: DEFAULT_TOAST_PAUSE_ON_HOVER,

@@ -39,6 +39,7 @@ defineOptions({ name: 'RpTooltip', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TooltipProps>(), {
     content: '',
+    autoContrast: true,
     placement: 'top',
     open: undefined,
     openDelay: 300,

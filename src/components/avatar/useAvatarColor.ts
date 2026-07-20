@@ -6,6 +6,7 @@ export function getAvatarColorStyle(
     color: AvatarColor | undefined,
     variant: AvatarVariant | undefined,
     autoContrast: boolean | undefined,
+    contrastColor?: string,
 ) {
     if (!color && !variant) return undefined;
 
@@ -13,6 +14,7 @@ export function getAvatarColorStyle(
         color,
         variant: variant ?? 'solid',
         autoContrast,
+        contrastColor,
     });
     if (!roles) return undefined;
 

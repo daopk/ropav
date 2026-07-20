@@ -81,28 +81,36 @@ describe('component color resolver', () => {
         });
     });
 
-    it('keeps white contrast by default and resolves readable custom contrast when enabled', () => {
-        expect(getComponentContrastColor('blue', { autoContrast: true })).toBe(
-            'var(--rp-color-blue-contrast)',
-        );
-        expect(getComponentContrastColor('yellow.6', { autoContrast: true })).toBe(
-            'var(--rp-color-yellow-6-contrast)',
-        );
-        expect(getComponentContrastColor('#fab005')).toBe('var(--rp-color-white)');
-        expect(getComponentContrastColor('#fab005', { autoContrast: true })).toBe(
-            'var(--rp-color-black)',
-        );
+    it('resolves readable contrast by default and allows opting out', () => {
+        expect(getComponentContrastColor('blue')).toBe('var(--rp-color-blue-contrast)');
+        expect(getComponentContrastColor('yellow.6')).toBe('var(--rp-color-yellow-6-contrast)');
+        expect(getComponentContrastColor('#fab005')).toBe('var(--rp-color-black)');
         expect(getComponentContrastColor('#82c91e', { autoContrast: true })).toBe(
             'var(--rp-color-black)',
         );
         expect(getComponentContrastColor('#141414', { autoContrast: true })).toBe(
             'var(--rp-color-white)',
         );
+        expect(getComponentContrastColor('#fab005', { autoContrast: false })).toBe(
+            'var(--rp-color-white)',
+        );
     });
 
-    it('falls back to white contrast for custom colors that cannot be parsed', () => {
+    it('accepts explicit contrast for custom CSS variables', () => {
         expect(getComponentColorValue('var(--brand-color)')).toBe('var(--brand-color)');
-        expect(getComponentContrastColor('var(--brand-color)', { autoContrast: true })).toBe(
+        expect(getComponentContrastColor('var(--brand-color)')).toBe('var(--rp-color-white)');
+        expect(
+            getComponentContrastColor('var(--brand-color)', {
+                contrastColor: 'var(--brand-contrast)',
+            }),
+        ).toBe('var(--brand-contrast)');
+        expect(
+            getComponentContrastColor('var(--brand-color)', {
+                autoContrast: false,
+                contrastColor: '#141414',
+            }),
+        ).toBe('#141414');
+        expect(getComponentContrastColor('var(--brand-color)', { autoContrast: false })).toBe(
             'var(--rp-color-white)',
         );
     });
@@ -124,12 +132,21 @@ describe('component color resolver', () => {
             getComponentVariantColorRoles({
                 color: '#fab005',
                 variant: 'solid',
-                autoContrast: true,
             }),
         ).toMatchObject({
             background: '#fab005',
             color: 'var(--rp-color-black)',
             border: '#fab005',
+        });
+        expect(
+            getComponentVariantColorRoles({
+                color: 'var(--brand-color)',
+                variant: 'solid',
+                contrastColor: 'var(--brand-contrast)',
+            }),
+        ).toMatchObject({
+            background: 'var(--brand-color)',
+            color: 'var(--brand-contrast)',
         });
     });
 

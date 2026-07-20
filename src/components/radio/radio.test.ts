@@ -449,7 +449,7 @@ describe('Radio', () => {
 
         expect([...root.classList]).toEqual(['rp-radio', 'rp-radio--checked']);
         expect(root.style.getPropertyValue('--_rp-radio-color')).toBe('#ff3366');
-        expect(root.style.getPropertyValue('--_rp-radio-on-color')).toBe('');
+        expect(root.style.getPropertyValue('--_rp-radio-on-color')).toBe('var(--rp-color-black)');
     });
 
     it('sets readable selected foreground when group autoContrast is enabled', async () => {

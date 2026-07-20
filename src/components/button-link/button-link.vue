@@ -34,6 +34,7 @@ import type { ButtonLinkPart, ButtonLinkProps } from './types';
 defineOptions({ name: 'RpButtonLink', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ButtonLinkProps>(), {
+    autoContrast: true,
     disabled: false,
     loading: false,
 });
@@ -51,7 +52,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getButtonColorStyle(props.color, props.variant, props.autoContrast),
+    getButtonColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 
 const resolvedHref = computed(() => (isUnavailable.value ? undefined : props.href));

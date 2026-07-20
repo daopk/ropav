@@ -161,6 +161,8 @@ export function useSlider(
     );
     const tooltipId = computed(() => tooltipOptions.value.id);
     const tooltipColor = computed(() => tooltipOptions.value.color);
+    const tooltipAutoContrast = computed(() => tooltipOptions.value.autoContrast);
+    const tooltipContrastColor = computed(() => tooltipOptions.value.contrastColor);
     const tooltipOffset = computed(() => tooltipOptions.value.offset);
     const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
     const tooltipValue = computed(() =>
@@ -413,6 +415,8 @@ export function useSlider(
         tooltipPlacement,
         tooltipId,
         tooltipColor,
+        tooltipAutoContrast,
+        tooltipContrastColor,
         tooltipOffset,
         tooltipOpenDelay,
         tooltipArrow,

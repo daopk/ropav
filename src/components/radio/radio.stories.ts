@@ -32,7 +32,7 @@ const meta = {
         disabled: { control: 'boolean' },
     },
     args: {
-        autoContrast: false,
+        autoContrast: true,
         disabled: false,
         modelValue: 'apple',
         orientation: 'vertical',

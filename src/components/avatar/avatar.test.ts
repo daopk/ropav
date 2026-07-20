@@ -238,7 +238,7 @@ describe('Avatar', () => {
         const expectedRoles = [
             {
                 background: 'var(--rp-color-blue-filled)',
-                foreground: 'var(--rp-color-white)',
+                foreground: 'var(--rp-color-blue-contrast)',
                 border: 'var(--rp-color-blue-filled)',
             },
             {
@@ -292,7 +292,7 @@ describe('Avatar', () => {
                 `var(--rp-color-${color}-filled)`,
             );
             expect(avatars[index].style.getPropertyValue('--_rp-avatar-fg')).toBe(
-                'var(--rp-color-white)',
+                `var(--rp-color-${color}-contrast)`,
             );
             expect(avatars[index].style.getPropertyValue('--_rp-avatar-border')).toBe(
                 `var(--rp-color-${color}-filled)`,

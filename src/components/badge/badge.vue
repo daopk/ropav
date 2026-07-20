@@ -21,7 +21,9 @@ import { getBadgeColorStyle } from './useBadgeColor';
 
 defineOptions({ name: 'RpBadge', inheritAttrs: false });
 
-const props = defineProps<BadgeProps>();
+const props = withDefaults(defineProps<BadgeProps>(), {
+    autoContrast: true,
+});
 
 const rootClass = computed(() =>
     bem('rp-badge', {
@@ -32,7 +34,7 @@ const rootClass = computed(() =>
 );
 
 const rootStyle = computed(() =>
-    getBadgeColorStyle(props.color, props.variant, props.autoContrast),
+    getBadgeColorStyle(props.color, props.variant, props.autoContrast, props.contrastColor),
 );
 const { getPartAttrs, getRootAttrs } = useStylesApi<BadgePart>(props, 'root');
 const rootAttrs = computed(() =>

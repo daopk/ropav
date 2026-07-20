@@ -136,6 +136,8 @@
                     v-if="tooltipVisible"
                     :arrow="tooltipArrow"
                     :color="tooltipColor"
+                    :auto-contrast="tooltipAutoContrast"
+                    :contrast-color="tooltipContrastColor"
                     :content="tooltipContent"
                     :ids="tooltipIds"
                     :merged-content="mergedTooltipContent"
@@ -239,6 +241,8 @@ const {
     tooltipIds,
     mergedTooltipId,
     tooltipColor,
+    tooltipAutoContrast,
+    tooltipContrastColor,
     tooltipOffset,
     tooltipArrow,
     tooltipContent,

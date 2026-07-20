@@ -28,6 +28,7 @@ export interface AvatarProps extends StylesApiProps<AvatarPart> {
     variant?: AvatarVariant;
     color?: AvatarColor;
     autoContrast?: boolean;
+    contrastColor?: string;
     size?: AvatarSize;
     radius?: AvatarRadius;
 }

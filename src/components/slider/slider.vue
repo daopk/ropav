@@ -119,6 +119,8 @@
                 :content="tooltipContent"
                 :placement="tooltipPlacement"
                 :color="tooltipColor"
+                :auto-contrast="tooltipAutoContrast"
+                :contrast-color="tooltipContrastColor"
                 :offset="tooltipOffset"
                 :open="tooltipOpen"
                 :open-delay="tooltipOpenDelay"
@@ -215,6 +217,8 @@ const {
     tooltipPlacement,
     tooltipId,
     tooltipColor,
+    tooltipAutoContrast,
+    tooltipContrastColor,
     tooltipOffset,
     tooltipOpenDelay,
     tooltipArrow,

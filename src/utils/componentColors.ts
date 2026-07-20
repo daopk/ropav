@@ -52,6 +52,7 @@ export interface ComponentVariantColorRoles {
 
 export interface ComponentContrastColorOptions {
     autoContrast?: boolean;
+    contrastColor?: string;
 }
 
 export interface ComponentVariantColorOptions extends ComponentContrastColorOptions {
@@ -114,7 +115,8 @@ export function getComponentContrastColor(
     color: ComponentColorValue | undefined,
     options: ComponentContrastColorOptions = {},
 ) {
-    if (!options.autoContrast) return 'var(--rp-color-white)';
+    if (options.contrastColor !== undefined) return options.contrastColor;
+    if (options.autoContrast === false) return 'var(--rp-color-white)';
 
     const parsed = parseComponentColor(color);
 
@@ -178,11 +180,15 @@ export function getComponentVariantColorRoles({
     variant,
     defaultColor = 'primary',
     autoContrast,
+    contrastColor,
 }: ComponentVariantColorOptions): ComponentVariantColorRoles | undefined {
     const roles = getComponentColorRoles(color ?? defaultColor);
     if (!roles) return undefined;
 
-    const contrast = getComponentContrastColor(color ?? defaultColor, { autoContrast });
+    const contrast = getComponentContrastColor(color ?? defaultColor, {
+        autoContrast,
+        contrastColor,
+    });
 
     if (variant === 'solid') {
         return {

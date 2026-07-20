@@ -16,7 +16,7 @@ This table is generated from `src/styles/styles-manifest.json`. A CSS variable i
 }
 ```
 
-Choose a companion with sufficient contrast against both normal and hover backgrounds. A palette shade is supported for consumer overrides only when its exact name is in this manifest; in that case, override the shade and its `*-contrast` companion together. Preset roles derive their normal contrast from the active shade companion, but their hover shade must remain compatible with the same foreground. Keep `--rp-color-black` and `--rp-color-white` as readable dark and light contrast anchors.
+Choose a companion with sufficient contrast against both normal and hover backgrounds. A palette shade is supported for consumer overrides only when its exact name is in this manifest; in that case, override the shade and its `*-contrast` companion together. Built-in preset solid roles prefer white text and select or darken their filled backgrounds accordingly; high-luminance lime and yellow roles retain black text. Keep `--rp-color-black` and `--rp-color-white` as readable dark and light contrast anchors.
 
 ## Design tokens
 
