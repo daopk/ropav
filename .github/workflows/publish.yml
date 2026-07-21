@@ -1,0 +1,81 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish package
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - name: Validate release tag
+        shell: bash
+        run: |
+          node --input-type=commonjs -e '
+            const { version } = require("./package.json")
+            const tag = process.env.GITHUB_REF_NAME
+
+            if (!/^v\d+\.\d+\.\d+$/.test(tag)) {
+              throw new Error(`Release tag must use stable SemVer (vX.Y.Z), received ${tag}`)
+            }
+
+            if (tag !== `v${version}`) {
+              throw new Error(`Release tag ${tag} does not match package version ${version}`)
+            }
+          '
+
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "Release tag must point to a commit on origin/main." >&2
+            exit 1
+          fi
+
+      - name: Resolve public styles baseline
+        shell: bash
+        run: |
+          baseline=""
+          while IFS= read -r candidate; do
+            if [[ "$candidate" != "$GITHUB_REF_NAME" && "$candidate" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+              baseline="$candidate"
+              break
+            fi
+          done < <(git tag --merged HEAD --sort=-version:refname)
+
+          if [[ -z "$baseline" ]]; then
+            echo "Unable to resolve the previous release tag for public styles compatibility." >&2
+            exit 1
+          fi
+
+          echo "PUBLIC_STYLES_BASELINE_REF=$baseline" >> "$GITHUB_ENV"
+          echo "Using $baseline as the public styles baseline."
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Publish package
+        run: npm publish --access public

@@ -19,6 +19,10 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -197,24 +201,21 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "vitest run --project=unit",
-    "test:consumer-types": "pnpm run test:package",
     "test:consumer-types:built": "tsc -p tests/fixtures/consumer-types/tsconfig.bundler.json && tsc -p tests/fixtures/consumer-types/tsconfig.nodenext.json",
-    "test:exports": "pnpm run test:package",
     "test:exports:built": "node scripts/check-exports.mjs",
     "test:consumer-fixture:built": "node tests/fixtures/consumer-app/check.mjs && vue-tsc -p tests/fixtures/consumer-app/tsconfig.json --noEmit && vite build --config tests/fixtures/consumer-app/vite.config.ts && node tests/fixtures/consumer-app/assertions.mjs",
     "test:package": "pnpm run build && pnpm run test:exports:built && pnpm run test:consumer-types:built && pnpm run test:consumer-fixture:built",
     "test:watch": "vitest --project=unit",
     "test:typecheck": "vitest run --project=unit --typecheck",
     "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
-    "test:all": "pnpm run tokens:check && pnpm test && pnpm test:storybook",
     "build": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
-    "prepublishOnly": "pnpm run test:package",
+    "verify": "pnpm run lint && pnpm run format:check && pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package",
+    "prepublishOnly": "pnpm run verify",
     "preview": "vite preview",
     "storybook": "pnpm run tokens:build && storybook dev -p 6006 --no-open",
     "build-storybook": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck:storybook && storybook build",
     "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md",
-    "changelog:all": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -o CHANGELOG.md -r 0",
-    "release": "pnpm run test:package && bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
+    "release": "pnpm run verify && bumpp --git-check --all --commit \"chore(release): v%s\" --tag \"v%s\" --execute \"pnpm run changelog\""
   },
   "peerDependencies": {
     "@vue/compiler-vapor": "3.6.0-rc.1",
