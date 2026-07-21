@@ -1,8 +1,10 @@
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, toValue, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, shallowRef, toValue, watch } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import type {
     HoverDisclosureContentProps,
     HoverDisclosureContentTarget,
     HoverDisclosureInteractionTarget,
+    HoverDisclosureOpenChangeDetails,
     HoverDisclosureOpenChangeReason,
     HoverDisclosureState,
     HoverDisclosureTouchBehavior,
@@ -68,12 +70,19 @@ function focusLeavesCurrentTarget(event: FocusEvent) {
 export function useHoverDisclosure(
     options: Readonly<UseHoverDisclosureOptions> = {},
 ): UseHoverDisclosureReturn {
-    const uncontrolledOpen = ref(options.defaultOpen === true && !toValue(options.disabled));
     const resolvedInteractionTarget = shallowRef<Element | null>(null);
     const resolvedContentTarget = shallowRef<Element | null>(null);
     const controlledOpen = computed(() => toValue(options.open));
     const isDisabled = computed(() => Boolean(toValue(options.disabled)));
-    const openState = computed(() => controlledOpen.value ?? uncontrolledOpen.value);
+    let pendingChangeDetails: HoverDisclosureOpenChangeDetails | undefined;
+    const controllableOpen = useControllableValue({
+        modelValue: () => controlledOpen.value,
+        defaultValue: () => options.defaultOpen === true && !isDisabled.value,
+        onChange: (nextOpen) => {
+            if (pendingChangeDetails) options.onOpenChange?.(nextOpen, pendingChangeDetails);
+        },
+    });
+    const openState = controllableOpen.value;
     const isOpen = computed(() => !isDisabled.value && openState.value);
     const state = computed<HoverDisclosureState>(() => (isOpen.value ? 'open' : 'closed'));
 
@@ -129,8 +138,12 @@ export function useHoverDisclosure(
         if (disposed || (nextOpen && isDisabled.value) || requestedOpen === nextOpen) return;
 
         requestedOpen = nextOpen;
-        if (controlledOpen.value === undefined) uncontrolledOpen.value = nextOpen;
-        options.onOpenChange?.(nextOpen, { reason, event });
+        pendingChangeDetails = { reason, event };
+        try {
+            controllableOpen.setValue(nextOpen);
+        } finally {
+            pendingChangeDetails = undefined;
+        }
     }
 
     function openImmediately(reason: HoverDisclosureOpenChangeReason, event?: Event) {

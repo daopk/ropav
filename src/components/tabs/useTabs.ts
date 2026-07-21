@@ -9,6 +9,7 @@ import {
     watch,
     type InjectionKey,
 } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import type {
@@ -258,8 +259,13 @@ export function useTabs(
         unregister: unregisterContent,
     } = contentRegistry;
 
-    const isControlled = computed(() => props.modelValue !== undefined);
-    const uncontrolledValue = ref<TabsValue | null>(props.defaultValue ?? null);
+    const controllable = useControllableValue<TabsValue | null>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? null,
+        onChange: (value) => {
+            if (value !== null) emitUpdate(value);
+        },
+    });
     const isDisabled = computed(() => Boolean(props.disabled));
     const size = computed<TabsSize>(() => props.size ?? DEFAULT_SIZE);
     const variant = computed<TabsVariant>(() => props.variant ?? DEFAULT_VARIANT);
@@ -269,9 +275,7 @@ export function useTabs(
     const activationMode = computed<TabsActivationMode>(
         () => props.activationMode ?? DEFAULT_ACTIVATION_MODE,
     );
-    const selectedValue = computed<TabsValue | null>(() =>
-        isControlled.value ? (props.modelValue ?? null) : uncontrolledValue.value,
-    );
+    const selectedValue = controllable.value;
     const firstEnabledTrigger = computed(() => triggers.value.find((trigger) => !trigger.disabled));
     const selectedEnabledTrigger = computed(() => {
         const trigger = findRegistration(triggers.value, selectedValue.value);
@@ -313,19 +317,18 @@ export function useTabs(
     }));
 
     function syncUncontrolledValue() {
-        if (isControlled.value || isDisabled.value) return;
+        if (controllable.isControlled.value || isDisabled.value) return;
 
         const selectedTrigger = findRegistration(triggers.value, selectedValue.value);
         if (selectedValue.value != null && !selectedTrigger?.disabled) return;
 
-        uncontrolledValue.value = firstEnabledTrigger.value?.value ?? null;
+        controllable.resetValue(firstEnabledTrigger.value?.value ?? null);
     }
 
     function setValue(value: TabsValue) {
         if (isDisabled.value || value === selectedValue.value) return;
 
-        if (!isControlled.value) uncontrolledValue.value = value;
-        emitUpdate(value);
+        controllable.setValue(value);
     }
 
     function selectValue(value: TabsValue) {

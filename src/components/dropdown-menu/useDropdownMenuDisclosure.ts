@@ -18,7 +18,6 @@ type BooleanSource = Readonly<Ref<boolean>>;
 type UseDropdownMenuDisclosureOptions = {
     props: Readonly<DropdownMenuProps>;
     emit: {
-        openChange?: (open: boolean) => void;
         select?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
         pointerDownOutside?: (event: DropdownMenuInteractOutsideEvent) => void;
         focusOutside?: (event: DropdownMenuInteractOutsideEvent) => void;
@@ -27,7 +26,7 @@ type UseDropdownMenuDisclosureOptions = {
     rootRef: Ref<HTMLElement | null>;
     menuRef: Ref<HTMLElement | null>;
     targetRef: Readonly<Ref<Element | null>>;
-    uncontrolledOpen: Ref<boolean>;
+    setControllableOpen: (open: boolean) => void;
     isDisabled: BooleanSource;
     isOpen: BooleanSource;
     isVisible: BooleanSource;
@@ -47,7 +46,7 @@ export function useDropdownMenuDisclosure({
     rootRef,
     menuRef,
     targetRef,
-    uncontrolledOpen,
+    setControllableOpen,
     isDisabled,
     isOpen,
     isVisible,
@@ -64,8 +63,7 @@ export function useDropdownMenuDisclosure({
         if (nextOpen && isDisabled.value) return;
 
         const previousOpen = isOpen.value;
-        if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        if (previousOpen !== nextOpen) emit.openChange?.(nextOpen);
+        if (previousOpen !== nextOpen) setControllableOpen(nextOpen);
     }
 
     function resetMenuFocus() {

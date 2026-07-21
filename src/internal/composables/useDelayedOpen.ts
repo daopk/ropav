@@ -1,4 +1,5 @@
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 
 export interface UseDelayedOpenOptions {
     open?: boolean | (() => boolean | undefined);
@@ -18,10 +19,14 @@ function readOptional<T>(value: T | (() => T | undefined) | undefined): T | unde
 }
 
 export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
-    const uncontrolledOpen = ref(false);
+    const controllableOpen = useControllableValue({
+        modelValue: () => readOptional(options.open),
+        defaultValue: () => false,
+        onChange: (nextOpen) => options.onOpenChange?.(nextOpen),
+    });
     let openTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const isOpen = computed(() => readOptional(options.open) ?? uncontrolledOpen.value);
+    const isOpen = controllableOpen.value;
 
     function clearTimers() {
         if (openTimer) {
@@ -36,8 +41,7 @@ export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
 
     function setOpen(nextOpen: boolean) {
         const previousOpen = isOpen.value;
-        if (readOptional(options.open) === undefined) uncontrolledOpen.value = nextOpen;
-        if (previousOpen !== nextOpen) options.onOpenChange?.(nextOpen);
+        if (previousOpen !== nextOpen) controllableOpen.setValue(nextOpen);
     }
 
     function open() {

@@ -1,4 +1,5 @@
-import { computed, ref, toValue, useId } from 'vue';
+import { computed, toValue, useId } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import type {
     CollapseContentProps,
@@ -24,12 +25,18 @@ export function useCollapse(
     emitOpenChange?: (open: boolean) => void,
 ): UseCollapseReturn {
     const generatedId = useId();
-    const uncontrolledOpen = ref(false);
 
     const id = computed(() => optionValue<string>(options.id) ?? `${generatedId}-collapse`);
-    const controlledOpen = computed(() => optionValue<boolean>(options.open));
     const isDisabled = computed(() => Boolean(optionValue<boolean>(options.disabled)));
-    const isOpen = computed(() => Boolean(controlledOpen.value ?? uncontrolledOpen.value));
+    const controllableOpen = useControllableValue({
+        modelValue: () => optionValue<boolean>(options.open),
+        defaultValue: () => false,
+        onChange: (nextOpen) => {
+            options.onOpenChange?.(nextOpen);
+            emitOpenChange?.(nextOpen);
+        },
+    });
+    const isOpen = controllableOpen.value;
     const state = computed<CollapseState>(() => (isOpen.value ? 'open' : 'closed'));
     const shouldRenderContent = computed(
         () => !optionValue<boolean>(options.unmountOnExit) || isOpen.value,
@@ -84,9 +91,7 @@ export function useCollapse(
     function setOpen(nextOpen: boolean) {
         if (isDisabled.value || nextOpen === isOpen.value) return;
 
-        if (controlledOpen.value === undefined) uncontrolledOpen.value = nextOpen;
-        options.onOpenChange?.(nextOpen);
-        emitOpenChange?.(nextOpen);
+        controllableOpen.setValue(nextOpen);
     }
 
     function open() {

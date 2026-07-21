@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, onBeforeUnmount, provide, ref, watch } from 'vue';
+import { nextTick, onBeforeUnmount, provide, ref, watch } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import {
     menuKey,
@@ -33,8 +34,12 @@ defineSlots<{
 }>();
 
 const parentMenu = useRequiredInject(menuKey, 'RpDropdownMenuSub');
-const uncontrolled = ref(props.defaultOpen);
-const isOpen = computed(() => props.open ?? uncontrolled.value);
+const controllableOpen = useControllableValue({
+    modelValue: () => props.open,
+    defaultValue: () => props.defaultOpen,
+    onChange: (open) => emit('update:open', open),
+});
+const isOpen = controllableOpen.value;
 const trigger = ref<HTMLElement | null>(null);
 const contentId = ref<string>();
 const actualPlacement = ref<DropdownMenuPlacement>('right-start');
@@ -42,8 +47,7 @@ const pendingFocus = ref<OpenFocusTarget>(false);
 
 function setOpen(value: boolean) {
     const previous = isOpen.value;
-    if (props.open === undefined) uncontrolled.value = value;
-    if (previous !== value) emit('update:open', value);
+    if (previous !== value) controllableOpen.setValue(value);
 }
 
 const context: DropdownMenuSubContext = {

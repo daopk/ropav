@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, mergeProps, provide, ref, useAttrs } from 'vue';
+import { computed, mergeProps, provide, useAttrs } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { checkedKey, optionalAttr, usePrimitiveItem } from './dropdown-menu-primitive-core';
 import type {
@@ -36,8 +37,12 @@ defineSlots<{
 }>();
 
 const attrs = useAttrs();
-const uncontrolled = ref<DropdownMenuCheckedState>(props.defaultValue);
-const value = computed(() => props.modelValue ?? uncontrolled.value);
+const controllable = useControllableValue<DropdownMenuCheckedState>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => emit('update:modelValue', value),
+});
+const value = controllable.value;
 const checked = computed<boolean | 'mixed'>(() =>
     value.value === 'indeterminate' ? 'mixed' : value.value,
 );
@@ -47,8 +52,7 @@ const state = computed<'checked' | 'unchecked' | 'indeterminate'>(() =>
 
 function toggleChecked() {
     const nextValue = value.value === 'indeterminate' ? true : !value.value;
-    if (props.modelValue === undefined) uncontrolled.value = nextValue;
-    emit('update:modelValue', nextValue);
+    controllable.setValue(nextValue);
 }
 
 provide(checkedKey, {

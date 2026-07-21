@@ -4,6 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, useId, watch } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { dialogRootKey, resolveDialogCloseReason, type DialogRootContext } from './dialog-core';
@@ -29,8 +30,12 @@ const emit = defineEmits<{
 defineSlots<{ default?(props: DialogRootSlotProps): unknown }>();
 
 const generatedId = useId();
-const uncontrolledOpen = ref(props.defaultOpen);
-const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
+const controllableOpen = useControllableValue({
+    modelValue: () => props.open,
+    defaultValue: () => props.defaultOpen,
+    onChange: (value) => emit('update:open', value),
+});
+const isOpen = controllableOpen.value;
 const modal = computed(() => props.modal);
 const closeOnEscape = computed(() => props.closeOnEscape);
 const closeOnOutsideClick = computed(() => props.closeOnOutsideClick);
@@ -61,8 +66,7 @@ const layer = useOverlayLayer({
 
 function setOpen(value: boolean) {
     const previous = isOpen.value;
-    if (props.open === undefined) uncontrolledOpen.value = value;
-    if (previous !== value) emit('update:open', value);
+    if (previous !== value) controllableOpen.setValue(value);
 }
 
 function rememberFocus() {

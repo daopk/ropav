@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, mergeProps, provide, ref, useAttrs } from 'vue';
+import { computed, mergeProps, provide, useAttrs } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { menuKey, radioGroupKey } from './dropdown-menu-primitive-core';
 import type { DropdownMenuItemValue, DropdownMenuRadioGroupPrimitiveProps } from './types';
@@ -28,15 +29,18 @@ defineSlots<{
 
 const attrs = useAttrs();
 useRequiredInject(menuKey, 'RpDropdownMenuRadioGroup');
-const uncontrolled = ref<DropdownMenuItemValue | null>(props.defaultValue);
-const value = computed(() =>
-    props.modelValue === undefined ? uncontrolled.value : props.modelValue,
-);
+const controllable = useControllableValue<DropdownMenuItemValue | null>({
+    modelValue: () => props.modelValue,
+    defaultValue: () => props.defaultValue,
+    onChange: (value) => {
+        if (value !== null) emit('update:modelValue', value);
+    },
+});
+const value = controllable.value;
 
 function select(nextValue: DropdownMenuItemValue) {
     if (value.value === nextValue) return;
-    if (props.modelValue === undefined) uncontrolled.value = nextValue;
-    emit('update:modelValue', nextValue);
+    controllable.setValue(nextValue);
 }
 
 provide(radioGroupKey, { value, select });

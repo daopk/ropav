@@ -9,6 +9,7 @@ import {
     watch,
     type CSSProperties,
 } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
@@ -103,7 +104,11 @@ export function usePopover(
     const rootRef = ref<HTMLElement | null>(null);
     const contentRef = ref<HTMLElement | null>(null);
     const arrowRef = ref<HTMLElement | null>(null);
-    const uncontrolledOpen = ref(false);
+    const controllableOpen = useControllableValue({
+        modelValue: () => props.open,
+        defaultValue: () => false,
+        onChange: (open) => emitOpenChange?.(open),
+    });
     const popoverId = computed(() => props.id ?? `${generatedId}-popover`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
@@ -120,7 +125,7 @@ export function usePopover(
         Boolean(slots.content || (isExplicitTarget.value && slots.default)),
     );
     const isDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
-    const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
+    const isOpen = controllableOpen.value;
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
     const baseZIndex = useOverlayZIndex({
         baseZIndex: () => props.baseZIndex,
@@ -214,8 +219,7 @@ export function usePopover(
 
     function setOpen(nextOpen: boolean) {
         const previousOpen = isOpen.value;
-        if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        if (previousOpen !== nextOpen) emitOpenChange?.(nextOpen);
+        if (previousOpen !== nextOpen) controllableOpen.setValue(nextOpen);
     }
 
     function openPopover() {

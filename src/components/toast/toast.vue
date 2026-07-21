@@ -52,6 +52,7 @@
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue';
 import IconX from '~icons/lucide/x';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
 import {
@@ -87,7 +88,12 @@ const emit = defineEmits<{
 }>();
 
 const slots = useSlots();
-const localOpen = ref(props.open ?? true);
+const controllableOpen = useControllableValue({
+    modelValue: () => props.open,
+    defaultValue: () => true,
+    onChange: (open) => emit('update:open', open),
+});
+const isOpen = controllableOpen.value;
 const isMounted = ref(false);
 const pausedByHover = ref(false);
 const pausedByFocus = ref(false);
@@ -101,7 +107,6 @@ let remainingDuration = 0;
 watch(
     () => props.open,
     (open) => {
-        if (open !== undefined) localOpen.value = open;
         if (open) closePending = false;
     },
 );
@@ -126,7 +131,6 @@ watch(
     },
 );
 
-const isOpen = computed(() => props.open ?? localOpen.value);
 const hasTitle = computed(() => Boolean(props.title || slots.title));
 const hasDescription = computed(() => Boolean(props.description));
 const hasContent = computed(() => Boolean(hasTitle.value || hasDescription.value || slots.default));
@@ -255,8 +259,7 @@ function closeToast(reason: ToastCloseReason) {
 
     closePending = true;
     clearTimer();
-    localOpen.value = false;
-    emit('update:open', false);
+    controllableOpen.setValue(false);
     emit('close', reason);
 
     // A controlled owner can close and reopen synchronously, which Vue batches into

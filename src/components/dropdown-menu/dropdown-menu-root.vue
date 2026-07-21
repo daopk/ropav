@@ -4,6 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
@@ -46,8 +47,12 @@ defineSlots<{
 
 const generatedId = useId();
 const id = computed(() => props.id ?? `${generatedId}-dropdown-menu`);
-const uncontrolledOpen = ref(props.defaultOpen);
-const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
+const controllableOpen = useControllableValue({
+    modelValue: () => props.open,
+    defaultValue: () => props.defaultOpen,
+    onChange: (nextOpen) => emit('update:open', nextOpen),
+});
+const isOpen = controllableOpen.value;
 const disabled = computed(() => props.disabled);
 const modal = computed(() => props.modal);
 const trigger = ref<HTMLElement | null>(null);
@@ -79,8 +84,7 @@ const layer = useOverlayLayer({
 function setOpen(value: boolean) {
     if (value && disabled.value) return;
     const previous = isOpen.value;
-    if (props.open === undefined) uncontrolledOpen.value = value;
-    if (previous !== value) emit('update:open', value);
+    if (previous !== value) controllableOpen.setValue(value);
 }
 
 function rememberFocus() {

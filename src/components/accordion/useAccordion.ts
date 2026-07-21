@@ -1,4 +1,5 @@
-import { computed, provide, ref, useId } from 'vue';
+import { computed, provide, useId } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import { useCollapse } from '../collapse/useCollapse';
@@ -85,15 +86,13 @@ export function useAccordion(
     const isMultiple = computed(() => Boolean(props.multiple));
     const isCollapsible = computed(() => props.collapsible !== false);
     const isDisabled = computed(() => Boolean(props.disabled));
-    const isControlled = computed(() => props.modelValue !== undefined);
-    const uncontrolledValue = ref<AccordionModelValue>(props.defaultValue ?? null);
+    const controllable = useControllableValue<AccordionModelValue>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? null,
+        onChange: emitUpdate,
+    });
 
-    const openValues = computed(() =>
-        normalizeValue(
-            isControlled.value ? props.modelValue : uncontrolledValue.value,
-            isMultiple.value,
-        ),
-    );
+    const openValues = computed(() => normalizeValue(controllable.value.value, isMultiple.value));
 
     const rootClass = computed(() =>
         bem('rp-accordion', {
@@ -115,8 +114,7 @@ export function useAccordion(
     function setValues(nextValues: AccordionItemValue[]) {
         const nextModelValue = toModelValue(nextValues, isMultiple.value);
 
-        if (!isControlled.value) uncontrolledValue.value = nextModelValue;
-        emitUpdate(nextModelValue);
+        controllable.setValue(nextModelValue);
     }
 
     function setItemOpen(value: AccordionItemValue, open: boolean) {

@@ -42,8 +42,9 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, useSlots, watch } from 'vue';
+import { computed, useSlots } from 'vue';
 import IconX from '~icons/lucide/x';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
 import type { AlertPart, AlertProps } from './types';
@@ -67,16 +68,12 @@ const emit = defineEmits<{
 }>();
 
 const slots = useSlots();
-const localOpen = ref(props.open ?? true);
-
-watch(
-    () => props.open,
-    (open) => {
-        if (open !== undefined) localOpen.value = open;
-    },
-);
-
-const isOpen = computed(() => props.open ?? localOpen.value);
+const controllableOpen = useControllableValue({
+    modelValue: () => props.open,
+    defaultValue: () => true,
+    onChange: (open) => emit('update:open', open),
+});
+const isOpen = controllableOpen.value;
 const hasTitle = computed(() => Boolean(props.title || slots.title));
 const hasDescription = computed(() => Boolean(props.description));
 const hasContent = computed(() => Boolean(hasTitle.value || hasDescription.value || slots.default));
@@ -100,8 +97,7 @@ const rootAttrs = computed(() =>
 );
 
 function closeAlert() {
-    localOpen.value = false;
-    emit('update:open', false);
+    controllableOpen.setValue(false);
     emit('close');
 }
 </script>

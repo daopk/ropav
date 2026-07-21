@@ -26,10 +26,13 @@ export function useControllableValue<T>(
         (value) => {
             if (value !== undefined) uncontrolledValue.value = value;
         },
-        { immediate: true },
+        { flush: 'sync', immediate: true },
     );
 
-    const value = computed<T>(() => options.modelValue() ?? uncontrolledValue.value);
+    const value = computed<T>(() => {
+        const modelValue = options.modelValue();
+        return modelValue === undefined ? uncontrolledValue.value : modelValue;
+    });
 
     function setValue(nextValue: T) {
         if (!isControlled.value) uncontrolledValue.value = nextValue;

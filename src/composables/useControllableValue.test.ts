@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { effectScope, isReadonly, nextTick, ref } from 'vue';
+import { effectScope, isReadonly, ref } from 'vue';
 
 import { useControllableValue } from './useControllableValue';
 
@@ -27,7 +27,7 @@ describe('useControllableValue', () => {
         expect(defaultValue).toHaveBeenCalledOnce();
     });
 
-    it('does not mutate controlled state and preserves the last controlled value as fallback', async () => {
+    it('does not mutate controlled state and preserves the last controlled value as fallback', () => {
         const modelValue = ref<string>();
         const onChange = vi.fn();
         const scope = effectScope();
@@ -40,7 +40,6 @@ describe('useControllableValue', () => {
         )!;
 
         modelValue.value = 'controlled';
-        await nextTick();
         expect(controllable.isControlled.value).toBe(true);
         expect(controllable.value.value).toBe('controlled');
 
@@ -49,15 +48,45 @@ describe('useControllableValue', () => {
         expect(onChange).toHaveBeenCalledWith('requested');
 
         modelValue.value = 'external';
-        await nextTick();
         controllable.resetValue('reset');
         expect(controllable.value.value).toBe('external');
         modelValue.value = undefined;
-        await nextTick();
 
         expect(controllable.isControlled.value).toBe(false);
         expect(controllable.value.value).toBe('external');
         scope.stop();
+    });
+
+    it('synchronously snapshots every defined controlled value', () => {
+        const modelValue = ref<string>();
+        const controllable = useControllableValue({
+            modelValue: () => modelValue.value,
+            defaultValue: () => 'initial',
+            onChange: vi.fn(),
+        });
+
+        modelValue.value = 'first';
+        modelValue.value = 'last';
+        modelValue.value = undefined;
+
+        expect(controllable.value.value).toBe('last');
+    });
+
+    it('treats null as a controlled value and preserves it as the fallback', () => {
+        const modelValue = ref<string | null | undefined>('controlled');
+        const controllable = useControllableValue<string | null>({
+            modelValue: () => modelValue.value,
+            defaultValue: () => 'initial',
+            onChange: vi.fn(),
+        });
+
+        modelValue.value = null;
+        expect(controllable.isControlled.value).toBe(true);
+        expect(controllable.value.value).toBeNull();
+
+        modelValue.value = undefined;
+        expect(controllable.isControlled.value).toBe(false);
+        expect(controllable.value.value).toBeNull();
     });
 
     it('resets only uncontrolled state without notifying', () => {

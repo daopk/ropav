@@ -1,5 +1,6 @@
 import { computed, ref, useId, watch } from 'vue';
 import type { CSSProperties } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
@@ -41,7 +42,11 @@ export function useDropdownMenu(
     const rootRef = ref<HTMLElement | null>(null);
     const menuRef = ref<HTMLElement | null>(null);
     const arrowRef = ref<HTMLElement | null>(null);
-    const uncontrolledOpen = ref(false);
+    const controllableOpen = useControllableValue({
+        modelValue: () => props.open,
+        defaultValue: () => false,
+        onChange: (open) => emit.openChange?.(open),
+    });
 
     const generatedId = useId();
     const menuId = computed(() => props.id ?? `${generatedId}-menu`);
@@ -58,7 +63,7 @@ export function useDropdownMenu(
     );
     const visibleItems = computed(() => props.items ?? []);
     const isDisabled = computed(() => Boolean(props.disabled));
-    const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
+    const isOpen = controllableOpen.value;
     const isVisible = computed(() => isOpen.value && !isDisabled.value);
     const baseZIndex = useOverlayZIndex({
         baseZIndex: () => props.baseZIndex,
@@ -148,7 +153,7 @@ export function useDropdownMenu(
         rootRef,
         menuRef,
         targetRef: targetElement,
-        uncontrolledOpen,
+        setControllableOpen: controllableOpen.setValue,
         isDisabled,
         isOpen,
         isVisible,

@@ -1,4 +1,5 @@
-import { computed, ref, useSlots, useId, type CSSProperties } from 'vue';
+import { computed, useSlots, useId, type CSSProperties } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { resolveDialogCloseReason } from '../dialog/dialog-core';
 import type { DialogCloseReason } from '../dialog/types';
@@ -22,7 +23,11 @@ export function useModal(
 ) {
     const slots = useSlots();
     const generatedId = useId();
-    const uncontrolledOpen = ref(false);
+    const controllableOpen = useControllableValue({
+        modelValue: () => props.open,
+        defaultValue: () => false,
+        onChange: (open) => emit.openChange?.(open),
+    });
 
     const modalId = computed(() => props.id ?? `${generatedId}-modal`);
     const titleId = computed(() => `${modalId.value}-title`);
@@ -30,7 +35,7 @@ export function useModal(
     const role = computed(() => props.role ?? DEFAULT_ROLE);
     const size = computed(() => props.size || DEFAULT_SIZE);
     const isPresetSize = computed(() => isModalPresetSize(size.value));
-    const isOpen = computed(() => props.open ?? uncontrolledOpen.value);
+    const isOpen = controllableOpen.value;
     const shouldRender = computed(() => Boolean(props.keepMounted || isOpen.value));
     const hasCustomHeader = computed(() => Boolean(slots.header));
     const hasHeader = computed(() =>
@@ -83,8 +88,7 @@ export function useModal(
 
     function setOpen(nextOpen: boolean) {
         if (nextOpen === isOpen.value) return;
-        if (props.open === undefined) uncontrolledOpen.value = nextOpen;
-        emit.openChange?.(nextOpen);
+        controllableOpen.setValue(nextOpen);
     }
 
     function openModal() {
