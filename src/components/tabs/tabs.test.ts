@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, reactive } from 'vue';
+import { defineComponent, h, reactive, ref } from 'vue';
 
 import { click, flush, keydown, mountDom } from '../../../tests/utils/vue';
 import Tabs from './tabs.vue';
@@ -579,6 +579,97 @@ describe('Tabs', () => {
         expect(triggers[1].tabIndex).toBe(0);
     });
 
+    it('reconciles uncontrolled selection when the selected trigger unmounts', async () => {
+        const showOverview = ref(true);
+        const showSettings = ref(true);
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Tabs,
+                        {
+                            defaultValue: 'overview',
+                            'onUpdate:modelValue': onUpdate,
+                        },
+                        {
+                            default: () => [
+                                h(TabsList, null, () => [
+                                    showOverview.value
+                                        ? h(
+                                              TabsTrigger,
+                                              { key: 'overview', value: 'overview' },
+                                              () => 'Overview',
+                                          )
+                                        : null,
+                                    h(
+                                        TabsTrigger,
+                                        { key: 'activity', value: 'activity', disabled: true },
+                                        () => 'Activity',
+                                    ),
+                                    showSettings.value
+                                        ? h(
+                                              TabsTrigger,
+                                              { key: 'settings', value: 'settings' },
+                                              () => 'Settings',
+                                          )
+                                        : null,
+                                ]),
+                                h(
+                                    TabsContent,
+                                    { id: 'overview-panel', value: 'overview' },
+                                    () => 'Overview panel',
+                                ),
+                                h(
+                                    TabsContent,
+                                    { id: 'activity-panel', value: 'activity' },
+                                    () => 'Activity panel',
+                                ),
+                                h(
+                                    TabsContent,
+                                    { id: 'settings-panel', value: 'settings' },
+                                    () => 'Settings panel',
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        showOverview.value = false;
+        await flush();
+
+        let triggers = Array.from(
+            container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+        expect(triggers).toHaveLength(2);
+        expect(triggers[0].disabled).toBe(true);
+        expect(triggers[0].getAttribute('aria-selected')).toBe('false');
+        expect(triggers[0].tabIndex).toBe(-1);
+        expect(triggers[1].getAttribute('aria-selected')).toBe('true');
+        expect(triggers[1].tabIndex).toBe(0);
+        expect((container.querySelector('#overview-panel') as HTMLElement).hidden).toBe(true);
+        expect((container.querySelector('#settings-panel') as HTMLElement).hidden).toBe(false);
+        expect(onUpdate).not.toHaveBeenCalled();
+
+        showSettings.value = false;
+        await flush();
+
+        triggers = Array.from(container.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'));
+        expect(triggers).toHaveLength(1);
+        expect(triggers[0].getAttribute('aria-selected')).toBe('false');
+        expect(triggers[0].tabIndex).toBe(-1);
+        expect(
+            Array.from(container.querySelectorAll<HTMLElement>('.rp-tabs-content')).every(
+                (panel) => panel.hidden,
+            ),
+        ).toBe(true);
+        expect(onUpdate).not.toHaveBeenCalled();
+    });
+
     it('supports automatic keyboard activation', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
@@ -627,6 +718,89 @@ describe('Tabs', () => {
         expect(document.activeElement).toBe(triggers[2]);
         expect(onUpdate).toHaveBeenLastCalledWith('settings');
         expect(triggers[2].getAttribute('aria-selected')).toBe('true');
+    });
+
+    it('mirrors horizontal keyboard navigation in RTL without changing vertical navigation', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('div', null, [
+                        h(
+                            Tabs,
+                            { defaultValue: 'overview', 'data-testid': 'horizontal-tabs' },
+                            {
+                                default: () =>
+                                    h(TabsList, null, () => [
+                                        h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                        h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                        h(TabsTrigger, { value: 'settings' }, () => 'Settings'),
+                                    ]),
+                            },
+                        ),
+                        h(
+                            Tabs,
+                            {
+                                defaultValue: 'overview',
+                                orientation: 'vertical',
+                                dir: 'rtl',
+                                'data-testid': 'vertical-tabs',
+                            },
+                            {
+                                default: () =>
+                                    h(TabsList, null, () => [
+                                        h(TabsTrigger, { value: 'overview' }, () => 'Overview'),
+                                        h(TabsTrigger, { value: 'activity' }, () => 'Activity'),
+                                    ]),
+                            },
+                        ),
+                    ]);
+                },
+            }),
+        );
+
+        await flush();
+
+        const horizontalRoot = container.querySelector(
+            '[data-testid="horizontal-tabs"]',
+        ) as HTMLElement;
+        const horizontalList = horizontalRoot.querySelector('[role="tablist"]') as HTMLElement;
+        const horizontalTriggers = Array.from(
+            horizontalRoot.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+        horizontalRoot.dir = 'rtl';
+
+        horizontalTriggers[0].focus();
+        keydown(horizontalTriggers[0], 'ArrowLeft');
+        await flush();
+        expect(document.activeElement).toBe(horizontalTriggers[1]);
+        expect(horizontalTriggers[1].getAttribute('aria-selected')).toBe('true');
+
+        keydown(horizontalTriggers[1], 'ArrowRight');
+        await flush();
+        expect(document.activeElement).toBe(horizontalTriggers[0]);
+
+        keydown(horizontalTriggers[0], 'ArrowRight');
+        await flush();
+        expect(document.activeElement).toBe(horizontalTriggers[2]);
+        expect(horizontalTriggers[2].getAttribute('aria-selected')).toBe('true');
+        expect(window.getComputedStyle(horizontalList).direction).toBe('rtl');
+
+        const verticalRoot = container.querySelector(
+            '[data-testid="vertical-tabs"]',
+        ) as HTMLElement;
+        const verticalTriggers = Array.from(
+            verticalRoot.querySelectorAll<HTMLButtonElement>('.rp-tabs-trigger'),
+        );
+
+        verticalTriggers[0].focus();
+        keydown(verticalTriggers[0], 'ArrowDown');
+        await flush();
+        expect(document.activeElement).toBe(verticalTriggers[1]);
+        expect(verticalTriggers[1].getAttribute('aria-selected')).toBe('true');
+
+        keydown(verticalTriggers[1], 'ArrowUp');
+        await flush();
+        expect(document.activeElement).toBe(verticalTriggers[0]);
     });
 
     it('supports manual keyboard activation', async () => {

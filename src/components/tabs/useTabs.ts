@@ -229,7 +229,12 @@ function getNextTrigger(
     const direction = ORIENTATION_NAVIGATION_KEYS[orientation][key];
     if (!direction) return undefined;
 
-    return triggers[(currentIndex + direction + triggers.length) % triggers.length];
+    const isHorizontalRtl =
+        orientation === 'horizontal' &&
+        list.ownerDocument.defaultView?.getComputedStyle(list).direction === 'rtl';
+    const navigationDirection = isHorizontalRtl ? -direction : direction;
+
+    return triggers[(currentIndex + navigationDirection + triggers.length) % triggers.length];
 }
 
 function useTabsItem(
@@ -252,7 +257,7 @@ export function useTabs(
 ): UseTabsReturn {
     const triggerRegistry = useTabsRegistry<TabsTriggerRegistration>();
     const contentRegistry = useTabsRegistry<TabsRegistration>();
-    const { items: triggers, unregister: unregisterTrigger } = triggerRegistry;
+    const { items: triggers } = triggerRegistry;
     const {
         items: contents,
         register: registerContent,
@@ -316,11 +321,16 @@ export function useTabs(
         select: selectValue,
     }));
 
-    function syncUncontrolledValue() {
+    function syncUncontrolledValue(reconcileMissing = false) {
         if (controllable.isControlled.value || isDisabled.value) return;
 
         const selectedTrigger = findRegistration(triggers.value, selectedValue.value);
-        if (selectedValue.value != null && !selectedTrigger?.disabled) return;
+        if (
+            selectedValue.value != null &&
+            (selectedTrigger ? !selectedTrigger.disabled : !reconcileMissing)
+        ) {
+            return;
+        }
 
         controllable.resetValue(firstEnabledTrigger.value?.value ?? null);
     }
@@ -348,6 +358,12 @@ export function useTabs(
     function registerTrigger(registration: TabsTriggerRegistration) {
         triggerRegistry.register(registration);
         syncUncontrolledValue();
+    }
+
+    function unregisterTrigger(id: string) {
+        const trigger = triggers.value.find((registration) => registration.id === id);
+        triggerRegistry.unregister(id);
+        syncUncontrolledValue(trigger?.value === selectedValue.value);
     }
 
     function onListKeydown(event: KeyboardEvent) {
