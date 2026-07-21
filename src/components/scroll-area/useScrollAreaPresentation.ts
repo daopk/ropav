@@ -23,6 +23,7 @@ export function useScrollAreaPresentation(
             class: 'rp-scroll-area',
             style: getRootStyle(props.scrollbarSize),
             'data-type': props.type,
+            'data-direction': scrollArea.metrics.direction,
             'data-scrollbars': props.scrollbars === false ? 'none' : props.scrollbars,
             'data-overflow-x': presence(scrollArea.metrics.overflowX),
             'data-overflow-y': presence(scrollArea.metrics.overflowY),
@@ -86,6 +87,7 @@ export function useScrollAreaPresentation(
     const cornerAttrs = computed(() => ({
         ...getPartAttrs('corner', { class: 'rp-scroll-area__corner' }),
         'aria-hidden': true,
+        'data-direction': scrollArea.metrics.direction,
         'data-visible': presence(
             scrollArea.horizontalScrollbarActive.value && scrollArea.verticalScrollbarActive.value,
         ),
@@ -125,6 +127,7 @@ export function useScrollAreaPresentation(
             'aria-disabled': !scrollArea.getOverflow(axis) || undefined,
             'aria-hidden': props.embedded || !active || undefined,
             'data-orientation': vertical ? 'vertical' : 'horizontal',
+            'data-direction': scrollArea.metrics.direction,
             'data-active': presence(active),
             'data-visible': presence(visible),
         };

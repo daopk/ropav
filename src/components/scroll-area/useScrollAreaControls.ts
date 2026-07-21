@@ -1,5 +1,10 @@
 import type { Ref } from 'vue';
-import { clamp, type ScrollAxis } from './scrollAreaCore';
+import {
+    clamp,
+    getRawHorizontalPosition,
+    type ScrollAxis,
+    type ScrollDirection,
+} from './scrollAreaCore';
 import type { ScrollAreaMetricsController } from './useScrollAreaMetrics';
 import type { ScrollAreaPosition } from './types';
 
@@ -19,7 +24,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
     let previousPosition: ScrollAreaPosition = { x: 0, y: 0 };
 
     function onViewportScroll(event: Event) {
-        options.metrics.update();
+        options.metrics.updatePosition();
         options.showDuringScroll();
 
         const position = {
@@ -55,9 +60,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
                 position.x >= maxPosition - 1 && previousPosition.x < maxPosition - 1;
 
             if (reachedStart || reachedEnd) {
-                const viewport = options.viewportRef.value;
-                const view = viewport?.ownerDocument.defaultView;
-                const rtl = viewport ? view?.getComputedStyle(viewport).direction === 'rtl' : false;
+                const rtl = options.metrics.metrics.direction === 'rtl';
 
                 if (reachedStart) boundaries.push(rtl ? 'right' : 'left');
                 if (reachedEnd) boundaries.push(rtl ? 'left' : 'right');
@@ -89,13 +92,16 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
         if (!viewport) return;
 
         if (axis === 'x') {
-            const direction = viewport.scrollLeft < 0 ? -1 : 1;
-            viewport.scrollLeft = direction * clamp(value, 0, options.metrics.getMaxPosition('x'));
+            viewport.scrollLeft = getRawHorizontalPosition(
+                value,
+                options.metrics.getMaxPosition('x'),
+                options.metrics.metrics.direction,
+            );
         } else {
             viewport.scrollTop = clamp(value, 0, options.metrics.getMaxPosition('y'));
         }
 
-        options.metrics.update();
+        options.metrics.updatePosition();
         options.showDuringScroll();
     }
 
@@ -106,10 +112,12 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
         const current = options.metrics.getPosition(axis);
         const pageSize = axis === 'x' ? viewport.clientWidth : viewport.clientHeight;
         const nextPosition = getKeyboardPosition(
+            axis,
             event.key,
             current,
             pageSize,
             options.metrics.getMaxPosition(axis),
+            options.metrics.metrics.direction,
         );
         if (nextPosition === undefined) return;
 
@@ -120,7 +128,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
     function onScrollbarWheel(axis: ScrollAxis, event: WheelEvent) {
         if (!options.metrics.getOverflow(axis)) return;
 
-        const delta = axis === 'x' ? event.deltaX || event.deltaY : event.deltaY;
+        const delta = getWheelDelta(axis, event, options.metrics.metrics.direction);
         if (!delta) return;
 
         event.preventDefault();
@@ -133,7 +141,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
 
         if (typeof viewport.scrollTo === 'function') viewport.scrollTo(scrollOptions);
         else setFallbackPosition(viewport, scrollOptions, false);
-        options.metrics.scheduleUpdate();
+        options.metrics.schedulePositionUpdate();
     }
 
     function scrollBy(scrollOptions: ScrollToOptions) {
@@ -142,7 +150,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
 
         if (typeof viewport.scrollBy === 'function') viewport.scrollBy(scrollOptions);
         else setFallbackPosition(viewport, scrollOptions, true);
-        options.metrics.scheduleUpdate();
+        options.metrics.schedulePositionUpdate();
     }
 
     return {
@@ -155,12 +163,21 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
     };
 }
 
-function getKeyboardPosition(key: string, current: number, pageSize: number, max: number) {
+function getKeyboardPosition(
+    axis: ScrollAxis,
+    key: string,
+    current: number,
+    pageSize: number,
+    max: number,
+    direction: ScrollDirection,
+) {
     switch (key) {
         case 'ArrowLeft':
+            return current + (axis === 'x' && direction === 'rtl' ? 40 : -40);
         case 'ArrowUp':
             return current - 40;
         case 'ArrowRight':
+            return current + (axis === 'x' && direction === 'rtl' ? -40 : 40);
         case 'ArrowDown':
             return current + 40;
         case 'PageUp':
@@ -174,6 +191,12 @@ function getKeyboardPosition(key: string, current: number, pageSize: number, max
         default:
             return undefined;
     }
+}
+
+function getWheelDelta(axis: ScrollAxis, event: WheelEvent, direction: ScrollDirection) {
+    if (axis === 'y') return event.deltaY;
+    if (!event.deltaX) return event.deltaY;
+    return direction === 'rtl' ? -event.deltaX : event.deltaX;
 }
 
 function setFallbackPosition(

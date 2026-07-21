@@ -20,7 +20,9 @@ export type ScrollAreaScrollbars = (typeof scrollAreaScrollbars)[number];
 export type ScrollAreaOrientation = 'horizontal' | 'vertical';
 
 export interface ScrollAreaPosition {
+    /** Logical horizontal offset: zero at inline-start and increasing toward inline-end. */
     x: number;
+    /** Vertical offset from the top edge. */
     y: number;
 }
 
@@ -28,7 +30,9 @@ export interface ScrollAreaSlotProps {
     position: ScrollAreaPosition;
     overflowX: boolean;
     overflowY: boolean;
+    /** Uses the native `Element.scrollTo()` coordinate semantics. */
     scrollTo: (options: ScrollToOptions) => void;
+    /** Uses the native `Element.scrollBy()` coordinate semantics. */
     scrollBy: (options: ScrollToOptions) => void;
     update: () => void;
 }

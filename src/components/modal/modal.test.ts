@@ -223,6 +223,8 @@ describe('Modal', () => {
         expect(body.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
 
         setGeometry(viewport, { clientHeight: 120, scrollHeight: 320 });
+        window.dispatchEvent(new Event('resize'));
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         viewport.scrollTop = 40;
         viewport.dispatchEvent(new Event('scroll'));
         await flush();

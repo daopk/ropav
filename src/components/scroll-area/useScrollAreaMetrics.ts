@@ -2,6 +2,8 @@ import { computed, nextTick, onBeforeUnmount, onMounted, reactive, type Ref } fr
 import { createRafScheduler } from '@/utils/rafScheduler';
 import {
     clamp,
+    getLogicalHorizontalPosition,
+    getScrollDirection,
     getThumbGeometry,
     getThumbOffset,
     type ScrollAreaMetrics,
@@ -20,6 +22,7 @@ interface UseScrollAreaMetricsOptions {
 
 export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
     const metrics = reactive<ScrollAreaMetrics>({
+        direction: 'ltr',
         clientWidth: 0,
         clientHeight: 0,
         scrollWidth: 0,
@@ -37,9 +40,15 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
 
     let resizeObserver: ResizeObserver | undefined;
     let mutationObserver: MutationObserver | undefined;
+    let horizontalThumbSizeRatio = 1;
+    let verticalThumbSizeRatio = 1;
 
     const scheduler = createRafScheduler(
         update,
+        () => options.viewportRef.value?.ownerDocument.defaultView,
+    );
+    const positionScheduler = createRafScheduler(
+        updatePosition,
         () => options.viewportRef.value?.ownerDocument.defaultView,
     );
 
@@ -47,24 +56,24 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
         const viewport = options.viewportRef.value;
         if (!viewport) return;
 
-        readViewportMetrics(viewport);
-        updateThumbMetrics(viewport);
+        metrics.direction = getScrollDirection(viewport);
+        readViewportGeometry(viewport);
+        updateThumbGeometry(viewport);
+        updatePosition(viewport);
     }
 
-    function readViewportMetrics(viewport: HTMLElement) {
+    function readViewportGeometry(viewport: HTMLElement) {
         metrics.clientWidth = viewport.clientWidth;
         metrics.clientHeight = viewport.clientHeight;
         metrics.scrollWidth = viewport.scrollWidth;
         metrics.scrollHeight = viewport.scrollHeight;
-        metrics.x = viewport.scrollLeft;
-        metrics.y = viewport.scrollTop;
         metrics.overflowX =
             options.horizontalEnabled.value && viewport.scrollWidth > viewport.clientWidth + 1;
         metrics.overflowY =
             options.verticalEnabled.value && viewport.scrollHeight > viewport.clientHeight + 1;
     }
 
-    function updateThumbMetrics(viewport: HTMLElement) {
+    function updateThumbGeometry(viewport: HTMLElement) {
         const horizontalGeometry = getThumbGeometry(
             options.horizontalScrollbarRef.value?.clientWidth ?? viewport.clientWidth,
             viewport.clientWidth,
@@ -77,21 +86,34 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
         );
 
         metrics.horizontalThumbSize = horizontalGeometry.size;
-        metrics.horizontalThumbOffset = getThumbOffset(
-            clamp(Math.abs(viewport.scrollLeft), 0, getMaxPosition('x')),
-            getMaxPosition('x'),
-            horizontalGeometry.offsetRatio,
-        );
+        horizontalThumbSizeRatio = horizontalGeometry.offsetRatio;
         metrics.verticalThumbSize = verticalGeometry.size;
+        verticalThumbSizeRatio = verticalGeometry.offsetRatio;
+    }
+
+    function updatePosition(viewport = options.viewportRef.value) {
+        if (!viewport) return;
+
+        metrics.x = getLogicalHorizontalPosition(
+            viewport.scrollLeft,
+            getMaxPosition('x'),
+            metrics.direction,
+        );
+        metrics.y = clamp(viewport.scrollTop, 0, getMaxPosition('y'));
+        metrics.horizontalThumbOffset = getThumbOffset(
+            metrics.x,
+            getMaxPosition('x'),
+            horizontalThumbSizeRatio,
+        );
         metrics.verticalThumbOffset = getThumbOffset(
-            clamp(viewport.scrollTop, 0, getMaxPosition('y')),
+            metrics.y,
             getMaxPosition('y'),
-            verticalGeometry.offsetRatio,
+            verticalThumbSizeRatio,
         );
     }
 
     function getPosition(axis: ScrollAxis) {
-        return axis === 'x' ? Math.abs(metrics.x) : metrics.y;
+        return axis === 'x' ? metrics.x : metrics.y;
     }
 
     function getMaxPosition(axis: ScrollAxis) {
@@ -154,13 +176,16 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
     onBeforeUnmount(() => {
         detachObservers();
         scheduler.cancel();
+        positionScheduler.cancel();
     });
 
     return {
         metrics,
         position,
         update,
+        updatePosition,
         scheduleUpdate: scheduler.schedule,
+        schedulePositionUpdate: positionScheduler.schedule,
         getPosition,
         getMaxPosition,
         getOverflow,

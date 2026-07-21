@@ -42,12 +42,13 @@ function dispatchPointer(
     target: EventTarget,
     type: 'pointerdown' | 'pointermove' | 'pointerup',
     clientY: number,
+    clientX = 5,
 ) {
     const init = {
         bubbles: true,
         button: 0,
         cancelable: true,
-        clientX: 5,
+        clientX,
         clientY,
         isPrimary: true,
         pointerId: 1,
@@ -63,6 +64,20 @@ function dispatchPointer(
         });
     }
     target.dispatchEvent(event);
+}
+
+function setRtlNegativeScrollModel(element: HTMLElement, maxPosition: number) {
+    let scrollLeft = 0;
+
+    Object.defineProperty(element, 'scrollLeft', {
+        configurable: true,
+        get: () => scrollLeft,
+        set: (value: number) => {
+            scrollLeft = Math.min(0, Math.max(-maxPosition, Number(value)));
+        },
+    });
+
+    return () => scrollLeft;
 }
 
 function mountScrollArea(
@@ -324,7 +339,12 @@ describe('ScrollArea', () => {
     it('maps horizontal boundary events to physical edges in RTL', async () => {
         const onReachLeft = vi.fn();
         const onReachRight = vi.fn();
-        const { container, instance } = mountScrollArea({ onReachLeft, onReachRight });
+        const onPositionChange = vi.fn();
+        const { container, instance } = mountScrollArea({
+            onReachLeft,
+            onReachRight,
+            onScrollPositionChange: onPositionChange,
+        });
         await flush();
 
         const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
@@ -337,11 +357,168 @@ describe('ScrollArea', () => {
         await flush();
         expect(onReachLeft).toHaveBeenCalledOnce();
         expect(onReachRight).not.toHaveBeenCalled();
+        expect(onPositionChange).toHaveBeenLastCalledWith({ x: 200, y: 0 });
 
         viewport.scrollLeft = 0;
         viewport.dispatchEvent(new Event('scroll'));
         await flush();
         expect(onReachRight).toHaveBeenCalledOnce();
+    });
+
+    it('normalizes RTL negative positions across keyboard and wheel controls', async () => {
+        const onPositionChange = vi.fn();
+        const { container, instance } = mountScrollArea({
+            type: 'always',
+            scrollbars: 'x',
+            onScrollPositionChange: onPositionChange,
+        });
+        await flush();
+
+        const root = container.querySelector('.rp-scroll-area') as HTMLElement;
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--horizontal',
+        ) as HTMLElement;
+        const thumb = scrollbar.firstElementChild as HTMLElement;
+        viewport.style.direction = 'rtl';
+        setGeometry(viewport, { clientWidth: 100, scrollWidth: 300 });
+        setGeometry(scrollbar, { clientWidth: 100 });
+        const getScrollLeft = setRtlNegativeScrollModel(viewport, 200);
+
+        instance.value?.update();
+        await flush();
+
+        expect(root.dataset.direction).toBe('rtl');
+        expect(scrollbar.dataset.direction).toBe('rtl');
+        expect(getScrollLeft()).toBe(0);
+
+        keydown(scrollbar, 'ArrowLeft');
+        await flush();
+        expect(getScrollLeft()).toBe(-40);
+        expect(scrollbar.getAttribute('aria-valuenow')).toBe('40');
+        expect(
+            Number.parseFloat(thumb.style.getPropertyValue('--_rp-scroll-area-thumb-offset')),
+        ).toBeGreaterThan(0);
+
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+        expect(onPositionChange).toHaveBeenLastCalledWith({ x: 40, y: 0 });
+
+        const verticalWheel = new WheelEvent('wheel', {
+            bubbles: true,
+            cancelable: true,
+            deltaY: 30,
+        });
+        scrollbar.dispatchEvent(verticalWheel);
+        await flush();
+        expect(verticalWheel.defaultPrevented).toBe(true);
+        expect(getScrollLeft()).toBe(-70);
+
+        const horizontalWheel = new WheelEvent('wheel', {
+            bubbles: true,
+            cancelable: true,
+            deltaX: -20,
+        });
+        scrollbar.dispatchEvent(horizontalWheel);
+        await flush();
+        expect(getScrollLeft()).toBe(-90);
+
+        keydown(scrollbar, 'ArrowRight');
+        await flush();
+        expect(getScrollLeft()).toBe(-50);
+
+        keydown(scrollbar, 'Home');
+        await flush();
+        expect(getScrollLeft()).toBe(0);
+
+        keydown(scrollbar, 'End');
+        await flush();
+        expect(getScrollLeft()).toBe(-200);
+    });
+
+    it('mirrors horizontal track clicks and thumb dragging in RTL', async () => {
+        const { container, instance } = mountScrollArea({ type: 'always', scrollbars: 'x' });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--horizontal',
+        ) as HTMLElement;
+        const thumb = scrollbar.firstElementChild as HTMLElement;
+        viewport.style.direction = 'rtl';
+        setGeometry(viewport, { clientWidth: 100, scrollWidth: 300 });
+        setGeometry(scrollbar, { clientWidth: 100 });
+        setRect(scrollbar, { left: 0, right: 100, width: 100 });
+        setRect(thumb, { left: 75, right: 100, width: 25 });
+        const getScrollLeft = setRtlNegativeScrollModel(viewport, 200);
+
+        instance.value?.update();
+        await flush();
+
+        dispatchPointer(scrollbar, 'pointerdown', 5, 12.5);
+        await flush();
+        expect(getScrollLeft()).toBe(-200);
+
+        dispatchPointer(scrollbar, 'pointerdown', 5, 87.5);
+        await flush();
+        expect(getScrollLeft()).toBe(0);
+
+        viewport.scrollLeft = -100;
+        instance.value?.update();
+        dispatchPointer(thumb, 'pointerdown', 5, 75);
+        dispatchPointer(window, 'pointermove', 5, 50);
+        await flush();
+        expect(getScrollLeft()).toBeCloseTo(-166.67, 1);
+
+        dispatchPointer(window, 'pointerup', 5, 50);
+    });
+
+    it('updates scroll position without rereading geometry', async () => {
+        const onPositionChange = vi.fn();
+        const { container, instance } = mountScrollArea({
+            type: 'always',
+            scrollbars: 'x',
+            onScrollPositionChange: onPositionChange,
+        });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--horizontal',
+        ) as HTMLElement;
+        let geometryReads = 0;
+        Object.defineProperties(viewport, {
+            clientWidth: {
+                configurable: true,
+                get: () => {
+                    geometryReads += 1;
+                    return 100;
+                },
+            },
+            scrollWidth: {
+                configurable: true,
+                get: () => {
+                    geometryReads += 1;
+                    return 300;
+                },
+            },
+        });
+        Object.defineProperty(scrollbar, 'clientWidth', {
+            configurable: true,
+            get: () => {
+                geometryReads += 1;
+                return 100;
+            },
+        });
+
+        instance.value?.update();
+        geometryReads = 0;
+        viewport.scrollLeft = 25;
+        viewport.dispatchEvent(new Event('scroll'));
+        await flush();
+
+        expect(onPositionChange).toHaveBeenLastCalledWith({ x: 25, y: 0 });
+        expect(geometryReads).toBe(0);
     });
 
     it('supports keyboard scrolling on the custom scrollbar', async () => {

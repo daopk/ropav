@@ -68,6 +68,10 @@
         user-select: none;
         transition: opacity var(--rp-transition-fast);
 
+        &[data-direction='rtl'] {
+            direction: rtl;
+        }
+
         &[data-visible] {
             opacity: 1;
             pointer-events: auto;
@@ -121,6 +125,10 @@
         transform: translateX(var(--_rp-scroll-area-thumb-offset));
     }
 
+    &__scrollbar--horizontal[data-direction='rtl'] &__thumb {
+        transform: translateX(calc(-1 * var(--_rp-scroll-area-thumb-offset)));
+    }
+
     &__scrollbar--vertical &__thumb {
         width: 100%;
         height: var(--_rp-scroll-area-thumb-size);
@@ -129,7 +137,7 @@
 
     &__corner {
         position: absolute;
-        right: 0;
+        inset-inline-end: 0;
         bottom: 0;
         z-index: 1;
         width: var(--_rp-scroll-area-scrollbar-size);
@@ -137,6 +145,10 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity var(--rp-transition-fast);
+
+        &[data-direction='rtl'] {
+            direction: rtl;
+        }
 
         &[data-visible] {
             opacity: 1;

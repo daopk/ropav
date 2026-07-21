@@ -1,8 +1,10 @@
 import type { ScrollAreaScrollbars, ScrollAreaType } from './types';
 
 export type ScrollAxis = 'x' | 'y';
+export type ScrollDirection = 'ltr' | 'rtl';
 
 export interface ScrollAreaMetrics {
+    direction: ScrollDirection;
     clientWidth: number;
     clientHeight: number;
     scrollWidth: number;
@@ -21,6 +23,29 @@ const minimumThumbSize = 18;
 
 export function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
+}
+
+export function getScrollDirection(viewport: HTMLElement): ScrollDirection {
+    const view = viewport.ownerDocument.defaultView;
+    return view?.getComputedStyle(viewport).direction === 'rtl' ? 'rtl' : 'ltr';
+}
+
+export function getLogicalHorizontalPosition(
+    scrollLeft: number,
+    maxPosition: number,
+    direction: ScrollDirection,
+) {
+    const position = direction === 'rtl' ? -scrollLeft : scrollLeft;
+    return clamp(position, 0, maxPosition);
+}
+
+export function getRawHorizontalPosition(
+    position: number,
+    maxPosition: number,
+    direction: ScrollDirection,
+) {
+    const logicalPosition = clamp(position, 0, maxPosition);
+    return direction === 'rtl' && logicalPosition !== 0 ? -logicalPosition : logicalPosition;
 }
 
 export function isAxisEnabled(

@@ -114,6 +114,78 @@ export const Horizontal: Story = {
     }),
 };
 
+export const HorizontalRtl: Story = {
+    tags: ['test'],
+    args: { scrollbars: 'both', type: 'always' },
+    render: (args) => ({
+        components: { ScrollArea },
+        setup: () => ({ args }),
+        template: `
+            <ScrollArea
+                v-bind="args"
+                dir="rtl"
+                aria-label="RTL color palette"
+                style="width: 420px; height: 152px; border: 1px solid var(--rp-color-default-border); border-radius: var(--rp-radius-md);"
+            >
+                <div style="display: flex; width: max-content; gap: 12px; padding: 16px 16px 22px;">
+                    <div
+                        v-for="color in ['blue', 'cyan', 'teal', 'green', 'lime', 'yellow']"
+                        :key="color"
+                        :style="{
+                            display: 'grid',
+                            width: '104px',
+                            height: '220px',
+                            placeItems: 'center',
+                            color: 'var(--rp-color-' + color + '-6-contrast)',
+                            background: 'var(--rp-color-' + color + '-6)',
+                            borderRadius: 'var(--rp-radius-sm)',
+                            fontWeight: 600,
+                        }"
+                    >
+                        {{ color }}
+                    </div>
+                </div>
+            </ScrollArea>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const root = canvasElement.querySelector<HTMLElement>('.rp-scroll-area')!;
+        const viewport = root.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
+        const scrollbar = root.querySelector<HTMLElement>(
+            '.rp-scroll-area__scrollbar--horizontal',
+        )!;
+        const thumb = scrollbar.querySelector<HTMLElement>('.rp-scroll-area__thumb')!;
+        const verticalScrollbar = root.querySelector<HTMLElement>(
+            '.rp-scroll-area__scrollbar--vertical',
+        )!;
+        const corner = root.querySelector<HTMLElement>('.rp-scroll-area__corner')!;
+
+        await waitFor(() => expect(root).toHaveAttribute('data-direction', 'rtl'));
+        await waitFor(() => expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth));
+        await waitFor(() => expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight));
+        expect(viewport.scrollLeft).toBe(0);
+        expect(
+            Math.abs(
+                verticalScrollbar.getBoundingClientRect().left - root.getBoundingClientRect().left,
+            ),
+        ).toBeLessThanOrEqual(2);
+        expect(
+            Math.abs(corner.getBoundingClientRect().left - root.getBoundingClientRect().left),
+        ).toBeLessThanOrEqual(2);
+
+        const initialThumbLeft = thumb.getBoundingClientRect().left;
+        scrollbar.focus();
+        await userEvent.keyboard('{ArrowLeft}');
+
+        await waitFor(() => expect(viewport.scrollLeft).toBeLessThan(0));
+        await waitFor(() =>
+            expect(thumb.getBoundingClientRect().left).toBeLessThan(initialThumbLeft),
+        );
+        expect(Number(scrollbar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+        scrollbar.blur();
+    },
+};
+
 export const BothAxes: Story = {
     args: { type: 'always' },
     render: (args) => ({

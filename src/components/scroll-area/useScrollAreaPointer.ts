@@ -10,6 +10,7 @@ interface DragSession {
     startPosition: number;
     maxPosition: number;
     travel: number;
+    coordinateDirection: 1 | -1;
     view: Window | null;
 }
 
@@ -41,8 +42,15 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         if (travel === 0) return;
 
         event.preventDefault();
-        const ratio = clamp((coordinate - trackStart - thumbSize / 2) / travel, 0, 1);
-        options.controls.writeAxisPosition(axis, ratio * options.metrics.getMaxPosition(axis));
+        const physicalRatio = clamp((coordinate - trackStart - thumbSize / 2) / travel, 0, 1);
+        const logicalRatio =
+            axis === 'x' && options.metrics.metrics.direction === 'rtl'
+                ? 1 - physicalRatio
+                : physicalRatio;
+        options.controls.writeAxisPosition(
+            axis,
+            logicalRatio * options.metrics.getMaxPosition(axis),
+        );
     }
 
     function onThumbPointerdown(axis: ScrollAxis, event: PointerEvent) {
@@ -81,6 +89,8 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
             startPosition: options.metrics.getPosition(axis),
             maxPosition: options.metrics.getMaxPosition(axis),
             travel,
+            coordinateDirection:
+                axis === 'x' && options.metrics.metrics.direction === 'rtl' ? -1 : 1,
             view,
         };
         options.setDraggingAxis(axis);
@@ -96,7 +106,8 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         const delta = getPointerCoordinate(session.axis, event) - session.startCoordinate;
         options.controls.writeAxisPosition(
             session.axis,
-            session.startPosition + (delta / session.travel) * session.maxPosition,
+            session.startPosition +
+                (session.coordinateDirection * delta * session.maxPosition) / session.travel,
         );
     }
 

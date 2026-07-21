@@ -239,6 +239,8 @@ describe('Tabs', () => {
         expect(onListKeydown).toHaveBeenCalledOnce();
 
         setGeometry(horizontalViewport, { clientWidth: 120, scrollWidth: 320 });
+        window.dispatchEvent(new Event('resize'));
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         horizontalViewport.scrollLeft = 40;
         horizontalViewport.dispatchEvent(new Event('scroll'));
         await flush();
