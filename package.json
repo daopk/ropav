@@ -17,7 +17,8 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "**/*.scss"
   ],
   "publishConfig": {
     "access": "public",
