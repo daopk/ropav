@@ -436,6 +436,40 @@ describe('ScrollArea', () => {
         expect(getScrollLeft()).toBe(-200);
     });
 
+    it('refreshes RTL direction when it changes after mount', async () => {
+        const { container, instance } = mountScrollArea({ type: 'always', scrollbars: 'x' });
+        await flush();
+
+        const root = container.querySelector('.rp-scroll-area') as HTMLElement;
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--horizontal',
+        ) as HTMLElement;
+        setGeometry(viewport, { clientWidth: 100, scrollWidth: 300 });
+        setGeometry(scrollbar, { clientWidth: 100 });
+        const getScrollLeft = setRtlNegativeScrollModel(viewport, 200);
+
+        instance.value?.update();
+        expect(root.dataset.direction).toBe('ltr');
+
+        root.dir = 'rtl';
+        keydown(scrollbar, 'ArrowLeft');
+        await flush();
+
+        expect(root.dataset.direction).toBe('rtl');
+        expect(scrollbar.dataset.direction).toBe('rtl');
+        expect(getScrollLeft()).toBe(-40);
+        expect(scrollbar.getAttribute('aria-valuenow')).toBe('40');
+
+        root.removeAttribute('dir');
+        await flush();
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        await flush();
+
+        expect(root.dataset.direction).toBe('ltr');
+        expect(scrollbar.dataset.direction).toBe('ltr');
+    });
+
     it('mirrors horizontal track clicks and thumb dragging in RTL', async () => {
         const { container, instance } = mountScrollArea({ type: 'always', scrollbars: 'x' });
         await flush();

@@ -40,6 +40,7 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
 
     let resizeObserver: ResizeObserver | undefined;
     let mutationObserver: MutationObserver | undefined;
+    let directionObserver: MutationObserver | undefined;
     let horizontalThumbSizeRatio = 1;
     let verticalThumbSizeRatio = 1;
 
@@ -56,7 +57,6 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
         const viewport = options.viewportRef.value;
         if (!viewport) return;
 
-        metrics.direction = getScrollDirection(viewport);
         readViewportGeometry(viewport);
         updateThumbGeometry(viewport);
         updatePosition(viewport);
@@ -94,6 +94,7 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
     function updatePosition(viewport = options.viewportRef.value) {
         if (!viewport) return;
 
+        metrics.direction = getScrollDirection(viewport);
         metrics.x = getLogicalHorizontalPosition(
             viewport.scrollLeft,
             getMaxPosition('x'),
@@ -139,7 +140,25 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
         } else {
             attachMutationObserver(view);
         }
+        attachDirectionObserver(view, viewport);
         view?.addEventListener('resize', scheduler.schedule);
+    }
+
+    function attachDirectionObserver(view: Window | null, viewport: HTMLElement) {
+        const MutationObserverConstructor =
+            (view as (Window & typeof globalThis) | null)?.MutationObserver ??
+            globalThis.MutationObserver;
+        if (!MutationObserverConstructor) return;
+
+        directionObserver = new MutationObserverConstructor(positionScheduler.schedule);
+        let element: HTMLElement | null = viewport;
+        while (element) {
+            directionObserver.observe(element, {
+                attributes: true,
+                attributeFilter: ['class', 'dir', 'style'],
+            });
+            element = element.parentElement;
+        }
     }
 
     function attachMutationObserver(view: Window | null) {
@@ -163,8 +182,10 @@ export function useScrollAreaMetrics(options: UseScrollAreaMetricsOptions) {
         const view = options.viewportRef.value?.ownerDocument.defaultView;
         resizeObserver?.disconnect();
         mutationObserver?.disconnect();
+        directionObserver?.disconnect();
         resizeObserver = undefined;
         mutationObserver = undefined;
+        directionObserver = undefined;
         view?.removeEventListener('resize', scheduler.schedule);
     }
 

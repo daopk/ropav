@@ -30,6 +30,7 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         if (event.target !== event.currentTarget || event.button !== 0) return;
         if (!options.metrics.getOverflow(axis)) return;
 
+        options.metrics.updatePosition();
         const scrollbar = event.currentTarget as HTMLElement;
         const thumb = scrollbar.firstElementChild as HTMLElement | null;
         const trackRect = scrollbar.getBoundingClientRect();
@@ -57,6 +58,7 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         if (event.button !== 0 || event.isPrimary === false) return;
         if (!options.metrics.getOverflow(axis)) return;
 
+        options.metrics.updatePosition();
         const scrollbar = getScrollbar(axis);
         const thumb = event.currentTarget as HTMLElement;
         if (!scrollbar) return;

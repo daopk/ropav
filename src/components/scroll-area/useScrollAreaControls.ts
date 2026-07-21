@@ -109,6 +109,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
         const viewport = options.viewportRef.value;
         if (!viewport || !options.metrics.getOverflow(axis)) return;
 
+        options.metrics.updatePosition(viewport);
         const current = options.metrics.getPosition(axis);
         const pageSize = axis === 'x' ? viewport.clientWidth : viewport.clientHeight;
         const nextPosition = getKeyboardPosition(
@@ -128,6 +129,7 @@ export function useScrollAreaControls(options: UseScrollAreaControlsOptions) {
     function onScrollbarWheel(axis: ScrollAxis, event: WheelEvent) {
         if (!options.metrics.getOverflow(axis)) return;
 
+        options.metrics.updatePosition();
         const delta = getWheelDelta(axis, event, options.metrics.metrics.direction);
         if (!delta) return;
 
