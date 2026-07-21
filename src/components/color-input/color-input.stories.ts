@@ -121,12 +121,15 @@ export const Default: Story = {
         const previewRect = preview.getBoundingClientRect();
         const pickerRect = picker.getBoundingClientRect();
         const pickerSurfaceRect = pickerSurface.getBoundingClientRect();
+        const crossAxisShift = pickerRect.left - inputRect.left;
 
         expect(picker).toHaveClass('rp-color-input__popover');
         expect(Number.parseFloat(getComputedStyle(picker).paddingLeft)).toBeLessThan(16);
         expect(pickerRect.left).toBeGreaterThanOrEqual(8);
-        expect(Math.abs(pickerRect.left - inputRect.left)).toBeLessThanOrEqual(16);
-        expect(Math.abs(pickerSurfaceRect.left - previewRect.left)).toBeLessThanOrEqual(16);
+        expect(pickerRect.right).toBeLessThanOrEqual(storyDocument.documentElement.clientWidth - 8);
+        expect(
+            Math.abs(pickerSurfaceRect.left - previewRect.left - crossAxisShift),
+        ).toBeLessThanOrEqual(0.5);
     },
 };
 
