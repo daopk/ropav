@@ -176,10 +176,26 @@ import { type TextareaProps } from 'ropav/textarea';
 import { vaporIconCompiler } from 'ropav/unplugin-icons';
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
+type IfEqual<Left, Right, Then = Left, Else = never> =
+    (<Value>() => Value extends Left ? 1 : 2) extends <Value>() => Value extends Right ? 1 : 2
+        ? Then
+        : Else;
+type ReadonlyKeys<Value> = {
+    [Key in keyof Value]-?: IfEqual<
+        { [Property in Key]: Value[Key] },
+        { -readonly [Property in Key]: Value[Key] },
+        never,
+        Key
+    >;
+}[keyof Value];
 type ToastColorIsTyped = IsAny<ToastProps['color']> extends false ? true : never;
 type RootToastColorIsTyped = IsAny<RootToastProps['color']> extends false ? true : never;
 type ToastUpdateIdIsExcluded = 'id' extends keyof ToastUpdateOptions ? never : true;
 type RootToastUpdateIdIsExcluded = 'id' extends keyof RootToastUpdateOptions ? never : true;
+type ControllableValueIsReadonly =
+    'value' extends ReadonlyKeys<UseControllableValueReturn<string>['value']> ? true : never;
+type FloatingPositionedStateIsReadonly =
+    'value' extends ReadonlyKeys<UseFloatingPositionReturn['isPositioned']> ? true : never;
 
 const props: ToastProps = { color: 'blue.5' };
 const iconCompiler = vaporIconCompiler();
@@ -212,8 +228,7 @@ const controllableValue: UseControllableValueReturn<string> =
 const rootControllableValue: RootUseControllableValueReturn<string> = useRootControllableValue(
     rootControllableValueOptions,
 );
-// @ts-expect-error Public controllable state is readonly.
-controllableValue.value.value = 'mutated';
+const controllableValueIsReadonly: ControllableValueIsReadonly = true;
 const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
 const dropdownRootProps: DropdownMenuRootPrimitiveProps = {
@@ -321,10 +336,9 @@ const rootTeleportComposable: typeof useTeleportTarget = useRootTeleportTarget;
 
 function verifyFloatingReturn(result: UseFloatingPositionReturn) {
     const placement: FloatingPlacement = result.actualPlacement.value;
-    // @ts-expect-error Public positioning state is readonly.
-    result.isPositioned.value = false;
     return placement;
 }
+const floatingPositionedStateIsReadonly: FloatingPositionedStateIsReadonly = true;
 
 const teleportTarget: TeleportTarget = 'body';
 const rootTeleportTarget: RootTeleportTarget = teleportTarget;
@@ -557,6 +571,7 @@ void [
     rootControllableValueOptions,
     controllableValue,
     rootControllableValue,
+    controllableValueIsReadonly,
     overlayLayerProviderProps,
     rootOverlayLayerProviderProps,
     overlayLayerProviderVNode,
@@ -610,6 +625,7 @@ void [
     publicTeleportComposable,
     rootTeleportComposable,
     verifyFloatingReturn,
+    floatingPositionedStateIsReadonly,
     teleportTarget,
     rootTeleportTarget,
     teleportProviderProps,

@@ -114,15 +114,12 @@ const accordionTriggerClass: AccordionTriggerProps['class'] = [
     'consumer-trigger',
     { active: true },
 ];
-
-const invalidClassNames: StylesApiClassNames<ButtonPart> = {
-    // @ts-expect-error internal wrappers are not public parts
-    content: 'invalid',
-};
-const invalidStyles: StylesApiStyles<ButtonPart> = {
-    // @ts-expect-error arbitrary part keys are rejected
-    wrapper: { color: 'red' },
-};
+type InternalClassNameIsExcluded = 'content' extends keyof StylesApiClassNames<ButtonPart>
+    ? never
+    : true;
+type ArbitraryStyleIsExcluded = 'wrapper' extends keyof StylesApiStyles<ButtonPart> ? never : true;
+const internalClassNameIsExcluded: InternalClassNameIsExcluded = true;
+const arbitraryStyleIsExcluded: ArbitraryStyleIsExcluded = true;
 
 void [
     parts,
@@ -130,6 +127,6 @@ void [
     rootModalParts,
     buttonProps,
     accordionTriggerClass,
-    invalidClassNames,
-    invalidStyles,
+    internalClassNameIsExcluded,
+    arbitraryStyleIsExcluded,
 ];

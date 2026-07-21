@@ -2,6 +2,7 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "allowJs": true,
     "paths": {
       "@/*": ["./src/*"],
       "ropav/unplugin-icons": ["./src/unplugin-icons.ts"]

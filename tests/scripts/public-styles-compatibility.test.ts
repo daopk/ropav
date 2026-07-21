@@ -3,7 +3,6 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-// @ts-expect-error The build scripts are plain JavaScript modules without declaration files.
 import * as compatibility from '../../scripts/public-styles-compatibility.mjs';
 
 const { checkReleasedPublicStylesCompatibility, comparePublicStylesManifests } = compatibility;
