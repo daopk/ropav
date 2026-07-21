@@ -641,6 +641,26 @@ describe.each(contracts)('$name controllable-state contract', ({ mount }) => {
         expect(contract.read()).toEqual(contract.accepted);
         expect(contract.updates).toEqual([contract.requested]);
     });
+
+    it('accepts a new request after control is released', async () => {
+        const contract = mount();
+        const settle = async () => {
+            await flush();
+            await contract.settle?.();
+        };
+
+        await settle();
+        contract.request();
+        await settle();
+
+        contract.setControlled(undefined);
+        await settle();
+
+        contract.request();
+        await settle();
+        expect(contract.read()).toEqual(contract.requested);
+        expect(contract.updates).toEqual([contract.requested, contract.requested]);
+    });
 });
 
 interface NullContractHarness {

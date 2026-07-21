@@ -442,8 +442,8 @@ export function useHoverDisclosure(
     }));
 
     watch(
-        openState,
-        (value) => {
+        [openState, controllableOpen.isControlled],
+        ([value]) => {
             requestedOpen = value;
             if (!value) {
                 contentHovered = false;
