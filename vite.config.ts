@@ -1,22 +1,13 @@
-import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
 import Icons from 'unplugin-icons/vite';
 
+import { createLibraryEntries } from './scripts/public-api.mjs';
 import { injectComponentCss } from './tooling/vite/inject-component-css';
 import { rewriteDeclarationImportExtensions } from './tooling/vite/rewrite-declaration-import-extensions';
 import { vaporIconCompiler } from './src/unplugin-icons';
-
-const componentEntries = readdirSync(resolve(__dirname, 'src/components'), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .toSorted()
-    .reduce<Record<string, string>>((entries, name) => {
-        entries[`components/${name}/index`] = resolve(__dirname, `src/components/${name}/index.ts`);
-        return entries;
-    }, {});
 
 const declarationRoot = resolve(__dirname, 'dist');
 const sourceRoot = resolve(__dirname, 'src');
@@ -94,13 +85,7 @@ export default defineConfig({
     ],
     build: {
         lib: {
-            entry: {
-                index: resolve(__dirname, 'src/index.ts'),
-                base: resolve(__dirname, 'src/styles/base.scss'),
-                'composables/index': resolve(__dirname, 'src/composables/index.ts'),
-                'unplugin-icons': resolve(__dirname, 'src/unplugin-icons.ts'),
-                ...componentEntries,
-            },
+            entry: createLibraryEntries(__dirname),
             formats: ['es'],
         },
         minify: false,

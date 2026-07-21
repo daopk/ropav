@@ -33,13 +33,13 @@
       "types": "./dist/composables/index.d.ts",
       "import": "./dist/composables/index.js"
     },
-    "./alert": {
-      "types": "./dist/components/alert/index.d.ts",
-      "import": "./dist/components/alert/index.js"
-    },
     "./accordion": {
       "types": "./dist/components/accordion/index.d.ts",
       "import": "./dist/components/accordion/index.js"
+    },
+    "./alert": {
+      "types": "./dist/components/alert/index.d.ts",
+      "import": "./dist/components/alert/index.js"
     },
     "./aspect-ratio": {
       "types": "./dist/components/aspect-ratio/index.d.ts",
@@ -57,13 +57,13 @@
       "types": "./dist/components/button/index.d.ts",
       "import": "./dist/components/button/index.js"
     },
-    "./button-link": {
-      "types": "./dist/components/button-link/index.d.ts",
-      "import": "./dist/components/button-link/index.js"
-    },
     "./button-group": {
       "types": "./dist/components/button-group/index.d.ts",
       "import": "./dist/components/button-group/index.js"
+    },
+    "./button-link": {
+      "types": "./dist/components/button-link/index.d.ts",
+      "import": "./dist/components/button-link/index.js"
     },
     "./card": {
       "types": "./dist/components/card/index.d.ts",
@@ -89,25 +89,25 @@
       "types": "./dist/components/color-swatch/index.d.ts",
       "import": "./dist/components/color-swatch/index.js"
     },
-    "./dropdown-menu": {
-      "types": "./dist/components/dropdown-menu/index.d.ts",
-      "import": "./dist/components/dropdown-menu/index.js"
-    },
     "./dialog": {
       "types": "./dist/components/dialog/index.d.ts",
       "import": "./dist/components/dialog/index.js"
+    },
+    "./dropdown-menu": {
+      "types": "./dist/components/dropdown-menu/index.d.ts",
+      "import": "./dist/components/dropdown-menu/index.js"
     },
     "./field": {
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"
     },
-    "./focus-trap": {
-      "types": "./dist/components/focus-trap/index.d.ts",
-      "import": "./dist/components/focus-trap/index.js"
-    },
     "./floating": {
       "types": "./dist/components/floating/index.d.ts",
       "import": "./dist/components/floating/index.js"
+    },
+    "./focus-trap": {
+      "types": "./dist/components/focus-trap/index.d.ts",
+      "import": "./dist/components/focus-trap/index.js"
     },
     "./icon-button": {
       "types": "./dist/components/icon-button/index.d.ts",
@@ -192,6 +192,8 @@
   },
   "scripts": {
     "dev": "pnpm run storybook",
+    "public-api:sync": "node scripts/sync-public-api.mjs --write",
+    "public-api:check": "node scripts/sync-public-api.mjs --check",
     "tokens:build": "style-dictionary build --config scripts/tokens.config.mjs --silent",
     "tokens:check": "node scripts/check-tokens.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
@@ -208,7 +210,7 @@
     "test:watch": "vitest --project=unit --project=tooling",
     "test:typecheck": "vitest run --project=unit --project=tooling --typecheck",
     "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
-    "build": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
+    "build": "pnpm run public-api:check && pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package",
     "prepublishOnly": "pnpm run verify",
     "preview": "vite preview",

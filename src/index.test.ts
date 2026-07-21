@@ -1,99 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
+import { getExpectedRootRuntimeExports } from '../scripts/public-api.mjs';
+
 const Ropav = await import('./index');
 
-const publicComponents = [
-    'Alert',
-    'AspectRatio',
-    'Avatar',
-    'Badge',
-    'Button',
-    'ButtonLink',
-    'ButtonGroup',
-    'Card',
-    'Checkbox',
-    'Collapse',
-    'ColorInput',
-    'ColorPicker',
-    'ColorSwatch',
-    'DropdownMenu',
-    'DropdownMenuCheckboxItem',
-    'DropdownMenuContent',
-    'DropdownMenuContextTrigger',
-    'DropdownMenuItem',
-    'DropdownMenuItemIndicator',
-    'DropdownMenuLabel',
-    'DropdownMenuPortal',
-    'DropdownMenuRadioGroup',
-    'DropdownMenuRadioItem',
-    'DropdownMenuRoot',
-    'DropdownMenuSeparator',
-    'DropdownMenuSub',
-    'DropdownMenuSubContent',
-    'DropdownMenuSubTrigger',
-    'DropdownMenuTrigger',
-    'DialogClose',
-    'DialogContent',
-    'DialogDescription',
-    'DialogOverlay',
-    'DialogPortal',
-    'DialogRoot',
-    'DialogTitle',
-    'DialogTrigger',
-    'Field',
-    'FocusTrap',
-    'IconButton',
-    'Input',
-    'Modal',
-    'NumberInput',
-    'Overlay',
-    'Popover',
-    'Radio',
-    'RadioGroup',
-    'ScrollArea',
-    'RangeSlider',
-    'Select',
-    'Slider',
-    'Switch',
-    'Tabs',
-    'TabsContent',
-    'TabsList',
-    'TabsTrigger',
-    'TeleportProvider',
-    'Textarea',
-    'Toast',
-    'ToastProvider',
-    'ToastViewport',
-    'Tooltip',
-] as const satisfies readonly (keyof typeof Ropav)[];
-
 describe('public source exports', () => {
-    it('exposes the primary component entrypoints from src/index.ts', () => {
-        for (const component of publicComponents) {
-            expect(Ropav).toHaveProperty(component);
-            expect(Ropav[component]).toBeTruthy();
-        }
-    });
-
-    it('exposes public composables from src/index.ts', () => {
-        expect(Ropav).toHaveProperty('useCollapse');
-        expect(Ropav.useCollapse).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useControllableValue');
-        expect(Ropav.useControllableValue).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useFocusTrap');
-        expect(Ropav.useFocusTrap).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useFloatingPosition');
-        expect(Ropav.useFloatingPosition).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useHoverDisclosure');
-        expect(Ropav.useHoverDisclosure).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useTeleportTarget');
-        expect(Ropav.useTeleportTarget).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useToast');
-        expect(Ropav.useToast).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('useToastState');
-        expect(Ropav.useToastState).toBeTypeOf('function');
-        expect(Ropav).toHaveProperty('createToastStore');
-        expect(Ropav.createToastStore).toBeTypeOf('function');
+    it('matches the exact root runtime contract', () => {
+        expect(new Set(Object.keys(Ropav))).toEqual(new Set(getExpectedRootRuntimeExports()));
     });
 
     it('exposes popover placement options from src/index.ts', () => {
