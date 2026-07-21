@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, within } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import Progress from './progress.vue';
 import { progressColors, progressRadiuses, progressSizes } from './types';
@@ -36,6 +37,7 @@ const meta = {
         },
         indeterminate: { control: 'boolean' },
         showValue: { control: 'boolean' },
+        ariaLabel: { control: 'text' },
         formatValue: { control: false },
     },
     args: {
@@ -47,6 +49,7 @@ const meta = {
         radius: 'full',
         indeterminate: false,
         showValue: false,
+        ariaLabel: 'Upload progress',
         formatValue: undefined,
     },
     render: (args) => ({
@@ -68,7 +71,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const WithLabel: Story = {
+    tags: ['test'],
     args: {
+        ariaLabel: undefined,
         showValue: true,
         formatValue: percentFormatter,
     },
@@ -84,6 +89,10 @@ export const WithLabel: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByRole('progressbar', { name: 'Uploading' })).toBeInTheDocument();
+    },
 };
 
 export const Indeterminate: Story = {
@@ -93,6 +102,9 @@ export const Indeterminate: Story = {
 };
 
 export const Colors: Story = {
+    args: {
+        ariaLabel: undefined,
+    },
     render: (args) => ({
         components: { Progress },
         setup() {
@@ -148,6 +160,7 @@ export const Sizes: Story = {
                     v-bind="args"
                     :value="values[size]"
                     :size="size"
+                    :aria-label="size + ' progress'"
                 />
             </div>
         `,
@@ -174,6 +187,7 @@ export const Radius: Story = {
                     v-bind="args"
                     :value="values[radius]"
                     :radius="radius"
+                    :aria-label="radius + ' radius progress'"
                 />
             </div>
         `,

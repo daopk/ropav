@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { ref } from 'vue';
+import Field from '../field/field.vue';
 import Textarea from './textarea.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -50,12 +51,16 @@ const meta = {
         valid: false,
     },
     render: (args) => ({
-        components: { Textarea },
+        components: { Field, Textarea },
         setup() {
             const value = ref(args.modelValue ?? '');
             return { args, value };
         },
-        template: '<Textarea v-bind="args" v-model="value" />',
+        template: `
+            <Field id="textarea-notes" label="Notes" v-slot="{ controlProps }" style="max-width: 360px;">
+                <Textarea v-bind="{ ...controlProps, ...args }" v-model="value" />
+            </Field>
+        `,
     }),
 } satisfies Meta<typeof Textarea>;
 
@@ -66,7 +71,7 @@ export const Default: Story = {
     tags: ['test'],
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const textbox = canvas.getByRole('textbox');
+        const textbox = canvas.getByRole('textbox', { name: 'Notes' });
 
         await expect(textbox).toHaveValue('');
         await userEvent.type(textbox, 'Hello Storybook');
@@ -86,7 +91,7 @@ export const Disabled: Story = {
     args: { disabled: true },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const textbox = canvas.getByRole('textbox');
+        const textbox = canvas.getByRole('textbox', { name: 'Notes' });
 
         await expect(textbox).toBeDisabled();
     },
@@ -130,7 +135,14 @@ export const Sizes: Story = {
         setup: () => ({ args, sizes }),
         template: `
             <div style="display: grid; gap: 12px; max-width: 360px;">
-                <Textarea v-for="size in sizes" :key="size" v-bind="args" :size="size" :model-value="size" />
+                <Textarea
+                    v-for="size in sizes"
+                    :key="size"
+                    v-bind="args"
+                    :aria-label="'Textarea size ' + size"
+                    :size="size"
+                    :model-value="size"
+                />
             </div>
         `,
     }),
@@ -142,7 +154,14 @@ export const Radii: Story = {
         setup: () => ({ args, radii }),
         template: `
             <div style="display: grid; gap: 12px; max-width: 360px;">
-                <Textarea v-for="radius in radii" :key="radius" v-bind="args" :radius="radius" :model-value="radius" />
+                <Textarea
+                    v-for="radius in radii"
+                    :key="radius"
+                    v-bind="args"
+                    :aria-label="'Textarea radius ' + radius"
+                    :radius="radius"
+                    :model-value="radius"
+                />
             </div>
         `,
     }),

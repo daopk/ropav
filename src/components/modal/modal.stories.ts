@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ref } from 'vue';
 import Button from '../button/button.vue';
+import Field from '../field/field.vue';
 import Input from '../input/input.vue';
 import Modal from './modal.vue';
 
@@ -61,7 +62,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
     render: (args) => ({
-        components: { Button, Input, Modal },
+        components: { Button, Field, Input, Modal },
         setup() {
             const open = ref(false);
             return { args, open };
@@ -71,7 +72,14 @@ export const Basic: Story = {
                 <Button variant="solid" @click="open = true">Open modal</Button>
                 <Modal v-bind="args" v-model:open="open" initial-focus=".invite-email">
                     <div style="display: grid; gap: 16px;">
-                        <Input class="invite-email" model-value="" placeholder="name@example.com" />
+                        <Field id="invite-email" label="Email" v-slot="{ controlProps }">
+                            <Input
+                                v-bind="controlProps"
+                                class="invite-email"
+                                model-value=""
+                                placeholder="name@example.com"
+                            />
+                        </Field>
                         <p style="margin: 0; color: var(--rp-color-dimmed); font-size: var(--rp-font-size-sm);">
                             The teammate will receive an email with access instructions.
                         </p>

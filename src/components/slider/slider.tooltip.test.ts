@@ -66,6 +66,7 @@ describe('Slider tooltip', () => {
                     return h(
                         Slider,
                         {
+                            ariaLabel: 'Test slider',
                             formatValue: (value: number) => `${value}s`,
                             max: 100,
                             min: 0,
@@ -146,6 +147,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render: () =>
                     h(Slider, {
+                        ariaLabel: 'Test slider',
                         max: 100,
                         min: 0,
                         modelValue: 10,
@@ -176,6 +178,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render: () =>
                     h(Slider, {
+                        ariaLabel: 'Test slider',
                         max: 100,
                         min: 0,
                         modelValue: 20,
@@ -217,6 +220,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render: () =>
                     h(Slider, {
+                        ariaLabel: 'Test slider',
                         disabled: true,
                         modelValue: 20,
                         thumb: 'interaction',
@@ -247,6 +251,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         min: 0,
                         max: 100,
@@ -279,6 +284,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         tooltip: {
                             id: 'volume-tooltip',
@@ -333,9 +339,7 @@ describe('Slider tooltip', () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h(Slider, {
-                        modelValue: 44,
-                    });
+                    return h(Slider, { ariaLabel: 'Test slider', modelValue: 44 });
                 },
             }),
         );
@@ -372,6 +376,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         formatValue: (value: number) => `${value}%`,
                     });
@@ -393,6 +398,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         ariaValueText: (value: number) => `${value} percent selected`,
                         formatValue: (value: number) => `${value}%`,
@@ -414,10 +420,7 @@ describe('Slider tooltip', () => {
         const container = mountDom(
             defineComponent({
                 render() {
-                    return h(Slider, {
-                        modelValue: 44,
-                        tooltip: false,
-                    });
+                    return h(Slider, { ariaLabel: 'Test slider', modelValue: 44, tooltip: false });
                 },
             }),
         );
@@ -432,6 +435,7 @@ describe('Slider tooltip', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         tooltip: 'always',
                     });

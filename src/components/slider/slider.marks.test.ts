@@ -10,6 +10,7 @@ describe('Slider marks', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 40,
                         min: 10,
                         max: 90,
@@ -42,6 +43,7 @@ describe('Slider marks', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 60,
                         marks: [
                             { value: 20, label: 'Hidden', hidden: true },

@@ -197,6 +197,7 @@ describe('native form value controls', () => {
                 render() {
                     return h('form', { id: 'slider-form' }, [
                         h(Slider, {
+                            ariaLabel: 'Test slider',
                             id: 'slider-control',
                             name: 'volume',
                             defaultValue: 20,
@@ -287,6 +288,7 @@ describe('native form value controls', () => {
                         'form',
                         { id: 'select-form' },
                         h(Select, {
+                            ariaLabel: 'Test select',
                             defaultValue: 'apple',
                             inputAttrs: { onInput, onChange },
                             name: 'choice',
@@ -336,6 +338,7 @@ describe('native form value controls', () => {
                     return h(
                         'form',
                         h(Select, {
+                            ariaLabel: 'Test select',
                             defaultValue: 'banana',
                             options: state.options,
                             'onUpdate:modelValue': onUpdate,
@@ -460,6 +463,7 @@ describe('native form value controls', () => {
                             },
                         ),
                         h(Slider, {
+                            ariaLabel: 'Test slider',
                             invalid: true,
                             required: true,
                             validationMessage: 'Invalid slider.',
@@ -474,6 +478,7 @@ describe('native form value controls', () => {
                             withEyeDropper: false,
                         }),
                         h(Select, {
+                            ariaLabel: 'Test select',
                             name: 'select',
                             options: [{ label: 'One', value: 'one' }],
                             required: true,

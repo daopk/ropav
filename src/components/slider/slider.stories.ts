@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { reactive, ref } from 'vue';
 import IconVolume2 from '~icons/lucide/volume-2';
 import Slider from './slider.vue';
@@ -82,6 +82,8 @@ const meta = {
         },
         formatValue: { control: false },
         disabled: { control: 'boolean' },
+        ariaLabel: { control: 'text' },
+        labelledby: { control: 'text' },
     },
     args: {
         modelValue: 40,
@@ -96,6 +98,8 @@ const meta = {
         size: undefined,
         orientation: 'horizontal',
         disabled: false,
+        ariaLabel: 'Volume',
+        labelledby: undefined,
     },
     render: (args) => ({
         components: { Slider },
@@ -114,7 +118,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ['test'],
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByRole('slider', { name: 'Volume' })).toBeInTheDocument();
+    },
+};
 
 export const Disabled: Story = {
     args: { disabled: true },
@@ -396,6 +406,7 @@ export const Colors: Story = {
                     v-bind="args"
                     v-model="values[color]"
                     :color="color"
+                    :aria-label="color + ' slider'"
                 />
             </div>
         `,
@@ -429,6 +440,7 @@ export const Sizes: Story = {
                     v-bind="args"
                     v-model="values[size]"
                     :size="size"
+                    :aria-label="size + ' slider'"
                 >
                     {{ size }}
                     <template #value="{ value }">{{ value }}</template>
@@ -476,6 +488,7 @@ export const HitRegions: Story = {
                     v-bind="args"
                     v-model="values[size]"
                     :size="size"
+                    :aria-label="size + ' hit region slider'"
                     :styles="{ track: hitRegionDebugStyle }"
                 >
                     {{ size }} · {{ hitSizes[size] }}px hit region

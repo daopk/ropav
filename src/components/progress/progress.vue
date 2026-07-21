@@ -6,6 +6,7 @@
         >
             <span
                 v-if="$slots.default"
+                :id="labelId"
                 v-bind="getPartAttrs('label', { class: 'rp-progress__label' })"
             >
                 <slot />
@@ -32,7 +33,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed } from 'vue';
+import { computed, useId, useSlots } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import type { ProgressPart, ProgressProps } from './types';
 import { useProgress } from './useProgress';
@@ -45,6 +46,8 @@ const props = withDefaults(defineProps<ProgressProps>(), {
     indeterminate: false,
     showValue: false,
 });
+const slots = useSlots();
+const labelId = `${useId()}-label`;
 
 const {
     control,
@@ -60,6 +63,11 @@ const {
     ariaValueNow,
 } = useProgress(props);
 const { getPartAttrs, getRootAttrs } = useStylesApi<ProgressPart>(props, 'root');
+const ariaLabel = computed(() => props.ariaLabel?.trim() || undefined);
+const ariaLabelledby = computed(() => {
+    if (ariaLabel.value) return undefined;
+    return control.ariaLabelledby || (slots.default ? labelId : undefined);
+});
 const rootAttrs = computed(() =>
     getRootAttrs({
         id: control.id,
@@ -67,8 +75,8 @@ const rootAttrs = computed(() =>
         style: rootStyle.value,
         role: 'progressbar',
         'data-state': isIndeterminate.value ? 'indeterminate' : 'determinate',
-        'aria-label': props.ariaLabel || undefined,
-        'aria-labelledby': control.ariaLabelledby,
+        'aria-label': ariaLabel.value,
+        'aria-labelledby': ariaLabelledby.value,
         'aria-describedby': control.ariaDescribedby,
         'aria-valuemin': ariaValueMin.value,
         'aria-valuemax': ariaValueMax.value,

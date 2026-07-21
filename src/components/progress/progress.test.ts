@@ -85,6 +85,8 @@ describe('Progress', () => {
                     return h(
                         Progress,
                         {
+                            ariaLabel: '   ',
+                            id: 'sync-progress',
                             formatValue: (value: number, percent: number) =>
                                 `${value} of ${Math.round(percent)}%`,
                             showValue: true,
@@ -105,9 +107,40 @@ describe('Progress', () => {
         const root = container.querySelector('.rp-progress')!;
 
         expect(label.textContent).toBe('Syncing');
+        expect(label.id).toBeTruthy();
+        expect(label.id).not.toBe('sync-progress-label');
+        expect(root.getAttribute('aria-label')).toBeNull();
+        expect(root.getAttribute('aria-labelledby')).toBe(label.id);
         expect(value.getAttribute('aria-hidden')).toBe('true');
         expect(value.textContent).toBe('64 of 64%');
         expect(root.getAttribute('aria-valuetext')).toBe('64 of 64%');
+    });
+
+    it('keeps an explicit aria label when the default slot has no accessible text', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Progress,
+                        {
+                            ariaLabel: 'Upload progress',
+                            labelledby: 'external-label',
+                            value: 64,
+                        },
+                        {
+                            default: () => h('svg', { 'aria-hidden': 'true' }),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-progress')!;
+
+        expect(root.getAttribute('aria-label')).toBe('Upload progress');
+        expect(root.getAttribute('aria-labelledby')).toBeNull();
     });
 
     it('passes normalized value props to the value slot', async () => {
@@ -212,6 +245,34 @@ describe('Progress', () => {
         expect(root.getAttribute('aria-labelledby')).toBe('deploy-label');
         expect(root.getAttribute('aria-describedby')).toBe('deploy-help deploy-status');
         expect(root.getAttribute('aria-valuetext')).toBe('24 files uploaded');
+    });
+
+    it('keeps an external label authoritative when a default slot is present', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Progress,
+                        {
+                            id: 'deploy-progress',
+                            labelledby: 'deploy-label',
+                            value: 24,
+                        },
+                        { default: () => 'Deploying' },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-progress')!;
+        const label = container.querySelector('.rp-progress__label') as HTMLElement;
+
+        expect(root.id).toBe('deploy-progress');
+        expect(label.id).toBeTruthy();
+        expect(label.id).not.toBe('deploy-progress-label');
+        expect(root.getAttribute('aria-labelledby')).toBe('deploy-label');
     });
 
     it('adds color, size, and radius modifiers when requested', async () => {

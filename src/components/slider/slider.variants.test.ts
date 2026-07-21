@@ -12,7 +12,9 @@ describe('Slider variants', () => {
                 render() {
                     return h(
                         'div',
-                        colors.map((color) => h(Slider, { color, modelValue: 50 })),
+                        colors.map((color) =>
+                            h(Slider, { ariaLabel: 'Test slider', color, modelValue: 50 }),
+                        ),
                     );
                 },
             }),
@@ -36,6 +38,7 @@ describe('Slider variants', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         color: '#ff3366',
                         modelValue: 50,
                     });
@@ -58,7 +61,9 @@ describe('Slider variants', () => {
                 render() {
                     return h(
                         'div',
-                        sizes.map((size) => h(Slider, { modelValue: 50, size })),
+                        sizes.map((size) =>
+                            h(Slider, { ariaLabel: 'Test slider', modelValue: 50, size }),
+                        ),
                     );
                 },
             }),

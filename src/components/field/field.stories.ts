@@ -101,7 +101,13 @@ export const FormControls: Story = {
                 </Field>
 
                 <Field id="field-role" label="Role" description="Choose the default access level." v-slot="{ controlProps }">
-                    <Select v-bind="controlProps" v-model="role" :options="options" placeholder="Select a role" />
+                    <Select
+                        v-bind="controlProps"
+                        v-model="role"
+                        labelledby="field-role-label"
+                        :options="options"
+                        placeholder="Select a role"
+                    />
                 </Field>
 
                 <Field id="field-note" label="Note">

@@ -51,6 +51,8 @@ const meta = {
         clearable: { control: 'boolean' },
         clearLabel: { control: 'text' },
         disabled: { control: 'boolean' },
+        ariaLabel: { control: 'text' },
+        labelledby: { control: 'text' },
     },
     args: {
         modelValue: null,
@@ -61,6 +63,8 @@ const meta = {
         clearable: false,
         clearLabel: 'Clear selection',
         disabled: false,
+        ariaLabel: 'Fruit',
+        labelledby: undefined,
     },
     render: (args) => ({
         components: { Select },
@@ -101,7 +105,7 @@ export const Typeahead: Story = {
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const trigger = canvas.getByRole('combobox');
+        const trigger = canvas.getByRole('combobox', { name: 'Fruit' });
         trigger.focus();
 
         await userEvent.keyboard('g');
@@ -165,6 +169,7 @@ export const Sizes: Story = {
                     v-bind="selectArgs"
                     v-model="values[size]"
                     :size="size"
+                    :aria-label="'Fruit (' + size + ')'"
                 />
             </div>
         `,
@@ -213,6 +218,7 @@ export const Radii: Story = {
                     v-bind="selectArgs"
                     v-model="values[radius]"
                     :radius="radius"
+                    :aria-label="'Fruit (' + radius + ' radius)'"
                 />
             </div>
         `,

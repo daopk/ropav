@@ -387,6 +387,7 @@ const rangeSliderInputAttrs: RangeSliderInputAttrs = [
 ];
 const rangeValidationMessage: RangeSliderValidationMessage = ['Choose a lower value.', undefined];
 const sliderProps: SliderProps = {
+    ariaLabel: 'Volume',
     defaultValue: 50,
     form: 'slider-form',
     inputAttrs: sliderInputAttrs,
@@ -468,9 +469,12 @@ const selectProps: SelectProps = {
     defaultValue: null,
     form: 'profile-form',
     inputAttrs: { autocomplete: 'off' },
+    labelledby: 'profile-choice-label',
     options: [{ label: 'One', value: 1 }],
     required: true,
 };
+const unnamedSliderProps: SliderProps = {};
+const unnamedSelectProps: SelectProps = {};
 const radioGroupProps: RadioGroupProps = {
     defaultValue: null,
     form: 'profile-form',
@@ -639,6 +643,8 @@ void [
     numberInputProps,
     colorInputProps,
     selectProps,
+    unnamedSliderProps,
+    unnamedSelectProps,
     radioGroupProps,
     radioOrientation,
     radioProps,

@@ -168,6 +168,7 @@ describe('Field', () => {
                             default: ({ controlProps }: FieldSlotProps) =>
                                 h(Select, {
                                     ...controlProps,
+                                    labelledby: 'role-label',
                                     modelValue: null,
                                     options: [{ label: 'Owner', value: 'owner' }],
                                 }),

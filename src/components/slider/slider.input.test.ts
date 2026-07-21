@@ -11,6 +11,7 @@ describe('Slider input', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 20,
                         'onUpdate:modelValue': onUpdate,
                     });
@@ -32,6 +33,7 @@ describe('Slider input', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         disabled: true,
                         modelValue: 20,
                         'onUpdate:modelValue': onUpdate,
@@ -80,6 +82,7 @@ describe('Slider input', () => {
         expect(native.max).toBe('90');
         expect(native.step).toBe('5');
         expect(native.getAttribute('aria-valuetext')).toBe('35 percent');
+        expect(native.getAttribute('aria-label')).toBeNull();
         expect(native.getAttribute('aria-labelledby')).toBe('volume-label');
         expect(native.getAttribute('aria-describedby')).toBe('volume-help volume-error');
     });
@@ -95,6 +98,7 @@ describe('Slider input', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         ref: sliderRef,
                         id: 'owned-id',
                         inputAttrs: {

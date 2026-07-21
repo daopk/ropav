@@ -30,12 +30,14 @@ const meta = {
             options: ['vertical', 'horizontal'],
         },
         disabled: { control: 'boolean' },
+        ariaLabel: { control: 'text' },
     },
     args: {
         autoContrast: true,
         disabled: false,
         modelValue: 'apple',
         orientation: 'vertical',
+        ariaLabel: 'Fruit',
     },
     render: (args) => ({
         components: { Radio, RadioGroup },
@@ -60,6 +62,7 @@ export const Default: Story = {
     tags: ['test'],
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
+        await expect(canvas.getByRole('radiogroup', { name: 'Fruit' })).toBeInTheDocument();
         const apple = canvas.getByRole('radio', { name: 'Apple' });
         const banana = canvas.getByRole('radio', { name: 'Banana' });
 
@@ -106,11 +109,11 @@ export const Orientations: Story = {
         },
         template: `
             <div style="display: grid; gap: 24px;">
-                <RadioGroup v-bind="args" v-model="values.vertical" orientation="vertical">
+                <RadioGroup v-bind="args" v-model="values.vertical" orientation="vertical" aria-label="Vertical fruit">
                     <Radio value="apple">Apple</Radio>
                     <Radio value="banana">Banana</Radio>
                 </RadioGroup>
-                <RadioGroup v-bind="args" v-model="values.horizontal" orientation="horizontal">
+                <RadioGroup v-bind="args" v-model="values.horizontal" orientation="horizontal" aria-label="Horizontal fruit">
                     <Radio value="apple">Apple</Radio>
                     <Radio value="banana">Banana</Radio>
                 </RadioGroup>
@@ -130,7 +133,7 @@ export const Variants: Story = {
         },
         template: `
             <div style="display: grid; gap: 16px;">
-                <RadioGroup v-for="variant in variants" :key="variant" v-bind="args" v-model="values[variant]" :variant="variant">
+                <RadioGroup v-for="variant in variants" :key="variant" v-bind="args" v-model="values[variant]" :variant="variant" :aria-label="variant + ' fruit'">
                     <Radio value="apple">{{ variant }}</Radio>
                     <Radio value="banana">Option</Radio>
                 </RadioGroup>
@@ -150,7 +153,7 @@ export const Sizes: Story = {
         },
         template: `
             <div style="display: grid; gap: 16px;">
-                <RadioGroup v-for="size in sizes" :key="size" v-bind="args" v-model="values[size]" :size="size">
+                <RadioGroup v-for="size in sizes" :key="size" v-bind="args" v-model="values[size]" :size="size" :aria-label="size + ' fruit'">
                     <Radio value="apple">{{ size }}</Radio>
                     <Radio value="banana">Option</Radio>
                 </RadioGroup>
@@ -170,7 +173,7 @@ export const Colors: Story = {
         },
         template: `
             <div style="display: grid; gap: 16px;">
-                <RadioGroup v-for="color in colors" :key="color" v-bind="args" v-model="values[color]" :color="color">
+                <RadioGroup v-for="color in colors" :key="color" v-bind="args" v-model="values[color]" :color="color" :aria-label="color + ' fruit'">
                     <Radio value="apple">{{ color }}</Radio>
                     <Radio value="banana">Option</Radio>
                 </RadioGroup>

@@ -28,6 +28,7 @@ describe('Select', () => {
 
     it('keeps state handlers testable without rendering the full component', async () => {
         const props = reactive<SelectProps>({
+            ariaLabel: 'Test select',
             modelValue: null,
             options: [
                 { label: 'Alpha', value: 'a' },
@@ -60,12 +61,33 @@ describe('Select', () => {
         expect(select.focusedIndex.value).toBe(-1);
     });
 
+    it('uses labelledby as its accessible naming source', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        labelledby: 'fruit-label',
+                        modelValue: null,
+                        options: [{ label: 'Apple', value: 'apple' }],
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const trigger = container.querySelector('[role="combobox"]')!;
+        expect(trigger.getAttribute('aria-label')).toBeNull();
+        expect(trigger.getAttribute('aria-labelledby')).toBe('fruit-label');
+    });
+
     it('navigates options with disabled items skipped', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         modelValue: null,
                         options: [
                             { label: 'Alpha', value: 'a' },
@@ -95,6 +117,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         modelValue: null,
                         options: [
                             { label: 'Apple', value: 'apple' },
@@ -125,6 +148,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         modelValue: null,
                         options: [
                             { label: 'Alpha', value: 'alpha' },
@@ -156,6 +180,7 @@ describe('Select', () => {
 
     it('keeps the highlighted option stable when options are reordered', async () => {
         const state = reactive<SelectProps>({
+            ariaLabel: 'Test select',
             modelValue: 'gamma',
             options: [
                 { label: 'Alpha', value: 'alpha' },
@@ -166,6 +191,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         modelValue: state.modelValue,
                         options: state.options,
                     });
@@ -193,6 +219,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         modelValue: null,
                         options: [{ label: 'Beta', value: 'beta', disabled: true }],
                         'onUpdate:modelValue': onUpdate,
@@ -217,6 +244,7 @@ describe('Select', () => {
                 render() {
                     return h('div', [
                         h(Select, {
+                            ariaLabel: 'Test select',
                             modelValue: null,
                             options: [
                                 { label: 'Beta', value: 'beta' },
@@ -257,10 +285,7 @@ describe('Select', () => {
             const container = mountDom(
                 defineComponent({
                     render() {
-                        return h(Select, {
-                            modelValue: 20,
-                            options,
-                        });
+                        return h(Select, { ariaLabel: 'Test select', modelValue: 20, options });
                     },
                 }),
             );
@@ -287,6 +312,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         id: 'fruit-select',
                         modelValue: null,
                         options,
@@ -337,6 +363,7 @@ describe('Select', () => {
                 render() {
                     return h('div', [
                         h(Select, {
+                            ariaLabel: 'Test select',
                             modelValue: 'a',
                             options: [
                                 { label: 'Alpha', value: 'a' },
@@ -369,6 +396,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         disabled: true,
                         modelValue: null,
                         options: [
@@ -399,6 +427,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         clearable: true,
                         modelValue: 'a',
                         options: [
@@ -426,6 +455,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         clearable: true,
                         clearLabel: 'Remove fruit',
                         modelValue: 'a',
@@ -448,6 +478,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         clearable: true,
                         modelValue: 'a',
                         options: [
@@ -474,6 +505,7 @@ describe('Select', () => {
             defineComponent({
                 render() {
                     return h(Select, {
+                        ariaLabel: 'Test select',
                         clearable: true,
                         modelValue: 'a',
                         options: [
@@ -504,17 +536,20 @@ describe('Select', () => {
                 render() {
                     return h('div', [
                         h(Select, {
+                            ariaLabel: 'Test select',
                             clearable: true,
                             modelValue: null,
                             options: [{ label: 'Alpha', value: 'a' }],
                         }),
                         h(Select, {
+                            ariaLabel: 'Test select',
                             clearable: true,
                             disabled: true,
                             modelValue: 'a',
                             options: [{ label: 'Alpha', value: 'a' }],
                         }),
                         h(Select, {
+                            ariaLabel: 'Test select',
                             clearable: true,
                             modelValue: 'a',
                             options: [{ label: 'Alpha', value: 'a' }],
@@ -535,6 +570,7 @@ describe('Select', () => {
                         'div',
                         radii.map((radius) =>
                             h(Select, {
+                                ariaLabel: 'Test select',
                                 modelValue: radius,
                                 options: [{ label: radius, value: radius }],
                                 radius,
@@ -564,6 +600,7 @@ describe('Select', () => {
                         'div',
                         sizes.map((size) =>
                             h(Select, {
+                                ariaLabel: 'Test select',
                                 modelValue: size,
                                 options: [{ label: size, value: size }],
                                 size,

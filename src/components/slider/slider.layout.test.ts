@@ -15,6 +15,7 @@ describe('Slider layout', () => {
                     return h(
                         Slider,
                         {
+                            ariaLabel: 'Test slider',
                             formatValue: (value: number) => `${value}s`,
                             max: 200,
                             min: 0,
@@ -80,10 +81,7 @@ describe('Slider layout', () => {
         const container = mountDom(
             defineComponent({
                 render: () =>
-                    h(Slider, {
-                        modelValue: 20,
-                        thumb: 'interaction',
-                    }),
+                    h(Slider, { ariaLabel: 'Test slider', modelValue: 20, thumb: 'interaction' }),
             }),
         );
 
@@ -111,7 +109,7 @@ describe('Slider layout', () => {
     it('hides only the visual thumb when thumb is false', async () => {
         const container = mountDom(
             defineComponent({
-                render: () => h(Slider, { modelValue: 20, thumb: false }),
+                render: () => h(Slider, { ariaLabel: 'Test slider', modelValue: 20, thumb: false }),
             }),
         );
 
@@ -136,6 +134,7 @@ describe('Slider layout', () => {
                     return h(
                         Slider,
                         {
+                            ariaLabel: 'Volume',
                             modelValue: 64,
                         },
                         {
@@ -167,6 +166,7 @@ describe('Slider layout', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 50,
                         min: 0,
                         max: 200,
@@ -190,6 +190,7 @@ describe('Slider layout', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 50,
                         orientation: 'vertical',
                     });
@@ -215,6 +216,7 @@ describe('Slider layout', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 50,
                         thumb: {
                             border: '2px solid red',
@@ -244,6 +246,7 @@ describe('Slider layout', () => {
                     return h(
                         Slider,
                         {
+                            ariaLabel: 'Test slider',
                             modelValue: 40,
                             formatValue: (value: number) => `${value}%`,
                             min: 0,

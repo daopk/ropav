@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { ref } from 'vue';
 import IconCircleCheck from '~icons/lucide/circle-check';
 import IconSearch from '~icons/lucide/search';
+import Field from '../field/field.vue';
 import Input from './input.vue';
 
 const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -43,19 +44,29 @@ const meta = {
         valid: false,
     },
     render: (args) => ({
-        components: { Input },
+        components: { Field, Input },
         setup() {
             const value = ref(args.modelValue ?? '');
             return { args, value };
         },
-        template: '<Input v-bind="args" v-model="value" />',
+        template: `
+            <Field id="input-default" label="Text input" v-slot="{ controlProps }" style="max-width: 320px;">
+                <Input v-bind="{ ...controlProps, ...args }" v-model="value" />
+            </Field>
+        `,
     }),
 } satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    tags: ['test'],
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByRole('textbox', { name: 'Text input' })).toBeInTheDocument();
+    },
+};
 
 export const Disabled: Story = {
     args: { disabled: true },
@@ -67,8 +78,8 @@ export const ValidationStates: Story = {
         components: { Input },
         template: `
             <div data-validation-states style="display: grid; gap: 12px; max-width: 320px;">
-                <Input model-value="Valid value" valid />
-                <Input model-value="Invalid value" invalid />
+                <Input aria-label="Valid input" model-value="Valid value" valid />
+                <Input aria-label="Invalid input" model-value="Invalid value" invalid />
             </div>
         `,
     }),
@@ -111,20 +122,24 @@ export const ValidationStates: Story = {
 
 export const Slots: Story = {
     render: (args) => ({
-        components: { IconCircleCheck, IconSearch, Input },
+        components: { Field, IconCircleCheck, IconSearch, Input },
         setup: () => ({ args }),
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
-                <Input v-bind="args" model-value="" placeholder="Search">
-                    <template #left>
-                        <IconSearch aria-hidden="true" />
-                    </template>
-                </Input>
-                <Input v-bind="args" model-value="zoi@example.com">
-                    <template #right>
-                        <IconCircleCheck aria-hidden="true" />
-                    </template>
-                </Input>
+                <Field id="input-search" label="Search" v-slot="{ controlProps }">
+                    <Input v-bind="{ ...controlProps, ...args }" model-value="" placeholder="Search">
+                        <template #left>
+                            <IconSearch aria-hidden="true" />
+                        </template>
+                    </Input>
+                </Field>
+                <Field id="input-email" label="Email" v-slot="{ controlProps }">
+                    <Input v-bind="{ ...controlProps, ...args }" model-value="zoi@example.com">
+                        <template #right>
+                            <IconCircleCheck aria-hidden="true" />
+                        </template>
+                    </Input>
+                </Field>
             </div>
         `,
     }),
@@ -136,7 +151,14 @@ export const Sizes: Story = {
         setup: () => ({ args, sizes }),
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
-                <Input v-for="size in sizes" :key="size" v-bind="args" :size="size" :model-value="size" />
+                <Input
+                    v-for="size in sizes"
+                    :key="size"
+                    v-bind="args"
+                    :aria-label="'Input size ' + size"
+                    :size="size"
+                    :model-value="size"
+                />
             </div>
         `,
     }),
@@ -148,7 +170,14 @@ export const Radii: Story = {
         setup: () => ({ args, radii }),
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
-                <Input v-for="radius in radii" :key="radius" v-bind="args" :radius="radius" :model-value="radius" />
+                <Input
+                    v-for="radius in radii"
+                    :key="radius"
+                    v-bind="args"
+                    :aria-label="'Input radius ' + radius"
+                    :radius="radius"
+                    :model-value="radius"
+                />
             </div>
         `,
     }),

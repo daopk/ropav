@@ -10,6 +10,7 @@ describe('Slider values', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         min: 0,
                         max: 100,
@@ -33,6 +34,7 @@ describe('Slider values', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 44,
                         min: 0,
                         max: 100,
@@ -56,6 +58,7 @@ describe('Slider values', () => {
             defineComponent({
                 render() {
                     return h(Slider, {
+                        ariaLabel: 'Test slider',
                         modelValue: 75,
                         min: 100,
                         max: 0,
