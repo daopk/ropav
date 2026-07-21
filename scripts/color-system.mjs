@@ -20,10 +20,10 @@ export const colorNames = [
 ];
 
 export const colorShades = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-export const primaryColor = 'blue';
-export const lightColorShade = 6;
-export const lightPrimaryShade = 8;
-export const darkPrimaryShade = 8;
+const primaryColor = 'blue';
+const lightColorShade = 6;
+const lightPrimaryShade = 8;
+const darkPrimaryShade = 8;
 export const whiteContrastColorNames = colorNames.filter(
     (color) => color !== 'lime' && color !== 'yellow',
 );
@@ -125,7 +125,7 @@ export const oldSemanticColorVariables = new Set([
     '--rp-color-neutral-fg',
 ]);
 
-export function getPrimaryColorVariables() {
+function getPrimaryColorVariables() {
     const variables = {};
 
     for (const shade of colorShades) {
@@ -139,7 +139,7 @@ export function getPrimaryColorVariables() {
     return variables;
 }
 
-export function getColorVariantVariables(color, scheme) {
+function getColorVariantVariables(color, scheme) {
     const isDark = scheme === 'dark';
     const startingShade = isDark
         ? darkPrimaryShade
@@ -175,12 +175,12 @@ export function getColorVariantVariables(color, scheme) {
 }
 
 function getLightVariantForeground(color) {
-    const foreground = colorFromHex(getColorTokenValue(color, 9));
-    const black = colorFromHex(getCoreColorTokenValue('black'));
+    const foreground = parseHexColor(getColorTokenValue(color, 9));
+    const black = parseHexColor(getCoreColorTokenValue('black'));
     const backgrounds = [
-        colorFromHex(getCoreColorTokenValue('white')),
-        colorFromHex(getColorTokenValue(color, 1)),
-        colorFromHex(getColorTokenValue(color, 2)),
+        parseHexColor(getCoreColorTokenValue('white')),
+        parseHexColor(getColorTokenValue(color, 1)),
+        parseHexColor(getColorTokenValue(color, 2)),
     ];
     let colorPercent = 100;
 
@@ -188,7 +188,7 @@ function getLightVariantForeground(color) {
         colorPercent > 0 &&
         backgrounds.some(
             (background) =>
-                contrastRatio(mixOpaqueColors(foreground, colorPercent / 100, black), background) <
+                contrastRatio(mixColors(foreground, colorPercent / 100, black), background) <
                 minimumTextContrast,
         )
     ) {
@@ -210,10 +210,10 @@ function getFilledColorVariables(color, startingShade) {
         };
     }
 
-    const white = colorFromHex(getCoreColorTokenValue('white'));
+    const white = parseHexColor(getCoreColorTokenValue('white'));
     for (let shade = startingShade; shade <= 9; shade += 1) {
         if (
-            contrastRatio(white, colorFromHex(getColorTokenValue(color, shade))) <
+            contrastRatio(white, parseHexColor(getColorTokenValue(color, shade))) <
             minimumTextContrast
         ) {
             continue;
@@ -230,14 +230,13 @@ function getFilledColorVariables(color, startingShade) {
     }
 
     const shade = 9;
-    const background = colorFromHex(getColorTokenValue(color, shade));
-    const black = colorFromHex(getCoreColorTokenValue('black'));
+    const background = parseHexColor(getColorTokenValue(color, shade));
+    const black = parseHexColor(getCoreColorTokenValue('black'));
     let colorPercent = 99;
 
     while (
         colorPercent > 0 &&
-        contrastRatio(white, mixOpaqueColors(background, colorPercent / 100, black)) <
-            minimumTextContrast
+        contrastRatio(white, mixColors(background, colorPercent / 100, black)) < minimumTextContrast
     ) {
         colorPercent -= 1;
     }
@@ -257,7 +256,7 @@ function getDarkenedColorVariable(color, shade, colorPercent) {
     return `color-mix(in srgb, var(--rp-color-${color}-${shade}) ${colorPercent}%, var(--rp-color-black))`;
 }
 
-export function getSchemeColorVariables(scheme) {
+function getSchemeColorVariables(scheme) {
     if (scheme === 'dark') {
         return {
             '--rp-color-scheme': 'dark',
@@ -349,18 +348,14 @@ export function getAllDerivedColorVariableNames() {
     ]);
 }
 
-export function getColorShadeContrastVariables() {
+function getColorShadeContrastVariables() {
     const variables = {};
-    const black = colorFromHex(getCoreColorTokenValue('black'));
+    const black = parseHexColor(getCoreColorTokenValue('black'));
 
     for (const color of colorNames) {
         for (const shade of colorShades) {
-            const background = colorFromHex(getColorTokenValue(color, shade));
-            const activeBackground = mixOpaqueColors(
-                background,
-                filledActiveColorPercent / 100,
-                black,
-            );
+            const background = parseHexColor(getColorTokenValue(color, shade));
+            const activeBackground = mixColors(background, filledActiveColorPercent / 100, black);
 
             variables[`--rp-color-${color}-${shade}-contrast`] =
                 getReadableColorVariableForBackground(background);
@@ -372,15 +367,9 @@ export function getColorShadeContrastVariables() {
     return variables;
 }
 
-export function getReadableColorVariable(color) {
-    const background = colorFromHex(color);
-
-    return getReadableColorVariableForBackground(background);
-}
-
 function getReadableColorVariableForBackground(background) {
-    const black = colorFromHex(getCoreColorTokenValue('black'));
-    const white = colorFromHex(getCoreColorTokenValue('white'));
+    const black = parseHexColor(getCoreColorTokenValue('black'));
+    const white = parseHexColor(getCoreColorTokenValue('white'));
     const blackContrast = contrastRatio(black, background);
     const whiteContrast = contrastRatio(white, background);
 
@@ -405,7 +394,7 @@ function getCoreColorTokenValue(color) {
     return token.$value;
 }
 
-function colorFromHex(hex) {
+export function parseHexColor(hex) {
     const value = hex.trim();
     const shortHex = value.match(/^#([\da-f])([\da-f])([\da-f])$/i);
     if (shortHex) {
@@ -430,7 +419,7 @@ function colorFromHex(hex) {
     };
 }
 
-function contrastRatio(foreground, background) {
+export function contrastRatio(foreground, background) {
     const foregroundLuminance = relativeLuminance(foreground);
     const backgroundLuminance = relativeLuminance(background);
     const lighter = Math.max(foregroundLuminance, backgroundLuminance);
@@ -439,13 +428,25 @@ function contrastRatio(foreground, background) {
     return (lighter + 0.05) / (darker + 0.05);
 }
 
-function mixOpaqueColors(firstColor, firstWeight, secondColor) {
+export function mixColors(firstColor, firstWeight, secondColor) {
     const secondWeight = 1 - firstWeight;
+    const alpha = firstColor.alpha * firstWeight + secondColor.alpha * secondWeight;
+    if (alpha === 0) return { red: 0, green: 0, blue: 0, alpha };
+
     return {
-        red: firstColor.red * firstWeight + secondColor.red * secondWeight,
-        green: firstColor.green * firstWeight + secondColor.green * secondWeight,
-        blue: firstColor.blue * firstWeight + secondColor.blue * secondWeight,
-        alpha: 1,
+        red:
+            (firstColor.red * firstColor.alpha * firstWeight +
+                secondColor.red * secondColor.alpha * secondWeight) /
+            alpha,
+        green:
+            (firstColor.green * firstColor.alpha * firstWeight +
+                secondColor.green * secondColor.alpha * secondWeight) /
+            alpha,
+        blue:
+            (firstColor.blue * firstColor.alpha * firstWeight +
+                secondColor.blue * secondColor.alpha * secondWeight) /
+            alpha,
+        alpha,
     };
 }
 

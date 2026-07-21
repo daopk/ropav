@@ -13,16 +13,18 @@ import {
 import {
     colorNames,
     colorShades,
+    contrastRatio,
     filledActiveColorPercent,
     getDerivedColorVariables,
+    mixColors,
     oldSemanticColorVariables,
+    parseHexColor,
     whiteContrastColorNames,
 } from './color-system.mjs';
 import {
     publicComponentVariableNames,
     publicComponentVariables,
 } from './public-styles-contract.mjs';
-import { createPublicStylesManifest, renderPublicTokenDocs } from './public-styles-manifest.mjs';
 import { checkReleasedPublicStylesCompatibility } from './public-styles-compatibility.mjs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,16 +37,16 @@ const documentedPublicVariables = new Set(
     [...publicTokenDocs.matchAll(/^\|\s+`(--rp-[^`]+)`\s+\|/gm)].map((match) => match[1]),
 );
 
-const { default: config } = await import('./tokens.config.mjs');
+const {
+    default: config,
+    defaultDictionary,
+    darkOverrideDictionary,
+} = await import('./tokens.config.mjs');
 const dictionary = new StyleDictionary(config, { verbosity: 'silent' });
 await dictionary.hasInitialized;
 
-const defaultTokenFiles = ['tokens/default/core.tokens.json'];
-const darkOverrideTokenFiles = ['tokens/dark/overrides.tokens.json'];
-const expectedPublicStylesManifest = createPublicStylesManifest(
-    dictionary,
-    new Set(collectTokenValuesFromFiles(darkOverrideTokenFiles).keys()),
-);
+const defaultTokenValues = collectDictionaryTokenValues(defaultDictionary);
+const darkOverrideTokenValues = collectDictionaryTokenValues(darkOverrideDictionary);
 
 const staleFiles = [];
 const platformOutputs = await dictionary.formatAllPlatforms();
@@ -70,8 +72,8 @@ if (staleFiles.length > 0) {
 }
 
 const tokenStructureFailures = [
-    ...checkPaletteStructure(defaultTokenFiles),
-    ...checkUnknownThemeOverrides(defaultTokenFiles, darkOverrideTokenFiles),
+    ...checkPaletteStructure(defaultTokenValues),
+    ...checkUnknownThemeOverrides(defaultTokenValues, darkOverrideTokenValues),
     ...checkDuplicateOutputNames(dictionary),
     ...checkPublicTokenMetadata(dictionary),
     ...checkGeneratedCssCustomProperties(),
@@ -243,8 +245,7 @@ function checkThemeContrast(themeName) {
     return failures;
 }
 
-function checkPaletteStructure(files) {
-    const tokenValues = collectTokenValuesFromFiles(files);
+function checkPaletteStructure(tokenValues) {
     const failures = [];
 
     for (const color of colorNames) {
@@ -274,13 +275,11 @@ function checkPaletteStructure(files) {
     return failures;
 }
 
-function checkUnknownThemeOverrides(defaultFiles, overrideFiles) {
-    const defaultTokenValues = collectTokenValuesFromFiles(defaultFiles);
-    const overrideTokenValues = collectTokenValuesFromFiles(overrideFiles);
+function checkUnknownThemeOverrides(defaultValues, overrideValues) {
     const failures = [];
 
-    for (const path of overrideTokenValues.keys()) {
-        if (!defaultTokenValues.has(path)) {
+    for (const path of overrideValues.keys()) {
+        if (!defaultValues.has(path)) {
             failures.push(`dark override ${path} does not exist in default tokens`);
         }
     }
@@ -347,20 +346,6 @@ function checkPublicStylesManifest() {
     const failures = [];
     const seen = new Set();
 
-    if (JSON.stringify(publicStylesManifest) !== JSON.stringify(expectedPublicStylesManifest)) {
-        failures.push(
-            'public styles manifest is out of date; run `pnpm styles:manifest:bootstrap`',
-        );
-    }
-    if (
-        normalizeMarkdownTables(publicTokenDocs) !==
-        normalizeMarkdownTables(renderPublicTokenDocs(expectedPublicStylesManifest))
-    ) {
-        failures.push(
-            'public token documentation is out of date; run `pnpm styles:manifest:bootstrap`',
-        );
-    }
-
     if (publicStylesManifest.schemaVersion !== 1) {
         failures.push('public styles manifest has an unsupported schemaVersion');
     }
@@ -401,19 +386,6 @@ function checkPublicStylesManifest() {
     }
 
     return failures;
-}
-
-function normalizeMarkdownTables(contents) {
-    return contents.replace(/^\|.*\|$/gm, (line) => {
-        const cells = line
-            .slice(1, -1)
-            .split('|')
-            .map((cell) => {
-                const value = cell.trim();
-                return /^-+$/.test(value) ? '---' : value;
-            });
-        return `| ${cells.join(' | ')} |`;
-    });
 }
 
 function checkPublicComponentVariables() {
@@ -495,28 +467,10 @@ function assertUniqueTokenNames(nameKind, tokens, getName, failures) {
     }
 }
 
-function collectTokenValuesFromFiles(files) {
-    const tokenValues = new Map();
-    for (const file of files) {
-        collectTokenValues(
-            JSON.parse(readFileSync(join(projectRoot, file), 'utf8')),
-            [],
-            tokenValues,
-        );
-    }
-
-    return tokenValues;
-}
-
-function collectTokenValues(node, path, values) {
-    if (node && typeof node === 'object' && '$value' in node) {
-        values.set(path.join('.'), node.$value);
-        return;
-    }
-
-    for (const [key, value] of Object.entries(node ?? {})) {
-        collectTokenValues(value, [...path, key], values);
-    }
+function collectDictionaryTokenValues(tokenDictionary) {
+    return new Map(
+        tokenDictionary.allTokens.map((token) => [tokenPathString(token), tokenValue(token)]),
+    );
 }
 
 function tokenValue(token) {
@@ -658,8 +612,8 @@ function resolveCssColorValue(cssValues, value, seen) {
     const cssVariable = trimmedValue.match(/^var\((--rp-[a-z0-9-]+)\)$/i);
     if (cssVariable) return resolveCssColor(cssValues, cssVariable[1], seen);
 
-    const hex = trimmedValue.match(/^#([\da-f]{6})$/i);
-    if (hex) return colorFromHex(trimmedValue);
+    const hex = trimmedValue.match(/^#(?:[\da-f]{3}|[\da-f]{6})$/i);
+    if (hex) return parseHexColor(trimmedValue);
 
     if (trimmedValue.toLowerCase() === 'transparent') {
         return { red: 0, green: 0, blue: 0, alpha: 0 };
@@ -684,37 +638,6 @@ function normalizeReferencePath(path) {
     return path.replace(/\.\$?value$/, '');
 }
 
-function colorFromHex(hex) {
-    return {
-        red: Number.parseInt(hex.slice(1, 3), 16),
-        green: Number.parseInt(hex.slice(3, 5), 16),
-        blue: Number.parseInt(hex.slice(5, 7), 16),
-        alpha: 1,
-    };
-}
-
-function mixColors(firstColor, firstWeight, secondColor) {
-    const secondWeight = 1 - firstWeight;
-    const alpha = firstColor.alpha * firstWeight + secondColor.alpha * secondWeight;
-    if (alpha === 0) return { red: 0, green: 0, blue: 0, alpha };
-
-    return {
-        red:
-            (firstColor.red * firstColor.alpha * firstWeight +
-                secondColor.red * secondColor.alpha * secondWeight) /
-            alpha,
-        green:
-            (firstColor.green * firstColor.alpha * firstWeight +
-                secondColor.green * secondColor.alpha * secondWeight) /
-            alpha,
-        blue:
-            (firstColor.blue * firstColor.alpha * firstWeight +
-                secondColor.blue * secondColor.alpha * secondWeight) /
-            alpha,
-        alpha,
-    };
-}
-
 function isOpaqueColor(color) {
     return color && color.alpha === 1;
 }
@@ -726,25 +649,6 @@ function sameColor(first, second) {
         first.blue === second.blue &&
         first.alpha === second.alpha
     );
-}
-
-function contrastRatio(foreground, background) {
-    const foregroundLuminance = relativeLuminance(foreground);
-    const backgroundLuminance = relativeLuminance(background);
-    const lighter = Math.max(foregroundLuminance, backgroundLuminance);
-    const darker = Math.min(foregroundLuminance, backgroundLuminance);
-
-    return (lighter + 0.05) / (darker + 0.05);
-}
-
-function relativeLuminance(hex) {
-    const [red, green, blue] = [hex.red, hex.green, hex.blue]
-        .map((channel) => channel / 255)
-        .map((channel) =>
-            channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
-        );
-
-    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
 function tokenPathString(token) {

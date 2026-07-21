@@ -193,7 +193,6 @@
     "dev": "pnpm run storybook",
     "tokens:build": "style-dictionary build --config scripts/tokens.config.mjs --silent",
     "tokens:check": "node scripts/check-tokens.mjs",
-    "styles:manifest:bootstrap": "node scripts/bootstrap-public-styles-manifest.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
     "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
     "lint": "oxlint",

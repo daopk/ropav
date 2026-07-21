@@ -81,21 +81,41 @@ export function renderPublicTokenDocs(manifest) {
         '',
         '## Design tokens',
         '',
-        '| Name | Source | Type | Theme | Description |',
-        '| --- | --- | --- | --- | --- |',
     ];
-    for (const token of manifest.tokens) {
-        lines.push(
-            `| \`${token.name}\` | \`${token.sourcePath}\` | ${token.type} | ${token.themeApplicability} | ${token.description} |`,
-        );
-    }
+    pushMarkdownTable(
+        lines,
+        ['Name', 'Source', 'Type', 'Theme', 'Description'],
+        manifest.tokens.map((token) => [
+            `\`${token.name}\``,
+            `\`${token.sourcePath}\``,
+            token.type,
+            token.themeApplicability,
+            token.description,
+        ]),
+    );
     lines.push('', '## Component geometry variables', '');
-    lines.push('| Name | Component | Accepted value | Fallback | Description |');
-    lines.push('| --- | --- | --- | --- | --- |');
-    for (const variable of manifest.componentVariables) {
-        lines.push(
-            `| \`${variable.name}\` | ${variable.component} | \`${variable.acceptedValue}\` | ${variable.fallback} | ${variable.description} |`,
-        );
-    }
+    pushMarkdownTable(
+        lines,
+        ['Name', 'Component', 'Accepted value', 'Fallback', 'Description'],
+        manifest.componentVariables.map((variable) => [
+            `\`${variable.name}\``,
+            variable.component,
+            `\`${variable.acceptedValue}\``,
+            variable.fallback,
+            variable.description,
+        ]),
+    );
     return `${lines.join('\n')}\n`;
+}
+
+function pushMarkdownTable(lines, headers, rows) {
+    const widths = headers.map((header, index) =>
+        Math.max(header.length, ...rows.map((row) => row[index].length)),
+    );
+    const renderRow = (row) =>
+        `| ${row.map((cell, index) => cell.padEnd(widths[index])).join(' | ')} |`;
+
+    lines.push(renderRow(headers));
+    lines.push(`| ${widths.map((width) => '-'.repeat(width)).join(' | ')} |`);
+    lines.push(...rows.map(renderRow));
 }
