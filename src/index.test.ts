@@ -78,6 +78,8 @@ describe('public source exports', () => {
     it('exposes public composables from src/index.ts', () => {
         expect(Ropav).toHaveProperty('useCollapse');
         expect(Ropav.useCollapse).toBeTypeOf('function');
+        expect(Ropav).toHaveProperty('useControllableValue');
+        expect(Ropav.useControllableValue).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useFocusTrap');
         expect(Ropav.useFocusTrap).toBeTypeOf('function');
         expect(Ropav).toHaveProperty('useFloatingPosition');

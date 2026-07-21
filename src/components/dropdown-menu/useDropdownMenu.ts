@@ -1,7 +1,7 @@
 import { computed, ref, useId, watch } from 'vue';
 import type { CSSProperties } from 'vue';
-import { useOverlayLayer } from '@/composables/useOverlayLayer';
-import { useTypeahead } from '@/composables/useTypeahead';
+import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
+import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
 import {

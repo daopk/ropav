@@ -1,5 +1,5 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
-import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
+import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
 import { blockNextDocumentClick, createOutsideEvent } from './dropdown-menu-primitive-core';
 import { isEventWithinTargets } from './dropdown-menu-outside';
 import type {

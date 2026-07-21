@@ -1,12 +1,22 @@
-import { computed, shallowRef, watch } from 'vue';
+import { computed, shallowRef, watch, type ComputedRef } from 'vue';
 
-export interface ControllableValueOptions<T> {
+export interface UseControllableValueOptions<T> {
     modelValue: () => T | undefined;
     defaultValue: () => T;
     onChange: (value: T) => void;
 }
 
-export function useControllableValue<T>(options: ControllableValueOptions<T>) {
+export interface UseControllableValueReturn<T> {
+    initialValue: T;
+    isControlled: ComputedRef<boolean>;
+    value: ComputedRef<T>;
+    setValue: (value: T) => void;
+    resetValue: (value?: T) => void;
+}
+
+export function useControllableValue<T>(
+    options: Readonly<UseControllableValueOptions<T>>,
+): UseControllableValueReturn<T> {
     const initialValue = options.defaultValue();
     const uncontrolledValue = shallowRef<T>(initialValue);
     const isControlled = computed(() => options.modelValue() !== undefined);

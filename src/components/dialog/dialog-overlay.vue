@@ -12,8 +12,8 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, ref, useAttrs, useId } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
-import { useOverlayLayerBranch } from '@/composables/useOverlayLayer';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { useOverlayLayerBranch } from '@/internal/composables/useOverlayLayer';
 import {
     dialogRootKey,
     resolveDialogHTMLElementRef,

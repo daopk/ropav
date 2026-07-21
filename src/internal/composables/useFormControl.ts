@@ -69,7 +69,9 @@ export function useFormControl(options: FormControlOptions) {
 
             function onReset(event: Event) {
                 const form = event.target;
-                if (!(form instanceof HTMLFormElement)) return;
+                const FormConstructor = (event.currentTarget as Document | null)?.defaultView
+                    ?.HTMLFormElement;
+                if (!FormConstructor || !(form instanceof FormConstructor)) return;
 
                 const elements = getElements(options).filter((element) => element.form === form);
                 if (elements.length === 0) return;

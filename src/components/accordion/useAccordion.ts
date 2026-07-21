@@ -1,5 +1,5 @@
 import { computed, provide, ref, useId } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import { useCollapse } from '../collapse/useCollapse';
 import { accordionKey } from './types';

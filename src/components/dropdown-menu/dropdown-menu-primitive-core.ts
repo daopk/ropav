@@ -12,9 +12,9 @@ import {
     type Ref,
     type VaporComponentInstance,
 } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
-import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
-import { useTypeahead } from '@/composables/useTypeahead';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
+import { useTypeahead } from '@/internal/composables/useTypeahead';
 import type { FloatingReference } from '../floating/types';
 import type {
     DropdownMenuCloseOptions,

@@ -1,6 +1,6 @@
 import { computed, onBeforeUnmount, ref, type CSSProperties } from 'vue';
-import { useDelayedOpen } from '@/composables/useDelayedOpen';
-import { useControlState } from '@/composables/useControlState';
+import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
+import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
 import {

@@ -9,7 +9,7 @@ import {
     useId,
     watch,
 } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import { useTeleportPositioningKey } from '../teleport-provider/useTeleportTarget';

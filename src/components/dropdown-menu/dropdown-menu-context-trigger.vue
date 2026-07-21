@@ -6,7 +6,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, ref, useAttrs, useId } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import {
     optionalAttr,
     resolveHTMLElementRef,

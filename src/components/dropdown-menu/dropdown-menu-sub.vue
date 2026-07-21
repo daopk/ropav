@@ -4,7 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, provide, ref, watch } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import {
     menuKey,
     subKey,

@@ -159,7 +159,7 @@
 <script lang="ts" setup vapor>
 import { computed, nextTick, ref, useId, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
 import type {

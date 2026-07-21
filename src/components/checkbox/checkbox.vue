@@ -43,7 +43,7 @@ import { computed, type InputHTMLAttributes } from 'vue';
 import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useCheckedFormControl } from '@/composables/useFormControl';
+import { useCheckedFormControl } from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxPart, CheckboxProps } from './types';

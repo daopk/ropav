@@ -4,7 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
-import { useOverlayLayer } from '@/composables/useOverlayLayer';
+import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { isEventWithinElement } from './dropdown-menu-outside';

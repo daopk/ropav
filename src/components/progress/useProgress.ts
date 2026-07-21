@@ -1,5 +1,5 @@
 import { computed, type CSSProperties } from 'vue';
-import { useControlState } from '@/composables/useControlState';
+import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
 import type { ProgressProps } from './types';

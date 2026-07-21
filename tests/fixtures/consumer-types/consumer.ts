@@ -37,7 +37,10 @@ import {
     type TeleportTarget as RootTeleportTarget,
     type UseFloatingPositionOptions as RootUseFloatingPositionOptions,
     type UseFloatingPositionReturn as RootUseFloatingPositionReturn,
+    type UseControllableValueOptions as RootUseControllableValueOptions,
+    type UseControllableValueReturn as RootUseControllableValueReturn,
     type UseOverlayZIndexOptions as RootUseOverlayZIndexOptions,
+    useControllableValue as useRootControllableValue,
     useFloatingPosition as useRootFloatingPosition,
     useHoverDisclosure as useRootHoverDisclosure,
     useFocusTrap as useRootFocusTrap,
@@ -45,6 +48,11 @@ import {
     useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
 } from 'ropav';
+import {
+    type UseControllableValueOptions,
+    type UseControllableValueReturn,
+    useControllableValue,
+} from 'ropav/composables';
 import {
     DialogClose,
     DialogContent,
@@ -189,6 +197,23 @@ const toastProviderProps: ToastProviderProps = { store: toastStore };
 const rootToastStoreOptions: RootToastStoreOptions = toastStoreOptions;
 const rootToastStore: RootToastStore = createRootToastStore(rootToastStoreOptions);
 const rootToastProviderProps: RootToastProviderProps = { store: rootToastStore };
+const controlledValue = ref<string>();
+const controllableValueOptions: UseControllableValueOptions<string> = {
+    modelValue: () => controlledValue.value,
+    defaultValue: () => 'initial',
+    onChange(value) {
+        controlledValue.value = value;
+    },
+};
+const rootControllableValueOptions: RootUseControllableValueOptions<string> =
+    controllableValueOptions;
+const controllableValue: UseControllableValueReturn<string> =
+    useControllableValue(controllableValueOptions);
+const rootControllableValue: RootUseControllableValueReturn<string> = useRootControllableValue(
+    rootControllableValueOptions,
+);
+// @ts-expect-error Public controllable state is readonly.
+controllableValue.value.value = 'mutated';
 const focusTrapOptions: FocusTrapOptions = { returnFocusOnDeactivate: true };
 const useFocusTrapOptions: UseFocusTrapOptions = { immediate: true };
 const dropdownRootProps: DropdownMenuRootPrimitiveProps = {
@@ -523,6 +548,11 @@ void [
     rootToastStore,
     rootToastStoreOptions,
     rootToastProviderProps,
+    controlledValue,
+    controllableValueOptions,
+    rootControllableValueOptions,
+    controllableValue,
+    rootControllableValue,
     overlayLayerProviderProps,
     rootOverlayLayerProviderProps,
     overlayLayerProviderVNode,

@@ -1,5 +1,5 @@
 import { computed, nextTick, ref, type CSSProperties } from 'vue';
-import { useControlState } from '@/composables/useControlState';
+import { useControlState } from '@/internal/composables/useControlState';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { SwitchProps } from './types';

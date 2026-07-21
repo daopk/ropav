@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue';
-import { useControlState } from '@/composables/useControlState';
+import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import type { InputProps } from './types';
 

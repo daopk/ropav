@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h } from 'vue';
 
-import { mountDom } from '../../tests/utils/vue';
+import { mountDom } from '../../../tests/utils/vue';
 import { useControlState, type ControlState } from './useControlState';
 
 describe('useControlState', () => {

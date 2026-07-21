@@ -4,7 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, useId, watch } from 'vue';
-import { useOverlayLayer } from '@/composables/useOverlayLayer';
+import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { dialogRootKey, resolveDialogCloseReason, type DialogRootContext } from './dialog-core';
 import type { DialogCloseReason, DialogRootProps, DialogRootSlotProps } from './types';

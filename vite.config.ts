@@ -71,7 +71,8 @@ export default defineConfig({
                 'src/unplugin-icons.ts',
                 'src/components/**/*.vue',
                 'src/components/**/*.ts',
-                'src/composables/useOverlayLayer.ts',
+                'src/composables/**/*.ts',
+                'src/internal/composables/useOverlayLayer.ts',
                 'src/utils/componentColors.ts',
             ],
             exclude: [
@@ -96,6 +97,7 @@ export default defineConfig({
             entry: {
                 index: resolve(__dirname, 'src/index.ts'),
                 base: resolve(__dirname, 'src/styles/base.scss'),
+                'composables/index': resolve(__dirname, 'src/composables/index.ts'),
                 'unplugin-icons': resolve(__dirname, 'src/unplugin-icons.ts'),
                 ...componentEntries,
             },

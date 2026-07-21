@@ -147,7 +147,7 @@
 <script lang="ts" setup vapor>
 import { computed, ref, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Tooltip from '../tooltip/tooltip.vue';
 import type {

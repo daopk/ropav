@@ -14,7 +14,7 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { claimNestedFormControlOwner, useTextFormControl } from '@/composables/useFormControl';
+import { claimNestedFormControlOwner, useTextFormControl } from '@/internal/composables/useFormControl';
 import { useInput } from './useInput';
 import type { InputPart, InputProps } from './types';
 

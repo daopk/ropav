@@ -7,7 +7,7 @@ import {
     type InjectionKey,
     type MaybeRefOrGetter,
 } from 'vue';
-import { useParentOverlayLayer } from '@/composables/useOverlayLayer';
+import { useParentOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import type { UseOverlayZIndexOptions } from './types';
 
 interface OverlayZIndexContext {

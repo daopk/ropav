@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
-import { mountDom } from '../../tests/utils/vue';
+import { mountDom } from '../../../tests/utils/vue';
 import { normalizeTypeaheadText, useTypeahead } from './useTypeahead';
 
 interface Item {

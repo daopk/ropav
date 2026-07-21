@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, provide, type InjectionKey } from 'vue';
 
-import { mountDom } from '../../tests/utils/vue';
+import { mountDom } from '../../../tests/utils/vue';
 import { useRequiredInject } from './useRequiredInject';
 
 interface ProvidedValue {

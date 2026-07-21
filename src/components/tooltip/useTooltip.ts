@@ -1,5 +1,5 @@
 import { computed, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
-import { useDelayedOpen } from '@/composables/useDelayedOpen';
+import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import {

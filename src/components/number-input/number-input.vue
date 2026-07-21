@@ -76,7 +76,7 @@ import { computed, ref } from 'vue';
 import IconMinus from '~icons/lucide/minus';
 import IconPlus from '~icons/lucide/plus';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { provideNestedFormControlOwner, useFormControl } from '@/composables/useFormControl';
+import { provideNestedFormControlOwner, useFormControl } from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import Input from '../input/input.vue';
 import type { NumberInputPart, NumberInputProps, NumberInputValue } from './types';

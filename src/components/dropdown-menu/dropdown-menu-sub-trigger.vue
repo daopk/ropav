@@ -12,7 +12,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import {
     menuKey,

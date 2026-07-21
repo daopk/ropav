@@ -1,4 +1,5 @@
 export type { StylesApiClassNames, StylesApiProps, StylesApiStyles } from './styles-api';
+export * from './composables';
 export * from './components/alert';
 export * from './components/accordion';
 export * from './components/aspect-ratio';

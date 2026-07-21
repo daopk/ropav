@@ -16,6 +16,8 @@ globalThis.SVGElement = dom.window.SVGElement;
 
 const expectedFiles = [
     'dist/index.js',
+    'dist/composables/index.js',
+    'dist/composables/index.d.ts',
     'dist/base.css',
     'dist/alert.css',
     'dist/accordion.css',
@@ -252,6 +254,7 @@ try {
             'useAccordion',
             'useAccordionItem',
             'useCollapse',
+            'useControllableValue',
             'useFloatingPosition',
             'useHoverDisclosure',
             'useOverlayZIndex',
@@ -267,6 +270,9 @@ try {
         ],
         'dist/index.js',
     );
+
+    const composables = await server.ssrLoadModule('/dist/composables/index.js');
+    assertExports(composables, ['useControllableValue'], 'dist/composables/index.js');
 
     const iconsCompiler = await server.ssrLoadModule('/dist/unplugin-icons.js');
     assertExports(iconsCompiler, ['vaporIconCompiler'], 'dist/unplugin-icons.js');

@@ -1,8 +1,8 @@
 import { computed, nextTick, ref, useId, watch, type Ref } from 'vue';
-import { useClickOutside } from '@/composables/useClickOutside';
-import { useCollectionNavigation } from '@/composables/useCollectionNavigation';
-import { useControlState } from '@/composables/useControlState';
-import { useTypeahead } from '@/composables/useTypeahead';
+import { useClickOutside } from '@/internal/composables/useClickOutside';
+import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
+import { useControlState } from '@/internal/composables/useControlState';
+import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import type { SelectOption, SelectProps } from './types';
 

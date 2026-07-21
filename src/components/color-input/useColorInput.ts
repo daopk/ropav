@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { useControlState } from '@/composables/useControlState';
+import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import type { ColorPickerValue } from '../color-picker/types';
 import type { ColorInputProps } from './types';

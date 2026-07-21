@@ -6,7 +6,7 @@ import {
     type Ref,
     type VaporComponentInstance,
 } from 'vue';
-import type { OverlayLayerContext } from '@/composables/useOverlayLayer';
+import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
 import type { DialogCloseReason } from './types';
 
 export interface DialogRootContext {

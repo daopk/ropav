@@ -12,7 +12,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, isRef, mergeProps, onBeforeUnmount, useAttrs, watch } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
 import {

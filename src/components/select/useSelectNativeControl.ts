@@ -1,5 +1,5 @@
 import { computed, type Ref, type SelectHTMLAttributes } from 'vue';
-import { useFormControl } from '@/composables/useFormControl';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import type { SelectProps } from './types';
 import { useSelectNativeValue, type SelectValue } from './useSelectNativeValue';
 

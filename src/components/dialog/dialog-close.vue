@@ -4,7 +4,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { dialogRootKey } from './dialog-core';
 import type { DialogCloseProps } from './types';
 

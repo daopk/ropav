@@ -6,7 +6,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, provide, ref, useAttrs } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { menuKey, radioGroupKey } from './dropdown-menu-primitive-core';
 import type { DropdownMenuItemValue, DropdownMenuRadioGroupPrimitiveProps } from './types';
 

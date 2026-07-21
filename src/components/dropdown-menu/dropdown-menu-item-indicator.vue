@@ -6,7 +6,7 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
-import { useRequiredInject } from '@/composables/useRequiredInject';
+import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { checkedKey } from './dropdown-menu-primitive-core';
 import type { DropdownMenuItemIndicatorPrimitiveProps } from './types';
 

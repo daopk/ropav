@@ -31,7 +31,7 @@
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useCheckedFormControl } from '@/composables/useFormControl';
+import { useCheckedFormControl } from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import { useSwitch } from './useSwitch';
 import type { SwitchPart, SwitchProps } from './types';

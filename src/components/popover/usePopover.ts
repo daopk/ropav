@@ -10,7 +10,7 @@ import {
     type CSSProperties,
 } from 'vue';
 import { bem } from '@/utils/bem';
-import { useOverlayLayer } from '@/composables/useOverlayLayer';
+import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
 import {

@@ -28,7 +28,7 @@
 import { computed, type TextareaHTMLAttributes } from 'vue';
 import { presence, useStylesApi } from '@/styles-api';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useTextFormControl } from '@/composables/useFormControl';
+import { useTextFormControl } from '@/internal/composables/useFormControl';
 import { useTextarea } from './useTextarea';
 import type { TextareaPart, TextareaProps } from './types';
 

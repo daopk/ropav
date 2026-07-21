@@ -1,5 +1,5 @@
 import { computed, ref, watch, type ComputedRef } from 'vue';
-import { useDelayedOpen } from '@/composables/useDelayedOpen';
+import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
 import type { RangeSliderThumb, SliderTooltipMode } from './types';
 
 export type RangeSliderTooltipInteractionReason = 'focus' | 'drag';

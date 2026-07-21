@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 
-import { click, mountDomWithApp } from '../../tests/utils/vue';
+import { click, mountDomWithApp } from '../../../tests/utils/vue';
 import { useClickOutside } from './useClickOutside';
 
 function mountClickOutside(initialActive: boolean) {
@@ -61,5 +61,47 @@ describe('useClickOutside', () => {
         click(document.body);
 
         expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('listens in the target owner document and rebinds when the target changes', async () => {
+        const iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+        const frameDocument = iframe.contentDocument!;
+        const frameWindow = iframe.contentWindow as Window & typeof globalThis;
+        const firstTarget = document.createElement('div');
+        const secondTarget = frameDocument.createElement('div');
+        document.body.appendChild(firstTarget);
+        frameDocument.body.appendChild(secondTarget);
+
+        const target = ref<Element | null>(firstTarget);
+        const active = ref(true);
+        const callback = vi.fn();
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    useClickOutside(target, active, callback);
+                    return () => h('div');
+                },
+            }),
+        );
+        await nextTick();
+
+        click(document.body);
+        expect(callback).toHaveBeenCalledTimes(1);
+
+        target.value = secondTarget;
+        await nextTick();
+        click(document.body);
+        expect(callback).toHaveBeenCalledTimes(1);
+
+        frameDocument.body.dispatchEvent(
+            new frameWindow.MouseEvent('click', { bubbles: true, cancelable: true }),
+        );
+        expect(callback).toHaveBeenCalledTimes(2);
+
+        secondTarget.dispatchEvent(
+            new frameWindow.MouseEvent('click', { bubbles: true, cancelable: true }),
+        );
+        expect(callback).toHaveBeenCalledTimes(2);
     });
 });

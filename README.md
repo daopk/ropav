@@ -37,6 +37,10 @@ Import the components you need:
 import { Button } from 'ropav';
 ```
 
+Headless state utilities are available from `ropav/composables`. See the
+[public composables API](./docs/public-composables-api.md) for their controlled and uncontrolled
+state contracts.
+
 ## Custom color contrast
 
 `autoContrast` selects foreground colors for preset colors and opaque custom color literals. A

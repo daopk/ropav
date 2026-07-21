@@ -10,8 +10,8 @@ import {
     type CSSProperties,
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { useControlState } from '@/composables/useControlState';
-import { useFormControl } from '@/composables/useFormControl';
+import { useControlState } from '@/internal/composables/useControlState';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
