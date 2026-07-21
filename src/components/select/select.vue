@@ -74,12 +74,11 @@
             <ScrollArea
                 v-if="isOpen"
                 v-bind="getPartAttrs('content', { class: 'rp-select__dropdown' })"
-                role="listbox"
-                :id="listboxId"
+                :id="popupId"
                 embedded
                 type="auto"
                 scrollbars="y"
-                :viewport-attrs="{ tabindex: -1 }"
+                :viewport-attrs="{ role: 'listbox', tabindex: -1 }"
                 :data-state="isOpen ? 'open' : 'closed'"
             >
                 <div
@@ -156,6 +155,7 @@ const {
     selectRef,
     isOpen,
     selectId,
+    popupId,
     listboxId,
     control,
     visibleOptions,

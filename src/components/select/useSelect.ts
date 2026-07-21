@@ -33,7 +33,8 @@ export function useSelect(
     const isOpen = ref(false);
 
     const selectId = useId();
-    const listboxId = `${selectId}-listbox`;
+    const popupId = `${selectId}-popup`;
+    const listboxId = `${popupId}-viewport`;
 
     const control = useControlState(props);
     const visibleOptions = computed(() => props.options ?? []);
@@ -218,6 +219,7 @@ export function useSelect(
         triggerRef,
         isOpen,
         selectId,
+        popupId,
         listboxId,
         control,
         visibleOptions,

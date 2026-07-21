@@ -98,6 +98,34 @@ export const ManyOptions: Story = {
     },
 };
 
+export const OpenDropdownA11y: Story = {
+    tags: ['test'],
+    parameters: {
+        a11y: {
+            options: {
+                runOnly: ['aria-required-children', 'scrollable-region-focusable'],
+            },
+            test: 'error',
+        },
+    },
+    args: {
+        options: manyFruitOptions,
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const trigger = canvas.getByRole('combobox', { name: 'Fruit' });
+        trigger.focus();
+
+        await userEvent.keyboard('{ArrowDown}');
+        const listbox = await canvas.findByRole('listbox');
+
+        expect(trigger).toHaveFocus();
+        expect(trigger).toHaveAttribute('aria-controls', listbox.id);
+        expect(listbox).toHaveClass('rp-scroll-area__viewport');
+        expect(listbox).toHaveAttribute('tabindex', '-1');
+    },
+};
+
 export const Typeahead: Story = {
     tags: ['test'],
     args: {

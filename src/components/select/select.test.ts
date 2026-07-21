@@ -328,32 +328,34 @@ describe('Select', () => {
         click(trigger);
         await flush();
 
-        const listbox = container.querySelector('[role="listbox"]') as HTMLElement;
-        const viewport = listbox.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const popup = container.querySelector('.rp-scroll-area') as HTMLElement;
+        const listbox = popup.querySelector('[role="listbox"]') as HTMLElement;
+        const viewport = popup.querySelector('.rp-scroll-area__viewport') as HTMLElement;
         const content = listbox.querySelector('.rp-scroll-area__content') as HTMLElement;
-        const scrollbar = listbox.querySelector(
+        const scrollbar = popup.querySelector(
             '.rp-scroll-area__scrollbar--vertical',
         ) as HTMLElement;
 
         expect(trigger.getAttribute('aria-controls')).toBe(listbox.id);
         expect(document.activeElement).toBe(trigger);
-        expect(listbox.classList.contains('rp-scroll-area')).toBe(true);
-        expect(listbox.classList.contains('custom-dropdown')).toBe(true);
-        expect(listbox.dataset.type).toBe('auto');
-        expect(listbox.dataset.scrollbars).toBe('y');
-        expect(listbox.style.maxHeight).toBe('120px');
-        expect(viewport.tabIndex).toBe(-1);
+        expect(listbox).toBe(viewport);
+        expect(popup.getAttribute('role')).toBeNull();
+        expect(popup.classList.contains('custom-dropdown')).toBe(true);
+        expect(popup.dataset.type).toBe('auto');
+        expect(popup.dataset.scrollbars).toBe('y');
+        expect(popup.style.maxHeight).toBe('120px');
+        expect(listbox.tabIndex).toBe(-1);
         expect(content.querySelectorAll('[role="option"]')).toHaveLength(options.length);
         expect(scrollbar.tabIndex).toBe(-1);
         expect(scrollbar.getAttribute('aria-hidden')).toBe('true');
-        expect(listbox.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
+        expect(popup.querySelector('.rp-scroll-area__scrollbar--horizontal')).toBeNull();
 
         setGeometry(viewport, { clientHeight: 120, scrollHeight: 320 });
         viewport.scrollTop = 40;
         viewport.dispatchEvent(new Event('scroll'));
         await flush();
 
-        expect(listbox).toHaveProperty('dataset.overflowY', '');
+        expect(popup).toHaveProperty('dataset.overflowY', '');
         expect(viewport.scrollTop).toBe(40);
     });
 
