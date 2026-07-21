@@ -29,6 +29,12 @@
     animation-delay: 240ms;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .rp-button-story-dots span {
+        animation: none;
+    }
+}
+
 @keyframes rp-button-story-dot-pulse {
     0%,
     80%,

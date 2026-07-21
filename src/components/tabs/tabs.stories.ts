@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import IconImage from '~icons/lucide/image';
 import IconMessageCircle from '~icons/lucide/message-circle';
 import IconSettings from '~icons/lucide/settings';
@@ -118,6 +118,7 @@ const overflowTabs = [
 ] as const;
 
 const variants = ['line', 'pills', 'outline'] as const;
+const tabSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
     title: 'Components/Tabs',
@@ -311,6 +312,7 @@ export const OutlineWithBorderedContent: Story = {
 export const ManualActivation: Story = {
     args: {
         activationMode: 'manual',
+        ariaLabel: 'Manual activation sections',
     },
 };
 
@@ -381,6 +383,7 @@ export const Overflow: Story = {
 export const Vertical: Story = {
     args: {
         orientation: 'vertical',
+        ariaLabel: 'Vertical project sections',
     },
 };
 
@@ -388,6 +391,7 @@ export const VerticalRight: Story = {
     args: {
         orientation: 'vertical',
         placement: 'right',
+        ariaLabel: 'Right-aligned vertical project sections',
     },
 };
 
@@ -395,6 +399,7 @@ export const TriggerAlign: Story = {
     args: {
         orientation: 'vertical',
         align: 'right',
+        ariaLabel: 'Mixed trigger alignment sections',
     },
     render: (args) => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
@@ -424,6 +429,9 @@ export const TriggerAlign: Story = {
 };
 
 export const WithDisabledTrigger: Story = {
+    args: {
+        ariaLabel: 'Project sections with disabled settings',
+    },
     render: (args) => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
         setup() {
@@ -504,10 +512,13 @@ export const Colors: Story = {
             const colorRow = canvasElement.querySelector<HTMLElement>(
                 `[data-tab-color="${color}"]`,
             )!;
+            const colorCanvas = within(colorRow);
             const activeTrigger = colorRow.querySelector<HTMLElement>(
                 '[role="tab"][data-state="active"]',
             )!;
             const colorProbe = document.createElement('span');
+
+            expect(colorCanvas.getByRole('tablist', { name: `${color} tabs` })).toBeInTheDocument();
 
             colorProbe.style.backgroundColor = `var(--rp-color-${color}-filled)`;
             colorRow.append(colorProbe);
@@ -522,6 +533,9 @@ export const Colors: Story = {
 };
 
 export const Icons: Story = {
+    args: {
+        ariaLabel: 'Icon-labelled project sections',
+    },
     render: (args) => ({
         components: {
             IconImage,
@@ -567,12 +581,12 @@ export const Icons: Story = {
 };
 
 export const Sizes: Story = {
+    tags: ['test'],
     render: () => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
         setup() {
-            const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
             const value = ref('overview');
-            return { panelStyle, sizes, value, wrapperStyle };
+            return { panelStyle, sizes: tabSizes, value, wrapperStyle };
         },
         template: `
             <div :style="wrapperStyle">
@@ -598,9 +612,18 @@ export const Sizes: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        expect(canvas.getAllByRole('tablist')).toHaveLength(tabSizes.length);
+        for (const size of tabSizes) {
+            expect(canvas.getByRole('tablist', { name: `Tabs size ${size}` })).toBeInTheDocument();
+        }
+    },
 };
 
 export const Variants: Story = {
+    tags: ['test'],
     render: () => ({
         components: { Tabs, TabsContent, TabsList, TabsTrigger },
         setup() {
@@ -636,6 +659,16 @@ export const Variants: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        expect(canvas.getAllByRole('tablist')).toHaveLength(variants.length);
+        for (const variant of variants) {
+            expect(
+                canvas.getByRole('tablist', { name: `Tabs variant ${variant}` }),
+            ).toBeInTheDocument();
+        }
+    },
 };
 
 export const Controlled: Story = {

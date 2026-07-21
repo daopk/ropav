@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { ref } from 'vue';
 import Button from '../button/button.vue';
 import Field from '../field/field.vue';
@@ -38,6 +38,7 @@ const meta = {
         focusTrapOptions: { control: false },
     },
     args: {
+        id: 'invite-teammate-modal',
         role: 'dialog',
         size: 'md',
         title: 'Invite teammate',
@@ -97,6 +98,7 @@ export const Basic: Story = {
 export const ScrollableBody: Story = {
     tags: ['test'],
     args: {
+        id: 'activity-history-modal',
         size: 'sm',
         title: 'Activity history',
         description: 'The header and footer remain fixed while the body scrolls.',
@@ -149,6 +151,10 @@ export const ScrollableBody: Story = {
 };
 
 export const Sizes: Story = {
+    tags: ['test'],
+    args: {
+        teleport: false,
+    },
     render: (args) => ({
         components: { Button, Modal },
         setup() {
@@ -156,23 +162,26 @@ export const Sizes: Story = {
             return { args, sizes, openSize };
         },
         template: `
-            <div style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 48px;">
+            <div data-testid="modal-sizes-story" style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 48px;">
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                     <Button v-for="size in sizes" :key="size" variant="outline" @click="openSize = size">
                         {{ size }}
                     </Button>
                 </div>
                 <Modal
-                    v-for="size in sizes"
-                    :key="size"
-                    v-bind="args"
-                    :title="'Modal ' + size"
-                    :size="size"
-                    :open="openSize === size"
-                    @update:open="openSize = $event ? size : null"
+                    v-if="openSize"
+                    :key="openSize"
+                    v-bind="{
+                        ...args,
+                        id: 'modal-size-' + openSize,
+                        title: 'Modal ' + openSize,
+                        size: openSize,
+                        open: true,
+                    }"
+                    @update:open="openSize = $event ? openSize : null"
                 >
                     <p style="margin: 0;">
-                        This modal uses the {{ size }} size preset.
+                        This modal uses the {{ openSize }} size preset.
                     </p>
                     <template #footer="{ close }">
                         <Button variant="solid" @click="close">Done</Button>
@@ -181,10 +190,25 @@ export const Sizes: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const story = within(canvas.getByTestId('modal-sizes-story'));
+
+        expect(story.queryByRole('dialog')).not.toBeInTheDocument();
+
+        await userEvent.click(story.getByRole('button', { name: 'md' }));
+
+        await waitFor(() => {
+            const dialogs = story.getAllByRole('dialog');
+            expect(dialogs).toHaveLength(1);
+            expect(dialogs[0]).toHaveAccessibleName('Modal md');
+        });
+    },
 };
 
 export const CustomSize: Story = {
     args: {
+        id: 'custom-width-modal',
         size: '55%',
         title: 'Custom width',
         description: 'This modal uses a CSS width value through the size prop.',
@@ -213,6 +237,7 @@ export const CustomSize: Story = {
 
 export const CustomOverlay: Story = {
     args: {
+        id: 'custom-overlay-modal',
         title: 'Custom overlay',
         description: 'This modal forwards visual props to the shared Overlay component.',
         overlayProps: {
@@ -255,6 +280,12 @@ export const CustomOverlay: Story = {
 };
 
 export const CustomHeader: Story = {
+    args: {
+        id: 'review-changes-modal',
+        title: '',
+        description: '',
+        ariaLabel: 'Review changes',
+    },
     render: (args) => ({
         components: { Button, Modal },
         setup() {

@@ -92,6 +92,16 @@
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .rp-progress__indicator {
+        transition: none;
+    }
+
+    .rp-progress--indeterminate .rp-progress__indicator {
+        animation: none;
+    }
+}
+
 @keyframes rp-progress-indeterminate {
     0% {
         transform: translateX(-110%);
