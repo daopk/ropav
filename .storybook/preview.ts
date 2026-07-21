@@ -19,7 +19,7 @@ const preview: Preview = {
     },
     parameters: {
         a11y: {
-            test: 'todo',
+            test: 'error',
         },
         backgrounds: {
             disable: true,

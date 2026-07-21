@@ -205,7 +205,7 @@
     "test:package": "pnpm run build && pnpm run test:exports:built && pnpm run test:consumer-types:built && pnpm run test:consumer-fixture:built",
     "test:watch": "vitest --project=unit",
     "test:typecheck": "vitest run --project=unit --typecheck",
-    "test:storybook": "vitest run --project=storybook",
+    "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
     "test:all": "pnpm run tokens:check && pnpm test && pnpm test:storybook",
     "build": "pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
     "prepublishOnly": "pnpm run test:package",
