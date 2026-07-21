@@ -18,5 +18,10 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": ["node_modules", "dist", "tests/fixtures/consumer-types"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests/fixtures/consumer-app",
+    "tests/fixtures/consumer-types"
+  ]
 }
