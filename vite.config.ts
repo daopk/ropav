@@ -5,8 +5,8 @@ import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
 import Icons from 'unplugin-icons/vite';
 
-import { injectComponentCss } from './config/inject-component-css';
-import { rewriteDeclarationImportExtensions } from './config/rewrite-declaration-import-extensions';
+import { injectComponentCss } from './tooling/vite/inject-component-css';
+import { rewriteDeclarationImportExtensions } from './tooling/vite/rewrite-declaration-import-extensions';
 import { vaporIconCompiler } from './src/unplugin-icons';
 
 const componentEntries = readdirSync(resolve(__dirname, 'src/components'), { withFileTypes: true })

@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { rewriteDeclarationImportExtensions } from './rewrite-declaration-import-extensions';
+import { rewriteDeclarationImportExtensions } from '../../../tooling/vite/rewrite-declaration-import-extensions';
 
 const declarationRoot = resolve('/project/dist');
 const sourceRoot = resolve('/project/src');

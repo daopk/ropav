@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 // @ts-expect-error The build scripts are plain JavaScript modules without declaration files.
-import { contrastRatio, mixColors, parseHexColor } from '../scripts/color-system.mjs';
+import { contrastRatio, mixColors, parseHexColor } from '../../scripts/color-system.mjs';
 
 describe('color system utilities', () => {
     it('parses short and full hex colors consistently', () => {

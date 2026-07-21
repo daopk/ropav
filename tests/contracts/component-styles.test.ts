@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const buttonStyles = readFileSync(resolve(rootDir, 'src/components/button/button.scss'), 'utf8');
 const buttonStoryStyles = readFileSync(
     resolve(rootDir, 'src/components/button/button.stories.scss'),

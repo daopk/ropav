@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 // @ts-expect-error The build scripts are plain JavaScript modules without declaration files.
-import { hasCssCustomProperty, isPublicToken } from '../scripts/token-output-policy.mjs';
+import { hasCssCustomProperty, isPublicToken } from '../../scripts/token-output-policy.mjs';
 // @ts-expect-error The build scripts are plain JavaScript modules without declaration files.
-import { createPublicStylesManifest } from '../scripts/public-styles-manifest.mjs';
+import { createPublicStylesManifest } from '../../scripts/public-styles-manifest.mjs';
 
 function token(path: string, ropav: Record<string, unknown> = {}) {
     return {

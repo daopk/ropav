@@ -3,7 +3,7 @@ import { dirname, extname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '../src/components');
+const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '../../src/components');
 
 function getFiles(directory: string): string[] {
     return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

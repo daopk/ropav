@@ -48,8 +48,20 @@ export default mergeConfig(
                     test: {
                         name: 'unit',
                         environment: 'jsdom',
-                        include: ['src/**/*.test.ts', 'config/**/*.test.ts'],
+                        include: ['src/**/*.test.ts'],
                         css: false,
+                    },
+                },
+                {
+                    extends: true,
+                    test: {
+                        name: 'tooling',
+                        environment: 'node',
+                        include: [
+                            'tests/tooling/vite/**/*.test.ts',
+                            'tests/contracts/**/*.test.ts',
+                            'tests/scripts/**/*.test.ts',
+                        ],
                     },
                 },
                 storybookProject('light'),

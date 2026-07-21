@@ -14,7 +14,7 @@ interface Replacement {
     value: string;
 }
 
-const indexSourceFiles = ['index.ts', 'index.tsx', 'index.mts', 'index.cts', 'index.vue'];
+const indexSourceFileNames = ['index.ts', 'index.tsx', 'index.mts', 'index.cts', 'index.vue'];
 
 export function rewriteDeclarationImportExtensions(
     filePath: string,
@@ -51,7 +51,7 @@ export function rewriteDeclarationImportExtensions(
         if (!/^\.{1,2}\//.test(path) || extname(path)) return;
 
         const sourceTarget = resolve(sourceDirectory, path);
-        const resolvesToIndex = indexSourceFiles.some((file) =>
+        const resolvesToIndex = indexSourceFileNames.some((file) =>
             fileExists(resolve(sourceTarget, file)),
         );
         const resolvedPath = resolvesToIndex ? `${path}/index.js` : `${path}.js`;
