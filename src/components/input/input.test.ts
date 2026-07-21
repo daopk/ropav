@@ -177,6 +177,32 @@ describe('Input', () => {
         expect(native.value).toBe('Search');
     });
 
+    it('renders interactive slot content inside a non-label root', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Input,
+                        {
+                            modelValue: '',
+                        },
+                        {
+                            right: () => h('button', { class: 'right-action' }, 'Clear'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const root = container.querySelector('.rp-input')!;
+        const action = container.querySelector('.right-action')!;
+
+        expect(root.tagName).toBe('DIV');
+        expect(action.closest('label')).toBeNull();
+    });
+
     it('applies valid state without ARIA invalid', async () => {
         const container = mountDom(
             defineComponent({

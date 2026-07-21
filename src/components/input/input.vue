@@ -1,5 +1,5 @@
 <template>
-    <label v-bind="rootAttrs">
+    <div v-bind="rootAttrs">
         <span v-if="$slots.left" v-bind="getPartAttrs('left', { class: 'rp-input__left' })">
             <slot name="left" />
         </span>
@@ -7,7 +7,7 @@
         <span v-if="$slots.right" v-bind="getPartAttrs('right', { class: 'rp-input__right' })">
             <slot name="right" />
         </span>
-    </label>
+    </div>
 </template>
 
 <script lang="ts" setup vapor>
