@@ -110,15 +110,12 @@ export const Default: Story = {
         const input = canvasElement.querySelector<HTMLInputElement>('.rp-input__native')!;
         const inputControl = canvasElement.querySelector<HTMLElement>('.rp-input')!;
         const preview = canvasElement.querySelector<HTMLElement>('.rp-color-input__preview')!;
+        const pickerId = input.getAttribute('aria-controls')!;
 
         await userEvent.click(input);
-        await waitFor(() =>
-            expect(storyDocument.querySelector<HTMLElement>('.rp-popover__content')).toBeVisible(),
-        );
-        const picker = storyDocument.querySelector<HTMLElement>('.rp-popover__content')!;
-        const pickerSurface = storyDocument.querySelector<HTMLElement>(
-            '.rp-color-picker__surface',
-        )!;
+        await waitFor(() => expect(storyDocument.getElementById(pickerId)).toBeVisible());
+        const picker = storyDocument.getElementById(pickerId)!;
+        const pickerSurface = picker.querySelector<HTMLElement>('.rp-color-picker__surface')!;
 
         const inputRect = inputControl.getBoundingClientRect();
         const previewRect = preview.getBoundingClientRect();
