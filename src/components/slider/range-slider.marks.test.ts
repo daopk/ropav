@@ -75,10 +75,10 @@ describe('RangeSlider marks', () => {
             'var(--rp-color-orange-filled)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-range-slider-mark-label-color')).toBe(
-            'var(--rp-color-orange-filled)',
+            'var(--rp-color-orange-light-color)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-range-slider-mark-filled-label-color')).toBe(
-            'var(--rp-color-orange-filled)',
+            'var(--rp-color-orange-light-color)',
         );
         expect(marks[0].style.getPropertyValue('--_rp-range-slider-mark-ring-color')).toBe(
             'var(--rp-color-orange-filled)',

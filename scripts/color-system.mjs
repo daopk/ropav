@@ -156,7 +156,7 @@ export function getColorVariantVariables(color, scheme) {
             [`--rp-color-${color}-contrast`]: filled.contrast,
             [`--rp-color-${color}-light`]: `var(--rp-color-${color}-1)`,
             [`--rp-color-${color}-light-hover`]: `var(--rp-color-${color}-2)`,
-            [`--rp-color-${color}-light-color`]: `var(--rp-color-${color}-9)`,
+            [`--rp-color-${color}-light-color`]: getLightVariantForeground(color),
             [`--rp-color-${color}-outline`]: `var(--rp-color-${color}-${outlineShade})`,
             [`--rp-color-${color}-outline-hover`]: `color-mix(in srgb, var(--rp-color-${color}-${outlineShade}) 5%, transparent)`,
         };
@@ -172,6 +172,32 @@ export function getColorVariantVariables(color, scheme) {
         [`--rp-color-${color}-outline`]: `var(--rp-color-${color}-${outlineShade})`,
         [`--rp-color-${color}-outline-hover`]: `color-mix(in srgb, var(--rp-color-${color}-${outlineShade}) 5%, transparent)`,
     };
+}
+
+function getLightVariantForeground(color) {
+    const foreground = colorFromHex(getColorTokenValue(color, 9));
+    const black = colorFromHex(getCoreColorTokenValue('black'));
+    const backgrounds = [
+        colorFromHex(getCoreColorTokenValue('white')),
+        colorFromHex(getColorTokenValue(color, 1)),
+        colorFromHex(getColorTokenValue(color, 2)),
+    ];
+    let colorPercent = 100;
+
+    while (
+        colorPercent > 0 &&
+        backgrounds.some(
+            (background) =>
+                contrastRatio(mixOpaqueColors(foreground, colorPercent / 100, black), background) <
+                minimumTextContrast,
+        )
+    ) {
+        colorPercent -= 1;
+    }
+
+    if (colorPercent === 100) return `var(--rp-color-${color}-9)`;
+
+    return `color-mix(in srgb, var(--rp-color-${color}-9) ${colorPercent}%, var(--rp-color-black))`;
 }
 
 function getFilledColorVariables(color, startingShade) {
@@ -238,7 +264,7 @@ export function getSchemeColorVariables(scheme) {
             '--rp-color-bright': 'var(--rp-color-white)',
             '--rp-color-text': 'var(--rp-color-dark-0)',
             '--rp-color-body': 'var(--rp-color-dark-7)',
-            '--rp-color-placeholder': 'var(--rp-color-dark-3)',
+            '--rp-color-placeholder': 'var(--rp-color-dark-1)',
             '--rp-color-default': 'var(--rp-color-dark-6)',
             '--rp-color-default-hover': 'var(--rp-color-dark-5)',
             '--rp-color-default-color': 'var(--rp-color-white)',
@@ -270,7 +296,7 @@ export function getSchemeColorVariables(scheme) {
         '--rp-color-bright': 'var(--rp-color-black)',
         '--rp-color-text': 'var(--rp-color-black)',
         '--rp-color-body': 'var(--rp-color-white)',
-        '--rp-color-placeholder': 'var(--rp-color-gray-5)',
+        '--rp-color-placeholder': 'var(--rp-color-gray-7)',
         '--rp-color-default': 'var(--rp-color-white)',
         '--rp-color-default-hover': 'var(--rp-color-gray-1)',
         '--rp-color-default-color': 'var(--rp-color-black)',

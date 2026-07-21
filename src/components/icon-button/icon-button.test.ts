@@ -224,7 +224,9 @@ describe('IconButton', () => {
             'color-mix(in srgb, #ff3366 18%, transparent)',
         );
         expect(button.style.getPropertyValue('--_rp-button-border')).toBe('transparent');
-        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe('#ff3366');
+        expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
+            'color-mix(in srgb, #ff3366 70%, var(--rp-color-bright))',
+        );
     });
 
     it('uses readable arbitrary color contrast when autoContrast is enabled', async () => {

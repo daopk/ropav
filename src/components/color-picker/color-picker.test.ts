@@ -751,7 +751,7 @@ describe('ColorPicker', () => {
         expect(saturationAxis.tabIndex).toBe(0);
         expect(valueAxis.tabIndex).toBe(0);
         expect(hueBar.getAttribute('tabindex')).toBe('0');
-        expect(panel.getAttribute('aria-readonly')).toBe('true');
+        expect(panel.getAttribute('aria-readonly')).toBeNull();
         expect(saturationAxis.getAttribute('aria-readonly')).toBe('true');
         expect(valueAxis.getAttribute('aria-readonly')).toBe('true');
         expect(hueBar.getAttribute('aria-readonly')).toBe('true');

@@ -49,7 +49,8 @@ describe('slider core', () => {
             (value) => value >= 20 && value <= 50,
             {
                 position: '--_rp-test-mark-position',
-                colors: ['--_rp-test-mark-color'],
+                decorativeColors: ['--_rp-test-mark-color'],
+                foregroundColors: [],
             },
         );
 

@@ -3,11 +3,11 @@
         <slot name="trigger" v-bind="publicTriggerSlotProps" />
 
         <Transition name="rp-collapse-content">
-            <section v-if="shouldRenderContent" v-show="isOpen" v-bind="publicContentProps">
+            <div v-if="shouldRenderContent" v-show="isOpen" v-bind="publicContentProps">
                 <div class="rp-collapse__inner">
                     <slot v-bind="contentSlotProps" />
                 </div>
-            </section>
+            </div>
         </Transition>
     </div>
 </template>

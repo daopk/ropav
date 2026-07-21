@@ -7,7 +7,6 @@
         :aria-label="groupAriaLabel"
         :aria-labelledby="labelledby"
         :aria-describedby="describedby"
-        :aria-readonly="readonly || undefined"
         :data-readonly="presence(readonly)"
         data-control="saturation"
         @pointerdown="onPointerDown"

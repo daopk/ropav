@@ -106,7 +106,10 @@
 import { computed, ref } from 'vue';
 import IconCrosshair from '~icons/lucide/crosshair';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { provideNestedFormControlOwner, useTextFormControl } from '@/internal/composables/useFormControl';
+import {
+    provideNestedFormControlOwner,
+    useTextFormControl,
+} from '@/internal/composables/useFormControl';
 import { presence, useStylesApi } from '@/styles-api';
 import ColorPicker from '../color-picker/color-picker.vue';
 import ColorSwatch from '../color-swatch/color-swatch.vue';

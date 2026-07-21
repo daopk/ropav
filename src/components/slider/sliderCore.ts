@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'vue';
-import { getComponentColorValue } from '@/utils/componentColors';
+import { getComponentColorRoles, getComponentColorValue } from '@/utils/componentColors';
 import type {
     RangeSliderTooltip,
     RangeSliderThumbOptions,
@@ -22,7 +22,8 @@ export interface SliderBounds {
 
 interface SliderMarkStyleProperties {
     position: `--_rp-${string}`;
-    colors: readonly `--_rp-${string}`[];
+    decorativeColors: readonly `--_rp-${string}`[];
+    foregroundColors: readonly `--_rp-${string}`[];
 }
 
 interface SliderThumbStyleProperties {
@@ -128,9 +129,13 @@ function getSliderMarkStyle(
 ) {
     const style: CSSProperties = { [properties.position]: `${percent}%` };
     const colorValue = getComponentColorValue(color);
+    const foreground = getComponentColorRoles(color)?.foreground;
 
-    for (const property of properties.colors) {
+    for (const property of properties.decorativeColors) {
         setSliderStyleValue(style, property, colorValue);
+    }
+    for (const property of properties.foregroundColors) {
+        setSliderStyleValue(style, property, foreground);
     }
 
     return style;

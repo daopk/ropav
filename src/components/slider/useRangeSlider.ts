@@ -302,11 +302,13 @@ export function useRangeSlider(
             (value) => value >= normalizedValue.value[0] && value <= normalizedValue.value[1],
             {
                 position: '--_rp-range-slider-mark-position',
-                colors: [
+                decorativeColors: [
                     '--_rp-range-slider-mark-color',
+                    '--_rp-range-slider-mark-ring-color',
+                ],
+                foregroundColors: [
                     '--_rp-range-slider-mark-label-color',
                     '--_rp-range-slider-mark-filled-label-color',
-                    '--_rp-range-slider-mark-ring-color',
                 ],
             },
         ),

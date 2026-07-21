@@ -1,7 +1,7 @@
 <template>
-    <section v-if="shouldRenderContent" v-bind="rootAttrs">
+    <div v-if="shouldRenderContent" v-bind="rootAttrs">
         <slot v-bind="slotProps" />
-    </section>
+    </div>
 </template>
 
 <script lang="ts" setup vapor>

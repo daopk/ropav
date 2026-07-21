@@ -81,7 +81,7 @@ describe('component color resolver', () => {
             contrast: 'var(--rp-color-black)',
             contrastHover: 'var(--rp-color-black)',
             contrastActive: 'var(--rp-color-white)',
-            foreground: '#ff3366',
+            foreground: 'color-mix(in srgb, #ff3366 70%, var(--rp-color-bright))',
         });
     });
 

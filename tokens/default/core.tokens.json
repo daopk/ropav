@@ -1090,7 +1090,7 @@
   },
   "opacity": {
     "disabled": {
-      "$value": 0.5,
+      "$value": 0.65,
       "$type": "number",
       "$extensions": { "ropav": { "public": true } }
     }

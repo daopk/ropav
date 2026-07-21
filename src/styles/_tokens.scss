@@ -474,7 +474,7 @@
     --rp-color-red-contrast            : var(--rp-color-white);
     --rp-color-red-light               : var(--rp-color-red-1);
     --rp-color-red-light-hover         : var(--rp-color-red-2);
-    --rp-color-red-light-color         : var(--rp-color-red-9);
+    --rp-color-red-light-color         : color-mix(in srgb, var(--rp-color-red-9) 89%, var(--rp-color-black));
     --rp-color-red-outline             : var(--rp-color-red-6);
     --rp-color-red-outline-hover       : color-mix(in srgb, var(--rp-color-red-6) 5%, transparent);
     --rp-color-pink-filled             : var(--rp-color-pink-7);
@@ -498,7 +498,7 @@
     --rp-color-violet-contrast         : var(--rp-color-white);
     --rp-color-violet-light            : var(--rp-color-violet-1);
     --rp-color-violet-light-hover      : var(--rp-color-violet-2);
-    --rp-color-violet-light-color      : var(--rp-color-violet-9);
+    --rp-color-violet-light-color      : color-mix(in srgb, var(--rp-color-violet-9) 96%, var(--rp-color-black));
     --rp-color-violet-outline          : var(--rp-color-violet-6);
     --rp-color-violet-outline-hover    : color-mix(in srgb, var(--rp-color-violet-6) 5%, transparent);
     --rp-color-indigo-filled           : var(--rp-color-indigo-7);
@@ -506,7 +506,7 @@
     --rp-color-indigo-contrast         : var(--rp-color-white);
     --rp-color-indigo-light            : var(--rp-color-indigo-1);
     --rp-color-indigo-light-hover      : var(--rp-color-indigo-2);
-    --rp-color-indigo-light-color      : var(--rp-color-indigo-9);
+    --rp-color-indigo-light-color      : color-mix(in srgb, var(--rp-color-indigo-9) 93%, var(--rp-color-black));
     --rp-color-indigo-outline          : var(--rp-color-indigo-6);
     --rp-color-indigo-outline-hover    : color-mix(in srgb, var(--rp-color-indigo-6) 5%, transparent);
     --rp-color-blue-filled             : var(--rp-color-blue-8);
@@ -514,7 +514,7 @@
     --rp-color-blue-contrast           : var(--rp-color-white);
     --rp-color-blue-light              : var(--rp-color-blue-1);
     --rp-color-blue-light-hover        : var(--rp-color-blue-2);
-    --rp-color-blue-light-color        : var(--rp-color-blue-9);
+    --rp-color-blue-light-color        : color-mix(in srgb, var(--rp-color-blue-9) 92%, var(--rp-color-black));
     --rp-color-blue-outline            : var(--rp-color-blue-6);
     --rp-color-blue-outline-hover      : color-mix(in srgb, var(--rp-color-blue-6) 5%, transparent);
     --rp-color-cyan-filled             : var(--rp-color-cyan-9);
@@ -522,7 +522,7 @@
     --rp-color-cyan-contrast           : var(--rp-color-white);
     --rp-color-cyan-light              : var(--rp-color-cyan-1);
     --rp-color-cyan-light-hover        : var(--rp-color-cyan-2);
-    --rp-color-cyan-light-color        : var(--rp-color-cyan-9);
+    --rp-color-cyan-light-color        : color-mix(in srgb, var(--rp-color-cyan-9) 93%, var(--rp-color-black));
     --rp-color-cyan-outline            : var(--rp-color-cyan-6);
     --rp-color-cyan-outline-hover      : color-mix(in srgb, var(--rp-color-cyan-6) 5%, transparent);
     --rp-color-teal-filled             : var(--rp-color-teal-9);
@@ -530,7 +530,7 @@
     --rp-color-teal-contrast           : var(--rp-color-white);
     --rp-color-teal-light              : var(--rp-color-teal-1);
     --rp-color-teal-light-hover        : var(--rp-color-teal-2);
-    --rp-color-teal-light-color        : var(--rp-color-teal-9);
+    --rp-color-teal-light-color        : color-mix(in srgb, var(--rp-color-teal-9) 89%, var(--rp-color-black));
     --rp-color-teal-outline            : var(--rp-color-teal-6);
     --rp-color-teal-outline-hover      : color-mix(in srgb, var(--rp-color-teal-6) 5%, transparent);
     --rp-color-green-filled            : color-mix(in srgb, var(--rp-color-green-9) 98%, var(--rp-color-black));
@@ -538,7 +538,7 @@
     --rp-color-green-contrast          : var(--rp-color-white);
     --rp-color-green-light             : var(--rp-color-green-1);
     --rp-color-green-light-hover       : var(--rp-color-green-2);
-    --rp-color-green-light-color       : var(--rp-color-green-9);
+    --rp-color-green-light-color       : color-mix(in srgb, var(--rp-color-green-9) 84%, var(--rp-color-black));
     --rp-color-green-outline           : var(--rp-color-green-6);
     --rp-color-green-outline-hover     : color-mix(in srgb, var(--rp-color-green-6) 5%, transparent);
     --rp-color-lime-filled             : var(--rp-color-lime-6);
@@ -546,7 +546,7 @@
     --rp-color-lime-contrast           : var(--rp-color-lime-6-contrast);
     --rp-color-lime-light              : var(--rp-color-lime-1);
     --rp-color-lime-light-hover        : var(--rp-color-lime-2);
-    --rp-color-lime-light-color        : var(--rp-color-lime-9);
+    --rp-color-lime-light-color        : color-mix(in srgb, var(--rp-color-lime-9) 79%, var(--rp-color-black));
     --rp-color-lime-outline            : var(--rp-color-lime-6);
     --rp-color-lime-outline-hover      : color-mix(in srgb, var(--rp-color-lime-6) 5%, transparent);
     --rp-color-yellow-filled           : var(--rp-color-yellow-6);
@@ -554,7 +554,7 @@
     --rp-color-yellow-contrast         : var(--rp-color-yellow-6-contrast);
     --rp-color-yellow-light            : var(--rp-color-yellow-1);
     --rp-color-yellow-light-hover      : var(--rp-color-yellow-2);
-    --rp-color-yellow-light-color      : var(--rp-color-yellow-9);
+    --rp-color-yellow-light-color      : color-mix(in srgb, var(--rp-color-yellow-9) 72%, var(--rp-color-black));
     --rp-color-yellow-outline          : var(--rp-color-yellow-6);
     --rp-color-yellow-outline-hover    : color-mix(in srgb, var(--rp-color-yellow-6) 5%, transparent);
     --rp-color-orange-filled           : color-mix(in srgb, var(--rp-color-orange-9) 97%, var(--rp-color-black));
@@ -562,14 +562,14 @@
     --rp-color-orange-contrast         : var(--rp-color-white);
     --rp-color-orange-light            : var(--rp-color-orange-1);
     --rp-color-orange-light-hover      : var(--rp-color-orange-2);
-    --rp-color-orange-light-color      : var(--rp-color-orange-9);
+    --rp-color-orange-light-color      : color-mix(in srgb, var(--rp-color-orange-9) 81%, var(--rp-color-black));
     --rp-color-orange-outline          : var(--rp-color-orange-6);
     --rp-color-orange-outline-hover    : color-mix(in srgb, var(--rp-color-orange-6) 5%, transparent);
     --rp-color-scheme                  : light;
     --rp-color-bright                  : var(--rp-color-black);
     --rp-color-text                    : var(--rp-color-black);
     --rp-color-body                    : var(--rp-color-white);
-    --rp-color-placeholder             : var(--rp-color-gray-5);
+    --rp-color-placeholder             : var(--rp-color-gray-7);
     --rp-color-default                 : var(--rp-color-white);
     --rp-color-default-hover           : var(--rp-color-gray-1);
     --rp-color-default-color           : var(--rp-color-black);
@@ -800,7 +800,7 @@ html.dark,
     --rp-color-bright              : var(--rp-color-white);
     --rp-color-text                : var(--rp-color-dark-0);
     --rp-color-body                : var(--rp-color-dark-7);
-    --rp-color-placeholder         : var(--rp-color-dark-3);
+    --rp-color-placeholder         : var(--rp-color-dark-1);
     --rp-color-default             : var(--rp-color-dark-6);
     --rp-color-default-hover       : var(--rp-color-dark-5);
     --rp-color-default-color       : var(--rp-color-white);

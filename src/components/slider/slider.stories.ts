@@ -135,7 +135,7 @@ export const Marks: Story = {
         marks: [
             20,
             { value: 50, label: '50%', color: 'green' },
-            { value: 80, label: '80%', color: 'var(--rp-color-red-filled)' },
+            { value: 80, label: '80%', color: 'red' },
             { value: 90, label: 'Hidden', hidden: true },
         ],
     },

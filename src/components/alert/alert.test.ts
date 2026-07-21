@@ -173,8 +173,12 @@ describe('Alert', () => {
             'color-mix(in srgb, #ff3366 12%, transparent)',
         );
         expect(alert.style.getPropertyValue('--_rp-alert-fg')).toBe('var(--rp-color-text)');
-        expect(alert.style.getPropertyValue('--_rp-alert-title-fg')).toBe('#ff3366');
-        expect(alert.style.getPropertyValue('--_rp-alert-icon-fg')).toBe('#ff3366');
+        expect(alert.style.getPropertyValue('--_rp-alert-title-fg')).toBe(
+            'color-mix(in srgb, #ff3366 70%, var(--rp-color-bright))',
+        );
+        expect(alert.style.getPropertyValue('--_rp-alert-icon-fg')).toBe(
+            'color-mix(in srgb, #ff3366 70%, var(--rp-color-bright))',
+        );
         expect(alert.style.getPropertyValue('--_rp-alert-border')).toBe('transparent');
     });
 

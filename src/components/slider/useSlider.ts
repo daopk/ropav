@@ -101,11 +101,10 @@ export function useSlider(
             (_value, percent) => percent <= valuePercent.value,
             {
                 position: '--_rp-slider-mark-position',
-                colors: [
-                    '--_rp-slider-mark-color',
+                decorativeColors: ['--_rp-slider-mark-color', '--_rp-slider-mark-ring-color'],
+                foregroundColors: [
                     '--_rp-slider-mark-label-color',
                     '--_rp-slider-mark-filled-label-color',
-                    '--_rp-slider-mark-ring-color',
                 ],
             },
         ),

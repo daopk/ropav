@@ -100,6 +100,7 @@ export const Horizontal: Story = {
                             padding: '12px',
                             color: 'white',
                             background: 'var(--rp-color-' + color + '-6)',
+                            color: 'var(--rp-color-' + color + '-6-contrast)',
                             borderRadius: 'var(--rp-radius-sm)',
                             boxSizing: 'border-box',
                             fontWeight: 600,

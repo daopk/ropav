@@ -68,7 +68,7 @@ export const Invalid: Story = {
                     <Input v-bind="controlProps" v-model="value" placeholder="zoi@example.com" />
                 </template>
                 <template #message>
-                    <p style="margin: 0; color: var(--rp-color-red-filled); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-md);">
+                    <p style="margin: 0; color: var(--rp-color-red-light-color); font-size: var(--rp-font-size-sm); line-height: var(--rp-line-height-md);">
                         Enter a valid email address.
                     </p>
                 </template>

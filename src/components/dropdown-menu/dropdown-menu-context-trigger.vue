@@ -118,7 +118,6 @@ const rootAttrs = computed(() =>
     mergeProps(attrs, {
         id: id.value,
         'aria-controls': root.contentId.value,
-        'aria-expanded': root.isOpen.value,
         'aria-haspopup': 'menu',
         'aria-disabled': optionalAttr(isDisabled.value),
         'data-state': root.isOpen.value ? 'open' : 'closed',

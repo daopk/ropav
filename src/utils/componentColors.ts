@@ -203,6 +203,7 @@ export function getComponentColorRoles(color: ComponentColorValue | undefined) {
         contrast: contrast.color,
         contrastHover: contrast.hover,
         contrastActive: contrast.active,
+        foreground: getCustomForegroundColor(parsed.value),
     });
 }
 
@@ -346,6 +347,40 @@ function createComponentColorRoles(
 }
 
 type RgbColor = Pick<ParsedCssColor, 'red' | 'green' | 'blue'>;
+
+const customForegroundBackgroundMixes = [0, 0.12, 0.18, 0.24];
+
+function getCustomForegroundColor(color: string) {
+    const parsed = parseCssColor(color);
+    if (!parsed || parsed.opacity < 100) return color;
+
+    const black = { red: 0, green: 0, blue: 0 };
+    const white = { red: 255, green: 255, blue: 255 };
+    const darkBody = { red: 36, green: 36, blue: 36 };
+    let colorPercent = 100;
+
+    while (colorPercent > 0) {
+        const weight = colorPercent / 100;
+        const lightForeground = mixOpaqueColors(parsed, weight, black);
+        const darkForeground = mixOpaqueColors(parsed, weight, white);
+        const isReadable = customForegroundBackgroundMixes.every((backgroundWeight) => {
+            const lightBackground = mixOpaqueColors(parsed, backgroundWeight, white);
+            const darkBackground = mixOpaqueColors(parsed, backgroundWeight, darkBody);
+
+            return (
+                contrastRatio(lightForeground, lightBackground) >= 4.5 &&
+                contrastRatio(darkForeground, darkBackground) >= 4.5
+            );
+        });
+
+        if (isReadable) break;
+        colorPercent -= 1;
+    }
+
+    if (colorPercent === 100) return color;
+
+    return `color-mix(in srgb, ${color} ${colorPercent}%, var(--rp-color-bright))`;
+}
 
 function getCustomContrastColorRoles(
     color: string,
