@@ -62,6 +62,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
+    tags: ['test'],
     render: (args) => ({
         components: { Button, Field, Input, Modal },
         setup() {
@@ -71,12 +72,11 @@ export const Basic: Story = {
         template: `
             <div style="box-sizing: border-box; display: grid; min-height: 360px; place-items: center; padding: 48px;">
                 <Button variant="solid" @click="open = true">Open modal</Button>
-                <Modal v-bind="args" v-model:open="open" initial-focus=".invite-email">
+                <Modal v-bind="args" v-model:open="open" initial-focus="#invite-email">
                     <div style="display: grid; gap: 16px;">
                         <Field id="invite-email" label="Email" v-slot="{ controlProps }">
                             <Input
                                 v-bind="controlProps"
-                                class="invite-email"
                                 model-value=""
                                 placeholder="name@example.com"
                             />
@@ -93,6 +93,17 @@ export const Basic: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const canvas = within(canvasElement);
+
+        await userEvent.click(canvas.getByRole('button', { name: 'Open modal' }));
+
+        await waitFor(() => {
+            const input = storyDocument.querySelector<HTMLInputElement>('#invite-email');
+            expect(storyDocument.activeElement).toBe(input);
+        });
+    },
 };
 
 export const ScrollableBody: Story = {
