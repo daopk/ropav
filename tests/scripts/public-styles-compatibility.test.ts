@@ -131,6 +131,7 @@ describe('public styles compatibility', () => {
             checkReleasedPublicStylesCompatibility({
                 currentManifest: bootstrapped,
                 projectRoot: repository,
+                baselineRef: '',
             }),
         ).toContain('v1.0.0 stable token --rp-color-text was removed or renamed');
     });
