@@ -92,7 +92,7 @@ export default defineConfig({
         sourcemap: false,
         cssCodeSplit: true,
         rolldownOptions: {
-            external: ['@vue/compiler-vapor', 'focus-trap', 'vue'],
+            external: ['@floating-ui/dom', '@vue/compiler-vapor', 'focus-trap', 'vue'],
             output: {
                 chunkFileNames: '[name].js',
             },

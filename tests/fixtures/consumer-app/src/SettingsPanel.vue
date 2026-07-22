@@ -1,5 +1,5 @@
 <template>
-    <section :class="css.panel" data-testid="settings-panel">
+    <section id="settings-panel" :class="css.panel" data-testid="settings-panel">
         <Input
             v-model="name"
             aria-label="Display name"

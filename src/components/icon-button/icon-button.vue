@@ -59,5 +59,5 @@ const rootAttrs = computed(() =>
 );
 </script>
 
-<style src="../button/button.scss" lang="scss" scoped></style>
+<style src="../button/button.scss" lang="scss"></style>
 <style src="./icon-button.scss" lang="scss" scoped></style>

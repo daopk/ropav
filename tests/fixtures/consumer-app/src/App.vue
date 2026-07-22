@@ -14,6 +14,12 @@
                 <IconSearch data-testid="consumer-vapor-icon" aria-hidden="true" />
                 Public color contrast
             </Button>
+            <ButtonLink data-testid="consumer-button-link" href="#settings-panel" variant="outline">
+                Account link
+            </ButtonLink>
+            <IconButton data-testid="consumer-icon-button" ariaLabel="Search account">
+                <IconSearch />
+            </IconButton>
             <IconGradient data-testid="consumer-gradient-icon" aria-hidden="true" />
             <IconGradient data-testid="consumer-gradient-icon" aria-hidden="true" />
         </header>
@@ -36,6 +42,8 @@
 <script lang="ts" setup vapor>
 import { ref, useCssModule } from 'vue';
 import { Button, ToastProvider, ToastViewport } from 'ropav';
+import { ButtonLink } from 'ropav/button-link';
+import { IconButton } from 'ropav/icon-button';
 import IconSearch from '~icons/lucide/search';
 import IconGradient from '~icons/regression/gradient';
 import SettingsPanel from './SettingsPanel.vue';

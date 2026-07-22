@@ -75,6 +75,39 @@ try {
         );
     }
 
+    const sharedButtonStyles = await page
+        .getByTestId('consumer-button-link')
+        .evaluate((element) => {
+            const styles = getComputedStyle(element);
+            return { display: styles.display, height: styles.height };
+        });
+    if (
+        !['flex', 'inline-flex'].includes(sharedButtonStyles.display) ||
+        sharedButtonStyles.height === 'auto'
+    ) {
+        throw new Error(
+            `ButtonLink did not load the shared button stylesheet: ${JSON.stringify(sharedButtonStyles)}`,
+        );
+    }
+
+    const iconButtonStyles = await page.getByTestId('consumer-icon-button').evaluate((element) => {
+        const styles = getComputedStyle(element);
+        return {
+            paddingLeft: styles.paddingLeft,
+            paddingRight: styles.paddingRight,
+            position: styles.position,
+        };
+    });
+    if (
+        iconButtonStyles.paddingLeft !== '0px' ||
+        iconButtonStyles.paddingRight !== '0px' ||
+        iconButtonStyles.position !== 'relative'
+    ) {
+        throw new Error(
+            `IconButton did not combine shared and scoped styles: ${JSON.stringify(iconButtonStyles)}`,
+        );
+    }
+
     await page.locator('[title="name-input"]').fill('Dao PK');
     await page.getByRole('combobox', { name: 'Language' }).click();
     await page.getByRole('option', { name: 'Vietnamese' }).click();

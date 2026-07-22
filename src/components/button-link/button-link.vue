@@ -94,4 +94,4 @@ function onDisabledClick(event: MouseEvent) {
 }
 </script>
 
-<style src="../button/button.scss" lang="scss" scoped></style>
+<style src="../button/button.scss" lang="scss"></style>
