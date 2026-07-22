@@ -1,3 +1,28 @@
+## [0.1.6](https://github.com/daopk/ropav/compare/v0.1.5...v0.1.6) (2026-07-22)
+
+### Features
+
+* **a11y:** require accessible names for controls ([ef99692](https://github.com/daopk/ropav/commit/ef99692ee69a9a98d10a5b409ed18f58ba50d487))
+* **composables:** expose controllable value utility ([ce4917d](https://github.com/daopk/ropav/commit/ce4917d0974cc145db68be48b44f5c2283ce2ad1))
+
+### Bug Fixes
+
+* **a11y:** improve story labels and reduced motion ([87ff4ad](https://github.com/daopk/ropav/commit/87ff4add412f5b19130d12f81cff208ae4807569))
+* **a11y:** pass Storybook theme matrix ([b18101d](https://github.com/daopk/ropav/commit/b18101d952a583614f814e84d878ae25a363f409))
+* **ci:** defer consumer fixture typecheck until after build ([974f8c8](https://github.com/daopk/ropav/commit/974f8c86c582f28b8552e37e2e4363b5706318ea))
+* **input:** use non-label root for slotted controls ([fc946e6](https://github.com/daopk/ropav/commit/fc946e62cb6b8bc501af32908ac8f0e56daffa0a))
+* **package:** preserve SCSS side effects ([57d8ed8](https://github.com/daopk/ropav/commit/57d8ed858542ee230a60dc1e4a054a3f35e3bc9b))
+* **scroll-area:** refresh runtime direction changes ([e1e8485](https://github.com/daopk/ropav/commit/e1e84859a77ec6ef44e1890535132f1fc7f072d2))
+* **scroll-area:** support horizontal scrolling in RTL ([e172569](https://github.com/daopk/ropav/commit/e172569015952f21b2e76d79260884dbf9b787bb))
+* **select:** correct listbox aria ownership ([8186da9](https://github.com/daopk/ropav/commit/8186da9cd3280f61e21e157997e14b99a62aef21))
+* **state:** accept requests after control release ([453faab](https://github.com/daopk/ropav/commit/453faab505db590d7e6d19e0dc593a8945e6924e))
+* **state:** preserve controlled values on release ([a6b7c6f](https://github.com/daopk/ropav/commit/a6b7c6f0f8dc2be655eda7066a001bdbffe4cbed))
+* **tabs:** reconcile selection and rtl navigation ([fd5732d](https://github.com/daopk/ropav/commit/fd5732dbc7575238d66c61621558f4f2b77cd51d))
+
+### Performance Improvements
+
+* **package:** reduce duplicated bundle output ([64b2bbe](https://github.com/daopk/ropav/commit/64b2bbee11d47d2e5c276375b7d6a30990f3c469))
+
 ## [0.1.5](https://github.com/daopk/ropav/compare/v0.1.4...v0.1.5) (2026-07-20)
 
 ### Features
