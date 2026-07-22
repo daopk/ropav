@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { keydown, mountDom, queryDom } from '../../../tests/utils/vue';
-import { items, nestedItems, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
+import { items, nestedItems, waitForDropdownClose } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuItem, DropdownMenuSlotProps } from './types';
 
@@ -39,7 +39,7 @@ describe('DropdownMenu keyboard navigation', () => {
         expect(menu.getAttribute('aria-activedescendant')).toMatch(/-item-2$/);
 
         keydown(menu, 'Enter');
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onSelect).toHaveBeenCalledWith(items[2], expect.any(CustomEvent));
         expect(queryDom(container, '[role="menu"]')).toBeNull();
@@ -147,7 +147,7 @@ describe('DropdownMenu keyboard navigation', () => {
         expect(menu.getAttribute('aria-activedescendant')).toBe('reset-typeahead-menu-item-1');
 
         keydown(menu, 'Escape');
-        await waitDropdownTransition();
+        await waitForDropdownClose();
         keydown(trigger, 'ArrowDown');
         await nextTick();
         menu = queryDom(container, '[role="menu"]') as HTMLElement;
@@ -398,7 +398,7 @@ describe('DropdownMenu keyboard navigation', () => {
         keydown(menu, 'ArrowDown');
         await nextTick();
         keydown(menu, 'Enter');
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onSelect).toHaveBeenCalledWith(
             keyboardItems[0].children![1],

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive, ref } from 'vue';
 
-import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, mountDom, waitForAssertion } from '../../../tests/utils/vue';
 import Collapse from './collapse.vue';
 import { useCollapse } from './useCollapse';
 import type { CollapseSlotProps, CollapseTriggerSlotProps } from './types';
@@ -59,7 +59,9 @@ describe('Collapse', () => {
         expect(onUpdate).toHaveBeenCalledWith(true);
 
         click(trigger);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(content.style.display).toBe('none');
+        });
 
         expect(root.classList.contains('rp-collapse--closed')).toBe(true);
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -215,7 +217,9 @@ describe('Collapse', () => {
         expect(container.querySelector('#lazy-panel')).not.toBeNull();
 
         click(trigger);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('#lazy-panel')).toBeNull();
+        });
 
         expect(container.querySelector('#lazy-panel')).toBeNull();
     });

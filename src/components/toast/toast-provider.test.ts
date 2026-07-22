@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, ref } from 'vue';
 
-import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, mountDom, waitForAssertion } from '../../../tests/utils/vue';
 import TeleportProvider from '../teleport-provider/teleport-provider.vue';
 import ToastProvider from './toast-provider.vue';
 import { createToastStore } from './toast-store';
@@ -150,7 +150,10 @@ describe('ToastProvider', () => {
         );
 
         api.dismiss(id);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(api.toasts.value).toHaveLength(0);
+            expect(container.querySelector('.rp-toast')).toBeNull();
+        });
 
         expect(onClose).toHaveBeenCalledOnce();
         expect(onClose).toHaveBeenCalledWith('dismiss');
@@ -324,7 +327,10 @@ describe('ToastProvider', () => {
         await flush();
 
         click(container.querySelector('.rp-toast__close') as HTMLButtonElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(api.toasts.value).toHaveLength(0);
+            expect(container.querySelector('.rp-toast')).toBeNull();
+        });
 
         expect(onClose).toHaveBeenCalledWith('dismiss');
         expect(api.toasts.value).toHaveLength(0);

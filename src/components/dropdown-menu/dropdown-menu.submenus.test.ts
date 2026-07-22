@@ -6,7 +6,7 @@ import {
     mouseenter,
     mousemove,
     nestedItems,
-    waitDropdownTransition,
+    waitForDropdownClose,
 } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuItem, DropdownMenuSlotProps } from './types';
@@ -58,7 +58,7 @@ describe('DropdownMenu submenus', () => {
         expect(submenu.getAttribute('aria-label')).toBe('Move to');
 
         click(progressItem);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onSelect).toHaveBeenCalledWith(nestedItems[1].children![1], expect.any(CustomEvent));
         expect(queryDom(container, '[role="menu"]')).toBeNull();
@@ -125,7 +125,7 @@ describe('DropdownMenu submenus', () => {
         );
 
         click(document.getElementById('deep-menu-item-0-1-0') as HTMLButtonElement);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onSelect).toHaveBeenCalledWith(
             deepNestedItems[0].children![1]!.children![0],

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive } from 'vue';
 
-import { click, flush, keydown, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, keydown, mountDom, waitForAssertion } from '../../../tests/utils/vue';
 import Accordion from './accordion.vue';
 import AccordionItem from './accordion-item.vue';
 import type { AccordionItemTriggerSlotProps, AccordionModelValue } from './types';
@@ -80,7 +80,9 @@ describe('Accordion', () => {
         expect(buttons[1].getAttribute('aria-expanded')).toBe('true');
 
         click(buttons[1]);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(billingContent.style.display).toBe('none');
+        });
 
         expect(onUpdate).toHaveBeenLastCalledWith(null);
         expect(buttons[1].getAttribute('aria-expanded')).toBe('false');
@@ -171,6 +173,9 @@ describe('Accordion', () => {
         const buttons = Array.from(
             container.querySelectorAll<HTMLButtonElement>('.rp-accordion-item__trigger'),
         );
+        const contents = Array.from(
+            container.querySelectorAll<HTMLElement>('.rp-accordion-item__content'),
+        );
 
         click(buttons[1]);
         await flush();
@@ -180,7 +185,9 @@ describe('Accordion', () => {
         expect(buttons[1].getAttribute('aria-expanded')).toBe('true');
 
         click(buttons[0]);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(contents[0].style.display).toBe('none');
+        });
 
         expect(onUpdate).toHaveBeenLastCalledWith(['billing']);
         expect(buttons[0].getAttribute('aria-expanded')).toBe('false');
@@ -323,7 +330,9 @@ describe('Accordion', () => {
         expect(container.querySelector('#lazy-item-content')).not.toBeNull();
 
         click(button);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('#lazy-item-content')).toBeNull();
+        });
 
         expect(container.querySelector('#lazy-item-content')).toBeNull();
     });

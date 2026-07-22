@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, shallowRef, type ShallowRef } from 'vue';
 
-import { click, flush, mountDom, waitTransition } from '../tests/utils/vue';
+import { click, flush, mountDom, waitForAssertion } from '../tests/utils/vue';
 import { useDelayedOpen } from './internal/composables/useDelayedOpen';
 import Alert from './components/alert/alert.vue';
 import DialogRoot from './components/dialog/dialog-root.vue';
@@ -42,7 +42,6 @@ interface ContractHarness {
     read: () => unknown;
     request: () => void;
     setControlled: (value: unknown | undefined) => void;
-    settle?: () => Promise<void>;
 }
 
 interface ContractCase {
@@ -196,7 +195,6 @@ function mountToastContract(): ContractHarness {
         setControlled(value) {
             controlled.value = value as boolean | undefined;
         },
-        settle: waitTransition,
     };
 }
 
@@ -614,50 +612,54 @@ const contracts: ContractCase[] = [
 describe.each(contracts)('$name controllable-state contract', ({ mount }) => {
     it('preserves the latest accepted controlled value when control is released', async () => {
         const contract = mount();
-        const settle = async () => {
+        const settle = async (expected: unknown) => {
             await flush();
-            await contract.settle?.();
+            await waitForAssertion(() => {
+                expect(contract.read()).toEqual(expected);
+            });
         };
 
-        await settle();
+        await settle(contract.initial);
         expect(contract.read()).toEqual(contract.initial);
 
         contract.request();
-        await settle();
+        await settle(contract.initial);
         expect(contract.read()).toEqual(contract.initial);
         expect(contract.updates).toEqual([contract.requested]);
 
         contract.setControlled(undefined);
-        await settle();
+        await settle(contract.initial);
         expect(contract.read()).toEqual(contract.initial);
         expect(contract.updates).toEqual([contract.requested]);
 
         contract.setControlled(contract.accepted);
-        await settle();
+        await settle(contract.accepted);
         expect(contract.read()).toEqual(contract.accepted);
 
         contract.setControlled(undefined);
-        await settle();
+        await settle(contract.accepted);
         expect(contract.read()).toEqual(contract.accepted);
         expect(contract.updates).toEqual([contract.requested]);
     });
 
     it('accepts a new request after control is released', async () => {
         const contract = mount();
-        const settle = async () => {
+        const settle = async (expected: unknown) => {
             await flush();
-            await contract.settle?.();
+            await waitForAssertion(() => {
+                expect(contract.read()).toEqual(expected);
+            });
         };
 
-        await settle();
+        await settle(contract.initial);
         contract.request();
-        await settle();
+        await settle(contract.initial);
 
         contract.setControlled(undefined);
-        await settle();
+        await settle(contract.initial);
 
         contract.request();
-        await settle();
+        await settle(contract.requested);
         expect(contract.read()).toEqual(contract.requested);
         expect(contract.updates).toEqual([contract.requested, contract.requested]);
     });

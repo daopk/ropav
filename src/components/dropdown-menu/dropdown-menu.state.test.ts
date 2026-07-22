@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { click, keydown, mountDom, queryDom } from '../../../tests/utils/vue';
-import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
+import { items, waitForDropdownClose } from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
 import type { DropdownMenuSlotProps } from './types';
 
@@ -67,7 +67,7 @@ describe('DropdownMenu state', () => {
         document.body.addEventListener('click', outsideClick);
         document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         click(document.body);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
         expect(outsideClick).toHaveBeenCalledOnce();
         expect(queryDom(container, '[role="menu"]')).toBeNull();
         document.body.removeEventListener('click', outsideClick);
@@ -77,7 +77,7 @@ describe('DropdownMenu state', () => {
 
         const menu = queryDom(container, '[role="menu"]') as HTMLElement;
         keydown(menu, 'Escape');
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
@@ -139,7 +139,7 @@ describe('DropdownMenu state', () => {
         expect(queryDom(container, '[role="menu"]')).not.toBeNull();
 
         document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onInteractOutside).toHaveBeenCalledOnce();
         expect(queryDom(container, '[role="menu"]')).toBeNull();
@@ -182,7 +182,7 @@ describe('DropdownMenu state', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
         keydown(menu, 'Escape');
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onOpen).toHaveBeenNthCalledWith(1, true);
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
@@ -212,7 +212,7 @@ describe('DropdownMenu state', () => {
         document.body.addEventListener('click', outsideClick);
         document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         click(document.body);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(outsideClick).not.toHaveBeenCalled();
         expect(queryDom(container, '[role="menu"]')).toBeNull();

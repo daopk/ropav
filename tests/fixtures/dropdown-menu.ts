@@ -1,4 +1,5 @@
-import { waitTransition } from '../utils/vue';
+import { expect } from 'vitest';
+import { waitForAssertion } from '../utils/vue';
 
 import type { DropdownMenuItem } from '../../src/components/dropdown-menu/types';
 
@@ -22,10 +23,10 @@ export const nestedItems: DropdownMenuItem[] = [
     { label: 'Delete', value: 'delete', destructive: true },
 ];
 
-export async function waitDropdownTransition() {
-    await waitTransition();
-    await waitTransition();
-    await waitTransition();
+export async function waitForDropdownClose() {
+    await waitForAssertion(() => {
+        expect(document.querySelector('[role="menu"]')).toBeNull();
+    });
 }
 
 export function createRect(left: number, top: number, right: number, bottom: number): DOMRect {

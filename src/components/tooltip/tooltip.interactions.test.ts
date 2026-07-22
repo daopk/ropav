@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-import { flush, keydown, mountDom, queryDom, waitTransition } from '../../../tests/utils/vue';
+import { flush, keydown, mountDom, queryDom, waitForAssertion } from '../../../tests/utils/vue';
 import Tooltip from './tooltip.vue';
 import type { TooltipSlotProps } from './types';
 
@@ -124,7 +124,11 @@ describe('Tooltip interactions', () => {
         expect(root.classList.contains('rp-tooltip--open')).toBe(true);
 
         keydown(root, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe(
+                'none',
+            );
+        });
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
         expect((queryDom(container, '[role="tooltip"]') as HTMLElement).style.display).toBe('none');
     });

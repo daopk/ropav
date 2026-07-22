@@ -8,7 +8,7 @@ import {
     mountDomWithApp,
     queryDom,
     queryDomAll,
-    waitTransition,
+    waitForAssertion,
 } from '../../../tests/utils/vue';
 import DropdownMenuPortal from '../dropdown-menu/dropdown-menu-portal.vue';
 import Popover from './popover.vue';
@@ -189,7 +189,9 @@ describe('Popover', () => {
         expect(popover.style.display).not.toBe('none');
 
         click(queryDom(container, '.inside') as HTMLButtonElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#account-popover')).toBeNull();
+        });
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -233,7 +235,9 @@ describe('Popover', () => {
         expect(popover.style.display).not.toBe('none');
 
         click(trigger);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(popover.style.display).toBe('none');
+        });
 
         expect(queryDom(container, '#persistent-popover')).toBe(popover);
         expect(popover.style.display).toBe('none');
@@ -334,13 +338,17 @@ describe('Popover', () => {
         expect(root.classList.contains('rp-popover--open')).toBe(true);
 
         click(document.body);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#outside-popover')).toBeNull();
+        });
         expect(root.classList.contains('rp-popover--open')).toBe(false);
 
         click(trigger);
         await flush();
         keydown(document, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#outside-popover')).toBeNull();
+        });
         expect(root.classList.contains('rp-popover--open')).toBe(false);
     });
 
@@ -445,7 +453,9 @@ describe('Popover', () => {
         expect(document.activeElement).toBe(last);
 
         keydown(document, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#focus-popover')).toBeNull();
+        });
         expect(document.activeElement).toBe(trigger);
 
         click(trigger);
@@ -453,7 +463,9 @@ describe('Popover', () => {
         outside.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
         outside.focus();
         click(outside);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#focus-popover')).toBeNull();
+        });
 
         expect(document.activeElement).toBe(outside);
     });
@@ -504,7 +516,9 @@ describe('Popover', () => {
         expect(popover.style.display).not.toBe('none');
 
         click(target);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#selector-popover')).toBeNull();
+        });
 
         expect(root.classList.contains('rp-popover--open')).toBe(false);
         expect(target.getAttribute('aria-expanded')).toBe('false');

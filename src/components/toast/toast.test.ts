@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, ref } from 'vue';
 import IconSparkles from '~icons/lucide/sparkles';
 
-import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, mountDom, waitForAssertion } from '../../../tests/utils/vue';
 import Toast from './toast.vue';
 import { toastColors, toastRadiuses, toastVariants } from './types';
 
@@ -154,7 +154,9 @@ describe('Toast', () => {
         expect(closeButton.getAttribute('aria-label')).toBe('Dismiss notification');
 
         click(closeButton);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('.rp-toast')).toBeNull();
+        });
 
         expect(container.querySelector('.rp-toast')).toBeNull();
         expect(emittedOpen).toBe(false);

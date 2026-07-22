@@ -6,7 +6,7 @@ import {
     mountDom,
     mountDomWithApp,
     queryDom,
-    waitTransition,
+    waitForAssertion,
 } from '../../../tests/utils/vue';
 import DropdownMenuPortal from '../dropdown-menu/dropdown-menu-portal.vue';
 import Tooltip from './tooltip.vue';
@@ -95,8 +95,9 @@ describe('Tooltip targets', () => {
         expect(tooltip.style.display).not.toBe('none');
 
         target.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, cancelable: true }));
-        await waitTransition();
-        await flush();
+        await waitForAssertion(() => {
+            expect(tooltip.style.display).toBe('none');
+        });
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
         expect(tooltip.style.display).toBe('none');
 
@@ -105,8 +106,9 @@ describe('Tooltip targets', () => {
         expect(root.classList.contains('rp-tooltip--open')).toBe(true);
 
         keydown(target, 'Escape');
-        await waitTransition();
-        await flush();
+        await waitForAssertion(() => {
+            expect(tooltip.style.display).toBe('none');
+        });
         expect(root.classList.contains('rp-tooltip--open')).toBe(false);
         expect(tooltip.style.display).toBe('none');
     });

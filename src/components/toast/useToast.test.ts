@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, ref } from 'vue';
 
-import { click, flush, mountDom, waitTransition } from '../../../tests/utils/vue';
+import { click, flush, mountDom, waitForAssertion } from '../../../tests/utils/vue';
 import Toast from './toast.vue';
 import type { ToastCloseReason, UseToastStateReturn } from './types';
 import { useToastState } from './useToastState';
@@ -117,7 +117,9 @@ describe('useToastState', () => {
         expect(controller?.isOpen.value).toBe(true);
 
         click(container.querySelector('.rp-toast__close') as HTMLButtonElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('.rp-toast')).toBeNull();
+        });
 
         expect(controller?.isOpen.value).toBe(false);
         expect(controller?.lastCloseReason.value).toBe('dismiss');

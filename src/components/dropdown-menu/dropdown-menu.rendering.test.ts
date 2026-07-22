@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref, shallowRef } from 'vue';
 import { click, keydown, mountDom, queryDom, queryDomAll } from '../../../tests/utils/vue';
-import { items, waitDropdownTransition } from '../../../tests/fixtures/dropdown-menu';
+import { items, waitForDropdownClose } from '../../../tests/fixtures/dropdown-menu';
 import type { FloatingReference } from '../floating/types';
 import DropdownMenu from './dropdown-menu.vue';
 import DropdownMenuPortal from './dropdown-menu-portal.vue';
@@ -129,7 +129,7 @@ describe('DropdownMenu rendering', () => {
         );
 
         click(menuItems[0]);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
 
         expect(onOpen).toHaveBeenNthCalledWith(1, true);
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
@@ -233,7 +233,7 @@ describe('DropdownMenu rendering', () => {
         expect(document.getElementById('portal-menu')).toBe(menu);
 
         click(portalledItem);
-        await waitDropdownTransition();
+        await waitForDropdownClose();
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(document.getElementById('portal-menu')).toBeNull();
     });

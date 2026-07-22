@@ -8,7 +8,7 @@ import {
     mountDom,
     queryDom,
     queryDomAll,
-    waitTransition,
+    waitForAssertion,
 } from '../../../tests/utils/vue';
 import ColorInput from './color-input.vue';
 
@@ -82,7 +82,9 @@ describe('ColorInput', () => {
         expect(popover.style.display).not.toBe('none');
 
         keydown(native, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(popover.style.display).toBe('none');
+        });
 
         expect(queryDom(container, '.rp-popover__content')).toBe(popover);
         expect(queryDom(container, '.rp-color-picker')).toBe(picker);
@@ -198,7 +200,10 @@ describe('ColorInput', () => {
         expect(onOpen).toHaveBeenLastCalledWith(true);
 
         click(queryDom(container, '.rp-color-input__eye-dropper') as HTMLButtonElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(openEyeDropper).toHaveBeenCalledOnce();
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
 
         expect(openEyeDropper).toHaveBeenCalledOnce();
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
@@ -526,7 +531,9 @@ describe('ColorInput', () => {
 
         swatches[0].focus();
         keydown(swatches[0], 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
 
         expect(document.activeElement).toBe(native);
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
@@ -654,7 +661,9 @@ describe('ColorInput', () => {
         const firstPicker = queryDom(container, '.rp-popover__content') as HTMLElement;
 
         keydown(native, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
 
         expect(document.activeElement).toBe(native);
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
@@ -669,7 +678,9 @@ describe('ColorInput', () => {
         expect(native.getAttribute('aria-expanded')).toBe('true');
 
         keydown(native, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
 
         keydown(native, 'ArrowDown');
@@ -706,7 +717,9 @@ describe('ColorInput', () => {
         ) as HTMLElement;
         saturation.focus();
         keydown(saturation, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
 
         expect(document.activeElement).toBe(native);
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
@@ -774,7 +787,9 @@ describe('ColorInput', () => {
         expect(onOpen).toHaveBeenLastCalledWith(true);
 
         outside.focus();
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-popover__content')).toBeNull();
+        });
 
         expect(queryDom(container, '.rp-popover__content')).toBeNull();
         expect(onOpen).toHaveBeenLastCalledWith(false);

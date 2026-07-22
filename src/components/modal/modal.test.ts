@@ -6,7 +6,7 @@ import {
     keydown,
     mountDom,
     queryDom,
-    waitTransition,
+    waitForAssertion,
 } from '../../../tests/utils/vue';
 import Button from '../button/button.vue';
 import Modal from './modal.vue';
@@ -92,7 +92,9 @@ describe('Modal', () => {
         expect(document.body.style.overflow).toBe('hidden');
 
         click(queryDom(container, '.done') as HTMLButtonElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-modal')).toBeNull();
+        });
 
         expect(props.open).toBe(false);
         expect(onClose).toHaveBeenCalledWith('programmatic');
@@ -315,7 +317,9 @@ describe('Modal', () => {
         expect(document.body.style.overflow).toBe('hidden');
 
         pointerdown(queryDom(container, '.rp-modal__overlay') as HTMLElement);
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-modal')).toBeNull();
+        });
 
         expect(props.open).toBe(false);
         expect(onClose).toHaveBeenNthCalledWith(1, 'outside');
@@ -327,7 +331,9 @@ describe('Modal', () => {
         await flush();
 
         keydown(document, 'Escape');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(queryDom(container, '.rp-modal')).toBeNull();
+        });
 
         expect(props.open).toBe(false);
         expect(onClose).toHaveBeenNthCalledWith(2, 'escape');
@@ -486,7 +492,9 @@ describe('Modal', () => {
         expect(props.open).toBe(true);
 
         props.open = false;
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect((queryDom(container, '.rp-modal') as HTMLElement).style.display).toBe('none');
+        });
 
         const root = queryDom(container, '.rp-modal') as HTMLElement;
         const panel = queryDom(container, '.rp-modal__panel') as HTMLElement;

@@ -7,7 +7,7 @@ import {
     keydown,
     keyEvent,
     mountDom,
-    waitTransition,
+    waitForAssertion,
 } from '../../../tests/utils/vue';
 import Select from './select.vue';
 import { useSelect } from './useSelect';
@@ -173,7 +173,9 @@ describe('Select', () => {
         expect(onUpdate).not.toHaveBeenCalled();
 
         keydown(trigger, 'Enter');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('[role="listbox"]')).toBeNull();
+        });
         expect(onUpdate).toHaveBeenCalledWith('gamma');
         expect(container.querySelector('[role="listbox"]')).toBeNull();
     });
@@ -388,7 +390,9 @@ describe('Select', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
         (container.querySelector('.next-control') as HTMLButtonElement).focus();
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('[role="listbox"]')).toBeNull();
+        });
 
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
         expect(container.querySelector('[role="listbox"]')).toBeNull();
@@ -528,7 +532,9 @@ describe('Select', () => {
         expect(container.querySelector('[role="listbox"]')).not.toBeNull();
 
         keydown(trigger, 'Backspace');
-        await waitTransition();
+        await waitForAssertion(() => {
+            expect(container.querySelector('[role="listbox"]')).toBeNull();
+        });
 
         expect(onUpdate).toHaveBeenCalledWith(null);
         expect(container.querySelector('[role="listbox"]')).toBeNull();

@@ -1,4 +1,4 @@
-import { afterEach } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { createApp, nextTick, vaporInteropPlugin, type Component } from 'vue';
 
 const cleanups: Array<() => void> = [];
@@ -60,9 +60,14 @@ export async function flush() {
     await nextTick();
 }
 
-export async function waitTransition() {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    await nextTick();
+export async function waitForAssertion(assertion: () => void | Promise<void>) {
+    await vi.waitFor(
+        async () => {
+            await nextTick();
+            await assertion();
+        },
+        { interval: 20, timeout: 2000 },
+    );
 }
 
 afterEach(() => {
