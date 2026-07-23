@@ -194,6 +194,147 @@ describe('floating positioning', () => {
         expect(floatingMocks.cleanup).toHaveBeenCalled();
     });
 
+    it.each(['reference', 'floating'] as const)(
+        'rebinds after the %s subtree is asynchronously detached and reattached',
+        async (movingSide) => {
+            const reference = ref<HTMLElement | null>(null);
+            const floatingElement = ref<HTMLElement | null>(null);
+            const referenceParent = ref<HTMLElement | null>(null);
+            const floatingParent = ref<HTMLElement | null>(null);
+            const nextHost = document.createElement('div');
+            document.body.append(nextHost);
+
+            mountDom(
+                defineComponent({
+                    setup() {
+                        useFloatingPosition({
+                            reference,
+                            floating: floatingElement,
+                        });
+                        return () =>
+                            h('div', [
+                                h('div', [
+                                    h('div', { ref: referenceParent }, [
+                                        h('button', { ref: reference }, 'Reference'),
+                                    ]),
+                                ]),
+                                h('div', [
+                                    h('div', { ref: floatingParent }, [
+                                        h('div', { ref: floatingElement }, 'Floating'),
+                                    ]),
+                                ]),
+                            ]);
+                    },
+                }),
+            );
+
+            await vi.waitFor(() => expect(floatingMocks.autoUpdate).toHaveBeenCalled());
+
+            const movingParent =
+                movingSide === 'reference' ? referenceParent.value! : floatingParent.value!;
+            movingParent.remove();
+
+            await new Promise<void>((resolve) => setTimeout(resolve, 0));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            expect(movingParent.isConnected).toBe(false);
+            const callsAfterDetach = floatingMocks.autoUpdate.mock.calls.length;
+            const cleanupsAfterDetach = floatingMocks.cleanup.mock.calls.length;
+
+            nextHost.append(movingParent);
+
+            await vi.waitFor(() => {
+                expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(
+                    callsAfterDetach,
+                );
+                expect(floatingMocks.cleanup.mock.calls.length).toBeGreaterThan(
+                    cleanupsAfterDetach,
+                );
+            });
+            expect(floatingMocks.autoUpdate.mock.lastCall?.[0]).toBe(reference.value);
+            expect(floatingMocks.autoUpdate.mock.lastCall?.[1]).toBe(floatingElement.value);
+            expect(floatingMocks.cleanup).toHaveBeenCalled();
+        },
+    );
+
+    it.each(['reference', 'floating'] as const)(
+        'rebinds across shadow DOM slot assignment changes for the %s element',
+        async (movingSide) => {
+            const host = document.createElement('div');
+            const shadowRoot = host.attachShadow({ mode: 'open' });
+            const firstScroller = document.createElement('div');
+            const firstSlot = document.createElement('slot');
+            firstSlot.name = 'first';
+            firstScroller.append(firstSlot);
+            const secondScroller = document.createElement('div');
+            const secondSlot = document.createElement('slot');
+            secondSlot.name = 'second';
+            secondScroller.append(secondSlot);
+            shadowRoot.append(firstScroller, secondScroller);
+
+            const reference = document.createElement('button');
+            const floatingElement = document.createElement('div');
+            const movingElement = movingSide === 'reference' ? reference : floatingElement;
+            const stationaryElement = movingSide === 'reference' ? floatingElement : reference;
+            movingElement.slot = 'first';
+            host.append(movingElement);
+            document.body.append(host, stationaryElement);
+
+            await new Promise<void>((resolve) => setTimeout(resolve, 0));
+            expect(movingElement.assignedSlot).toBe(firstSlot);
+
+            mountDom(
+                defineComponent({
+                    setup() {
+                        useFloatingPosition({
+                            reference,
+                            floating: floatingElement,
+                        });
+                        return () => null;
+                    },
+                }),
+            );
+
+            await vi.waitFor(() => expect(floatingMocks.autoUpdate).toHaveBeenCalled());
+            const callsBeforeReassignment = floatingMocks.autoUpdate.mock.calls.length;
+            const cleanupsBeforeReassignment = floatingMocks.cleanup.mock.calls.length;
+
+            movingElement.slot = 'second';
+            expect(movingElement.assignedSlot).toBe(secondSlot);
+
+            await vi.waitFor(() => {
+                expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(
+                    callsBeforeReassignment,
+                );
+                expect(floatingMocks.cleanup.mock.calls.length).toBeGreaterThan(
+                    cleanupsBeforeReassignment,
+                );
+            });
+            expect(floatingMocks.autoUpdate.mock.lastCall?.[0]).toBe(reference);
+            expect(floatingMocks.autoUpdate.mock.lastCall?.[1]).toBe(floatingElement);
+
+            const callsBeforeUnassignment = floatingMocks.autoUpdate.mock.calls.length;
+            movingElement.slot = 'unmatched';
+            expect(movingElement.assignedSlot).toBeNull();
+
+            await vi.waitFor(() => {
+                expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(
+                    callsBeforeUnassignment,
+                );
+            });
+
+            const callsBeforeSlotRename = floatingMocks.autoUpdate.mock.calls.length;
+            firstSlot.name = 'unmatched';
+            expect(movingElement.assignedSlot).toBe(firstSlot);
+
+            await vi.waitFor(() => {
+                expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(
+                    callsBeforeSlotRename,
+                );
+            });
+        },
+    );
+
     it('reacts to flip and auto-update options', async () => {
         const state = reactive({
             fallbackStrategy: 'initialPlacement' as FloatingFlipFallbackStrategy,

@@ -42,7 +42,6 @@ const { actualPlacement, arrowStyle, floatingStyle } = useFloatingPosition({
   open,
   placement: 'bottom-start',
   offset: 8,
-  restartKey: () => [teleport.value, teleportTo.value],
 });
 </script>
 ```
@@ -63,7 +62,7 @@ The composable accepts plain values, refs, computed refs or getters for reactive
 | `shift`                            | `true`     | Keeps the floating element inside the collision boundary.              |
 | `collisionPadding`                 | `8`        | Padding between the floating element and viewport boundary.            |
 | `autoUpdateOptions.animationFrame` | `false`    | Tracks transform animations and detached nested floating contexts.     |
-| `restartKey`                       | —          | Rebinds auto-update observers when its reactive value changes.         |
+| `restartKey`                       | —          | Forces a rebind for reactive changes unrelated to DOM ancestry.        |
 
 Use `autoUpdateOptions.animationFrame` sparingly. It checks the reference position every animation
 frame and is intended for references moving with CSS transforms or nested floating elements outside
@@ -78,9 +77,11 @@ The return value contains readonly `actualPlacement`, `floatingStyle`, `arrowSty
 `isPositioned` refs, plus an async `update()` method for content-driven layout changes.
 
 `useTeleportTarget()` resolves the nearest `TeleportProvider` target and falls back to `body`. Pass
-a target value, ref or getter to override the provider for one floating element. Include the
-resolved target and the Teleport enabled state in `restartKey` whenever either can change while the
-floating element is open.
+a target value, ref or getter to override the provider for one floating element. Positioning
+automatically rebinds when the reference or floating element moves through the composed DOM,
+including Teleport moves, temporary detachments and slot reassignment within an existing shadow
+tree. Use `restartKey` when a reactive change outside observable DOM ancestry must recreate the
+auto-update subscriptions, such as a host attaching a new shadow root after positioning starts.
 
 Positioning does not add interaction or accessibility behavior. Custom overlays remain responsible
 for keyboard handling, focus management, roles, labels, outside interaction and dismissal.

@@ -22,7 +22,7 @@ import {
     type CSSProperties,
     type Ref,
 } from 'vue';
-import { areNodeListsIdentical, getComposedAncestry } from '@/utils/dom/ancestry';
+import { observeComposedAncestry } from '@/utils/dom/ancestry';
 import { isElement, querySelectorSafe } from '@/utils/dom/query';
 import type {
     FloatingAutoUpdateOptions,
@@ -39,11 +39,6 @@ import type {
 
 type Source<T> = () => T;
 
-interface PositioningAncestry {
-    reference: Node[];
-    floating: Node[];
-}
-
 const DEFAULT_ARROW_PADDING = 4;
 const DEFAULT_COLLISION_PADDING = 8;
 const DEFAULT_OFFSET = 8;
@@ -53,23 +48,6 @@ const DEFAULT_STRATEGY: FloatingStrategy = 'absolute';
 function getReferenceElement(reference: FloatingReference | null | undefined): Element | null {
     if (isElement(reference)) return reference;
     return reference && isElement(reference.contextElement) ? reference.contextElement : null;
-}
-
-function readPositioningAncestry(
-    reference: FloatingReference | null | undefined,
-    floating: HTMLElement,
-): PositioningAncestry {
-    return {
-        reference: getComposedAncestry(getReferenceElement(reference)),
-        floating: getComposedAncestry(floating),
-    };
-}
-
-function hasSameAncestry(left: PositioningAncestry, right: PositioningAncestry) {
-    return (
-        areNodeListsIdentical(left.reference, right.reference) &&
-        areNodeListsIdentical(left.floating, right.floating)
-    );
 }
 
 export function readFloatingTarget(target: FloatingTarget | null | undefined) {
@@ -128,8 +106,7 @@ export function useFloatingPosition(
     const arrowStyle = ref<CSSProperties>();
 
     let cleanup: (() => void) | undefined;
-    let ancestryObserver: MutationObserver | undefined;
-    let positioningAncestry: PositioningAncestry | undefined;
+    let cleanupPositioningAncestry: (() => void) | undefined;
     let generation = 0;
     let request = 0;
 
@@ -200,33 +177,18 @@ export function useFloatingPosition(
     function stop() {
         cleanup?.();
         cleanup = undefined;
-        ancestryObserver?.disconnect();
-        ancestryObserver = undefined;
-        positioningAncestry = undefined;
+        cleanupPositioningAncestry?.();
+        cleanupPositioningAncestry = undefined;
         generation += 1;
         request += 1;
     }
 
-    function observePositioningAncestry(reference: FloatingReference, floating: HTMLElement) {
-        const view = floating.ownerDocument.defaultView;
-        const MutationObserverConstructor = view?.MutationObserver ?? globalThis.MutationObserver;
-        if (!MutationObserverConstructor) return;
-
-        positioningAncestry = readPositioningAncestry(reference, floating);
-        ancestryObserver = new MutationObserverConstructor(() => {
-            if (!positioningAncestry) return;
-
-            const nextAncestry = readPositioningAncestry(getReference(), floating);
-            if (!hasSameAncestry(positioningAncestry, nextAncestry)) start();
-        });
-
-        const observedNodes = new Set([
-            ...positioningAncestry.reference,
-            ...positioningAncestry.floating,
-        ]);
-        for (const node of observedNodes) {
-            ancestryObserver.observe(node, { childList: true });
-        }
+    function observePositioningAncestry() {
+        cleanupPositioningAncestry = observeComposedAncestry(
+            () => [getReferenceElement(getReference()), getFloating()],
+            start,
+            { deferWhileDisconnected: true },
+        );
     }
 
     function getMiddleware(): Middleware[] {
@@ -306,7 +268,7 @@ export function useFloatingPosition(
                     : autoUpdate(reference, floating, updatePosition, {
                           animationFrame,
                       } satisfies FloatingAutoUpdateOptions);
-            observePositioningAncestry(reference, floating);
+            observePositioningAncestry();
         });
     }
 
