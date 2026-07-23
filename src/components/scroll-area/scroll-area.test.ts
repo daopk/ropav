@@ -507,6 +507,79 @@ describe('ScrollArea', () => {
         dispatchPointer(window, 'pointerup', 5, 50);
     });
 
+    it('forwards thumb pointerdown events to root listeners', async () => {
+        const targets: EventTarget[] = [];
+        const onPointerdown = vi.fn((event: Event) => targets.push(event.target!));
+        const { container, instance } = mountScrollArea({
+            type: 'always',
+            scrollbars: 'y',
+            onPointerdown,
+        });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--vertical',
+        ) as HTMLElement;
+        const thumb = scrollbar.firstElementChild as HTMLElement;
+        setGeometry(viewport, { clientHeight: 100, scrollHeight: 400 });
+        setGeometry(scrollbar, { clientHeight: 100 });
+        setRect(scrollbar, { height: 100 });
+        setRect(thumb, { bottom: 25, height: 25 });
+        instance.value?.update();
+        await flush();
+
+        dispatchPointer(thumb, 'pointerdown', 10);
+        dispatchPointer(window, 'pointermove', 35);
+        await flush();
+
+        expect(onPointerdown).toHaveBeenCalledOnce();
+        expect(targets).toEqual([thumb]);
+        expect(viewport.scrollTop).toBe(100);
+        dispatchPointer(window, 'pointerup', 10);
+    });
+
+    it('keeps scrollbar listeners stable while the scroll position changes', async () => {
+        const { container, instance } = mountScrollArea({ type: 'always', scrollbars: 'y' });
+        await flush();
+
+        const viewport = container.querySelector('.rp-scroll-area__viewport') as HTMLElement;
+        const scrollbar = container.querySelector(
+            '.rp-scroll-area__scrollbar--vertical',
+        ) as HTMLElement;
+        const thumb = scrollbar.firstElementChild as HTMLElement;
+        setGeometry(viewport, { clientHeight: 100, scrollHeight: 400 });
+        setGeometry(scrollbar, { clientHeight: 100 });
+        instance.value?.update();
+        await flush();
+
+        const scrollbarAdd = vi.spyOn(scrollbar, 'addEventListener');
+        const scrollbarRemove = vi.spyOn(scrollbar, 'removeEventListener');
+        const thumbAdd = vi.spyOn(thumb, 'addEventListener');
+        const thumbRemove = vi.spyOn(thumb, 'removeEventListener');
+
+        try {
+            viewport.scrollTop = 40;
+            viewport.dispatchEvent(new Event('scroll'));
+            await flush();
+
+            const interactionEvents = new Set(['keydown', 'pointerdown', 'wheel']);
+            const interactionCalls = (calls: unknown[][]) =>
+                calls.filter(([name]) => interactionEvents.has(String(name)));
+
+            expect(scrollbar.getAttribute('aria-valuenow')).toBe('40');
+            expect(interactionCalls(scrollbarAdd.mock.calls)).toEqual([]);
+            expect(interactionCalls(scrollbarRemove.mock.calls)).toEqual([]);
+            expect(interactionCalls(thumbAdd.mock.calls)).toEqual([]);
+            expect(interactionCalls(thumbRemove.mock.calls)).toEqual([]);
+        } finally {
+            scrollbarAdd.mockRestore();
+            scrollbarRemove.mockRestore();
+            thumbAdd.mockRestore();
+            thumbRemove.mockRestore();
+        }
+    });
+
     it('updates scroll position without rereading geometry', async () => {
         const onPositionChange = vi.fn();
         const { container, instance } = mountScrollArea({

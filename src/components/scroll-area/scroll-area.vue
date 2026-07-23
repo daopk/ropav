@@ -1,6 +1,6 @@
 <template>
     <div :ref="templateRefs.root" v-bind="rootAttrs">
-        <div ref="viewportRef" v-bind="viewportAttrs">
+        <div :ref="templateRefs.viewport" v-bind="viewportAttrs">
             <div :ref="templateRefs.content" v-bind="contentAttrs">
                 <slot v-bind="slotProps" />
             </div>
@@ -36,7 +36,6 @@
 import type { PropType } from 'vue';
 import type { ScrollAreaProps, ScrollAreaScrollbars } from './types';
 import { useScrollArea } from './useScrollArea';
-import { useScrollAreaPresentation } from './useScrollAreaPresentation';
 
 defineOptions({ name: 'RpScrollArea', inheritAttrs: false });
 
@@ -68,38 +67,10 @@ const emit = defineEmits<{
     reachRight: [event: Event];
 }>();
 
-const scrollArea = useScrollArea({
-    props,
-    emitScroll: (event) => emit('scroll', event),
-    emitPositionChange: (position) => emit('scrollPositionChange', position),
-    emitReachTop: (event) => emit('reachTop', event),
-    emitReachBottom: (event) => emit('reachBottom', event),
-    emitReachLeft: (event) => emit('reachLeft', event),
-    emitReachRight: (event) => emit('reachRight', event),
-});
 const {
-    rootRef,
-    viewportRef,
-    contentRef,
-    horizontalScrollbarRef,
-    verticalScrollbarRef,
+    templateRefs,
     renderHorizontalScrollbar,
     renderVerticalScrollbar,
-    onScrollbarKeydown,
-    onScrollbarWheel,
-    onScrollbarPointerdown,
-    onThumbPointerdown,
-    scrollTo,
-    scrollBy,
-    update,
-} = scrollArea;
-const templateRefs = {
-    root: rootRef,
-    content: contentRef,
-    horizontalScrollbar: horizontalScrollbarRef,
-    verticalScrollbar: verticalScrollbarRef,
-};
-const {
     rootAttrs,
     viewportAttrs,
     contentAttrs,
@@ -109,10 +80,17 @@ const {
     verticalThumbAttrs,
     cornerAttrs,
     slotProps,
-} = useScrollAreaPresentation(props, scrollArea);
+    onScrollbarKeydown,
+    onScrollbarWheel,
+    onScrollbarPointerdown,
+    onThumbPointerdown,
+    scrollTo,
+    scrollBy,
+    update,
+} = useScrollArea(props, emit);
 
 defineExpose({
-    viewport: viewportRef,
+    viewport: templateRefs.viewport,
     scrollTo,
     scrollBy,
     update,
