@@ -146,6 +146,54 @@ describe('floating positioning', () => {
         expect(floatingMocks.autoUpdate.mock.lastCall).toHaveLength(3);
     });
 
+    it('rebinds when reference or floating DOM ancestry changes', async () => {
+        const reference = ref<HTMLElement | null>(null);
+        const floatingElement = ref<HTMLElement | null>(null);
+        const referenceParent = ref<HTMLElement | null>(null);
+        const floatingParent = ref<HTMLElement | null>(null);
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    useFloatingPosition({
+                        reference,
+                        floating: floatingElement,
+                    });
+                    return () =>
+                        h('div', [
+                            h('div', { ref: referenceParent }, [
+                                h('button', { ref: reference }, 'Reference'),
+                            ]),
+                            h('div', { ref: floatingParent }, [
+                                h('div', { ref: floatingElement }, 'Floating'),
+                            ]),
+                        ]);
+                },
+            }),
+        );
+
+        await vi.waitFor(() => expect(floatingMocks.autoUpdate).toHaveBeenCalled());
+
+        const referenceCalls = floatingMocks.autoUpdate.mock.calls.length;
+        const nextReferenceHost = document.createElement('div');
+        document.body.append(nextReferenceHost);
+        nextReferenceHost.append(referenceParent.value!);
+
+        await vi.waitFor(() => {
+            expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(referenceCalls);
+        });
+
+        const floatingCalls = floatingMocks.autoUpdate.mock.calls.length;
+        const nextFloatingHost = document.createElement('div');
+        document.body.append(nextFloatingHost);
+        nextFloatingHost.append(floatingParent.value!);
+
+        await vi.waitFor(() => {
+            expect(floatingMocks.autoUpdate.mock.calls.length).toBeGreaterThan(floatingCalls);
+        });
+        expect(floatingMocks.cleanup).toHaveBeenCalled();
+    });
+
     it('reacts to flip and auto-update options', async () => {
         const state = reactive({
             fallbackStrategy: 'initialPlacement' as FloatingFlipFallbackStrategy,

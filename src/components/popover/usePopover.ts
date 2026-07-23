@@ -16,10 +16,7 @@ import { isElement } from '@/utils/dom/query';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
 import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
-import {
-    useTeleportPositioningKey,
-    useTeleportTarget,
-} from '../teleport-provider/useTeleportTarget';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
     PopoverContentSlotProps,
@@ -110,7 +107,6 @@ export function usePopover(
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
-    const teleportPositioningKey = useTeleportPositioningKey();
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
         rootRef,
@@ -164,7 +160,6 @@ export function usePopover(
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
         autoUpdateOptions: () => props.autoUpdateOptions,
-        restartKey: () => [Boolean(props.teleport), teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
     const rootClass = computed(() =>

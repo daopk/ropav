@@ -38,11 +38,67 @@ import type {
 
 type Source<T> = () => T;
 
+interface PositioningAncestry {
+    reference: Node[];
+    floating: Node[];
+}
+
 const DEFAULT_ARROW_PADDING = 4;
 const DEFAULT_COLLISION_PADDING = 8;
 const DEFAULT_OFFSET = 8;
 const DEFAULT_PLACEMENT: FloatingPlacement = 'bottom';
 const DEFAULT_STRATEGY: FloatingStrategy = 'absolute';
+
+function isElementNode(value: unknown): value is Element {
+    return (
+        value != null && typeof value === 'object' && 'nodeType' in value && value.nodeType === 1
+    );
+}
+
+function getReferenceElement(reference: FloatingReference | null | undefined): Element | null {
+    if (isElementNode(reference)) return reference;
+    return reference && isElementNode(reference.contextElement) ? reference.contextElement : null;
+}
+
+function getDomParent(node: Node): Node | null {
+    if (isElementNode(node) && node.assignedSlot) return node.assignedSlot;
+
+    const parent = node.parentNode;
+    if (parent) return parent;
+    return 'host' in node && isElementNode(node.host) ? node.host : null;
+}
+
+function collectAncestry(element: Element | null): Node[] {
+    const ancestry: Node[] = [];
+    let current: Node | null = element;
+
+    while (current) {
+        current = getDomParent(current);
+        if (current) ancestry.push(current);
+    }
+
+    return ancestry;
+}
+
+function readPositioningAncestry(
+    reference: FloatingReference | null | undefined,
+    floating: HTMLElement,
+): PositioningAncestry {
+    return {
+        reference: collectAncestry(getReferenceElement(reference)),
+        floating: collectAncestry(floating),
+    };
+}
+
+function hasSameNodes(left: Node[], right: Node[]) {
+    return left.length === right.length && left.every((node, index) => node === right[index]);
+}
+
+function hasSameAncestry(left: PositioningAncestry, right: PositioningAncestry) {
+    return (
+        hasSameNodes(left.reference, right.reference) && hasSameNodes(left.floating, right.floating)
+    );
+}
 
 export function readFloatingTarget(target: FloatingTarget | null | undefined) {
     return isRef(target) ? target.value : target;
@@ -100,6 +156,8 @@ export function useFloatingPosition(
     const arrowStyle = ref<CSSProperties>();
 
     let cleanup: (() => void) | undefined;
+    let ancestryObserver: MutationObserver | undefined;
+    let positioningAncestry: PositioningAncestry | undefined;
     let generation = 0;
     let request = 0;
 
@@ -170,8 +228,33 @@ export function useFloatingPosition(
     function stop() {
         cleanup?.();
         cleanup = undefined;
+        ancestryObserver?.disconnect();
+        ancestryObserver = undefined;
+        positioningAncestry = undefined;
         generation += 1;
         request += 1;
+    }
+
+    function observePositioningAncestry(reference: FloatingReference, floating: HTMLElement) {
+        const view = floating.ownerDocument.defaultView;
+        const MutationObserverConstructor = view?.MutationObserver ?? globalThis.MutationObserver;
+        if (!MutationObserverConstructor) return;
+
+        positioningAncestry = readPositioningAncestry(reference, floating);
+        ancestryObserver = new MutationObserverConstructor(() => {
+            if (!positioningAncestry) return;
+
+            const nextAncestry = readPositioningAncestry(getReference(), floating);
+            if (!hasSameAncestry(positioningAncestry, nextAncestry)) start();
+        });
+
+        const observedNodes = new Set([
+            ...positioningAncestry.reference,
+            ...positioningAncestry.floating,
+        ]);
+        for (const node of observedNodes) {
+            ancestryObserver.observe(node, { childList: true });
+        }
     }
 
     function getMiddleware(): Middleware[] {
@@ -251,6 +334,7 @@ export function useFloatingPosition(
                     : autoUpdate(reference, floating, updatePosition, {
                           animationFrame,
                       } satisfies FloatingAutoUpdateOptions);
+            observePositioningAncestry(reference, floating);
         });
     }
 

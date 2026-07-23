@@ -13,7 +13,6 @@ export function useDropdownMenuPortalPosition(options: {
     arrowRef: Ref<HTMLElement | null>;
     isVisible: BooleanSource;
     placement: PlacementSource;
-    restartKey: () => unknown;
 }) {
     const floating = useFloatingPosition({
         reference: options.reference,
@@ -28,7 +27,6 @@ export function useDropdownMenuPortalPosition(options: {
         shift: () => options.props.shift !== false,
         collisionPadding: () => options.props.collisionPadding ?? 8,
         autoUpdateOptions: () => options.props.autoUpdateOptions,
-        restartKey: options.restartKey,
     });
 
     return {

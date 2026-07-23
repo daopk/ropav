@@ -16,10 +16,7 @@ import { isElement } from '@/utils/dom/query';
 import { hasMeasuredRect, type Point } from '@/utils/geometry';
 import { getPathKey, normalizePath } from '@/utils/indexPath';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
-import {
-    useTeleportPositioningKey,
-    useTeleportTarget,
-} from '../teleport-provider/useTeleportTarget';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
     DropdownMenuCloseOptions,
@@ -78,7 +75,6 @@ export function useDropdownMenu(
     const menuId = computed(() => props.id ?? `${generatedId}-menu`);
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
-    const teleportPositioningKey = useTeleportPositioningKey();
     const shouldTeleport = computed(() => props.teleport !== false);
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
@@ -112,7 +108,6 @@ export function useDropdownMenu(
         arrowRef,
         isVisible,
         placement,
-        restartKey: () => [shouldTeleport.value, teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => actualPlacement.value.split('-')[0]);
 

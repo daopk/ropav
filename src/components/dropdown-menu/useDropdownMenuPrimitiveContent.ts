@@ -15,7 +15,6 @@ import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
-import { useTeleportPositioningKey } from '../teleport-provider/useTeleportTarget';
 import {
     createMenuContext,
     menuKey,
@@ -57,7 +56,6 @@ export function useDropdownMenuPrimitiveContent(
     const reference = computed<ElementReference | null>(() =>
         sub ? sub.trigger.value : root.reference.value,
     );
-    const teleportPositioningKey = useTeleportPositioningKey();
     const menu = createMenuContext({
         root,
         element,
@@ -94,7 +92,6 @@ export function useDropdownMenuPrimitiveContent(
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
         autoUpdateOptions: () => props.autoUpdateOptions,
-        restartKey: teleportPositioningKey,
     });
     watch(
         floating.actualPlacement,

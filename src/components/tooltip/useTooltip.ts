@@ -4,10 +4,7 @@ import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import { isElement } from '@/utils/dom/query';
 import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
-import {
-    useTeleportPositioningKey,
-    useTeleportTarget,
-} from '../teleport-provider/useTeleportTarget';
+import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type { TooltipOffset, TooltipProps, TooltipTriggerProps } from './types';
 
@@ -70,7 +67,6 @@ export function useTooltip(
     const shouldRenderContent = computed(() => !isDisabled.value);
     const shouldDescribeContent = computed(() => shouldRenderContent.value && !isDecorative.value);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
-    const teleportPositioningKey = useTeleportPositioningKey();
     const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
         () => props.target,
         rootRef,
@@ -104,7 +100,6 @@ export function useTooltip(
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
         autoUpdateOptions: () => props.autoUpdateOptions,
-        restartKey: () => [Boolean(props.teleport), teleportTo.value, teleportPositioningKey.value],
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
 
