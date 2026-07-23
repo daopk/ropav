@@ -1,6 +1,8 @@
 import { computed, onBeforeUnmount, ref, type CSSProperties } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
 import { useControlState } from '@/internal/composables/useControlState';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { getPointerId } from '@/utils/dom/pointer';
@@ -70,18 +72,27 @@ function getSliderTrackStyle(
     return style;
 }
 
-export function useSlider(
-    props: SliderStateProps,
-    emitUpdate: (value: number) => void,
-    getValue: () => number = () => props.modelValue ?? props.min,
-) {
+export function useSlider(props: SliderStateProps, onChange: (value: number) => void) {
+    const inputRef = ref<HTMLInputElement | null>(null);
+    const controllable = useControllableValue<number>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? props.min,
+        onChange,
+    });
     const control = useControlState(props);
 
     const bounds = computed(() => normalizeSliderBounds(props.min, props.max));
+    const nativeMin = computed(() => bounds.value.min);
+    const nativeMax = computed(() => bounds.value.max);
     const nativeStep = computed(() => normalizeSliderStep(props.step));
 
     const normalizedValue = computed(() =>
-        normalizeSliderValue(getValue(), bounds.value.min, bounds.value.max, nativeStep.value),
+        normalizeSliderValue(
+            controllable.value.value,
+            bounds.value.min,
+            bounds.value.max,
+            nativeStep.value,
+        ),
     );
 
     const valuePercent = computed(() =>
@@ -204,7 +215,7 @@ export function useSlider(
         if (control.disabled) return;
 
         const input = e.target as HTMLInputElement;
-        emitUpdate(
+        controllable.setValue(
             normalizeSliderValue(
                 input.valueAsNumber,
                 bounds.value.min,
@@ -213,6 +224,28 @@ export function useSlider(
             ),
         );
     }
+
+    useFormControl({
+        elements: () => [inputRef.value],
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element) {
+            (element as HTMLInputElement).defaultValue = String(
+                normalizeSliderValue(
+                    controllable.initialValue,
+                    nativeMin.value,
+                    nativeMax.value,
+                    nativeStep.value,
+                ),
+            );
+        },
+        validationMessage: () => props.validationMessage,
+        readResetValue(elements) {
+            controllable.resetValue((elements[0] as HTMLInputElement).valueAsNumber);
+        },
+        syncControlledValue(elements) {
+            (elements[0] as HTMLInputElement).value = String(normalizedValue.value);
+        },
+    });
 
     function hasTooltipInteraction() {
         if (tooltipAnchor.value === 'pointer') {
@@ -379,10 +412,16 @@ export function useSlider(
         cancelScheduledPreview();
     });
 
+    function focus(options?: FocusOptions) {
+        inputRef.value?.focus(options);
+    }
+
     return {
+        inputRef,
+        focus,
         control,
-        nativeMin: computed(() => bounds.value.min),
-        nativeMax: computed(() => bounds.value.max),
+        nativeMin,
+        nativeMax,
         nativeStep,
         rootClass,
         normalizedValue,

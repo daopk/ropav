@@ -145,9 +145,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, type InputHTMLAttributes } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { computed, type InputHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
 import Tooltip from '../tooltip/tooltip.vue';
@@ -157,7 +155,7 @@ import type {
     SliderTooltipSlotProps,
     SliderTrackSlotProps,
 } from './types';
-import { normalizeSliderValue, useSlider } from './useSlider';
+import { useSlider } from './useSlider';
 
 defineOptions({ name: 'RpSlider', inheritAttrs: false });
 
@@ -189,14 +187,9 @@ const emit = defineEmits<{
     'update:modelValue': [value: number];
 }>();
 
-const inputRef = ref<HTMLInputElement | null>(null);
-const controllable = useControllableValue<number>({
-    modelValue: () => props.modelValue,
-    defaultValue: () => props.defaultValue ?? props.min,
-    onChange: (value) => emit('update:modelValue', value),
-});
-
 const {
+    inputRef,
+    focus,
     control,
     nativeMin,
     nativeMax,
@@ -235,33 +228,7 @@ const {
     onTooltipFocusIn,
     onTooltipFocusOut,
     onTooltipKeydown,
-} = useSlider(
-    props,
-    (value) => controllable.setValue(value),
-    () => controllable.value.value,
-);
-
-useFormControl({
-    elements: () => [inputRef.value],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLInputElement).defaultValue = String(
-            normalizeSliderValue(
-                controllable.initialValue,
-                nativeMin.value,
-                nativeMax.value,
-                nativeStep.value,
-            ),
-        );
-    },
-    validationMessage: () => props.validationMessage,
-    readResetValue(elements) {
-        controllable.resetValue((elements[0] as HTMLInputElement).valueAsNumber);
-    },
-    syncControlledValue(elements) {
-        (elements[0] as HTMLInputElement).value = String(normalizedValue.value);
-    },
-});
+} = useSlider(props, (value) => emit('update:modelValue', value));
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SliderPart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -303,10 +270,6 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         },
     };
 });
-
-function focus(options?: FocusOptions) {
-    inputRef.value?.focus(options);
-}
 
 defineExpose({ nativeElement: inputRef, focus });
 </script>

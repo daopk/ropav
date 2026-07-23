@@ -1,5 +1,7 @@
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, nextTick, ref, type CSSProperties } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState } from '@/internal/composables/useControlState';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { clamp } from '@/utils/number';
@@ -208,9 +210,15 @@ function focusThumb(track: HTMLElement, thumb: RangeSliderThumb) {
 
 export function useRangeSlider(
     props: RangeSliderStateProps,
-    emitUpdate: (value: RangeSliderValue) => void,
-    getValue: () => RangeSliderValue = () => props.modelValue ?? [props.min, props.max],
+    onChange: (value: RangeSliderValue) => void,
 ) {
+    const lowerInputRef = ref<HTMLInputElement | null>(null);
+    const upperInputRef = ref<HTMLInputElement | null>(null);
+    const controllable = useControllableValue<RangeSliderValue>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? [props.min, props.max],
+        onChange,
+    });
     const control = useControlState(props);
     const activeThumb = ref<RangeSliderThumb>();
 
@@ -230,7 +238,7 @@ export function useRangeSlider(
     );
     const normalizedValue = computed(() =>
         normalizeRangeSliderValue(
-            getValue(),
+            controllable.value.value,
             bounds.value.min,
             bounds.value.max,
             valueStep.value,
@@ -255,6 +263,11 @@ export function useRangeSlider(
         control.id,
         control.id ? `${control.id}-upper` : undefined,
     ]);
+    const validationMessages = computed<[string | undefined, string | undefined]>(() =>
+        Array.isArray(props.validationMessage)
+            ? props.validationMessage
+            : [props.validationMessage, props.validationMessage],
+    );
     const nativeMin = computed<RangeSliderValue>(() => {
         if (normalizedMinRange.value === 0) {
             return [bounds.value.min, bounds.value.min];
@@ -325,6 +338,44 @@ export function useRangeSlider(
     const trackStyle = computed<CSSProperties>(() =>
         getRangeSliderTrackStyle(props, valuePercent.value),
     );
+
+    function normalizeInitialValue(value: RangeSliderValue = controllable.initialValue) {
+        return normalizeRangeSliderValue(value, props.min, props.max, props.step, props.minRange);
+    }
+
+    useFormControl({
+        elements: () => [lowerInputRef.value, upperInputRef.value],
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element, index) {
+            const initialValue = normalizeInitialValue();
+            (element as HTMLInputElement).defaultValue = String(initialValue[index]);
+        },
+        validationMessage: (_element, index) => validationMessages.value[index],
+        readResetValue(elements) {
+            const resetValue: RangeSliderValue = [
+                normalizedValue.value[0],
+                normalizedValue.value[1],
+            ];
+
+            for (const element of elements) {
+                const index = element === upperInputRef.value ? 1 : 0;
+                resetValue[index] = Number((element as HTMLInputElement).defaultValue);
+            }
+
+            const nextValue = normalizeInitialValue(resetValue);
+            controllable.resetValue(nextValue);
+            void nextTick(() => {
+                if (lowerInputRef.value) lowerInputRef.value.value = String(nextValue[0]);
+                if (upperInputRef.value) upperInputRef.value.value = String(nextValue[1]);
+            });
+        },
+        syncControlledValue(elements) {
+            for (const element of elements) {
+                const index = element === upperInputRef.value ? 1 : 0;
+                (element as HTMLInputElement).value = String(normalizedValue.value[index]);
+            }
+        },
+    });
 
     const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));
     const tooltipMode = computed(() => getSliderTooltipMode(props.tooltip));
@@ -414,7 +465,7 @@ export function useRangeSlider(
 
         const update = getThumbUpdate(thumb, value, anchorValue);
         activeThumb.value = update.thumb;
-        emitUpdate(update.value);
+        controllable.setValue(update.value);
 
         return update.thumb;
     }
@@ -533,7 +584,25 @@ export function useRangeSlider(
         transferDrag: (from, to) => tooltipState.transferInteraction(from, to, 'drag'),
     });
 
+    const nativeElements = computed<[HTMLInputElement | null, HTMLInputElement | null]>(() => [
+        lowerInputRef.value,
+        upperInputRef.value,
+    ]);
+
+    function setInputRef(index: number, element: unknown) {
+        const input = element instanceof HTMLInputElement ? element : null;
+        if (index === 0) lowerInputRef.value = input;
+        else upperInputRef.value = input;
+    }
+
+    function focus(options?: FocusOptions) {
+        lowerInputRef.value?.focus(options);
+    }
+
     return {
+        nativeElements,
+        setInputRef,
+        focus,
         control,
         nativeMin,
         nativeMax,

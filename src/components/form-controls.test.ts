@@ -237,6 +237,48 @@ describe('native form value controls', () => {
         expect(rangeUpdate).toHaveBeenCalledOnce();
     });
 
+    it('keeps current controlled slider values authoritative on reset', async () => {
+        const values = reactive({
+            slider: 20,
+            range: [25, 75] as [number, number],
+        });
+        const sliderUpdate = vi.fn();
+        const rangeUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('form', [
+                        h(Slider, {
+                            ariaLabel: 'Test slider',
+                            modelValue: values.slider,
+                            'onUpdate:modelValue': sliderUpdate,
+                        }),
+                        h(RangeSlider, {
+                            modelValue: values.range,
+                            'onUpdate:modelValue': rangeUpdate,
+                        }),
+                    ]);
+                },
+            }),
+        );
+        await flush();
+
+        const form = container.querySelector('form')!;
+        const slider = container.querySelector('.rp-slider__native') as HTMLInputElement;
+        const range = [...container.querySelectorAll<HTMLInputElement>('.rp-range-slider__native')];
+
+        values.slider = 60;
+        values.range = [35, 85];
+        await flush();
+
+        await reset(form);
+
+        expect(slider.value).toBe('60');
+        expect(range.map((element) => element.value)).toEqual(['35', '85']);
+        expect(sliderUpdate).not.toHaveBeenCalled();
+        expect(rangeUpdate).not.toHaveBeenCalled();
+    });
+
     it('resets an uncontrolled range slider independently of its current min-range bounds', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(
