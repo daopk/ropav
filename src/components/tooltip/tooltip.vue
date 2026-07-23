@@ -1,5 +1,5 @@
 <template>
-    <span ref="rootRef" v-bind="rootAttrs">
+    <span :ref="templateRefs.root" v-bind="rootAttrs">
         <slot v-if="!isTargetMode" :trigger-props="publicTriggerProps" />
 
         <Teleport :to="teleportTo" :disabled="!teleport">
@@ -8,7 +8,7 @@
                     v-if="shouldRenderContent"
                     v-show="isVisible"
                     :id="tooltipId"
-                    ref="contentRef"
+                    :ref="templateRefs.content"
                     v-bind="contentAttrs"
                     :role="contentRole"
                     :aria-hidden="contentAriaHidden"
@@ -16,7 +16,7 @@
                 >
                     <span
                         v-if="arrow"
-                        ref="arrowRef"
+                        :ref="templateRefs.arrow"
                         class="rp-tooltip__arrow"
                         :data-side="placementSide"
                         :style="arrowStyle"
@@ -82,10 +82,7 @@ const {
 } = useTooltip(props, (open) => {
     emit('update:open', open);
 });
-
-void rootRef;
-void contentRef;
-void arrowRef;
+const templateRefs = { root: rootRef, content: contentRef, arrow: arrowRef };
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<TooltipPart>(props, 'root');
 const state = computed(() => (isVisible.value ? 'open' : 'closed'));

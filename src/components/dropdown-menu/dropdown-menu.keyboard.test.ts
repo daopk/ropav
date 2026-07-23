@@ -1,9 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { keydown, mountDom, queryDom } from '../../../tests/utils/vue';
-import { items, nestedItems, waitForDropdownClose } from '../../../tests/fixtures/dropdown-menu';
+import {
+    items,
+    mouseenter,
+    nestedItems,
+    waitForDropdownClose,
+} from '../../../tests/fixtures/dropdown-menu';
 import DropdownMenu from './dropdown-menu.vue';
-import type { DropdownMenuItem, DropdownMenuSlotProps } from './types';
+import type { DropdownMenuItem, DropdownMenuItemSlotProps, DropdownMenuSlotProps } from './types';
 
 describe('DropdownMenu keyboard navigation', () => {
     it('navigates the menu with the keyboard and skips disabled items', async () => {
@@ -405,5 +410,120 @@ describe('DropdownMenu keyboard navigation', () => {
             expect.any(CustomEvent),
         );
         expect(queryDom(container, '[role="menu"]')).toBeNull();
+    });
+
+    it('closes a hover-opened submenu without closing the root menu', async () => {
+        const keyboardItems: DropdownMenuItem[] = [
+            {
+                label: 'Move to',
+                value: 'move',
+                children: [{ label: 'Backlog', value: 'backlog' }],
+            },
+            { label: 'Archive', value: 'archive' },
+        ];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'hover-keyboard-menu',
+                            items: keyboardItems,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        keydown(trigger, 'ArrowDown');
+        await nextTick();
+
+        const menu = document.getElementById('hover-keyboard-menu') as HTMLElement;
+        const submenuTrigger = document.getElementById(
+            'hover-keyboard-menu-item-0',
+        ) as HTMLButtonElement;
+        expect(document.activeElement).toBe(menu);
+
+        mouseenter(submenuTrigger, 100, 20);
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(document.activeElement).toBe(menu);
+
+        keydown(menu, 'ArrowLeft');
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
+        expect(document.getElementById('hover-keyboard-menu')).toBe(menu);
+        expect(menu.getAttribute('aria-activedescendant')).toBe('hover-keyboard-menu-item-0');
+
+        mouseenter(submenuTrigger, 100, 20);
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).not.toBeNull();
+        expect(document.activeElement).toBe(menu);
+
+        keydown(menu, 'Escape');
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
+        expect(document.getElementById('hover-keyboard-menu')).toBe(menu);
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        expect(document.activeElement).toBe(menu);
+    });
+
+    it('routes ArrowDown from the parent after the public closeSubmenu control closes an active submenu', async () => {
+        const moveItem: DropdownMenuItem = {
+            label: 'Move to',
+            value: 'move',
+            children: [
+                { label: 'Backlog', value: 'backlog' },
+                { label: 'Done', value: 'done' },
+            ],
+        };
+        const keyboardItems: DropdownMenuItem[] = [
+            moveItem,
+            { label: 'Archive', value: 'archive' },
+        ];
+        let moveItemSlot: DropdownMenuItemSlotProps | undefined;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'public-close-submenu',
+                            items: keyboardItems,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                            item: (slotProps: DropdownMenuItemSlotProps) => {
+                                if (slotProps.item === moveItem) moveItemSlot = slotProps;
+                                return h('span', slotProps.item.label);
+                            },
+                        },
+                    );
+                },
+            }),
+        );
+
+        keydown(queryDom(container, '.trigger') as HTMLButtonElement, 'ArrowDown');
+        await nextTick();
+        const menu = queryDom(container, '[role="menu"]') as HTMLElement;
+        keydown(menu, 'ArrowRight');
+        await nextTick();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('public-close-submenu-item-0-0');
+
+        moveItemSlot?.closeSubmenu();
+        await nextTick();
+        expect(queryDom(container, '.rp-dropdown-menu__submenu')).toBeNull();
+        expect(menu.getAttribute('aria-activedescendant')).toBe('public-close-submenu-item-0');
+
+        keydown(menu, 'ArrowDown');
+        await nextTick();
+
+        expect(menu.getAttribute('aria-activedescendant')).toBe('public-close-submenu-item-1');
     });
 });

@@ -1,12 +1,12 @@
 <template>
     <div class="rp-dropdown-menu__item-wrap" role="none">
-        <button ref="itemElement" v-bind="publicItemProps">
+        <button :ref="templateRefs.item" v-bind="publicItemProps">
             <slot name="item" v-bind="slotProps" />
         </button>
 
         <div
             v-if="hasSubmenu && submenuOpen"
-            ref="submenuElement"
+            :ref="templateRefs.submenu"
             v-bind="publicSubmenuProps"
             data-state="open"
             :data-placement="actualPlacement"
@@ -81,6 +81,7 @@ const slotProps = computed(() =>
 
 const itemElement = ref<HTMLElement | null>(null);
 const submenuElement = ref<HTMLElement | null>(null);
+const templateRefs = { item: itemElement, submenu: submenuElement };
 const { actualPlacement, floatingStyle } = useFloatingPosition({
     reference: itemElement,
     floating: submenuElement,
@@ -107,7 +108,4 @@ const placementSide = computed(() => actualPlacement.value.split('-')[0]);
 function getChildKey(index: number, child: DropdownMenuItem) {
     return `${getPathKey([...path.value, index])}:${String(child.value)}`;
 }
-
-void itemElement;
-void submenuElement;
 </script>

@@ -225,6 +225,106 @@ describe('DropdownMenu compound primitives', () => {
         expect(container.querySelector('.bravo')?.hasAttribute('data-highlighted')).toBe(true);
     });
 
+    it('preserves the active primitive item when its id changes', async () => {
+        const activeItemId = ref('active-item');
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenuRoot,
+                        { defaultOpen: true, modal: false },
+                        {
+                            default: () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () => [
+                                    h(DropdownMenuItem, { id: 'first-item' }, () => 'First action'),
+                                    h(
+                                        DropdownMenuItem,
+                                        {
+                                            id: activeItemId.value,
+                                            key: 'active-item',
+                                            class: 'active-item',
+                                        },
+                                        () => 'Active action',
+                                    ),
+                                ]),
+                        },
+                    );
+                },
+            }),
+        );
+        await nextTick();
+
+        const content = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(content, 'ArrowDown');
+        await nextTick();
+        expect(content.getAttribute('aria-activedescendant')).toBe('active-item');
+
+        activeItemId.value = 'updated-active-item';
+        await nextTick();
+
+        const activeItem = container.querySelector('.active-item') as HTMLElement;
+        expect(activeItem.id).toBe('updated-active-item');
+        expect(content.getAttribute('aria-activedescendant')).toBe('updated-active-item');
+        expect(activeItem.hasAttribute('data-highlighted')).toBe(true);
+    });
+
+    it('preserves the active submenu trigger when its id changes', async () => {
+        const activeTriggerId = ref('active-sub-trigger');
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenuRoot,
+                        { defaultOpen: true, modal: false },
+                        {
+                            default: () =>
+                                h(DropdownMenuContent, { flip: false, shift: false }, () => [
+                                    h(DropdownMenuItem, { id: 'first-item' }, () => 'Archive'),
+                                    h(
+                                        DropdownMenuSub,
+                                        { key: 'submenu' },
+                                        {
+                                            default: () => [
+                                                h(
+                                                    DropdownMenuSubTrigger,
+                                                    {
+                                                        id: activeTriggerId.value,
+                                                        class: 'active-sub-trigger',
+                                                        textValue: 'Move to',
+                                                    },
+                                                    () => 'Move to',
+                                                ),
+                                                h(
+                                                    DropdownMenuSubContent,
+                                                    { flip: false, shift: false },
+                                                    () =>
+                                                        h(DropdownMenuItem, null, () => 'Backlog'),
+                                                ),
+                                            ],
+                                        },
+                                    ),
+                                ]),
+                        },
+                    );
+                },
+            }),
+        );
+        await nextTick();
+
+        const content = container.querySelector('[role="menu"]') as HTMLElement;
+        keydown(content, 'ArrowDown');
+        await nextTick();
+        expect(content.getAttribute('aria-activedescendant')).toBe('active-sub-trigger');
+
+        activeTriggerId.value = 'updated-active-sub-trigger';
+        await nextTick();
+
+        const activeTrigger = container.querySelector('.active-sub-trigger') as HTMLElement;
+        expect(activeTrigger.id).toBe('updated-active-sub-trigger');
+        expect(content.getAttribute('aria-activedescendant')).toBe('updated-active-sub-trigger');
+        expect(activeTrigger.hasAttribute('data-highlighted')).toBe(true);
+    });
+
     it('teleports content through Portal and preserves injected context', async () => {
         const portalDisabled = ref(false);
         const container = mountDom(

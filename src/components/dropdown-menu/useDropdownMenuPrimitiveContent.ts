@@ -16,11 +16,8 @@ import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/com
 import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import { useTeleportPositioningKey } from '../teleport-provider/useTeleportTarget';
-import { isEventWithinTargets } from './dropdown-menu-outside';
 import {
-    blockNextDocumentClick,
     createMenuContext,
-    createOutsideEvent,
     menuKey,
     rootKey,
     subKey,
@@ -73,11 +70,17 @@ export function useDropdownMenuPrimitiveContent(
                 event,
             );
             events.escapeKeyDown(customEvent);
-            if (customEvent.defaultPrevented) return;
-            if (sub) sub.close(true);
-            else root.close({ returnFocus: true });
+            return !customEvent.defaultPrevented;
         },
     });
+    const cleanupDismissal = submenu
+        ? undefined
+        : root.interaction.registerDismissal({
+              ignoredTargets: () => props.ignore ?? [],
+              pointerDownOutside: events.pointerDownOutside,
+              focusOutside: events.focusOutside,
+              interactOutside: events.interactOutside,
+          });
     const floating = useFloatingPosition({
         reference,
         floating: element,
@@ -119,67 +122,11 @@ export function useDropdownMenuPrimitiveContent(
         });
     }
 
-    function emitOutside(type: 'pointer' | 'focus', originalEvent: Event) {
-        const outsideEvent = createOutsideEvent(originalEvent);
-        if (type === 'pointer') events.pointerDownOutside(outsideEvent);
-        else events.focusOutside(outsideEvent);
-        events.interactOutside(outsideEvent);
-        return outsideEvent;
-    }
-
-    function onDocumentPointer(event: Event) {
-        if (
-            !root.layer.isTopLayer() ||
-            root.isInside(event) ||
-            isEventWithinTargets(event, props.ignore ?? [])
-        ) {
-            return;
-        }
-        const outsideEvent = emitOutside('pointer', event);
-        if (root.modal.value) {
-            if (event.cancelable) event.preventDefault();
-            event.stopPropagation();
-            if (event.type === 'pointerdown') blockNextDocumentClick();
-        }
-        if (!outsideEvent.defaultPrevented) {
-            root.close({ returnFocus: root.modal.value });
-        }
-    }
-
-    function onDocumentFocus(event: Event) {
-        if (
-            !root.layer.isTopLayer() ||
-            root.isInside(event) ||
-            isEventWithinTargets(event, props.ignore ?? [])
-        ) {
-            return;
-        }
-        const outsideEvent = emitOutside('focus', event);
-        if (root.modal.value) {
-            if (event.cancelable) event.preventDefault();
-            event.stopPropagation();
-        }
-        if (!outsideEvent.defaultPrevented) {
-            root.close({ returnFocus: root.modal.value });
-        } else if (root.modal.value) {
-            void nextTick(menu.focusElement);
-        }
-    }
-
-    function setDocumentListeners(active: boolean) {
-        if (submenu || typeof document === 'undefined') return;
-        const method = active ? 'addEventListener' : 'removeEventListener';
-        document[method]('pointerdown', onDocumentPointer, true);
-        document[method]('focusin', onDocumentFocus, true);
-    }
-
     watch(
         isOpen,
         (open) => {
-            setDocumentListeners(open);
             if (!open) {
-                menu.activeId.value = null;
-                menu.closeSubmenus();
+                if (sub) root.interaction.closeMenu(menu.id, false);
                 return;
             }
 
@@ -199,7 +146,7 @@ export function useDropdownMenuPrimitiveContent(
         }
     });
     onBeforeUnmount(() => {
-        setDocumentListeners(false);
+        cleanupDismissal?.();
         layerBranchCleanup?.();
         if (element.value) root.unregisterInside(element.value);
         if (!sub && root.layer.element.value === element.value) root.layer.element.value = null;

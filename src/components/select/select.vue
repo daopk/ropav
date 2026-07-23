@@ -1,5 +1,5 @@
 <template>
-    <div v-bind="rootAttrs" ref="selectRef">
+    <div v-bind="rootAttrs" :ref="templateRefs.select">
         <select
             v-bind="nativeInputAttrs"
             ref="nativeSelectRef"
@@ -173,8 +173,7 @@ const {
     onFocusout,
     onTriggerKeydown,
 } = useSelect(props, requestValueUpdate, () => selectedValue.value, triggerRef);
-
-void selectRef;
+const templateRefs = { select: selectRef };
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SelectPart>(props, 'root');
 const rootAttrs = computed(() =>

@@ -2,7 +2,7 @@
     <component v-if="shouldRender" :is="as" :ref="setElement" v-bind="rootAttrs">
         <span
             v-if="arrow"
-            ref="arrowElement"
+            :ref="templateRefs.arrow"
             class="rp-dropdown-menu__arrow"
             :data-side="placementSide"
             :style="floating.arrowStyle.value"
@@ -71,6 +71,5 @@ const {
     },
     false,
 );
-
-void arrowElement;
+const templateRefs = { arrow: arrowElement };
 </script>

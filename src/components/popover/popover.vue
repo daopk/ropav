@@ -1,5 +1,5 @@
 <template>
-    <span ref="rootRef" v-bind="publicRootAttrs">
+    <span :ref="templateRefs.root" v-bind="publicRootAttrs">
         <slot
             v-if="!isTargetMode"
             :trigger-props="styledTriggerProps"
@@ -15,7 +15,7 @@
                     v-if="shouldRenderContent"
                     v-show="shouldShowContent"
                     :id="popoverId"
-                    ref="contentRef"
+                    :ref="templateRefs.content"
                     v-bind="contentAttrs"
                     :role="popoverRole"
                     :aria-label="ariaLabel"
@@ -42,7 +42,7 @@
                     </slot>
                     <span
                         v-if="arrow"
-                        ref="arrowRef"
+                        :ref="templateRefs.arrow"
                         class="rp-popover__arrow"
                         :data-side="placementSide"
                         :style="arrowStyle"
@@ -112,10 +112,7 @@ const {
 } = usePopover(props, (open) => {
     emit('update:open', open);
 });
-
-void rootRef;
-void contentRef;
-void arrowRef;
+const templateRefs = { root: rootRef, content: contentRef, arrow: arrowRef };
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<PopoverPart>(props, 'root');
 const publicRootAttrs = computed(() =>

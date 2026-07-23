@@ -49,7 +49,7 @@
 
         <div
             v-if="validSwatches.length"
-            ref="swatchesRef"
+            :ref="templateRefs.swatches"
             v-bind="
                 getPartAttrs('swatches', {
                     class: 'rp-color-picker__swatches',
@@ -161,8 +161,7 @@ const {
     isSelected: isColorSelected,
     select: selectColor,
 });
-
-void swatchesRef;
+const templateRefs = { swatches: swatchesRef };
 </script>
 
 <style src="./color-picker.scss" lang="scss" scoped></style>

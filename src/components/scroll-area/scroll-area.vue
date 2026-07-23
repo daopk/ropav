@@ -1,14 +1,14 @@
 <template>
-    <div ref="rootRef" v-bind="rootAttrs">
+    <div :ref="templateRefs.root" v-bind="rootAttrs">
         <div ref="viewportRef" v-bind="viewportAttrs">
-            <div ref="contentRef" v-bind="contentAttrs">
+            <div :ref="templateRefs.content" v-bind="contentAttrs">
                 <slot v-bind="slotProps" />
             </div>
         </div>
 
         <div
             v-if="renderHorizontalScrollbar"
-            ref="horizontalScrollbarRef"
+            :ref="templateRefs.horizontalScrollbar"
             v-bind="horizontalScrollbarAttrs"
             @keydown="onScrollbarKeydown('x', $event)"
             @pointerdown="onScrollbarPointerdown('x', $event)"
@@ -19,7 +19,7 @@
 
         <div
             v-if="renderVerticalScrollbar"
-            ref="verticalScrollbarRef"
+            :ref="templateRefs.verticalScrollbar"
             v-bind="verticalScrollbarAttrs"
             @keydown="onScrollbarKeydown('y', $event)"
             @pointerdown="onScrollbarPointerdown('y', $event)"
@@ -93,6 +93,12 @@ const {
     scrollBy,
     update,
 } = scrollArea;
+const templateRefs = {
+    root: rootRef,
+    content: contentRef,
+    horizontalScrollbar: horizontalScrollbarRef,
+    verticalScrollbar: verticalScrollbarRef,
+};
 const {
     rootAttrs,
     viewportAttrs,
@@ -104,11 +110,6 @@ const {
     cornerAttrs,
     slotProps,
 } = useScrollAreaPresentation(props, scrollArea);
-
-void rootRef;
-void contentRef;
-void horizontalScrollbarRef;
-void verticalScrollbarRef;
 
 defineExpose({
     viewport: viewportRef,

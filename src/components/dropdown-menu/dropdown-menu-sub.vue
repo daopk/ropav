@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { nextTick, onBeforeUnmount, provide, ref, watch } from 'vue';
+import { onBeforeUnmount, provide, ref, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import {
@@ -34,6 +34,8 @@ defineSlots<{
 }>();
 
 const parentMenu = useRequiredInject(menuKey, 'RpDropdownMenuSub');
+const generatedId = useId();
+const menuId = `${generatedId}-interaction-menu`;
 const controllableOpen = useControllableValue({
     modelValue: () => props.open,
     defaultValue: () => props.defaultOpen,
@@ -50,34 +52,31 @@ function setOpen(value: boolean) {
     if (previous !== value) controllableOpen.setValue(value);
 }
 
+const cleanupMenuState = parentMenu.root.interaction.registerMenuState({
+    id: menuId,
+    isOpen: () => isOpen.value,
+    setOpen,
+});
+
 const context: DropdownMenuSubContext = {
+    menuId,
     isOpen,
     trigger,
     contentId,
     actualPlacement,
     pendingFocus,
     menu: null,
+    setOpen,
     open(focus: OpenFocusTarget = 'first') {
-        parentMenu.closeSubmenus(context);
         pendingFocus.value = focus;
-        setOpen(true);
-        if (focus) void nextTick(() => context.menu?.focus(focus));
+        if (!parentMenu.root.interaction.openMenu(menuId, focus)) setOpen(true);
     },
     close(focusParent = false) {
-        setOpen(false);
         pendingFocus.value = false;
-        context.menu?.closeSubmenus();
-        if (focusParent) {
-            parentMenu.setActive(trigger.value?.id ?? '');
-            parentMenu.focusElement();
-        }
+        if (!parentMenu.root.interaction.closeMenu(menuId, focusParent)) setOpen(false);
     },
 };
 
-parentMenu.registerSub(context);
 provide(subKey, context);
-watch(parentMenu.root.isOpen, (open) => {
-    if (!open) context.close(false);
-});
-onBeforeUnmount(() => parentMenu.unregisterSub(context));
+onBeforeUnmount(cleanupMenuState);
 </script>

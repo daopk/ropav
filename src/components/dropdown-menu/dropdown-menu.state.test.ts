@@ -190,6 +190,57 @@ describe('DropdownMenu state', () => {
         expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
+    it('does not emit duplicate open updates for idempotent controls or disabling a closed menu', async () => {
+        const open = ref(false);
+        const disabled = ref(false);
+        const onOpen = vi.fn((value: boolean) => {
+            open.value = value;
+        });
+        let controls: DropdownMenuSlotProps | undefined;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(
+                            DropdownMenu,
+                            {
+                                items,
+                                open: open.value,
+                                disabled: disabled.value,
+                                'onUpdate:open': onOpen,
+                            },
+                            {
+                                default: (slotProps: DropdownMenuSlotProps) => {
+                                    controls = slotProps;
+                                    return h('button', slotProps.triggerProps, 'Actions');
+                                },
+                            },
+                        );
+                },
+            }),
+        );
+
+        controls?.close();
+        disabled.value = true;
+        await nextTick();
+        expect(onOpen).not.toHaveBeenCalled();
+
+        disabled.value = false;
+        await nextTick();
+        controls?.open();
+        await nextTick();
+        controls?.open();
+        await nextTick();
+        expect(onOpen.mock.calls).toEqual([[true]]);
+
+        controls?.close();
+        await waitForDropdownClose();
+        controls?.close();
+        await nextTick();
+        expect(onOpen.mock.calls).toEqual([[true], [false]]);
+    });
+
     it('blocks the outside click target in modal mode', async () => {
         const outsideClick = vi.fn();
         const container = mountDom(

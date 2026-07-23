@@ -1,18 +1,18 @@
 <template>
-    <span ref="rootRef" v-bind="rootAttrs">
+    <span :ref="templateRefs.root" v-bind="rootAttrs">
         <slot v-if="!isTargetMode" v-bind="publicSlotProps" />
 
         <Teleport :to="teleportTo" :disabled="!shouldTeleport">
             <Transition name="rp-dropdown-menu-content">
                 <div
                     v-if="isVisible"
-                    ref="menuRef"
+                    :ref="templateRefs.menu"
                     v-bind="publicContentProps"
                     :data-side="placementSide"
                 >
                     <span
                         v-if="arrow"
-                        ref="arrowRef"
+                        :ref="templateRefs.arrow"
                         class="rp-dropdown-menu__arrow"
                         :data-side="placementSide"
                         :style="arrowStyle"
@@ -140,10 +140,7 @@ const {
     focusOutside: (event) => emit('focusOutside', event),
     interactOutside: (event) => emit('interactOutside', event),
 });
-
-void rootRef;
-void menuRef;
-void arrowRef;
+const templateRefs = { root: rootRef, menu: menuRef, arrow: arrowRef };
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<DropdownMenuPart>(props, 'root');
 const state = computed<'open' | 'closed'>(() => (isVisible.value ? 'open' : 'closed'));

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
+import { computed, mergeProps, onBeforeUnmount, useAttrs, useId, watch } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
 import { toOptionalAttribute } from '@/utils/attributes';
@@ -56,11 +56,22 @@ const registration: MenuItemRegistration = {
     element: () => sub.trigger.value,
     textValue: () => props.textValue ?? sub.trigger.value?.textContent?.trim() ?? '',
     disabled: () => isDisabled.value,
-    activate: () => sub.open('first'),
+    activate: () => undefined,
     submenu: sub,
 };
 
 menu.registerItem(registration);
+watch(
+    id,
+    (nextId, previousId) => {
+        const wasActive = menu.activeId.value === previousId;
+        menu.unregisterItem(previousId);
+        menu.registerItem(registration);
+        if (wasActive) menu.setActive(nextId);
+    },
+    { flush: 'sync' },
+);
+watch(isDisabled, () => menu.root.interaction.reconcile(menu.id));
 onBeforeUnmount(() => menu.unregisterItem(id.value));
 
 function setElement(value: ComponentElementRef) {
@@ -71,12 +82,11 @@ function setElement(value: ComponentElementRef) {
 
 function onMouseenter() {
     if (isDisabled.value) return;
-    menu.setActive(id.value);
-    sub.open(false);
+    menu.hover(id.value, true);
 }
 
 function onClick(event: MouseEvent) {
-    if (!event.defaultPrevented && !isDisabled.value) sub.open('first');
+    if (!event.defaultPrevented && !isDisabled.value) menu.activate(id.value, event);
 }
 
 const rootAttrs = computed(() =>

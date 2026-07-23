@@ -1,5 +1,5 @@
 <template>
-    <component :is="as" ref="containerRef" v-bind="rootAttrs">
+    <component :is="as" :ref="templateRefs.container" v-bind="rootAttrs">
         <slot v-bind="slotProps" />
     </component>
 </template>
@@ -36,6 +36,7 @@ const { isActive, isPaused, activate, deactivate, pause, unpause } = useFocusTra
     containerRef,
     props.options,
 );
+const templateRefs = { container: containerRef };
 
 const slotProps = computed<FocusTrapSlotProps>(() => ({
     active: isActive.value,
@@ -85,6 +86,4 @@ watch(
 watch(isActive, (active) => {
     if (active !== props.active) emit('update:active', active);
 });
-
-void containerRef;
 </script>

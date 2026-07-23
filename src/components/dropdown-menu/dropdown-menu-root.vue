@@ -6,19 +6,16 @@
 import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
-import { isEventWithinElement } from '@/utils/dom/events';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import {
     createVirtualAnchor,
-    getFocusTarget,
     rootKey,
     type DropdownMenuRootContext,
     type ElementReference,
-    type OpenFocusTarget,
 } from './dropdownMenuContext';
+import { useDropdownMenuInteraction } from './dropdownMenuInteraction';
 import type {
-    DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
     DropdownMenuOpenOptions,
     DropdownMenuPoint,
@@ -66,9 +63,7 @@ const { reference: configuredReference } = useFloatingTarget(
 const reference = computed<ElementReference | null>(
     () => activeReference.value ?? configuredReference.value,
 );
-const pendingFocus = ref<OpenFocusTarget>('first');
 const contentElement = ref<HTMLElement | null>(null);
-const inside = new Set<HTMLElement>();
 let returnFocusElement: HTMLElement | null = null;
 const baseZIndex = useOverlayZIndex({
     baseZIndex: () => props.baseZIndex,
@@ -93,28 +88,22 @@ function rememberFocus() {
     if (activeElement instanceof HTMLElement) returnFocusElement = activeElement;
 }
 
-function open(options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) {
-    if (disabled.value) return;
-    rememberFocus();
-    pendingFocus.value = getFocusTarget(options);
-    setOpen(true);
-}
-
 function focusReturnTarget() {
     const target = returnFocusElement ?? trigger.value;
     void nextTick(() => target?.focus());
 }
 
-function close(options: DropdownMenuCloseOptions & { returnFocus?: boolean } = {}) {
-    setOpen(false);
-    pendingFocus.value = false;
-    if (options.focusTrigger || options.returnFocus) focusReturnTarget();
-}
-
-function toggle() {
-    if (isOpen.value) close({ returnFocus: true });
-    else open();
-}
+const interaction = useDropdownMenuInteraction({
+    rootMenuId: `${generatedId}-interaction-root`,
+    isOpen,
+    disabled,
+    modal,
+    setOpen,
+    isTopLayer: layer.isTopLayer,
+    focusTrigger: focusReturnTarget,
+    beforeOpen: rememberFocus,
+});
+const { pendingRootFocus: pendingFocus, open, close, toggle } = interaction;
 
 function openAt(
     point: DropdownMenuPoint,
@@ -125,10 +114,10 @@ function openAt(
 }
 
 function setTrigger(element: HTMLElement | null, nextId?: string) {
-    if (trigger.value && trigger.value !== element) inside.delete(trigger.value);
+    if (trigger.value && trigger.value !== element) interaction.unregisterInside(trigger.value);
     trigger.value = element;
     triggerId.value = nextId;
-    if (element) inside.add(element);
+    if (element) interaction.registerInside(element);
 }
 
 const context: DropdownMenuRootContext = {
@@ -142,6 +131,7 @@ const context: DropdownMenuRootContext = {
     reference,
     pendingFocus,
     layer,
+    interaction,
     open,
     close,
     toggle,
@@ -154,13 +144,10 @@ const context: DropdownMenuRootContext = {
         returnFocusElement = element;
     },
     registerInside(element) {
-        inside.add(element);
+        interaction.registerInside(element);
     },
     unregisterInside(element) {
-        inside.delete(element);
-    },
-    isInside(event) {
-        return [...inside].some((element) => isEventWithinElement(event, element));
+        interaction.unregisterInside(element);
     },
 };
 
@@ -172,9 +159,6 @@ const slotProps = computed<DropdownMenuRootSlotProps>(() => ({
     openAt,
 }));
 
-watch(disabled, (value) => {
-    if (value) close();
-});
 watch(
     isOpen,
     (value) => {

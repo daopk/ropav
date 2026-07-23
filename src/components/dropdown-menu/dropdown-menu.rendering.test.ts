@@ -9,8 +9,11 @@ import type {
     DropdownMenuItem,
     DropdownMenuItemSlotProps,
     DropdownMenuPlacement,
+    DropdownMenuProps,
+    DropdownMenuSelectEvent,
     DropdownMenuSlotProps,
 } from './types';
+import { useDropdownMenu } from './useDropdownMenu';
 
 describe('DropdownMenu rendering', () => {
     it('rebinds positioning when an ancestor portal moves the reference', async () => {
@@ -171,6 +174,75 @@ describe('DropdownMenu rendering', () => {
 
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(queryDom(container, '[role="menu"]')).not.toBeNull();
+    });
+
+    it('selects a submenu-bearing item through the public item slot control', async () => {
+        const submenuItem: DropdownMenuItem = {
+            label: 'Move to',
+            value: 'move',
+            children: [{ label: 'Backlog', value: 'backlog' }],
+        };
+        const onSelect = vi.fn();
+        let submenuItemSlot: DropdownMenuItemSlotProps | undefined;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'slot-select-menu',
+                            items: [submenuItem, { label: 'Archive', value: 'archive' }],
+                            onSelect,
+                        },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                            item: (slotProps: DropdownMenuItemSlotProps) => {
+                                if (slotProps.item === submenuItem) submenuItemSlot = slotProps;
+                                return h('span', slotProps.item.label);
+                            },
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
+        await nextTick();
+        submenuItemSlot?.select();
+        await waitForDropdownClose();
+
+        expect(onSelect).toHaveBeenCalledWith(submenuItem, expect.any(CustomEvent));
+        expect(queryDom(container, '[role="menu"]')).toBeNull();
+    });
+
+    it('preserves the original event passed to useDropdownMenu selectItem', () => {
+        const item: DropdownMenuItem = { label: 'Archive', value: 'archive' };
+        const props: DropdownMenuProps = {
+            items: [item],
+            closeOnSelect: false,
+        };
+        let selectItem!: (selectedItem: DropdownMenuItem, originalEvent?: Event) => void;
+        let selectEvent: DropdownMenuSelectEvent | undefined;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    const menu = useDropdownMenu(props, {
+                        select(_selectedItem, event) {
+                            selectEvent = event;
+                        },
+                    });
+                    selectItem = menu.selectItem;
+                    return () => h('div');
+                },
+            }),
+        );
+
+        const originalEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+        selectItem(item, originalEvent);
+
+        expect(selectEvent?.detail.originalEvent).toBe(originalEvent);
     });
 
     it('keeps the convenience menu open when the select event is canceled', async () => {

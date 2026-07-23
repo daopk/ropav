@@ -1,9 +1,7 @@
 import {
     computed,
-    nextTick,
     onBeforeUnmount,
     ref,
-    shallowRef,
     useId,
     watch,
     type ComputedRef,
@@ -12,15 +10,17 @@ import {
 } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
-import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { createPointRect } from '@/utils/geometry';
 import type { FloatingReference } from '../floating/types';
 import type {
+    DropdownMenuInteractionFocusTarget,
+    DropdownMenuInteractionRuntime,
+} from './dropdownMenuInteraction';
+import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
-    DropdownMenuInteractOutsideEvent,
     DropdownMenuItemPrimitiveProps,
     DropdownMenuItemValue,
     DropdownMenuOpenOptions,
@@ -31,42 +31,46 @@ import type {
 } from './types';
 
 export type ElementReference = FloatingReference;
-export type OpenFocusTarget = DropdownMenuFocusTarget | false;
+export type OpenFocusTarget = DropdownMenuInteractionFocusTarget;
 
 export interface MenuItemRegistration {
     id: string;
     element: () => HTMLElement | null;
     textValue: () => string;
     disabled: () => boolean;
-    activate: (event: Event) => void;
+    activate: (event: Event) => DropdownMenuSelectEvent | undefined;
+    closeOnSelect?: () => boolean;
     submenu?: DropdownMenuSubContext;
 }
 
 export interface DropdownMenuContext {
     root: DropdownMenuRootContext;
+    id: string;
     element: Ref<HTMLElement | null>;
-    activeId: Ref<string | null>;
+    activeId: ComputedRef<string | null>;
     actualPlacement: Ref<DropdownMenuPlacement>;
     parentSub?: DropdownMenuSubContext;
     registerItem: (item: MenuItemRegistration) => void;
     unregisterItem: (id: string) => void;
-    registerSub: (sub: DropdownMenuSubContext) => void;
-    unregisterSub: (sub: DropdownMenuSubContext) => void;
     closeSubmenus: (except?: DropdownMenuSubContext) => void;
     setActive: (id: string) => void;
     isActive: (id: string) => boolean;
     focus: (target?: DropdownMenuFocusTarget) => boolean;
     focusElement: () => void;
+    activate: (id: string, event?: Event) => void;
+    hover: (id: string, openSubmenu?: boolean) => void;
     onKeydown: (event: KeyboardEvent) => void;
 }
 
 export interface DropdownMenuSubContext {
+    menuId: string;
     isOpen: ComputedRef<boolean>;
     trigger: Ref<HTMLElement | null>;
     contentId: Ref<string | undefined>;
     actualPlacement: Ref<DropdownMenuPlacement>;
     pendingFocus: Ref<OpenFocusTarget>;
     menu: DropdownMenuContext | null;
+    setOpen: (open: boolean) => void;
     open: (focus?: OpenFocusTarget) => void;
     close: (focusParent?: boolean) => void;
 }
@@ -82,6 +86,7 @@ export interface DropdownMenuRootContext {
     reference: ComputedRef<ElementReference | null>;
     pendingFocus: Ref<OpenFocusTarget>;
     layer: OverlayLayerContext;
+    interaction: DropdownMenuInteractionRuntime;
     open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
     close: (options?: DropdownMenuCloseOptions & { returnFocus?: boolean }) => void;
     toggle: () => void;
@@ -94,7 +99,6 @@ export interface DropdownMenuRootContext {
     setReturnFocus: (element: HTMLElement | null) => void;
     registerInside: (element: HTMLElement) => void;
     unregisterInside: (element: HTMLElement) => void;
-    isInside: (event: Event) => boolean;
 }
 
 export interface DropdownMenuRadioGroupContext {
@@ -141,232 +145,66 @@ export function createSelectEvent(
     );
 }
 
-export function createOutsideEvent(originalEvent: Event): DropdownMenuInteractOutsideEvent {
-    return createCancelableCustomEvent(
-        'dropdown-menu-interact-outside',
-        { originalEvent },
-        originalEvent,
-    );
-}
-
-function sortItems(items: MenuItemRegistration[]) {
-    // oxlint-disable-next-line unicorn/no-array-sort -- ES2022 target lacks toSorted; this sorts a copy.
-    return [...items].sort((left, right) => {
-        const leftElement = left.element();
-        const rightElement = right.element();
-        if (!leftElement || !rightElement || leftElement === rightElement) return 0;
-
-        const position = leftElement.compareDocumentPosition(rightElement);
-        if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
-        if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
-        return 0;
-    });
-}
-
-function getPlacementSide(placement: DropdownMenuPlacement) {
-    return placement.split('-')[0] as 'top' | 'right' | 'bottom' | 'left';
-}
-
-function getOpenDirection(sub: DropdownMenuSubContext) {
-    return getPlacementSide(sub.actualPlacement.value) === 'left' ? 'ArrowLeft' : 'ArrowRight';
-}
-
-function getCloseDirection(menu: DropdownMenuContext) {
-    return getPlacementSide(menu.actualPlacement.value) === 'left' ? 'ArrowRight' : 'ArrowLeft';
-}
-
-function blockDocumentClick(event: Event) {
-    if (event.cancelable) event.preventDefault();
-    event.stopPropagation();
-    document.removeEventListener('click', blockDocumentClick, true);
-}
-
-export function blockNextDocumentClick() {
-    if (typeof document === 'undefined') return;
-    document.addEventListener('click', blockDocumentClick, true);
-    window.setTimeout(() => document.removeEventListener('click', blockDocumentClick, true), 1000);
-}
-
 export function createMenuContext(options: {
     root: DropdownMenuRootContext;
     element: Ref<HTMLElement | null>;
     actualPlacement: Ref<DropdownMenuPlacement>;
     parentSub?: DropdownMenuSubContext;
-    onEscape: (event: KeyboardEvent) => void;
+    onEscape: (event: KeyboardEvent) => boolean;
 }): DropdownMenuContext {
-    const items = shallowRef<MenuItemRegistration[]>([]);
-    const activeId = ref<string | null>(null);
-    const submenus = new Set<DropdownMenuSubContext>();
-
-    function getEnabledItems() {
-        return sortItems(items.value).filter((item) => !item.disabled());
-    }
+    const id = options.parentSub?.menuId ?? options.root.interaction.rootMenuId;
+    const interaction = options.root.interaction;
+    const activeId = interaction.getActiveId(id);
+    const cleanupMenu = interaction.registerMenu({
+        id,
+        parentItemId: () => options.parentSub?.trigger.value?.id,
+        element: () => options.element.value,
+        placement: () => options.actualPlacement.value,
+        isOpen: () => options.parentSub?.isOpen.value ?? options.root.isOpen.value,
+        setOpen: options.parentSub?.setOpen,
+        stopKeyPropagation: true,
+        onEscape: options.onEscape,
+    });
 
     function registerItem(item: MenuItemRegistration) {
-        items.value = [...items.value.filter((current) => current.id !== item.id), item];
-        const open = options.parentSub?.isOpen.value ?? options.root.isOpen.value;
-        if (open && activeId.value == null && !item.disabled()) {
-            activeId.value = item.id;
-            void nextTick(() => {
-                options.element.value?.focus();
-                item.element()?.scrollIntoView?.({ block: 'nearest' });
-            });
-        }
-    }
-
-    function unregisterItem(id: string) {
-        items.value = items.value.filter((item) => item.id !== id);
-        if (activeId.value === id) activeId.value = null;
-    }
-
-    function registerSub(sub: DropdownMenuSubContext) {
-        submenus.add(sub);
-    }
-
-    function unregisterSub(sub: DropdownMenuSubContext) {
-        submenus.delete(sub);
-    }
-
-    function closeSubmenus(except?: DropdownMenuSubContext) {
-        for (const submenu of submenus) {
-            if (submenu !== except) submenu.close(false);
-        }
-    }
-
-    function setActive(id: string) {
-        const item = items.value.find((current) => current.id === id);
-        if (!item || item.disabled()) return;
-        activeId.value = id;
-        void nextTick(() => item.element()?.scrollIntoView?.({ block: 'nearest' }));
-    }
-
-    function focus(target: DropdownMenuFocusTarget = 'first') {
-        const enabledItems = getEnabledItems();
-        const item = target === 'last' ? enabledItems[enabledItems.length - 1] : enabledItems[0];
-        if (!item) {
-            activeId.value = null;
-            options.element.value?.focus();
-            return false;
-        }
-
-        activeId.value = item.id;
-        options.element.value?.focus();
-        item.element()?.scrollIntoView?.({ block: 'nearest' });
-        return true;
-    }
-
-    function focusElement() {
-        options.element.value?.focus();
-    }
-
-    function move(direction: 1 | -1) {
-        const enabledItems = getEnabledItems();
-        if (enabledItems.length === 0) return;
-        const currentIndex = enabledItems.findIndex((item) => item.id === activeId.value);
-        const start = currentIndex < 0 ? (direction === 1 ? -1 : 0) : currentIndex;
-        const nextIndex = (start + direction + enabledItems.length) % enabledItems.length;
-        const item = enabledItems[nextIndex];
-        if (item) setActive(item.id);
-    }
-
-    const typeahead = useTypeahead<MenuItemRegistration>({
-        items: () => sortItems(items.value),
-        activeIndex: () => sortItems(items.value).findIndex((item) => item.id === activeId.value),
-        getKey: (item) => item.id,
-        getTextValue: (item) => item.textValue(),
-        isDisabled: (item) => item.disabled(),
-        onMatch: (item) => setActive(item.id),
-    });
-    const isOpen = computed(() => options.parentSub?.isOpen.value ?? options.root.isOpen.value);
-    watch(
-        isOpen,
-        (open) => {
-            if (!open) typeahead.reset();
-        },
-        { flush: 'sync' },
-    );
-
-    function onHorizontalKeydown(event: KeyboardEvent, active?: MenuItemRegistration) {
-        if (options.parentSub && event.key === getCloseDirection(context)) {
-            event.preventDefault();
-            event.stopPropagation();
-            options.parentSub.close(true);
-            return;
-        }
-
-        if (!active?.submenu || event.key !== getOpenDirection(active.submenu)) return;
-        event.preventDefault();
-        event.stopPropagation();
-        active.submenu.open('first');
-    }
-
-    function onKeydown(event: KeyboardEvent) {
-        if (typeahead.handleKey(event)) {
-            event.stopPropagation();
-            return;
-        }
-        const active = items.value.find((item) => item.id === activeId.value);
-
-        switch (event.key) {
-            case 'ArrowDown':
-                event.preventDefault();
-                event.stopPropagation();
-                move(1);
-                break;
-            case 'ArrowUp':
-                event.preventDefault();
-                event.stopPropagation();
-                move(-1);
-                break;
-            case 'Home':
-                event.preventDefault();
-                event.stopPropagation();
-                focus('first');
-                break;
-            case 'End':
-                event.preventDefault();
-                event.stopPropagation();
-                focus('last');
-                break;
-            case 'ArrowRight':
-            case 'ArrowLeft':
-                onHorizontalKeydown(event, active);
-                break;
-            case 'Enter':
-            case ' ':
-                event.preventDefault();
-                event.stopPropagation();
-                active?.activate(event);
-                break;
-            case 'Escape':
-                event.preventDefault();
-                event.stopPropagation();
-                options.onEscape(event);
-                break;
-            case 'Tab':
-                options.root.close({ returnFocus: false });
-                break;
-        }
+        interaction.registerItem({
+            get id() {
+                return item.id;
+            },
+            menuId: id,
+            element: item.element,
+            textValue: item.textValue,
+            disabled: item.disabled,
+            submenuId: () => item.submenu?.menuId,
+            submenuDirection: () =>
+                item.submenu?.actualPlacement.value.startsWith('left') ? 'left' : 'right',
+            select: item.activate,
+            closeOnSelect: item.closeOnSelect,
+        });
     }
 
     const context: DropdownMenuContext = {
         root: options.root,
+        id,
         element: options.element,
         activeId,
         actualPlacement: options.actualPlacement,
         parentSub: options.parentSub,
         registerItem,
-        unregisterItem,
-        registerSub,
-        unregisterSub,
-        closeSubmenus,
-        setActive,
-        isActive: (id) => activeId.value === id,
-        focus,
-        focusElement,
-        onKeydown,
+        unregisterItem: interaction.unregisterItem,
+        closeSubmenus: (except) => interaction.closeSubmenus(id, except?.menuId),
+        setActive: (itemId) => {
+            interaction.setActive(itemId);
+        },
+        isActive: interaction.isActive,
+        focus: (target = 'first') => interaction.focusMenu(id, target),
+        focusElement: () => interaction.focusMenuElement(id),
+        activate: interaction.activateItem,
+        hover: interaction.hoverItem,
+        onKeydown: (event) => interaction.onMenuKeydown(id, event),
     };
 
+    onBeforeUnmount(cleanupMenu);
     return context;
 }
 
@@ -387,17 +225,12 @@ export function usePrimitiveItem(
     const isDisabled = computed(() => Boolean(menu.root.disabled.value || props.disabled));
     const focused = computed(() => menu.isActive(id.value));
 
-    function activate(originalEvent: Event) {
-        if (isDisabled.value) return;
+    function emitSelection(originalEvent: Event) {
+        if (isDisabled.value) return undefined;
         const selectEvent = createSelectEvent(originalEvent, props.value);
         emitSelect(selectEvent);
         options.afterSelect?.();
-        if (
-            !selectEvent.defaultPrevented &&
-            (props.closeOnSelect ?? options.defaultCloseOnSelect)
-        ) {
-            menu.root.close({ returnFocus: true });
-        }
+        return selectEvent;
     }
 
     const registration: MenuItemRegistration = {
@@ -407,31 +240,42 @@ export function usePrimitiveItem(
         element: () => element.value,
         textValue: () => props.textValue ?? element.value?.textContent?.trim() ?? '',
         disabled: () => isDisabled.value,
-        activate,
+        activate: emitSelection,
+        closeOnSelect: () => props.closeOnSelect ?? options.defaultCloseOnSelect,
     };
 
     menu.registerItem(registration);
-    watch(id, (nextId, previousId) => {
-        menu.unregisterItem(previousId);
-        menu.registerItem(registration);
-        if (menu.activeId.value === previousId) menu.activeId.value = nextId;
-    });
+    watch(
+        id,
+        (nextId, previousId) => {
+            const wasActive = menu.activeId.value === previousId;
+            menu.unregisterItem(previousId);
+            menu.registerItem(registration);
+            if (wasActive) menu.setActive(nextId);
+        },
+        { flush: 'sync' },
+    );
+    watch(isDisabled, () => menu.root.interaction.reconcile(menu.id));
     onBeforeUnmount(() => menu.unregisterItem(id.value));
 
     function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
             element.value = resolved;
+            menu.root.interaction.reconcile(menu.id);
         });
+    }
+
+    function activate(originalEvent: Event) {
+        menu.activate(id.value, originalEvent);
     }
 
     function onPointerenter() {
         if (isDisabled.value) return;
-        menu.closeSubmenus();
-        menu.setActive(id.value);
+        menu.hover(id.value);
     }
 
     function select() {
-        activate(new Event('select'));
+        menu.activate(id.value, new Event('select'));
     }
 
     return {

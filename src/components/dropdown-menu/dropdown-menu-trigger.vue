@@ -10,7 +10,7 @@ import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { toOptionalAttribute } from '@/utils/attributes';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { rootKey } from './dropdownMenuContext';
-import type { DropdownMenuFocusTarget, DropdownMenuTriggerPrimitiveProps } from './types';
+import type { DropdownMenuTriggerPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuTrigger', inheritAttrs: false });
 
@@ -37,30 +37,19 @@ function setElement(value: ComponentElementRef) {
     });
 }
 
-function openWithReference(focus: DropdownMenuFocusTarget = 'first') {
+function prepareReference() {
     root.setReference(element.value);
     root.setReturnFocus(element.value);
-    root.open({ focus });
 }
 
 function onClick(event: MouseEvent) {
     if (event.defaultPrevented || isDisabled.value) return;
-    root.setReference(element.value);
-    root.setReturnFocus(element.value);
-    root.toggle();
+    root.interaction.onTriggerClick(prepareReference);
 }
 
 function onKeydown(event: KeyboardEvent) {
     if (isDisabled.value) return;
-    if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        openWithReference('last');
-    } else if (['Enter', ' ', 'ArrowDown'].includes(event.key)) {
-        event.preventDefault();
-        openWithReference('first');
-    } else if (event.key === 'Escape') {
-        root.close({ focusTrigger: true });
-    }
+    root.interaction.onTriggerKeydown(event, prepareReference);
 }
 
 const rootAttrs = computed(() =>
