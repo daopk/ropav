@@ -1,4 +1,4 @@
-export const publicApiManifest = {
+export const packagePublicationManifest = {
     schemaVersion: 1,
     root: {
         source: 'src/index.ts',

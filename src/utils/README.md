@@ -2,7 +2,7 @@
 
 This directory contains reusable runtime helpers that are independent of component state and
 Vue lifecycle hooks. Utilities are internal implementation details unless they are explicitly
-added to the public API manifest.
+added to the Package Publication manifest.
 
 Import utilities directly from their module (for example, `@/utils/aria`) rather than through a
 barrel. Component-specific logic stays with its component, composables stay under `composables`,

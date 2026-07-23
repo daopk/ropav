@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
 import Icons from 'unplugin-icons/vite';
 
-import { createLibraryEntries } from './scripts/public-api.mjs';
+import { createPackagePublicationBuildEntries } from './scripts/package-publication.mjs';
 import { injectComponentCss } from './tooling/vite/inject-component-css';
 import { rewriteDeclarationImportExtensions } from './tooling/vite/rewrite-declaration-import-extensions';
 import { vaporIconCompiler } from './src/unplugin-icons';
@@ -85,7 +85,7 @@ export default defineConfig({
     ],
     build: {
         lib: {
-            entry: createLibraryEntries(__dirname),
+            entry: createPackagePublicationBuildEntries(__dirname),
             formats: ['es'],
         },
         minify: false,
