@@ -79,7 +79,6 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         if (travel === 0) return;
 
         event.preventDefault();
-        event.stopPropagation();
         stopDragging();
         if (!options.isEmbedded()) scrollbar.focus({ preventScroll: true });
         startDragging(axis, event, scrollbar, travel, state);
