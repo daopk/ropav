@@ -1,3 +1,10 @@
+## [0.1.7](https://github.com/daopk/ropav/compare/v0.1.6...v0.1.7) (2026-07-23)
+
+### Bug Fixes
+
+* **floating:** rebind across composed ancestry changes ([fc6050e](https://github.com/daopk/ropav/commit/fc6050e39d2a08e89feec399500bb1d87dfd10d9))
+* **modal:** focus invite input on open ([fecdbec](https://github.com/daopk/ropav/commit/fecdbec85ce773a0c373a1b2ef995bc4999993dc))
+
 ## [0.1.6](https://github.com/daopk/ropav/compare/v0.1.5...v0.1.6) (2026-07-22)
 
 ### Features
