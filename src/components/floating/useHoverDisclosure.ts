@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, shallowRef, toValue, watch } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { isEventWithinTargets, isNodeWithinElement } from '@/utils/dom/events';
 import { isElement, querySelectorSafe } from '@/utils/dom/query';
 import type {
     HoverDisclosureContentProps,
@@ -48,15 +49,7 @@ function eventElement(event: Event) {
 }
 
 function focusLeavesCurrentTarget(event: FocusEvent) {
-    const currentTarget = eventElement(event);
-    const nextTarget = event.relatedTarget;
-    const NodeConstructor = currentTarget?.ownerDocument.defaultView?.Node;
-    return !(
-        currentTarget &&
-        NodeConstructor &&
-        nextTarget instanceof NodeConstructor &&
-        currentTarget.contains(nextTarget)
-    );
+    return !isNodeWithinElement(event.relatedTarget, eventElement(event));
 }
 
 export function useHoverDisclosure(
@@ -322,15 +315,7 @@ export function useHoverDisclosure(
             resolvedInteractionTarget.value,
             resolvedContentTarget.value,
         ].filter((element): element is Element => element !== null);
-        const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
-        if (elements.some((element) => path.includes(element))) return true;
-
-        const target = event.target;
-        return (
-            typeof Node !== 'undefined' &&
-            target instanceof Node &&
-            elements.some((element) => element.contains(target))
-        );
+        return isEventWithinTargets(event, elements);
     }
 
     function onDocumentPointerdown(event: PointerEvent) {

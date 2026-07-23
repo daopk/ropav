@@ -31,14 +31,15 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { toPresenceAttribute } from '@/utils/attributes';
 import {
+    COLOR_PICKER_KEYBOARD_LARGE_STEP,
     clampHue,
     clampOpacity,
+    getColorPickerKeyboardValue,
     HUE_MAX,
     normalizeHue,
     normalizeHueForColor,
     roundPercent,
 } from '@/utils/colorPicker';
-import { KEYBOARD_LARGE_STEP, KEYBOARD_STEP } from './constants';
 import type { ColorPickerSliderProps } from './types';
 import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 
@@ -117,28 +118,16 @@ const { onPointerDown } = useColorPickerDrag({
 function onKeydown(e: KeyboardEvent) {
     if (props.readonly) return;
 
-    const step = e.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP;
+    const nextValue = getColorPickerKeyboardValue(
+        e.key,
+        normalizedValue.value,
+        max.value,
+        e.shiftKey ? COLOR_PICKER_KEYBOARD_LARGE_STEP : undefined,
+    );
+    if (nextValue === undefined) return;
 
-    switch (e.key) {
-        case 'ArrowRight':
-        case 'ArrowUp':
-            e.preventDefault();
-            updateValue(normalizedValue.value + step);
-            break;
-        case 'ArrowLeft':
-        case 'ArrowDown':
-            e.preventDefault();
-            updateValue(normalizedValue.value - step);
-            break;
-        case 'Home':
-            e.preventDefault();
-            updateValue(0);
-            break;
-        case 'End':
-            e.preventDefault();
-            updateValue(max.value);
-            break;
-    }
+    e.preventDefault();
+    updateValue(nextValue);
 }
 
 function normalizeOutputValue(value: number) {

@@ -4,7 +4,7 @@ import { useControlState } from '@/internal/composables/useControlState';
 import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
-import { clamp } from '@/utils/number';
+import { clamp, getValuePercent } from '@/utils/number';
 import type {
     RangeSliderEndpointValueText,
     RangeSliderProps,
@@ -19,7 +19,6 @@ import {
     getSliderAriaValueText,
     getSliderTooltipMode,
     getSliderTooltipOptions,
-    getSliderValuePercent,
     normalizeSliderBounds,
     normalizeSliderStep,
     normalizeSliderValue,
@@ -246,8 +245,8 @@ export function useRangeSlider(
         ),
     );
     const valuePercent = computed<RangeSliderValue>(() => [
-        getSliderValuePercent(normalizedValue.value[0], bounds.value.min, bounds.value.max),
-        getSliderValuePercent(normalizedValue.value[1], bounds.value.min, bounds.value.max),
+        getValuePercent(normalizedValue.value[0], bounds.value.min, bounds.value.max),
+        getValuePercent(normalizedValue.value[1], bounds.value.min, bounds.value.max),
     ]);
     const formattedValue = computed(() =>
         getFormattedRangeSliderValue(normalizedValue.value, props.formatValue),
@@ -332,7 +331,7 @@ export function useRangeSlider(
         max: bounds.value.max,
         orientation: props.orientation,
         getPercent(value) {
-            return getSliderValuePercent(value, bounds.value.min, bounds.value.max);
+            return getValuePercent(value, bounds.value.min, bounds.value.max);
         },
     }));
     const trackStyle = computed<CSSProperties>(() =>

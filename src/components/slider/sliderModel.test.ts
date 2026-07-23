@@ -6,18 +6,10 @@ import {
     createSliderMarkItems,
     getSliderThumbMode,
     getSliderThumbOptions,
-    getSliderValuePercent,
     getSliderTooltipMode,
 } from './sliderModel';
 
 describe('slider core', () => {
-    it('maps arbitrary finite track values to a clamped percentage', () => {
-        expect(getSliderValuePercent(44.4, 0, 200)).toBe(22.2);
-        expect(getSliderValuePercent(-10, 0, 100)).toBe(0);
-        expect(getSliderValuePercent(140, 0, 100)).toBe(100);
-        expect(getSliderValuePercent(Number.NaN, 0, 100)).toBe(0);
-    });
-
     it('normalizes pointer-anchored tooltips to hover mode at runtime', () => {
         expect(getSliderTooltipMode({ anchor: 'pointer' })).toBe('hover');
         expect(

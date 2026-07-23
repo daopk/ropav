@@ -3,7 +3,6 @@ import type {
     DropdownMenuFocusTarget,
     DropdownMenuItem,
     DropdownMenuItemPath,
-    DropdownMenuOpenOptions,
     DropdownMenuPlacement,
 } from './types';
 
@@ -12,13 +11,6 @@ export const DEFAULT_FOCUS_TARGET: DropdownMenuFocusTarget = 'first';
 
 export type ItemPath = DropdownMenuItemPath;
 export type SubmenuFocusTarget = DropdownMenuFocusTarget | false;
-
-export function getOpenFocusTarget(
-    options: DropdownMenuOpenOptions | DropdownMenuFocusTarget | undefined,
-) {
-    if (typeof options === 'string') return options;
-    return options?.focus ?? DEFAULT_FOCUS_TARGET;
-}
 
 export function getItemClass(
     item: DropdownMenuItem,

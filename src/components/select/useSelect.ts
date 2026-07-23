@@ -4,6 +4,7 @@ import { useCollectionNavigation } from '@/internal/composables/useCollectionNav
 import { useControlState } from '@/internal/composables/useControlState';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
@@ -134,8 +135,7 @@ export function useSelect(
     }
 
     function onFocusout(event: FocusEvent) {
-        const nextTarget = event.relatedTarget;
-        if (nextTarget instanceof Node && selectRef.value?.contains(nextTarget)) return;
+        if (isNodeWithinElement(event.relatedTarget, selectRef.value)) return;
         close();
     }
 

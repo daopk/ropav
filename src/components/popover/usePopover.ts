@@ -10,9 +10,17 @@ import {
     type CSSProperties,
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { mergeAriaIdRefs } from '@/utils/aria';
 import { bem } from '@/utils/bem';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
+import {
+    restoreAttributes,
+    snapshotAttributes,
+    type AttributeSnapshot,
+} from '@/utils/dom/attributes';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import { isElement } from '@/utils/dom/query';
+import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
 import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
@@ -20,7 +28,6 @@ import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
     PopoverContentSlotProps,
-    PopoverOffset,
     PopoverPlacement,
     PopoverProps,
     PopoverRole,
@@ -31,36 +38,22 @@ import type {
 const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
 const DEFAULT_ROLE: PopoverRole = 'dialog';
 const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
+const POPOVER_OFFSET_PROPERTIES = {
+    mainAxis: '--_rp-popover-main-axis-offset',
+    crossAxis: '--_rp-popover-cross-axis-offset',
+} as const;
 
 type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
 
-function addIdReference(currentValue: string | null, id: string) {
-    const ids = (currentValue ?? '').split(/\s+/).filter(Boolean);
-    if (!ids.includes(id)) ids.push(id);
-    return ids.join(' ');
-}
-
-function snapshotAttributes(element: Element) {
-    const snapshot = {} as Record<TargetAttribute, string | null>;
-    for (const attribute of TARGET_ATTRIBUTES)
-        snapshot[attribute] = element.getAttribute(attribute);
-    return snapshot;
-}
-
-function restoreAttributes(element: Element, snapshot: Record<TargetAttribute, string | null>) {
-    for (const attribute of TARGET_ATTRIBUTES) {
-        const value = snapshot[attribute];
-        if (value == null) element.removeAttribute(attribute);
-        else element.setAttribute(attribute, value);
-    }
-}
-
 function applyTargetAttributes(
     element: Element,
-    snapshot: Record<TargetAttribute, string | null>,
+    snapshot: AttributeSnapshot<TargetAttribute>,
     options: { id: string; expanded: boolean; role: PopoverRole },
 ) {
-    element.setAttribute('aria-controls', addIdReference(snapshot['aria-controls'], options.id));
+    element.setAttribute(
+        'aria-controls',
+        mergeAriaIdRefs(snapshot.get('aria-controls'), options.id) ?? '',
+    );
     element.setAttribute('aria-expanded', String(options.expanded));
     element.setAttribute('aria-haspopup', options.role);
 }
@@ -70,22 +63,6 @@ function isFocusTrapContainer(value: Element | null): value is HTMLElement | SVG
         (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) ||
         (typeof SVGElement !== 'undefined' && value instanceof SVGElement)
     );
-}
-
-function resolveOffsetStyle(offset: PopoverOffset | undefined): CSSProperties | undefined {
-    if (offset == null) return undefined;
-    if (typeof offset === 'number') {
-        return { '--_rp-popover-main-axis-offset': `${offset}px` };
-    }
-
-    const style: CSSProperties = {};
-    if (offset.mainAxis != null) {
-        style['--_rp-popover-main-axis-offset'] = `${offset.mainAxis}px`;
-    }
-    if (offset.crossAxis != null) {
-        style['--_rp-popover-cross-axis-offset'] = `${offset.crossAxis}px`;
-    }
-    return Object.keys(style).length > 0 ? style : undefined;
 }
 
 export function usePopover(
@@ -173,7 +150,7 @@ export function usePopover(
     );
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
-        ...resolveOffsetStyle(props.offset),
+        ...getFloatingOffsetStyle(props.offset, POPOVER_OFFSET_PROPERTIES),
         zIndex: layer.zIndex.value,
     }));
     const triggerProps = computed<PopoverTriggerProps>(() => ({
@@ -254,10 +231,9 @@ export function usePopover(
     function onCompositeFocusout(event: FocusEvent) {
         const nextTarget = event.relatedTarget;
         if (
-            nextTarget instanceof Node &&
-            (rootRef.value?.contains(nextTarget) ||
-                contentRef.value?.contains(nextTarget) ||
-                targetElement.value?.contains(nextTarget))
+            isNodeWithinElement(nextTarget, rootRef.value) ||
+            isNodeWithinElement(nextTarget, contentRef.value) ||
+            isNodeWithinElement(nextTarget, targetElement.value)
         ) {
             return;
         }
@@ -319,7 +295,7 @@ export function usePopover(
         [isExplicitTarget, targetElement, popoverId, popoverRole, isVisible, isDisabled],
         ([explicit, target, id, role, visible, disabled], _previous, onCleanup) => {
             if (!explicit || !target || disabled) return;
-            const snapshot = snapshotAttributes(target);
+            const snapshot = snapshotAttributes(target, TARGET_ATTRIBUTES);
             applyTargetAttributes(target, snapshot, { id, expanded: visible, role });
             onCleanup(() => restoreAttributes(target, snapshot));
         },

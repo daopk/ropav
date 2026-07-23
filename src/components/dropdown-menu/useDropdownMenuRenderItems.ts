@@ -1,4 +1,5 @@
 import { computed, type Ref } from 'vue';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
 import { getPathKey, normalizePath } from '@/utils/indexPath';
 import type { StylesApiPartOptions } from '../../styles-api';
@@ -151,9 +152,9 @@ export function useDropdownMenuRenderItems({
             'aria-expanded': hasSubmenu ? resolvedSubmenuOpen : undefined,
             'aria-haspopup': hasSubmenu ? 'menu' : undefined,
             'aria-disabled': disabled || undefined,
-            'data-disabled': disabled ? '' : undefined,
-            'data-highlighted': focused ? '' : undefined,
-            'data-submenu': hasSubmenu ? '' : undefined,
+            'data-disabled': toPresenceAttribute(disabled),
+            'data-highlighted': toPresenceAttribute(focused),
+            'data-submenu': toPresenceAttribute(hasSubmenu),
             onClick: (event) => activateItem(item, path, event),
             onMouseenter: (event) => focusHoveredItem(item, path, event),
         };

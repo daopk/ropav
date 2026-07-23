@@ -1,6 +1,5 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue';
 import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
-import { createCancelableCustomEvent } from '@/utils/dom/events';
 import type { DialogCloseReason } from './types';
 
 export interface DialogRootContext {
@@ -30,8 +29,4 @@ export function resolveDialogCloseReason(reason: unknown): DialogCloseReason {
     return reason === 'escape' || reason === 'outside' || reason === 'programmatic'
         ? reason
         : 'programmatic';
-}
-
-export function createDialogEvent<T>(type: string, detail: T, originalEvent: Event) {
-    return createCancelableCustomEvent(type, detail, originalEvent);
 }

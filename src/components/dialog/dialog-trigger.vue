@@ -7,6 +7,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { dialogRootKey } from './dialogContext';
 import type { DialogTriggerProps } from './types';
@@ -44,7 +45,7 @@ const rootAttrs = computed(() =>
         'aria-haspopup': 'dialog',
         'aria-disabled': props.as === 'button' ? undefined : props.disabled || undefined,
         'data-state': root.isOpen.value ? 'open' : 'closed',
-        'data-disabled': props.disabled ? '' : undefined,
+        'data-disabled': toPresenceAttribute(props.disabled),
         onClick,
     }),
 );

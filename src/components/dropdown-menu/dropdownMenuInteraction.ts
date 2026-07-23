@@ -1,7 +1,19 @@
-import { computed, nextTick, onBeforeUnmount, ref, watch, type ComputedRef, type Ref } from 'vue';
+import {
+    computed,
+    isRef,
+    nextTick,
+    onBeforeUnmount,
+    ref,
+    watch,
+    type ComputedRef,
+    type Ref,
+} from 'vue';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
-import { createCancelableCustomEvent, isEventWithinElement } from '@/utils/dom/events';
-import { isEventWithinTargets } from './dropdown-menu-outside';
+import {
+    createCancelableCustomEvent,
+    isEventWithinElement,
+    isEventWithinTargets,
+} from '@/utils/dom/events';
 import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
@@ -100,7 +112,7 @@ export interface DropdownMenuInteractionRuntime {
     onMenuKeydown: (menuId: string, event: KeyboardEvent) => void;
 }
 
-function getOpenFocusTarget(
+function resolveOpenFocusTarget(
     options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget,
 ): DropdownMenuFocusTarget {
     if (typeof options === 'string') return options;
@@ -598,7 +610,7 @@ export function useDropdownMenuInteraction(
     function open(options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) {
         if (host.disabled.value) return;
         host.beforeOpen?.();
-        pendingRootFocus.value = getOpenFocusTarget(options);
+        pendingRootFocus.value = resolveOpenFocusTarget(options);
         host.setOpen(true);
         focusMenu(host.rootMenuId, pendingRootFocus.value);
     }
@@ -674,7 +686,10 @@ export function useDropdownMenuInteraction(
     }
 
     function shouldIgnoreOutside(event: Event) {
-        return isInside(event) || isEventWithinTargets(event, dismissal?.ignoredTargets() ?? []);
+        const ignoredTargets = (dismissal?.ignoredTargets() ?? []).map((target) =>
+            isRef(target) ? target.value : target,
+        );
+        return isInside(event) || isEventWithinTargets(event, ignoredTargets);
     }
 
     function onDocumentPointer(event: Event) {

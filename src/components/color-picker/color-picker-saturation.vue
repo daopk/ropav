@@ -60,13 +60,14 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { toPresenceAttribute } from '@/utils/attributes';
 import {
+    COLOR_PICKER_KEYBOARD_LARGE_STEP,
     clampPercent,
+    getColorPickerKeyboardValue,
     getHsvCssColor,
     normalizeHue,
     normalizeHueForColor,
     roundPercent,
 } from '@/utils/colorPicker';
-import { KEYBOARD_LARGE_STEP, KEYBOARD_STEP } from './constants';
 import type { ColorPickerSaturationProps, ColorPickerSelection } from './types';
 import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 
@@ -138,25 +139,12 @@ const { onPointerDown } = useColorPickerDrag({
 
 function onAxisKeydown(event: KeyboardEvent, axis: ColorPickerAxis) {
     const currentValue = axis === 'saturation' ? saturation.value : value.value;
-    const step = event.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP;
-    let nextValue: number | undefined;
-
-    switch (event.key) {
-        case 'ArrowRight':
-        case 'ArrowUp':
-            nextValue = currentValue + step;
-            break;
-        case 'ArrowLeft':
-        case 'ArrowDown':
-            nextValue = currentValue - step;
-            break;
-        case 'Home':
-            nextValue = 0;
-            break;
-        case 'End':
-            nextValue = 100;
-            break;
-    }
+    const nextValue = getColorPickerKeyboardValue(
+        event.key,
+        currentValue,
+        100,
+        event.shiftKey ? COLOR_PICKER_KEYBOARD_LARGE_STEP : undefined,
+    );
 
     if (nextValue === undefined) return;
 

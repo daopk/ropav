@@ -8,6 +8,8 @@ export type ColorPickerFormat = (typeof colorPickerFormats)[number];
 export const DEFAULT_HUE = 0;
 export const HUE_MAX = 359;
 export const DEFAULT_OPACITY = 100;
+export const COLOR_PICKER_KEYBOARD_STEP = 1;
+export const COLOR_PICKER_KEYBOARD_LARGE_STEP = 10;
 
 export interface ColorPickerHsvColor {
     hue: number;
@@ -46,6 +48,28 @@ export function clampOpacity(value: number | undefined) {
 
 export function roundPercent(value: number) {
     return roundTo(value);
+}
+
+export function getColorPickerKeyboardValue(
+    key: string,
+    currentValue: number,
+    maxValue: number,
+    step = COLOR_PICKER_KEYBOARD_STEP,
+) {
+    switch (key) {
+        case 'ArrowRight':
+        case 'ArrowUp':
+            return currentValue + step;
+        case 'ArrowLeft':
+        case 'ArrowDown':
+            return currentValue - step;
+        case 'Home':
+            return 0;
+        case 'End':
+            return maxValue;
+        default:
+            return undefined;
+    }
 }
 
 export function isColorPickerAlphaFormat(format: ColorPickerFormat) {

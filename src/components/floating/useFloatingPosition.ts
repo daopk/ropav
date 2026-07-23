@@ -22,7 +22,8 @@ import {
     type CSSProperties,
     type Ref,
 } from 'vue';
-import { querySelectorSafe } from '@/utils/dom/query';
+import { areNodeListsIdentical, getComposedAncestry } from '@/utils/dom/ancestry';
+import { isElement, querySelectorSafe } from '@/utils/dom/query';
 import type {
     FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
@@ -49,35 +50,9 @@ const DEFAULT_OFFSET = 8;
 const DEFAULT_PLACEMENT: FloatingPlacement = 'bottom';
 const DEFAULT_STRATEGY: FloatingStrategy = 'absolute';
 
-function isElementNode(value: unknown): value is Element {
-    return (
-        value != null && typeof value === 'object' && 'nodeType' in value && value.nodeType === 1
-    );
-}
-
 function getReferenceElement(reference: FloatingReference | null | undefined): Element | null {
-    if (isElementNode(reference)) return reference;
-    return reference && isElementNode(reference.contextElement) ? reference.contextElement : null;
-}
-
-function getDomParent(node: Node): Node | null {
-    if (isElementNode(node) && node.assignedSlot) return node.assignedSlot;
-
-    const parent = node.parentNode;
-    if (parent) return parent;
-    return 'host' in node && isElementNode(node.host) ? node.host : null;
-}
-
-function collectAncestry(element: Element | null): Node[] {
-    const ancestry: Node[] = [];
-    let current: Node | null = element;
-
-    while (current) {
-        current = getDomParent(current);
-        if (current) ancestry.push(current);
-    }
-
-    return ancestry;
+    if (isElement(reference)) return reference;
+    return reference && isElement(reference.contextElement) ? reference.contextElement : null;
 }
 
 function readPositioningAncestry(
@@ -85,18 +60,15 @@ function readPositioningAncestry(
     floating: HTMLElement,
 ): PositioningAncestry {
     return {
-        reference: collectAncestry(getReferenceElement(reference)),
-        floating: collectAncestry(floating),
+        reference: getComposedAncestry(getReferenceElement(reference)),
+        floating: getComposedAncestry(floating),
     };
-}
-
-function hasSameNodes(left: Node[], right: Node[]) {
-    return left.length === right.length && left.every((node, index) => node === right[index]);
 }
 
 function hasSameAncestry(left: PositioningAncestry, right: PositioningAncestry) {
     return (
-        hasSameNodes(left.reference, right.reference) && hasSameNodes(left.floating, right.floating)
+        areNodeListsIdentical(left.reference, right.reference) &&
+        areNodeListsIdentical(left.floating, right.floating)
     );
 }
 

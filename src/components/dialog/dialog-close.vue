@@ -5,6 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { dialogRootKey } from './dialogContext';
 import type { DialogCloseProps } from './types';
 
@@ -24,7 +25,7 @@ const rootAttrs = computed(() =>
         type: props.as === 'button' ? 'button' : undefined,
         disabled: props.as === 'button' ? props.disabled || undefined : undefined,
         'aria-disabled': props.as === 'button' ? undefined : props.disabled || undefined,
-        'data-disabled': props.disabled ? '' : undefined,
+        'data-disabled': toPresenceAttribute(props.disabled),
         onClick,
     }),
 );

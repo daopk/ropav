@@ -6,7 +6,7 @@ import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
 import { getPointerId } from '@/utils/dom/pointer';
-import { clamp } from '@/utils/number';
+import { clamp, getValuePercent } from '@/utils/number';
 import { createRafScheduler } from '@/utils/rafScheduler';
 import {
     applySliderThumbStyle,
@@ -18,7 +18,6 @@ import {
     getSliderTooltipAnchor,
     getSliderTooltipMode,
     getSliderTooltipOptions,
-    getSliderValuePercent,
     normalizeSliderBounds,
     normalizeSliderStep,
     normalizeSliderValue,
@@ -26,12 +25,7 @@ import {
 } from './sliderModel';
 import type { SliderProps, SliderTrackSlotProps } from './types';
 
-export {
-    getSliderValuePercent,
-    normalizeSliderBounds,
-    normalizeSliderStep,
-    normalizeSliderValue,
-} from './sliderModel';
+export { normalizeSliderBounds, normalizeSliderStep, normalizeSliderValue } from './sliderModel';
 
 type SliderStateProps = Readonly<
     SliderProps & {
@@ -96,7 +90,7 @@ export function useSlider(props: SliderStateProps, onChange: (value: number) => 
     );
 
     const valuePercent = computed(() =>
-        getSliderValuePercent(normalizedValue.value, bounds.value.min, bounds.value.max),
+        getValuePercent(normalizedValue.value, bounds.value.min, bounds.value.max),
     );
 
     const formattedValue = computed(() =>
@@ -161,7 +155,7 @@ export function useSlider(props: SliderStateProps, onChange: (value: number) => 
         max: bounds.value.max,
         orientation: props.orientation,
         getPercent(value) {
-            return getSliderValuePercent(value, bounds.value.min, bounds.value.max);
+            return getValuePercent(value, bounds.value.min, bounds.value.max);
         },
     }));
     const tooltipVisible = computed(() => tooltipMode.value !== false);
@@ -186,7 +180,7 @@ export function useSlider(props: SliderStateProps, onChange: (value: number) => 
             : normalizedValue.value,
     );
     const tooltipPercent = computed(() =>
-        getSliderValuePercent(tooltipValue.value, bounds.value.min, bounds.value.max),
+        getValuePercent(tooltipValue.value, bounds.value.min, bounds.value.max),
     );
     const tooltipFormattedValue = computed(() =>
         getFormattedSliderValue(tooltipValue.value, props.formatValue),

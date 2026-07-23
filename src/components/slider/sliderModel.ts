@@ -64,10 +64,6 @@ export function normalizeSliderValue(
     return clamp(Number(snapped.toFixed(10)), bounds.min, bounds.max);
 }
 
-export function getSliderValuePercent(value: number, min: number, max: number) {
-    return getValuePercent(value, min, max);
-}
-
 export function setSliderStyleValue(
     style: CSSProperties,
     property: `--${string}`,
@@ -153,7 +149,7 @@ export function createSliderMarkItems(
         const value = Number(mark.value);
         if (!Number.isFinite(value)) return [];
 
-        const percent = getSliderValuePercent(value, min, max);
+        const percent = getValuePercent(value, min, max);
 
         return {
             key: `${value}-${index}`,

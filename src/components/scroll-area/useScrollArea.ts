@@ -12,7 +12,21 @@ import {
 } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import { getPointerId } from '@/utils/dom/pointer';
+import {
+    applyFallbackScrollPosition,
+    getKeyboardScrollPosition,
+    getLogicalHorizontalScrollPosition,
+    getPointerAxisCoordinate,
+    getRawHorizontalScrollPosition,
+    getScrollDirection,
+    getScrollThumbGeometry,
+    getScrollThumbOffset,
+    getWheelScrollDelta,
+    type ScrollAxis,
+    type ScrollDirection,
+} from '@/utils/dom/scroll';
 import { clamp } from '@/utils/number';
 import { createRafScheduler } from '@/utils/rafScheduler';
 import type {
@@ -25,8 +39,6 @@ import type {
     ScrollAreaType,
 } from './types';
 
-type ScrollAxis = 'x' | 'y';
-type ScrollDirection = 'ltr' | 'rtl';
 type ScrollBoundary = 'top' | 'bottom' | 'left' | 'right';
 
 interface ScrollAreaMetrics {
@@ -66,6 +78,7 @@ interface ScrollAreaEmit {
 }
 
 const minimumThumbSize = 18;
+const keyboardScrollStep = 40;
 
 export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollAreaEmit) {
     const rootRef = ref<HTMLElement | null>(null);
@@ -245,15 +258,17 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
     }
 
     function updateThumbGeometry(viewport: HTMLElement) {
-        const horizontalGeometry = getThumbGeometry(
+        const horizontalGeometry = getScrollThumbGeometry(
             horizontalScrollbarRef.value?.clientWidth ?? viewport.clientWidth,
             viewport.clientWidth,
             viewport.scrollWidth,
+            minimumThumbSize,
         );
-        const verticalGeometry = getThumbGeometry(
+        const verticalGeometry = getScrollThumbGeometry(
             verticalScrollbarRef.value?.clientHeight ?? viewport.clientHeight,
             viewport.clientHeight,
             viewport.scrollHeight,
+            minimumThumbSize,
         );
 
         metrics.horizontalThumbSize = horizontalGeometry.size;
@@ -266,18 +281,18 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         if (!viewport) return;
 
         metrics.direction = getScrollDirection(viewport);
-        metrics.x = getLogicalHorizontalPosition(
+        metrics.x = getLogicalHorizontalScrollPosition(
             viewport.scrollLeft,
             getMaxPosition('x'),
             metrics.direction,
         );
         metrics.y = clamp(viewport.scrollTop, 0, getMaxPosition('y'));
-        metrics.horizontalThumbOffset = getThumbOffset(
+        metrics.horizontalThumbOffset = getScrollThumbOffset(
             metrics.x,
             getMaxPosition('x'),
             horizontalThumbSizeRatio,
         );
-        metrics.verticalThumbOffset = getThumbOffset(
+        metrics.verticalThumbOffset = getScrollThumbOffset(
             metrics.y,
             getMaxPosition('y'),
             verticalThumbSizeRatio,
@@ -401,8 +416,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
     }
 
     function onFocusout(event: FocusEvent) {
-        const nextTarget = event.relatedTarget;
-        if (nextTarget instanceof Node && rootRef.value?.contains(nextTarget)) return;
+        if (isNodeWithinElement(event.relatedTarget, rootRef.value)) return;
         hasFocusWithin.value = false;
     }
 
@@ -468,7 +482,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         if (!viewport) return;
 
         if (axis === 'x') {
-            viewport.scrollLeft = getRawHorizontalPosition(
+            viewport.scrollLeft = getRawHorizontalScrollPosition(
                 value,
                 getMaxPosition('x'),
                 metrics.direction,
@@ -488,14 +502,15 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         updatePosition(viewport);
         const current = getPosition(axis);
         const pageSize = axis === 'x' ? viewport.clientWidth : viewport.clientHeight;
-        const nextPosition = getKeyboardPosition(
+        const nextPosition = getKeyboardScrollPosition({
             axis,
-            event.key,
+            key: event.key,
             current,
             pageSize,
-            getMaxPosition(axis),
-            metrics.direction,
-        );
+            maxPosition: getMaxPosition(axis),
+            direction: metrics.direction,
+            lineStep: keyboardScrollStep,
+        });
         if (nextPosition === undefined) return;
 
         event.preventDefault();
@@ -506,7 +521,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         if (!getOverflow(axis)) return;
 
         updatePosition();
-        const delta = getWheelDelta(axis, event, metrics.direction);
+        const delta = getWheelScrollDelta(axis, event, metrics.direction);
         if (!delta) return;
 
         event.preventDefault();
@@ -518,7 +533,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         if (!viewport) return;
 
         if (typeof viewport.scrollTo === 'function') viewport.scrollTo(scrollOptions);
-        else setFallbackPosition(viewport, scrollOptions, false);
+        else applyFallbackScrollPosition(viewport, scrollOptions, 'absolute');
         positionScheduler.schedule();
     }
 
@@ -527,7 +542,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         if (!viewport) return;
 
         if (typeof viewport.scrollBy === 'function') viewport.scrollBy(scrollOptions);
-        else setFallbackPosition(viewport, scrollOptions, true);
+        else applyFallbackScrollPosition(viewport, scrollOptions, 'relative');
         positionScheduler.schedule();
     }
 
@@ -543,7 +558,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         const trackStart = axis === 'x' ? trackRect.left : trackRect.top;
         const trackSize = axis === 'x' ? trackRect.width : trackRect.height;
         const thumbSize = thumbRect ? (axis === 'x' ? thumbRect.width : thumbRect.height) : 0;
-        const coordinate = getPointerCoordinate(axis, event);
+        const coordinate = getPointerAxisCoordinate(axis, event);
         const travel = Math.max(0, trackSize - thumbSize);
         if (travel === 0) return;
 
@@ -587,7 +602,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         dragSession = {
             axis,
             pointerId: getPointerId(event),
-            startCoordinate: getPointerCoordinate(axis, event),
+            startCoordinate: getPointerAxisCoordinate(axis, event),
             startPosition: getPosition(axis),
             maxPosition: getMaxPosition(axis),
             travel,
@@ -604,7 +619,7 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
         const session = dragSession;
         if (!session || !isCurrentPointer(event, session)) return;
 
-        const delta = getPointerCoordinate(session.axis, event) - session.startCoordinate;
+        const delta = getPointerAxisCoordinate(session.axis, event) - session.startCoordinate;
         writeAxisPosition(
             session.axis,
             session.startPosition +
@@ -726,29 +741,6 @@ export function useScrollArea(props: Readonly<ScrollAreaProps>, emit: ScrollArea
     };
 }
 
-function getScrollDirection(viewport: HTMLElement): ScrollDirection {
-    const view = viewport.ownerDocument.defaultView;
-    return view?.getComputedStyle(viewport).direction === 'rtl' ? 'rtl' : 'ltr';
-}
-
-function getLogicalHorizontalPosition(
-    scrollLeft: number,
-    maxPosition: number,
-    direction: ScrollDirection,
-) {
-    const position = direction === 'rtl' ? -scrollLeft : scrollLeft;
-    return clamp(position, 0, maxPosition);
-}
-
-function getRawHorizontalPosition(
-    position: number,
-    maxPosition: number,
-    direction: ScrollDirection,
-) {
-    const logicalPosition = clamp(position, 0, maxPosition);
-    return direction === 'rtl' && logicalPosition !== 0 ? -logicalPosition : logicalPosition;
-}
-
 function isAxisEnabled(scrollbars: ScrollAreaScrollbars | false | undefined, axis: ScrollAxis) {
     if (scrollbars === false) return false;
     if (axis === 'x') return scrollbars === 'x' || scrollbars === 'both';
@@ -758,74 +750,6 @@ function isAxisEnabled(scrollbars: ScrollAreaScrollbars | false | undefined, axi
 function isScrollbarActive(type: ScrollAreaType, enabled: boolean, overflowing: boolean) {
     if (!enabled || type === 'never') return false;
     return type === 'always' || overflowing;
-}
-
-function getThumbGeometry(trackSize: number, viewportSize: number, scrollSize: number) {
-    if (trackSize <= 0 || viewportSize <= 0 || scrollSize <= viewportSize) {
-        return { size: 100, offsetRatio: 1 };
-    }
-
-    const thumbSize = clamp((viewportSize / scrollSize) * trackSize, minimumThumbSize, trackSize);
-    const sizeRatio = thumbSize / trackSize;
-    return { size: sizeRatio * 100, offsetRatio: sizeRatio };
-}
-
-function getThumbOffset(position: number, maxPosition: number, sizeRatio: number) {
-    if (sizeRatio >= 1 || maxPosition <= 0) return 0;
-    return (position / maxPosition) * ((1 - sizeRatio) / sizeRatio) * 100;
-}
-
-function getKeyboardPosition(
-    axis: ScrollAxis,
-    key: string,
-    current: number,
-    pageSize: number,
-    max: number,
-    direction: ScrollDirection,
-) {
-    switch (key) {
-        case 'ArrowLeft':
-            return current + (axis === 'x' && direction === 'rtl' ? 40 : -40);
-        case 'ArrowUp':
-            return current - 40;
-        case 'ArrowRight':
-            return current + (axis === 'x' && direction === 'rtl' ? -40 : 40);
-        case 'ArrowDown':
-            return current + 40;
-        case 'PageUp':
-            return current - pageSize;
-        case 'PageDown':
-            return current + pageSize;
-        case 'Home':
-            return 0;
-        case 'End':
-            return max;
-        default:
-            return undefined;
-    }
-}
-
-function getWheelDelta(axis: ScrollAxis, event: WheelEvent, direction: ScrollDirection) {
-    if (axis === 'y') return event.deltaY;
-    if (!event.deltaX) return event.deltaY;
-    return direction === 'rtl' ? -event.deltaX : event.deltaX;
-}
-
-function setFallbackPosition(
-    viewport: HTMLElement,
-    scrollOptions: ScrollToOptions,
-    relative: boolean,
-) {
-    if (scrollOptions.left !== undefined) {
-        viewport.scrollLeft = (relative ? viewport.scrollLeft : 0) + scrollOptions.left;
-    }
-    if (scrollOptions.top !== undefined) {
-        viewport.scrollTop = (relative ? viewport.scrollTop : 0) + scrollOptions.top;
-    }
-}
-
-function getPointerCoordinate(axis: ScrollAxis, event: PointerEvent) {
-    return axis === 'x' ? event.clientX : event.clientY;
 }
 
 function isCurrentPointer(event: PointerEvent, session: DragSession) {

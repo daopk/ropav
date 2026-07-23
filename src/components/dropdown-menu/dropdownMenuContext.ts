@@ -121,13 +121,6 @@ export const checkedKey = Symbol(
     'dropdown-menu-checked',
 ) as InjectionKey<DropdownMenuCheckedContext>;
 
-export function getFocusTarget(
-    options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget,
-): DropdownMenuFocusTarget {
-    if (typeof options === 'string') return options;
-    return options?.focus ?? 'first';
-}
-
 export function createVirtualAnchor(point: DropdownMenuPoint): DropdownMenuVirtualAnchor {
     return {
         getBoundingClientRect: () => createPointRect(point),

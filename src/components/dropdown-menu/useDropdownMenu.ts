@@ -12,6 +12,7 @@ import {
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { bem } from '@/utils/bem';
+import { restoreAttributes, snapshotAttributes } from '@/utils/dom/attributes';
 import { isElement } from '@/utils/dom/query';
 import { hasMeasuredRect, type Point } from '@/utils/geometry';
 import { getPathKey, normalizePath } from '@/utils/indexPath';
@@ -50,6 +51,8 @@ interface DropdownMenuDataRegistrationIndex {
     registeredItemIds: ReadonlySet<string>;
     registeredMenuIds: ReadonlySet<string>;
 }
+
+const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup', 'aria-disabled'];
 
 export function useDropdownMenu(
     props: Readonly<DropdownMenuProps>,
@@ -565,10 +568,7 @@ export function useDropdownMenu(
         [isExplicitTarget, targetElement, menuId, isVisible, isDisabled],
         ([explicit, target, id, visible, disabled], _previous, onCleanup) => {
             if (!explicit || !target) return;
-            const attributes = ['aria-controls', 'aria-expanded', 'aria-haspopup', 'aria-disabled'];
-            const snapshot = new Map(
-                attributes.map((attribute) => [attribute, target.getAttribute(attribute)]),
-            );
+            const snapshot = snapshotAttributes(target, TARGET_ATTRIBUTES);
             if (disabled) {
                 target.removeAttribute('aria-controls');
                 target.removeAttribute('aria-expanded');
@@ -580,12 +580,7 @@ export function useDropdownMenu(
                 target.setAttribute('aria-haspopup', 'menu');
                 target.removeAttribute('aria-disabled');
             }
-            onCleanup(() => {
-                for (const [attribute, value] of snapshot) {
-                    if (value == null) target.removeAttribute(attribute);
-                    else target.setAttribute(attribute, value);
-                }
-            });
+            onCleanup(() => restoreAttributes(target, snapshot));
         },
         { flush: 'sync' },
     );

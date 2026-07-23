@@ -2,12 +2,24 @@ export function isElement(value: unknown): value is Element {
     if (value == null || typeof value !== 'object') return false;
     if (typeof Element !== 'undefined' && value instanceof Element) return true;
 
-    const ownerDocument =
-        'ownerDocument' in value
-            ? (value as { ownerDocument?: Document | null }).ownerDocument
-            : null;
+    const candidate = value as {
+        getAttribute?: unknown;
+        nodeType?: unknown;
+        ownerDocument?: Document | null;
+    };
+    const ownerDocument = 'ownerDocument' in value ? candidate.ownerDocument : null;
     const ElementConstructor = ownerDocument?.defaultView?.Element;
-    return Boolean(ElementConstructor && value instanceof ElementConstructor);
+    if (ElementConstructor && value instanceof ElementConstructor) return true;
+
+    return candidate.nodeType === 1 && typeof candidate.getAttribute === 'function';
+}
+
+export function matchesSelectorSafe(element: Element, selector: string) {
+    try {
+        return element.matches(selector);
+    } catch {
+        return false;
+    }
 }
 
 function getQueryRoot(root: ParentNode | null | undefined) {

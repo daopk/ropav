@@ -54,6 +54,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } 
 import IconX from '~icons/lucide/x';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import { useStylesApi } from '@/styles-api';
 import {
     DEFAULT_TOAST_CLOSE_LABEL,
@@ -241,14 +242,7 @@ function onFocusin() {
 function onFocusout(event: FocusEvent) {
     if (!props.pauseOnFocus) return;
 
-    const currentTarget = event.currentTarget;
-    if (
-        currentTarget instanceof HTMLElement &&
-        event.relatedTarget instanceof Node &&
-        currentTarget.contains(event.relatedTarget)
-    ) {
-        return;
-    }
+    if (isNodeWithinElement(event.relatedTarget, event.currentTarget)) return;
 
     pausedByFocus.value = false;
     resumeTimer();

@@ -1,33 +1,22 @@
 import { computed, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
 import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
+import { mergeAriaIdRefs } from '@/utils/aria';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
+import { restoreAttributes, snapshotAttributes } from '@/utils/dom/attributes';
 import { isElement } from '@/utils/dom/query';
+import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
 import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
-import type { TooltipOffset, TooltipProps, TooltipTriggerProps } from './types';
+import type { TooltipProps, TooltipTriggerProps } from './types';
 
 type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
 
-export function resolveTooltipOffsetStyle(
-    offset: TooltipOffset | undefined,
-): CSSProperties | undefined {
-    if (offset == null) return undefined;
-
-    if (typeof offset === 'number') {
-        return { '--_rp-tooltip-main-axis-offset': `${offset}px` };
-    }
-
-    const style: CSSProperties = {};
-    if (offset.mainAxis != null) {
-        style['--_rp-tooltip-main-axis-offset'] = `${offset.mainAxis}px`;
-    }
-    if (offset.crossAxis != null) {
-        style['--_rp-tooltip-cross-axis-offset'] = `${offset.crossAxis}px`;
-    }
-    return Object.keys(style).length > 0 ? style : undefined;
-}
+const TOOLTIP_OFFSET_PROPERTIES = {
+    mainAxis: '--_rp-tooltip-main-axis-offset',
+    crossAxis: '--_rp-tooltip-cross-axis-offset',
+} as const;
 
 export function resolveTooltipColorStyleWithContrast(
     color: TooltipProps['color'],
@@ -119,7 +108,7 @@ export function useTooltip(
     const contentAriaHidden = computed(() => (isDecorative.value ? 'true' : undefined));
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
-        ...resolveTooltipOffsetStyle(props.offset),
+        ...getFloatingOffsetStyle(props.offset, TOOLTIP_OFFSET_PROPERTIES),
         ...resolveTooltipColorStyleWithContrast(
             props.color,
             props.autoContrast,
@@ -171,15 +160,13 @@ export function useTooltip(
         ([explicit, target, shouldDescribe, id], _previous, onCleanup) => {
             if (!explicit || !target || !shouldDescribe) return;
 
-            const previous = target.getAttribute('aria-describedby');
-            const ids = (previous ?? '').split(/\s+/).filter(Boolean);
-            if (!ids.includes(id)) ids.push(id);
-            target.setAttribute('aria-describedby', ids.join(' '));
+            const snapshot = snapshotAttributes(target, ['aria-describedby']);
+            target.setAttribute(
+                'aria-describedby',
+                mergeAriaIdRefs(snapshot.get('aria-describedby'), id) ?? '',
+            );
 
-            onCleanup(() => {
-                if (previous == null) target.removeAttribute('aria-describedby');
-                else target.setAttribute('aria-describedby', previous);
-            });
+            onCleanup(() => restoreAttributes(target, snapshot));
         },
         { flush: 'sync' },
     );

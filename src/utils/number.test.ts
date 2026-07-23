@@ -9,7 +9,7 @@ describe('number utilities', () => {
     });
 
     it('maps finite range values to a clamped percentage', () => {
-        expect(getValuePercent(25, 0, 200)).toBe(12.5);
+        expect(getValuePercent(44.4, 0, 200)).toBe(22.2);
         expect(getValuePercent(-1, 0, 100)).toBe(0);
         expect(getValuePercent(101, 0, 100)).toBe(100);
         expect(getValuePercent(Number.NaN, 0, 100)).toBe(0);

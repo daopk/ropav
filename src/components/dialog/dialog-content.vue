@@ -13,11 +13,13 @@
 <script lang="ts" setup vapor>
 import { computed, isRef, mergeProps, onBeforeUnmount, useAttrs, watch } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { querySelectorSafe } from '@/utils/dom/query';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
-import { createDialogEvent, dialogRootKey } from './dialogContext';
+import { dialogRootKey } from './dialogContext';
 import type { DialogCloseReason, DialogContentProps, DialogInteractOutsideEvent } from './types';
 
 defineOptions({ name: 'RpDialogContent', inheritAttrs: false });
@@ -88,7 +90,7 @@ function onDocumentKeydown(event: KeyboardEvent) {
     ) {
         return;
     }
-    const customEvent = createDialogEvent(
+    const customEvent = createCancelableCustomEvent(
         'dialog-escape-key-down',
         { originalEvent: event },
         event,
@@ -108,7 +110,7 @@ function onDocumentPointerdown(event: PointerEvent) {
     ) {
         return;
     }
-    const customEvent = createDialogEvent(
+    const customEvent = createCancelableCustomEvent(
         'dialog-pointer-down-outside',
         { originalEvent: event },
         event,
@@ -165,7 +167,7 @@ const rootAttrs = computed(() =>
         'aria-labelledby': ariaLabelledby.value,
         'aria-describedby': ariaDescribedby.value,
         'data-state': root.isOpen.value ? 'open' : 'closed',
-        'data-modal': root.modal.value ? '' : undefined,
+        'data-modal': toPresenceAttribute(root.modal.value),
         style: { zIndex: root.layer.zIndex.value },
     }),
 );

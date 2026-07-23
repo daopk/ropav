@@ -1,4 +1,6 @@
 import { nextTick, type InputHTMLAttributes } from 'vue';
+import { hasAriaIdRef, parseAriaIdRefs } from '@/utils/aria';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import type { PopoverContentSlotProps, PopoverSlotProps } from '../popover/types';
 import type { ColorInputProps } from './types';
 
@@ -15,7 +17,7 @@ function onInputKeydown(event: KeyboardEvent, popover: PopoverSlotProps) {
 }
 
 function focusPickerFromTrigger(trigger: HTMLElement | null) {
-    const contentId = trigger?.getAttribute('aria-controls')?.split(/\s+/).find(Boolean);
+    const contentId = parseAriaIdRefs(trigger?.getAttribute('aria-controls'))[0];
     const picker = contentId
         ? trigger?.ownerDocument
               .getElementById(contentId)
@@ -42,7 +44,7 @@ function onPickerKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps)
     const contentId = content?.id;
     const focusTarget = contentId
         ? [...content.ownerDocument.querySelectorAll<HTMLElement>('[aria-controls]')].find(
-              (element) => element.getAttribute('aria-controls')?.split(/\s+/).includes(contentId),
+              (element) => hasAriaIdRef(element.getAttribute('aria-controls'), contentId),
           )
         : undefined;
 
@@ -90,16 +92,7 @@ export function useColorInputPopover(getInputAttrs: () => ColorInputProps['input
     }
 
     function onFocusOut(event: FocusEvent) {
-        const root = event.currentTarget;
-        const nextTarget = event.relatedTarget;
-
-        if (
-            root instanceof HTMLElement &&
-            nextTarget instanceof Node &&
-            root.contains(nextTarget)
-        ) {
-            return;
-        }
+        if (isNodeWithinElement(event.relatedTarget, event.currentTarget)) return;
 
         closePicker?.();
     }

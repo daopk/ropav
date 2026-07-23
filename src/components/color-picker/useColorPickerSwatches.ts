@@ -1,5 +1,6 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { parseColorPickerValue } from '@/utils/colorPicker';
+import { isNodeWithinElement } from '@/utils/dom/events';
 import type { ColorPickerProps } from './types';
 
 const MAX_SWATCHES_PER_ROW = 15;
@@ -59,16 +60,7 @@ export function useColorPickerSwatches(
     }
 
     function onSwatchesFocusout(event: FocusEvent) {
-        const group = event.currentTarget;
-        const nextTarget = event.relatedTarget;
-
-        if (
-            group instanceof HTMLElement &&
-            nextTarget instanceof Node &&
-            group.contains(nextTarget)
-        ) {
-            return;
-        }
+        if (isNodeWithinElement(event.relatedTarget, event.currentTarget)) return;
 
         focusedSwatchIndex.value = null;
     }

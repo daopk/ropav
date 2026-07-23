@@ -94,15 +94,18 @@
 <script lang="ts" setup vapor>
 import { computed, onBeforeUnmount, ref, toRef, useId, watch, type HTMLAttributes } from 'vue';
 import { bem } from '@/utils/bem';
-import {
-    resolveTooltipColorStyleWithContrast,
-    resolveTooltipOffsetStyle,
-} from '../tooltip/useTooltip';
+import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
+import { resolveTooltipColorStyleWithContrast } from '../tooltip/useTooltip';
 import type { TooltipColor, TooltipOffset, TooltipPlacement } from '../tooltip/types';
 import type { RangeSliderValue, SliderOrientation } from './types';
 import { useRangeSliderTooltipCollision } from './useRangeSliderTooltipCollision';
 
 defineOptions({ name: 'RpRangeSliderTooltip' });
+
+const TOOLTIP_OFFSET_PROPERTIES = {
+    mainAxis: '--_rp-tooltip-main-axis-offset',
+    crossAxis: '--_rp-tooltip-cross-axis-offset',
+} as const;
 
 const props = withDefaults(
     defineProps<{
@@ -154,7 +157,7 @@ const tooltipRootClass = computed(() =>
     }),
 );
 const contentStyle = computed(() => ({
-    ...resolveTooltipOffsetStyle(props.offset),
+    ...getFloatingOffsetStyle(props.offset, TOOLTIP_OFFSET_PROPERTIES),
     ...resolveTooltipColorStyleWithContrast(props.color, props.autoContrast, props.contrastColor),
 }));
 

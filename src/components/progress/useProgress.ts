@@ -27,10 +27,6 @@ export function normalizeProgressValue(value: number | null | undefined, min: nu
     return clamp(safeValue, min, max);
 }
 
-export function getProgressValuePercent(value: number, min: number, max: number) {
-    return getValuePercent(value, min, max);
-}
-
 function getFormattedProgressValue(
     value: number,
     percent: number,
@@ -61,7 +57,7 @@ export function useProgress(props: ProgressStateProps) {
         normalizeProgressValue(props.value, bounds.value.min, bounds.value.max),
     );
     const valuePercent = computed(() =>
-        getProgressValuePercent(normalizedValue.value, bounds.value.min, bounds.value.max),
+        getValuePercent(normalizedValue.value, bounds.value.min, bounds.value.max),
     );
     const formattedValue = computed(() =>
         getFormattedProgressValue(normalizedValue.value, valuePercent.value, props.formatValue),
