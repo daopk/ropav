@@ -146,10 +146,11 @@ export const ScrollableBody: Story = {
     }),
     play: async ({ canvasElement }) => {
         const storyDocument = canvasElement.ownerDocument;
-        const body = storyDocument.querySelector<HTMLElement>('.rp-modal__body')!;
+        const modal = storyDocument.querySelector<HTMLElement>('#activity-history-modal')!;
+        const body = modal.querySelector<HTMLElement>('.rp-modal__body')!;
         const viewport = body.querySelector<HTMLElement>('.rp-scroll-area__viewport')!;
         const scrollbar = body.querySelector<HTMLElement>('.rp-scroll-area__scrollbar--vertical')!;
-        const footer = storyDocument.querySelector<HTMLElement>('.rp-modal__footer')!;
+        const footer = modal.querySelector<HTMLElement>('.rp-modal__footer')!;
 
         await waitFor(() => expect(body).toHaveAttribute('data-overflow-y'));
         expect(body).toHaveClass('rp-scroll-area');
