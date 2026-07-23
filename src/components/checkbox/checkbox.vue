@@ -46,6 +46,7 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useCheckedFormControl } from '@/internal/composables/useFormControl';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxPart, CheckboxProps } from './types';
 
@@ -97,24 +98,18 @@ const rootAttrs = computed(() =>
 );
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
-    const {
-        class: compatibilityClass,
-        style: compatibilityStyle,
-        onChange: compatibilityOnChange,
-        ...attrs
-    } = props.inputAttrs ?? {};
+    const inputAttrs = props.inputAttrs ?? {};
+    const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+        splitCompatibilityAttributes(inputAttrs);
 
     return {
-        ...attrs,
+        ...forwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-checkbox__native',
             compatibilityClass,
             compatibilityStyle,
         }),
-        onChange(event) {
-            onChange(event);
-            compatibilityOnChange?.(event);
-        },
+        onChange: composeEventHandlers(onChange, inputAttrs.onChange),
     };
 });
 

@@ -87,9 +87,9 @@ import type { NumberInputPart, NumberInputProps, NumberInputValue } from './type
 import {
     getModelInputValue,
     parseNumberInputValue,
-    useNumberInput,
     type NumberInputControl,
-} from './useNumberInput';
+} from './numberInputModel';
+import { useNumberInput } from './useNumberInput';
 
 defineOptions({ name: 'RpNumberInput', inheritAttrs: false });
 

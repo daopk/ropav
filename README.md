@@ -144,3 +144,9 @@ See the [Public Styles API](./docs/public-styles-api.md) and [public token table
 
 For headless Tooltip, HoverCard and custom menu markup, see the
 [public floating API](./docs/public-floating-api.md).
+
+## Development
+
+Contributors should follow the [code architecture guide](./docs/code-architecture.md) for component,
+composable, utility, dependency, and testing conventions. Run `pnpm run verify` before submitting a
+change.

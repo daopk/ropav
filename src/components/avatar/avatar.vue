@@ -27,6 +27,7 @@ import { computed, ref, watch } from 'vue';
 import IconUser from '~icons/lucide/user';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
+import { getNameInitials } from '@/utils/text';
 import type { AvatarPart, AvatarProps } from './types';
 import { getAvatarColorStyle } from './avatarColor';
 
@@ -55,7 +56,7 @@ const rootAriaLabel = computed(() => (rootRole.value ? accessibleName.value : un
 const fallbackAriaHidden = computed(() =>
     isHidden.value || rootAriaLabel.value ? true : undefined,
 );
-const initials = computed(() => getInitials(props.name));
+const initials = computed(() => getNameInitials(props.name));
 
 const rootClass = computed(() =>
     bem('rp-avatar', {
@@ -91,24 +92,6 @@ function handleImageLoad(event: Event) {
 function handleImageError(event: Event) {
     imageFailed.value = true;
     emit('error', event);
-}
-
-function getInitials(name: string | undefined) {
-    if (!name) return '';
-
-    const parts = name.trim().split(/\s+/).filter(Boolean);
-    const firstPart = parts[0];
-    if (!firstPart) return '';
-
-    if (parts.length === 1) {
-        return Array.from(firstPart).slice(0, 2).join('').toLocaleUpperCase();
-    }
-
-    const lastPart = parts.at(-1) ?? firstPart;
-    const firstInitial = Array.from(firstPart)[0] ?? '';
-    const lastInitial = Array.from(lastPart)[0] ?? '';
-
-    return `${firstInitial}${lastInitial}`.toLocaleUpperCase();
 }
 </script>
 

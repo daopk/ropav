@@ -2,97 +2,18 @@ import { computed, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
 import { clamp } from '@/utils/number';
-import type { PaginationItem, PaginationProps } from './types';
+import {
+    getPaginationItems,
+    normalizePaginationPage,
+    normalizePaginationTotal,
+} from './paginationModel';
+import type { PaginationProps, UsePaginationReturn } from './types';
 
-function normalizeCount(value: number, fallback: number) {
-    return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : fallback;
-}
-
-export function normalizePaginationTotal(total: number) {
-    return normalizeCount(total, 0);
-}
-
-export function normalizePaginationPage(page: number, total: number) {
-    const safeTotal = normalizePaginationTotal(total);
-    const safePage = Number.isFinite(page) ? Math.floor(page) : 1;
-
-    return clamp(safePage, 1, Math.max(safeTotal, 1));
-}
-
-function getRange(start: number, end: number) {
-    return Array.from({ length: Math.max(end - start + 1, 0) }, (_, index) => start + index);
-}
-
-export function getPaginationItems(
-    total: number,
-    page: number,
-    siblings = 1,
-    boundaries = 1,
-): PaginationItem[] {
-    const safeTotal = normalizePaginationTotal(total);
-    if (safeTotal === 0) return [];
-
-    const currentPage = normalizePaginationPage(page, safeTotal);
-    const siblingCount = normalizeCount(siblings, 1);
-    const boundaryCount = normalizeCount(boundaries, 1);
-    const itemCount = siblingCount * 2 + boundaryCount * 2 + 3;
-
-    if (safeTotal <= itemCount) {
-        return getRange(1, safeTotal).map((pageValue) => ({
-            type: 'page',
-            key: `page-${pageValue}`,
-            page: pageValue,
-        }));
-    }
-
-    const leftSibling = Math.max(currentPage - siblingCount, boundaryCount);
-    const rightSibling = Math.min(currentPage + siblingCount, safeTotal - boundaryCount);
-    const showLeftEllipsis = leftSibling > boundaryCount + 2;
-    const showRightEllipsis = rightSibling < safeTotal - boundaryCount - 1;
-    let pages: number[];
-
-    if (!showLeftEllipsis && showRightEllipsis) {
-        const leftItemCount = siblingCount * 2 + boundaryCount + 2;
-        pages = [
-            ...getRange(1, leftItemCount),
-            ...getRange(safeTotal - boundaryCount + 1, safeTotal),
-        ];
-    } else if (showLeftEllipsis && !showRightEllipsis) {
-        const rightItemCount = siblingCount * 2 + boundaryCount + 2;
-        pages = [
-            ...getRange(1, boundaryCount),
-            ...getRange(safeTotal - rightItemCount + 1, safeTotal),
-        ];
-    } else {
-        pages = [
-            ...getRange(1, boundaryCount),
-            ...getRange(leftSibling, rightSibling),
-            ...getRange(safeTotal - boundaryCount + 1, safeTotal),
-        ];
-    }
-
-    const items: PaginationItem[] = [];
-    let previous = 0;
-
-    function addGap(next: number) {
-        const missingPages = next - previous - 1;
-        if (missingPages === 1) {
-            const pageValue = previous + 1;
-            items.push({ type: 'page', key: `page-${pageValue}`, page: pageValue });
-        } else if (missingPages > 1) {
-            items.push({ type: 'ellipsis', key: `ellipsis-${previous}-${next}` });
-        }
-    }
-
-    for (const pageValue of pages) {
-        addGap(pageValue);
-        items.push({ type: 'page', key: `page-${pageValue}`, page: pageValue });
-        previous = pageValue;
-    }
-
-    addGap(safeTotal + 1);
-    return items;
-}
+export {
+    getPaginationItems,
+    normalizePaginationPage,
+    normalizePaginationTotal,
+} from './paginationModel';
 
 function getPaginationColorStyle(
     color: PaginationProps['color'],
@@ -121,7 +42,7 @@ export function usePagination(
     props: Readonly<PaginationProps>,
     getCurrentValue: () => number,
     onChange: (page: number) => void,
-) {
+): UsePaginationReturn {
     const totalPages = computed(() => normalizePaginationTotal(props.total));
     const currentPage = computed(() =>
         normalizePaginationPage(getCurrentValue(), totalPages.value),

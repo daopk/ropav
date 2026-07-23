@@ -1,6 +1,6 @@
 <template>
     <div
-        ref="sliderRef"
+        :ref="setSliderElement"
         :class="[rootClass, controlClass]"
         role="slider"
         :style="[sliderStyle, controlStyle]"
@@ -8,8 +8,8 @@
         :aria-label="ariaLabel"
         aria-orientation="horizontal"
         :aria-valuemin="0"
-        :aria-valuemax="max"
-        :aria-valuenow="Math.round(normalizedValue)"
+        :aria-valuemax="sliderState.max"
+        :aria-valuenow="Math.round(sliderState.value)"
         :aria-valuetext="ariaValueText"
         :aria-readonly="readonly || undefined"
         :data-readonly="toPresenceAttribute(readonly)"
@@ -28,20 +28,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 import { toPresenceAttribute } from '@/utils/attributes';
-import {
-    COLOR_PICKER_KEYBOARD_LARGE_STEP,
-    clampHue,
-    clampOpacity,
-    getColorPickerKeyboardValue,
-    HUE_MAX,
-    normalizeHue,
-    normalizeHueForColor,
-    roundPercent,
-} from '@/utils/colorPicker';
+import { normalizeHueForColor } from '@/utils/colorPicker';
 import type { ColorPickerSliderProps } from './types';
-import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
+import { useColorPickerSlider } from './useColorPickerSlider';
 
 defineOptions({ name: 'RpColorPickerSlider' });
 
@@ -54,9 +45,13 @@ const emit = defineEmits<{
     'update:value': [value: number];
 }>();
 
-const sliderRef = ref<HTMLElement | null>(null);
-const isHue = computed(() => props.variant === 'hue');
-const max = computed(() => (isHue.value ? HUE_MAX : 100));
+const { setSliderElement, sliderState, onPointerDown, onKeydown } = useColorPickerSlider({
+    variant: () => props.variant,
+    value: () => props.value,
+    readonly: () => props.readonly,
+    onChange: (value) => emit('update:value', value),
+});
+
 const rootClass = computed(() => `rp-color-picker__${props.variant}`);
 const surfaceClass = computed(() => [
     'rp-color-picker__slider-surface',
@@ -67,18 +62,17 @@ const internalHandleClass = computed(() => [
     `rp-color-picker__${props.variant}-handle`,
 ]);
 
-const normalizedValue = computed(() =>
-    isHue.value ? normalizeHue(props.value) : clampOpacity(props.value),
-);
-const currentOutputValue = computed(() => normalizeOutputValue(normalizedValue.value));
-
 const sliderStyle = computed(() => {
     const style = {
-        '--_rp-color-picker-slider-x': `${(currentOutputValue.value / max.value) * 100}%`,
+        '--_rp-color-picker-slider-x': `${
+            (sliderState.value.outputValue / sliderState.value.max) * 100
+        }%`,
     } as CSSProperties;
 
-    if (isHue.value) {
-        style['--_rp-color-picker-hue'] = String(normalizeHueForColor(currentOutputValue.value));
+    if (sliderState.value.isHue) {
+        style['--_rp-color-picker-hue'] = String(
+            normalizeHueForColor(sliderState.value.outputValue),
+        );
     } else {
         style['--_rp-color-picker-opacity-color'] = props.color;
     }
@@ -86,53 +80,12 @@ const sliderStyle = computed(() => {
     return style;
 });
 
-const ariaLabel = computed(() => (isHue.value ? 'Hue' : 'Opacity'));
+const ariaLabel = computed(() => (sliderState.value.isHue ? 'Hue' : 'Opacity'));
 const ariaValueText = computed(() =>
-    isHue.value
-        ? `${Math.round(normalizedValue.value)} degrees hue`
-        : `${Math.round(normalizedValue.value)}% opacity`,
+    sliderState.value.isHue
+        ? `${Math.round(sliderState.value.value)} degrees hue`
+        : `${Math.round(sliderState.value.value)}% opacity`,
 );
-
-function updateValue(nextValue: number) {
-    if (props.readonly) return;
-
-    const normalizedNextValue = normalizeOutputValue(nextValue);
-    if (normalizedNextValue === currentOutputValue.value) return;
-
-    emit('update:value', normalizedNextValue);
-}
-
-function updateFromPointer(e: ColorPickerPointerCoordinates, rect: DOMRect) {
-    if (rect.width <= 0) return;
-
-    updateValue(((e.clientX - rect.left) / rect.width) * max.value);
-}
-
-const { onPointerDown } = useColorPickerDrag({
-    target: sliderRef,
-    readonly: () => props.readonly,
-    isGeometryValid: (rect) => rect.width > 0,
-    updateFromPointer,
-});
-
-function onKeydown(e: KeyboardEvent) {
-    if (props.readonly) return;
-
-    const nextValue = getColorPickerKeyboardValue(
-        e.key,
-        normalizedValue.value,
-        max.value,
-        e.shiftKey ? COLOR_PICKER_KEYBOARD_LARGE_STEP : undefined,
-    );
-    if (nextValue === undefined) return;
-
-    e.preventDefault();
-    updateValue(nextValue);
-}
-
-function normalizeOutputValue(value: number) {
-    return isHue.value ? Math.round(clampHue(value)) : roundPercent(clampOpacity(value));
-}
 </script>
 
 <style src="./color-picker-slider.scss" lang="scss" scoped></style>

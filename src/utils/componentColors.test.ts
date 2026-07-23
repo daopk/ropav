@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+    getComponentCheckedColorStyle,
     getComponentContrastColor,
     getComponentColorRoles,
     getComponentColorValue,
@@ -240,6 +241,34 @@ describe('component color resolver', () => {
             colorHover: 'var(--rp-color-black)',
             colorActive: 'var(--rp-color-white)',
         });
+    });
+
+    it('builds checked-control variables with shared contrast semantics', () => {
+        expect(
+            getComponentCheckedColorStyle({
+                color: 'blue',
+                colorProperty: '--control-color',
+                checkedColorProperty: '--control-checked-color',
+            }),
+        ).toEqual({
+            '--control-color': 'var(--rp-color-blue-filled)',
+            '--control-checked-color': 'var(--rp-color-blue-contrast)',
+        });
+        expect(
+            getComponentCheckedColorStyle({
+                color: undefined,
+                colorProperty: '--control-color',
+                checkedColorProperty: '--control-checked-color',
+                autoContrast: false,
+            }),
+        ).toBeUndefined();
+        expect(
+            getComponentCheckedColorStyle({
+                color: 'blue.10',
+                colorProperty: '--control-color',
+                checkedColorProperty: '--control-checked-color',
+            }),
+        ).toBeUndefined();
     });
 
     it('returns final subtle, surface, outline, ghost, and plain roles', () => {

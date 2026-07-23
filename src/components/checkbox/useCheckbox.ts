@@ -1,29 +1,8 @@
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, ref } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
-import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
+import { getComponentCheckedColorStyle } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import type { CheckboxProps } from './types';
-
-function getCheckboxColorStyle(
-    color: CheckboxProps['color'],
-    autoContrast: CheckboxProps['autoContrast'],
-    contrastColor: CheckboxProps['contrastColor'],
-) {
-    const colorValue = getComponentColorValue(color);
-    if (color && !colorValue) return undefined;
-    if (!colorValue && autoContrast === false && contrastColor === undefined) return undefined;
-
-    const style: CSSProperties = {};
-    if (colorValue) style['--_rp-checkbox-color'] = colorValue;
-    if (autoContrast !== false || contrastColor !== undefined) {
-        style['--_rp-checkbox-on-color'] = getComponentContrastColor(color ?? 'primary', {
-            autoContrast,
-            contrastColor,
-        });
-    }
-
-    return style;
-}
 
 export function useCheckbox(
     props: Readonly<CheckboxProps>,
@@ -46,7 +25,13 @@ export function useCheckbox(
     );
 
     const rootStyle = computed(() =>
-        getCheckboxColorStyle(props.color, props.autoContrast, props.contrastColor),
+        getComponentCheckedColorStyle({
+            color: props.color,
+            autoContrast: props.autoContrast,
+            contrastColor: props.contrastColor,
+            colorProperty: '--_rp-checkbox-color',
+            checkedColorProperty: '--_rp-checkbox-on-color',
+        }),
     );
 
     function onChange(e: Event) {

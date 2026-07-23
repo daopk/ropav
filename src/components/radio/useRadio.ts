@@ -1,18 +1,8 @@
-import {
-    computed,
-    inject,
-    onBeforeUnmount,
-    onMounted,
-    provide,
-    ref,
-    shallowRef,
-    useId,
-    type CSSProperties,
-} from 'vue';
+import { computed, inject, onBeforeUnmount, onMounted, provide, ref, shallowRef, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { useFormControl } from '@/internal/composables/useFormControl';
-import { getComponentColorValue, getComponentContrastColor } from '@/utils/componentColors';
+import { getComponentCheckedColorStyle } from '@/utils/componentColors';
 import { bem } from '@/utils/bem';
 import { radioGroupKey } from './types';
 import type {
@@ -21,27 +11,6 @@ import type {
     RadioGroupRegistration,
     RadioProps,
 } from './types';
-
-function getRadioColorStyle(
-    color: RadioProps['color'],
-    autoContrast: RadioProps['autoContrast'],
-    contrastColor: RadioProps['contrastColor'],
-) {
-    const colorValue = getComponentColorValue(color);
-    if (color && !colorValue) return undefined;
-    if (!colorValue && autoContrast === false && contrastColor === undefined) return undefined;
-
-    const style: CSSProperties = {};
-    if (colorValue) style['--_rp-radio-color'] = colorValue;
-    if (autoContrast !== false || contrastColor !== undefined) {
-        style['--_rp-radio-on-color'] = getComponentContrastColor(color ?? 'primary', {
-            autoContrast,
-            contrastColor,
-        });
-    }
-
-    return style;
-}
 
 export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event) => void) {
     const inputRef = ref<HTMLInputElement | null>(null);
@@ -72,7 +41,13 @@ export function useRadio(props: Readonly<RadioProps>, emitChange: (event: Event)
     );
 
     const rootStyle = computed(() =>
-        getRadioColorStyle(color.value, autoContrast.value, contrastColor.value),
+        getComponentCheckedColorStyle({
+            color: color.value,
+            autoContrast: autoContrast.value,
+            contrastColor: contrastColor.value,
+            colorProperty: '--_rp-radio-color',
+            checkedColorProperty: '--_rp-radio-on-color',
+        }),
     );
 
     function onSelect(event: Event) {

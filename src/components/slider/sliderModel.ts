@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue';
 import { getComponentColorRoles, getComponentColorValue } from '@/utils/componentColors';
+import { toCssLength } from '@/utils/css';
 import { clamp, getValuePercent } from '@/utils/number';
 import type {
     RangeSliderTooltip,
@@ -73,10 +74,7 @@ export function setSliderStyleValue(
 }
 
 function getSliderLengthValue(value: number | string | undefined) {
-    if (value == null || value === '') return undefined;
-    if (typeof value === 'number') return Number.isFinite(value) ? `${value}px` : undefined;
-
-    return value;
+    return toCssLength(value);
 }
 
 function getSliderBorderValue(

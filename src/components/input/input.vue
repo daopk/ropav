@@ -14,6 +14,7 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useControllableValue } from '@/composables/useControllableValue';
 import {
     claimNestedFormControlOwner,
@@ -71,10 +72,11 @@ const rootAttrs = computed(() =>
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     const attrs = props.inputAttrs ?? {};
-    const { class: compatibilityClass, style: compatibilityStyle, ...forwardedAttrs } = attrs;
+    const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+        splitCompatibilityAttributes(attrs);
 
     return {
-        ...forwardedAttrs,
+        ...forwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-input__native',
             compatibilityClass,
@@ -82,7 +84,7 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         }),
         id: control.id,
         name: props.name,
-        form: control.form ?? forwardedAttrs.form,
+        form: control.form ?? forwardedAttributes.form,
         type: props.type,
         value: controllable.value.value,
         placeholder: props.placeholder,
@@ -97,10 +99,7 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         'data-disabled': toPresenceAttribute(control.disabled),
         'data-readonly': toPresenceAttribute(props.readonly),
         'data-invalid': toPresenceAttribute(control.invalid),
-        onInput(event) {
-            onInput(event);
-            attrs.onInput?.(event);
-        },
+        onInput: composeEventHandlers(onInput, attrs.onInput),
     };
 });
 

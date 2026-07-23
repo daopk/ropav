@@ -9,7 +9,8 @@
 <script lang="ts" setup vapor>
 import { computed, type CSSProperties } from 'vue';
 import { useStylesApi } from '@/styles-api';
-import type { ColorSwatchPart, ColorSwatchProps, ColorSwatchSize } from './types';
+import { toCssLength } from '@/utils/css';
+import type { ColorSwatchPart, ColorSwatchProps } from './types';
 import { getColorSwatchForeground, getColorSwatchOverlay } from './colorSwatchColor';
 
 defineOptions({ name: 'RpColorSwatch', inheritAttrs: false });
@@ -34,7 +35,7 @@ const rootStyle = computed(() => {
     } as CSSProperties;
 
     if (props.size !== undefined) {
-        style['--_rp-color-swatch-size'] = normalizeSize(props.size);
+        style['--_rp-color-swatch-size'] = toCssLength(props.size);
     }
 
     return style;
@@ -47,10 +48,6 @@ const rootAttrs = computed(() =>
         'aria-label': rootAriaLabel.value,
     }),
 );
-
-function normalizeSize(size: ColorSwatchSize) {
-    return typeof size === 'number' ? `${size}px` : size;
-}
 </script>
 
 <style src="./color-swatch.scss" lang="scss" scoped></style>

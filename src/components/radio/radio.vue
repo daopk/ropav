@@ -31,6 +31,7 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useRadio } from './useRadio';
 import type { RadioPart, RadioProps } from './types';
 
@@ -80,32 +81,27 @@ const rootAttrs = computed(() =>
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     const groupAttrs = groupInputAttrs.value ?? {};
+    const itemAttrs = props.inputAttrs ?? {};
     const {
-        class: groupClass,
-        style: groupStyle,
-        onChange: groupOnChange,
-        ...groupForwardedAttrs
-    } = groupAttrs;
+        compatibilityClass: groupClass,
+        compatibilityStyle: groupStyle,
+        forwardedAttributes: groupForwardedAttributes,
+    } = splitCompatibilityAttributes(groupAttrs);
     const {
-        class: itemClass,
-        style: itemStyle,
-        onChange: itemOnChange,
-        ...itemForwardedAttrs
-    } = props.inputAttrs ?? {};
+        compatibilityClass: itemClass,
+        compatibilityStyle: itemStyle,
+        forwardedAttributes: itemForwardedAttributes,
+    } = splitCompatibilityAttributes(itemAttrs);
 
     return {
-        ...groupForwardedAttrs,
-        ...itemForwardedAttrs,
+        ...groupForwardedAttributes,
+        ...itemForwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-radio__native',
             compatibilityClass: [groupClass, itemClass],
             compatibilityStyle: [groupStyle, itemStyle],
         }),
-        onChange(event) {
-            onSelect(event);
-            groupOnChange?.(event);
-            itemOnChange?.(event);
-        },
+        onChange: composeEventHandlers(onSelect, groupAttrs.onChange, itemAttrs.onChange),
     };
 });
 

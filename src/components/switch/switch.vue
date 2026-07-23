@@ -34,6 +34,7 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useCheckedFormControl } from '@/internal/composables/useFormControl';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useSwitch } from './useSwitch';
 import type { SwitchPart, SwitchProps } from './types';
 
@@ -82,10 +83,11 @@ const rootAttrs = computed(() =>
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
     const attrs = props.inputAttrs ?? {};
-    const { class: compatibilityClass, style: compatibilityStyle, ...forwardedAttrs } = attrs;
+    const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+        splitCompatibilityAttributes(attrs);
 
     return {
-        ...forwardedAttrs,
+        ...forwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-switch__native',
             compatibilityClass,
@@ -94,10 +96,7 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         'data-disabled': toPresenceAttribute(control.disabled),
         'data-invalid': toPresenceAttribute(control.invalid),
         'data-state': controllable.value.value ? 'checked' : 'unchecked',
-        onChange(event) {
-            onChange(event);
-            attrs.onChange?.(event);
-        },
+        onChange: composeEventHandlers(onChange, attrs.onChange),
     };
 });
 

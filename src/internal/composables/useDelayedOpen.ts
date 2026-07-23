@@ -1,5 +1,6 @@
 import { onBeforeUnmount } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { normalizeDelay } from '@/utils/number';
 
 export interface UseDelayedOpenOptions {
     open?: boolean | (() => boolean | undefined);
@@ -46,7 +47,7 @@ export function useDelayedOpen(options: UseDelayedOpenOptions = {}) {
 
     function open() {
         if (isDisabled()) return;
-        const delay = readOption(options.openDelay, 0);
+        const delay = normalizeDelay(readOption(options.openDelay, 0));
         if (delay <= 0) {
             setOpen(true);
             return;

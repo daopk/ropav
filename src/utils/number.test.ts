@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clamp, getValuePercent, roundTo } from './number';
+import { clamp, getValuePercent, normalizeDelay, roundTo } from './number';
 
 describe('number utilities', () => {
     it('clamps values to inclusive bounds', () => {
@@ -14,6 +14,17 @@ describe('number utilities', () => {
         expect(getValuePercent(101, 0, 100)).toBe(100);
         expect(getValuePercent(Number.NaN, 0, 100)).toBe(0);
         expect(getValuePercent(10, 5, 5)).toBe(0);
+    });
+
+    it.each([
+        [undefined, 20, 20],
+        [null, 20, 20],
+        [Number.NaN, 20, 20],
+        [Number.POSITIVE_INFINITY, 20, 20],
+        [-10, 20, 0],
+        [15, 20, 15],
+    ])('normalizes delay %j with fallback %j', (value, fallback, expected) => {
+        expect(normalizeDelay(value, fallback)).toBe(expected);
     });
 
     it('rounds to a requested number of fractional digits', () => {

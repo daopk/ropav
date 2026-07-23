@@ -1,5 +1,5 @@
 import { onBeforeUnmount, type Ref } from 'vue';
-import { getPointerId } from '@/utils/dom/pointer';
+import { getPointerId, isMatchingPointer } from '@/utils/dom/pointer';
 import { createRafScheduler } from '@/utils/rafScheduler';
 
 export interface ColorPickerPointerCoordinates {
@@ -37,8 +37,7 @@ export function useColorPickerDrag({
         const currentSession = session;
         if (!currentSession) return false;
 
-        const pointerId = getPointerId(event);
-        return currentSession.pointerId === undefined || pointerId === currentSession.pointerId;
+        return isMatchingPointer(event, currentSession.pointerId);
     }
 
     function applyScheduledUpdate(currentSession: ColorPickerDragSession) {

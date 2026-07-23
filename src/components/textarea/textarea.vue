@@ -28,6 +28,7 @@
 import { computed, type TextareaHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useTextFormControl } from '@/internal/composables/useFormControl';
 import { useTextarea } from './useTextarea';
@@ -84,24 +85,18 @@ const rootAttrs = computed(() =>
 );
 
 const nativeInputAttrs = computed<TextareaHTMLAttributes>(() => {
-    const {
-        class: compatibilityClass,
-        style: compatibilityStyle,
-        onInput: compatibilityOnInput,
-        ...attrs
-    } = props.inputAttrs ?? {};
+    const inputAttrs = props.inputAttrs ?? {};
+    const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+        splitCompatibilityAttributes(inputAttrs);
 
     return {
-        ...attrs,
+        ...forwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-textarea__native',
             compatibilityClass,
             compatibilityStyle,
         }),
-        onInput(event) {
-            onInput(event);
-            compatibilityOnInput?.(event);
-        },
+        onInput: composeEventHandlers(onInput, inputAttrs.onInput),
     };
 });
 

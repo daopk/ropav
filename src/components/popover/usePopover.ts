@@ -10,14 +10,8 @@ import {
     type CSSProperties,
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { mergeAriaIdRefs } from '@/utils/aria';
 import { bem } from '@/utils/bem';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
-import {
-    restoreAttributes,
-    snapshotAttributes,
-    type AttributeSnapshot,
-} from '@/utils/dom/attributes';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import { isElement } from '@/utils/dom/query';
 import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
@@ -34,29 +28,14 @@ import type {
     PopoverSlotProps,
     PopoverTriggerProps,
 } from './types';
+import { usePopoverBindings } from './usePopoverBindings';
 
 const DEFAULT_PLACEMENT: PopoverPlacement = 'bottom';
 const DEFAULT_ROLE: PopoverRole = 'dialog';
-const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
 const POPOVER_OFFSET_PROPERTIES = {
     mainAxis: '--_rp-popover-main-axis-offset',
     crossAxis: '--_rp-popover-cross-axis-offset',
 } as const;
-
-type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
-
-function applyTargetAttributes(
-    element: Element,
-    snapshot: AttributeSnapshot<TargetAttribute>,
-    options: { id: string; expanded: boolean; role: PopoverRole },
-) {
-    element.setAttribute(
-        'aria-controls',
-        mergeAriaIdRefs(snapshot.get('aria-controls'), options.id) ?? '',
-    );
-    element.setAttribute('aria-expanded', String(options.expanded));
-    element.setAttribute('aria-haspopup', options.role);
-}
 
 function isFocusTrapContainer(value: Element | null): value is HTMLElement | SVGElement {
     return (
@@ -281,44 +260,18 @@ export function usePopover(
         { flush: 'post', immediate: true },
     );
 
-    watch(
-        [isExplicitTarget, targetElement],
-        ([explicit, target], _previous, onCleanup) => {
-            if (!explicit || !target) return;
-            target.addEventListener('click', onTriggerClick);
-            onCleanup(() => target.removeEventListener('click', onTriggerClick));
-        },
-        { flush: 'sync' },
-    );
-
-    watch(
-        [isExplicitTarget, targetElement, popoverId, popoverRole, isVisible, isDisabled],
-        ([explicit, target, id, role, visible, disabled], _previous, onCleanup) => {
-            if (!explicit || !target || disabled) return;
-            const snapshot = snapshotAttributes(target, TARGET_ATTRIBUTES);
-            applyTargetAttributes(target, snapshot, { id, expanded: visible, role });
-            onCleanup(() => restoreAttributes(target, snapshot));
-        },
-        { flush: 'sync' },
-    );
-
-    watch(
+    usePopoverBindings({
+        isExplicitTarget,
+        targetElement,
+        popoverId,
+        popoverRole,
         isVisible,
-        (visible, _previous, onCleanup) => {
-            if (!visible || typeof document === 'undefined') return;
-            document.addEventListener('click', onDocumentClick, true);
-            document.addEventListener('mousedown', onDocumentPointerDown, true);
-            document.addEventListener('touchstart', onDocumentPointerDown, true);
-            document.addEventListener('keydown', onDocumentKeydown);
-            onCleanup(() => {
-                document.removeEventListener('click', onDocumentClick, true);
-                document.removeEventListener('mousedown', onDocumentPointerDown, true);
-                document.removeEventListener('touchstart', onDocumentPointerDown, true);
-                document.removeEventListener('keydown', onDocumentKeydown);
-            });
-        },
-        { flush: 'sync', immediate: true },
-    );
+        isDisabled,
+        onTriggerClick,
+        onDocumentClick,
+        onDocumentPointerDown,
+        onDocumentKeydown,
+    });
 
     return {
         rootRef,

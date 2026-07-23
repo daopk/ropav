@@ -2,7 +2,13 @@ import { computed, type CSSProperties } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
-import { clamp, getValuePercent } from '@/utils/number';
+import { getValuePercent } from '@/utils/number';
+import {
+    formatProgressValue,
+    getProgressAriaValueText,
+    normalizeProgressBounds,
+    normalizeProgressValue,
+} from './progressModel';
 import type { ProgressProps } from './types';
 
 type ProgressStateProps = Readonly<
@@ -13,40 +19,6 @@ type ProgressStateProps = Readonly<
         showValue: boolean;
     }
 >;
-
-export function normalizeProgressBounds(min: number, max: number) {
-    const safeMin = Number.isFinite(min) ? min : 0;
-    const safeMax = Number.isFinite(max) ? max : 100;
-
-    return safeMax >= safeMin ? { min: safeMin, max: safeMax } : { min: safeMax, max: safeMin };
-}
-
-export function normalizeProgressValue(value: number | null | undefined, min: number, max: number) {
-    const safeValue = Number.isFinite(value) ? Number(value) : min;
-
-    return clamp(safeValue, min, max);
-}
-
-function getFormattedProgressValue(
-    value: number,
-    percent: number,
-    formatter: ProgressProps['formatValue'],
-) {
-    return formatter ? formatter(value, percent) : `${Math.round(percent)}%`;
-}
-
-function getProgressAriaValueText(
-    value: number,
-    percent: number,
-    ariaValueText: ProgressProps['ariaValueText'],
-    formatter: ProgressProps['formatValue'],
-) {
-    if (typeof ariaValueText === 'function') return String(ariaValueText(value, percent));
-    if (ariaValueText != null && ariaValueText !== '') return String(ariaValueText);
-    if (formatter) return String(formatter(value, percent));
-
-    return undefined;
-}
 
 export function useProgress(props: ProgressStateProps) {
     const control = useControlState(props);
@@ -60,7 +32,7 @@ export function useProgress(props: ProgressStateProps) {
         getValuePercent(normalizedValue.value, bounds.value.min, bounds.value.max),
     );
     const formattedValue = computed(() =>
-        getFormattedProgressValue(normalizedValue.value, valuePercent.value, props.formatValue),
+        formatProgressValue(normalizedValue.value, valuePercent.value, props.formatValue),
     );
     const ariaValueText = computed(() =>
         isIndeterminate.value

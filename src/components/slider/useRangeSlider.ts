@@ -1,135 +1,29 @@
-import { computed, nextTick, ref, type CSSProperties } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
-import { useControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { computed, ref, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
-import { clamp, getValuePercent } from '@/utils/number';
-import type {
-    RangeSliderEndpointValueText,
-    RangeSliderProps,
-    RangeSliderTrackSlotProps,
-    RangeSliderThumb,
-    RangeSliderValue,
-} from './types';
+import {
+    getClosestRangeSliderThumb,
+    getOppositeRangeSliderThumb,
+    getRangeSliderKeyboardValue,
+    getRangeSliderPointerValue,
+    getRangeSliderThumbIndex,
+} from './rangeSliderModel';
 import {
     applySliderThumbStyle,
-    createSliderMarkItems,
-    getFormattedSliderValue,
-    getSliderAriaValueText,
     getSliderTooltipMode,
     getSliderTooltipOptions,
-    normalizeSliderBounds,
-    normalizeSliderStep,
-    normalizeSliderValue,
     setSliderStyleValue,
 } from './sliderModel';
+import type { RangeSliderThumb, RangeSliderValue } from './types';
 import { useRangeSliderPointer } from './useRangeSliderPointer';
 import { useRangeSliderTooltipState } from './useRangeSliderTooltipState';
+import { useRangeSliderValueState, type RangeSliderStateProps } from './useRangeSliderValueState';
 
-type RangeSliderStateProps = Readonly<
-    RangeSliderProps & {
-        min: number;
-        max: number;
-        step: number | 'any';
-        minRange: number;
-        tooltip: NonNullable<RangeSliderProps['tooltip']>;
-        orientation: NonNullable<RangeSliderProps['orientation']>;
-        ariaLabel: [string, string];
-    }
->;
-
-interface RangeSliderPointerGeometry {
-    length: number;
-    start: number;
-    vertical: boolean;
-}
-
-function roundSliderNumber(value: number) {
-    return Number(value.toFixed(10));
-}
-
-function getStepValueAtOrAbove(value: number, min: number, step: number | 'any') {
-    if (step === 'any') return value;
-
-    const steps = Math.ceil((value - min) / step - 1e-10);
-    return roundSliderNumber(min + steps * step);
-}
-
-function getStepValueAtOrBelow(value: number, min: number, step: number | 'any') {
-    if (step === 'any') return value;
-
-    const steps = Math.floor((value - min) / step + 1e-10);
-    return roundSliderNumber(min + steps * step);
-}
-
-function isSliderStepAligned(min: number, max: number, step: number) {
-    const stepCount = (max - min) / step;
-    return Math.abs(stepCount - Math.round(stepCount)) <= 1e-10;
-}
-
-export function normalizeRangeSliderMinRange(minRange: number, min: number, max: number) {
-    const bounds = normalizeSliderBounds(min, max);
-    const domain = bounds.max - bounds.min;
-    const safeMinRange = Number.isFinite(minRange) && minRange > 0 ? minRange : 0;
-
-    return Math.min(domain, safeMinRange);
-}
-
-export function normalizeRangeSliderValue(
-    value: RangeSliderValue,
-    min: number,
-    max: number,
-    step: number | 'any',
-    minRange = 0,
-): RangeSliderValue {
-    const bounds = normalizeSliderBounds(min, max);
-    const safeStep = normalizeSliderStep(step);
-    const safeMinRange = normalizeRangeSliderMinRange(minRange, bounds.min, bounds.max);
-    const first = normalizeSliderValue(
-        Array.isArray(value) ? Number(value[0]) : Number.NaN,
-        bounds.min,
-        bounds.max,
-        safeStep,
-    );
-    const second = normalizeSliderValue(
-        Array.isArray(value) ? Number(value[1]) : Number.NaN,
-        bounds.min,
-        bounds.max,
-        safeStep,
-    );
-    const lower = Math.min(first, second);
-    const upper = Math.max(first, second);
-
-    if (upper - lower >= safeMinRange) return [lower, upper];
-    if (safeMinRange >= bounds.max - bounds.min) return [bounds.min, bounds.max];
-
-    const expandedUpper = getStepValueAtOrAbove(lower + safeMinRange, bounds.min, safeStep);
-    if (expandedUpper <= bounds.max) return [lower, expandedUpper];
-
-    const expandedLower = getStepValueAtOrBelow(bounds.max - safeMinRange, bounds.min, safeStep);
-
-    return [Math.max(bounds.min, expandedLower), bounds.max];
-}
-
-export function getClosestRangeSliderThumb(
-    value: number,
-    range: RangeSliderValue,
-    activeThumb?: RangeSliderThumb,
-): RangeSliderThumb {
-    const [lower, upper] = range;
-
-    if (value < lower) return 'lower';
-    if (value > upper) return 'upper';
-
-    const lowerDistance = Math.abs(value - lower);
-    const upperDistance = Math.abs(value - upper);
-
-    if (lowerDistance < upperDistance) return 'lower';
-    if (upperDistance < lowerDistance) return 'upper';
-
-    return activeThumb ?? 'upper';
-}
+export {
+    getClosestRangeSliderThumb,
+    normalizeRangeSliderMinRange,
+    normalizeRangeSliderValue,
+} from './rangeSliderModel';
 
 function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: RangeSliderValue) {
     const [lowerPercent, upperPercent] = valuePercent;
@@ -142,7 +36,6 @@ function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: Ra
     };
 
     setSliderStyleValue(style, '--_rp-range-slider-color', getComponentColorValue(props.color));
-
     applySliderThumbStyle(style, props.thumb, {
         size: '--rp-slider-thumb-size',
         border: '--_rp-range-slider-thumb-border-style',
@@ -151,40 +44,6 @@ function getRangeSliderTrackStyle(props: RangeSliderStateProps, valuePercent: Ra
     });
 
     return style;
-}
-
-function getFormattedRangeSliderValue(
-    value: RangeSliderValue,
-    formatter: RangeSliderProps['formatValue'],
-): [string | number, string | number] {
-    return [
-        getFormattedSliderValue(value[0], formatter),
-        getFormattedSliderValue(value[1], formatter),
-    ];
-}
-
-function getRangeSliderAriaValueText(
-    value: RangeSliderValue,
-    ariaValueText: RangeSliderProps['ariaValueText'],
-    formatter: RangeSliderProps['formatValue'],
-): [string | undefined, string | undefined] {
-    const endpointValues: [
-        RangeSliderEndpointValueText | undefined,
-        RangeSliderEndpointValueText | undefined,
-    ] = Array.isArray(ariaValueText) ? ariaValueText : [ariaValueText, ariaValueText];
-
-    return [
-        getSliderAriaValueText(value[0], endpointValues[0], formatter),
-        getSliderAriaValueText(value[1], endpointValues[1], formatter),
-    ];
-}
-
-function getThumbIndex(thumb: RangeSliderThumb) {
-    return thumb === 'lower' ? 0 : 1;
-}
-
-function getOppositeThumb(thumb: RangeSliderThumb): RangeSliderThumb {
-    return thumb === 'lower' ? 'upper' : 'lower';
 }
 
 function getThumbFromTarget(target: EventTarget | null) {
@@ -203,186 +62,46 @@ function getThumbInput(track: HTMLElement, thumb: RangeSliderThumb) {
 }
 
 function focusThumb(track: HTMLElement, thumb: RangeSliderThumb) {
-    const input = getThumbInput(track, thumb);
-    input?.focus({ preventScroll: true });
+    getThumbInput(track, thumb)?.focus({ preventScroll: true });
+}
+
+function readRangeSliderPointerGeometry(
+    track: HTMLElement,
+    orientation: RangeSliderStateProps['orientation'],
+) {
+    const vertical = orientation === 'vertical';
+    const thumbsRect = track
+        .querySelector<HTMLElement>('.rp-range-slider__thumbs')
+        ?.getBoundingClientRect();
+    const rect =
+        thumbsRect && (vertical ? thumbsRect.height > 0 : thumbsRect.width > 0)
+            ? thumbsRect
+            : track.getBoundingClientRect();
+    const length = vertical ? rect.height : rect.width;
+    if (length <= 0) return undefined;
+
+    return {
+        length,
+        start: vertical ? rect.bottom : rect.left,
+        vertical,
+    };
 }
 
 export function useRangeSlider(
     props: RangeSliderStateProps,
     onChange: (value: RangeSliderValue) => void,
 ) {
-    const lowerInputRef = ref<HTMLInputElement | null>(null);
-    const upperInputRef = ref<HTMLInputElement | null>(null);
-    const controllable = useControllableValue<RangeSliderValue>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => props.defaultValue ?? [props.min, props.max],
-        onChange,
-    });
-    const control = useControlState(props);
     const activeThumb = ref<RangeSliderThumb>();
-
-    const bounds = computed(() => normalizeSliderBounds(props.min, props.max));
-    const valueStep = computed(() => normalizeSliderStep(props.step));
-    const nativeStep = computed<number | 'any'>(() => {
-        const step = valueStep.value;
-        if (step === 'any') return step;
-
-        return isSliderStepAligned(bounds.value.min, bounds.value.max, step) ? step : 'any';
+    const valueState = useRangeSliderValueState(props, onChange, (thumb) => {
+        activeThumb.value = thumb;
     });
-    const hasManualNativeKeyboard = computed(
-        () => valueStep.value !== 'any' && nativeStep.value === 'any',
-    );
-    const normalizedMinRange = computed(() =>
-        normalizeRangeSliderMinRange(props.minRange, bounds.value.min, bounds.value.max),
-    );
-    const normalizedValue = computed(() =>
-        normalizeRangeSliderValue(
-            controllable.value.value,
-            bounds.value.min,
-            bounds.value.max,
-            valueStep.value,
-            normalizedMinRange.value,
-        ),
-    );
-    const valuePercent = computed<RangeSliderValue>(() => [
-        getValuePercent(normalizedValue.value[0], bounds.value.min, bounds.value.max),
-        getValuePercent(normalizedValue.value[1], bounds.value.min, bounds.value.max),
-    ]);
-    const formattedValue = computed(() =>
-        getFormattedRangeSliderValue(normalizedValue.value, props.formatValue),
-    );
-    const ariaLabels = computed<[string, string]>(() => props.ariaLabel ?? ['Minimum', 'Maximum']);
-    const ariaValueText = computed(() =>
-        getRangeSliderAriaValueText(normalizedValue.value, props.ariaValueText, props.formatValue),
-    );
-    const nativeNames = computed<[string | undefined, string | undefined]>(() =>
-        Array.isArray(props.name) ? props.name : [props.name, props.name],
-    );
-    const nativeIds = computed<[string | undefined, string | undefined]>(() => [
-        control.id,
-        control.id ? `${control.id}-upper` : undefined,
-    ]);
-    const validationMessages = computed<[string | undefined, string | undefined]>(() =>
-        Array.isArray(props.validationMessage)
-            ? props.validationMessage
-            : [props.validationMessage, props.validationMessage],
-    );
-    const nativeMin = computed<RangeSliderValue>(() => {
-        if (normalizedMinRange.value === 0) {
-            return [bounds.value.min, bounds.value.min];
-        }
-
-        return [
-            bounds.value.min,
-            clamp(
-                getStepValueAtOrAbove(
-                    normalizedValue.value[0] + normalizedMinRange.value,
-                    bounds.value.min,
-                    valueStep.value,
-                ),
-                bounds.value.min,
-                bounds.value.max,
-            ),
-        ];
-    });
-    const nativeMax = computed<RangeSliderValue>(() => {
-        if (normalizedMinRange.value === 0) {
-            return [bounds.value.max, bounds.value.max];
-        }
-
-        return [
-            clamp(
-                getStepValueAtOrBelow(
-                    normalizedValue.value[1] - normalizedMinRange.value,
-                    bounds.value.min,
-                    valueStep.value,
-                ),
-                bounds.value.min,
-                bounds.value.max,
-            ),
-            bounds.value.max,
-        ];
-    });
-    const markItems = computed(() =>
-        createSliderMarkItems(
-            props.marks,
-            bounds.value.min,
-            bounds.value.max,
-            (value) => value >= normalizedValue.value[0] && value <= normalizedValue.value[1],
-            {
-                position: '--_rp-range-slider-mark-position',
-                decorativeColors: [
-                    '--_rp-range-slider-mark-color',
-                    '--_rp-range-slider-mark-ring-color',
-                ],
-                foregroundColors: [
-                    '--_rp-range-slider-mark-label-color',
-                    '--_rp-range-slider-mark-filled-label-color',
-                ],
-            },
-        ),
-    );
-    const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
-    const trackSlotProps = computed<RangeSliderTrackSlotProps>(() => ({
-        value: normalizedValue.value,
-        formattedValue: formattedValue.value,
-        percent: valuePercent.value,
-        min: bounds.value.min,
-        max: bounds.value.max,
-        orientation: props.orientation,
-        getPercent(value) {
-            return getValuePercent(value, bounds.value.min, bounds.value.max);
-        },
-    }));
-    const trackStyle = computed<CSSProperties>(() =>
-        getRangeSliderTrackStyle(props, valuePercent.value),
-    );
-
-    function normalizeInitialValue(value: RangeSliderValue = controllable.initialValue) {
-        return normalizeRangeSliderValue(value, props.min, props.max, props.step, props.minRange);
-    }
-
-    useFormControl({
-        elements: () => [lowerInputRef.value, upperInputRef.value],
-        isControlled: () => controllable.isControlled.value,
-        initializeDefault(element, index) {
-            const initialValue = normalizeInitialValue();
-            (element as HTMLInputElement).defaultValue = String(initialValue[index]);
-        },
-        validationMessage: (_element, index) => validationMessages.value[index],
-        readResetValue(elements) {
-            const resetValue: RangeSliderValue = [
-                normalizedValue.value[0],
-                normalizedValue.value[1],
-            ];
-
-            for (const element of elements) {
-                const index = element === upperInputRef.value ? 1 : 0;
-                resetValue[index] = Number((element as HTMLInputElement).defaultValue);
-            }
-
-            const nextValue = normalizeInitialValue(resetValue);
-            controllable.resetValue(nextValue);
-            void nextTick(() => {
-                if (lowerInputRef.value) lowerInputRef.value.value = String(nextValue[0]);
-                if (upperInputRef.value) upperInputRef.value.value = String(nextValue[1]);
-            });
-        },
-        syncControlledValue(elements) {
-            for (const element of elements) {
-                const index = element === upperInputRef.value ? 1 : 0;
-                (element as HTMLInputElement).value = String(normalizedValue.value[index]);
-            }
-        },
-    });
-
     const tooltipOptions = computed(() => getSliderTooltipOptions(props.tooltip));
     const tooltipMode = computed(() => getSliderTooltipMode(props.tooltip));
     const tooltipOpenDelay = computed(() => tooltipOptions.value.openDelay ?? 0);
     const tooltipState = useRangeSliderTooltipState({
         mode: tooltipMode,
         openDelay: tooltipOpenDelay,
-        disabled: () => control.disabled,
+        disabled: () => valueState.control.disabled,
         setActiveThumb: (thumb) => {
             activeThumb.value = thumb;
         },
@@ -407,73 +126,27 @@ export function useRangeSlider(
     const tooltipOffset = computed(() => tooltipOptions.value.offset);
     const tooltipArrow = computed(() => tooltipOptions.value.arrow ?? false);
     const tooltipContent = computed<[string, string]>(() => [
-        String(formattedValue.value[0]),
-        String(formattedValue.value[1]),
+        String(valueState.formattedValue.value[0]),
+        String(valueState.formattedValue.value[1]),
     ]);
     const mergedTooltipContent = computed(() => {
         const [lower, upper] = tooltipContent.value;
         return lower === upper ? lower : `${lower}–${upper}`;
     });
-
     const rootClass = computed(() =>
         bem('rp-range-slider', {
             [`size-${props.size}`]: Boolean(props.size),
             vertical: props.orientation === 'vertical',
-            marked: markItems.value.length > 0,
-            'marks-with-labels': hasMarkLabels.value,
+            marked: valueState.markItems.value.length > 0,
+            'marks-with-labels': valueState.hasMarkLabels.value,
             'tooltip-always-visible': tooltipAlwaysVisible.value,
-            disabled: control.disabled,
-            invalid: control.invalid,
+            disabled: valueState.control.disabled,
+            invalid: valueState.control.invalid,
         }),
     );
-
-    function getThumbUpdate(
-        thumb: RangeSliderThumb,
-        value: number,
-        anchorValue = normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))],
-    ) {
-        const safeValue = normalizeSliderValue(
-            value,
-            bounds.value.min,
-            bounds.value.max,
-            valueStep.value,
-        );
-
-        if (normalizedMinRange.value > 0) {
-            const nextValue: RangeSliderValue = [...normalizedValue.value];
-            nextValue[getThumbIndex(thumb)] =
-                thumb === 'lower'
-                    ? Math.min(safeValue, nativeMax.value[0])
-                    : Math.max(safeValue, nativeMin.value[1]);
-
-            return { thumb, value: nextValue };
-        }
-
-        if (safeValue < anchorValue) {
-            return { thumb: 'lower' as const, value: [safeValue, anchorValue] as RangeSliderValue };
-        }
-        if (safeValue > anchorValue) {
-            return { thumb: 'upper' as const, value: [anchorValue, safeValue] as RangeSliderValue };
-        }
-
-        return { thumb, value: [safeValue, safeValue] as RangeSliderValue };
-    }
-
-    function updateThumb(thumb: RangeSliderThumb, value: number, anchorValue?: number) {
-        if (control.disabled) return thumb;
-
-        const update = getThumbUpdate(thumb, value, anchorValue);
-        activeThumb.value = update.thumb;
-        controllable.setValue(update.value);
-
-        return update.thumb;
-    }
-
-    function onInput(thumb: RangeSliderThumb, event: Event) {
-        const input = event.target as HTMLInputElement;
-        const nextThumb = updateThumb(thumb, input.valueAsNumber);
-        transferFocusedThumb(input, thumb, nextThumb);
-    }
+    const trackStyle = computed<CSSProperties>(() =>
+        getRangeSliderTrackStyle(props, valueState.valuePercent.value),
+    );
 
     function transferFocusedThumb(
         input: HTMLInputElement,
@@ -489,91 +162,53 @@ export function useRangeSlider(
         if (!nextInput) return;
 
         tooltipState.transferInteraction(thumb, nextThumb, 'focus');
-
         nextInput.focus({ preventScroll: true });
+    }
+
+    function onInput(thumb: RangeSliderThumb, event: Event) {
+        const input = event.target as HTMLInputElement;
+        const nextThumb = valueState.updateThumb(thumb, input.valueAsNumber);
+        transferFocusedThumb(input, thumb, nextThumb);
     }
 
     function onTooltipKeydown(thumb: RangeSliderThumb, event: KeyboardEvent) {
         if (tooltipState.onKeydown(thumb, event)) return;
-
-        if (!hasManualNativeKeyboard.value || valueStep.value === 'any') return;
-
-        const index = getThumbIndex(thumb);
-        const currentValue = normalizedValue.value[index];
-        const pageStep = valueStep.value * 10;
-        let nextValue: number | undefined;
-
-        switch (event.key) {
-            case 'ArrowRight':
-            case 'ArrowUp':
-                nextValue = currentValue + valueStep.value;
-                break;
-            case 'ArrowLeft':
-            case 'ArrowDown':
-                nextValue = currentValue - valueStep.value;
-                break;
-            case 'PageUp':
-                nextValue = currentValue + pageStep;
-                break;
-            case 'PageDown':
-                nextValue = currentValue - pageStep;
-                break;
-            case 'Home':
-                nextValue = nativeMin.value[index];
-                break;
-            case 'End':
-                nextValue = nativeMax.value[index];
-                break;
+        if (!valueState.hasManualNativeKeyboard.value || valueState.valueStep.value === 'any') {
+            return;
         }
 
+        const index = getRangeSliderThumbIndex(thumb);
+        const nextValue = getRangeSliderKeyboardValue(
+            event.key,
+            valueState.normalizedValue.value[index],
+            valueState.valueStep.value,
+            valueState.nativeMin.value[index],
+            valueState.nativeMax.value[index],
+        );
         if (nextValue == null) return;
 
         event.preventDefault();
-        const nextThumb = updateThumb(thumb, nextValue);
+        const nextThumb = valueState.updateThumb(thumb, nextValue);
         transferFocusedThumb(event.target as HTMLInputElement, thumb, nextThumb);
     }
 
-    function getPointerGeometry(track: HTMLElement): RangeSliderPointerGeometry | undefined {
-        const vertical = props.orientation === 'vertical';
-        const thumbsRect = track
-            .querySelector<HTMLElement>('.rp-range-slider__thumbs')
-            ?.getBoundingClientRect();
-        const rect =
-            thumbsRect && (vertical ? thumbsRect.height > 0 : thumbsRect.width > 0)
-                ? thumbsRect
-                : track.getBoundingClientRect();
-        const length = vertical ? rect.height : rect.width;
-        if (length <= 0) return undefined;
-
-        return {
-            length,
-            start: vertical ? rect.bottom : rect.left,
-            vertical,
-        };
-    }
-
-    function getValueFromPointer(event: PointerEvent, geometry: RangeSliderPointerGeometry) {
-        const pointerPosition = geometry.vertical ? event.clientY : event.clientX;
-        const offset = geometry.vertical
-            ? geometry.start - pointerPosition
-            : pointerPosition - geometry.start;
-        const ratio = clamp(offset / geometry.length, 0, 1);
-        return bounds.value.min + ratio * (bounds.value.max - bounds.value.min);
-    }
-
     const { onTrackPointerDown } = useRangeSliderPointer({
-        disabled: () => control.disabled,
-        getPointerGeometry,
-        getPointerValue: getValueFromPointer,
+        disabled: () => valueState.control.disabled,
+        getPointerGeometry: (track) => readRangeSliderPointerGeometry(track, props.orientation),
+        getPointerValue: (event, geometry) =>
+            getRangeSliderPointerValue(event, geometry, valueState.bounds.value),
         getThumb: (event, value) =>
             getThumbFromTarget(event.target) ??
-            getClosestRangeSliderThumb(value, normalizedValue.value, activeThumb.value),
-        getAnchorValue: (thumb) => normalizedValue.value[getThumbIndex(getOppositeThumb(thumb))],
+            getClosestRangeSliderThumb(value, valueState.normalizedValue.value, activeThumb.value),
+        getAnchorValue: (thumb) =>
+            valueState.normalizedValue.value[
+                getRangeSliderThumbIndex(getOppositeRangeSliderThumb(thumb))
+            ],
         setActiveThumb: (thumb) => {
             activeThumb.value = thumb;
         },
         focusThumb,
-        updateThumb,
+        updateThumb: valueState.updateThumb,
         transferFocusedThumb: (track, from, to) => {
             const input = getThumbInput(track, from);
             if (input) transferFocusedThumb(input, from, to);
@@ -583,39 +218,24 @@ export function useRangeSlider(
         transferDrag: (from, to) => tooltipState.transferInteraction(from, to, 'drag'),
     });
 
-    const nativeElements = computed<[HTMLInputElement | null, HTMLInputElement | null]>(() => [
-        lowerInputRef.value,
-        upperInputRef.value,
-    ]);
-
-    function setInputRef(index: number, element: unknown) {
-        const input = element instanceof HTMLInputElement ? element : null;
-        if (index === 0) lowerInputRef.value = input;
-        else upperInputRef.value = input;
-    }
-
-    function focus(options?: FocusOptions) {
-        lowerInputRef.value?.focus(options);
-    }
-
     return {
-        nativeElements,
-        setInputRef,
-        focus,
-        control,
-        nativeMin,
-        nativeMax,
-        nativeStep,
-        nativeNames,
-        nativeIds,
+        nativeElements: valueState.nativeElements,
+        setInputRef: valueState.setInputRef,
+        focus: valueState.focus,
+        control: valueState.control,
+        nativeMin: valueState.nativeMin,
+        nativeMax: valueState.nativeMax,
+        nativeStep: valueState.nativeStep,
+        nativeNames: valueState.nativeNames,
+        nativeIds: valueState.nativeIds,
         rootClass,
-        normalizedValue,
-        valuePercent,
-        formattedValue,
-        ariaLabels,
-        ariaValueText,
-        markItems,
-        trackSlotProps,
+        normalizedValue: valueState.normalizedValue,
+        valuePercent: valueState.valuePercent,
+        formattedValue: valueState.formattedValue,
+        ariaLabels: valueState.ariaLabels,
+        ariaValueText: valueState.ariaValueText,
+        markItems: valueState.markItems,
+        trackSlotProps: valueState.trackSlotProps,
         trackStyle,
         activeThumb,
         tooltipVisible,

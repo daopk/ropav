@@ -1,6 +1,6 @@
 <template>
     <div
-        ref="saturationRef"
+        :ref="setSaturationElement"
         :class="['rp-color-picker__saturation', controlClass]"
         role="group"
         :style="[saturationStyle, controlStyle]"
@@ -13,16 +13,16 @@
     >
         <input
             :id="id"
-            ref="saturationInputRef"
+            :ref="setSaturationInput"
             class="rp-color-picker__axis-input rp-color-picker__axis-input--saturation"
             type="range"
             min="0"
             max="100"
             step="1"
-            :value="saturation"
+            :value="selection.saturation"
             aria-label="Saturation"
             aria-orientation="horizontal"
-            :aria-valuenow="Math.round(saturation)"
+            :aria-valuenow="Math.round(selection.saturation)"
             :aria-valuetext="ariaValueText"
             :aria-describedby="describedby"
             :aria-readonly="readonly || undefined"
@@ -36,10 +36,10 @@
             min="0"
             max="100"
             step="1"
-            :value="value"
+            :value="selection.value"
             aria-label="Value"
             aria-orientation="vertical"
-            :aria-valuenow="Math.round(value)"
+            :aria-valuenow="Math.round(selection.value)"
             :aria-valuetext="ariaValueText"
             :aria-describedby="describedby"
             :aria-readonly="readonly || undefined"
@@ -57,21 +57,11 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 import { toPresenceAttribute } from '@/utils/attributes';
-import {
-    COLOR_PICKER_KEYBOARD_LARGE_STEP,
-    clampPercent,
-    getColorPickerKeyboardValue,
-    getHsvCssColor,
-    normalizeHue,
-    normalizeHueForColor,
-    roundPercent,
-} from '@/utils/colorPicker';
+import { getHsvCssColor, normalizeHueForColor } from '@/utils/colorPicker';
 import type { ColorPickerSaturationProps, ColorPickerSelection } from './types';
-import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
-
-type ColorPickerAxis = 'saturation' | 'value';
+import { useColorPickerSaturation } from './useColorPickerSaturation';
 
 defineOptions({ name: 'RpColorPickerSaturation' });
 
@@ -84,90 +74,44 @@ const emit = defineEmits<{
     'update:modelValue': [value: ColorPickerSelection];
 }>();
 
-const saturationRef = ref<HTMLElement | null>(null);
-const saturationInputRef = ref<HTMLInputElement | null>(null);
-const saturation = computed(() => clampPercent(props.modelValue.saturation));
-const value = computed(() => clampPercent(props.modelValue.value));
-const hue = computed(() => normalizeHue(props.hue));
+const {
+    setSaturationElement,
+    setSaturationInput,
+    selection,
+    normalizedHue,
+    onPointerDown,
+    onAxisKeydown,
+    onAxisInput,
+} = useColorPickerSaturation({
+    modelValue: () => props.modelValue,
+    hue: () => props.hue,
+    readonly: () => props.readonly,
+    onChange: (nextSelection) => emit('update:modelValue', nextSelection),
+});
 
 const saturationStyle = computed(
     () =>
         ({
-            '--_rp-color-picker-hue': String(normalizeHueForColor(hue.value)),
-            '--_rp-color-picker-saturation-x': `${saturation.value}%`,
-            '--_rp-color-picker-saturation-y': `${100 - value.value}%`,
-            '--_rp-color-picker-current': getHsvCssColor(hue.value, saturation.value, value.value),
+            '--_rp-color-picker-hue': String(normalizeHueForColor(normalizedHue.value)),
+            '--_rp-color-picker-saturation-x': `${selection.value.saturation}%`,
+            '--_rp-color-picker-saturation-y': `${100 - selection.value.value}%`,
+            '--_rp-color-picker-current': getHsvCssColor(
+                normalizedHue.value,
+                selection.value.saturation,
+                selection.value.value,
+            ),
         }) as CSSProperties,
 );
 
 const ariaValueText = computed(
-    () => `${Math.round(saturation.value)}% saturation, ${Math.round(value.value)}% value`,
+    () =>
+        `${Math.round(selection.value.saturation)}% saturation, ${Math.round(
+            selection.value.value,
+        )}% value`,
 );
 const groupAriaLabel = computed(() =>
     props.labelledby ? undefined : props.ariaLabel || 'Color area',
 );
-
-function updateValue(nextSaturation: number, nextValue: number) {
-    if (props.readonly) return;
-
-    const normalizedSaturation = roundPercent(clampPercent(nextSaturation));
-    const normalizedValue = roundPercent(clampPercent(nextValue));
-    if (normalizedSaturation === saturation.value && normalizedValue === value.value) return;
-
-    emit('update:modelValue', {
-        saturation: normalizedSaturation,
-        value: normalizedValue,
-    });
-}
-
-function updateFromPointer(e: ColorPickerPointerCoordinates, rect: DOMRect) {
-    if (rect.width <= 0 || rect.height <= 0) return;
-
-    const nextSaturation = ((e.clientX - rect.left) / rect.width) * 100;
-    const nextValue = 100 - ((e.clientY - rect.top) / rect.height) * 100;
-
-    updateValue(nextSaturation, nextValue);
-}
-
-const { onPointerDown } = useColorPickerDrag({
-    target: saturationRef,
-    focusTarget: saturationInputRef,
-    readonly: () => props.readonly,
-    isGeometryValid: (rect) => rect.width > 0 && rect.height > 0,
-    updateFromPointer,
-});
-
-function onAxisKeydown(event: KeyboardEvent, axis: ColorPickerAxis) {
-    const currentValue = axis === 'saturation' ? saturation.value : value.value;
-    const nextValue = getColorPickerKeyboardValue(
-        event.key,
-        currentValue,
-        100,
-        event.shiftKey ? COLOR_PICKER_KEYBOARD_LARGE_STEP : undefined,
-    );
-
-    if (nextValue === undefined) return;
-
-    event.preventDefault();
-    if (!props.readonly) updateAxis(axis, nextValue);
-}
-
-function onAxisInput(event: Event, axis: ColorPickerAxis) {
-    const input = event.currentTarget;
-    if (!(input instanceof HTMLInputElement)) return;
-
-    if (props.readonly) {
-        input.value = String(axis === 'saturation' ? saturation.value : value.value);
-        return;
-    }
-
-    updateAxis(axis, Number(input.value));
-}
-
-function updateAxis(axis: ColorPickerAxis, nextValue: number) {
-    if (axis === 'saturation') updateValue(nextValue, value.value);
-    else updateValue(saturation.value, nextValue);
-}
 </script>
 
 <style src="./color-picker-saturation.scss" lang="scss" scoped></style>

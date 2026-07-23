@@ -73,6 +73,13 @@ export interface ComponentVariantColorOptions extends ComponentContrastColorOpti
     defaultColor?: ComponentColorValue;
 }
 
+export interface ComponentCheckedColorStyleOptions extends ComponentContrastColorOptions {
+    color: ComponentColorValue | undefined;
+    colorProperty: `--${string}`;
+    checkedColorProperty: `--${string}`;
+    defaultColor?: ComponentColorValue;
+}
+
 export type ParsedComponentColor =
     | { kind: 'empty' }
     | { kind: 'preset'; color: ComponentColor }
@@ -131,6 +138,30 @@ export function getComponentContrastColor(
     return getComponentContrastColorRoles(color, options).color;
 }
 
+export function getComponentCheckedColorStyle({
+    color,
+    colorProperty,
+    checkedColorProperty,
+    defaultColor = 'primary',
+    autoContrast,
+    contrastColor,
+}: ComponentCheckedColorStyleOptions) {
+    const colorValue = getComponentColorValue(color);
+    if (color && !colorValue) return undefined;
+    if (!colorValue && autoContrast === false && contrastColor === undefined) return undefined;
+
+    const style: Record<string, string> = {};
+    if (colorValue) style[colorProperty] = colorValue;
+    if (autoContrast !== false || contrastColor !== undefined) {
+        style[checkedColorProperty] = getComponentContrastColor(color ?? defaultColor, {
+            autoContrast,
+            contrastColor,
+        });
+    }
+
+    return style;
+}
+
 export function getComponentContrastColorRoles(
     color: ComponentColorValue | undefined,
     options: ComponentContrastColorOptions = {},
@@ -156,54 +187,65 @@ export function getComponentContrastColorRoles(
 export function getComponentColorRoles(color: ComponentColorValue | undefined) {
     const parsed = parseComponentColor(color);
 
-    if (parsed.kind === 'empty' || parsed.kind === 'invalid') {
-        return undefined;
+    switch (parsed.kind) {
+        case 'empty':
+        case 'invalid':
+            return undefined;
+        case 'primary':
+            return createPrimaryColorRoles();
+        case 'preset':
+            return createPresetColorRoles(parsed.color);
+        case 'shade':
+            return createShadeColorRoles(parsed.color, parsed.shade);
+        case 'custom':
+            return createCustomColorRoles(parsed.value);
     }
+}
 
-    if (parsed.kind === 'primary') {
-        return createComponentColorRoles('var(--rp-primary-color-filled)', {
-            hover: 'var(--rp-primary-color-filled-hover)',
-            contrast: 'var(--rp-primary-color-contrast)',
-            light: 'var(--rp-primary-color-light)',
-            lightHover: 'var(--rp-primary-color-light-hover)',
-            outline: 'var(--rp-primary-color-outline)',
-            outlineHover: 'color-mix(in srgb, var(--rp-primary-color-outline) 62%, transparent)',
-            foreground: 'var(--rp-primary-color-light-color)',
-        });
-    }
+function createPrimaryColorRoles() {
+    return createComponentColorRoles('var(--rp-primary-color-filled)', {
+        hover: 'var(--rp-primary-color-filled-hover)',
+        contrast: 'var(--rp-primary-color-contrast)',
+        light: 'var(--rp-primary-color-light)',
+        lightHover: 'var(--rp-primary-color-light-hover)',
+        outline: 'var(--rp-primary-color-outline)',
+        outlineHover: 'color-mix(in srgb, var(--rp-primary-color-outline) 62%, transparent)',
+        foreground: 'var(--rp-primary-color-light-color)',
+    });
+}
 
-    if (parsed.kind === 'preset') {
-        return createComponentColorRoles(`var(--rp-color-${parsed.color}-filled)`, {
-            hover: `var(--rp-color-${parsed.color}-filled-hover)`,
-            contrast: `var(--rp-color-${parsed.color}-contrast)`,
-            light: `var(--rp-color-${parsed.color}-light)`,
-            lightHover: `var(--rp-color-${parsed.color}-light-hover)`,
-            outline: `var(--rp-color-${parsed.color}-outline)`,
-            outlineHover: `color-mix(in srgb, var(--rp-color-${parsed.color}-outline) 62%, transparent)`,
-            foreground: `var(--rp-color-${parsed.color}-light-color)`,
-        });
-    }
+function createPresetColorRoles(color: ComponentColor) {
+    return createComponentColorRoles(`var(--rp-color-${color}-filled)`, {
+        hover: `var(--rp-color-${color}-filled-hover)`,
+        contrast: `var(--rp-color-${color}-contrast)`,
+        light: `var(--rp-color-${color}-light)`,
+        lightHover: `var(--rp-color-${color}-light-hover)`,
+        outline: `var(--rp-color-${color}-outline)`,
+        outlineHover: `color-mix(in srgb, var(--rp-color-${color}-outline) 62%, transparent)`,
+        foreground: `var(--rp-color-${color}-light-color)`,
+    });
+}
 
-    if (parsed.kind === 'shade') {
-        const base = `var(--rp-color-${parsed.color}-${parsed.shade})`;
-        const hoverShade = Math.min(Number(parsed.shade) + 1, 9);
-        const hover = `var(--rp-color-${parsed.color}-${hoverShade})`;
+function createShadeColorRoles(color: ComponentColor, shade: ComponentColorShade) {
+    const base = `var(--rp-color-${color}-${shade})`;
+    const hoverShade = Math.min(Number(shade) + 1, 9);
 
-        return createComponentColorRoles(base, {
-            hover,
-            contrast: `var(--rp-color-${parsed.color}-${parsed.shade}-contrast)`,
-            contrastHover: `var(--rp-color-${parsed.color}-${hoverShade}-contrast)`,
-            contrastActive: `var(--rp-color-${parsed.color}-${parsed.shade}-active-contrast)`,
-            foreground: base,
-        });
-    }
+    return createComponentColorRoles(base, {
+        hover: `var(--rp-color-${color}-${hoverShade})`,
+        contrast: `var(--rp-color-${color}-${shade}-contrast)`,
+        contrastHover: `var(--rp-color-${color}-${hoverShade}-contrast)`,
+        contrastActive: `var(--rp-color-${color}-${shade}-active-contrast)`,
+        foreground: base,
+    });
+}
 
-    const contrast = getCustomContrastColorRoles(parsed.value);
-    return createComponentColorRoles(parsed.value, {
+function createCustomColorRoles(color: string) {
+    const contrast = getCustomContrastColorRoles(color);
+    return createComponentColorRoles(color, {
         contrast: contrast.color,
         contrastHover: contrast.hover,
         contrastActive: contrast.active,
-        foreground: getCustomForegroundColor(parsed.value),
+        foreground: getCustomForegroundColor(color),
     });
 }
 
@@ -214,109 +256,146 @@ export function getComponentVariantColorRoles({
     autoContrast,
     contrastColor,
 }: ComponentVariantColorOptions): ComponentVariantColorRoles | undefined {
-    const roles = getComponentColorRoles(color ?? defaultColor);
+    const resolvedColor = color ?? defaultColor;
+    const roles = getComponentColorRoles(resolvedColor);
     if (!roles) return undefined;
 
     if (variant === 'solid') {
-        const contrast = getComponentContrastColorRoles(color ?? defaultColor, {
-            autoContrast,
-            contrastColor,
-        });
-
-        return {
-            background: roles.filled,
-            hover: roles.hover,
-            active: roles.active,
-            color: contrast.color,
-            colorHover: contrast.hover,
-            colorActive: contrast.active,
-            border: roles.filled,
-            borderHover: roles.hover,
-            borderActive: roles.active,
-        };
+        return createSolidVariantColorRoles(
+            roles,
+            getComponentContrastColorRoles(resolvedColor, { autoContrast, contrastColor }),
+        );
     }
 
-    if (variant === 'subtle') {
-        return {
-            background: roles.light,
-            hover: roles.lightHover,
-            active: roles.lightActive,
-            color: roles.foreground,
-            colorHover: roles.foreground,
-            colorActive: roles.foreground,
-            border: 'transparent',
-            borderHover: 'transparent',
-            borderActive: 'transparent',
-        };
-    }
+    return createForegroundVariantColorRoles(roles, variant);
+}
 
-    if (variant === 'surface') {
-        return {
-            background: roles.light,
-            hover: roles.lightHover,
-            active: roles.lightActive,
-            color: roles.foreground,
-            colorHover: roles.foreground,
-            colorActive: roles.foreground,
-            border: roles.outline,
-            borderHover: roles.lightHover,
-            borderActive: roles.outlineHover,
-        };
-    }
+type ComponentVariantSurfaces = Pick<
+    ComponentVariantColorRoles,
+    'background' | 'hover' | 'active' | 'border' | 'borderHover' | 'borderActive'
+>;
 
-    if (variant === 'outline') {
-        return {
-            background: 'transparent',
-            hover: roles.lightHover,
-            active: roles.lightActive,
-            color: roles.foreground,
-            colorHover: roles.foreground,
-            colorActive: roles.foreground,
-            border: roles.outline,
-            borderHover: roles.outlineHover,
-            borderActive: roles.outlineHover,
-        };
-    }
+function createSolidVariantColorRoles(
+    roles: ComponentColorRoles,
+    contrast: ComponentContrastColorRoles,
+): ComponentVariantColorRoles {
+    return {
+        background: roles.filled,
+        hover: roles.hover,
+        active: roles.active,
+        color: contrast.color,
+        colorHover: contrast.hover,
+        colorActive: contrast.active,
+        border: roles.filled,
+        borderHover: roles.hover,
+        borderActive: roles.active,
+    };
+}
 
-    if (variant === 'ghost') {
-        return {
-            background: 'transparent',
-            hover: roles.lightHover,
-            active: roles.lightActive,
-            color: roles.foreground,
-            colorHover: roles.foreground,
-            colorActive: roles.foreground,
-            border: 'transparent',
-            borderHover: 'transparent',
-            borderActive: 'transparent',
-        };
-    }
-
-    if (variant === 'plain') {
-        return {
-            background: 'transparent',
-            hover: 'transparent',
-            active: 'transparent',
-            color: roles.foreground,
-            colorHover: roles.foreground,
-            colorActive: roles.foreground,
-            border: 'transparent',
-            borderHover: 'transparent',
-            borderActive: 'transparent',
-        };
-    }
+function createForegroundVariantColorRoles(
+    roles: ComponentColorRoles,
+    variant: ComponentColorVariant | undefined,
+): ComponentVariantColorRoles {
+    const surfaces = getForegroundVariantSurfaces(roles, variant);
 
     return {
-        background: 'var(--rp-color-default)',
-        hover: roles.lightHover,
-        active: roles.lightActive,
+        ...surfaces,
         color: roles.foreground,
         colorHover: roles.foreground,
         colorActive: roles.foreground,
+    };
+}
+
+function getForegroundVariantSurfaces(
+    roles: ComponentColorRoles,
+    variant: ComponentColorVariant | undefined,
+): ComponentVariantSurfaces {
+    switch (variant) {
+        case 'subtle':
+            return createSubtleVariantSurfaces(roles);
+        case 'surface':
+            return createSurfaceVariantSurfaces(roles);
+        case 'outline':
+            return createOutlineVariantSurfaces(roles);
+        case 'ghost':
+            return createGhostVariantSurfaces(roles);
+        case 'plain':
+            return createPlainVariantSurfaces();
+        default:
+            return createDefaultVariantSurfaces(roles);
+    }
+}
+
+function createSubtleVariantSurfaces(roles: ComponentColorRoles) {
+    return createVariantSurfaces({
+        background: roles.light,
+        hover: roles.lightHover,
+        active: roles.lightActive,
+        border: 'transparent',
+    });
+}
+
+function createSurfaceVariantSurfaces(roles: ComponentColorRoles) {
+    return createVariantSurfaces({
+        background: roles.light,
+        hover: roles.lightHover,
+        active: roles.lightActive,
+        border: roles.outline,
+        borderHover: roles.lightHover,
+        borderActive: roles.outlineHover,
+    });
+}
+
+function createOutlineVariantSurfaces(roles: ComponentColorRoles) {
+    return createVariantSurfaces({
+        background: 'transparent',
+        hover: roles.lightHover,
+        active: roles.lightActive,
         border: roles.outline,
         borderHover: roles.outlineHover,
-        borderActive: roles.outlineHover,
-    };
+    });
+}
+
+function createGhostVariantSurfaces(roles: ComponentColorRoles) {
+    return createVariantSurfaces({
+        background: 'transparent',
+        hover: roles.lightHover,
+        active: roles.lightActive,
+        border: 'transparent',
+    });
+}
+
+function createPlainVariantSurfaces() {
+    return createVariantSurfaces({
+        background: 'transparent',
+        hover: 'transparent',
+        active: 'transparent',
+        border: 'transparent',
+    });
+}
+
+function createDefaultVariantSurfaces(roles: ComponentColorRoles) {
+    return createVariantSurfaces({
+        background: 'var(--rp-color-default)',
+        hover: roles.lightHover,
+        active: roles.lightActive,
+        border: roles.outline,
+        borderHover: roles.outlineHover,
+    });
+}
+
+function createVariantSurfaces({
+    background,
+    hover,
+    active,
+    border,
+    borderHover = border,
+    borderActive = borderHover,
+}: Omit<ComponentVariantSurfaces, 'borderHover' | 'borderActive'> &
+    Partial<
+        Pick<ComponentVariantSurfaces, 'borderHover' | 'borderActive'>
+    >): ComponentVariantSurfaces {
+    return { background, hover, active, border, borderHover, borderActive };
 }
 
 function createComponentColorRoles(

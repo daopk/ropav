@@ -248,6 +248,33 @@ describe('RangeSlider pointer interaction', () => {
         expect(onUpdate).toHaveBeenCalledTimes(callCount);
     });
 
+    it('maps track pointers against the measured visual thumb travel', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(RangeSlider, {
+                        modelValue: [20, 80],
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const track = container.querySelector('.rp-range-slider__track') as HTMLElement;
+        const thumbs = container.querySelector('.rp-range-slider__thumbs') as HTMLElement;
+        mockTrackRect(track, { right: 200, width: 200 });
+        mockTrackRect(thumbs, { left: 20, right: 180, width: 160 });
+
+        dispatchPointer(track, 'pointerdown', 60);
+        await flush();
+
+        expect(onUpdate).toHaveBeenLastCalledWith([25, 80]);
+        dispatchPointer(window, 'pointerup', 60);
+    });
+
     it('caches drag geometry and refreshes it only when the viewport changes', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

@@ -161,6 +161,7 @@ import { computed, ref, useId, type InputHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
 import { mergeAriaIdRefs } from '@/utils/aria';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
 import type { RangeSliderPart, RangeSliderProps, RangeSliderTrackSlotProps } from './types';
 import { useRangeSlider } from './useRangeSlider';
@@ -280,38 +281,32 @@ const inputAttrsByThumb = computed<
 const nativeInputAttrs = computed<[InputHTMLAttributes, InputHTMLAttributes]>(
     () =>
         rangeSliderThumbs.map((thumb, index) => {
-            const {
-                class: compatibilityClass,
-                style: compatibilityStyle,
-                onInput: compatibilityOnInput,
-                onFocus: compatibilityOnFocus,
-                onBlur: compatibilityOnBlur,
-                onKeydown: compatibilityOnKeydown,
-                ...attrs
-            } = inputAttrsByThumb.value[index] ?? {};
+            const inputAttrs = inputAttrsByThumb.value[index] ?? {};
+            const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+                splitCompatibilityAttributes(inputAttrs);
 
-            return Object.assign({}, attrs, {
+            return Object.assign({}, forwardedAttributes, {
                 ...getPartAttrs('input', {
                     class: ['rp-range-slider__native', `rp-range-slider__native--${thumb}`],
                     compatibilityClass,
                     compatibilityStyle,
                 }),
-                onInput(event: InputEvent) {
-                    onInput(thumb, event);
-                    compatibilityOnInput?.(event);
-                },
-                onFocus(event: FocusEvent) {
-                    onTooltipFocus(thumb);
-                    compatibilityOnFocus?.(event);
-                },
-                onBlur(event: FocusEvent) {
-                    onTooltipBlur(thumb);
-                    compatibilityOnBlur?.(event);
-                },
-                onKeydown(event: KeyboardEvent) {
-                    onTooltipKeydown(thumb, event);
-                    compatibilityOnKeydown?.(event);
-                },
+                onInput: composeEventHandlers<InputEvent>(
+                    (event) => onInput(thumb, event),
+                    inputAttrs.onInput,
+                ),
+                onFocus: composeEventHandlers<FocusEvent>(
+                    () => onTooltipFocus(thumb),
+                    inputAttrs.onFocus,
+                ),
+                onBlur: composeEventHandlers<FocusEvent>(
+                    () => onTooltipBlur(thumb),
+                    inputAttrs.onBlur,
+                ),
+                onKeydown: composeEventHandlers<KeyboardEvent>(
+                    (event) => onTooltipKeydown(thumb, event),
+                    inputAttrs.onKeydown,
+                ),
             });
         }) as [InputHTMLAttributes, InputHTMLAttributes],
 );

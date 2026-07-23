@@ -148,6 +148,7 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import Tooltip from '../tooltip/tooltip.vue';
 import type {
     SliderPart,
@@ -250,24 +251,18 @@ const tooltipClassNames = computed(() => ({
 const tooltipStyles = computed(() => ({ root: props.styles?.tooltip }));
 
 const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
-    const {
-        class: compatibilityClass,
-        style: compatibilityStyle,
-        onInput: compatibilityOnInput,
-        ...attrs
-    } = props.inputAttrs ?? {};
+    const inputAttrs = props.inputAttrs ?? {};
+    const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+        splitCompatibilityAttributes(inputAttrs);
 
     return {
-        ...attrs,
+        ...forwardedAttributes,
         ...getPartAttrs('input', {
             class: 'rp-slider__native',
             compatibilityClass,
             compatibilityStyle,
         }),
-        onInput(event) {
-            onInput(event);
-            compatibilityOnInput?.(event);
-        },
+        onInput: composeEventHandlers(onInput, inputAttrs.onInput),
     };
 });
 

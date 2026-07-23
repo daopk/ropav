@@ -50,11 +50,10 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue';
+import { computed, useSlots } from 'vue';
 import IconX from '~icons/lucide/x';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
-import { isNodeWithinElement } from '@/utils/dom/events';
 import { useStylesApi } from '@/styles-api';
 import {
     DEFAULT_TOAST_CLOSE_LABEL,
@@ -66,6 +65,7 @@ import {
 } from './defaults';
 import type { ToastCloseReason, ToastPart, ToastProps } from './types';
 import { getToastColorStyle } from './toastColor';
+import { useToastLifecycle } from './useToastLifecycle';
 
 defineOptions({ name: 'RpToast', inheritAttrs: false });
 
@@ -95,42 +95,16 @@ const controllableOpen = useControllableValue({
     onChange: (open) => emit('update:open', open),
 });
 const isOpen = controllableOpen.value;
-const isMounted = ref(false);
-const pausedByHover = ref(false);
-const pausedByFocus = ref(false);
-
-let closePending = false;
-
-let timer: ReturnType<typeof setTimeout> | undefined;
-let timerStartedAt = 0;
-let remainingDuration = 0;
-
-watch(
-    () => props.open,
-    (open) => {
-        if (open) closePending = false;
+const { close: closeToast, rootEvents } = useToastLifecycle({
+    isOpen,
+    duration: () => props.duration,
+    pauseOnHover: () => props.pauseOnHover,
+    pauseOnFocus: () => props.pauseOnFocus,
+    requestClose(reason) {
+        controllableOpen.setValue(false);
+        emit('close', reason);
     },
-);
-
-watch(
-    () => props.pauseOnHover,
-    (pauseOnHover) => {
-        if (pauseOnHover || !pausedByHover.value) return;
-
-        pausedByHover.value = false;
-        resumeTimer();
-    },
-);
-
-watch(
-    () => props.pauseOnFocus,
-    (pauseOnFocus) => {
-        if (pauseOnFocus || !pausedByFocus.value) return;
-
-        pausedByFocus.value = false;
-        resumeTimer();
-    },
-);
+});
 
 const hasTitle = computed(() => Boolean(props.title || slots.title));
 const hasDescription = computed(() => Boolean(props.description));
@@ -154,117 +128,9 @@ const rootAttrs = computed(() =>
         class: rootClass.value,
         style: rootStyle.value,
         role: resolvedRole.value,
-        onMouseenter,
-        onMouseleave,
-        onFocusin,
-        onFocusout,
+        ...rootEvents,
     }),
 );
-
-watch([isOpen, () => props.duration], ([open], [wasOpen]) => {
-    if (!isMounted.value) return;
-
-    if (!open || !wasOpen) {
-        pausedByHover.value = false;
-        pausedByFocus.value = false;
-    }
-
-    resetTimer();
-});
-
-onMounted(() => {
-    isMounted.value = true;
-    resetTimer();
-});
-
-onBeforeUnmount(clearTimer);
-
-function getDuration() {
-    return Number.isFinite(props.duration) && props.duration > 0 ? props.duration : 0;
-}
-
-function resetTimer() {
-    clearTimer();
-    remainingDuration = getDuration();
-    scheduleTimer();
-}
-
-function scheduleTimer() {
-    if (!isOpen.value || remainingDuration <= 0 || pausedByHover.value || pausedByFocus.value) {
-        return;
-    }
-
-    timerStartedAt = Date.now();
-    timer = setTimeout(() => {
-        timer = undefined;
-        remainingDuration = 0;
-        closeToast('timeout');
-    }, remainingDuration);
-}
-
-function clearTimer() {
-    if (timer === undefined) return;
-    clearTimeout(timer);
-    timer = undefined;
-}
-
-function pauseTimer() {
-    if (timer === undefined) return;
-    remainingDuration = Math.max(0, remainingDuration - (Date.now() - timerStartedAt));
-    clearTimer();
-
-    if (remainingDuration === 0) closeToast('timeout');
-}
-
-function resumeTimer() {
-    if (pausedByHover.value || pausedByFocus.value) return;
-    scheduleTimer();
-}
-
-function onMouseenter() {
-    if (!props.pauseOnHover) return;
-    pausedByHover.value = true;
-    pauseTimer();
-}
-
-function onMouseleave() {
-    if (!props.pauseOnHover) return;
-    pausedByHover.value = false;
-    resumeTimer();
-}
-
-function onFocusin() {
-    if (!props.pauseOnFocus) return;
-    pausedByFocus.value = true;
-    pauseTimer();
-}
-
-function onFocusout(event: FocusEvent) {
-    if (!props.pauseOnFocus) return;
-
-    if (isNodeWithinElement(event.relatedTarget, event.currentTarget)) return;
-
-    pausedByFocus.value = false;
-    resumeTimer();
-}
-
-function closeToast(reason: ToastCloseReason) {
-    if (closePending) return;
-
-    closePending = true;
-    clearTimer();
-    controllableOpen.setValue(false);
-    emit('close', reason);
-
-    // A controlled owner can close and reopen synchronously, which Vue batches into
-    // a single unchanged `open` value. Restart here because the watcher will not run.
-    if (isOpen.value) {
-        resetTimer();
-        void nextTick(() => {
-            if (isOpen.value) closePending = false;
-        });
-    }
-}
 </script>
 
 <style src="./toast.scss" lang="scss" scoped></style>

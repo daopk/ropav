@@ -7,11 +7,59 @@
   },
   "plugins": ["unicorn", "typescript", "oxc", "import", "vue", "vitest"],
   "ignorePatterns": ["dist/**", "storybook-static/**"],
+  "options": {
+    "reportUnusedDisableDirectives": "error"
+  },
   "rules": {
+    "import/no-cycle": "error",
     "import/no-unassigned-import": "off",
     "vitest/require-mock-type-parameters": "off"
   },
   "overrides": [
+    {
+      "files": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+      "excludeFiles": [
+        "src/**/*.spec.*",
+        "src/**/*.story.*",
+        "src/**/*.stories.*",
+        "src/**/*.test.*"
+      ],
+      "rules": {
+        "complexity": ["error", 20],
+        "max-depth": ["error", 4],
+        "max-lines-per-function": [
+          "error",
+          {
+            "max": 250,
+            "skipBlankLines": true,
+            "skipComments": true
+          }
+        ],
+        "max-params": ["error", 5],
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "vue",
+                "importNames": [
+                  "h",
+                  "VNode",
+                  "defineComponent",
+                  "createVNode",
+                  "cloneVNode",
+                  "isVNode",
+                  "openBlock",
+                  "createBlock",
+                  "createElementBlock"
+                ],
+                "message": "Production source must remain zero-VDOM with Vue Vapor."
+              }
+            ]
+          }
+        ]
+      }
+    },
     {
       "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {

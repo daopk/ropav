@@ -1,5 +1,5 @@
 import { onBeforeUnmount } from 'vue';
-import { getPointerId } from '@/utils/dom/pointer';
+import { getPointerId, isMatchingPointer } from '@/utils/dom/pointer';
 import { createRafScheduler } from '@/utils/rafScheduler';
 import type { RangeSliderThumb } from './types';
 
@@ -117,7 +117,7 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
     }
 
     function isCurrentPointer(event: PointerEvent) {
-        return session?.pointerId === undefined || event.pointerId === session.pointerId;
+        return isMatchingPointer(event, session?.pointerId);
     }
 
     function onPointerMove(event: PointerEvent) {

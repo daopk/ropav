@@ -13,6 +13,7 @@ export type {
     PaginationProps,
     PaginationRadius,
     PaginationSize,
+    UsePaginationReturn,
 } from './types';
 export {
     getPaginationItems,

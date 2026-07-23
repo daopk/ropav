@@ -1,5 +1,6 @@
 import { computed, type Ref, type SelectHTMLAttributes } from 'vue';
 import { useFormControl } from '@/internal/composables/useFormControl';
+import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import type { SelectProps } from './types';
 import { useSelectNativeValue, type SelectValue } from './useSelectNativeValue';
 
@@ -24,31 +25,24 @@ export function useSelectNativeControl(
     });
 
     const nativeInputAttrs = computed<SelectHTMLAttributes>(() => {
-        const {
-            class: compatibilityClass,
-            style: compatibilityStyle,
-            onInput: compatibilityOnInput,
-            onChange: compatibilityOnChange,
-            onInvalid: compatibilityOnInvalid,
-            ...attrs
-        } = props.inputAttrs ?? {};
+        const compatibilityAttrs = props.inputAttrs ?? {};
+        const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
+            splitCompatibilityAttributes(compatibilityAttrs);
 
         return {
-            ...attrs,
+            ...forwardedAttributes,
             class: ['rp-select__native', compatibilityClass],
             style: compatibilityStyle,
-            onInput(event) {
-                controllable.setValue(getNativeValue(event.currentTarget as HTMLSelectElement));
-                compatibilityOnInput?.(event);
-            },
-            onChange(event) {
-                compatibilityOnChange?.(event);
-            },
-            onInvalid(event) {
+            onInput: composeEventHandlers<InputEvent>(
+                (event) =>
+                    controllable.setValue(getNativeValue(event.currentTarget as HTMLSelectElement)),
+                compatibilityAttrs.onInput,
+            ),
+            onChange: compatibilityAttrs.onChange,
+            onInvalid: composeEventHandlers<Event>((event) => {
                 event.preventDefault();
                 triggerRef.value?.focus();
-                compatibilityOnInvalid?.(event);
-            },
+            }, compatibilityAttrs.onInvalid),
         };
     });
 
