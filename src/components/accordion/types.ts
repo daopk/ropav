@@ -1,4 +1,4 @@
-import type { ComputedRef, HTMLAttributes, InjectionKey } from 'vue';
+import type { ComputedRef, HTMLAttributes } from 'vue';
 import type { StylesApiProps } from '../../styles-api';
 import type {
     CollapseContentProps,
@@ -118,5 +118,3 @@ export interface UseAccordionItemReturn {
     close: () => void;
     toggle: () => void;
 }
-
-export const accordionKey = Symbol('accordion') as InjectionKey<AccordionContext>;

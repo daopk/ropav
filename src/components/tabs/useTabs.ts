@@ -13,6 +13,7 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { toOptionalAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
+import { getFocusNavigationTarget } from '@/utils/dom/focusNavigation';
 import type {
     TabsActivationMode,
     TabsContentProps,
@@ -48,8 +49,6 @@ const DEFAULT_VARIANT: TabsVariant = 'line';
 const DEFAULT_ORIENTATION: TabsOrientation = 'horizontal';
 const DEFAULT_PLACEMENT: TabsPlacement = 'left';
 const DEFAULT_ACTIVATION_MODE: TabsActivationMode = 'automatic';
-
-type NavigationDirection = 1 | -1;
 
 interface TabsRegistration {
     id: string;
@@ -87,14 +86,6 @@ interface TabsContext {
 }
 
 const tabsKey = Symbol('tabs') as InjectionKey<TabsContext>;
-
-const ORIENTATION_NAVIGATION_KEYS: Record<
-    TabsOrientation,
-    Partial<Record<string, NavigationDirection>>
-> = {
-    horizontal: { ArrowRight: 1, ArrowLeft: -1 },
-    vertical: { ArrowDown: 1, ArrowUp: -1 },
-};
 
 function toTabsState(active: boolean): TabsState {
     return active ? 'active' : 'inactive';
@@ -194,44 +185,6 @@ function useTabsRegistration<T extends { id: string }>(
     onBeforeUnmount(() => {
         if (registeredId.value) unregister(registeredId.value);
     });
-}
-
-function getTabsTrigger(event: KeyboardEvent, list: HTMLElement) {
-    const target = event.target;
-    const trigger =
-        target instanceof Element ? target.closest<HTMLButtonElement>(TRIGGER_SELECTOR) : undefined;
-
-    return trigger?.closest(TABLIST_SELECTOR) === list ? trigger : undefined;
-}
-
-function getTabsTriggers(list: HTMLElement) {
-    return Array.from(list.querySelectorAll<HTMLButtonElement>(TRIGGER_SELECTOR)).filter(
-        (trigger) => trigger.closest(TABLIST_SELECTOR) === list && !trigger.disabled,
-    );
-}
-
-function getNextTrigger(
-    list: HTMLElement,
-    currentTrigger: HTMLButtonElement,
-    key: string,
-    orientation: TabsOrientation,
-) {
-    const triggers = getTabsTriggers(list);
-    const currentIndex = triggers.indexOf(currentTrigger);
-    if (currentIndex === -1 || triggers.length === 0) return undefined;
-
-    if (key === 'Home') return triggers[0];
-    if (key === 'End') return triggers[triggers.length - 1];
-
-    const direction = ORIENTATION_NAVIGATION_KEYS[orientation][key];
-    if (!direction) return undefined;
-
-    const isHorizontalRtl =
-        orientation === 'horizontal' &&
-        list.ownerDocument.defaultView?.getComputedStyle(list).direction === 'rtl';
-    const navigationDirection = isHorizontalRtl ? -direction : direction;
-
-    return triggers[(currentIndex + navigationDirection + triggers.length) % triggers.length];
 }
 
 function useTabsItem(
@@ -367,10 +320,11 @@ export function useTabs(
         const list = event.currentTarget as HTMLElement | null;
         if (!list || isDisabled.value) return;
 
-        const trigger = getTabsTrigger(event, list);
-        if (!trigger) return;
-
-        const nextTrigger = getNextTrigger(list, trigger, event.key, orientation.value);
+        const nextTrigger = getFocusNavigationTarget<HTMLButtonElement>(event, list, {
+            itemSelector: TRIGGER_SELECTOR,
+            collectionSelector: TABLIST_SELECTOR,
+            orientation: orientation.value,
+        });
         if (!nextTrigger) return;
 
         event.preventDefault();

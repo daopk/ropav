@@ -31,7 +31,7 @@ import { computed } from 'vue';
 import IconChevronDown from '~icons/lucide/chevron-down';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
-import { useAccordionItem } from './useAccordion';
+import { useAccordionItem } from './useAccordionItem';
 import type { AccordionItemPart, AccordionItemProps } from './types';
 
 defineOptions({ name: 'RpAccordionItem', inheritAttrs: false });

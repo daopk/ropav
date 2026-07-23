@@ -1,9 +1,14 @@
 import {
     accordionItemParts,
     accordionParts,
+    useAccordion,
+    useAccordionItem,
+    type AccordionContext,
     type AccordionItemPart,
     type AccordionPart,
     type AccordionTriggerProps,
+    type UseAccordionItemReturn,
+    type UseAccordionReturn,
 } from 'ropav/accordion';
 import { alertParts, type AlertPart } from 'ropav/alert';
 import { aspectRatioParts, type AspectRatioPart } from 'ropav/aspect-ratio';
@@ -114,6 +119,9 @@ const accordionTriggerClass: AccordionTriggerProps['class'] = [
     'consumer-trigger',
     { active: true },
 ];
+const accordionContextSetter: AccordionContext['setItemOpen'] = () => {};
+const accordionRootSetter: UseAccordionReturn['setItemOpen'] = accordionContextSetter;
+const accordionItemToggle: UseAccordionItemReturn['toggle'] = () => {};
 type InternalClassNameIsExcluded = 'content' extends keyof StylesApiClassNames<ButtonPart>
     ? never
     : true;
@@ -127,6 +135,11 @@ void [
     rootModalParts,
     buttonProps,
     accordionTriggerClass,
+    accordionContextSetter,
+    accordionRootSetter,
+    accordionItemToggle,
+    useAccordion,
+    useAccordionItem,
     internalClassNameIsExcluded,
     arbitraryStyleIsExcluded,
 ];
