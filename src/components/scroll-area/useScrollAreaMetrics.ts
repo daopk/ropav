@@ -1,14 +1,14 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, type Ref } from 'vue';
+import { clamp } from '@/utils/number';
 import { createRafScheduler } from '@/utils/rafScheduler';
 import {
-    clamp,
     getLogicalHorizontalPosition,
     getScrollDirection,
     getThumbGeometry,
     getThumbOffset,
     type ScrollAreaMetrics,
     type ScrollAxis,
-} from './scrollAreaCore';
+} from './scrollAreaModel';
 import type { ScrollAreaPosition } from './types';
 
 interface UseScrollAreaMetricsOptions {

@@ -30,8 +30,9 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref } from 'vue';
+import { getPathKey } from '@/utils/indexPath';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
-import { getPathKey, hasItemSubmenu, type ItemPath } from './dropdown-menu-utils';
+import { hasItemSubmenu, type ItemPath } from './dropdown-menu-model';
 import type { DropdownMenuItem, DropdownMenuItemSlotProps } from './types';
 import type { DropdownMenuRenderContext } from './useDropdownMenuRenderItems';
 

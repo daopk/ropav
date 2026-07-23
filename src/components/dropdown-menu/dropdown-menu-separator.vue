@@ -5,7 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import { menuKey } from './dropdown-menu-primitive-core';
+import { menuKey } from './dropdownMenuContext';
 import type { DropdownMenuSeparatorPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuSeparator', inheritAttrs: false });

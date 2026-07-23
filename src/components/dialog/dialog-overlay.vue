@@ -14,11 +14,8 @@
 import { computed, mergeProps, ref, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { useOverlayLayerBranch } from '@/internal/composables/useOverlayLayer';
-import {
-    dialogRootKey,
-    resolveDialogHTMLElementRef,
-    type DialogElementRefValue,
-} from './dialog-core';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { dialogRootKey } from './dialogContext';
 import type { DialogOverlayProps } from './types';
 
 defineOptions({ name: 'RpDialogOverlay', inheritAttrs: false });
@@ -43,8 +40,8 @@ const rootAttrs = computed(() =>
     }),
 );
 
-function setElement(value: DialogElementRefValue) {
-    resolveDialogHTMLElementRef(value, id.value, (resolved) => {
+function setElement(value: ComponentElementRef) {
+    resolveHTMLElementRef(value, id.value, (resolved) => {
         element.value = resolved;
     });
 }

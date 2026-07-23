@@ -1,6 +1,6 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
 import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
-import { blockNextDocumentClick, createOutsideEvent } from './dropdown-menu-primitive-core';
+import { blockNextDocumentClick, createOutsideEvent } from './dropdownMenuContext';
 import { isEventWithinTargets } from './dropdown-menu-outside';
 import type {
     DropdownMenuCloseOptions,
@@ -11,7 +11,7 @@ import type {
     DropdownMenuProps,
     DropdownMenuSelectEvent,
 } from './types';
-import { DEFAULT_FOCUS_TARGET, getOpenFocusTarget, type ItemPath } from './dropdown-menu-utils';
+import { DEFAULT_FOCUS_TARGET, getOpenFocusTarget, type ItemPath } from './dropdown-menu-model';
 
 type BooleanSource = Readonly<Ref<boolean>>;
 

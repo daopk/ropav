@@ -7,7 +7,7 @@
         :aria-label="groupAriaLabel"
         :aria-labelledby="labelledby"
         :aria-describedby="describedby"
-        :data-readonly="presence(readonly)"
+        :data-readonly="toPresenceAttribute(readonly)"
         data-control="saturation"
         @pointerdown="onPointerDown"
     >
@@ -58,16 +58,15 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, type CSSProperties } from 'vue';
-import { presence } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import {
     clampPercent,
     getHsvCssColor,
-    KEYBOARD_LARGE_STEP,
-    KEYBOARD_STEP,
     normalizeHue,
     normalizeHueForColor,
     roundPercent,
-} from './color-picker-utils';
+} from '@/utils/colorPicker';
+import { KEYBOARD_LARGE_STEP, KEYBOARD_STEP } from './constants';
 import type { ColorPickerSaturationProps, ColorPickerSelection } from './types';
 import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 

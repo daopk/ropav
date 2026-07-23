@@ -1,4 +1,6 @@
 import { onBeforeUnmount } from 'vue';
+import { getPointerId } from '@/utils/dom/pointer';
+import { createRafScheduler } from '@/utils/rafScheduler';
 import type { RangeSliderThumb } from './types';
 
 interface DragSession<TGeometry> {
@@ -31,16 +33,8 @@ interface UseRangeSliderPointerOptions<TGeometry> {
 
 export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerOptions<TGeometry>) {
     let session: DragSession<TGeometry> | undefined;
-    let frameWindow: Window | null = null;
-    let frameId: number | undefined;
     let pendingPointerEvent: PointerEvent | undefined;
     let geometryDirty = false;
-
-    function cancelScheduledFrame() {
-        if (frameId !== undefined) frameWindow?.cancelAnimationFrame(frameId);
-        frameWindow = null;
-        frameId = undefined;
-    }
 
     function refreshGeometry() {
         const currentSession = session;
@@ -63,27 +57,15 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
         if (event && isCurrentPointer(event)) updateFromPointer(event);
     }
 
-    function flushScheduledUpdate() {
-        cancelScheduledFrame();
-        applyScheduledUpdate();
-    }
+    const updateScheduler = createRafScheduler(applyScheduledUpdate, () => session?.view);
 
-    function onAnimationFrame() {
-        frameWindow = null;
-        frameId = undefined;
+    function flushScheduledUpdate() {
+        updateScheduler.cancel();
         applyScheduledUpdate();
     }
 
     function scheduleUpdate() {
-        const view = session?.view;
-        if (!view?.requestAnimationFrame) {
-            flushScheduledUpdate();
-            return;
-        }
-        if (frameId !== undefined) return;
-
-        frameWindow = view;
-        frameId = view.requestAnimationFrame(onAnimationFrame);
+        if (session) updateScheduler.schedule();
     }
 
     function onGeometryChange() {
@@ -101,7 +83,7 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
         stoppedSession.view?.removeEventListener('pointercancel', onPointerEnd);
         stoppedSession.view?.removeEventListener('resize', onGeometryChange);
         stoppedSession.view?.removeEventListener('scroll', onGeometryChange, true);
-        cancelScheduledFrame();
+        updateScheduler.cancel();
         pendingPointerEvent = undefined;
         geometryDirty = false;
         session = undefined;
@@ -176,7 +158,7 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
             geometry,
             thumb,
             anchorValue: options.getAnchorValue(thumb),
-            pointerId: Number.isFinite(event.pointerId) ? event.pointerId : undefined,
+            pointerId: getPointerId(event),
         };
         options.startDrag(thumb);
         const nextThumb = options.updateThumb(thumb, pointerValue, session.anchorValue);

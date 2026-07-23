@@ -10,7 +10,7 @@ import {
     parseColorPickerValue,
     roundPercent,
     type ColorPickerHsvColor,
-} from './color-picker-utils';
+} from '@/utils/colorPicker';
 import type {
     ColorPickerFormat,
     ColorPickerProps,

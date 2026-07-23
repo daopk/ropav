@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getLogicalHorizontalPosition, getRawHorizontalPosition } from './scrollAreaCore';
+import { getLogicalHorizontalPosition, getRawHorizontalPosition } from './scrollAreaModel';
 
 describe('ScrollArea horizontal positions', () => {
     it('keeps LTR positions in native coordinates', () => {

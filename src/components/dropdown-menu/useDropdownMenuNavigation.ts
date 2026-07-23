@@ -1,10 +1,8 @@
 import { computed, ref } from 'vue';
-import {
-    getEnabledIndexes,
-    getNextEnabledIndex,
-} from '@/internal/composables/collectionNavigation';
+import { getEnabledIndexes, getNextEnabledIndex } from '@/utils/collectionNavigation';
+import { arePathsEqual, getParentPath, normalizePath } from '@/utils/indexPath';
+import type { ItemPath } from './dropdown-menu-model';
 import type { DropdownMenuFocusTarget, DropdownMenuItem } from './types';
-import { arePathsEqual, getParentPath, normalizePath, type ItemPath } from './dropdown-menu-utils';
 
 type DropdownMenuItemsSource = {
     readonly value: DropdownMenuItem[];

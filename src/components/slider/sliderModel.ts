@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue';
 import { getComponentColorRoles, getComponentColorValue } from '@/utils/componentColors';
+import { clamp, getValuePercent } from '@/utils/number';
 import type {
     RangeSliderTooltip,
     RangeSliderThumbOptions,
@@ -53,21 +54,18 @@ export function normalizeSliderValue(
     const bounds = normalizeSliderBounds(min, max);
     const safeStep = normalizeSliderStep(step);
     const safeValue = Number.isFinite(value) ? value : bounds.min;
-    const clamped = Math.min(bounds.max, Math.max(bounds.min, safeValue));
+    const clamped = clamp(safeValue, bounds.min, bounds.max);
 
     if (safeStep === 'any') return clamped;
 
     const steps = Math.round((clamped - bounds.min) / safeStep);
     const snapped = bounds.min + steps * safeStep;
 
-    return Math.min(bounds.max, Math.max(bounds.min, Number(snapped.toFixed(10))));
+    return clamp(Number(snapped.toFixed(10)), bounds.min, bounds.max);
 }
 
 export function getSliderValuePercent(value: number, min: number, max: number) {
-    if (!Number.isFinite(value) || max <= min) return 0;
-
-    const percent = ((value - min) / (max - min)) * 100;
-    return Math.min(100, Math.max(0, percent));
+    return getValuePercent(value, min, max);
 }
 
 export function setSliderStyleValue(

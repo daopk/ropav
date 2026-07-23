@@ -13,14 +13,11 @@
 <script lang="ts" setup vapor>
 import { computed, isRef, mergeProps, onBeforeUnmount, useAttrs, watch } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { querySelectorSafe } from '@/utils/dom/query';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
-import {
-    createDialogEvent,
-    dialogRootKey,
-    resolveDialogHTMLElementRef,
-    type DialogElementRefValue,
-} from './dialog-core';
+import { createDialogEvent, dialogRootKey } from './dialogContext';
 import type { DialogCloseReason, DialogContentProps, DialogInteractOutsideEvent } from './types';
 
 defineOptions({ name: 'RpDialogContent', inheritAttrs: false });
@@ -64,11 +61,7 @@ function resolveInitialFocus() {
     const initialFocus = props.initialFocus;
     const resolved = isRef(initialFocus) ? initialFocus.value : initialFocus;
     if (typeof resolved !== 'string') return resolved ?? undefined;
-    try {
-        return root.contentRef.value?.querySelector<HTMLElement>(resolved) ?? undefined;
-    } catch {
-        return undefined;
-    }
+    return querySelectorSafe<HTMLElement>(resolved, root.contentRef.value) ?? undefined;
 }
 
 const focusTrap = useFocusTrap(focusTrapContainers, {
@@ -82,8 +75,8 @@ const focusTrap = useFocusTrap(focusTrapContainers, {
     delayInitialFocus: props.focusTrapOptions.delayInitialFocus ?? false,
 });
 
-function setElement(value: DialogElementRefValue) {
-    resolveDialogHTMLElementRef(value, id.value, (element) => root.setContent(element, id.value));
+function setElement(value: ComponentElementRef) {
+    resolveHTMLElementRef(value, id.value, (element) => root.setContent(element, id.value));
 }
 
 function onDocumentKeydown(event: KeyboardEvent) {

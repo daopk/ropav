@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, shallowRef, toValue, watch } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { isElement, querySelectorSafe } from '@/utils/dom/query';
 import type {
     HoverDisclosureContentProps,
     HoverDisclosureContentTarget,
@@ -16,25 +17,11 @@ import type {
 const DEFAULT_OPEN_DELAY = 0;
 const DEFAULT_CLOSE_DELAY = 0;
 
-function isElement(value: unknown): value is Element {
-    return typeof Element !== 'undefined' && value instanceof Element;
-}
-
-function resolveSelector(selector: string) {
-    if (typeof document === 'undefined') return null;
-
-    try {
-        return document.querySelector(selector);
-    } catch {
-        return null;
-    }
-}
-
 function resolveInteractionTarget(
     target: HoverDisclosureInteractionTarget | null | undefined,
 ): Element | null {
     if (!target) return null;
-    if (typeof target === 'string') return resolveSelector(target);
+    if (typeof target === 'string') return querySelectorSafe(target);
     if (isElement(target)) return target;
 
     return isElement(target.contextElement) ? target.contextElement : null;
@@ -44,7 +31,11 @@ function resolveContentTarget(
     target: HoverDisclosureContentTarget | null | undefined,
 ): Element | null {
     if (!target) return null;
-    return typeof target === 'string' ? resolveSelector(target) : isElement(target) ? target : null;
+    return typeof target === 'string'
+        ? querySelectorSafe(target)
+        : isElement(target)
+          ? target
+          : null;
 }
 
 function readDelay(value: number | undefined, fallback: number) {
@@ -59,10 +50,11 @@ function eventElement(event: Event) {
 function focusLeavesCurrentTarget(event: FocusEvent) {
     const currentTarget = eventElement(event);
     const nextTarget = event.relatedTarget;
+    const NodeConstructor = currentTarget?.ownerDocument.defaultView?.Node;
     return !(
         currentTarget &&
-        typeof Node !== 'undefined' &&
-        nextTarget instanceof Node &&
+        NodeConstructor &&
+        nextTarget instanceof NodeConstructor &&
         currentTarget.contains(nextTarget)
     );
 }

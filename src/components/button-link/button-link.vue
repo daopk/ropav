@@ -27,8 +27,9 @@
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
 import { bem } from '@/utils/bem';
-import { presence, useStylesApi } from '@/styles-api';
-import { getButtonColorStyle } from '../button/useButtonColor';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
+import { getButtonColorStyle } from '../button/buttonColor';
 import type { ButtonLinkPart, ButtonLinkProps } from './types';
 
 defineOptions({ name: 'RpButtonLink', inheritAttrs: false });
@@ -80,8 +81,8 @@ const rootAttrs = computed(() =>
         'aria-disabled': isUnavailable.value || undefined,
         'aria-busy': props.loading || undefined,
         tabindex: isUnavailable.value ? -1 : undefined,
-        'data-disabled': presence(isUnavailable.value),
-        'data-loading': presence(props.loading),
+        'data-disabled': toPresenceAttribute(isUnavailable.value),
+        'data-loading': toPresenceAttribute(props.loading),
         onClickCapture: onDisabledClick,
     }),
 );

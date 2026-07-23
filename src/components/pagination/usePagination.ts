@@ -1,6 +1,7 @@
 import { computed, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
+import { clamp } from '@/utils/number';
 import type { PaginationItem, PaginationProps } from './types';
 
 function normalizeCount(value: number, fallback: number) {
@@ -15,7 +16,7 @@ export function normalizePaginationPage(page: number, total: number) {
     const safeTotal = normalizePaginationTotal(total);
     const safePage = Number.isFinite(page) ? Math.floor(page) : 1;
 
-    return Math.min(Math.max(safePage, 1), Math.max(safeTotal, 1));
+    return clamp(safePage, 1, Math.max(safeTotal, 1));
 }
 
 function getRange(start: number, end: number) {
@@ -145,7 +146,7 @@ export function usePagination(
     );
     const firstPage = computed(() => 1);
     const previousPage = computed(() => Math.max(1, currentPage.value - 1));
-    const nextPage = computed(() => Math.min(Math.max(totalPages.value, 1), currentPage.value + 1));
+    const nextPage = computed(() => clamp(currentPage.value + 1, 1, Math.max(totalPages.value, 1)));
     const lastPage = computed(() => Math.max(totalPages.value, 1));
     const isFirstDisabled = computed(
         () => props.disabled || totalPages.value === 0 || currentPage.value <= 1,

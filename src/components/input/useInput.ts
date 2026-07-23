@@ -1,22 +1,10 @@
 import { computed, ref } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
+import { isInteractiveElement } from '@/utils/dom/interactive';
 import type { InputProps } from './types';
 
 const NATIVE_INPUT_SELECTOR = '.rp-input__native';
-const INTERACTIVE_SELECTOR = [
-    'button',
-    'a[href]',
-    `input:not(${NATIVE_INPUT_SELECTOR})`,
-    'select',
-    'textarea',
-    '[contenteditable="true"]',
-    '[tabindex]:not([tabindex="-1"])',
-].join(',');
-
-function isInteractiveElement(target: Element) {
-    return Boolean(target.closest(INTERACTIVE_SELECTOR));
-}
 
 export function useInput(props: Readonly<InputProps>, emitUpdate: (value: string) => void) {
     const inputRef = ref<HTMLInputElement | null>(null);
@@ -40,8 +28,7 @@ export function useInput(props: Readonly<InputProps>, emitUpdate: (value: string
     function focusInput(e: MouseEvent) {
         if (control.disabled) return;
 
-        const target = e.target;
-        if (target instanceof Element && isInteractiveElement(target)) return;
+        if (isInteractiveElement(e.target, NATIVE_INPUT_SELECTOR)) return;
 
         inputRef.value?.focus();
     }

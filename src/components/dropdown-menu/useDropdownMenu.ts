@@ -4,7 +4,9 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
-import { isElementReference, useFloatingTarget } from '../floating/useFloatingPosition';
+import { getParentPath } from '@/utils/indexPath';
+import { isElement } from '@/utils/dom/query';
+import { useFloatingTarget } from '../floating/useFloatingPosition';
 import {
     useTeleportPositioningKey,
     useTeleportTarget,
@@ -19,7 +21,7 @@ import type {
     DropdownMenuSlotProps,
     DropdownMenuTriggerProps,
 } from './types';
-import { DEFAULT_PLACEMENT, getParentPath, hasNestedItems } from './dropdown-menu-utils';
+import { DEFAULT_PLACEMENT, hasNestedItems } from './dropdown-menu-model';
 import { useDropdownMenuDisclosure } from './useDropdownMenuDisclosure';
 import { useDropdownMenuDom } from './useDropdownMenuDom';
 import { useDropdownMenuHoverIntent } from './useDropdownMenuHoverIntent';
@@ -59,7 +61,7 @@ export function useDropdownMenu(
         rootRef,
     );
     const targetElement = computed(() =>
-        isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
+        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
     );
     const visibleItems = computed(() => props.items ?? []);
     const isDisabled = computed(() => Boolean(props.disabled));

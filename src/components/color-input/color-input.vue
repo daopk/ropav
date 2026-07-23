@@ -110,7 +110,8 @@ import {
     provideNestedFormControlOwner,
     useTextFormControl,
 } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import ColorPicker from '../color-picker/color-picker.vue';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
 import Input from '../input/input.vue';
@@ -194,9 +195,9 @@ useTextFormControl(
 const { getPartAttrs, getRootAttrs } = useStylesApi<ColorInputPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
-        'data-disabled': presence(control.disabled),
-        'data-readonly': presence(props.readonly),
-        'data-invalid': presence(isInvalid.value),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-readonly': toPresenceAttribute(props.readonly),
+        'data-invalid': toPresenceAttribute(isInvalid.value),
         onFocusout: onFocusOut,
     }),
 );

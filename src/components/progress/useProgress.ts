@@ -2,6 +2,7 @@ import { computed, type CSSProperties } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
+import { clamp, getValuePercent } from '@/utils/number';
 import type { ProgressProps } from './types';
 
 type ProgressStateProps = Readonly<
@@ -23,14 +24,11 @@ export function normalizeProgressBounds(min: number, max: number) {
 export function normalizeProgressValue(value: number | null | undefined, min: number, max: number) {
     const safeValue = Number.isFinite(value) ? Number(value) : min;
 
-    return Math.min(max, Math.max(min, safeValue));
+    return clamp(safeValue, min, max);
 }
 
 export function getProgressValuePercent(value: number, min: number, max: number) {
-    if (max <= min) return 0;
-
-    const percent = ((value - min) / (max - min)) * 100;
-    return Math.min(100, Math.max(0, percent));
+    return getValuePercent(value, min, max);
 }
 
 function getFormattedProgressValue(

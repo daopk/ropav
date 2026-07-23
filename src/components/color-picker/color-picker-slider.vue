@@ -12,7 +12,7 @@
         :aria-valuenow="Math.round(normalizedValue)"
         :aria-valuetext="ariaValueText"
         :aria-readonly="readonly || undefined"
-        :data-readonly="presence(readonly)"
+        :data-readonly="toPresenceAttribute(readonly)"
         :data-control="variant"
         @pointerdown="onPointerDown"
         @keydown="onKeydown"
@@ -29,17 +29,16 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, type CSSProperties } from 'vue';
-import { presence } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import {
     clampHue,
     clampOpacity,
     HUE_MAX,
-    KEYBOARD_LARGE_STEP,
-    KEYBOARD_STEP,
     normalizeHue,
     normalizeHueForColor,
     roundPercent,
-} from './color-picker-utils';
+} from '@/utils/colorPicker';
+import { KEYBOARD_LARGE_STEP, KEYBOARD_STEP } from './constants';
 import type { ColorPickerSliderProps } from './types';
 import { useColorPickerDrag, type ColorPickerPointerCoordinates } from './useColorPickerDrag';
 

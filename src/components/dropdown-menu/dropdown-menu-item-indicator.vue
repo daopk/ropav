@@ -7,7 +7,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import { checkedKey } from './dropdown-menu-primitive-core';
+import { checkedKey } from './dropdownMenuContext';
 import type { DropdownMenuItemIndicatorPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuItemIndicator', inheritAttrs: false });

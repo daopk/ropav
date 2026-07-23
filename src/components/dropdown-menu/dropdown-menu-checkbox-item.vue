@@ -7,8 +7,9 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, provide, useAttrs } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { toOptionalAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
-import { checkedKey, optionalAttr, usePrimitiveItem } from './dropdown-menu-primitive-core';
+import { checkedKey, usePrimitiveItem } from './dropdownMenuContext';
 import type {
     DropdownMenuCheckedState,
     DropdownMenuCheckboxItemPrimitiveProps,
@@ -81,12 +82,12 @@ const rootAttrs = computed(() =>
         type: props.as === 'button' ? 'button' : undefined,
         role: 'menuitemcheckbox',
         tabindex: -1,
-        disabled: props.as === 'button' ? optionalAttr(isDisabled.value) : undefined,
-        'aria-disabled': optionalAttr(isDisabled.value),
+        disabled: props.as === 'button' ? toOptionalAttribute(isDisabled.value) : undefined,
+        'aria-disabled': toOptionalAttribute(isDisabled.value),
         'aria-checked': checked.value,
-        'data-disabled': optionalAttr(isDisabled.value),
-        'data-focused': optionalAttr(focused.value),
-        'data-highlighted': optionalAttr(focused.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
+        'data-focused': toOptionalAttribute(focused.value),
+        'data-highlighted': toOptionalAttribute(focused.value),
         'data-state': state.value,
         class: bem('rp-dropdown-menu__item', {
             focused: focused.value,

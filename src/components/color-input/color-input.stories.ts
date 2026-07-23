@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { computed, reactive, ref, watch } from 'vue';
 import IconPipette from '~icons/lucide/pipette';
+import { formatColorPickerValue, parseColorPickerValue } from '@/utils/colorPicker';
 import Field from '../field/field.vue';
 import { popoverPlacements } from '../popover/types';
 import Radio from '../radio/radio.vue';
 import RadioGroup from '../radio/radio-group.vue';
 import ColorInput from './color-input.vue';
-import { formatColorPickerValue, parseColorPickerValue } from '../color-picker/color-picker-utils';
 import {
     colorPickerFormats,
     type ColorPickerFormat,

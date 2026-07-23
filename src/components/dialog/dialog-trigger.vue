@@ -7,11 +7,8 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import {
-    dialogRootKey,
-    resolveDialogHTMLElementRef,
-    type DialogElementRefValue,
-} from './dialog-core';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { dialogRootKey } from './dialogContext';
 import type { DialogTriggerProps } from './types';
 
 defineOptions({ name: 'RpDialogTrigger', inheritAttrs: false });
@@ -28,8 +25,8 @@ const root = useRequiredInject(dialogRootKey, 'RpDialogTrigger');
 const generatedId = `${useId()}-trigger`;
 const id = computed(() => props.id ?? generatedId);
 
-function setElement(value: DialogElementRefValue) {
-    resolveDialogHTMLElementRef(value, id.value, root.setTrigger);
+function setElement(value: ComponentElementRef) {
+    resolveHTMLElementRef(value, id.value, root.setTrigger);
 }
 
 function onClick(event: MouseEvent) {

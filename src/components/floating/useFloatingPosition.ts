@@ -22,6 +22,7 @@ import {
     type CSSProperties,
     type Ref,
 } from 'vue';
+import { querySelectorSafe } from '@/utils/dom/query';
 import type {
     FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
@@ -52,22 +53,12 @@ export function isVirtualReference(value: unknown): value is FloatingReference {
     return 'getBoundingClientRect' in value && typeof value.getBoundingClientRect === 'function';
 }
 
-export function isElementReference(value: unknown): value is Element {
-    return typeof Element !== 'undefined' && value instanceof Element;
-}
-
 export function resolveFloatingTarget(
     target: string | FloatingReference | null | undefined,
 ): FloatingReference | null {
     if (!target) return null;
     if (typeof target !== 'string') return isVirtualReference(target) ? target : null;
-    if (typeof document === 'undefined') return null;
-
-    try {
-        return document.querySelector(target);
-    } catch {
-        return null;
-    }
+    return querySelectorSafe(target);
 }
 
 export function useFloatingTarget(

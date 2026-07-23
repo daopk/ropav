@@ -13,7 +13,8 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import ScrollArea from '../scroll-area/scroll-area.vue';
 import { useTabsList } from './useTabs';
 import type { TabsListPart, TabsListProps } from './types';
@@ -32,7 +33,7 @@ const rootAttrs = computed(() => {
         {
             id: internal.id,
             class: internal.class,
-            'data-disabled': presence(internal['data-disabled']),
+            'data-disabled': toPresenceAttribute(internal['data-disabled']),
             'data-variant': internal['data-variant'],
             'data-orientation': internal['data-orientation'],
             'data-placement': internal['data-placement'],

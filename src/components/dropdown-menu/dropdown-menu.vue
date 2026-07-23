@@ -69,7 +69,8 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconChevronRight from '~icons/lucide/chevron-right';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import DropdownMenuItems from './dropdown-menu-items.vue';
 import { useDropdownMenu } from './useDropdownMenu';
 import type {
@@ -150,7 +151,7 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         'data-state': state.value,
-        'data-disabled': presence(props.disabled),
+        'data-disabled': toPresenceAttribute(props.disabled),
     }),
 );
 const publicSlotProps = computed(() => {
@@ -162,7 +163,7 @@ const publicSlotProps = computed(() => {
             ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
             ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
             'data-state': state.value,
-            'data-disabled': presence(props.disabled),
+            'data-disabled': toPresenceAttribute(props.disabled),
         },
     };
 });

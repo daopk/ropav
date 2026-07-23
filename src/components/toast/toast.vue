@@ -64,7 +64,7 @@ import {
     DEFAULT_TOAST_ROLE,
 } from './defaults';
 import type { ToastCloseReason, ToastPart, ToastProps } from './types';
-import { getToastColorStyle } from './useToastColor';
+import { getToastColorStyle } from './toastColor';
 
 defineOptions({ name: 'RpToast', inheritAttrs: false });
 

@@ -36,8 +36,8 @@
             :aria-labelledby="control.ariaLabelledby"
             :aria-describedby="control.ariaDescribedby"
             :data-state="isOpen ? 'open' : 'closed'"
-            :data-disabled="presence(control.disabled)"
-            :data-invalid="presence(control.invalid)"
+            :data-disabled="toPresenceAttribute(control.disabled)"
+            :data-invalid="toPresenceAttribute(control.invalid)"
             :tabindex="control.disabled ? -1 : 0"
             @click="toggle"
             @keydown="onTriggerKeydown"
@@ -94,9 +94,9 @@
                     :id="`${selectId}-option-${index}`"
                     :aria-selected="option.value === selectedValue"
                     :aria-disabled="option.disabled || undefined"
-                    :data-selected="presence(option.value === selectedValue)"
-                    :data-highlighted="presence(index === focusedIndex)"
-                    :data-disabled="presence(option.disabled)"
+                    :data-selected="toPresenceAttribute(option.value === selectedValue)"
+                    :data-highlighted="toPresenceAttribute(index === focusedIndex)"
+                    :data-disabled="toPresenceAttribute(option.disabled)"
                     v-bind="
                         getPartAttrs('option', {
                             class: [
@@ -123,7 +123,8 @@
 import { computed, ref } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import ScrollArea from '../scroll-area/scroll-area.vue';
 import { useSelect } from './useSelect';
 import { useSelectNativeControl } from './useSelectNativeControl';
@@ -181,8 +182,8 @@ const rootAttrs = computed(() =>
         class: rootClass.value,
         onFocusout,
         'data-state': isOpen.value ? 'open' : 'closed',
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
     }),
 );
 

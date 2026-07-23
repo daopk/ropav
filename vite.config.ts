@@ -64,7 +64,7 @@ export default defineConfig({
                 'src/components/**/*.ts',
                 'src/composables/**/*.ts',
                 'src/internal/composables/useOverlayLayer.ts',
-                'src/utils/componentColors.ts',
+                'src/utils/**/*.ts',
             ],
             exclude: [
                 'src/**/*.story.*',

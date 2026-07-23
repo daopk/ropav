@@ -80,7 +80,8 @@ import {
     provideNestedFormControlOwner,
     useFormControl,
 } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import Input from '../input/input.vue';
 import type { NumberInputPart, NumberInputProps, NumberInputValue } from './types';
 import {
@@ -171,7 +172,7 @@ function getControlAttrs(controlType: NumberInputControl) {
             class: ['rp-number-input__control', `rp-number-input__control--${controlType}`],
         }),
         'data-control': controlType,
-        'data-disabled': presence(isControlDisabled(controlType)),
+        'data-disabled': toPresenceAttribute(isControlDisabled(controlType)),
     };
 }
 

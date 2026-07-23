@@ -1,5 +1,5 @@
 import { computed, ref, type CSSProperties } from 'vue';
-import { parseColorPickerValue } from './color-picker-utils';
+import { parseColorPickerValue } from '@/utils/colorPicker';
 import type { ColorPickerProps } from './types';
 
 const MAX_SWATCHES_PER_ROW = 15;

@@ -8,7 +8,7 @@
 import { computed, mergeProps, provide, useAttrs } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import { menuKey, radioGroupKey } from './dropdown-menu-primitive-core';
+import { menuKey, radioGroupKey } from './dropdownMenuContext';
 import type { DropdownMenuItemValue, DropdownMenuRadioGroupPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuRadioGroup', inheritAttrs: false });

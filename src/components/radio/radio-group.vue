@@ -6,7 +6,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useRadioGroup } from './useRadio';
 import type { RadioGroupPart, RadioGroupProps } from './types';
 
@@ -39,8 +40,8 @@ const rootAttrs = computed(() =>
         class: rootClass.value,
         role: 'radiogroup',
         'data-orientation': props.orientation,
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'aria-label': props.ariaLabel || undefined,
         'aria-labelledby': control.ariaLabelledby,
         'aria-describedby': control.ariaDescribedby,

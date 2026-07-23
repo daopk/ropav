@@ -1,5 +1,6 @@
 import { computed, type Ref } from 'vue';
 import { bem } from '@/utils/bem';
+import { getPathKey, normalizePath } from '@/utils/indexPath';
 import type { StylesApiPartOptions } from '../../styles-api';
 import type {
     DropdownMenuCloseOptions,
@@ -16,12 +17,10 @@ import type {
 import {
     DEFAULT_FOCUS_TARGET,
     getItemClass,
-    getPathKey,
     hasItemSubmenu,
     hasNestedItems,
-    normalizePath,
     type ItemPath,
-} from './dropdown-menu-utils';
+} from './dropdown-menu-model';
 
 type DropdownMenuItemsSource = {
     readonly value: DropdownMenuItem[];

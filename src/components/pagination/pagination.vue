@@ -91,7 +91,8 @@ import IconChevronsLeft from '~icons/lucide/chevrons-left';
 import IconChevronsRight from '~icons/lucide/chevrons-right';
 import IconEllipsis from '~icons/lucide/ellipsis';
 import { useControllableValue } from '@/composables/useControllableValue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import type { PaginationControl, PaginationPart, PaginationProps } from './types';
 import { usePagination } from './usePagination';
 
@@ -156,7 +157,7 @@ const rootAttrs = computed(() =>
         style: rootStyle.value,
         'data-page': currentPage.value,
         'data-total': totalPages.value,
-        'data-disabled': presence(props.disabled),
+        'data-disabled': toPresenceAttribute(props.disabled),
         'aria-label': props.ariaLabel || undefined,
         'aria-labelledby': props.labelledby,
         'aria-describedby': props.describedby,
@@ -169,7 +170,7 @@ function getControlAttrs(control: PaginationControl, isDisabled: boolean) {
             class: ['rp-pagination__control', `rp-pagination__control--${control}`],
         }),
         'data-control': control,
-        'data-disabled': presence(isDisabled),
+        'data-disabled': toPresenceAttribute(isDisabled),
     };
 }
 
@@ -181,8 +182,8 @@ function getPageAttrs(page: number) {
             class: ['rp-pagination__page', { 'rp-pagination__page--active': active }],
         }),
         'data-page': page,
-        'data-active': presence(active),
-        'data-disabled': presence(props.disabled),
+        'data-active': toPresenceAttribute(active),
+        'data-disabled': toPresenceAttribute(props.disabled),
     };
 }
 

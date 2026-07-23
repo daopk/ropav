@@ -19,8 +19,9 @@
 import { computed } from 'vue';
 import IconLoaderCircle from '~icons/lucide/loader-circle';
 import { bem } from '@/utils/bem';
-import { presence, useStylesApi } from '@/styles-api';
-import { getButtonColorStyle } from '../button/useButtonColor';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
+import { getButtonColorStyle } from '../button/buttonColor';
 import type { IconButtonPart, IconButtonProps } from './types';
 
 defineOptions({ name: 'RpIconButton', inheritAttrs: false });
@@ -53,8 +54,8 @@ const rootAttrs = computed(() =>
         type: props.type,
         'aria-label': props.ariaLabel || undefined,
         'aria-busy': props.loading || undefined,
-        'data-disabled': presence(props.disabled || props.loading),
-        'data-loading': presence(props.loading),
+        'data-disabled': toPresenceAttribute(props.disabled || props.loading),
+        'data-loading': toPresenceAttribute(props.loading),
     }),
 );
 </script>

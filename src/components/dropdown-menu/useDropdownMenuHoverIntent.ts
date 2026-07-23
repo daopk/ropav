@@ -1,61 +1,38 @@
 import { onUnmounted, ref, type Ref } from 'vue';
-import type { DropdownMenuItem } from './types';
 import {
-    arePathsEqual,
-    getEventPoint,
+    clampPointToRect,
+    getClientPoint,
     hasMeasuredRect,
-    isPathPrefix,
     isPointInRect,
-    type ItemPath,
-    type PointerPoint,
-} from './dropdown-menu-utils';
+    isPointInTriangle,
+    type Point,
+    type Triangle,
+} from '@/utils/geometry';
+import { arePathsEqual, isPathPrefix } from '@/utils/indexPath';
+import type { ItemPath } from './dropdown-menu-model';
+import type { DropdownMenuItem } from './types';
 
 const SAFE_TRIANGLE_PADDING = 2;
 const SAFE_TRIANGLE_ORIGIN_OFFSET = 2;
 const SAFE_TRIANGLE_TIMEOUT = 400;
 
-export type SafeTriangle = [PointerPoint, PointerPoint, PointerPoint];
+export type SafeTriangle = Triangle;
 type GetSafeTriangleOptions = {
     itemRect: DOMRect | null;
     submenuRect: DOMRect;
-    origin: PointerPoint;
+    origin: Point;
 };
 type PendingHover = {
     item: DropdownMenuItem;
     path: ItemPath;
 };
-type HoverCommit = (item: DropdownMenuItem, path: ItemPath, point?: PointerPoint) => void;
+type HoverCommit = (item: DropdownMenuItem, path: ItemPath, point?: Point) => void;
 
 type UseDropdownMenuHoverIntentOptions = {
     openSubmenuPath: Ref<ItemPath>;
     getItemElement: (path: ItemPath) => HTMLElement | null;
     getSubmenuElement: (path: ItemPath) => HTMLElement | null;
 };
-
-function getTriangleArea(a: PointerPoint, b: PointerPoint, c: PointerPoint) {
-    return Math.abs((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2);
-}
-
-function isPointInTriangle(point: PointerPoint, triangle: SafeTriangle) {
-    const [a, b, c] = triangle;
-    const area = getTriangleArea(a, b, c);
-    const area1 = getTriangleArea(point, b, c);
-    const area2 = getTriangleArea(a, point, c);
-    const area3 = getTriangleArea(a, b, point);
-
-    return Math.abs(area - (area1 + area2 + area3)) < 0.5;
-}
-
-function clamp(value: number, min: number, max: number) {
-    return Math.min(Math.max(value, min), max);
-}
-
-function clampPointToRect(point: PointerPoint, rect: DOMRect): PointerPoint {
-    return {
-        x: clamp(point.x, rect.left, rect.right),
-        y: clamp(point.y, rect.top, rect.bottom),
-    };
-}
 
 export function getDropdownMenuSafeTriangle({
     itemRect,
@@ -91,8 +68,8 @@ export function useDropdownMenuHoverIntent({
     getItemElement,
     getSubmenuElement,
 }: UseDropdownMenuHoverIntentOptions) {
-    const safeTriangleOrigin = ref<PointerPoint | null>(null);
-    let latestPointerPoint: PointerPoint | null = null;
+    const safeTriangleOrigin = ref<Point | null>(null);
+    let latestPointerPoint: Point | null = null;
     let pendingHover: PendingHover | null = null;
     let pendingHoverTimer: number | undefined;
 
@@ -110,7 +87,7 @@ export function useDropdownMenuHoverIntent({
         clearPendingHover();
     }
 
-    function getFallbackTriangleOrigin(path: ItemPath): PointerPoint | null {
+    function getFallbackTriangleOrigin(path: ItemPath): Point | null {
         const itemRect = getItemElement(path)?.getBoundingClientRect();
         if (!itemRect) return null;
 
@@ -122,12 +99,12 @@ export function useDropdownMenuHoverIntent({
         };
     }
 
-    function trackSubmenuOpen(path: ItemPath, point?: PointerPoint) {
+    function trackSubmenuOpen(path: ItemPath, point?: Point) {
         safeTriangleOrigin.value = point ?? getFallbackTriangleOrigin(path);
         clearPendingHover();
     }
 
-    function isPointInCurrentSubmenu(point: PointerPoint) {
+    function isPointInCurrentSubmenu(point: Point) {
         if (openSubmenuPath.value.length === 0) return false;
 
         const submenuRect = getSubmenuElement(openSubmenuPath.value)?.getBoundingClientRect();
@@ -148,7 +125,7 @@ export function useDropdownMenuHoverIntent({
         });
     }
 
-    function updateSafeTriangleOrigin(point: PointerPoint) {
+    function updateSafeTriangleOrigin(point: Point) {
         if (openSubmenuPath.value.length === 0) return;
 
         const itemRect = getItemElement(openSubmenuPath.value)?.getBoundingClientRect();
@@ -157,7 +134,7 @@ export function useDropdownMenuHoverIntent({
         }
     }
 
-    function shouldDelayHover(path: ItemPath, point: PointerPoint) {
+    function shouldDelayHover(path: ItemPath, point: Point) {
         if (openSubmenuPath.value.length === 0) return false;
         if (arePathsEqual(path, openSubmenuPath.value)) return false;
         if (isPathPrefix(openSubmenuPath.value, path)) return false;
@@ -193,7 +170,7 @@ export function useDropdownMenuHoverIntent({
         event: MouseEvent | undefined,
         commit: HoverCommit,
     ) {
-        const point = event ? getEventPoint(event) : undefined;
+        const point = event ? getClientPoint(event) : undefined;
         latestPointerPoint = point ?? latestPointerPoint;
 
         if (point && shouldDelayHover(path, point)) {
@@ -205,7 +182,7 @@ export function useDropdownMenuHoverIntent({
     }
 
     function handleMenuMousemove(event: MouseEvent, commit: HoverCommit) {
-        const point = getEventPoint(event);
+        const point = getClientPoint(event);
         latestPointerPoint = point;
         updateSafeTriangleOrigin(point);
         if (!pendingHover) return;

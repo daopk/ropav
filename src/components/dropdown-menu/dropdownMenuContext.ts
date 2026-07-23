@@ -6,15 +6,16 @@ import {
     shallowRef,
     useId,
     watch,
-    type ComponentPublicInstance,
     type ComputedRef,
     type InjectionKey,
     type Ref,
-    type VaporComponentInstance,
 } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import type { OverlayLayerContext } from '@/internal/composables/useOverlayLayer';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { createCancelableCustomEvent } from '@/utils/dom/events';
+import { createPointRect } from '@/utils/geometry';
 import type { FloatingReference } from '../floating/types';
 import type {
     DropdownMenuCloseOptions,
@@ -31,7 +32,6 @@ import type {
 
 export type ElementReference = FloatingReference;
 export type OpenFocusTarget = DropdownMenuFocusTarget | false;
-export type ComponentRefValue = Element | ComponentPublicInstance | VaporComponentInstance | null;
 
 export interface MenuItemRegistration {
     id: string;
@@ -117,55 +117,11 @@ export const checkedKey = Symbol(
     'dropdown-menu-checked',
 ) as InjectionKey<DropdownMenuCheckedContext>;
 
-export function optionalAttr<T extends boolean | string | undefined>(value: T): T | undefined {
-    return value || undefined;
-}
-
 export function getFocusTarget(
     options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget,
 ): DropdownMenuFocusTarget {
     if (typeof options === 'string') return options;
     return options?.focus ?? 'first';
-}
-
-export function toHTMLElement(value: ComponentRefValue, fallbackId?: string): HTMLElement | null {
-    if (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) return value;
-    if (typeof HTMLElement === 'undefined') return null;
-
-    const vdomElement = (value as ComponentPublicInstance | null)?.$el;
-    if (vdomElement instanceof HTMLElement) return vdomElement;
-
-    const vaporBlock = (value as VaporComponentInstance | null)?.block;
-    if (vaporBlock instanceof HTMLElement) return vaporBlock;
-
-    return fallbackId && typeof document !== 'undefined'
-        ? document.getElementById(fallbackId)
-        : null;
-}
-
-export function resolveHTMLElementRef(
-    value: ComponentRefValue,
-    fallbackId: string,
-    resolve: (element: HTMLElement | null) => void,
-) {
-    const element = toHTMLElement(value, fallbackId);
-    resolve(element);
-    if (element || !value) return;
-    void nextTick(() => resolve(toHTMLElement(value, fallbackId)));
-}
-
-function createPointRect(point: DropdownMenuPoint): DOMRect {
-    return {
-        x: point.x,
-        y: point.y,
-        left: point.x,
-        right: point.x,
-        top: point.y,
-        bottom: point.y,
-        width: 0,
-        height: 0,
-        toJSON: () => ({}),
-    } as DOMRect;
 }
 
 export function createVirtualAnchor(point: DropdownMenuPoint): DropdownMenuVirtualAnchor {
@@ -174,26 +130,23 @@ export function createVirtualAnchor(point: DropdownMenuPoint): DropdownMenuVirtu
     };
 }
 
-export function createCustomEvent<T>(
-    type: string,
-    detail: T,
-    originalEvent: Event,
-): CustomEvent<T> {
-    const target = originalEvent.target;
-    const view = target instanceof Node ? target.ownerDocument?.defaultView : null;
-    const EventConstructor = view?.CustomEvent ?? CustomEvent;
-    return new EventConstructor(type, { bubbles: false, cancelable: true, detail });
-}
-
 export function createSelectEvent(
     originalEvent: Event,
     value?: DropdownMenuItemValue,
 ): DropdownMenuSelectEvent {
-    return createCustomEvent('dropdown-menu-select', { originalEvent, value }, originalEvent);
+    return createCancelableCustomEvent(
+        'dropdown-menu-select',
+        { originalEvent, value },
+        originalEvent,
+    );
 }
 
 export function createOutsideEvent(originalEvent: Event): DropdownMenuInteractOutsideEvent {
-    return createCustomEvent('dropdown-menu-interact-outside', { originalEvent }, originalEvent);
+    return createCancelableCustomEvent(
+        'dropdown-menu-interact-outside',
+        { originalEvent },
+        originalEvent,
+    );
 }
 
 function sortItems(items: MenuItemRegistration[]) {
@@ -465,7 +418,7 @@ export function usePrimitiveItem(
     });
     onBeforeUnmount(() => menu.unregisterItem(id.value));
 
-    function setElement(value: ComponentRefValue) {
+    function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
             element.value = resolved;
         });

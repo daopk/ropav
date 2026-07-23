@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { parseColorPickerValue } from '../color-picker/color-picker-utils';
+import { parseColorPickerValue } from '@/utils/colorPicker';
 import type { ColorInputProps } from './types';
 
 export function useColorInputValue(

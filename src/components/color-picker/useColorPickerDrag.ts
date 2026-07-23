@@ -1,4 +1,6 @@
 import { onBeforeUnmount, type Ref } from 'vue';
+import { getPointerId } from '@/utils/dom/pointer';
+import { createRafScheduler } from '@/utils/rafScheduler';
 
 export interface ColorPickerPointerCoordinates {
     clientX: number;
@@ -20,10 +22,6 @@ interface ColorPickerDragSession {
     view: Window | null;
 }
 
-function getPointerId(event: PointerEvent) {
-    return Number.isFinite(event.pointerId) ? event.pointerId : undefined;
-}
-
 export function useColorPickerDrag({
     target,
     focusTarget,
@@ -32,8 +30,6 @@ export function useColorPickerDrag({
     updateFromPointer,
 }: UseColorPickerDragOptions) {
     let session: ColorPickerDragSession | undefined;
-    let frameWindow: Window | null = null;
-    let frameId: number | undefined;
     let geometryDirty = false;
     let pendingPointer: ColorPickerPointerCoordinates | undefined;
 
@@ -43,12 +39,6 @@ export function useColorPickerDrag({
 
         const pointerId = getPointerId(event);
         return currentSession.pointerId === undefined || pointerId === currentSession.pointerId;
-    }
-
-    function cancelScheduledFrame() {
-        if (frameId !== undefined) frameWindow?.cancelAnimationFrame(frameId);
-        frameWindow = null;
-        frameId = undefined;
     }
 
     function applyScheduledUpdate(currentSession: ColorPickerDragSession) {
@@ -67,29 +57,22 @@ export function useColorPickerDrag({
         if (pointer) updateFromPointer(pointer, currentSession.rect);
     }
 
+    const updateScheduler = createRafScheduler(
+        () => {
+            const currentSession = session;
+            if (currentSession) applyScheduledUpdate(currentSession);
+        },
+        () => session?.view,
+    );
+
     function flushScheduledUpdate() {
         const currentSession = session;
-        cancelScheduledFrame();
+        updateScheduler.cancel();
         if (currentSession) applyScheduledUpdate(currentSession);
     }
 
     function scheduleUpdate() {
-        const currentSession = session;
-        if (!currentSession) return;
-
-        const view = currentSession.view;
-        if (!view?.requestAnimationFrame) {
-            applyScheduledUpdate(currentSession);
-            return;
-        }
-        if (frameId !== undefined) return;
-
-        frameWindow = view;
-        frameId = view.requestAnimationFrame(() => {
-            frameWindow = null;
-            frameId = undefined;
-            applyScheduledUpdate(currentSession);
-        });
+        if (session) updateScheduler.schedule();
     }
 
     function onGeometryChange() {
@@ -107,7 +90,7 @@ export function useColorPickerDrag({
         stoppedSession.view?.removeEventListener('pointercancel', onPointerEnd);
         stoppedSession.view?.removeEventListener('resize', onGeometryChange);
         stoppedSession.view?.removeEventListener('scroll', onGeometryChange, true);
-        cancelScheduledFrame();
+        updateScheduler.cancel();
         geometryDirty = false;
         pendingPointer = undefined;
         session = undefined;

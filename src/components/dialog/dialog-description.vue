@@ -5,7 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, useAttrs, useId, watch } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import { dialogRootKey } from './dialog-core';
+import { dialogRootKey } from './dialogContext';
 import type { DialogDescriptionProps } from './types';
 
 defineOptions({ name: 'RpDialogDescription', inheritAttrs: false });

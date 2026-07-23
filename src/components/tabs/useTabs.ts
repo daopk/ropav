@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { toOptionalAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
 import type {
     TabsActivationMode,
@@ -95,10 +96,6 @@ const ORIENTATION_NAVIGATION_KEYS: Record<
     vertical: { ArrowDown: 1, ArrowUp: -1 },
 };
 
-function optionalAttr<T extends boolean | string | undefined>(value: T): T | undefined {
-    return value || undefined;
-}
-
 function toTabsState(active: boolean): TabsState {
     return active ? 'active' : 'inactive';
 }
@@ -109,9 +106,9 @@ function getDefaultAlign(orientation: TabsOrientation): TabsTriggerAlign {
 
 function getAriaProps(label?: string, labelledby?: string, describedby?: string) {
     return {
-        'aria-label': optionalAttr(label),
-        'aria-labelledby': optionalAttr(labelledby),
-        'aria-describedby': optionalAttr(describedby),
+        'aria-label': toOptionalAttribute(label),
+        'aria-labelledby': toOptionalAttribute(labelledby),
+        'aria-describedby': toOptionalAttribute(describedby),
     };
 }
 
@@ -300,11 +297,11 @@ export function useTabs(
     const rootProps = computed<TabsRootProps>(() => ({
         id: props.id,
         class: rootClass.value,
-        'data-disabled': optionalAttr(isDisabled.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
         'data-size': size.value,
         'data-variant': variant.value,
         'data-orientation': orientation.value,
-        'data-placement': optionalAttr(
+        'data-placement': toOptionalAttribute(
             orientation.value === 'vertical' ? placement.value : undefined,
         ),
         'data-activation-mode': activationMode.value,
@@ -456,10 +453,10 @@ export function useTabsList(props: Readonly<TabsListProps>): UseTabsListReturn {
         id: props.id,
         class: rootClass.value,
         role: 'tablist',
-        'data-disabled': optionalAttr(group.disabled),
+        'data-disabled': toOptionalAttribute(group.disabled),
         'data-variant': group.variant,
         'data-orientation': group.orientation,
-        'data-placement': optionalAttr(
+        'data-placement': toOptionalAttribute(
             group.orientation === 'vertical' ? group.placement : undefined,
         ),
         'aria-orientation': group.orientation,
@@ -510,15 +507,15 @@ export function useTabsTrigger(props: Readonly<TabsTriggerProps>): UseTabsTrigge
         class: rootClass.value,
         role: 'tab',
         type: 'button',
-        disabled: optionalAttr(isDisabled.value),
+        disabled: toOptionalAttribute(isDisabled.value),
         tabIndex: isFocusable.value ? 0 : -1,
         'data-state': state.value,
-        'data-disabled': optionalAttr(isDisabled.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
         'data-variant': group.variant,
-        'data-align': optionalAttr(align.value),
+        'data-align': toOptionalAttribute(align.value),
         'aria-selected': isSelected.value,
         'aria-controls': group.getContentId(props.value),
-        'aria-disabled': optionalAttr(isDisabled.value),
+        'aria-disabled': toOptionalAttribute(isDisabled.value),
         onClick: select,
         onFocus,
         onKeydown,
@@ -579,7 +576,7 @@ export function useTabsContent(props: Readonly<TabsContentProps>): UseTabsConten
         class: rootClass.value,
         role: 'tabpanel',
         tabIndex: 0,
-        hidden: optionalAttr(!isSelected.value),
+        hidden: toOptionalAttribute(!isSelected.value),
         'data-state': state.value,
         ...getAriaProps(
             props.ariaLabel,

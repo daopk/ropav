@@ -7,7 +7,7 @@ import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, useId, w
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
-import { dialogRootKey, resolveDialogCloseReason, type DialogRootContext } from './dialog-core';
+import { dialogRootKey, resolveDialogCloseReason, type DialogRootContext } from './dialogContext';
 import type { DialogCloseReason, DialogRootProps, DialogRootSlotProps } from './types';
 
 defineOptions({ name: 'RpDialogRoot' });

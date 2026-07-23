@@ -14,6 +14,7 @@ import {
     type Ref,
     type ShallowRef,
 } from 'vue';
+import { isEventWithinElement } from '@/utils/dom/events';
 
 interface InertSnapshot {
     ariaHidden: string | null;
@@ -104,22 +105,6 @@ function syncLayerZIndices(state: OverlayLayerState) {
         metadata.setZIndex(zIndex);
         highestZIndex = zIndex;
     }
-}
-
-function isEventWithinElement(event: Event, element: Element) {
-    const path = event.composedPath();
-    if (path.length > 0) {
-        return path.some(
-            (entry) =>
-                entry === element ||
-                (typeof Node !== 'undefined' && entry instanceof Node && element.contains(entry)),
-        );
-    }
-    return (
-        typeof Node !== 'undefined' &&
-        event.target instanceof Node &&
-        element.contains(event.target)
-    );
 }
 
 function restoreInertBackground(state: OverlayLayerState) {

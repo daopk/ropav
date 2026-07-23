@@ -6,7 +6,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useTabs } from './useTabs';
 import type { TabsPart, TabsProps, TabsValue } from './types';
 
@@ -35,7 +36,7 @@ const { getRootAttrs } = useStylesApi<TabsPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
         ...internalRootProps.value,
-        'data-disabled': presence(props.disabled),
+        'data-disabled': toPresenceAttribute(props.disabled),
     }),
 );
 </script>

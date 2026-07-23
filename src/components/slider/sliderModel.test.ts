@@ -8,7 +8,7 @@ import {
     getSliderThumbOptions,
     getSliderValuePercent,
     getSliderTooltipMode,
-} from './sliderCore';
+} from './sliderModel';
 
 describe('slider core', () => {
     it('maps arbitrary finite track values to a clamped percentage', () => {

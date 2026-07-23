@@ -1,5 +1,6 @@
 import { computed, type CSSProperties } from 'vue';
 import { bem } from '@/utils/bem';
+import { clamp } from '@/utils/number';
 import type { OverlayProps } from './types';
 
 function getBlurValue(blur: OverlayProps['blur']) {
@@ -22,7 +23,7 @@ export function useOverlay(props: Readonly<OverlayProps>) {
         const opacity = props.opacity;
         if (opacity === undefined || !Number.isFinite(opacity)) return 1;
 
-        return Math.min(1, Math.max(0, opacity));
+        return clamp(opacity, 0, 1);
     });
 
     const blurValue = computed(() => getBlurValue(props.blur));

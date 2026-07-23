@@ -4,7 +4,6 @@ import { bem } from '@/utils/bem';
 import type {
     CollapseContentProps,
     CollapseContentRole,
-    CollapseOption,
     CollapseRootProps,
     CollapseSlotProps,
     CollapseState,
@@ -16,20 +15,16 @@ import type {
 
 const DEFAULT_ROLE: CollapseContentRole = 'region';
 
-function optionValue<T>(value: CollapseOption<T | undefined> | undefined) {
-    return toValue(value);
-}
-
 export function useCollapse(
     options: Readonly<UseCollapseOptions> = {},
     emitOpenChange?: (open: boolean) => void,
 ): UseCollapseReturn {
     const generatedId = useId();
 
-    const id = computed(() => optionValue<string>(options.id) ?? `${generatedId}-collapse`);
-    const isDisabled = computed(() => Boolean(optionValue<boolean>(options.disabled)));
+    const id = computed(() => toValue(options.id) ?? `${generatedId}-collapse`);
+    const isDisabled = computed(() => Boolean(toValue(options.disabled)));
     const controllableOpen = useControllableValue({
-        modelValue: () => optionValue<boolean>(options.open),
+        modelValue: () => toValue(options.open),
         defaultValue: () => false,
         onChange: (nextOpen) => {
             options.onOpenChange?.(nextOpen);
@@ -38,9 +33,7 @@ export function useCollapse(
     });
     const isOpen = controllableOpen.value;
     const state = computed<CollapseState>(() => (isOpen.value ? 'open' : 'closed'));
-    const shouldRenderContent = computed(
-        () => !optionValue<boolean>(options.unmountOnExit) || isOpen.value,
-    );
+    const shouldRenderContent = computed(() => !toValue(options.unmountOnExit) || isOpen.value);
 
     const rootClass = computed(() =>
         bem('rp-collapse', {
@@ -75,12 +68,12 @@ export function useCollapse(
     const contentProps = computed<CollapseContentProps>(() => ({
         class: 'rp-collapse__content',
         id: id.value,
-        role: optionValue<CollapseContentRole>(options.role) ?? DEFAULT_ROLE,
+        role: toValue(options.role) ?? DEFAULT_ROLE,
         'data-state': state.value,
         'aria-hidden': isOpen.value ? undefined : 'true',
-        'aria-label': optionValue<string>(options.ariaLabel) || undefined,
-        'aria-labelledby': optionValue<string>(options.ariaLabelledby) || undefined,
-        'aria-describedby': optionValue<string>(options.ariaDescribedby) || undefined,
+        'aria-label': toValue(options.ariaLabel) || undefined,
+        'aria-labelledby': toValue(options.ariaLabelledby) || undefined,
+        'aria-describedby': toValue(options.ariaDescribedby) || undefined,
     }));
 
     const triggerSlotProps = computed<CollapseTriggerSlotProps>(() => ({

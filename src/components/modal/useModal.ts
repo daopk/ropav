@@ -1,7 +1,7 @@
 import { computed, useSlots, useId, type CSSProperties } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
-import { resolveDialogCloseReason } from '../dialog/dialog-core';
+import { resolveDialogCloseReason } from '../dialog/dialogContext';
 import type { DialogCloseReason } from '../dialog/types';
 import type { ModalPresetSize, ModalProps, ModalRole, ModalSize, ModalSlotProps } from './types';
 

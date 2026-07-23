@@ -5,7 +5,7 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import { dialogRootKey } from './dialog-core';
+import { dialogRootKey } from './dialogContext';
 import type { DialogCloseProps } from './types';
 
 defineOptions({ name: 'RpDialogClose', inheritAttrs: false });

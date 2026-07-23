@@ -1,6 +1,6 @@
 import { computed, shallowRef, watch } from 'vue';
 import type { ComputedRef, ShallowRef } from 'vue';
-import { getEnabledIndexes, getNextEnabledIndex } from './collectionNavigation';
+import { getEnabledIndexes, getNextEnabledIndex } from '@/utils/collectionNavigation';
 
 export interface UseCollectionNavigationOptions<T, Key extends PropertyKey> {
     items: () => readonly T[];

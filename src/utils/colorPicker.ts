@@ -1,10 +1,12 @@
-import { parseCssColor, type ParsedCssColor } from '@/utils/color';
-import type { ColorPickerFormat } from './types';
+import { parseCssColor, type ParsedCssColor } from './color';
+import { clamp, roundTo } from './number';
+
+export const colorPickerFormats = ['hex', 'hexa', 'rgb', 'rgba', 'hsl', 'hsla'] as const;
+
+export type ColorPickerFormat = (typeof colorPickerFormats)[number];
 
 export const DEFAULT_HUE = 0;
 export const HUE_MAX = 359;
-export const KEYBOARD_STEP = 1;
-export const KEYBOARD_LARGE_STEP = 10;
 export const DEFAULT_OPACITY = 100;
 
 export interface ColorPickerHsvColor {
@@ -18,10 +20,6 @@ interface HslColor {
     hue: number;
     saturation: number;
     lightness: number;
-}
-
-export function clamp(value: number, min: number, max: number) {
-    return Math.min(max, Math.max(min, value));
 }
 
 export function clampPercent(value: number | undefined) {
@@ -47,7 +45,7 @@ export function clampOpacity(value: number | undefined) {
 }
 
 export function roundPercent(value: number) {
-    return Math.round(value * 100) / 100;
+    return roundTo(value);
 }
 
 export function isColorPickerAlphaFormat(format: ColorPickerFormat) {
@@ -194,5 +192,5 @@ function formatAlpha(opacity: number) {
 }
 
 function formatNumber(value: number) {
-    return String(Math.round(value * 100) / 100);
+    return String(roundTo(value));
 }

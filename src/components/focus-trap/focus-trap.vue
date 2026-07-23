@@ -6,7 +6,8 @@
 
 <script lang="ts" setup vapor>
 import { computed, ref, watch } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useFocusTrap } from './useFocusTrap';
 import type {
     FocusTrapPauseOptions,
@@ -48,8 +49,8 @@ const { getRootAttrs } = useStylesApi<FocusTrapPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
         class: 'rp-focus-trap',
-        'data-active': presence(isActive.value),
-        'data-paused': presence(isPaused.value),
+        'data-active': toPresenceAttribute(isActive.value),
+        'data-paused': toPresenceAttribute(isPaused.value),
     }),
 );
 

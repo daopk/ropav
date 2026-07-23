@@ -1,20 +1,11 @@
 import { computed, ref, toValue, watch } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
-import type {
-    ToastCloseReason,
-    ToastStateOption,
-    UseToastStateOptions,
-    UseToastStateReturn,
-} from './types';
-
-function optionValue<T>(value: ToastStateOption<T | undefined> | undefined) {
-    return toValue(value);
-}
+import type { ToastCloseReason, UseToastStateOptions, UseToastStateReturn } from './types';
 
 export function useToastState(options: Readonly<UseToastStateOptions> = {}): UseToastStateReturn {
     const closeReason = ref<ToastCloseReason | null>(null);
 
-    const controlledOpen = computed(() => optionValue<boolean>(options.open));
+    const controlledOpen = computed(() => toValue(options.open));
     const controllableOpen = useControllableValue({
         modelValue: () => controlledOpen.value,
         defaultValue: () => options.defaultOpen ?? false,

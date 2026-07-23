@@ -12,13 +12,10 @@ import {
 import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
+import { isElement } from '@/utils/dom/query';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
-import {
-    isElementReference,
-    useFloatingPosition,
-    useFloatingTarget,
-} from '../floating/useFloatingPosition';
+import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
 import {
     useTeleportPositioningKey,
     useTeleportTarget,
@@ -119,7 +116,7 @@ export function usePopover(
         rootRef,
     );
     const targetElement = computed(() =>
-        isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
+        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
     );
     const hasContent = computed(() =>
         Boolean(slots.content || (isExplicitTarget.value && slots.default)),

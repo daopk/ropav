@@ -18,8 +18,8 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            :data-disabled="presence(control.disabled)"
-            :data-invalid="presence(control.invalid)"
+            :data-disabled="toPresenceAttribute(control.disabled)"
+            :data-invalid="toPresenceAttribute(control.invalid)"
             :data-state="state"
         />
         <span v-bind="getPartAttrs('indicator', { class: 'rp-checkbox__box' })">
@@ -44,7 +44,8 @@ import CheckIcon from '~icons/lucide/check';
 import MinusIcon from '~icons/lucide/minus';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useCheckedFormControl } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useCheckbox } from './useCheckbox';
 import type { CheckboxPart, CheckboxProps } from './types';
 
@@ -89,8 +90,8 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         style: rootStyle.value,
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'data-state': state.value,
     }),
 );

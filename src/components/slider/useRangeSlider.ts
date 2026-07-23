@@ -2,6 +2,7 @@ import { computed, ref, type CSSProperties } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
+import { clamp } from '@/utils/number';
 import type {
     RangeSliderEndpointValueText,
     RangeSliderProps,
@@ -21,7 +22,7 @@ import {
     normalizeSliderStep,
     normalizeSliderValue,
     setSliderStyleValue,
-} from './sliderCore';
+} from './sliderModel';
 import { useRangeSliderPointer } from './useRangeSliderPointer';
 import { useRangeSliderTooltipState } from './useRangeSliderTooltipState';
 
@@ -45,10 +46,6 @@ interface RangeSliderPointerGeometry {
 
 function roundSliderNumber(value: number) {
     return Number(value.toFixed(10));
-}
-
-function clamp(value: number, min: number, max: number) {
-    return Math.min(max, Math.max(min, value));
 }
 
 function getStepValueAtOrAbove(value: number, min: number, step: number | 'any') {

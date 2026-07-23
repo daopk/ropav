@@ -7,12 +7,9 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, ref, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import {
-    optionalAttr,
-    resolveHTMLElementRef,
-    rootKey,
-    type ComponentRefValue,
-} from './dropdown-menu-primitive-core';
+import { toOptionalAttribute } from '@/utils/attributes';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { rootKey } from './dropdownMenuContext';
 import type { DropdownMenuContextTriggerPrimitiveProps, DropdownMenuPoint } from './types';
 
 defineOptions({ name: 'RpDropdownMenuContextTrigger', inheritAttrs: false });
@@ -40,7 +37,7 @@ let startPoint: DropdownMenuPoint | undefined;
 let longPressOpened = false;
 let suppressUntil = 0;
 
-function setElement(value: ComponentRefValue) {
+function setElement(value: ComponentElementRef) {
     resolveHTMLElementRef(value, id.value, (resolved) => {
         const previous = element.value;
         if (previous) root.unregisterInside(previous);
@@ -119,9 +116,9 @@ const rootAttrs = computed(() =>
         id: id.value,
         'aria-controls': root.contentId.value,
         'aria-haspopup': 'menu',
-        'aria-disabled': optionalAttr(isDisabled.value),
+        'aria-disabled': toOptionalAttribute(isDisabled.value),
         'data-state': root.isOpen.value ? 'open' : 'closed',
-        'data-disabled': optionalAttr(isDisabled.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
         onClick,
         onContextmenu,
         onKeydown,

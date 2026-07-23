@@ -1,5 +1,5 @@
 import { computed, nextTick, ref, watch } from 'vue';
-import { isAxisEnabled } from './scrollAreaCore';
+import { isAxisEnabled } from './scrollAreaModel';
 import { useScrollAreaControls } from './useScrollAreaControls';
 import { useScrollAreaMetrics } from './useScrollAreaMetrics';
 import { useScrollAreaPointer } from './useScrollAreaPointer';

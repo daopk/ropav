@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { mountDom } from '../../../tests/utils/vue';
-import { normalizeTypeaheadText, useTypeahead } from './useTypeahead';
+import { normalizeTypeaheadText } from '@/utils/text';
+import { useTypeahead } from './useTypeahead';
 
 interface Item {
     label: string;

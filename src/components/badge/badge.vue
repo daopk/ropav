@@ -17,7 +17,7 @@ import { computed } from 'vue';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
 import type { BadgePart, BadgeProps } from './types';
-import { getBadgeColorStyle } from './useBadgeColor';
+import { getBadgeColorStyle } from './badgeColor';
 
 defineOptions({ name: 'RpBadge', inheritAttrs: false });
 

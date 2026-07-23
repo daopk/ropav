@@ -1,5 +1,8 @@
 import type { HTMLAttributes } from 'vue';
+import { colorPickerFormats, type ColorPickerFormat } from '../../utils/colorPicker';
 import type { StylesApiProps } from '../../styles-api';
+
+export { colorPickerFormats, type ColorPickerFormat };
 
 export const colorPickerParts = [
     'root',
@@ -11,11 +14,7 @@ export const colorPickerParts = [
 ] as const;
 export type ColorPickerPart = (typeof colorPickerParts)[number];
 
-export const colorPickerFormats = ['hex', 'hexa', 'rgb', 'rgba', 'hsl', 'hsla'] as const;
-
 export const colorPickerSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
-
-export type ColorPickerFormat = (typeof colorPickerFormats)[number];
 
 export type ColorPickerSize = (typeof colorPickerSizes)[number];
 

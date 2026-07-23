@@ -31,7 +31,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useTooltip } from './useTooltip';
 import type { TooltipPart, TooltipProps, TooltipTriggerProps } from './types';
 
@@ -92,7 +93,7 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         'data-state': state.value,
-        'data-disabled': presence(isDisabled.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
         onMouseenter: openTooltip,
         onMouseleave: closeTooltip,
         onFocusin: openTooltip,
@@ -107,7 +108,7 @@ const publicTriggerProps = computed<TooltipTriggerProps>(() => {
         ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
         ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
         'data-state': state.value,
-        'data-disabled': presence(isDisabled.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
     };
 });
 const contentAttrs = computed(() => ({

@@ -14,7 +14,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useCollapse } from './useCollapse';
 import type { CollapsePart, CollapseProps, CollapseTriggerProps } from './types';
 
@@ -49,7 +50,7 @@ const { getPartAttrs, getRootAttrs } = useStylesApi<CollapsePart>(props, 'root')
 const rootAttrs = computed(() =>
     getRootAttrs({
         ...internalRootProps.value,
-        'data-disabled': presence(isDisabled.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
     }),
 );
 const publicTriggerProps = computed<CollapseTriggerProps>(() => {
@@ -59,7 +60,7 @@ const publicTriggerProps = computed<CollapseTriggerProps>(() => {
         ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
         ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
         'data-state': state.value,
-        'data-disabled': presence(isDisabled.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
     };
 });
 const publicTriggerSlotProps = computed(() => ({

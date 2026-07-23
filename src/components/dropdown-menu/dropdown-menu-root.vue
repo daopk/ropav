@@ -6,9 +6,9 @@
 import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
+import { isEventWithinElement } from '@/utils/dom/events';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
-import { isEventWithinElement } from './dropdown-menu-outside';
 import {
     createVirtualAnchor,
     getFocusTarget,
@@ -16,7 +16,7 @@ import {
     type DropdownMenuRootContext,
     type ElementReference,
     type OpenFocusTarget,
-} from './dropdown-menu-primitive-core';
+} from './dropdownMenuContext';
 import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,

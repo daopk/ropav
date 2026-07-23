@@ -76,8 +76,8 @@
                 :aria-checked="isSwatchSelected(index)"
                 :aria-label="`Select color ${swatch}`"
                 :title="swatch"
-                :data-selected="presence(isSwatchSelected(index))"
-                :data-readonly="presence(readonly)"
+                :data-selected="toPresenceAttribute(isSwatchSelected(index))"
+                :data-readonly="toPresenceAttribute(readonly)"
                 @click="selectSwatch(swatch)"
                 @focus="onSwatchFocus(index)"
                 @keydown="onSwatchKeydown($event, index)"
@@ -97,7 +97,8 @@
 import { computed } from 'vue';
 import IconCheck from '~icons/lucide/check';
 import { bem } from '@/utils/bem';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import ColorSwatch from '../color-swatch/color-swatch.vue';
 import ColorPickerSaturation from './color-picker-saturation.vue';
 import ColorPickerSlider from './color-picker-slider.vue';
@@ -128,7 +129,7 @@ const { getPartAttrs, getRootAttrs } = useStylesApi<ColorPickerPart>(props, 'roo
 const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
-        'data-readonly': presence(props.readonly),
+        'data-readonly': toPresenceAttribute(props.readonly),
     }),
 );
 

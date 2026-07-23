@@ -1,3 +1,4 @@
+import { clamp } from '@/utils/number';
 import type { ScrollAreaScrollbars, ScrollAreaType } from './types';
 
 export type ScrollAxis = 'x' | 'y';
@@ -20,10 +21,6 @@ export interface ScrollAreaMetrics {
 }
 
 const minimumThumbSize = 18;
-
-export function clamp(value: number, min: number, max: number) {
-    return Math.min(max, Math.max(min, value));
-}
 
 export function getScrollDirection(viewport: HTMLElement): ScrollDirection {
     const view = viewport.ownerDocument.defaultView;

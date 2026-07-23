@@ -1,5 +1,7 @@
 import { onBeforeUnmount, type Ref } from 'vue';
-import { clamp, type ScrollAxis } from './scrollAreaCore';
+import { getPointerId } from '@/utils/dom/pointer';
+import { clamp } from '@/utils/number';
+import type { ScrollAxis } from './scrollAreaModel';
 import type { ScrollAreaControlsController } from './useScrollAreaControls';
 import type { ScrollAreaMetricsController } from './useScrollAreaMetrics';
 
@@ -86,7 +88,7 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
         const view = scrollbar.ownerDocument.defaultView;
         dragSession = {
             axis,
-            pointerId: Number.isFinite(event.pointerId) ? event.pointerId : undefined,
+            pointerId: getPointerId(event),
             startCoordinate: getPointerCoordinate(axis, event),
             startPosition: options.metrics.getPosition(axis),
             maxPosition: options.metrics.getMaxPosition(axis),

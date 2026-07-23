@@ -1,4 +1,6 @@
 import type { Ref } from 'vue';
+import { getClientPoint, type Point } from '@/utils/geometry';
+import { arePathsEqual, getParentPath, normalizePath } from '@/utils/indexPath';
 import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
@@ -8,16 +10,11 @@ import type {
     DropdownMenuSelectEvent,
 } from './types';
 import {
-    arePathsEqual,
     DEFAULT_FOCUS_TARGET,
-    getEventPoint,
-    getParentPath,
     hasItemSubmenu,
-    normalizePath,
     type ItemPath,
-    type PointerPoint,
     type SubmenuFocusTarget,
-} from './dropdown-menu-utils';
+} from './dropdown-menu-model';
 
 type BooleanSource = Readonly<Ref<boolean>>;
 
@@ -37,16 +34,16 @@ type SubmenuControls = {
 type HoverIntentControls = {
     clearPendingHover: () => void;
     resetHoverIntent: () => void;
-    trackSubmenuOpen: (path: ItemPath, point?: PointerPoint) => void;
+    trackSubmenuOpen: (path: ItemPath, point?: Point) => void;
     handleItemHover: (
         item: DropdownMenuItem,
         path: ItemPath,
         event: MouseEvent | undefined,
-        commit: (item: DropdownMenuItem, path: ItemPath, point?: PointerPoint) => void,
+        commit: (item: DropdownMenuItem, path: ItemPath, point?: Point) => void,
     ) => void;
     handleMenuMousemove: (
         event: MouseEvent,
-        commit: (item: DropdownMenuItem, path: ItemPath, point?: PointerPoint) => void,
+        commit: (item: DropdownMenuItem, path: ItemPath, point?: Point) => void,
     ) => void;
 };
 
@@ -94,7 +91,7 @@ export function useDropdownMenuInteractions({
             openSubmenu(
                 path,
                 DEFAULT_FOCUS_TARGET,
-                event instanceof MouseEvent ? getEventPoint(event) : undefined,
+                event instanceof MouseEvent ? getClientPoint(event) : undefined,
             );
             return;
         }
@@ -126,7 +123,7 @@ export function useDropdownMenuInteractions({
     function openSubmenu(
         path: ItemPath,
         focus: SubmenuFocusTarget = DEFAULT_FOCUS_TARGET,
-        point?: PointerPoint,
+        point?: Point,
     ) {
         const opened = submenus.openSubmenu(path, focus);
         if (opened) hoverIntent.trackSubmenuOpen(path, point);
@@ -145,7 +142,7 @@ export function useDropdownMenuInteractions({
         return closed;
     }
 
-    function commitHoveredItem(item: DropdownMenuItem, path: ItemPath, point?: PointerPoint) {
+    function commitHoveredItem(item: DropdownMenuItem, path: ItemPath, point?: Point) {
         hoverIntent.clearPendingHover();
         focusedPath.value = [...path];
 

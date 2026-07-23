@@ -11,7 +11,7 @@ import {
     subKey,
     type DropdownMenuSubContext,
     type OpenFocusTarget,
-} from './dropdown-menu-primitive-core';
+} from './dropdownMenuContext';
 import type { DropdownMenuPlacement, DropdownMenuSubPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuSub' });

@@ -14,15 +14,14 @@
 import { computed, mergeProps, onBeforeUnmount, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
 import { bem } from '@/utils/bem';
+import { toOptionalAttribute } from '@/utils/attributes';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import {
     menuKey,
-    optionalAttr,
-    resolveHTMLElementRef,
     subKey,
-    type ComponentRefValue,
     type MenuItemRegistration,
     type OpenFocusTarget,
-} from './dropdown-menu-primitive-core';
+} from './dropdownMenuContext';
 import type { DropdownMenuSubTriggerPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuSubTrigger', inheritAttrs: false });
@@ -64,7 +63,7 @@ const registration: MenuItemRegistration = {
 menu.registerItem(registration);
 onBeforeUnmount(() => menu.unregisterItem(id.value));
 
-function setElement(value: ComponentRefValue) {
+function setElement(value: ComponentElementRef) {
     resolveHTMLElementRef(value, id.value, (resolved) => {
         sub.trigger.value = resolved;
     });
@@ -86,14 +85,14 @@ const rootAttrs = computed(() =>
         type: props.as === 'button' ? 'button' : undefined,
         role: 'menuitem',
         tabindex: -1,
-        disabled: props.as === 'button' ? optionalAttr(isDisabled.value) : undefined,
-        'aria-disabled': optionalAttr(isDisabled.value),
+        disabled: props.as === 'button' ? toOptionalAttribute(isDisabled.value) : undefined,
+        'aria-disabled': toOptionalAttribute(isDisabled.value),
         'aria-haspopup': 'menu',
         'aria-expanded': sub.isOpen.value,
         'aria-controls': sub.contentId.value,
-        'data-disabled': optionalAttr(isDisabled.value),
-        'data-focused': optionalAttr(focused.value),
-        'data-highlighted': optionalAttr(focused.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
+        'data-focused': toOptionalAttribute(focused.value),
+        'data-highlighted': toOptionalAttribute(focused.value),
         'data-state': sub.isOpen.value ? 'open' : 'closed',
         class: bem('rp-dropdown-menu__item', {
             focused: focused.value,

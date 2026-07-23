@@ -1,19 +1,12 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
+import { isInteractiveElement } from '@/utils/dom/interactive';
+import { clamp } from '@/utils/number';
 import type { TextareaProps } from './types';
 
 const MIN_ROWS = 1;
 const NATIVE_TEXTAREA_SELECTOR = '.rp-textarea__native';
-const INTERACTIVE_SELECTOR = [
-    'button',
-    'a[href]',
-    'input',
-    'select',
-    `textarea:not(${NATIVE_TEXTAREA_SELECTOR})`,
-    '[contenteditable="true"]',
-    '[tabindex]:not([tabindex="-1"])',
-].join(',');
 
 interface AutosizeRows {
     minRows: number;
@@ -24,10 +17,6 @@ interface TextareaMetrics {
     lineHeight: number;
     paddingHeight: number;
     borderHeight: number;
-}
-
-function isInteractiveElement(target: Element) {
-    return Boolean(target.closest(INTERACTIVE_SELECTOR));
 }
 
 function normalizeRows(value: number | undefined, fallback?: number) {
@@ -139,7 +128,7 @@ export function useTextarea(
             autosizeRows.value,
         );
         const heightLimit = maxHeight ?? Number.POSITIVE_INFINITY;
-        const nextHeight = Math.min(Math.max(contentHeight, minHeight), heightLimit);
+        const nextHeight = clamp(contentHeight, minHeight, heightLimit);
 
         textarea.style.height = `${nextHeight}px`;
         textarea.style.overflowY =
@@ -164,8 +153,7 @@ export function useTextarea(
     function focusTextarea(e: MouseEvent) {
         if (control.disabled) return;
 
-        const target = e.target;
-        if (target instanceof Element && isInteractiveElement(target)) return;
+        if (isInteractiveElement(e.target, NATIVE_TEXTAREA_SELECTOR)) return;
 
         textareaRef.value?.focus();
     }

@@ -1,8 +1,7 @@
 import { onBeforeUnmount } from 'vue';
+import { normalizeTypeaheadText } from '@/utils/text';
 
 const DEFAULT_TYPEAHEAD_TIMEOUT = 1000;
-const COMBINING_MARKS = /\p{M}/gu;
-const WHITESPACE = /\s+/g;
 
 export interface UseTypeaheadOptions<T> {
     items: () => readonly T[];
@@ -13,15 +12,6 @@ export interface UseTypeaheadOptions<T> {
     isDisabled?: (item: T) => boolean;
     scopeKey?: () => unknown;
     timeout?: number;
-}
-
-export function normalizeTypeaheadText(value: string, locales?: Intl.LocalesArgument) {
-    return value
-        .toLocaleLowerCase(locales)
-        .normalize('NFKD')
-        .replace(COMBINING_MARKS, '')
-        .replace(WHITESPACE, ' ')
-        .trim();
 }
 
 function isRepeatedQuery(query: string) {

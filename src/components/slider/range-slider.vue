@@ -75,8 +75,8 @@
                 "
                 :aria-required="props.required ?? nativeInputAttrs[index]?.required"
                 :data-thumb="thumb"
-                :data-disabled="presence(control.disabled)"
-                :data-invalid="presence(control.invalid)"
+                :data-disabled="toPresenceAttribute(control.disabled)"
+                :data-invalid="toPresenceAttribute(control.invalid)"
             />
 
             <span v-if="markItems.length" class="rp-range-slider__marks" aria-hidden="true">
@@ -92,7 +92,7 @@
                             style: mark.style,
                         })
                     "
-                    :data-filled="presence(mark.filled)"
+                    :data-filled="toPresenceAttribute(mark.filled)"
                 >
                     <span class="rp-range-slider__mark-dot" />
                     <span
@@ -160,7 +160,9 @@
 import { computed, nextTick, ref, useId, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useFormControl } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
+import { mergeAriaIdRefs } from '@/utils/aria';
 import RangeSliderTooltip from './range-slider-tooltip.vue';
 import type {
     RangeSliderPart,
@@ -314,8 +316,8 @@ const rootAttrs = computed(() =>
         style: trackStyle.value,
         role: 'group',
         'data-active-thumb': activeThumb.value || undefined,
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'data-orientation': props.orientation,
         'aria-labelledby': groupLabelledby.value,
         'aria-describedby': control.ariaDescribedby,
@@ -385,13 +387,9 @@ function focus(options?: FocusOptions) {
     lowerInputRef.value?.focus(options);
 }
 
-const groupLabelledby = computed(() => {
-    const values = [control.ariaLabelledby, slots.default ? labelId.value : undefined]
-        .flatMap((value) => value?.split(/\s+/) ?? [])
-        .filter(Boolean);
-
-    return values.length ? Array.from(new Set(values)).join(' ') : undefined;
-});
+const groupLabelledby = computed(() =>
+    mergeAriaIdRefs(control.ariaLabelledby, slots.default ? labelId.value : undefined),
+);
 
 defineExpose({ nativeElements, focus });
 </script>

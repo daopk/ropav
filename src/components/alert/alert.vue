@@ -48,7 +48,7 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
 import type { AlertPart, AlertProps } from './types';
-import { getAlertColorStyle } from './useAlertColor';
+import { getAlertColorStyle } from './alertColor';
 
 defineOptions({ name: 'RpAlert', inheritAttrs: false });
 

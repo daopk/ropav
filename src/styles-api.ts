@@ -20,10 +20,6 @@ export interface StylesApiPartOptions {
 
 type StylesApiSource<Part extends string> = Pick<StylesApiProps<Part>, 'classNames' | 'styles'>;
 
-export function presence(value: unknown): '' | undefined {
-    return value ? '' : undefined;
-}
-
 export function resolveStylesApiPart<Part extends string>(
     source: Readonly<StylesApiSource<Part>>,
     part: Part,

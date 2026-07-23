@@ -1,4 +1,5 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref, type WatchSource } from 'vue';
+import { createRafScheduler } from '@/utils/rafScheduler';
 import type { TooltipPlacement } from '../tooltip/types';
 import type { RangeSliderValue, SliderOrientation } from './types';
 
@@ -173,8 +174,6 @@ export function useRangeSliderTooltipCollision({
     const upperSize = ref<RangeSliderTooltipSize>({ width: 0, height: 0 });
 
     let resizeObserver: ResizeObserver | undefined;
-    let frameWindow: Window | undefined;
-    let frameId: number | undefined;
     let destroyed = false;
 
     function setOverlapping(value: boolean) {
@@ -213,21 +212,13 @@ export function useRangeSliderTooltipCollision({
         updateCollision();
     }
 
+    const measureScheduler = createRafScheduler(
+        measureSizes,
+        () => root.value?.ownerDocument.defaultView,
+    );
+
     function scheduleMeasure() {
-        if (destroyed || frameId != null) return;
-
-        const view = root.value?.ownerDocument.defaultView;
-        if (!view?.requestAnimationFrame) {
-            measureSizes();
-            return;
-        }
-
-        frameWindow = view;
-        frameId = view.requestAnimationFrame(() => {
-            frameId = undefined;
-            frameWindow = undefined;
-            measureSizes();
-        });
+        if (!destroyed) measureScheduler.schedule();
     }
 
     function refreshObservedElements() {
@@ -321,7 +312,7 @@ export function useRangeSliderTooltipCollision({
         const view = root.value?.ownerDocument.defaultView;
         view?.removeEventListener('resize', onWindowResize);
         resizeObserver?.disconnect();
-        if (frameId != null) frameWindow?.cancelAnimationFrame(frameId);
+        measureScheduler.cancel();
     });
 
     return { tooltipsOverlapping, mergedArrowOffset, mergedMinSize };

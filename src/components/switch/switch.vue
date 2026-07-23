@@ -32,7 +32,8 @@
 import { computed, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useCheckedFormControl } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useSwitch } from './useSwitch';
 import type { SwitchPart, SwitchProps } from './types';
 
@@ -73,8 +74,8 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         style: rootStyle.value,
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'data-state': controllable.value.value ? 'checked' : 'unchecked',
     }),
 );
@@ -90,8 +91,8 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
             compatibilityClass,
             compatibilityStyle,
         }),
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'data-state': controllable.value.value ? 'checked' : 'unchecked',
         onChange(event) {
             onChange(event);

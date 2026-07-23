@@ -1,13 +1,8 @@
 import { computed, nextTick, watch, type Ref } from 'vue';
+import { hasMeasuredRect } from '@/utils/geometry';
+import { arePathsEqual, getParentPath, getPathKey, normalizePath } from '@/utils/indexPath';
+import type { ItemPath } from './dropdown-menu-model';
 import type { DropdownMenuPlacement } from './types';
-import {
-    arePathsEqual,
-    getParentPath,
-    getPathKey,
-    hasMeasuredRect,
-    normalizePath,
-    type ItemPath,
-} from './dropdown-menu-utils';
 
 type StringSource = {
     readonly value: string;

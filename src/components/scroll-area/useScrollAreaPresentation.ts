@@ -1,6 +1,7 @@
 import { computed, useId, type CSSProperties, type HTMLAttributes } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
-import { getLengthValue, type ScrollAxis } from './scrollAreaCore';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
+import { getLengthValue, type ScrollAxis } from './scrollAreaModel';
 import type { ScrollAreaController } from './useScrollArea';
 import type {
     ScrollAreaOrientation,
@@ -25,12 +26,20 @@ export function useScrollAreaPresentation(
             'data-type': props.type,
             'data-direction': scrollArea.metrics.direction,
             'data-scrollbars': props.scrollbars === false ? 'none' : props.scrollbars,
-            'data-overflow-x': presence(scrollArea.metrics.overflowX),
-            'data-overflow-y': presence(scrollArea.metrics.overflowY),
-            'data-scrollbar-x-active': presence(scrollArea.horizontalScrollbarActive.value),
-            'data-scrollbar-y-active': presence(scrollArea.verticalScrollbarActive.value),
-            'data-scrollbar-x-visible': presence(scrollArea.horizontalScrollbarVisible.value),
-            'data-scrollbar-y-visible': presence(scrollArea.verticalScrollbarVisible.value),
+            'data-overflow-x': toPresenceAttribute(scrollArea.metrics.overflowX),
+            'data-overflow-y': toPresenceAttribute(scrollArea.metrics.overflowY),
+            'data-scrollbar-x-active': toPresenceAttribute(
+                scrollArea.horizontalScrollbarActive.value,
+            ),
+            'data-scrollbar-y-active': toPresenceAttribute(
+                scrollArea.verticalScrollbarActive.value,
+            ),
+            'data-scrollbar-x-visible': toPresenceAttribute(
+                scrollArea.horizontalScrollbarVisible.value,
+            ),
+            'data-scrollbar-y-visible': toPresenceAttribute(
+                scrollArea.verticalScrollbarVisible.value,
+            ),
             onPointerenter: scrollArea.onPointerenter,
             onPointerleave: scrollArea.onPointerleave,
             onFocusin: scrollArea.onFocusin,
@@ -88,7 +97,7 @@ export function useScrollAreaPresentation(
         ...getPartAttrs('corner', { class: 'rp-scroll-area__corner' }),
         'aria-hidden': true,
         'data-direction': scrollArea.metrics.direction,
-        'data-visible': presence(
+        'data-visible': toPresenceAttribute(
             scrollArea.horizontalScrollbarActive.value && scrollArea.verticalScrollbarActive.value,
         ),
     }));
@@ -128,8 +137,8 @@ export function useScrollAreaPresentation(
             'aria-hidden': props.embedded || !active || undefined,
             'data-orientation': vertical ? 'vertical' : 'horizontal',
             'data-direction': scrollArea.metrics.direction,
-            'data-active': presence(active),
-            'data-visible': presence(visible),
+            'data-active': toPresenceAttribute(active),
+            'data-visible': toPresenceAttribute(visible),
         };
     }
 

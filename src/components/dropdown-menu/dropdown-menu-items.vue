@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts" setup vapor>
+import { getPathKey } from '@/utils/indexPath';
 import DropdownMenuItemRow from './dropdown-menu-item-row.vue';
-import { getPathKey, type ItemPath } from './dropdown-menu-utils';
+import type { ItemPath } from './dropdown-menu-model';
 import type { DropdownMenuItem, DropdownMenuItemSlotProps } from './types';
 import type { DropdownMenuRenderContext } from './useDropdownMenuRenderItems';
 

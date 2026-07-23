@@ -1,18 +1,5 @@
 import { onBeforeUnmount, onMounted, watch, type Ref } from 'vue';
-
-function isEventInside(event: MouseEvent, element: Element) {
-    const path = event.composedPath();
-    if (path.includes(element)) return true;
-
-    const eventTarget = event.target;
-    const NodeConstructor = element.ownerDocument.defaultView?.Node;
-    return Boolean(
-        eventTarget &&
-        NodeConstructor &&
-        eventTarget instanceof NodeConstructor &&
-        element.contains(eventTarget as Node),
-    );
-}
+import { isEventWithinElement } from '@/utils/dom/events';
 
 export function useClickOutside(
     target: Ref<Element | null> | Ref<Element | null>[],
@@ -26,7 +13,7 @@ export function useClickOutside(
     function handler(event: MouseEvent) {
         const inside = targets.some((current) => {
             const element = current.value;
-            return element ? isEventInside(event, element) : false;
+            return element ? isEventWithinElement(event, element) : false;
         });
         if (!inside) callback(event);
     }

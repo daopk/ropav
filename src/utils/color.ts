@@ -1,3 +1,5 @@
+import { clamp, roundTo } from './number';
+
 export interface ParsedCssColor {
     red: number;
     green: number;
@@ -37,7 +39,7 @@ function parseHexColor(color: string): ParsedCssColor | undefined {
             blue: Number.parseInt(hex[2] + hex[2], 16),
             opacity:
                 hex.length === 4
-                    ? roundPercent((Number.parseInt(hex[3] + hex[3], 16) / 255) * 100)
+                    ? roundTo((Number.parseInt(hex[3] + hex[3], 16) / 255) * 100)
                     : DEFAULT_OPACITY,
         };
     }
@@ -48,7 +50,7 @@ function parseHexColor(color: string): ParsedCssColor | undefined {
         blue: Number.parseInt(hex.slice(4, 6), 16),
         opacity:
             hex.length === 8
-                ? roundPercent((Number.parseInt(hex.slice(6, 8), 16) / 255) * 100)
+                ? roundTo((Number.parseInt(hex.slice(6, 8), 16) / 255) * 100)
                 : DEFAULT_OPACITY,
     };
 }
@@ -167,10 +169,10 @@ function parseAlpha(alpha: string | undefined) {
     if (alpha === undefined) return DEFAULT_OPACITY;
 
     const percentage = parsePercentage(alpha);
-    if (percentage != null) return roundPercent(percentage);
+    if (percentage != null) return roundTo(percentage);
 
     const number = parseNumber(alpha);
-    return number == null ? undefined : roundPercent(clamp(number, 0, 1) * 100);
+    return number == null ? undefined : roundTo(clamp(number, 0, 1) * 100);
 }
 
 function parseNumber(value: string) {
@@ -228,12 +230,4 @@ function hslToRgb(
 
 function normalizeHue(value: number) {
     return ((value % 360) + 360) % 360;
-}
-
-function roundPercent(value: number) {
-    return Math.round(value * 100) / 100;
-}
-
-function clamp(value: number, min: number, max: number) {
-    return Math.min(max, Math.max(min, value));
 }

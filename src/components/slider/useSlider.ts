@@ -3,6 +3,9 @@ import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { getComponentColorValue } from '@/utils/componentColors';
+import { getPointerId } from '@/utils/dom/pointer';
+import { clamp } from '@/utils/number';
+import { createRafScheduler } from '@/utils/rafScheduler';
 import {
     applySliderThumbStyle,
     createSliderMarkItems,
@@ -18,7 +21,7 @@ import {
     normalizeSliderStep,
     normalizeSliderValue,
     setSliderStyleValue,
-} from './sliderCore';
+} from './sliderModel';
 import type { SliderProps, SliderTrackSlotProps } from './types';
 
 export {
@@ -26,7 +29,7 @@ export {
     normalizeSliderBounds,
     normalizeSliderStep,
     normalizeSliderValue,
-} from './sliderCore';
+} from './sliderModel';
 
 type SliderStateProps = Readonly<
     SliderProps & {
@@ -131,9 +134,11 @@ export function useSlider(
     let dragView: Window | null = null;
     let dragPointerId: number | undefined;
     let dragTrack: HTMLElement | null = null;
-    let previewFrameView: Window | null = null;
-    let previewFrameId: number | undefined;
     let pendingPreview: { clientX: number; clientY: number; track: HTMLElement } | undefined;
+    const previewScheduler = createRafScheduler(
+        applyScheduledPreview,
+        () => pendingPreview?.track.ownerDocument.defaultView,
+    );
 
     const hasMarkLabels = computed(() => markItems.value.some((mark) => mark.hasLabel));
     const thumbMode = computed(() => getSliderThumbMode(props.thumb));
@@ -274,11 +279,7 @@ export function useSlider(
     }
 
     function cancelScheduledPreview() {
-        if (previewFrameId !== undefined) {
-            previewFrameView?.cancelAnimationFrame(previewFrameId);
-        }
-        previewFrameView = null;
-        previewFrameId = undefined;
+        previewScheduler.cancel();
         pendingPreview = undefined;
     }
 
@@ -301,7 +302,7 @@ export function useSlider(
         if (length <= 0) return false;
 
         const offset = vertical ? rect.bottom - pointer.clientY : pointer.clientX - rect.left;
-        const ratio = Math.min(1, Math.max(0, offset / length));
+        const ratio = clamp(offset / length, 0, 1);
         const rawValue = bounds.value.min + ratio * (bounds.value.max - bounds.value.min);
         previewValue.value = normalizeSliderValue(
             rawValue,
@@ -319,25 +320,11 @@ export function useSlider(
         if (pending && updatePreviewFromPointer(pending, pending.track)) syncTooltip();
     }
 
-    function onPreviewAnimationFrame() {
-        previewFrameView = null;
-        previewFrameId = undefined;
-        applyScheduledPreview();
-    }
-
     function schedulePreview(event: PointerEvent, track: HTMLElement) {
         if (tooltipAnchor.value !== 'pointer' || control.disabled) return;
 
         pendingPreview = { clientX: event.clientX, clientY: event.clientY, track };
-        const view = track.ownerDocument.defaultView;
-        if (!view?.requestAnimationFrame) {
-            applyScheduledPreview();
-            return;
-        }
-        if (previewFrameId !== undefined) return;
-
-        previewFrameView = view;
-        previewFrameId = view.requestAnimationFrame(onPreviewAnimationFrame);
+        previewScheduler.schedule();
     }
 
     function onTooltipPointerMove(event: PointerEvent) {
@@ -370,7 +357,7 @@ export function useSlider(
         removeDragListeners();
         dismissed = false;
         dragging.value = true;
-        dragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : undefined;
+        dragPointerId = getPointerId(event);
         dragTrack = event.currentTarget as HTMLElement | null;
         if (dragTrack) updatePreviewFromPointer(event, dragTrack);
         dragView = dragTrack?.ownerDocument.defaultView ?? null;

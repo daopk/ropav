@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, ref } from 'vue';
 
-import { flush, keydown, mountDom } from '../../../tests/utils/vue';
-import ColorPicker from './color-picker.vue';
 import {
     formatColorPickerValue,
     parseColorPickerValue,
     type ColorPickerHsvColor,
-} from './color-picker-utils';
+} from '@/utils/colorPicker';
+import { flush, keydown, mountDom } from '../../../tests/utils/vue';
+import ColorPicker from './color-picker.vue';
 import { colorPickerSizes, type ColorPickerFormat, type ColorPickerValue } from './types';
 
 function setRect(el: Element, rect: Partial<DOMRect>) {

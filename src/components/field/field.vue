@@ -42,7 +42,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useField } from './useField';
 import type { FieldPart, FieldProps } from './types';
 
@@ -75,8 +76,8 @@ const { getPartAttrs, getRootAttrs } = useStylesApi<FieldPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
-        'data-disabled': presence(props.disabled),
-        'data-invalid': presence(isInvalid.value),
+        'data-disabled': toPresenceAttribute(props.disabled),
+        'data-invalid': toPresenceAttribute(isInvalid.value),
     }),
 );
 </script>

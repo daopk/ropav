@@ -28,7 +28,7 @@ import IconUser from '~icons/lucide/user';
 import { bem } from '@/utils/bem';
 import { useStylesApi } from '@/styles-api';
 import type { AvatarPart, AvatarProps } from './types';
-import { getAvatarColorStyle } from './useAvatarColor';
+import { getAvatarColorStyle } from './avatarColor';
 
 defineOptions({ name: 'RpAvatar', inheritAttrs: false });
 

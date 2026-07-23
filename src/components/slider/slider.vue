@@ -74,8 +74,8 @@
                         : control.invalid || undefined
                 "
                 :aria-required="props.required ?? nativeInputAttrs.required"
-                :data-disabled="presence(control.disabled)"
-                :data-invalid="presence(control.invalid)"
+                :data-disabled="toPresenceAttribute(control.disabled)"
+                :data-invalid="toPresenceAttribute(control.invalid)"
             />
 
             <span v-if="markItems.length" class="rp-slider__marks" aria-hidden="true">
@@ -88,7 +88,7 @@
                             style: mark.style,
                         })
                     "
-                    :data-filled="presence(mark.filled)"
+                    :data-filled="toPresenceAttribute(mark.filled)"
                 >
                     <span class="rp-slider__mark-dot" />
                     <span
@@ -148,7 +148,8 @@
 import { computed, ref, type InputHTMLAttributes } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useFormControl } from '@/internal/composables/useFormControl';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import Tooltip from '../tooltip/tooltip.vue';
 import type {
     SliderPart,
@@ -267,11 +268,11 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: [rootClass.value, { 'rp-slider--custom-thumb': Boolean(slots.thumb) }],
         style: trackStyle.value,
-        'data-disabled': presence(control.disabled),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-invalid': toPresenceAttribute(control.invalid),
         'data-orientation': props.orientation,
-        'data-track-hovered': presence(trackHovered.value),
-        'data-dragging': presence(dragging.value),
+        'data-track-hovered': toPresenceAttribute(trackHovered.value),
+        'data-dragging': toPresenceAttribute(dragging.value),
         'data-thumb-visibility': thumbMode.value === false ? 'hidden' : thumbMode.value,
     }),
 );

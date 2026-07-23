@@ -1,4 +1,5 @@
 import { computed } from 'vue';
+import { mergeAriaIdRefs } from '@/utils/aria';
 
 export interface ControlStateOptions {
     id?: string;
@@ -22,11 +23,6 @@ export interface ControlState {
     ariaLabelledby: string | undefined;
 }
 
-function mergeIds(...values: Array<string | undefined>): string | undefined {
-    const ids = values.flatMap((value) => value?.split(/\s+/) ?? []).filter(Boolean);
-    return ids.length > 0 ? Array.from(new Set(ids)).join(' ') : undefined;
-}
-
 export function useControlState(options: ControlStateOptions = {}): ControlState {
     const id = computed(() => options.id);
     const form = computed(() => options.form);
@@ -35,8 +31,8 @@ export function useControlState(options: ControlStateOptions = {}): ControlState
     const invalid = computed(() => options.invalid ?? false);
     const valid = computed(() => options.valid ?? false);
 
-    const ariaDescribedby = computed(() => mergeIds(options.describedby));
-    const ariaLabelledby = computed(() => mergeIds(options.labelledby));
+    const ariaDescribedby = computed(() => mergeAriaIdRefs(options.describedby));
+    const ariaLabelledby = computed(() => mergeAriaIdRefs(options.labelledby));
 
     return {
         get id() {

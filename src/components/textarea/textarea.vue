@@ -17,16 +17,17 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="control.invalid || undefined"
             :aria-required="control.required || undefined"
-            :data-disabled="presence(control.disabled)"
-            :data-readonly="presence(readonly)"
-            :data-invalid="presence(control.invalid)"
+            :data-disabled="toPresenceAttribute(control.disabled)"
+            :data-readonly="toPresenceAttribute(readonly)"
+            :data-invalid="toPresenceAttribute(control.invalid)"
         />
     </div>
 </template>
 
 <script lang="ts" setup vapor>
 import { computed, type TextareaHTMLAttributes } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useTextFormControl } from '@/internal/composables/useFormControl';
 import { useTextarea } from './useTextarea';
@@ -76,9 +77,9 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         onMousedown: focusTextarea,
-        'data-disabled': presence(control.disabled),
-        'data-readonly': presence(props.readonly),
-        'data-invalid': presence(control.invalid),
+        'data-disabled': toPresenceAttribute(control.disabled),
+        'data-readonly': toPresenceAttribute(props.readonly),
+        'data-invalid': toPresenceAttribute(control.invalid),
     }),
 );
 

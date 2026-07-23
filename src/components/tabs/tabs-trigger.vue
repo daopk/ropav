@@ -6,7 +6,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useTabsTrigger } from './useTabs';
 import type { TabsTriggerPart, TabsTriggerProps } from './types';
 
@@ -21,7 +22,7 @@ const { getRootAttrs } = useStylesApi<TabsTriggerPart>(props, 'root');
 const rootAttrs = computed(() =>
     getRootAttrs({
         ...internalRootProps.value,
-        'data-disabled': presence(internalRootProps.value['data-disabled']),
+        'data-disabled': toPresenceAttribute(internalRootProps.value['data-disabled']),
     }),
 );
 </script>

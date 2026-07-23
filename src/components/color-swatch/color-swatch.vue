@@ -10,7 +10,7 @@
 import { computed, type CSSProperties } from 'vue';
 import { useStylesApi } from '@/styles-api';
 import type { ColorSwatchPart, ColorSwatchProps, ColorSwatchSize } from './types';
-import { getColorSwatchForeground, getColorSwatchOverlay } from './useColorSwatchColor';
+import { getColorSwatchForeground, getColorSwatchOverlay } from './colorSwatchColor';
 
 defineOptions({ name: 'RpColorSwatch', inheritAttrs: false });
 

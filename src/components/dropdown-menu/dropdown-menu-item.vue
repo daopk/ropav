@@ -6,8 +6,9 @@
 
 <script lang="ts" setup vapor>
 import { computed, mergeProps, useAttrs } from 'vue';
+import { toOptionalAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
-import { optionalAttr, usePrimitiveItem } from './dropdown-menu-primitive-core';
+import { usePrimitiveItem } from './dropdownMenuContext';
 import type {
     DropdownMenuItemPrimitiveProps,
     DropdownMenuItemPrimitiveSlotProps,
@@ -51,11 +52,11 @@ const rootAttrs = computed(() =>
         type: props.as === 'button' ? 'button' : undefined,
         role: 'menuitem',
         tabindex: -1,
-        disabled: props.as === 'button' ? optionalAttr(isDisabled.value) : undefined,
-        'aria-disabled': optionalAttr(isDisabled.value),
-        'data-disabled': optionalAttr(isDisabled.value),
-        'data-focused': optionalAttr(focused.value),
-        'data-highlighted': optionalAttr(focused.value),
+        disabled: props.as === 'button' ? toOptionalAttribute(isDisabled.value) : undefined,
+        'aria-disabled': toOptionalAttribute(isDisabled.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
+        'data-focused': toOptionalAttribute(focused.value),
+        'data-highlighted': toOptionalAttribute(focused.value),
         class: bem('rp-dropdown-menu__item', {
             focused: focused.value,
             disabled: isDisabled.value,

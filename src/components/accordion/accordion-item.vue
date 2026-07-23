@@ -29,7 +29,8 @@
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
 import IconChevronDown from '~icons/lucide/chevron-down';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useAccordionItem } from './useAccordion';
 import type { AccordionItemPart, AccordionItemProps } from './types';
 
@@ -56,14 +57,14 @@ const { getPartAttrs, getRootAttrs } = useStylesApi<AccordionItemPart>(props, 'r
 const rootAttrs = computed(() =>
     getRootAttrs({
         ...internalRootProps.value,
-        'data-disabled': presence(internalRootProps.value['data-disabled']),
+        'data-disabled': toPresenceAttribute(internalRootProps.value['data-disabled']),
     }),
 );
 const publicTriggerProps = computed(() => ({
     ...internalTriggerProps.value,
     ...getPartAttrs('trigger', { class: internalTriggerProps.value.class }),
     'data-state': internalRootProps.value['data-state'],
-    'data-disabled': presence(internalRootProps.value['data-disabled']),
+    'data-disabled': toPresenceAttribute(internalRootProps.value['data-disabled']),
 }));
 const publicTriggerSlotProps = computed(() => ({
     ...triggerSlotProps.value,

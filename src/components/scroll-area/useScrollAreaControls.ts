@@ -1,10 +1,6 @@
 import type { Ref } from 'vue';
-import {
-    clamp,
-    getRawHorizontalPosition,
-    type ScrollAxis,
-    type ScrollDirection,
-} from './scrollAreaCore';
+import { clamp } from '@/utils/number';
+import { getRawHorizontalPosition, type ScrollAxis, type ScrollDirection } from './scrollAreaModel';
 import type { ScrollAreaMetricsController } from './useScrollAreaMetrics';
 import type { ScrollAreaPosition } from './types';
 

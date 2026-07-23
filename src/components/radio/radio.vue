@@ -16,8 +16,8 @@
             :aria-describedby="control.ariaDescribedby"
             :aria-invalid="isInvalid || undefined"
             :aria-required="isRequired || undefined"
-            :data-disabled="presence(isDisabled)"
-            :data-invalid="presence(isInvalid)"
+            :data-disabled="toPresenceAttribute(isDisabled)"
+            :data-invalid="toPresenceAttribute(isInvalid)"
             :data-state="isChecked ? 'checked' : 'unchecked'"
         />
         <span v-bind="getPartAttrs('indicator', { class: 'rp-radio__dot' })" />
@@ -29,7 +29,8 @@
 
 <script lang="ts" setup vapor>
 import { computed, type InputHTMLAttributes } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { useRadio } from './useRadio';
 import type { RadioPart, RadioProps } from './types';
 
@@ -71,8 +72,8 @@ const rootAttrs = computed(() =>
     getRootAttrs({
         class: rootClass.value,
         style: rootStyle.value,
-        'data-disabled': presence(isDisabled.value),
-        'data-invalid': presence(isInvalid.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
+        'data-invalid': toPresenceAttribute(isInvalid.value),
         'data-state': isChecked.value ? 'checked' : 'unchecked',
     }),
 );

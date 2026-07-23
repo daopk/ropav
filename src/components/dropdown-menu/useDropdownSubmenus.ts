@@ -1,13 +1,12 @@
 import { ref, type Ref } from 'vue';
-import type { DropdownMenuItem } from './types';
+import { getParentPath, isPathPrefix } from '@/utils/indexPath';
 import {
     DEFAULT_FOCUS_TARGET,
-    getParentPath,
     hasItemSubmenu,
-    isPathPrefix,
     type ItemPath,
     type SubmenuFocusTarget,
-} from './dropdown-menu-utils';
+} from './dropdown-menu-model';
+import type { DropdownMenuItem } from './types';
 
 type UseDropdownSubmenusOptions = {
     focusedPath: Ref<ItemPath>;

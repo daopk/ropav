@@ -7,12 +7,9 @@
 <script lang="ts" setup vapor>
 import { computed, mergeProps, onBeforeUnmount, ref, useAttrs, useId } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
-import {
-    optionalAttr,
-    resolveHTMLElementRef,
-    rootKey,
-    type ComponentRefValue,
-} from './dropdown-menu-primitive-core';
+import { toOptionalAttribute } from '@/utils/attributes';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { rootKey } from './dropdownMenuContext';
 import type { DropdownMenuFocusTarget, DropdownMenuTriggerPrimitiveProps } from './types';
 
 defineOptions({ name: 'RpDropdownMenuTrigger', inheritAttrs: false });
@@ -33,7 +30,7 @@ const id = computed(() => props.id ?? `${generatedId}-trigger`);
 const element = ref<HTMLElement | null>(null);
 const isDisabled = computed(() => root.disabled.value || props.disabled);
 
-function setElement(value: ComponentRefValue) {
+function setElement(value: ComponentElementRef) {
     resolveHTMLElementRef(value, id.value, (resolved) => {
         element.value = resolved;
         root.setTrigger(resolved, id.value);
@@ -70,13 +67,13 @@ const rootAttrs = computed(() =>
     mergeProps(attrs, {
         id: id.value,
         type: props.as === 'button' ? 'button' : undefined,
-        disabled: props.as === 'button' ? optionalAttr(isDisabled.value) : undefined,
+        disabled: props.as === 'button' ? toOptionalAttribute(isDisabled.value) : undefined,
         'aria-controls': root.contentId.value,
         'aria-expanded': root.isOpen.value,
         'aria-haspopup': 'menu',
-        'aria-disabled': props.as === 'button' ? undefined : optionalAttr(isDisabled.value),
+        'aria-disabled': props.as === 'button' ? undefined : toOptionalAttribute(isDisabled.value),
         'data-state': root.isOpen.value ? 'open' : 'closed',
-        'data-disabled': optionalAttr(isDisabled.value),
+        'data-disabled': toOptionalAttribute(isDisabled.value),
         onClick,
         onKeydown,
     }),

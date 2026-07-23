@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { computed, reactive, ref, watch } from 'vue';
+import { formatColorPickerValue, parseColorPickerValue } from '@/utils/colorPicker';
 import Field from '../field/field.vue';
 import Radio from '../radio/radio.vue';
 import RadioGroup from '../radio/radio-group.vue';
 import ColorPicker from './color-picker.vue';
-import { formatColorPickerValue, parseColorPickerValue } from './color-picker-utils';
 import {
     colorPickerFormats,
     colorPickerSizes,

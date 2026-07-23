@@ -56,7 +56,8 @@
 
 <script lang="ts" setup vapor>
 import { computed } from 'vue';
-import { presence, useStylesApi } from '@/styles-api';
+import { useStylesApi } from '@/styles-api';
+import { toPresenceAttribute } from '@/utils/attributes';
 import { usePopover } from './usePopover';
 import type { PopoverPart, PopoverProps, PopoverTriggerProps } from './types';
 
@@ -123,7 +124,7 @@ const publicRootAttrs = computed(() =>
             class: rootClass.value,
             onFocusout: onCompositeFocusout,
             'data-state': slotProps.value.isOpen ? 'open' : 'closed',
-            'data-disabled': presence(isDisabled.value),
+            'data-disabled': toPresenceAttribute(isDisabled.value),
         },
         {},
         ['onFocusout'],
@@ -136,7 +137,7 @@ const styledTriggerProps = computed<PopoverTriggerProps>(() => {
         ...(props.classNames?.trigger !== undefined ? { class: partAttrs.class } : {}),
         ...(props.styles?.trigger !== undefined ? { style: partAttrs.style } : {}),
         'data-state': slotProps.value.isOpen ? 'open' : 'closed',
-        'data-disabled': presence(isDisabled.value),
+        'data-disabled': toPresenceAttribute(isDisabled.value),
     };
 });
 const contentAttrs = computed(() => ({

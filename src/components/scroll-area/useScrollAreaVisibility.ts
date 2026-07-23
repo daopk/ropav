@@ -1,5 +1,5 @@
 import { computed, onBeforeUnmount, ref, watch, type Ref } from 'vue';
-import { isScrollbarActive, type ScrollAxis } from './scrollAreaCore';
+import { isScrollbarActive, type ScrollAxis } from './scrollAreaModel';
 import type { ScrollAreaProps } from './types';
 
 interface UseScrollAreaVisibilityOptions {

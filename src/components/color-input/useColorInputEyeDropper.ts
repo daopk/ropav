@@ -1,5 +1,5 @@
 import { computed, onMounted, ref, shallowRef } from 'vue';
-import { formatColorPickerValue, parseColorPickerValue } from '../color-picker/color-picker-utils';
+import { formatColorPickerValue, parseColorPickerValue } from '@/utils/colorPicker';
 import type { ColorPickerFormat, ColorPickerValue } from '../color-picker/types';
 
 interface EyeDropperResult {

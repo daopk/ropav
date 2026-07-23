@@ -10,23 +10,22 @@ import {
     watch,
 } from 'vue';
 import { useRequiredInject } from '@/internal/composables/useRequiredInject';
+import { toOptionalAttribute } from '@/utils/attributes';
 import { bem } from '@/utils/bem';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
+import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import { useTeleportPositioningKey } from '../teleport-provider/useTeleportTarget';
 import { isEventWithinTargets } from './dropdown-menu-outside';
 import {
     blockNextDocumentClick,
-    createCustomEvent,
     createMenuContext,
     createOutsideEvent,
     menuKey,
-    optionalAttr,
-    resolveHTMLElementRef,
     rootKey,
     subKey,
-    type ComponentRefValue,
     type ElementReference,
-} from './dropdown-menu-primitive-core';
+} from './dropdownMenuContext';
 import type {
     DropdownMenuContentPrimitiveProps,
     DropdownMenuInteractOutsideEvent,
@@ -68,7 +67,7 @@ export function useDropdownMenuPrimitiveContent(
         actualPlacement,
         parentSub: sub,
         onEscape(event) {
-            const customEvent = createCustomEvent(
+            const customEvent = createCancelableCustomEvent(
                 'dropdown-menu-escape-key-down',
                 { originalEvent: event },
                 event,
@@ -107,7 +106,7 @@ export function useDropdownMenuPrimitiveContent(
     provide(menuKey, menu);
     if (sub) sub.menu = menu;
 
-    function setElement(value: ComponentRefValue) {
+    function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
             const previous = element.value;
             if (previous) root.unregisterInside(previous);
@@ -215,7 +214,7 @@ export function useDropdownMenuPrimitiveContent(
             id: id.value,
             role: 'menu',
             tabindex: -1,
-            hidden: optionalAttr(!isOpen.value),
+            hidden: toOptionalAttribute(!isOpen.value),
             class: submenu
                 ? bem('rp-dropdown-menu__submenu', { compound: true, open: isOpen.value })
                 : bem('rp-dropdown-menu__content', { compound: true, open: isOpen.value }),

@@ -2,11 +2,8 @@ import { computed, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
 import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
-import {
-    isElementReference,
-    useFloatingPosition,
-    useFloatingTarget,
-} from '../floating/useFloatingPosition';
+import { isElement } from '@/utils/dom/query';
+import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
 import {
     useTeleportPositioningKey,
     useTeleportTarget,
@@ -79,7 +76,7 @@ export function useTooltip(
         rootRef,
     );
     const targetElement = computed(() =>
-        isElementReference(resolvedTarget.value) ? resolvedTarget.value : null,
+        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
     );
     const zIndex = useOverlayZIndex({
         baseZIndex: () => props.baseZIndex,
