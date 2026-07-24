@@ -102,7 +102,7 @@ export function useDropdownMenu(
         disabled: isDisabled,
         modal,
         setOpen,
-        isTopLayer: layer.isTopLayer,
+        connectLayerInteraction: layer.connectInteraction,
         focusTrigger,
         beforeOpen: () => resetHoverIntent(),
         beforeClose: () => resetHoverIntent(),

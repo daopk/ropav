@@ -1,5 +1,9 @@
 import type { ComputedRef, Ref } from 'vue';
 import type {
+    OverlayLayerInteraction,
+    OverlayLayerInteractionConnection,
+} from '@/internal/composables/useOverlayLayer';
+import type {
     DropdownMenuCloseOptions,
     DropdownMenuFocusTarget,
     DropdownMenuInteractOutsideEvent,
@@ -55,7 +59,9 @@ export interface DropdownMenuInteractionHost {
     disabled: Readonly<Ref<boolean>>;
     modal: Readonly<Ref<boolean>>;
     setOpen: (open: boolean) => void;
-    isTopLayer: () => boolean;
+    connectLayerInteraction: (
+        interaction: OverlayLayerInteraction,
+    ) => OverlayLayerInteractionConnection;
     focusTrigger: () => void;
     beforeOpen?: () => void;
     beforeClose?: () => void;

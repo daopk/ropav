@@ -2,6 +2,7 @@ import {
     computed,
     isRef,
     nextTick,
+    onBeforeUnmount,
     ref,
     useAttrs,
     useId,
@@ -203,10 +204,6 @@ export function usePopover(
         closePopover();
     }
 
-    function isEventInsidePopover(event: Event) {
-        return layer.isInside(event, [rootRef.value, targetElement.value]);
-    }
-
     function onCompositeFocusout(event: FocusEvent) {
         const nextTarget = event.relatedTarget;
         if (
@@ -224,23 +221,27 @@ export function usePopover(
         }
     }
 
-    function onDocumentClick(event: MouseEvent) {
-        if (!layer.isTopLayer()) return;
-        if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
+    function onDocumentClick() {
+        if (props.closeOnOutsideClick === false) return;
         closePopoverWithoutReturnFocus();
     }
 
-    function onDocumentPointerDown(event: MouseEvent | TouchEvent) {
-        if (!layer.isTopLayer()) return;
-        if (props.closeOnOutsideClick === false || isEventInsidePopover(event)) return;
+    function onDocumentPointerDown() {
+        if (props.closeOnOutsideClick === false) return;
         closePopoverWithoutReturnFocus();
     }
 
-    function onDocumentKeydown(event: KeyboardEvent) {
-        if (!layer.isTopLayer()) return;
-        if (props.closeOnEscape === false || event.key !== 'Escape') return;
+    function onDocumentKeydown() {
+        if (props.closeOnEscape === false) return;
         closePopover();
     }
+
+    const disconnectLayerInteraction = layer.connectInteraction({
+        inside: () => [rootRef.value, targetElement.value],
+        clickOutside: onDocumentClick,
+        pointerDownOutside: onDocumentPointerDown,
+        escapeKeyDown: onDocumentKeydown,
+    });
 
     watch(isDisabled, (disabled) => {
         if (disabled) closePopover();
@@ -268,10 +269,9 @@ export function usePopover(
         isVisible,
         isDisabled,
         onTriggerClick,
-        onDocumentClick,
-        onDocumentPointerDown,
-        onDocumentKeydown,
     });
+
+    onBeforeUnmount(disconnectLayerInteraction);
 
     return {
         rootRef,

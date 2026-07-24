@@ -82,6 +82,35 @@ describe('DropdownMenu state', () => {
         expect(queryDom(container, '[role="menu"]')).toBeNull();
     });
 
+    it('closes iframe-teleported content from its host document', async () => {
+        const frame = document.createElement('iframe');
+        document.body.append(frame);
+        const frameDocument = frame.contentDocument!;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        { items, teleportTo: frameDocument.body },
+                        {
+                            default: ({ triggerProps }: DropdownMenuSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Actions'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        click(queryDom(container, '.trigger') as HTMLButtonElement);
+        await nextTick();
+        expect(frameDocument.querySelector('[role="menu"]')).not.toBeNull();
+
+        document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+        await vi.waitFor(() => {
+            expect(frameDocument.querySelector('[role="menu"]')).toBeNull();
+        });
+    });
+
     it('supports cancelable outside interaction without a duplicate click event', async () => {
         const onInteractOutside = vi.fn((event: CustomEvent) => event.preventDefault());
         const container = mountDom(

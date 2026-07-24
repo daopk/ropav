@@ -91,6 +91,30 @@ describe('DOM ancestry utilities', () => {
         nextHost.remove();
     });
 
+    it('can notify once while deferring an ancestry rebind until reconnection', async () => {
+        const host = document.createElement('div');
+        const child = document.createElement('button');
+        host.append(child);
+        document.body.append(host);
+
+        const onChange = vi.fn();
+        const stop = observeComposedAncestry(() => [child], onChange, {
+            deferWhileDisconnected: true,
+            notifyOnDisconnect: true,
+        });
+
+        child.remove();
+        await vi.waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        expect(onChange).toHaveBeenCalledTimes(1);
+
+        host.append(child);
+        await vi.waitFor(() => expect(onChange).toHaveBeenCalledTimes(2));
+
+        stop();
+        host.remove();
+    });
+
     it('observes new slot assignments within an existing open shadow root', async () => {
         const host = document.createElement('div');
         const shadowRoot = host.attachShadow({ mode: 'open' });

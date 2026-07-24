@@ -18,9 +18,6 @@ interface UsePopoverBindingsOptions {
     isVisible: Readonly<Ref<boolean>>;
     isDisabled: Readonly<Ref<boolean>>;
     onTriggerClick: () => void;
-    onDocumentClick: (event: MouseEvent) => void;
-    onDocumentPointerDown: (event: MouseEvent | TouchEvent) => void;
-    onDocumentKeydown: (event: KeyboardEvent) => void;
 }
 
 function applyTargetAttributes(
@@ -44,9 +41,6 @@ export function usePopoverBindings({
     isVisible,
     isDisabled,
     onTriggerClick,
-    onDocumentClick,
-    onDocumentPointerDown,
-    onDocumentKeydown,
 }: UsePopoverBindingsOptions) {
     watch(
         [isExplicitTarget, targetElement],
@@ -69,24 +63,5 @@ export function usePopoverBindings({
             onCleanup(() => restoreAttributes(target, snapshot));
         },
         { flush: 'sync' },
-    );
-
-    watch(
-        isVisible,
-        (visible, _previous, onCleanup) => {
-            if (!visible || typeof document === 'undefined') return;
-
-            document.addEventListener('click', onDocumentClick, true);
-            document.addEventListener('mousedown', onDocumentPointerDown, true);
-            document.addEventListener('touchstart', onDocumentPointerDown, true);
-            document.addEventListener('keydown', onDocumentKeydown);
-            onCleanup(() => {
-                document.removeEventListener('click', onDocumentClick, true);
-                document.removeEventListener('mousedown', onDocumentPointerDown, true);
-                document.removeEventListener('touchstart', onDocumentPointerDown, true);
-                document.removeEventListener('keydown', onDocumentKeydown);
-            });
-        },
-        { flush: 'sync', immediate: true },
     );
 }

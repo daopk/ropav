@@ -100,7 +100,7 @@ const interaction = useDropdownMenuInteraction({
     disabled,
     modal,
     setOpen,
-    isTopLayer: layer.isTopLayer,
+    connectLayerInteraction: layer.connectInteraction,
     focusTrigger: focusReturnTarget,
     beforeOpen: rememberFocus,
 });

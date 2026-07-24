@@ -3,6 +3,7 @@ import { isElement } from './query';
 
 export interface ObserveComposedAncestryOptions {
     deferWhileDisconnected?: boolean;
+    notifyOnDisconnect?: boolean;
 }
 
 function getFrameElement(documentNode: Document): Element | null {
@@ -79,6 +80,7 @@ export function observeComposedAncestry(
     let mutationObservers: MutationObserver[] = [];
     let slotRoots: ShadowRoot[] = [];
     let disposed = false;
+    let disconnectNotified = false;
 
     const reconnectScheduler = createRafScheduler(check, getView);
 
@@ -152,13 +154,20 @@ export function observeComposedAncestry(
 
         const nodes = getNodes();
         if (options.deferWhileDisconnected && hasDisconnectedAncestry(nodes)) {
+            if (options.notifyOnDisconnect && !disconnectNotified) onChange();
+            disconnectNotified = true;
             scheduleReconnectCheck(nodes);
             return;
         }
 
+        const shouldNotifyReconnect = disconnectNotified && options.notifyOnDisconnect;
+        disconnectNotified = false;
         reconnectScheduler.cancel();
         const nextPaths = readComposedAncestryPaths(nodes);
-        if (areAncestryPathsIdentical(paths, nextPaths)) return;
+        if (areAncestryPathsIdentical(paths, nextPaths)) {
+            if (shouldNotifyReconnect) onChange();
+            return;
+        }
 
         rebind(nodes, nextPaths);
         onChange();

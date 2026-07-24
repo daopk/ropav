@@ -399,6 +399,47 @@ describe('Popover', () => {
         expect(queryDom(container, '#child-popover')?.getAttribute('data-state')).toBe('open');
     });
 
+    it('dismisses iframe-teleported content from its host document', async () => {
+        const frame = document.createElement('iframe');
+        document.body.append(frame);
+        const frameDocument = frame.contentDocument!;
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        { id: 'iframe-popover', teleportTo: frameDocument.body },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', { class: 'iframe-trigger', ...triggerProps }, 'Open'),
+                            content: () => h('button', 'Inside'),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const trigger = container.querySelector('.iframe-trigger') as HTMLButtonElement;
+        click(trigger);
+        await flush();
+        expect(frameDocument.querySelector('#iframe-popover')).not.toBeNull();
+
+        click(document.body);
+        await waitForAssertion(() => {
+            expect(frameDocument.querySelector('#iframe-popover')).toBeNull();
+        });
+
+        click(trigger);
+        await flush();
+        expect(frameDocument.querySelector('#iframe-popover')).not.toBeNull();
+
+        keydown(document, 'Escape');
+        await waitForAssertion(() => {
+            expect(frameDocument.querySelector('#iframe-popover')).toBeNull();
+        });
+    });
+
     it('optionally traps focus across the trigger and content', async () => {
         const outside = document.createElement('button');
         outside.textContent = 'Outside';
@@ -460,7 +501,7 @@ describe('Popover', () => {
 
         click(trigger);
         await flush();
-        outside.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+        outside.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
         outside.focus();
         click(outside);
         await waitForAssertion(() => {

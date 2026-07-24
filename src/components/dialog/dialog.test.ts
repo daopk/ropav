@@ -22,7 +22,8 @@ import DialogTrigger from './dialog-trigger.vue';
 import type { DialogCloseReason } from './types';
 
 function pointerdown(element: Element) {
-    element.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }));
+    const EventConstructor = element.ownerDocument.defaultView?.Event ?? Event;
+    element.dispatchEvent(new EventConstructor('pointerdown', { bubbles: true, cancelable: true }));
 }
 
 describe('Dialog primitives', () => {
@@ -264,6 +265,113 @@ describe('Dialog primitives', () => {
         pointerdown(portal.querySelector('.dialog-overlay') as HTMLElement);
         await flush();
         expect(closeReasons).toEqual(['programmatic', 'escape', 'outside']);
+    });
+
+    it('routes iframe content dismissal to its trigger document', async () => {
+        const frame = document.createElement('iframe');
+        document.body.append(frame);
+        const frameDocument = frame.contentDocument!;
+        const onClose = vi.fn();
+        mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        { defaultOpen: true, modal: false, onClose },
+                        {
+                            default: () => [
+                                h(
+                                    DialogTrigger,
+                                    { class: 'iframe-dialog-trigger' },
+                                    () => 'Toggle dialog',
+                                ),
+                                h(
+                                    DialogPortal,
+                                    { teleportTo: frameDocument.body },
+                                    {
+                                        default: () =>
+                                            h(DialogContent, {
+                                                ariaLabel: 'Iframe dialog',
+                                            }),
+                                    },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        expect(frameDocument.querySelector('[role="dialog"]')).not.toBeNull();
+
+        const trigger = document.querySelector('.iframe-dialog-trigger') as HTMLButtonElement;
+        pointerdown(trigger);
+        click(trigger);
+        await flush();
+        expect(frameDocument.querySelector('[role="dialog"]')).toBeNull();
+        expect(onClose).toHaveBeenLastCalledWith('programmatic');
+
+        click(trigger);
+        await flush();
+        expect(frameDocument.querySelector('[role="dialog"]')).not.toBeNull();
+
+        pointerdown(document.body);
+        await flush();
+        expect(frameDocument.querySelector('[role="dialog"]')).toBeNull();
+        expect(onClose).toHaveBeenLastCalledWith('outside');
+    });
+
+    it('dismisses from an outside-only overlay in a separate document', async () => {
+        const contentFrame = document.createElement('iframe');
+        const overlayFrame = document.createElement('iframe');
+        document.body.append(contentFrame, overlayFrame);
+        const contentDocument = contentFrame.contentDocument!;
+        const overlayDocument = overlayFrame.contentDocument!;
+        const onClose = vi.fn();
+
+        mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        { defaultOpen: true, modal: false, onClose },
+                        {
+                            default: () => [
+                                h(
+                                    DialogPortal,
+                                    { teleportTo: overlayDocument.body },
+                                    {
+                                        default: () =>
+                                            h(DialogOverlay, {
+                                                class: 'separate-document-overlay',
+                                            }),
+                                    },
+                                ),
+                                h(
+                                    DialogPortal,
+                                    { teleportTo: contentDocument.body },
+                                    {
+                                        default: () =>
+                                            h(DialogContent, {
+                                                ariaLabel: 'Separate document dialog',
+                                            }),
+                                    },
+                                ),
+                            ],
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        expect(contentDocument.querySelector('[role="dialog"]')).not.toBeNull();
+
+        pointerdown(overlayDocument.querySelector('.separate-document-overlay') as HTMLElement);
+        await flush();
+        expect(contentDocument.querySelector('[role="dialog"]')).toBeNull();
+        expect(onClose).toHaveBeenCalledWith('outside');
     });
 
     it('supports non-modal content without inerting, scroll lock, or focus trapping', async () => {

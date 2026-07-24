@@ -14,6 +14,7 @@ import {
     type Ref,
     type ShallowRef,
 } from 'vue';
+import { observeComposedAncestry } from '@/utils/dom/ancestry';
 import { isEventWithinElement } from '@/utils/dom/events';
 
 interface InertSnapshot {
@@ -23,11 +24,28 @@ interface InertSnapshot {
 
 interface OverlayLayerState {
     layers: OverlayLayerContext[];
+    interactionLayers: OverlayLayerContext[];
     inertSnapshots: Map<HTMLElement, InertSnapshot>;
+    interactionListeners: Partial<
+        Record<OverlayLayerInteractionName, OverlayLayerDocumentListener>
+    >;
     originalBodyOverflow: string;
     scrollLocked: boolean;
     observer: MutationObserver | null;
     syncQueued: boolean;
+}
+
+export interface OverlayLayerInteraction {
+    inside?: MaybeRefOrGetter<readonly (Element | null | undefined)[]>;
+    escapeKeyDown?: (event: KeyboardEvent) => void;
+    pointerDownOutside?: (event: PointerEvent) => void;
+    focusOutside?: (event: FocusEvent) => void;
+    clickOutside?: (event: MouseEvent) => void;
+}
+
+export interface OverlayLayerInteractionConnection {
+    (): void;
+    refresh: () => void;
 }
 
 export interface OverlayLayerContext {
@@ -46,6 +64,7 @@ export interface OverlayLayerContext {
         element: HTMLElement,
         options?: { focus?: boolean; inside?: boolean },
     ) => () => void;
+    connectInteraction: (interaction: OverlayLayerInteraction) => OverlayLayerInteractionConnection;
 }
 
 export interface UseOverlayLayerOptions {
@@ -59,19 +78,72 @@ export interface UseOverlayLayerOptions {
 
 const overlayLayerKey = Symbol('overlay-layer') as InjectionKey<OverlayLayerContext>;
 const documentStates = new WeakMap<Document, OverlayLayerState>();
-const layerMetadata = new WeakMap<
-    OverlayLayerContext,
-    {
-        baseZIndex: ComputedRef<number>;
-        parent: OverlayLayerContext | null;
-        setZIndex: (value: number) => void;
-    }
->();
+const activeInteractionLayers: OverlayLayerContext[] = [];
+
+type OverlayLayerInteractionName =
+    | 'escapeKeyDown'
+    | 'pointerDownOutside'
+    | 'focusOutside'
+    | 'clickOutside';
+
+interface OverlayLayerDocumentListener {
+    capture: boolean;
+    eventName: keyof DocumentEventMap;
+    listener: EventListener;
+}
+
+interface OverlayLayerInteractionListenerDefinition {
+    capture: boolean;
+    eventName: keyof DocumentEventMap;
+    outside: boolean;
+    matches?: (event: Event) => boolean;
+}
+
+const interactionListenerDefinitions: Record<
+    OverlayLayerInteractionName,
+    OverlayLayerInteractionListenerDefinition
+> = {
+    escapeKeyDown: {
+        capture: false,
+        eventName: 'keydown',
+        outside: false,
+        matches: (event) => (event as KeyboardEvent).key === 'Escape',
+    },
+    pointerDownOutside: {
+        capture: true,
+        eventName: 'pointerdown',
+        outside: true,
+    },
+    focusOutside: {
+        capture: true,
+        eventName: 'focusin',
+        outside: true,
+    },
+    clickOutside: {
+        capture: true,
+        eventName: 'click',
+        outside: true,
+    },
+};
+
+interface OverlayLayerMetadata {
+    baseZIndex: ComputedRef<number>;
+    interactions: Set<OverlayLayerInteraction>;
+    interactionDocuments: Set<Document>;
+    ownInteractionDocuments: Set<Document>;
+    parent: OverlayLayerContext | null;
+    registered: boolean;
+    setZIndex: (value: number) => void;
+}
+
+const layerMetadata = new WeakMap<OverlayLayerContext, OverlayLayerMetadata>();
 
 function createState(): OverlayLayerState {
     return {
         layers: [],
+        interactionLayers: [],
         inertSnapshots: new Map(),
+        interactionListeners: {},
         originalBodyOverflow: '',
         scrollLocked: false,
         observer: null,
@@ -96,6 +168,29 @@ function isDescendantLayer(layer: OverlayLayerContext, ancestor: OverlayLayerCon
     return false;
 }
 
+function insertLayer(layers: OverlayLayerContext[], layer: OverlayLayerContext) {
+    const currentIndex = layers.indexOf(layer);
+    if (currentIndex >= 0) layers.splice(currentIndex, 1);
+    const descendantIndex = layers.findIndex((candidate) => isDescendantLayer(candidate, layer));
+    if (descendantIndex >= 0) layers.splice(descendantIndex, 0, layer);
+    else layers.push(layer);
+}
+
+function insertPhysicalLayer(layers: OverlayLayerContext[], layer: OverlayLayerContext) {
+    removeLayerFromStack(layers, layer);
+    const layerIndex = activeInteractionLayers.indexOf(layer);
+    const nextIndex = layers.findIndex(
+        (candidate) => activeInteractionLayers.indexOf(candidate) > layerIndex,
+    );
+    if (nextIndex >= 0) layers.splice(nextIndex, 0, layer);
+    else layers.push(layer);
+}
+
+function removeLayerFromStack(layers: OverlayLayerContext[], layer: OverlayLayerContext) {
+    const index = layers.indexOf(layer);
+    if (index >= 0) layers.splice(index, 1);
+}
+
 function syncLayerZIndices(state: OverlayLayerState) {
     let highestZIndex = Number.NEGATIVE_INFINITY;
     for (const layer of state.layers) {
@@ -104,6 +199,104 @@ function syncLayerZIndices(state: OverlayLayerState) {
         const zIndex = Math.max(metadata.baseZIndex.value, highestZIndex + 2);
         metadata.setZIndex(zIndex);
         highestZIndex = zIndex;
+    }
+}
+
+function syncDocumentInteractionLayers(document: Document) {
+    const state = getState(document);
+    state.interactionLayers = activeInteractionLayers.filter((layer) =>
+        layerMetadata.get(layer)?.interactionDocuments.has(document),
+    );
+    syncInteractionListeners(document, state);
+}
+
+function reconcileInteractionDocuments(layer: OverlayLayerContext) {
+    const affectedDocuments = new Set<Document>();
+    const layers = activeInteractionLayers.filter(
+        (candidate) => candidate === layer || isDescendantLayer(candidate, layer),
+    );
+    if (!layers.includes(layer)) layers.unshift(layer);
+
+    for (const candidate of layers) {
+        const metadata = layerMetadata.get(candidate);
+        if (!metadata) continue;
+        for (const document of metadata.interactionDocuments) {
+            affectedDocuments.add(document);
+        }
+
+        const nextDocuments = metadata.registered
+            ? new Set(metadata.ownInteractionDocuments)
+            : new Set<Document>();
+        const parentDocuments = metadata.parent
+            ? layerMetadata.get(metadata.parent)?.interactionDocuments
+            : undefined;
+        if (metadata.registered && parentDocuments) {
+            for (const document of parentDocuments) nextDocuments.add(document);
+        }
+        metadata.interactionDocuments = nextDocuments;
+
+        for (const document of nextDocuments) affectedDocuments.add(document);
+    }
+
+    for (const document of affectedDocuments) syncDocumentInteractionLayers(document);
+}
+
+function hasInteractionHandler(state: OverlayLayerState, name: OverlayLayerInteractionName) {
+    return state.interactionLayers.some((layer) =>
+        [...(layerMetadata.get(layer)?.interactions ?? [])].some(
+            (interaction) => typeof interaction[name] === 'function',
+        ),
+    );
+}
+
+function routeLayerInteraction(
+    state: OverlayLayerState,
+    name: OverlayLayerInteractionName,
+    event: Event,
+) {
+    const layer = state.interactionLayers[state.interactionLayers.length - 1];
+    if (!layer) return;
+
+    const definition = interactionListenerDefinitions[name];
+    if (definition.matches && !definition.matches(event)) return;
+
+    const interactions = [...(layerMetadata.get(layer)?.interactions ?? [])];
+    for (const interaction of interactions) {
+        const handler = interaction[name] as ((event: Event) => void) | undefined;
+        if (!handler) continue;
+
+        const additionalInside = interaction.inside ? toValue(interaction.inside) : [];
+        if (definition.outside && layer.isInside(event, additionalInside)) continue;
+        handler(event);
+    }
+}
+
+function syncInteractionListeners(document: Document, state: OverlayLayerState) {
+    for (const name of Object.keys(
+        interactionListenerDefinitions,
+    ) as OverlayLayerInteractionName[]) {
+        const existing = state.interactionListeners[name];
+        if (!hasInteractionHandler(state, name)) {
+            if (existing) {
+                document.removeEventListener(
+                    existing.eventName,
+                    existing.listener,
+                    existing.capture,
+                );
+                delete state.interactionListeners[name];
+            }
+            continue;
+        }
+        if (existing) continue;
+
+        const definition = interactionListenerDefinitions[name];
+        const listener: EventListener = (event) => routeLayerInteraction(state, name, event);
+        document.addEventListener(definition.eventName, listener, definition.capture);
+        state.interactionListeners[name] = {
+            capture: definition.capture,
+            eventName: definition.eventName,
+            listener,
+        };
     }
 }
 
@@ -216,10 +409,67 @@ function syncModalEffects(document: Document, state: OverlayLayerState) {
 }
 
 function removeLayer(layer: OverlayLayerContext, document: Document, state: OverlayLayerState) {
-    const index = state.layers.indexOf(layer);
-    if (index >= 0) state.layers.splice(index, 1);
+    removeLayerFromStack(state.layers, layer);
     syncLayerZIndices(state);
     syncModalEffects(document, state);
+}
+
+interface OverlayLayerAncestryObserverOptions {
+    active: ComputedRef<boolean>;
+    element: Ref<HTMLElement | null>;
+    branches: ReadonlySet<HTMLElement>;
+    interactions: ReadonlySet<OverlayLayerInteraction>;
+    onContentChange: () => void;
+    onAuxiliaryChange: () => void;
+}
+
+function createOverlayLayerAncestryObserver(options: OverlayLayerAncestryObserverOptions) {
+    let cleanups: (() => void)[] = [];
+    let disposed = false;
+
+    function stop() {
+        for (const cleanup of cleanups) cleanup();
+        cleanups = [];
+    }
+
+    function reset() {
+        stop();
+        if (disposed || !options.active.value) return;
+
+        const content = options.element.value;
+        if (content) {
+            cleanups.push(
+                observeComposedAncestry(() => [content], options.onContentChange, {
+                    deferWhileDisconnected: true,
+                }),
+            );
+        }
+
+        const auxiliaryElements = new Set<Element>(options.branches);
+        for (const interaction of options.interactions) {
+            if (!interaction.inside) continue;
+            for (const element of toValue(interaction.inside)) {
+                if (element) auxiliaryElements.add(element);
+            }
+        }
+        if (content) auxiliaryElements.delete(content);
+        for (const element of auxiliaryElements) {
+            cleanups.push(
+                observeComposedAncestry(() => [element], options.onAuxiliaryChange, {
+                    deferWhileDisconnected: true,
+                    notifyOnDisconnect: true,
+                }),
+            );
+        }
+    }
+
+    return {
+        reset,
+        dispose() {
+            disposed = true;
+            stop();
+        },
+    };
 }
 
 export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerContext {
@@ -232,15 +482,27 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
     const branchSet = new Set<HTMLElement>();
     const focusBranchSet = new Set<HTMLElement>();
     const insideBranchSet = new Set<HTMLElement>();
+    const interactions = new Set<OverlayLayerInteraction>();
+    const interactionSetRevision = ref(0);
     const baseZIndex = computed(() => toValue(options.baseZIndex ?? 100));
     const zIndex = ref(baseZIndex.value);
     let registeredDocument: Document | null = null;
     let registeredElement: HTMLElement | null = null;
     let parentBranchCleanup: (() => void) | undefined;
+    const ancestryObserver = createOverlayLayerAncestryObserver({
+        active,
+        element: options.element,
+        branches: branchSet,
+        interactions,
+        onContentChange: syncObservedAncestry,
+        onAuxiliaryChange: syncObservedAuxiliaryAncestry,
+    });
 
     function syncBranches() {
         branches.value = [...branchSet];
         focusBranches.value = [...focusBranchSet];
+        syncOwnInteractionDocuments();
+        ancestryObserver.reset();
         if (registeredDocument) {
             syncModalEffects(registeredDocument, getState(registeredDocument));
         }
@@ -269,6 +531,51 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         parentBranchCleanup = element ? parent?.registerBranch(element) : undefined;
     }
 
+    function connectInteraction(interaction: OverlayLayerInteraction) {
+        interactions.add(interaction);
+        interactionSetRevision.value += 1;
+
+        let connected = true;
+        return Object.assign(
+            () => {
+                if (!connected) return;
+                connected = false;
+                interactions.delete(interaction);
+                interactionSetRevision.value += 1;
+            },
+            {
+                refresh() {
+                    if (!connected) return;
+                    syncOwnInteractionDocuments();
+                    ancestryObserver.reset();
+                },
+            },
+        );
+    }
+
+    function readOwnInteractionDocuments() {
+        const documents = new Set<Document>();
+        if (registeredElement) documents.add(registeredElement.ownerDocument);
+        for (const branch of branchSet) {
+            if (branch.isConnected) documents.add(branch.ownerDocument);
+        }
+        for (const interaction of interactions) {
+            if (interaction.inside) {
+                for (const element of toValue(interaction.inside)) {
+                    if (element?.isConnected) documents.add(element.ownerDocument);
+                }
+            }
+        }
+        return [...documents];
+    }
+
+    function syncOwnInteractionDocuments(documents = readOwnInteractionDocuments()) {
+        const metadata = layerMetadata.get(context);
+        if (!metadata) return;
+        metadata.ownInteractionDocuments = new Set(documents);
+        reconcileInteractionDocuments(context);
+    }
+
     const context: OverlayLayerContext = {
         id: Symbol('overlay-layer'),
         element: options.element,
@@ -291,55 +598,118 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
             );
         },
         registerBranch,
+        connectInteraction,
     };
     layerMetadata.set(context, {
         baseZIndex,
+        interactions,
+        interactionDocuments: new Set(),
+        ownInteractionDocuments: new Set(),
         parent,
+        registered: false,
         setZIndex(value) {
             zIndex.value = value;
         },
     });
 
+    watch(
+        () => {
+            void interactionSetRevision.value;
+            return readOwnInteractionDocuments();
+        },
+        (documents) => {
+            syncOwnInteractionDocuments(documents);
+            ancestryObserver.reset();
+        },
+        { flush: 'sync', immediate: true },
+    );
+
     function unregister() {
-        replaceParentBranch(null);
         if (!registeredDocument) return;
         const document = registeredDocument;
         registeredDocument = null;
         registeredElement = null;
+        const metadata = layerMetadata.get(context);
+        if (metadata) metadata.registered = false;
+        removeLayerFromStack(activeInteractionLayers, context);
+        syncOwnInteractionDocuments();
+        replaceParentBranch(null);
         removeLayer(context, document, getState(document));
+    }
+
+    function moveRegistration(element: HTMLElement) {
+        const previousDocument = registeredDocument;
+        if (!previousDocument) return;
+
+        registeredDocument = element.ownerDocument;
+        registeredElement = element;
+        removeLayer(context, previousDocument, getState(previousDocument));
+
+        const state = getState(registeredDocument);
+        insertPhysicalLayer(state.layers, context);
+        syncOwnInteractionDocuments();
+        replaceParentBranch(element);
+        syncLayerZIndices(state);
+        syncModalEffects(registeredDocument, state);
     }
 
     function register(element: HTMLElement) {
         const document = element.ownerDocument;
         if (registeredDocument === document) {
             if (registeredElement !== element) {
-                replaceParentBranch(element);
                 registeredElement = element;
+                syncOwnInteractionDocuments();
+                replaceParentBranch(element);
                 syncModalEffects(document, getState(document));
             }
             return;
         }
-        unregister();
+        if (registeredDocument) {
+            moveRegistration(element);
+            return;
+        }
         const state = getState(document);
-        const currentIndex = state.layers.indexOf(context);
-        if (currentIndex >= 0) state.layers.splice(currentIndex, 1);
-        const descendantIndex = state.layers.findIndex((layer) =>
-            isDescendantLayer(layer, context),
-        );
-        if (descendantIndex >= 0) state.layers.splice(descendantIndex, 0, context);
-        else state.layers.push(context);
         registeredDocument = document;
         registeredElement = element;
+        const metadata = layerMetadata.get(context);
+        if (metadata) metadata.registered = true;
+        insertLayer(activeInteractionLayers, context);
+        insertPhysicalLayer(state.layers, context);
+        syncOwnInteractionDocuments();
         replaceParentBranch(element);
         syncLayerZIndices(state);
         syncModalEffects(document, state);
     }
 
+    function syncRegistration() {
+        const element = options.element.value;
+        if (active.value && element?.isConnected) {
+            register(element);
+            syncOwnInteractionDocuments();
+        } else {
+            unregister();
+        }
+    }
+
+    function syncObservedAncestry() {
+        syncRegistration();
+        if (registeredDocument) {
+            syncModalEffects(registeredDocument, getState(registeredDocument));
+        }
+    }
+
+    function syncObservedAuxiliaryAncestry() {
+        syncOwnInteractionDocuments();
+        if (registeredDocument) {
+            syncModalEffects(registeredDocument, getState(registeredDocument));
+        }
+    }
+
     watch(
         [active, options.element],
-        ([isActive, element]) => {
-            if (isActive && element?.isConnected) register(element);
-            else unregister();
+        () => {
+            syncRegistration();
+            ancestryObserver.reset();
         },
         { flush: 'post', immediate: true },
     );
@@ -356,7 +726,11 @@ export function useOverlayLayer(options: UseOverlayLayerOptions): OverlayLayerCo
         }
     });
 
-    onBeforeUnmount(unregister);
+    onBeforeUnmount(() => {
+        ancestryObserver.dispose();
+        unregister();
+        interactions.clear();
+    });
     provide(overlayLayerKey, context);
     return context;
 }

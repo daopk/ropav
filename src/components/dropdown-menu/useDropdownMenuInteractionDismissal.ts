@@ -1,9 +1,5 @@
-import { isRef, onBeforeUnmount, watch } from 'vue';
-import {
-    createCancelableCustomEvent,
-    isEventWithinElement,
-    isEventWithinTargets,
-} from '@/utils/dom/events';
+import { isRef } from 'vue';
+import { createCancelableCustomEvent, isEventWithinTargets } from '@/utils/dom/events';
 import type { DropdownMenuCloseOptions, DropdownMenuInteractOutsideEvent } from './types';
 import type { DropdownMenuInteractionRegistry } from './dropdownMenuInteractionRegistry';
 import type {
@@ -30,16 +26,18 @@ function createOutsideEvent(originalEvent: Event): DropdownMenuInteractOutsideEv
     );
 }
 
-function blockDocumentClick(event: Event) {
-    if (event.cancelable) event.preventDefault();
-    event.stopPropagation();
-    document.removeEventListener('click', blockDocumentClick, true);
-}
+function blockNextDocumentClick(document: Document) {
+    function blockDocumentClick(event: Event) {
+        if (event.cancelable) event.preventDefault();
+        event.stopPropagation();
+        document.removeEventListener('click', blockDocumentClick, true);
+    }
 
-function blockNextDocumentClick() {
-    if (typeof document === 'undefined') return;
     document.addEventListener('click', blockDocumentClick, true);
-    window.setTimeout(() => document.removeEventListener('click', blockDocumentClick, true), 1000);
+    document.defaultView?.setTimeout(
+        () => document.removeEventListener('click', blockDocumentClick, true),
+        1000,
+    );
 }
 
 export function useDropdownMenuInteractionDismissal({
@@ -49,18 +47,18 @@ export function useDropdownMenuInteractionDismissal({
 }: UseDropdownMenuInteractionDismissalOptions) {
     const inside = new Set<Element>();
     let dismissal: DropdownMenuInteractionDismissalRegistration | undefined;
-    let isListening = false;
+    let layerInteraction:
+        | ReturnType<DropdownMenuInteractionHost['connectLayerInteraction']>
+        | undefined;
 
     function registerInside(element: Element) {
         inside.add(element);
+        layerInteraction?.refresh();
     }
 
     function unregisterInside(element: Element) {
         inside.delete(element);
-    }
-
-    function isInside(event: Event) {
-        return [...inside].some((element) => isEventWithinElement(event, element));
+        layerInteraction?.refresh();
     }
 
     function emitOutside(type: 'pointer' | 'focus', originalEvent: Event) {
@@ -75,51 +73,50 @@ export function useDropdownMenuInteractionDismissal({
         if (!host.modal.value) return;
         if (event.cancelable) event.preventDefault();
         event.stopPropagation();
-        if (event.type === 'pointerdown') blockNextDocumentClick();
+        const listenerDocument = event.currentTarget as Document | null;
+        if (event.type === 'pointerdown' && listenerDocument?.nodeType === 9) {
+            blockNextDocumentClick(listenerDocument);
+        }
     }
 
     function shouldIgnoreOutside(event: Event) {
         const ignoredTargets = (dismissal?.ignoredTargets() ?? []).map((target) =>
             isRef(target) ? target.value : target,
         );
-        return isInside(event) || isEventWithinTargets(event, ignoredTargets);
+        return isEventWithinTargets(event, ignoredTargets);
     }
 
     function onDocumentPointer(event: Event) {
-        if (!host.isTopLayer() || shouldIgnoreOutside(event)) return;
+        if (shouldIgnoreOutside(event)) return;
         const outsideEvent = emitOutside('pointer', event);
         blockModalInteraction(event);
         if (!outsideEvent.defaultPrevented) closeRoot({ focusTrigger: host.modal.value });
     }
 
     function onDocumentFocus(event: Event) {
-        if (!host.isTopLayer() || shouldIgnoreOutside(event)) return;
+        if (shouldIgnoreOutside(event)) return;
         const outsideEvent = emitOutside('focus', event);
         blockModalInteraction(event);
         if (!outsideEvent.defaultPrevented) closeRoot({ focusTrigger: host.modal.value });
         else if (host.modal.value) registry.focusMenuElement(registry.activeMenuId.value);
     }
 
-    function setDocumentListeners(active: boolean) {
-        if (typeof document === 'undefined' || active === isListening) return;
-        isListening = active;
-        const method = active ? 'addEventListener' : 'removeEventListener';
-        document[method]('pointerdown', onDocumentPointer, true);
-        document[method]('focusin', onDocumentFocus, true);
-    }
-
     function registerDismissal(registration: DropdownMenuInteractionDismissalRegistration) {
+        layerInteraction?.();
         dismissal = registration;
-        setDocumentListeners(host.isOpen.value);
+        layerInteraction = host.connectLayerInteraction({
+            inside: () => [...inside],
+            pointerDownOutside: onDocumentPointer,
+            focusOutside: onDocumentFocus,
+        });
+
         return () => {
             if (dismissal !== registration) return;
             dismissal = undefined;
-            setDocumentListeners(false);
+            layerInteraction?.();
+            layerInteraction = undefined;
         };
     }
-
-    watch(host.isOpen, (open) => setDocumentListeners(open && Boolean(dismissal)));
-    onBeforeUnmount(() => setDocumentListeners(false));
 
     return {
         registerInside,
