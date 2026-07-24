@@ -1,12 +1,12 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
 import { restoreAttributes, snapshotAttributes } from '@/utils/dom/attributes';
 import type { DropdownMenuInteractOutsideEvent, DropdownMenuInteractOutsideTarget } from './types';
-import type { DropdownMenuInteractionRuntime } from './dropdownMenuInteraction';
+import type { DropdownMenuInteraction } from './dropdownMenuInteraction';
 
 const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup', 'aria-disabled'];
 
 interface UseDropdownMenuTargetBindingsOptions {
-    interaction: DropdownMenuInteractionRuntime;
+    interaction: DropdownMenuInteraction;
     rootRef: Readonly<Ref<HTMLElement | null>>;
     menuRef: Readonly<Ref<HTMLElement | null>>;
     targetElement: Readonly<Ref<Element | null>>;
@@ -52,9 +52,8 @@ export function useDropdownMenuTargetBindings({
     function watchInside<ElementType extends Element>(source: Readonly<Ref<ElementType | null>>) {
         watch(
             source,
-            (element, previous) => {
-                if (previous) interaction.unregisterInside(previous);
-                if (element) interaction.registerInside(element);
+            (element, _previous, onCleanup) => {
+                if (element) onCleanup(interaction.connectInside(element));
             },
             { immediate: true },
         );
@@ -64,7 +63,7 @@ export function useDropdownMenuTargetBindings({
     watchInside(menuRef);
     watchInside(targetElement);
 
-    const cleanupDismissal = interaction.registerDismissal({
+    const cleanupDismissal = interaction.connectDismissal({
         ignoredTargets,
         pointerDownOutside,
         focusOutside,

@@ -45,15 +45,15 @@ const isOpen = controllableOpen.value;
 const trigger = ref<HTMLElement | null>(null);
 const contentId = ref<string>();
 const actualPlacement = ref<DropdownMenuPlacement>('right-start');
-const pendingFocus = ref<OpenFocusTarget>(false);
 
 function setOpen(value: boolean) {
     const previous = isOpen.value;
     if (previous !== value) controllableOpen.setValue(value);
 }
 
-const cleanupMenuState = parentMenu.root.interaction.registerMenuState({
+const interaction = parentMenu.root.interaction.connectSubmenu({
     id: menuId,
+    parentItemId: () => trigger.value?.id,
     isOpen: () => isOpen.value,
     setOpen,
 });
@@ -64,19 +64,16 @@ const context: DropdownMenuSubContext = {
     trigger,
     contentId,
     actualPlacement,
-    pendingFocus,
     menu: null,
-    setOpen,
+    interaction,
     open(focus: OpenFocusTarget = 'first') {
-        pendingFocus.value = focus;
-        if (!parentMenu.root.interaction.openMenu(menuId, focus)) setOpen(true);
+        if (!interaction.open(focus)) setOpen(true);
     },
     close(focusParent = false) {
-        pendingFocus.value = false;
-        if (!parentMenu.root.interaction.closeMenu(menuId, focusParent)) setOpen(false);
+        if (!interaction.close(focusParent)) setOpen(false);
     },
 };
 
 provide(subKey, context);
-onBeforeUnmount(cleanupMenuState);
+onBeforeUnmount(interaction.dispose);
 </script>

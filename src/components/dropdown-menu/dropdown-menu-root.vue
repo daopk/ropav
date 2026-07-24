@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, nextTick, provide, ref, shallowRef, watch, useId } from 'vue';
+import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { useFloatingTarget } from '../floating/useFloatingPosition';
@@ -93,8 +93,9 @@ function focusReturnTarget() {
     void nextTick(() => target?.focus());
 }
 
+const interactionRootMenuId = `${generatedId}-interaction-root`;
 const interaction = useDropdownMenuInteraction({
-    rootMenuId: `${generatedId}-interaction-root`,
+    rootMenuId: interactionRootMenuId,
     isOpen,
     disabled,
     modal,
@@ -103,7 +104,7 @@ const interaction = useDropdownMenuInteraction({
     focusTrigger: focusReturnTarget,
     beforeOpen: rememberFocus,
 });
-const { pendingRootFocus: pendingFocus, open, close, toggle } = interaction;
+const { open, close, toggle } = interaction;
 
 function openAt(
     point: DropdownMenuPoint,
@@ -113,11 +114,14 @@ function openAt(
     open(options);
 }
 
+let disconnectTrigger: (() => void) | undefined;
+
 function setTrigger(element: HTMLElement | null, nextId?: string) {
-    if (trigger.value && trigger.value !== element) interaction.unregisterInside(trigger.value);
+    disconnectTrigger?.();
+    disconnectTrigger = undefined;
     trigger.value = element;
     triggerId.value = nextId;
-    if (element) interaction.registerInside(element);
+    if (element) disconnectTrigger = interaction.connectInside(element);
 }
 
 const context: DropdownMenuRootContext = {
@@ -129,7 +133,7 @@ const context: DropdownMenuRootContext = {
     triggerId,
     contentId,
     reference,
-    pendingFocus,
+    interactionRootMenuId,
     layer,
     interaction,
     open,
@@ -143,12 +147,7 @@ const context: DropdownMenuRootContext = {
     setReturnFocus(element) {
         returnFocusElement = element;
     },
-    registerInside(element) {
-        interaction.registerInside(element);
-    },
-    unregisterInside(element) {
-        interaction.unregisterInside(element);
-    },
+    connectInside: interaction.connectInside,
 };
 
 const slotProps = computed<DropdownMenuRootSlotProps>(() => ({
@@ -167,5 +166,6 @@ watch(
     { flush: 'sync' },
 );
 provide(rootKey, context);
+onBeforeUnmount(() => disconnectTrigger?.());
 defineExpose({ open, close, toggle, openAt });
 </script>

@@ -47,7 +47,6 @@ const sub = useRequiredInject(subKey, 'RpDropdownMenuSubTrigger');
 const generatedId = useId();
 const id = computed(() => props.id ?? `${generatedId}-sub-trigger`);
 const isDisabled = computed(() => menu.root.disabled.value || props.disabled);
-const focused = computed(() => menu.isActive(id.value));
 
 const registration: MenuItemRegistration = {
     get id() {
@@ -60,19 +59,23 @@ const registration: MenuItemRegistration = {
     submenu: sub,
 };
 
-menu.registerItem(registration);
+let itemInteraction = menu.connectItem(registration);
+const focused = computed(() => {
+    const currentId = id.value;
+    return currentId === registration.id && itemInteraction.active.value;
+});
 watch(
     id,
-    (nextId, previousId) => {
-        const wasActive = menu.activeId.value === previousId;
-        menu.unregisterItem(previousId);
-        menu.registerItem(registration);
-        if (wasActive) menu.setActive(nextId);
+    () => {
+        const previous = itemInteraction;
+        const wasActive = previous.active.value;
+        itemInteraction = menu.connectItem(registration);
+        previous.dispose();
+        if (wasActive) itemInteraction.setActive();
     },
     { flush: 'sync' },
 );
-watch(isDisabled, () => menu.root.interaction.reconcile(menu.id));
-onBeforeUnmount(() => menu.unregisterItem(id.value));
+onBeforeUnmount(() => itemInteraction.dispose());
 
 function setElement(value: ComponentElementRef) {
     resolveHTMLElementRef(value, id.value, (resolved) => {
@@ -82,11 +85,11 @@ function setElement(value: ComponentElementRef) {
 
 function onMouseenter() {
     if (isDisabled.value) return;
-    menu.hover(id.value, true);
+    itemInteraction.hover(true);
 }
 
 function onClick(event: MouseEvent) {
-    if (!event.defaultPrevented && !isDisabled.value) menu.activate(id.value, event);
+    if (!event.defaultPrevented && !isDisabled.value) itemInteraction.activate(event);
 }
 
 const rootAttrs = computed(() =>

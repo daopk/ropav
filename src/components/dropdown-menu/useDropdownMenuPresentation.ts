@@ -1,6 +1,6 @@
 import { computed, type Ref } from 'vue';
 import { bem } from '@/utils/bem';
-import type { DropdownMenuInteractionRuntime } from './dropdownMenuInteraction';
+import type { DropdownMenuInteraction } from './dropdownMenuInteraction';
 import type {
     DropdownMenuCloseOptions,
     DropdownMenuContentProps,
@@ -14,7 +14,6 @@ import type {
 
 interface UseDropdownMenuPresentationOptions {
     props: Readonly<DropdownMenuProps>;
-    rootMenuId: string;
     menuId: Readonly<Ref<string>>;
     isDisabled: Readonly<Ref<boolean>>;
     isVisible: Readonly<Ref<boolean>>;
@@ -22,7 +21,7 @@ interface UseDropdownMenuPresentationOptions {
     actualPlacement: Readonly<Ref<DropdownMenuPlacement>>;
     contentHasSubmenu: Readonly<Ref<boolean>>;
     activeDescendantId: Readonly<Ref<string | undefined>>;
-    interaction: DropdownMenuInteractionRuntime;
+    interaction: DropdownMenuInteraction;
     resetHoverIntent: () => void;
     onMenuMousemove: (event: MouseEvent) => void;
     open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
@@ -32,7 +31,6 @@ interface UseDropdownMenuPresentationOptions {
 
 export function useDropdownMenuPresentation({
     props,
-    rootMenuId,
     menuId,
     isDisabled,
     isVisible,
@@ -69,32 +67,9 @@ export function useDropdownMenuPresentation({
         onKeydown: (event) => interaction.onTriggerKeydown(event),
     }));
 
-    function getKeyboardMenuId(event: KeyboardEvent) {
-        const activeItem = interaction.activeItemId.value
-            ? interaction.getItem(interaction.activeItemId.value)
-            : undefined;
-        const openSubmenuId = activeItem?.submenuId?.();
-        if (openSubmenuId && interaction.isMenuOpen(openSubmenuId)) {
-            if (event.key === 'Escape') return openSubmenuId;
-
-            const opensLeft =
-                activeItem?.submenuDirection?.() === 'left' ||
-                interaction.getMenu(openSubmenuId)?.placement().startsWith('left');
-            if (event.key === (opensLeft ? 'ArrowRight' : 'ArrowLeft')) return openSubmenuId;
-        }
-
-        if (
-            ['ArrowLeft', 'ArrowRight', 'Escape'].includes(event.key) &&
-            interaction.activeMenuId.value !== rootMenuId
-        ) {
-            return interaction.activeMenuId.value;
-        }
-        return activeItem?.menuId ?? interaction.activeMenuId.value;
-    }
-
     function onMenuKeydown(event: KeyboardEvent) {
         resetHoverIntent();
-        interaction.onMenuKeydown(getKeyboardMenuId(event), event);
+        interaction.onMenuKeydown(event);
     }
 
     const contentProps = computed<DropdownMenuContentProps>(() => ({

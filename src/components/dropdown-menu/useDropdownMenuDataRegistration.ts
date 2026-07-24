@@ -1,4 +1,4 @@
-import { computed, ref, shallowRef, watch, type Ref } from 'vue';
+import { computed, onBeforeUnmount, ref, shallowRef, watch, type Ref } from 'vue';
 import {
     buildDropdownMenuDataIndex,
     getDropdownMenuDataCollectionState,
@@ -6,8 +6,10 @@ import {
     type DropdownMenuDataIndex,
 } from './dropdownMenuDataModel';
 import type {
-    DropdownMenuInteractionRuntime,
-    DropdownMenuInteractionMenuRegistration,
+    DropdownMenuInteraction,
+    DropdownMenuInteractionItem,
+    DropdownMenuInteractionMenu,
+    DropdownMenuInteractionSubmenu,
 } from './dropdownMenuInteraction';
 import type {
     DropdownMenuItem,
@@ -17,16 +19,12 @@ import type {
 } from './types';
 import type { ItemPath } from './dropdown-menu-model';
 
-type DropdownMenuDataInteraction = Pick<
-    DropdownMenuInteractionRuntime,
-    'reconcile' | 'registerItem' | 'registerMenu' | 'unregisterItem' | 'unregisterMenu'
->;
-
 interface UseDropdownMenuDataRegistrationOptions {
     props: Readonly<DropdownMenuProps>;
     items: Readonly<Ref<DropdownMenuItem[]>>;
     rootMenuId: string;
-    interaction: DropdownMenuDataInteraction;
+    interaction: DropdownMenuInteraction;
+    rootMenu: DropdownMenuInteractionMenu;
     menuRef: Readonly<Ref<HTMLElement | null>>;
     getItemElement: (path: ItemPath) => HTMLElement | null;
     getSubmenuElement: (path: ItemPath) => HTMLElement | null;
@@ -43,6 +41,7 @@ export function useDropdownMenuDataRegistration({
     items,
     rootMenuId,
     interaction,
+    rootMenu,
     menuRef,
     getItemElement,
     getSubmenuElement,
@@ -52,8 +51,9 @@ export function useDropdownMenuDataRegistration({
     const openMenuIds = ref(new Set<string>());
     const itemIdentity = new WeakMap<DropdownMenuItem, string>();
     let nextItemIdentity = 0;
-    let registeredItemIds = new Set<string>();
-    let registeredMenuIds = new Set<string>();
+    let itemInteractions = new Map<string, DropdownMenuInteractionItem>();
+    let menuInteractions = new Map<string, DropdownMenuInteractionMenu>([[rootMenuId, rootMenu]]);
+    let submenuInteractions = new Map<string, DropdownMenuInteractionSubmenu>();
 
     function getStableItemId(item: DropdownMenuItem) {
         const existing = itemIdentity.get(item);
@@ -77,25 +77,25 @@ export function useDropdownMenuDataRegistration({
         openMenuIds.value = next;
     }
 
-    function createMenuRegistration(
-        index: DropdownMenuDataIndex,
-        entry: DropdownMenuDataEntry,
-    ): DropdownMenuInteractionMenuRegistration | undefined {
+    function connectSubmenu(index: DropdownMenuDataIndex, entry: DropdownMenuDataEntry) {
         const submenuMenuId = entry.submenuMenuId;
         if (!submenuMenuId) return undefined;
 
-        return {
+        const submenu = interaction.connectSubmenu({
             id: submenuMenuId,
             parentItemId: () => entry.itemId,
+            isOpen: () => openMenuIds.value.has(submenuMenuId),
+            setOpen: (open) => setMenuOpen(submenuMenuId, open),
+        });
+        const menu = submenu.connectContent({
             element: () => getSubmenuElement(getCurrentPath(index, entry)),
             focusTarget: () => menuRef.value,
             placement: () => {
                 const value = getSubmenuElement(getCurrentPath(index, entry))?.dataset.placement;
                 return (value as DropdownMenuPlacement) ?? 'right-start';
             },
-            isOpen: () => openMenuIds.value.has(submenuMenuId),
-            setOpen: (open) => setMenuOpen(submenuMenuId, open),
-        };
+        });
+        return { menu, submenu };
     }
 
     function createSelectEvent(entry: DropdownMenuDataEntry, originalEvent: Event) {
@@ -110,18 +110,22 @@ export function useDropdownMenuDataRegistration({
         return event;
     }
 
-    function registerEntry(index: DropdownMenuDataIndex, entry: DropdownMenuDataEntry) {
-        const menuRegistration = createMenuRegistration(index, entry);
-        if (menuRegistration) interaction.registerMenu(menuRegistration);
+    function connectItem(
+        index: DropdownMenuDataIndex,
+        entry: DropdownMenuDataEntry,
+        nextMenus: ReadonlyMap<string, DropdownMenuInteractionMenu>,
+        nextSubmenus: ReadonlyMap<string, DropdownMenuInteractionSubmenu>,
+    ) {
+        const menu = nextMenus.get(entry.ownerMenuId);
+        if (!menu) return undefined;
 
-        interaction.registerItem({
+        return menu.connectItem({
             id: entry.itemId,
-            menuId: entry.ownerMenuId,
             element: () => getItemElement(getCurrentPath(index, entry)),
             textValue: () => entry.item.label,
             disabled: () => Boolean(entry.item.disabled || props.disabled),
             order: () => entry.order,
-            submenuId: () => entry.submenuMenuId,
+            submenu: entry.submenuMenuId ? nextSubmenus.get(entry.submenuMenuId) : undefined,
             submenuDirection: () =>
                 isSubmenuOpeningLeft(getCurrentPath(index, entry)) ? 'left' : 'right',
             select: (originalEvent) => createSelectEvent(entry, originalEvent),
@@ -129,41 +133,42 @@ export function useDropdownMenuDataRegistration({
         });
     }
 
-    function unregisterStaleEntries(
-        nextRegisteredItemIds: ReadonlySet<string>,
-        nextRegisteredMenuIds: ReadonlySet<string>,
-    ) {
-        for (const id of registeredItemIds) {
-            if (!nextRegisteredItemIds.has(id)) interaction.unregisterItem(id);
-        }
-        for (const id of registeredMenuIds) {
-            if (nextRegisteredMenuIds.has(id)) continue;
-            interaction.unregisterMenu(id);
-            setMenuOpen(id, false);
-        }
-    }
-
     function registerItems() {
         const nextIndex = buildDropdownMenuDataIndex(items.value, rootMenuId, getStableItemId);
-        const nextRegisteredItemIds = new Set(nextIndex.entries.map((entry) => entry.itemId));
-        const nextRegisteredMenuIds = new Set(
-            nextIndex.entries.flatMap((entry) =>
-                entry.submenuMenuId ? [entry.submenuMenuId] : [],
-            ),
-        );
+        const nextItems = new Map<string, DropdownMenuInteractionItem>();
+        const nextMenus = new Map<string, DropdownMenuInteractionMenu>([[rootMenuId, rootMenu]]);
+        const nextSubmenus = new Map<string, DropdownMenuInteractionSubmenu>();
 
-        for (const entry of nextIndex.entries) registerEntry(nextIndex, entry);
-        unregisterStaleEntries(nextRegisteredItemIds, nextRegisteredMenuIds);
-        registeredItemIds = nextRegisteredItemIds;
-        registeredMenuIds = nextRegisteredMenuIds;
+        for (const entry of nextIndex.entries) {
+            const connection = connectSubmenu(nextIndex, entry);
+            if (!entry.submenuMenuId || !connection) continue;
+            nextMenus.set(entry.submenuMenuId, connection.menu);
+            nextSubmenus.set(entry.submenuMenuId, connection.submenu);
+        }
+        for (const entry of nextIndex.entries) {
+            const item = connectItem(nextIndex, entry, nextMenus, nextSubmenus);
+            if (item) nextItems.set(entry.itemId, item);
+        }
+
+        for (const item of itemInteractions.values()) item.dispose();
+        for (const submenu of submenuInteractions.values()) submenu.dispose();
+
+        itemInteractions = nextItems;
+        menuInteractions = nextMenus;
+        submenuInteractions = nextSubmenus;
         registrationIndex.value = nextIndex;
-        interaction.reconcile();
     }
 
     watch(collectionState, registerItems, { immediate: true });
+    onBeforeUnmount(() => {
+        for (const item of itemInteractions.values()) item.dispose();
+        for (const submenu of submenuInteractions.values()) submenu.dispose();
+    });
 
     return {
         openMenuIds,
         registrationIndex,
+        getItemInteraction: (id: string) => itemInteractions.get(id),
+        getMenuInteraction: (id: string) => menuInteractions.get(id),
     };
 }

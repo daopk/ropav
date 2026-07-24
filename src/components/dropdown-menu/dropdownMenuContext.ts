@@ -15,8 +15,11 @@ import { createCancelableCustomEvent } from '@/utils/dom/events';
 import { createPointRect } from '@/utils/geometry';
 import type { FloatingReference } from '../floating/types';
 import type {
+    DropdownMenuInteraction,
     DropdownMenuInteractionFocusTarget,
-    DropdownMenuInteractionRuntime,
+    DropdownMenuInteractionItem,
+    DropdownMenuInteractionMenu,
+    DropdownMenuInteractionSubmenu,
 } from './dropdownMenuInteraction';
 import type {
     DropdownMenuCloseOptions,
@@ -47,19 +50,10 @@ export interface DropdownMenuContext {
     root: DropdownMenuRootContext;
     id: string;
     element: Ref<HTMLElement | null>;
-    activeId: ComputedRef<string | null>;
     actualPlacement: Ref<DropdownMenuPlacement>;
     parentSub?: DropdownMenuSubContext;
-    registerItem: (item: MenuItemRegistration) => void;
-    unregisterItem: (id: string) => void;
-    closeSubmenus: (except?: DropdownMenuSubContext) => void;
-    setActive: (id: string) => void;
-    isActive: (id: string) => boolean;
-    focus: (target?: DropdownMenuFocusTarget) => boolean;
-    focusElement: () => void;
-    activate: (id: string, event?: Event) => void;
-    hover: (id: string, openSubmenu?: boolean) => void;
-    onKeydown: (event: KeyboardEvent) => void;
+    interaction: DropdownMenuInteractionMenu;
+    connectItem: (item: MenuItemRegistration) => DropdownMenuInteractionItem;
 }
 
 export interface DropdownMenuSubContext {
@@ -68,9 +62,8 @@ export interface DropdownMenuSubContext {
     trigger: Ref<HTMLElement | null>;
     contentId: Ref<string | undefined>;
     actualPlacement: Ref<DropdownMenuPlacement>;
-    pendingFocus: Ref<OpenFocusTarget>;
     menu: DropdownMenuContext | null;
-    setOpen: (open: boolean) => void;
+    interaction: DropdownMenuInteractionSubmenu;
     open: (focus?: OpenFocusTarget) => void;
     close: (focusParent?: boolean) => void;
 }
@@ -84,9 +77,9 @@ export interface DropdownMenuRootContext {
     triggerId: Ref<string | undefined>;
     contentId: Ref<string | undefined>;
     reference: ComputedRef<ElementReference | null>;
-    pendingFocus: Ref<OpenFocusTarget>;
+    interactionRootMenuId: string;
     layer: OverlayLayerContext;
-    interaction: DropdownMenuInteractionRuntime;
+    interaction: DropdownMenuInteraction;
     open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
     close: (options?: DropdownMenuCloseOptions & { returnFocus?: boolean }) => void;
     toggle: () => void;
@@ -97,8 +90,7 @@ export interface DropdownMenuRootContext {
     setTrigger: (element: HTMLElement | null, id?: string) => void;
     setReference: (reference: ElementReference | null) => void;
     setReturnFocus: (element: HTMLElement | null) => void;
-    registerInside: (element: HTMLElement) => void;
-    unregisterInside: (element: HTMLElement) => void;
+    connectInside: (element: HTMLElement) => () => void;
 }
 
 export interface DropdownMenuRadioGroupContext {
@@ -145,30 +137,28 @@ export function createMenuContext(options: {
     parentSub?: DropdownMenuSubContext;
     onEscape: (event: KeyboardEvent) => boolean;
 }): DropdownMenuContext {
-    const id = options.parentSub?.menuId ?? options.root.interaction.rootMenuId;
-    const interaction = options.root.interaction;
-    const activeId = interaction.getActiveId(id);
-    const cleanupMenu = interaction.registerMenu({
-        id,
-        parentItemId: () => options.parentSub?.trigger.value?.id,
-        element: () => options.element.value,
-        placement: () => options.actualPlacement.value,
-        isOpen: () => options.parentSub?.isOpen.value ?? options.root.isOpen.value,
-        setOpen: options.parentSub?.setOpen,
-        stopKeyPropagation: true,
-        onEscape: options.onEscape,
-    });
+    const id = options.parentSub?.menuId ?? options.root.interactionRootMenuId;
+    const interaction = options.parentSub
+        ? options.parentSub.interaction.connectContent({
+              element: () => options.element.value,
+              placement: () => options.actualPlacement.value,
+              stopKeyPropagation: true,
+              onEscape: options.onEscape,
+          })
+        : options.root.interaction.connectRootMenu({
+              element: () => options.element.value,
+              placement: () => options.actualPlacement.value,
+              stopKeyPropagation: true,
+              onEscape: options.onEscape,
+          });
 
-    function registerItem(item: MenuItemRegistration) {
-        interaction.registerItem({
-            get id() {
-                return item.id;
-            },
-            menuId: id,
+    function connectItem(item: MenuItemRegistration) {
+        return interaction.connectItem({
+            id: item.id,
             element: item.element,
             textValue: item.textValue,
             disabled: item.disabled,
-            submenuId: () => item.submenu?.menuId,
+            submenu: item.submenu?.interaction,
             submenuDirection: () =>
                 item.submenu?.actualPlacement.value.startsWith('left') ? 'left' : 'right',
             select: item.activate,
@@ -180,24 +170,13 @@ export function createMenuContext(options: {
         root: options.root,
         id,
         element: options.element,
-        activeId,
         actualPlacement: options.actualPlacement,
         parentSub: options.parentSub,
-        registerItem,
-        unregisterItem: interaction.unregisterItem,
-        closeSubmenus: (except) => interaction.closeSubmenus(id, except?.menuId),
-        setActive: (itemId) => {
-            interaction.setActive(itemId);
-        },
-        isActive: interaction.isActive,
-        focus: (target = 'first') => interaction.focusMenu(id, target),
-        focusElement: () => interaction.focusMenuElement(id),
-        activate: interaction.activateItem,
-        hover: interaction.hoverItem,
-        onKeydown: (event) => interaction.onMenuKeydown(id, event),
+        interaction,
+        connectItem,
     };
 
-    onBeforeUnmount(cleanupMenu);
+    onBeforeUnmount(interaction.dispose);
     return context;
 }
 
@@ -216,7 +195,6 @@ export function usePrimitiveItem(
     const id = computed(() => props.id ?? `${generatedId}-item`);
     const element = ref<HTMLElement | null>(null);
     const isDisabled = computed(() => Boolean(menu.root.disabled.value || props.disabled));
-    const focused = computed(() => menu.isActive(id.value));
 
     function emitSelection(originalEvent: Event) {
         if (isDisabled.value) return undefined;
@@ -237,38 +215,41 @@ export function usePrimitiveItem(
         closeOnSelect: () => props.closeOnSelect ?? options.defaultCloseOnSelect,
     };
 
-    menu.registerItem(registration);
+    let itemInteraction = menu.connectItem(registration);
+    const focused = computed(() => {
+        const currentId = id.value;
+        return currentId === registration.id && itemInteraction.active.value;
+    });
     watch(
         id,
-        (nextId, previousId) => {
-            const wasActive = menu.activeId.value === previousId;
-            menu.unregisterItem(previousId);
-            menu.registerItem(registration);
-            if (wasActive) menu.setActive(nextId);
+        () => {
+            const previous = itemInteraction;
+            const wasActive = previous.active.value;
+            itemInteraction = menu.connectItem(registration);
+            previous.dispose();
+            if (wasActive) itemInteraction.setActive();
         },
         { flush: 'sync' },
     );
-    watch(isDisabled, () => menu.root.interaction.reconcile(menu.id));
-    onBeforeUnmount(() => menu.unregisterItem(id.value));
+    onBeforeUnmount(() => itemInteraction.dispose());
 
     function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
             element.value = resolved;
-            menu.root.interaction.reconcile(menu.id);
         });
     }
 
     function activate(originalEvent: Event) {
-        menu.activate(id.value, originalEvent);
+        itemInteraction.activate(originalEvent);
     }
 
     function onPointerenter() {
         if (isDisabled.value) return;
-        menu.hover(id.value);
+        itemInteraction.hover();
     }
 
     function select() {
-        menu.activate(id.value, new Event('select'));
+        itemInteraction.activate(new Event('select'));
     }
 
     return {

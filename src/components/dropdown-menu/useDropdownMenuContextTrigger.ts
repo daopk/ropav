@@ -19,13 +19,14 @@ export function useDropdownMenuContextTrigger(
     let startPoint: DropdownMenuPoint | undefined;
     let longPressOpened = false;
     let suppressUntil = 0;
+    let disconnectInside: (() => void) | undefined;
 
     function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
-            const previous = element.value;
-            if (previous) root.unregisterInside(previous);
+            disconnectInside?.();
+            disconnectInside = undefined;
             element.value = resolved;
-            if (resolved) root.registerInside(resolved);
+            if (resolved) disconnectInside = root.connectInside(resolved);
             if (!root.triggerId.value) root.triggerId.value = id.value;
         });
     }
@@ -120,7 +121,7 @@ export function useDropdownMenuContextTrigger(
 
     onBeforeUnmount(() => {
         clearLongPress();
-        if (element.value) root.unregisterInside(element.value);
+        disconnectInside?.();
         if (root.triggerId.value === id.value) root.triggerId.value = undefined;
     });
 

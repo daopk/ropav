@@ -7,7 +7,10 @@ import {
     type ItemPath,
     type SubmenuFocusTarget,
 } from './dropdown-menu-model';
-import type { DropdownMenuInteractionRuntime } from './dropdownMenuInteraction';
+import type {
+    DropdownMenuInteraction,
+    DropdownMenuInteractionMenu,
+} from './dropdownMenuInteraction';
 import type {
     DropdownMenuItem,
     DropdownMenuPlacement,
@@ -24,7 +27,8 @@ interface UseDropdownMenuDataControllerOptions {
     menuId: Readonly<Ref<string>>;
     menuRef: Readonly<Ref<HTMLElement | null>>;
     actualPlacement: Readonly<Ref<DropdownMenuPlacement>>;
-    interaction: DropdownMenuInteractionRuntime;
+    interaction: DropdownMenuInteraction;
+    rootMenu: DropdownMenuInteractionMenu;
     onSelect?: (item: DropdownMenuItem, event: DropdownMenuSelectEvent) => void;
 }
 
@@ -36,6 +40,7 @@ export function useDropdownMenuDataController({
     menuRef,
     actualPlacement,
     interaction,
+    rootMenu,
     onSelect,
 }: UseDropdownMenuDataControllerOptions) {
     function getItemId(path: ItemPath) {
@@ -63,17 +68,19 @@ export function useDropdownMenuDataController({
         return actualPlacement.value.endsWith('end');
     }
 
-    const { openMenuIds, registrationIndex } = useDropdownMenuDataRegistration({
-        props,
-        items,
-        rootMenuId,
-        interaction,
-        menuRef,
-        getItemElement,
-        getSubmenuElement,
-        isSubmenuOpeningLeft,
-        onSelect,
-    });
+    const { openMenuIds, registrationIndex, getItemInteraction, getMenuInteraction } =
+        useDropdownMenuDataRegistration({
+            props,
+            items,
+            rootMenuId,
+            interaction,
+            rootMenu,
+            menuRef,
+            getItemElement,
+            getSubmenuElement,
+            isSubmenuOpeningLeft,
+            onSelect,
+        });
 
     function getDataItemId(path: ItemPath) {
         return registrationIndex.value.itemIdByPath.get(getPathKey(path));
@@ -85,7 +92,9 @@ export function useDropdownMenuDataController({
             return id ? [...(registrationIndex.value.pathByItemId.get(id) ?? [])] : [];
         },
         set(path) {
-            interaction.setActive(path.length > 0 ? (getDataItemId(path) ?? null) : null);
+            const itemId = path.length > 0 ? getDataItemId(path) : undefined;
+            if (itemId) getItemInteraction(itemId)?.setActive();
+            else rootMenu.clearActive();
         },
     });
     const focusedIndex = computed(() => focusedPath.value[0] ?? -1);
@@ -108,8 +117,7 @@ export function useDropdownMenuDataController({
 
     function isSubmenuOpen(path: ItemPath) {
         const itemId = getDataItemId(path);
-        const submenuId = itemId ? interaction.getItem(itemId)?.submenuId?.() : undefined;
-        return Boolean(submenuId && interaction.isMenuOpen(submenuId));
+        return itemId ? (getItemInteraction(itemId)?.submenuOpen.value ?? false) : false;
     }
 
     function openSubmenu(
@@ -118,8 +126,8 @@ export function useDropdownMenuDataController({
         point?: Point,
     ) {
         const itemId = getDataItemId(path);
-        const submenuId = itemId ? interaction.getItem(itemId)?.submenuId?.() : undefined;
-        if (!submenuId || !interaction.openMenu(submenuId, focus)) return false;
+        const itemInteraction = itemId ? getItemInteraction(itemId) : undefined;
+        if (!itemInteraction?.openSubmenu(focus)) return false;
 
         hoverIntent.trackSubmenuOpen(path, point);
         return true;
@@ -127,21 +135,20 @@ export function useDropdownMenuDataController({
 
     function closeSubmenu(path: ItemPath) {
         const itemId = getDataItemId(path);
-        const submenuId = itemId ? interaction.getItem(itemId)?.submenuId?.() : undefined;
-        const closed = submenuId ? interaction.closeMenu(submenuId, false) : false;
+        const closed = itemId ? (getItemInteraction(itemId)?.closeSubmenu(false) ?? false) : false;
         if (closed) hoverIntent.resetHoverIntent();
         return closed;
     }
 
     function commitHoveredItem(item: DropdownMenuItem, path: ItemPath, point?: Point) {
         const itemId = getDataItemId(path);
-        const itemRegistration = itemId ? interaction.getItem(itemId) : undefined;
-        if (!itemRegistration) return;
+        const itemInteraction = itemId ? getItemInteraction(itemId) : undefined;
+        if (!itemInteraction) return;
 
         hoverIntent.clearPendingHover();
-        interaction.setActive(itemRegistration.id);
-        if (hasItemSubmenu(item)) openSubmenu(path, false, point);
-        else interaction.closeSubmenus(itemRegistration.menuId);
+        const hasSubmenu = hasItemSubmenu(item);
+        const opened = itemInteraction.hover(hasSubmenu);
+        if (hasSubmenu && opened) hoverIntent.trackSubmenuOpen(path, point);
     }
 
     const hoverIntent = useDropdownMenuHoverIntent({
@@ -161,7 +168,7 @@ export function useDropdownMenuDataController({
 
     function selectItem(item: DropdownMenuItem, originalEvent: Event = new Event('select')) {
         const id = registrationIndex.value.primaryItemId.get(item);
-        if (id) interaction.selectItem(id, originalEvent);
+        if (id) getItemInteraction(id)?.select(originalEvent);
     }
 
     function activateItem(
@@ -170,14 +177,14 @@ export function useDropdownMenuDataController({
         event?: MouseEvent | KeyboardEvent,
     ) {
         const id = getDataItemId(path);
-        if (id) interaction.activateItem(id, event);
+        if (id) getItemInteraction(id)?.activate(event);
     }
 
     function getMenuActiveDescendant(path: ItemPath) {
         const pathKey = getPathKey(path);
-        const activeId = interaction.getActiveId(
+        const activeId = getMenuInteraction(
             registrationIndex.value.menuIdByPath.get(pathKey) ?? rootMenuId,
-        ).value;
+        )?.activeId.value;
         const activePath = activeId
             ? registrationIndex.value.pathByItemId.get(activeId)
             : undefined;

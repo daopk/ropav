@@ -73,7 +73,7 @@ export function useDropdownMenuPrimitiveContent(
     });
     const cleanupDismissal = submenu
         ? undefined
-        : root.interaction.registerDismissal({
+        : root.interaction.connectDismissal({
               ignoredTargets: () => props.ignore ?? [],
               pointerDownOutside: events.pointerDownOutside,
               focusOutside: events.focusOutside,
@@ -102,18 +102,19 @@ export function useDropdownMenuPrimitiveContent(
     );
     const shouldRender = computed(() => props.forceMount === true || isOpen.value);
     let layerBranchCleanup: (() => void) | undefined;
+    let disconnectInside: (() => void) | undefined;
 
     provide(menuKey, menu);
     if (sub) sub.menu = menu;
 
     function setElement(value: ComponentElementRef) {
         resolveHTMLElementRef(value, id.value, (resolved) => {
-            const previous = element.value;
-            if (previous) root.unregisterInside(previous);
+            disconnectInside?.();
+            disconnectInside = undefined;
             layerBranchCleanup?.();
             layerBranchCleanup = undefined;
             element.value = resolved;
-            if (resolved) root.registerInside(resolved);
+            if (resolved) disconnectInside = root.connectInside(resolved);
             if (!sub) root.layer.element.value = resolved;
             else if (resolved) layerBranchCleanup = root.layer.registerBranch(resolved);
         });
@@ -122,15 +123,9 @@ export function useDropdownMenuPrimitiveContent(
     watch(
         isOpen,
         (open) => {
-            if (!open) {
-                if (sub) root.interaction.closeMenu(menu.id, false);
-                return;
-            }
+            if (!open) return;
 
-            void nextTick(() => {
-                const focus = sub ? sub.pendingFocus.value : root.pendingFocus.value;
-                menu.focus(focus || 'first');
-            });
+            void nextTick(menu.interaction.focusPending);
         },
         { flush: 'post', immediate: true },
     );
@@ -138,14 +133,12 @@ export function useDropdownMenuPrimitiveContent(
     onMounted(() => {
         if (sub) sub.contentId.value = id.value;
         else root.contentId.value = id.value;
-        if (isOpen.value) {
-            menu.focus((sub ? sub.pendingFocus.value : root.pendingFocus.value) || 'first');
-        }
+        if (isOpen.value) menu.interaction.focusPending();
     });
     onBeforeUnmount(() => {
         cleanupDismissal?.();
+        disconnectInside?.();
         layerBranchCleanup?.();
-        if (element.value) root.unregisterInside(element.value);
         if (!sub && root.layer.element.value === element.value) root.layer.element.value = null;
         if (sub) sub.menu = null;
         else if (root.contentId.value === id.value) root.contentId.value = undefined;
@@ -170,12 +163,12 @@ export function useDropdownMenuPrimitiveContent(
             'aria-label': props.ariaLabel,
             'aria-labelledby': props.ariaLabelledby ?? (submenu ? undefined : root.triggerId.value),
             'aria-describedby': props.ariaDescribedby,
-            'aria-activedescendant': menu.activeId.value ?? undefined,
+            'aria-activedescendant': menu.interaction.activeId.value ?? undefined,
             'data-state': isOpen.value ? 'open' : 'closed',
             'data-placement': floating.actualPlacement.value,
             'data-side': placementSide.value,
             'data-align': placementAlign.value,
-            onKeydown: menu.onKeydown,
+            onKeydown: menu.interaction.onKeydown,
         }),
     );
 

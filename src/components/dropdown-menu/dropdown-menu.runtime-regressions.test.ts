@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick } from 'vue';
+import { defineComponent, h, nextTick, ref } from 'vue';
 import { click, keydown, mountDom, queryDom } from '../../../tests/utils/vue';
 import {
     DropdownMenuContent,
@@ -10,7 +10,11 @@ import {
     DropdownMenuSubTrigger,
 } from './dropdown-menu-primitives';
 import DropdownMenu from './dropdown-menu.vue';
-import type { DropdownMenuInteractOutsideEvent, DropdownMenuSlotProps } from './types';
+import type {
+    DropdownMenuFocusTarget,
+    DropdownMenuInteractOutsideEvent,
+    DropdownMenuSlotProps,
+} from './types';
 
 async function flush() {
     await nextTick();
@@ -77,6 +81,89 @@ describe('DropdownMenu interaction runtime regressions', () => {
 
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(queryDom(container, '#lazy-submenu-content')).not.toBeNull();
+    });
+
+    it('preserves requested focus when submenu trigger and content mount lazily', async () => {
+        const showTrigger = ref(false);
+        let openSubmenu!: (focus?: DropdownMenuFocusTarget | false) => void;
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(
+                            DropdownMenuRoot,
+                            { defaultOpen: true, modal: false },
+                            {
+                                default: () =>
+                                    h(DropdownMenuContent, { flip: false, shift: false }, () =>
+                                        h(
+                                            DropdownMenuSub,
+                                            {},
+                                            {
+                                                default: ({
+                                                    isOpen,
+                                                    open,
+                                                }: {
+                                                    isOpen: boolean;
+                                                    open: typeof openSubmenu;
+                                                }) => {
+                                                    openSubmenu = open;
+
+                                                    return [
+                                                        showTrigger.value
+                                                            ? h(
+                                                                  DropdownMenuSubTrigger,
+                                                                  {
+                                                                      id: 'lazy-last-trigger',
+                                                                  },
+                                                                  () => 'Lazy submenu',
+                                                              )
+                                                            : null,
+                                                        isOpen
+                                                            ? h(
+                                                                  DropdownMenuSubContent,
+                                                                  {
+                                                                      id: 'lazy-last-content',
+                                                                      flip: false,
+                                                                      shift: false,
+                                                                  },
+                                                                  () => [
+                                                                      h(
+                                                                          DropdownMenuItemPrimitive,
+                                                                          {
+                                                                              id: 'lazy-first-item',
+                                                                          },
+                                                                          () => 'First',
+                                                                      ),
+                                                                      h(
+                                                                          DropdownMenuItemPrimitive,
+                                                                          {
+                                                                              id: 'lazy-last-item',
+                                                                          },
+                                                                          () => 'Last',
+                                                                      ),
+                                                                  ],
+                                                              )
+                                                            : null,
+                                                    ];
+                                                },
+                                            },
+                                        ),
+                                    ),
+                            },
+                        );
+                },
+            }),
+        );
+        await flush();
+
+        openSubmenu('last');
+        showTrigger.value = true;
+        await flush();
+
+        const submenu = queryDom(container, '#lazy-last-content');
+        expect(submenu?.getAttribute('aria-activedescendant')).toBe('lazy-last-item');
+        expect(queryDom(container, '#lazy-last-item')?.hasAttribute('data-highlighted')).toBe(true);
     });
 
     it('restores canceled modal focus outside to the data menu focus owner', async () => {

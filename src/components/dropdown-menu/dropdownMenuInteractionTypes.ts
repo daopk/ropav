@@ -61,38 +61,74 @@ export interface DropdownMenuInteractionHost {
     beforeClose?: () => void;
 }
 
-export interface DropdownMenuInteractionRuntime {
-    rootMenuId: string;
+export interface DropdownMenuInteractionMenuOptions {
+    element: () => HTMLElement | null;
+    focusTarget?: () => HTMLElement | null;
+    placement: () => DropdownMenuPlacement;
+    stopKeyPropagation?: boolean;
+    onEscape?: (event: KeyboardEvent) => boolean;
+}
+
+export interface DropdownMenuInteractionItemOptions {
+    id: string;
+    element: () => HTMLElement | null;
+    textValue: () => string;
+    disabled: () => boolean;
+    order?: () => number;
+    submenu?: DropdownMenuInteractionSubmenu;
+    submenuDirection?: () => 'left' | 'right';
+    select?: (originalEvent: Event) => DropdownMenuSelectEvent | undefined;
+    closeOnSelect?: () => boolean;
+}
+
+export interface DropdownMenuInteractionItem {
+    active: ComputedRef<boolean>;
+    submenuOpen: ComputedRef<boolean>;
+    setActive: (focusElement?: boolean) => boolean;
+    openSubmenu: (focus?: DropdownMenuInteractionFocusTarget) => boolean;
+    closeSubmenu: (focusParent?: boolean) => boolean;
+    select: (originalEvent?: Event) => void;
+    activate: (originalEvent?: Event) => void;
+    hover: (openSubmenu?: boolean) => boolean;
+    dispose: () => void;
+}
+
+export interface DropdownMenuInteractionMenu {
+    activeId: ComputedRef<string | null>;
+    connectItem: (registration: DropdownMenuInteractionItemOptions) => DropdownMenuInteractionItem;
+    clearActive: () => void;
+    focusPending: () => boolean;
+    onKeydown: (event: KeyboardEvent) => void;
+    dispose: () => void;
+}
+
+export interface DropdownMenuInteractionSubmenu {
+    id: string;
+    open: (focus?: DropdownMenuInteractionFocusTarget) => boolean;
+    close: (focusParent?: boolean) => boolean;
+    connectContent: (options: DropdownMenuInteractionMenuOptions) => DropdownMenuInteractionMenu;
+    dispose: () => void;
+}
+
+export interface DropdownMenuInteractionSubmenuOptions {
+    id: string;
+    parentItemId: () => string | undefined;
+    isOpen: () => boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export interface DropdownMenuInteraction {
     activeItemId: Readonly<Ref<string | null>>;
-    activeMenuId: Readonly<Ref<string>>;
-    pendingRootFocus: Ref<DropdownMenuInteractionFocusTarget>;
-    registerMenu: (registration: DropdownMenuInteractionMenuRegistration) => () => void;
-    unregisterMenu: (id: string) => void;
-    registerMenuState: (registration: DropdownMenuInteractionMenuStateRegistration) => () => void;
-    registerItem: (registration: DropdownMenuInteractionItemRegistration) => () => void;
-    unregisterItem: (id: string) => void;
-    registerInside: (element: Element) => void;
-    unregisterInside: (element: Element) => void;
-    registerDismissal: (registration: DropdownMenuInteractionDismissalRegistration) => () => void;
-    getActiveId: (menuId: string) => ComputedRef<string | null>;
-    getItem: (id: string) => DropdownMenuInteractionItemRegistration | undefined;
-    getMenu: (id: string) => DropdownMenuInteractionMenuRegistration | undefined;
-    isActive: (id: string) => boolean;
-    isMenuOpen: (menuId: string) => boolean;
-    setActive: (id: string | null, focusElement?: boolean) => boolean;
-    focusMenu: (menuId: string, target?: DropdownMenuFocusTarget) => boolean;
-    focusMenuElement: (menuId: string) => void;
+    connectRootMenu: (options: DropdownMenuInteractionMenuOptions) => DropdownMenuInteractionMenu;
+    connectSubmenu: (
+        options: DropdownMenuInteractionSubmenuOptions,
+    ) => DropdownMenuInteractionSubmenu;
+    connectInside: (element: Element) => () => void;
+    connectDismissal: (registration: DropdownMenuInteractionDismissalRegistration) => () => void;
     open: (options?: DropdownMenuOpenOptions | DropdownMenuFocusTarget) => void;
     close: (options?: DropdownMenuCloseOptions & { returnFocus?: boolean }) => void;
     toggle: () => void;
-    openMenu: (menuId: string, focus?: DropdownMenuInteractionFocusTarget) => boolean;
-    closeMenu: (menuId: string, focusParent?: boolean) => boolean;
-    closeSubmenus: (menuId: string, exceptMenuId?: string) => void;
-    selectItem: (id: string, originalEvent?: Event) => void;
-    activateItem: (id: string, originalEvent?: Event) => void;
-    hoverItem: (id: string, openSubmenu?: boolean) => void;
-    reconcile: (menuId?: string) => void;
     onTriggerClick: (beforeToggle?: () => void) => void;
     onTriggerKeydown: (event: KeyboardEvent, beforeOpen?: () => void) => void;
-    onMenuKeydown: (menuId: string, event: KeyboardEvent) => void;
+    onMenuKeydown: (event: KeyboardEvent) => void;
 }

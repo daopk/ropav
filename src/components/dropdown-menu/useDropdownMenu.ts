@@ -111,11 +111,9 @@ export function useDropdownMenu(
     const close = (options: DropdownMenuCloseOptions = {}) => interaction.close(options);
     const toggle = interaction.toggle;
 
-    const cleanupRootMenu = interaction.registerMenu({
-        id: interactionRootMenuId,
+    const rootMenu = interaction.connectRootMenu({
         element: () => menuRef.value,
         placement: () => actualPlacement.value,
-        isOpen: () => isVisible.value,
     });
 
     const dataController = useDropdownMenuDataController({
@@ -126,6 +124,7 @@ export function useDropdownMenu(
         menuRef,
         actualPlacement,
         interaction,
+        rootMenu,
         onSelect: (item, event) => emit.select?.(item, event),
     });
     resetHoverIntent = dataController.resetHoverIntent;
@@ -151,7 +150,6 @@ export function useDropdownMenu(
 
     const presentation = useDropdownMenuPresentation({
         props,
-        rootMenuId: interactionRootMenuId,
         menuId,
         isDisabled,
         isVisible,
@@ -187,7 +185,7 @@ export function useDropdownMenu(
         zIndex: layer.zIndex.value,
     }));
 
-    onBeforeUnmount(cleanupRootMenu);
+    onBeforeUnmount(rootMenu.dispose);
 
     return {
         rootRef,
