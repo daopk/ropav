@@ -3,7 +3,7 @@
   "version": "0.1.7",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@11.15.1",
+  "packageManager": "pnpm@11.17.0",
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
   },
@@ -265,7 +265,7 @@
     "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.10",
     "vue": "3.6.0-rc.2",
-    "vue-tsc": "^3.3.7"
+    "vue-tsc": "^3.3.8"
   },
   "repository": {
     "type": "git",
