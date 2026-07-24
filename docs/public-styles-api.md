@@ -1,6 +1,6 @@
 # Public Styles API
 
-The Public Styles API is the supported way to restyle Ropav without depending on component DOM nesting or internal selectors. Its compatibility baseline is commit `5102a40`.
+The Public Styles API is the supported way to restyle Ropav without depending on component DOM nesting or internal selectors.
 
 ## Typed component API
 
@@ -111,6 +111,8 @@ The exact entries in [`styles-manifest.json`](../src/styles/styles-manifest.json
 
 The manifest contains design tokens plus a deliberately small component-geometry allowlist. Slider and RangeSlider share the `--rp-slider-*` namespace. Size presets provide fallbacks, while a consumer value wins for the individual dimension. See the generated [token table](./public-tokens.md).
 
+The schema-v2 manifest does not pin a Git commit. `tokens:check` resolves compatibility from release tags, so the baseline advances with releases instead of remaining hard-coded.
+
 Palette shades and their normal and active `*-contrast` companions are required override groups because `autoContrast` consumes state-specific companions selected at build time. The [color override contract](./public-tokens.md#color-override-contract) documents the state pairings and preset-role requirements.
 
 ## Cascade layers and migration
@@ -128,6 +130,6 @@ Place global resets in `reset` and application overrides in `app`. Import order 
 - Typed parts, state attributes, manifest entries, geometry variables and cascade layers form the current Public Styles API.
 - Renaming or removing a documented part, state attribute or variable changes the public contract.
 - Adding a public part, state attribute or variable extends the public contract.
-- `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Until the first such release, it uses the immutable manifest from the initial Public Styles API commit (`f16e826`). Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
-- Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly pin a commit or tag that contains a manifest.
+- `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
+- Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly select another Git ref that contains a manifest.
 - Internal DOM, selectors and undocumented variables are outside the public contract.

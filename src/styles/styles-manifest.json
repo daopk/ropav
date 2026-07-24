@@ -1,7 +1,6 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "contractVersion": 2,
-  "baseline": "5102a40",
   "tokens": [
     {
       "name": "--rp-border-width-medium",

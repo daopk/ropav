@@ -8,11 +8,7 @@ import {
     tokenPath,
 } from './token-output-policy.mjs';
 import { getDerivedColorVariables } from './color-system.mjs';
-import {
-    createPublicStylesManifest,
-    renderPublicTokenDocs,
-    serializePublicStylesManifest,
-} from './public-styles-manifest.mjs';
+import { buildPublicStylesArtifacts } from './public-styles-contract.mjs';
 
 export const defaultTokenSources = ['tokens/default/**/*.tokens.json'];
 export const darkTokenSources = ['tokens/dark/**/*.tokens.json'];
@@ -85,13 +81,15 @@ export default {
             'ropav/variables-scss': ({ dictionary }) => renderVariablesScss(dictionary),
             'ropav/tokens-scss': ({ dictionary }) => renderTokensScss(dictionary),
             'ropav/public-styles-manifest': ({ dictionary }) =>
-                serializePublicStylesManifest(
-                    createPublicStylesManifest(dictionary, darkOverrideTokenPaths),
-                ),
+                buildPublicStylesArtifacts({
+                    tokens: dictionary.allTokens,
+                    darkTokenPaths: darkOverrideTokenPaths,
+                }).manifestJson,
             'ropav/public-token-docs': ({ dictionary }) =>
-                renderPublicTokenDocs(
-                    createPublicStylesManifest(dictionary, darkOverrideTokenPaths),
-                ),
+                buildPublicStylesArtifacts({
+                    tokens: dictionary.allTokens,
+                    darkTokenPaths: darkOverrideTokenPaths,
+                }).documentation,
         },
     },
     platforms: {
