@@ -1,4 +1,9 @@
-import { computed, type InputHTMLAttributes } from 'vue';
+import { computed, useTemplateRef, type InputHTMLAttributes } from 'vue';
+import { useControllableValue } from '@/composables/useControllableValue';
+import {
+    provideNestedFormControlOwner,
+    useFormControl,
+} from '@/internal/composables/useFormControl';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import {
@@ -15,15 +20,26 @@ import {
 } from './numberInputModel';
 import type { NumberInputProps, NumberInputValue } from './types';
 
+interface InputComponentHandle {
+    readonly nativeElement: HTMLInputElement | null;
+}
+
 export function useNumberInput(
     props: Readonly<NumberInputProps>,
-    emitUpdate: (value: NumberInputValue) => void,
-    getValue: () => NumberInputValue = () => props.modelValue ?? null,
+    onUpdate: (value: NumberInputValue) => void,
 ) {
+    const controllable = useControllableValue<NumberInputValue>({
+        modelValue: () => props.modelValue,
+        defaultValue: () => props.defaultValue ?? null,
+        onChange: onUpdate,
+    });
+    const inputComponent = useTemplateRef<InputComponentHandle>('inputComponent');
+    provideNestedFormControlOwner();
+
     const control = useControlState(props);
     const bounds = computed(() => normalizeNumberInputBounds(props.min, props.max));
     const nativeStep = computed(() => normalizeNumberInputStep(props.step));
-    const currentValue = computed(getValue);
+    const currentValue = controllable.value;
     const modelInputValue = computed(() => getModelInputValue(currentValue.value));
     const isInteractive = computed(() => !control.disabled && !props.readonly);
     const controlsPosition = computed(() =>
@@ -79,13 +95,13 @@ export function useNumberInput(
         const next = stepNumberInputValue(current, direction, nativeStep.value, bounds.value);
         if (current !== null && next === current) return false;
 
-        emitUpdate(next);
+        controllable.setValue(next);
         return true;
     }
 
     function onInputUpdate(value: string) {
         if (!isInteractive.value) return;
-        emitUpdate(parseNumberInputValue(value));
+        controllable.setValue(parseNumberInputValue(value));
     }
 
     function onKeydown(event: KeyboardEvent) {
@@ -116,8 +132,25 @@ export function useNumberInput(
         if (next === current) return;
 
         input.value = String(next);
-        emitUpdate(next);
+        controllable.setValue(next);
     }
+
+    useFormControl({
+        elements: () => [inputComponent.value?.nativeElement],
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element) {
+            (element as HTMLInputElement).defaultValue = getModelInputValue(
+                controllable.initialValue,
+            );
+        },
+        validationMessage: () => props.validationMessage,
+        readResetValue([element]) {
+            controllable.resetValue(parseNumberInputValue((element as HTMLInputElement).value));
+        },
+        syncControlledValue([element]) {
+            (element as HTMLInputElement).value = getModelInputValue(controllable.value.value);
+        },
+    });
 
     const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         const attrs = props.inputAttrs ?? {};
@@ -143,8 +176,6 @@ export function useNumberInput(
     return {
         control,
         rootClass,
-        bounds,
-        nativeStep,
         nativeInputAttrs,
         modelInputValue,
         leftControls,

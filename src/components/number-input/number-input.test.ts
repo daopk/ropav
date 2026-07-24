@@ -277,6 +277,102 @@ describe('NumberInput', () => {
         expect(onUpdate).toHaveBeenNthCalledWith(2, null);
     });
 
+    it('preserves the last controlled value when released to uncontrolled state', async () => {
+        const props = reactive<{ modelValue: number | null | undefined }>({ modelValue: 2 });
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(NumberInput, {
+                        modelValue: props.modelValue,
+                        'onUpdate:modelValue': onUpdate,
+                    });
+                },
+            }),
+        );
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        props.modelValue = 5;
+        await flush();
+        expect(native.value).toBe('5');
+
+        props.modelValue = undefined;
+        await flush();
+        expect(native.value).toBe('5');
+
+        input(native, '6');
+        await flush();
+
+        expect(native.value).toBe('6');
+        expect(onUpdate).toHaveBeenCalledWith(6);
+    });
+
+    it('resets uncontrolled value state from the native form default', async () => {
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('form', [
+                        h(NumberInput, {
+                            defaultValue: 2,
+                            'onUpdate:modelValue': onUpdate,
+                        }),
+                    ]);
+                },
+            }),
+        );
+        const form = container.querySelector('form') as HTMLFormElement;
+        const native = container.querySelector('input') as HTMLInputElement;
+        const increment = container.querySelector(
+            '.rp-number-input__control--increment',
+        ) as HTMLButtonElement;
+
+        await flush();
+        input(native, '4');
+        await flush();
+        expect(native.value).toBe('4');
+
+        form.reset();
+        await flush();
+        expect(native.value).toBe('2');
+
+        click(increment);
+        await flush();
+        expect(native.value).toBe('3');
+        expect(onUpdate).toHaveBeenNthCalledWith(1, 4);
+        expect(onUpdate).toHaveBeenNthCalledWith(2, 3);
+    });
+
+    it('restores controlled value state after a native form reset', async () => {
+        const props = reactive({ modelValue: 2 });
+        const onUpdate = vi.fn();
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h('form', [
+                        h(NumberInput, {
+                            modelValue: props.modelValue,
+                            'onUpdate:modelValue': onUpdate,
+                        }),
+                    ]);
+                },
+            }),
+        );
+        const form = container.querySelector('form') as HTMLFormElement;
+        const native = container.querySelector('input') as HTMLInputElement;
+
+        await flush();
+        props.modelValue = 5;
+        await flush();
+        expect(native.value).toBe('5');
+
+        form.reset();
+        await flush();
+
+        expect(native.value).toBe('5');
+        expect(onUpdate).not.toHaveBeenCalled();
+    });
+
     it('applies range, state, and ARIA props', async () => {
         const container = mountDom(
             defineComponent({
