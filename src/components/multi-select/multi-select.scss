@@ -1,0 +1,323 @@
+@mixin multi-select-size($height, $padding-x, $font-size, $option-min-height, $option-padding-y) {
+    --_rp-multi-select-height: #{$height};
+    --_rp-multi-select-padding-x: #{$padding-x};
+    --_rp-multi-select-font-size: #{$font-size};
+    --_rp-multi-select-option-min-height: #{$option-min-height};
+    --_rp-multi-select-option-padding-y: #{$option-padding-y};
+}
+
+.rp-multi-select {
+    --_rp-multi-select-height: var(--rp-size-control-md);
+    --_rp-multi-select-padding-x: calc(var(--rp-size-control-md) / 3);
+    --_rp-multi-select-font-size: var(--rp-font-size-md);
+    --_rp-multi-select-option-min-height: calc(var(--rp-size-control-md) - var(--rp-spacing-4));
+    --_rp-multi-select-option-padding-y: var(--rp-spacing-1);
+    --_rp-multi-select-radius: var(--rp-radius-sm);
+    --_rp-multi-select-invalid-border: var(--rp-color-red-filled);
+    --_rp-multi-select-invalid-ring: color-mix(
+        in srgb,
+        var(--rp-color-red-filled) 32%,
+        transparent
+    );
+    --_rp-multi-select-option-highlighted-bg: var(--rp-color-default-hover);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-width: $component-menu-min-width;
+    min-height: var(--_rp-multi-select-height);
+    padding: var(--rp-spacing-1) var(--_rp-multi-select-padding-x);
+    gap: var(--rp-spacing-2);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-multi-select-font-size);
+    font-weight: var(--rp-font-weight-normal);
+    line-height: 1;
+    background-color: var(--rp-color-control-bg);
+    border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+    border-radius: var(--_rp-multi-select-radius);
+    cursor: text;
+    transition:
+        border-color var(--rp-transition-fast),
+        box-shadow var(--rp-transition-fast);
+
+    &:hover:not(.rp-multi-select--disabled):not(.rp-multi-select--invalid) {
+        border-color: var(--rp-color-control-border-hover);
+    }
+
+    &:focus-within:not(.rp-multi-select--disabled):not(.rp-multi-select--invalid),
+    &--open:not(.rp-multi-select--disabled):not(.rp-multi-select--invalid) {
+        border-color: var(--rp-color-control-border-focus);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
+    }
+
+    &__native {
+        @include visually-hidden;
+    }
+
+    &--size-xs {
+        @include multi-select-size(
+            var(--rp-size-control-xs),
+            calc(var(--rp-size-control-xs) / 3),
+            var(--rp-font-size-xs),
+            calc(var(--rp-size-control-xs) - var(--rp-spacing-2)),
+            calc(var(--rp-spacing-1) / 2)
+        );
+    }
+
+    &--size-sm {
+        @include multi-select-size(
+            var(--rp-size-control-sm),
+            calc(var(--rp-size-control-sm) / 3),
+            var(--rp-font-size-sm),
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-3)),
+            var(--rp-spacing-1)
+        );
+    }
+
+    &--size-md {
+        @include multi-select-size(
+            var(--rp-size-control-md),
+            calc(var(--rp-size-control-md) / 3),
+            var(--rp-font-size-md),
+            calc(var(--rp-size-control-md) - var(--rp-spacing-4)),
+            var(--rp-spacing-1)
+        );
+    }
+
+    &--size-lg {
+        @include multi-select-size(
+            var(--rp-size-control-lg),
+            calc(var(--rp-size-control-lg) / 3),
+            var(--rp-font-size-lg),
+            calc(var(--rp-size-control-lg) - var(--rp-spacing-5)),
+            calc(var(--rp-spacing-3) / 2)
+        );
+    }
+
+    &--size-xl {
+        @include multi-select-size(
+            var(--rp-size-control-xl),
+            calc(var(--rp-size-control-xl) / 3),
+            var(--rp-font-size-xl),
+            calc(var(--rp-size-control-xl) - var(--rp-spacing-6)),
+            var(--rp-spacing-2)
+        );
+    }
+
+    @each $radius,
+        $value
+            in (
+                xs: var(--rp-radius-xs),
+                sm: var(--rp-radius-sm),
+                md: var(--rp-radius-md),
+                lg: var(--rp-radius-lg),
+                xl: var(--rp-radius-xl)
+            )
+    {
+        &--radius-#{$radius} {
+            --_rp-multi-select-radius: #{$value};
+        }
+    }
+
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-multi-select-invalid-border: var(--rp-color-red-light-color);
+        --_rp-multi-select-invalid-ring: color-mix(
+            in srgb,
+            var(--rp-color-red-light-color) 32%,
+            transparent
+        );
+    }
+
+    &--disabled {
+        @include disabled-state;
+    }
+
+    &--invalid {
+        border-color: var(--_rp-multi-select-invalid-border);
+    }
+
+    &--invalid:focus-within,
+    &--open#{&}--invalid {
+        border-color: var(--_rp-multi-select-invalid-border);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-multi-select-invalid-ring);
+    }
+
+    &__pills {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        min-width: 0;
+        gap: var(--rp-spacing-1);
+    }
+
+    &__pill {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        max-width: 100%;
+        min-height: calc(var(--_rp-multi-select-height) - var(--rp-spacing-3));
+        padding-inline: var(--rp-spacing-2) var(--rp-spacing-1);
+        gap: var(--rp-spacing-1);
+        color: var(--rp-color-control-fg);
+        background-color: var(--rp-color-default-hover);
+        border-radius: var(--_rp-multi-select-radius);
+    }
+
+    &__pill-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__pill-remove {
+        @include icon-close-button;
+        width: 1em;
+        height: 1em;
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+    }
+
+    &__input {
+        box-sizing: border-box;
+        flex: 1 0 4rem;
+        width: 4rem;
+        min-width: 4rem;
+        min-height: calc(var(--_rp-multi-select-height) - var(--rp-spacing-2));
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font: inherit;
+        color: var(--rp-color-control-fg);
+        line-height: 1;
+
+        &::placeholder {
+            color: var(--rp-color-control-placeholder);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+    }
+
+    &__indicator {
+        @include inline-icon;
+        position: relative;
+        flex-shrink: 0;
+        color: var(--rp-color-control-icon);
+        transform: translateX(var(--rp-spacing-1));
+    }
+
+    &__toggle,
+    &__clear {
+        @include reset-button;
+        @include inline-icon;
+        color: var(--rp-color-control-icon);
+        transition:
+            color var(--rp-transition-fast),
+            opacity var(--rp-transition-fast);
+
+        &:hover {
+            color: var(--rp-color-control-fg);
+        }
+    }
+
+    &__toggle:disabled {
+        cursor: not-allowed;
+    }
+
+    &__clear {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background-color: var(--rp-color-control-bg);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &:hover &__clear {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &:hover &__clear + &__toggle {
+        opacity: 0;
+    }
+
+    &__dropdown {
+        position: absolute;
+        width: calc(100% + (var(--rp-border-width-thin) * 2));
+        @include menu-surface($radius: var(--_rp-multi-select-radius));
+        max-height: $component-menu-max-height;
+        padding: var(--rp-spacing-1);
+    }
+
+    &__dropdown :deep(.rp-scroll-area__viewport) {
+        scroll-padding-block: var(--rp-spacing-1);
+    }
+
+    &__option {
+        display: flex;
+        align-items: center;
+        min-height: var(--_rp-multi-select-option-min-height);
+        padding: var(--_rp-multi-select-option-padding-y) var(--_rp-multi-select-padding-x);
+        gap: var(--rp-spacing-2);
+        border-radius: var(--_rp-multi-select-radius);
+        font-size: var(--_rp-multi-select-font-size);
+        cursor: pointer;
+        color: var(--rp-color-control-fg);
+        transition: color var(--rp-transition-fast);
+
+        svg {
+            width: 1em;
+            height: 1em;
+            margin-inline-start: auto;
+            flex-shrink: 0;
+        }
+
+        &--highlighted {
+            background-color: var(--_rp-multi-select-option-highlighted-bg);
+        }
+
+        &--selected {
+            color: var(--rp-primary-color-light-color);
+        }
+
+        &--disabled {
+            color: var(--rp-color-disabled-color);
+            cursor: not-allowed;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--rp-spacing-4);
+        color: var(--rp-color-dimmed);
+        font-size: var(--_rp-multi-select-font-size);
+    }
+}
+
+.rp-multi-select-dropdown-enter-active,
+.rp-multi-select-dropdown-leave-active {
+    transition:
+        opacity var(--rp-transition-fast),
+        transform var(--rp-transition-fast);
+}
+
+.rp-multi-select-dropdown-enter-from,
+.rp-multi-select-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--rp-spacing-1)));
+}
+
+.rp-multi-select__dropdown[data-side='top'].rp-multi-select-dropdown-enter-from,
+.rp-multi-select__dropdown[data-side='top'].rp-multi-select-dropdown-leave-to {
+    transform: translateY(var(--rp-spacing-1));
+}

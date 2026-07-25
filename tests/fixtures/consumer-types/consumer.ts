@@ -156,6 +156,12 @@ import { type TooltipOffset, type TooltipProps, type TooltipTarget } from 'ropav
 import { type CheckboxProps } from 'ropav/checkbox';
 import { type ColorInputProps } from 'ropav/color-input';
 import { type InputProps } from 'ropav/input';
+import {
+    type MultiSelectFilter,
+    type MultiSelectOptionSlotProps,
+    type MultiSelectProps,
+    type MultiSelectValue,
+} from 'ropav/multi-select';
 import { type NumberInputProps } from 'ropav/number-input';
 import {
     Radio,
@@ -510,6 +516,21 @@ const selectProps: SelectProps = {
     options: [{ label: 'One', value: 1 }],
     required: true,
 };
+const multiSelectFilter: MultiSelectFilter = (option, searchValue) =>
+    option.label.includes(searchValue);
+const multiSelectValue: MultiSelectValue = 1;
+const multiSelectOptionSlotProps: MultiSelectOptionSlotProps = {
+    option: { label: 'One', value: multiSelectValue },
+    selected: true,
+    highlighted: false,
+};
+const multiSelectProps: MultiSelectProps = {
+    defaultValue: [multiSelectValue],
+    form: 'profile-form',
+    filter: multiSelectFilter,
+    maxValues: 3,
+    options: [multiSelectOptionSlotProps.option],
+};
 const unnamedSliderProps: SliderProps = {};
 const unnamedSelectProps: SelectProps = {};
 const radioGroupProps: RadioGroupProps = {
@@ -688,6 +709,10 @@ void [
     numberInputProps,
     colorInputProps,
     selectProps,
+    multiSelectFilter,
+    multiSelectOptionSlotProps,
+    multiSelectProps,
+    multiSelectValue,
     unnamedSliderProps,
     unnamedSelectProps,
     radioGroupProps,

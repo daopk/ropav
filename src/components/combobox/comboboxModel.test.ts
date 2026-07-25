@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-    defaultComboboxFilter,
-    filterComboboxOptions,
     getComboboxActiveDescendantId,
     getComboboxDisplayLabel,
     hasComboboxValue,
@@ -15,20 +13,6 @@ const options: ComboboxOption[] = [
 ];
 
 describe('combobox model', () => {
-    it('filters labels case-insensitively and ignores surrounding whitespace', () => {
-        expect(filterComboboxOptions(options, '  FRUIT ', undefined)).toEqual([options[1]]);
-        expect(defaultComboboxFilter(options[0]!, 'APP')).toBe(true);
-    });
-
-    it('supports custom and disabled filtering', () => {
-        expect(filterComboboxOptions(options, 'missing', false)).toEqual(options);
-        expect(
-            filterComboboxOptions(options, '2', (option, searchValue) =>
-                String(option.value).includes(searchValue),
-            ),
-        ).toEqual([options[1]]);
-    });
-
     it('uses null as the sole empty value sentinel', () => {
         expect(hasComboboxValue(null)).toBe(false);
         expect(hasComboboxValue('')).toBe(true);

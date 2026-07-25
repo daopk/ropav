@@ -3,7 +3,6 @@ import {
     nextTick,
     ref,
     useId,
-    watch,
     watchEffect,
     type CSSProperties,
     type ComputedRef,
@@ -12,6 +11,7 @@ import {
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
+import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
 import { useFormControl } from '@/internal/composables/useFormControl';
@@ -217,6 +217,10 @@ export function useSelect(
     const activeDescendantId = computed(() =>
         getSelectActiveDescendantId(selectId, focusedIndex.value, isOpen.value),
     );
+    useActiveDescendantScroll({
+        activeDescendantId,
+        collectionRef: selectRef,
+    });
     const floating = useFloatingPosition({
         reference: triggerRef,
         floating: dropdownRef,
@@ -374,18 +378,6 @@ export function useSelect(
                 break;
         }
     }
-
-    watch(focusedIndex, (index) => {
-        if (!isOpen.value || index < 0) return;
-
-        void nextTick(() => {
-            if (!isOpen.value || focusedIndex.value !== index) return;
-
-            selectRef.value
-                ?.querySelector<HTMLElement>(`[id="${selectId}-option-${index}"]`)
-                ?.scrollIntoView?.({ block: 'nearest' });
-        });
-    });
 
     useClickOutside(selectRef, isOpen, close);
 

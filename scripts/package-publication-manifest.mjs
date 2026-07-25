@@ -170,6 +170,10 @@ export const packagePublicationManifest = {
             runtimeExports: ['Modal', 'modalParts'],
         },
         {
+            name: 'multi-select',
+            runtimeExports: ['MultiSelect', 'multiSelectParts'],
+        },
+        {
             name: 'number-input',
             runtimeExports: ['NumberInput', 'numberInputParts'],
         },

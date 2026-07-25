@@ -30,6 +30,7 @@ import { hoverCardParts, type HoverCardPart } from 'ropav/hover-card';
 import { iconButtonParts, type IconButtonPart } from 'ropav/icon-button';
 import { inputParts, type InputPart } from 'ropav/input';
 import { modalParts, type ModalPart } from 'ropav/modal';
+import { multiSelectParts, type MultiSelectPart } from 'ropav/multi-select';
 import { numberInputParts, type NumberInputPart } from 'ropav/number-input';
 import { overlayParts, type OverlayPart } from 'ropav/overlay';
 import { popoverParts, type PopoverPart } from 'ropav/popover';
@@ -87,6 +88,7 @@ const parts = [
     iconButtonParts[0] satisfies IconButtonPart,
     inputParts[0] satisfies InputPart,
     modalParts[0] satisfies ModalPart,
+    multiSelectParts[0] satisfies MultiSelectPart,
     numberInputParts[0] satisfies NumberInputPart,
     overlayParts[0] satisfies OverlayPart,
     popoverParts[0] satisfies PopoverPart,

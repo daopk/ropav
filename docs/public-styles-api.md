@@ -58,6 +58,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | FocusTrap                                | `root`                                                                                                                                      |
 | Input                                    | `root`, `input`, `left`, `right`                                                                                                            |
 | Modal                                    | `root`, `overlay`, `panel`, `header`, `title`, `description`, `body`, `footer`, `close`                                                     |
+| MultiSelect                              | `root`, `pills`, `pill`, `pillLabel`, `pillRemove`, `input`, `indicator`, `clear`, `toggle`, `content`, `option`, `empty`                   |
 | NumberInput                              | `root`, `input`, `control`                                                                                                                  |
 | Overlay                                  | `root`                                                                                                                                      |
 | Popover, Tooltip                         | `root`, `trigger`, `content`                                                                                                                |
@@ -79,7 +80,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 
 Boolean states use presence semantics: the attribute value is empty when true and the attribute is absent when false or unknown. Enum values are lowercase kebab-case.
 
-- `data-state="open|closed"`: AccordionItem, Collapse, Combobox, DropdownMenu and submenus, Modal, Popover, Select and Tooltip.
+- `data-state="open|closed"`: AccordionItem, Collapse, Combobox, DropdownMenu and submenus, Modal, MultiSelect, Popover, Select and Tooltip.
 - `data-state="checked|unchecked|indeterminate"`: Checkbox.
 - `data-state="checked|unchecked"`: Radio and Switch.
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
@@ -89,15 +90,15 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-invalid`: form-control roots and their public input parts.
 - `data-loading`: Button, ButtonLink and IconButton.
 - `data-active` and `data-paused`: FocusTrap.
-- `data-selected`: Combobox and Select options, and ColorPicker swatches.
-- `data-highlighted`: Combobox and Select options, and DropdownMenu items.
+- `data-selected`: Combobox, MultiSelect and Select options, and ColorPicker swatches.
+- `data-highlighted`: Combobox, MultiSelect and Select options, and DropdownMenu items.
 - `data-filled`: Slider and RangeSlider marks.
 - `data-track-hovered` and `data-dragging`: Slider track pointer interaction.
 - `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.
 - `data-orientation="horizontal|vertical"`: ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
-- `data-placement`: the final placement after collision handling; twelve placements for Popover and DropdownMenu, `top-start|bottom-start` for Combobox and Select, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
-- `data-side="top|right|bottom|left"`: the side component of the final placement for Combobox, Popover, DropdownMenu, Select and Tooltip.
+- `data-placement`: the final placement after collision handling; twelve placements for Popover and DropdownMenu, `top-start|bottom-start` for Combobox, MultiSelect and Select, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
+- `data-side="top|right|bottom|left"`: the side component of the final placement for Combobox, MultiSelect, Popover, DropdownMenu, Select and Tooltip.
 - `data-control="increment|decrement"`: NumberInput controls.
 - `data-control="saturation|hue|opacity"`: ColorPicker controls and handles.
 - `data-thumb="lower|upper|merged"`: RangeSlider inputs, thumbs and tooltips; `data-active-thumb="lower|upper"` is present on its root only while a thumb is active.

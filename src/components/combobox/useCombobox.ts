@@ -11,6 +11,7 @@ import {
     type SelectHTMLAttributes,
 } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
 import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
@@ -18,10 +19,10 @@ import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { isNodeWithinElement } from '@/utils/dom/events';
+import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
 import {
-    filterComboboxOptions,
     getComboboxActiveDescendantId,
     getComboboxDisplayLabel,
     hasComboboxValue,
@@ -207,7 +208,7 @@ export function useCombobox(
     const searchValue = ref(displayLabel.value);
     const filterValue = computed(() => (isSearching.value ? searchValue.value : ''));
     const visibleOptions = computed(() =>
-        filterComboboxOptions(props.options, filterValue.value, props.filter),
+        filterOptions(props.options, filterValue.value, props.filter),
     );
     const navigation = useCollectionNavigation<ComboboxOption, string | number>({
         items: () => visibleOptions.value,
@@ -219,6 +220,10 @@ export function useCombobox(
     const activeDescendantId = computed(() =>
         getComboboxActiveDescendantId(comboboxId, highlightedIndex.value, isOpen.value),
     );
+    useActiveDescendantScroll({
+        activeDescendantId,
+        collectionRef: rootRef,
+    });
     const floating = useFloatingPosition({
         reference: rootRef,
         floating: dropdownRef,
@@ -392,17 +397,6 @@ export function useCombobox(
             navigation.focusFirst();
         }
     });
-    watch(highlightedIndex, (index) => {
-        if (!isOpen.value || index < 0) return;
-
-        void nextTick(() => {
-            if (!isOpen.value || highlightedIndex.value !== index) return;
-            rootRef.value
-                ?.querySelector<HTMLElement>(`[id="${comboboxId}-option-${index}"]`)
-                ?.scrollIntoView?.({ block: 'nearest' });
-        });
-    });
-
     useClickOutside(rootRef, isOpen, () => close());
 
     return {

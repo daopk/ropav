@@ -27,6 +27,7 @@ export * from './components/hover-card';
 export * from './components/icon-button';
 export * from './components/input';
 export * from './components/modal';
+export * from './components/multi-select';
 export * from './components/number-input';
 export * from './components/overlay';
 export * from './components/pagination';

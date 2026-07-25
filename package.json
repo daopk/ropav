@@ -129,6 +129,10 @@
       "types": "./dist/components/modal/index.d.ts",
       "import": "./dist/components/modal/index.js"
     },
+    "./multi-select": {
+      "types": "./dist/components/multi-select/index.d.ts",
+      "import": "./dist/components/multi-select/index.js"
+    },
     "./number-input": {
       "types": "./dist/components/number-input/index.d.ts",
       "import": "./dist/components/number-input/index.js"
