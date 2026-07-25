@@ -24,6 +24,7 @@ import {
     type ToastStore as RootToastStore,
     type ToastStoreOptions as RootToastStoreOptions,
     type ToastUpdateOptions as RootToastUpdateOptions,
+    type CreateCalendarDaysOptions as RootCreateCalendarDaysOptions,
     type DialogCloseReason as RootDialogCloseReason,
     type DialogRootProps as RootDialogRootProps,
     type DropdownMenuRootPrimitiveProps as RootDropdownMenuRootPrimitiveProps,
@@ -50,6 +51,7 @@ import {
     useTeleportTarget as useRootTeleportTarget,
     useToast as useRootToast,
 } from 'ropav';
+import { type CreateCalendarDaysOptions } from 'ropav/calendar';
 import {
     type UseControllableValueOptions,
     type UseControllableValueReturn,
@@ -233,6 +235,15 @@ const toastProviderProps: ToastProviderProps = { store: toastStore };
 const rootToastStoreOptions: RootToastStoreOptions = toastStoreOptions;
 const rootToastStore: RootToastStore = createRootToastStore(rootToastStoreOptions);
 const rootToastProviderProps: RootToastProviderProps = { store: rootToastStore };
+const calendarDaysOptions: CreateCalendarDaysOptions = {
+    month: new Date(2026, 6, 1),
+    selectedDate: new Date(2026, 6, 14),
+    today: new Date(2026, 6, 14),
+    firstDayOfWeek: 1,
+    fixedWeeks: true,
+    hideOutsideDates: false,
+};
+const rootCalendarDaysOptions: RootCreateCalendarDaysOptions = calendarDaysOptions;
 const controlledValue = ref<string>();
 const controllableValueOptions: UseControllableValueOptions<string> = {
     modelValue: () => controlledValue.value,
@@ -623,6 +634,8 @@ void [
     rootToastStore,
     rootToastStoreOptions,
     rootToastProviderProps,
+    calendarDaysOptions,
+    rootCalendarDaysOptions,
     controlledValue,
     controllableValueOptions,
     rootControllableValueOptions,

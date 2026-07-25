@@ -46,6 +46,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | Button, ButtonLink                       | `root`, `loader`, `left`, `label`, `right`                                                                                                  |
 | IconButton                               | `root`, `loader`, `icon`                                                                                                                    |
 | ButtonGroup                              | `root`                                                                                                                                      |
+| Calendar                                 | `root`, `header`, `previousControl`, `monthLabel`, `nextControl`, `weekdays`, `weekday`, `grid`, `week`, `dayCell`, `day`                   |
 | Card                                     | `root`, `header`, `title`, `description`, `body`, `footer`                                                                                  |
 | Checkbox                                 | `root`, `input`, `indicator`, `label`                                                                                                       |
 | Collapse                                 | `root`, `trigger`, `content`                                                                                                                |
@@ -87,11 +88,13 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
 - `data-state="determinate|indeterminate"`: Progress.
 - `data-disabled`: the effective disabled state on each applicable control, trigger, item or option.
-- `data-readonly`: Input, Textarea, TagsInput, ColorInput and ColorPicker controls.
+- `data-readonly`: Calendar, Input, Textarea, TagsInput, ColorInput and ColorPicker controls.
 - `data-invalid`: form-control roots and their public input parts.
 - `data-loading`: Button, ButtonLink and IconButton.
 - `data-active` and `data-paused`: FocusTrap.
-- `data-selected`: Combobox, MultiSelect and Select options, and ColorPicker swatches.
+- `data-selected`: Calendar days, Combobox, MultiSelect and Select options, and ColorPicker swatches.
+- `data-outside` and `data-today`: Calendar days.
+- `data-month="YYYY-MM-DD"`: Calendar roots.
 - `data-highlighted`: Combobox, MultiSelect and Select options, and DropdownMenu items.
 - `data-filled`: Slider and RangeSlider marks.
 - `data-track-hovered` and `data-dragging`: Slider track pointer interaction.

@@ -65,6 +65,10 @@
       "types": "./dist/components/button-link/index.d.ts",
       "import": "./dist/components/button-link/index.js"
     },
+    "./calendar": {
+      "types": "./dist/components/calendar/index.d.ts",
+      "import": "./dist/components/calendar/index.js"
+    },
     "./card": {
       "types": "./dist/components/card/index.d.ts",
       "import": "./dist/components/card/index.js"

@@ -17,6 +17,7 @@ import { badgeParts, type BadgePart } from 'ropav/badge';
 import { buttonParts, type ButtonPart, type ButtonProps } from 'ropav/button';
 import { buttonGroupParts, type ButtonGroupPart } from 'ropav/button-group';
 import { buttonLinkParts, type ButtonLinkPart } from 'ropav/button-link';
+import { calendarParts, type CalendarPart } from 'ropav/calendar';
 import { cardParts, type CardPart } from 'ropav/card';
 import { checkboxParts, type CheckboxPart } from 'ropav/checkbox';
 import { collapseParts, type CollapsePart } from 'ropav/collapse';
@@ -61,7 +62,9 @@ import {
 import { tooltipParts, type TooltipPart } from 'ropav/tooltip';
 import {
     buttonParts as rootButtonParts,
+    calendarParts as rootCalendarParts,
     modalParts as rootModalParts,
+    type CalendarPart as RootCalendarPart,
     type StylesApiClassNames,
     type StylesApiStyles,
 } from 'ropav';
@@ -76,6 +79,7 @@ const parts = [
     buttonParts[0] satisfies ButtonPart,
     buttonGroupParts[0] satisfies ButtonGroupPart,
     buttonLinkParts[0] satisfies ButtonLinkPart,
+    calendarParts[0] satisfies CalendarPart,
     cardParts[0] satisfies CardPart,
     checkboxParts[0] satisfies CheckboxPart,
     collapseParts[0] satisfies CollapsePart,
@@ -134,10 +138,12 @@ type InternalClassNameIsExcluded = 'content' extends keyof StylesApiClassNames<B
 type ArbitraryStyleIsExcluded = 'wrapper' extends keyof StylesApiStyles<ButtonPart> ? never : true;
 const internalClassNameIsExcluded: InternalClassNameIsExcluded = true;
 const arbitraryStyleIsExcluded: ArbitraryStyleIsExcluded = true;
+const rootCalendarPart = rootCalendarParts[0] satisfies RootCalendarPart;
 
 void [
     parts,
     rootButtonParts,
+    rootCalendarPart,
     rootModalParts,
     buttonProps,
     accordionTriggerClass,
