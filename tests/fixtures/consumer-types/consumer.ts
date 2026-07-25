@@ -6,6 +6,7 @@ import {
     DropdownMenuRoot as RootDropdownMenuRoot,
     DropdownMenuTrigger as RootDropdownMenuTrigger,
     FocusTrap as RootFocusTrap,
+    HoverCard as RootHoverCard,
     OverlayLayerProvider as RootOverlayLayerProvider,
     TeleportProvider as RootTeleportProvider,
     Toast as RootToast,
@@ -31,6 +32,7 @@ import {
     type FloatingFlipOptions as RootFloatingFlipOptions,
     type FloatingStrategy as RootFloatingStrategy,
     type FloatingTarget as RootFloatingTarget,
+    type HoverCardProps as RootHoverCardProps,
     type OverlayLayerProviderProps as RootOverlayLayerProviderProps,
     type UseHoverDisclosureOptions as RootUseHoverDisclosureOptions,
     type UseHoverDisclosureReturn as RootUseHoverDisclosureReturn,
@@ -109,6 +111,13 @@ import {
     type UseFocusTrapOptions,
     useFocusTrap,
 } from 'ropav/focus-trap';
+import {
+    HoverCard,
+    hoverCardPlacements,
+    type HoverCardOpenChangeReason,
+    type HoverCardProps,
+    type HoverCardTarget,
+} from 'ropav/hover-card';
 import {
     Toast,
     ToastProvider,
@@ -274,6 +283,7 @@ const floatingTarget: FloatingTarget = virtualAnchor;
 const rootFloatingTarget: RootFloatingTarget = floatingTarget;
 const popoverTarget: PopoverTarget = floatingTarget;
 const tooltipTarget: TooltipTarget = floatingTarget;
+const hoverCardTarget: HoverCardTarget = floatingTarget;
 const floatingStrategy: FloatingStrategy = 'fixed';
 const rootFloatingStrategy: RootFloatingStrategy = floatingStrategy;
 const floatingOffset: FloatingOffset = { mainAxis: 12, crossAxis: 4 };
@@ -376,6 +386,19 @@ const popoverProps: PopoverProps = {
     flipOptions: floatingFlipOptions,
     autoUpdateOptions: floatingAutoUpdateOptions,
 };
+const hoverCardProps: HoverCardProps = {
+    baseZIndex: 2000,
+    target: hoverCardTarget,
+    arrow: true,
+    openDelay: 700,
+    closeDelay: 300,
+    touchBehavior: 'toggle',
+    placement: hoverCardPlacements[0],
+};
+const rootHoverCardProps: RootHoverCardProps = hoverCardProps;
+const hoverCardVNode = h(HoverCard, hoverCardProps);
+const rootHoverCardVNode = h(RootHoverCard, rootHoverCardProps);
+const hoverCardOpenReason: HoverCardOpenChangeReason = 'hover';
 const dropdownIgnoreTarget: DropdownMenuInteractOutsideTarget = ref<Element | null>(null);
 const dropdownProps: DropdownMenuProps = {
     baseZIndex: 2000,
@@ -606,6 +629,7 @@ void [
     rootFloatingTarget,
     popoverTarget,
     tooltipTarget,
+    hoverCardTarget,
     floatingStrategy,
     rootFloatingStrategy,
     floatingOffset,
@@ -631,6 +655,11 @@ void [
     teleportProviderProps,
     tooltipProps,
     popoverProps,
+    hoverCardProps,
+    rootHoverCardProps,
+    hoverCardVNode,
+    rootHoverCardVNode,
+    hoverCardOpenReason,
     dropdownIgnoreTarget,
     dropdownProps,
     modalProps,

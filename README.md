@@ -142,7 +142,7 @@ Use typed `classNames` and `styles`, documented state attributes, and variables 
 
 See the [Public Styles API](./docs/public-styles-api.md) and [public token table](./docs/public-tokens.md). Consumers can declare `reset, ropav.tokens, ropav.components, app` to establish their cascade layer order.
 
-For headless Tooltip, HoverCard and custom menu markup, see the
+For headless floating content and custom overlay markup, see the
 [public floating API](./docs/public-floating-api.md).
 
 ## Development

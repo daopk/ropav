@@ -113,6 +113,10 @@
       "types": "./dist/components/focus-trap/index.d.ts",
       "import": "./dist/components/focus-trap/index.js"
     },
+    "./hover-card": {
+      "types": "./dist/components/hover-card/index.d.ts",
+      "import": "./dist/components/hover-card/index.js"
+    },
     "./icon-button": {
       "types": "./dist/components/icon-button/index.d.ts",
       "import": "./dist/components/icon-button/index.js"

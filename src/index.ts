@@ -23,6 +23,7 @@ export * from './components/dropdown-menu';
 export * from './components/field';
 export * from './components/floating';
 export * from './components/focus-trap';
+export * from './components/hover-card';
 export * from './components/icon-button';
 export * from './components/input';
 export * from './components/modal';

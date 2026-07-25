@@ -26,6 +26,7 @@ import { colorSwatchParts, type ColorSwatchPart } from 'ropav/color-swatch';
 import { dropdownMenuParts, type DropdownMenuPart } from 'ropav/dropdown-menu';
 import { fieldParts, type FieldPart } from 'ropav/field';
 import { focusTrapParts, type FocusTrapPart } from 'ropav/focus-trap';
+import { hoverCardParts, type HoverCardPart } from 'ropav/hover-card';
 import { iconButtonParts, type IconButtonPart } from 'ropav/icon-button';
 import { inputParts, type InputPart } from 'ropav/input';
 import { modalParts, type ModalPart } from 'ropav/modal';
@@ -82,6 +83,7 @@ const parts = [
     dropdownMenuParts[0] satisfies DropdownMenuPart,
     fieldParts[0] satisfies FieldPart,
     focusTrapParts[0] satisfies FocusTrapPart,
+    hoverCardParts[0] satisfies HoverCardPart,
     iconButtonParts[0] satisfies IconButtonPart,
     inputParts[0] satisfies InputPart,
     modalParts[0] satisfies ModalPart,

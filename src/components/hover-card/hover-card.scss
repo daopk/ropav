@@ -1,0 +1,69 @@
+.rp-hover-card {
+    position: relative;
+    display: inline-flex;
+    font-family: var(--rp-font-family);
+    vertical-align: middle;
+
+    &__content {
+        --_rp-hover-card-main-axis-offset: var(--rp-spacing-2);
+        --_rp-hover-card-cross-axis-offset: 0px;
+        --_rp-hover-card-radius: var(--rp-radius-sm);
+        --_rp-hover-card-arrow-size: 0.5rem;
+
+        position: absolute;
+        z-index: $z-index-dropdown;
+        box-sizing: border-box;
+        width: max-content;
+        max-width: min(22rem, calc(100vw - var(--rp-spacing-6)));
+        padding: var(--rp-spacing-4);
+        color: var(--rp-color-text);
+        font-size: var(--rp-font-size-md);
+        line-height: var(--rp-line-height-md);
+        overflow-wrap: anywhere;
+        background-color: var(--rp-color-default);
+        border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
+        border-radius: var(--_rp-hover-card-radius);
+        box-shadow: var(--rp-shadow-base);
+    }
+
+    &--target {
+        display: contents;
+    }
+
+    &__arrow {
+        position: absolute;
+        box-sizing: border-box;
+        width: var(--_rp-hover-card-arrow-size);
+        height: var(--_rp-hover-card-arrow-size);
+        pointer-events: none;
+        background-color: inherit;
+        border: inherit;
+        rotate: 45deg;
+
+        &[data-side='top'] {
+            bottom: calc(-1 * var(--_rp-hover-card-arrow-size) / 2);
+        }
+
+        &[data-side='right'] {
+            left: calc(-1 * var(--_rp-hover-card-arrow-size) / 2);
+        }
+
+        &[data-side='bottom'] {
+            top: calc(-1 * var(--_rp-hover-card-arrow-size) / 2);
+        }
+
+        &[data-side='left'] {
+            right: calc(-1 * var(--_rp-hover-card-arrow-size) / 2);
+        }
+    }
+}
+
+.rp-hover-card-content-enter-active,
+.rp-hover-card-content-leave-active {
+    transition: opacity var(--rp-transition-fast);
+}
+
+.rp-hover-card-content-enter-from,
+.rp-hover-card-content-leave-to {
+    opacity: 0;
+}

@@ -154,6 +154,10 @@ export const packagePublicationManifest = {
             runtimeExports: ['FocusTrap', 'focusTrapParts', 'useFocusTrap'],
         },
         {
+            name: 'hover-card',
+            runtimeExports: ['HoverCard', 'hoverCardParts', 'hoverCardPlacements'],
+        },
+        {
             name: 'icon-button',
             runtimeExports: ['IconButton', 'iconButtonParts'],
         },

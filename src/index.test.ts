@@ -11,4 +11,9 @@ describe('public source exports', () => {
     it('exposes avatar variants from src/index.ts', () => {
         expect(Ropav.avatarVariants).toEqual(['solid', 'subtle', 'surface', 'outline']);
     });
+
+    it('exposes hover card placements from src/index.ts', () => {
+        expect(Ropav.hoverCardPlacements).toHaveLength(12);
+        expect(Ropav.hoverCardPlacements).toContain('bottom-start');
+    });
 });

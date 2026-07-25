@@ -68,10 +68,10 @@ Use `autoUpdateOptions.animationFrame` sparingly. It checks the reference positi
 frame and is intended for references moving with CSS transforms or nested floating elements outside
 their ancestor's scrolling context. The animation-frame loop only runs while positioning is open.
 
-`Popover`, `Tooltip`, `DropdownMenu`, `DropdownMenuContent` and `DropdownMenuSubContent` accept the
-same `flipOptions` and `autoUpdateOptions` objects. On the data-driven `DropdownMenu`, the options
-also apply to its open submenus. Each open floating element using `animationFrame: true` runs its own
-animation-frame loop.
+`HoverCard`, `Popover`, `Tooltip`, `DropdownMenu`, `DropdownMenuContent` and
+`DropdownMenuSubContent` accept the same `flipOptions` and `autoUpdateOptions` objects. On the
+data-driven `DropdownMenu`, the options also apply to its open submenus. Each open floating element
+using `animationFrame: true` runs its own animation-frame loop.
 
 The return value contains readonly `actualPlacement`, `floatingStyle`, `arrowStyle` and
 `isPositioned` refs, plus an async `update()` method for content-driven layout changes.
@@ -91,6 +91,9 @@ for keyboard handling, focus management, roles, labels, outside interaction and 
 `useHoverDisclosure` manages hover and focus state without rendering DOM or positioning content. It
 coordinates the trigger and floating content, so a close delay started when the pointer leaves the
 trigger is cancelled when the pointer enters the content.
+
+`HoverCard` composes this behavior with positioning, Teleport and styled content. Use the composable
+directly when custom markup or a different visual treatment is required.
 
 ```vue
 <template>
