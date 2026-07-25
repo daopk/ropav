@@ -167,6 +167,10 @@ export const packagePublicationManifest = {
             runtimeExports: ['Field', 'fieldParts'],
         },
         {
+            name: 'file-input',
+            runtimeExports: ['FileInput', 'fileInputParts'],
+        },
+        {
             name: 'floating',
             runtimeExports: ['useFloatingPosition', 'useHoverDisclosure'],
         },

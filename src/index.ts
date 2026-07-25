@@ -23,6 +23,7 @@ export * from './components/date-picker';
 export * from './components/dialog';
 export * from './components/dropdown-menu';
 export * from './components/field';
+export * from './components/file-input';
 export * from './components/floating';
 export * from './components/focus-trap';
 export * from './components/hover-card';

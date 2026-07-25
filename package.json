@@ -113,6 +113,10 @@
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"
     },
+    "./file-input": {
+      "types": "./dist/components/file-input/index.d.ts",
+      "import": "./dist/components/file-input/index.js"
+    },
     "./floating": {
       "types": "./dist/components/floating/index.d.ts",
       "import": "./dist/components/floating/index.js"
