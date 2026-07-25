@@ -1,25 +1,39 @@
 import { describe, expect, it } from 'vitest';
-import { getDropzoneDragStatus, isFileAccepted, processDropzoneFiles } from './dropzoneModel';
+import { createDropzonePolicy } from './dropzoneModel';
 
 describe('dropzoneModel', () => {
     it('matches exact MIME types, wildcards, and file extensions', () => {
         const image = new File(['image'], 'PHOTO.PNG', { type: 'image/png' });
         const document = new File(['document'], 'report.PDF', { type: '' });
 
-        expect(isFileAccepted(image, 'image/*')).toBe(true);
-        expect(isFileAccepted(image, 'image/png')).toBe(true);
-        expect(isFileAccepted(document, '.pdf')).toBe(true);
-        expect(isFileAccepted(document, 'image/*,.txt')).toBe(false);
-        expect(isFileAccepted(document, undefined)).toBe(true);
+        expect(
+            createDropzonePolicy({ accept: 'image/*', multiple: true }).commit([image])
+                .acceptedFiles,
+        ).toEqual([image]);
+        expect(
+            createDropzonePolicy({ accept: 'image/png', multiple: true }).commit([image])
+                .acceptedFiles,
+        ).toEqual([image]);
+        expect(
+            createDropzonePolicy({ accept: '.pdf', multiple: true }).commit([document])
+                .acceptedFiles,
+        ).toEqual([document]);
+        expect(
+            createDropzonePolicy({ accept: 'image/*,.txt', multiple: true }).commit([document])
+                .acceptedFiles,
+        ).toEqual([]);
+        expect(createDropzonePolicy({ multiple: true }).commit([document]).acceptedFiles).toEqual([
+            document,
+        ]);
     });
 
     it('collects type and size errors for rejected files', () => {
         const file = new File(['too large'], 'notes.txt', { type: 'text/plain' });
-        const selection = processDropzoneFiles([file], {
+        const selection = createDropzonePolicy({
             accept: 'image/*',
             multiple: true,
             maxSize: 2,
-        });
+        }).commit([file]);
 
         expect(selection.acceptedFiles).toEqual([]);
         expect(selection.rejections).toHaveLength(1);
@@ -36,11 +50,14 @@ describe('dropzoneModel', () => {
             new File(['three'], 'three.txt', { type: 'text/plain' }),
         ];
 
-        const multipleSelection = processDropzoneFiles(files, {
+        const multipleSelection = createDropzonePolicy({
             multiple: true,
             maxFiles: 2,
-        });
-        const singleSelection = processDropzoneFiles(files, { multiple: false });
+        }).commit(files);
+        const singleSelection = createDropzonePolicy({
+            multiple: false,
+            maxFiles: 4,
+        }).commit(files);
 
         expect(multipleSelection.acceptedFiles).toEqual(files.slice(0, 2));
         expect(multipleSelection.rejections[0]?.errors[0]?.code).toBe('too-many-files');
@@ -50,40 +67,39 @@ describe('dropzoneModel', () => {
 
     it('accepts a protected drag with a compatible MIME type', () => {
         expect(
-            getDropzoneDragStatus([{ kind: 'file', type: 'image/png' }], {
+            createDropzonePolicy({
                 accept: 'image/*',
                 multiple: true,
-            }),
+            }).preview([{ kind: 'file', type: 'image/png' }]),
         ).toBe('accept');
     });
 
     it('rejects a protected drag with a known incompatible MIME type', () => {
         expect(
-            getDropzoneDragStatus([{ kind: 'file', type: 'text/plain' }], {
+            createDropzonePolicy({
                 accept: 'image/*',
                 multiple: true,
-            }),
+            }).preview([{ kind: 'file', type: 'text/plain' }]),
         ).toBe('reject');
     });
 
     it('keeps protected drags optimistic when type acceptance cannot be decided', () => {
         expect(
-            getDropzoneDragStatus([{ kind: 'file', type: '' }], {
+            createDropzonePolicy({
                 accept: 'image/*',
                 multiple: true,
-            }),
+            }).preview([{ kind: 'file', type: '' }]),
         ).toBe('accept');
         expect(
-            getDropzoneDragStatus([{ kind: 'file', type: 'application/octet-stream' }], {
-                accept: 'image/*',
-                multiple: true,
-            }),
+            createDropzonePolicy({ accept: 'image/*', multiple: true }).preview([
+                { kind: 'file', type: 'application/octet-stream' },
+            ]),
         ).toBe('accept');
         expect(
-            getDropzoneDragStatus([{ kind: 'file', type: 'text/plain' }], {
+            createDropzonePolicy({
                 accept: '.pdf',
                 multiple: true,
-            }),
+            }).preview([{ kind: 'file', type: 'text/plain' }]),
         ).toBe('accept');
     });
 
@@ -93,7 +109,9 @@ describe('dropzoneModel', () => {
             { kind: 'file', type: 'image/jpeg' },
         ];
 
-        expect(getDropzoneDragStatus(items, { multiple: false })).toBe('reject');
-        expect(getDropzoneDragStatus(items, { multiple: true, maxFiles: 1 })).toBe('reject');
+        expect(createDropzonePolicy({ multiple: false, maxFiles: 4 }).preview(items)).toBe(
+            'reject',
+        );
+        expect(createDropzonePolicy({ multiple: true, maxFiles: 1 }).preview(items)).toBe('reject');
     });
 });

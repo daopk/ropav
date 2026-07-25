@@ -2,11 +2,7 @@ import { computed, ref } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { useNativeFileSelection } from '@/internal/composables/useNativeFileSelection';
 import { bem } from '@/utils/bem';
-import {
-    getDropzoneDragStatus,
-    processDropzoneFiles,
-    type DropzoneDragItem,
-} from './dropzoneModel';
+import { createDropzonePolicy } from './dropzoneModel';
 import type {
     DropzoneFileRejection,
     DropzoneProps,
@@ -41,7 +37,7 @@ function readTransferFiles(transfer: DataTransfer | null) {
         .filter((file): file is File => Boolean(file));
 }
 
-function readTransferItems(transfer: DataTransfer | null): DropzoneDragItem[] {
+function readTransferItems(transfer: DataTransfer | null) {
     if (!transfer) return [];
     return Array.from(transfer.items, ({ kind, type }) => ({ kind, type }));
 }
@@ -65,22 +61,22 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
     });
     const dragDepth = ref(0);
     const dragFiles = ref<File[]>([]);
-    const dragItems = ref<DropzoneDragItem[]>([]);
+    const dragItems = ref<ReturnType<typeof readTransferItems>>([]);
     const lastRejections = ref<DropzoneFileRejection[]>([]);
 
-    const selectionOptions = computed(() => ({
-        accept: props.accept,
-        multiple: props.multiple ?? true,
-        maxFiles: props.maxFiles,
-        maxSize: props.maxSize,
-    }));
-    const dragSelection = computed(() =>
-        processDropzoneFiles(dragFiles.value, selectionOptions.value),
+    const policy = computed(() =>
+        createDropzonePolicy({
+            accept: props.accept,
+            multiple: props.multiple ?? true,
+            maxFiles: props.maxFiles,
+            maxSize: props.maxSize,
+        }),
     );
+    const dragSelection = computed(() => policy.value.commit(dragFiles.value));
     const status = computed<DropzoneStatus>(() => {
         if (dragDepth.value === 0) return 'idle';
         if (dragSelection.value.rejections.length > 0) return 'reject';
-        return getDropzoneDragStatus(dragItems.value, selectionOptions.value);
+        return policy.value.preview(dragItems.value);
     });
     const rejections = computed(() =>
         status.value === 'idle' ? lastRejections.value : dragSelection.value.rejections,
@@ -101,7 +97,7 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
     );
 
     function submitFiles(nextFiles: File[]) {
-        const selection = processDropzoneFiles(nextFiles, selectionOptions.value);
+        const selection = policy.value.commit(nextFiles);
         lastRejections.value = selection.rejections;
 
         settleSelection(

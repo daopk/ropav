@@ -135,49 +135,6 @@ describe('Dropzone', () => {
         expect(onReject).toHaveBeenCalledWith(onDrop.mock.calls[0]?.[0].rejections);
     });
 
-    it('rejects incompatible MIME types while the drag data store is protected', async () => {
-        const container = mountDropzone({ accept: 'image/*' });
-        const root = container.querySelector('.rp-dropzone')!;
-        const event = new Event('dragenter', {
-            bubbles: true,
-            cancelable: true,
-        }) as DragEvent;
-        Object.defineProperty(event, 'dataTransfer', {
-            configurable: true,
-            value: {
-                files: createFileList([]),
-                items: [
-                    {
-                        kind: 'file',
-                        type: 'text/plain',
-                        getAsFile: () => null,
-                    },
-                ],
-                types: ['Files'],
-                dropEffect: 'none',
-            } as unknown as DataTransfer,
-        });
-
-        root.dispatchEvent(event);
-        await flush();
-
-        expect(root.getAttribute('data-state')).toBe('reject');
-    });
-
-    it('enforces maxFiles and the single-file contract', async () => {
-        const onDrop = vi.fn();
-        const container = mountDropzone({ multiple: false, maxFiles: 4 }, { onDrop });
-        const files = [new File(['one'], 'one.txt'), new File(['two'], 'two.txt')];
-
-        dispatchDrag(container.querySelector('.rp-dropzone')!, 'drop', files);
-        await flush();
-
-        const selection = onDrop.mock.calls[0]?.[0] as DropzoneSelection;
-        expect(selection.acceptedFiles).toEqual([files[0]]);
-        expect(selection.rejections[0]?.file).toBe(files[1]);
-        expect(selection.rejections[0]?.errors[0]?.code).toBe('too-many-files');
-    });
-
     it('keeps the native input keyboard accessible beside interactive slot content', async () => {
         const onNestedClick = vi.fn();
         const container = mountDom(

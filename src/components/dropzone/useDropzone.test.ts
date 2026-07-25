@@ -1,7 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
 
-import { createFileList } from '../../../tests/utils/files';
+import {
+    createFileList,
+    installDataTransferStub,
+    makeInputFilesMutable,
+} from '../../../tests/utils/files';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import { useDropzone } from './useDropzone';
 import type { DropzoneProps } from './types';
@@ -38,13 +42,27 @@ function mountUseDropzone(props: DropzoneProps, callbacks: Parameters<typeof use
     return { container, dropzone };
 }
 
+let restoreDataTransfer: () => void;
+
+beforeEach(() => {
+    restoreDataTransfer = installDataTransferStub();
+});
+
+afterEach(() => {
+    restoreDataTransfer();
+});
+
 describe('useDropzone', () => {
-    it('reports drag status and the resulting rejections through its interface', async () => {
+    it('owns protected preview and the commit callback transaction', async () => {
+        const calls: string[] = [];
+        const onUpdate = vi.fn(() => calls.push('update'));
+        const onDrop = vi.fn(() => calls.push('drop'));
+        const onReject = vi.fn(() => calls.push('reject'));
         const accepted = new File(['image'], 'avatar.png', { type: 'image/png' });
         const rejected = new File(['text'], 'notes.txt', { type: 'text/plain' });
         const { dropzone } = mountUseDropzone(
             { accept: 'image/*', multiple: true },
-            { onUpdate: vi.fn(), onDrop: vi.fn(), onReject: vi.fn() },
+            { onUpdate, onDrop, onReject },
         );
         await flush();
 
@@ -69,12 +87,50 @@ describe('useDropzone', () => {
         expect(dropzone.rejections.value).toHaveLength(1);
         expect(dropzone.rejections.value[0]?.file).toBe(rejected);
         expect(dropzone.rejections.value[0]?.errors[0]?.code).toBe('file-invalid-type');
+        expect(onUpdate).toHaveBeenCalledWith([accepted]);
+        expect(onDrop).toHaveBeenCalledWith({
+            acceptedFiles: [accepted],
+            rejections: dropzone.rejections.value,
+        });
+        expect(onReject).toHaveBeenCalledWith(dropzone.rejections.value);
+        expect(calls).toEqual(['update', 'drop', 'reject']);
+    });
+
+    it('restores the native selection when every submitted file is rejected', async () => {
+        const calls: string[] = [];
+        const onUpdate = vi.fn(() => calls.push('update'));
+        const onDrop = vi.fn(() => calls.push('drop'));
+        const onReject = vi.fn(() => calls.push('reject'));
+        const initial = new File(['image'], 'avatar.png', { type: 'image/png' });
+        const rejected = new File(['text'], 'notes.txt', { type: 'text/plain' });
+        const { container, dropzone } = mountUseDropzone(
+            { modelValue: [initial], accept: 'image/*', multiple: true },
+            { onUpdate, onDrop, onReject },
+        );
+        await flush();
+
+        const input = container.querySelector('input') as HTMLInputElement;
+        const nativeFiles = makeInputFilesMutable(input, [initial]);
+        nativeFiles.replace([rejected]);
+
+        dropzone.onChange({ target: input } as unknown as Event);
+        await flush();
+
+        expect(Array.from(nativeFiles.files)).toEqual([initial]);
+        expect(dropzone.files.value).toEqual([initial]);
+        expect(dropzone.rejections.value[0]?.file).toBe(rejected);
+        expect(onUpdate).not.toHaveBeenCalled();
+        expect(onDrop).toHaveBeenCalledWith({
+            acceptedFiles: [],
+            rejections: dropzone.rejections.value,
+        });
+        expect(onReject).toHaveBeenCalledWith(dropzone.rejections.value);
+        expect(calls).toEqual(['drop', 'reject']);
     });
 
     it('owns open, clear, and focus through its returned commands', async () => {
         const onUpdate = vi.fn();
         const accepted = new File(['image'], 'avatar.png', { type: 'image/png' });
-        const rejected = new File(['text'], 'notes.txt', { type: 'text/plain' });
         const { container, dropzone } = mountUseDropzone(
             { accept: 'image/*', multiple: true },
             { onUpdate, onDrop: vi.fn(), onReject: vi.fn() },
@@ -94,9 +150,8 @@ describe('useDropzone', () => {
         dropzone.open();
         expect(clickCount).toBe(1);
 
-        dropzone.onDrop(createDragEvent('drop', [accepted, rejected]));
+        dropzone.onDrop(createDragEvent('drop', [accepted]));
         expect(dropzone.files.value).toEqual([accepted]);
-        expect(dropzone.rejections.value).toHaveLength(1);
 
         dropzone.clear();
         expect(dropzone.files.value).toEqual([]);

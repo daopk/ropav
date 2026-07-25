@@ -5,14 +5,14 @@ import type {
     DropzoneStatus,
 } from './types';
 
-export interface ProcessDropzoneFilesOptions {
+interface DropzonePolicyOptions {
     accept?: string;
     multiple: boolean;
     maxFiles?: number;
     maxSize?: number;
 }
 
-export interface DropzoneDragItem {
+interface DropzoneDragItem {
     kind: string;
     type: string;
 }
@@ -37,15 +37,12 @@ function matchesAcceptToken(file: File, token: string) {
     return matchesMimeToken(file.type, token);
 }
 
-export function isFileAccepted(file: File, accept: string | undefined) {
+function isFileAccepted(file: File, accept: string | undefined) {
     const tokens = normalizeAcceptTokens(accept);
     return tokens.length === 0 || tokens.some((token) => matchesAcceptToken(file, token));
 }
 
-function getFileErrors(
-    file: File,
-    options: Pick<ProcessDropzoneFilesOptions, 'accept' | 'maxSize'>,
-) {
+function getFileErrors(file: File, options: Pick<DropzonePolicyOptions, 'accept' | 'maxSize'>) {
     const errors: DropzoneFileError[] = [];
 
     if (!isFileAccepted(file, options.accept)) {
@@ -65,15 +62,15 @@ function getFileErrors(
     return errors;
 }
 
-function getFileLimit(options: Pick<ProcessDropzoneFilesOptions, 'multiple' | 'maxFiles'>) {
+function getFileLimit(options: Pick<DropzonePolicyOptions, 'multiple' | 'maxFiles'>) {
     if (!options.multiple) return 1;
     if (options.maxFiles == null) return Number.POSITIVE_INFINITY;
     return Math.max(0, Math.floor(options.maxFiles));
 }
 
-export function getDropzoneDragStatus(
+function getDragStatus(
     items: Iterable<DropzoneDragItem>,
-    options: Pick<ProcessDropzoneFilesOptions, 'accept' | 'multiple' | 'maxFiles'>,
+    options: Pick<DropzonePolicyOptions, 'accept' | 'multiple' | 'maxFiles'>,
 ): Exclude<DropzoneStatus, 'idle'> {
     const fileItems = Array.from(items).filter((item) => item.kind === 'file');
     if (fileItems.length > getFileLimit(options)) return 'reject';
@@ -104,10 +101,7 @@ function rejectTooMany(file: File, limit: number): DropzoneFileRejection {
     };
 }
 
-export function processDropzoneFiles(
-    files: Iterable<File>,
-    options: ProcessDropzoneFilesOptions,
-): DropzoneSelection {
+function processFiles(files: Iterable<File>, options: DropzonePolicyOptions): DropzoneSelection {
     const acceptedFiles: File[] = [];
     const rejections: DropzoneFileRejection[] = [];
     const limit = getFileLimit(options);
@@ -128,4 +122,15 @@ export function processDropzoneFiles(
     }
 
     return { acceptedFiles, rejections };
+}
+
+export function createDropzonePolicy(options: Readonly<DropzonePolicyOptions>) {
+    return {
+        preview(items: Iterable<DropzoneDragItem>) {
+            return getDragStatus(items, options);
+        },
+        commit(files: Iterable<File>) {
+            return processFiles(files, options);
+        },
+    };
 }
