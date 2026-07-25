@@ -40,6 +40,7 @@ import { scrollAreaParts, type ScrollAreaPart } from 'ropav/scroll-area';
 import { selectParts, type SelectPart } from 'ropav/select';
 import { rangeSliderParts, sliderParts, type RangeSliderPart, type SliderPart } from 'ropav/slider';
 import { switchParts, type SwitchPart } from 'ropav/switch';
+import { tagsInputParts, type TagsInputPart } from 'ropav/tags-input';
 import {
     tabsContentParts,
     tabsListParts,
@@ -100,6 +101,7 @@ const parts = [
     sliderParts[0] satisfies SliderPart,
     rangeSliderParts[0] satisfies RangeSliderPart,
     switchParts[0] satisfies SwitchPart,
+    tagsInputParts[0] satisfies TagsInputPart,
     tabsParts[0] satisfies TabsPart,
     tabsListParts[0] satisfies TabsListPart,
     tabsTriggerParts[0] satisfies TabsTriggerPart,

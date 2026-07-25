@@ -70,6 +70,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | RangeSlider                              | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
 | Switch                                   | `root`, `input`, `track`, `thumb`, `label`                                                                                                  |
 | Tabs, TabsList, TabsTrigger, TabsContent | `root` on each component                                                                                                                    |
+| TagsInput                                | `root`, `tags`, `tag`, `tagLabel`, `tagRemove`, `input`, `clear`                                                                            |
 | Textarea                                 | `root`, `input`                                                                                                                             |
 | Toast                                    | `root`, `icon`, `title`, `description`, `body`, `action`, `close`                                                                           |
 | ToastViewport                            | `root`, `item`, `toast`, `toastIcon`, `toastTitle`, `toastDescription`, `toastBody`, `toastAction`, `toastClose`                            |
@@ -86,7 +87,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
 - `data-state="determinate|indeterminate"`: Progress.
 - `data-disabled`: the effective disabled state on each applicable control, trigger, item or option.
-- `data-readonly`: Input, Textarea, ColorInput and ColorPicker controls.
+- `data-readonly`: Input, Textarea, TagsInput, ColorInput and ColorPicker controls.
 - `data-invalid`: form-control roots and their public input parts.
 - `data-loading`: Button, ButtonLink and IconButton.
 - `data-active` and `data-paused`: FocusTrap.

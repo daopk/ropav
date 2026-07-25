@@ -260,6 +260,10 @@ export const packagePublicationManifest = {
             ],
         },
         {
+            name: 'tags-input',
+            runtimeExports: ['TagsInput', 'tagsInputParts'],
+        },
+        {
             name: 'teleport-provider',
             runtimeExports: ['TeleportProvider', 'useTeleportTarget'],
         },

@@ -177,6 +177,10 @@
       "types": "./dist/components/tabs/index.d.ts",
       "import": "./dist/components/tabs/index.js"
     },
+    "./tags-input": {
+      "types": "./dist/components/tags-input/index.d.ts",
+      "import": "./dist/components/tags-input/index.js"
+    },
     "./teleport-provider": {
       "types": "./dist/components/teleport-provider/index.d.ts",
       "import": "./dist/components/teleport-provider/index.js"

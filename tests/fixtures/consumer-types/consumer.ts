@@ -187,6 +187,11 @@ import {
     type SliderTooltipSlotProps,
 } from 'ropav/slider';
 import { type SwitchProps } from 'ropav/switch';
+import {
+    type TagsInputProps,
+    type TagsInputTagSlotProps,
+    type TagsInputValueValidator,
+} from 'ropav/tags-input';
 import { type TextareaProps } from 'ropav/textarea';
 import { vaporIconCompiler } from 'ropav/unplugin-icons';
 
@@ -531,6 +536,14 @@ const multiSelectProps: MultiSelectProps = {
     maxValues: 3,
     options: [multiSelectOptionSlotProps.option],
 };
+const tagsInputValidator: TagsInputValueValidator = (value) => value.length >= 2;
+const tagsInputTagSlotProps: TagsInputTagSlotProps = { value: 'Vue' };
+const tagsInputProps: TagsInputProps = {
+    defaultValue: [tagsInputTagSlotProps.value],
+    form: 'profile-form',
+    splitChars: [',', ';'],
+    validate: tagsInputValidator,
+};
 const unnamedSliderProps: SliderProps = {};
 const unnamedSelectProps: SelectProps = {};
 const radioGroupProps: RadioGroupProps = {
@@ -713,6 +726,9 @@ void [
     multiSelectOptionSlotProps,
     multiSelectProps,
     multiSelectValue,
+    tagsInputProps,
+    tagsInputTagSlotProps,
+    tagsInputValidator,
     unnamedSliderProps,
     unnamedSelectProps,
     radioGroupProps,

@@ -39,6 +39,7 @@ export * from './components/select';
 export * from './components/slider';
 export * from './components/switch';
 export * from './components/tabs';
+export * from './components/tags-input';
 export * from './components/teleport-provider';
 export * from './components/textarea';
 export * from './components/toast';
