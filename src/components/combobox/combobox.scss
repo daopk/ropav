@@ -1,0 +1,272 @@
+@mixin combobox-size($height, $padding-x, $font-size, $option-min-height, $option-padding-y) {
+    --_rp-combobox-height: #{$height};
+    --_rp-combobox-padding-x: #{$padding-x};
+    --_rp-combobox-font-size: #{$font-size};
+    --_rp-combobox-option-min-height: #{$option-min-height};
+    --_rp-combobox-option-padding-y: #{$option-padding-y};
+}
+
+.rp-combobox {
+    --_rp-combobox-height: var(--rp-size-control-md);
+    --_rp-combobox-padding-x: calc(var(--rp-size-control-md) / 3);
+    --_rp-combobox-font-size: var(--rp-font-size-md);
+    --_rp-combobox-option-min-height: calc(var(--rp-size-control-md) - var(--rp-spacing-4));
+    --_rp-combobox-option-padding-y: var(--rp-spacing-1);
+    --_rp-combobox-radius: var(--rp-radius-sm);
+    --_rp-combobox-invalid-border: var(--rp-color-red-filled);
+    --_rp-combobox-invalid-ring: color-mix(in srgb, var(--rp-color-red-filled) 32%, transparent);
+    --_rp-combobox-option-highlighted-bg: var(--rp-color-default-hover);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-width: $component-menu-min-width;
+    height: var(--_rp-combobox-height);
+    padding: 0 var(--_rp-combobox-padding-x);
+    gap: var(--rp-spacing-2);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-combobox-font-size);
+    font-weight: var(--rp-font-weight-normal);
+    line-height: 1;
+    background-color: var(--rp-color-control-bg);
+    border: var(--rp-border-width-thin) solid var(--rp-color-control-border);
+    border-radius: var(--_rp-combobox-radius);
+    cursor: text;
+    transition:
+        border-color var(--rp-transition-fast),
+        box-shadow var(--rp-transition-fast);
+
+    &:hover:not(.rp-combobox--disabled):not(.rp-combobox--invalid) {
+        border-color: var(--rp-color-control-border-hover);
+    }
+
+    &:focus-within:not(.rp-combobox--disabled):not(.rp-combobox--invalid),
+    &--open:not(.rp-combobox--disabled):not(.rp-combobox--invalid) {
+        border-color: var(--rp-color-control-border-focus);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--rp-color-focus-ring);
+    }
+
+    &__native {
+        @include visually-hidden;
+    }
+
+    &--size-xs {
+        @include combobox-size(
+            var(--rp-size-control-xs),
+            calc(var(--rp-size-control-xs) / 3),
+            var(--rp-font-size-xs),
+            calc(var(--rp-size-control-xs) - var(--rp-spacing-2)),
+            calc(var(--rp-spacing-1) / 2)
+        );
+    }
+
+    &--size-sm {
+        @include combobox-size(
+            var(--rp-size-control-sm),
+            calc(var(--rp-size-control-sm) / 3),
+            var(--rp-font-size-sm),
+            calc(var(--rp-size-control-sm) - var(--rp-spacing-3)),
+            var(--rp-spacing-1)
+        );
+    }
+
+    &--size-md {
+        @include combobox-size(
+            var(--rp-size-control-md),
+            calc(var(--rp-size-control-md) / 3),
+            var(--rp-font-size-md),
+            calc(var(--rp-size-control-md) - var(--rp-spacing-4)),
+            var(--rp-spacing-1)
+        );
+    }
+
+    &--size-lg {
+        @include combobox-size(
+            var(--rp-size-control-lg),
+            calc(var(--rp-size-control-lg) / 3),
+            var(--rp-font-size-lg),
+            calc(var(--rp-size-control-lg) - var(--rp-spacing-5)),
+            calc(var(--rp-spacing-3) / 2)
+        );
+    }
+
+    &--size-xl {
+        @include combobox-size(
+            var(--rp-size-control-xl),
+            calc(var(--rp-size-control-xl) / 3),
+            var(--rp-font-size-xl),
+            calc(var(--rp-size-control-xl) - var(--rp-spacing-6)),
+            var(--rp-spacing-2)
+        );
+    }
+
+    @each $radius,
+        $value
+            in (
+                xs: var(--rp-radius-xs),
+                sm: var(--rp-radius-sm),
+                md: var(--rp-radius-md),
+                lg: var(--rp-radius-lg),
+                xl: var(--rp-radius-xl)
+            )
+    {
+        &--radius-#{$radius} {
+            --_rp-combobox-radius: #{$value};
+        }
+    }
+
+    html.dark &,
+    [data-rp-color-scheme='dark'] & {
+        --_rp-combobox-invalid-border: var(--rp-color-red-light-color);
+        --_rp-combobox-invalid-ring: color-mix(
+            in srgb,
+            var(--rp-color-red-light-color) 32%,
+            transparent
+        );
+    }
+
+    &--disabled {
+        @include disabled-state;
+    }
+
+    &--invalid {
+        border-color: var(--_rp-combobox-invalid-border);
+    }
+
+    &--invalid:focus-within,
+    &--open#{&}--invalid {
+        border-color: var(--_rp-combobox-invalid-border);
+        box-shadow: 0 0 0 var(--rp-border-width-medium) var(--_rp-combobox-invalid-ring);
+    }
+
+    &__input {
+        box-sizing: border-box;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font: inherit;
+        color: var(--rp-color-control-fg);
+        line-height: 1;
+
+        &::placeholder {
+            color: var(--rp-color-control-placeholder);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+    }
+
+    &__indicator {
+        @include inline-icon;
+        position: relative;
+        color: var(--rp-color-control-icon);
+        transform: translateX(var(--rp-spacing-1));
+    }
+
+    &__toggle,
+    &__clear {
+        @include reset-button;
+        @include inline-icon;
+        color: var(--rp-color-control-icon);
+        transition:
+            color var(--rp-transition-fast),
+            opacity var(--rp-transition-fast);
+
+        &:hover {
+            color: var(--rp-color-control-fg);
+        }
+    }
+
+    &__toggle:disabled {
+        cursor: not-allowed;
+    }
+
+    &__clear {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background-color: var(--rp-color-control-bg);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &:hover &__clear {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    &:hover &__clear + &__toggle {
+        opacity: 0;
+    }
+
+    &__dropdown {
+        position: absolute;
+        width: calc(100% + (var(--rp-border-width-thin) * 2));
+        @include menu-surface($radius: var(--_rp-combobox-radius));
+        max-height: $component-menu-max-height;
+        padding: var(--rp-spacing-1);
+    }
+
+    &__dropdown :deep(.rp-scroll-area__viewport) {
+        scroll-padding-block: var(--rp-spacing-1);
+    }
+
+    &__option {
+        display: flex;
+        align-items: center;
+        min-height: var(--_rp-combobox-option-min-height);
+        padding: var(--_rp-combobox-option-padding-y) var(--_rp-combobox-padding-x);
+        border-radius: var(--_rp-combobox-radius);
+        font-size: var(--_rp-combobox-font-size);
+        cursor: pointer;
+        color: var(--rp-color-control-fg);
+        transition: color var(--rp-transition-fast);
+
+        &--highlighted {
+            background-color: var(--_rp-combobox-option-highlighted-bg);
+        }
+
+        &--selected {
+            color: var(--rp-primary-color-light-color);
+        }
+
+        &--disabled {
+            color: var(--rp-color-disabled-color);
+            cursor: not-allowed;
+        }
+    }
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--rp-spacing-4);
+        color: var(--rp-color-dimmed);
+        font-size: var(--_rp-combobox-font-size);
+    }
+}
+
+.rp-combobox-dropdown-enter-active,
+.rp-combobox-dropdown-leave-active {
+    transition:
+        opacity var(--rp-transition-fast),
+        transform var(--rp-transition-fast);
+}
+
+.rp-combobox-dropdown-enter-from,
+.rp-combobox-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--rp-spacing-1)));
+}
+
+.rp-combobox__dropdown[data-side='top'].rp-combobox-dropdown-enter-from,
+.rp-combobox__dropdown[data-side='top'].rp-combobox-dropdown-leave-to {
+    transform: translateY(var(--rp-spacing-1));
+}

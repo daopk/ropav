@@ -102,6 +102,10 @@ export const packagePublicationManifest = {
             runtimeExports: ['ColorSwatch', 'colorSwatchParts'],
         },
         {
+            name: 'combobox',
+            runtimeExports: ['Combobox', 'comboboxParts'],
+        },
+        {
             name: 'dialog',
             runtimeExports: [
                 'DialogClose',

@@ -89,6 +89,10 @@
       "types": "./dist/components/color-swatch/index.d.ts",
       "import": "./dist/components/color-swatch/index.js"
     },
+    "./combobox": {
+      "types": "./dist/components/combobox/index.d.ts",
+      "import": "./dist/components/combobox/index.js"
+    },
     "./dialog": {
       "types": "./dist/components/dialog/index.d.ts",
       "import": "./dist/components/dialog/index.js"

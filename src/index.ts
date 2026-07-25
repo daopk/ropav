@@ -17,6 +17,7 @@ export * from './components/collapse';
 export * from './components/color-input';
 export * from './components/color-picker';
 export * from './components/color-swatch';
+export * from './components/combobox';
 export * from './components/dialog';
 export * from './components/dropdown-menu';
 export * from './components/field';
