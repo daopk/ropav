@@ -1,13 +1,10 @@
-import { computed, onBeforeUnmount, ref, useId, useSlots, type CSSProperties } from 'vue';
+import { computed, ref, useId, useSlots, type CSSProperties } from 'vue';
 import { useElementDirection } from '@/internal/composables/useElementDirection';
-import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { bem } from '@/utils/bem';
 import { isElement } from '@/utils/dom/query';
 import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
-import type { HoverDisclosureDismissalHandlers } from '../floating/hoverDisclosureDismissalRouting';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
-import { useHoverDisclosureWithDismissalRouting } from '../floating/useHoverDisclosure';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
@@ -16,6 +13,7 @@ import type {
     HoverCardPlacement,
     HoverCardProps,
 } from './types';
+import { useHoverCardDisclosure } from './useHoverCardDisclosure';
 
 const DEFAULT_PLACEMENT: HoverCardPlacement = 'bottom-start';
 const HOVER_CARD_OFFSET_PROPERTIES = {
@@ -52,8 +50,12 @@ export function useHoverCard(
         Boolean(slots.content || (isExplicitTarget.value && slots.default)),
     );
     const disclosureDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
-    let dismissalHandlers: HoverDisclosureDismissalHandlers | undefined;
-    const disclosure = useHoverDisclosureWithDismissalRouting(
+    const baseZIndex = useOverlayZIndex({
+        baseZIndex: () => props.baseZIndex,
+        defaultBaseZIndex: 100,
+        aboveParent: false,
+    });
+    const disclosure = useHoverCardDisclosure(
         {
             open: () => props.open,
             defaultOpen: props.defaultOpen,
@@ -67,11 +69,10 @@ export function useHoverCard(
             contentTarget: contentRef,
             onOpenChange,
         },
-        (handlers) => {
-            dismissalHandlers = handlers;
-            return () => {
-                if (dismissalHandlers === handlers) dismissalHandlers = undefined;
-            };
+        {
+            baseZIndex,
+            element: contentRef,
+            inside: () => [rootRef.value, targetElement.value],
         },
     );
     const isVisible = disclosure.isOpen;
@@ -80,21 +81,6 @@ export function useHoverCard(
             !disclosure.isDisabled.value && (Boolean(props.keepMounted) || disclosure.isOpen.value),
     );
     const shouldShowContent = computed(() => !props.keepMounted || disclosure.isOpen.value);
-    const baseZIndex = useOverlayZIndex({
-        baseZIndex: () => props.baseZIndex,
-        defaultBaseZIndex: 100,
-        aboveParent: false,
-    });
-    const layer = useOverlayLayer({
-        active: isVisible,
-        element: contentRef,
-        baseZIndex,
-    });
-    const disconnectLayerInteraction = layer.connectInteraction({
-        inside: () => [rootRef.value, targetElement.value],
-        escapeKeyDown: (event) => dismissalHandlers?.escapeKeyDown(event),
-        pointerDownOutside: (event) => dismissalHandlers?.pointerDownOutside(event),
-    });
     const floating = useFloatingPosition({
         reference,
         floating: contentRef,
@@ -123,7 +109,7 @@ export function useHoverCard(
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
         ...getFloatingOffsetStyle(props.offset, HOVER_CARD_OFFSET_PROPERTIES),
-        zIndex: layer.zIndex.value,
+        zIndex: disclosure.zIndex.value,
     }));
     const contentSlotProps = computed<HoverCardContentSlotProps>(() => ({
         isOpen: isVisible.value,
@@ -131,8 +117,6 @@ export function useHoverCard(
         close: disclosure.close,
         toggle: disclosure.toggle,
     }));
-
-    onBeforeUnmount(disconnectLayerInteraction);
 
     return {
         rootRef,

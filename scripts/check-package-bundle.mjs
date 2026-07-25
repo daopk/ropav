@@ -8,6 +8,7 @@ const distRoot = join(projectRoot, 'dist');
 
 assertSharedButtonStyles(distRoot);
 assertExternalRuntimeDependency(distRoot, '@floating-ui/dom');
+assertPackageExportDoesNotReachSource('./floating', 'src/internal/composables/useOverlayLayer.ts');
 
 const baseCss = readFileSync(join(distRoot, 'base.css'), 'utf8');
 for (const selector of ['.rp-spinner', '@keyframes rp-spinner-spin']) {
@@ -66,6 +67,23 @@ function assertExternalRuntimeDependency(outputRoot, dependency) {
     }
     if (javascript.some((source) => source.includes('#region node_modules/.pnpm/@floating-ui'))) {
         throw new Error(`${dependency} implementation is embedded in the built package`);
+    }
+}
+
+function assertPackageExportDoesNotReachSource(packageExport, excludedSource) {
+    const target = packageJson.exports[packageExport]?.import;
+    if (typeof target !== 'string') {
+        throw new Error(`Missing package import target for ${packageExport}`);
+    }
+
+    const entryFile = resolve(projectRoot, normalizePackageTarget(target));
+    const imports = collectRelativeImports(entryFile);
+    const sourceMarker = `#region ${excludedSource}`;
+    const reachesExcludedSource = [entryFile, ...imports].some(
+        (file) => file.endsWith('.js') && readFileSync(file, 'utf8').includes(sourceMarker),
+    );
+    if (reachesExcludedSource) {
+        throw new Error(`${packageExport} must not reach ${excludedSource}`);
     }
 }
 

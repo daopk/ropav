@@ -204,10 +204,12 @@ describe('useHoverDisclosure', () => {
         const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
 
         dispatchPointer(trigger, 'pointerenter');
+        dispatchPointer(trigger, 'pointerenter');
         expect(onOpenChange).toHaveBeenLastCalledWith(
             true,
             expect.objectContaining({ reason: 'hover' }),
         );
+        expect(onOpenChange).toHaveBeenCalledTimes(1);
         expect(disclosure.isOpen.value).toBe(false);
 
         model.open = true;
@@ -240,6 +242,23 @@ describe('useHoverDisclosure', () => {
         expect(disclosure.isOpen.value).toBe(false);
 
         touchBehavior.value = 'toggle';
+        for (const pointerType of ['mouse', 'pen'] as const) {
+            dispatchPointer(trigger, 'pointerdown', pointerType);
+            dispatchPointer(trigger, 'pointerup', pointerType);
+            const pointerClick = new MouseEvent('click', { bubbles: true, cancelable: true });
+            trigger.dispatchEvent(pointerClick);
+            expect(pointerClick.defaultPrevented).toBe(false);
+            expect(disclosure.isOpen.value).toBe(false);
+        }
+
+        dispatchPointer(trigger, 'pointerdown', 'touch');
+        dispatchPointer(trigger, 'pointercancel', 'touch');
+        dispatchPointer(trigger, 'pointerup', 'touch');
+        const canceledClick = new MouseEvent('click', { bubbles: true, cancelable: true });
+        trigger.dispatchEvent(canceledClick);
+        expect(canceledClick.defaultPrevented).toBe(false);
+        expect(disclosure.isOpen.value).toBe(false);
+
         dispatchPointer(trigger, 'pointerdown', 'touch');
         dispatchPointer(trigger, 'pointerup', 'touch');
         const toggleClick = new MouseEvent('click', { bubbles: true, cancelable: true });
