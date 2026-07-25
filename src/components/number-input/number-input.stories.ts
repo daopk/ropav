@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { ref } from 'vue';
 import NumberInput from './number-input.vue';
 
@@ -58,13 +59,13 @@ const meta = {
         max: undefined,
         step: 1,
         controls: true,
-        controlsPosition: 'right',
+        controlsPosition: undefined,
         clampOnBlur: true,
         incrementLabel: 'Increment value',
         decrementLabel: 'Decrement value',
         radius: undefined,
         size: undefined,
-        textAlign: 'left',
+        textAlign: undefined,
         placeholder: 'Enter a number...',
         disabled: false,
         readonly: false,
@@ -249,18 +250,29 @@ export const InputAttributes: Story = {
 export const Sizes: Story = {
     render: (args) => ({
         components: { NumberInput },
-        setup: () => ({ args, sizes }),
+        setup() {
+            const values = ref<Record<(typeof sizes)[number], number | null>>({
+                xs: 10,
+                sm: 20,
+                md: 30,
+                lg: 40,
+                xl: 50,
+            });
+
+            return { args, sizes, values };
+        },
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
                 <NumberInput
-                    v-for="(size, index) in sizes"
+                    v-for="size in sizes"
                     :key="size"
                     v-bind="{
                         ...args,
                         size,
-                        modelValue: (index + 1) * 10,
+                        modelValue: values[size],
                         ariaLabel: size + ' number input',
                     }"
+                    @update:model-value="values[size] = $event"
                 />
             </div>
         `,
@@ -268,22 +280,45 @@ export const Sizes: Story = {
 };
 
 export const Radii: Story = {
+    tags: ['test'],
     render: (args) => ({
         components: { NumberInput },
-        setup: () => ({ args, radii }),
+        setup() {
+            const values = ref<Record<(typeof radii)[number], number | null>>({
+                xs: 10,
+                sm: 20,
+                md: 30,
+                lg: 40,
+                xl: 50,
+            });
+
+            return { args, radii, values };
+        },
         template: `
             <div style="display: grid; gap: 12px; max-width: 320px;">
                 <NumberInput
-                    v-for="(radius, index) in radii"
+                    v-for="radius in radii"
                     :key="radius"
                     v-bind="{
                         ...args,
                         radius,
-                        modelValue: (index + 1) * 10,
+                        modelValue: values[radius],
                         ariaLabel: radius + ' radius number input',
                     }"
+                    @update:model-value="values[radius] = $event"
                 />
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const input = canvas.getByRole('spinbutton', {
+            name: 'xs radius number input',
+        });
+
+        await userEvent.clear(input);
+        await userEvent.type(input, '17');
+
+        await expect(input).toHaveValue(17);
+    },
 };

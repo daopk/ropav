@@ -8,7 +8,7 @@ describe('NumberInput', () => {
     const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
-    it('renders values with labelled Minus and Plus controls on the right by default', async () => {
+    it('renders values with labelled Minus and Plus controls split by default', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -24,11 +24,12 @@ describe('NumberInput', () => {
 
         const roots = [...container.querySelectorAll('.rp-number-input')];
         const inputs = [...container.querySelectorAll('input')] as HTMLInputElement[];
-        const controls = roots[0].querySelector('.rp-number-input__controls')!;
-        const increment = controls.querySelector(
+        const leftControls = roots[0].querySelector('.rp-input__left')!;
+        const rightControls = roots[0].querySelector('.rp-input__right')!;
+        const increment = rightControls.querySelector(
             '.rp-number-input__control--increment',
         ) as HTMLButtonElement;
-        const decrement = controls.querySelector(
+        const decrement = leftControls.querySelector(
             '.rp-number-input__control--decrement',
         ) as HTMLButtonElement;
 
@@ -37,12 +38,10 @@ describe('NumberInput', () => {
         expect(inputs[0].type).toBe('number');
         expect(inputs[0].value).toBe('12.5');
         expect(inputs[1].value).toBe('');
-        expect(roots[0].querySelector('.rp-input__left')).toBeNull();
-        expect(roots[0].querySelector('.rp-input__right .rp-number-input__controls')).toBe(
-            controls,
-        );
-        expect([...controls.querySelectorAll('.rp-number-input__control')]).toEqual([
+        expect([...leftControls.querySelectorAll('.rp-number-input__control')]).toEqual([
             decrement,
+        ]);
+        expect([...rightControls.querySelectorAll('.rp-number-input__control')]).toEqual([
             increment,
         ]);
         expect(decrement.type).toBe('button');
@@ -146,7 +145,7 @@ describe('NumberInput', () => {
         );
     });
 
-    it('defaults text alignment to left and overrides the native input style', async () => {
+    it('defaults text alignment to center and overrides the native input style', async () => {
         const container = mountDom(
             defineComponent({
                 render() {
@@ -165,8 +164,8 @@ describe('NumberInput', () => {
         const root = container.querySelector('.rp-number-input')!;
         const native = container.querySelector('input') as HTMLInputElement;
 
-        expect(root.classList.contains('rp-number-input--text-align-left')).toBe(true);
-        expect(native.style.textAlign).toBe('left');
+        expect(root.classList.contains('rp-number-input--text-align-center')).toBe(true);
+        expect(native.style.textAlign).toBe('center');
     });
 
     it.each(['left', 'center', 'right'] as const)(
