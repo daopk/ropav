@@ -1,0 +1,52 @@
+.rp-date-picker {
+    display: inline-flex;
+    max-width: 100%;
+    font-family: var(--rp-font-family);
+    vertical-align: middle;
+
+    :deep(.rp-input) {
+        width: 100%;
+        min-width: $component-menu-min-width;
+    }
+
+    &__clear,
+    &__indicator {
+        @include reset-button;
+        @include flex-center;
+        flex-shrink: 0;
+        border-radius: var(--rp-radius-xs);
+        color: var(--rp-color-control-icon);
+        transition:
+            color var(--rp-transition-fast),
+            opacity var(--rp-transition-fast);
+
+        &:hover:not(:disabled) {
+            color: var(--rp-color-control-fg);
+        }
+
+        &:focus-visible {
+            outline: var(--rp-border-width-medium) solid var(--rp-color-focus-ring);
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: var(--rp-opacity-disabled);
+        }
+
+        > :deep(svg) {
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    &__clear--hidden {
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+:global(.rp-popover__content.rp-date-picker__popover) {
+    min-width: auto;
+    padding: var(--rp-spacing-3);
+}

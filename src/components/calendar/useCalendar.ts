@@ -359,9 +359,17 @@ export function useCalendar(props: Readonly<CalendarProps>, emit: CalendarEmitte
     function selectDate(day: CalendarDay) {
         if (props.disabled || props.readonly || day.disabled || day.hidden) return;
         const date = toLocalDate(day.date);
+        const calendarHadFocus =
+            rootRef.value?.contains(rootRef.value.ownerDocument.activeElement) ?? false;
         controllable.setValue(date);
         focusedDate.value = date;
         if (isSameMonth(date, visibleMonth.value)) return;
+        if (
+            !calendarHadFocus ||
+            !rootRef.value?.contains(rootRef.value.ownerDocument.activeElement)
+        ) {
+            return;
+        }
         void focusDate(date);
     }
 

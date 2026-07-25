@@ -4,6 +4,7 @@ import {
     createCalendarWeeks,
     getCalendarWeekdays,
     isCalendarDateDisabled,
+    normalizeCalendarDate,
     normalizeFirstDayOfWeek,
 } from './calendarModel';
 
@@ -76,5 +77,14 @@ describe('calendarModel', () => {
             'Sat',
             'Sun',
         ]);
+    });
+
+    it('normalizes valid dates without mutating the source', () => {
+        const source = new Date(2026, 6, 14, 18, 30);
+        const normalized = normalizeCalendarDate(source);
+
+        expect(normalized).toEqual(new Date(2026, 6, 14));
+        expect(normalized).not.toBe(source);
+        expect(normalizeCalendarDate(new Date('invalid'))).toBeNull();
     });
 });

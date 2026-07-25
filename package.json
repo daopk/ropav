@@ -97,6 +97,10 @@
       "types": "./dist/components/combobox/index.d.ts",
       "import": "./dist/components/combobox/index.js"
     },
+    "./date-picker": {
+      "types": "./dist/components/date-picker/index.d.ts",
+      "import": "./dist/components/date-picker/index.js"
+    },
     "./dialog": {
       "types": "./dist/components/dialog/index.d.ts",
       "import": "./dist/components/dialog/index.js"

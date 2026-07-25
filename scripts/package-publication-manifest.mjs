@@ -125,6 +125,17 @@ export const packagePublicationManifest = {
             runtimeExports: ['Combobox', 'comboboxParts'],
         },
         {
+            name: 'date-picker',
+            runtimeExports: [
+                'DatePicker',
+                'datePickerParts',
+                'defaultDatePickerFormat',
+                'formatDatePickerValue',
+                'normalizeDatePickerValue',
+                'parseDatePickerValue',
+            ],
+        },
+        {
             name: 'dialog',
             runtimeExports: [
                 'DialogClose',

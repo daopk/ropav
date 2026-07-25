@@ -4,7 +4,7 @@ import {
     endOfMonth,
     isSameDate,
     isSameMonth,
-    isValidDate,
+    normalizeDate,
     startOfMonth,
     toDateKey,
     toLocalDate,
@@ -29,7 +29,7 @@ export interface CreateCalendarDaysOptions {
 }
 
 export function normalizeCalendarDate(value: Date | null | undefined): Date | null {
-    return isValidDate(value) ? toLocalDate(value) : null;
+    return normalizeDate(value);
 }
 
 export function normalizeFirstDayOfWeek(value: number | undefined): number {
