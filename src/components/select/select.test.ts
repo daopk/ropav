@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick, reactive } from 'vue';
+import { defineComponent, h, nextTick, reactive, shallowReactive } from 'vue';
 
 import {
     click,
@@ -10,7 +10,7 @@ import {
     waitForAssertion,
 } from '../../../tests/utils/vue';
 import Select from './select.vue';
-import { useSelect } from './useSelect';
+import { useSelect, type SelectControl } from './useSelect';
 import type { SelectProps } from './types';
 
 function setGeometry(
@@ -27,7 +27,7 @@ describe('Select', () => {
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
     it('keeps state handlers testable without rendering the full component', async () => {
-        const props = reactive<SelectProps>({
+        const props = shallowReactive<SelectProps>({
             ariaLabel: 'Test select',
             modelValue: null,
             options: [
@@ -37,7 +37,7 @@ describe('Select', () => {
             ],
         });
         const updates: Array<string | number | null> = [];
-        let select!: ReturnType<typeof useSelect>;
+        let select!: SelectControl;
 
         mountDom(
             defineComponent({
@@ -59,6 +59,56 @@ describe('Select', () => {
 
         select.onTriggerKeydown(keyEvent('Escape'));
         expect(select.focusedIndex.value).toBe(-1);
+    });
+
+    it('owns typed native updates and controlled rollback behind the useSelect seam', async () => {
+        const props = shallowReactive<SelectProps>({
+            ariaLabel: 'Test select',
+            modelValue: 'apple',
+            options: [
+                { label: 'Apple', value: 'apple' },
+                { label: 'Two as text', value: '2' },
+                { label: 'Two as number', value: 2 },
+            ],
+        });
+        const updates: Array<string | number | null> = [];
+        let select!: SelectControl;
+
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    select = useSelect(props, (value) => updates.push(value));
+                    return () =>
+                        h(
+                            'select',
+                            {
+                                ...select.nativeInputAttrs.value,
+                                ref: select.templateRefs.native,
+                            },
+                            [
+                                h('option', { value: '' }),
+                                ...props.options!.map((option) =>
+                                    h('option', { value: String(option.value) }, option.label),
+                                ),
+                            ],
+                        );
+                },
+            }),
+        );
+        await flush();
+
+        const nativeSelect = container.querySelector('select')!;
+        expect(nativeSelect.selectedIndex).toBe(1);
+
+        select.selectOption(props.options![2]!);
+
+        expect(updates).toEqual([2]);
+        expect(nativeSelect.selectedIndex).toBe(3);
+
+        await flush();
+
+        expect(select.selectedValue.value).toBe('apple');
+        expect(nativeSelect.selectedIndex).toBe(1);
     });
 
     it('uses labelledby as its accessible naming source', async () => {

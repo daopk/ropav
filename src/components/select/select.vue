@@ -2,7 +2,7 @@
     <div v-bind="rootAttrs" :ref="templateRefs.select">
         <select
             v-bind="nativeInputAttrs"
-            ref="nativeSelectRef"
+            :ref="templateRefs.native"
             :name="name"
             :form="control.form ?? nativeInputAttrs.form"
             :disabled="control.disabled || undefined"
@@ -22,7 +22,7 @@
         </select>
         <div
             :id="control.id"
-            ref="triggerRef"
+            :ref="templateRefs.trigger"
             v-bind="getPartAttrs('trigger', { class: 'rp-select__trigger' })"
             role="combobox"
             :aria-expanded="isOpen"
@@ -120,14 +120,13 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import ChevronsUpDownIcon from '~icons/lucide/chevrons-up-down';
 import XIcon from '~icons/lucide/x';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
 import ScrollArea from '../scroll-area/scroll-area.vue';
 import { useSelect } from './useSelect';
-import { useSelectNativeControl } from './useSelectNativeControl';
 import type { SelectPart, SelectProps } from './types';
 
 defineOptions({ name: 'RpSelect', inheritAttrs: false });
@@ -148,12 +147,9 @@ const emit = defineEmits<{
     'update:modelValue': [value: string | number | null];
 }>();
 
-const triggerRef = ref<HTMLElement | null>(null);
-const { nativeSelectRef, selectedValue, nativeInputAttrs, requestValueUpdate } =
-    useSelectNativeControl(props, (value) => emit('update:modelValue', value), triggerRef);
-
 const {
-    selectRef,
+    templateRefs,
+    nativeInputAttrs,
     isOpen,
     selectId,
     popupId,
@@ -165,6 +161,7 @@ const {
     rootClass,
     hasValue,
     displayLabel,
+    selectedValue,
     canClear,
     toggle,
     selectOption,
@@ -172,8 +169,7 @@ const {
     onOptionMouseenter,
     onFocusout,
     onTriggerKeydown,
-} = useSelect(props, requestValueUpdate, () => selectedValue.value, triggerRef);
-const templateRefs = { select: selectRef };
+} = useSelect(props, (value) => emit('update:modelValue', value));
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<SelectPart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -186,7 +182,10 @@ const rootAttrs = computed(() =>
     }),
 );
 
-defineExpose({ nativeElement: nativeSelectRef, focus: () => triggerRef.value?.focus() });
+defineExpose({
+    nativeElement: templateRefs.native,
+    focus: () => templateRefs.trigger.value?.focus(),
+});
 </script>
 
 <style src="./select.scss" lang="scss" scoped></style>
