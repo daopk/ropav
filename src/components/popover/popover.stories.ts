@@ -142,11 +142,17 @@ export const TeleportedStyles: Story = {
         });
 
         const contentStyle = getComputedStyle(content);
+        const arrowStyle = getComputedStyle(arrow);
         const arrowRect = arrow.getBoundingClientRect();
 
         expect(contentStyle.getPropertyValue('--_rp-popover-radius').trim()).not.toBe('');
         expect(contentStyle.getPropertyValue('--_rp-popover-arrow-size').trim()).not.toBe('');
         expect(Number.parseFloat(contentStyle.borderRadius)).toBeGreaterThan(0);
+        expect(arrow.dataset.side).toBe('bottom');
+        expect(arrowStyle.borderTopColor).toBe(contentStyle.borderTopColor);
+        expect(arrowStyle.borderLeftColor).toBe(contentStyle.borderLeftColor);
+        expect(arrowStyle.borderRightColor).toBe('rgba(0, 0, 0, 0)');
+        expect(arrowStyle.borderBottomColor).toBe('rgba(0, 0, 0, 0)');
         expect(arrowRect.width).toBeGreaterThan(0);
         expect(arrowRect.height).toBeGreaterThan(0);
     },

@@ -118,19 +118,27 @@ export const TeleportedStyles: Story = {
         });
 
         const contentStyle = getComputedStyle(content);
+        const arrowStyle = getComputedStyle(arrow);
         const arrowRect = arrow.getBoundingClientRect();
 
         expect(contentStyle.getPropertyValue('--_rp-hover-card-radius').trim()).not.toBe('');
         expect(contentStyle.getPropertyValue('--_rp-hover-card-arrow-size').trim()).not.toBe('');
         expect(Number.parseFloat(contentStyle.borderRadius)).toBeGreaterThan(0);
+        expect(arrow.dataset.side).toBe('bottom');
+        expect(arrowStyle.borderTopColor).toBe(contentStyle.borderTopColor);
+        expect(arrowStyle.borderLeftColor).toBe(contentStyle.borderLeftColor);
+        expect(arrowStyle.borderRightColor).toBe('rgba(0, 0, 0, 0)');
+        expect(arrowStyle.borderBottomColor).toBe('rgba(0, 0, 0, 0)');
         expect(arrowRect.width).toBeGreaterThan(0);
         expect(arrowRect.height).toBeGreaterThan(0);
     },
 };
 
 export const Placements: Story = {
+    tags: ['test'],
     args: {
         open: true,
+        arrow: true,
     },
     render: (args) => ({
         components: { Button, HoverCard },
@@ -155,6 +163,47 @@ export const Placements: Story = {
             </div>
         `,
     }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const contents = [
+            ...storyDocument.querySelectorAll<HTMLElement>('.rp-hover-card__content'),
+        ];
+
+        expect(contents).toHaveLength(hoverCardPlacements.length);
+        await waitFor(() => {
+            for (const content of contents) expect(content).toBeVisible();
+        });
+
+        for (const content of contents) {
+            const contentStyle = getComputedStyle(content);
+            const arrow = content.querySelector<HTMLElement>('.rp-hover-card__arrow')!;
+            const arrowStyle = getComputedStyle(arrow);
+            const transparent = 'rgba(0, 0, 0, 0)';
+
+            if (arrow.dataset.side === 'top') {
+                expect(arrowStyle.borderTopColor).toBe(transparent);
+                expect(arrowStyle.borderLeftColor).toBe(transparent);
+                expect(arrowStyle.borderRightColor).toBe(contentStyle.borderRightColor);
+                expect(arrowStyle.borderBottomColor).toBe(contentStyle.borderBottomColor);
+            } else if (arrow.dataset.side === 'right') {
+                expect(arrowStyle.borderTopColor).toBe(transparent);
+                expect(arrowStyle.borderRightColor).toBe(transparent);
+                expect(arrowStyle.borderBottomColor).toBe(contentStyle.borderBottomColor);
+                expect(arrowStyle.borderLeftColor).toBe(contentStyle.borderLeftColor);
+            } else if (arrow.dataset.side === 'bottom') {
+                expect(arrowStyle.borderTopColor).toBe(contentStyle.borderTopColor);
+                expect(arrowStyle.borderLeftColor).toBe(contentStyle.borderLeftColor);
+                expect(arrowStyle.borderRightColor).toBe(transparent);
+                expect(arrowStyle.borderBottomColor).toBe(transparent);
+            } else {
+                expect(arrow.dataset.side).toBe('left');
+                expect(arrowStyle.borderTopColor).toBe(contentStyle.borderTopColor);
+                expect(arrowStyle.borderRightColor).toBe(contentStyle.borderRightColor);
+                expect(arrowStyle.borderBottomColor).toBe(transparent);
+                expect(arrowStyle.borderLeftColor).toBe(transparent);
+            }
+        }
+    },
 };
 
 export const ExternalTarget: Story = {

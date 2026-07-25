@@ -108,6 +108,32 @@ $rp-component-colors:
     padding: var(--rp-spacing-1) 0;
 }
 
+@mixin bordered-floating-arrow {
+    background-color: inherit;
+    border: inherit;
+    rotate: 45deg;
+
+    &[data-side='top'] {
+        border-top-color: transparent;
+        border-left-color: transparent;
+    }
+
+    &[data-side='right'] {
+        border-top-color: transparent;
+        border-right-color: transparent;
+    }
+
+    &[data-side='bottom'] {
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+    }
+
+    &[data-side='left'] {
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
 @mixin inline-icon($size: 1em) {
     display: inline-flex;
     align-items: center;

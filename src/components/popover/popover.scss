@@ -162,14 +162,12 @@
     }
 
     &__arrow {
+        @include bordered-floating-arrow;
         position: absolute;
         box-sizing: border-box;
         width: var(--_rp-popover-arrow-size);
         height: var(--_rp-popover-arrow-size);
         pointer-events: none;
-        background-color: inherit;
-        border: inherit;
-        rotate: 45deg;
 
         &[data-side='top'] {
             bottom: calc(-1 * var(--_rp-popover-arrow-size) / 2);

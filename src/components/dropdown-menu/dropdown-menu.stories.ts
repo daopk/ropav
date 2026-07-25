@@ -187,6 +187,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
     tags: ['test'],
+    args: {
+        arrow: true,
+    },
     render: (args) => ({
         components: { Button, DropdownMenu: StoryDropdownMenu },
         setup: () => ({ args }),
@@ -206,18 +209,25 @@ export const Basic: Story = {
 
         const body = within(canvasElement.ownerDocument.body);
         const menu = await body.findByRole('menu', { name: 'Project actions' });
+        const arrow = menu.querySelector<HTMLElement>('.rp-dropdown-menu__arrow')!;
         const item = within(menu).getByRole('menuitem', { name: /Duplicate/ });
         menu.focus();
         await userEvent.keyboard('d');
 
         await waitFor(() => {
+            const menuStyle = getComputedStyle(menu);
+            const arrowStyle = getComputedStyle(arrow);
+
             expect(item).toHaveClass('rp-dropdown-menu__item--focused');
-            expect(
-                getComputedStyle(menu).getPropertyValue('--_rp-dropdown-menu-focused-bg').trim(),
-            ).not.toBe('');
-            expect(getComputedStyle(item).backgroundColor).not.toBe(
-                getComputedStyle(menu).backgroundColor,
+            expect(menuStyle.getPropertyValue('--_rp-dropdown-menu-focused-bg').trim()).not.toBe(
+                '',
             );
+            expect(getComputedStyle(item).backgroundColor).not.toBe(menuStyle.backgroundColor);
+            expect(arrow.dataset.side).toBe('bottom');
+            expect(arrowStyle.borderTopColor).toBe(menuStyle.borderTopColor);
+            expect(arrowStyle.borderLeftColor).toBe(menuStyle.borderLeftColor);
+            expect(arrowStyle.borderRightColor).toBe('rgba(0, 0, 0, 0)');
+            expect(arrowStyle.borderBottomColor).toBe('rgba(0, 0, 0, 0)');
         });
 
         await userEvent.click(canvas.getByRole('button', { name: 'Actions' }));
