@@ -76,7 +76,7 @@
             </Input>
         </template>
 
-        <template #content="slotProps">
+        <template #content>
             <Calendar
                 ref="calendarComponentRef"
                 :model-value="selectedDate"
@@ -97,9 +97,8 @@
                 :next-label="nextLabel"
                 :class-names="calendarClassNames"
                 :styles="calendarStyles"
-                @focusin="rememberClose(slotProps)"
-                @keydown="onCalendarKeydown($event, slotProps)"
-                @update:model-value="selectCalendarDate($event, slotProps.close)"
+                @keydown="onCalendarKeydown"
+                @update:model-value="selectCalendarDate"
             >
                 <template v-if="$slots.day" #day="dayProps">
                     <slot name="day" v-bind="dayProps" />
@@ -194,7 +193,6 @@ const {
     canClear,
     getInputTriggerAttrs,
     onInputUpdate,
-    rememberClose,
     onCalendarKeydown,
     onFocusOut,
     clearFromControl,
