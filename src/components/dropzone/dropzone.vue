@@ -16,6 +16,7 @@
                 <p
                     v-if="description"
                     v-bind="getPartAttrs('description', { class: 'rp-dropzone__description' })"
+                    :id="descriptionId"
                 >
                     {{ description }}
                 </p>
@@ -25,8 +26,9 @@
 </template>
 
 <script setup lang="ts" vapor>
-import { computed, type InputHTMLAttributes } from 'vue';
+import { computed, type InputHTMLAttributes, useId } from 'vue';
 import { useStylesApi } from '@/styles-api';
+import { mergeAriaIdRefs } from '@/utils/aria';
 import { toPresenceAttribute } from '@/utils/attributes';
 import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { useDropzone } from './useDropzone';
@@ -65,9 +67,11 @@ const emit = defineEmits<{
     reject: [rejections: DropzoneFileRejection[]];
 }>();
 
-defineSlots<{
+const slots = defineSlots<{
     default?(props: DropzoneSlotProps): unknown;
 }>();
+
+const descriptionId = `${useId()}-description`;
 
 const {
     rootRef,
@@ -82,6 +86,7 @@ const {
     onDragleave,
     onDrop,
     onChange,
+    onKeydown,
     open,
     clear,
     focus,
@@ -99,6 +104,12 @@ const displayLabel = computed(() => {
         ? 'Drag files here or click to browse'
         : 'Drag a file here or click to browse';
 });
+const ariaDescribedby = computed(() =>
+    mergeAriaIdRefs(
+        control.ariaDescribedby,
+        !slots.default && props.description ? descriptionId : undefined,
+    ),
+);
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<DropzonePart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -140,12 +151,13 @@ const nativeInputAttrs = computed<InputHTMLAttributes>(() => {
         tabindex: props.activateOnKeyboard ? undefined : -1,
         'aria-label': control.ariaLabelledby ? undefined : props.ariaLabel || displayLabel.value,
         'aria-labelledby': control.ariaLabelledby,
-        'aria-describedby': control.ariaDescribedby,
+        'aria-describedby': ariaDescribedby.value,
         'aria-invalid': control.invalid || undefined,
         'aria-required': control.required || undefined,
         'data-disabled': toPresenceAttribute(control.disabled),
         'data-invalid': toPresenceAttribute(control.invalid),
         onChange: composeEventHandlers(onChange, attrs.onChange),
+        onKeydown: composeEventHandlers(onKeydown, attrs.onKeydown),
     };
 });
 

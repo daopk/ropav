@@ -1,10 +1,20 @@
-import type { DropzoneFileError, DropzoneFileRejection, DropzoneSelection } from './types';
+import type {
+    DropzoneFileError,
+    DropzoneFileRejection,
+    DropzoneSelection,
+    DropzoneStatus,
+} from './types';
 
 export interface ProcessDropzoneFilesOptions {
     accept?: string;
     multiple: boolean;
     maxFiles?: number;
     maxSize?: number;
+}
+
+export interface DropzoneDragItem {
+    kind: string;
+    type: string;
 }
 
 function normalizeAcceptTokens(accept: string | undefined) {
@@ -16,12 +26,15 @@ function normalizeAcceptTokens(accept: string | undefined) {
     );
 }
 
-function matchesAcceptToken(file: File, token: string) {
-    if (token.startsWith('.')) return file.name.toLowerCase().endsWith(token);
-
-    const fileType = file.type.toLowerCase();
+function matchesMimeToken(type: string, token: string) {
+    const fileType = type.toLowerCase();
     if (token.endsWith('/*')) return fileType.startsWith(token.slice(0, -1));
     return Boolean(fileType) && fileType === token;
+}
+
+function matchesAcceptToken(file: File, token: string) {
+    if (token.startsWith('.')) return file.name.toLowerCase().endsWith(token);
+    return matchesMimeToken(file.type, token);
 }
 
 export function isFileAccepted(file: File, accept: string | undefined) {
@@ -56,6 +69,27 @@ function getFileLimit(options: Pick<ProcessDropzoneFilesOptions, 'multiple' | 'm
     if (!options.multiple) return 1;
     if (options.maxFiles == null) return Number.POSITIVE_INFINITY;
     return Math.max(0, Math.floor(options.maxFiles));
+}
+
+export function getDropzoneDragStatus(
+    items: Iterable<DropzoneDragItem>,
+    options: Pick<ProcessDropzoneFilesOptions, 'accept' | 'multiple' | 'maxFiles'>,
+): Exclude<DropzoneStatus, 'idle'> {
+    const fileItems = Array.from(items).filter((item) => item.kind === 'file');
+    if (fileItems.length > getFileLimit(options)) return 'reject';
+
+    const tokens = normalizeAcceptTokens(options.accept);
+    if (tokens.length === 0) return 'accept';
+
+    const hasExtensionToken = tokens.some((token) => token.startsWith('.'));
+    const mimeTokens = tokens.filter((token) => !token.startsWith('.'));
+    const hasKnownRejection = fileItems.some((item) => {
+        const itemType = item.type.toLowerCase();
+        if (!itemType || itemType === 'application/octet-stream' || hasExtensionToken) return false;
+        return !mimeTokens.some((token) => matchesMimeToken(itemType, token));
+    });
+
+    return hasKnownRejection ? 'reject' : 'accept';
 }
 
 function rejectTooMany(file: File, limit: number): DropzoneFileRejection {

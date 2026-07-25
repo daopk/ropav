@@ -1,26 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, reactive, ref } from 'vue';
 
+import { createFileList, selectFiles } from '../../../tests/utils/files';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import FileInput from './file-input.vue';
 import type { FileInputProps } from './types';
-
-function createFileList(files: File[]) {
-    const entries = Object.fromEntries(files.map((file, index) => [index, file]));
-    return {
-        ...entries,
-        length: files.length,
-        item: (index: number) => files[index] ?? null,
-    } as unknown as FileList;
-}
-
-function selectFiles(input: HTMLInputElement, files: File[]) {
-    Object.defineProperty(input, 'files', {
-        configurable: true,
-        value: createFileList(files),
-    });
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-}
 
 function mountFileInput(props: FileInputProps = {}, listeners: Record<string, unknown> = {}) {
     return mountDom(
@@ -151,6 +135,38 @@ describe('FileInput', () => {
         expect(input.autocomplete).toBe('off');
         expect(onBlur).toHaveBeenCalledOnce();
         expect(onChange).toHaveBeenCalledOnce();
+    });
+
+    it('wires classNames and styles to every public semantic part', async () => {
+        const container = mountFileInput({
+            classNames: {
+                root: 'custom-root',
+                input: 'custom-input',
+                trigger: 'custom-trigger',
+                value: 'custom-value',
+            },
+            styles: {
+                root: { maxWidth: '321px' },
+                input: { cursor: 'crosshair' },
+                trigger: { fontWeight: 700 },
+                value: { letterSpacing: '2px' },
+            },
+        });
+        await flush();
+
+        const root = container.querySelector('.rp-file-input') as HTMLElement;
+        const input = container.querySelector('.rp-file-input__native') as HTMLInputElement;
+        const trigger = container.querySelector('.rp-file-input__trigger') as HTMLSpanElement;
+        const value = container.querySelector('.rp-file-input__value') as HTMLSpanElement;
+
+        expect(root.classList).toContain('custom-root');
+        expect(root.style.maxWidth).toBe('321px');
+        expect(input.classList).toContain('custom-input');
+        expect(input.style.cursor).toBe('crosshair');
+        expect(trigger.classList).toContain('custom-trigger');
+        expect(trigger.style.fontWeight).toBe('700');
+        expect(value.classList).toContain('custom-value');
+        expect(value.style.letterSpacing).toBe('2px');
     });
 
     it('updates the display when a controlled model is cleared', async () => {

@@ -77,6 +77,7 @@ export function useFormControl(options: FormControlOptions) {
                 if (elements.length === 0) return;
 
                 queueMicrotask(() => {
+                    if (event.defaultPrevented) return;
                     if (options.isControlled()) options.syncControlledValue(elements);
                     else options.readResetValue(elements);
                 });

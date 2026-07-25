@@ -88,6 +88,34 @@ export const Default: Story = {
     },
 };
 
+export const ControlledInitialFiles: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { FileInput },
+        setup() {
+            const files = ref([new File(['initial'], 'initial.txt', { type: 'text/plain' })]);
+            return { files };
+        },
+        template: `
+            <form data-testid="form">
+                <FileInput
+                    v-model="files"
+                    name="attachment"
+                    aria-label="Initial attachment"
+                />
+            </form>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const form = canvas.getByTestId('form') as HTMLFormElement;
+
+        await waitFor(() =>
+            expect((new FormData(form).get('attachment') as File).name).toBe('initial.txt'),
+        );
+    },
+};
+
 export const Multiple: Story = {
     args: {
         accept: 'image/*',

@@ -1,10 +1,12 @@
-import { computed, nextTick, ref, watch } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
+import { computed, ref } from 'vue';
 import { useControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { useNativeFileSelection } from '@/internal/composables/useNativeFileSelection';
 import { bem } from '@/utils/bem';
-import { replaceInputFiles } from '@/utils/dom/files';
-import { processDropzoneFiles } from './dropzoneModel';
+import {
+    getDropzoneDragStatus,
+    processDropzoneFiles,
+    type DropzoneDragItem,
+} from './dropzoneModel';
 import type {
     DropzoneFileRejection,
     DropzoneProps,
@@ -39,23 +41,33 @@ function readTransferFiles(transfer: DataTransfer | null) {
         .filter((file): file is File => Boolean(file));
 }
 
+function readTransferItems(transfer: DataTransfer | null): DropzoneDragItem[] {
+    if (!transfer) return [];
+    return Array.from(transfer.items, ({ kind, type }) => ({ kind, type }));
+}
+
 export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneCallbacks) {
     const rootRef = ref<HTMLElement | null>(null);
-    const inputRef = ref<HTMLInputElement | null>(null);
     const control = useControlState(props);
-    const controllable = useControllableValue<File[]>({
+    const {
+        inputRef,
+        files,
+        settleSelection,
+        clear: clearNativeFiles,
+        focus,
+        open,
+    } = useNativeFileSelection({
         modelValue: () => props.modelValue,
-        defaultValue: () => [],
+        multiple: () => props.multiple !== false,
+        disabled: () => control.disabled,
+        validationMessage: () => props.validationMessage,
         onChange: callbacks.onUpdate,
     });
     const dragDepth = ref(0);
     const dragFiles = ref<File[]>([]);
+    const dragItems = ref<DropzoneDragItem[]>([]);
     const lastRejections = ref<DropzoneFileRejection[]>([]);
 
-    const files = computed(() => {
-        const selectedFiles = Array.from(controllable.value.value);
-        return props.multiple !== false ? selectedFiles : selectedFiles.slice(0, 1);
-    });
     const selectionOptions = computed(() => ({
         accept: props.accept,
         multiple: props.multiple ?? true,
@@ -67,7 +79,8 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
     );
     const status = computed<DropzoneStatus>(() => {
         if (dragDepth.value === 0) return 'idle';
-        return dragSelection.value.rejections.length > 0 ? 'reject' : 'accept';
+        if (dragSelection.value.rejections.length > 0) return 'reject';
+        return getDropzoneDragStatus(dragItems.value, selectionOptions.value);
     });
     const rejections = computed(() =>
         status.value === 'idle' ? lastRejections.value : dragSelection.value.rejections,
@@ -87,25 +100,15 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
         }),
     );
 
-    function syncNativeFiles() {
-        const input = inputRef.value;
-        if (input) replaceInputFiles(input, files.value);
-    }
-
-    function requestFiles(nextFiles: File[]) {
-        controllable.setValue(props.multiple !== false ? nextFiles : nextFiles.slice(0, 1));
-        void nextTick(syncNativeFiles);
-    }
-
     function submitFiles(nextFiles: File[]) {
         const selection = processDropzoneFiles(nextFiles, selectionOptions.value);
         lastRejections.value = selection.rejections;
 
-        if (selection.acceptedFiles.length > 0 || selection.rejections.length === 0) {
-            requestFiles(selection.acceptedFiles);
-        } else {
-            void nextTick(syncNativeFiles);
-        }
+        settleSelection(
+            selection.acceptedFiles.length > 0 || selection.rejections.length === 0
+                ? { status: 'accepted', files: selection.acceptedFiles }
+                : { status: 'rejected' },
+        );
 
         callbacks.onDrop(selection);
         if (selection.rejections.length > 0) callbacks.onReject(selection.rejections);
@@ -114,6 +117,7 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
     function resetDrag() {
         dragDepth.value = 0;
         dragFiles.value = [];
+        dragItems.value = [];
     }
 
     function onDragenter(event: DragEvent) {
@@ -123,6 +127,7 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
 
         dragDepth.value += 1;
         dragFiles.value = readTransferFiles(event.dataTransfer);
+        dragItems.value = readTransferItems(event.dataTransfer);
     }
 
     function onDragover(event: DragEvent) {
@@ -132,13 +137,18 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
 
         if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
         const nextFiles = readTransferFiles(event.dataTransfer);
+        const nextItems = readTransferItems(event.dataTransfer);
         if (nextFiles.length > 0) dragFiles.value = nextFiles;
+        if (nextItems.length > 0) dragItems.value = nextItems;
     }
 
     function onDragleave() {
         if (control.disabled || dragDepth.value === 0) return;
         dragDepth.value = Math.max(0, dragDepth.value - 1);
-        if (dragDepth.value === 0) dragFiles.value = [];
+        if (dragDepth.value === 0) {
+            dragFiles.value = [];
+            dragItems.value = [];
+        }
     }
 
     function onDrop(event: DragEvent) {
@@ -150,33 +160,20 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
         if (!control.disabled) submitFiles(nextFiles);
     }
 
-    function open() {
-        if (control.disabled) return;
-        inputRef.value?.click();
-    }
-
     function clear() {
         lastRejections.value = [];
-        requestFiles([]);
-    }
-
-    function focus(options?: FocusOptions) {
-        inputRef.value?.focus(options);
+        clearNativeFiles();
     }
 
     function onChange(event: Event) {
         submitFiles(Array.from((event.target as HTMLInputElement).files ?? []));
     }
 
-    watch(files, syncNativeFiles, { flush: 'post', immediate: true });
-
-    useFormControl({
-        elements: () => [inputRef.value],
-        isControlled: () => controllable.isControlled.value,
-        validationMessage: () => props.validationMessage,
-        readResetValue: () => controllable.resetValue([]),
-        syncControlledValue: syncNativeFiles,
-    });
+    function onKeydown(event: KeyboardEvent) {
+        if (props.activateOnKeyboard === false && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+        }
+    }
 
     return {
         rootRef,
@@ -191,6 +188,7 @@ export function useDropzone(props: Readonly<DropzoneProps>, callbacks: DropzoneC
         onDragleave,
         onDrop,
         onChange,
+        onKeydown,
         open,
         clear,
         focus,

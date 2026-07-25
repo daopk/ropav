@@ -37,4 +37,33 @@ describe('useFormControl', () => {
         expect(readResetValue).toHaveBeenCalledOnce();
         expect(readResetValue).toHaveBeenCalledWith([input]);
     });
+
+    it('preserves control state when the native reset is cancelled', async () => {
+        const form = document.createElement('form');
+        const input = document.createElement('input');
+        form.appendChild(input);
+        document.body.appendChild(form);
+        const readResetValue = vi.fn();
+
+        form.addEventListener('reset', (event) => event.preventDefault());
+        mountDom(
+            defineComponent({
+                setup() {
+                    useFormControl({
+                        elements: () => [input],
+                        isControlled: () => false,
+                        readResetValue,
+                        syncControlledValue: vi.fn(),
+                    });
+                    return () => h('div');
+                },
+            }),
+        );
+        await nextTick();
+
+        form.reset();
+        await Promise.resolve();
+
+        expect(readResetValue).not.toHaveBeenCalled();
+    });
 });

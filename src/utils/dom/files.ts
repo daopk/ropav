@@ -1,3 +1,8 @@
+export function normalizeSelectedFiles(files: Iterable<File>, multiple: boolean) {
+    const selectedFiles = Array.from(files);
+    return multiple ? selectedFiles : selectedFiles.slice(0, 1);
+}
+
 export function haveSameFiles(fileList: FileList | null, files: readonly File[]) {
     if (!fileList || fileList.length !== files.length) return false;
     return files.every((file, index) => fileList.item(index) === file);

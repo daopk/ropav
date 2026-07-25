@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isFileAccepted, processDropzoneFiles } from './dropzoneModel';
+import { getDropzoneDragStatus, isFileAccepted, processDropzoneFiles } from './dropzoneModel';
 
 describe('dropzoneModel', () => {
     it('matches exact MIME types, wildcards, and file extensions', () => {
@@ -46,5 +46,54 @@ describe('dropzoneModel', () => {
         expect(multipleSelection.rejections[0]?.errors[0]?.code).toBe('too-many-files');
         expect(singleSelection.acceptedFiles).toEqual(files.slice(0, 1));
         expect(singleSelection.rejections).toHaveLength(2);
+    });
+
+    it('accepts a protected drag with a compatible MIME type', () => {
+        expect(
+            getDropzoneDragStatus([{ kind: 'file', type: 'image/png' }], {
+                accept: 'image/*',
+                multiple: true,
+            }),
+        ).toBe('accept');
+    });
+
+    it('rejects a protected drag with a known incompatible MIME type', () => {
+        expect(
+            getDropzoneDragStatus([{ kind: 'file', type: 'text/plain' }], {
+                accept: 'image/*',
+                multiple: true,
+            }),
+        ).toBe('reject');
+    });
+
+    it('keeps protected drags optimistic when type acceptance cannot be decided', () => {
+        expect(
+            getDropzoneDragStatus([{ kind: 'file', type: '' }], {
+                accept: 'image/*',
+                multiple: true,
+            }),
+        ).toBe('accept');
+        expect(
+            getDropzoneDragStatus([{ kind: 'file', type: 'application/octet-stream' }], {
+                accept: 'image/*',
+                multiple: true,
+            }),
+        ).toBe('accept');
+        expect(
+            getDropzoneDragStatus([{ kind: 'file', type: 'text/plain' }], {
+                accept: '.pdf',
+                multiple: true,
+            }),
+        ).toBe('accept');
+    });
+
+    it('rejects protected drags that exceed the single or configured file limit', () => {
+        const items = [
+            { kind: 'file', type: 'image/png' },
+            { kind: 'file', type: 'image/jpeg' },
+        ];
+
+        expect(getDropzoneDragStatus(items, { multiple: false })).toBe('reject');
+        expect(getDropzoneDragStatus(items, { multiple: true, maxFiles: 1 })).toBe('reject');
     });
 });

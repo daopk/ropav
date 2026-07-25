@@ -57,6 +57,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | DropdownMenu                             | `root`, `trigger`, `content`, `item`, `label`, `shortcut`, `submenu`, `submenuIndicator`, `empty`                                           |
 | Dropzone                                 | `root`, `input`, `content`, `label`, `description`                                                                                          |
 | Field                                    | `root`, `label`, `required`, `control`, `description`                                                                                       |
+| FileInput                                | `root`, `input`, `trigger`, `value`                                                                                                         |
 | FocusTrap                                | `root`                                                                                                                                      |
 | Input                                    | `root`, `input`, `left`, `right`                                                                                                            |
 | Modal                                    | `root`, `overlay`, `panel`, `header`, `title`, `description`, `body`, `footer`, `close`                                                     |

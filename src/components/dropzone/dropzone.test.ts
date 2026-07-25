@@ -1,18 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, reactive, ref } from 'vue';
 
+import { createFileList, makeInputFilesMutable, selectFiles } from '../../../tests/utils/files';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import Dropzone from './dropzone.vue';
 import type { DropzoneProps, DropzoneSelection } from './types';
-
-function createFileList(files: File[]) {
-    const entries = Object.fromEntries(files.map((file, index) => [index, file]));
-    return {
-        ...entries,
-        length: files.length,
-        item: (index: number) => files[index] ?? null,
-    } as unknown as FileList;
-}
 
 function createDataTransfer(files: File[]) {
     return {
@@ -35,14 +27,6 @@ function dispatchDrag(element: Element, type: string, files: File[]) {
     });
     element.dispatchEvent(event);
     return event;
-}
-
-function selectFiles(input: HTMLInputElement, files: File[]) {
-    Object.defineProperty(input, 'files', {
-        configurable: true,
-        value: createFileList(files),
-    });
-    input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 function mountDropzone(props: DropzoneProps = {}, listeners: Record<string, unknown> = {}) {
@@ -81,6 +65,30 @@ describe('Dropzone', () => {
             rejections: [],
         } satisfies DropzoneSelection);
         expect(container.querySelector('.rp-dropzone')?.getAttribute('data-filled')).toBe('');
+    });
+
+    it('restores the existing native selection when the picker selection is rejected', async () => {
+        const initial = new File(['initial'], 'initial.png', { type: 'image/png' });
+        const rejected = new File(['rejected'], 'rejected.txt', { type: 'text/plain' });
+        const onUpdate = vi.fn();
+        const onReject = vi.fn();
+        const container = mountDropzone(
+            { accept: 'image/*', modelValue: [initial], multiple: true },
+            { 'onUpdate:modelValue': onUpdate, onReject },
+        );
+        const input = container.querySelector('input') as HTMLInputElement;
+        const mutableFiles = makeInputFilesMutable(input, [initial]);
+        await flush();
+
+        expect(Array.from(input.files ?? [])).toEqual([initial]);
+
+        mutableFiles.replace([rejected]);
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        await flush();
+
+        expect(Array.from(input.files ?? [])).toEqual([initial]);
+        expect(onUpdate).not.toHaveBeenCalled();
+        expect(onReject).toHaveBeenCalledOnce();
     });
 
     it('shows drag acceptance and rejects invalid dropped files', async () => {
@@ -125,6 +133,35 @@ describe('Dropzone', () => {
             ),
         ).toEqual(['file-invalid-type', 'file-too-large']);
         expect(onReject).toHaveBeenCalledWith(onDrop.mock.calls[0]?.[0].rejections);
+    });
+
+    it('rejects incompatible MIME types while the drag data store is protected', async () => {
+        const container = mountDropzone({ accept: 'image/*' });
+        const root = container.querySelector('.rp-dropzone')!;
+        const event = new Event('dragenter', {
+            bubbles: true,
+            cancelable: true,
+        }) as DragEvent;
+        Object.defineProperty(event, 'dataTransfer', {
+            configurable: true,
+            value: {
+                files: createFileList([]),
+                items: [
+                    {
+                        kind: 'file',
+                        type: 'text/plain',
+                        getAsFile: () => null,
+                    },
+                ],
+                types: ['Files'],
+                dropEffect: 'none',
+            } as unknown as DataTransfer,
+        });
+
+        root.dispatchEvent(event);
+        await flush();
+
+        expect(root.getAttribute('data-state')).toBe('reject');
     });
 
     it('enforces maxFiles and the single-file contract', async () => {
@@ -235,6 +272,21 @@ describe('Dropzone', () => {
             (container.querySelector('.rp-dropzone__label') as HTMLElement).style.letterSpacing,
         ).toBe('1px');
         expect(onBlur).toHaveBeenCalledOnce();
+    });
+
+    it('associates its fallback description with the native input', () => {
+        const container = mountDropzone({
+            describedby: 'external-help',
+            description: 'PDF files up to 5 MB.',
+        });
+        const input = container.querySelector('input') as HTMLInputElement;
+        const description = container.querySelector(
+            '.rp-dropzone__description',
+        ) as HTMLParagraphElement;
+        const describedby = input.getAttribute('aria-describedby')?.split(/\s+/);
+
+        expect(description.id).not.toBe('');
+        expect(describedby).toEqual(expect.arrayContaining(['external-help', description.id]));
     });
 
     it('exposes selection state and commands to the default slot', async () => {

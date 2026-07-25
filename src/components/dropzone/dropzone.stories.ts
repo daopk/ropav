@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { ref } from 'vue';
 import Field from '../field/field.vue';
 import Dropzone from './dropzone.vue';
@@ -114,6 +114,172 @@ export const Default: Story = {
 
         await waitFor(() => expect(canvas.getByText('report.pdf')).toBeInTheDocument());
         await expect((new FormData(form).get('attachments') as File).name).toBe('report.pdf');
+    },
+};
+
+export const ControlledInitialFiles: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Dropzone },
+        setup() {
+            const files = ref([new File(['initial'], 'initial.pdf', { type: 'application/pdf' })]);
+            return { files };
+        },
+        template: `
+            <form data-testid="form">
+                <Dropzone
+                    v-model="files"
+                    name="attachments"
+                    aria-label="Initial attachments"
+                />
+            </form>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const form = canvas.getByTestId('form') as HTMLFormElement;
+
+        await waitFor(() =>
+            expect((new FormData(form).get('attachments') as File).name).toBe('initial.pdf'),
+        );
+    },
+};
+
+export const DropCallbackUsesAcceptedFormFiles: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Dropzone },
+        setup() {
+            const files = ref<File[]>([]);
+            const form = ref<HTMLFormElement | null>(null);
+            const callbackFileNames = ref('');
+
+            function captureFormFiles() {
+                callbackFileNames.value = Array.from(
+                    new FormData(form.value!).getAll('attachments'),
+                    (value) => (value as File).name,
+                ).join(',');
+            }
+
+            return { callbackFileNames, captureFormFiles, files, form };
+        },
+        template: `
+            <form ref="form" data-testid="form">
+                <Dropzone
+                    v-model="files"
+                    name="attachments"
+                    aria-label="Callback attachments"
+                    accept=".pdf"
+                    multiple
+                    @drop="captureFormFiles"
+                />
+                <output data-testid="callback-file-names">{{ callbackFileNames }}</output>
+            </form>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const input = canvas.getByLabelText('Callback attachments') as HTMLInputElement;
+        const root = input.closest('.rp-dropzone')!;
+        const transfer = new DataTransfer();
+
+        transfer.items.add(new File(['accepted'], 'accepted.pdf', { type: 'application/pdf' }));
+        transfer.items.add(new File(['rejected'], 'rejected.txt', { type: 'text/plain' }));
+        root.dispatchEvent(
+            new DragEvent('drop', {
+                bubbles: true,
+                cancelable: true,
+                dataTransfer: transfer,
+            }),
+        );
+
+        await waitFor(() =>
+            expect(canvas.getByTestId('callback-file-names')).toHaveTextContent('accepted.pdf'),
+        );
+    },
+};
+
+export const RejectCallbackRestoresPreviousFormFiles: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Dropzone },
+        setup() {
+            const files = ref([
+                new File(['previous'], 'previous.pdf', { type: 'application/pdf' }),
+            ]);
+            const form = ref<HTMLFormElement | null>(null);
+            const callbackFileNames = ref('');
+
+            function captureFormFiles() {
+                callbackFileNames.value = Array.from(
+                    new FormData(form.value!).getAll('attachments'),
+                    (value) => (value as File).name,
+                ).join(',');
+            }
+
+            return { callbackFileNames, captureFormFiles, files, form };
+        },
+        template: `
+            <form ref="form">
+                <Dropzone
+                    v-model="files"
+                    name="attachments"
+                    aria-label="Rejected attachments"
+                    accept=".pdf"
+                    @reject="captureFormFiles"
+                />
+                <output data-testid="rejected-file-names">{{ callbackFileNames }}</output>
+            </form>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const input = canvas.getByLabelText('Rejected attachments') as HTMLInputElement;
+        const transfer = new DataTransfer();
+
+        transfer.items.add(new File(['rejected'], 'rejected.txt', { type: 'text/plain' }));
+        input.files = transfer.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        await waitFor(() =>
+            expect(canvas.getByTestId('rejected-file-names')).toHaveTextContent('previous.pdf'),
+        );
+    },
+};
+
+export const KeyboardActivationDisabled: Story = {
+    tags: ['test'],
+    render: () => ({
+        components: { Dropzone },
+        setup() {
+            const clickCount = ref(0);
+            const inputAttrs = {
+                onClick(event: MouseEvent) {
+                    event.preventDefault();
+                    clickCount.value += 1;
+                },
+            };
+            return { clickCount, inputAttrs };
+        },
+        template: `
+            <div>
+                <Dropzone
+                    aria-label="Keyboard-disabled attachments"
+                    :activate-on-keyboard="false"
+                    :input-attrs="inputAttrs"
+                />
+                <output data-testid="click-count">{{ clickCount }}</output>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const input = canvas.getByLabelText('Keyboard-disabled attachments') as HTMLInputElement;
+
+        input.focus();
+        await userEvent.keyboard('{Enter} ');
+
+        await expect(canvas.getByTestId('click-count')).toHaveTextContent('0');
     },
 };
 
