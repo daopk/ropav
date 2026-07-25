@@ -10,7 +10,7 @@ import {
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
 import { useEditableOptionList } from '@/internal/composables/useEditableOptionList';
 import type { FlatOptionState } from '@/internal/composables/useFlatOptionCollection';
-import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
+import { useHiddenSelectChoiceTransaction } from '@/internal/composables/useHiddenSelectChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { createMultipleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
@@ -65,7 +65,7 @@ function useMultiSelectTransaction(
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const transaction = useNativeChoiceTransaction<MultiSelectValue[]>({
+    const transaction = useHiddenSelectChoiceTransaction<MultiSelectValue[]>({
         value: {
             modelValue: () => props.modelValue,
             defaultValue: () => [...(props.defaultValue ?? [])],
@@ -75,7 +75,6 @@ function useMultiSelectTransaction(
             adapter: createMultipleNativeChoiceAdapter<MultiSelectValue>(() => props.options),
             className: 'rp-multi-select__native',
             focusVisible: () => inputRef.value?.focus(),
-            syncOrder: 'after-value-change',
             validationMessage: () => props.validationMessage,
         },
         onFormReset,

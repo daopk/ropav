@@ -14,7 +14,7 @@ import {
     useFlatOptionCollection,
     type FlatOptionState,
 } from '@/internal/composables/useFlatOptionCollection';
-import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
+import { useHiddenSelectChoiceTransaction } from '@/internal/composables/useHiddenSelectChoiceTransaction';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
@@ -72,7 +72,7 @@ function useSelectTransaction(
     emitUpdate: (value: SelectValue) => void,
     triggerRef: Readonly<Ref<HTMLElement | null>>,
 ) {
-    const transaction = useNativeChoiceTransaction<SelectValue>({
+    const transaction = useHiddenSelectChoiceTransaction<SelectValue>({
         value: {
             modelValue: () => props.modelValue,
             defaultValue: () => props.defaultValue ?? null,
@@ -86,7 +86,6 @@ function useSelectTransaction(
             attributes: () => props.inputAttrs,
             className: 'rp-select__native',
             focusVisible: () => triggerRef.value?.focus(),
-            syncOrder: 'before-value-change',
             validationMessage: () => props.validationMessage,
         },
     });

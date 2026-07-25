@@ -7,7 +7,7 @@ import {
     type SelectHTMLAttributes,
 } from 'vue';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
+import { useHiddenSelectChoiceTransaction } from '@/internal/composables/useHiddenSelectChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import { isInteractiveElement } from '@/utils/dom/interactive';
@@ -41,7 +41,7 @@ function useTagsInputTransaction(
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const transaction = useNativeChoiceTransaction<string[]>({
+    const transaction = useHiddenSelectChoiceTransaction<string[]>({
         value: {
             modelValue: () => props.modelValue,
             defaultValue: () => [...(props.defaultValue ?? [])],
@@ -51,7 +51,6 @@ function useTagsInputTransaction(
             adapter: createStringListNativeChoiceAdapter(),
             className: 'rp-tags-input__native',
             focusVisible: () => inputRef.value?.focus(),
-            syncOrder: 'after-value-change',
             validationMessage: () => (props.readonly ? undefined : props.validationMessage),
         },
         onFormReset,

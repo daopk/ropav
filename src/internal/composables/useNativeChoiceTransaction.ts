@@ -1,58 +1,37 @@
-import {
-    computed,
-    nextTick,
-    ref,
-    watchEffect,
-    type ComputedRef,
-    type Ref,
-    type SelectHTMLAttributes,
-} from 'vue';
+import { nextTick, watchEffect, type ComputedRef } from 'vue';
 import {
     useControllableValue,
     type UseControllableValueOptions,
 } from '@/composables/useControllableValue';
-import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
-import type { NativeChoiceAdapter } from '@/utils/dom/nativeChoice';
-import { useFormControl } from './useFormControl';
+import { useFormControl, type FormControlOptions, type NativeFormControl } from './useFormControl';
 
-interface NativeChoiceControlOptions<Value> {
-    adapter: NativeChoiceAdapter<Value>;
-    attributes?: () => SelectHTMLAttributes | undefined;
-    className: string;
-    focusVisible: () => void;
-    syncOrder: 'before-value-change' | 'after-value-change';
-    validationMessage?: () => string | undefined;
+export interface NativeChoiceAdapter<Value> {
+    controls: () => Array<NativeFormControl | null | undefined>;
+    readResetValue: (controls: NativeFormControl[], initialValue: Value) => Value;
+    reconcileValue?: (value: Value, initialValue: Value, isControlled: boolean) => Value;
+    syncValue: (value: Value, defaultValue: Value) => void;
+    validationMessage?: FormControlOptions['validationMessage'];
 }
 
 export interface NativeChoiceTransactionOptions<Value> {
     value: Readonly<UseControllableValueOptions<Value>>;
-    native: NativeChoiceControlOptions<Value>;
+    adapter: NativeChoiceAdapter<Value>;
     onFormReset?: () => void;
 }
 
 export interface NativeChoiceTransaction<Value> {
     isControlled: ComputedRef<boolean>;
-    nativeSelectAttrs: ComputedRef<SelectHTMLAttributes>;
-    nativeSelectRef: Ref<HTMLSelectElement | null>;
     requestValueUpdate: (value: Value) => void;
     value: ComputedRef<Value>;
-}
-
-function dispatchNativeSelectEvent(select: HTMLSelectElement, type: 'input' | 'change') {
-    const EventConstructor = select.ownerDocument.defaultView?.Event ?? Event;
-    select.dispatchEvent(new EventConstructor(type, { bubbles: true, cancelable: true }));
 }
 
 export function useNativeChoiceTransaction<Value>(
     options: Readonly<NativeChoiceTransactionOptions<Value>>,
 ): NativeChoiceTransaction<Value> {
-    const nativeSelectRef = ref<HTMLSelectElement | null>(null);
     const controllable = useControllableValue(options.value);
-    let ignoreNativeInput = false;
 
     function syncNativeValue(value: Value) {
-        const select = nativeSelectRef.value;
-        if (select) options.native.adapter.sync(select, value, controllable.initialValue);
+        options.adapter.syncValue(value, controllable.initialValue);
     }
 
     function restoreControlledValue() {
@@ -60,64 +39,18 @@ export function useNativeChoiceTransaction<Value>(
         queueMicrotask(() => syncNativeValue(controllable.value.value));
     }
 
-    function onNativeInput(event: InputEvent) {
-        if (ignoreNativeInput) return;
-        controllable.setValue(
-            options.native.adapter.read(event.currentTarget as HTMLSelectElement),
-        );
-        restoreControlledValue();
-    }
-
-    function onNativeInvalid(event: Event) {
-        event.preventDefault();
-        options.native.focusVisible();
-    }
-
-    const nativeSelectAttrs = computed<SelectHTMLAttributes>(() => {
-        const compatibilityAttrs = options.native.attributes?.() ?? {};
-        const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
-            splitCompatibilityAttributes(compatibilityAttrs);
-
-        return {
-            ...forwardedAttributes,
-            class: [options.native.className, compatibilityClass],
-            style: compatibilityStyle,
-            onInput: composeEventHandlers<InputEvent>(onNativeInput, compatibilityAttrs.onInput),
-            onChange: compatibilityAttrs.onChange,
-            onInvalid: composeEventHandlers<Event>(onNativeInvalid, compatibilityAttrs.onInvalid),
-        };
-    });
-
     function requestValueUpdate(value: Value) {
-        const select = nativeSelectRef.value;
-        if (!select) {
-            controllable.setValue(value);
-            return;
-        }
-
-        if (options.native.syncOrder === 'before-value-change') syncNativeValue(value);
         controllable.setValue(value);
-        if (options.native.syncOrder === 'after-value-change') syncNativeValue(value);
-        ignoreNativeInput = true;
-        try {
-            dispatchNativeSelectEvent(select, 'input');
-            dispatchNativeSelectEvent(select, 'change');
-        } finally {
-            ignoreNativeInput = false;
-        }
         restoreControlledValue();
     }
 
     useFormControl({
-        elements: () => [nativeSelectRef.value],
+        elements: options.adapter.controls,
         isControlled: () => controllable.isControlled.value,
-        validationMessage: options.native.validationMessage,
-        readResetValue([select]) {
+        validationMessage: options.adapter.validationMessage,
+        readResetValue(controls) {
             controllable.resetValue(
-                options.native.adapter.resolveResetValue(
-                    select as HTMLSelectElement,
-                    controllable.initialValue,
-                ),
+                options.adapter.readResetValue(controls, controllable.initialValue),
             );
             syncNativeValue(controllable.value.value);
             options.onFormReset?.();
@@ -130,6 +63,18 @@ export function useNativeChoiceTransaction<Value>(
 
     watchEffect(
         () => {
+            const currentValue = controllable.value.value;
+            const reconciledValue =
+                options.adapter.reconcileValue?.(
+                    currentValue,
+                    controllable.initialValue,
+                    controllable.isControlled.value,
+                ) ?? currentValue;
+
+            if (!controllable.isControlled.value && !Object.is(reconciledValue, currentValue)) {
+                controllable.resetValue(reconciledValue);
+            }
+
             syncNativeValue(controllable.value.value);
             void nextTick(() => syncNativeValue(controllable.value.value));
         },
@@ -138,8 +83,6 @@ export function useNativeChoiceTransaction<Value>(
 
     return {
         isControlled: controllable.isControlled,
-        nativeSelectAttrs,
-        nativeSelectRef,
         requestValueUpdate,
         value: controllable.value,
     };

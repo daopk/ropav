@@ -10,7 +10,7 @@ import {
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
 import { useEditableOptionList } from '@/internal/composables/useEditableOptionList';
 import type { FlatOptionState } from '@/internal/composables/useFlatOptionCollection';
-import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
+import { useHiddenSelectChoiceTransaction } from '@/internal/composables/useHiddenSelectChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { createSingleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
@@ -63,7 +63,7 @@ function useComboboxTransaction(
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const transaction = useNativeChoiceTransaction<ComboboxValue>({
+    const transaction = useHiddenSelectChoiceTransaction<ComboboxValue>({
         value: {
             modelValue: () => props.modelValue,
             defaultValue: () => props.defaultValue ?? null,
@@ -76,7 +76,6 @@ function useComboboxTransaction(
             }),
             className: 'rp-combobox__native',
             focusVisible: () => inputRef.value?.focus(),
-            syncOrder: 'before-value-change',
             validationMessage: () => props.validationMessage,
         },
         onFormReset,
