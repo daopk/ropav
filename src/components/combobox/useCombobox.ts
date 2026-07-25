@@ -4,21 +4,20 @@ import {
     ref,
     useId,
     watch,
-    watchEffect,
     type CSSProperties,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
 import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
 import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { isNodeWithinElement } from '@/utils/dom/events';
+import { createSingleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
@@ -71,116 +70,37 @@ interface ComboboxCallbacks {
     search: (searchValue: string) => void;
 }
 
-function readNativeValue(
-    select: HTMLSelectElement,
-    options: readonly ComboboxOption[] | undefined,
-) {
-    if (select.selectedIndex <= 0) return null;
-    return options?.[select.selectedIndex - 1]?.value ?? null;
-}
-
-function writeNativeSelection(
-    select: HTMLSelectElement,
-    options: readonly ComboboxOption[] | undefined,
-    value: ComboboxValue,
-) {
-    const optionIndex = options?.findIndex((option) => option.value === value) ?? -1;
-    select.selectedIndex = optionIndex + 1;
-}
-
-function writeNativeDefaultSelection(
-    select: HTMLSelectElement,
-    options: readonly ComboboxOption[] | undefined,
-    value: ComboboxValue,
-) {
-    const optionIndex = options?.findIndex((option) => option.value === value) ?? -1;
-    for (const [index, option] of [...select.options].entries()) {
-        option.defaultSelected = index === optionIndex + 1;
-    }
-}
-
 function useComboboxTransaction(
     props: Readonly<ComboboxProps>,
     emitUpdate: (value: ComboboxValue) => void,
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const nativeSelectRef = ref<HTMLSelectElement | null>(null);
-    const controllable = useControllableValue<ComboboxValue>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => props.defaultValue ?? null,
-        onChange: emitUpdate,
+    const transaction = useNativeChoiceTransaction<ComboboxValue>({
+        value: {
+            modelValue: () => props.modelValue,
+            defaultValue: () => props.defaultValue ?? null,
+            onChange: emitUpdate,
+        },
+        native: {
+            adapter: createSingleNativeChoiceAdapter<ComboboxValue>({
+                emptyValue: null,
+                options: () => props.options,
+            }),
+            className: 'rp-combobox__native',
+            focusVisible: () => inputRef.value?.focus(),
+            syncOrder: 'before-value-change',
+            validationMessage: () => props.validationMessage,
+        },
+        onFormReset,
     });
-
-    function syncNativeSelection(value: ComboboxValue) {
-        const select = nativeSelectRef.value;
-        if (select) writeNativeSelection(select, props.options, value);
-    }
-
-    function requestValueUpdate(value: ComboboxValue) {
-        const select = nativeSelectRef.value;
-        if (!select) {
-            controllable.setValue(value);
-            return;
-        }
-
-        syncNativeSelection(value);
-        select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-        select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-        if (controllable.isControlled.value) {
-            queueMicrotask(() => syncNativeSelection(controllable.value.value));
-        }
-    }
-
-    const nativeSelectAttrs = computed<SelectHTMLAttributes>(() => ({
-        class: 'rp-combobox__native',
-        onInput: (event: Event) =>
-            controllable.setValue(
-                readNativeValue(event.currentTarget as HTMLSelectElement, props.options),
-            ),
-        onInvalid: (event: Event) => {
-            event.preventDefault();
-            inputRef.value?.focus();
-        },
-    }));
-
-    useFormControl({
-        elements: () => [nativeSelectRef.value],
-        isControlled: () => controllable.isControlled.value,
-        validationMessage: () => props.validationMessage,
-        readResetValue([select]) {
-            controllable.resetValue(readNativeValue(select as HTMLSelectElement, props.options));
-            onFormReset();
-        },
-        syncControlledValue() {
-            syncNativeSelection(controllable.value.value);
-            onFormReset();
-        },
-    });
-
-    watchEffect(
-        () => {
-            const select = nativeSelectRef.value;
-            if (select)
-                writeNativeDefaultSelection(select, props.options, controllable.initialValue);
-        },
-        { flush: 'post' },
-    );
-    watchEffect(
-        () => {
-            syncNativeSelection(controllable.value.value);
-            void nextTick(() => syncNativeSelection(controllable.value.value));
-        },
-        { flush: 'post' },
-    );
 
     return {
-        isControlled: controllable.isControlled,
-        nativeSelectRef,
-        nativeSelectAttrs,
-        requestValueUpdate,
-        selectedValue: controllable.value,
+        isControlled: transaction.isControlled,
+        nativeSelectRef: transaction.nativeSelectRef,
+        nativeSelectAttrs: transaction.nativeSelectAttrs,
+        requestValueUpdate: transaction.requestValueUpdate,
+        selectedValue: transaction.value,
     };
 }
 

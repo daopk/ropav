@@ -4,22 +4,21 @@ import {
     ref,
     useId,
     watch,
-    watchEffect,
     type CSSProperties,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
 import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
 import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import { isInteractiveElement } from '@/utils/dom/interactive';
+import { createMultipleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
@@ -75,120 +74,33 @@ interface MultiSelectCallbacks {
     search: (searchValue: string) => void;
 }
 
-function readNativeValues(
-    select: HTMLSelectElement,
-    options: readonly MultiSelectOption[] | undefined,
-) {
-    return [...select.options].flatMap((nativeOption, index) => {
-        const option = options?.[index];
-        return nativeOption.selected && option ? [option.value] : [];
-    });
-}
-
-function writeNativeSelection(
-    select: HTMLSelectElement,
-    options: readonly MultiSelectOption[] | undefined,
-    values: readonly MultiSelectValue[],
-) {
-    for (const [index, nativeOption] of [...select.options].entries()) {
-        const option = options?.[index];
-        nativeOption.selected = Boolean(option && values.includes(option.value));
-    }
-}
-
-function writeNativeDefaultSelection(
-    select: HTMLSelectElement,
-    options: readonly MultiSelectOption[] | undefined,
-    values: readonly MultiSelectValue[],
-) {
-    for (const [index, nativeOption] of [...select.options].entries()) {
-        const option = options?.[index];
-        nativeOption.defaultSelected = Boolean(option && values.includes(option.value));
-    }
-}
-
 function useMultiSelectTransaction(
     props: Readonly<MultiSelectProps>,
     emitUpdate: (value: MultiSelectValue[]) => void,
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const nativeSelectRef = ref<HTMLSelectElement | null>(null);
-    const controllable = useControllableValue<MultiSelectValue[]>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => [...(props.defaultValue ?? [])],
-        onChange: emitUpdate,
+    const transaction = useNativeChoiceTransaction<MultiSelectValue[]>({
+        value: {
+            modelValue: () => props.modelValue,
+            defaultValue: () => [...(props.defaultValue ?? [])],
+            onChange: emitUpdate,
+        },
+        native: {
+            adapter: createMultipleNativeChoiceAdapter<MultiSelectValue>(() => props.options),
+            className: 'rp-multi-select__native',
+            focusVisible: () => inputRef.value?.focus(),
+            syncOrder: 'after-value-change',
+            validationMessage: () => props.validationMessage,
+        },
+        onFormReset,
     });
-    let ignoreNativeInput = false;
-
-    function syncNativeSelection(values: readonly MultiSelectValue[]) {
-        const select = nativeSelectRef.value;
-        if (select) writeNativeSelection(select, props.options, values);
-    }
-
-    function requestValueUpdate(values: MultiSelectValue[]) {
-        controllable.setValue(values);
-        const select = nativeSelectRef.value;
-        if (!select) return;
-
-        syncNativeSelection(values);
-        ignoreNativeInput = true;
-        try {
-            select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-            select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-        } finally {
-            ignoreNativeInput = false;
-        }
-
-        if (controllable.isControlled.value) {
-            queueMicrotask(() => syncNativeSelection(controllable.value.value));
-        }
-    }
-
-    const nativeSelectAttrs = computed<SelectHTMLAttributes>(() => ({
-        class: 'rp-multi-select__native',
-        onInput: (event: Event) => {
-            if (!ignoreNativeInput) {
-                controllable.setValue(
-                    readNativeValues(event.currentTarget as HTMLSelectElement, props.options),
-                );
-            }
-        },
-        onInvalid: (event: Event) => {
-            event.preventDefault();
-            inputRef.value?.focus();
-        },
-    }));
-
-    useFormControl({
-        elements: () => [nativeSelectRef.value],
-        isControlled: () => controllable.isControlled.value,
-        validationMessage: () => props.validationMessage,
-        readResetValue() {
-            controllable.resetValue();
-            onFormReset();
-        },
-        syncControlledValue() {
-            syncNativeSelection(controllable.value.value);
-            onFormReset();
-        },
-    });
-
-    watchEffect(
-        () => {
-            const select = nativeSelectRef.value;
-            if (select)
-                writeNativeDefaultSelection(select, props.options, controllable.initialValue);
-        },
-        { flush: 'post' },
-    );
-    watchEffect(() => syncNativeSelection(controllable.value.value), { flush: 'post' });
 
     return {
-        nativeSelectRef,
-        nativeSelectAttrs,
-        requestValueUpdate,
-        selectedValues: controllable.value,
+        nativeSelectRef: transaction.nativeSelectRef,
+        nativeSelectAttrs: transaction.nativeSelectAttrs,
+        requestValueUpdate: transaction.requestValueUpdate,
+        selectedValues: transaction.value,
     };
 }
 

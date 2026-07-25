@@ -3,23 +3,21 @@ import {
     nextTick,
     ref,
     useId,
-    watchEffect,
     type CSSProperties,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
 import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
-import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { isNodeWithinElement } from '@/utils/dom/events';
+import { createSingleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
 import type { SelectOption, SelectProps } from './types';
@@ -71,115 +69,35 @@ function getSelectActiveDescendantId(baseId: string, focusedIndex: number, isOpe
     return !isOpen || focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
 }
 
-function readNativeValue(select: HTMLSelectElement, options: SelectOption[] | undefined) {
-    if (select.selectedIndex <= 0) return null;
-    return options?.[select.selectedIndex - 1]?.value ?? null;
-}
-
-function writeNativeSelection(
-    select: HTMLSelectElement,
-    options: SelectOption[] | undefined,
-    value: SelectValue,
-) {
-    const optionIndex = options?.findIndex((option) => option.value === value) ?? -1;
-    select.selectedIndex = optionIndex + 1;
-}
-
-function writeNativeDefaultSelection(
-    select: HTMLSelectElement,
-    options: SelectOption[] | undefined,
-    value: SelectValue,
-) {
-    const optionIndex = options?.findIndex((option) => option.value === value) ?? -1;
-    for (const [index, option] of [...select.options].entries()) {
-        option.defaultSelected = index === optionIndex + 1;
-    }
-}
-
 function useSelectTransaction(
     props: Readonly<SelectProps>,
     emitUpdate: (value: SelectValue) => void,
     triggerRef: Readonly<Ref<HTMLElement | null>>,
 ) {
-    const nativeSelectRef = ref<HTMLSelectElement | null>(null);
-    const controllable = useControllableValue<SelectValue>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => props.defaultValue ?? null,
-        onChange: emitUpdate,
-    });
-
-    function syncNativeSelection(value: SelectValue) {
-        const select = nativeSelectRef.value;
-        if (select) writeNativeSelection(select, props.options, value);
-    }
-
-    function requestValueUpdate(value: SelectValue) {
-        const select = nativeSelectRef.value;
-        if (!select) {
-            controllable.setValue(value);
-            return;
-        }
-
-        syncNativeSelection(value);
-        select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-        select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-        if (controllable.isControlled.value) {
-            queueMicrotask(() => syncNativeSelection(controllable.value.value));
-        }
-    }
-
-    useFormControl({
-        elements: () => [nativeSelectRef.value],
-        isControlled: () => controllable.isControlled.value,
-        validationMessage: () => props.validationMessage,
-        readResetValue([select]) {
-            controllable.resetValue(readNativeValue(select as HTMLSelectElement, props.options));
+    const transaction = useNativeChoiceTransaction<SelectValue>({
+        value: {
+            modelValue: () => props.modelValue,
+            defaultValue: () => props.defaultValue ?? null,
+            onChange: emitUpdate,
         },
-        syncControlledValue() {
-            syncNativeSelection(controllable.value.value);
+        native: {
+            adapter: createSingleNativeChoiceAdapter<SelectValue>({
+                emptyValue: null,
+                options: () => props.options,
+            }),
+            attributes: () => props.inputAttrs,
+            className: 'rp-select__native',
+            focusVisible: () => triggerRef.value?.focus(),
+            syncOrder: 'before-value-change',
+            validationMessage: () => props.validationMessage,
         },
     });
-
-    const nativeInputAttrs = computed<SelectHTMLAttributes>(() => {
-        const compatibilityAttrs = props.inputAttrs ?? {};
-        const { compatibilityClass, compatibilityStyle, forwardedAttributes } =
-            splitCompatibilityAttributes(compatibilityAttrs);
-
-        return {
-            ...forwardedAttributes,
-            class: ['rp-select__native', compatibilityClass],
-            style: compatibilityStyle,
-            onInput: composeEventHandlers<InputEvent>(
-                (event) =>
-                    controllable.setValue(
-                        readNativeValue(event.currentTarget as HTMLSelectElement, props.options),
-                    ),
-                compatibilityAttrs.onInput,
-            ),
-            onChange: compatibilityAttrs.onChange,
-            onInvalid: composeEventHandlers<Event>((event) => {
-                event.preventDefault();
-                triggerRef.value?.focus();
-            }, compatibilityAttrs.onInvalid),
-        };
-    });
-
-    watchEffect(
-        () => {
-            const select = nativeSelectRef.value;
-            if (select)
-                writeNativeDefaultSelection(select, props.options, controllable.initialValue);
-        },
-        { flush: 'post' },
-    );
-    watchEffect(() => syncNativeSelection(controllable.value.value), { flush: 'post' });
 
     return {
-        nativeSelectRef,
-        nativeInputAttrs,
-        requestValueUpdate,
-        selectedValue: controllable.value,
+        nativeSelectRef: transaction.nativeSelectRef,
+        nativeInputAttrs: transaction.nativeSelectAttrs,
+        requestValueUpdate: transaction.requestValueUpdate,
+        selectedValue: transaction.value,
     };
 }
 

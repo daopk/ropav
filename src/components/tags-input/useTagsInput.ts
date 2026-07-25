@@ -2,17 +2,16 @@ import {
     computed,
     nextTick,
     ref,
-    watchEffect,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import { useFormControl } from '@/internal/composables/useFormControl';
+import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import { isInteractiveElement } from '@/utils/dom/interactive';
+import { createStringListNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { addTagsInputValues, splitTagsInputValue } from './tagsInputModel';
 import type { TagsInputProps } from './types';
 
@@ -36,111 +35,33 @@ export interface TagsInputControl {
     onInputKeydown: (event: KeyboardEvent) => void;
 }
 
-function readNativeValues(select: HTMLSelectElement) {
-    return [...select.selectedOptions].map((option) => option.value);
-}
-
-function writeNativeValues(
-    select: HTMLSelectElement,
-    values: readonly string[],
-    defaultValues: readonly string[],
-) {
-    const defaultCounts = new Map<string, number>();
-    for (const value of defaultValues) {
-        defaultCounts.set(value, (defaultCounts.get(value) ?? 0) + 1);
-    }
-
-    const options = values.map((value) => {
-        const option = select.ownerDocument.createElement('option');
-        const defaultCount = defaultCounts.get(value) ?? 0;
-
-        option.value = value;
-        option.textContent = value;
-        option.defaultSelected = defaultCount > 0;
-        option.selected = true;
-        if (defaultCount > 0) defaultCounts.set(value, defaultCount - 1);
-        return option;
-    });
-
-    select.replaceChildren(...options);
-}
-
 function useTagsInputTransaction(
     props: Readonly<TagsInputProps>,
     emitUpdate: (value: string[]) => void,
     inputRef: Readonly<Ref<HTMLInputElement | null>>,
     onFormReset: () => void,
 ) {
-    const nativeSelectRef = ref<HTMLSelectElement | null>(null);
-    const controllable = useControllableValue<string[]>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => [...(props.defaultValue ?? [])],
-        onChange: emitUpdate,
+    const transaction = useNativeChoiceTransaction<string[]>({
+        value: {
+            modelValue: () => props.modelValue,
+            defaultValue: () => [...(props.defaultValue ?? [])],
+            onChange: emitUpdate,
+        },
+        native: {
+            adapter: createStringListNativeChoiceAdapter(),
+            className: 'rp-tags-input__native',
+            focusVisible: () => inputRef.value?.focus(),
+            syncOrder: 'after-value-change',
+            validationMessage: () => (props.readonly ? undefined : props.validationMessage),
+        },
+        onFormReset,
     });
-    let ignoreNativeInput = false;
-
-    function syncNativeValues(values: readonly string[]) {
-        const select = nativeSelectRef.value;
-        if (select) writeNativeValues(select, values, controllable.initialValue);
-    }
-
-    function requestValueUpdate(values: string[]) {
-        controllable.setValue(values);
-        const select = nativeSelectRef.value;
-        if (!select) return;
-
-        syncNativeValues(values);
-        ignoreNativeInput = true;
-        try {
-            select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-            select.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-        } finally {
-            ignoreNativeInput = false;
-        }
-
-        if (controllable.isControlled.value) {
-            queueMicrotask(() => syncNativeValues(controllable.value.value));
-        }
-    }
-
-    const nativeSelectAttrs = computed<SelectHTMLAttributes>(() => ({
-        class: 'rp-tags-input__native',
-        onInput: (event: Event) => {
-            if (ignoreNativeInput) return;
-
-            controllable.setValue(readNativeValues(event.currentTarget as HTMLSelectElement));
-            if (controllable.isControlled.value) {
-                queueMicrotask(() => syncNativeValues(controllable.value.value));
-            }
-        },
-        onInvalid: (event: Event) => {
-            event.preventDefault();
-            inputRef.value?.focus();
-        },
-    }));
-
-    useFormControl({
-        elements: () => [nativeSelectRef.value],
-        isControlled: () => controllable.isControlled.value,
-        validationMessage: () => (props.readonly ? undefined : props.validationMessage),
-        readResetValue() {
-            controllable.resetValue();
-            syncNativeValues(controllable.value.value);
-            onFormReset();
-        },
-        syncControlledValue() {
-            syncNativeValues(controllable.value.value);
-            onFormReset();
-        },
-    });
-
-    watchEffect(() => syncNativeValues(controllable.value.value), { flush: 'post' });
 
     return {
-        nativeSelectRef,
-        nativeSelectAttrs,
-        requestValueUpdate,
-        values: controllable.value,
+        nativeSelectRef: transaction.nativeSelectRef,
+        nativeSelectAttrs: transaction.nativeSelectAttrs,
+        requestValueUpdate: transaction.requestValueUpdate,
+        values: transaction.value,
     };
 }
 
