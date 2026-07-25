@@ -1,4 +1,5 @@
 import type { StylesApiProps } from '../../styles-api';
+import type { DisabledDateRule } from '@/utils/dateAvailability';
 
 export const calendarParts = [
     'root',
@@ -22,12 +23,13 @@ export type CalendarPart = (typeof calendarParts)[number];
 export type CalendarSize = (typeof calendarSizes)[number];
 export type CalendarRadius = (typeof calendarRadiuses)[number];
 export type CalendarWeekdayFormat = (typeof calendarWeekdayFormats)[number];
-export type CalendarDisabledDates = readonly Date[] | ((date: Date) => boolean);
+export type CalendarDisabledDates = DisabledDateRule;
 
 export interface CalendarDay {
     date: Date;
     key: string;
     label: number;
+    ariaLabel: string;
     outside: boolean;
     hidden: boolean;
     selected: boolean;

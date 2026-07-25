@@ -3,7 +3,7 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { normalizeDate, toLocalDate } from '@/utils/date';
-import { isCalendarDateDisabled } from '../calendar/calendarModel';
+import { isDateUnavailable } from '@/utils/dateAvailability';
 import {
     defaultDatePickerFormat,
     formatDatePickerValue,
@@ -87,7 +87,7 @@ export function useDatePicker(props: Readonly<DatePickerProps>, emit: DatePicker
     }
 
     function dateIsDisabled(date: Date) {
-        return isCalendarDateDisabled(date, {
+        return isDateUnavailable(date, {
             min: props.min,
             max: props.max,
             disabledDates: props.disabledDates,

@@ -11,15 +11,3 @@ export type {
     CalendarWeekday,
     CalendarWeekdayFormat,
 } from './types';
-export {
-    createCalendarDays,
-    createCalendarWeeks,
-    getCalendarDayLabel,
-    getCalendarMonthLabel,
-    getCalendarWeekdays,
-    isCalendarDateDisabled,
-    normalizeCalendarDate,
-    normalizeFirstDayOfWeek,
-} from './calendarModel';
-export type { CreateCalendarDaysOptions } from './calendarModel';
-export { useCalendar } from './useCalendar';

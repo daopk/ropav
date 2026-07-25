@@ -79,7 +79,7 @@
                             v-bind="getDayAttrs(day)"
                             type="button"
                             :disabled="disabled || day.disabled"
-                            :aria-label="getDayAriaLabel(day)"
+                            :aria-label="day.ariaLabel"
                             :aria-current="day.today ? 'date' : undefined"
                             :tabindex="isFocusable(day) ? 0 : -1"
                             @click="selectDate(day)"
@@ -155,7 +155,6 @@ const {
     navigateMonth,
     onDayKeydown,
     onDayFocus,
-    getDayAriaLabel,
 } = useCalendar(props, {
     value: (value) => emit('update:modelValue', value),
     month: (month) => emit('update:month', month),
