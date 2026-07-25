@@ -163,6 +163,10 @@ export const packagePublicationManifest = {
             ],
         },
         {
+            name: 'dropzone',
+            runtimeExports: ['Dropzone', 'dropzoneErrorCodes', 'dropzoneParts', 'dropzoneStatuses'],
+        },
+        {
             name: 'field',
             runtimeExports: ['Field', 'fieldParts'],
         },

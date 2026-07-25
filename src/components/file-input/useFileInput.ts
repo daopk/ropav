@@ -3,7 +3,8 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { useControlState } from '@/internal/composables/useControlState';
 import { useFormControl } from '@/internal/composables/useFormControl';
 import { bem } from '@/utils/bem';
-import { normalizeSelectedFiles, readSelectedFiles, replaceSelectedFiles } from './fileInputModel';
+import { replaceInputFiles } from '@/utils/dom/files';
+import { normalizeSelectedFiles, readSelectedFiles } from './fileInputModel';
 import type { FileInputProps } from './types';
 
 export function useFileInput(props: Readonly<FileInputProps>, emitUpdate: (value: File[]) => void) {
@@ -40,7 +41,7 @@ export function useFileInput(props: Readonly<FileInputProps>, emitUpdate: (value
 
     function syncNativeFiles() {
         const input = inputRef.value;
-        if (input) replaceSelectedFiles(input, files.value);
+        if (input) replaceInputFiles(input, files.value);
     }
 
     function requestFiles(nextFiles: File[]) {

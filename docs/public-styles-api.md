@@ -55,6 +55,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | ColorSwatch                              | `root`                                                                                                                                      |
 | Combobox                                 | `root`, `input`, `indicator`, `clear`, `toggle`, `content`, `option`, `empty`                                                               |
 | DropdownMenu                             | `root`, `trigger`, `content`, `item`, `label`, `shortcut`, `submenu`, `submenuIndicator`, `empty`                                           |
+| Dropzone                                 | `root`, `input`, `content`, `label`, `description`                                                                                          |
 | Field                                    | `root`, `label`, `required`, `control`, `description`                                                                                       |
 | FocusTrap                                | `root`                                                                                                                                      |
 | Input                                    | `root`, `input`, `left`, `right`                                                                                                            |
@@ -88,6 +89,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-state="checked|unchecked"`: Radio, SegmentedControl controls and inputs, and Switch.
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
 - `data-state="determinate|indeterminate"`: Progress.
+- `data-state="idle|accept|reject"`: Dropzone.
 - `data-disabled`: the effective disabled state on each applicable control, trigger, item or option.
 - `data-readonly`: Calendar, Input, Textarea, TagsInput, ColorInput and ColorPicker controls.
 - `data-invalid`: form-control roots and their public input parts.
@@ -98,6 +100,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-month="YYYY-MM-DD"`: Calendar roots.
 - `data-highlighted`: Combobox, MultiSelect and Select options, and DropdownMenu items.
 - `data-filled`: Slider and RangeSlider marks.
+- `data-filled` and `data-dragging`: Dropzone.
 - `data-track-hovered` and `data-dragging`: Slider track pointer interaction.
 - `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.

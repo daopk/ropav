@@ -109,6 +109,10 @@
       "types": "./dist/components/dropdown-menu/index.d.ts",
       "import": "./dist/components/dropdown-menu/index.js"
     },
+    "./dropzone": {
+      "types": "./dist/components/dropzone/index.d.ts",
+      "import": "./dist/components/dropzone/index.js"
+    },
     "./field": {
       "types": "./dist/components/field/index.d.ts",
       "import": "./dist/components/field/index.js"
