@@ -396,6 +396,12 @@ describe('Select', () => {
         expect(popup.dataset.type).toBe('auto');
         expect(popup.dataset.scrollbars).toBe('y');
         expect(popup.style.maxHeight).toBe('120px');
+        await waitForAssertion(() => {
+            expect(['bottom-start', 'top-start']).toContain(popup.dataset.placement);
+            expect(popup.dataset.side).toBe(popup.dataset.placement?.split('-')[0]);
+            expect(popup.style.position).toBe('absolute');
+            expect(popup.style.visibility).not.toBe('hidden');
+        });
         expect(listbox.tabIndex).toBe(-1);
         expect(content.querySelectorAll('[role="option"]')).toHaveLength(options.length);
         expect(scrollbar.tabIndex).toBe(-1);

@@ -5,6 +5,7 @@ import {
     useId,
     watch,
     watchEffect,
+    type CSSProperties,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
@@ -17,7 +18,10 @@ import { useFormControl } from '@/internal/composables/useFormControl';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
 import { composeEventHandlers, splitCompatibilityAttributes } from '@/utils/dom/attributes';
+import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
 import { isNodeWithinElement } from '@/utils/dom/events';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
+import type { FloatingPlacement, FloatingSide } from '../floating/types';
 import type { SelectOption, SelectProps } from './types';
 
 type SelectValue = string | number | null;
@@ -38,10 +42,14 @@ export interface SelectControl {
     focusedIndex: ComputedRef<number>;
     activeDescendantId: ComputedRef<string | undefined>;
     rootClass: ComputedRef<string[]>;
+    floatingStyle: Readonly<Ref<CSSProperties>>;
+    actualPlacement: Readonly<Ref<FloatingPlacement>>;
+    placementSide: ComputedRef<FloatingSide>;
     hasValue: ComputedRef<boolean>;
     displayLabel: ComputedRef<string>;
     selectedValue: ComputedRef<SelectValue>;
     canClear: ComputedRef<boolean>;
+    setDropdownElement: (value: ComponentElementRef) => void;
     toggle: () => void;
     selectOption: (option: SelectOption) => void;
     clearSelection: () => void;
@@ -181,6 +189,7 @@ export function useSelect(
 ): SelectControl {
     const selectRef = ref<HTMLElement | null>(null);
     const triggerRef = ref<HTMLElement | null>(null);
+    const dropdownRef = ref<HTMLElement | null>(null);
     const isOpen = ref(false);
     const transaction = useSelectTransaction(props, emitUpdate, triggerRef);
     const value = transaction.selectedValue;
@@ -207,6 +216,15 @@ export function useSelect(
     );
     const activeDescendantId = computed(() =>
         getSelectActiveDescendantId(selectId, focusedIndex.value, isOpen.value),
+    );
+    const floating = useFloatingPosition({
+        reference: triggerRef,
+        floating: dropdownRef,
+        open: isOpen,
+        placement: 'bottom-start',
+    });
+    const placementSide = computed(
+        () => floating.actualPlacement.value.split('-')[0] as FloatingSide,
     );
 
     const typeahead = useTypeahead<SelectOption>({
@@ -239,6 +257,12 @@ export function useSelect(
     const canClear = computed(() =>
         Boolean(props.clearable && hasValue.value && !control.disabled),
     );
+
+    function setDropdownElement(elementRef: ComponentElementRef) {
+        resolveHTMLElementRef(elementRef, popupId, (resolved) => {
+            dropdownRef.value = resolved;
+        });
+    }
 
     function focusTrigger() {
         nextTick(() => triggerRef.value?.focus());
@@ -381,10 +405,14 @@ export function useSelect(
         focusedIndex,
         activeDescendantId,
         rootClass,
+        floatingStyle: floating.floatingStyle,
+        actualPlacement: floating.actualPlacement,
+        placementSide,
         hasValue,
         displayLabel,
         selectedValue: value,
         canClear,
+        setDropdownElement,
         toggle,
         selectOption,
         clearSelection,

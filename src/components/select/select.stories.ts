@@ -98,6 +98,35 @@ export const ManyOptions: Story = {
     },
 };
 
+export const FlipsAboveNearViewportEdge: Story = {
+    tags: ['test'],
+    args: {
+        options: manyFruitOptions,
+    },
+    render: (args) => ({
+        components: { Select },
+        setup() {
+            const value = ref<string | number | null>(null);
+            return { args, value };
+        },
+        template: `
+            <div style="position: fixed; inset-inline-start: 24px; bottom: 4px;">
+                <Select v-bind="args" v-model="value" />
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await userEvent.click(canvas.getByRole('combobox', { name: 'Fruit' }));
+
+        const popup = canvasElement.querySelector('.rp-select__dropdown');
+        await waitFor(() => {
+            expect(popup).toHaveAttribute('data-placement', 'top-start');
+            expect(popup).toHaveAttribute('data-side', 'top');
+        });
+    },
+};
+
 export const OpenDropdownA11y: Story = {
     tags: ['test'],
     parameters: {

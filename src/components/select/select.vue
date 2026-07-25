@@ -73,7 +73,8 @@
         <Transition name="rp-select-dropdown">
             <ScrollArea
                 v-if="isOpen"
-                v-bind="getPartAttrs('content', { class: 'rp-select__dropdown' })"
+                :ref="setDropdownElement"
+                v-bind="contentAttrs"
                 :id="popupId"
                 embedded
                 type="auto"
@@ -159,10 +160,14 @@ const {
     focusedIndex,
     activeDescendantId,
     rootClass,
+    floatingStyle,
+    actualPlacement,
+    placementSide,
     hasValue,
     displayLabel,
     selectedValue,
     canClear,
+    setDropdownElement,
     toggle,
     selectOption,
     clearSelection,
@@ -181,6 +186,14 @@ const rootAttrs = computed(() =>
         'data-invalid': toPresenceAttribute(control.invalid),
     }),
 );
+const contentAttrs = computed(() => ({
+    ...getPartAttrs('content', {
+        class: 'rp-select__dropdown',
+        style: floatingStyle.value,
+    }),
+    'data-placement': actualPlacement.value,
+    'data-side': placementSide.value,
+}));
 
 defineExpose({
     nativeElement: templateRefs.native,

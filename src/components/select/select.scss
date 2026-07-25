@@ -203,9 +203,7 @@
 
     &__dropdown {
         position: absolute;
-        top: calc(100% + var(--rp-spacing-2));
-        left: 0;
-        right: 0;
+        width: 100%;
         @include menu-surface($radius: var(--_rp-select-radius));
         max-height: $component-menu-max-height;
         padding: var(--rp-spacing-1);
@@ -261,4 +259,9 @@
 .rp-select-dropdown-leave-to {
     opacity: 0;
     transform: translateY(calc(-1 * var(--rp-spacing-1)));
+}
+
+.rp-select__dropdown[data-side='top'].rp-select-dropdown-enter-from,
+.rp-select__dropdown[data-side='top'].rp-select-dropdown-leave-to {
+    transform: translateY(var(--rp-spacing-1));
 }
