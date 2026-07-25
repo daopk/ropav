@@ -1,5 +1,4 @@
 import { nextTick, type InputHTMLAttributes } from 'vue';
-import { hasAriaIdRef, parseAriaIdRefs } from '@/utils/aria';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import type { PopoverContentSlotProps, PopoverSlotProps } from '../popover/types';
 import type { DatePickerProps } from './types';
@@ -9,32 +8,8 @@ interface DatePickerPopoverOptions {
     getInputValue: () => string;
     isInputEditable: () => boolean;
     onInputBlur: () => void;
-}
-
-function focusCalendarFromTrigger(trigger: HTMLElement | null) {
-    const contentId = parseAriaIdRefs(trigger?.getAttribute('aria-controls'))[0];
-    const calendar = contentId
-        ? trigger?.ownerDocument
-              .getElementById(contentId)
-              ?.querySelector<HTMLElement>('.rp-calendar')
-        : null;
-    const focusTarget =
-        calendar?.querySelector<HTMLButtonElement>('.rp-calendar__day[tabindex="0"]') ??
-        calendar?.querySelector<HTMLButtonElement>('.rp-calendar__control:not(:disabled)');
-    focusTarget?.focus({ preventScroll: true });
-}
-
-function focusTriggerFromCalendar(event: KeyboardEvent) {
-    const content =
-        event.currentTarget instanceof Element
-            ? event.currentTarget.closest('[role="dialog"]')
-            : null;
-    const contentId = content?.id;
-    if (!contentId) return;
-
-    [...content.ownerDocument.querySelectorAll<HTMLElement>('[aria-controls]')]
-        .find((element) => hasAriaIdRef(element.getAttribute('aria-controls'), contentId))
-        ?.focus({ preventScroll: true });
+    focusInput: () => void;
+    focusCalendar: () => void;
 }
 
 export function useDatePickerPopover(options: DatePickerPopoverOptions) {
@@ -98,10 +73,8 @@ export function useDatePickerPopover(options: DatePickerPopoverOptions) {
             onKeydown(event) {
                 if (event.key === 'ArrowDown') {
                     event.preventDefault();
-                    const triggerElement =
-                        event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
                     popover.open();
-                    void nextTick(() => focusCalendarFromTrigger(triggerElement));
+                    void nextTick(options.focusCalendar);
                 } else if (event.key === 'Escape') {
                     trigger.onKeydown(event);
                 }
@@ -130,7 +103,7 @@ export function useDatePickerPopover(options: DatePickerPopoverOptions) {
     function onCalendarKeydown(event: KeyboardEvent, popover: PopoverContentSlotProps) {
         if (event.key !== 'Escape') return;
         event.stopPropagation();
-        focusTriggerFromCalendar(event);
+        focusWithoutOpening(options.focusInput);
         popover.close();
     }
 

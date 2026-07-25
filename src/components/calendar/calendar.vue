@@ -198,8 +198,12 @@ function isFocusable(day: CalendarDay) {
 
 defineExpose({
     nativeElement: rootRef,
-    focus: () =>
-        rootRef.value?.querySelector<HTMLButtonElement>('.rp-calendar__day[tabindex="0"]')?.focus(),
+    focus() {
+        const focusTarget =
+            rootRef.value?.querySelector<HTMLButtonElement>('.rp-calendar__day[tabindex="0"]') ??
+            rootRef.value?.querySelector<HTMLButtonElement>('.rp-calendar__control:not(:disabled)');
+        focusTarget?.focus({ preventScroll: true });
+    },
 });
 </script>
 

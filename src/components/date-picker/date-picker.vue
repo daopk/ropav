@@ -78,6 +78,7 @@
 
         <template #content="slotProps">
             <Calendar
+                ref="calendarComponentRef"
                 :model-value="selectedDate"
                 :default-month="defaultMonth"
                 :locale="locale"
@@ -117,10 +118,7 @@
 <script lang="ts" setup vapor>
 import { computed, ref } from 'vue';
 import IconX from '~icons/lucide/x';
-import {
-    provideNestedFormControlOwner,
-    useFormControl,
-} from '@/internal/composables/useFormControl';
+import { provideNestedFormControlOwner } from '@/internal/composables/useFormControl';
 import { useStylesApi } from '@/styles-api';
 import { toPresenceAttribute } from '@/utils/attributes';
 import Calendar from '../calendar/calendar.vue';
@@ -130,7 +128,6 @@ import type { PopoverSlotProps } from '../popover/types';
 import type { DatePickerDaySlotProps, DatePickerPart, DatePickerProps } from './types';
 import { defaultDatePickerFormat } from './datePickerModel';
 import { useDatePicker } from './useDatePicker';
-import { useDatePickerPopover } from './useDatePickerPopover';
 
 defineOptions({ name: 'RpDatePicker', inheritAttrs: false });
 
@@ -186,57 +183,37 @@ provideNestedFormControlOwner();
 const inputComponentRef = ref<{ nativeElement: HTMLInputElement | null; focus: () => void } | null>(
     null,
 );
+const calendarComponentRef = ref<{ focus: () => void } | null>(null);
 const {
     control,
-    controllable,
-    initialValue,
     selectedDate,
     inputValue,
     isInvalid,
     effectiveValidationMessage,
     rootClass,
     canClear,
-    formatValue,
-    onInputUpdate,
-    onInputBlur,
-    onCalendarUpdate,
-    clearSelection,
-    resetValue,
-    onOpenUpdate,
-} = useDatePicker(props, {
-    value: (value) => emit('update:modelValue', value),
-    change: (value) => emit('change', value),
-    open: (open) => emit('update:open', open),
-});
-const {
     getInputTriggerAttrs,
-    open: openPopover,
-    focusWithoutOpening,
+    onInputUpdate,
     rememberClose,
     onCalendarKeydown,
     onFocusOut,
-} = useDatePickerPopover({
-    getInputAttrs: () => props.inputAttrs,
-    getInputValue: () => inputValue.value,
-    isInputEditable: () => props.allowInput && !control.disabled && !props.readonly,
-    onInputBlur,
-});
+    clearFromControl,
+    selectCalendarDate,
+    openDatePicker,
+    onOpenUpdate,
+} = useDatePicker(
+    props,
+    {
+        value: (value) => emit('update:modelValue', value),
+        change: (value) => emit('change', value),
+        open: (open) => emit('update:open', open),
+    },
+    {
+        getInput: () => inputComponentRef.value?.nativeElement ?? null,
+        focusCalendar: () => calendarComponentRef.value?.focus(),
+    },
+);
 const popoverDisabled = computed(() => control.disabled || props.readonly);
-
-useFormControl({
-    elements: () => [inputComponentRef.value?.nativeElement],
-    isControlled: () => controllable.isControlled.value,
-    initializeDefault(element) {
-        (element as HTMLInputElement).defaultValue = formatValue(initialValue);
-    },
-    validationMessage: () => effectiveValidationMessage.value,
-    readResetValue() {
-        resetValue();
-    },
-    syncControlledValue([element]) {
-        element.value = inputValue.value;
-    },
-});
 
 const { getPartAttrs, getRootAttrs } = useStylesApi<DatePickerPart>(props, 'root');
 const rootAttrs = computed(() =>
@@ -293,31 +270,6 @@ function getIndicatorAttrs(slotProps: unknown) {
         ...getPartAttrs('indicator', { class: 'rp-date-picker__indicator' }),
         'aria-controls': popover.triggerProps['aria-controls'],
     };
-}
-
-function focusInputWithoutOpening() {
-    focusWithoutOpening(() => inputComponentRef.value?.focus());
-}
-
-function clearFromControl(event: MouseEvent) {
-    const clearButton = event.currentTarget;
-    const shouldRestoreFocus =
-        clearButton instanceof HTMLElement &&
-        clearButton.ownerDocument.activeElement === clearButton;
-    clearSelection();
-    if (shouldRestoreFocus) focusInputWithoutOpening();
-}
-
-function selectCalendarDate(value: Date, close: () => void) {
-    onCalendarUpdate(value, () => {
-        focusInputWithoutOpening();
-        close();
-    });
-}
-
-function openDatePicker() {
-    focusInputWithoutOpening();
-    openPopover();
 }
 
 defineExpose({

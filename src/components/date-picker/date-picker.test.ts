@@ -204,6 +204,28 @@ describe('DatePicker', () => {
         expect(document.activeElement).toBe(native);
     });
 
+    it('focuses a calendar control when no day is selectable', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(DatePicker, {
+                        defaultValue: new Date(2026, 6, 10),
+                        disabledDates: () => true,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const native = queryDom(container, 'input') as HTMLInputElement;
+        native.focus();
+        keydown(native, 'ArrowDown');
+        await flush();
+
+        expect(document.activeElement?.classList.contains('rp-calendar__control')).toBe(true);
+    });
+
     it('restores focus after keyboard selection and keyboard clearing', async () => {
         const container = mountDom(
             defineComponent({

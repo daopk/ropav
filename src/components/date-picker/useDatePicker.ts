@@ -1,5 +1,6 @@
 import { computed, nextTick, shallowRef, watch } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
+import { useFormControl } from '@/internal/composables/useFormControl';
 import { useControlState } from '@/internal/composables/useControlState';
 import { bem } from '@/utils/bem';
 import { normalizeDate, toLocalDate } from '@/utils/date';
@@ -11,6 +12,7 @@ import {
     parseDatePickerValue,
 } from './datePickerModel';
 import type { DatePickerProps } from './types';
+import { useDatePickerPopover } from './useDatePickerPopover';
 
 interface DatePickerEmitters {
     value: (value: Date | null) => void;
@@ -18,7 +20,16 @@ interface DatePickerEmitters {
     open: (open: boolean) => void;
 }
 
-export function useDatePicker(props: Readonly<DatePickerProps>, emit: DatePickerEmitters) {
+interface DatePickerElements {
+    getInput: () => HTMLInputElement | null;
+    focusCalendar: () => void;
+}
+
+export function useDatePicker(
+    props: Readonly<DatePickerProps>,
+    emit: DatePickerEmitters,
+    elements: DatePickerElements,
+) {
     const control = useControlState(props);
     const initialValue = normalizeDatePickerValue(props.defaultValue);
     const controllable = useControllableValue<Date | null>({
@@ -52,6 +63,21 @@ export function useDatePicker(props: Readonly<DatePickerProps>, emit: DatePicker
         () =>
             Boolean(props.clearable && selectedDate.value) && !control.disabled && !props.readonly,
     );
+    const {
+        getInputTriggerAttrs,
+        open: openPopover,
+        focusWithoutOpening,
+        rememberClose,
+        onCalendarKeydown,
+        onFocusOut,
+    } = useDatePickerPopover({
+        getInputAttrs: () => props.inputAttrs,
+        getInputValue: () => inputValue.value,
+        isInputEditable: () => Boolean(props.allowInput && !control.disabled && !props.readonly),
+        onInputBlur,
+        focusInput,
+        focusCalendar: elements.focusCalendar,
+    });
 
     watch(
         [
@@ -137,15 +163,39 @@ export function useDatePicker(props: Readonly<DatePickerProps>, emit: DatePicker
         if (!hasInvalidInput.value && parsed) inputValue.value = formatValue(parsed);
     }
 
-    function onCalendarUpdate(value: Date, close: () => void) {
+    function focusInput() {
+        elements.getInput()?.focus({ preventScroll: true });
+    }
+
+    function focusInputWithoutOpening() {
+        focusWithoutOpening(focusInput);
+    }
+
+    function selectCalendarDate(value: Date, close: () => void) {
         if (control.disabled || props.readonly) return;
         setSelectedDate(value);
-        if (props.closeOnSelect !== false) close();
+        if (props.closeOnSelect === false) return;
+        focusInputWithoutOpening();
+        close();
     }
 
     function clearSelection() {
         if (!canClear.value) return;
         setSelectedDate(null);
+    }
+
+    function clearFromControl(event: MouseEvent) {
+        const clearButton = event.currentTarget;
+        const shouldRestoreFocus =
+            clearButton instanceof HTMLElement &&
+            clearButton.ownerDocument.activeElement === clearButton;
+        clearSelection();
+        if (shouldRestoreFocus) focusInputWithoutOpening();
+    }
+
+    function openDatePicker() {
+        focusInputWithoutOpening();
+        openPopover();
     }
 
     function resetValue() {
@@ -158,23 +208,35 @@ export function useDatePicker(props: Readonly<DatePickerProps>, emit: DatePicker
         emit.open(open);
     }
 
+    useFormControl({
+        elements: () => [elements.getInput()],
+        isControlled: () => controllable.isControlled.value,
+        initializeDefault(element) {
+            (element as HTMLInputElement).defaultValue = formatValue(initialValue);
+        },
+        validationMessage: () => effectiveValidationMessage.value,
+        readResetValue: resetValue,
+        syncControlledValue([element]) {
+            element.value = inputValue.value;
+        },
+    });
+
     return {
         control,
-        controllable,
-        initialValue,
         selectedDate,
         inputValue,
         isInvalid,
         effectiveValidationMessage,
         rootClass,
         canClear,
-        formatValue,
-        setSelectedDate,
+        getInputTriggerAttrs,
         onInputUpdate,
-        onInputBlur,
-        onCalendarUpdate,
-        clearSelection,
-        resetValue,
+        rememberClose,
+        onCalendarKeydown,
+        onFocusOut,
+        clearFromControl,
+        selectCalendarDate,
+        openDatePicker,
         onOpenUpdate,
     };
 }
