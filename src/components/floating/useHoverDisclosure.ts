@@ -1,4 +1,5 @@
 import { createHoverDisclosureInteractionModel } from './hoverDisclosureInteractionModel';
+import type { ConnectHoverDisclosureDismissal } from './hoverDisclosureDismissalRouting';
 import type { UseHoverDisclosureOptions, UseHoverDisclosureReturn } from './types';
 import { useHoverDisclosureInteractions } from './useHoverDisclosureInteractions';
 import { useHoverDisclosureOpenState } from './useHoverDisclosureOpenState';
@@ -9,6 +10,20 @@ import {
 
 export function useHoverDisclosure(
     options: Readonly<UseHoverDisclosureOptions> = {},
+): UseHoverDisclosureReturn {
+    return useHoverDisclosureController(options);
+}
+
+export function useHoverDisclosureWithDismissalRouting(
+    options: Readonly<UseHoverDisclosureOptions>,
+    connectDismissal: ConnectHoverDisclosureDismissal,
+): UseHoverDisclosureReturn {
+    return useHoverDisclosureController(options, connectDismissal);
+}
+
+function useHoverDisclosureController(
+    options: Readonly<UseHoverDisclosureOptions>,
+    connectDismissal?: ConnectHoverDisclosureDismissal,
 ): UseHoverDisclosureReturn {
     const interaction = createHoverDisclosureInteractionModel();
     const targets = createHoverDisclosureTargetState();
@@ -21,6 +36,7 @@ export function useHoverDisclosure(
     });
     const { bindingAdapter, contentProps, triggerProps } = useHoverDisclosureInteractions({
         commands: openState,
+        dismissalRouted: connectDismissal !== undefined,
         interaction,
         options,
         state: openState.state,
@@ -29,6 +45,7 @@ export function useHoverDisclosure(
 
     useHoverDisclosureTargetBinding({
         adapter: bindingAdapter,
+        connectDismissal,
         isOpen: openState.isOpen,
         options,
         targets,

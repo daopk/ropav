@@ -19,6 +19,7 @@ import {
     dropdownMenuParts,
     fieldParts,
     focusTrapParts,
+    hoverCardParts,
     iconButtonParts,
     inputParts,
     modalParts,
@@ -67,6 +68,7 @@ describe('public semantic part catalog', () => {
             DropdownMenu: dropdownMenuParts,
             Field: fieldParts,
             FocusTrap: focusTrapParts,
+            HoverCard: hoverCardParts,
             IconButton: iconButtonParts,
             Input: inputParts,
             Modal: modalParts,
@@ -142,6 +144,7 @@ describe('public semantic part catalog', () => {
             ],
             Field: ['root', 'label', 'required', 'control', 'description'],
             FocusTrap: ['root'],
+            HoverCard: ['root', 'trigger', 'content'],
             IconButton: ['root', 'loader', 'icon'],
             Input: ['root', 'input', 'left', 'right'],
             Modal: [

@@ -9,6 +9,7 @@ import {
 } from 'vue';
 import { isEventWithinTargets } from '@/utils/dom/events';
 import { isElement } from '@/utils/dom/query';
+import type { ConnectHoverDisclosureDismissal } from './hoverDisclosureDismissalRouting';
 import type { UseHoverDisclosureOptions } from './types';
 import type { HoverDisclosureInteractionPart } from './hoverDisclosureInteractionModel';
 import { useFloatingTargetLifecycle } from './useFloatingTargetLifecycle';
@@ -33,6 +34,7 @@ interface HoverDisclosureBindingAdapter {
 
 interface UseHoverDisclosureTargetBindingOptions {
     adapter: HoverDisclosureBindingAdapter;
+    connectDismissal?: ConnectHoverDisclosureDismissal;
     isOpen: ComputedRef<boolean>;
     options: Readonly<UseHoverDisclosureOptions>;
     targets: HoverDisclosureTargetState;
@@ -49,6 +51,7 @@ export function createHoverDisclosureTargetState(): HoverDisclosureTargetState {
 
 export function useHoverDisclosureTargetBinding({
     adapter,
+    connectDismissal,
     isOpen,
     options,
     targets,
@@ -84,7 +87,11 @@ export function useHoverDisclosureTargetBinding({
     }
 
     function setDocumentListeners(active: boolean) {
-        if (typeof document === 'undefined' || active === documentListenersActive) {
+        if (
+            connectDismissal ||
+            typeof document === 'undefined' ||
+            active === documentListenersActive
+        ) {
             return;
         }
 
@@ -99,6 +106,10 @@ export function useHoverDisclosureTargetBinding({
         document.removeEventListener('pointerdown', onDocumentPointerdown as EventListener, true);
     }
 
+    const disconnectDismissal = connectDismissal?.({
+        escapeKeyDown: adapter.onDocumentKeydown,
+        pointerDownOutside: adapter.onOutsidePointerdown,
+    });
     const fallbackTarget = shallowRef<Element | null>(null);
     const interactionTargetLifecycle = useFloatingTargetLifecycle({
         target: () => toValue(options.interactionTarget),
@@ -128,7 +139,10 @@ export function useHoverDisclosureTargetBinding({
     onMounted(() => {
         setDocumentListeners(isOpen.value);
     });
-    onBeforeUnmount(() => setDocumentListeners(false));
+    onBeforeUnmount(() => {
+        setDocumentListeners(false);
+        disconnectDismissal?.();
+    });
 }
 
 function isEventInsideTargets(event: Event, targets: HoverDisclosureTargetState) {

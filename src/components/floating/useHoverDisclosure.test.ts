@@ -110,7 +110,7 @@ describe('useHoverDisclosure', () => {
         expect(disclosure.isOpen.value).toBe(false);
     });
 
-    it('opens immediately on focus and keeps the composite open while focus moves to content', async () => {
+    it('opens immediately on keyboard focus and stays open while focus moves to content', async () => {
         vi.useFakeTimers();
         const { container, disclosure } = mountDisclosure({
             openDelay: 500,
@@ -248,6 +248,126 @@ describe('useHoverDisclosure', () => {
         expect(disclosure.isOpen.value).toBe(true);
 
         dispatchPointer(document.body, 'pointerdown');
+        expect(disclosure.isOpen.value).toBe(false);
+    });
+
+    it.each([
+        {
+            expectedOpen: false,
+            focusTiming: 'before pointerup',
+            touchBehavior: 'none' as const,
+        },
+        {
+            expectedOpen: true,
+            focusTiming: 'before pointerup',
+            touchBehavior: 'toggle' as const,
+        },
+        {
+            expectedOpen: false,
+            focusTiming: 'after pointerup',
+            touchBehavior: 'none' as const,
+        },
+        {
+            expectedOpen: true,
+            focusTiming: 'after pointerup',
+            touchBehavior: 'toggle' as const,
+        },
+    ])(
+        'handles touch focus $focusTiming with $touchBehavior behavior',
+        ({ expectedOpen, focusTiming, touchBehavior }) => {
+            const onOpenChange =
+                vi.fn<(open: boolean, details: HoverDisclosureOpenChangeDetails) => void>();
+            const { container, disclosure } = mountDisclosure({
+                onOpenChange,
+                touchBehavior,
+            });
+            const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+
+            dispatchPointer(trigger, 'pointerdown', 'touch');
+            if (focusTiming === 'before pointerup') {
+                trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+            }
+            dispatchPointer(trigger, 'pointerup', 'touch');
+            if (focusTiming === 'after pointerup') {
+                trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+            }
+            trigger.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+            expect(disclosure.isOpen.value).toBe(expectedOpen);
+            expect(
+                onOpenChange.mock.calls.map(([open, details]) => [open, details.reason]),
+            ).toEqual(expectedOpen ? [[true, 'touch']] : []);
+        },
+    );
+
+    it('expires a missing touch compatibility click before later keyboard focus', () => {
+        vi.useFakeTimers();
+        const changes: Array<[boolean, HoverDisclosureOpenChangeDetails]> = [];
+        const { container, disclosure } = mountDisclosure({
+            onOpenChange(open, details) {
+                changes.push([open, details]);
+            },
+            touchBehavior: 'toggle',
+        });
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+
+        dispatchPointer(trigger, 'pointerdown', 'touch');
+        dispatchPointer(trigger, 'pointerup', 'touch');
+        vi.runOnlyPendingTimers();
+        trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+
+        expect(disclosure.isOpen.value).toBe(true);
+        expect(changes.map(([open, details]) => [open, details.reason])).toEqual([[true, 'focus']]);
+    });
+
+    it('keeps inline content touch actions out of an ancestor interaction target', async () => {
+        const onContentClick = vi.fn();
+        let disclosure!: ReturnType<typeof useHoverDisclosure>;
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    disclosure = useHoverDisclosure({
+                        defaultOpen: true,
+                        interactionTarget: '#inline-trigger',
+                        contentTarget: '#inline-content',
+                        touchBehavior: 'toggle',
+                    });
+                    return () =>
+                        h('div', { id: 'inline-trigger' }, [
+                            h('section', { id: 'inline-content' }, [
+                                h(
+                                    'button',
+                                    {
+                                        class: 'content-action',
+                                        onClick: onContentClick,
+                                        type: 'button',
+                                    },
+                                    'Content action',
+                                ),
+                            ]),
+                        ]);
+                },
+            }),
+        );
+        await flush();
+        const trigger = queryDom(container, '#inline-trigger') as HTMLElement;
+        const contentAction = queryDom(container, '.content-action') as HTMLButtonElement;
+
+        dispatchPointer(contentAction, 'pointerdown', 'touch');
+        dispatchPointer(contentAction, 'pointerup', 'touch');
+        const contentClick = new MouseEvent('click', { bubbles: true, cancelable: true });
+        contentAction.dispatchEvent(contentClick);
+
+        expect(onContentClick).toHaveBeenCalledOnce();
+        expect(contentClick.defaultPrevented).toBe(false);
+        expect(disclosure.isOpen.value).toBe(true);
+
+        dispatchPointer(trigger, 'pointerdown', 'touch');
+        dispatchPointer(trigger, 'pointerup', 'touch');
+        const triggerClick = new MouseEvent('click', { bubbles: true, cancelable: true });
+        trigger.dispatchEvent(triggerClick);
+
+        expect(triggerClick.defaultPrevented).toBe(true);
         expect(disclosure.isOpen.value).toBe(false);
     });
 

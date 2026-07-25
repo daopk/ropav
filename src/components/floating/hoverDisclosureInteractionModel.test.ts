@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     createHoverDisclosureInteractionModel,
     hasActiveHoverDisclosureInteraction,
+    hasPendingHoverDisclosureTouchInteraction,
 } from './hoverDisclosureInteractionModel';
 
 describe('hover disclosure interaction model', () => {
@@ -40,18 +41,22 @@ describe('hover disclosure interaction model', () => {
         interaction.send({ type: 'pointer-down', touch: true });
         expect(interaction.read().touchPointerActive).toBe(true);
         expect(interaction.read().touchClickPending).toBe(false);
+        expect(hasPendingHoverDisclosureTouchInteraction(interaction.read())).toBe(true);
 
         interaction.send({ type: 'pointer-up', touch: true });
         expect(interaction.read().touchPointerActive).toBe(false);
         expect(interaction.read().touchClickPending).toBe(true);
+        expect(hasPendingHoverDisclosureTouchInteraction(interaction.read())).toBe(true);
 
         interaction.send({ type: 'consume-touch-click' });
         expect(interaction.read().touchClickPending).toBe(false);
+        expect(hasPendingHoverDisclosureTouchInteraction(interaction.read())).toBe(false);
 
         interaction.send({ type: 'pointer-down', touch: true });
         interaction.send({ type: 'pointer-cancel' });
         interaction.send({ type: 'pointer-up', touch: true });
         expect(interaction.read().touchClickPending).toBe(false);
+        expect(hasPendingHoverDisclosureTouchInteraction(interaction.read())).toBe(false);
     });
 
     it('does not treat mouse or pen pointer sequences as touch clicks', () => {

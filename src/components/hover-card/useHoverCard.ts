@@ -1,9 +1,13 @@
-import { computed, ref, useId, useSlots, type CSSProperties } from 'vue';
+import { computed, onBeforeUnmount, ref, useId, useSlots, type CSSProperties } from 'vue';
+import { useElementDirection } from '@/internal/composables/useElementDirection';
+import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { bem } from '@/utils/bem';
+import { isElement } from '@/utils/dom/query';
 import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
+import type { HoverDisclosureDismissalHandlers } from '../floating/hoverDisclosureDismissalRouting';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
-import { useHoverDisclosure } from '../floating/useHoverDisclosure';
+import { useHoverDisclosureWithDismissalRouting } from '../floating/useHoverDisclosure';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import type {
@@ -35,33 +39,61 @@ export function useHoverCard(
         target: () => props.target,
         fallback: rootRef,
     });
-    const { isExplicitTarget, reference } = targetLifecycle;
+    const { isExplicitTarget, reference, targetElement } = targetLifecycle;
+    const directionTarget = computed(() => {
+        const currentReference = reference.value;
+        if (isElement(currentReference)) return currentReference;
+        return isElement(currentReference?.contextElement)
+            ? currentReference.contextElement
+            : rootRef.value;
+    });
+    const contentDirection = useElementDirection(directionTarget);
     const hasContent = computed(() =>
         Boolean(slots.content || (isExplicitTarget.value && slots.default)),
     );
     const disclosureDisabled = computed(() => Boolean(props.disabled || !hasContent.value));
-    const disclosure = useHoverDisclosure({
-        open: () => props.open,
-        defaultOpen: props.defaultOpen,
-        openDelay: () => props.openDelay,
-        closeDelay: () => props.closeDelay,
-        disabled: disclosureDisabled,
-        openOnFocus: () => props.openOnFocus,
-        closeOnEscape: () => props.closeOnEscape,
-        touchBehavior: () => props.touchBehavior,
-        interactionTarget: reference,
-        contentTarget: contentRef,
-        onOpenChange,
-    });
+    let dismissalHandlers: HoverDisclosureDismissalHandlers | undefined;
+    const disclosure = useHoverDisclosureWithDismissalRouting(
+        {
+            open: () => props.open,
+            defaultOpen: props.defaultOpen,
+            openDelay: () => props.openDelay,
+            closeDelay: () => props.closeDelay,
+            disabled: disclosureDisabled,
+            openOnFocus: () => props.openOnFocus,
+            closeOnEscape: () => props.closeOnEscape,
+            touchBehavior: () => props.touchBehavior,
+            interactionTarget: reference,
+            contentTarget: contentRef,
+            onOpenChange,
+        },
+        (handlers) => {
+            dismissalHandlers = handlers;
+            return () => {
+                if (dismissalHandlers === handlers) dismissalHandlers = undefined;
+            };
+        },
+    );
     const isVisible = disclosure.isOpen;
     const shouldRenderContent = computed(
         () =>
             !disclosure.isDisabled.value && (Boolean(props.keepMounted) || disclosure.isOpen.value),
     );
     const shouldShowContent = computed(() => !props.keepMounted || disclosure.isOpen.value);
-    const zIndex = useOverlayZIndex({
+    const baseZIndex = useOverlayZIndex({
         baseZIndex: () => props.baseZIndex,
         defaultBaseZIndex: 100,
+        aboveParent: false,
+    });
+    const layer = useOverlayLayer({
+        active: isVisible,
+        element: contentRef,
+        baseZIndex,
+    });
+    const disconnectLayerInteraction = layer.connectInteraction({
+        inside: () => [rootRef.value, targetElement.value],
+        escapeKeyDown: (event) => dismissalHandlers?.escapeKeyDown(event),
+        pointerDownOutside: (event) => dismissalHandlers?.pointerDownOutside(event),
     });
     const floating = useFloatingPosition({
         reference,
@@ -76,6 +108,7 @@ export function useHoverCard(
         shift: () => props.shift !== false,
         collisionPadding: () => props.collisionPadding ?? 8,
         autoUpdateOptions: () => props.autoUpdateOptions,
+        restartKey: contentDirection,
     });
     const placementSide = computed(() => floating.actualPlacement.value.split('-')[0]);
     const rootClass = computed(() =>
@@ -90,7 +123,7 @@ export function useHoverCard(
     const contentStyle = computed<CSSProperties>(() => ({
         ...floating.floatingStyle.value,
         ...getFloatingOffsetStyle(props.offset, HOVER_CARD_OFFSET_PROPERTIES),
-        zIndex: zIndex.value,
+        zIndex: layer.zIndex.value,
     }));
     const contentSlotProps = computed<HoverCardContentSlotProps>(() => ({
         isOpen: isVisible.value,
@@ -98,6 +131,8 @@ export function useHoverCard(
         close: disclosure.close,
         toggle: disclosure.toggle,
     }));
+
+    onBeforeUnmount(disconnectLayerInteraction);
 
     return {
         rootRef,
@@ -112,6 +147,7 @@ export function useHoverCard(
         shouldShowContent,
         rootClass,
         contentStyle,
+        contentDirection,
         contentSlotProps,
         actualPlacement: floating.actualPlacement,
         placementSide,

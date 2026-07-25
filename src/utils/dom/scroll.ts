@@ -1,7 +1,8 @@
 import { clamp } from '../number';
+import { getElementDirection, type ElementDirection } from './direction';
 
 export type ScrollAxis = 'x' | 'y';
-export type ScrollDirection = 'ltr' | 'rtl';
+export type ScrollDirection = ElementDirection;
 
 export interface KeyboardScrollPositionOptions {
     axis: ScrollAxis;
@@ -14,8 +15,7 @@ export interface KeyboardScrollPositionOptions {
 }
 
 export function getScrollDirection(element: Element): ScrollDirection {
-    const view = element.ownerDocument.defaultView;
-    return view?.getComputedStyle(element).direction === 'rtl' ? 'rtl' : 'ltr';
+    return getElementDirection(element);
 }
 
 export function getLogicalHorizontalScrollPosition(

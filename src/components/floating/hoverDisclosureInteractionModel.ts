@@ -60,6 +60,12 @@ export function hasActiveHoverDisclosureInteraction(
     );
 }
 
+export function hasPendingHoverDisclosureTouchInteraction(
+    state: Readonly<HoverDisclosureInteractionState>,
+) {
+    return state.touchPointerActive || state.touchClickPending;
+}
+
 export function reduceHoverDisclosureInteraction(
     state: Readonly<HoverDisclosureInteractionState>,
     action: HoverDisclosureInteractionAction,

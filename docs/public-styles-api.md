@@ -61,7 +61,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | MultiSelect                              | `root`, `pills`, `pill`, `pillLabel`, `pillRemove`, `input`, `indicator`, `clear`, `toggle`, `content`, `option`, `empty`                   |
 | NumberInput                              | `root`, `input`, `control`                                                                                                                  |
 | Overlay                                  | `root`                                                                                                                                      |
-| Popover, Tooltip                         | `root`, `trigger`, `content`                                                                                                                |
+| HoverCard, Popover, Tooltip              | `root`, `trigger`, `content`                                                                                                                |
 | Progress                                 | `root`, `label`, `value`, `track`, `indicator`                                                                                              |
 | Radio                                    | `root`, `input`, `indicator`, `label`                                                                                                       |
 | RadioGroup                               | `root`                                                                                                                                      |
@@ -80,7 +80,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 
 Boolean states use presence semantics: the attribute value is empty when true and the attribute is absent when false or unknown. Enum values are lowercase kebab-case.
 
-- `data-state="open|closed"`: AccordionItem, Collapse, Combobox, DropdownMenu and submenus, Modal, MultiSelect, Popover, Select and Tooltip.
+- `data-state="open|closed"`: AccordionItem, Collapse, Combobox, DropdownMenu and submenus, HoverCard, Modal, MultiSelect, Popover, Select and Tooltip.
 - `data-state="checked|unchecked|indeterminate"`: Checkbox.
 - `data-state="checked|unchecked"`: Radio and Switch.
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
@@ -97,8 +97,8 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.
 - `data-orientation="horizontal|vertical"`: ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
-- `data-placement`: the final placement after collision handling; twelve placements for Popover and DropdownMenu, `top-start|bottom-start` for Combobox, MultiSelect and Select, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
-- `data-side="top|right|bottom|left"`: the side component of the final placement for Combobox, MultiSelect, Popover, DropdownMenu, Select and Tooltip.
+- `data-placement`: the final placement after collision handling; twelve placements for HoverCard, Popover and DropdownMenu, `top-start|bottom-start` for Combobox, MultiSelect and Select, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
+- `data-side="top|right|bottom|left"`: the side component of the final placement for Combobox, MultiSelect, HoverCard, Popover, DropdownMenu, Select and Tooltip.
 - `data-control="increment|decrement"`: NumberInput controls.
 - `data-control="saturation|hue|opacity"`: ColorPicker controls and handles.
 - `data-thumb="lower|upper|merged"`: RangeSlider inputs, thumbs and tooltips; `data-active-thumb="lower|upper"` is present on its root only while a thumb is active.

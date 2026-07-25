@@ -17,6 +17,7 @@
         max-width: min(22rem, calc(100vw - var(--rp-spacing-6)));
         padding: var(--rp-spacing-4);
         color: var(--rp-color-text);
+        font-family: var(--rp-font-family);
         font-size: var(--rp-font-size-md);
         line-height: var(--rp-line-height-md);
         overflow-wrap: anywhere;

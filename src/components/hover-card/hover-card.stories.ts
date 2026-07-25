@@ -134,6 +134,51 @@ export const TeleportedStyles: Story = {
     },
 };
 
+export const RtlPlacement: Story = {
+    tags: ['test'],
+    args: {
+        id: 'rtl-hover-card',
+        open: true,
+        placement: 'bottom-start',
+        flip: false,
+        shift: false,
+    },
+    render: (args) => ({
+        components: { Button, HoverCard },
+        setup: () => ({ args }),
+        template: `
+            <div
+                dir="rtl"
+                style="box-sizing: border-box; display: grid; min-height: 420px; place-items: center; padding: 112px;"
+            >
+                <HoverCard v-bind="args">
+                    <template #default="{ triggerProps }">
+                        <Button v-bind="triggerProps" variant="outline">RTL target</Button>
+                    </template>
+                    <template #content>
+                        <div style="width: 180px;">محتوى بطاقة المعاينة</div>
+                    </template>
+                </HoverCard>
+            </div>
+        `,
+    }),
+    play: async ({ canvasElement }) => {
+        const storyDocument = canvasElement.ownerDocument;
+        const root = canvasElement.querySelector<HTMLElement>('.rp-hover-card')!;
+        const content = storyDocument.querySelector<HTMLElement>('#rtl-hover-card')!;
+
+        await waitFor(() => {
+            expect(content).toBeVisible();
+            expect(content.style.visibility).not.toBe('hidden');
+        });
+
+        expect(getComputedStyle(content).direction).toBe('rtl');
+        expect(
+            Math.abs(content.getBoundingClientRect().right - root.getBoundingClientRect().right),
+        ).toBeLessThanOrEqual(1);
+    },
+};
+
 export const Placements: Story = {
     tags: ['test'],
     args: {

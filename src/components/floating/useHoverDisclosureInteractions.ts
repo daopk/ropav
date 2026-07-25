@@ -1,7 +1,8 @@
-import { computed, toValue, watch, type ComputedRef } from 'vue';
-import { isNodeWithinElement } from '@/utils/dom/events';
+import { computed, onBeforeUnmount, toValue, watch, type ComputedRef } from 'vue';
+import { isEventWithinElement, isNodeWithinElement } from '@/utils/dom/events';
 import { isElement } from '@/utils/dom/query';
 import {
+    hasPendingHoverDisclosureTouchInteraction,
     type HoverDisclosureInteractionModel,
     type HoverDisclosureInteractionPart,
 } from './hoverDisclosureInteractionModel';
@@ -29,19 +30,53 @@ interface HoverDisclosureInteractionCommands {
 
 interface UseHoverDisclosureInteractionsOptions {
     commands: HoverDisclosureInteractionCommands;
+    dismissalRouted?: boolean;
     interaction: HoverDisclosureInteractionModel;
     options: Readonly<UseHoverDisclosureOptions>;
     state: ComputedRef<HoverDisclosureState>;
     targets: HoverDisclosureTargetState;
 }
 
+const TOUCH_CLICK_EXPIRY_DELAY = 500;
+
 export function useHoverDisclosureInteractions({
     commands,
+    dismissalRouted = false,
     interaction,
     options,
     state,
     targets,
 }: UseHoverDisclosureInteractionsOptions) {
+    let touchClickExpiryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function clearTouchClickExpiryTimer() {
+        if (touchClickExpiryTimer === undefined) return;
+        clearTimeout(touchClickExpiryTimer);
+        touchClickExpiryTimer = undefined;
+    }
+
+    function clearPendingTouchClick() {
+        clearTouchClickExpiryTimer();
+        interaction.send({ type: 'consume-touch-click' });
+    }
+
+    function scheduleTouchClickExpiry() {
+        clearTouchClickExpiryTimer();
+        touchClickExpiryTimer = setTimeout(() => {
+            touchClickExpiryTimer = undefined;
+            interaction.send({ type: 'consume-touch-click' });
+        }, TOUCH_CLICK_EXPIRY_DELAY);
+    }
+
+    function originatesInContent(event: Event) {
+        const contentTarget = targets.resolvedContentTarget.value;
+        return (
+            contentTarget !== null &&
+            contentTarget !== targets.resolvedInteractionTarget.value &&
+            isEventWithinElement(event, contentTarget)
+        );
+    }
+
     function rememberTarget(part: HoverDisclosureInteractionPart, event: Event) {
         const currentTarget = isElement(event.currentTarget) ? event.currentTarget : null;
         if (part === 'trigger') {
@@ -87,7 +122,11 @@ export function useHoverDisclosureInteractions({
 
     function onTriggerFocusin(event: FocusEvent) {
         rememberTarget('trigger', event);
-        if (commands.isDisabled.value || toValue(options.openOnFocus) === false) {
+        if (
+            commands.isDisabled.value ||
+            toValue(options.openOnFocus) === false ||
+            hasPendingHoverDisclosureTouchInteraction(interaction.read())
+        ) {
             return;
         }
 
@@ -120,7 +159,10 @@ export function useHoverDisclosureInteractions({
     }
 
     function onTriggerPointerdown(event: PointerEvent) {
+        if (originatesInContent(event)) return;
+
         rememberTarget('trigger', event);
+        clearPendingTouchClick();
         interaction.send({
             type: 'pointer-down',
             touch: event.pointerType === 'touch',
@@ -128,20 +170,29 @@ export function useHoverDisclosureInteractions({
     }
 
     function onTriggerPointerup(event: PointerEvent) {
+        if (originatesInContent(event)) return;
+
         rememberTarget('trigger', event);
-        interaction.send({
+        const interactionState = interaction.send({
             type: 'pointer-up',
             touch: event.pointerType === 'touch',
         });
+        if (interactionState.touchClickPending) scheduleTouchClickExpiry();
     }
 
     function onTriggerPointercancel(event: PointerEvent) {
+        if (originatesInContent(event)) return;
+
         rememberTarget('trigger', event);
+        clearTouchClickExpiryTimer();
         interaction.send({ type: 'pointer-cancel' });
     }
 
     function onTriggerClick(event: MouseEvent) {
+        if (originatesInContent(event)) return;
+
         rememberTarget('trigger', event);
+        clearTouchClickExpiryTimer();
         const interactionState = interaction.read();
         if (!interactionState.touchClickPending) return;
 
@@ -168,17 +219,27 @@ export function useHoverDisclosureInteractions({
         rememberTarget('content', event);
     }
 
-    function onKeydown(event: KeyboardEvent) {
+    function requestEscapeClose(event: KeyboardEvent) {
         if (
             event.key !== 'Escape' ||
             toValue(options.closeOnEscape) === false ||
             !commands.isOpen.value
         ) {
-            return;
+            return false;
         }
 
         interaction.send({ type: 'set-touch-pinned', pinned: false });
         requestClose('escape', event, 'immediate');
+        return true;
+    }
+
+    function onKeydown(event: KeyboardEvent) {
+        if (dismissalRouted || !requestEscapeClose(event)) return;
+        event.stopPropagation();
+    }
+
+    function onDocumentKeydown(event: KeyboardEvent) {
+        requestEscapeClose(event);
     }
 
     function onOutsidePointerdown(event: PointerEvent) {
@@ -189,6 +250,7 @@ export function useHoverDisclosureInteractions({
     }
 
     function onTargetDetached(part: HoverDisclosureInteractionPart) {
+        clearPendingTouchClick();
         if (part === 'trigger') interaction.send({ type: 'pointer-cancel' });
         interaction.send({ type: 'reset', part });
         requestClose('hover', undefined, 'delayed');
@@ -249,12 +311,13 @@ export function useHoverDisclosureInteractions({
             requestClose('touch', undefined, 'immediate');
         },
     );
+    onBeforeUnmount(clearTouchClickExpiryTimer);
 
     return {
         bindingAdapter: {
             contentListeners: presentation.contentListeners,
             isOutsideDismissalActive: () => interaction.read().touchPinned,
-            onDocumentKeydown: onKeydown,
+            onDocumentKeydown,
             onOutsidePointerdown,
             onTargetDetached,
             triggerListeners: presentation.triggerListeners,

@@ -17,6 +17,7 @@
                     :id="hoverCardId"
                     :ref="templateRefs.content"
                     v-bind="contentAttrs"
+                    :dir="contentDirection"
                     :data-side="placementSide"
                 >
                     <slot
@@ -106,6 +107,7 @@ const {
     shouldShowContent,
     rootClass,
     contentStyle,
+    contentDirection,
     contentSlotProps,
     actualPlacement,
     placementSide,

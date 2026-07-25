@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { flush, mountDom, queryDom, waitForAssertion } from '../../../tests/utils/vue';
+import DialogContent from '../dialog/dialog-content.vue';
+import DialogRoot from '../dialog/dialog-root.vue';
+import type { DialogCloseReason } from '../dialog/types';
 import HoverCard from './hover-card.vue';
 import type {
     HoverCardContentSlotProps,
@@ -103,6 +106,38 @@ describe('HoverCard', () => {
         expect(content.style.getPropertyValue('--_rp-hover-card-cross-axis-offset')).toBe('-4px');
         expect(arrow.getAttribute('aria-hidden')).toBe('true');
         expect(arrow.dataset.side).toBe('right');
+    });
+
+    it('preserves and tracks an external target direction across Teleport', async () => {
+        const target = document.createElement('button');
+        target.style.direction = 'rtl';
+        document.body.append(target);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        HoverCard,
+                        {
+                            id: 'direction-card',
+                            open: true,
+                            target,
+                        },
+                        {
+                            default: () => 'تفاصيل الملف الشخصي',
+                        },
+                    );
+                },
+            }),
+        );
+
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#direction-card')?.getAttribute('dir')).toBe('rtl');
+        });
+
+        target.style.direction = 'ltr';
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#direction-card')?.getAttribute('dir')).toBe('ltr');
+        });
     });
 
     it('coordinates delayed hover across the trigger and teleported content', async () => {
@@ -268,5 +303,293 @@ describe('HoverCard', () => {
             expect(queryDom(container, '#persistent-card')).toBe(content);
             expect(content.style.display).toBe('none');
         });
+    });
+
+    it('allows touch actions inside non-teleported content', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        HoverCard,
+                        {
+                            defaultOpen: true,
+                            teleport: false,
+                            touchBehavior: 'toggle',
+                        },
+                        {
+                            default: () => h('button', { class: 'trigger' }, 'Profile'),
+                            content: () =>
+                                h(
+                                    'a',
+                                    { class: 'inline-content-action', href: '#profile' },
+                                    'View profile',
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const action = queryDom(container, '.inline-content-action') as HTMLAnchorElement;
+
+        dispatchPointer(action, 'pointerdown', 'touch');
+        dispatchPointer(action, 'pointerup', 'touch');
+        const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+        action.dispatchEvent(click);
+        await flush();
+
+        expect(click.defaultPrevented).toBe(false);
+        expect(queryDom(container, '.rp-hover-card__content')).not.toBeNull();
+    });
+
+    it('keeps teleported content active inside a modal layer', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        { defaultOpen: true },
+                        {
+                            default: () =>
+                                h(
+                                    DialogContent,
+                                    {
+                                        ariaLabel: 'Parent dialog',
+                                        focusTrapOptions: {
+                                            tabbableOptions: { displayCheck: 'none' },
+                                        },
+                                    },
+                                    () =>
+                                        h(
+                                            HoverCard,
+                                            { defaultOpen: true, id: 'nested-hover-card' },
+                                            {
+                                                default: () =>
+                                                    h('button', { class: 'trigger' }, 'Profile'),
+                                                content: () =>
+                                                    h(
+                                                        'button',
+                                                        { class: 'nested-card-action' },
+                                                        'View profile',
+                                                    ),
+                                            },
+                                        ),
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+
+        const dialog = queryDom(container, '[role="dialog"]') as HTMLElement;
+        const content = queryDom(container, '#nested-hover-card') as HTMLElement;
+
+        expect(content.inert).toBe(false);
+        expect(content.getAttribute('aria-hidden')).toBeNull();
+        expect(Number(content.style.zIndex)).toBeGreaterThan(Number(dialog.style.zIndex));
+    });
+
+    it('keeps a parent modal open when Escape dismisses a nested card', async () => {
+        const closeReasons: DialogCloseReason[] = [];
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        DialogRoot,
+                        {
+                            defaultOpen: true,
+                            onClose: (reason: DialogCloseReason) => closeReasons.push(reason),
+                        },
+                        {
+                            default: () =>
+                                h(
+                                    DialogContent,
+                                    {
+                                        ariaLabel: 'Parent dialog',
+                                        focusTrapOptions: {
+                                            tabbableOptions: { displayCheck: 'none' },
+                                        },
+                                    },
+                                    () =>
+                                        h(
+                                            HoverCard,
+                                            { defaultOpen: true, id: 'escape-hover-card' },
+                                            {
+                                                default: () =>
+                                                    h('button', { class: 'trigger' }, 'Profile'),
+                                                content: () =>
+                                                    h(
+                                                        'button',
+                                                        { class: 'escape-card-action' },
+                                                        'View profile',
+                                                    ),
+                                            },
+                                        ),
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const action = queryDom(container, '.escape-card-action') as HTMLButtonElement;
+
+        action.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Escape',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#escape-hover-card')).toBeNull();
+        });
+        expect(queryDom(container, '[role="dialog"]')).not.toBeNull();
+        expect(closeReasons).toEqual([]);
+    });
+
+    it('routes Escape through nested card layers one card at a time', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        HoverCard,
+                        {
+                            defaultOpen: true,
+                            id: 'outer-layer-card',
+                            teleport: false,
+                        },
+                        {
+                            default: () =>
+                                h('button', { class: 'outer-layer-trigger' }, 'Outer profile'),
+                            content: () =>
+                                h(
+                                    HoverCard,
+                                    {
+                                        defaultOpen: true,
+                                        id: 'inner-layer-card',
+                                        teleport: false,
+                                    },
+                                    {
+                                        default: () =>
+                                            h(
+                                                'button',
+                                                { class: 'inner-layer-trigger' },
+                                                'Inner profile',
+                                            ),
+                                        content: () =>
+                                            h(
+                                                'button',
+                                                { class: 'inner-layer-action' },
+                                                'View inner profile',
+                                            ),
+                                    },
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const outerTrigger = queryDom(container, '.outer-layer-trigger') as HTMLButtonElement;
+        outerTrigger.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Escape',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#inner-layer-card')).toBeNull();
+        });
+        expect(queryDom(container, '#outer-layer-card')).not.toBeNull();
+
+        const innerTrigger = queryDom(container, '.inner-layer-trigger') as HTMLButtonElement;
+        innerTrigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#inner-layer-card')).not.toBeNull();
+        });
+
+        const innerAction = queryDom(container, '.inner-layer-action') as HTMLButtonElement;
+        innerAction.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Escape',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#inner-layer-card')).toBeNull();
+        });
+        expect(queryDom(container, '#outer-layer-card')).not.toBeNull();
+    });
+
+    it('routes an outside touch press to only the top pinned card', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(
+                        HoverCard,
+                        {
+                            id: 'outer-touch-card',
+                            touchBehavior: 'toggle',
+                        },
+                        {
+                            default: () =>
+                                h('button', { class: 'outer-touch-trigger' }, 'Outer profile'),
+                            content: () =>
+                                h(
+                                    HoverCard,
+                                    {
+                                        id: 'inner-touch-card',
+                                        touchBehavior: 'toggle',
+                                    },
+                                    {
+                                        default: () =>
+                                            h(
+                                                'button',
+                                                { class: 'inner-touch-trigger' },
+                                                'Inner profile',
+                                            ),
+                                        content: () => 'Inner details',
+                                    },
+                                ),
+                        },
+                    );
+                },
+            }),
+        );
+
+        await flush();
+        const outerTrigger = queryDom(container, '.outer-touch-trigger') as HTMLButtonElement;
+        dispatchPointer(outerTrigger, 'pointerdown', 'touch');
+        dispatchPointer(outerTrigger, 'pointerup', 'touch');
+        outerTrigger.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#outer-touch-card')).not.toBeNull();
+        });
+
+        const innerTrigger = queryDom(container, '.inner-touch-trigger') as HTMLButtonElement;
+        dispatchPointer(innerTrigger, 'pointerdown', 'touch');
+        dispatchPointer(innerTrigger, 'pointerup', 'touch');
+        innerTrigger.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#inner-touch-card')).not.toBeNull();
+        });
+
+        dispatchPointer(document.body, 'pointerdown', 'touch');
+
+        await waitForAssertion(() => {
+            expect(queryDom(container, '#inner-touch-card')).toBeNull();
+        });
+        expect(queryDom(container, '#outer-touch-card')).not.toBeNull();
     });
 });
