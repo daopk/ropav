@@ -10,7 +10,6 @@ export interface UseFlatOptionCollectionOptions<T extends object, Key extends Pr
     getKey: (item: T) => Key;
     isDisabled?: (item: T) => boolean;
     isSelected?: (item: T) => boolean;
-    getItemsChangeActivation?: () => 'first' | 'selected' | undefined;
     loop?: boolean;
 }
 
@@ -70,10 +69,6 @@ export function useFlatOptionCollection<T extends object, Key extends PropertyKe
         if (!options.isOpen()) return undefined;
         return optionStates.value[activeIndex.value]?.id;
     });
-    const collectionSnapshot = computed(() =>
-        options.items().map((item) => [options.getKey(item), isDisabled(item)] as const),
-    );
-
     function reset() {
         activeKey.value = null;
     }
@@ -136,11 +131,6 @@ export function useFlatOptionCollection<T extends object, Key extends PropertyKe
         },
         { flush: 'sync' },
     );
-    watch(collectionSnapshot, () => {
-        if (activeIndex.value >= 0) return;
-        const target = options.getItemsChangeActivation?.();
-        if (target) activate(target);
-    });
     watch(
         [activeDescendantId, options.collectionRef],
         ([id, collection]) => {

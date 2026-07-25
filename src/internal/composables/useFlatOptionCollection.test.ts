@@ -14,14 +14,10 @@ function createCollection(
         baseId?: string;
         loop?: boolean;
         open?: boolean;
-        itemsChangeActivation?: 'first' | 'selected';
     } = {},
 ) {
     const items = ref(initialItems);
     const isOpen = ref(options.open ?? true);
-    const itemsChangeActivation = ref<'first' | 'selected' | undefined>(
-        options.itemsChangeActivation,
-    );
     const collectionRef = ref<HTMLElement | null>(null);
     const scope = effectScope();
     const collection = scope.run(() =>
@@ -33,12 +29,11 @@ function createCollection(
             getKey: (item) => item.id,
             isDisabled: (item) => Boolean(item.disabled),
             isSelected: (item) => Boolean(item.selected),
-            getItemsChangeActivation: () => itemsChangeActivation.value,
             loop: options.loop,
         }),
     )!;
 
-    return { collection, collectionRef, isOpen, items, itemsChangeActivation, scope };
+    return { collection, collectionRef, isOpen, items, scope };
 }
 
 describe('useFlatOptionCollection', () => {
@@ -125,27 +120,6 @@ describe('useFlatOptionCollection', () => {
         collection.reset();
         collection.move(-1);
         expect(collection.activeIndex.value).toBe(2);
-        scope.stop();
-    });
-
-    it('repairs an empty active state only when the caller policy requests it', async () => {
-        const { collection, items, itemsChangeActivation, scope } = createCollection([], {
-            itemsChangeActivation: 'first',
-        });
-
-        items.value = [{ id: 'disabled', disabled: true }, { id: 'available' }];
-        await nextTick();
-        expect(collection.activeIndex.value).toBe(1);
-
-        itemsChangeActivation.value = undefined;
-        items.value = [{ id: 'replacement' }];
-        await nextTick();
-        expect(collection.activeIndex.value).toBe(-1);
-
-        itemsChangeActivation.value = 'selected';
-        items.value = [{ id: 'next' }, { id: 'chosen', selected: true }];
-        await nextTick();
-        expect(collection.activeIndex.value).toBe(1);
         scope.stop();
     });
 

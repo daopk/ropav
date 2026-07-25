@@ -1,27 +1,19 @@
 import {
     computed,
-    nextTick,
     ref,
     useId,
-    watch,
     type CSSProperties,
     type ComputedRef,
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useClickOutside } from '@/internal/composables/useClickOutside';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
-import {
-    useFlatOptionCollection,
-    type FlatOptionState,
-} from '@/internal/composables/useFlatOptionCollection';
+import { useEditableOptionList } from '@/internal/composables/useEditableOptionList';
+import type { FlatOptionState } from '@/internal/composables/useFlatOptionCollection';
 import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
-import { isNodeWithinElement } from '@/utils/dom/events';
-import { isInteractiveElement } from '@/utils/dom/interactive';
 import { createMultipleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
-import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
 import { getMultiSelectSelectedOptions, toggleMultiSelectValue } from './multiSelectModel';
@@ -49,7 +41,6 @@ export interface MultiSelectControl {
     searchValue: Ref<string>;
     canClear: ComputedRef<boolean>;
     setDropdownElement: (elementRef: ComponentElementRef) => void;
-    open: () => void;
     toggle: () => void;
     selectOption: (option: MultiSelectOption) => void;
     removeOption: (option: MultiSelectOption) => void;
@@ -105,12 +96,8 @@ export function useMultiSelect(
     const rootRef = ref<HTMLElement | null>(null);
     const inputRef = ref<HTMLInputElement | null>(null);
     const dropdownRef = ref<HTMLElement | null>(null);
-    const isOpen = ref(false);
-    const searchValue = ref('');
     const generatedId = useId();
     const multiSelectId = props.id ?? generatedId;
-    const popupId = `${multiSelectId}-popup`;
-    const listboxId = `${popupId}-viewport`;
     const transaction = useMultiSelectTransaction(
         props,
         callbacks.valueChange,
@@ -119,9 +106,6 @@ export function useMultiSelect(
     );
     const selectedValues = transaction.selectedValues;
     const control = useControlState(props);
-    const visibleOptions = computed(() =>
-        filterOptions(props.options, searchValue.value, props.filter),
-    );
     const selectedOptions = computed(() =>
         getMultiSelectSelectedOptions(props.options, selectedValues.value),
     );
@@ -141,19 +125,39 @@ export function useMultiSelect(
         return Boolean(option.disabled || (isAtLimit() && !isSelected(option)));
     }
 
-    const optionCollection = useFlatOptionCollection<MultiSelectOption, MultiSelectValue>({
-        items: () => visibleOptions.value,
+    const optionList = useEditableOptionList<MultiSelectOption, MultiSelectValue>({
         baseId: multiSelectId,
-        collectionRef: rootRef,
-        isOpen: () => isOpen.value,
+        clearable: () => Boolean(props.clearable),
+        disabled: () => control.disabled,
+        filter: () => props.filter,
         getKey: (option) => option.value,
+        inputRef,
         isDisabled: isOptionDisabled,
-        isSelected,
-        getItemsChangeActivation: () => (isOpen.value ? 'first' : undefined),
+        items: () => props.options,
+        onSearch: callbacks.search,
+        rootRef,
+        selection: {
+            kind: 'multiple',
+            clear: () => transaction.requestValueUpdate([]),
+            hasSelection: () => selectedValues.value.length > 0,
+            isSelected,
+            removeLast() {
+                const option = selectedOptions.value.at(-1);
+                if (!option) return;
+                transaction.requestValueUpdate(
+                    selectedValues.value.filter((value) => value !== option.value),
+                );
+            },
+            select(option) {
+                transaction.requestValueUpdate(
+                    toggleMultiSelectValue(selectedValues.value, option.value, props.maxValues),
+                );
+            },
+        },
     });
-    const renderedOptions = optionCollection.options;
-    const activeDescendantId = optionCollection.activeDescendantId;
-    const highlightedIndex = optionCollection.activeIndex;
+    const { activeDescendantId, canClear, isOpen, renderedOptions, searchValue, visibleOptions } =
+        optionList.state;
+    const { listbox: listboxId, popup: popupId } = optionList.ids;
     const floating = useFloatingPosition({
         reference: rootRef,
         floating: dropdownRef,
@@ -172,9 +176,6 @@ export function useMultiSelect(
             invalid: control.invalid,
         }),
     );
-    const canClear = computed(() =>
-        Boolean(props.clearable && selectedValues.value.length > 0 && !control.disabled),
-    );
 
     function setDropdownElement(elementRef: ComponentElementRef) {
         resolveHTMLElementRef(elementRef, popupId, (resolved) => {
@@ -182,51 +183,8 @@ export function useMultiSelect(
         });
     }
 
-    function focusInput() {
-        void nextTick(() => inputRef.value?.focus());
-    }
-
-    function open() {
-        if (control.disabled || isOpen.value) return;
-        isOpen.value = true;
-        optionCollection.activate('selected');
-    }
-
-    function close() {
-        isOpen.value = false;
-        optionCollection.reset();
-    }
-
-    function toggle() {
-        if (control.disabled) return;
-        if (isOpen.value) close();
-        else open();
-        focusInput();
-    }
-
-    function resetSearch() {
-        if (searchValue.value === '') return;
-        searchValue.value = '';
-        callbacks.search('');
-        if (inputRef.value) inputRef.value.value = '';
-    }
-
     function resetAfterFormReset() {
-        close();
-        resetSearch();
-    }
-
-    function selectOption(option: MultiSelectOption) {
-        if (isOptionDisabled(option)) return;
-        const nextValues = toggleMultiSelectValue(
-            selectedValues.value,
-            option.value,
-            props.maxValues,
-        );
-        transaction.requestValueUpdate(nextValues);
-        resetSearch();
-        optionCollection.activate(option);
-        focusInput();
+        optionList.actions.resetAfterFormReset();
     }
 
     function removeOption(option: MultiSelectOption) {
@@ -234,100 +192,8 @@ export function useMultiSelect(
         transaction.requestValueUpdate(
             selectedValues.value.filter((value) => value !== option.value),
         );
-        focusInput();
+        optionList.actions.focusInput();
     }
-
-    function clearSelection() {
-        if (!canClear.value) return;
-        transaction.requestValueUpdate([]);
-        resetSearch();
-        focusInput();
-    }
-
-    function onOptionMouseenter(option: MultiSelectOption) {
-        optionCollection.activate(option);
-    }
-
-    function onRootMousedown(event: MouseEvent) {
-        if (control.disabled) return;
-        if (isInteractiveElement(event.target, '.rp-multi-select__input')) return;
-        open();
-        inputRef.value?.focus();
-    }
-
-    function onFocusout(event: FocusEvent) {
-        if (isNodeWithinElement(event.relatedTarget, rootRef.value)) return;
-        close();
-    }
-
-    function onInput(event: Event) {
-        if (control.disabled) return;
-        const value = (event.currentTarget as HTMLInputElement).value;
-        searchValue.value = value;
-        callbacks.search(value);
-        if (!isOpen.value) isOpen.value = true;
-        optionCollection.activate('first');
-    }
-
-    function onInputFocus() {
-        open();
-    }
-
-    function onInputClick() {
-        open();
-    }
-
-    function selectHighlightedOption() {
-        const option = visibleOptions.value[highlightedIndex.value];
-        if (option) selectOption(option);
-    }
-
-    function removeLastOption() {
-        const option = selectedOptions.value.at(-1);
-        if (option) removeOption(option);
-    }
-
-    function onInputKeydown(event: KeyboardEvent) {
-        if (control.disabled || event.isComposing) return;
-
-        switch (event.key) {
-            case 'Enter':
-                if (!isOpen.value || highlightedIndex.value < 0) return;
-                event.preventDefault();
-                selectHighlightedOption();
-                break;
-            case 'ArrowDown':
-                event.preventDefault();
-                if (!isOpen.value) open();
-                else optionCollection.move(1);
-                break;
-            case 'ArrowUp':
-                event.preventDefault();
-                if (!isOpen.value) {
-                    open();
-                    optionCollection.activate('last');
-                } else {
-                    optionCollection.move(-1);
-                }
-                break;
-            case 'Backspace':
-                if (searchValue.value === '') removeLastOption();
-                break;
-            case 'Escape':
-                if (!isOpen.value) return;
-                event.preventDefault();
-                close();
-                break;
-        }
-    }
-
-    watch(
-        () => control.disabled,
-        (disabled) => {
-            if (disabled) close();
-        },
-    );
-    useClickOutside(rootRef, isOpen, close);
 
     return {
         templateRefs: {
@@ -351,17 +217,16 @@ export function useMultiSelect(
         searchValue,
         canClear,
         setDropdownElement,
-        open,
-        toggle,
-        selectOption,
+        toggle: optionList.actions.toggle,
+        selectOption: optionList.actions.selectOption,
         removeOption,
-        clearSelection,
-        onOptionMouseenter,
-        onRootMousedown,
-        onFocusout,
-        onInput,
-        onInputFocus,
-        onInputClick,
-        onInputKeydown,
+        clearSelection: optionList.actions.clearSelection,
+        onOptionMouseenter: optionList.handlers.onOptionMouseenter,
+        onRootMousedown: optionList.handlers.onRootMousedown,
+        onFocusout: optionList.handlers.onFocusout,
+        onInput: optionList.handlers.onInput,
+        onInputFocus: optionList.handlers.onInputFocus,
+        onInputClick: optionList.handlers.onInputClick,
+        onInputKeydown: optionList.handlers.onInputKeydown,
     };
 }

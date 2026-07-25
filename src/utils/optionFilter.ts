@@ -1,8 +1,8 @@
-interface LabeledOption {
+export interface LabeledOption {
     label: string;
 }
 
-type OptionFilter<Option> = (option: Option, searchValue: string) => boolean;
+export type OptionFilter<Option> = (option: Option, searchValue: string) => boolean;
 
 function defaultOptionFilter(option: LabeledOption, searchValue: string) {
     return option.label.toLocaleLowerCase().includes(searchValue.trim().toLocaleLowerCase());
