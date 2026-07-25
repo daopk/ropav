@@ -101,41 +101,40 @@
                     <slot name="empty" :search-value="searchValue">No options</slot>
                 </div>
                 <div
-                    v-for="(option, index) in visibleOptions"
-                    :key="option.value"
-                    :id="`${multiSelectId}-option-${index}`"
+                    v-for="optionState in renderedOptions"
+                    :key="optionState.option.value"
+                    :id="optionState.id"
                     role="option"
-                    :aria-selected="isSelected(option)"
-                    :aria-disabled="isOptionDisabled(option) || undefined"
-                    :data-selected="toPresenceAttribute(isSelected(option))"
-                    :data-highlighted="toPresenceAttribute(index === highlightedIndex)"
-                    :data-disabled="toPresenceAttribute(isOptionDisabled(option))"
+                    :aria-selected="optionState.selected"
+                    :aria-disabled="optionState.disabled || undefined"
+                    :data-selected="toPresenceAttribute(optionState.selected)"
+                    :data-highlighted="toPresenceAttribute(optionState.active)"
+                    :data-disabled="toPresenceAttribute(optionState.disabled)"
                     v-bind="
                         getPartAttrs('option', {
                             class: [
                                 'rp-multi-select__option',
                                 {
-                                    'rp-multi-select__option--selected': isSelected(option),
-                                    'rp-multi-select__option--highlighted':
-                                        index === highlightedIndex,
-                                    'rp-multi-select__option--disabled': isOptionDisabled(option),
+                                    'rp-multi-select__option--selected': optionState.selected,
+                                    'rp-multi-select__option--highlighted': optionState.active,
+                                    'rp-multi-select__option--disabled': optionState.disabled,
                                 },
                             ],
                         })
                     "
                     @mousedown.prevent
-                    @click="selectOption(option)"
-                    @mouseenter="onOptionMouseenter(option, index)"
+                    @click="selectOption(optionState.option)"
+                    @mouseenter="onOptionMouseenter(optionState.option)"
                 >
                     <slot
                         name="option"
-                        :option="option"
-                        :selected="isSelected(option)"
-                        :highlighted="index === highlightedIndex"
+                        :option="optionState.option"
+                        :selected="optionState.selected"
+                        :highlighted="optionState.active"
                     >
-                        {{ option.label }}
+                        {{ optionState.option.label }}
                     </slot>
-                    <CheckIcon v-if="isSelected(option)" aria-hidden="true" />
+                    <CheckIcon v-if="optionState.selected" aria-hidden="true" />
                 </div>
             </ScrollArea>
         </Transition>
@@ -194,13 +193,12 @@ const {
     templateRefs,
     nativeSelectAttrs,
     isOpen,
-    multiSelectId,
     popupId,
     listboxId,
     control,
     visibleOptions,
+    renderedOptions,
     selectedOptions,
-    highlightedIndex,
     activeDescendantId,
     rootClass,
     floatingStyle,
@@ -208,8 +206,6 @@ const {
     placementSide,
     searchValue,
     canClear,
-    isSelected,
-    isOptionDisabled,
     setDropdownElement,
     toggle,
     selectOption,

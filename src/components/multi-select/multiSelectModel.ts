@@ -19,11 +19,3 @@ export function toggleMultiSelectValue(
     if (maxValues !== undefined && values.length >= Math.max(0, maxValues)) return [...values];
     return [...values, value];
 }
-
-export function getMultiSelectActiveDescendantId(
-    baseId: string,
-    highlightedIndex: number,
-    isOpen: boolean,
-) {
-    return !isOpen || highlightedIndex < 0 ? undefined : `${baseId}-option-${highlightedIndex}`;
-}

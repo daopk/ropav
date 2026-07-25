@@ -265,6 +265,44 @@ describe('Select', () => {
         );
     });
 
+    it('keeps options inactive when they arrive after opening until keyboard navigation', async () => {
+        const state = reactive<SelectProps>({
+            ariaLabel: 'Test select',
+            modelValue: 'gamma',
+            options: [],
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Select, {
+                        ariaLabel: state.ariaLabel,
+                        modelValue: state.modelValue,
+                        options: state.options,
+                    });
+                },
+            }),
+        );
+        const trigger = container.querySelector('[role="combobox"]')!;
+
+        keydown(trigger, 'ArrowDown');
+        await flush();
+        state.options = [
+            { label: 'Alpha', value: 'alpha' },
+            { label: 'Gamma', value: 'gamma' },
+        ];
+        await flush();
+
+        expect(container.querySelector('[role="option"][data-highlighted]')).toBeNull();
+        expect(trigger.getAttribute('aria-activedescendant')).toBeNull();
+
+        keydown(trigger, 'ArrowDown');
+        await flush();
+
+        const highlighted = container.querySelector('[role="option"][data-highlighted]')!;
+        expect(highlighted.textContent).toBe('Alpha');
+        expect(trigger.getAttribute('aria-activedescendant')).toBe(highlighted.id);
+    });
+
     it('ignores unmatched and disabled closed typeahead options', async () => {
         const onUpdate = vi.fn();
         const container = mountDom(

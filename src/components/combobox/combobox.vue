@@ -68,38 +68,38 @@
                     <slot name="empty" :search-value="searchValue">No options</slot>
                 </div>
                 <div
-                    v-for="(option, index) in visibleOptions"
-                    :key="option.value"
-                    :id="`${comboboxId}-option-${index}`"
+                    v-for="optionState in renderedOptions"
+                    :key="optionState.option.value"
+                    :id="optionState.id"
                     role="option"
-                    :aria-selected="option.value === selectedValue"
-                    :aria-disabled="option.disabled || undefined"
-                    :data-selected="toPresenceAttribute(option.value === selectedValue)"
-                    :data-highlighted="toPresenceAttribute(index === highlightedIndex)"
-                    :data-disabled="toPresenceAttribute(option.disabled)"
+                    :aria-selected="optionState.selected"
+                    :aria-disabled="optionState.disabled || undefined"
+                    :data-selected="toPresenceAttribute(optionState.selected)"
+                    :data-highlighted="toPresenceAttribute(optionState.active)"
+                    :data-disabled="toPresenceAttribute(optionState.disabled)"
                     v-bind="
                         getPartAttrs('option', {
                             class: [
                                 'rp-combobox__option',
                                 {
-                                    'rp-combobox__option--selected': option.value === selectedValue,
-                                    'rp-combobox__option--highlighted': index === highlightedIndex,
-                                    'rp-combobox__option--disabled': option.disabled,
+                                    'rp-combobox__option--selected': optionState.selected,
+                                    'rp-combobox__option--highlighted': optionState.active,
+                                    'rp-combobox__option--disabled': optionState.disabled,
                                 },
                             ],
                         })
                     "
                     @mousedown.prevent
-                    @click="selectOption(option)"
-                    @mouseenter="onOptionMouseenter(option, index)"
+                    @click="selectOption(optionState.option)"
+                    @mouseenter="onOptionMouseenter(optionState.option)"
                 >
                     <slot
                         name="option"
-                        :option="option"
-                        :selected="option.value === selectedValue"
-                        :highlighted="index === highlightedIndex"
+                        :option="optionState.option"
+                        :selected="optionState.selected"
+                        :highlighted="optionState.active"
                     >
-                        {{ option.label }}
+                        {{ optionState.option.label }}
                     </slot>
                 </div>
             </ScrollArea>
@@ -153,19 +153,17 @@ const {
     templateRefs,
     nativeSelectAttrs,
     isOpen,
-    comboboxId,
     popupId,
     listboxId,
     control,
     visibleOptions,
-    highlightedIndex,
+    renderedOptions,
     activeDescendantId,
     rootClass,
     floatingStyle,
     actualPlacement,
     placementSide,
     searchValue,
-    selectedValue,
     canClear,
     setDropdownElement,
     toggle,

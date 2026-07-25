@@ -9,10 +9,12 @@ import {
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
-import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
+import {
+    useFlatOptionCollection,
+    type FlatOptionState,
+} from '@/internal/composables/useFlatOptionCollection';
 import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
@@ -21,12 +23,7 @@ import { createSingleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
-import {
-    getComboboxActiveDescendantId,
-    getComboboxDisplayLabel,
-    hasComboboxValue,
-    type ComboboxValue,
-} from './comboboxModel';
+import { getComboboxDisplayLabel, hasComboboxValue, type ComboboxValue } from './comboboxModel';
 import type { ComboboxOption, ComboboxProps } from './types';
 
 export interface ComboboxControl {
@@ -37,12 +34,11 @@ export interface ComboboxControl {
     };
     nativeSelectAttrs: ComputedRef<SelectHTMLAttributes>;
     isOpen: Ref<boolean>;
-    comboboxId: string;
     popupId: string;
     listboxId: string;
     control: ControlState;
     visibleOptions: ComputedRef<ComboboxOption[]>;
-    highlightedIndex: ComputedRef<number>;
+    renderedOptions: ComputedRef<readonly FlatOptionState<ComboboxOption>[]>;
     activeDescendantId: ComputedRef<string | undefined>;
     rootClass: ComputedRef<string[]>;
     floatingStyle: Readonly<Ref<CSSProperties>>;
@@ -50,14 +46,13 @@ export interface ComboboxControl {
     placementSide: ComputedRef<FloatingSide>;
     searchValue: Ref<string>;
     displayLabel: ComputedRef<string>;
-    selectedValue: ComputedRef<ComboboxValue>;
     canClear: ComputedRef<boolean>;
     setDropdownElement: (elementRef: ComponentElementRef) => void;
     open: () => void;
     toggle: () => void;
     selectOption: (option: ComboboxOption) => void;
     clearSelection: () => void;
-    onOptionMouseenter: (option: ComboboxOption, index: number) => void;
+    onOptionMouseenter: (option: ComboboxOption) => void;
     onFocusout: (event: FocusEvent) => void;
     onInput: (event: Event) => void;
     onInputFocus: () => void;
@@ -130,20 +125,19 @@ export function useCombobox(
     const visibleOptions = computed(() =>
         filterOptions(props.options, filterValue.value, props.filter),
     );
-    const navigation = useCollectionNavigation<ComboboxOption, string | number>({
+    const optionCollection = useFlatOptionCollection<ComboboxOption, string | number>({
         items: () => visibleOptions.value,
+        baseId: comboboxId,
+        isOpen: () => isOpen.value,
+        collectionRef: rootRef,
         getKey: (option) => option.value,
         isDisabled: (option) => Boolean(option.disabled),
         isSelected: (option) => option.value === selectedValue.value,
+        getItemsChangeActivation: () => (isOpen.value && isSearching.value ? 'first' : undefined),
     });
-    const highlightedIndex = navigation.activeIndex;
-    const activeDescendantId = computed(() =>
-        getComboboxActiveDescendantId(comboboxId, highlightedIndex.value, isOpen.value),
-    );
-    useActiveDescendantScroll({
-        activeDescendantId,
-        collectionRef: rootRef,
-    });
+    const renderedOptions = optionCollection.options;
+    const highlightedIndex = optionCollection.activeIndex;
+    const activeDescendantId = optionCollection.activeDescendantId;
     const floating = useFloatingPosition({
         reference: rootRef,
         floating: dropdownRef,
@@ -192,12 +186,12 @@ export function useCombobox(
         if (control.disabled || isOpen.value) return;
         isOpen.value = true;
         syncSearchToSelection();
-        navigation.focusSelected();
+        optionCollection.activate('selected');
     }
 
     function close(restoreSearch = true) {
         isOpen.value = false;
-        navigation.resetActive();
+        optionCollection.reset();
         if (restoreSearch) syncSearchToSelection();
     }
 
@@ -238,8 +232,8 @@ export function useCombobox(
         focusInput();
     }
 
-    function onOptionMouseenter(option: ComboboxOption, index: number) {
-        if (!option.disabled) navigation.setActiveIndex(index);
+    function onOptionMouseenter(option: ComboboxOption) {
+        optionCollection.activate(option);
     }
 
     function onFocusout(event: FocusEvent) {
@@ -254,7 +248,7 @@ export function useCombobox(
         isSearching.value = true;
         callbacks.search(value);
         if (!isOpen.value) isOpen.value = true;
-        navigation.focusFirst();
+        optionCollection.activate('first');
     }
 
     function onInputFocus() {
@@ -284,15 +278,15 @@ export function useCombobox(
             case 'ArrowDown':
                 event.preventDefault();
                 if (!isOpen.value) open();
-                else navigation.moveFocus(1);
+                else optionCollection.move(1);
                 break;
             case 'ArrowUp':
                 event.preventDefault();
                 if (!isOpen.value) {
                     open();
-                    navigation.focusLast();
+                    optionCollection.activate('last');
                 } else {
-                    navigation.moveFocus(-1);
+                    optionCollection.move(-1);
                 }
                 break;
             case 'Escape':
@@ -312,11 +306,6 @@ export function useCombobox(
             if (disabled) close();
         },
     );
-    watch(visibleOptions, () => {
-        if (isOpen.value && isSearching.value && highlightedIndex.value < 0) {
-            navigation.focusFirst();
-        }
-    });
     useClickOutside(rootRef, isOpen, () => close());
 
     return {
@@ -327,12 +316,11 @@ export function useCombobox(
         },
         nativeSelectAttrs: transaction.nativeSelectAttrs,
         isOpen,
-        comboboxId,
         popupId,
         listboxId,
         control,
         visibleOptions,
-        highlightedIndex,
+        renderedOptions,
         activeDescendantId,
         rootClass,
         floatingStyle: floating.floatingStyle,
@@ -340,7 +328,6 @@ export function useCombobox(
         placementSide,
         searchValue,
         displayLabel,
-        selectedValue,
         canClear,
         setDropdownElement,
         open,

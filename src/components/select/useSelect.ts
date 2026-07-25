@@ -9,9 +9,11 @@ import {
     type SelectHTMLAttributes,
 } from 'vue';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
-import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
-import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
+import {
+    useFlatOptionCollection,
+    type FlatOptionState,
+} from '@/internal/composables/useFlatOptionCollection';
 import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { useTypeahead } from '@/internal/composables/useTypeahead';
 import { bem } from '@/utils/bem';
@@ -32,11 +34,11 @@ export interface SelectControl {
     };
     nativeInputAttrs: ComputedRef<SelectHTMLAttributes>;
     isOpen: Ref<boolean>;
-    selectId: string;
     popupId: string;
     listboxId: string;
     control: ControlState;
     visibleOptions: ComputedRef<SelectOption[]>;
+    renderedOptions: ComputedRef<readonly FlatOptionState<SelectOption>[]>;
     focusedIndex: ComputedRef<number>;
     activeDescendantId: ComputedRef<string | undefined>;
     rootClass: ComputedRef<string[]>;
@@ -51,7 +53,7 @@ export interface SelectControl {
     toggle: () => void;
     selectOption: (option: SelectOption) => void;
     clearSelection: () => void;
-    onOptionMouseenter: (option: SelectOption, index: number) => void;
+    onOptionMouseenter: (option: SelectOption) => void;
     onFocusout: (event: FocusEvent) => void;
     onTriggerKeydown: (event: KeyboardEvent) => void;
 }
@@ -63,10 +65,6 @@ function hasSelectValue(value: SelectValue) {
 function getSelectDisplayLabel(options: SelectOption[] | undefined, value: SelectValue) {
     if (!hasSelectValue(value)) return '';
     return options?.find((option) => option.value === value)?.label ?? '';
-}
-
-function getSelectActiveDescendantId(baseId: string, focusedIndex: number, isOpen: boolean) {
-    return !isOpen || focusedIndex < 0 ? undefined : `${baseId}-option-${focusedIndex}`;
 }
 
 function useSelectTransaction(
@@ -119,26 +117,24 @@ export function useSelect(
     const control = useControlState(props);
     const visibleOptions = computed(() => props.options ?? []);
 
-    const navigation = useCollectionNavigation<SelectOption, string | number>({
+    const optionCollection = useFlatOptionCollection<SelectOption, string | number>({
         items: () => visibleOptions.value,
+        baseId: selectId,
+        isOpen: () => isOpen.value,
+        collectionRef: selectRef,
         getKey: (item) => item.value,
         isDisabled: (item) => Boolean(item.disabled),
         isSelected: (item) => item.value === value.value,
     });
 
-    const focusedIndex = navigation.activeIndex;
+    const renderedOptions = optionCollection.options;
+    const focusedIndex = optionCollection.activeIndex;
     const selectedIndex = computed(() =>
         visibleOptions.value.findIndex(
             (option) => option.value === value.value && !option.disabled,
         ),
     );
-    const activeDescendantId = computed(() =>
-        getSelectActiveDescendantId(selectId, focusedIndex.value, isOpen.value),
-    );
-    useActiveDescendantScroll({
-        activeDescendantId,
-        collectionRef: selectRef,
-    });
+    const activeDescendantId = optionCollection.activeDescendantId;
     const floating = useFloatingPosition({
         reference: triggerRef,
         floating: dropdownRef,
@@ -155,9 +151,9 @@ export function useSelect(
         getKey: (item) => item.value,
         getTextValue: (item) => item.label,
         isDisabled: (item) => Boolean(item.disabled),
-        onMatch(item, index) {
+        onMatch(item) {
             if (isOpen.value) {
-                navigation.setActiveIndex(index);
+                optionCollection.activate(item);
             } else if (item.value !== value.value) {
                 transaction.requestValueUpdate(item.value);
             }
@@ -194,12 +190,12 @@ export function useSelect(
         if (control.disabled || isOpen.value) return;
         typeahead.reset();
         isOpen.value = true;
-        navigation.focusSelected();
+        optionCollection.activate('selected');
     }
 
     function close() {
         isOpen.value = false;
-        navigation.resetActive();
+        optionCollection.reset();
         typeahead.reset();
     }
 
@@ -227,8 +223,8 @@ export function useSelect(
         focusTrigger();
     }
 
-    function onOptionMouseenter(option: SelectOption, index: number) {
-        if (!option.disabled) navigation.setActiveIndex(index);
+    function onOptionMouseenter(option: SelectOption) {
+        optionCollection.activate(option);
     }
 
     function onFocusout(event: FocusEvent) {
@@ -259,27 +255,27 @@ export function useSelect(
             case 'ArrowDown':
                 e.preventDefault();
                 if (!isOpen.value) open();
-                else navigation.moveFocus(1);
+                else optionCollection.move(1);
                 break;
             case 'ArrowUp':
                 e.preventDefault();
                 if (!isOpen.value) {
                     open();
-                    navigation.focusLast();
+                    optionCollection.activate('last');
                 } else {
-                    navigation.moveFocus(-1);
+                    optionCollection.move(-1);
                 }
                 break;
             case 'Home':
                 if (isOpen.value) {
                     e.preventDefault();
-                    navigation.focusFirst();
+                    optionCollection.activate('first');
                 }
                 break;
             case 'End':
                 if (isOpen.value) {
                     e.preventDefault();
-                    navigation.focusLast();
+                    optionCollection.activate('last');
                 }
                 break;
             case 'Delete':
@@ -307,11 +303,11 @@ export function useSelect(
         },
         nativeInputAttrs: transaction.nativeInputAttrs,
         isOpen,
-        selectId,
         popupId,
         listboxId,
         control,
         visibleOptions,
+        renderedOptions,
         focusedIndex,
         activeDescendantId,
         rootClass,

@@ -13,11 +13,3 @@ export function getComboboxDisplayLabel(
     if (!hasComboboxValue(value)) return '';
     return options?.find((option) => option.value === value)?.label ?? '';
 }
-
-export function getComboboxActiveDescendantId(
-    baseId: string,
-    highlightedIndex: number,
-    isOpen: boolean,
-) {
-    return !isOpen || highlightedIndex < 0 ? undefined : `${baseId}-option-${highlightedIndex}`;
-}

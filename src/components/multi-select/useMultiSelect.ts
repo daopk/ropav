@@ -9,10 +9,12 @@ import {
     type Ref,
     type SelectHTMLAttributes,
 } from 'vue';
-import { useActiveDescendantScroll } from '@/internal/composables/useActiveDescendantScroll';
 import { useClickOutside } from '@/internal/composables/useClickOutside';
-import { useCollectionNavigation } from '@/internal/composables/useCollectionNavigation';
 import { useControlState, type ControlState } from '@/internal/composables/useControlState';
+import {
+    useFlatOptionCollection,
+    type FlatOptionState,
+} from '@/internal/composables/useFlatOptionCollection';
 import { useNativeChoiceTransaction } from '@/internal/composables/useNativeChoiceTransaction';
 import { bem } from '@/utils/bem';
 import { resolveHTMLElementRef, type ComponentElementRef } from '@/utils/dom/componentRef';
@@ -22,11 +24,7 @@ import { createMultipleNativeChoiceAdapter } from '@/utils/dom/nativeChoice';
 import { filterOptions } from '@/utils/optionFilter';
 import { useFloatingPosition } from '../floating/useFloatingPosition';
 import type { FloatingPlacement, FloatingSide } from '../floating/types';
-import {
-    getMultiSelectActiveDescendantId,
-    getMultiSelectSelectedOptions,
-    toggleMultiSelectValue,
-} from './multiSelectModel';
+import { getMultiSelectSelectedOptions, toggleMultiSelectValue } from './multiSelectModel';
 import type { MultiSelectOption, MultiSelectProps, MultiSelectValue } from './types';
 
 export interface MultiSelectControl {
@@ -37,14 +35,12 @@ export interface MultiSelectControl {
     };
     nativeSelectAttrs: ComputedRef<SelectHTMLAttributes>;
     isOpen: Ref<boolean>;
-    multiSelectId: string;
     popupId: string;
     listboxId: string;
     control: ControlState;
     visibleOptions: ComputedRef<MultiSelectOption[]>;
+    renderedOptions: ComputedRef<readonly FlatOptionState<MultiSelectOption>[]>;
     selectedOptions: ComputedRef<MultiSelectOption[]>;
-    selectedValues: ComputedRef<MultiSelectValue[]>;
-    highlightedIndex: ComputedRef<number>;
     activeDescendantId: ComputedRef<string | undefined>;
     rootClass: ComputedRef<string[]>;
     floatingStyle: Readonly<Ref<CSSProperties>>;
@@ -52,15 +48,13 @@ export interface MultiSelectControl {
     placementSide: ComputedRef<FloatingSide>;
     searchValue: Ref<string>;
     canClear: ComputedRef<boolean>;
-    isSelected: (option: MultiSelectOption) => boolean;
-    isOptionDisabled: (option: MultiSelectOption) => boolean;
     setDropdownElement: (elementRef: ComponentElementRef) => void;
     open: () => void;
     toggle: () => void;
     selectOption: (option: MultiSelectOption) => void;
     removeOption: (option: MultiSelectOption) => void;
     clearSelection: () => void;
-    onOptionMouseenter: (option: MultiSelectOption, index: number) => void;
+    onOptionMouseenter: (option: MultiSelectOption) => void;
     onRootMousedown: (event: MouseEvent) => void;
     onFocusout: (event: FocusEvent) => void;
     onInput: (event: Event) => void;
@@ -102,40 +96,6 @@ function useMultiSelectTransaction(
         requestValueUpdate: transaction.requestValueUpdate,
         selectedValues: transaction.value,
     };
-}
-
-function useMultiSelectNavigation(options: {
-    baseId: string;
-    collectionRef: Readonly<Ref<HTMLElement | null>>;
-    isOpen: Readonly<Ref<boolean>>;
-    isDisabled: (option: MultiSelectOption) => boolean;
-    isSelected: (option: MultiSelectOption) => boolean;
-    items: ComputedRef<MultiSelectOption[]>;
-}) {
-    const navigation = useCollectionNavigation<MultiSelectOption, MultiSelectValue>({
-        items: () => options.items.value,
-        getKey: (option) => option.value,
-        isDisabled: options.isDisabled,
-        isSelected: options.isSelected,
-    });
-    const highlightedIndex = navigation.activeIndex;
-    const activeDescendantId = computed(() =>
-        getMultiSelectActiveDescendantId(
-            options.baseId,
-            highlightedIndex.value,
-            options.isOpen.value,
-        ),
-    );
-
-    useActiveDescendantScroll({
-        activeDescendantId,
-        collectionRef: options.collectionRef,
-    });
-    watch(options.items, () => {
-        if (options.isOpen.value && highlightedIndex.value < 0) navigation.focusFirst();
-    });
-
-    return { activeDescendantId, highlightedIndex, navigation };
 }
 
 export function useMultiSelect(
@@ -181,14 +141,19 @@ export function useMultiSelect(
         return Boolean(option.disabled || (isAtLimit() && !isSelected(option)));
     }
 
-    const { activeDescendantId, highlightedIndex, navigation } = useMultiSelectNavigation({
+    const optionCollection = useFlatOptionCollection<MultiSelectOption, MultiSelectValue>({
+        items: () => visibleOptions.value,
         baseId: multiSelectId,
         collectionRef: rootRef,
-        isOpen,
+        isOpen: () => isOpen.value,
+        getKey: (option) => option.value,
         isDisabled: isOptionDisabled,
         isSelected,
-        items: visibleOptions,
+        getItemsChangeActivation: () => (isOpen.value ? 'first' : undefined),
     });
+    const renderedOptions = optionCollection.options;
+    const activeDescendantId = optionCollection.activeDescendantId;
+    const highlightedIndex = optionCollection.activeIndex;
     const floating = useFloatingPosition({
         reference: rootRef,
         floating: dropdownRef,
@@ -224,12 +189,12 @@ export function useMultiSelect(
     function open() {
         if (control.disabled || isOpen.value) return;
         isOpen.value = true;
-        navigation.focusSelected();
+        optionCollection.activate('selected');
     }
 
     function close() {
         isOpen.value = false;
-        navigation.resetActive();
+        optionCollection.reset();
     }
 
     function toggle() {
@@ -246,13 +211,6 @@ export function useMultiSelect(
         if (inputRef.value) inputRef.value.value = '';
     }
 
-    function focusOption(option: MultiSelectOption) {
-        const index = visibleOptions.value.findIndex(
-            (candidate) => candidate.value === option.value,
-        );
-        if (index >= 0) navigation.setActiveIndex(index);
-    }
-
     function resetAfterFormReset() {
         close();
         resetSearch();
@@ -267,7 +225,7 @@ export function useMultiSelect(
         );
         transaction.requestValueUpdate(nextValues);
         resetSearch();
-        focusOption(option);
+        optionCollection.activate(option);
         focusInput();
     }
 
@@ -286,8 +244,8 @@ export function useMultiSelect(
         focusInput();
     }
 
-    function onOptionMouseenter(option: MultiSelectOption, index: number) {
-        if (!isOptionDisabled(option)) navigation.setActiveIndex(index);
+    function onOptionMouseenter(option: MultiSelectOption) {
+        optionCollection.activate(option);
     }
 
     function onRootMousedown(event: MouseEvent) {
@@ -308,7 +266,7 @@ export function useMultiSelect(
         searchValue.value = value;
         callbacks.search(value);
         if (!isOpen.value) isOpen.value = true;
-        navigation.focusFirst();
+        optionCollection.activate('first');
     }
 
     function onInputFocus() {
@@ -341,15 +299,15 @@ export function useMultiSelect(
             case 'ArrowDown':
                 event.preventDefault();
                 if (!isOpen.value) open();
-                else navigation.moveFocus(1);
+                else optionCollection.move(1);
                 break;
             case 'ArrowUp':
                 event.preventDefault();
                 if (!isOpen.value) {
                     open();
-                    navigation.focusLast();
+                    optionCollection.activate('last');
                 } else {
-                    navigation.moveFocus(-1);
+                    optionCollection.move(-1);
                 }
                 break;
             case 'Backspace':
@@ -379,14 +337,12 @@ export function useMultiSelect(
         },
         nativeSelectAttrs: transaction.nativeSelectAttrs,
         isOpen,
-        multiSelectId,
         popupId,
         listboxId,
         control,
         visibleOptions,
+        renderedOptions,
         selectedOptions,
-        selectedValues,
-        highlightedIndex,
         activeDescendantId,
         rootClass,
         floatingStyle: floating.floatingStyle,
@@ -394,8 +350,6 @@ export function useMultiSelect(
         placementSide,
         searchValue,
         canClear,
-        isSelected,
-        isOptionDisabled,
         setDropdownElement,
         open,
         toggle,

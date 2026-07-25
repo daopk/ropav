@@ -120,6 +120,51 @@ describe('MultiSelect', () => {
         expect(onUpdate).toHaveBeenLastCalledWith(['apple']);
     });
 
+    it('highlights the first option when options arrive after opening without a search', async () => {
+        const state = reactive<{
+            modelValue: MultiSelectValue[];
+            options: MultiSelectProps['options'];
+        }>({
+            modelValue: ['gamma'],
+            options: [],
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(MultiSelect, {
+                        ariaLabel: 'Fruit',
+                        modelValue: state.modelValue,
+                        options: state.options,
+                        'onUpdate:modelValue': (value) => {
+                            state.modelValue = value;
+                        },
+                    });
+                },
+            }),
+        );
+        await flush();
+
+        const inputElement = container.querySelector('[role="combobox"]') as HTMLInputElement;
+        inputElement.focus();
+        await flush();
+
+        state.options = [
+            { label: 'Alpha', value: 'alpha' },
+            { label: 'Gamma', value: 'gamma' },
+        ];
+        await flush();
+
+        const highlightedOption = container.querySelector(
+            '[role="option"][data-highlighted]',
+        ) as HTMLElement;
+        expect(highlightedOption.textContent?.trim()).toBe('Alpha');
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(highlightedOption.id);
+
+        keydown(inputElement, 'Enter');
+        await flush();
+        expect(state.modelValue).toEqual(['gamma', 'alpha']);
+    });
+
     it('highlights enabled options that arrive after a remote search', async () => {
         const state = reactive<{
             modelValue: MultiSelectValue[];

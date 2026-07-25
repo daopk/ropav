@@ -264,6 +264,45 @@ describe('Combobox', () => {
         expect(unfiltered.querySelectorAll('[role="option"]')).toHaveLength(3);
     });
 
+    it('keeps options inactive when they arrive after opening without a search', async () => {
+        const state = reactive<ComboboxProps>({
+            modelValue: 'gamma',
+            options: [],
+        });
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Combobox, {
+                        ariaLabel: 'Fruit',
+                        modelValue: state.modelValue,
+                        options: state.options,
+                    });
+                },
+            }),
+        );
+        const input = container.querySelector('[role="combobox"]') as HTMLInputElement;
+
+        input.focus();
+        await flush();
+        state.options = [
+            { label: 'Alpha', value: 'alpha' },
+            { label: 'Gamma', value: 'gamma' },
+        ];
+        await flush();
+
+        expect(container.querySelector('[role="option"][data-highlighted]')).toBeNull();
+        expect(input.getAttribute('aria-activedescendant')).toBeNull();
+
+        keydown(input, 'ArrowDown');
+        await flush();
+
+        const highlighted = container.querySelector(
+            '[role="option"][data-highlighted]',
+        ) as HTMLElement;
+        expect(highlighted.textContent).toContain('Alpha');
+        expect(input.getAttribute('aria-activedescendant')).toBe(highlighted.id);
+    });
+
     it('highlights results that arrive after an asynchronous search', async () => {
         const state = reactive<ComboboxProps>({
             modelValue: null,

@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    getComboboxActiveDescendantId,
-    getComboboxDisplayLabel,
-    hasComboboxValue,
-} from './comboboxModel';
+import { getComboboxDisplayLabel, hasComboboxValue } from './comboboxModel';
 import type { ComboboxOption } from './types';
 
 const options: ComboboxOption[] = [
@@ -21,10 +17,8 @@ describe('combobox model', () => {
         expect(getComboboxDisplayLabel(options, '')).toBe('All');
     });
 
-    it('resolves typed display values and active descendant ids', () => {
+    it('resolves typed display values', () => {
         expect(getComboboxDisplayLabel(options, 2)).toBe('Dragon Fruit');
         expect(getComboboxDisplayLabel(options, '2')).toBe('');
-        expect(getComboboxActiveDescendantId('fruit', 1, true)).toBe('fruit-option-1');
-        expect(getComboboxActiveDescendantId('fruit', 1, false)).toBeUndefined();
     });
 });

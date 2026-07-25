@@ -89,31 +89,31 @@
                     <slot name="empty">No options</slot>
                 </div>
                 <div
-                    v-for="(option, index) in visibleOptions"
-                    :key="option.value"
+                    v-for="optionState in renderedOptions"
+                    :key="optionState.option.value"
                     role="option"
-                    :id="`${selectId}-option-${index}`"
-                    :aria-selected="option.value === selectedValue"
-                    :aria-disabled="option.disabled || undefined"
-                    :data-selected="toPresenceAttribute(option.value === selectedValue)"
-                    :data-highlighted="toPresenceAttribute(index === focusedIndex)"
-                    :data-disabled="toPresenceAttribute(option.disabled)"
+                    :id="optionState.id"
+                    :aria-selected="optionState.selected"
+                    :aria-disabled="optionState.disabled || undefined"
+                    :data-selected="toPresenceAttribute(optionState.selected)"
+                    :data-highlighted="toPresenceAttribute(optionState.active)"
+                    :data-disabled="toPresenceAttribute(optionState.disabled)"
                     v-bind="
                         getPartAttrs('option', {
                             class: [
                                 'rp-select__option',
                                 {
-                                    'rp-select__option--selected': option.value === selectedValue,
-                                    'rp-select__option--focused': index === focusedIndex,
-                                    'rp-select__option--disabled': option.disabled,
+                                    'rp-select__option--selected': optionState.selected,
+                                    'rp-select__option--focused': optionState.active,
+                                    'rp-select__option--disabled': optionState.disabled,
                                 },
                             ],
                         })
                     "
-                    @click="selectOption(option)"
-                    @mouseenter="onOptionMouseenter(option, index)"
+                    @click="selectOption(optionState.option)"
+                    @mouseenter="onOptionMouseenter(optionState.option)"
                 >
-                    {{ option.label }}
+                    {{ optionState.option.label }}
                 </div>
             </ScrollArea>
         </Transition>
@@ -152,12 +152,11 @@ const {
     templateRefs,
     nativeInputAttrs,
     isOpen,
-    selectId,
     popupId,
     listboxId,
     control,
     visibleOptions,
-    focusedIndex,
+    renderedOptions,
     activeDescendantId,
     rootClass,
     floatingStyle,
@@ -165,7 +164,6 @@ const {
     placementSide,
     hasValue,
     displayLabel,
-    selectedValue,
     canClear,
     setDropdownElement,
     toggle,
