@@ -8,6 +8,7 @@ import {
     FocusTrap as RootFocusTrap,
     HoverCard as RootHoverCard,
     OverlayLayerProvider as RootOverlayLayerProvider,
+    SegmentedControl as RootSegmentedControl,
     TeleportProvider as RootTeleportProvider,
     Toast as RootToast,
     ToastProvider as RootToastProvider,
@@ -34,6 +35,7 @@ import {
     type FloatingTarget as RootFloatingTarget,
     type HoverCardProps as RootHoverCardProps,
     type OverlayLayerProviderProps as RootOverlayLayerProviderProps,
+    type SegmentedControlProps as RootSegmentedControlProps,
     type UseHoverDisclosureOptions as RootUseHoverDisclosureOptions,
     type UseHoverDisclosureReturn as RootUseHoverDisclosureReturn,
     type TeleportTarget as RootTeleportTarget,
@@ -170,6 +172,12 @@ import {
     type RadioProps,
 } from 'ropav/radio';
 import { type SelectProps } from 'ropav/select';
+import {
+    SegmentedControl,
+    type SegmentedControlOption,
+    type SegmentedControlProps,
+    type SegmentedControlValue,
+} from 'ropav/segmented-control';
 import {
     type RangeSliderInputAttrs,
     type RangeSliderProps,
@@ -567,6 +575,19 @@ const radioVNode = h(Radio, {
         void event.target;
     },
 });
+const segmentedControlOptions: SegmentedControlOption[] = [
+    { label: 'List', value: 'list' },
+    { label: 'Grid', value: 'grid' },
+];
+const segmentedControlValue: SegmentedControlValue = 'list';
+const segmentedControlProps: SegmentedControlProps = {
+    defaultValue: segmentedControlValue,
+    options: segmentedControlOptions,
+    orientation: 'horizontal',
+};
+const rootSegmentedControlProps: RootSegmentedControlProps = segmentedControlProps;
+const segmentedControlVNode = h(SegmentedControl, segmentedControlProps);
+const rootSegmentedControlVNode = h(RootSegmentedControl, rootSegmentedControlProps);
 
 void [
     iconCompiler,
@@ -579,6 +600,7 @@ void [
     RootDropdownMenuTrigger,
     RootFocusTrap,
     RootOverlayLayerProvider,
+    RootSegmentedControl,
     RootTeleportProvider,
     RootToastProvider,
     RootToastViewport,
@@ -735,4 +757,10 @@ void [
     radioOrientation,
     radioProps,
     radioVNode,
+    segmentedControlOptions,
+    segmentedControlValue,
+    segmentedControlProps,
+    rootSegmentedControlProps,
+    segmentedControlVNode,
+    rootSegmentedControlVNode,
 ];

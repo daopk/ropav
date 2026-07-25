@@ -169,6 +169,10 @@
       "types": "./dist/components/scroll-area/index.d.ts",
       "import": "./dist/components/scroll-area/index.js"
     },
+    "./segmented-control": {
+      "types": "./dist/components/segmented-control/index.d.ts",
+      "import": "./dist/components/segmented-control/index.js"
+    },
     "./select": {
       "types": "./dist/components/select/index.d.ts",
       "import": "./dist/components/select/index.js"

@@ -244,6 +244,17 @@ export const packagePublicationManifest = {
             ],
         },
         {
+            name: 'segmented-control',
+            runtimeExports: [
+                'SegmentedControl',
+                'segmentedControlColors',
+                'segmentedControlOrientations',
+                'segmentedControlParts',
+                'segmentedControlRadiuses',
+                'segmentedControlSizes',
+            ],
+        },
+        {
             name: 'select',
             runtimeExports: ['Select', 'selectParts'],
         },

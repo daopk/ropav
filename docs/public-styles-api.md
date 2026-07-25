@@ -66,6 +66,7 @@ Only independently useful semantic elements are public parts. Conditional parts 
 | Progress                                 | `root`, `label`, `value`, `track`, `indicator`                                                                                              |
 | Radio                                    | `root`, `input`, `indicator`, `label`                                                                                                       |
 | RadioGroup                               | `root`                                                                                                                                      |
+| SegmentedControl                         | `root`, `control`, `input`, `indicator`, `label`                                                                                            |
 | Select                                   | `root`, `trigger`, `value`, `indicator`, `clear`, `content`, `option`, `empty`                                                              |
 | Slider                                   | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
 | RangeSlider                              | `root`, `label`, `value`, `track`, `range`, `input`, `thumb`, `mark`, `markLabel`, `tooltip`                                                |
@@ -84,7 +85,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 
 - `data-state="open|closed"`: AccordionItem, Collapse, Combobox, DropdownMenu and submenus, HoverCard, Modal, MultiSelect, Popover, Select and Tooltip.
 - `data-state="checked|unchecked|indeterminate"`: Checkbox.
-- `data-state="checked|unchecked"`: Radio and Switch.
+- `data-state="checked|unchecked"`: Radio, SegmentedControl controls and inputs, and Switch.
 - `data-state="active|inactive"`: TabsTrigger and TabsContent.
 - `data-state="determinate|indeterminate"`: Progress.
 - `data-disabled`: the effective disabled state on each applicable control, trigger, item or option.
@@ -100,7 +101,7 @@ Boolean states use presence semantics: the attribute value is empty when true an
 - `data-track-hovered` and `data-dragging`: Slider track pointer interaction.
 - `data-thumb-visibility="always|interaction|hidden"`: Slider thumb visibility behavior.
 - `data-submenu`: DropdownMenu items that own children.
-- `data-orientation="horizontal|vertical"`: ButtonGroup, RadioGroup, Slider, RangeSlider, Tabs and TabsList.
+- `data-orientation="horizontal|vertical"`: ButtonGroup, RadioGroup, SegmentedControl, Slider, RangeSlider, Tabs and TabsList.
 - `data-placement`: the final placement after collision handling; twelve placements for HoverCard, Popover and DropdownMenu, `top-start|bottom-start` for Combobox, MultiSelect and Select, and a side (`top`, `right`, `bottom`, `left`) for Tooltip.
 - `data-side="top|right|bottom|left"`: the side component of the final placement for Combobox, MultiSelect, HoverCard, Popover, DropdownMenu, Select and Tooltip.
 - `data-control="increment|decrement"`: NumberInput controls.

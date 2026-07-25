@@ -1,0 +1,194 @@
+@mixin segmented-control-size($height, $padding-x, $gap, $font-size) {
+    --_rp-segmented-control-height: #{$height};
+    --_rp-segmented-control-padding-x: #{$padding-x};
+    --_rp-segmented-control-gap: #{$gap};
+    --_rp-segmented-control-font-size: #{$font-size};
+}
+
+.rp-segmented-control {
+    --_rp-segmented-control-color: var(--rp-color-control-selected-bg);
+    --_rp-segmented-control-on-color: var(--rp-color-control-selected-fg);
+    --_rp-segmented-control-height: var(--rp-size-control-md);
+    --_rp-segmented-control-padding-x: calc(var(--rp-size-control-md) / 3);
+    --_rp-segmented-control-gap: var(--rp-spacing-2);
+    --_rp-segmented-control-font-size: var(--rp-font-size-md);
+    --_rp-segmented-control-radius: var(--rp-radius-sm);
+
+    display: inline-flex;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 2px;
+    color: var(--rp-color-control-fg);
+    font-family: var(--rp-font-family);
+    font-size: var(--_rp-segmented-control-font-size);
+    line-height: 1;
+    background-color: var(--rp-color-control-track-bg);
+    border: var(--rp-border-width-thin) solid transparent;
+    border-radius: var(--_rp-segmented-control-radius);
+    vertical-align: middle;
+
+    &__control {
+        position: relative;
+        display: inline-flex;
+        align-items: stretch;
+        min-width: 0;
+        min-height: var(--_rp-segmented-control-height);
+        flex: 1 1 auto;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    &__input {
+        @include visually-hidden;
+    }
+
+    &__indicator {
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        background-color: transparent;
+        border-radius: var(--_rp-segmented-control-radius);
+        box-shadow: none;
+        transition:
+            background-color var(--rp-transition-fast),
+            box-shadow var(--rp-transition-fast);
+    }
+
+    &__label {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        padding-inline: var(--_rp-segmented-control-padding-x);
+        gap: var(--_rp-segmented-control-gap);
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        transition: color var(--rp-transition-fast);
+        white-space: nowrap;
+    }
+
+    &__label :deep(svg) {
+        width: 1em;
+        height: 1em;
+        flex: 0 0 auto;
+    }
+
+    &__control:hover:not(&__control--disabled) &__indicator {
+        background-color: color-mix(in srgb, var(--rp-color-body) 55%, transparent);
+    }
+
+    &__control--selected &__indicator,
+    &__control--selected:hover:not(&__control--disabled) &__indicator {
+        background-color: var(--_rp-segmented-control-color);
+        box-shadow: var(--rp-shadow-sm);
+    }
+
+    &__control--selected &__label {
+        color: var(--_rp-segmented-control-on-color);
+        font-weight: var(--rp-font-weight-medium);
+    }
+
+    &__input:focus-visible + &__indicator {
+        outline: none;
+        @include focus-ring;
+    }
+
+    &__control--disabled {
+        @include disabled-state;
+    }
+
+    &--disabled {
+        cursor: not-allowed;
+    }
+
+    &--invalid {
+        border-color: var(--rp-color-red-filled);
+        box-shadow: 0 0 0 var(--rp-border-width-thin)
+            color-mix(in srgb, var(--rp-color-red-filled) 22%, transparent);
+    }
+
+    &--vertical {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    &--vertical &__control {
+        width: 100%;
+    }
+
+    &--vertical &__label {
+        justify-content: flex-start;
+        text-align: start;
+    }
+
+    &--full-width {
+        display: flex;
+        width: 100%;
+    }
+
+    &--full-width &__control {
+        flex-basis: 0;
+    }
+
+    &--size-xs {
+        @include segmented-control-size(
+            var(--rp-size-control-xs),
+            calc(var(--rp-size-control-xs) / 3),
+            var(--rp-spacing-1),
+            var(--rp-font-size-xs)
+        );
+    }
+
+    &--size-sm {
+        @include segmented-control-size(
+            var(--rp-size-control-sm),
+            calc(var(--rp-size-control-sm) / 3),
+            var(--rp-spacing-2),
+            var(--rp-font-size-sm)
+        );
+    }
+
+    &--size-md {
+        @include segmented-control-size(
+            var(--rp-size-control-md),
+            calc(var(--rp-size-control-md) / 3),
+            var(--rp-spacing-2),
+            var(--rp-font-size-md)
+        );
+    }
+
+    &--size-lg {
+        @include segmented-control-size(
+            var(--rp-size-control-lg),
+            calc(var(--rp-size-control-lg) / 3),
+            var(--rp-spacing-3),
+            var(--rp-font-size-lg)
+        );
+    }
+
+    &--size-xl {
+        @include segmented-control-size(
+            var(--rp-size-control-xl),
+            calc(var(--rp-size-control-xl) / 3),
+            var(--rp-spacing-3),
+            var(--rp-font-size-xl)
+        );
+    }
+
+    @each $radius in none, xs, sm, md, lg, xl, full {
+        &--radius-#{$radius} {
+            --_rp-segmented-control-radius: var(--rp-radius-#{$radius});
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rp-segmented-control__indicator,
+    .rp-segmented-control__label {
+        transition: none;
+    }
+}

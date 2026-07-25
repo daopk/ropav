@@ -38,6 +38,7 @@ import { popoverParts, type PopoverPart } from 'ropav/popover';
 import { progressParts, type ProgressPart } from 'ropav/progress';
 import { radioGroupParts, radioParts, type RadioGroupPart, type RadioPart } from 'ropav/radio';
 import { scrollAreaParts, type ScrollAreaPart } from 'ropav/scroll-area';
+import { segmentedControlParts, type SegmentedControlPart } from 'ropav/segmented-control';
 import { selectParts, type SelectPart } from 'ropav/select';
 import { rangeSliderParts, sliderParts, type RangeSliderPart, type SliderPart } from 'ropav/slider';
 import { switchParts, type SwitchPart } from 'ropav/switch';
@@ -101,6 +102,7 @@ const parts = [
     radioParts[0] satisfies RadioPart,
     radioGroupParts[0] satisfies RadioGroupPart,
     scrollAreaParts[0] satisfies ScrollAreaPart,
+    segmentedControlParts[0] satisfies SegmentedControlPart,
     selectParts[0] satisfies SelectPart,
     sliderParts[0] satisfies SliderPart,
     rangeSliderParts[0] satisfies RangeSliderPart,

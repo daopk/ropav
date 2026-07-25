@@ -34,6 +34,7 @@ import {
     radioParts,
     rangeSliderParts,
     scrollAreaParts,
+    segmentedControlParts,
     selectParts,
     sliderParts,
     switchParts,
@@ -85,6 +86,7 @@ describe('public semantic part catalog', () => {
             RadioGroup: radioGroupParts,
             RangeSlider: rangeSliderParts,
             ScrollArea: scrollAreaParts,
+            SegmentedControl: segmentedControlParts,
             Select: selectParts,
             Slider: sliderParts,
             Switch: switchParts,
@@ -209,6 +211,7 @@ describe('public semantic part catalog', () => {
                 'tooltip',
             ],
             ScrollArea: ['root', 'viewport', 'content', 'scrollbar', 'thumb', 'corner'],
+            SegmentedControl: ['root', 'control', 'input', 'indicator', 'label'],
             Select: [
                 'root',
                 'trigger',
