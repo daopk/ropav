@@ -1,8 +1,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, useId, type CSSProperties } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
-import { isElement } from '@/utils/dom/query';
-import { useFloatingTarget } from '../floating/useFloatingPosition';
+import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
@@ -45,13 +44,11 @@ export function useDropdownMenu(
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
     const shouldTeleport = computed(() => props.teleport !== false);
-    const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
-        () => props.target,
-        rootRef,
-    );
-    const targetElement = computed(() =>
-        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
-    );
+    const targetLifecycle = useFloatingTargetLifecycle({
+        target: () => props.target,
+        fallback: rootRef,
+    });
+    const { isExplicitTarget, reference, targetElement } = targetLifecycle;
     const visibleItems = computed(() => props.items ?? []);
     const isDisabled = computed(() => Boolean(props.disabled));
     const modal = computed(() => Boolean(props.modal));
@@ -169,8 +166,7 @@ export function useDropdownMenu(
         interaction,
         rootRef,
         menuRef,
-        targetElement,
-        isExplicitTarget,
+        targetLifecycle,
         menuId,
         isVisible,
         isDisabled,

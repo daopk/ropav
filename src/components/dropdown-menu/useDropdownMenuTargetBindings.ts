@@ -1,5 +1,5 @@
 import { onBeforeUnmount, watch, type Ref } from 'vue';
-import { restoreAttributes, snapshotAttributes } from '@/utils/dom/attributes';
+import type { FloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import type { DropdownMenuInteractOutsideEvent, DropdownMenuInteractOutsideTarget } from './types';
 import type { DropdownMenuInteraction } from './dropdownMenuInteraction';
 
@@ -9,8 +9,7 @@ interface UseDropdownMenuTargetBindingsOptions {
     interaction: DropdownMenuInteraction;
     rootRef: Readonly<Ref<HTMLElement | null>>;
     menuRef: Readonly<Ref<HTMLElement | null>>;
-    targetElement: Readonly<Ref<Element | null>>;
-    isExplicitTarget: Readonly<Ref<boolean>>;
+    targetLifecycle: FloatingTargetLifecycle;
     menuId: Readonly<Ref<string>>;
     isVisible: Readonly<Ref<boolean>>;
     isDisabled: Readonly<Ref<boolean>>;
@@ -39,8 +38,7 @@ export function useDropdownMenuTargetBindings({
     interaction,
     rootRef,
     menuRef,
-    targetElement,
-    isExplicitTarget,
+    targetLifecycle,
     menuId,
     isVisible,
     isDisabled,
@@ -61,7 +59,6 @@ export function useDropdownMenuTargetBindings({
 
     watchInside(rootRef);
     watchInside(menuRef);
-    watchInside(targetElement);
 
     const cleanupDismissal = interaction.connectDismissal({
         ignoredTargets,
@@ -70,34 +67,21 @@ export function useDropdownMenuTargetBindings({
         interactOutside,
     });
 
-    watch(
-        [isExplicitTarget, targetElement],
-        ([explicit, target], _previous, onCleanup) => {
-            if (!explicit || !target) return;
-
-            const onClick = () => interaction.onTriggerClick();
-            const onKeydown = (event: KeyboardEvent) => interaction.onTriggerKeydown(event);
-            target.addEventListener('click', onClick);
-            target.addEventListener('keydown', onKeydown as EventListener);
-            onCleanup(() => {
-                target.removeEventListener('click', onClick);
-                target.removeEventListener('keydown', onKeydown as EventListener);
-            });
+    const onClick = () => interaction.onTriggerClick();
+    const onKeydown = (event: KeyboardEvent) => interaction.onTriggerKeydown(event);
+    targetLifecycle.bindTarget({
+        connect: (target) => interaction.connectInside(target),
+        listeners: [
+            ['click', onClick],
+            ['keydown', onKeydown as EventListener],
+        ],
+        attributes: {
+            names: TARGET_ATTRIBUTES,
+            apply: (target) => {
+                syncTargetAttributes(target, menuId.value, isVisible.value, isDisabled.value);
+            },
         },
-        { flush: 'sync' },
-    );
-
-    watch(
-        [isExplicitTarget, targetElement, menuId, isVisible, isDisabled],
-        ([explicit, target, id, visible, disabled], _previous, onCleanup) => {
-            if (!explicit || !target) return;
-
-            const snapshot = snapshotAttributes(target, TARGET_ATTRIBUTES);
-            syncTargetAttributes(target, id, visible, disabled);
-            onCleanup(() => restoreAttributes(target, snapshot));
-        },
-        { flush: 'sync' },
-    );
+    });
 
     onBeforeUnmount(cleanupDismissal);
 }

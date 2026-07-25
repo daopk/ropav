@@ -1,15 +1,14 @@
 import { computed, ref, useId, useSlots, watch, type CSSProperties } from 'vue';
 import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
-import { mergeAriaIdRefs } from '@/utils/aria';
 import { bem } from '@/utils/bem';
 import { getComponentVariantColorRoles } from '@/utils/componentColors';
-import { restoreAttributes, snapshotAttributes } from '@/utils/dom/attributes';
-import { isElement } from '@/utils/dom/query';
 import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
-import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
+import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type { TooltipProps, TooltipTriggerProps } from './types';
+import { useTooltipTargetBindings } from './useTooltipTargetBindings';
 
 type TooltipBehaviorProps = Omit<TooltipProps, 'classNames' | 'styles'>;
 
@@ -56,13 +55,11 @@ export function useTooltip(
     const shouldRenderContent = computed(() => !isDisabled.value);
     const shouldDescribeContent = computed(() => shouldRenderContent.value && !isDecorative.value);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
-    const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
-        () => props.target,
-        rootRef,
-    );
-    const targetElement = computed(() =>
-        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
-    );
+    const targetLifecycle = useFloatingTargetLifecycle({
+        target: () => props.target,
+        fallback: rootRef,
+    });
+    const { isExplicitTarget, reference } = targetLifecycle;
     const zIndex = useOverlayZIndex({
         baseZIndex: () => props.baseZIndex,
         defaultBaseZIndex: 1000,
@@ -133,43 +130,14 @@ export function useTooltip(
         if (disabled) closeTooltip();
     });
 
-    watch(
-        [isExplicitTarget, targetElement],
-        ([explicit, target], _previous, onCleanup) => {
-            if (!explicit || !target) return;
-
-            target.addEventListener('mouseenter', openTooltip);
-            target.addEventListener('mouseleave', closeTooltip);
-            target.addEventListener('focusin', openTooltip);
-            target.addEventListener('focusout', closeTooltip);
-            target.addEventListener('keydown', onKeydown as EventListener);
-
-            onCleanup(() => {
-                target.removeEventListener('mouseenter', openTooltip);
-                target.removeEventListener('mouseleave', closeTooltip);
-                target.removeEventListener('focusin', openTooltip);
-                target.removeEventListener('focusout', closeTooltip);
-                target.removeEventListener('keydown', onKeydown as EventListener);
-            });
-        },
-        { flush: 'sync' },
-    );
-
-    watch(
-        [isExplicitTarget, targetElement, shouldDescribeContent, tooltipId],
-        ([explicit, target, shouldDescribe, id], _previous, onCleanup) => {
-            if (!explicit || !target || !shouldDescribe) return;
-
-            const snapshot = snapshotAttributes(target, ['aria-describedby']);
-            target.setAttribute(
-                'aria-describedby',
-                mergeAriaIdRefs(snapshot.get('aria-describedby'), id) ?? '',
-            );
-
-            onCleanup(() => restoreAttributes(target, snapshot));
-        },
-        { flush: 'sync' },
-    );
+    useTooltipTargetBindings({
+        targetLifecycle,
+        shouldDescribeContent,
+        tooltipId,
+        openTooltip,
+        closeTooltip,
+        onKeydown,
+    });
 
     return {
         rootRef,

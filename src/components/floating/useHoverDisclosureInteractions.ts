@@ -189,6 +189,7 @@ export function useHoverDisclosureInteractions({
     }
 
     function onTargetDetached(part: HoverDisclosureInteractionPart) {
+        if (part === 'trigger') interaction.send({ type: 'pointer-cancel' });
         interaction.send({ type: 'reset', part });
         requestClose('hover', undefined, 'delayed');
     }

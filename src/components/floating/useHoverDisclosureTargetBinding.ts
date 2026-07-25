@@ -1,19 +1,24 @@
-import { onBeforeUnmount, onMounted, shallowRef, toValue, watch, type ComputedRef } from 'vue';
+import {
+    onBeforeUnmount,
+    onMounted,
+    shallowRef,
+    toValue,
+    watch,
+    type ComputedRef,
+    type Ref,
+} from 'vue';
 import { isEventWithinTargets } from '@/utils/dom/events';
-import { isElement, querySelectorSafe } from '@/utils/dom/query';
-import type {
-    HoverDisclosureContentTarget,
-    HoverDisclosureInteractionTarget,
-    UseHoverDisclosureOptions,
-} from './types';
+import { isElement } from '@/utils/dom/query';
+import type { UseHoverDisclosureOptions } from './types';
 import type { HoverDisclosureInteractionPart } from './hoverDisclosureInteractionModel';
+import { useFloatingTargetLifecycle } from './useFloatingTargetLifecycle';
 
 export type HoverDisclosureTargetListener = readonly [type: string, listener: EventListener];
 
 export interface HoverDisclosureTargetState {
     contentElement: Element | null;
-    resolvedContentTarget: ReturnType<typeof shallowRef<Element | null>>;
-    resolvedInteractionTarget: ReturnType<typeof shallowRef<Element | null>>;
+    resolvedContentTarget: Readonly<Ref<Element | null>>;
+    resolvedInteractionTarget: Readonly<Ref<Element | null>>;
     triggerElement: Element | null;
 }
 
@@ -50,41 +55,6 @@ export function useHoverDisclosureTargetBinding({
 }: UseHoverDisclosureTargetBindingOptions) {
     let documentListenersActive = false;
 
-    function syncInteractionTarget() {
-        targets.resolvedInteractionTarget.value = resolveInteractionTarget(
-            toValue(options.interactionTarget),
-        );
-    }
-
-    function syncContentTarget() {
-        targets.resolvedContentTarget.value = resolveContentTarget(toValue(options.contentTarget));
-    }
-
-    function syncTargets() {
-        syncInteractionTarget();
-        syncContentTarget();
-    }
-
-    function bindTarget(
-        part: HoverDisclosureInteractionPart,
-        target: Element,
-        listeners: readonly HoverDisclosureTargetListener[],
-        cleanup: (callback: () => void) => void,
-    ) {
-        setCurrentTarget(part, target);
-        for (const [type, listener] of listeners) {
-            target.addEventListener(type, listener);
-        }
-
-        cleanup(() => {
-            for (const [type, listener] of listeners) {
-                target.removeEventListener(type, listener);
-            }
-            clearCurrentTarget(part, target);
-            adapter.onTargetDetached(part);
-        });
-    }
-
     function setCurrentTarget(part: HoverDisclosureInteractionPart, target: Element) {
         if (part === 'trigger') targets.triggerElement = target;
         else targets.contentElement = target;
@@ -97,6 +67,14 @@ export function useHoverDisclosureTargetBinding({
         if (part === 'content' && targets.contentElement === target) {
             targets.contentElement = null;
         }
+    }
+
+    function connectTarget(part: HoverDisclosureInteractionPart, target: Element) {
+        setCurrentTarget(part, target);
+        return () => {
+            clearCurrentTarget(part, target);
+            adapter.onTargetDetached(part);
+        };
     }
 
     function onDocumentPointerdown(event: PointerEvent) {
@@ -121,58 +99,36 @@ export function useHoverDisclosureTargetBinding({
         document.removeEventListener('pointerdown', onDocumentPointerdown as EventListener, true);
     }
 
-    watch(() => toValue(options.interactionTarget), syncInteractionTarget, {
-        flush: 'post',
-        immediate: true,
-    });
-    watch(() => toValue(options.contentTarget), syncContentTarget, {
-        flush: 'post',
-        immediate: true,
-    });
-    watch(
-        targets.resolvedInteractionTarget,
-        (target, _previous, cleanup) => {
-            if (target) {
-                bindTarget('trigger', target, adapter.triggerListeners, cleanup);
-            }
+    const fallbackTarget = shallowRef<Element | null>(null);
+    const interactionTargetLifecycle = useFloatingTargetLifecycle({
+        target: () => toValue(options.interactionTarget),
+        fallback: fallbackTarget,
+        getTargetElement: (reference) => {
+            if (isElement(reference)) return reference;
+            return isElement(reference.contextElement) ? reference.contextElement : null;
         },
-        { flush: 'sync', immediate: true },
-    );
-    watch(
-        targets.resolvedContentTarget,
-        (target, _previous, cleanup) => {
-            if (target) {
-                bindTarget('content', target, adapter.contentListeners, cleanup);
-            }
-        },
-        { flush: 'sync', immediate: true },
-    );
+    });
+    const contentTargetLifecycle = useFloatingTargetLifecycle({
+        target: () => toValue(options.contentTarget),
+        fallback: fallbackTarget,
+    });
+    targets.resolvedInteractionTarget = interactionTargetLifecycle.targetElement;
+    targets.resolvedContentTarget = contentTargetLifecycle.targetElement;
+    interactionTargetLifecycle.bindTarget({
+        connect: (target) => connectTarget('trigger', target),
+        listeners: adapter.triggerListeners,
+    });
+    contentTargetLifecycle.bindTarget({
+        connect: (target) => connectTarget('content', target),
+        listeners: adapter.contentListeners,
+    });
+
     watch(isOpen, setDocumentListeners, { flush: 'sync' });
-    watch(isOpen, syncTargets, { flush: 'post' });
 
     onMounted(() => {
-        syncTargets();
         setDocumentListeners(isOpen.value);
     });
     onBeforeUnmount(() => setDocumentListeners(false));
-}
-
-function resolveInteractionTarget(
-    target: HoverDisclosureInteractionTarget | null | undefined,
-): Element | null {
-    if (!target) return null;
-    if (typeof target === 'string') return querySelectorSafe(target);
-    if (isElement(target)) return target;
-
-    return isElement(target.contextElement) ? target.contextElement : null;
-}
-
-function resolveContentTarget(
-    target: HoverDisclosureContentTarget | null | undefined,
-): Element | null {
-    if (!target) return null;
-    if (typeof target === 'string') return querySelectorSafe(target);
-    return isElement(target) ? target : null;
 }
 
 function isEventInsideTargets(event: Event, targets: HoverDisclosureTargetState) {

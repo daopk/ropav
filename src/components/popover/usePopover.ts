@@ -14,11 +14,11 @@ import { useControllableValue } from '@/composables/useControllableValue';
 import { bem } from '@/utils/bem';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
 import { isNodeWithinElement } from '@/utils/dom/events';
-import { isElement } from '@/utils/dom/query';
 import { getFloatingOffsetStyle } from '@/utils/floatingOffset';
 import { useFocusTrap } from '../focus-trap/useFocusTrap';
 import type { FocusTrapContainers } from '../focus-trap/types';
-import { useFloatingPosition, useFloatingTarget } from '../floating/useFloatingPosition';
+import { useFloatingPosition } from '../floating/useFloatingPosition';
+import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import { useTeleportTarget } from '../teleport-provider/useTeleportTarget';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import type {
@@ -64,13 +64,11 @@ export function usePopover(
     const placement = computed(() => props.placement ?? DEFAULT_PLACEMENT);
     const popoverRole = computed(() => props.role ?? DEFAULT_ROLE);
     const teleportTo = useTeleportTarget(() => props.teleportTo);
-    const { isExplicitTarget, reference, resolvedTarget } = useFloatingTarget(
-        () => props.target,
-        rootRef,
-    );
-    const targetElement = computed(() =>
-        isElement(resolvedTarget.value) ? resolvedTarget.value : null,
-    );
+    const targetLifecycle = useFloatingTargetLifecycle({
+        target: () => props.target,
+        fallback: rootRef,
+    });
+    const { isExplicitTarget, reference, targetElement } = targetLifecycle;
     const hasContent = computed(() =>
         Boolean(slots.content || (isExplicitTarget.value && slots.default)),
     );
@@ -262,8 +260,7 @@ export function usePopover(
     );
 
     usePopoverBindings({
-        isExplicitTarget,
-        targetElement,
+        targetLifecycle,
         popoverId,
         popoverRole,
         isVisible,

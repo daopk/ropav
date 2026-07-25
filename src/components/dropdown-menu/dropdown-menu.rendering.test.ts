@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref, shallowRef } from 'vue';
-import { click, keydown, mountDom, queryDom, queryDomAll } from '../../../tests/utils/vue';
+import {
+    click,
+    keydown,
+    mountDom,
+    mountDomWithApp,
+    queryDom,
+    queryDomAll,
+    waitForAssertion,
+} from '../../../tests/utils/vue';
 import { items, waitForDropdownClose } from '../../../tests/fixtures/dropdown-menu';
 import type { FloatingReference } from '../floating/types';
 import DropdownMenu from './dropdown-menu.vue';
@@ -138,6 +146,71 @@ describe('DropdownMenu rendering', () => {
         expect(onOpen).toHaveBeenNthCalledWith(2, false);
         expect(onSelect).toHaveBeenCalledWith(items[0], expect.any(CustomEvent));
         expect(queryDom(container, '[role="menu"]')).toBeNull();
+    });
+
+    it('rebinds and restores a selector target when its node is replaced', async () => {
+        const original = document.createElement('button');
+        original.id = 'replaceable-menu-target';
+        original.setAttribute('aria-controls', 'original-control');
+        original.setAttribute('aria-expanded', 'mixed');
+        original.setAttribute('aria-haspopup', 'listbox');
+        original.setAttribute('aria-disabled', 'true');
+        document.body.append(original);
+
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(
+                        DropdownMenu,
+                        {
+                            id: 'replaceable-menu',
+                            items,
+                            target: '#replaceable-menu-target',
+                        },
+                        { default: () => null },
+                    );
+                },
+            }),
+        );
+
+        await nextTick();
+        await nextTick();
+
+        expect(original.getAttribute('aria-controls')).toBe('replaceable-menu');
+        expect(original.getAttribute('aria-expanded')).toBe('false');
+        expect(original.getAttribute('aria-haspopup')).toBe('menu');
+        expect(original.hasAttribute('aria-disabled')).toBe(false);
+
+        click(original);
+        await nextTick();
+        expect(original.getAttribute('aria-expanded')).toBe('true');
+        expect(queryDom(container, '#replaceable-menu')).not.toBeNull();
+
+        const replacement = document.createElement('button');
+        replacement.id = original.id;
+        replacement.setAttribute('aria-controls', 'replacement-control');
+        original.replaceWith(replacement);
+
+        await waitForAssertion(() => {
+            expect(replacement.getAttribute('aria-controls')).toBe('replaceable-menu');
+            expect(replacement.getAttribute('aria-expanded')).toBe('true');
+            expect(replacement.getAttribute('aria-haspopup')).toBe('menu');
+        });
+        expect(original.getAttribute('aria-controls')).toBe('original-control');
+        expect(original.getAttribute('aria-expanded')).toBe('mixed');
+        expect(original.getAttribute('aria-haspopup')).toBe('listbox');
+        expect(original.getAttribute('aria-disabled')).toBe('true');
+
+        click(replacement);
+        await waitForAssertion(() => {
+            expect(replacement.getAttribute('aria-expanded')).toBe('false');
+            expect(queryDom(container, '#replaceable-menu')).toBeNull();
+        });
+
+        unmount();
+        expect(replacement.getAttribute('aria-controls')).toBe('replacement-control');
+        expect(replacement.hasAttribute('aria-expanded')).toBe(false);
+        expect(replacement.hasAttribute('aria-haspopup')).toBe(false);
     });
 
     it('supports custom item rendering and opt-out close on select', async () => {

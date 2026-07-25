@@ -1,18 +1,14 @@
-import { watch, type Ref } from 'vue';
+import type { Ref } from 'vue';
 import { mergeAriaIdRefs } from '@/utils/aria';
-import {
-    restoreAttributes,
-    snapshotAttributes,
-    type AttributeSnapshot,
-} from '@/utils/dom/attributes';
+import type { AttributeSnapshot } from '@/utils/dom/attributes';
+import type { FloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import type { PopoverRole } from './types';
 
 const TARGET_ATTRIBUTES = ['aria-controls', 'aria-expanded', 'aria-haspopup'] as const;
 type TargetAttribute = (typeof TARGET_ATTRIBUTES)[number];
 
 interface UsePopoverBindingsOptions {
-    isExplicitTarget: Readonly<Ref<boolean>>;
-    targetElement: Readonly<Ref<Element | null>>;
+    targetLifecycle: FloatingTargetLifecycle;
     popoverId: Readonly<Ref<string>>;
     popoverRole: Readonly<Ref<PopoverRole>>;
     isVisible: Readonly<Ref<boolean>>;
@@ -34,34 +30,25 @@ function applyTargetAttributes(
 }
 
 export function usePopoverBindings({
-    isExplicitTarget,
-    targetElement,
+    targetLifecycle,
     popoverId,
     popoverRole,
     isVisible,
     isDisabled,
     onTriggerClick,
 }: UsePopoverBindingsOptions) {
-    watch(
-        [isExplicitTarget, targetElement],
-        ([explicit, target], _previous, onCleanup) => {
-            if (!explicit || !target) return;
-
-            target.addEventListener('click', onTriggerClick);
-            onCleanup(() => target.removeEventListener('click', onTriggerClick));
+    targetLifecycle.bindTarget({
+        listeners: [['click', onTriggerClick]],
+        attributes: {
+            names: TARGET_ATTRIBUTES,
+            isActive: () => !isDisabled.value,
+            apply: (target, snapshot) => {
+                applyTargetAttributes(target, snapshot, {
+                    id: popoverId.value,
+                    expanded: isVisible.value,
+                    role: popoverRole.value,
+                });
+            },
         },
-        { flush: 'sync' },
-    );
-
-    watch(
-        [isExplicitTarget, targetElement, popoverId, popoverRole, isVisible, isDisabled],
-        ([explicit, target, id, role, visible, disabled], _previous, onCleanup) => {
-            if (!explicit || !target || disabled) return;
-
-            const snapshot = snapshotAttributes(target, TARGET_ATTRIBUTES);
-            applyTargetAttributes(target, snapshot, { id, expanded: visible, role });
-            onCleanup(() => restoreAttributes(target, snapshot));
-        },
-        { flush: 'sync' },
-    );
+    });
 }

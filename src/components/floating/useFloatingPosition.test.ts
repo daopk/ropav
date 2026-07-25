@@ -1,19 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { computed, defineComponent, h, reactive, ref, shallowReactive, shallowRef } from 'vue';
+import { computed, defineComponent, h, reactive, ref, shallowRef } from 'vue';
 import { flush, mountDom } from '../../../tests/utils/vue';
 import type {
     FloatingFlipFallbackStrategy,
     FloatingPlacement,
     FloatingReference,
     FloatingStrategy,
-    FloatingTarget,
 } from './types';
-import {
-    readFloatingTarget,
-    resolveFloatingTarget,
-    useFloatingPosition,
-    useFloatingTarget,
-} from './useFloatingPosition';
+import { useFloatingPosition } from './useFloatingPosition';
 
 const floatingMocks = vi.hoisted(() => {
     const cleanup = vi.fn();
@@ -63,58 +57,6 @@ describe('floating positioning', () => {
             strategy: 'fixed',
             middlewareData: { arrow: { x: 5, y: 6 } },
         });
-    });
-
-    it('resolves selector, element, virtual element, and ref targets reactively', async () => {
-        const first = document.createElement('button');
-        first.id = 'floating-first';
-        const second = document.createElement('button');
-        document.body.append(first, second);
-
-        const virtual = createVirtualReference(20, 30);
-        const innerTarget = shallowRef<FloatingReference | null>(first);
-        const target = shallowReactive<{ value: FloatingTarget | null }>({
-            value: '#floating-first',
-        });
-        let floatingTarget!: ReturnType<typeof useFloatingTarget>;
-
-        mountDom(
-            defineComponent({
-                setup() {
-                    const fallback = ref<HTMLElement | null>(null);
-                    floatingTarget = useFloatingTarget(() => target.value, fallback);
-                    return () => h('span', { ref: fallback });
-                },
-            }),
-        );
-
-        await flush();
-        expect(floatingTarget.reference.value).toBe(first);
-        expect(resolveFloatingTarget('#floating-first')).toBe(first);
-        expect(resolveFloatingTarget(first)).toBe(first);
-        expect(resolveFloatingTarget(virtual)).toBe(virtual);
-        expect(resolveFloatingTarget('[')).toBeNull();
-
-        target.value = second;
-        await flush();
-        expect(floatingTarget.reference.value).toBe(second);
-
-        target.value = virtual;
-        await flush();
-        expect(floatingTarget.reference.value).toBe(virtual);
-
-        target.value = innerTarget;
-        await flush();
-        expect(readFloatingTarget(target.value)).toBe(first);
-        expect(floatingTarget.reference.value).toBe(first);
-
-        innerTarget.value = second;
-        await flush();
-        expect(floatingTarget.reference.value).toBe(second);
-
-        target.value = null;
-        await flush();
-        expect(floatingTarget.reference.value).toBeInstanceOf(HTMLElement);
     });
 
     it('applies public defaults and positions without an explicit open option', async () => {

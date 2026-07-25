@@ -251,6 +251,49 @@ describe('useHoverDisclosure', () => {
         expect(disclosure.isOpen.value).toBe(false);
     });
 
+    it('does not complete a touch sequence across selector target replacement', async () => {
+        const original = document.createElement('button');
+        original.id = 'replaceable-touch-trigger';
+        document.body.append(original);
+        let disclosure!: ReturnType<typeof useHoverDisclosure>;
+
+        mountDom(
+            defineComponent({
+                setup() {
+                    disclosure = useHoverDisclosure({
+                        interactionTarget: '#replaceable-touch-trigger',
+                        touchBehavior: 'toggle',
+                    });
+                    return () => h('div');
+                },
+            }),
+        );
+        await flush();
+
+        dispatchPointer(original, 'pointerdown', 'touch');
+
+        const replacement = document.createElement('button');
+        replacement.id = original.id;
+        original.replaceWith(replacement);
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        await flush();
+
+        dispatchPointer(replacement, 'pointerup', 'touch');
+        const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+        replacement.dispatchEvent(click);
+
+        expect(click.defaultPrevented).toBe(false);
+        expect(disclosure.isOpen.value).toBe(false);
+
+        dispatchPointer(replacement, 'pointerdown', 'touch');
+        dispatchPointer(replacement, 'pointerup', 'touch');
+        const replacementClick = new MouseEvent('click', { bubbles: true, cancelable: true });
+        replacement.dispatchEvent(replacementClick);
+
+        expect(replacementClick.defaultPrevented).toBe(true);
+        expect(disclosure.isOpen.value).toBe(true);
+    });
+
     it('binds external virtual context and content targets and cleans up after retargeting', async () => {
         vi.useFakeTimers();
         const firstTrigger = document.createElement('button');

@@ -8,22 +8,9 @@ import {
     type Middleware,
     type Placement,
 } from '@floating-ui/dom';
-import {
-    computed,
-    isRef,
-    nextTick,
-    onBeforeUnmount,
-    onMounted,
-    readonly,
-    ref,
-    shallowRef,
-    toValue,
-    watch,
-    type CSSProperties,
-    type Ref,
-} from 'vue';
+import { nextTick, onBeforeUnmount, readonly, ref, toValue, watch, type CSSProperties } from 'vue';
 import { observeComposedAncestry } from '@/utils/dom/ancestry';
-import { isElement, querySelectorSafe } from '@/utils/dom/query';
+import { isElement } from '@/utils/dom/query';
 import type {
     FloatingAutoUpdateOptions,
     FloatingCollisionPadding,
@@ -32,12 +19,9 @@ import type {
     FloatingPlacement,
     FloatingReference,
     FloatingStrategy,
-    FloatingTarget,
     UseFloatingPositionOptions,
     UseFloatingPositionReturn,
 } from './types';
-
-type Source<T> = () => T;
 
 const DEFAULT_ARROW_PADDING = 4;
 const DEFAULT_COLLISION_PADDING = 8;
@@ -48,53 +32,6 @@ const DEFAULT_STRATEGY: FloatingStrategy = 'absolute';
 function getReferenceElement(reference: FloatingReference | null | undefined): Element | null {
     if (isElement(reference)) return reference;
     return reference && isElement(reference.contextElement) ? reference.contextElement : null;
-}
-
-export function readFloatingTarget(target: FloatingTarget | null | undefined) {
-    return isRef(target) ? target.value : target;
-}
-
-export function isVirtualReference(value: unknown): value is FloatingReference {
-    if (value == null || typeof value !== 'object') return false;
-    return 'getBoundingClientRect' in value && typeof value.getBoundingClientRect === 'function';
-}
-
-export function resolveFloatingTarget(
-    target: string | FloatingReference | null | undefined,
-): FloatingReference | null {
-    if (!target) return null;
-    if (typeof target !== 'string') return isVirtualReference(target) ? target : null;
-    return querySelectorSafe(target);
-}
-
-export function useFloatingTarget(
-    getTarget: Source<FloatingTarget | null | undefined>,
-    fallback: Readonly<Ref<Element | null>>,
-) {
-    const resolvedTarget = shallowRef<FloatingReference | null>(null);
-    const isExplicitTarget = computed(() => {
-        const target = readFloatingTarget(getTarget());
-        return target != null && target !== '';
-    });
-    const reference = computed<FloatingReference | null>(() =>
-        isExplicitTarget.value ? resolvedTarget.value : fallback.value,
-    );
-
-    function syncTarget() {
-        resolvedTarget.value = isExplicitTarget.value
-            ? resolveFloatingTarget(readFloatingTarget(getTarget()))
-            : null;
-    }
-
-    watch(() => readFloatingTarget(getTarget()), syncTarget, { flush: 'post' });
-    onMounted(syncTarget);
-
-    return {
-        isExplicitTarget,
-        reference,
-        resolvedTarget,
-        syncTarget,
-    };
 }
 
 export function useFloatingPosition(

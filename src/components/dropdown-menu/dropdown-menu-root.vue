@@ -6,7 +6,7 @@
 import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, watch, useId } from 'vue';
 import { useControllableValue } from '@/composables/useControllableValue';
 import { useOverlayLayer } from '@/internal/composables/useOverlayLayer';
-import { useFloatingTarget } from '../floating/useFloatingPosition';
+import { useFloatingTargetLifecycle } from '../floating/useFloatingTargetLifecycle';
 import { useOverlayZIndex } from '../overlay/useOverlayZIndex';
 import {
     createVirtualAnchor,
@@ -56,10 +56,10 @@ const trigger = ref<HTMLElement | null>(null);
 const triggerId = ref<string>();
 const contentId = ref<string>();
 const activeReference = shallowRef<ElementReference | null>(null);
-const { reference: configuredReference } = useFloatingTarget(
-    () => props.target ?? props.virtualAnchor,
-    trigger,
-);
+const { reference: configuredReference } = useFloatingTargetLifecycle({
+    target: () => props.target ?? props.virtualAnchor,
+    fallback: trigger,
+});
 const reference = computed<ElementReference | null>(
     () => activeReference.value ?? configuredReference.value,
 );
