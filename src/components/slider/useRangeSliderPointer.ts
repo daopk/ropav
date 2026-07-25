@@ -1,15 +1,13 @@
 import { onBeforeUnmount } from 'vue';
-import { getPointerId, isMatchingPointer } from '@/utils/dom/pointer';
-import { createRafScheduler } from '@/utils/rafScheduler';
+import { createPointerSession } from '@/utils/dom/pointerSession';
 import type { RangeSliderThumb } from './types';
 
 interface DragSession<TGeometry> {
-    view: Window | null;
     track: HTMLElement;
     geometry: TGeometry;
     thumb: RangeSliderThumb;
     anchorValue: number;
-    pointerId: number | undefined;
+    initialValue: number;
 }
 
 interface UseRangeSliderPointerOptions<TGeometry> {
@@ -32,67 +30,19 @@ interface UseRangeSliderPointerOptions<TGeometry> {
 }
 
 export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerOptions<TGeometry>) {
-    let session: DragSession<TGeometry> | undefined;
-    let pendingPointerEvent: PointerEvent | undefined;
-    let geometryDirty = false;
-
-    function refreshGeometry() {
-        const currentSession = session;
-        if (!currentSession) return false;
-        if (!geometryDirty) return true;
-
+    function refreshGeometry(currentSession: DragSession<TGeometry>) {
         const geometry = options.getPointerGeometry(currentSession.track);
         if (geometry === undefined) return false;
 
-        geometryDirty = false;
         currentSession.geometry = geometry;
         return true;
     }
 
-    function applyScheduledUpdate() {
-        if (!refreshGeometry()) return;
-
-        const event = pendingPointerEvent;
-        pendingPointerEvent = undefined;
-        if (event && isCurrentPointer(event)) updateFromPointer(event);
-    }
-
-    const updateScheduler = createRafScheduler(applyScheduledUpdate, () => session?.view);
-
-    function flushScheduledUpdate() {
-        updateScheduler.cancel();
-        applyScheduledUpdate();
-    }
-
-    function scheduleUpdate() {
-        if (session) updateScheduler.schedule();
-    }
-
-    function onGeometryChange() {
-        if (!session) return;
-        geometryDirty = true;
-        scheduleUpdate();
-    }
-
-    function stopDragging() {
-        const stoppedSession = session;
-        if (!stoppedSession) return;
-
-        stoppedSession.view?.removeEventListener('pointermove', onPointerMove);
-        stoppedSession.view?.removeEventListener('pointerup', onPointerEnd);
-        stoppedSession.view?.removeEventListener('pointercancel', onPointerEnd);
-        stoppedSession.view?.removeEventListener('resize', onGeometryChange);
-        stoppedSession.view?.removeEventListener('scroll', onGeometryChange, true);
-        updateScheduler.cancel();
-        pendingPointerEvent = undefined;
-        geometryDirty = false;
-        session = undefined;
-        options.endDrag(stoppedSession.thumb);
-    }
-
-    function switchDraggingThumb(nextThumb: RangeSliderThumb) {
-        const currentSession = session;
-        if (!currentSession || currentSession.thumb === nextThumb) return;
+    function switchDraggingThumb(
+        currentSession: DragSession<TGeometry>,
+        nextThumb: RangeSliderThumb,
+    ) {
+        if (currentSession.thumb === nextThumb) return;
 
         const previousThumb = currentSession.thumb;
         currentSession.thumb = nextThumb;
@@ -101,10 +51,7 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
         options.transferFocusedThumb(currentSession.track, previousThumb, nextThumb);
     }
 
-    function updateFromPointer(event: PointerEvent) {
-        const currentSession = session;
-        if (!currentSession) return;
-
+    function updateFromPointer(event: PointerEvent, currentSession: DragSession<TGeometry>) {
         const value = options.getPointerValue(event, currentSession.geometry);
         if (value == null) return;
 
@@ -113,66 +60,57 @@ export function useRangeSliderPointer<TGeometry>(options: UseRangeSliderPointerO
             value,
             currentSession.anchorValue,
         );
-        switchDraggingThumb(nextThumb);
+        switchDraggingThumb(currentSession, nextThumb);
     }
 
-    function isCurrentPointer(event: PointerEvent) {
-        return isMatchingPointer(event, session?.pointerId);
-    }
-
-    function onPointerMove(event: PointerEvent) {
-        if (!isCurrentPointer(event)) return;
-        if (!session) return;
-
-        pendingPointerEvent = event;
-        scheduleUpdate();
-    }
-
-    function onPointerEnd(event: PointerEvent) {
-        if (!isCurrentPointer(event)) return;
-        if (event.type === 'pointerup') flushScheduledUpdate();
-        stopDragging();
-    }
+    const pointerSession = createPointerSession<DragSession<TGeometry>>({
+        onStart(event, currentSession) {
+            event.preventDefault();
+            options.setActiveThumb(currentSession.thumb);
+            options.focusThumb(currentSession.track, currentSession.thumb);
+            options.startDrag(currentSession.thumb);
+            const nextThumb = options.updateThumb(
+                currentSession.thumb,
+                currentSession.initialValue,
+                currentSession.anchorValue,
+            );
+            switchDraggingThumb(currentSession, nextThumb);
+        },
+        onStop(currentSession) {
+            options.endDrag(currentSession.thumb);
+        },
+        onUpdate: updateFromPointer,
+        refreshGeometry,
+    });
 
     function onTrackPointerDown(event: PointerEvent) {
-        if (options.disabled() || event.button !== 0 || event.isPrimary === false) return;
+        return pointerSession.start(event, () => {
+            if (options.disabled()) return;
 
-        const track = event.currentTarget as HTMLElement | null;
-        if (!track) return;
+            const track = event.currentTarget as HTMLElement | null;
+            if (!track) return;
 
-        const geometry = options.getPointerGeometry(track);
-        if (geometry === undefined) return;
+            const geometry = options.getPointerGeometry(track);
+            if (geometry === undefined) return;
 
-        const pointerValue = options.getPointerValue(event, geometry);
-        if (pointerValue == null) return;
+            const initialValue = options.getPointerValue(event, geometry);
+            if (initialValue == null) return;
 
-        const thumb = options.getThumb(event, pointerValue);
-        event.preventDefault();
-        stopDragging();
-        options.setActiveThumb(thumb);
-        options.focusThumb(track, thumb);
-
-        session = {
-            view: track.ownerDocument.defaultView,
-            track,
-            geometry,
-            thumb,
-            anchorValue: options.getAnchorValue(thumb),
-            pointerId: getPointerId(event),
-        };
-        options.startDrag(thumb);
-        const nextThumb = options.updateThumb(thumb, pointerValue, session.anchorValue);
-        switchDraggingThumb(nextThumb);
-
-        const view = session?.view;
-        view?.addEventListener('pointermove', onPointerMove);
-        view?.addEventListener('pointerup', onPointerEnd);
-        view?.addEventListener('pointercancel', onPointerEnd);
-        view?.addEventListener('resize', onGeometryChange);
-        view?.addEventListener('scroll', onGeometryChange, true);
+            const thumb = options.getThumb(event, initialValue);
+            return {
+                state: {
+                    anchorValue: options.getAnchorValue(thumb),
+                    geometry,
+                    initialValue,
+                    thumb,
+                    track,
+                },
+                target: track,
+            };
+        });
     }
 
-    onBeforeUnmount(stopDragging);
+    onBeforeUnmount(pointerSession.stop);
 
     return { onTrackPointerDown };
 }

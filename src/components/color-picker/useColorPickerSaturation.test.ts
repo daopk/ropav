@@ -95,6 +95,59 @@ describe('useColorPickerSaturation', () => {
         window.dispatchEvent(new MouseEvent('pointerup'));
     });
 
+    it('measures pointer geometry after focusing the drag target', async () => {
+        const { container, control, onChange } = mountSaturation();
+        const surface = container.firstElementChild as HTMLElement;
+        const input = document.createElement('input');
+        surface.append(input);
+        let rect = {
+            left: 50,
+            top: 50,
+            width: 200,
+            height: 200,
+        };
+        vi.spyOn(surface, 'getBoundingClientRect').mockImplementation(
+            () =>
+                ({
+                    ...rect,
+                    bottom: rect.top + rect.height,
+                    right: rect.left + rect.width,
+                    x: rect.left,
+                    y: rect.top,
+                    toJSON: () => ({}),
+                }) as DOMRect,
+        );
+        vi.spyOn(input, 'focus').mockImplementation(() => {
+            rect = { left: 100, top: 100, width: 200, height: 200 };
+            window.dispatchEvent(new Event('scroll'));
+        });
+        control.setSaturationElement(surface);
+        control.setSaturationInput(input);
+
+        control.onPointerDown(
+            new MouseEvent('pointerdown', {
+                button: 0,
+                cancelable: true,
+                clientX: 150,
+                clientY: 150,
+            }) as PointerEvent,
+        );
+
+        expect(onChange).toHaveBeenCalledWith({ saturation: 25, value: 75 });
+
+        onChange.mockClear();
+        window.dispatchEvent(
+            new MouseEvent('pointermove', {
+                clientX: 200,
+                clientY: 200,
+            }),
+        );
+        await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+        expect(onChange).toHaveBeenCalledWith({ saturation: 50, value: 50 });
+
+        window.dispatchEvent(new MouseEvent('pointerup'));
+    });
+
     it('handles keyboard steps and keeps readonly range input state controlled', () => {
         const { control, onChange, state } = mountSaturation();
         const keyboardEvent = new KeyboardEvent('keydown', {

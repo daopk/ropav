@@ -1,6 +1,6 @@
 import { onBeforeUnmount, type Ref } from 'vue';
-import { getPointerId, isMatchingPointer } from '@/utils/dom/pointer';
 import { getPointerAxisCoordinate, type ScrollAxis } from '@/utils/dom/scroll';
+import { createPointerSession } from '@/utils/dom/pointerSession';
 import {
     getScrollAreaDragPosition,
     getScrollAreaTrackPosition,
@@ -24,16 +24,13 @@ interface DragSession {
     axis: ScrollAxis;
     coordinateDirection: 1 | -1;
     maxPosition: number;
-    pointerId: number | undefined;
+    scrollbar: HTMLElement;
     startCoordinate: number;
     startPosition: number;
     travel: number;
-    view: Window | null;
 }
 
 export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
-    let dragSession: DragSession | undefined;
-
     function onScrollbarPointerdown(axis: ScrollAxis, event: PointerEvent) {
         if (event.target !== event.currentTarget || event.button !== 0) return;
 
@@ -61,82 +58,35 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
     }
 
     function onThumbPointerdown(axis: ScrollAxis, event: PointerEvent) {
-        if (event.button !== 0 || event.isPrimary === false) return;
+        return pointerSession.start(event, () => {
+            const state = options.refreshAxis(axis);
+            if (!state.overflow) return;
 
-        const state = options.refreshAxis(axis);
-        if (!state.overflow) return;
+            const scrollbar = getScrollbar(axis);
+            const thumb = event.currentTarget as HTMLElement;
+            if (!scrollbar) return;
 
-        const scrollbar = getScrollbar(axis);
-        const thumb = event.currentTarget as HTMLElement;
-        if (!scrollbar) return;
+            const trackRect = scrollbar.getBoundingClientRect();
+            const thumbRect = thumb.getBoundingClientRect();
+            const horizontal = axis === 'x';
+            const trackSize = horizontal ? trackRect.width : trackRect.height;
+            const thumbSize = horizontal ? thumbRect.width : thumbRect.height;
+            const travel = Math.max(0, trackSize - thumbSize);
+            if (travel === 0) return;
 
-        const trackRect = scrollbar.getBoundingClientRect();
-        const thumbRect = thumb.getBoundingClientRect();
-        const horizontal = axis === 'x';
-        const trackSize = horizontal ? trackRect.width : trackRect.height;
-        const thumbSize = horizontal ? thumbRect.width : thumbRect.height;
-        const travel = Math.max(0, trackSize - thumbSize);
-        if (travel === 0) return;
-
-        event.preventDefault();
-        stopDragging();
-        if (!options.isEmbedded()) scrollbar.focus({ preventScroll: true });
-        startDragging(axis, event, scrollbar, travel, state);
-    }
-
-    function startDragging(
-        axis: ScrollAxis,
-        event: PointerEvent,
-        scrollbar: HTMLElement,
-        travel: number,
-        state: ScrollAreaAxisState,
-    ) {
-        const view = scrollbar.ownerDocument.defaultView;
-        dragSession = {
-            axis,
-            coordinateDirection: axis === 'x' && state.direction === 'rtl' ? -1 : 1,
-            maxPosition: state.maxPosition,
-            pointerId: getPointerId(event),
-            startCoordinate: getPointerAxisCoordinate(axis, event),
-            startPosition: state.position,
-            travel,
-            view,
-        };
-        options.setDraggingAxis(axis);
-        view?.addEventListener('pointermove', onPointermove);
-        view?.addEventListener('pointerup', onPointerend);
-        view?.addEventListener('pointercancel', onPointerend);
-    }
-
-    function onPointermove(event: PointerEvent) {
-        const session = dragSession;
-        if (!session || !isMatchingPointer(event, session.pointerId)) return;
-
-        options.writeAxisPosition(
-            session.axis,
-            getScrollAreaDragPosition({
-                coordinate: getPointerAxisCoordinate(session.axis, event),
-                coordinateDirection: session.coordinateDirection,
-                maxPosition: session.maxPosition,
-                startCoordinate: session.startCoordinate,
-                startPosition: session.startPosition,
-                travel: session.travel,
-            }),
-        );
-    }
-
-    function onPointerend(event: PointerEvent) {
-        if (!dragSession || !isMatchingPointer(event, dragSession.pointerId)) return;
-        stopDragging();
-    }
-
-    function stopDragging() {
-        const view = dragSession?.view;
-        view?.removeEventListener('pointermove', onPointermove);
-        view?.removeEventListener('pointerup', onPointerend);
-        view?.removeEventListener('pointercancel', onPointerend);
-        dragSession = undefined;
-        options.setDraggingAxis(null);
+            return {
+                state: {
+                    axis,
+                    coordinateDirection: axis === 'x' && state.direction === 'rtl' ? -1 : 1,
+                    maxPosition: state.maxPosition,
+                    scrollbar,
+                    startCoordinate: getPointerAxisCoordinate(axis, event),
+                    startPosition: state.position,
+                    travel,
+                },
+                target: scrollbar,
+            };
+        });
     }
 
     function getScrollbar(axis: ScrollAxis) {
@@ -145,7 +95,33 @@ export function useScrollAreaPointer(options: UseScrollAreaPointerOptions) {
             : options.elements.verticalScrollbar.value;
     }
 
-    onBeforeUnmount(stopDragging);
+    const pointerSession = createPointerSession<DragSession>({
+        endUpdate: 'none',
+        onStart(event, session) {
+            event.preventDefault();
+            if (!options.isEmbedded()) session.scrollbar.focus({ preventScroll: true });
+            options.setDraggingAxis(session.axis);
+        },
+        onStop() {
+            options.setDraggingAxis(null);
+        },
+        onUpdate(event, session) {
+            options.writeAxisPosition(
+                session.axis,
+                getScrollAreaDragPosition({
+                    coordinate: getPointerAxisCoordinate(session.axis, event),
+                    coordinateDirection: session.coordinateDirection,
+                    maxPosition: session.maxPosition,
+                    startCoordinate: session.startCoordinate,
+                    startPosition: session.startPosition,
+                    travel: session.travel,
+                }),
+            );
+        },
+        updateMode: 'immediate',
+    });
+
+    onBeforeUnmount(pointerSession.stop);
 
     return { onScrollbarPointerdown, onThumbPointerdown };
 }

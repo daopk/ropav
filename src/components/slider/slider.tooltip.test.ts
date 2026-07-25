@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
-import { flush, mountDom, queryDom } from '../../../tests/utils/vue';
+import { flush, mountDom, mountDomWithApp, queryDom } from '../../../tests/utils/vue';
 import Slider from './slider.vue';
 
 function mockRect(element: Element, rect: Partial<DOMRect>) {
@@ -333,6 +333,31 @@ describe('Slider tooltip', () => {
         vi.advanceTimersByTime(1);
         await flush();
         expect(tooltip.classList.contains('rp-tooltip--open')).toBe(true);
+    });
+
+    it('clears delayed opening when unmounted during an active drag', async () => {
+        vi.useFakeTimers();
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render: () =>
+                    h(Slider, {
+                        ariaLabel: 'Test slider',
+                        modelValue: 20,
+                        tooltip: { anchor: 'pointer', openDelay: 100 },
+                    }),
+            }),
+        );
+        await flush();
+
+        const track = queryDom(container, '.rp-slider__track') as HTMLElement;
+        const travel = queryDom(container, '.rp-slider__travel')!;
+        mockRect(travel, { left: 0, right: 100, width: 100 });
+        dispatchPointer(track, 'pointerenter', { clientX: 20 });
+        dispatchPointer(track, 'pointerdown', { clientX: 20, pointerId: 7 });
+
+        expect(vi.getTimerCount()).toBeGreaterThan(0);
+        unmount();
+        expect(vi.getTimerCount()).toBe(0);
     });
 
     it('shows the tooltip for the duration of a touch drag', async () => {

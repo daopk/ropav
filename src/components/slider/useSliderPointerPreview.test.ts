@@ -87,6 +87,37 @@ describe('useSliderPointerPreview', () => {
         dispatchPointerUp(7, 74);
         expect(preview.dragging.value).toBe(false);
         expect(preview.previewValue.value).toBe(80);
-        expect(onStateChange).toHaveBeenCalled();
+        expect(onStateChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('stops an active drag without notifying after unmount begins', () => {
+        const onStateChange = vi.fn();
+        let preview!: ReturnType<typeof useSliderPointerPreview>;
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                setup() {
+                    preview = useSliderPointerPreview({
+                        enabled: () => true,
+                        disabled: () => false,
+                        orientation: () => 'horizontal',
+                        bounds: computed(() => ({ min: 0, max: 100 })),
+                        step: computed(() => 1),
+                        initialValue: 20,
+                        onStateChange,
+                    });
+                    return () => h('div');
+                },
+            }),
+        );
+        const track = container.firstElementChild as HTMLElement;
+        setRect(track, { width: 100 });
+
+        expect(preview.onPointerDown(pointerEvent(track, { clientX: 25 }))).toBe(true);
+        expect(preview.dragging.value).toBe(true);
+
+        unmount();
+
+        expect(preview.dragging.value).toBe(false);
+        expect(onStateChange).not.toHaveBeenCalled();
     });
 });

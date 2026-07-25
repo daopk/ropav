@@ -1,5 +1,5 @@
 import { onBeforeUnmount, ref, type ComputedRef } from 'vue';
-import { getPointerId, isMatchingPointer } from '@/utils/dom/pointer';
+import { createPointerSession } from '@/utils/dom/pointerSession';
 import { clamp } from '@/utils/number';
 import { createRafScheduler } from '@/utils/rafScheduler';
 import { normalizeSliderValue, type SliderBounds } from './sliderModel';
@@ -36,9 +36,7 @@ export function useSliderPointerPreview(options: UseSliderPointerPreviewOptions)
     const dragging = ref(false);
     const previewAvailable = ref(false);
     const previewValue = ref(options.initialValue);
-    let dragView: Window | null = null;
-    let dragPointerId: number | undefined;
-    let dragTrack: HTMLElement | null = null;
+    let disposing = false;
     let pendingPreview: PendingSliderPreview | undefined;
     const previewScheduler = createRafScheduler(
         applyScheduledPreview,
@@ -88,50 +86,39 @@ export function useSliderPointerPreview(options: UseSliderPointerPreviewOptions)
         pendingPreview = undefined;
     }
 
-    function removeDragListeners() {
-        dragView?.removeEventListener('pointermove', onWindowPointerMove);
-        dragView?.removeEventListener('pointerup', onPointerEnd);
-        dragView?.removeEventListener('pointercancel', onPointerEnd);
-        dragView = null;
-        dragPointerId = undefined;
-        dragTrack = null;
-    }
+    const pointerSession = createPointerSession<HTMLElement>({
+        endUpdate: 'event',
+        onStart(event, track) {
+            cancelScheduledPreview();
+            dragging.value = true;
+            updateFromPointer(event, track);
+        },
+        onStop() {
+            dragging.value = false;
+            if (!disposing) options.onStateChange();
+        },
+        onUpdate(event, track) {
+            const updated = updateFromPointer(event, track);
+            if (updated && event.type === 'pointermove') options.onStateChange();
+        },
+    });
 
     function onPointerMove(event: PointerEvent) {
-        if (dragging.value && !isMatchingPointer(event, dragPointerId)) return;
+        if (dragging.value) return;
 
         const track = event.currentTarget as HTMLElement | null;
         if (track) schedulePreview(event, track);
     }
 
-    function onWindowPointerMove(event: PointerEvent) {
-        if (!isMatchingPointer(event, dragPointerId)) return;
-        if (dragTrack) schedulePreview(event, dragTrack);
-    }
-
-    function onPointerEnd(event: PointerEvent) {
-        if (!isMatchingPointer(event, dragPointerId)) return;
-
-        cancelScheduledPreview();
-        if (dragTrack) updateFromPointer(event, dragTrack);
-        dragging.value = false;
-        removeDragListeners();
-        options.onStateChange();
-    }
-
     function onPointerDown(event: PointerEvent) {
-        if (options.disabled() || event.button !== 0 || event.isPrimary === false) return false;
+        return pointerSession.start(event, () => {
+            if (options.disabled()) return;
 
-        removeDragListeners();
-        dragging.value = true;
-        dragPointerId = getPointerId(event);
-        dragTrack = event.currentTarget as HTMLElement | null;
-        if (dragTrack) updateFromPointer(event, dragTrack);
-        dragView = dragTrack?.ownerDocument.defaultView ?? null;
-        dragView?.addEventListener('pointermove', onWindowPointerMove);
-        dragView?.addEventListener('pointerup', onPointerEnd);
-        dragView?.addEventListener('pointercancel', onPointerEnd);
-        return true;
+            const track = event.currentTarget as HTMLElement | null;
+            if (!track) return;
+
+            return { state: track, target: track };
+        });
     }
 
     function onTrackEnter(event: PointerEvent) {
@@ -148,7 +135,8 @@ export function useSliderPointerPreview(options: UseSliderPointerPreviewOptions)
     }
 
     onBeforeUnmount(() => {
-        removeDragListeners();
+        disposing = true;
+        pointerSession.stop();
         cancelScheduledPreview();
     });
 
