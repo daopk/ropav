@@ -26,7 +26,7 @@ for (const dependency of ['@tanstack/table-core', 'ropav/composables', 'vue']) {
         throw new Error(`Built package must preserve an external import for ${dependency}`);
     }
 }
-for (const forbidden of ['@tanstack/vue-table', 'createVNode', 'defineComponent']) {
+for (const forbidden of ['@tanstack/vue-table']) {
     if (javascript.includes(forbidden)) {
         throw new Error(`Built package includes forbidden VDOM marker: ${forbidden}`);
     }
@@ -35,14 +35,7 @@ for (const forbidden of ['@tanstack/vue-table', 'createVNode', 'defineComponent'
 const nodeEntry = resolve(packageRoot, manifest.exports['.'].node);
 const nodeClosure = readJavaScriptClosure(nodeEntry);
 for (const [file, source] of nodeClosure) {
-    for (const forbidden of [
-        '@tanstack/',
-        'ropav/composables',
-        'from "vue"',
-        "from 'vue'",
-        'createVNode',
-        'defineComponent',
-    ]) {
+    for (const forbidden of ['@tanstack/', 'ropav/composables', 'from "vue"', "from 'vue'"]) {
         if (source.includes(forbidden)) {
             throw new Error(`${file} includes client-only marker: ${forbidden}`);
         }

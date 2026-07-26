@@ -164,5 +164,8 @@ Before opening a pull request:
 - Dependency direction remains downward and acyclic.
 - Functions stay below the enforced complexity, depth, length, and parameter limits.
 - New behavior is tested at the module interface.
-- Every publishable package defines a `verify` script and passes the workspace contract runner.
+- Every publishable package defines a `verify` script for its package-owned type, test, build, and
+  bundle behavior.
+- Workspace-wide lint, formatting, architecture, and zero-VDOM bundle contracts run only from the
+  root verification interface.
 - `pnpm verify` passes from the workspace root.

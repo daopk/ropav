@@ -1,18 +1,12 @@
 # Changesets
 
-Add a changeset for user-facing package changes:
+Add a changeset when a package change should appear in the next release:
 
 ```bash
 pnpm changeset
 ```
 
-Pull requests that change a publishable package must include release intent. For repository-only
-changes that do not affect a published package, add an empty changeset:
-
-```bash
-pnpm changeset add --empty
-```
-
-The generated Changesets release pull request is exempt because it has already consumed the source
-changesets. See [`docs/releasing.md`](../docs/releasing.md) for publishing and new-package bootstrap
-instructions.
+CI does not require a changeset. Package changes without one are verified normally but remain
+unreleased until a later changeset covers them. Repository-only changes do not need an empty
+changeset. See [`docs/releasing.md`](../docs/releasing.md) for publishing, tag recovery, and
+new-package bootstrap instructions.

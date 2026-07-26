@@ -18,15 +18,12 @@
     "test": "pnpm run test:workspace && pnpm -r --if-present test",
     "test:workspace": "node --test tests/*.test.mjs",
     "test:storybook": "pnpm -r --if-present test:storybook",
-    "verify": "pnpm run lint && pnpm run format:check && pnpm run verify:workspace && pnpm -r --if-present verify && pnpm run verify:workspace:bundles",
-    "verify:workspace": "node scripts/verify-workspace-contracts.mjs && pnpm run test:workspace",
-    "verify:workspace:bundles": "node scripts/verify-workspace-contracts.mjs --bundles",
+    "verify": "pnpm run lint && pnpm run format:check && node scripts/verify-workspace-contracts.mjs && pnpm run test:workspace && pnpm -r --if-present verify && node scripts/verify-workspace-contracts.mjs --bundles",
     "storybook": "pnpm --filter ropav storybook",
     "build-storybook": "pnpm -r --if-present build-storybook",
     "changeset": "changeset",
     "version": "changeset version && pnpm install --lockfile-only",
-    "release": "pnpm run verify && changeset publish",
-    "release:reconcile-tags": "node scripts/reconcile-release-tags.mjs"
+    "release": "pnpm run verify && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

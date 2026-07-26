@@ -419,61 +419,6 @@ describe('workspace contracts', () => {
             /workspace import "ropav" is not exposed by ropav package\.json exports/,
         );
     });
-
-    it('requires package publishing to run the package verification interface', () => {
-        const root = createWorkspace();
-        createPackage(
-            root,
-            {
-                name: 'ropav',
-                scripts: {
-                    prepublishOnly: 'pnpm run verify; true',
-                    verify: 'test',
-                },
-                version: '1.0.0',
-            },
-            {
-                'src/index.ts': 'export const component = true;',
-            },
-        );
-
-        const violations = verifyWorkspaceContracts(root).join('\n');
-        assert.match(
-            violations,
-            /publishable packages must run pnpm run verify from scripts\.prepublishOnly/,
-        );
-    });
-
-    it('filters verification to a named package and rejects unknown package names', () => {
-        const root = createWorkspace();
-        createPackage(
-            root,
-            {
-                name: 'ropav',
-                version: '1.0.0',
-            },
-            {},
-        );
-        createPackage(
-            root,
-            {
-                name: '@ropav/editor',
-                scripts: { verify: 'test' },
-                version: '1.0.0',
-            },
-            {
-                'dist/index.js': 'export const editor = true;',
-                'src/index.ts': 'export const editor = true;',
-            },
-        );
-
-        assert.deepEqual(verifyWorkspaceContracts(root, { packageName: '@ropav/editor' }), []);
-        assert.deepEqual(verifyWorkspaceBundles(root, { packageName: '@ropav/editor' }), []);
-        assert.throws(
-            () => verifyWorkspaceContracts(root, { packageName: 'missing' }),
-            /Unknown workspace package "missing"/,
-        );
-    });
 });
 
 function createWorkspace() {
@@ -485,14 +430,7 @@ function createWorkspace() {
 function createPackage(workspaceRoot, manifest, files) {
     const directory = manifest.name === 'ropav' ? 'ropav' : 'editor';
     const packageRoot = join(workspaceRoot, 'packages', directory);
-    const scripts = manifest.scripts?.verify
-        ? { prepublishOnly: 'pnpm run verify', ...manifest.scripts }
-        : manifest.scripts;
-    writeFixtureFile(
-        packageRoot,
-        'package.json',
-        JSON.stringify({ ...manifest, scripts }, null, 2),
-    );
+    writeFixtureFile(packageRoot, 'package.json', JSON.stringify(manifest, null, 2));
     for (const [path, content] of Object.entries(files)) {
         writeFixtureFile(packageRoot, path, content);
     }

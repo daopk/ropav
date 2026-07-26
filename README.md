@@ -28,6 +28,10 @@ pnpm --filter @ropav/editor verify
 pnpm --filter @ropav/table verify
 ```
 
+Package-level `verify` commands cover package-owned type, test, build, and bundle behavior. Only
+the root `pnpm verify` command enforces lint, formatting, and workspace-wide architecture
+contracts.
+
 Contributors should follow the [code architecture guide](./docs/code-architecture.md).
 Package versioning, npm Trusted Publishing, and first-release setup are documented in the
 [release guide](./docs/releasing.md).

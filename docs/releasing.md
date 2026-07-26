@@ -5,25 +5,32 @@ token-free releases from GitHub Actions.
 
 ## Normal changes
 
-Add a changeset for every user-facing package change:
+Add a changeset when a package change should appear in the next release:
 
 ```bash
 pnpm changeset
 ```
 
-Use an empty changeset when a pull request touches a publishable package but does not change its
-released behavior:
-
-```bash
-pnpm changeset add --empty
-```
+CI does not require release intent on every pull request. A package change without a changeset is
+verified normally but is not included in a release until a later changeset covers it.
 
 On `main`, Changesets creates or updates a release pull request. Merging that pull request publishes
-the unpublished package versions and pushes package-specific tags such as `ropav@0.1.9`.
+the unpublished package versions, creates package-specific tags such as `ropav@0.1.9`, and pushes
+those tags. The release workflow only publishes after the full verification job succeeds and uses
+the package outputs produced by that job.
 
-The release workflow only publishes from `refs/heads/main`. Its tag reconciliation checks npm's
-`gitHead` metadata before creating a missing tag, so reruns can recover from a partial multi-package
-publish or a transient Git push failure without tagging an unpublished version.
+If npm publish succeeds but pushing a tag fails, a workflow rerun might not recreate the tag for an
+already-published version. Read the release commit from npm, verify that it is the intended commit,
+then recreate and push the missing tag manually:
+
+```bash
+npm view <package-name>@<version> gitHead
+git tag -a '<package-name>@<version>' <git-head> -m 'Release <package-name>@<version>'
+git push origin '<package-name>@<version>'
+```
+
+Repair missing release tags before changing public styles or tokens because compatibility checks
+use those tags as their released baseline.
 
 ## Release pull request token
 
@@ -63,11 +70,11 @@ maintainer-authenticated bootstrap:
    pnpm --filter <package-name> publish --access public
    ```
 
-3. From the same commit, reconcile and push the package tag:
+3. From the same commit, create and push the package tag:
 
    ```bash
-   pnpm release:reconcile-tags
-   git push origin --tags
+   git tag -a '<package-name>@<version>' -m 'Release <package-name>@<version>'
+   git push origin '<package-name>@<version>'
    ```
 
 4. Configure the package's Trusted Publisher using the values above, then rerun the release workflow

@@ -232,10 +232,6 @@
   },
   "scripts": {
     "dev": "pnpm run storybook",
-    "lint": "pnpm --workspace-root exec oxlint packages/ropav",
-    "format:check": "pnpm --workspace-root exec oxfmt --check packages/ropav",
-    "contracts:source": "node ../../scripts/verify-workspace-contracts.mjs --package ropav",
-    "contracts:bundle": "node ../../scripts/verify-workspace-contracts.mjs --bundles --package ropav",
     "publication:sync": "node scripts/sync-package-publication.mjs --write",
     "publication:check": "node scripts/sync-package-publication.mjs --check",
     "publication:verify": "node scripts/verify-package-publication.mjs",
@@ -251,12 +247,11 @@
     "test:watch": "vitest --project=unit --project=tooling",
     "test:typecheck": "vitest run --project=unit --project=tooling --typecheck",
     "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
-    "build": "pnpm run publication:check && pnpm run tokens:build && pnpm run tokens:check && pnpm run typecheck && vite build",
-    "verify": "pnpm run lint && pnpm run format:check && pnpm run contracts:source && pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package && pnpm run contracts:bundle",
-    "prepublishOnly": "pnpm run verify",
+    "build": "pnpm run publication:check && pnpm run tokens:check && pnpm run typecheck && vite build",
+    "verify": "pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package",
     "preview": "vite preview",
-    "storybook": "pnpm run tokens:build && storybook dev -p 6006 --no-open",
-    "build-storybook": "pnpm run tokens:build && pnpm run typecheck:storybook && storybook build"
+    "storybook": "pnpm run tokens:check && storybook dev -p 6006 --no-open",
+    "build-storybook": "pnpm run tokens:check && pnpm run typecheck:storybook && storybook build"
   },
   "peerDependencies": {
     "@vue/compiler-vapor": "3.6.0-rc.2",

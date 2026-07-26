@@ -1,26 +1,76 @@
-name: Release packages
+name: Verify
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
+permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  verify:
+    name: Full quality suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter ropav exec playwright install --with-deps chromium
+
+      - name: Verify
+        run: pnpm run verify
+
+      - name: Archive verified package outputs
+        if: github.ref == 'refs/heads/main'
+        run: tar -czf verified-package-dist.tgz packages/*/dist
+
+      - name: Upload verified package outputs
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: verified-package-dist-${{ github.sha }}
+          path: verified-package-dist.tgz
+          if-no-files-found: error
+          retention-days: 1
+
   release:
     if: github.ref == 'refs/heads/main'
+    needs: verify
     name: Version or publish packages
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -42,9 +92,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chromium
-        run: pnpm --filter ropav exec playwright install --with-deps chromium
-
       - name: Validate release automation token
         shell: bash
         env:
@@ -65,15 +112,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CHANGESETS_TOKEN }}
 
-      - name: Verify and publish unpublished packages
+      - name: Download verified package outputs
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: verified-package-dist-${{ github.sha }}
+
+      - name: Check verified package outputs
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          tar -xzf verified-package-dist.tgz
+          node scripts/verify-workspace-contracts.mjs --bundles
+          pnpm -r --if-present test:bundle:built
+          pnpm --filter ropav publication:verify
+
+      - name: Publish packages and push tags
         if: steps.changesets.outputs.hasChangesets == 'false'
         shell: bash
         run: |
           set +e
-          pnpm run release
+          pnpm exec changeset publish
           publish_status=$?
-          pnpm run release:reconcile-tags
-          reconcile_status=$?
           set -e
 
           push_status=1
@@ -90,8 +149,5 @@ jobs:
 
           if [[ "$publish_status" -ne 0 ]]; then
             exit "$publish_status"
-          fi
-          if [[ "$reconcile_status" -ne 0 ]]; then
-            exit "$reconcile_status"
           fi
           exit "$push_status"

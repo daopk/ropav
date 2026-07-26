@@ -71,13 +71,12 @@ const workspaceDependencyPolicy = new Map([
     ['@ropav/table', new Set(['ropav'])],
 ]);
 
-export function verifyWorkspaceContracts(workspaceRoot, options = {}) {
+export function verifyWorkspaceContracts(workspaceRoot) {
     const packageRecords = readWorkspacePackages(workspaceRoot);
-    const selectedPackageRecords = selectPackageRecords(packageRecords, options.packageName);
     const packageRecordsByName = new Map(
         packageRecords.map((packageRecord) => [packageRecord.manifest.name, packageRecord]),
     );
-    const violations = selectedPackageRecords.flatMap((packageRecord) =>
+    const violations = packageRecords.flatMap((packageRecord) =>
         verifyPackageManifest(packageRecord, packageRecordsByName).concat(
             verifyPackageSource(packageRecord, packageRecordsByName),
         ),
@@ -86,10 +85,9 @@ export function verifyWorkspaceContracts(workspaceRoot, options = {}) {
     return [...new Set(violations)].toSorted();
 }
 
-export function verifyWorkspaceBundles(workspaceRoot, options = {}) {
+export function verifyWorkspaceBundles(workspaceRoot) {
     const packageRecords = readWorkspacePackages(workspaceRoot);
-    const selectedPackageRecords = selectPackageRecords(packageRecords, options.packageName);
-    const violations = selectedPackageRecords.flatMap(({ manifest, packageRoot }) => {
+    const violations = packageRecords.flatMap(({ manifest, packageRoot }) => {
         if (manifest.private === true) return [];
 
         const distRoot = resolve(packageRoot, 'dist');
@@ -149,19 +147,6 @@ function readWorkspacePackages(workspaceRoot) {
         });
 }
 
-function selectPackageRecords(packageRecords, packageName) {
-    if (packageName === undefined) return packageRecords;
-
-    const selectedPackageRecords = packageRecords.filter(
-        ({ manifest }) => manifest.name === packageName,
-    );
-    if (selectedPackageRecords.length === 0) {
-        throw new Error(`Unknown workspace package ${JSON.stringify(packageName)}`);
-    }
-
-    return selectedPackageRecords;
-}
-
 function verifyPackageManifest(packageRecord, packageRecordsByName) {
     const { manifest } = packageRecord;
     const packageNames = new Set(packageRecordsByName.keys());
@@ -171,12 +156,6 @@ function verifyPackageManifest(packageRecord, packageRecordsByName) {
     if (!manifest.scripts?.verify) {
         violations.push(`${manifest.name}: publishable packages must define scripts.verify`);
     }
-    if (!runsPackageVerify(manifest.scripts?.prepublishOnly)) {
-        violations.push(
-            `${manifest.name}: publishable packages must run pnpm run verify from scripts.prepublishOnly`,
-        );
-    }
-
     const allowedDependencies = workspaceDependencyPolicy.get(manifest.name);
     if (!allowedDependencies) {
         violations.push(
@@ -207,10 +186,6 @@ function verifyPackageManifest(packageRecord, packageRecordsByName) {
     }
 
     return violations;
-}
-
-function runsPackageVerify(script) {
-    return typeof script === 'string' && script.trim() === 'pnpm run verify';
 }
 
 function verifyPackageSource(packageRecord, packageRecordsByName) {
@@ -854,8 +829,8 @@ function run() {
     let violations;
     try {
         violations = options.bundlesOnly
-            ? verifyWorkspaceBundles(workspaceRoot, { packageName: options.packageName })
-            : verifyWorkspaceContracts(workspaceRoot, { packageName: options.packageName });
+            ? verifyWorkspaceBundles(workspaceRoot)
+            : verifyWorkspaceContracts(workspaceRoot);
     } catch (error) {
         console.error(`Workspace contract verifier failed: ${error.message}`);
         process.exitCode = 1;
@@ -877,37 +852,11 @@ function run() {
 }
 
 function parseCliOptions(arguments_) {
-    let bundlesOnly = false;
-    let packageName;
-
-    for (let index = 0; index < arguments_.length; index += 1) {
-        const argument = arguments_[index];
-        if (argument === '--bundles') {
-            bundlesOnly = true;
-            continue;
-        }
-        if (argument === '--package') {
-            const value = arguments_[index + 1];
-            if (!value || value.startsWith('--')) {
-                throw new Error('--package requires a workspace package name');
-            }
-            if (packageName !== undefined) throw new Error('--package may only be provided once');
-            packageName = value;
-            index += 1;
-            continue;
-        }
-        if (argument.startsWith('--package=')) {
-            const value = argument.slice('--package='.length);
-            if (!value) throw new Error('--package requires a workspace package name');
-            if (packageName !== undefined) throw new Error('--package may only be provided once');
-            packageName = value;
-            continue;
-        }
-
-        throw new Error(`Unknown argument ${JSON.stringify(argument)}`);
+    if (arguments_.length === 0) return { bundlesOnly: false };
+    if (arguments_.length === 1 && arguments_[0] === '--bundles') {
+        return { bundlesOnly: true };
     }
-
-    return { bundlesOnly, packageName };
+    throw new Error('Expected no arguments or a single --bundles flag');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) run();

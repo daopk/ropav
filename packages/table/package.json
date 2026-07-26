@@ -33,17 +33,12 @@
     "./table.css": "./dist/table.css"
   },
   "scripts": {
-    "lint": "pnpm --workspace-root exec oxlint packages/table",
-    "format:check": "pnpm --workspace-root exec oxfmt --check packages/table",
-    "contracts:source": "node ../../scripts/verify-workspace-contracts.mjs --package @ropav/table",
-    "contracts:bundle": "node ../../scripts/verify-workspace-contracts.mjs --bundles --package @ropav/table",
     "build": "pnpm run typecheck && vite build",
     "test": "vitest run",
     "test:bundle:built": "node scripts/check-package-bundle.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
     "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
-    "verify": "pnpm run lint && pnpm run format:check && pnpm run contracts:source && pnpm run typecheck:storybook && pnpm run test && pnpm run build && pnpm run test:bundle:built && pnpm run contracts:bundle",
-    "prepublishOnly": "pnpm run verify"
+    "verify": "pnpm run typecheck:storybook && pnpm run test && pnpm run build && pnpm run test:bundle:built"
   },
   "peerDependencies": {
     "ropav": "workspace:^",
