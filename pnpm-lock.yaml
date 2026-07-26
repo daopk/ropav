@@ -39,6 +39,9 @@ importers:
       '@microsoft/api-extractor':
         specifier: ^7.58.9
         version: 7.58.9(@types/node@26.1.1)
+      '@storybook/vue3-vite':
+        specifier: ^10.5.3
+        version: 10.5.3(esbuild@0.28.1)(storybook@10.5.3(prettier@3.9.6)(react@19.2.4))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.6.0-rc.2(typescript@6.0.3))
       '@types/node':
         specifier: ^26.1.1
         version: 26.1.1
@@ -57,6 +60,9 @@ importers:
       ropav:
         specifier: workspace:^
         version: link:../ropav
+      storybook:
+        specifier: ^10.5.3
+        version: 10.5.3(prettier@3.9.6)(react@19.2.4)
       typescript:
         specifier: ~6.0.3
         version: 6.0.3

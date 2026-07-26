@@ -1,7 +1,10 @@
 import type { StorybookConfig } from '@storybook/vue3-vite';
 
 const config: StorybookConfig = {
-    stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    stories: [
+        '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+        '../../editor/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    ],
     addons: [
         '@storybook/addon-a11y',
         '@storybook/addon-themes',
