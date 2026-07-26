@@ -181,8 +181,9 @@ describe('Combobox', () => {
     });
 
     it('supports uncontrolled selection and clear behavior', async () => {
-        const onUpdate = vi.fn();
-        const onSearch = vi.fn();
+        const eventOrder: string[] = [];
+        const onUpdate = vi.fn(() => eventOrder.push('update'));
+        const onSearch = vi.fn(() => eventOrder.push('search'));
         const container = mountCombobox(
             {
                 defaultValue: 'apple',
@@ -201,6 +202,7 @@ describe('Combobox', () => {
 
         expect(onUpdate).toHaveBeenCalledWith(null);
         expect(onSearch).toHaveBeenCalledWith('');
+        expect(eventOrder).toEqual(['search', 'update']);
         expect(input.value).toBe('');
         expect((container.querySelector('select') as HTMLSelectElement).selectedIndex).toBe(0);
     });

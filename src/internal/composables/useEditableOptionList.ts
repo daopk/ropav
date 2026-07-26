@@ -188,15 +188,16 @@ export function useEditableOptionList<Option extends LabeledOption, Key extends 
 
     function clearSelection() {
         if (!canClear.value) return;
-        selection.clear();
 
         if (selection.kind === 'single') {
             isSearching.value = false;
             setInputValue('');
             options.onSearch('');
+            selection.clear();
             close(false);
             restoreRejectedSingleSelection();
         } else {
+            selection.clear();
             resetQuery();
         }
         focusInput();
