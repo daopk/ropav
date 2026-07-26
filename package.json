@@ -41,7 +41,8 @@
     "test": "vitest run",
     "test:bundle:built": "node scripts/check-package-bundle.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
-    "verify": "pnpm run lint && pnpm run format:check && pnpm run contracts:source && pnpm run test && pnpm run build && pnpm run test:bundle:built && pnpm run contracts:bundle",
+    "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
+    "verify": "pnpm run lint && pnpm run format:check && pnpm run contracts:source && pnpm run typecheck:storybook && pnpm run test && pnpm run build && pnpm run test:bundle:built && pnpm run contracts:bundle",
     "prepublishOnly": "pnpm run verify"
   },
   "peerDependencies": {
@@ -55,12 +56,14 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.9",
+    "@storybook/vue3-vite": "^10.5.3",
     "@types/node": "^26.1.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/compiler-vapor": "3.6.0-rc.2",
     "@vue/tsconfig": "^0.9.1",
     "jsdom": "^29.1.1",
     "ropav": "workspace:^",
+    "storybook": "^10.5.3",
     "typescript": "~6.0.3",
     "vite": "^8.1.5",
     "vite-plugin-dts": "^5.0.3",
