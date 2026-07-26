@@ -1,81 +1,86 @@
-name: Publish to npm
+name: Release packages
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   id-token: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  publish:
-    name: Publish package
+  release:
+    if: github.ref == 'refs/heads/main'
+    name: Version or publish packages
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout release tag
-        uses: actions/checkout@v6
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
 
-      - name: Validate release tag
-        shell: bash
-        run: |
-          node --input-type=commonjs -e '
-            const { version } = require("./package.json")
-            const tag = process.env.GITHUB_REF_NAME
-
-            if (!/^v\d+\.\d+\.\d+$/.test(tag)) {
-              throw new Error(`Release tag must use stable SemVer (vX.Y.Z), received ${tag}`)
-            }
-
-            if (tag !== `v${version}`) {
-              throw new Error(`Release tag ${tag} does not match package version ${version}`)
-            }
-          '
-
-          if ! git merge-base --is-ancestor HEAD origin/main; then
-            echo "Release tag must point to a commit on origin/main." >&2
-            exit 1
-          fi
-
-      - name: Resolve public styles baseline
-        shell: bash
-        run: |
-          baseline=""
-          while IFS= read -r candidate; do
-            if [[ "$candidate" != "$GITHUB_REF_NAME" && "$candidate" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
-              baseline="$candidate"
-              break
-            fi
-          done < <(git tag --merged HEAD --sort=-version:refname)
-
-          if [[ -z "$baseline" ]]; then
-            echo "Unable to resolve the previous release tag for public styles compatibility." >&2
-            exit 1
-          fi
-
-          echo "PUBLIC_STYLES_BASELINE_REF=$baseline" >> "$GITHUB_ENV"
-          echo "Using $baseline as the public styles baseline."
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter ropav exec playwright install --with-deps chromium
 
-      - name: Publish package
-        run: npm publish --access public
+      - name: Create or update release pull request
+        id: changesets
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        with:
+          version: pnpm run version
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify and publish unpublished packages
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        shell: bash
+        run: |
+          set +e
+          pnpm run release
+          publish_status=$?
+          pnpm run release:reconcile-tags
+          reconcile_status=$?
+          set -e
+
+          push_status=1
+          for attempt in 1 2 3; do
+            if git push origin --follow-tags; then
+              push_status=0
+              break
+            fi
+
+            if [[ "$attempt" -lt 3 ]]; then
+              sleep "$((attempt * 2))"
+            fi
+          done
+
+          if [[ "$publish_status" -ne 0 ]]; then
+            exit "$publish_status"
+          fi
+          if [[ "$reconcile_status" -ne 0 ]]; then
+            exit "$reconcile_status"
+          fi
+          exit "$push_status"

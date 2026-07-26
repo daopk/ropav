@@ -2,5 +2,5 @@
 
 - Always use Conventional Commits for commit messages.
 - Keep production components and bundles zero-VDOM with Vue Vapor; never use `h`, `VNode`, `defineComponent`, or `createVNode`.
-- Keep reusable helpers exclusively in `src/utils/`; reuse or extend utilities there instead of scattering helpers or adding component-local `utils`, `helpers`, or `core` modules.
+- Keep reusable helpers exclusively in each package's `src/utils/`; reuse or extend utilities there instead of scattering helpers or adding component-local `utils`, `helpers`, or `core` modules.
 - Follow the contributor conventions in [`docs/code-architecture.md`](./docs/code-architecture.md), including its module seams and dependency direction.

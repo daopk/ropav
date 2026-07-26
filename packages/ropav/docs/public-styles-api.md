@@ -141,6 +141,6 @@ Place global resets in `reset` and application overrides in `app`. Import order 
 - Typed parts, state attributes, manifest entries, geometry variables and cascade layers form the current Public Styles API.
 - Renaming or removing a documented part, state attribute or variable changes the public contract.
 - Adding a public part, state attribute or variable extends the public contract.
-- `tokens:check` compares the current manifest with the latest reachable `v*` release tag that contains one. Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
+- `tokens:check` compares the current manifest with the latest reachable `ropav@*` release tag that contains one. Until the first package-specific release exists, it falls back to legacy `v*` tags and their pre-monorepo manifest path. Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
 - Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly select another Git ref that contains a manifest.
 - Internal DOM, selectors and undocumented variables are outside the public contract.

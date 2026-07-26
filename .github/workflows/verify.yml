@@ -24,15 +24,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           cache: pnpm
@@ -41,8 +41,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify package release intent
+        if: >-
+          github.event_name == 'pull_request' &&
+          !(github.event.pull_request.user.login == 'github-actions[bot]' &&
+          startsWith(github.head_ref, 'changeset-release/'))
+        run: pnpm changeset status --since=origin/main
+
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter ropav exec playwright install --with-deps chromium
 
       - name: Verify
         run: pnpm run verify

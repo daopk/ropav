@@ -6,7 +6,7 @@
     "perf": "warn"
   },
   "plugins": ["unicorn", "typescript", "oxc", "import", "vue", "vitest"],
-  "ignorePatterns": ["dist/**", "storybook-static/**"],
+  "ignorePatterns": ["packages/*/dist/**", "packages/*/storybook-static/**"],
   "options": {
     "reportUnusedDisableDirectives": "error"
   },
@@ -17,12 +17,12 @@
   },
   "overrides": [
     {
-      "files": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+      "files": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx", "packages/*/src/**/*.vue"],
       "excludeFiles": [
-        "src/**/*.spec.*",
-        "src/**/*.story.*",
-        "src/**/*.stories.*",
-        "src/**/*.test.*"
+        "packages/*/src/**/*.spec.*",
+        "packages/*/src/**/*.story.*",
+        "packages/*/src/**/*.stories.*",
+        "packages/*/src/**/*.test.*"
       ],
       "rules": {
         "complexity": ["error", 20],
@@ -54,6 +54,10 @@
                   "createElementBlock"
                 ],
                 "message": "Production source must remain zero-VDOM with Vue Vapor."
+              },
+              {
+                "name": "@tiptap/vue-3",
+                "message": "Use @tiptap/core with a directly mounted DOM host in Vue Vapor packages."
               }
             ]
           }

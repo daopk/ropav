@@ -1,3 +1,8 @@
+packages:
+  - 'packages/*'
+
+disallowWorkspaceCycles: true
+
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

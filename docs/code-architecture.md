@@ -4,6 +4,31 @@ This guide defines the source structure expected from contributors. The goal is 
 codebase where UI files describe rendering, behavior is testable through small interfaces, and
 shared logic has one obvious home.
 
+## Workspace seams
+
+Published modules live under `packages/`. Each package owns its source, tests, build configuration,
+consumer fixtures, and public documentation. Paths such as `src/utils/` below are relative to the
+package that owns them.
+
+Package dependencies point from specialized modules to foundational modules:
+
+```text
+future @ropav/editor
+    -> ropav
+```
+
+`ropav` must not import `@ropav/editor`. Cross-package code is consumed through a package interface,
+never through relative imports into another package's source. Use pnpm's `workspace:` protocol for
+local package dependencies and keep the workspace graph acyclic. The workspace contract runner in
+`scripts/verify-workspace-contracts.mjs` enforces these rules for every publishable package.
+
+The future `@ropav/editor` module will integrate Tiptap through `@tiptap/core`, mounting the editor
+directly into an element owned by a Vapor SFC. Production source must not use `@tiptap/vue-3`,
+because its Vue renderer relies on VDOM interfaces that violate this repository's zero-VDOM
+contract. Create or mount the editor only after the host element is available, and call
+`editor.destroy()` from `onBeforeUnmount`. Custom node and mark views must also remain DOM-native;
+do not use `VueNodeViewRenderer`.
+
 ## Module seams
 
 A module should hide a meaningful amount of behavior behind a small interface. Extract code around
@@ -115,4 +140,5 @@ Before opening a pull request:
 - Dependency direction remains downward and acyclic.
 - Functions stay below the enforced complexity, depth, length, and parameter limits.
 - New behavior is tested at the module interface.
-- `pnpm run verify` passes.
+- Every publishable package defines a `verify` script and passes the workspace contract runner.
+- `pnpm verify` passes from the workspace root.

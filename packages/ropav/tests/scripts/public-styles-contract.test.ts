@@ -184,10 +184,12 @@ describe('public styles contract', () => {
         expect(failures).toContain('docs/example.md consumes an internal Ropav class selector');
     });
 
-    it('accepts a released baseline supplied by the Git adapter', () => {
+    it('accepts the package release baseline supplied by the Git adapter', () => {
         const fixture = createVerificationFixture();
         const repository = createRepository({
-            'src/styles/styles-manifest.json': JSON.stringify(fixture.releasedBaseline.manifest),
+            'packages/ropav/src/styles/styles-manifest.json': JSON.stringify(
+                fixture.releasedBaseline.manifest,
+            ),
         });
 
         const releasedBaseline = resolveReleasedPublicStylesBaseline({
@@ -202,15 +204,37 @@ describe('public styles contract', () => {
         };
 
         expect(verifyPublicStylesContract({ ...fixture, releasedBaseline })).toContain(
-            'v1.0.0 stable token --rp-spacing-stable was removed or renamed',
+            'ropav@1.0.0 stable token --rp-spacing-stable was removed or renamed',
         );
+    });
+
+    it('falls back to legacy release tags and manifest paths', () => {
+        const fixture = createVerificationFixture();
+        const repository = createRepository(
+            {
+                'src/styles/styles-manifest.json': JSON.stringify(
+                    fixture.releasedBaseline.manifest,
+                ),
+            },
+            { tagName: 'v1.0.0' },
+        );
+
+        expect(
+            resolveReleasedPublicStylesBaseline({
+                projectRoot: repository,
+                baselineRef: '',
+            }),
+        ).toEqual({
+            ref: 'v1.0.0',
+            manifest: fixture.releasedBaseline.manifest,
+        });
     });
 
     it('requires a release tag or an explicit baseline ref', () => {
         const fixture = createVerificationFixture();
         const repository = createRepository(
             {
-                'src/styles/styles-manifest.json': JSON.stringify(
+                'packages/ropav/src/styles/styles-manifest.json': JSON.stringify(
                     fixture.releasedBaseline.manifest,
                 ),
             },
@@ -224,7 +248,7 @@ describe('public styles contract', () => {
             }),
         ).toEqual({
             failure:
-                'cannot resolve a released public styles baseline containing src/styles/styles-manifest.json; fetch release tags or set PUBLIC_STYLES_BASELINE_REF',
+                'cannot resolve a released public styles baseline containing packages/ropav/src/styles/styles-manifest.json or legacy src/styles/styles-manifest.json; fetch release tags or set PUBLIC_STYLES_BASELINE_REF',
         });
     });
 });
@@ -298,7 +322,7 @@ function renderGeneratedCss(manifest: { tokens: Array<{ name: string }> }) {
 
 function createRepository(
     files: Record<string, string>,
-    { tagRelease = true }: { tagRelease?: boolean } = {},
+    { tagRelease = true, tagName = 'ropav@1.0.0' }: { tagRelease?: boolean; tagName?: string } = {},
 ) {
     const repository = mkdtempSync(join(tmpdir(), 'ropav-public-styles-'));
     temporaryRepositories.push(repository);
@@ -313,7 +337,7 @@ function createRepository(
     }
     runGit(repository, ['add', '.']);
     runGit(repository, ['commit', '--quiet', '-m', 'test: release baseline']);
-    if (tagRelease) runGit(repository, ['tag', 'v1.0.0']);
+    if (tagRelease) runGit(repository, ['tag', tagName]);
 
     return repository;
 }
