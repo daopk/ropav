@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, extname, parse as parsePath, relative, resolve } from 'node:path';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { dirname, extname, isAbsolute, parse as parsePath, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { parse as parseVueSfc } from '@vue/compiler-sfc';
@@ -13,8 +13,30 @@ const dependencyFields = [
 ];
 const forbiddenLocalModuleNames = new Set(['core', 'helpers', 'utils']);
 const jsxSourceExtensions = new Set(['.jsx', '.tsx']);
-const productionSourceExtensions = new Set(['.js', '.jsx', '.ts', '.tsx', '.vue']);
-const testOrStoryPattern = /\.(?:spec|story|stories|test)\.(?:js|jsx|ts|tsx|vue)$/;
+const productionSourceExtensions = new Set([
+    '.cjs',
+    '.cts',
+    '.js',
+    '.jsx',
+    '.mjs',
+    '.mts',
+    '.ts',
+    '.tsx',
+    '.vue',
+]);
+const testOrStoryPattern = /\.(?:spec|story|stories|test)\.(?:cjs|cts|js|jsx|mjs|mts|ts|tsx|vue)$/;
+const forbiddenVdomApis = new Set([
+    'h',
+    'VNode',
+    'defineComponent',
+    'createVNode',
+    'cloneVNode',
+    'isVNode',
+    'openBlock',
+    'createBlock',
+    'createElementBlock',
+]);
+const vueRuntimeModules = ['vue', '@vue/runtime-core', '@vue/runtime-dom'];
 const vdomPatterns = [
     /\bdefineComponent\s*\(/,
     /\bh\s*\(/,
@@ -48,21 +70,25 @@ const workspaceDependencyPolicy = new Map([
     ['@ropav/editor', new Set(['ropav'])],
 ]);
 
-export function verifyWorkspaceContracts(workspaceRoot) {
+export function verifyWorkspaceContracts(workspaceRoot, options = {}) {
     const packageRecords = readWorkspacePackages(workspaceRoot);
-    const packageNames = new Set(packageRecords.map(({ manifest }) => manifest.name));
-    const violations = packageRecords.flatMap((packageRecord) =>
-        verifyPackageManifest(packageRecord, packageNames).concat(
-            verifyPackageSource(packageRecord, packageNames),
+    const selectedPackageRecords = selectPackageRecords(packageRecords, options.packageName);
+    const packageRecordsByName = new Map(
+        packageRecords.map((packageRecord) => [packageRecord.manifest.name, packageRecord]),
+    );
+    const violations = selectedPackageRecords.flatMap((packageRecord) =>
+        verifyPackageManifest(packageRecord, packageRecordsByName).concat(
+            verifyPackageSource(packageRecord, packageRecordsByName),
         ),
     );
 
     return [...new Set(violations)].toSorted();
 }
 
-export function verifyWorkspaceBundles(workspaceRoot) {
+export function verifyWorkspaceBundles(workspaceRoot, options = {}) {
     const packageRecords = readWorkspacePackages(workspaceRoot);
-    const violations = packageRecords.flatMap(({ manifest, packageRoot }) => {
+    const selectedPackageRecords = selectPackageRecords(packageRecords, options.packageName);
+    const violations = selectedPackageRecords.flatMap(({ manifest, packageRoot }) => {
         if (manifest.private === true) return [];
 
         const distRoot = resolve(packageRoot, 'dist');
@@ -79,6 +105,11 @@ export function verifyWorkspaceBundles(workspaceRoot) {
                 if (source.includes('@tiptap/vue-3')) {
                     fileViolations.push(
                         `${manifest.name}/${relativeFile}: built output references @tiptap/vue-3`,
+                    );
+                }
+                for (const api of getForbiddenVdomImports(source, file)) {
+                    fileViolations.push(
+                        `${manifest.name}/${relativeFile}: built output matches forbidden VDOM pattern imported Vue API ${api}`,
                     );
                 }
                 for (const pattern of bundleVdomPatterns) {
@@ -108,6 +139,7 @@ function readWorkspacePackages(workspaceRoot) {
 
             return [
                 {
+                    compilerOptions: readPackageCompilerOptions(packageRoot),
                     manifest: JSON.parse(readFileSync(manifestPath, 'utf8')),
                     packageRoot,
                     sourceRoot: resolve(packageRoot, 'src'),
@@ -116,13 +148,32 @@ function readWorkspacePackages(workspaceRoot) {
         });
 }
 
-function verifyPackageManifest(packageRecord, packageNames) {
+function selectPackageRecords(packageRecords, packageName) {
+    if (packageName === undefined) return packageRecords;
+
+    const selectedPackageRecords = packageRecords.filter(
+        ({ manifest }) => manifest.name === packageName,
+    );
+    if (selectedPackageRecords.length === 0) {
+        throw new Error(`Unknown workspace package ${JSON.stringify(packageName)}`);
+    }
+
+    return selectedPackageRecords;
+}
+
+function verifyPackageManifest(packageRecord, packageRecordsByName) {
     const { manifest } = packageRecord;
+    const packageNames = new Set(packageRecordsByName.keys());
     const violations = [];
     if (manifest.private === true) return violations;
 
     if (!manifest.scripts?.verify) {
         violations.push(`${manifest.name}: publishable packages must define scripts.verify`);
+    }
+    if (!runsPackageVerify(manifest.scripts?.prepublishOnly)) {
+        violations.push(
+            `${manifest.name}: publishable packages must run pnpm run verify from scripts.prepublishOnly`,
+        );
     }
 
     const allowedDependencies = workspaceDependencyPolicy.get(manifest.name);
@@ -157,7 +208,11 @@ function verifyPackageManifest(packageRecord, packageNames) {
     return violations;
 }
 
-function verifyPackageSource(packageRecord, packageNames) {
+function runsPackageVerify(script) {
+    return typeof script === 'string' && script.trim() === 'pnpm run verify';
+}
+
+function verifyPackageSource(packageRecord, packageRecordsByName) {
     const { manifest, packageRoot, sourceRoot } = packageRecord;
     if (manifest.private === true || !existsSync(sourceRoot)) return [];
 
@@ -175,6 +230,11 @@ function verifyPackageSource(packageRecord, packageNames) {
         }
 
         const moduleSource = readModuleSource(file, violations, manifest.name, relativeFile);
+        for (const api of getForbiddenVdomImports(moduleSource, file)) {
+            violations.push(
+                `${manifest.name}/${relativeFile}: production source matches forbidden VDOM pattern imported Vue API ${api}`,
+            );
+        }
         for (const pattern of vdomPatterns) {
             if (pattern.test(moduleSource)) {
                 violations.push(
@@ -188,7 +248,8 @@ function verifyPackageSource(packageRecord, packageNames) {
             ...verifyModuleSpecifiers({
                 file,
                 manifest,
-                packageNames,
+                packageRecord,
+                packageRecordsByName,
                 packageRoot,
                 relativeFile,
                 specifiers,
@@ -228,12 +289,14 @@ function readModuleSource(file, violations, packageName, relativeFile) {
 function verifyModuleSpecifiers({
     file,
     manifest,
-    packageNames,
+    packageRecord,
+    packageRecordsByName,
     packageRoot,
     relativeFile,
     specifiers,
 }) {
     const violations = [];
+    const packageNames = new Set(packageRecordsByName.keys());
     const allowedDependencies = workspaceDependencyPolicy.get(manifest.name);
     const declaredDependencies = new Set(
         dependencyFields.flatMap((field) => Object.keys(manifest[field] ?? {})),
@@ -257,10 +320,40 @@ function verifyModuleSpecifiers({
         }
 
         const dependency = findWorkspaceDependency(specifier, packageNames);
-        if (!dependency || dependency === manifest.name) continue;
+        if (!dependency) {
+            const aliasedPackage = resolveAliasedWorkspacePackage({
+                file,
+                packageRecord,
+                packageRecordsByName,
+                specifier,
+            });
+            if (aliasedPackage) {
+                violations.push(
+                    `${manifest.name}/${relativeFile}: import ${JSON.stringify(specifier)} resolves across the ${aliasedPackage.manifest.name} package seam; import through its public workspace package interface`,
+                );
+            }
+            continue;
+        }
+        if (dependency === manifest.name) {
+            if (specifier === manifest.name) {
+                violations.push(
+                    `${manifest.name}/${relativeFile}: internal source must not import its own package root barrel`,
+                );
+            }
+            continue;
+        }
         if (specifier === `${dependency}/src` || specifier.startsWith(`${dependency}/src/`)) {
             violations.push(
                 `${manifest.name}/${relativeFile}: import ${JSON.stringify(specifier)} reaches into another package's source`,
+            );
+        }
+        const dependencyRecord = packageRecordsByName.get(dependency);
+        if (
+            dependencyRecord &&
+            !isWorkspaceSpecifierExported(dependencyRecord.manifest, specifier)
+        ) {
+            violations.push(
+                `${manifest.name}/${relativeFile}: workspace import ${JSON.stringify(specifier)} is not exposed by ${dependency} package.json exports`,
             );
         }
         if (!declaredDependencies.has(dependency)) {
@@ -276,6 +369,145 @@ function verifyModuleSpecifiers({
     }
 
     return violations;
+}
+
+function resolveAliasedWorkspacePackage({ file, packageRecord, packageRecordsByName, specifier }) {
+    if (specifier.startsWith('.')) return undefined;
+
+    for (const compilerOptions of packageRecord.compilerOptions) {
+        const result = ts.resolveModuleName(specifier, file, compilerOptions, ts.sys);
+        const resolvedFile = result.resolvedModule?.resolvedFileName;
+        const candidates =
+            resolvedFile === undefined
+                ? resolvePathMappingTargets(specifier, compilerOptions, packageRecord.packageRoot)
+                : [resolvedFile];
+
+        for (const candidatePath of candidates) {
+            const owner = [...packageRecordsByName.values()].find((candidate) =>
+                isPathInside(candidate.packageRoot, candidatePath),
+            );
+            if (owner && owner.manifest.name !== packageRecord.manifest.name) return owner;
+        }
+    }
+
+    return undefined;
+}
+
+function resolvePathMappingTargets(specifier, compilerOptions, packageRoot) {
+    const paths = compilerOptions.paths;
+    if (!paths || typeof paths !== 'object') return [];
+
+    const exactMatch = Object.hasOwn(paths, specifier) ? specifier : undefined;
+    const patternMatch =
+        exactMatch ??
+        Object.keys(paths)
+            .filter((pattern) => pattern.includes('*') && matchesExportPattern(specifier, pattern))
+            .toSorted(compareExportPatterns)[0];
+    if (patternMatch === undefined) return [];
+
+    const wildcard = patternMatch.includes('*')
+        ? getPatternWildcard(specifier, patternMatch)
+        : undefined;
+    const basePath = compilerOptions.pathsBasePath ?? compilerOptions.baseUrl ?? packageRoot;
+    return (paths[patternMatch] ?? [])
+        .map((target) =>
+            resolve(basePath, wildcard === undefined ? target : target.replaceAll('*', wildcard)),
+        )
+        .flatMap(resolveExistingModulePath)
+        .slice(0, 1);
+}
+
+function getPatternWildcard(value, pattern) {
+    const wildcardIndex = pattern.indexOf('*');
+    const prefix = pattern.slice(0, wildcardIndex);
+    const suffix = pattern.slice(wildcardIndex + 1);
+    return value.slice(prefix.length, suffix.length === 0 ? undefined : -suffix.length);
+}
+
+function resolveExistingModulePath(candidate) {
+    const candidates = [
+        candidate,
+        ...[...productionSourceExtensions].map((extension) => `${candidate}${extension}`),
+        ...[...productionSourceExtensions].map((extension) =>
+            resolve(candidate, `index${extension}`),
+        ),
+    ];
+    const existing = candidates.find((path) => {
+        if (!existsSync(path)) return false;
+        try {
+            return statSync(path).isFile();
+        } catch {
+            return false;
+        }
+    });
+    return existing === undefined ? [] : [existing];
+}
+
+function isWorkspaceSpecifierExported(manifest, specifier) {
+    const packageExports = manifest.exports;
+    if (packageExports === undefined) return true;
+
+    const subpath = specifier === manifest.name ? '.' : `.${specifier.slice(manifest.name.length)}`;
+    return hasExportTarget(resolvePackageExportTarget(packageExports, subpath));
+}
+
+function resolvePackageExportTarget(packageExports, subpath) {
+    if (
+        typeof packageExports === 'string' ||
+        packageExports === null ||
+        Array.isArray(packageExports)
+    ) {
+        return subpath === '.' ? packageExports : undefined;
+    }
+    if (typeof packageExports !== 'object') return undefined;
+
+    const exportKeys = Object.keys(packageExports);
+    const hasSubpathKeys = exportKeys.some((key) => key.startsWith('.'));
+    if (!hasSubpathKeys) return subpath === '.' ? packageExports : undefined;
+    if (Object.hasOwn(packageExports, subpath)) return packageExports[subpath];
+
+    const matchingPattern = exportKeys
+        .filter((key) => key.includes('*') && matchesPackageExportPattern(subpath, key))
+        .toSorted(compareExportPatterns)[0];
+    return matchingPattern === undefined ? undefined : packageExports[matchingPattern];
+}
+
+function compareExportPatterns(left, right) {
+    const leftWildcard = left.indexOf('*');
+    const rightWildcard = right.indexOf('*');
+    const prefixDifference = rightWildcard - leftWildcard;
+    return prefixDifference === 0 ? right.length - left.length : prefixDifference;
+}
+
+function matchesExportPattern(subpath, pattern) {
+    const wildcardIndex = pattern.indexOf('*');
+    const prefix = pattern.slice(0, wildcardIndex);
+    const suffix = pattern.slice(wildcardIndex + 1);
+    return (
+        subpath.startsWith(prefix) &&
+        subpath.endsWith(suffix) &&
+        subpath.length >= prefix.length + suffix.length
+    );
+}
+
+function matchesPackageExportPattern(subpath, pattern) {
+    return subpath.length >= pattern.length && matchesExportPattern(subpath, pattern);
+}
+
+function hasExportTarget(target) {
+    if (typeof target === 'string') return true;
+    if (Array.isArray(target)) return target.some(hasExportTarget);
+    if (!target || typeof target !== 'object') return false;
+    return Object.values(target).some(hasExportTarget);
+}
+
+function isPathInside(root, target) {
+    const relativeTarget = relative(root, target);
+    return (
+        relativeTarget !== '..' &&
+        !relativeTarget.startsWith(`..${pathSeparator()}`) &&
+        !isAbsolute(relativeTarget)
+    );
 }
 
 function verifyComponentHelperPlacement(packageName, sourceRoot) {
@@ -323,14 +555,156 @@ function verifyLayerDependencies(packageName, sourceRoot) {
     });
 }
 
-function getModuleSpecifiers(source, file) {
-    const sourceFile = ts.createSourceFile(
-        file,
-        source,
-        ts.ScriptTarget.Latest,
-        true,
-        file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+function readPackageCompilerOptions(packageRoot) {
+    return readdirSync(packageRoot, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && /^tsconfig(?:\..+)?\.json$/.test(entry.name))
+        .flatMap((entry) => {
+            const configPath = resolve(packageRoot, entry.name);
+            const config = ts.readConfigFile(configPath, ts.sys.readFile);
+            if (config.error) return [];
+
+            const parsedConfig = ts.parseJsonConfigFileContent(
+                config.config,
+                ts.sys,
+                packageRoot,
+                undefined,
+                configPath,
+            );
+            return [parsedConfig.options];
+        });
+}
+
+function getForbiddenVdomImports(source, file) {
+    const sourceFile = createTypeScriptSourceFile(source, file);
+    const forbiddenImports = new Set();
+    const namespaceImports = new Set();
+
+    function collectImports(node) {
+        if (
+            ts.isImportDeclaration(node) &&
+            node.moduleSpecifier &&
+            ts.isStringLiteralLike(node.moduleSpecifier) &&
+            isVueRuntimeModule(node.moduleSpecifier.text)
+        ) {
+            const bindings = node.importClause?.namedBindings;
+            if (bindings && ts.isNamedImports(bindings)) {
+                for (const element of bindings.elements) {
+                    const importedName = (element.propertyName ?? element.name).text;
+                    if (forbiddenVdomApis.has(importedName)) forbiddenImports.add(importedName);
+                }
+            } else if (bindings && ts.isNamespaceImport(bindings)) {
+                namespaceImports.add(bindings.name.text);
+            }
+        } else if (
+            ts.isExportDeclaration(node) &&
+            node.moduleSpecifier &&
+            ts.isStringLiteralLike(node.moduleSpecifier) &&
+            isVueRuntimeModule(node.moduleSpecifier.text)
+        ) {
+            if (!node.exportClause || ts.isNamespaceExport(node.exportClause)) {
+                forbiddenImports.add('*');
+            } else if (ts.isNamedExports(node.exportClause)) {
+                for (const element of node.exportClause.elements) {
+                    const importedName = (element.propertyName ?? element.name).text;
+                    if (forbiddenVdomApis.has(importedName)) forbiddenImports.add(importedName);
+                }
+            }
+        } else if (
+            ts.isVariableDeclaration(node) &&
+            node.initializer &&
+            isVueModuleExpression(node.initializer)
+        ) {
+            if (ts.isIdentifier(node.name)) {
+                namespaceImports.add(node.name.text);
+            } else if (ts.isObjectBindingPattern(node.name)) {
+                collectForbiddenObjectBindings(node.name, forbiddenImports);
+            }
+        }
+
+        ts.forEachChild(node, collectImports);
+    }
+
+    function collectNamespaceAccesses(node) {
+        if (
+            ts.isVariableDeclaration(node) &&
+            ts.isObjectBindingPattern(node.name) &&
+            node.initializer &&
+            ts.isIdentifier(node.initializer) &&
+            namespaceImports.has(node.initializer.text)
+        ) {
+            collectForbiddenObjectBindings(node.name, forbiddenImports);
+        }
+        if (
+            ts.isPropertyAccessExpression(node) &&
+            ((ts.isIdentifier(node.expression) && namespaceImports.has(node.expression.text)) ||
+                isVueModuleExpression(node.expression)) &&
+            forbiddenVdomApis.has(node.name.text)
+        ) {
+            forbiddenImports.add(node.name.text);
+        } else if (
+            ts.isElementAccessExpression(node) &&
+            ((ts.isIdentifier(node.expression) && namespaceImports.has(node.expression.text)) ||
+                isVueModuleExpression(node.expression)) &&
+            node.argumentExpression &&
+            ts.isStringLiteralLike(node.argumentExpression) &&
+            forbiddenVdomApis.has(node.argumentExpression.text)
+        ) {
+            forbiddenImports.add(node.argumentExpression.text);
+        }
+
+        ts.forEachChild(node, collectNamespaceAccesses);
+    }
+
+    collectImports(sourceFile);
+    collectNamespaceAccesses(sourceFile);
+    return [...forbiddenImports].toSorted();
+}
+
+function collectForbiddenObjectBindings(binding, forbiddenImports) {
+    for (const element of binding.elements) {
+        const importedName = element.propertyName
+            ? getStaticPropertyName(element.propertyName)
+            : getStaticPropertyName(element.name);
+        if (forbiddenVdomApis.has(importedName)) forbiddenImports.add(importedName);
+    }
+}
+
+function getStaticPropertyName(name) {
+    if (ts.isIdentifier(name) || ts.isStringLiteralLike(name)) return name.text;
+    if (ts.isComputedPropertyName(name) && ts.isStringLiteralLike(name.expression)) {
+        return name.expression.text;
+    }
+    return undefined;
+}
+
+function isVueRuntimeModule(specifier) {
+    return vueRuntimeModules.some(
+        (moduleName) => specifier === moduleName || specifier.startsWith(`${moduleName}/`),
     );
+}
+
+function isVueModuleExpression(node) {
+    const expression = unwrapModuleExpression(node);
+    return (
+        ts.isCallExpression(expression) &&
+        ((ts.isIdentifier(expression.expression) && expression.expression.text === 'require') ||
+            expression.expression.kind === ts.SyntaxKind.ImportKeyword) &&
+        expression.arguments.length === 1 &&
+        ts.isStringLiteralLike(expression.arguments[0]) &&
+        isVueRuntimeModule(expression.arguments[0].text)
+    );
+}
+
+function unwrapModuleExpression(node) {
+    let expression = node;
+    while (ts.isAwaitExpression(expression) || ts.isParenthesizedExpression(expression)) {
+        expression = expression.expression;
+    }
+    return expression;
+}
+
+function getModuleSpecifiers(source, file) {
+    const sourceFile = createTypeScriptSourceFile(source, file);
     const specifiers = new Set();
 
     function visit(node) {
@@ -357,6 +731,25 @@ function getModuleSpecifiers(source, file) {
 
     visit(sourceFile);
     return [...specifiers];
+}
+
+function createTypeScriptSourceFile(source, file) {
+    return ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, getScriptKind(file));
+}
+
+function getScriptKind(file) {
+    switch (extname(file)) {
+        case '.js':
+        case '.cjs':
+        case '.mjs':
+            return ts.ScriptKind.JS;
+        case '.jsx':
+            return ts.ScriptKind.JSX;
+        case '.tsx':
+            return ts.ScriptKind.TSX;
+        default:
+            return ts.ScriptKind.TS;
+    }
 }
 
 function getSourceDependency(importer, specifier, sourceRoot) {
@@ -417,10 +810,25 @@ function pathSeparator() {
 
 function run() {
     const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-    const bundlesOnly = process.argv.includes('--bundles');
-    const violations = bundlesOnly
-        ? verifyWorkspaceBundles(workspaceRoot)
-        : verifyWorkspaceContracts(workspaceRoot);
+    let options;
+    try {
+        options = parseCliOptions(process.argv.slice(2));
+    } catch (error) {
+        console.error(`Workspace contract verifier failed: ${error.message}`);
+        process.exitCode = 1;
+        return;
+    }
+
+    let violations;
+    try {
+        violations = options.bundlesOnly
+            ? verifyWorkspaceBundles(workspaceRoot, { packageName: options.packageName })
+            : verifyWorkspaceContracts(workspaceRoot, { packageName: options.packageName });
+    } catch (error) {
+        console.error(`Workspace contract verifier failed: ${error.message}`);
+        process.exitCode = 1;
+        return;
+    }
     if (violations.length > 0) {
         console.error(
             ['Workspace contract violations:', ...violations.map((item) => `- ${item}`)].join('\n'),
@@ -430,10 +838,44 @@ function run() {
     }
 
     console.log(
-        bundlesOnly
+        options.bundlesOnly
             ? 'Workspace built bundles satisfy the zero-VDOM contract.'
             : 'Workspace package, dependency, and zero-VDOM contracts are satisfied.',
     );
+}
+
+function parseCliOptions(arguments_) {
+    let bundlesOnly = false;
+    let packageName;
+
+    for (let index = 0; index < arguments_.length; index += 1) {
+        const argument = arguments_[index];
+        if (argument === '--bundles') {
+            bundlesOnly = true;
+            continue;
+        }
+        if (argument === '--package') {
+            const value = arguments_[index + 1];
+            if (!value || value.startsWith('--')) {
+                throw new Error('--package requires a workspace package name');
+            }
+            if (packageName !== undefined) throw new Error('--package may only be provided once');
+            packageName = value;
+            index += 1;
+            continue;
+        }
+        if (argument.startsWith('--package=')) {
+            const value = argument.slice('--package='.length);
+            if (!value) throw new Error('--package requires a workspace package name');
+            if (packageName !== undefined) throw new Error('--package may only be provided once');
+            packageName = value;
+            continue;
+        }
+
+        throw new Error(`Unknown argument ${JSON.stringify(argument)}`);
+    }
+
+    return { bundlesOnly, packageName };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) run();

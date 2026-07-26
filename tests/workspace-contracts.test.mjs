@@ -143,6 +143,296 @@ describe('workspace contracts', () => {
         assert.match(violations, /built output references @tiptap\/vue-3/);
         assert.match(violations, /built output matches forbidden VDOM pattern/);
     });
+
+    it('detects aliased Vue VDOM imports, re-exports, namespace access, and direct h calls', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                name: 'ropav',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.js':
+                    'import { h as render } from "vue";\nexport const view = render("div");',
+                'src/reexport.js': 'export { h as render } from "@vue/runtime-core";',
+                'src/namespace.js':
+                    'import * as Vue from "vue";\nconst { h: render } = Vue;\nrender("div");',
+                'src/computed.cjs':
+                    'const Vue = require("vue");\nconst { ["h"]: render } = Vue;\nrender("div");',
+                'src/quoted.cjs': 'const { "h": render } = require("vue");\nrender("div");',
+                'src/require.cjs': 'const render = require("vue").h;\nrender("div");',
+                'src/dynamic.js': 'const { h: render } = await import("vue");\nrender("div");',
+                'src/direct.js': 'h("div");',
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(
+            violations,
+            /ropav\/index\.js: production source matches forbidden VDOM pattern imported Vue API h/,
+        );
+        assert.match(
+            violations,
+            /ropav\/reexport\.js: production source matches forbidden VDOM pattern imported Vue API h/,
+        );
+        for (const file of [
+            'computed.cjs',
+            'dynamic.js',
+            'namespace.js',
+            'quoted.cjs',
+            'require.cjs',
+        ]) {
+            assert.match(
+                violations,
+                new RegExp(
+                    `ropav/${escapeRegExp(file)}: production source matches forbidden VDOM pattern imported Vue API h`,
+                ),
+            );
+        }
+        assert.match(
+            violations,
+            /ropav\/direct\.js: production source matches forbidden VDOM pattern/,
+        );
+    });
+
+    it('detects aliased Vue VDOM imports in bundles without rejecting generic h calls', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                name: 'ropav',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'dist/index.js':
+                    'import { h as render } from "vue";\nexport const view = render("div");',
+                'dist/safe.js': 'function h(value){return value}h("not VDOM");',
+            },
+        );
+
+        const violations = verifyWorkspaceBundles(root).join('\n');
+        assert.match(
+            violations,
+            /ropav\/dist\/index\.js: built output matches forbidden VDOM pattern imported Vue API h/,
+        );
+        assert.doesNotMatch(violations, /ropav\/dist\/safe\.js/);
+    });
+
+    it('rejects unexported workspace subpaths while accepting exact and wildcard exports', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                exports: {
+                    '.': './dist/index.js',
+                    './*': './dist/*.js',
+                    './dist/*': null,
+                    './features/*': './dist/features/*.js',
+                    './private/*': null,
+                    './tokens': './dist/tokens.js',
+                },
+                name: 'ropav',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts': 'export const component = true;',
+            },
+        );
+        createPackage(
+            root,
+            {
+                dependencies: {
+                    ropav: 'workspace:^',
+                },
+                name: '@ropav/editor',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts': [
+                    'import "ropav/dist/internal.js";',
+                    'import "ropav/features/button";',
+                    'import "ropav/private/secret";',
+                    'import "ropav/";',
+                    'import "ropav/tokens";',
+                ].join('\n'),
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(
+            violations,
+            /workspace import "ropav\/dist\/internal\.js" is not exposed by ropav package\.json exports/,
+        );
+        assert.match(
+            violations,
+            /workspace import "ropav\/private\/secret" is not exposed by ropav package\.json exports/,
+        );
+        assert.match(
+            violations,
+            /workspace import "ropav\/" is not exposed by ropav package\.json exports/,
+        );
+        assert.doesNotMatch(violations, /workspace import "ropav\/features\/button"/);
+        assert.doesNotMatch(violations, /workspace import "ropav\/tokens"/);
+    });
+
+    it('rejects TypeScript path aliases that resolve across package boundaries', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                exports: {
+                    '.': './dist/index.js',
+                },
+                name: 'ropav',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/components/button/button.vue': vaporSfc('const label = "Button";'),
+                'src/index.ts': 'export const component = true;',
+            },
+        );
+        createPackage(
+            root,
+            {
+                dependencies: {
+                    ropav: 'workspace:^',
+                },
+                name: '@ropav/editor',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts':
+                    'import "#local-fallback";\nimport "#local-first";\nimport "#ropav-button";\nimport "#ropav-internal";',
+                'src/local.ts': 'export const local = true;',
+                'tsconfig.app.json': JSON.stringify({
+                    compilerOptions: {
+                        module: 'ESNext',
+                        moduleResolution: 'Bundler',
+                        paths: {
+                            '#local-fallback': ['../ropav/src/missing.vue', './src/local.ts'],
+                            '#local-first': ['./src/local.ts', '../ropav/src/index.ts'],
+                            '#ropav-button': ['../ropav/src/components/button/button.vue'],
+                            '#ropav-internal': ['../ropav/src/index.ts'],
+                        },
+                    },
+                    include: ['src/**/*.ts'],
+                }),
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(
+            violations,
+            /import "#ropav-internal" resolves across the ropav package seam; import through its public workspace package interface/,
+        );
+        assert.match(
+            violations,
+            /import "#ropav-button" resolves across the ropav package seam; import through its public workspace package interface/,
+        );
+        assert.doesNotMatch(violations, /import "#local-fallback" resolves across/);
+        assert.doesNotMatch(violations, /import "#local-first" resolves across/);
+    });
+
+    it('rejects unavailable package roots and internal imports from a package root barrel', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                exports: {
+                    './button': './dist/button.js',
+                },
+                name: 'ropav',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts': 'import "ropav";',
+            },
+        );
+        createPackage(
+            root,
+            {
+                dependencies: {
+                    ropav: 'workspace:^',
+                },
+                name: '@ropav/editor',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts': 'import "ropav";',
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(violations, /internal source must not import its own package root barrel/);
+        assert.match(
+            violations,
+            /workspace import "ropav" is not exposed by ropav package\.json exports/,
+        );
+    });
+
+    it('requires package publishing to run the package verification interface', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                name: 'ropav',
+                scripts: {
+                    prepublishOnly: 'pnpm run verify; true',
+                    verify: 'test',
+                },
+                version: '1.0.0',
+            },
+            {
+                'src/index.ts': 'export const component = true;',
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(
+            violations,
+            /publishable packages must run pnpm run verify from scripts\.prepublishOnly/,
+        );
+    });
+
+    it('filters verification to a named package and rejects unknown package names', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                name: 'ropav',
+                version: '1.0.0',
+            },
+            {},
+        );
+        createPackage(
+            root,
+            {
+                name: '@ropav/editor',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'dist/index.js': 'export const editor = true;',
+                'src/index.ts': 'export const editor = true;',
+            },
+        );
+
+        assert.deepEqual(verifyWorkspaceContracts(root, { packageName: '@ropav/editor' }), []);
+        assert.deepEqual(verifyWorkspaceBundles(root, { packageName: '@ropav/editor' }), []);
+        assert.throws(
+            () => verifyWorkspaceContracts(root, { packageName: 'missing' }),
+            /Unknown workspace package "missing"/,
+        );
+    });
 });
 
 function createWorkspace() {
@@ -154,7 +444,14 @@ function createWorkspace() {
 function createPackage(workspaceRoot, manifest, files) {
     const directory = manifest.name === 'ropav' ? 'ropav' : 'editor';
     const packageRoot = join(workspaceRoot, 'packages', directory);
-    writeFixtureFile(packageRoot, 'package.json', JSON.stringify(manifest, null, 2));
+    const scripts = manifest.scripts?.verify
+        ? { prepublishOnly: 'pnpm run verify', ...manifest.scripts }
+        : manifest.scripts;
+    writeFixtureFile(
+        packageRoot,
+        'package.json',
+        JSON.stringify({ ...manifest, scripts }, null, 2),
+    );
     for (const [path, content] of Object.entries(files)) {
         writeFixtureFile(packageRoot, path, content);
     }

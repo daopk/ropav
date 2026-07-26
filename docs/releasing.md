@@ -25,6 +25,17 @@ The release workflow only publishes from `refs/heads/main`. Its tag reconciliati
 `gitHead` metadata before creating a missing tag, so reruns can recover from a partial multi-package
 publish or a transient Git push failure without tagging an unpublished version.
 
+## Release pull request token
+
+Create a fine-grained personal access token for the release automation, grant it access to this
+repository, and give it read/write permissions for **Contents** and **Pull requests**. Store it as
+the repository Actions secret `CHANGESETS_TOKEN`.
+
+The Changesets action uses this dedicated token to create and update `changeset-release/*` pull
+requests. Do not replace it with the workflow's built-in `GITHUB_TOKEN`: events created with the
+built-in token leave the pull request verification runs waiting for manual approval. The release
+job fails with a clear error when `CHANGESETS_TOKEN` is not configured.
+
 ## Trusted Publisher configuration
 
 Configure each npm package separately:
@@ -55,7 +66,7 @@ package, including `@ropav/editor`, therefore needs a one-time maintainer-authen
 
    ```bash
    pnpm release:reconcile-tags
-   git push origin --follow-tags
+   git push origin --tags
    ```
 
 4. Configure the package's Trusted Publisher using the values above, then rerun the release workflow

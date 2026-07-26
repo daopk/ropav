@@ -44,7 +44,7 @@ jobs:
       - name: Verify package release intent
         if: >-
           github.event_name == 'pull_request' &&
-          !(github.event.pull_request.user.login == 'github-actions[bot]' &&
+          !(github.event.pull_request.head.repo.full_name == github.repository &&
           startsWith(github.head_ref, 'changeset-release/'))
         run: pnpm changeset status --since=origin/main
 
