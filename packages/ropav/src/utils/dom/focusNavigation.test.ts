@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { getFocusNavigationTarget } from './focusNavigation';
+import { getFocusNavigationTarget, setFocusNavigationTabStop } from './focusNavigation';
 
 const options = {
     itemSelector: 'button',
@@ -91,5 +91,38 @@ describe('focus navigation', () => {
                 horizontalOptions,
             ),
         ).toBe(last);
+    });
+
+    it('keeps hidden and inert items out of navigation and the roving tab stop', () => {
+        const collection = document.createElement('div');
+        collection.className = 'collection';
+        collection.innerHTML = `
+            <button id="first">First</button>
+            <button id="hidden" hidden>Hidden</button>
+            <span hidden><button id="hidden-child">Hidden child</button></span>
+            <button id="inert" inert>Inert</button>
+            <span inert><button id="inert-child">Inert child</button></span>
+            <button id="last">Last</button>
+        `;
+        document.body.append(collection);
+
+        const buttons = [...collection.querySelectorAll('button')] as HTMLButtonElement[];
+        const [first, hidden, , , , last] = buttons;
+
+        expect(
+            getFocusNavigationTarget(keyboardTarget('ArrowDown', first!), collection, options),
+        ).toBe(last);
+        expect(
+            getFocusNavigationTarget(keyboardTarget('ArrowUp', last!), collection, options),
+        ).toBe(first);
+        expect(
+            getFocusNavigationTarget(keyboardTarget('ArrowDown', hidden!), collection, options),
+        ).toBeUndefined();
+
+        expect(setFocusNavigationTabStop(collection, hidden!, options)).toBe(first);
+        expect(buttons.map((button) => button.tabIndex)).toEqual([0, -1, -1, -1, -1, -1]);
+
+        expect(setFocusNavigationTabStop(collection, last!, options)).toBe(last);
+        expect(buttons.map((button) => button.tabIndex)).toEqual([-1, -1, -1, -1, -1, 0]);
     });
 });

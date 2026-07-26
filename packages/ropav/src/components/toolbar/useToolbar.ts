@@ -1,5 +1,5 @@
 import { onBeforeUnmount, onMounted, shallowRef, type ShallowRef } from 'vue';
-import { getFocusNavigationTarget } from '@/utils/dom/focusNavigation';
+import { getFocusNavigationTarget, setFocusNavigationTabStop } from '@/utils/dom/focusNavigation';
 import { isElement } from '@/utils/dom/query';
 import type { ToolbarOrientation } from './types';
 
@@ -22,17 +22,10 @@ const TOOLBAR_ITEM_SELECTOR = [
     '[tabindex]',
 ].join(',');
 
-function isDisabled(item: HTMLElement) {
-    return item.matches(':disabled');
-}
-
-function getToolbarItems(toolbar: HTMLElement) {
-    return Array.from(toolbar.querySelectorAll<HTMLElement>(TOOLBAR_ITEM_SELECTOR)).filter(
-        (item) =>
-            item.closest(TOOLBAR_SELECTOR) === toolbar &&
-            item.closest('[hidden], [inert]') === null,
-    );
-}
+const TOOLBAR_NAVIGATION_OPTIONS = {
+    itemSelector: TOOLBAR_ITEM_SELECTOR,
+    collectionSelector: TOOLBAR_SELECTOR,
+} as const;
 
 export function useToolbar(
     root: ShallowRef<HTMLElement | null>,
@@ -45,15 +38,7 @@ export function useToolbar(
         const toolbar = root.value;
         if (!toolbar) return null;
 
-        const items = getToolbarItems(toolbar);
-        const nextItem =
-            item && items.includes(item) && !isDisabled(item)
-                ? item
-                : (items.find((candidate) => !isDisabled(candidate)) ?? null);
-
-        for (const candidate of items) {
-            candidate.tabIndex = candidate === nextItem ? 0 : -1;
-        }
+        const nextItem = setFocusNavigationTabStop(toolbar, item, TOOLBAR_NAVIGATION_OPTIONS);
         activeItem.value = nextItem;
         return nextItem;
     }
@@ -75,8 +60,7 @@ export function useToolbar(
         if (!toolbar) return;
 
         const nextItem = getFocusNavigationTarget<HTMLElement>(event, toolbar, {
-            itemSelector: TOOLBAR_ITEM_SELECTOR,
-            collectionSelector: TOOLBAR_SELECTOR,
+            ...TOOLBAR_NAVIGATION_OPTIONS,
             orientation: getOrientation(),
         });
         if (!nextItem) return;

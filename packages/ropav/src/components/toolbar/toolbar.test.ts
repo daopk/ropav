@@ -105,6 +105,32 @@ describe('Toolbar', () => {
         expect(document.activeElement).toBe(buttons[0]);
     });
 
+    it('keeps hidden and inert controls out of the tab stop and arrow navigation', async () => {
+        const container = mountToolbar({}, () => [
+            h('button', { type: 'button', 'data-control': 'first' }, 'First'),
+            h('span', { hidden: true }, [
+                h('button', { type: 'button', 'data-control': 'hidden' }, 'Hidden'),
+            ]),
+            h('span', { inert: true }, [
+                h('button', { type: 'button', 'data-control': 'inert' }, 'Inert'),
+            ]),
+            h('button', { type: 'button', 'data-control': 'last' }, 'Last'),
+        ]);
+        await flush();
+
+        const buttons = [...container.querySelectorAll('button')] as HTMLButtonElement[];
+        const [first, , , last] = buttons;
+
+        expect(buttons.map((button) => button.tabIndex)).toEqual([0, -1, -1, -1]);
+
+        first!.focus();
+        keydown(first!, 'ArrowRight');
+        expect(document.activeElement).toBe(last);
+
+        keydown(last!, 'ArrowLeft');
+        expect(document.activeElement).toBe(first);
+    });
+
     it('uses vertical arrows when orientation is vertical', async () => {
         const container = mountToolbar({ orientation: 'vertical' });
         await flush();

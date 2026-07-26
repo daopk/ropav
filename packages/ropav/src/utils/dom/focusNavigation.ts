@@ -3,14 +3,17 @@ import { isElement } from './query';
 
 export type FocusNavigationOrientation = 'horizontal' | 'vertical';
 
-export interface FocusNavigationOptions {
+export interface FocusNavigationCollectionOptions {
     itemSelector: string;
     collectionSelector: string;
+}
+
+export interface FocusNavigationOptions extends FocusNavigationCollectionOptions {
     orientation: FocusNavigationOrientation;
 }
 
-function isDisabled(element: Element) {
-    return element.matches(':disabled');
+function isIneligible(element: Element) {
+    return element.matches(':disabled') || element.closest('[hidden], [inert]') !== null;
 }
 
 function getDirection(key: string, orientation: FocusNavigationOrientation): 1 | -1 | undefined {
@@ -27,11 +30,26 @@ function getDirection(key: string, orientation: FocusNavigationOrientation): 1 |
 
 function getScopedItems<ElementType extends HTMLElement>(
     collection: HTMLElement,
-    options: FocusNavigationOptions,
+    options: FocusNavigationCollectionOptions,
 ) {
     return Array.from(collection.querySelectorAll<ElementType>(options.itemSelector)).filter(
         (item) => item.closest(options.collectionSelector) === collection,
     );
+}
+
+export function setFocusNavigationTabStop<ElementType extends HTMLElement>(
+    collection: HTMLElement,
+    preferredItem: ElementType | null,
+    options: FocusNavigationCollectionOptions,
+): ElementType | null {
+    const items = getScopedItems<ElementType>(collection, options);
+    const target =
+        preferredItem && items.includes(preferredItem) && !isIneligible(preferredItem)
+            ? preferredItem
+            : (items.find((item) => !isIneligible(item)) ?? null);
+
+    for (const item of items) item.tabIndex = item === target ? 0 : -1;
+    return target;
 }
 
 export function getFocusNavigationTarget<ElementType extends HTMLElement>(
@@ -45,7 +63,7 @@ export function getFocusNavigationTarget<ElementType extends HTMLElement>(
     if (
         !currentItem ||
         currentItem.closest(options.collectionSelector) !== collection ||
-        isDisabled(currentItem)
+        isIneligible(currentItem)
     ) {
         return undefined;
     }
@@ -54,7 +72,7 @@ export function getFocusNavigationTarget<ElementType extends HTMLElement>(
     const currentIndex = items.indexOf(currentItem);
     if (currentIndex < 0) return undefined;
 
-    const enabledIndexes = getEnabledIndexes(items, isDisabled);
+    const enabledIndexes = getEnabledIndexes(items, isIneligible);
     if (enabledIndexes.length === 0) return undefined;
     if (event.key === 'Home') return items[enabledIndexes[0]!];
     if (event.key === 'End') return items[enabledIndexes[enabledIndexes.length - 1]!];
@@ -69,6 +87,6 @@ export function getFocusNavigationTarget<ElementType extends HTMLElement>(
         direction = direction === 1 ? -1 : 1;
     }
 
-    const nextIndex = getNextEnabledIndex(items, currentIndex, direction, isDisabled);
+    const nextIndex = getNextEnabledIndex(items, currentIndex, direction, isIneligible);
     return nextIndex === undefined ? undefined : items[nextIndex];
 }
