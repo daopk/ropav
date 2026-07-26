@@ -23,35 +23,35 @@
         <span v-if="hasInlineActions" class="rp-editor-toolbar__group">
             <button
                 v-if="state.actions.bold.available"
-                v-bind="getButtonAttrs('bold', 'Bold', true)"
+                v-bind="getButtonAttrs('bold')"
                 @click="invokeAction('bold')"
             >
                 <IconBold />
             </button>
             <button
                 v-if="state.actions.italic.available"
-                v-bind="getButtonAttrs('italic', 'Italic', true)"
+                v-bind="getButtonAttrs('italic')"
                 @click="invokeAction('italic')"
             >
                 <IconItalic />
             </button>
             <button
                 v-if="state.actions.underline.available"
-                v-bind="getButtonAttrs('underline', 'Underline', true)"
+                v-bind="getButtonAttrs('underline')"
                 @click="invokeAction('underline')"
             >
                 <IconUnderline />
             </button>
             <button
                 v-if="state.actions.strike.available"
-                v-bind="getButtonAttrs('strike', 'Strikethrough', true)"
+                v-bind="getButtonAttrs('strike')"
                 @click="invokeAction('strike')"
             >
                 <IconStrikethrough />
             </button>
             <button
                 v-if="state.actions.code.available"
-                v-bind="getButtonAttrs('code', 'Inline code', true)"
+                v-bind="getButtonAttrs('code')"
                 @click="invokeAction('code')"
             >
                 <IconCode />
@@ -61,14 +61,14 @@
         <span v-if="hasListActions" class="rp-editor-toolbar__group">
             <button
                 v-if="state.actions['bullet-list'].available"
-                v-bind="getButtonAttrs('bullet-list', 'Bullet list', true)"
+                v-bind="getButtonAttrs('bullet-list')"
                 @click="invokeAction('bullet-list')"
             >
                 <IconList />
             </button>
             <button
                 v-if="state.actions['ordered-list'].available"
-                v-bind="getButtonAttrs('ordered-list', 'Ordered list', true)"
+                v-bind="getButtonAttrs('ordered-list')"
                 @click="invokeAction('ordered-list')"
             >
                 <IconListOrdered />
@@ -78,21 +78,21 @@
         <span v-if="hasBlockActions" class="rp-editor-toolbar__group">
             <button
                 v-if="state.actions.blockquote.available"
-                v-bind="getButtonAttrs('blockquote', 'Blockquote', true)"
+                v-bind="getButtonAttrs('blockquote')"
                 @click="invokeAction('blockquote')"
             >
                 <IconQuote />
             </button>
             <button
                 v-if="state.actions['code-block'].available"
-                v-bind="getButtonAttrs('code-block', 'Code block', true)"
+                v-bind="getButtonAttrs('code-block')"
                 @click="invokeAction('code-block')"
             >
                 <IconSquareCode />
             </button>
             <button
                 v-if="state.actions['horizontal-rule'].available"
-                v-bind="getButtonAttrs('horizontal-rule', 'Horizontal rule')"
+                v-bind="getButtonAttrs('horizontal-rule')"
                 @click="invokeAction('horizontal-rule')"
             >
                 <IconMinus />
@@ -102,14 +102,14 @@
         <span v-if="hasHistoryActions" class="rp-editor-toolbar__group">
             <button
                 v-if="state.actions.undo.available"
-                v-bind="getButtonAttrs('undo', 'Undo')"
+                v-bind="getButtonAttrs('undo')"
                 @click="invokeAction('undo')"
             >
                 <IconUndo />
             </button>
             <button
                 v-if="state.actions.redo.available"
-                v-bind="getButtonAttrs('redo', 'Redo')"
+                v-bind="getButtonAttrs('redo')"
                 @click="invokeAction('redo')"
             >
                 <IconRedo />
@@ -133,6 +133,11 @@ import IconStrikethrough from '~icons/lucide/strikethrough';
 import IconUnderline from '~icons/lucide/underline';
 import IconUndo from '~icons/lucide/undo-2';
 
+import {
+    editorToolbarBlockOptions,
+    getEditorToolbarActionPresentation,
+    hasAvailableEditorToolbarActionsInGroup,
+} from './editorFormattingModel';
 import type { EditorToolbarAction, EditorToolbarBlock, EditorToolbarState } from './types';
 
 defineOptions({ name: 'RpEditorToolbar' });
@@ -142,43 +147,32 @@ const props = defineProps<{
     run: (action: EditorToolbarAction) => boolean;
 }>();
 
-const blockOptions = [
-    { action: 'paragraph', label: 'Paragraph' },
-    { action: 'heading-1', label: 'Heading 1' },
-    { action: 'heading-2', label: 'Heading 2' },
-    { action: 'heading-3', label: 'Heading 3' },
-    { action: 'heading-4', label: 'Heading 4' },
-    { action: 'heading-5', label: 'Heading 5' },
-    { action: 'heading-6', label: 'Heading 6' },
-] as const satisfies readonly { action: EditorToolbarBlock; label: string }[];
-
 const availableBlockOptions = computed(() =>
-    blockOptions.filter((option) => props.state.actions[option.action].available),
+    editorToolbarBlockOptions.filter((option) => props.state.actions[option.action].available),
 );
 const blockSelectDisabled = computed(() =>
     availableBlockOptions.value.every((option) => props.state.actions[option.action].disabled),
 );
 const hasInlineActions = computed(() =>
-    hasAvailableAction(['bold', 'italic', 'underline', 'strike', 'code']),
+    hasAvailableEditorToolbarActionsInGroup(props.state, 'inline'),
 );
-const hasListActions = computed(() => hasAvailableAction(['bullet-list', 'ordered-list']));
+const hasListActions = computed(() => hasAvailableEditorToolbarActionsInGroup(props.state, 'list'));
 const hasBlockActions = computed(() =>
-    hasAvailableAction(['blockquote', 'code-block', 'horizontal-rule']),
+    hasAvailableEditorToolbarActionsInGroup(props.state, 'block'),
 );
-const hasHistoryActions = computed(() => hasAvailableAction(['undo', 'redo']));
+const hasHistoryActions = computed(() =>
+    hasAvailableEditorToolbarActionsInGroup(props.state, 'history'),
+);
 
-function hasAvailableAction(actions: EditorToolbarAction[]) {
-    return actions.some((action) => props.state.actions[action].available);
-}
-
-function getButtonAttrs(action: EditorToolbarAction, label: string, toggle = false) {
+function getButtonAttrs(action: EditorToolbarAction) {
     const actionState = props.state.actions[action];
+    const presentation = getEditorToolbarActionPresentation(action);
     return {
         type: 'button' as const,
         class: 'rp-editor-toolbar__button',
-        title: label,
-        'aria-label': label,
-        'aria-pressed': toggle ? actionState.active : undefined,
+        title: presentation.label,
+        'aria-label': presentation.label,
+        'aria-pressed': presentation.toggle ? actionState.active : undefined,
         disabled: actionState.disabled || undefined,
         onMousedown: preserveSelection,
     };
