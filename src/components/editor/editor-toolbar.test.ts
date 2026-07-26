@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { mountDomWithApp } from '../../../tests/utils/vue';
 import Editor from './editor.vue';
+import { getEditorToolbarState, runEditorToolbarAction } from './editorFormattingModel';
 import type { EditorProps, EditorToolbarSlotProps } from './types';
 
 async function settleEditor() {
@@ -32,6 +33,43 @@ describe('Editor toolbar', () => {
         expect(toolbar.querySelector('[aria-label="Bold"]')).not.toBeNull();
         expect(disabled.container.querySelector('[role="toolbar"]')).toBeNull();
         expect(readonly.container.querySelector('[role="toolbar"]')).toBeNull();
+    });
+
+    it('keeps the top-level editable prop authoritative over editorProps', async () => {
+        const editorPropsEditable = vi.fn(() => false);
+        const mounted = mountEditor({
+            editorProps: {
+                editable: editorPropsEditable,
+            } as unknown as NonNullable<EditorProps['editorProps']>,
+        });
+        await settleEditor();
+
+        expect(editorPropsEditable).not.toHaveBeenCalled();
+        expect(mounted.state.editor?.isEditable).toBe(true);
+        expect(mounted.container.querySelector('.tiptap')?.getAttribute('contenteditable')).toBe(
+            'true',
+        );
+        expect(
+            (mounted.container.querySelector('[aria-label="Bold"]') as HTMLButtonElement).disabled,
+        ).toBe(false);
+    });
+
+    it('rejects toolbar commands when the live editor view is not editable', async () => {
+        const mounted = mountEditor({ defaultValue: '<p>Alpha</p>' });
+        await settleEditor();
+
+        const editor = mounted.state.editor;
+        expect(editor).not.toBeNull();
+        if (!editor) return;
+
+        editor.view.setProps({ editable: () => false });
+        const state = getEditorToolbarState(editor, true);
+
+        expect(editor.isEditable).toBe(false);
+        expect(state.actions.bold.disabled).toBe(true);
+        expect(runEditorToolbarAction(editor, true, 'bold')).toBe(false);
+        expect(editor.getHTML()).toBe('<p>Alpha</p>');
+        expect(mounted.update).not.toHaveBeenCalled();
     });
 
     it('uses one tab stop and arrow keys to move between formatting controls', async () => {

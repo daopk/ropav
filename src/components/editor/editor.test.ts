@@ -193,6 +193,35 @@ describe('Editor', () => {
         expect(update).not.toHaveBeenCalled();
     });
 
+    it('does not add authoritative controlled replacements to Undo history', async () => {
+        const content = ref<EditorModelValue>('<p>First document</p>');
+        const update = vi.fn();
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            modelValue: content.value,
+                            onReady: (editor) => {
+                                state.editor = editor;
+                            },
+                            'onUpdate:modelValue': update,
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        content.value = '<p>Second document</p>';
+        await settleEditor();
+
+        expect(state.editor?.commands.undo()).toBe(false);
+        await settleEditor();
+        expect(state.editor?.getHTML()).toBe('<p>Second document</p>');
+        expect(update).not.toHaveBeenCalled();
+    });
+
     it('restores the authoritative content when a controlled update is rejected', async () => {
         const update = vi.fn();
         const state: { editor: TiptapEditor | null } = { editor: null };
@@ -217,6 +246,46 @@ describe('Editor', () => {
         expect(update).toHaveBeenCalledOnce();
         expect(update).toHaveBeenCalledWith('<p>Rejected</p>');
         expect(container.querySelector('.tiptap')?.innerHTML).toBe('<p>Accepted</p>');
+        expect(state.editor?.can().undo()).toBe(false);
+    });
+
+    it('preserves accepted Undo history when a later controlled update is rejected', async () => {
+        const content = ref<EditorModelValue>('<p>Initial</p>');
+        let acceptUpdate = true;
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            modelValue: content.value,
+                            onReady: (editor) => {
+                                state.editor = editor;
+                            },
+                            'onUpdate:modelValue': (value) => {
+                                if (acceptUpdate) content.value = value;
+                            },
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        state.editor?.commands.setContent('<p>Accepted</p>');
+        await settleEditor();
+        acceptUpdate = false;
+        state.editor?.commands.setContent('<p>Rejected</p>');
+        await settleEditor();
+
+        expect(state.editor?.getHTML()).toBe('<p>Accepted</p>');
+        expect(state.editor?.can().undo()).toBe(true);
+
+        acceptUpdate = true;
+        expect(state.editor?.commands.undo()).toBe(true);
+        await settleEditor();
+
+        expect(content.value).toBe('<p>Initial</p>');
+        expect(state.editor?.getHTML()).toBe('<p>Initial</p>');
     });
 
     it('restores controlled authority after a suppressed follow-up transaction', async () => {
@@ -244,6 +313,47 @@ describe('Editor', () => {
         expect(update).toHaveBeenCalledOnce();
         expect(update).toHaveBeenCalledWith('<p>Proposal</p>');
         expect(container.querySelector('.tiptap')?.innerHTML).toBe('<p>Authoritative</p>');
+    });
+
+    it('stops reconciling after an extension normalizes authoritative content', async () => {
+        let transactionCount = 0;
+        const transactionLimit = Extension.create({
+            name: 'transactionLimit',
+            onTransaction() {
+                transactionCount += 1;
+                if (transactionCount > 5) {
+                    throw new Error('Controlled reconciliation did not settle');
+                }
+            },
+        });
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(Editor, {
+                        extensions: [StarterKit, transactionLimit],
+                        modelValue: '<h1>Authoritative</h1>',
+                        onReady: (editor) => {
+                            state.editor = editor;
+                        },
+                    });
+                },
+            }),
+        );
+        await settleEditor();
+
+        state.editor?.commands.setContent('<h1>Proposal</h1>');
+        await settleEditor();
+        const settledTransactionCount = transactionCount;
+        await settleEditor();
+
+        expect(state.editor?.getHTML()).toBe('<h1>Authoritative</h1><p></p>');
+        expect(transactionCount).toBe(settledTransactionCount);
+        expect(transactionCount).toBeLessThanOrEqual(5);
+        expect(state.editor?.can().undo()).toBe(false);
+        expect(state.editor?.can().redo()).toBe(false);
+        expect(state.editor?.can().undo()).toBe(false);
+        expect(state.editor?.can().redo()).toBe(false);
     });
 
     it('reconciles controlled updates from appended extension transactions', async () => {
@@ -362,6 +472,45 @@ describe('Editor', () => {
         expect(state.editor?.getHTML()).toBe('<p>abXcd</p>');
         expect(state.editor?.state.selection.anchor).toBe(4);
         expect(state.editor?.state.selection.head).toBe(4);
+        expect(state.editor?.can().undo()).toBe(false);
+    });
+
+    it('does not reuse rejected proposal history across a controlled-mode boundary', async () => {
+        const content = ref<EditorModelValue | undefined>('<p>abcd</p>');
+        let proposedContent: EditorModelValue | undefined;
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            modelValue: content.value,
+                            onReady: (editor) => {
+                                state.editor = editor;
+                            },
+                            'onUpdate:modelValue': (value) => {
+                                proposedContent = value;
+                            },
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        state.editor?.commands.setTextSelection(3);
+        state.editor?.commands.insertContent('X');
+        await settleEditor();
+
+        expect(proposedContent).toBe('<p>abXcd</p>');
+        expect(state.editor?.can().undo()).toBe(false);
+
+        content.value = undefined;
+        await settleEditor();
+        content.value = proposedContent;
+        await settleEditor();
+
+        expect(state.editor?.getHTML()).toBe('<p>abXcd</p>');
+        expect(state.editor?.can().undo()).toBe(false);
     });
 
     it('preserves the authoritative selection across synchronous rejected proposals', async () => {
@@ -388,6 +537,99 @@ describe('Editor', () => {
         expect(state.editor?.getHTML()).toBe('<p>abcd</p>');
         expect(state.editor?.state.selection.anchor).toBe(3);
         expect(state.editor?.state.selection.head).toBe(3);
+    });
+
+    it('keeps reentrant controlled proposals paired with their own history and selection', async () => {
+        const content = ref<EditorModelValue>('<p>abcd</p>');
+        const proposals: EditorModelValue[] = [];
+        let reentered = false;
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            modelValue: content.value,
+                            onReady: (editor) => {
+                                state.editor = editor;
+                            },
+                            'onUpdate:modelValue': (value) => {
+                                proposals.push(value);
+                                if (!reentered) {
+                                    reentered = true;
+                                    content.value = value;
+                                    state.editor?.commands.insertContent('Y');
+                                } else if (proposals.length > 2) {
+                                    content.value = value;
+                                }
+                            },
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        state.editor?.commands.setTextSelection(3);
+        state.editor?.commands.insertContent('X');
+        await settleEditor();
+
+        expect(proposals).toEqual(['<p>abXcd</p>', '<p>abXYcd</p>']);
+        expect(state.editor?.getHTML()).toBe('<p>abXcd</p>');
+        expect(state.editor?.state.selection.anchor).toBe(4);
+        expect(state.editor?.state.selection.head).toBe(4);
+
+        expect(state.editor?.commands.undo()).toBe(true);
+        await settleEditor();
+        expect(content.value).toBe('<p>abcd</p>');
+        expect(state.editor?.getHTML()).toBe('<p>abcd</p>');
+
+        expect(state.editor?.commands.redo()).toBe(true);
+        await settleEditor();
+        expect(content.value).toBe('<p>abXcd</p>');
+        expect(state.editor?.getHTML()).toBe('<p>abXcd</p>');
+    });
+
+    it('archives later reentrant proposals without carrying their history forward', async () => {
+        const content = ref<EditorModelValue>('<p>abcd</p>');
+        const proposals: EditorModelValue[] = [];
+        let reentered = false;
+        const state: { editor: TiptapEditor | null } = { editor: null };
+        mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            modelValue: content.value,
+                            onReady: (editor) => {
+                                state.editor = editor;
+                            },
+                            'onUpdate:modelValue': (value) => {
+                                proposals.push(value);
+                                if (reentered) return;
+
+                                reentered = true;
+                                content.value = value;
+                                state.editor?.commands.insertContent('Y');
+                            },
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        state.editor?.commands.setTextSelection(3);
+        state.editor?.commands.insertContent('X');
+        await settleEditor();
+
+        expect(proposals).toEqual(['<p>abXcd</p>', '<p>abXYcd</p>']);
+        expect(state.editor?.getHTML()).toBe('<p>abXcd</p>');
+
+        content.value = proposals[1] ?? '';
+        await settleEditor();
+
+        expect(state.editor?.getHTML()).toBe('<p>abXYcd</p>');
+        expect(state.editor?.can().undo()).toBe(false);
+        expect(state.editor?.can().redo()).toBe(false);
     });
 
     it('restores sequentially accepted proposal selections', async () => {
@@ -649,6 +891,34 @@ describe('Editor', () => {
         expect(transformPastedHTML(state.editor, 'input')).toBe('two:input');
     });
 
+    it('removes reactive editor props that are no longer configured', async () => {
+        const handleKeyDown = vi.fn(() => true);
+        const editorProps = ref<NonNullable<EditorProps['editorProps']>>({
+            handleKeyDown,
+        });
+        const { container } = mountDomWithApp(
+            defineComponent({
+                setup() {
+                    return () =>
+                        h(Editor, {
+                            editorProps: editorProps.value,
+                        });
+                },
+            }),
+        );
+        await settleEditor();
+
+        const editable = container.querySelector('.tiptap') as HTMLElement;
+        editable.dispatchEvent(createKeydownEvent());
+        expect(handleKeyDown).toHaveBeenCalledOnce();
+
+        editorProps.value = {};
+        await settleEditor();
+        editable.dispatchEvent(createKeydownEvent());
+
+        expect(handleKeyDown).toHaveBeenCalledOnce();
+    });
+
     it('destroys the Tiptap instance during component teardown', async () => {
         const destroyed = vi.fn();
         const state: { editor: TiptapEditor | null } = { editor: null };
@@ -698,4 +968,12 @@ describe('Editor', () => {
 function transformPastedHTML(editor: TiptapEditor | null, html: string) {
     if (!editor) return undefined;
     return editor.view.props.transformPastedHTML?.(html, editor.view);
+}
+
+function createKeydownEvent() {
+    return new KeyboardEvent('keydown', {
+        bubbles: true,
+        cancelable: true,
+        key: 'a',
+    });
 }

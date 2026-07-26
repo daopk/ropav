@@ -12,7 +12,7 @@ pnpm add @ropav/editor ropav vue
 
 ```vue
 <template>
-  <Editor v-model="content" />
+  <Editor v-model="content" aria-label="Document" />
 </template>
 
 <script setup lang="ts" vapor>
@@ -34,7 +34,8 @@ lists, blockquote and code block controls, a horizontal rule action, and undo/re
 ```
 
 The toolbar is hidden automatically when `:editable="false"`. Use `toolbarAriaLabel` to customize
-the accessible toolbar name.
+the accessible toolbar name. The top-level `editable` prop is authoritative;
+`editorProps.editable` is reserved and ignored so the textbox and toolbar stay synchronized.
 
 Replace the built-in controls with the `toolbar` slot. The slot exposes the Tiptap instance,
 reactive action state, and the same selection-preserving command runner used by the default
@@ -62,7 +63,7 @@ slot can use the exposed Tiptap instance for extension-specific actions such as 
 The default schema uses Tiptap's `StarterKit`. Pass `extensions` to replace that schema:
 
 ```vue
-<Editor v-model="content" :extensions="[StarterKit, Link]" />
+<Editor v-model="content" :extensions="[StarterKit.configure({ link: { openOnClick: false } })]" />
 ```
 
 Set `output="json"` to emit Tiptap JSON instead of HTML. The `ready` event and exposed `editor`

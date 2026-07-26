@@ -3,12 +3,16 @@ import { nextTick, onBeforeUnmount, onMounted, shallowRef, watch, type ShallowRe
 
 import { resolveEditorProps } from './editorAttributesModel';
 import {
+    type EditorHistorySnapshot,
     type EditorSelectionSnapshot,
     isEditorContentEqual,
+    isEditorContentReplacement,
     isEditorModelValueEqual,
     readEditorContent,
+    readEditorHistory,
     readEditorSelection,
     replaceEditorContent,
+    restoreEditorHistory,
 } from './editorContentModel';
 import type { EditorModelValue, EditorOutput } from './types';
 
@@ -16,6 +20,8 @@ const MAX_TRACKED_PROPOSALS = 20;
 
 interface ControlledProposal {
     content: EditorModelValue;
+    historyAfter?: EditorHistorySnapshot;
+    historyBefore?: EditorHistorySnapshot;
     selectionAfter: EditorSelectionSnapshot;
     selectionBefore: EditorSelectionSnapshot;
 }
@@ -38,8 +44,10 @@ interface UseEditorOptions {
 
 export function useEditor(options: UseEditorOptions) {
     const editor = shallowRef<TiptapEditor | null>(null);
+    const transactionHistories = new WeakMap<object, EditorHistorySnapshot>();
     const transactionSelections = new WeakMap<object, EditorSelectionSnapshot>();
     let activeProposals: ControlledProposal[] = [];
+    let appliedReactiveEditorProps = new Set<string>();
     let rejectedProposals: ControlledProposal[] = [];
     let readyEmitted = false;
     let reconciliationId = 0;
@@ -81,25 +89,37 @@ export function useEditor(options: UseEditorOptions) {
                     transactionSelections.get(transaction) ??
                     readEditorSelection(updatedEditor);
                 const controlled = options.modelValue() !== undefined;
+                if (controlled) {
+                    activeProposals = appendProposal(activeProposals, {
+                        content,
+                        historyAfter: readEditorHistory(updatedEditor),
+                        historyBefore: transactionHistories.get(transaction),
+                        selectionAfter: readEditorSelection(updatedEditor),
+                        selectionBefore,
+                    });
+                }
                 options.onUpdate(content);
 
                 if (!controlled) return;
 
-                activeProposals = appendProposal(activeProposals, {
-                    content,
-                    selectionAfter: readEditorSelection(updatedEditor),
+                scheduleControlledReconciliation(
+                    updatedEditor,
                     selectionBefore,
-                });
-                scheduleControlledReconciliation(updatedEditor, selectionBefore);
+                    activeProposals[0]?.historyBefore,
+                );
             },
         });
 
         instance.on('beforeTransaction', ({ editor: updatedEditor, transaction }) => {
+            const history = readEditorHistory(updatedEditor);
+            if (history) transactionHistories.set(transaction, history);
             transactionSelections.set(transaction, readEditorSelection(updatedEditor));
         });
         instance.on(
             'transaction',
             ({ editor: updatedEditor, transaction, appendedTransactions }) => {
+                if (isEditorContentReplacement(transaction)) return;
+
                 const contentChanged =
                     transaction.docChanged ||
                     appendedTransactions.some(
@@ -111,22 +131,36 @@ export function useEditor(options: UseEditorOptions) {
                     activeProposals[0]?.selectionBefore ??
                     transactionSelections.get(transaction) ??
                     readEditorSelection(updatedEditor);
-                scheduleControlledReconciliation(updatedEditor, selectionBefore);
+                const historyBefore =
+                    activeProposals[0]?.historyBefore ?? transactionHistories.get(transaction);
+                scheduleControlledReconciliation(updatedEditor, selectionBefore, historyBefore);
             },
         );
-        applyEditorProps(instance, resolvedEditorProps);
+        appliedReactiveEditorProps = applyEditorProps(
+            instance,
+            resolvedEditorProps,
+            appliedReactiveEditorProps,
+        );
         editor.value = instance;
     });
 
     watch(
         options.modelValue,
         (content) => {
-            if (content === undefined || !editor.value) return;
+            if (content === undefined) {
+                reconciliationId += 1;
+                activeProposals = [];
+                rejectedProposals = [];
+                return;
+            }
+            if (!editor.value) return;
 
             reconciliationId += 1;
             const proposal = consumeProposal(content);
-            const selection = proposal?.selectionAfter;
-            replaceEditorContent(editor.value, content, selection);
+            replaceEditorContent(editor.value, content, {
+                history: proposal?.historyAfter,
+                selection: proposal?.selectionAfter,
+            });
         },
         { deep: true },
     );
@@ -141,7 +175,11 @@ export function useEditor(options: UseEditorOptions) {
             const instance = editor.value;
             if (!instance) return;
 
-            applyEditorProps(instance, resolveCurrentEditorProps());
+            appliedReactiveEditorProps = applyEditorProps(
+                instance,
+                resolveCurrentEditorProps(),
+                appliedReactiveEditorProps,
+            );
         },
         { deep: true },
     );
@@ -169,6 +207,7 @@ export function useEditor(options: UseEditorOptions) {
     function scheduleControlledReconciliation(
         instance: TiptapEditor,
         selectionBefore: EditorSelectionSnapshot,
+        historyBefore: EditorHistorySnapshot | undefined,
     ) {
         const scheduledReconciliationId = ++reconciliationId;
 
@@ -190,14 +229,18 @@ export function useEditor(options: UseEditorOptions) {
                 }
 
                 if (isEditorContentEqual(instance, authoritativeContent)) {
-                    rejectedProposals = appendProposals(rejectedProposals, activeProposals);
+                    rejectedProposals = archiveProposals(rejectedProposals, activeProposals);
                     activeProposals = [];
+                    restoreEditorHistory(instance, historyBefore);
                     return;
                 }
 
-                rejectedProposals = appendProposals(rejectedProposals, activeProposals);
+                rejectedProposals = archiveProposals(rejectedProposals, activeProposals);
                 activeProposals = [];
-                replaceEditorContent(instance, authoritativeContent, selectionBefore);
+                replaceEditorContent(instance, authoritativeContent, {
+                    history: historyBefore,
+                    selection: selectionBefore,
+                });
             });
         });
     }
@@ -208,9 +251,15 @@ export function useEditor(options: UseEditorOptions) {
 
         for (let index = proposals.length - 1; index >= 0; index -= 1) {
             const proposal = proposals[index];
-            if (!proposal || !isEditorModelValueEqual(proposal.content, content)) continue;
+            if (
+                !proposal ||
+                !editor.value ||
+                !isEditorModelValueEqual(editor.value, proposal.content, content)
+            ) {
+                continue;
+            }
 
-            rejectedProposals = proposals.slice(index + 1);
+            rejectedProposals = archiveProposals([], proposals.slice(index + 1));
             return proposal;
         }
 
@@ -224,8 +273,16 @@ export function useEditor(options: UseEditorOptions) {
 function applyEditorProps(
     instance: TiptapEditor,
     resolvedEditorProps: ReturnType<typeof resolveEditorProps>,
+    previousReactivePropNames: ReadonlySet<string>,
 ) {
+    const reactiveEditorProps = resolvedEditorProps.reactive as Record<string, unknown>;
+    const removedEditorProps = Object.fromEntries(
+        [...previousReactivePropNames]
+            .filter((name) => !(name in reactiveEditorProps))
+            .map((name) => [name, undefined]),
+    );
     const editorProps = {
+        ...removedEditorProps,
         ...resolvedEditorProps.reactive,
         dispatchTransaction: instance.view.props.dispatchTransaction,
         transformPastedHTML: instance.extensionManager.transformPastedHTML(
@@ -233,6 +290,7 @@ function applyEditorProps(
         ),
     } as TiptapEditorOptions['editorProps'];
     instance.setOptions({ editorProps });
+    return new Set(Object.keys(reactiveEditorProps));
 }
 
 function appendProposal(
@@ -247,4 +305,18 @@ function appendProposals(
     additions: ControlledProposal[],
 ): ControlledProposal[] {
     return [...current, ...additions].slice(-MAX_TRACKED_PROPOSALS);
+}
+
+function archiveProposals(
+    current: ControlledProposal[],
+    additions: ControlledProposal[],
+): ControlledProposal[] {
+    return appendProposals(
+        current,
+        additions.map(({ content, selectionAfter, selectionBefore }) => ({
+            content,
+            selectionAfter,
+            selectionBefore,
+        })),
+    );
 }

@@ -48,7 +48,9 @@ const slots = defineSlots<{
 
 const attrs = useAttrs();
 const host = shallowRef<HTMLElement | null>(null);
-const fallthroughAttributes = computed(() => splitEditorFallthroughAttributes(attrs));
+const fallthroughAttributes = computed(() =>
+    splitEditorFallthroughAttributes(attrs, props.editable),
+);
 const { editor, focus } = useEditor({
     host,
     modelValue: () => props.modelValue,

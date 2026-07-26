@@ -5,6 +5,7 @@ type TiptapEditorProps = NonNullable<TiptapEditorOptions['editorProps']>;
 const CONTROL_ATTRIBUTE_PATTERN = /^aria-/;
 const protectedEditorProps = new Set([
     'dispatchTransaction',
+    'editable',
     'markViews',
     'nodeViews',
     'state',
@@ -24,6 +25,7 @@ export interface ResolvedEditorProps {
 
 export function splitEditorFallthroughAttributes(
     attributes: Readonly<Record<string, unknown>>,
+    editable: boolean,
 ): EditorFallthroughAttributes {
     const controlAttributes: Record<string, string> = {};
     const rootAttributes: Record<string, unknown> = {};
@@ -36,6 +38,9 @@ export function splitEditorFallthroughAttributes(
         if (value !== null && value !== undefined) controlAttributes[name] = String(value);
     }
 
+    controlAttributes['aria-multiline'] = 'true';
+    controlAttributes['aria-readonly'] = String(!editable);
+
     return { controlAttributes, rootAttributes };
 }
 
@@ -46,13 +51,16 @@ export function resolveEditorProps(
     const configuredAttributes = editorProps?.attributes;
     const initialAttributes =
         typeof configuredAttributes === 'function' ? {} : configuredAttributes;
+    const initialEditorProps = Object.fromEntries(
+        Object.entries(editorProps ?? {}).filter(([name]) => name !== 'editable'),
+    ) as TiptapEditorProps;
     const reactiveEditorProps = Object.fromEntries(
         Object.entries(editorProps ?? {}).filter(([name]) => !protectedEditorProps.has(name)),
     ) as TiptapEditorProps;
 
     return {
         initial: {
-            ...editorProps,
+            ...initialEditorProps,
             attributes: {
                 ...initialAttributes,
                 ...controlAttributes,

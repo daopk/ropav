@@ -281,7 +281,11 @@ function getActionState(
     return {
         available,
         active,
-        disabled: !editable || !available || (!active && !executeAction(editor, action, true)),
+        disabled:
+            !editable ||
+            !editor.isEditable ||
+            !available ||
+            (!active && !executeAction(editor, action, true)),
     };
 }
 
