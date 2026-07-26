@@ -330,6 +330,10 @@ export const packagePublicationManifest = {
             ],
         },
         {
+            name: 'toolbar',
+            runtimeExports: ['Toolbar', 'toolbarOrientations', 'toolbarParts'],
+        },
+        {
             name: 'tooltip',
             runtimeExports: ['Tooltip', 'tooltipParts'],
         },

@@ -34,6 +34,30 @@ describe('Editor toolbar', () => {
         expect(readonly.container.querySelector('[role="toolbar"]')).toBeNull();
     });
 
+    it('uses one tab stop and arrow keys to move between formatting controls', async () => {
+        const mounted = mountEditor();
+        await settleEditor();
+
+        const toolbar = mounted.container.querySelector('[role="toolbar"]') as HTMLElement;
+        const select = toolbar.querySelector('select') as HTMLSelectElement;
+        const bold = toolbar.querySelector('[aria-label="Bold"]') as HTMLButtonElement;
+        const controls = [...toolbar.querySelectorAll('select, button')] as HTMLElement[];
+
+        expect(controls.filter((control) => control.tabIndex === 0)).toEqual([select]);
+
+        select.focus();
+        select.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'ArrowRight',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+
+        expect(document.activeElement).toBe(bold);
+        expect(controls.filter((control) => control.tabIndex === 0)).toEqual([bold]);
+    });
+
     it.each([
         ['Bold', 'bold'],
         ['Italic', 'italic'],

@@ -213,6 +213,10 @@
       "types": "./dist/components/toast/index.d.ts",
       "import": "./dist/components/toast/index.js"
     },
+    "./toolbar": {
+      "types": "./dist/components/toolbar/index.d.ts",
+      "import": "./dist/components/toolbar/index.js"
+    },
     "./tooltip": {
       "types": "./dist/components/tooltip/index.d.ts",
       "import": "./dist/components/tooltip/index.js"

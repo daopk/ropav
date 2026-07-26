@@ -48,4 +48,5 @@ export * from './components/tags-input';
 export * from './components/teleport-provider';
 export * from './components/textarea';
 export * from './components/toast';
+export * from './components/toolbar';
 export * from './components/tooltip';

@@ -1,0 +1,14 @@
+.rp-toolbar {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--rp-spacing-2);
+    min-width: 0;
+    font-family: var(--rp-font-family);
+
+    &--vertical {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: 0;
+    }
+}
