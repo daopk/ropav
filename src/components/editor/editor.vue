@@ -8,6 +8,7 @@
 import { StarterKit } from '@tiptap/starter-kit';
 import { computed, shallowRef, useAttrs } from 'vue';
 
+import { splitEditorFallthroughAttributes } from './editorAttributesModel';
 import { useEditor } from './useEditor';
 import type { EditorModelValue, EditorPart, EditorProps } from './types';
 import type { Editor as TiptapEditor } from '@tiptap/core';
@@ -22,7 +23,7 @@ const props = withDefaults(defineProps<EditorProps>(), {
     editable: true,
     autofocus: false,
     editorProps: () => ({}),
-    injectCSS: true,
+    injectCSS: false,
 });
 
 const emit = defineEmits<{
@@ -33,6 +34,7 @@ const emit = defineEmits<{
 
 const attrs = useAttrs();
 const host = shallowRef<HTMLElement | null>(null);
+const fallthroughAttributes = computed(() => splitEditorFallthroughAttributes(attrs));
 const { editor, focus } = useEditor({
     host,
     modelValue: () => props.modelValue,
@@ -42,6 +44,7 @@ const { editor, focus } = useEditor({
     editable: () => props.editable,
     autofocus: () => props.autofocus,
     editorProps: () => props.editorProps,
+    controlAttributes: () => fallthroughAttributes.value.controlAttributes,
     injectCSS: () => props.injectCSS,
     onReady: (instance) => emit('ready', instance),
     onUpdate: (content) => emit('update:modelValue', content),
@@ -49,7 +52,7 @@ const { editor, focus } = useEditor({
 });
 
 const rootAttrs = computed(() => ({
-    ...attrs,
+    ...fallthroughAttributes.value.rootAttributes,
     class: ['rp-editor', props.classNames?.root, attrs.class],
     style: [props.styles?.root, attrs.style],
     'data-readonly': props.editable ? undefined : '',
