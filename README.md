@@ -5,7 +5,8 @@ This repository is a pnpm monorepo for zero-VDOM Vue Vapor packages.
 ## Packages
 
 - [`ropav`](./packages/ropav): minimal UI components and public composables for Vue Vapor.
-- `@ropav/editor`: reserved for a future Tiptap editor module built on `@tiptap/core`.
+- [`@ropav/editor`](./packages/editor): zero-VDOM rich-text editor built directly on
+  `@tiptap/core`.
 
 ## Development
 
@@ -21,6 +22,7 @@ Use pnpm filters to target one package:
 ```bash
 pnpm --filter ropav test
 pnpm --filter ropav build
+pnpm --filter @ropav/editor verify
 ```
 
 Contributors should follow the [code architecture guide](./docs/code-architecture.md).

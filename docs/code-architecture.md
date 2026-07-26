@@ -13,7 +13,7 @@ package that owns them.
 Package dependencies point from specialized modules to foundational modules:
 
 ```text
-future @ropav/editor
+@ropav/editor
     -> ropav
 ```
 
@@ -22,7 +22,7 @@ never through relative imports into another package's source. Use pnpm's `worksp
 local package dependencies and keep the workspace graph acyclic. The workspace contract runner in
 `scripts/verify-workspace-contracts.mjs` enforces these rules for every publishable package.
 
-The future `@ropav/editor` module will integrate Tiptap through `@tiptap/core`, mounting the editor
+The `@ropav/editor` module integrates Tiptap through `@tiptap/core`, mounting the editor
 directly into an element owned by a Vapor SFC. Production source must not use `@tiptap/vue-3`,
 because its Vue renderer relies on VDOM interfaces that violate this repository's zero-VDOM
 contract. Create or mount the editor only after the host element is available, and call

@@ -1,0 +1,69 @@
+{
+  "name": "@ropav/editor",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./editor.css": "./dist/editor.css"
+  },
+  "scripts": {
+    "build": "pnpm run typecheck && vite build",
+    "test": "vitest run",
+    "test:bundle:built": "node scripts/check-package-bundle.mjs",
+    "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
+    "verify": "pnpm run test && pnpm run build && pnpm run test:bundle:built",
+    "prepublishOnly": "pnpm run verify"
+  },
+  "peerDependencies": {
+    "ropav": "workspace:^",
+    "vue": "^3.6.0-rc.2"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.29.0",
+    "@tiptap/pm": "^3.29.0",
+    "@tiptap/starter-kit": "^3.29.0"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.58.9",
+    "@types/node": "^26.1.1",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/compiler-vapor": "3.6.0-rc.2",
+    "@vue/tsconfig": "^0.9.1",
+    "jsdom": "^29.1.1",
+    "ropav": "workspace:^",
+    "typescript": "~6.0.3",
+    "vite": "^8.1.5",
+    "vite-plugin-dts": "^5.0.3",
+    "vitest": "^4.1.10",
+    "vue": "3.6.0-rc.2",
+    "vue-tsc": "^3.3.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daopk/ropav",
+    "directory": "packages/editor"
+  }
+}
