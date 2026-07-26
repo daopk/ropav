@@ -16,7 +16,12 @@ const storybookProject = (theme: 'light' | 'dark'): TestProjectConfiguration => 
             tags: {
                 include: ['test'],
             },
-            initialGlobals: { theme },
+            initialGlobals: {
+                theme,
+                a11y: {
+                    manual: false,
+                },
+            },
         }),
     ],
     test: {

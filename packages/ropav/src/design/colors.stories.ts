@@ -101,33 +101,49 @@ const meta = {
     render: () => ({
         components: { ColorSwatch },
         setup() {
-            const computedValues = ref<Record<string, string>>({});
-            const themeName = ref('Light');
+            const storyRoot = ref<HTMLElement>();
+            const themeLabel = ref<HTMLElement>();
             let observer: MutationObserver | undefined;
+            let updateTimer: number | undefined;
 
             const updateComputedValues = () => {
-                const root = document.documentElement;
-                const rootStyle = getComputedStyle(root);
-                const variables = [
-                    ...variantVariables.flatMap((color) =>
-                        color.variables.map((variable) => variable.name),
-                    ),
-                    ...primaryVariables,
-                    ...schemeVariables,
-                ];
+                if (!storyRoot.value) return;
 
-                computedValues.value = Object.fromEntries(
-                    variables.map((variable) => [
-                        variable,
-                        rootStyle.getPropertyValue(variable).trim(),
-                    ]),
+                const rootStyle = getComputedStyle(document.documentElement);
+                const valueElements = storyRoot.value.querySelectorAll<HTMLElement>(
+                    '[data-rp-color-variable]',
                 );
-                themeName.value = root.classList.contains('dark') ? 'Dark' : 'Light';
+
+                for (const element of valueElements) {
+                    const variable = element.dataset.rpColorVariable;
+                    if (!variable) continue;
+
+                    updateTextNode(
+                        element,
+                        rootStyle.getPropertyValue(variable).trim() || variable,
+                    );
+                }
+            };
+
+            const updateThemeLabel = () => {
+                if (!themeLabel.value) return;
+
+                const themeName = document.documentElement.classList.contains('dark')
+                    ? 'Dark'
+                    : 'Light';
+                updateTextNode(themeLabel.value, `${themeName} theme`);
+            };
+
+            const scheduleComputedValueUpdate = () => {
+                updateThemeLabel();
+                window.clearTimeout(updateTimer);
+                updateTimer = window.setTimeout(updateComputedValues, 80);
             };
 
             onMounted(() => {
+                updateThemeLabel();
                 updateComputedValues();
-                observer = new MutationObserver(updateComputedValues);
+                observer = new MutationObserver(scheduleComputedValueUpdate);
                 observer.observe(document.documentElement, {
                     attributes: true,
                     attributeFilter: ['class'],
@@ -136,26 +152,27 @@ const meta = {
 
             onBeforeUnmount(() => {
                 observer?.disconnect();
+                window.clearTimeout(updateTimer);
             });
 
             return {
-                computedValues,
                 fixedColors,
                 paletteColors,
                 primaryVariables,
                 schemeVariables,
-                themeName,
+                storyRoot,
+                themeLabel,
                 variantVariables,
             };
         },
         template: `
-            <main class="rp-color-story">
+            <main ref="storyRoot" class="rp-color-story">
                 <header class="rp-color-story__header">
                     <div>
                         <p class="rp-color-story__eyebrow">Ropav tokens</p>
                         <h1>Colors</h1>
                     </div>
-                    <span class="rp-color-story__theme">{{ themeName }} theme</span>
+                    <span ref="themeLabel" class="rp-color-story__theme">Dark theme</span>
                 </header>
 
                 <section class="rp-color-section" aria-labelledby="palette-colors-title">
@@ -225,7 +242,9 @@ const meta = {
                                     />
                                     <span>
                                         <strong>{{ variable.label }}</strong>
-                                        <code>{{ computedValues[variable.name] || variable.name }}</code>
+                                        <code :data-rp-color-variable="variable.name">
+                                            {{ variable.name }}
+                                        </code>
                                     </span>
                                 </span>
                             </div>
@@ -255,7 +274,7 @@ const meta = {
                                 <code>{{ variable }}</code>
                             </span>
                             <span class="rp-color-table__value" role="cell">
-                                <code>{{ computedValues[variable] || '...' }}</code>
+                                <code :data-rp-color-variable="variable">{{ variable }}</code>
                             </span>
                         </div>
                         <div
@@ -273,7 +292,7 @@ const meta = {
                                 <code>{{ variable }}</code>
                             </span>
                             <span class="rp-color-table__value" role="cell">
-                                <code>{{ computedValues[variable] || '...' }}</code>
+                                <code :data-rp-color-variable="variable">{{ variable }}</code>
                             </span>
                         </div>
                     </div>
@@ -342,4 +361,11 @@ function resolveTokenValue(value: TokenValue, tokenValues: TokenValueMap): strin
         const referencedValue = tokenValues.get(path);
         return referencedValue == null ? match : resolveTokenValue(referencedValue, tokenValues);
     });
+}
+
+function updateTextNode(element: HTMLElement, value: string) {
+    const textNode = element.firstChild;
+    if (textNode?.nodeType !== Node.TEXT_NODE || textNode.nodeValue === value) return;
+
+    textNode.nodeValue = value;
 }
