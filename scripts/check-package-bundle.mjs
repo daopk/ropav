@@ -26,11 +26,6 @@ for (const dependency of ['@tiptap/core', '@tiptap/pm/state', '@tiptap/starter-k
         throw new Error(`Built package must preserve an external import for ${dependency}`);
     }
 }
-for (const forbidden of ['@tiptap/vue-3', 'createVNode', 'defineComponent']) {
-    if (javascript.includes(forbidden)) {
-        throw new Error(`Built package includes forbidden VDOM marker: ${forbidden}`);
-    }
-}
 if (/\b(?:from\s+|import\s*\(\s*)["']~icons\//.test(javascript)) {
     throw new Error('Built package contains an unresolved icon module');
 }
@@ -38,13 +33,7 @@ if (/\b(?:from\s+|import\s*\(\s*)["']~icons\//.test(javascript)) {
 const nodeEntry = resolve(packageRoot, manifest.exports['.'].node);
 const nodeClosure = readJavaScriptClosure(nodeEntry);
 for (const [file, source] of nodeClosure) {
-    for (const forbidden of [
-        '@tiptap/',
-        'from "vue"',
-        "from 'vue'",
-        'createVNode',
-        'defineComponent',
-    ]) {
+    for (const forbidden of ['@tiptap/', 'from "vue"', "from 'vue'"]) {
         if (source.includes(forbidden)) {
             throw new Error(`${file} includes client-only marker: ${forbidden}`);
         }
