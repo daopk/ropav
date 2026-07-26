@@ -69,6 +69,64 @@ function mountGroupedRadioChoice(props: GroupedRadioProps, renderControls = true
 }
 
 describe('useGroupedRadioChoiceTransaction', () => {
+    it('keeps an automatic native default after choices load asynchronously', async () => {
+        const mounted = mountGroupedRadioChoice({
+            choices: [],
+        });
+        await flush();
+
+        mounted.props.choices = [
+            { label: 'List', value: 'list' },
+            { label: 'Grid', value: 'grid' },
+        ];
+        await flush();
+
+        const form = mounted.container.querySelector('form')!;
+        const inputs = [...mounted.container.querySelectorAll('input')] as HTMLInputElement[];
+        expect(mounted.transaction.value.value).toBe('list');
+        expect(inputs.map((input) => input.defaultChecked)).toEqual([true, false]);
+
+        inputs[1].click();
+        await flush();
+
+        expect(inputs.map((input) => input.defaultChecked)).toEqual([true, false]);
+
+        form.reset();
+
+        expect(inputs.map((input) => input.checked)).toEqual([true, false]);
+        expect(new FormData(form).get('view')).toBe('list');
+    });
+
+    it('resets to empty when the explicit native default is removed', async () => {
+        const mounted = mountGroupedRadioChoice({
+            choices: [
+                { label: 'List', value: 'list' },
+                { label: 'Grid', value: 'grid' },
+                { label: 'Board', value: 'board' },
+            ],
+            defaultValue: 'grid',
+        });
+        await flush();
+
+        const form = mounted.container.querySelector('form')!;
+        const inputs = [...mounted.container.querySelectorAll('input')] as HTMLInputElement[];
+        inputs[2].click();
+        await flush();
+
+        mounted.props.choices = [
+            { label: 'List', value: 'list' },
+            { label: 'Board', value: 'board' },
+        ];
+        await flush();
+
+        form.reset();
+        await Promise.resolve();
+        await flush();
+
+        expect(mounted.transaction.value.value).toBeNull();
+        expect(new FormData(form).get('view')).toBeNull();
+    });
+
     it('coordinates typed selection, form reset, and validation anchoring', async () => {
         const mounted = mountGroupedRadioChoice({
             choices: [
@@ -113,6 +171,23 @@ describe('useGroupedRadioChoiceTransaction', () => {
             { label: 'List view', value: 'list' },
             { label: 'Grid', value: 'grid' },
         ];
+        await flush();
+
+        expect(mounted.transaction.value.value).toBeNull();
+        expect(mounted.updates).toEqual([]);
+    });
+
+    it('preserves the last controlled value when control is released', async () => {
+        const mounted = mountGroupedRadioChoice({
+            choices: [
+                { label: 'List', value: 'list' },
+                { label: 'Grid', value: 'grid' },
+            ],
+            modelValue: null,
+        });
+        await flush();
+
+        mounted.props.modelValue = undefined;
         await flush();
 
         expect(mounted.transaction.value.value).toBeNull();

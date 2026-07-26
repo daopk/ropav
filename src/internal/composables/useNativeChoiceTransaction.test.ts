@@ -16,6 +16,9 @@ describe('useNativeChoiceTransaction', () => {
         let transaction!: NativeChoiceTransaction<string>;
 
         const adapter: NativeChoiceAdapter<string> = {
+            commitValue(_value, _initialValue, applyValue) {
+                applyValue();
+            },
             controls: () => [inputRef.value],
             readResetValue([input]) {
                 return (input as HTMLInputElement).value;
@@ -74,6 +77,9 @@ describe('useNativeChoiceTransaction', () => {
         }
 
         const adapter: NativeChoiceAdapter<string> = {
+            commitValue(_value, _initialValue, applyValue) {
+                applyValue();
+            },
             controls: () => [inputRef.value],
             readResetValue([input]) {
                 return (input as HTMLInputElement).value;

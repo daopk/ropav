@@ -36,6 +36,7 @@ export function useHiddenSelectChoiceTransaction<Value>(
 ): HiddenSelectChoiceTransaction<Value> {
     const nativeSelectRef = ref<HTMLSelectElement | null>(null);
     const initialValue = options.value.defaultValue();
+    let handlingNativeInput = false;
     let ignoreNativeInput = false;
 
     function syncNativeValue(value: Value, defaultValue: Value) {
@@ -44,6 +45,22 @@ export function useHiddenSelectChoiceTransaction<Value>(
     }
 
     const adapter: NativeChoiceAdapter<Value> = {
+        commitValue(value, defaultValue, applyValue) {
+            const select = nativeSelectRef.value;
+            if (!select || handlingNativeInput) {
+                applyValue();
+                return;
+            }
+
+            options.native.adapter.commit(select, value, defaultValue, applyValue);
+            ignoreNativeInput = true;
+            try {
+                dispatchNativeSelectEvent(select, 'input');
+                dispatchNativeSelectEvent(select, 'change');
+            } finally {
+                ignoreNativeInput = false;
+            }
+        },
         controls: () => [nativeSelectRef.value],
         readResetValue([select], defaultValue) {
             return options.native.adapter.resolveResetValue(
@@ -66,33 +83,19 @@ export function useHiddenSelectChoiceTransaction<Value>(
 
     function onNativeInput(event: InputEvent) {
         if (ignoreNativeInput) return;
-        transaction.requestValueUpdate(
-            options.native.adapter.read(event.currentTarget as HTMLSelectElement),
-        );
+        handlingNativeInput = true;
+        try {
+            transaction.requestValueUpdate(
+                options.native.adapter.read(event.currentTarget as HTMLSelectElement),
+            );
+        } finally {
+            handlingNativeInput = false;
+        }
     }
 
     function onNativeInvalid(event: Event) {
         event.preventDefault();
         options.native.focusVisible();
-    }
-
-    function requestValueUpdate(value: Value) {
-        const select = nativeSelectRef.value;
-        if (!select) {
-            transaction.requestValueUpdate(value);
-            return;
-        }
-
-        options.native.adapter.commit(select, value, initialValue, () =>
-            transaction.requestValueUpdate(value),
-        );
-        ignoreNativeInput = true;
-        try {
-            dispatchNativeSelectEvent(select, 'input');
-            dispatchNativeSelectEvent(select, 'change');
-        } finally {
-            ignoreNativeInput = false;
-        }
     }
 
     const nativeSelectAttrs = computed<SelectHTMLAttributes>(() => {
@@ -114,7 +117,7 @@ export function useHiddenSelectChoiceTransaction<Value>(
         isControlled: transaction.isControlled,
         nativeSelectAttrs,
         nativeSelectRef,
-        requestValueUpdate,
+        requestValueUpdate: transaction.requestValueUpdate,
         value: transaction.value,
     };
 }

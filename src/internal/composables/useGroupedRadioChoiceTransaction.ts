@@ -33,6 +33,25 @@ function getFirstEnabledValue<Value>(
     return choices?.find((choice) => !choice.disabled)?.value ?? null;
 }
 
+function getChoiceMetadata<Value>(
+    choices: readonly GroupedRadioChoice<Value>[] | undefined,
+): Array<readonly [Value, boolean]> {
+    return choices?.map((choice) => [choice.value, Boolean(choice.disabled)] as const) ?? [];
+}
+
+function hasSameChoiceMetadata<Value>(
+    previous: readonly (readonly [Value, boolean])[],
+    next: readonly (readonly [Value, boolean])[],
+) {
+    return (
+        previous.length === next.length &&
+        previous.every(
+            ([value, disabled], index) =>
+                value === next[index]?.[0] && disabled === next[index]?.[1],
+        )
+    );
+}
+
 export function useGroupedRadioChoiceTransaction<Value>(
     options: Readonly<GroupedRadioChoiceTransactionOptions<Value>>,
 ): GroupedRadioChoiceTransaction<Value> {
@@ -43,19 +62,24 @@ export function useGroupedRadioChoiceTransaction<Value>(
     );
     const explicitDefaultValue = options.value.defaultValue();
     const hasExplicitEmptyDefault = explicitDefaultValue === null;
+    const initialValue =
+        explicitDefaultValue === undefined
+            ? getFirstEnabledValue(options.choices())
+            : explicitDefaultValue;
+    let nativeResetValue = initialValue;
+    let choiceMetadata = getChoiceMetadata(options.choices());
+    let shouldSyncNativeDefault = true;
 
     function findInputChoice(input: HTMLInputElement) {
         const index = inputRefs.value.indexOf(input);
         return index < 0 ? undefined : options.choices()?.[index];
     }
 
-    function getResetValue(initialValue: Value | null, currentValue: Value | null) {
+    function getResetValue(currentValue: Value | null) {
         if (hasExplicitEmptyDefault) return null;
 
-        const initialChoice = options
-            .choices()
-            ?.find((choice) => choice.value === initialValue && !choice.disabled);
-        if (initialChoice) return initialChoice.value;
+        const initialChoice = options.choices()?.find((choice) => choice.value === initialValue);
+        if (initialChoice && !initialChoice.disabled) return initialChoice.value;
 
         const fallbackValue = getFirstEnabledValue(options.choices());
         return currentValue === fallbackValue ? fallbackValue : initialValue;
@@ -74,28 +98,33 @@ export function useGroupedRadioChoiceTransaction<Value>(
         return firstEnabledInput;
     }
 
-    function syncInputs(value: Value | null, initialValue: Value | null) {
-        const resetValue = getResetValue(initialValue, value);
-
+    function syncInputs(value: Value | null) {
         for (const [index, input] of inputRefs.value.entries()) {
             if (!input) continue;
             const choiceValue = options.choices()?.[index]?.value;
             input.checked = choiceValue === value;
-            input.defaultChecked = choiceValue === resetValue;
+        }
+
+        if (!shouldSyncNativeDefault) return;
+        shouldSyncNativeDefault = false;
+
+        for (const [index, input] of inputRefs.value.entries()) {
+            if (input)
+                input.defaultChecked = options.choices()?.[index]?.value === nativeResetValue;
         }
     }
 
     const valueOptions: UseControllableValueOptions<Value | null> = {
         modelValue: options.value.modelValue,
-        defaultValue: () =>
-            explicitDefaultValue === undefined
-                ? getFirstEnabledValue(options.choices())
-                : explicitDefaultValue,
+        defaultValue: () => initialValue,
         onChange: options.value.onChange,
     };
 
     let currentValue: ComputedRef<Value | null>;
     const adapter: NativeChoiceAdapter<Value | null> = {
+        commitValue(_value, _initialValue, applyValue) {
+            applyValue();
+        },
         controls: () => inputRefs.value,
         readResetValue(controls) {
             const checked = controls.find((control) => (control as HTMLInputElement).checked) as
@@ -104,11 +133,24 @@ export function useGroupedRadioChoiceTransaction<Value>(
             return checked ? (findInputChoice(checked)?.value ?? null) : null;
         },
         reconcileValue(value, _initialValue, isControlled) {
-            if (isControlled || (value === null && hasExplicitEmptyDefault)) return value;
-            const hasEnabledSelection = options
-                .choices()
-                ?.some((choice) => choice.value === value && !choice.disabled);
-            return hasEnabledSelection ? value : getFirstEnabledValue(options.choices());
+            const nextChoiceMetadata = getChoiceMetadata(options.choices());
+            if (hasSameChoiceMetadata(choiceMetadata, nextChoiceMetadata)) return value;
+            choiceMetadata = nextChoiceMetadata;
+
+            let reconciledValue = value;
+            if (!isControlled && !(value === null && hasExplicitEmptyDefault)) {
+                const hasEnabledSelection = options
+                    .choices()
+                    ?.some((choice) => choice.value === value && !choice.disabled);
+                reconciledValue = hasEnabledSelection
+                    ? value
+                    : getFirstEnabledValue(options.choices());
+            }
+
+            nativeResetValue = getResetValue(reconciledValue);
+            shouldSyncNativeDefault = true;
+
+            return reconciledValue;
         },
         syncValue: syncInputs,
         validationMessage(element) {
@@ -131,6 +173,7 @@ export function useGroupedRadioChoiceTransaction<Value>(
 
             if (input) {
                 mountedInput = input;
+                input.defaultChecked = value === nativeResetValue;
                 const existingInput = inputsByValue.value.get(value);
                 const hasOtherRegistration = [...inputsByValue.value].some(
                     ([registeredValue, registeredInput]) =>

@@ -92,6 +92,84 @@ describe('useHiddenSelectChoiceTransaction', () => {
 
         expect(transaction.value.value).toBe('apple');
         expect(select.selectedIndex).toBe(1);
+
+        nativeEvents.length = 0;
+        select.selectedIndex = 2;
+        select.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+
+        expect(updates).toEqual([2, '2']);
+        expect(nativeEvents).toEqual(['input']);
+
+        await Promise.resolve();
+
+        expect(select.selectedIndex).toBe(1);
+    });
+
+    it('keeps a controlled proposal available for a microtask-delayed change handler', async () => {
+        const props = shallowReactive<{
+            modelValue: SingleValue;
+            options: Array<{ value: string }>;
+        }>({
+            modelValue: 'apple',
+            options: [{ value: 'apple' }, { value: 'banana' }],
+        });
+        const updates: SingleValue[] = [];
+        const valuesSeenByChange: string[] = [];
+        let transaction!: HiddenSelectChoiceTransaction<SingleValue>;
+
+        const container = mountDom(
+            defineComponent({
+                setup() {
+                    transaction = useHiddenSelectChoiceTransaction<SingleValue>({
+                        value: {
+                            modelValue: () => props.modelValue,
+                            defaultValue: () => null,
+                            onChange: (value) => updates.push(value),
+                        },
+                        native: {
+                            adapter: createSingleNativeChoiceAdapter<SingleValue>({
+                                emptyValue: null,
+                                options: () => props.options,
+                            }),
+                            className: 'native-choice',
+                            focusVisible: vi.fn(),
+                        },
+                    });
+
+                    return () =>
+                        h(
+                            'select',
+                            {
+                                ...transaction.nativeSelectAttrs.value,
+                                ref: transaction.nativeSelectRef,
+                            },
+                            [
+                                h('option', { value: '' }),
+                                ...props.options.map((option) =>
+                                    h('option', { value: option.value }),
+                                ),
+                            ],
+                        );
+                },
+            }),
+        );
+        await flush();
+
+        const select = container.querySelector('select')!;
+        select.addEventListener('change', async () => {
+            await Promise.resolve();
+            valuesSeenByChange.push(select.value);
+            props.modelValue = select.value;
+        });
+
+        transaction.requestValueUpdate('banana');
+        expect(updates).toEqual(['banana']);
+
+        await Promise.resolve();
+
+        expect(valuesSeenByChange).toEqual(['banana']);
+        expect(transaction.value.value).toBe('banana');
+        expect(select.value).toBe('banana');
     });
 
     it('restores an uncontrolled default on reset and redirects native invalid focus', async () => {

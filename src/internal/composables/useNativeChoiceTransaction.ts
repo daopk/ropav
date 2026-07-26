@@ -6,6 +6,7 @@ import {
 import { useFormControl, type FormControlOptions, type NativeFormControl } from './useFormControl';
 
 export interface NativeChoiceAdapter<Value> {
+    commitValue: (value: Value, initialValue: Value, applyValue: () => void) => void;
     controls: () => Array<NativeFormControl | null | undefined>;
     readResetValue: (controls: NativeFormControl[], initialValue: Value) => Value;
     reconcileValue?: (value: Value, initialValue: Value, isControlled: boolean) => Value;
@@ -40,7 +41,9 @@ export function useNativeChoiceTransaction<Value>(
     }
 
     function requestValueUpdate(value: Value) {
-        controllable.setValue(value);
+        options.adapter.commitValue(value, controllable.initialValue, () =>
+            controllable.setValue(value),
+        );
         restoreControlledValue();
     }
 
