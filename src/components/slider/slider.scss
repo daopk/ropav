@@ -66,6 +66,7 @@
 
     &__track {
         height: var(--_rp-slider-hit-size);
+        touch-action: none;
     }
 
     &--marks-with-labels &__track {

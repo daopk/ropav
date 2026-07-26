@@ -22,7 +22,7 @@
         </span>
         <span
             v-bind="getPartAttrs('track', { class: 'rp-slider__track' })"
-            @pointerdown="onTooltipPointerDown"
+            @pointerdown="onTrackPointerDown"
             @pointerenter="onTooltipTrackEnter"
             @pointerleave="onTooltipTrackLeave"
             @pointermove="onTooltipPointerMove"
@@ -222,7 +222,7 @@ const {
     tooltipFormattedValue,
     tooltipContent,
     onInput,
-    onTooltipPointerDown,
+    onTrackPointerDown,
     onTooltipPointerMove,
     onTooltipTrackEnter,
     onTooltipTrackLeave,

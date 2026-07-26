@@ -86,13 +86,14 @@ export function useSliderValueState(props: SliderStateProps, onChange: (value: n
         if (control.disabled) return;
 
         const input = event.target as HTMLInputElement;
+        updateValue(input.valueAsNumber);
+    }
+
+    function updateValue(value: number) {
+        if (control.disabled) return;
+
         controllable.setValue(
-            normalizeSliderValue(
-                input.valueAsNumber,
-                bounds.value.min,
-                bounds.value.max,
-                nativeStep.value,
-            ),
+            normalizeSliderValue(value, bounds.value.min, bounds.value.max, nativeStep.value),
         );
     }
 
@@ -138,5 +139,6 @@ export function useSliderValueState(props: SliderStateProps, onChange: (value: n
         hasMarkLabels,
         trackSlotProps,
         onInput,
+        updateValue,
     };
 }

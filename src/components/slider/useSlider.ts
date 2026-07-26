@@ -7,6 +7,7 @@ import {
     getSliderThumbOptions,
     setSliderStyleValue,
 } from './sliderModel';
+import { useSliderPointer } from './useSliderPointer';
 import { useSliderTooltipState } from './useSliderTooltipState';
 import { useSliderValueState, type SliderStateProps } from './useSliderValueState';
 
@@ -67,6 +68,20 @@ export function useSlider(props: SliderStateProps, onChange: (value: number) => 
             tooltipState.tooltipPercent.value,
         ),
     );
+    const pointerState = useSliderPointer({
+        bounds: valueState.bounds,
+        disabled: () => valueState.control.disabled,
+        inputRef: valueState.inputRef,
+        orientation: () => props.orientation,
+        step: valueState.nativeStep,
+        updateValue: valueState.updateValue,
+    });
+
+    function onTrackPointerDown(event: PointerEvent) {
+        const started = pointerState.onPointerDown(event);
+        tooltipState.onTooltipPointerDown(event);
+        return started;
+    }
 
     return {
         inputRef: valueState.inputRef,
@@ -102,7 +117,7 @@ export function useSlider(props: SliderStateProps, onChange: (value: number) => 
         tooltipFormattedValue: tooltipState.tooltipFormattedValue,
         tooltipContent: tooltipState.tooltipContent,
         onInput: valueState.onInput,
-        onTooltipPointerDown: tooltipState.onTooltipPointerDown,
+        onTrackPointerDown,
         onTooltipPointerMove: tooltipState.onTooltipPointerMove,
         onTooltipTrackEnter: tooltipState.onTooltipTrackEnter,
         onTooltipTrackLeave: tooltipState.onTooltipTrackLeave,
