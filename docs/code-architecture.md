@@ -37,6 +37,12 @@ The `@ropav/table` module integrates `@tanstack/table-core` behind its own colum
 interface. Production source must not use `@tanstack/vue-table`, because dynamic Vue cell renderers
 rely on VDOM interfaces. Custom markup crosses the package seam through compiled Vapor slots.
 
+Client-only packages verify their built artifacts through
+`scripts/verify-built-client-only-package.mjs`. That module owns output inspection, Node dependency
+closure traversal, ESM and CommonJS resolution, and the server-render guard. Each package supplies
+an adapter that retains its own dependency, exported interface, and stylesheet policy. The root
+verification interface remains limited to workspace-wide architecture and zero-VDOM contracts.
+
 ## Module seams
 
 A module should hide a meaningful amount of behavior behind a small interface. Extract code around
