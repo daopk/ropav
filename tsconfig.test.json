@@ -5,7 +5,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client", "vitest", "node"],
+    "types": ["vite/client", "vitest", "node", "unplugin-icons/types/vue"],
     "noEmit": true
   },
   "include": ["src/**/*.test.ts", "tests/**/*.ts"],

@@ -27,6 +27,8 @@ const meta = {
             options: ['html', 'json'],
         },
         editable: { control: 'boolean' },
+        toolbar: { control: 'boolean' },
+        toolbarAriaLabel: { control: 'text' },
         autofocus: { control: 'boolean' },
         injectCSS: { control: 'boolean' },
         extensions: { control: false },
@@ -38,6 +40,8 @@ const meta = {
         modelValue: initialContent,
         output: 'html',
         editable: true,
+        toolbar: true,
+        toolbarAriaLabel: 'Text formatting',
         autofocus: false,
         injectCSS: false,
     },
@@ -100,6 +104,46 @@ export const Readonly: Story = {
             <p>This editor is rendered in read-only mode.</p>
         `,
     },
+};
+
+export const WithoutToolbar: Story = {
+    args: {
+        toolbar: false,
+    },
+};
+
+export const CustomToolbar: Story = {
+    render: (args) => ({
+        components: { Editor },
+        setup() {
+            const value = ref<EditorModelValue>(args.modelValue ?? args.defaultValue ?? '');
+            return { args, value };
+        },
+        template: `
+            <Editor v-bind="args" v-model="value" aria-label="Custom toolbar editor">
+                <template #toolbar="{ state, run }">
+                    <button
+                        type="button"
+                        :aria-pressed="state.actions.bold.active"
+                        :disabled="state.actions.bold.disabled"
+                        @mousedown.prevent
+                        @click="run('bold')"
+                    >
+                        Bold
+                    </button>
+                    <button
+                        type="button"
+                        :aria-pressed="state.actions.italic.active"
+                        :disabled="state.actions.italic.disabled"
+                        @mousedown.prevent
+                        @click="run('italic')"
+                    >
+                        Italic
+                    </button>
+                </template>
+            </Editor>
+        `,
+    }),
 };
 
 export const JsonOutput: Story = {

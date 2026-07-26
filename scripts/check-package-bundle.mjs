@@ -31,6 +31,9 @@ for (const forbidden of ['@tiptap/vue-3', 'createVNode', 'defineComponent']) {
         throw new Error(`Built package includes forbidden VDOM marker: ${forbidden}`);
     }
 }
+if (/\b(?:from\s+|import\s*\(\s*)["']~icons\//.test(javascript)) {
+    throw new Error('Built package contains an unresolved icon module');
+}
 
 const nodeEntry = resolve(packageRoot, manifest.exports['.'].node);
 const nodeClosure = readJavaScriptClosure(nodeEntry);
@@ -72,11 +75,14 @@ try {
 
 const css = readFileSync(resolve(packageRoot, manifest.exports['./editor.css']), 'utf8');
 if (!css.includes('.rp-editor')) throw new Error('Built stylesheet is missing .rp-editor');
-const componentLayer = readCssBlock(css, '@layer ropav.components');
+if (!css.includes('.rp-editor-toolbar')) {
+    throw new Error('Built stylesheet is missing .rp-editor-toolbar');
+}
+const componentLayer = readCssBlocks(css, '@layer ropav.components').join('\n');
 if (!componentLayer.includes('.ProseMirror-gapcursor')) {
     throw new Error('Built stylesheet is missing layered ProseMirror base rules');
 }
-const forcedColors = readCssBlock(componentLayer, '@media (forced-colors: active)');
+const forcedColors = readCssBlocks(componentLayer, '@media (forced-colors: active)').join('\n');
 if (
     !forcedColors.includes('.tiptap:focus-visible') ||
     !forcedColors.includes('outline: 2px solid Highlight')
@@ -144,4 +150,20 @@ function readCssBlock(source, header) {
     }
 
     throw new Error(`Built stylesheet has an unclosed ${header} block`);
+}
+
+function readCssBlocks(source, header) {
+    const blocks = [];
+    let remainingSource = source;
+
+    while (remainingSource.includes(header)) {
+        const headerIndex = remainingSource.indexOf(header);
+        blocks.push(readCssBlock(remainingSource, header));
+        remainingSource = remainingSource.slice(headerIndex + header.length);
+    }
+
+    if (blocks.length === 0) {
+        throw new Error(`Built stylesheet is missing ${header}`);
+    }
+    return blocks;
 }

@@ -55,6 +55,7 @@
     "@tiptap/starter-kit": "^3.29.0"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.118",
     "@microsoft/api-extractor": "^7.58.9",
     "@storybook/vue3-vite": "^10.5.3",
     "@types/node": "^26.1.1",
@@ -65,6 +66,7 @@
     "ropav": "workspace:^",
     "storybook": "^10.5.3",
     "typescript": "~6.0.3",
+    "unplugin-icons": "^23.0.1",
     "vite": "^8.1.5",
     "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.10",
