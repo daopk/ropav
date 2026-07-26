@@ -14,12 +14,19 @@
   }
 
   .rp-editor:focus-within {
-    border-color: var(--rp-color-primary-filled, #2563eb);
-    box-shadow: 0 0 0 1px var(--rp-color-primary-filled, #2563eb);
+    border-color: var(--rp-primary-color-filled, #2563eb);
+    box-shadow: 0 0 0 1px var(--rp-primary-color-filled, #2563eb);
   }
 
   .rp-editor[data-readonly] {
     background: var(--rp-color-default-hover, #f4f4f5);
+  }
+
+  .rp-editor__toolbar {
+    min-width: 0;
+    padding: var(--rp-spacing-2, 0.5rem);
+    background: var(--rp-color-default-hover, #f4f4f5);
+    border-block-end: var(--rp-border-width-thin, 1px) solid var(--rp-color-default-border, #d4d4d8);
   }
 
   .rp-editor__content {

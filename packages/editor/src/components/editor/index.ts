@@ -6,4 +6,9 @@ export type {
     EditorOutput,
     EditorPart,
     EditorProps,
+    EditorToolbarAction,
+    EditorToolbarActionState,
+    EditorToolbarBlock,
+    EditorToolbarSlotProps,
+    EditorToolbarState,
 } from './types';

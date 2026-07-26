@@ -25,6 +25,40 @@ const content = ref('<p>Hello from Tiptap.</p>');
 </script>
 ```
 
+The toolbar is enabled by default and includes paragraph and heading styles, inline formatting,
+lists, blockquote and code block controls, a horizontal rule action, and undo/redo. Hide it with
+`:toolbar="false"`:
+
+```vue
+<Editor v-model="content" :toolbar="false" />
+```
+
+The toolbar is hidden automatically when `:editable="false"`. Use `toolbarAriaLabel` to customize
+the accessible toolbar name.
+
+Replace the built-in controls with the `toolbar` slot. The slot exposes the Tiptap instance,
+reactive action state, and the same selection-preserving command runner used by the default
+toolbar:
+
+```vue
+<Editor v-model="content">
+  <template #toolbar="{ state, run }">
+    <button
+      type="button"
+      :aria-pressed="state.actions.bold.active"
+      :disabled="state.actions.bold.disabled"
+      @mousedown.prevent
+      @click="run('bold')"
+    >
+      Bold
+    </button>
+  </template>
+</Editor>
+```
+
+Controls for extensions that are not installed are omitted from the default toolbar. The toolbar
+slot can use the exposed Tiptap instance for extension-specific actions such as editing links.
+
 The default schema uses Tiptap's `StarterKit`. Pass `extensions` to replace that schema:
 
 ```vue
