@@ -5,7 +5,7 @@ import Alert from './alert.vue';
 import { alertColors, alertRadiuses, alertVariants } from './types';
 
 const meta = {
-    title: 'Components/Alert',
+    title: 'Components/Feedback/Alert',
     component: Alert as any,
     tags: ['autodocs'],
     argTypes: {

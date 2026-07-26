@@ -35,7 +35,7 @@ const items = [
 ] as const;
 
 const meta = {
-    title: 'Components/Accordion',
+    title: 'Components/Data Display/Accordion',
     component: Accordion as any,
     tags: ['autodocs'],
     argTypes: {

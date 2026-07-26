@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import Calendar from './calendar.vue';
 
 const meta = {
-    title: 'Components/Calendar',
+    title: 'Components/Forms/Calendar',
     component: Calendar as any,
     tags: ['autodocs'],
     args: {

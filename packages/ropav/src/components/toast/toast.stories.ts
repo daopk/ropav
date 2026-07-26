@@ -222,7 +222,7 @@ const PositionControls = defineComponent({
 });
 
 const meta = {
-    title: 'Components/Toast',
+    title: 'Components/Feedback/Toast',
     component: Toast as any,
     tags: ['autodocs'],
     parameters: {

@@ -11,7 +11,7 @@ import DialogTitle from './dialog-title.vue';
 import DialogTrigger from './dialog-trigger.vue';
 
 const meta = {
-    title: 'Components/Dialog',
+    title: 'Components/Overlays/Dialog',
     component: DialogRoot as any,
     tags: ['autodocs'],
     args: {

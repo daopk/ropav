@@ -8,7 +8,7 @@ const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/FileInput',
+    title: 'Components/Forms/File Input',
     component: FileInput as any,
     tags: ['autodocs'],
     argTypes: {

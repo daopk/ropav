@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import DatePicker from './date-picker.vue';
 
 const meta = {
-    title: 'Components/DatePicker',
+    title: 'Components/Forms/Date Picker',
     component: DatePicker as any,
     tags: ['autodocs'],
     args: {

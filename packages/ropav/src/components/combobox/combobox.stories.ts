@@ -22,7 +22,7 @@ const fruitOptions = [
 ];
 
 const meta = {
-    title: 'Components/Combobox',
+    title: 'Components/Forms/Combobox',
     component: Combobox as any,
     tags: ['autodocs'],
     argTypes: {

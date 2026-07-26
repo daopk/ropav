@@ -26,7 +26,7 @@ const storyWrapperStyle = {
 };
 
 const meta = {
-    title: 'Components/ColorSwatch',
+    title: 'Components/Data Display/Color Swatch',
     component: ColorSwatch as any,
     tags: ['autodocs'],
     argTypes: {

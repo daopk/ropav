@@ -15,7 +15,7 @@ import Switch from '../components/switch/switch.vue';
 import Textarea from '../components/textarea/textarea.vue';
 
 const meta = {
-    title: 'Contracts/Native form',
+    title: 'Contracts/Native Form',
     render: () => ({
         components: {
             Checkbox,

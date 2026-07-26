@@ -94,7 +94,7 @@ const variantVariables = componentColors.map((name) => ({
 }));
 
 const meta = {
-    title: 'Design Tokens/Colors',
+    title: 'Foundations/Colors',
     parameters: {
         controls: { disable: true },
     },

@@ -5,7 +5,7 @@ import Pagination from './pagination.vue';
 import { paginationColors, paginationRadiuses, paginationSizes } from './types';
 
 const meta = {
-    title: 'Components/Pagination',
+    title: 'Components/Navigation/Pagination',
     component: Pagination as any,
     tags: ['autodocs'],
     argTypes: {

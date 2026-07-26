@@ -6,7 +6,7 @@ import Badge from './badge.vue';
 import { badgeColors, badgeRadiuses, badgeSizes, badgeVariants } from './types';
 
 const meta = {
-    title: 'Components/Badge',
+    title: 'Components/Data Display/Badge',
     component: Badge as any,
     tags: ['autodocs'],
     argTypes: {

@@ -42,7 +42,7 @@ function expectPlacementGeometry(
 }
 
 const meta = {
-    title: 'Components/Popover',
+    title: 'Components/Overlays/Popover',
     component: Popover as any,
     tags: ['autodocs'],
     argTypes: {

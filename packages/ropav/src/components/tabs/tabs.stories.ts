@@ -121,7 +121,7 @@ const variants = ['line', 'pills', 'outline'] as const;
 const tabSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/Tabs',
+    title: 'Components/Navigation/Tabs',
     component: Tabs as any,
     tags: ['autodocs'],
     argTypes: {

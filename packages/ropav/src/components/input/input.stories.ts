@@ -10,7 +10,7 @@ const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/Input',
+    title: 'Components/Forms/Input',
     component: Input as any,
     tags: ['autodocs'],
     argTypes: {

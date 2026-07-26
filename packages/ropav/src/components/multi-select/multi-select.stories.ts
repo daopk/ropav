@@ -15,7 +15,7 @@ const fruitOptions = [
 ];
 
 const meta = {
-    title: 'Components/MultiSelect',
+    title: 'Components/Forms/Multi Select',
     component: MultiSelect as any,
     tags: ['autodocs'],
     argTypes: {

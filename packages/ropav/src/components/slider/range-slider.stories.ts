@@ -30,7 +30,7 @@ const verticalStoryWrapperStyle = {
 };
 
 const meta = {
-    title: 'Components/RangeSlider',
+    title: 'Components/Forms/Range Slider',
     component: RangeSlider as any,
     tags: ['autodocs'],
     argTypes: {

@@ -17,7 +17,7 @@ const stackedStoryWrapperStyle = {
 };
 
 const meta = {
-    title: 'Components/Progress',
+    title: 'Components/Feedback/Progress',
     component: Progress as any,
     tags: ['autodocs'],
     argTypes: {

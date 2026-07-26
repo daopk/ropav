@@ -39,7 +39,7 @@ const paddingExamples: Array<{ label: string; padding?: (typeof paddings)[number
 ];
 
 const meta = {
-    title: 'Components/Card',
+    title: 'Components/Data Display/Card',
     component: Card as any,
     tags: ['autodocs'],
     argTypes: {

@@ -57,7 +57,7 @@ const verticalStoryWrapperStyle = {
 };
 
 const meta = {
-    title: 'Components/Slider',
+    title: 'Components/Forms/Slider',
     component: Slider as any,
     tags: ['autodocs'],
     argTypes: {

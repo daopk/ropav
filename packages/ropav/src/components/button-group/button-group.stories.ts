@@ -8,7 +8,7 @@ import IconButton from '../icon-button/icon-button.vue';
 import ButtonGroup from './button-group.vue';
 
 const meta = {
-    title: 'Components/ButtonGroup',
+    title: 'Components/Actions/Button Group',
     component: ButtonGroup as any,
     tags: ['autodocs'],
     argTypes: {

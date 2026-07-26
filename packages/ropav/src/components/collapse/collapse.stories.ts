@@ -31,7 +31,7 @@ const headlessPanelStyle = {
 };
 
 const meta = {
-    title: 'Components/Collapse',
+    title: 'Components/Layout/Collapse',
     component: Collapse as any,
     tags: ['autodocs'],
     argTypes: {

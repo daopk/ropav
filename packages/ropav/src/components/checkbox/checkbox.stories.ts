@@ -9,7 +9,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'outline'] as const;
 
 const meta = {
-    title: 'Components/Checkbox',
+    title: 'Components/Forms/Checkbox',
     component: Checkbox as any,
     tags: ['autodocs'],
     argTypes: {

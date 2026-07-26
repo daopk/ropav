@@ -30,6 +30,27 @@ const preview: Preview = {
                 date: /Date$/i,
             },
         },
+        options: {
+            storySort: {
+                method: 'alphabetical',
+                locales: 'en-US',
+                order: [
+                    'Foundations',
+                    'Components',
+                    [
+                        'Actions',
+                        'Data Display',
+                        'Feedback',
+                        'Forms',
+                        'Layout',
+                        'Navigation',
+                        'Overlays',
+                    ],
+                    'Utilities',
+                    'Contracts',
+                ],
+            },
+        },
     },
     decorators: [
         withSynchronousThemeClass,

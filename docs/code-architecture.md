@@ -131,6 +131,22 @@ Test through the interface of the extracted module:
 Tests should assert observable behavior rather than private implementation details. Refactoring a
 module internally should not require rewriting its behavioral tests.
 
+### Storybook organization
+
+Keep component stories beside their component at
+`src/components/<name>/<name>.stories.ts`. Use human-readable Storybook titles with this hierarchy:
+
+```text
+Foundations/<name>
+Components/<category>/<name>
+Utilities/<name>
+Contracts/<name>
+```
+
+Component categories are `Actions`, `Data Display`, `Feedback`, `Forms`, `Layout`, `Navigation`,
+and `Overlays`. Foundations document design tokens, utilities demonstrate lower-level package
+capabilities, and contracts exercise cross-component or browser integration behavior.
+
 ## Contributor checklist
 
 Before opening a pull request:

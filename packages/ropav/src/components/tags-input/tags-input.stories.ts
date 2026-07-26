@@ -6,7 +6,7 @@ import TagsInput from './tags-input.vue';
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/TagsInput',
+    title: 'Components/Forms/Tags Input',
     component: TagsInput as any,
     tags: ['autodocs'],
     argTypes: {

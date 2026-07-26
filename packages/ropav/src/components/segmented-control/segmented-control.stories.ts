@@ -19,7 +19,7 @@ const options = [
 ];
 
 const meta = {
-    title: 'Components/SegmentedControl',
+    title: 'Components/Forms/Segmented Control',
     component: SegmentedControl as any,
     tags: ['autodocs'],
     argTypes: {

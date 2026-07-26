@@ -7,7 +7,7 @@ const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as c
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/Switch',
+    title: 'Components/Forms/Switch',
     component: Switch as any,
     tags: ['autodocs'],
     argTypes: {

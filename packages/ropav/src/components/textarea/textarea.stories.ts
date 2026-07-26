@@ -9,7 +9,7 @@ const resizes = ['none', 'vertical', 'both'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 const meta = {
-    title: 'Components/Textarea',
+    title: 'Components/Forms/Textarea',
     component: Textarea as any,
     tags: ['autodocs'],
     argTypes: {

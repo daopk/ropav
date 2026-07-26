@@ -7,7 +7,7 @@ const placements = ['top', 'right', 'bottom', 'left'] as const;
 const colors = ['blue', 'violet', 'green', 'orange', 'red', 'cyan', 'gray'] as const;
 
 const meta = {
-    title: 'Components/Tooltip',
+    title: 'Components/Overlays/Tooltip',
     component: Tooltip as any,
     tags: ['autodocs'],
     argTypes: {

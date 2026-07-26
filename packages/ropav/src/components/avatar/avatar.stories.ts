@@ -7,7 +7,7 @@ const portraitUrl =
     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80';
 
 const meta = {
-    title: 'Components/Avatar',
+    title: 'Components/Data Display/Avatar',
     component: Avatar as any,
     tags: ['autodocs'],
     argTypes: {

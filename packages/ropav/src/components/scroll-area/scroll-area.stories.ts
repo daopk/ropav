@@ -24,7 +24,7 @@ interface ScrollAreaInstance {
 }
 
 const meta = {
-    title: 'Components/ScrollArea',
+    title: 'Components/Layout/Scroll Area',
     component: ScrollArea as any,
     tags: ['autodocs'],
     argTypes: {

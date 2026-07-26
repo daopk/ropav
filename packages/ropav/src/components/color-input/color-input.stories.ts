@@ -49,7 +49,7 @@ function isColorPickerFormat(value: string): value is ColorPickerFormat {
 }
 
 const meta = {
-    title: 'Components/ColorInput',
+    title: 'Components/Forms/Color Input',
     component: ColorInput as any,
     tags: ['autodocs'],
     argTypes: {

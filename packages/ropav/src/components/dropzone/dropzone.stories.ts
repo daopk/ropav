@@ -8,7 +8,7 @@ const radii = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const sizes = ['sm', 'md', 'lg'] as const;
 
 const meta = {
-    title: 'Components/Dropzone',
+    title: 'Components/Forms/Dropzone',
     component: Dropzone as any,
     tags: ['autodocs'],
     argTypes: {

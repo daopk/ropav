@@ -10,7 +10,7 @@ const sizes = ['sm', 'md', 'lg', 'xl', 'full'] as const;
 const roles = ['dialog', 'alertdialog'] as const;
 
 const meta = {
-    title: 'Components/Modal',
+    title: 'Components/Overlays/Modal',
     component: Modal as any,
     tags: ['autodocs'],
     argTypes: {

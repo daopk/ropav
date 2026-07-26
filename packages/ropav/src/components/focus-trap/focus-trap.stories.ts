@@ -6,7 +6,7 @@ import FocusTrap from './focus-trap.vue';
 import type { FocusTrapProps } from './types';
 
 const meta = {
-    title: 'Components/FocusTrap',
+    title: 'Utilities/Focus Trap',
     component: FocusTrap as any,
     tags: ['autodocs'],
     argTypes: {

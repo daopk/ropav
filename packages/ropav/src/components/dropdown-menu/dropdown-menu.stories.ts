@@ -156,7 +156,7 @@ function isStoryEventInsideDropdownMenu(event: MouseEvent) {
 }
 
 const meta = {
-    title: 'Components/DropdownMenu',
+    title: 'Components/Navigation/Dropdown Menu',
     component: DropdownMenu as any,
     tags: ['autodocs'],
     argTypes: {

@@ -28,7 +28,7 @@ const colorExamples = [
 ];
 
 const meta = {
-    title: 'Components/Overlay',
+    title: 'Components/Overlays/Overlay',
     component: Overlay as any,
     tags: ['autodocs'],
     argTypes: {

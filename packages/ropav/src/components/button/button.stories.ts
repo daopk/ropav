@@ -10,7 +10,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const variants = ['solid', 'subtle', 'surface', 'outline', 'ghost', 'plain'] as const;
 
 const meta = {
-    title: 'Components/Button',
+    title: 'Components/Actions/Button',
     component: Button as any,
     tags: ['autodocs'],
     argTypes: {

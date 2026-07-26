@@ -173,7 +173,7 @@ const cascadeCases = [
 ] as const;
 
 const meta = {
-    title: 'Contracts/Cascade layers',
+    title: 'Contracts/Cascade Layers',
     parameters: {
         controls: { disable: true },
         layout: 'fullscreen',

@@ -65,7 +65,7 @@ function isColorPickerFormat(value: string): value is ColorPickerFormat {
 }
 
 const meta = {
-    title: 'Components/ColorPicker',
+    title: 'Components/Forms/Color Picker',
     component: ColorPicker as any,
     tags: ['autodocs'],
     argTypes: {

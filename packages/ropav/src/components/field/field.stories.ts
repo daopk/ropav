@@ -10,7 +10,7 @@ import Textarea from '../textarea/textarea.vue';
 import Field from './field.vue';
 
 const meta = {
-    title: 'Components/Field',
+    title: 'Components/Forms/Field',
     component: Field as any,
     tags: ['autodocs'],
     argTypes: {

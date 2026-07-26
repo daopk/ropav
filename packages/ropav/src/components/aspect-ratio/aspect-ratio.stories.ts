@@ -13,7 +13,7 @@ const ratioExamples = [
 ];
 
 const meta = {
-    title: 'Components/AspectRatio',
+    title: 'Components/Layout/Aspect Ratio',
     component: AspectRatio as any,
     tags: ['autodocs'],
     argTypes: {

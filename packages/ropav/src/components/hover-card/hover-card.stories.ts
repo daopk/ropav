@@ -5,7 +5,7 @@ import HoverCard from './hover-card.vue';
 import { hoverCardPlacements } from './types';
 
 const meta = {
-    title: 'Components/HoverCard',
+    title: 'Components/Overlays/Hover Card',
     component: HoverCard as any,
     tags: ['autodocs'],
     argTypes: {

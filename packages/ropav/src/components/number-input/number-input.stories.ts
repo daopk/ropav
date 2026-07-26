@@ -9,7 +9,7 @@ const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const textAlignments = ['left', 'center', 'right'] as const;
 
 const meta = {
-    title: 'Components/NumberInput',
+    title: 'Components/Forms/Number Input',
     component: NumberInput as any,
     tags: ['autodocs'],
     argTypes: {
