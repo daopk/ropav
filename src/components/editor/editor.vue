@@ -1,16 +1,17 @@
 <template>
     <div v-bind="rootAttrs">
-        <div v-if="showToolbar" v-bind="toolbarAttrs" role="toolbar" :aria-label="toolbarAriaLabel">
+        <Toolbar v-if="showToolbar" v-bind="toolbarAttrs" :aria-label="toolbarAriaLabel">
             <slot name="toolbar" v-bind="toolbarSlotProps">
                 <EditorToolbar :state="toolbarState" :run="runToolbarAction" />
             </slot>
-        </div>
+        </Toolbar>
         <div ref="host" v-bind="contentAttrs"></div>
     </div>
 </template>
 
 <script setup lang="ts" vapor>
 import { StarterKit } from '@tiptap/starter-kit';
+import { Toolbar } from 'ropav';
 import { computed, shallowRef, useAttrs } from 'vue';
 
 import EditorToolbar from './editor-toolbar.vue';
