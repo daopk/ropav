@@ -15,12 +15,16 @@ Package dependencies point from specialized modules to foundational modules:
 ```text
 @ropav/editor
     -> ropav
+
+@ropav/table
+    -> ropav
 ```
 
-`ropav` must not import `@ropav/editor`. Cross-package code is consumed through a package interface,
-never through relative imports into another package's source. Use pnpm's `workspace:` protocol for
-local package dependencies and keep the workspace graph acyclic. The workspace contract runner in
-`scripts/verify-workspace-contracts.mjs` enforces these rules for every publishable package.
+`ropav` must not import `@ropav/editor` or `@ropav/table`. Cross-package code is consumed through a
+package interface, never through relative imports into another package's source. Use pnpm's
+`workspace:` protocol for local package dependencies and keep the workspace graph acyclic. The
+workspace contract runner in `scripts/verify-workspace-contracts.mjs` enforces these rules for every
+publishable package.
 
 The `@ropav/editor` module integrates Tiptap through `@tiptap/core`, mounting the editor
 directly into an element owned by a Vapor SFC. Production source must not use `@tiptap/vue-3`,
@@ -28,6 +32,10 @@ because its Vue renderer relies on VDOM interfaces that violate this repository'
 contract. Create or mount the editor only after the host element is available, and call
 `editor.destroy()` from `onBeforeUnmount`. Custom node and mark views must also remain DOM-native;
 do not use `VueNodeViewRenderer`.
+
+The `@ropav/table` module integrates `@tanstack/table-core` behind its own column and sorting
+interface. Production source must not use `@tanstack/vue-table`, because dynamic Vue cell renderers
+rely on VDOM interfaces. Custom markup crosses the package seam through compiled Vapor slots.
 
 ## Module seams
 

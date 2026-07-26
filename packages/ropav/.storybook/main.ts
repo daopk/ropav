@@ -4,6 +4,7 @@ const config: StorybookConfig = {
     stories: [
         '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
         '../../editor/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+        '../../table/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     ],
     addons: [
         '@storybook/addon-a11y',

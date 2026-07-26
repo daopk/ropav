@@ -68,6 +68,7 @@ const layerRules = [
 const workspaceDependencyPolicy = new Map([
     ['ropav', new Set()],
     ['@ropav/editor', new Set(['ropav'])],
+    ['@ropav/table', new Set(['ropav'])],
 ]);
 
 export function verifyWorkspaceContracts(workspaceRoot, options = {}) {

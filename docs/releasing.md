@@ -51,7 +51,8 @@ publish token to the workflow.
 ## First publish of a new package
 
 npm requires a package to exist before it can have a Trusted Publisher. The first version of a new
-package, including `@ropav/editor`, therefore needs a one-time maintainer-authenticated bootstrap:
+package, including `@ropav/editor` and `@ropav/table`, therefore needs a one-time
+maintainer-authenticated bootstrap:
 
 1. Confirm ownership of the npm scope and merge the publishable package on `main` with an empty
    changeset. The OIDC release job may remain red until the bootstrap is complete.
@@ -59,7 +60,7 @@ package, including `@ropav/editor`, therefore needs a one-time maintainer-authen
    the initial version:
 
    ```bash
-   pnpm --filter @ropav/editor publish --access public
+   pnpm --filter <package-name> publish --access public
    ```
 
 3. From the same commit, reconcile and push the package tag:

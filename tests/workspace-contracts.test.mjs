@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('workspace contracts', () => {
-    it('accepts the declared editor-to-ropav direction and direct Tiptap core usage', () => {
+    it('accepts the declared specialized-package directions', () => {
         const root = createWorkspace();
         createPackage(
             root,
@@ -43,6 +43,23 @@ describe('workspace contracts', () => {
             {
                 'src/components/editor/editor.vue': vaporSfc(
                     'import { Editor } from "@tiptap/core";\nconst editor = new Editor({ element: null });',
+                ),
+            },
+        );
+        createPackage(
+            root,
+            {
+                dependencies: {
+                    '@tanstack/table-core': '^8.0.0',
+                    ropav: 'workspace:^',
+                },
+                name: '@ropav/table',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/components/table/table.vue': vaporSfc(
+                    'import { createTable } from "@tanstack/table-core";\nconst table = createTable;',
                 ),
             },
         );

@@ -167,6 +167,58 @@ importers:
         specifier: ^3.3.8
         version: 3.3.8(typescript@6.0.3)
 
+  packages/table:
+    dependencies:
+      '@tanstack/table-core':
+        specifier: ^8.21.3
+        version: 8.21.3
+    devDependencies:
+      '@microsoft/api-extractor':
+        specifier: ^7.58.9
+        version: 7.58.9(@types/node@26.1.1)
+      '@storybook/vue3-vite':
+        specifier: ^10.5.3
+        version: 10.5.3(esbuild@0.28.1)(storybook@10.5.3(prettier@3.9.6)(react@19.2.4))(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.6.0-rc.2(typescript@6.0.3))
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.1.1
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.8
+        version: 6.0.8(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.6.0-rc.2(typescript@6.0.3))
+      '@vue/compiler-vapor':
+        specifier: 3.6.0-rc.2
+        version: 3.6.0-rc.2
+      '@vue/tsconfig':
+        specifier: ^0.9.1
+        version: 0.9.1(typescript@6.0.3)(vue@3.6.0-rc.2(typescript@6.0.3))
+      jsdom:
+        specifier: ^29.1.1
+        version: 29.1.1
+      ropav:
+        specifier: workspace:^
+        version: link:../ropav
+      storybook:
+        specifier: ^10.5.3
+        version: 10.5.3(prettier@3.9.6)(react@19.2.4)
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.5
+        version: 8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0)
+      vite-plugin-dts:
+        specifier: ^5.0.3
+        version: 5.0.3(@microsoft/api-extractor@7.58.9(@types/node@26.1.1))(@vue/language-core@3.3.8)(esbuild@0.28.1)(rolldown@1.1.5)(supports-color@8.1.1)(typescript@6.0.3)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@26.1.1)(@vitest/browser-playwright@4.1.10)(jsdom@29.1.1)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))
+      vue:
+        specifier: 3.6.0-rc.2
+        version: 3.6.0-rc.2(typescript@6.0.3)
+      vue-tsc:
+        specifier: ^3.3.8
+        version: 3.3.8(typescript@6.0.3)
+
 packages:
 
   '@adobe/css-tools@4.5.0':
@@ -1496,6 +1548,10 @@ packages:
     peerDependencies:
       storybook: ^10.5.3
       vue: ^3.0.0
+
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -4732,6 +4788,8 @@ snapshots:
       type-fest: 5.8.0
       vue: 3.6.0-rc.2(typescript@6.0.3)
       vue-component-type-helpers: 3.3.8
+
+  '@tanstack/table-core@8.21.3': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:
