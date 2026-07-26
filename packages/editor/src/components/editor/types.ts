@@ -37,7 +37,7 @@ export interface EditorProps extends StylesApiProps<EditorPart> {
     toolbar?: boolean;
     toolbarAriaLabel?: string;
     autofocus?: TiptapEditorOptions['autofocus'];
-    editorProps?: TiptapEditorOptions['editorProps'];
+    editorProps?: Omit<NonNullable<TiptapEditorOptions['editorProps']>, 'editable'>;
     injectCSS?: boolean;
 }
 

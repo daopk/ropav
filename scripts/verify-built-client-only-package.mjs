@@ -20,7 +20,7 @@ export async function verifyBuiltClientOnlyPackage({ packageRoot, policy }) {
     if (!clientTarget) {
         throw new Error(`${manifest.name} must define a browser or import package export`);
     }
-    const nodeTarget = readConditionalTarget(rootExport, ['node']);
+    const nodeTarget = readConditionalTarget(rootExport, ['node'], ['node', 'import', 'default']);
     if (!nodeTarget) throw new Error(`${manifest.name} must define a Node package export`);
 
     const clientJavaScript = readOutput(resolvedPackageRoot, clientTarget);
@@ -99,14 +99,20 @@ function collectOutputTargets(value, targets) {
     for (const item of Object.values(value)) collectOutputTargets(item, targets);
 }
 
-function readConditionalTarget(value, conditions) {
-    if (typeof value === 'string') return value;
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
-    for (const condition of conditions) {
-        const target = readConditionalTarget(value[condition], conditions);
-        if (target) return target;
+function readConditionalTarget(value, conditions, nestedConditions = conditions) {
+    return readTarget(value, conditions);
+
+    function readTarget(candidate, candidateConditions) {
+        if (typeof candidate === 'string') return candidate;
+        if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
+            return undefined;
+        }
+        for (const condition of candidateConditions) {
+            const target = readTarget(candidate[condition], nestedConditions);
+            if (target) return target;
+        }
+        return undefined;
     }
-    return undefined;
 }
 
 function readOutput(packageRoot, target) {

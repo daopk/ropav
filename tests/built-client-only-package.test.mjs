@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 describe('built client-only package verification', () => {
-    it('verifies outputs, Node resolution, the package interface, and the client-only guard', async () => {
+    it('verifies nested conditional outputs, Node resolution, the interface, and the client-only guard', async () => {
         const packageRoot = createPackage();
         const checkedEntries = [];
 
@@ -115,18 +115,27 @@ function createPackage(
     const packageRoot = mkdtempSync(join(tmpdir(), 'ropav-built-client-only-'));
     fixtureRoots.push(packageRoot);
 
+    const browserConditions = {
+        types: './dist/index.d.ts',
+        default: './dist/index.js',
+    };
+    const nodeConditions = {
+        types: './dist/index.node.d.ts',
+        default: './dist/index.node.js',
+    };
     const rootConditions = importBeforeNode
         ? {
-              types: './dist/index.d.ts',
-              browser: './dist/index.js',
+              browser: browserConditions,
               import: './dist/index.js',
-              node: './dist/index.node.js',
+              node: nodeConditions,
+              types: './dist/index.d.ts',
+              default: './dist/index.js',
           }
         : {
+              browser: browserConditions,
+              node: nodeConditions,
               types: './dist/index.d.ts',
-              browser: './dist/index.js',
-              node: './dist/index.node.js',
-              import: './dist/index.js',
+              default: './dist/index.js',
           };
     writeFiles(packageRoot, {
         'package.json': JSON.stringify({
@@ -143,6 +152,10 @@ function createPackage(
             },
         }),
         'dist/index.d.ts': 'export declare const Widget: { setup(): void };',
+        'dist/index.node.d.ts': [
+            'export declare const Widget: { setup(): never };',
+            'export declare const widgetParts: readonly [];',
+        ].join('\n'),
         'dist/index.js': 'import { ref } from "vue"; export const Widget = ref;',
         'dist/index.node.js': 'export { Widget, widgetParts } from "./node-api.js";',
         'dist/node-api.js': [

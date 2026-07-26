@@ -63,7 +63,6 @@ const meta = {
                     v-bind="args"
                     v-model="value"
                     aria-label="Rich text editor"
-                    aria-multiline="true"
                 />
                 <details>
                     <summary>v-model value</summary>

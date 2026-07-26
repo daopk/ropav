@@ -25,10 +25,16 @@
   },
   "exports": {
     ".": {
+      "browser": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "node": {
+        "types": "./dist/index.node.d.ts",
+        "default": "./dist/index.node.js"
+      },
       "types": "./dist/index.d.ts",
-      "browser": "./dist/index.js",
-      "node": "./dist/index.node.js",
-      "import": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./editor.css": "./dist/editor.css"
   },
@@ -36,9 +42,10 @@
     "build": "pnpm run typecheck && vite build",
     "test": "vitest run",
     "test:bundle:built": "node scripts/check-package-bundle.mjs",
+    "test:consumer-types:built": "tsc -p tests/fixtures/consumer-types/tsconfig.bundler.json && tsc -p tests/fixtures/consumer-types/tsconfig.browser.json && tsc -p tests/fixtures/consumer-types/tsconfig.nodenext.json",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
     "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
-    "verify": "pnpm run typecheck:storybook && pnpm run test && pnpm run build && pnpm run test:bundle:built"
+    "verify": "pnpm run typecheck:storybook && pnpm run test && pnpm run build && pnpm run test:bundle:built && pnpm run test:consumer-types:built"
   },
   "peerDependencies": {
     "ropav": "workspace:^",
