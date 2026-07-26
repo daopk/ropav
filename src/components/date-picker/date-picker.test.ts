@@ -484,9 +484,14 @@ describe('DatePicker', () => {
         await flush();
         expect(native.value).toBe('07/14/2026');
 
+        input(native, 'not a date');
+        await flush();
+        expect(native.getAttribute('aria-invalid')).toBe('true');
+
         form.reset();
         await flush();
         expect(native.value).toBe('07/10/2026');
+        expect(native.getAttribute('aria-invalid')).toBeNull();
         expect(native.name).toBe('booking-date');
         expect(native.required).toBe(true);
 

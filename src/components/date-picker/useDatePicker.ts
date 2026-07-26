@@ -1,27 +1,9 @@
-import {
-    computed,
-    nextTick,
-    shallowRef,
-    watch,
-    type ComputedRef,
-    type InputHTMLAttributes,
-    type ShallowRef,
-} from 'vue';
-import { useControllableValue } from '@/composables/useControllableValue';
-import { useFormControl } from '@/internal/composables/useFormControl';
-import { useControlState } from '@/internal/composables/useControlState';
+import { computed, nextTick, type InputHTMLAttributes } from 'vue';
 import { bem } from '@/utils/bem';
-import { normalizeDate, toLocalDate } from '@/utils/date';
-import { isDateUnavailable } from '@/utils/dateAvailability';
 import { isNodeWithinElement } from '@/utils/dom/events';
 import type { PopoverSlotProps } from '../popover/types';
-import {
-    defaultDatePickerFormat,
-    formatDatePickerValue,
-    normalizeDatePickerValue,
-    parseDatePickerValue,
-} from './datePickerModel';
 import type { DatePickerProps } from './types';
+import { useDatePickerValueState } from './useDatePickerValueState';
 
 interface DatePickerEmitters {
     value: (value: Date | null) => void;
@@ -34,64 +16,30 @@ interface DatePickerElements {
     focusCalendar: () => void;
 }
 
-function isDatePickerInputEditable(props: Readonly<DatePickerProps>, disabled: boolean) {
-    return Boolean(props.allowInput && !disabled && !props.readonly);
-}
-
-function isDatePickerDateUnavailable(date: Date, props: Readonly<DatePickerProps>) {
-    return isDateUnavailable(date, {
-        min: props.min,
-        max: props.max,
-        disabledDates: props.disabledDates,
-    });
-}
-
-function watchDatePickerInput(
-    props: Readonly<DatePickerProps>,
-    selectedDate: ComputedRef<Date | null>,
-    inputValue: ShallowRef<string>,
-    hasInvalidInput: ShallowRef<boolean>,
-    formatValue: (value: Date | null) => string,
-) {
-    watch(
-        [
-            () => selectedDate.value?.getTime(),
-            () => props.locale,
-            () => props.dateFormat,
-            () => props.formatDate,
-        ],
-        () => {
-            inputValue.value = formatValue(selectedDate.value);
-            hasInvalidInput.value = false;
-        },
-        { flush: 'sync' },
-    );
-}
-
 export function useDatePicker(
     props: Readonly<DatePickerProps>,
     emit: DatePickerEmitters,
     elements: DatePickerElements,
 ) {
-    const control = useControlState(props);
-    const initialValue = normalizeDatePickerValue(props.defaultValue);
-    const controllable = useControllableValue<Date | null>({
-        modelValue: () => props.modelValue,
-        defaultValue: () => initialValue,
+    const valueState = useDatePickerValueState({
+        props,
+        getInput: elements.getInput,
         onChange(value) {
-            const normalized = normalizeDate(value);
-            emit.value(normalized);
-            emit.change(normalized);
+            emit.value(value);
+            emit.change(value);
         },
     });
-    const selectedDate = computed(() => normalizeDatePickerValue(controllable.value.value));
-    const inputValue = shallowRef(formatValue(selectedDate.value));
-    const hasInvalidInput = shallowRef(false);
-    const isInvalid = computed(() => control.invalid || hasInvalidInput.value);
-    const effectiveValidationMessage = computed(() => {
-        if (props.validationMessage !== undefined) return props.validationMessage;
-        return hasInvalidInput.value ? props.invalidDateMessage : undefined;
-    });
+    const {
+        control,
+        selectedDate,
+        inputValue,
+        isInputEditable,
+        isInvalid,
+        validationMessage: effectiveValidationMessage,
+        canClear,
+        updateInput: onInputUpdate,
+        blurInput: onInputBlur,
+    } = valueState;
     const rootClass = computed(() =>
         bem('rp-date-picker', {
             [`size-${props.size}`]: Boolean(props.size),
@@ -102,78 +50,10 @@ export function useDatePicker(
             valid: control.valid && !isInvalid.value,
         }),
     );
-    const canClear = computed(
-        () =>
-            Boolean(props.clearable && selectedDate.value) && !control.disabled && !props.readonly,
-    );
     let openPicker: PopoverSlotProps['open'] | undefined;
     let closePicker: PopoverSlotProps['close'] | undefined;
     let suppressFocusOpen = false;
     let pointerDownStartedFocused: boolean | undefined;
-
-    watchDatePickerInput(props, selectedDate, inputValue, hasInvalidInput, formatValue);
-
-    function formatValue(value: Date | null) {
-        if (!value) return '';
-        return (
-            props.formatDate?.(toLocalDate(value)) ??
-            formatDatePickerValue(value, props.locale, props.dateFormat ?? defaultDatePickerFormat)
-        );
-    }
-
-    function parseValue(value: string) {
-        const parsed = props.parseDate
-            ? props.parseDate(value)
-            : parseDatePickerValue(
-                  value,
-                  props.locale,
-                  props.dateFormat ?? defaultDatePickerFormat,
-              );
-        return normalizeDate(parsed);
-    }
-
-    function reconcileControlledInput() {
-        if (!controllable.isControlled.value) return false;
-        void nextTick(() => {
-            inputValue.value = formatValue(selectedDate.value);
-        });
-        return true;
-    }
-
-    function setSelectedDate(value: Date | null) {
-        const normalized = normalizeDate(value);
-        controllable.setValue(normalized);
-        if (!reconcileControlledInput()) inputValue.value = formatValue(normalized);
-        hasInvalidInput.value = false;
-    }
-
-    function onInputUpdate(value: string) {
-        if (!props.allowInput || control.disabled || props.readonly) return;
-        inputValue.value = value;
-
-        if (!value.trim()) {
-            setSelectedDate(null);
-            return;
-        }
-
-        const parsed = parseValue(value);
-        hasInvalidInput.value = !parsed || isDatePickerDateUnavailable(parsed, props);
-        if (!hasInvalidInput.value && parsed) {
-            controllable.setValue(parsed);
-            reconcileControlledInput();
-        }
-    }
-
-    function onInputBlur() {
-        if (!props.allowInput || !inputValue.value.trim()) return;
-        if (inputValue.value === formatValue(selectedDate.value)) {
-            hasInvalidInput.value = false;
-            return;
-        }
-        const parsed = parseValue(inputValue.value);
-        hasInvalidInput.value = !parsed || isDatePickerDateUnavailable(parsed, props);
-        if (!hasInvalidInput.value && parsed) inputValue.value = formatValue(parsed);
-    }
 
     function getInputTriggerAttrs(slotProps: unknown): InputHTMLAttributes {
         const popover = slotProps as PopoverSlotProps;
@@ -192,22 +72,15 @@ export function useDatePicker(
             'aria-controls': trigger['aria-controls'],
             'aria-expanded': trigger['aria-expanded'],
             'aria-haspopup': trigger['aria-haspopup'],
-            'aria-readonly': isDatePickerInputEditable(props, control.disabled)
-                ? attrs['aria-readonly']
-                : true,
+            'aria-readonly': isInputEditable.value ? attrs['aria-readonly'] : true,
             autocomplete: attrs.autocomplete ?? 'off',
-            inputmode: isDatePickerInputEditable(props, control.disabled)
-                ? attrs.inputmode
-                : 'none',
+            inputmode: isInputEditable.value ? attrs.inputmode : 'none',
             onBeforeinput(event) {
-                if (!isDatePickerInputEditable(props, control.disabled)) event.preventDefault();
+                if (!isInputEditable.value) event.preventDefault();
                 attrs.onBeforeinput?.(event);
             },
             onInput(event) {
-                if (
-                    !isDatePickerInputEditable(props, control.disabled) &&
-                    event.currentTarget instanceof HTMLInputElement
-                ) {
+                if (!isInputEditable.value && event.currentTarget instanceof HTMLInputElement) {
                     event.currentTarget.value = inputValue.value;
                 }
                 attrs.onInput?.(event);
@@ -271,16 +144,10 @@ export function useDatePicker(
     }
 
     function selectCalendarDate(value: Date) {
-        if (control.disabled || props.readonly) return;
-        setSelectedDate(value);
+        if (!valueState.selectDate(value)) return;
         if (props.closeOnSelect === false) return;
         focusInputWithoutOpening();
         closePicker?.();
-    }
-
-    function clearSelection() {
-        if (!canClear.value) return;
-        setSelectedDate(null);
     }
 
     function clearFromControl(event: MouseEvent) {
@@ -288,7 +155,7 @@ export function useDatePicker(
         const shouldRestoreFocus =
             clearButton instanceof HTMLElement &&
             clearButton.ownerDocument.activeElement === clearButton;
-        clearSelection();
+        valueState.clear();
         if (shouldRestoreFocus) focusInputWithoutOpening();
     }
 
@@ -297,28 +164,9 @@ export function useDatePicker(
         openPicker?.();
     }
 
-    function resetValue() {
-        controllable.resetValue(initialValue);
-        inputValue.value = formatValue(initialValue);
-        hasInvalidInput.value = false;
-    }
-
     function onOpenUpdate(open: boolean) {
         emit.open(open);
     }
-
-    useFormControl({
-        elements: () => [elements.getInput()],
-        isControlled: () => controllable.isControlled.value,
-        initializeDefault(element) {
-            (element as HTMLInputElement).defaultValue = formatValue(initialValue);
-        },
-        validationMessage: () => effectiveValidationMessage.value,
-        readResetValue: resetValue,
-        syncControlledValue([element]) {
-            element.value = inputValue.value;
-        },
-    });
 
     return {
         control,
