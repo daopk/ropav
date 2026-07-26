@@ -19,6 +19,7 @@
                                 v-if="column.headerSlotProps.sortable"
                                 v-bind="getPartAttrs('sortButton', 'rp-table__sort-button')"
                                 type="button"
+                                :aria-label="getSortButtonLabel(column)"
                                 @click="column.headerSlotProps.toggle($event.shiftKey)"
                             >
                                 <span>{{ column.headerSlotProps.label }}</span>
@@ -104,13 +105,13 @@ const props = withDefaults(defineProps<TableProps<TData>>(), {
     emptyText: 'No data',
     loadingText: 'Loading',
     ariaLabel: undefined,
-    labelledby: undefined,
-    describedby: undefined,
+    ariaLabelledby: undefined,
+    ariaDescribedby: undefined,
 });
 
 const emit = defineEmits<{
     'update:sorting': [sorting: TableSortingState];
-    'sorting-change': [sorting: TableSortingState];
+    sortingChange: [sorting: TableSortingState];
 }>();
 
 const slots = defineSlots<{
@@ -137,7 +138,7 @@ const {
     multiSort: () => props.multiSort,
     onSortingChange(sorting) {
         emit('update:sorting', sorting);
-        emit('sorting-change', sorting);
+        emit('sortingChange', sorting);
     },
 });
 
@@ -152,8 +153,8 @@ const tableAttrs = computed(() => ({
     ...getPartAttrs('table', 'rp-table__table'),
     'aria-busy': props.loading || undefined,
     'aria-label': props.ariaLabel,
-    'aria-labelledby': props.labelledby,
-    'aria-describedby': props.describedby,
+    'aria-labelledby': props.ariaLabelledby,
+    'aria-describedby': props.ariaDescribedby,
 }));
 
 function getPartAttrs(part: TablePart, className: string) {
@@ -180,16 +181,24 @@ function getColumnAttrs(
 }
 
 function getAriaSort(column: TableViewColumn<TData>) {
-    if (!column.headerSlotProps.sortable) return undefined;
+    if (column.headerSlotProps.sortIndex !== 0) return undefined;
     if (column.headerSlotProps.sorted === 'asc') return 'ascending' as const;
     if (column.headerSlotProps.sorted === 'desc') return 'descending' as const;
-    return 'none' as const;
+    return undefined;
 }
 
 function getSortIndicator(column: TableViewColumn<TData>) {
-    if (column.headerSlotProps.sorted === 'asc') return '▲';
-    if (column.headerSlotProps.sorted === 'desc') return '▼';
+    const { sorted, sortIndex } = column.headerSlotProps;
+    if (sorted === 'asc') return `▲ ${sortIndex + 1}`;
+    if (sorted === 'desc') return `▼ ${sortIndex + 1}`;
     return '↕';
+}
+
+function getSortButtonLabel(column: TableViewColumn<TData>) {
+    const { label, sorted, sortIndex } = column.headerSlotProps;
+    if (!sorted) return `${label}, not sorted`;
+    const direction = sorted === 'asc' ? 'ascending' : 'descending';
+    return `${label}, sorted ${direction}, sort priority ${sortIndex + 1}`;
 }
 
 defineExpose({ nativeElement, clearSorting });

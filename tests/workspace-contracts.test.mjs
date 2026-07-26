@@ -67,6 +67,54 @@ describe('workspace contracts', () => {
         assert.deepEqual(verifyWorkspaceContracts(root), []);
     });
 
+    it('rejects the Vue TanStack adapter from the table manifest and production source', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                dependencies: {
+                    'tanstack-vue-adapter': 'npm:@tanstack/vue-table@^8.0.0',
+                },
+                devDependencies: {
+                    '@tanstack/vue-table': '^8.0.0',
+                },
+                name: '@ropav/table',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/components/table/useTable.ts': [
+                    'import { useVueTable } from "@tanstack/vue-table";',
+                    'export { FlexRender } from "@tanstack/vue-table/renderer";',
+                    'export const loadAdapter = () => import("@tanstack/vue-table/adapters");',
+                    'export const table = useVueTable;',
+                ].join('\n'),
+            },
+        );
+
+        const violations = verifyWorkspaceContracts(root).join('\n');
+        assert.match(
+            violations,
+            /@ropav\/table: devDependencies must use @tanstack\/table-core instead of @tanstack\/vue-table/,
+        );
+        assert.match(
+            violations,
+            /@ropav\/table: dependencies must use @tanstack\/table-core instead of @tanstack\/vue-table through npm alias "tanstack-vue-adapter"/,
+        );
+        for (const specifier of [
+            '@tanstack/vue-table',
+            '@tanstack/vue-table/adapters',
+            '@tanstack/vue-table/renderer',
+        ]) {
+            assert.match(
+                violations,
+                new RegExp(
+                    `@ropav/table/components/table/useTable\\.ts: import ${escapeRegExp(JSON.stringify(specifier))} violates the zero-VDOM TanStack Table contract`,
+                ),
+            );
+        }
+    });
+
     it('rejects component-local modules outside the canonical component directory', () => {
         const root = createWorkspace();
         createPackage(

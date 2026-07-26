@@ -12,6 +12,7 @@ const dependencyFields = [
     'peerDependencies',
 ];
 const forbiddenLocalModuleNames = new Set(['core', 'helpers', 'utils']);
+const forbiddenTableVueAdapter = '@tanstack/vue-table';
 const jsxSourceExtensions = new Set(['.jsx', '.tsx']);
 const productionSourceExtensions = new Set([
     '.cjs',
@@ -170,6 +171,21 @@ function verifyPackageManifest(packageRecord, packageRecordsByName) {
                     `${manifest.name}: ${field} must use @tiptap/core instead of @tiptap/vue-3`,
                 );
             }
+            const aliasesForbiddenTableVueAdapter =
+                typeof range === 'string' &&
+                (range === `npm:${forbiddenTableVueAdapter}` ||
+                    range.startsWith(`npm:${forbiddenTableVueAdapter}@`));
+            if (
+                manifest.name === '@ropav/table' &&
+                (dependency === forbiddenTableVueAdapter || aliasesForbiddenTableVueAdapter)
+            ) {
+                const alias = aliasesForbiddenTableVueAdapter
+                    ? ` through npm alias ${JSON.stringify(dependency)}`
+                    : '';
+                violations.push(
+                    `${manifest.name}: ${field} must use @tanstack/table-core instead of ${forbiddenTableVueAdapter}${alias}`,
+                );
+            }
             if (!packageNames.has(dependency)) continue;
 
             if (typeof range !== 'string' || !range.startsWith('workspace:')) {
@@ -283,6 +299,15 @@ function verifyModuleSpecifiers({
         if (specifier === '@tiptap/vue-3' || specifier.startsWith('@tiptap/vue-3/')) {
             violations.push(
                 `${manifest.name}/${relativeFile}: import ${JSON.stringify(specifier)} violates the zero-VDOM Tiptap contract`,
+            );
+        }
+        if (
+            manifest.name === '@ropav/table' &&
+            (specifier === forbiddenTableVueAdapter ||
+                specifier.startsWith(`${forbiddenTableVueAdapter}/`))
+        ) {
+            violations.push(
+                `${manifest.name}/${relativeFile}: import ${JSON.stringify(specifier)} violates the zero-VDOM TanStack Table contract`,
             );
         }
 

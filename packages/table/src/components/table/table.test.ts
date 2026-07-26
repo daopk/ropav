@@ -1,4 +1,4 @@
-import { defineComponent, h, nextTick, type Component } from 'vue';
+import { defineComponent, h, nextTick, reactive, ref, type Component } from 'vue';
 import { describe, expect, it, vi } from 'vitest';
 
 import { mountDomWithApp } from '../../../tests/utils/vue';
@@ -113,6 +113,23 @@ describe('Table', () => {
         ).toEqual(['true', '2026-07-27T00:00:00.000Z', '', 'record:true']);
     });
 
+    it('renders invalid dates as empty content instead of aborting the table', () => {
+        interface RecordRow {
+            id: string;
+            createdAt: Date;
+        }
+
+        const { container } = mountTable({
+            data: [{ id: 'invalid-date', createdAt: new Date('not-a-date') }],
+            columns: [
+                { accessorKey: 'createdAt', header: 'Created' },
+            ] satisfies TableColumn<RecordRow>[],
+            getRowId: (row: RecordRow) => row.id,
+        });
+
+        expect(container.querySelector('tbody td')?.textContent).toBe('');
+    });
+
     it('rejects duplicate column ids through the Table interface', () => {
         const duplicateColumns: TableColumn<Person>[] = [
             { accessorKey: 'name', header: 'Name' },
@@ -178,6 +195,132 @@ describe('Table', () => {
 
         expect(getRenderedNames(container)).toEqual(['Grace Hopper', 'Ada Lovelace']);
         expect(nameHeader?.getAttribute('aria-sort')).toBe('descending');
+    });
+
+    it('updates rendered values and sorting after an in-place reactive row change', async () => {
+        const data = reactive(
+            people.map((person) => ({ id: person.id, name: person.name, age: person.age })),
+        );
+        const { container } = mountTable({ data });
+        const sortButton = container.querySelector<HTMLButtonElement>(
+            '[data-column-id="name"] button',
+        );
+
+        sortButton?.click();
+        await nextTick();
+        expect(getRenderedNames(container)).toEqual(['Ada Lovelace', 'Grace Hopper']);
+
+        data[0].name = 'Aaron Hopper';
+        await nextTick();
+
+        expect(getRenderedNames(container)).toEqual(['Aaron Hopper', 'Ada Lovelace']);
+        expect(container.querySelector('tbody tr:first-child')?.getAttribute('data-row-id')).toBe(
+            'grace',
+        );
+    });
+
+    it('refreshes values and sorting when an accessor dependency changes', async () => {
+        const scale = ref(1);
+        const scoreColumns: TableColumn<Person>[] = [
+            {
+                id: 'score',
+                accessor: (person) => person.age * scale.value,
+                header: 'Score',
+                sortDescFirst: false,
+            },
+        ];
+        const { container } = mountTable({ columns: scoreColumns });
+
+        container.querySelector<HTMLButtonElement>('[data-column-id="score"] button')?.click();
+        await nextTick();
+        expect(getRenderedNames(container)).toEqual(['36', '85']);
+
+        scale.value = -1;
+        await nextTick();
+
+        expect(getRenderedNames(container)).toEqual(['-85', '-36']);
+        expect(container.querySelector('tbody tr:first-child')?.getAttribute('data-row-id')).toBe(
+            'grace',
+        );
+    });
+
+    it('re-sorts when a custom comparator dependency changes', async () => {
+        const reverse = ref(false);
+        const comparedColumns: TableColumn<Person>[] = [
+            {
+                accessorKey: 'name',
+                compare: (left, right) => {
+                    const result = String(left).localeCompare(String(right));
+                    return reverse.value ? -result : result;
+                },
+                header: 'Name',
+            },
+        ];
+        const { container } = mountTable({ columns: comparedColumns });
+
+        container.querySelector<HTMLButtonElement>('[data-column-id="name"] button')?.click();
+        await nextTick();
+        expect(getRenderedNames(container)).toEqual(['Ada Lovelace', 'Grace Hopper']);
+
+        reverse.value = true;
+        await nextTick();
+
+        expect(getRenderedNames(container)).toEqual(['Grace Hopper', 'Ada Lovelace']);
+    });
+
+    it('rebuilds row ids when the getRowId dependency changes', async () => {
+        const prefix = ref('');
+        const { container } = mountTable({
+            getRowId: (person: Person) => `${prefix.value}${person.id}`,
+        });
+
+        expect(container.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('grace');
+
+        prefix.value = 'person-';
+        await nextTick();
+
+        expect(container.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe(
+            'person-grace',
+        );
+    });
+
+    it('forgets uncontrolled sorting when its column is removed', async () => {
+        const dynamicColumns = reactive<TableColumn<Person>[]>([
+            { accessorKey: 'name', header: 'Name' },
+            { accessorKey: 'age', header: 'Age' },
+        ]);
+        const { container } = mountTable({ columns: dynamicColumns });
+
+        container.querySelector<HTMLButtonElement>('[data-column-id="name"] button')?.click();
+        await nextTick();
+        expect(getRenderedNames(container)).toEqual(['Ada Lovelace', 'Grace Hopper']);
+
+        dynamicColumns.splice(0, 1);
+        await nextTick();
+        dynamicColumns.unshift({ accessorKey: 'name', header: 'Name' });
+        await nextTick();
+
+        expect(
+            container.querySelector('[data-column-id="name"]')?.getAttribute('aria-sort'),
+        ).not.toBe('ascending');
+        expect(getRenderedNames(container)).toEqual(['Grace Hopper', 'Ada Lovelace']);
+    });
+
+    it('does not let an unsortable header toggle enter sorting state', async () => {
+        const update = vi.fn();
+        let actionsHeader: TableHeaderSlotProps<Person> | undefined;
+        const header = (slotProps: TableHeaderSlotProps<Person>) => {
+            if (slotProps.id === 'actions') actionsHeader = slotProps;
+            return slotProps.label;
+        };
+        mountTable({ 'onUpdate:sorting': update }, { header });
+
+        expect(actionsHeader?.sortable).toBe(false);
+        actionsHeader?.toggle();
+        await nextTick();
+
+        expect(update).not.toHaveBeenCalled();
+        expect(actionsHeader?.sorted).toBe(false);
     });
 
     it('keeps controlled sorting authoritative when an update is rejected', async () => {

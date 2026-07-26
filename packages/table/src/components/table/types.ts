@@ -73,8 +73,8 @@ export interface TableProps<TData> extends StylesApiProps<TablePart> {
     emptyText?: string;
     loadingText?: string;
     ariaLabel?: string;
-    labelledby?: string;
-    describedby?: string;
+    ariaLabelledby?: string;
+    ariaDescribedby?: string;
 }
 
 export interface TableHeaderSlotProps<TData> {

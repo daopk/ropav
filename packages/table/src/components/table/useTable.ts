@@ -64,22 +64,32 @@ export function useTable<TData>(options: Readonly<UseTableOptions<TData>>): UseT
         defaultValue: options.defaultSorting,
         onChange: options.onSortingChange,
     });
+    const initialColumns = resolveTableColumns(options.columns());
     const tableVersion = shallowRef({});
-    let sourceColumns = new Map<string, TableColumn<TData>>();
-    const table = createCoreTable(options, applySortingUpdate);
+    let sourceColumns = new Map(initialColumns.sourceById);
+    let sortableColumnIds = new Set(initialColumns.sortableIds);
+    const table = createCoreTable(options, initialColumns, applySortingUpdate);
 
     watchEffect(
         () => {
             const resolvedColumns = resolveTableColumns(options.columns());
             sourceColumns = new Map(resolvedColumns.sourceById);
+            sortableColumnIds = new Set(resolvedColumns.sortableIds);
+            const sorting = resolveSorting(controllableSorting.value.value, sortableColumnIds);
+            if (
+                !controllableSorting.isControlled.value &&
+                !sortingStatesEqual(sorting, controllableSorting.value.value)
+            ) {
+                controllableSorting.resetValue(sorting);
+            }
+
             table.setOptions((current) => ({
                 ...current,
-                data: [...options.data()],
                 columns: resolvedColumns.definitions,
                 state: {
                     ...table.initialState,
                     ...current.state,
-                    sorting: cloneSorting(controllableSorting.value.value),
+                    sorting,
                 },
                 getRowId: options.getRowId(),
                 manualSorting: options.manualSorting(),
@@ -118,6 +128,12 @@ export function useTable<TData>(options: Readonly<UseTableOptions<TData>>): UseT
     const columnsById = computed(() => new Map(columns.value.map((column) => [column.id, column])));
     const rows = computed(() => {
         void tableVersion.value;
+        // A fresh data identity invalidates TanStack's row, accessor, and sorting caches while
+        // Vue collects dependencies read by row callbacks and reactive row properties.
+        table.setOptions((current) => ({
+            ...current,
+            data: [...options.data()],
+        }));
         return table.getRowModel().rows.map((row) => {
             const viewColumns = columnsById.value;
             return {
@@ -147,9 +163,9 @@ export function useTable<TData>(options: Readonly<UseTableOptions<TData>>): UseT
     function applySortingUpdate(updater: Updater<TanStackSortingState>) {
         const nextSorting = functionalUpdate(
             updater,
-            cloneSorting(controllableSorting.value.value),
+            resolveSorting(controllableSorting.value.value, sortableColumnIds),
         );
-        controllableSorting.setValue(cloneSorting(nextSorting));
+        controllableSorting.setValue(resolveSorting(nextSorting, sortableColumnIds));
     }
 
     function clearSorting() {
@@ -157,7 +173,9 @@ export function useTable<TData>(options: Readonly<UseTableOptions<TData>>): UseT
     }
 
     function toggleSorting(columnId: string, multi = false) {
-        table.getColumn(columnId)?.toggleSorting(undefined, options.multiSort() && multi);
+        const column = table.getColumn(columnId);
+        if (!column?.getCanSort()) return;
+        column.toggleSorting(undefined, options.multiSort() && multi);
     }
 
     return {
@@ -170,21 +188,25 @@ export function useTable<TData>(options: Readonly<UseTableOptions<TData>>): UseT
 interface ResolvedTableColumns<TData> {
     readonly definitions: ColumnDef<TData, unknown>[];
     readonly sourceById: ReadonlyMap<string, TableColumn<TData>>;
+    readonly sortableIds: ReadonlySet<string>;
 }
 
 function resolveTableColumns<TData>(
     columns: readonly TableColumn<TData>[],
 ): ResolvedTableColumns<TData> {
     const sourceById = new Map<string, TableColumn<TData>>();
+    const sortableIds = new Set<string>();
     const definitions = columns.map((column) => {
         const id = resolveColumnId(column);
         if (sourceById.has(id)) throw new Error(`Duplicate table column id ${JSON.stringify(id)}`);
 
         sourceById.set(id, column);
-        return createColumnDefinition(column, id);
+        const definition = createColumnDefinition(column, id);
+        if (definition.enableSorting) sortableIds.add(id);
+        return definition;
     });
 
-    return { definitions, sourceById };
+    return { definitions, sourceById, sortableIds };
 }
 
 function resolveColumnId<TData>(column: TableColumn<TData>) {
@@ -232,19 +254,24 @@ function formatTableCell<TData>(
     if (value === null || value === undefined) return '';
     if (typeof value === 'string' || typeof value === 'number') return value;
     if (typeof value === 'boolean' || typeof value === 'bigint') return String(value);
-    if (value instanceof Date) return value.toISOString();
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? '' : value.toISOString();
     return '';
 }
 
 function createCoreTable<TData>(
     options: Readonly<UseTableOptions<TData>>,
+    columns: ResolvedTableColumns<TData>,
     onSortingChange: (updater: Updater<TanStackSortingState>) => void,
 ): TanStackTable<TData> {
-    const resolvedColumns = resolveTableColumns(options.columns());
     const tableOptions: TableOptionsResolved<TData> = {
         data: [...options.data()],
-        columns: resolvedColumns.definitions,
-        state: { sorting: cloneSorting(options.sorting() ?? options.defaultSorting()) },
+        columns: columns.definitions,
+        state: {
+            sorting: resolveSorting(
+                options.sorting() ?? options.defaultSorting(),
+                columns.sortableIds,
+            ),
+        },
         onStateChange: () => undefined,
         onSortingChange,
         renderFallbackValue: null,
@@ -257,8 +284,25 @@ function createCoreTable<TData>(
     return createTable(tableOptions);
 }
 
-function cloneSorting(sorting: TableSortingState) {
-    return sorting.map((sort) => ({ id: sort.id, desc: sort.desc }));
+function resolveSorting(
+    sorting: TableSortingState,
+    sortableColumnIds: ReadonlySet<string>,
+): TanStackSortingState {
+    const seen = new Set<string>();
+    return sorting.flatMap((sort) => {
+        if (!sortableColumnIds.has(sort.id) || seen.has(sort.id)) return [];
+        seen.add(sort.id);
+        return [{ id: sort.id, desc: sort.desc }];
+    });
+}
+
+function sortingStatesEqual(left: TableSortingState, right: TableSortingState) {
+    return (
+        left.length === right.length &&
+        left.every(
+            (sort, index) => sort.id === right[index]?.id && sort.desc === right[index]?.desc,
+        )
+    );
 }
 
 function getSourceColumn<TData>(
