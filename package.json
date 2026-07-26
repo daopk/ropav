@@ -30,11 +30,15 @@
     "./editor.css": "./dist/editor.css"
   },
   "scripts": {
+    "lint": "pnpm --workspace-root exec oxlint packages/editor",
+    "format:check": "pnpm --workspace-root exec oxfmt --check packages/editor",
+    "contracts:source": "node ../../scripts/verify-workspace-contracts.mjs --package @ropav/editor",
+    "contracts:bundle": "node ../../scripts/verify-workspace-contracts.mjs --bundles --package @ropav/editor",
     "build": "pnpm run typecheck && vite build",
     "test": "vitest run",
     "test:bundle:built": "node scripts/check-package-bundle.mjs",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
-    "verify": "pnpm run test && pnpm run build && pnpm run test:bundle:built",
+    "verify": "pnpm run lint && pnpm run format:check && pnpm run contracts:source && pnpm run test && pnpm run build && pnpm run test:bundle:built && pnpm run contracts:bundle",
     "prepublishOnly": "pnpm run verify"
   },
   "peerDependencies": {
