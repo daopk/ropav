@@ -1,3 +1,28 @@
+## [0.1.8](https://github.com/daopk/ropav/compare/v0.1.7...v0.1.8) (2026-07-26)
+
+### Features
+
+* **calendar:** add calendar component ([8a7fc6e](https://github.com/daopk/ropav/commit/8a7fc6e0a0071264bdd7446f66782011b3bdc523))
+* **combobox:** add combobox component ([a4119ef](https://github.com/daopk/ropav/commit/a4119ef1c7407e2ad3374c0434edcddc7383ef0d))
+* **date-picker:** add date picker component ([c2e2754](https://github.com/daopk/ropav/commit/c2e2754db8fbad4a877f4a470998c33ba9284c66))
+* **dropzone:** add dropzone component ([ccb3bb9](https://github.com/daopk/ropav/commit/ccb3bb914a2749963332c9dd07266dfe59aed30e))
+* **file-input:** add file input component ([523fa4e](https://github.com/daopk/ropav/commit/523fa4e8fe077891e62beb8c150ace1722ee8c8d))
+* **hover-card:** add hover card component ([5cb6797](https://github.com/daopk/ropav/commit/5cb6797c8b37bbb8aea7454e5bf0d83279ae6e71))
+* **multi-select:** add multi-select component ([790b849](https://github.com/daopk/ropav/commit/790b8499a6e7a26a4219c173f4b1bdd81181ebc8))
+* **segmented-control:** add segmented control component ([40f00d0](https://github.com/daopk/ropav/commit/40f00d05b369a1cf371198c0cb19e588be2c70ae))
+* **tags-input:** add tags input component ([46df7ed](https://github.com/daopk/ropav/commit/46df7ed6747bc1478f1ea454b0a9510bef1c2fbb))
+
+### Bug Fixes
+
+* **combobox:** preserve clear event ordering ([aa48ad7](https://github.com/daopk/ropav/commit/aa48ad7b5a33cf04c85a66a6ab2693b9692efc91))
+* **file-controls:** harden native file interactions ([e764bf3](https://github.com/daopk/ropav/commit/e764bf34b96a4e555ec0404a9c41d854f9b6267e))
+* **floating:** merge bordered arrows with surfaces ([04829eb](https://github.com/daopk/ropav/commit/04829ebcffc83994272ee271b025a0ed4c8b95e6))
+* **floating:** own out-of-tree target lifecycle ([589afd8](https://github.com/daopk/ropav/commit/589afd8659a2cd4a8379dc5ba5f14ecc74e2dc06))
+* **form:** preserve native choice semantics ([9c643bf](https://github.com/daopk/ropav/commit/9c643bfe22d377eda89a57a5ea9d8efc29658342))
+* **hover-card:** resolve interaction and teleport regressions ([ae5177f](https://github.com/daopk/ropav/commit/ae5177f9f54a679128f714c41f06f1aa1c573e96))
+* **number-input:** update defaults and variant stories ([c2078a8](https://github.com/daopk/ropav/commit/c2078a8a7d1627f59ab2747467ae2d1bfee07b57))
+* **select:** flip dropdown when space is constrained ([81673fe](https://github.com/daopk/ropav/commit/81673fec387546498112c50ae0648fd1d2d9a7da))
+
 ## [0.1.7](https://github.com/daopk/ropav/compare/v0.1.6...v0.1.7) (2026-07-23)
 
 ### Bug Fixes
