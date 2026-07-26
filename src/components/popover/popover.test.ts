@@ -244,6 +244,35 @@ describe('Popover', () => {
         expect((queryDom(container, '.persistent-input') as HTMLInputElement).value).toBe('Edited');
     });
 
+    it('unmounts while teleported content is leaving', async () => {
+        const { container, unmount } = mountDomWithApp(
+            defineComponent({
+                render() {
+                    return h(
+                        Popover,
+                        { id: 'leaving-popover' },
+                        {
+                            default: ({ triggerProps }: PopoverSlotProps) =>
+                                h('button', { class: 'trigger', ...triggerProps }, 'Toggle'),
+                            content: () => 'Content',
+                        },
+                    );
+                },
+            }),
+        );
+
+        const trigger = queryDom(container, '.trigger') as HTMLButtonElement;
+        click(trigger);
+        await flush();
+
+        click(trigger);
+        await flush();
+
+        expect(queryDom(container, '#leaving-popover')).not.toBeNull();
+        unmount();
+        expect(container.isConnected).toBe(false);
+    });
+
     it('renders a real arrow element when enabled', async () => {
         const container = mountDom(
             defineComponent({

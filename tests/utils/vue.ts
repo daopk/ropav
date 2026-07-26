@@ -2,6 +2,29 @@ import { afterEach, vi } from 'vitest';
 import { createApp, nextTick, vaporInteropPlugin, type Component } from 'vue';
 
 const cleanups: Array<() => void> = [];
+const LEAVE_ACTIVE_CLASS_SUFFIX = '-leave-active';
+
+function hasActiveLeaveTransition(element: Element) {
+    return [...element.classList].some((className) =>
+        className.endsWith(LEAVE_ACTIVE_CLASS_SUFFIX),
+    );
+}
+
+async function settleLeavingElements() {
+    const leavingElements = [...document.body.querySelectorAll('[class]')].filter(
+        hasActiveLeaveTransition,
+    );
+    if (leavingElements.length === 0) return;
+
+    await vi.waitFor(
+        () => {
+            if (leavingElements.some((element) => element.isConnected)) {
+                throw new Error('Waiting for leaving elements to detach.');
+            }
+        },
+        { interval: 1, timeout: 2000 },
+    );
+}
 
 export function mountDomWithApp(component: Component) {
     const container = document.createElement('div');
@@ -70,8 +93,9 @@ export async function waitForAssertion(assertion: () => void | Promise<void>) {
     );
 }
 
-afterEach(() => {
+afterEach(async () => {
     while (cleanups.length) cleanups.pop()?.();
+    await settleLeavingElements();
     document.body.innerHTML = '';
     document.body.style.overflow = '';
 });
