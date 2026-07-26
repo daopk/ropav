@@ -25,16 +25,25 @@ export default defineConfig({
     ],
     build: {
         lib: {
-            entry: resolve(__dirname, 'src/index.ts'),
+            entry: {
+                index: resolve(__dirname, 'src/index.ts'),
+                'index.node': resolve(__dirname, 'src/index.node.ts'),
+            },
             cssFileName: 'editor',
-            fileName: 'index',
+            fileName: (_format, entryName) => `${entryName}.js`,
             formats: ['es'],
         },
         minify: false,
         sourcemap: false,
         cssCodeSplit: false,
         rolldownOptions: {
-            external: ['@tiptap/core', '@tiptap/pm', '@tiptap/starter-kit', 'ropav', 'vue'],
+            external: [
+                '@tiptap/core',
+                /^@tiptap\/pm(?:\/|$)/,
+                '@tiptap/starter-kit',
+                'ropav',
+                'vue',
+            ],
             output: {
                 chunkFileNames: '[name].js',
             },

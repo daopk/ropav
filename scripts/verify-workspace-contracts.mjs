@@ -218,6 +218,7 @@ function verifyPackageSource(packageRecord, packageRecordsByName) {
 
     const productionFiles = getFiles(sourceRoot).filter(isProductionSourceFile);
     const violations = [
+        ...verifyComponentPlacement(manifest.name, sourceRoot),
         ...verifyComponentHelperPlacement(manifest.name, sourceRoot),
         ...verifyLayerDependencies(manifest.name, sourceRoot),
     ];
@@ -527,6 +528,36 @@ function verifyComponentHelperPlacement(packageName, sourceRoot) {
     return [...forbiddenDirectories, ...forbiddenFiles].map(
         (path) => `${packageName}/${path}: generic component-local helper modules are forbidden`,
     );
+}
+
+function verifyComponentPlacement(packageName, sourceRoot) {
+    const componentsRoot = resolve(sourceRoot, 'components');
+    const sfcViolations = getFiles(sourceRoot)
+        .filter(isProductionSourceFile)
+        .filter((file) => extname(file) === '.vue')
+        .filter((file) => {
+            if (!isPathInside(componentsRoot, file)) return true;
+            return dirname(relative(componentsRoot, file)) === '.';
+        })
+        .map(
+            (file) =>
+                `${packageName}/${toPosixRelativePath(sourceRoot, file)}: production Vue SFC must live under src/components/<name>/`,
+        );
+    if (!existsSync(componentsRoot)) return sfcViolations;
+
+    const componentNames = readdirSync(componentsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name);
+    const misplacedModuleViolations = componentNames.flatMap((componentName) =>
+        getFiles(resolve(sourceRoot, componentName))
+            .filter(isProductionSourceFile)
+            .map(
+                (file) =>
+                    `${packageName}/${toPosixRelativePath(sourceRoot, file)}: component-local modules for ${componentName} must live under src/components/${componentName}/`,
+            ),
+    );
+
+    return sfcViolations.concat(misplacedModuleViolations);
 }
 
 function verifyLayerDependencies(packageName, sourceRoot) {

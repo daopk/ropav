@@ -1,10 +1,9 @@
-export { default as Editor } from './editor/editor.vue';
-export { editorParts } from './editor/types';
+export { Editor, editorParts } from './components/editor';
 export type {
     EditorComponentExposed,
     EditorModelValue,
     EditorOutput,
     EditorPart,
     EditorProps,
-} from './editor/types';
+} from './components/editor';
 export type { Editor as TiptapEditor, Extensions, JSONContent } from '@tiptap/core';

@@ -12,8 +12,9 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/index.node.js",
   "module": "./dist/index.js",
+  "browser": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": [
     "**/*.css"
@@ -25,6 +26,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "browser": "./dist/index.js",
+      "node": "./dist/index.node.js",
       "import": "./dist/index.js"
     },
     "./editor.css": "./dist/editor.css"

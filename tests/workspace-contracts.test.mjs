@@ -41,13 +41,36 @@ describe('workspace contracts', () => {
                 version: '1.0.0',
             },
             {
-                'src/editor.vue': vaporSfc(
+                'src/components/editor/editor.vue': vaporSfc(
                     'import { Editor } from "@tiptap/core";\nconst editor = new Editor({ element: null });',
                 ),
             },
         );
 
         assert.deepEqual(verifyWorkspaceContracts(root), []);
+    });
+
+    it('rejects component-local modules outside the canonical component directory', () => {
+        const root = createWorkspace();
+        createPackage(
+            root,
+            {
+                name: '@ropav/editor',
+                scripts: { verify: 'test' },
+                version: '1.0.0',
+            },
+            {
+                'src/components/editor/editor.vue': vaporSfc(
+                    'import { helper } from "../../editor/helpers";\nconst value = helper;',
+                ),
+                'src/editor/helpers.ts': 'export const helper = true;',
+            },
+        );
+
+        assert.match(
+            verifyWorkspaceContracts(root).join('\n'),
+            /editor\/helpers\.ts: component-local modules for editor must live under src\/components\/editor\//,
+        );
     });
 
     it('reports package, Vapor, Tiptap, helper, and dependency-direction violations together', () => {
@@ -103,6 +126,7 @@ describe('workspace contracts', () => {
             'zero-VDOM Tiptap contract',
             'relative import "../../ropav/src/index" crosses a package seam',
             'generic component-local helper modules are forbidden',
+            'production Vue SFC must live under src/components/<name>/',
             'utils cannot depend on components',
             'workspace dependency @ropav/editor violates the declared package direction',
             "reaches into another package's source",
