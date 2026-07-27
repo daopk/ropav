@@ -24,6 +24,7 @@ export type CalendarSize = (typeof calendarSizes)[number];
 export type CalendarRadius = (typeof calendarRadiuses)[number];
 export type CalendarWeekdayFormat = (typeof calendarWeekdayFormats)[number];
 export type CalendarDisabledDates = DisabledDateRule;
+export type CalendarGetDayAriaLabel = (day: Readonly<CalendarDay>) => string;
 
 export interface CalendarDay {
     date: Date;
@@ -62,11 +63,13 @@ export interface CalendarProps extends StylesApiProps<CalendarPart> {
     disabledDates?: CalendarDisabledDates;
     fixedWeeks?: boolean;
     hideOutsideDates?: boolean;
+    showHeader?: boolean;
     disabled?: boolean;
     readonly?: boolean;
     size?: CalendarSize;
     radius?: CalendarRadius;
     ariaLabel?: string;
+    getDayAriaLabel?: CalendarGetDayAriaLabel;
     previousLabel?: string;
     nextLabel?: string;
 }

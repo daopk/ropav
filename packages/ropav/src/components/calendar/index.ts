@@ -4,6 +4,7 @@ export type {
     CalendarDay,
     CalendarDaySlotProps,
     CalendarDisabledDates,
+    CalendarGetDayAriaLabel,
     CalendarPart,
     CalendarProps,
     CalendarRadius,

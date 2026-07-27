@@ -92,6 +92,10 @@
         text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &--visually-hidden {
+            @include visually-hidden;
+        }
     }
 
     &__control,

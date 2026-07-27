@@ -3,6 +3,7 @@ export { datePickerParts } from './types';
 export type {
     DatePickerDaySlotProps,
     DatePickerFormat,
+    DatePickerGetDayAriaLabel,
     DatePickerParse,
     DatePickerPart,
     DatePickerProps,

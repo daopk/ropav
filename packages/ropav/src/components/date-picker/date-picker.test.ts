@@ -9,6 +9,7 @@ import {
     queryDom,
     waitForAssertion,
 } from '../../../tests/utils/vue';
+import type { CalendarDay } from '../calendar/types';
 import DatePicker from './date-picker.vue';
 
 describe('DatePicker', () => {
@@ -61,6 +62,29 @@ describe('DatePicker', () => {
         expect(onUpdate).toHaveBeenCalledWith(new Date(2026, 6, 14));
         expect(onChange).toHaveBeenCalledWith(new Date(2026, 6, 14));
         expect(onOpen).toHaveBeenLastCalledWith(false);
+    });
+
+    it('forwards custom day accessible names to its calendar', async () => {
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(DatePicker, {
+                        defaultValue: new Date(2026, 6, 10),
+                        locale: 'en-US',
+                        getDayAriaLabel: (day: Readonly<CalendarDay>) =>
+                            `${day.ariaLabel}, Lunar calendar`,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        click(queryDom(container, 'input') as HTMLInputElement);
+        await flush();
+
+        const day = queryDom(container, '[data-date="2026-07-14"]') as HTMLButtonElement;
+        expect(day.getAttribute('aria-label')).toBe('Tuesday, July 14, 2026, Lunar calendar');
     });
 
     it('renders an indicator only when a calendar icon is provided', async () => {

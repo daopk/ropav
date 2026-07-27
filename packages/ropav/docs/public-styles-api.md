@@ -81,6 +81,9 @@ Only independently useful semantic elements are public parts. Conditional parts 
 
 `ToastProvider` renders no DOM and therefore has no Styles API.
 
+When `Calendar.showHeader` is `false`, the `header`, `previousControl` and `nextControl` parts are
+not rendered. The `monthLabel` part remains as a visually hidden live label for the calendar grid.
+
 ## State attributes
 
 Boolean states use presence semantics: the attribute value is empty when true and the attribute is absent when false or unknown. Enum values are lowercase kebab-case.

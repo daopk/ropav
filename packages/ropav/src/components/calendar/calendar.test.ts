@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 import { click, flush, keydown, mountDom } from '../../../tests/utils/vue';
 import Calendar from './calendar.vue';
+import type { CalendarDay } from './types';
 
 describe('Calendar', () => {
     it('renders an accessible localized grid and selects an uncontrolled date', async () => {
@@ -36,6 +37,7 @@ describe('Calendar', () => {
             ),
         ).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
         expect(container.querySelectorAll('.rp-calendar__day')).toHaveLength(42);
+        expect(day.getAttribute('aria-label')).toBe('Tuesday, July 14, 2026');
 
         click(day);
         await flush();
@@ -168,5 +170,33 @@ describe('Calendar', () => {
         await flush();
         expect(onMonth).toHaveBeenCalledWith(new Date(2026, 7, 1));
         expect(root.dataset.month).toBe('2026-07-01');
+    });
+
+    it('supports reactive accessible names for individual days', async () => {
+        const includeLunarDate = ref(true);
+        const container = mountDom(
+            defineComponent({
+                render() {
+                    return h(Calendar, {
+                        defaultMonth: new Date(2026, 6, 1),
+                        locale: 'en-US',
+                        getDayAriaLabel: (day: Readonly<CalendarDay>) =>
+                            includeLunarDate.value
+                                ? `${day.ariaLabel}, Lunar day ${day.label}`
+                                : day.ariaLabel,
+                    });
+                },
+            }),
+        );
+
+        await flush();
+
+        const day = container.querySelector('[data-date="2026-07-14"]') as HTMLButtonElement;
+        expect(day.getAttribute('aria-label')).toBe('Tuesday, July 14, 2026, Lunar day 14');
+
+        includeLunarDate.value = false;
+        await flush();
+
+        expect(day.getAttribute('aria-label')).toBe('Tuesday, July 14, 2026');
     });
 });

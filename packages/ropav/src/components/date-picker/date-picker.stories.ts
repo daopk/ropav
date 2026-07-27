@@ -7,6 +7,9 @@ const meta = {
     title: 'Components/Forms/Date Picker',
     component: DatePicker as any,
     tags: ['autodocs'],
+    argTypes: {
+        getDayAriaLabel: { control: false },
+    },
     args: {
         defaultValue: new Date(2026, 6, 14),
         locale: 'en-US',

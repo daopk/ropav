@@ -3,6 +3,7 @@ import type { StylesApiProps } from '../../styles-api';
 import type {
     CalendarDaySlotProps,
     CalendarDisabledDates,
+    CalendarGetDayAriaLabel,
     CalendarRadius,
     CalendarSize,
     CalendarWeekdayFormat,
@@ -33,6 +34,7 @@ export type DatePickerPart = (typeof datePickerParts)[number];
 export type DatePickerFormat = (date: Date) => string;
 export type DatePickerParse = (value: string) => Date | null;
 export type DatePickerDaySlotProps = CalendarDaySlotProps;
+export type DatePickerGetDayAriaLabel = CalendarGetDayAriaLabel;
 
 export interface DatePickerProps extends StylesApiProps<DatePickerPart> {
     id?: string;
@@ -53,6 +55,7 @@ export interface DatePickerProps extends StylesApiProps<DatePickerPart> {
     disabledDates?: CalendarDisabledDates;
     fixedWeeks?: boolean;
     hideOutsideDates?: boolean;
+    getDayAriaLabel?: DatePickerGetDayAriaLabel;
     allowInput?: boolean;
     clearable?: boolean;
     closeOnSelect?: boolean;

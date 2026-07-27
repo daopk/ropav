@@ -89,6 +89,7 @@
                 :disabled-dates="disabledDates"
                 :fixed-weeks="fixedWeeks"
                 :hide-outside-dates="hideOutsideDates"
+                :get-day-aria-label="getDayAriaLabel"
                 :readonly="readonly"
                 :size="calendarSize ?? size"
                 :radius="calendarRadius ?? radius"

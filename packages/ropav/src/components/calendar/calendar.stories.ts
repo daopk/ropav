@@ -7,12 +7,17 @@ const meta = {
     title: 'Components/Forms/Calendar',
     component: Calendar as any,
     tags: ['autodocs'],
+    argTypes: {
+        getDayAriaLabel: { control: false },
+        showHeader: { control: 'boolean' },
+    },
     args: {
         defaultMonth: new Date(2026, 6, 1),
         locale: 'en-US',
         firstDayOfWeek: 0,
         fixedWeeks: true,
         hideOutsideDates: false,
+        showHeader: true,
         disabled: false,
         readonly: false,
         size: 'md',
@@ -66,6 +71,10 @@ export const DateConstraints: Story = {
 
 export const WithoutOutsideDates: Story = {
     args: { hideOutsideDates: true, fixedWeeks: false },
+};
+
+export const WithoutHeader: Story = {
+    args: { showHeader: false },
 };
 
 export const Readonly: Story = {

@@ -1,6 +1,6 @@
 <template>
     <div v-bind="rootAttrs" ref="rootRef">
-        <div v-bind="getPartAttrs('header', { class: 'rp-calendar__header' })">
+        <div v-if="showHeader" v-bind="getPartAttrs('header', { class: 'rp-calendar__header' })">
             <button
                 v-bind="
                     getPartAttrs('previousControl', {
@@ -39,6 +39,21 @@
                 </slot>
             </button>
         </div>
+        <span
+            v-else
+            :id="monthLabelId"
+            v-bind="
+                getPartAttrs('monthLabel', {
+                    class: [
+                        'rp-calendar__month-label',
+                        'rp-calendar__month-label--visually-hidden',
+                    ],
+                })
+            "
+            aria-live="polite"
+        >
+            {{ monthLabel }}
+        </span>
 
         <table
             v-bind="getPartAttrs('grid', { class: 'rp-calendar__grid' })"
@@ -79,7 +94,7 @@
                             v-bind="getDayAttrs(day)"
                             type="button"
                             :disabled="disabled || day.disabled"
-                            :aria-label="day.ariaLabel"
+                            :aria-label="getDayLabel(day)"
                             :aria-current="day.today ? 'date' : undefined"
                             :tabindex="isFocusable(day) ? 0 : -1"
                             @click="selectDate(day)"
@@ -120,6 +135,7 @@ const props = withDefaults(defineProps<CalendarProps>(), {
     monthFormat: undefined,
     fixedWeeks: true,
     hideOutsideDates: false,
+    showHeader: true,
     disabled: false,
     readonly: false,
     size: 'md',
@@ -190,6 +206,10 @@ function getDayAttrs(day: CalendarDay) {
         'data-today': toPresenceAttribute(day.today),
         'data-disabled': toPresenceAttribute(props.disabled || day.disabled),
     };
+}
+
+function getDayLabel(day: CalendarDay) {
+    return props.getDayAriaLabel?.(day) ?? day.ariaLabel;
 }
 
 function isFocusable(day: CalendarDay) {
