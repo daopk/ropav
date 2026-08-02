@@ -82,15 +82,56 @@ describe("ButtonGroup (browser)", () => {
     unmount();
   });
 
-  it("positions the separator between the buttons", () => {
+  it("positions the separator on the leading edge of the button it divides", () => {
     const {container, unmount} = renderGroup({withSeparator: true});
+    const [, last] = buttonsIn(container);
     const separator = container.querySelector<HTMLElement>('[data-slot="button-group-separator"]')!;
 
     const styles = getComputedStyle(separator);
 
     expect(styles.position).toBe("absolute");
     expect(styles.pointerEvents).toBe("none");
-    expect(separator.getBoundingClientRect().width).toBeCloseTo(1, 0);
+
+    // The separator is absolute, so it only lands correctly while the button it belongs to
+    // is its containing block. Anywhere else it resolves against a distant ancestor and
+    // leaves the viewport - which the computed styles alone would not reveal.
+    expect(separator.offsetParent).toBe(last);
+
+    const separatorRect = separator.getBoundingClientRect();
+    const buttonRect = last.getBoundingClientRect();
+
+    expect(separatorRect.width).toBeCloseTo(1, 0);
+    // Straddles the seam: one pixel outside the button, spanning the middle half of it.
+    expect(separatorRect.left - buttonRect.left).toBeCloseTo(-1, 0);
+    expect(separatorRect.height).toBeCloseTo(buttonRect.height / 2, 0);
+
+    unmount();
+  });
+
+  it("gives every button in a vertical group the same width", () => {
+    const {container, unmount} = renderGroup({orientation: "vertical"});
+    const [first, last] = buttonsIn(container);
+
+    const firstRect = first.getBoundingClientRect();
+    const lastRect = last.getBoundingClientRect();
+
+    // `.button` is `w-fit`, so without a cross-axis rule each button would only be as wide
+    // as its own label and sit centred against the widest one - a ragged stack of edges.
+    expect(firstRect.width).toBeCloseTo(lastRect.width, 0);
+    expect(firstRect.left).toBeCloseTo(lastRect.left, 0);
+
+    unmount();
+  });
+
+  it("keeps an icon-only button square in a vertical group", () => {
+    const {container, unmount} = renderGroup({isIconOnly: true, orientation: "vertical"});
+    const [first] = buttonsIn(container);
+
+    const rect = first.getBoundingClientRect();
+
+    // The width an icon-only button carries is deliberate, so squaring up the stack must
+    // not stretch it.
+    expect(rect.width).toBeCloseTo(rect.height, 0);
 
     unmount();
   });

@@ -7,9 +7,11 @@ import {ButtonGroup} from "@/components/button-group";
 const props = withDefaults(
   defineProps<
     ButtonGroupRootProps & {
+      /** Renders both buttons as icon-only, whose fixed width the group must not stretch. */
+      isIconOnly?: boolean;
       /** Renders the second button one level deeper, outside the direct-child position. */
       nested?: boolean;
-      /** Renders a separator between the two buttons. */
+      /** Renders a separator inside the second button, dividing it from the first. */
       withSeparator?: boolean;
       /** Overrides applied to the first button only. */
       childIsDisabled?: boolean;
@@ -24,6 +26,7 @@ const props = withDefaults(
     childSize: undefined,
     childVariant: undefined,
     isDisabled: undefined,
+    isIconOnly: undefined,
   },
 );
 
@@ -41,16 +44,19 @@ defineEmits<{click: [event: MouseEvent]}>();
   >
     <Button
       :is-disabled="props.childIsDisabled"
+      :is-icon-only="props.isIconOnly"
       :size="props.childSize"
       :variant="props.childVariant"
       @click="$emit('click', $event)"
     >
       Save
     </Button>
-    <ButtonGroup.Separator v-if="props.withSeparator" />
     <div v-if="props.nested">
       <Button>Nested</Button>
     </div>
-    <Button v-else>Cancel</Button>
+    <Button v-else :is-icon-only="props.isIconOnly">
+      <ButtonGroup.Separator v-if="props.withSeparator" />
+      Cancel
+    </Button>
   </ButtonGroup>
 </template>
