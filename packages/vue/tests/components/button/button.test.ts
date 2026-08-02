@@ -1,6 +1,6 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import {nextTick, reactive} from "vue";
 
 import {Button} from "@/components/button";
 
@@ -24,10 +24,10 @@ describe("Button", () => {
       unmount();
     });
 
-    it("renders slot content", () => {
+    it("renders slot content as its accessible name", () => {
       const {getByRole, unmount} = renderButton();
 
-      expect(getByRole("button").textContent).toContain("Press me");
+      expect(getByRole("button", {name: "Press me"})).toBeInTheDocument();
 
       unmount();
     });
@@ -279,6 +279,48 @@ describe("Button", () => {
       expect(onPointerenter).toHaveBeenCalledTimes(1);
       // The component's own handler must not be replaced by the caller's.
       expect(button.getAttribute("data-hovered")).toBe("true");
+
+      unmount();
+    });
+  });
+
+  describe("announcements", () => {
+    const liveRegionText = () =>
+      document.querySelector('[data-slot="live-announcer"]')?.textContent;
+
+    it("announces the transition while focused", async () => {
+      const props = reactive({isPending: false});
+      const {container, unmount} = renderVapor(Button, {
+        props,
+        slots: {default: () => document.createTextNode("Press me")},
+      });
+
+      buttonIn(container)!.dispatchEvent(new FocusEvent("focus"));
+      props.isPending = true;
+      await nextTick();
+
+      expect(liveRegionText()).toBe("pending");
+
+      props.isPending = false;
+      await nextTick();
+
+      // Cleared, so a state that has ended stops being reported.
+      expect(liveRegionText()).toBe("");
+
+      unmount();
+    });
+
+    it("stays quiet when the button is not focused", async () => {
+      const props = reactive({isPending: false});
+      const {unmount} = renderVapor(Button, {
+        props,
+        slots: {default: () => document.createTextNode("Press me")},
+      });
+
+      props.isPending = true;
+      await nextTick();
+
+      expect(liveRegionText()).not.toBe("pending");
 
       unmount();
     });

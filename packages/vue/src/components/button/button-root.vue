@@ -2,10 +2,11 @@
 import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
 
 import {buttonVariants} from "@heroui/styles";
-import {computed} from "vue";
+import {computed, watch} from "vue";
 
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
+import {announce} from "../../utils/live-announcer";
 
 const props = withDefaults(defineProps<ButtonRootProps>(), {type: "button"});
 
@@ -39,6 +40,18 @@ const {
   isDisabled: () => props.isDisabled,
   isPending: () => props.isPending,
 });
+
+// A pending button keeps its label and only changes an attribute, so the transition
+// would otherwise pass a screen reader by. Announced only while focused, because that
+// is when the change is part of what the user is doing.
+watch(
+  () => Boolean(props.isPending),
+  (isPending) => {
+    if (!isFocused.value) return;
+
+    announce(isPending ? "pending" : "");
+  },
+);
 
 // Blocking the click is not enough on its own: implicit submission reaches the form
 // through the button's own type, without a click ever landing on the button.
