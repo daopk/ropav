@@ -1,0 +1,80 @@
+{
+  "name": "@heroui/vue",
+  "version": "0.1.0",
+  "description": "🚀 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "author": "HeroUI <support@heroui.com>",
+  "homepage": "https://heroui.com",
+  "keywords": [
+    "hero ui",
+    "vue",
+    "vue 3",
+    "vapor",
+    "vapor mode",
+    "components",
+    "modern components",
+    "vue components",
+    "vue ui"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    },
+    "./package.json": "./package.json",
+    "./styles": {
+      "style": "./src/styles.css",
+      "default": "./src/styles.css"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroui-inc/heroui.git",
+    "directory": "packages/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/heroui-inc/heroui/issues"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "node scripts/build.mjs --tsc",
+    "build:fast": "node scripts/build.mjs",
+    "lint": "eslint .",
+    "typecheck": "vue-tsc --noEmit",
+    "clean": "rm -rf dist .turbo tsconfig.tsbuildinfo",
+    "prepack": "clean-package && node scripts/update-exports.mjs",
+    "postpack": "clean-package restore"
+  },
+  "clean-package": "./clean-package.config.json",
+  "dependencies": {
+    "@heroui/styles": "workspace:*",
+    "tailwind-variants": "3.3.1"
+  },
+  "devDependencies": {
+    "@heroui/standard": "workspace:*",
+    "@types/fs-extra": "11.0.4",
+    "@vitejs/plugin-vue": "6.0.8",
+    "clean-package": "2.2.0",
+    "fs-extra": "11.3.3",
+    "tailwindcss": "4.3.0",
+    "typescript": "5.9.3",
+    "vite": "7.3.5",
+    "vue": "3.6.0-rc.4",
+    "vue-tsc": "3.3.10"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=4.0.0",
+    "vue": "^3.6.0-rc.4"
+  }
+}

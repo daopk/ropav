@@ -1,0 +1,7 @@
+# build output
+dist
+
+# generated during `pnpm build` / `pnpm pack`
+tsconfig.build.json
+bundle-sizes.json
+.package.json.backup

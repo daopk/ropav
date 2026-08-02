@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@heroui/standard/tsconfig/vue.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "tests", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "**/*.stories.*"]
+}
