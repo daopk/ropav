@@ -10,6 +10,9 @@ const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 
 const COMPONENTS_DIR = "src/components";
 
+/** Directories under `src/components` that are not components. Kept in step with `scripts/`. */
+const SKIP_DIRS = new Set(["icons", "utils", "composables"]);
+
 /**
  * Replace the version placeholder in `src/version.ts` with the real version.
  */
@@ -71,6 +74,8 @@ const resolveEntries = () => {
   if (!fs.existsSync(COMPONENTS_DIR)) return entries;
 
   for (const name of fs.readdirSync(COMPONENTS_DIR)) {
+    if (SKIP_DIRS.has(name)) continue;
+
     const dir = path.join(COMPONENTS_DIR, name);
 
     if (!fs.statSync(dir).isDirectory()) continue;
