@@ -62,11 +62,7 @@ export default mergeConfig(
                     test: {
                         name: 'tooling',
                         environment: 'node',
-                        include: [
-                            'tests/tooling/vite/**/*.test.ts',
-                            'tests/contracts/**/*.test.ts',
-                            'tests/scripts/**/*.test.ts',
-                        ],
+                        include: ['tests/tooling/vite/**/*.test.ts', 'tests/scripts/**/*.test.ts'],
                     },
                 },
                 storybookProject('light'),

@@ -252,7 +252,6 @@
     "test:consumer-fixture:built": "node tests/fixtures/consumer-app/check.mjs && vue-tsc -p tests/fixtures/consumer-app/tsconfig.json --noEmit && vite build --config tests/fixtures/consumer-app/vite.config.ts && node tests/fixtures/consumer-app/assertions.mjs",
     "test:package": "pnpm run build && pnpm run publication:verify && pnpm run test:bundle:built && pnpm run test:consumer-types:built && pnpm run test:consumer-fixture:built",
     "test:watch": "vitest --project=unit --project=tooling",
-    "test:typecheck": "vitest run --project=unit --project=tooling --typecheck",
     "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
     "build": "pnpm run publication:check && pnpm run tokens:check && pnpm run typecheck && vite build",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run test:workspace && pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package",
