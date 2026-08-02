@@ -1,5 +1,6 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
+import {nextTick} from "vue";
 
 import {Button} from "@/components/button";
 
@@ -136,6 +137,122 @@ describe("Button", () => {
       expect(button?.getAttribute("aria-disabled")).toBe("true");
       // Not `disabled`, so assistive technology can still reach and announce it.
       expect(button?.hasAttribute("disabled")).toBe(false);
+
+      unmount();
+    });
+  });
+
+  describe("interaction states", () => {
+    const pointerEvent = (type: string, init: PointerEventInit = {}) =>
+      new PointerEvent(type, {bubbles: true, button: 0, pointerType: "mouse", ...init});
+
+    it("reports hover, which is what the stylesheet keys on", async () => {
+      const {container, unmount} = renderButton();
+      const button = buttonIn(container)!;
+
+      button.dispatchEvent(pointerEvent("pointerenter"));
+      await nextTick();
+
+      expect(button.getAttribute("data-hovered")).toBe("true");
+
+      button.dispatchEvent(pointerEvent("pointerleave"));
+      await nextTick();
+
+      expect(button.hasAttribute("data-hovered")).toBe(false);
+
+      unmount();
+    });
+
+    it("reports press, and ends it when the pointer is released anywhere", async () => {
+      const {container, unmount} = renderButton();
+      const button = buttonIn(container)!;
+
+      button.dispatchEvent(pointerEvent("pointerdown"));
+      await nextTick();
+
+      expect(button.getAttribute("data-pressed")).toBe("true");
+
+      // Released off the button, the case native `:active` gets wrong.
+      document.body.dispatchEvent(pointerEvent("pointerup"));
+      await nextTick();
+
+      expect(button.hasAttribute("data-pressed")).toBe(false);
+
+      unmount();
+    });
+
+    it("reports focus, and marks it visible only after a keyboard interaction", async () => {
+      const {container, unmount} = renderButton();
+      const button = buttonIn(container)!;
+
+      document.dispatchEvent(pointerEvent("pointerdown"));
+      button.dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      expect(button.getAttribute("data-focused")).toBe("true");
+      expect(button.hasAttribute("data-focus-visible")).toBe(false);
+
+      button.dispatchEvent(new FocusEvent("blur"));
+      document.dispatchEvent(new KeyboardEvent("keydown", {key: "Tab"}));
+      button.dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      // `data-focus-visible` is the only selector that paints the focus ring.
+      expect(button.getAttribute("data-focus-visible")).toBe("true");
+
+      unmount();
+    });
+
+    it("reports no hover or press while disabled", async () => {
+      const {container, unmount} = renderButton({isDisabled: true});
+      const button = buttonIn(container)!;
+
+      button.dispatchEvent(pointerEvent("pointerenter"));
+      button.dispatchEvent(pointerEvent("pointerdown"));
+      await nextTick();
+
+      expect(button.hasAttribute("data-hovered")).toBe(false);
+      expect(button.hasAttribute("data-pressed")).toBe(false);
+
+      unmount();
+    });
+
+    it("reports no press while pending, which stays focusable", async () => {
+      const {container, unmount} = renderButton({isPending: true});
+      const button = buttonIn(container)!;
+
+      button.dispatchEvent(pointerEvent("pointerdown"));
+      button.dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      expect(button.hasAttribute("data-pressed")).toBe(false);
+      expect(button.getAttribute("data-focused")).toBe("true");
+
+      unmount();
+    });
+
+    it("exposes data-disabled alongside the native attribute", () => {
+      const {container, unmount} = renderButton({isDisabled: true});
+
+      expect(buttonIn(container)?.getAttribute("data-disabled")).toBe("true");
+
+      unmount();
+    });
+
+    it("still forwards a caller's own pointer listener", async () => {
+      const onPointerenter = vi.fn();
+      const {container, unmount} = renderVapor(Button, {
+        props: {onPointerenter},
+        slots: {default: () => document.createTextNode("Press me")},
+      });
+      const button = buttonIn(container)!;
+
+      button.dispatchEvent(pointerEvent("pointerenter"));
+      await nextTick();
+
+      expect(onPointerenter).toHaveBeenCalledTimes(1);
+      // The component's own handler must not be replaced by the caller's.
+      expect(button.getAttribute("data-hovered")).toBe("true");
 
       unmount();
     });

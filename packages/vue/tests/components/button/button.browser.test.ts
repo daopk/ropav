@@ -2,6 +2,7 @@ import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
+import {nextTick} from "vue";
 
 import {Button} from "@/components/button";
 
@@ -14,47 +15,71 @@ const renderButton = (props: Record<string, unknown> = {}) =>
 const buttonIn = (container: HTMLElement) => container.querySelector("button")!;
 
 /**
- * These cover the bet this port makes on Button: that native pseudo-classes stand in for
- * the `data-hovered` / `data-pressed` / `data-focus-visible` attributes React Aria sets,
- * because the HeroUI stylesheet declares both. Only a real browser can show it working.
+ * These cover the parts of Button only a real browser can show: that the interaction
+ * attributes it renders line up with the pseudo-classes the browser computes, and that
+ * the stylesheet then paints the states those attributes select.
  */
 describe("Button (browser)", () => {
-  it("matches :focus-visible on keyboard focus and gets a focus ring", async () => {
+  it("paints a focus ring on keyboard focus", async () => {
     const {container, unmount} = renderButton();
     const button = buttonIn(container);
 
-    const outlineWhenIdle = getComputedStyle(button).outlineWidth;
+    const shadowWhenIdle = getComputedStyle(button).boxShadow;
 
     await userEvent.keyboard("{Tab}");
+    await nextTick();
 
     expect(button).toHaveFocus();
     expect(button.matches(":focus-visible")).toBe(true);
-    // The stylesheet reacts to the pseudo-class alone, with no JS state involved.
-    expect(getComputedStyle(button).outlineWidth).not.toBe(outlineWhenIdle);
+    // The ring is a ring utility, so it lands on box-shadow. `outline-style` stays
+    // `none` in both states, which makes outline useless as the assertion here.
+    expect(button.getAttribute("data-focus-visible")).toBe("true");
+    expect(getComputedStyle(button).boxShadow).not.toBe(shadowWhenIdle);
 
     unmount();
   });
 
-  it("does not match :focus-visible when focused by pointer", async () => {
+  it("paints no focus ring when focused by pointer", async () => {
     const {container, unmount} = renderButton();
     const button = buttonIn(container);
 
-    await userEvent.click(button);
+    const shadowWhenIdle = getComputedStyle(button).boxShadow;
 
+    await userEvent.click(button);
+    await nextTick();
+
+    // The rendered attribute agrees with what the browser itself computes.
     expect(button.matches(":focus-visible")).toBe(false);
+    expect(button.hasAttribute("data-focus-visible")).toBe(false);
+    expect(getComputedStyle(button).boxShadow).toBe(shadowWhenIdle);
 
     unmount();
   });
 
-  it("reacts to :hover with no JS state involved", async () => {
+  it("ends a press released away from the button", async () => {
+    const {container, unmount} = renderButton();
+    const button = buttonIn(container);
+
+    await userEvent.dragAndDrop(button, document.body);
+    await nextTick();
+
+    // Native `:active` sticks here; the rendered attribute is what the stylesheet reads.
+    expect(button.hasAttribute("data-pressed")).toBe(false);
+
+    unmount();
+  });
+
+  it("reports hover in step with the pseudo-class", async () => {
     const {container, unmount} = renderButton();
     const button = buttonIn(container);
 
     const transformWhenIdle = getComputedStyle(button).transform;
 
     await userEvent.hover(button);
+    await nextTick();
 
     expect(button.matches(":hover")).toBe(true);
+    expect(button.getAttribute("data-hovered")).toBe("true");
     // A transform is declared at rest, which is what `:active` scales down from.
     expect(transformWhenIdle).toBeTruthy();
 
