@@ -187,9 +187,7 @@ describe('public styles contract', () => {
     it('accepts the package release baseline supplied by the Git adapter', () => {
         const fixture = createVerificationFixture();
         const repository = createRepository({
-            'packages/ropav/src/styles/styles-manifest.json': JSON.stringify(
-                fixture.releasedBaseline.manifest,
-            ),
+            'src/styles/styles-manifest.json': JSON.stringify(fixture.releasedBaseline.manifest),
         });
 
         const releasedBaseline = resolveReleasedPublicStylesBaseline({
@@ -212,7 +210,7 @@ describe('public styles contract', () => {
         const fixture = createVerificationFixture();
         const repository = createRepository(
             {
-                'src/styles/styles-manifest.json': JSON.stringify(
+                'packages/ropav/src/styles/styles-manifest.json': JSON.stringify(
                     fixture.releasedBaseline.manifest,
                 ),
             },
@@ -234,7 +232,7 @@ describe('public styles contract', () => {
         const fixture = createVerificationFixture();
         const repository = createRepository(
             {
-                'packages/ropav/src/styles/styles-manifest.json': JSON.stringify(
+                'src/styles/styles-manifest.json': JSON.stringify(
                     fixture.releasedBaseline.manifest,
                 ),
             },
@@ -248,7 +246,7 @@ describe('public styles contract', () => {
             }),
         ).toEqual({
             failure:
-                'cannot resolve a released public styles baseline containing packages/ropav/src/styles/styles-manifest.json or legacy src/styles/styles-manifest.json; fetch release tags or set PUBLIC_STYLES_BASELINE_REF',
+                'cannot resolve a released public styles baseline containing src/styles/styles-manifest.json or legacy packages/ropav/src/styles/styles-manifest.json; fetch release tags or set PUBLIC_STYLES_BASELINE_REF',
         });
     });
 });

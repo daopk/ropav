@@ -6,7 +6,7 @@
     "perf": "warn"
   },
   "plugins": ["unicorn", "typescript", "oxc", "import", "vue", "vitest"],
-  "ignorePatterns": ["packages/*/dist/**", "packages/*/storybook-static/**"],
+  "ignorePatterns": ["dist/**", "storybook-static/**"],
   "options": {
     "reportUnusedDisableDirectives": "error"
   },
@@ -18,21 +18,21 @@
   "overrides": [
     {
       "files": [
-        "packages/*/src/**/*.cjs",
-        "packages/*/src/**/*.cts",
-        "packages/*/src/**/*.js",
-        "packages/*/src/**/*.jsx",
-        "packages/*/src/**/*.mjs",
-        "packages/*/src/**/*.mts",
-        "packages/*/src/**/*.ts",
-        "packages/*/src/**/*.tsx",
-        "packages/*/src/**/*.vue"
+        "src/**/*.cjs",
+        "src/**/*.cts",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.mjs",
+        "src/**/*.mts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue"
       ],
       "excludeFiles": [
-        "packages/*/src/**/*.spec.*",
-        "packages/*/src/**/*.story.*",
-        "packages/*/src/**/*.stories.*",
-        "packages/*/src/**/*.test.*"
+        "src/**/*.spec.*",
+        "src/**/*.story.*",
+        "src/**/*.stories.*",
+        "src/**/*.test.*"
       ],
       "rules": {
         "complexity": ["error", 20],

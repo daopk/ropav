@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 
-const currentManifestPath = 'packages/ropav/src/styles/styles-manifest.json';
-const legacyManifestPath = 'src/styles/styles-manifest.json';
+const currentManifestPath = 'src/styles/styles-manifest.json';
+const legacyManifestPath = 'packages/ropav/src/styles/styles-manifest.json';
 const manifestPaths = [currentManifestPath, legacyManifestPath];
 const packageReleaseTagPattern = /^ropav@\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 const legacyReleaseTagPattern = /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;

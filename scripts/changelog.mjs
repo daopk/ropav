@@ -1,45 +1,29 @@
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ConventionalChangelog } from 'conventional-changelog';
 
-const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const packagesRoot = resolve(workspaceRoot, 'packages');
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const manifestPath = resolve(repoRoot, 'package.json');
+const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 
-const publishablePackages = readdirSync(packagesRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => {
-        const packageRoot = resolve(packagesRoot, entry.name);
-        const manifestPath = resolve(packageRoot, 'package.json');
-        if (!existsSync(manifestPath)) return undefined;
-
-        const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-        if (manifest.private === true) return undefined;
-
-        return { manifest, manifestPath, packageRoot };
-    })
-    .filter((record) => record !== undefined);
-
-await Promise.all(publishablePackages.map(writePackageChangelog));
-
-async function writePackageChangelog({ manifest, manifestPath, packageRoot }) {
-    const notes = await collectChangelogNotes({ manifestPath, packageRoot });
-    if (notes.trim() === '') return;
-
-    const changelogPath = resolve(packageRoot, 'CHANGELOG.md');
+const notes = await collectChangelogNotes(manifestPath);
+if (notes.trim() === '') {
+    console.log('No new changelog entries.');
+} else {
+    const changelogPath = resolve(repoRoot, 'CHANGELOG.md');
     const existing = existsSync(changelogPath) ? readFileSync(changelogPath, 'utf8') : '';
     writeFileSync(changelogPath, mergeChangelog(existing, manifest.name, notes));
 }
 
-function collectChangelogNotes({ manifestPath, packageRoot }) {
-    const changelog = new ConventionalChangelog(workspaceRoot);
+async function collectChangelogNotes(packageManifestPath) {
+    const changelog = new ConventionalChangelog(repoRoot);
     changelog
         .loadPreset('conventionalcommits')
-        .readPackage(manifestPath)
+        .readPackage(packageManifestPath)
         .options({ releaseCount: 1 })
-        .tags({ prefix: 'v' })
-        .commits({ path: relativeToWorkspace(packageRoot) });
+        .tags({ prefix: 'v' });
 
     return new Promise((resolveChangelog, rejectChangelog) => {
         let output = '';
@@ -53,17 +37,13 @@ function collectChangelogNotes({ manifestPath, packageRoot }) {
     });
 }
 
-function relativeToWorkspace(path) {
-    return path.slice(workspaceRoot.length + 1).replaceAll('\\', '/');
-}
-
-function mergeChangelog(existing, packageName, notes) {
+function mergeChangelog(existing, packageName, releaseNotes) {
     const releaseIndex = existing.indexOf('\n## ');
     if (releaseIndex === -1) {
-        return `# ${packageName}\n\n${notes.trim()}\n`;
+        return `# ${packageName}\n\n${releaseNotes.trim()}\n`;
     }
 
     const header = existing.slice(0, releaseIndex + 1);
     const previousReleases = existing.slice(releaseIndex + 1).trimStart();
-    return `${header}${notes.trimEnd()}\n\n${previousReleases}`;
+    return `${header}${releaseNotes.trimEnd()}\n\n${previousReleases}`;
 }

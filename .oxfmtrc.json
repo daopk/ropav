@@ -7,11 +7,11 @@
   "trailingComma": "all",
   "sortPackageJson": false,
   "ignorePatterns": [
-    "packages/*/CHANGELOG.md",
-    "packages/*/dist/**",
-    "packages/*/storybook-static/**",
-    "packages/*/src/styles/_tokens.scss",
-    "packages/*/src/styles/_variables.scss"
+    "CHANGELOG.md",
+    "dist/**",
+    "storybook-static/**",
+    "src/styles/_tokens.scss",
+    "src/styles/_variables.scss"
   ],
   "overrides": [
     {

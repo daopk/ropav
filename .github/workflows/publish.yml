@@ -43,7 +43,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium
-        run: pnpm --filter ropav exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Verify
         run: pnpm run verify
@@ -51,7 +51,7 @@ jobs:
   release:
     if: "github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'chore(release): v')"
     needs: verify
-    name: Publish packages
+    name: Publish package
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -77,14 +77,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build packages
-        run: pnpm -r --if-present build
+      - name: Build package
+        run: pnpm run build
 
       - name: Verify built bundles
         run: |
-          node scripts/verify-workspace-contracts.mjs --bundles
-          pnpm -r --if-present test:bundle:built
-          pnpm --filter ropav publication:verify
+          pnpm run test:bundle:built
+          pnpm run publication:verify
 
-      - name: Publish packages
-        run: pnpm -r publish --access public
+      - name: Publish package
+        run: pnpm publish --access public

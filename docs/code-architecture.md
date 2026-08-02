@@ -4,44 +4,15 @@ This guide defines the source structure expected from contributors. The goal is 
 codebase where UI files describe rendering, behavior is testable through small interfaces, and
 shared logic has one obvious home.
 
-## Workspace seams
+## Package seams
 
-Published modules live under `packages/`. Each package owns its source, tests, build configuration,
-consumer fixtures, and public documentation. Paths such as `src/utils/` below are relative to the
-package that owns them.
+This repository publishes `ropav`, a zero-VDOM UI component library for Vue Vapor. Paths such as
+`src/utils/` below are relative to this package's root.
 
-Package dependencies point from specialized modules to foundational modules:
-
-```text
-@ropav/editor
-    -> ropav
-
-@ropav/table
-    -> ropav
-```
-
-`ropav` must not import `@ropav/editor` or `@ropav/table`. Cross-package code is consumed through a
-package interface, never through relative imports into another package's source. Use pnpm's
-`workspace:` protocol for local package dependencies and keep the workspace graph acyclic. The
-workspace contract runner in `scripts/verify-workspace-contracts.mjs` enforces these rules for every
-publishable package.
-
-The `@ropav/editor` module integrates Tiptap through `@tiptap/core`, mounting the editor
-directly into an element owned by a Vapor SFC. Production source must not use `@tiptap/vue-3`,
-because its Vue renderer relies on VDOM interfaces that violate this repository's zero-VDOM
-contract. Create or mount the editor only after the host element is available, and call
-`editor.destroy()` from `onBeforeUnmount`. Custom node and mark views must also remain DOM-native;
-do not use `VueNodeViewRenderer`.
-
-The `@ropav/table` module integrates `@tanstack/table-core` behind its own column and sorting
-interface. Production source must not use `@tanstack/vue-table`, because dynamic Vue cell renderers
-rely on VDOM interfaces. Custom markup crosses the package seam through compiled Vapor slots.
-
-Client-only packages verify their built artifacts through
-`scripts/verify-built-client-only-package.mjs`. That module owns output inspection, Node dependency
-closure traversal, ESM and CommonJS resolution, and the server-render guard. Each package supplies
-an adapter that retains its own dependency, exported interface, and stylesheet policy. The root
-verification interface remains limited to workspace-wide architecture and zero-VDOM contracts.
+The library integrates `@floating-ui/dom` and `focus-trap` through package dependencies, and it
+exposes public composables, component subpath exports, design tokens, and styles through its
+`package.json` exports. Production source stays zero-VDOM: component rendering, style injection,
+and accessible behavior are built with Vue Vapor, never through VDOM interfaces.
 
 ## Module seams
 
@@ -170,8 +141,7 @@ Before opening a pull request:
 - Dependency direction remains downward and acyclic.
 - Functions stay below the enforced complexity, depth, length, and parameter limits.
 - New behavior is tested at the module interface.
-- Every publishable package defines a `verify` script for its package-owned type, test, build, and
-  bundle behavior.
-- Workspace-wide lint, formatting, architecture, and zero-VDOM bundle contracts run only from the
-  root verification interface.
-- `pnpm verify` passes from the workspace root.
+- The package defines a `verify` script for package-owned type, test, build, and bundle behavior.
+- Lint, formatting, architecture, and zero-VDOM bundle contracts run from the root verification
+  interface.
+- `pnpm verify` passes from the repository root.
