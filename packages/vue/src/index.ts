@@ -3,10 +3,15 @@
 //  ===================================
 export * from "./components";
 //  ===================================
-//  Version
+//  Composables
 //  ===================================
-export {HEROUI_VERSION} from "./version";
+export * from "./composables";
 //  ===================================
 //  Utils
 //  ===================================
+export * from "./utils";
+//  ===================================
+//  Version
+//  ===================================
+export {HEROUI_VERSION} from "./version";
 export {tv, cn, type VariantProps} from "tailwind-variants";
