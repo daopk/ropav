@@ -1,83 +1,39 @@
 # Releasing packages
 
-This workspace uses Changesets for independent package versions and npm Trusted Publishing for
-token-free releases from GitHub Actions.
+This workspace releases `ropav`, `@ropav/editor`, and `@ropav/table` together at a single version
+with [`bumpp`](https://www.npmjs.com/package/bumpp). Release notes are generated from Conventional
+Commits, and packages are published from GitHub Actions with npm Trusted Publishing.
 
-## Normal changes
+## Release
 
-Add a changeset when a package change should appear in the next release:
-
-```bash
-pnpm changeset
-```
-
-CI does not require release intent on every pull request. A package change without a changeset is
-verified normally but is not included in a release until a later changeset covers it.
-
-On `main`, Changesets creates or updates a release pull request. Merging that pull request publishes
-the unpublished package versions, creates package-specific tags such as `ropav@0.1.9`, and pushes
-those tags. The release workflow only publishes after the full verification job succeeds and uses
-the package outputs produced by that job.
-
-If npm publish succeeds but pushing a tag fails, a workflow rerun might not recreate the tag for an
-already-published version. Read the release commit from npm, verify that it is the intended commit,
-then recreate and push the missing tag manually:
+With a clean working tree, run:
 
 ```bash
-npm view <package-name>@<version> gitHead
-git tag -a '<package-name>@<version>' <git-head> -m 'Release <package-name>@<version>'
-git push origin '<package-name>@<version>'
+pnpm release
 ```
 
-Repair missing release tags before changing public styles or tokens because compatibility checks
-use those tags as their released baseline.
+`bumpp` bumps all three packages to the same next version (patch/minor/major prompt), runs
+`pnpm run changelog` to regenerate each package changelog from commits since the last `v*` tag,
+then commits `chore(release): vX.Y.Z`, tags `vX.Y.Z`, and pushes the commit and tag.
 
-## Release pull request token
+Every push to `main` runs the full quality suite. When the pushed commit is a release commit
+(message starts with `chore(release): v`), the release job rebuilds the packages, checks the
+built bundles, and publishes them to npm. Change the release commit message in the `release`
+script and the release workflow will need the matching prefix.
 
-Create a fine-grained personal access token for the release automation, grant it access to this
-repository, and give it read/write permissions for **Contents** and **Pull requests**. Store it as
-the repository Actions secret `CHANGESETS_TOKEN`.
+## Changelog
 
-The Changesets action uses this dedicated token to create and update `changeset-release/*` pull
-requests. Do not replace it with the workflow's built-in `GITHUB_TOKEN`: events created with the
-built-in token leave the pull request verification runs waiting for manual approval. The release
-job fails with a clear error when `CHANGESETS_TOKEN` is not configured.
+`pnpm run changelog` regenerates `packages/*/CHANGELOG.md`. Each changelog covers commits that
+touch that package directory since the latest `v*` tag and uses the package's own version header.
+The release flow runs this automatically.
 
 ## Trusted Publisher configuration
 
-Configure each npm package separately:
+Each npm package is configured as a Trusted Publisher:
 
 - GitHub owner: `daopk`
 - Repository: `ropav`
 - Workflow filename: `publish.yml`
-- Allowed action: `npm publish`
 
-The workflow uses GitHub-hosted runners, Node 24, and `id-token: write`. Do not add a long-lived npm
-publish token to the workflow.
-
-## First publish of a new package
-
-npm requires a package to exist before it can have a Trusted Publisher. The first version of a new
-package, including `@ropav/editor` and `@ropav/table`, therefore needs a one-time
-maintainer-authenticated bootstrap:
-
-1. Confirm ownership of the npm scope and merge the publishable package on `main` with an empty
-   changeset. The OIDC release job may remain red until the bootstrap is complete.
-2. Check out that exact `main` commit, run `pnpm verify`, authenticate to npm with 2FA, and publish
-   the initial version:
-
-   ```bash
-   pnpm --filter <package-name> publish --access public
-   ```
-
-3. From the same commit, create and push the package tag:
-
-   ```bash
-   git tag -a '<package-name>@<version>' -m 'Release <package-name>@<version>'
-   git push origin '<package-name>@<version>'
-   ```
-
-4. Configure the package's Trusted Publisher using the values above, then rerun the release workflow
-   on `main`.
-
-All later versions use the normal Changesets and OIDC workflow.
+The workflow uses GitHub-hosted runners, Node 24, and `id-token: write`. Do not add a long-lived
+npm publish token to the workflow.

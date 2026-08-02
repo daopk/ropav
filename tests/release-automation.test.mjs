@@ -8,38 +8,34 @@ const workspaceRoot = fileURLToPath(new URL('../', import.meta.url));
 const readWorkspaceFile = (path) => readFile(`${workspaceRoot}${path}`, 'utf8');
 
 describe('release automation', () => {
-    it('keeps the legacy changelog compatible with Changesets', async () => {
+    it('keeps per-package changelogs in the conventional format', async () => {
         const changelog = await readWorkspaceFile('packages/ropav/CHANGELOG.md');
 
         assert.equal(changelog.split('\n', 1)[0], '# ropav');
+        assert.match(
+            changelog,
+            /^## \[0\.1\.8\]\(https:\/\/github\.com\/daopk\/ropav\/compare\/v0\.1\.7\.\.\.v0\.1\.8\)/m,
+        );
     });
 
-    it('gates releases on verification and reuses outputs from the verified commit', async () => {
+    it('releases with bumpp and publishes only on release commits', async () => {
         const workflow = await readWorkspaceFile('.github/workflows/publish.yml');
+        const packageJson = await readWorkspaceFile('package.json');
+
+        assert.match(packageJson, /"release": "[^"]*bumpp/);
+        assert.match(packageJson, /"changelog": "node scripts\/changelog\.mjs"/);
+        assert.doesNotMatch(packageJson, /changeset|@changesets/);
 
         assert.match(workflow, /pull_request:\n\s+branches:\n\s+- main/);
-        assert.match(workflow, /release:\n\s+if: .*\n\s+needs: verify/);
-        assert.equal(workflow.match(/run: pnpm run verify/g)?.length, 1);
-        assert.equal(
-            workflow.match(/name: verified-package-dist-\$\{\{ github\.sha \}\}/g)?.length,
-            2,
+        assert.match(
+            workflow,
+            /startsWith\(github\.event\.head_commit\.message, 'chore\(release\): v'\)/,
         );
-        assert.match(workflow, /tar -czf verified-package-dist\.tgz packages\/\*\/dist/);
-        assert.match(workflow, /tar -xzf verified-package-dist\.tgz/);
-        assert.match(workflow, /node scripts\/verify-workspace-contracts\.mjs --bundles/);
-        assert.doesNotMatch(workflow, /changeset status|release intent|reconcile-release|gitHead/);
-    });
-
-    it('uses an automation token for release pull requests and pushes tags only', async () => {
-        const workflow = await readWorkspaceFile('.github/workflows/publish.yml');
-
-        assert.match(workflow, /CHANGESETS_TOKEN is required/);
-        assert.match(workflow, /GITHUB_TOKEN: \$\{\{ secrets\.CHANGESETS_TOKEN \}\}/);
-        assert.doesNotMatch(workflow, /GITHUB_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
-        assert.match(workflow, /persist-credentials: false/);
-        assert.match(workflow, /pnpm exec changeset publish/);
-        assert.doesNotMatch(workflow, /pnpm run release/);
-        assert.match(workflow, /git push origin --tags/);
-        assert.doesNotMatch(workflow, /git push origin --follow-tags/);
+        assert.match(workflow, /release:\n\s+if: .*\n\s+needs: verify/);
+        assert.match(workflow, /pnpm -r publish --access public/);
+        assert.doesNotMatch(
+            workflow,
+            /changeset|CHANGESETS_TOKEN|verified-package-dist|actions\/upload-artifact|actions\/download-artifact|git push origin --tags/,
+        );
     });
 });

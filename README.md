@@ -33,5 +33,5 @@ the root `pnpm verify` command enforces lint, formatting, and workspace-wide arc
 contracts.
 
 Contributors should follow the [code architecture guide](./docs/code-architecture.md).
-Package versioning, npm Trusted Publishing, and first-release setup are documented in the
+Package versioning and npm Trusted Publishing are documented in the
 [release guide](./docs/releasing.md).
