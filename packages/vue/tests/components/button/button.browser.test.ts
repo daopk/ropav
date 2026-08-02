@@ -1,6 +1,6 @@
 import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
@@ -140,6 +140,46 @@ describe("Button (browser)", () => {
     expect(Number(styles.opacity)).toBeLessThan(1);
 
     unmount();
+  });
+
+  it("does not submit its form while pending", async () => {
+    const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault());
+    const form = document.createElement("form");
+
+    document.body.appendChild(form);
+    form.addEventListener("submit", onSubmit);
+
+    const {container, unmount} = renderButton({isPending: true, type: "submit"});
+
+    form.appendChild(container);
+
+    // A real click cannot land while `pointer-events` is none, so the click is dispatched
+    // directly: what is under test is the type downgrade, not the pointer blocking.
+    buttonIn(container).click();
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    unmount();
+    form.remove();
+  });
+
+  it("submits its form once pending clears", async () => {
+    const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault());
+    const form = document.createElement("form");
+
+    document.body.appendChild(form);
+    form.addEventListener("submit", onSubmit);
+
+    const {container, unmount} = renderButton({type: "submit"});
+
+    form.appendChild(container);
+
+    await userEvent.click(buttonIn(container));
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+
+    unmount();
+    form.remove();
   });
 
   it("has no axe violations", async () => {

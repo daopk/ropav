@@ -140,6 +140,22 @@ describe("Button", () => {
       unmount();
     });
 
+    it("stops being a submit button so a pending form cannot be submitted", () => {
+      const {container, unmount} = renderButton({isPending: true, type: "submit"});
+
+      expect(buttonIn(container)?.type).toBe("button");
+
+      unmount();
+    });
+
+    it("keeps a non-submit type as it is", () => {
+      const {container, unmount} = renderButton({isPending: true, type: "reset"});
+
+      expect(buttonIn(container)?.type).toBe("reset");
+
+      unmount();
+    });
+
     it("marks itself aria-disabled while staying focusable", () => {
       const {container, unmount} = renderButton({isPending: true});
       const button = buttonIn(container);

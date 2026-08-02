@@ -40,6 +40,10 @@ const {
   isPending: () => props.isPending,
 });
 
+// Blocking the click is not enough on its own: implicit submission reaches the form
+// through the button's own type, without a click ever landing on the button.
+const type = computed(() => (props.isPending && props.type === "submit" ? "button" : props.type));
+
 const onClick = (event: MouseEvent) => {
   // A pending button stays focusable rather than `disabled`, so activation is blocked here.
   if (props.isPending) {
@@ -64,7 +68,7 @@ const onClick = (event: MouseEvent) => {
     :data-pressed="dataAttr(isPressed)"
     data-slot="button"
     :disabled="props.isDisabled || undefined"
-    :type="props.type"
+    :type="type"
     @blur="onBlur"
     @click="onClick"
     @focus="onFocus"
