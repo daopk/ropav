@@ -1,5 +1,24 @@
 # ropav
 
+## [0.1.9](https://github.com/daopk/ropav/compare/v0.1.8...v0.1.9) (2026-08-02)
+
+### Features
+
+* **calendar:** add accessible extension points ([7d996af](https://github.com/daopk/ropav/commit/7d996af44aa3ffa694a5bebb9eda854456333775))
+* **storybook:** add editor demos ([0b9fad2](https://github.com/daopk/ropav/commit/0b9fad2f80259ced07f6e56f1784927b40b51493))
+* **table:** add data table package ([dd6ce01](https://github.com/daopk/ropav/commit/dd6ce018b3e3962d28b00719a233f726d44dd384))
+* **toolbar:** add accessible toolbar component ([4bec7a3](https://github.com/daopk/ropav/commit/4bec7a345b8403f5638200bf7c282d774b131de4))
+
+### Bug Fixes
+
+* **repo:** harden pnpm monorepo safeguards ([c079711](https://github.com/daopk/ropav/commit/c079711cb0ec0d17d5fae5c63f5e8148083b8afd))
+* **slider:** enhance thumb interaction visibility and positioning ([da32638](https://github.com/daopk/ropav/commit/da3263881b84107e4e46fa6bcd3bd475eccaf618))
+* **toolbar:** unify focus navigation eligibility ([8f84685](https://github.com/daopk/ropav/commit/8f8468588c3989195cf3094df0f1db74a4eb6df3))
+
+### Performance Improvements
+
+* **storybook:** smooth color theme toggling ([7eb5ccc](https://github.com/daopk/ropav/commit/7eb5ccc457b79daa08a6710dfdc84b167e199f7b))
+
 ## [0.1.8](https://github.com/daopk/ropav/compare/v0.1.7...v0.1.8) (2026-07-26)
 
 ### Features
