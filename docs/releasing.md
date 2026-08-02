@@ -25,7 +25,9 @@ script and the release workflow will need the matching prefix.
 
 `pnpm run changelog` regenerates `packages/*/CHANGELOG.md`. Each changelog covers commits that
 touch that package directory since the latest `v*` tag and uses the package's own version header.
-The release flow runs this automatically.
+The release flow runs this automatically. Changelogs are tracked files (editor and table start as
+header-only placeholders), and the release commit includes them via `bumpp --all`, so the working
+tree must be clean before `pnpm release`.
 
 ## Trusted Publisher configuration
 

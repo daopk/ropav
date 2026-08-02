@@ -22,7 +22,8 @@ describe('release automation', () => {
         const workflow = await readWorkspaceFile('.github/workflows/publish.yml');
         const packageJson = await readWorkspaceFile('package.json');
 
-        assert.match(packageJson, /"release": "[^"]*bumpp/);
+        assert.match(packageJson, /"release": ".*bumpp/);
+        assert.match(packageJson, /--all --commit \\"chore\(release\): v\{version\}\\"/);
         assert.match(packageJson, /"changelog": "node scripts\/changelog\.mjs"/);
         assert.doesNotMatch(packageJson, /changeset|@changesets/);
 

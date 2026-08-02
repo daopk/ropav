@@ -22,7 +22,7 @@
     "storybook": "pnpm --filter ropav storybook",
     "build-storybook": "pnpm -r --if-present build-storybook",
     "changelog": "node scripts/changelog.mjs",
-    "release": "bumpp --recursive --git-check --commit \"chore(release): v{version}\" --tag \"v{version}\" --execute \"pnpm run changelog\""
+    "release": "test -z \"$(git status --porcelain)\" && bumpp --recursive --all --commit \"chore(release): v{version}\" --tag \"v{version}\" --execute \"pnpm run changelog\""
   },
   "devDependencies": {
     "@vue/compiler-sfc": "3.6.0-rc.2",
