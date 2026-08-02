@@ -1,6 +1,28 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
-import {Accordion} from "./index";
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeading,
+  AccordionIndicator,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
+} from "./index";
+
+/**
+ * Runtime-compiled story templates cannot resolve `Accordion.Item` — dot notation is an SFC
+ * compiler feature. The parts are registered individually instead.
+ */
+const components = {
+  Accordion,
+  AccordionBody,
+  AccordionHeading,
+  AccordionIndicator,
+  AccordionItem,
+  AccordionPanel,
+  AccordionTrigger,
+};
 
 const ITEMS = [
   {
@@ -49,24 +71,24 @@ type Story = StoryObj<typeof meta>;
 const template = `
   <div class="w-full max-w-md">
     <Accordion v-bind="args">
-      <Accordion.Item v-for="item in items" :id="item.id" :key="item.id">
-        <Accordion.Heading>
-          <Accordion.Trigger>
+      <AccordionItem v-for="item in items" :id="item.id" :key="item.id">
+        <AccordionHeading>
+          <AccordionTrigger>
             {{ item.title }}
-            <Accordion.Indicator />
-          </Accordion.Trigger>
-        </Accordion.Heading>
-        <Accordion.Panel>
-          <Accordion.Body>{{ item.content }}</Accordion.Body>
-        </Accordion.Panel>
-      </Accordion.Item>
+            <AccordionIndicator />
+          </AccordionTrigger>
+        </AccordionHeading>
+        <AccordionPanel>
+          <AccordionBody>{{ item.content }}</AccordionBody>
+        </AccordionPanel>
+      </AccordionItem>
     </Accordion>
   </div>
 `;
 
 export const Default: Story = {
   render: (args) => ({
-    components: {Accordion},
+    components,
     setup: () => ({args, items: ITEMS}),
     template,
   }),
@@ -75,7 +97,7 @@ export const Default: Story = {
 export const SurfaceVariant: Story = {
   args: {variant: "surface"},
   render: (args) => ({
-    components: {Accordion},
+    components,
     setup: () => ({args, items: ITEMS}),
     template,
   }),
@@ -84,7 +106,7 @@ export const SurfaceVariant: Story = {
 export const WithoutSeparator: Story = {
   args: {hideSeparator: true},
   render: (args) => ({
-    components: {Accordion},
+    components,
     setup: () => ({args, items: ITEMS}),
     template,
   }),
@@ -93,7 +115,7 @@ export const WithoutSeparator: Story = {
 export const SingleExpanded: Story = {
   args: {allowsMultipleExpanded: false},
   render: (args) => ({
-    components: {Accordion},
+    components,
     setup: () => ({args, items: ITEMS}),
     template,
   }),
@@ -102,7 +124,7 @@ export const SingleExpanded: Story = {
 export const Disabled: Story = {
   args: {isDisabled: true},
   render: (args) => ({
-    components: {Accordion},
+    components,
     setup: () => ({args, items: ITEMS}),
     template,
   }),

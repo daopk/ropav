@@ -1,6 +1,12 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
-import {Avatar} from "./index";
+import {Avatar, AvatarFallback, AvatarImage} from "./index";
+
+/**
+ * Runtime-compiled story templates cannot resolve `Avatar.Image` — dot notation is an SFC
+ * compiler feature. The parts are registered individually instead.
+ */
+const components = {Avatar, AvatarFallback, AvatarImage};
 
 const AVATAR_SRC = "https://i.pravatar.cc/150?u=heroui";
 
@@ -32,12 +38,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
-    components: {Avatar},
+    components,
     setup: () => ({args, src: AVATAR_SRC}),
     template: `
       <Avatar v-bind="args">
-        <Avatar.Image alt="HeroUI" :src="src" />
-        <Avatar.Fallback>HU</Avatar.Fallback>
+        <AvatarImage alt="HeroUI" :src="src" />
+        <AvatarFallback>HU</AvatarFallback>
       </Avatar>
     `,
   }),
@@ -46,11 +52,11 @@ export const Default: Story = {
 /** With no `src`, the image never loads and the fallback stays. */
 export const Fallback: Story = {
   render: (args) => ({
-    components: {Avatar},
+    components,
     setup: () => ({args}),
     template: `
       <Avatar v-bind="args">
-        <Avatar.Fallback>HU</Avatar.Fallback>
+        <AvatarFallback>HU</AvatarFallback>
       </Avatar>
     `,
   }),
@@ -58,13 +64,13 @@ export const Fallback: Story = {
 
 export const Sizes: Story = {
   render: () => ({
-    components: {Avatar},
+    components,
     setup: () => ({sizes: ["sm", "md", "lg"], src: AVATAR_SRC}),
     template: `
       <div class="flex items-center gap-3">
         <Avatar v-for="size in sizes" :key="size" :size="size">
-          <Avatar.Image alt="HeroUI" :src="src" />
-          <Avatar.Fallback>HU</Avatar.Fallback>
+          <AvatarImage alt="HeroUI" :src="src" />
+          <AvatarFallback>HU</AvatarFallback>
         </Avatar>
       </div>
     `,
@@ -73,12 +79,12 @@ export const Sizes: Story = {
 
 export const FallbackColors: Story = {
   render: () => ({
-    components: {Avatar},
+    components,
     setup: () => ({colors: ["default", "accent", "success", "warning", "danger"]}),
     template: `
       <div class="flex items-center gap-3">
         <Avatar v-for="color in colors" :key="color" :color="color" variant="soft">
-          <Avatar.Fallback>HU</Avatar.Fallback>
+          <AvatarFallback>HU</AvatarFallback>
         </Avatar>
       </div>
     `,

@@ -1,6 +1,12 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
-import {Chip} from "./index";
+import {Chip, ChipLabel} from "./index";
+
+/**
+ * Runtime-compiled story templates cannot resolve `Chip.Label` — dot notation is an SFC
+ * compiler feature. The parts are registered individually instead.
+ */
+const components = {Chip, ChipLabel};
 
 const meta: Meta = {
   argTypes: {
@@ -30,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
-    components: {Chip},
+    components,
     setup: () => ({args}),
     template: `<Chip label="Label" v-bind="args" />`,
   }),
@@ -38,7 +44,7 @@ export const Default: Story = {
 
 export const Sizes: Story = {
   render: () => ({
-    components: {Chip},
+    components,
     setup: () => ({sizes: ["sm", "md", "lg"]}),
     template: `
       <div class="flex items-center gap-3">
@@ -50,7 +56,7 @@ export const Sizes: Story = {
 
 export const Colors: Story = {
   render: () => ({
-    components: {Chip},
+    components,
     setup: () => ({colors: ["default", "accent", "success", "warning", "danger"]}),
     template: `
       <div class="flex items-center gap-3">
@@ -62,7 +68,7 @@ export const Colors: Story = {
 
 export const Variants: Story = {
   render: () => ({
-    components: {Chip},
+    components,
     setup: () => ({variants: ["primary", "secondary", "tertiary", "soft"]}),
     template: `
       <div class="flex items-center gap-3">
@@ -78,13 +84,13 @@ export const Variants: Story = {
  */
 export const WithIcons: Story = {
   render: () => ({
-    components: {Chip},
+    components,
     template: `
       <Chip>
         <svg fill="none" height="12" viewBox="0 0 16 16" width="12">
           <circle cx="8" cy="8" fill="currentColor" r="4" />
         </svg>
-        <Chip.Label>Label</Chip.Label>
+        <ChipLabel>Label</ChipLabel>
       </Chip>
     `,
   }),

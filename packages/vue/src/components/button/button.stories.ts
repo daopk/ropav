@@ -2,6 +2,8 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {Button} from "./index";
 
+const components = {Button};
+
 const meta: Meta = {
   argTypes: {
     size: {
@@ -26,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
-    components: {Button},
+    components,
     setup: () => ({args}),
     template: `<Button v-bind="args">Button</Button>`,
   }),
@@ -34,14 +36,22 @@ export const Default: Story = {
 
 export const Variants: Story = {
   render: () => ({
-    components: {Button},
+    components,
     setup: () => ({
-      variants: ["primary", "secondary", "tertiary", "outline", "ghost", "danger", "danger-soft"],
+      variants: [
+        {label: "Primary", variant: "primary"},
+        {label: "Secondary", variant: "secondary"},
+        {label: "Tertiary", variant: "tertiary"},
+        {label: "Outline", variant: "outline"},
+        {label: "Ghost", variant: "ghost"},
+        {label: "Danger", variant: "danger"},
+        {label: "Danger Soft", variant: "danger-soft"},
+      ],
     }),
     template: `
-      <div class="flex flex-wrap items-center gap-3">
-        <Button v-for="variant in variants" :key="variant" :variant="variant">
-          {{ variant }}
+      <div class="flex gap-3">
+        <Button v-for="item in variants" :key="item.variant" :variant="item.variant">
+          {{ item.label }}
         </Button>
       </div>
     `,
@@ -50,7 +60,7 @@ export const Variants: Story = {
 
 export const Sizes: Story = {
   render: () => ({
-    components: {Button},
+    components,
     setup: () => ({sizes: ["sm", "md", "lg"]}),
     template: `
       <div class="flex items-center gap-3">
@@ -62,7 +72,7 @@ export const Sizes: Story = {
 
 export const States: Story = {
   render: () => ({
-    components: {Button},
+    components,
     template: `
       <div class="flex items-center gap-3">
         <Button>Default</Button>
@@ -75,7 +85,7 @@ export const States: Story = {
 
 export const FullWidth: Story = {
   render: () => ({
-    components: {Button},
+    components,
     template: `
       <div class="w-80">
         <Button full-width>Full width</Button>
