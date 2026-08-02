@@ -11,11 +11,9 @@ type DocsContext = Parameters<typeof StorybookDocsContainer>[0]["context"];
  */
 const readTheme = (context: DocsContext) => {
   try {
-    return ensureThemeKey(
-      context.getStoryContext(context.storyById()).globals[THEME_GLOBAL_TYPE_ID] as
-        | string
-        | undefined,
-    );
+    const {globals} = context.getStoryContext(context.storyById());
+
+    return ensureThemeKey(globals[THEME_GLOBAL_TYPE_ID] as string | undefined);
   } catch {
     return ensureThemeKey(undefined);
   }

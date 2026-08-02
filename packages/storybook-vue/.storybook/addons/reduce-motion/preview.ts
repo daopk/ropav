@@ -1,3 +1,5 @@
+import type {Preview} from "@storybook/vue3-vite";
+
 import {
   DEFAULT_REDUCE_MOTION,
   REDUCE_MOTION_GLOBAL_TYPE_ID,
@@ -19,7 +21,6 @@ export const reduceMotionGlobalType = {
         title: option.title,
         icon: option.icon,
       })),
-      showName: true,
     },
   },
-};
+} satisfies Preview["globalTypes"];

@@ -15,7 +15,7 @@ const STORIES_GLOB = join(__dirname, "../../vue/src/**/*.stories.ts");
  * starts with `Components`, matching the filter on the React side.
  */
 export const getStories = () => {
-  const readyOnly = process.env.STORYBOOK_READY_ONLY === "true";
+  const readyOnly = process.env["STORYBOOK_READY_ONLY"] === "true";
 
   if (!readyOnly) return [STORIES_GLOB];
 

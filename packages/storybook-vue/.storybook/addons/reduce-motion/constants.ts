@@ -8,7 +8,7 @@ export const DEFAULT_REDUCE_MOTION: ReduceMotionKey = "false";
 export interface ReduceMotionOption {
   value: ReduceMotionKey;
   title: string;
-  icon?: string;
+  icon?: "play" | "stop";
 }
 
 export const REDUCE_MOTION_OPTIONS: ReduceMotionOption[] = [
