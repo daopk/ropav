@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "storybook-vue",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@heroui/storybook-vue", "dev"],
+      "port": 6007,
+      "url": "http://127.0.0.1:6007"
+    },
+    {
+      "name": "storybook-react",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@heroui/storybook", "dev"],
+      "port": 6006,
+      "url": "http://127.0.0.1:6006"
+    }
+  ]
+}
