@@ -50,6 +50,16 @@ describe("Button", () => {
 
       unmount();
     });
+
+    it("forwards unknown attributes to the button", () => {
+      const {container, unmount} = renderButton({"aria-label": "Save", "data-testid": "save"});
+      const button = buttonIn(container);
+
+      expect(button?.getAttribute("data-testid")).toBe("save");
+      expect(button?.getAttribute("aria-label")).toBe("Save");
+
+      unmount();
+    });
   });
 
   describe("styling", () => {

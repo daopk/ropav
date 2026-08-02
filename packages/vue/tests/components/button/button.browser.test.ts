@@ -86,6 +86,27 @@ describe("Button (browser)", () => {
     unmount();
   });
 
+  it("activates on Enter and on Space", async () => {
+    const clicks: MouseEvent[] = [];
+    const {container, unmount} = renderVapor(Button, {
+      props: {onClick: (event: MouseEvent) => clicks.push(event)},
+      slots: {default: () => document.createTextNode("Press me")},
+    });
+    const button = buttonIn(container);
+
+    button.focus();
+    // Keyboard activation is left to the native button, so only a real browser shows it.
+    await userEvent.keyboard("{Enter}");
+
+    expect(clicks).toHaveLength(1);
+
+    await userEvent.keyboard(" ");
+
+    expect(clicks).toHaveLength(2);
+
+    unmount();
+  });
+
   it("renders the block class and resolves real styles from the stylesheet", () => {
     const {container, unmount} = renderButton();
     const button = buttonIn(container);
