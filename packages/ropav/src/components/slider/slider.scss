@@ -14,7 +14,10 @@
             var(--_rp-slider-tooltip-ratio)
     );
 
-    &--thumb-hidden {
+    // Interaction mode idles without a visible thumb, so it shares the edge-to-edge
+    // fill of hidden mode; its thumb overflows the bar edges instead of compressing.
+    &--thumb-hidden,
+    &--thumb-interaction {
         --_rp-slider-fill-position: calc(100% * var(--_rp-slider-ratio));
         --_rp-slider-tooltip-fill-position: calc(100% * var(--_rp-slider-tooltip-ratio));
     }
@@ -321,6 +324,20 @@
     &--vertical &__native::-webkit-slider-thumb {
         margin-top: 0;
         margin-left: calc((var(--_rp-slider-hit-size) - var(--_rp-slider-thumb-size)) / 2);
+    }
+
+    &--thumb-interaction:not(#{&}--vertical) &__thumb,
+    &--thumb-interaction:not(#{&}--vertical) &__travel,
+    &--thumb-interaction:not(#{&}--vertical) &__marks {
+        right: 0;
+        left: 0;
+    }
+
+    &--vertical#{&}--thumb-interaction &__thumb,
+    &--vertical#{&}--thumb-interaction &__travel,
+    &--vertical#{&}--thumb-interaction &__marks {
+        top: 0;
+        bottom: 0;
     }
 
     &--thumb-hidden &__thumb-content,
