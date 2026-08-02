@@ -1,9 +1,8 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import {AvatarFallback} from "@/components/avatar";
-
-import {renderVapor} from "../../helpers";
 
 import AvatarFixture from "./fixtures.vue";
 

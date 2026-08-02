@@ -1,8 +1,7 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import {ChipLabel} from "@/components/chip";
-
-import {renderVapor} from "../../helpers";
 
 import ChipFixture from "./fixtures.vue";
 

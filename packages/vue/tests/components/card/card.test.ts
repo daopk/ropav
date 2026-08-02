@@ -1,8 +1,7 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import {CardHeader} from "@/components/card";
-
-import {renderVapor} from "../../helpers";
 
 import CardFixture from "./fixtures.vue";
 

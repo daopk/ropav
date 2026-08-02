@@ -1,9 +1,9 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import {useId} from "@/composables/use-id";
 
 import UseIdHost from "../fixtures/use-id-host.vue";
-import {renderVapor} from "../helpers";
 
 const read = (container: HTMLElement, testId: string) =>
   container.querySelector(`[data-testid='${testId}']`)?.textContent;

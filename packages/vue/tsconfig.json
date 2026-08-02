@@ -6,6 +6,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "tests", "vite.config.ts", "vitest.config.ts"],
+  "include": ["src", "tests", "vite.config.ts", "vitest.config.ts", "../testing/globals.d.ts"],
   "exclude": ["node_modules", "dist", "**/*.stories.*"]
 }

@@ -1,8 +1,8 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import ContextOptionalConsumer from "../fixtures/context-optional-consumer.vue";
 import ContextProvider from "../fixtures/context-provider.vue";
-import {renderVapor} from "../helpers";
 
 describe("createContext", () => {
   it("exposes the provided value to a descendant", () => {

@@ -1,9 +1,8 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import {AccordionItem} from "@/components/accordion";
-
-import {renderVapor} from "../../helpers";
 
 import AccordionFixture from "./fixtures.vue";
 

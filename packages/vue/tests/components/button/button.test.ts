@@ -1,8 +1,7 @@
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import {Button} from "@/components/button";
-
-import {renderVapor} from "../../helpers";
 
 const renderButton = (props: Record<string, unknown> = {}) =>
   renderVapor(Button, {
