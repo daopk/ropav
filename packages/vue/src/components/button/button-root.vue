@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {ButtonRootProps} from "./button.types";
+import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
 
 import {buttonVariants} from "@heroui/styles";
 import {computed} from "vue";
@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<ButtonRootProps>(), {type: "button"});
 
 const emit = defineEmits<{click: [event: MouseEvent]}>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{default?: (props: ButtonSlotProps) => unknown}>();
 
 const styles = computed(() =>
   buttonVariants({
@@ -72,6 +72,12 @@ const onClick = (event: MouseEvent) => {
     @pointerenter="onPointerenter"
     @pointerleave="onPointerleave"
   >
-    <slot />
+    <slot
+      :is-disabled="Boolean(props.isDisabled)"
+      :is-focus-visible="isFocusVisible"
+      :is-hovered="isHovered"
+      :is-pending="Boolean(props.isPending)"
+      :is-pressed="isPressed"
+    />
   </button>
 </template>

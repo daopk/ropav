@@ -12,7 +12,11 @@ export const Button = Object.assign(ButtonRoot, {
  * -----------------------------------------------------------------------------------------------*/
 export {ButtonRoot};
 
-export type {ButtonRootProps, ButtonRootProps as ButtonProps} from "./button.types";
+export type {
+  ButtonRootProps,
+  ButtonRootProps as ButtonProps,
+  ButtonSlotProps,
+} from "./button.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

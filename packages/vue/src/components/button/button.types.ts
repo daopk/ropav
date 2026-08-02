@@ -1,5 +1,14 @@
 import type {ButtonVariants} from "@heroui/styles";
 
+/** State handed to the default slot, so content can follow the button's own state. */
+export interface ButtonSlotProps {
+  isDisabled: boolean;
+  isFocusVisible: boolean;
+  isHovered: boolean;
+  isPending: boolean;
+  isPressed: boolean;
+}
+
 export interface ButtonRootProps {
   class?: string;
   /** Stretches the button to the full width of its container. */

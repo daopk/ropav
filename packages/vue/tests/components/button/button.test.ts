@@ -258,6 +258,40 @@ describe("Button", () => {
     });
   });
 
+  describe("slot props", () => {
+    it("hands its state to the default slot", async () => {
+      const seen: Record<string, unknown>[] = [];
+      const {container, unmount} = renderVapor(Button, {
+        props: {isPending: true},
+        slots: {
+          default: (slotProps = {}) => {
+            seen.push(slotProps);
+
+            return document.createTextNode("Press me");
+          },
+        },
+      });
+
+      expect(seen.at(0)).toMatchObject({
+        isDisabled: false,
+        isFocusVisible: false,
+        isHovered: false,
+        isPending: true,
+        isPressed: false,
+      });
+
+      buttonIn(container)!.dispatchEvent(
+        new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}),
+      );
+      await nextTick();
+
+      // Slot props are read live, so content can follow the state without a rerender.
+      expect(seen.at(-1)).toMatchObject({isPending: true});
+
+      unmount();
+    });
+  });
+
   describe("events", () => {
     it("emits click when activated", async () => {
       const onClick = vi.fn();
