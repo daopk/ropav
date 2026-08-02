@@ -7,6 +7,7 @@ import {withReduceMotion} from "./addons/reduce-motion/decorator";
 import {reduceMotionGlobalType} from "./addons/reduce-motion/preview";
 import {withTheme} from "./addons/theme/decorator";
 import {themeGlobalType} from "./addons/theme/preview";
+import {DocsContainer} from "./components/docs-container";
 
 import "./globals.css";
 
@@ -27,6 +28,9 @@ const parameters: Preview["parameters"] = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+  },
+  docs: {
+    container: DocsContainer,
   },
   layout: "fullscreen",
   options: {
