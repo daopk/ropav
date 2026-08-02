@@ -45,7 +45,7 @@ async function removeIgnoredFilesLegacy(files, eslint) {
 }
 
 const lintStaged = {
-  "**/*.{cjs,mjs,js,ts,jsx,tsx}": async (files) => {
+  "**/*.{cjs,mjs,js,ts,jsx,tsx,vue}": async (files) => {
     if (LINT_MODE === "Experimental") {
       // use ESLint with experimental configuration file resolution
       const filesToLint = await removeIgnoredFilesNew(files);
