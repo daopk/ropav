@@ -11,8 +11,11 @@ export interface RenderVaporOptions {
    * `rerender` step.
    */
   props?: Record<string, unknown>;
-  /** Slot functions returning DOM nodes, e.g. `{default: () => document.createTextNode("x")}`. */
-  slots?: Record<string, () => Node>;
+  /**
+   * Slot functions returning DOM nodes, e.g. `{default: () => document.createTextNode("x")}`.
+   * Any slot props the component passes arrive as the first argument.
+   */
+  slots?: Record<string, (slotProps?: Record<string, unknown>) => Node>;
 }
 
 export type RenderVaporResult = ReturnType<typeof renderVapor>;
