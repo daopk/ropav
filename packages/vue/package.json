@@ -52,6 +52,8 @@
     "build:fast": "node scripts/build.mjs",
     "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "clean": "rm -rf dist .turbo tsconfig.tsbuildinfo",
     "prepack": "clean-package && node scripts/update-exports.mjs",
     "postpack": "clean-package restore"
@@ -63,13 +65,16 @@
   },
   "devDependencies": {
     "@heroui/standard": "workspace:*",
+    "@testing-library/dom": "10.4.1",
     "@types/fs-extra": "11.0.4",
     "@vitejs/plugin-vue": "6.0.8",
     "clean-package": "2.2.0",
     "fs-extra": "11.3.3",
+    "jsdom": "30.0.1",
     "tailwindcss": "4.3.0",
     "typescript": "5.9.3",
     "vite": "7.3.5",
+    "vitest": "4.1.10",
     "vue": "3.6.0-rc.4",
     "vue-tsc": "3.3.10"
   },
