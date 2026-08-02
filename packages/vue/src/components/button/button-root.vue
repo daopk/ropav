@@ -7,20 +7,40 @@ import {computed, watch} from "vue";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {announce} from "../../utils/live-announcer";
+import {useButtonGroupContext} from "../button-group/button-group.context";
 
-const props = withDefaults(defineProps<ButtonRootProps>(), {type: "button"});
+// The boolean props declare an explicit `undefined` default so an absent prop stays
+// absent: Vue otherwise casts a missing boolean to `false`, which reads as "the caller
+// set false" and would swallow the value a surrounding group provides.
+const props = withDefaults(defineProps<ButtonRootProps>(), {
+  fullWidth: undefined,
+  isDisabled: undefined,
+  type: "button",
+});
 
 const emit = defineEmits<{click: [event: MouseEvent]}>();
 
 defineSlots<{default?: (props: ButtonSlotProps) => unknown}>();
 
+// A surrounding group supplies defaults for the whole row of buttons, which each button
+// can still override for itself. `isIconOnly` is deliberately left out: it describes the
+// content of one button rather than the shape of the group.
+const group = useButtonGroupContext();
+
+// Named apart from the props they resolve: a binding that shadows a prop name is read as
+// the prop inside the template, which would silently drop the value coming from the group.
+const resolvedFullWidth = computed(() => props.fullWidth ?? group?.fullWidth.value);
+const resolvedIsDisabled = computed(() => props.isDisabled ?? group?.isDisabled.value);
+const resolvedSize = computed(() => props.size ?? group?.size.value);
+const resolvedVariant = computed(() => props.variant ?? group?.variant.value);
+
 const styles = computed(() =>
   buttonVariants({
     class: props.class,
-    fullWidth: props.fullWidth,
+    fullWidth: resolvedFullWidth.value,
     isIconOnly: props.isIconOnly,
-    size: props.size,
-    variant: props.variant,
+    size: resolvedSize.value,
+    variant: resolvedVariant.value,
   }),
 );
 
@@ -37,7 +57,7 @@ const {
   onPointerenter,
   onPointerleave,
 } = useInteractionStates({
-  isDisabled: () => props.isDisabled,
+  isDisabled: () => resolvedIsDisabled.value,
   isPending: () => props.isPending,
 });
 
@@ -73,14 +93,14 @@ const onClick = (event: MouseEvent) => {
   <button
     :aria-disabled="props.isPending || undefined"
     :class="styles"
-    :data-disabled="dataAttr(props.isDisabled)"
+    :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-focused="dataAttr(isFocused)"
     :data-hovered="dataAttr(isHovered)"
     :data-pending="dataAttr(props.isPending)"
     :data-pressed="dataAttr(isPressed)"
     data-slot="button"
-    :disabled="props.isDisabled || undefined"
+    :disabled="resolvedIsDisabled || undefined"
     :type="type"
     @blur="onBlur"
     @click="onClick"
@@ -90,7 +110,7 @@ const onClick = (event: MouseEvent) => {
     @pointerleave="onPointerleave"
   >
     <slot
-      :is-disabled="Boolean(props.isDisabled)"
+      :is-disabled="Boolean(resolvedIsDisabled)"
       :is-focus-visible="isFocusVisible"
       :is-hovered="isHovered"
       :is-pending="Boolean(props.isPending)"
