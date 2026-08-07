@@ -1,5 +1,6 @@
 export * from "./use-collection";
 export * from "./use-controllable-state";
+export * from "./use-description";
 export * from "./use-disclosure-group";
 export * from "./use-field-ids";
 export * from "./use-id";
@@ -7,6 +8,7 @@ export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
 export * from "./use-list-data";
 export * from "./use-list-keyboard";
+export * from "./use-long-press";
 export * from "./use-press";
 export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
