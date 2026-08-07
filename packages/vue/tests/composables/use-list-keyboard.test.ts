@@ -100,6 +100,21 @@ const setup = (
   return {...harness, container, items, press};
 };
 
+/**
+ * A focus event with a real target.
+ *
+ * `onFocusin` tells focus landing inside the collection from focus that merely bubbled through it,
+ * which a bare `FocusEvent` cannot express — its target is `null`.
+ */
+const focusin = (target: Element, relatedTarget?: Element) => {
+  const event = new FocusEvent("focusin");
+
+  Object.defineProperty(event, "target", {value: target});
+  if (relatedTarget) Object.defineProperty(event, "relatedTarget", {value: relatedTarget});
+
+  return event;
+};
+
 afterEach(() => {
   scopes.splice(0).forEach((stop) => stop());
   containers.splice(0).forEach((container) => container.remove());
@@ -430,10 +445,10 @@ describe("useListKeyboard", () => {
 
   describe("focus entry", () => {
     it("prefers the first selected key over the first item", () => {
-      const {collection, keyboard, selection} = setup();
+      const {collection, container, keyboard, selection} = setup();
 
       selection.setSelectedKeys(["c"]);
-      keyboard.onFocusin(new FocusEvent("focusin"));
+      keyboard.onFocusin(focusin(container));
 
       expect(selection.focusedKey.value).toBe("c");
       expect(collection.getElement("c")).toBeTruthy();
@@ -447,20 +462,16 @@ describe("useListKeyboard", () => {
       document.body.appendChild(after);
       containers.push(after);
 
-      const event = new FocusEvent("focusin");
-
-      Object.defineProperty(event, "relatedTarget", {value: after});
-      Object.defineProperty(event, "target", {value: container});
-      keyboard.onFocusin(event);
+      keyboard.onFocusin(focusin(container, after));
       after.remove();
 
       expect(selection.focusedKey.value).toBe("d");
     });
 
     it("reports focus leaving the collection", () => {
-      const {keyboard, selection} = setup();
+      const {container, keyboard, selection} = setup();
 
-      keyboard.onFocusin(new FocusEvent("focusin"));
+      keyboard.onFocusin(focusin(container));
 
       expect(selection.isFocused.value).toBe(true);
 
@@ -469,10 +480,38 @@ describe("useListKeyboard", () => {
       expect(selection.isFocused.value).toBe(false);
     });
 
-    it("does not report a departure for focus moving between items", () => {
-      const {items, keyboard, selection} = setup();
+    it("leaves the focused key alone when the collection already holds focus", () => {
+      const {container, keyboard, selection} = setup();
 
-      keyboard.onFocusin(new FocusEvent("focusin"));
+      selection.setFocused(true);
+      keyboard.onFocusin(focusin(container));
+
+      // Whatever moved focus has already decided where it goes. This is what keeps a menu opened
+      // by pointer focused on the menu itself rather than jumping to its first item.
+      expect(selection.focusedKey.value).toBeNull();
+    });
+
+    it("gives up focus when the event only bubbled through from elsewhere", () => {
+      const {container, keyboard, selection} = setup();
+      const elsewhere = document.createElement("button");
+
+      document.body.appendChild(elsewhere);
+      containers.push(elsewhere);
+      keyboard.onFocusin(focusin(container));
+
+      expect(selection.isFocused.value).toBe(true);
+
+      // A teleported overlay's focus events bubble through the component that opened it, and that
+      // is not focus on this collection.
+      keyboard.onFocusin(focusin(elsewhere));
+
+      expect(selection.isFocused.value).toBe(false);
+    });
+
+    it("does not report a departure for focus moving between items", () => {
+      const {container, items, keyboard, selection} = setup();
+
+      keyboard.onFocusin(focusin(container));
 
       const event = new FocusEvent("focusout");
 
@@ -493,9 +532,9 @@ describe("useListKeyboard", () => {
     });
 
     it("follows a key set programmatically once the collection has focus", async () => {
-      const {items, keyboard, selection} = setup();
+      const {container, items, keyboard, selection} = setup();
 
-      keyboard.onFocusin(new FocusEvent("focusin"));
+      keyboard.onFocusin(focusin(container));
       selection.setFocusedKey("c");
       await nextTick();
 

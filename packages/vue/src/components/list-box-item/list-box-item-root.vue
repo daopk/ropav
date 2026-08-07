@@ -78,7 +78,12 @@ const {
 const onFocus = (event: FocusEvent) => {
   onFocusState();
 
-  if (event.target === element.value) selection.setFocusedKey(itemKey.value);
+  if (event.target !== element.value) return;
+
+  // Claimed before the collection sees the same event bubbling, so it leaves this key alone
+  // instead of picking an entry key of its own.
+  selection.setFocused(true);
+  selection.setFocusedKey(itemKey.value);
 };
 
 const onClick = (event: MouseEvent) => {

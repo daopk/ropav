@@ -184,6 +184,9 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
   };
 
   const focusKey = (key: CollectionKey | null, options: {scroll?: boolean} = {}) => {
+    // Claimed before focus moves, so the focus event that follows knows the collection already
+    // decided where it goes.
+    selection.setFocused(true);
     selection.setFocusedKey(key);
 
     if (key == null) return;
@@ -325,11 +328,26 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
   };
 
   const onFocusin = (event: FocusEvent) => {
+    const element = getElement();
+    const target = event.target;
+    const isInside = element && target instanceof Node && element.contains(target);
+
+    // Already ours: whatever moved focus has decided where it goes, and picking an entry key here
+    // would overwrite it. This is what keeps a menu opened by pointer focused on the menu itself
+    // rather than jumping to its first item.
+    if (selection.isFocused.value) {
+      // A focus event that bubbled from a teleported overlay is not focus on this collection.
+      if (!isInside) selection.setFocused(false);
+
+      return;
+    }
+
+    if (!isInside) return;
+
     selection.setFocused(true);
 
     if (selection.focusedKey.value != null) return;
 
-    const element = getElement();
     const from = event.relatedTarget;
 
     // Focus arriving from later in the document means Shift+Tab, which should land at the end.
