@@ -21,5 +21,7 @@ export * from "./list-box-section";
 export * from "./separator";
 export * from "./spinner";
 export * from "./surface";
+export * from "./tag";
+export * from "./tag-group";
 export * from "./toggle-button";
 export * from "./toggle-button-group";
