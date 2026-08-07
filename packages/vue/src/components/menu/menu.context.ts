@@ -37,6 +37,9 @@ export interface MenuSectionContext {
 }
 
 /** Optional: an item may sit directly in the menu rather than in a section. */
-export const [useMenuSectionContext, provideMenuSectionContext] = createContext<
-  MenuSectionContext | undefined
->({defaultValue: undefined, name: "MenuSectionContext", strict: false});
+export const [useMenuSectionContext, provideMenuSectionContext] =
+  createContext<MenuSectionContext | null>({
+    defaultValue: null,
+    name: "MenuSectionContext",
+    strict: false,
+  });

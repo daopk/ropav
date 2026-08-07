@@ -41,6 +41,9 @@ export interface MenuItemPopupContext {
 }
 
 /** Optional: most items open nothing. */
-export const [useMenuItemPopupContext, provideMenuItemPopupContext] = createContext<
-  MenuItemPopupContext | undefined
->({defaultValue: undefined, name: "MenuItemPopupContext", strict: false});
+export const [useMenuItemPopupContext, provideMenuItemPopupContext] =
+  createContext<MenuItemPopupContext | null>({
+    defaultValue: null,
+    name: "MenuItemPopupContext",
+    strict: false,
+  });

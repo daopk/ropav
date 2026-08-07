@@ -4,6 +4,7 @@ import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
 import {buttonVariants} from "@heroui/styles";
 import {computed, watch} from "vue";
 
+import {usePressResponder} from "../../composables/press-responder";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {announce} from "../../utils/live-announcer";
@@ -26,6 +27,15 @@ defineSlots<{default?: (props: ButtonSlotProps) => unknown}>();
 // can still override for itself. `isIconOnly` is deliberately left out: it describes the
 // content of one button rather than the shape of the group.
 const group = useButtonGroupContext();
+
+// Something above may be driving this button — a dropdown makes its first child the trigger —
+// in which case it supplies the ARIA wiring and the press behaviour, and the button stays an
+// ordinary button.
+const responder = usePressResponder();
+
+const setElement = (element: unknown) => {
+  responder?.registerElement((element as HTMLElement | null) ?? null);
+};
 
 // Named apart from the props they resolve: a binding that shadows a prop name is read as
 // the prop inside the template, which would silently drop the value coming from the group.
@@ -91,6 +101,7 @@ const onClick = (event: MouseEvent) => {
 
 <template>
   <button
+    :ref="setElement"
     :aria-disabled="props.isPending || undefined"
     :class="styles"
     :data-disabled="dataAttr(resolvedIsDisabled)"
@@ -98,10 +109,11 @@ const onClick = (event: MouseEvent) => {
     :data-focused="dataAttr(isFocused)"
     :data-hovered="dataAttr(isHovered)"
     :data-pending="dataAttr(props.isPending)"
-    :data-pressed="dataAttr(isPressed)"
+    :data-pressed="dataAttr(isPressed || responder?.isPressed.value)"
     data-slot="button"
     :disabled="resolvedIsDisabled || undefined"
     :type="type"
+    v-bind="responder?.bind.value"
     @blur="onBlur"
     @click="onClick"
     @focus="onFocus"
