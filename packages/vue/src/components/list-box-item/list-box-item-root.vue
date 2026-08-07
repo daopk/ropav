@@ -62,11 +62,24 @@ const {
   isHovered,
   isPressed,
   onBlur,
-  onFocus,
+  onFocus: onFocusState,
   onPointerdown,
   onPointerenter,
   onPointerleave,
 } = useInteractionStates({isDisabled: () => isDisabled.value});
+
+/**
+ * Keep the collection's focused key on whatever actually holds focus.
+ *
+ * Focus can arrive without the collection having moved it — a click, a screen reader stepping
+ * through, `.focus()` from anywhere — and a focused key that disagrees with real focus leaves the
+ * roving tab stop on one item while the ring is on another.
+ */
+const onFocus = (event: FocusEvent) => {
+  onFocusState();
+
+  if (event.target === element.value) selection.setFocusedKey(itemKey.value);
+};
 
 const onClick = (event: MouseEvent) => {
   if (isDisabled.value) return;

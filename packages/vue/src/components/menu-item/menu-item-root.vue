@@ -53,14 +53,16 @@ watch(
   {flush: "post", immediate: true},
 );
 
+const itemId = computed(() => `${menu.menuId.value}-item-${itemKey.value}`);
+
 // The popup is declared beside this item, so it only learns which item it belongs to once the
 // item says so.
 watch(
-  [element, itemKey],
-  ([current, key], _previous, onCleanup) => {
+  [element, itemKey, itemId],
+  ([current, key, id], _previous, onCleanup) => {
     if (!current || !popup) return;
 
-    onCleanup(popup.registerTrigger(key, () => element.value));
+    onCleanup(popup.registerTrigger({element: () => element.value, id, key}));
   },
   {flush: "post", immediate: true},
 );
@@ -94,7 +96,7 @@ const {
   isHovered,
   isPressed,
   onBlur,
-  onFocus,
+  onFocus: onFocusState,
   onPointerdown,
   onPointerenter: onPointerenterState,
   onPointerleave: onPointerleaveState,
@@ -139,6 +141,19 @@ const activate = (
   }
 
   if (shouldCloseOnSelect.value && closesOnActivate(source)) menu.onClose?.();
+};
+
+/**
+ * Keep the collection's focused key on whatever actually holds focus.
+ *
+ * Focus can arrive without the collection having moved it — a click, a screen reader stepping
+ * through, `.focus()` from anywhere — and a focused key that disagrees with real focus leaves the
+ * roving tab stop on one item while the ring is on another.
+ */
+const onFocus = (event: FocusEvent) => {
+  onFocusState();
+
+  if (event.target === element.value) selection.value.setFocusedKey(itemKey.value);
 };
 
 const onClick = (event: MouseEvent) => {
@@ -194,7 +209,7 @@ const ariaExpanded = computed<"true" | "false" | undefined>(() => {
 
 <template>
   <div
-    :id="`${menu.menuId.value}-item-${itemKey}`"
+    :id="itemId"
     ref="element"
     :aria-checked="selectionMode === 'none' || hasSubmenu ? undefined : isSelected"
     :aria-controls="popup?.popupId.value"
