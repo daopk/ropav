@@ -6,7 +6,7 @@ import Fixture from "./fixtures.vue";
 
 const renderLabel = (props: Record<string, unknown> = {}) => {
   const result = renderVapor(Fixture, {props});
-  const label = result.container.querySelector("label");
+  const label = result.container.querySelector('[data-slot="label"]');
 
   if (!label) throw new Error("label not rendered");
 
@@ -65,6 +65,23 @@ describe("Label", () => {
   describe("field ids", () => {
     it("takes no id when it stands on its own", () => {
       const {label} = renderLabel();
+
+      expect(label).not.toHaveAttribute("id");
+    });
+
+    it("renders a span when the field's label names a composite", async () => {
+      // `label` implies a labelable form control to point at, which a tag group has none of.
+      const {label} = renderLabel({labelElementType: "span", withFieldIds: true});
+
+      expect(label.tagName).toBe("SPAN");
+    });
+
+    it("takes no id from a container that does not reference a label", async () => {
+      // A collection item names itself from its content, so handing out an id would add an
+      // attribute nothing points at.
+      const {label} = renderLabel({slots: ["description"], withFieldIds: true});
+
+      await nextTick();
 
       expect(label).not.toHaveAttribute("id");
     });

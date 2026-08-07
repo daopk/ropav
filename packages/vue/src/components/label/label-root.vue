@@ -19,15 +19,22 @@ const styles = computed(() =>
   }),
 );
 
-// Inside a container that names itself after its label — a collection item, a field root —
-// the label takes the id the container points `aria-labelledby` at. Standing on its own it
-// takes no id, and the caller wires `for`/`id` by hand as they would in plain HTML.
+// Inside a container that names itself after its label — a field root, a section — the label
+// takes the id the container points `aria-labelledby` at, and renders as whatever element that
+// container needs. A container that does not reference a label hands out no id, so the markup
+// never grows an attribute nothing points at.
 const fieldIds = useFieldIdsContext();
 const id = fieldIds?.claimLabelId();
+// `label` implies a labelable form control to point at, which a composite like a tag group has
+// none of, so such a field asks for a `span` instead.
+const isSpan = computed(() => fieldIds?.labelElementType === "span");
 </script>
 
 <template>
-  <label :id="id" :class="styles" data-slot="label">
+  <span v-if="isSpan" :id="id" :class="styles" data-slot="label">
+    <slot />
+  </span>
+  <label v-else :id="id" :class="styles" data-slot="label">
     <slot />
   </label>
 </template>

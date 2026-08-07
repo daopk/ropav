@@ -16,11 +16,23 @@ import {useId} from "./use-id";
  * Each `claim*` returns the id to render and registers the part for as long as its scope
  * lives.
  */
+export type FieldSlot = "label" | "description" | "errorMessage" | "heading";
+
 export interface FieldIdsContext {
-  claimLabelId: () => string;
-  claimDescriptionId: () => string;
-  claimErrorMessageId: () => string;
-  claimHeadingId: () => string;
+  /**
+   * Each returns the id to render, or `undefined` when the container does not wire that slot.
+   * A container that never references a slot must not hand out an id for it, or the markup
+   * grows an attribute that means nothing.
+   */
+  claimLabelId: () => string | undefined;
+  claimDescriptionId: () => string | undefined;
+  claimErrorMessageId: () => string | undefined;
+  claimHeadingId: () => string | undefined;
+  /**
+   * Element the label should render as. A field whose label names a composite rather than a
+   * form control needs a `span`: `label` implies a labelable control to point at.
+   */
+  labelElementType?: "label" | "span";
   /**
    * Role to put on the heading, when the container needs one that is not the element's
    * own. A listbox section sets `"presentation"`: ARIA does not allow a heading inside a
@@ -67,7 +79,14 @@ export interface UseFieldIdsReturn {
  * // <div role="option" :aria-labelledby="labelId" :aria-describedby="describedBy">
  * ```
  */
-export const useFieldIds = (options: {headingRole?: string} = {}): UseFieldIdsReturn => {
+export const useFieldIds = (
+  options: {
+    headingRole?: string;
+    labelElementType?: "label" | "span";
+    /** Slots this container actually references. @default all of them */
+    slots?: FieldSlot[];
+  } = {},
+): UseFieldIdsReturn => {
   const baseId = useId();
 
   const ids = {
@@ -86,7 +105,11 @@ export const useFieldIds = (options: {headingRole?: string} = {}): UseFieldIdsRe
     label: shallowRef(0),
   };
 
-  const claim = (slot: keyof typeof claims): string => {
+  const isWired = (slot: FieldSlot) => !options.slots || options.slots.includes(slot);
+
+  const claim = (slot: FieldSlot): string | undefined => {
+    if (!isWired(slot)) return undefined;
+
     const count = claims[slot];
 
     count.value += 1;
@@ -97,7 +120,7 @@ export const useFieldIds = (options: {headingRole?: string} = {}): UseFieldIdsRe
     return ids[slot];
   };
 
-  const claimed = (slot: keyof typeof claims) =>
+  const claimed = (slot: FieldSlot) =>
     computed(() => (claims[slot].value > 0 ? ids[slot] : undefined));
 
   const descriptionId = claimed("description");
@@ -110,6 +133,7 @@ export const useFieldIds = (options: {headingRole?: string} = {}): UseFieldIdsRe
       claimHeadingId: () => claim("heading"),
       claimLabelId: () => claim("label"),
       headingRole: options.headingRole,
+      labelElementType: options.labelElementType,
     },
     describedBy: computed(() => {
       const parts = [descriptionId.value, errorMessageId.value].filter(Boolean);

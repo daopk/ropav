@@ -9,10 +9,16 @@ import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
  * item or a field root — so the id-claiming path is exercised without depending on one.
  */
 const props = defineProps<
-  LabelRootProps & {labelFor?: string; text?: string; withFieldIds?: boolean}
+  LabelRootProps & {
+    labelElementType?: "label" | "span";
+    labelFor?: string;
+    slots?: ("label" | "description" | "errorMessage" | "heading")[];
+    text?: string;
+    withFieldIds?: boolean;
+  }
 >();
 
-const fieldIds = useFieldIds();
+const fieldIds = useFieldIds({labelElementType: props.labelElementType, slots: props.slots});
 
 if (props.withFieldIds) provideFieldIdsContext(fieldIds.context);
 </script>
