@@ -1,0 +1,123 @@
+import type {UseFieldIdsReturn} from "@/composables/use-field-ids";
+
+import {afterEach, describe, expect, it} from "vitest";
+import {effectScope} from "vue";
+
+import {useFieldIds} from "@/composables/use-field-ids";
+
+const scopes: (() => void)[] = [];
+
+/** The container's side of the contract: one call per provider component. */
+const createFieldIds = (): UseFieldIdsReturn => {
+  const scope = effectScope();
+
+  scopes.push(() => scope.stop());
+
+  return scope.run(() => useFieldIds()) as UseFieldIdsReturn;
+};
+
+/**
+ * A consuming part gets its own scope, because that is what releases the claim — a
+ * `Label` inside a `v-if` must stop being referenced when it goes away.
+ */
+const createPart = <T>(claim: () => T): {result: T; unmount: () => void} => {
+  const scope = effectScope();
+
+  scopes.push(() => scope.stop());
+
+  return {result: scope.run(claim) as T, unmount: () => scope.stop()};
+};
+
+afterEach(() => {
+  scopes.splice(0).forEach((stop) => stop());
+});
+
+describe("useFieldIds", () => {
+  describe("unclaimed ids", () => {
+    it("exposes no id until a part claims it", () => {
+      const field = createFieldIds();
+
+      expect(field.labelId.value).toBeUndefined();
+      expect(field.descriptionId.value).toBeUndefined();
+      expect(field.errorMessageId.value).toBeUndefined();
+      expect(field.headingId.value).toBeUndefined();
+      expect(field.describedBy.value).toBeUndefined();
+    });
+  });
+
+  describe("claiming", () => {
+    it("exposes the id a part claimed", () => {
+      const field = createFieldIds();
+      const {result: labelId} = createPart(() => field.context.claimLabelId());
+
+      expect(labelId).toMatch(/-label$/);
+      expect(field.labelId.value).toBe(labelId);
+      // Claiming a label must not make the container describe itself by it.
+      expect(field.describedBy.value).toBeUndefined();
+    });
+
+    it("gives every slot a distinct id", () => {
+      const field = createFieldIds();
+      const {result: ids} = createPart(() => ({
+        description: field.context.claimDescriptionId(),
+        errorMessage: field.context.claimErrorMessageId(),
+        heading: field.context.claimHeadingId(),
+        label: field.context.claimLabelId(),
+      }));
+
+      expect(new Set(Object.values(ids)).size).toBe(4);
+    });
+
+    it("returns a stable id across repeated claims of the same slot", () => {
+      const field = createFieldIds();
+      const first = createPart(() => field.context.claimLabelId());
+      const second = createPart(() => field.context.claimLabelId());
+
+      expect(second.result).toBe(first.result);
+    });
+  });
+
+  describe("describedBy", () => {
+    it("joins the description and the error message in that order", () => {
+      const field = createFieldIds();
+      // Claimed error-message-first to prove the order comes from the container, not from
+      // the order the parts happened to mount in.
+      const {result: errorMessageId} = createPart(() => field.context.claimErrorMessageId());
+      const {result: descriptionId} = createPart(() => field.context.claimDescriptionId());
+
+      expect(field.describedBy.value).toBe(`${descriptionId} ${errorMessageId}`);
+    });
+
+    it("falls back to the single id present", () => {
+      const field = createFieldIds();
+      const {result: descriptionId} = createPart(() => field.context.claimDescriptionId());
+
+      expect(field.describedBy.value).toBe(descriptionId);
+    });
+  });
+
+  describe("releasing", () => {
+    it("stops exposing an id once its part goes away", () => {
+      const field = createFieldIds();
+      const part = createPart(() => field.context.claimDescriptionId());
+
+      expect(field.describedBy.value).toBeDefined();
+
+      part.unmount();
+
+      expect(field.descriptionId.value).toBeUndefined();
+      expect(field.describedBy.value).toBeUndefined();
+    });
+
+    it("keeps the id while another part still claims it", () => {
+      const field = createFieldIds();
+      const first = createPart(() => field.context.claimLabelId());
+
+      createPart(() => field.context.claimLabelId());
+
+      first.unmount();
+
+      expect(field.labelId.value).toBe(first.result);
+    });
+  });
+});
