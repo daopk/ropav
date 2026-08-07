@@ -28,3 +28,22 @@ export const isElementVisible = (element: HTMLElement): boolean =>
 /** The focusable controls inside `element`, in document order, skipping hidden ones. */
 export const focusableIn = (element: HTMLElement): HTMLElement[] =>
   [...element.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(isElementVisible);
+
+/**
+ * Whether an element scrolls its own content.
+ *
+ * Ported from React Aria's `isScrollable`. Paging keys need this: in a list that does not
+ * scroll there is no page to move by, so Page Up and Page Down collapse to the ends instead.
+ * The document's scrolling element is a special case — it scrolls despite defaulting to
+ * `overflow: visible`.
+ */
+export const isScrollable = (element: Element | null): boolean => {
+  if (!element) return false;
+
+  const style = getComputedStyle(element);
+  const root = document.scrollingElement ?? document.documentElement;
+
+  if (element === root && style.overflow !== "hidden") return true;
+
+  return /(auto|scroll)/.test(style.overflow + style.overflowX + style.overflowY);
+};
