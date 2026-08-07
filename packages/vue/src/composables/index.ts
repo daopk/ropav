@@ -5,5 +5,6 @@ export * from "./use-field-ids";
 export * from "./use-id";
 export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
+export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
