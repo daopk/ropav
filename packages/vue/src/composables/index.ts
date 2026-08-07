@@ -4,6 +4,7 @@ export * from "./use-description";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";
 export * from "./use-field-ids";
+export * from "./use-focus-scope";
 export * from "./use-id";
 export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
