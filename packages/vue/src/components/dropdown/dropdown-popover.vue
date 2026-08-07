@@ -10,6 +10,7 @@ import {useOverlayPosition} from "../../composables/use-overlay-position";
 import {usePreventScroll} from "../../composables/use-prevent-scroll";
 import {ariaHideOutside, keepVisible} from "../../utils/aria-hide-outside";
 import {dataAttr} from "../../utils/assertion";
+import {provideSurfaceContext} from "../surface";
 
 import DropdownDismissButton from "./dropdown-dismiss-button.vue";
 import {useDropdownContext, useDropdownPopoverTarget} from "./dropdown.context";
@@ -30,6 +31,10 @@ const element = shallowRef<HTMLElement | null>(null);
 const container = shallowRef<HTMLElement | null>(null);
 
 const isRoot = computed(() => target.trigger === "MenuTrigger");
+
+// The popover is a surface in its own right, so anything inside it that picks its colours from the
+// surface it sits on — a field, a chip — reads the popover rather than the page behind it.
+provideSurfaceContext({variant: computed(() => "default" as const)});
 
 /**
  * Where the popover element is rendered.
