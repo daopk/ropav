@@ -317,25 +317,6 @@ export const WithoutSeparator: Story = {
   }),
 };
 
-export const OverridingTheGroup: Story = {
-  render: () => ({
-    components,
-    template: `
-      <ButtonGroup size="sm" variant="secondary">
-        <Button>Day</Button>
-        <Button variant="primary">
-          <ButtonGroupSeparator />
-          Week
-        </Button>
-        <Button>
-          <ButtonGroupSeparator />
-          Month
-        </Button>
-      </ButtonGroup>
-    `,
-  }),
-};
-
 /**
  * Mirrors the React `Examples` story, minus the pieces that need components the Vue port
  * has not reached yet (`Dropdown`, `Label`, `Description`).
