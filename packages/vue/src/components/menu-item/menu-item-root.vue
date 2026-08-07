@@ -23,7 +23,7 @@ const popup = useMenuItemPopupContext();
 
 // A section may carry its own selection — one section of text styles, another of alignments —
 // so the item selects through the nearest one rather than through the menu.
-const selection = computed(() => section?.selection ?? menu.selection);
+const selection = computed(() => section?.selection.value ?? menu.selection);
 const shouldCloseOnSelect = computed(
   () => section?.shouldCloseOnSelect.value ?? menu.shouldCloseOnSelect.value,
 );

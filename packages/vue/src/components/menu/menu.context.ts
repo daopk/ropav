@@ -32,7 +32,7 @@ export const [useMenuContext, provideMenuContext] = createContext<MenuContext>({
 
 export interface MenuSectionContext {
   /** The section's own selection, if it declared one; otherwise the menu's. */
-  selection: UseSelectionManagerReturn;
+  selection: ComputedRef<UseSelectionManagerReturn>;
   shouldCloseOnSelect: ComputedRef<boolean>;
 }
 
