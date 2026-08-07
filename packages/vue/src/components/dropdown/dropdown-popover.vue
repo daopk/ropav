@@ -88,20 +88,6 @@ const onKeydown = (event: KeyboardEvent) => {
   dismissable.onKeydown(event);
 };
 
-// Focus is contained and given back: the popover is rendered at the end of the document, so
-// tabbing out of it would otherwise land on whatever happens to follow in the body, and closing it
-// would drop a keyboard user at the top of the page.
-useFocusScope({
-  contain: true,
-  isActive: () => target.state.isOpen.value,
-  restoreFocus: true,
-  scopeRef: element,
-});
-
-// A submenu is not modal — the menu behind it stays live — so only the root popover holds the page
-// still.
-usePreventScroll({isDisabled: () => target.isNonModal || !target.state.isOpen.value});
-
 /**
  * Hide the rest of the page from assistive technology while the menu is open.
  *
@@ -124,6 +110,22 @@ watch(
   },
   {flush: "post", immediate: true},
 );
+
+// Ordered after the hiding above on purpose: cleanups run in the order their watchers were made,
+// and focus cannot be given back to a trigger that is still inert.
+// Focus is contained and given back: the popover is rendered at the end of the document, so
+// tabbing out of it would otherwise land on whatever happens to follow in the body, and closing it
+// would drop a keyboard user at the top of the page.
+useFocusScope({
+  contain: true,
+  isActive: () => target.state.isOpen.value,
+  restoreFocus: true,
+  scopeRef: element,
+});
+
+// A submenu is not modal — the menu behind it stays live — so only the root popover holds the page
+// still.
+usePreventScroll({isDisabled: () => target.isNonModal || !target.state.isOpen.value});
 
 // Published so submenus have somewhere to render. Only the root popover makes one; a submenu reuses
 // it, which is what keeps the tree in a single subtree however deep it goes.
