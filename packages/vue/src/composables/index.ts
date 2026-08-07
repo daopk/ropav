@@ -9,6 +9,8 @@ export * from "./use-interaction-states";
 export * from "./use-list-data";
 export * from "./use-list-keyboard";
 export * from "./use-long-press";
+export * from "./use-overlay-trigger";
+export * from "./use-overlay-trigger-state";
 export * from "./use-press";
 export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
