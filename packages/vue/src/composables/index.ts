@@ -8,3 +8,4 @@ export * from "./use-interaction-states";
 export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
+export * from "./use-typeahead";
