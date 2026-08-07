@@ -23,6 +23,13 @@ export interface UseListKeyboardProps {
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
   /** Called when an item is activated rather than selected. */
   onAction?: (key: CollectionKey) => void;
+  /**
+   * Leaves Enter and Space to the items.
+   *
+   * A menu needs this: its sections may each hold their own selection, so only the item knows
+   * which one to act on, and answering here would always act on the collection's.
+   */
+  disallowActivation?: MaybeRefOrGetter<boolean | undefined>;
 }
 
 export interface UseListKeyboardReturn {
@@ -295,7 +302,7 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
         return;
       }
       case "Enter": {
-        if (focused == null) return;
+        if (focused == null || toValue(props.disallowActivation)) return;
 
         props.onAction?.(focused);
         event.preventDefault();
@@ -303,7 +310,7 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
         return;
       }
       case " ": {
-        if (focused == null) return;
+        if (focused == null || toValue(props.disallowActivation)) return;
 
         if (selection.selectionMode.value === "none") props.onAction?.(focused);
         else selection.select(focused, {isShiftPressed: event.shiftKey});

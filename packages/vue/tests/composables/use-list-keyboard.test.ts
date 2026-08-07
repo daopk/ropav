@@ -383,6 +383,20 @@ describe("useListKeyboard", () => {
 
       expect(onAction).toHaveBeenCalledWith("a");
     });
+
+    it("leaves Enter and Space alone when the items handle them", () => {
+      const onAction = vi.fn();
+      const {press, selection} = setup({keyboard: {disallowActivation: true, onAction}});
+
+      press("ArrowDown");
+      press("Enter");
+      press(" ");
+
+      // A menu's sections may each hold their own selection, so only the item knows which one to
+      // act on; answering here would always act on the collection's.
+      expect(onAction).not.toHaveBeenCalled();
+      expect(selection.selectedKeys.value.size).toBe(0);
+    });
   });
 
   describe("tabindex", () => {
