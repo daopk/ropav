@@ -18,6 +18,7 @@ export * from "./label";
 export * from "./list-box";
 export * from "./list-box-item";
 export * from "./list-box-section";
+export * from "./menu-item";
 export * from "./separator";
 export * from "./spinner";
 export * from "./surface";
