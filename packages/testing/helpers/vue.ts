@@ -31,12 +31,23 @@ export type RenderVaporResult = ReturnType<typeof renderVapor>;
  * `createComponent` rather than mounted directly, because `createVaporApp(Component, props)`
  * has no way to pass slots.
  *
+ * The returned queries are scoped to the container, which cannot see content a component
+ * teleports elsewhere — everything an overlay renders lands outside it. `screen` covers the
+ * whole document for those cases, and `baseElement` is there to scope a query by hand.
+ *
  * @example
  * ```ts
  * const {getByRole, unmount} = renderVapor(Button, {
  *   props: {variant: "danger"},
  *   slots: {default: () => document.createTextNode("Delete")},
  * });
+ * ```
+ *
+ * @example
+ * ```ts
+ * // An overlay teleports to the body, so its content is only reachable through `screen`.
+ * const {screen, unmount} = renderVapor(Dropdown);
+ * const menu = screen.getByRole("menu");
  * ```
  */
 export const renderVapor = (component: VaporComponent, options: RenderVaporOptions = {}) => {
@@ -62,7 +73,11 @@ export const renderVapor = (component: VaporComponent, options: RenderVaporOptio
   return {
     ...getQueriesForElement(container),
     app,
+    /** The element the whole document is queried from, for scoping a query by hand. */
+    baseElement: document.body,
     container,
+    /** Document-wide queries, so a teleported overlay is reachable. */
+    screen: getQueriesForElement(document.body),
     unmount: () => {
       app.unmount();
       container.remove();
