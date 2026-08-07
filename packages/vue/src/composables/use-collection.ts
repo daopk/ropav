@@ -98,18 +98,35 @@ export const useCollection = (): UseCollectionReturn => {
     return keys[index + step] ?? null;
   };
 
+  /**
+   * Read the registration counter, so a lookup made inside a `computed` re-runs once the item
+   * it asked about registers. `getItem` and `getElement` are read during render — an item's
+   * own disabled state and tabindex come from them — unlike `orderedKeys()`, which is only ever
+   * read on an interaction and so deliberately stays outside reactivity.
+   */
+  const track = () => {
+    void version.value;
+  };
+
   return {
-    getElement: (key) => items.get(key)?.element() ?? null,
+    getElement: (key) => {
+      track();
+
+      return items.get(key)?.element() ?? null;
+    },
     getFirstKey: () => keyAt(0),
-    getItem: (key) => items.get(key),
+    getItem: (key) => {
+      track();
+
+      return items.get(key);
+    },
     getKeyAfter: (key) => neighbour(key, 1),
     getKeyBefore: (key) => neighbour(key, -1),
     getLastKey: () => keyAt(orderedKeys().length - 1),
     orderedKeys,
     register,
     size: computed(() => {
-      // Touch `version` so the count follows registration; the Map itself is not reactive.
-      void version.value;
+      track();
 
       return items.size;
     }),
