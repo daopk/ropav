@@ -1,6 +1,6 @@
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
 export interface UseEnterExitProps {
   /** The animated element. */
@@ -64,30 +64,41 @@ export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
   /** Identifies the latest wait, so a superseded one cannot resolve over the top of it. */
   let generation = 0;
 
-  /** Resolve once every animation running on the element has settled. */
+  /**
+   * Resolve once every animation running on the element has settled.
+   *
+   * The animations are read a tick after being asked for, not straight away: the state that
+   * triggers them is rendered as an attribute, and reading before that attribute is in the DOM
+   * finds no animations at all — which would clear the state again and leave the animation never
+   * playing.
+   */
   const whenSettled = (onEnd: () => void) => {
-    const element = getElement();
-
-    if (!element || typeof element.getAnimations !== "function") {
-      onEnd();
-
-      return;
-    }
-
-    const animations = element.getAnimations();
-
-    if (animations.length === 0) {
-      onEnd();
-
-      return;
-    }
-
     const current = ++generation;
 
-    // `allSettled`, not `all`: an interrupted animation rejects, and an interrupted entry still
-    // has to clear the entering state or the element would stay stuck at its start frame.
-    void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-      if (!cancelled && current === generation) onEnd();
+    void nextTick(() => {
+      if (cancelled || current !== generation) return;
+
+      const element = getElement();
+
+      if (!element || typeof element.getAnimations !== "function") {
+        onEnd();
+
+        return;
+      }
+
+      const animations = element.getAnimations();
+
+      if (animations.length === 0) {
+        onEnd();
+
+        return;
+      }
+
+      // `allSettled`, not `all`: an interrupted animation rejects, and an interrupted entry still
+      // has to clear the entering state or the element would stay stuck at its start frame.
+      void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
+        if (!cancelled && current === generation) onEnd();
+      });
     });
   };
 
@@ -115,6 +126,9 @@ export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
     {flush: "post", immediate: true},
   );
 
+  // Synchronous, because this is derived state rather than a side effect: the element has to
+  // already be reported as exiting by the time the render that would otherwise remove it runs.
+  // A tick later is too late — the element is gone, and what animates out is a fresh one.
   watch(
     () => toValue(props.isOpen),
     (isOpen) => {
@@ -128,6 +142,7 @@ export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
 
       if (exitState.value === "open") exitState.value = "exiting";
     },
+    {flush: "sync"},
   );
 
   watch(

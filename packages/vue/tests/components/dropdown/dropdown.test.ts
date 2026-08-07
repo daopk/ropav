@@ -36,7 +36,13 @@ const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) =>
   return event;
 };
 
-/** Three ticks: the items register a tick after the menu mounts, and focus moves in a tick later. */
+/**
+ * Let the dropdown settle.
+ *
+ * Three ticks: the items register a tick after the menu mounts and focus moves in a tick later, and
+ * on the way out the exit is reported as finished a tick after the animation settles — which in
+ * jsdom, with no animations at all, is immediately.
+ */
 const settle = async () => {
   await nextTick();
   await nextTick();
@@ -117,7 +123,7 @@ describe("Dropdown", () => {
       expect(dismissers[0]).toHaveAttribute("tabindex", "-1");
 
       press(dismissers[0]!);
-      await nextTick();
+      await settle();
 
       expect(result.screen.queryByRole("menu")).toBeNull();
 
@@ -129,7 +135,7 @@ describe("Dropdown", () => {
       const menu = await open(result);
 
       keydown(menu, "Escape");
-      await nextTick();
+      await settle();
 
       expect(result.baseElement.querySelector('[data-slot="dropdown-popover"]')).toBeNull();
 
@@ -178,7 +184,7 @@ describe("Dropdown", () => {
       expect(result.container).toHaveAttribute("aria-hidden", "true");
 
       keydown(result.screen.getByRole("menu"), "Escape");
-      await nextTick();
+      await settle();
 
       expect(result.container).not.toHaveAttribute("aria-hidden");
 
@@ -283,7 +289,7 @@ describe("Dropdown", () => {
 
       await open(single);
       press(itemsOf(single)[1]!);
-      await nextTick();
+      await settle();
 
       expect(single.screen.queryByRole("menu")).toBeNull();
 
@@ -395,7 +401,7 @@ describe("Dropdown", () => {
 
       await open(result);
       press(itemsOf(result).at(-1)!);
-      await nextTick();
+      await settle();
 
       expect(onAction).not.toHaveBeenCalled();
       expect(result.screen.queryByRole("menu")).not.toBeNull();
@@ -541,7 +547,7 @@ describe("Dropdown", () => {
       keydown(menu, "ArrowDown");
       await nextTick();
       keydown(document.activeElement!, "Enter");
-      await nextTick();
+      await settle();
 
       expect(onAction).toHaveBeenCalledWith("new-file");
       expect(result.screen.queryByRole("menu")).toBeNull();
@@ -886,7 +892,7 @@ describe("Dropdown", () => {
       await open(result);
       await openSubmenu(result);
       press(result.screen.getByRole("menuitem", {name: "Telegram"}));
-      await nextTick();
+      await settle();
 
       expect(result.screen.queryByRole("menu")).toBeNull();
 

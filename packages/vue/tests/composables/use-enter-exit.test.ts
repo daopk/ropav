@@ -34,10 +34,18 @@ const setup = (options: {isOpen?: boolean; isReady?: boolean} = {}) => {
 };
 
 /**
- * jsdom implements no animations, so every wait resolves at once and the states collapse to
- * their end values. That is the behaviour under test here — the timing itself is covered in the
- * browser suites, where there is a real animation to wait for.
+ * jsdom implements no animations, so every wait resolves at once and the states collapse to their
+ * end values. The wait still costs a tick: the animations are read one tick after being asked for,
+ * because the state that starts them is rendered as an attribute first.
+ *
+ * That is the behaviour under test here — the timing itself is covered in the browser suites, where
+ * there is a real animation to wait for.
  */
+const settle = async () => {
+  await nextTick();
+  await nextTick();
+};
+
 describe("useEnterExit", () => {
   describe("presence", () => {
     it("is present while open", () => {
@@ -60,7 +68,7 @@ describe("useEnterExit", () => {
       const {dispose, isOpen, state} = setup();
 
       isOpen.value = false;
-      await nextTick();
+      await settle();
 
       expect(state.isExiting.value).toBe(false);
       expect(state.isPresent.value).toBe(false);
@@ -73,7 +81,7 @@ describe("useEnterExit", () => {
     it("clears the entering state once the animation has finished", async () => {
       const {dispose, state} = setup();
 
-      await nextTick();
+      await settle();
 
       expect(state.isEntering.value).toBe(false);
 
@@ -83,14 +91,14 @@ describe("useEnterExit", () => {
     it("does not report entering until the element is ready", async () => {
       const {dispose, isReady, state} = setup({isReady: false});
 
-      await nextTick();
+      await settle();
 
       // An overlay is not ready until it has been measured and positioned; animating before
       // that would be a slide in from wherever it was laid out.
       expect(state.isEntering.value).toBe(false);
 
       isReady.value = true;
-      await nextTick();
+      await settle();
 
       expect(state.isEntering.value).toBe(false);
 
@@ -100,22 +108,22 @@ describe("useEnterExit", () => {
     it("enters again when it is reopened", async () => {
       const {dispose, isOpen, isReady, state} = setup();
 
-      await nextTick();
+      await settle();
 
       expect(state.isEntering.value).toBe(false);
 
       // Held un-ready across the reopen, which is the only way to catch the entering state in
-      // jsdom: with nothing to wait for it is otherwise cleared within the same flush.
+      // jsdom: with nothing to wait for it is otherwise cleared a tick later.
       isReady.value = false;
       isOpen.value = false;
-      await nextTick();
+      await settle();
       isOpen.value = true;
-      await nextTick();
+      await settle();
       isReady.value = true;
 
       expect(state.isEntering.value).toBe(true);
 
-      await nextTick();
+      await settle();
 
       expect(state.isEntering.value).toBe(false);
 
@@ -127,10 +135,10 @@ describe("useEnterExit", () => {
     it("returns to open rather than finishing the exit", async () => {
       const {dispose, isOpen, state} = setup();
 
-      await nextTick();
+      await settle();
       isOpen.value = false;
       isOpen.value = true;
-      await nextTick();
+      await settle();
 
       // The element never left, so it must not be reported as on its way out.
       expect(state.isExiting.value).toBe(false);
