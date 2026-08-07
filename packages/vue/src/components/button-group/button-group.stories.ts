@@ -2,6 +2,10 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {Button} from "../button";
 import {Chip} from "../chip";
+import {DescriptionRoot} from "../description";
+import {DropdownMenu, DropdownPopover, DropdownRoot} from "../dropdown";
+import {LabelRoot} from "../label";
+import {MenuItemRoot} from "../menu-item";
 
 import {ButtonGroup, ButtonGroupSeparator} from "./index";
 
@@ -317,15 +321,17 @@ export const WithoutSeparator: Story = {
   }),
 };
 
-/**
- * Mirrors the React `Examples` story, minus the pieces that need components the Vue port
- * has not reached yet (`Dropdown`, `Label`, `Description`).
- */
+/** Mirrors the React `Examples` story. */
 export const Examples: Story = {
   render: () => ({
     components: {
       ...components,
       Chip,
+      Description: DescriptionRoot,
+      Dropdown: DropdownRoot,
+      DropdownItem: MenuItemRoot,
+      DropdownMenu,
+      DropdownPopover,
       IconChevronDown,
       IconChevronLeft,
       IconChevronRight,
@@ -342,9 +348,60 @@ export const Examples: Story = {
       IconThumbsDown,
       IconThumbsUp,
       IconVideo,
+      Label: LabelRoot,
+      Label: LabelRoot,
     },
+    setup: () => ({
+      mergeStrategies: [
+        {
+          description: "All commits from this branch will be added to the base branch",
+          id: "merge",
+          label: "Create a merge commit",
+        },
+        {
+          description:
+            "The 14 commits from this branch will be combined into one commit in the base branch",
+          id: "squash-and-merge",
+          label: "Squash and merge",
+        },
+        {
+          description:
+            "The 14 commits from this branch will be rebased and added to the base branch",
+          id: "rebase-and-merge",
+          label: "Rebase and merge",
+        },
+      ],
+    }),
+    // The dropdown's trigger is the grouped button itself, separator and all: the group styles the
+    // button, and the dropdown hands it the press behaviour on top.
     template: `
       <div class="flex flex-col items-start gap-8">
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-muted">Single button with dropdown</p>
+          <ButtonGroup>
+            <Button>Merge pull request</Button>
+            <Dropdown>
+              <Button aria-label="More options" is-icon-only>
+                <ButtonGroupSeparator />
+                <IconChevronDown />
+              </Button>
+              <DropdownPopover class="max-w-[290px]" placement="bottom end">
+                <DropdownMenu>
+                  <DropdownItem
+                    v-for="strategy in mergeStrategies"
+                    :id="strategy.id"
+                    :key="strategy.id"
+                    class="flex flex-col items-start gap-1"
+                    :text-value="strategy.label"
+                  >
+                    <Label>{{ strategy.label }}</Label>
+                    <Description>{{ strategy.description }}</Description>
+                  </DropdownItem>
+                </DropdownMenu>
+              </DropdownPopover>
+            </Dropdown>
+          </ButtonGroup>
+        </div>
         <div class="flex flex-col gap-2">
           <p class="text-sm text-muted">Individual buttons</p>
           <div class="flex gap-2">
