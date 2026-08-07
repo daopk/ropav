@@ -7,6 +7,7 @@ export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
 export * from "./use-list-data";
 export * from "./use-list-keyboard";
+export * from "./use-press";
 export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
