@@ -13,6 +13,7 @@ export * from "./empty-state";
 export * from "./error-message";
 export * from "./header";
 export * from "./icons";
+export * from "./kbd";
 export * from "./label";
 export * from "./separator";
 export * from "./spinner";
