@@ -2,6 +2,7 @@ export * from "./use-collection";
 export * from "./use-controllable-state";
 export * from "./use-description";
 export * from "./use-disclosure-group";
+export * from "./use-dismissable";
 export * from "./use-field-ids";
 export * from "./use-id";
 export * from "./use-image-loading-status";
