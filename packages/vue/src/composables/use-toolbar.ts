@@ -2,15 +2,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, onMounted, shallowRef, toValue} from "vue";
 
-/** Controls that can hold focus inside a toolbar, in the order the browser would visit them. */
-const FOCUSABLE_SELECTOR = [
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "a[href]",
-  '[tabindex]:not([tabindex="-1"])',
-].join(",");
+import {focusableIn} from "../utils/focus";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
@@ -71,17 +63,6 @@ export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
 
   /** The control focus should return to, or `null` once it has been restored. */
   let lastFocused: HTMLElement | null = null;
-
-  /**
-   * A control hidden by CSS cannot take focus, so counting it would let one arrow press
-   * land nowhere. `checkVisibility` is the only reliable read of that, and jsdom does not
-   * implement it — there, every match counts, which is what the tests exercise anyway.
-   */
-  const isVisible = (child: HTMLElement) =>
-    typeof child.checkVisibility === "function" ? child.checkVisibility() : true;
-
-  const focusableIn = (element: HTMLElement) =>
-    [...element.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(isVisible);
 
   const moveFocus = (step: -1 | 1) => {
     const element = toValue(props.element);
