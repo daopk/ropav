@@ -21,6 +21,13 @@ export interface FieldIdsContext {
   claimDescriptionId: () => string;
   claimErrorMessageId: () => string;
   claimHeadingId: () => string;
+  /**
+   * Role to put on the heading, when the container needs one that is not the element's
+   * own. A listbox section sets `"presentation"`: ARIA does not allow a heading inside a
+   * listbox, so the heading is hidden from assistive technology and reused only as the
+   * visual label the section points `aria-labelledby` at.
+   */
+  headingRole?: string;
 }
 
 /**
@@ -60,7 +67,7 @@ export interface UseFieldIdsReturn {
  * // <div role="option" :aria-labelledby="labelId" :aria-describedby="describedBy">
  * ```
  */
-export const useFieldIds = (): UseFieldIdsReturn => {
+export const useFieldIds = (options: {headingRole?: string} = {}): UseFieldIdsReturn => {
   const baseId = useId();
 
   const ids = {
@@ -102,6 +109,7 @@ export const useFieldIds = (): UseFieldIdsReturn => {
       claimErrorMessageId: () => claim("errorMessage"),
       claimHeadingId: () => claim("heading"),
       claimLabelId: () => claim("label"),
+      headingRole: options.headingRole,
     },
     describedBy: computed(() => {
       const parts = [descriptionId.value, errorMessageId.value].filter(Boolean);
