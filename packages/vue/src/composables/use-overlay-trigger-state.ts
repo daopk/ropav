@@ -1,7 +1,7 @@
 import type {CollectionKey} from "./use-collection";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
-import {computed, shallowRef} from "vue";
+import {computed, shallowRef, toValue} from "vue";
 
 import {useControllableState} from "./use-controllable-state";
 
@@ -135,8 +135,13 @@ export interface SubmenuTriggerState extends OverlayTriggerState {
 }
 
 export interface UseSubmenuTriggerStateProps {
-  /** The key of the item that opens this submenu. */
-  triggerKey: CollectionKey;
+  /**
+   * The key of the item that opens this submenu.
+   *
+   * Read reactively, because the item is declared beside the submenu rather than around it: the
+   * submenu exists before it has been told which item it belongs to, and is closed until it has.
+   */
+  triggerKey: MaybeRefOrGetter<CollectionKey | null>;
 }
 
 /**
@@ -157,16 +162,27 @@ export const useSubmenuTriggerState = (
   const submenuLevel = root.expandedKeysStack.value.length;
   const focusStrategy = shallowRef<FocusStrategy | null>(null);
 
-  const isOpen = computed(() => root.expandedKeysStack.value[submenuLevel] === props.triggerKey);
+  const triggerKey = computed(() => toValue(props.triggerKey));
+
+  const isOpen = computed(
+    () =>
+      triggerKey.value !== null && root.expandedKeysStack.value[submenuLevel] === triggerKey.value,
+  );
 
   const close = () => {
     focusStrategy.value = null;
-    root.closeSubmenu(props.triggerKey, submenuLevel);
+
+    if (triggerKey.value === null) return;
+
+    root.closeSubmenu(triggerKey.value, submenuLevel);
   };
 
   const open = (strategy: FocusStrategy | null = null) => {
     focusStrategy.value = strategy;
-    root.openSubmenu(props.triggerKey, submenuLevel);
+
+    if (triggerKey.value === null) return;
+
+    root.openSubmenu(triggerKey.value, submenuLevel);
   };
 
   return {

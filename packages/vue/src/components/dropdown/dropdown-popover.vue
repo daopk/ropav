@@ -69,7 +69,7 @@ const {isEntering, isExiting, isPresent} = useEnterExit({
   isReady: () => placement.value !== null,
 });
 
-const {onKeydown} = useDismissable({
+const dismissable = useDismissable({
   isDismissable: true,
   isKeyboardDismissDisabled: () => props.isKeyboardDismissDisabled,
   isOpen: () => target.state.isOpen.value,
@@ -77,6 +77,16 @@ const {onKeydown} = useDismissable({
   overlayRef: element,
   shouldCloseOnInteractOutside: target.shouldCloseOnInteractOutside,
 });
+
+// Whatever opened the popover gets the key first: a submenu closes on ArrowLeft, which dismissal
+// knows nothing about.
+const onKeydown = (event: KeyboardEvent) => {
+  target.onKeydown?.(event);
+
+  if (event.defaultPrevented) return;
+
+  dismissable.onKeydown(event);
+};
 
 // Focus is contained and given back: the popover is rendered at the end of the document, so
 // tabbing out of it would otherwise land on whatever happens to follow in the body, and closing it
@@ -138,6 +148,7 @@ const direction = computed(() => {
 
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
+  target.registerOverlayElement?.(element.value);
 };
 
 // `display: contents` on the container, so it never affects layout and never becomes the containing

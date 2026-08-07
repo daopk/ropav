@@ -1,4 +1,8 @@
-import type {FocusStrategy, OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
+import type {
+  FocusStrategy,
+  OverlayTriggerState,
+  RootMenuTriggerState,
+} from "../../composables/use-overlay-trigger-state";
 import type {Placement} from "../../utils/position";
 import type {dropdownVariants} from "@heroui/styles";
 import type {ComputedRef, ShallowRef} from "vue";
@@ -6,6 +10,13 @@ import type {ComputedRef, ShallowRef} from "vue";
 import {createContext} from "../../utils/create-context";
 
 export interface DropdownContext {
+  /**
+   * The whole tree's open state, held on the root.
+   *
+   * A submenu asks it whether its own trigger is the one expanded at its level rather than holding
+   * a flag of its own, which is what keeps a single path through the tree open.
+   */
+  state: RootMenuTriggerState;
   slots: ComputedRef<ReturnType<typeof dropdownVariants>>;
   /**
    * The element the root popover renders as its own portal target.
@@ -51,6 +62,13 @@ export interface DropdownPopoverTarget {
   autoFocus: ComputedRef<boolean | FocusStrategy>;
   /** Closes this popover and every menu above it, which choosing an item does. */
   closeAll: () => void;
+  /**
+   * Reports the popover element back, for whatever owns it. A submenu trigger needs it to guard the
+   * pointer's path from the trigger to the submenu.
+   */
+  registerOverlayElement?: (element: HTMLElement | null) => void;
+  /** Keys the popover hands on before dismissal sees them, e.g. ArrowLeft closing a submenu. */
+  onKeydown?: (event: KeyboardEvent) => void;
 }
 
 export const [useDropdownPopoverTarget, provideDropdownPopoverTarget] =

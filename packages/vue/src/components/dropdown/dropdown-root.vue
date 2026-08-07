@@ -49,6 +49,7 @@ providePressResponder(trigger.responder);
 provideDropdownContext({
   popoverContainer: shallowRef<HTMLElement | null>(null),
   slots: computed(() => dropdownVariants()),
+  state,
 });
 
 provideDropdownPopoverTarget({

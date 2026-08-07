@@ -19,6 +19,7 @@ export * from "./use-overlay-trigger";
 export * from "./use-overlay-trigger-state";
 export * from "./use-prevent-scroll";
 export * from "./use-press";
+export * from "./use-safely-mouse-to-submenu";
 export * from "./use-selection-manager";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";

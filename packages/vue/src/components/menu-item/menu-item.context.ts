@@ -28,11 +28,16 @@ export interface MenuItemPopupContext {
   /** `aria-controls` while open, naming the popup this item opens. */
   popupId: ComputedRef<string | undefined>;
   /**
-   * Reports the item's key and element, which is how the popup learns which item it belongs to.
+   * Reports the item's key, id and element, which is how the popup learns which item it belongs to
+   * and what names it.
    *
    * @returns The release, to be called when the item goes away.
    */
-  registerTrigger: (key: CollectionKey, element: () => HTMLElement | null) => () => void;
+  registerTrigger: (info: {
+    key: CollectionKey;
+    id: string;
+    element: () => HTMLElement | null;
+  }) => () => void;
   /** Opens the popup instead of the item selecting or acting. */
   onActivate: (source: "pointer" | "keyboard") => void;
   onKeydown: (event: KeyboardEvent) => void;

@@ -4,6 +4,7 @@ import {MenuSectionRoot} from "../menu-section";
 import DropdownMenu from "./dropdown-menu.vue";
 import DropdownPopover from "./dropdown-popover.vue";
 import DropdownRoot from "./dropdown-root.vue";
+import DropdownSubmenuTrigger from "./dropdown-submenu-trigger.vue";
 import DropdownTrigger from "./dropdown-trigger.vue";
 
 /* -------------------------------------------------------------------------------------------------
@@ -23,13 +24,14 @@ export const Dropdown = Object.assign(DropdownRoot, {
   Root: DropdownRoot,
   Section: MenuSectionRoot,
   SubmenuIndicator: MenuItemSubmenuIndicator,
+  SubmenuTrigger: DropdownSubmenuTrigger,
   Trigger: DropdownTrigger,
 });
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {DropdownMenu, DropdownPopover, DropdownRoot, DropdownTrigger};
+export {DropdownMenu, DropdownPopover, DropdownRoot, DropdownSubmenuTrigger, DropdownTrigger};
 
 export type {
   DropdownMenuProps,

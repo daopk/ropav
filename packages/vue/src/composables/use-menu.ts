@@ -11,6 +11,7 @@ import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 import {computed, nextTick, shallowRef, toValue, watch} from "vue";
 
 import {provideMenuContext} from "../components/menu/menu.context";
+import {provideMenuItemPopupContext} from "../components/menu-item/menu-item.context";
 
 import {useCollection} from "./use-collection";
 import {useId} from "./use-id";
@@ -113,9 +114,20 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
 
   const shouldCloseOnSelect = computed(() => toValue(props.shouldCloseOnSelect) ?? true);
 
+  /**
+   * Cleared here, at every menu.
+   *
+   * A submenu trigger provides it for the one item that opens the submenu, and that item sits in
+   * the menu *above*. The submenu's own items are deeper in the same tree, so without clearing it
+   * they would each read as opening the same submenu — and each would claim to be its trigger,
+   * the last one winning and closing the submenu the moment it appeared.
+   */
+  provideMenuItemPopupContext(null);
+
   provideMenuContext({
     collection,
     collectionId,
+    element,
     keyboard,
     menuId,
     onAction: props.onAction,
@@ -149,6 +161,10 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
       // this one is queued first — asking for the first key any sooner asks an empty collection.
       // Still within the same task, so nothing is painted with focus in the wrong place.
       void nextTick(() => {
+        // Something already took focus inside the menu while this was waiting — a submenu opened
+        // from an item, most plainly — and moving it now would undo what the user just did.
+        if (current.contains(current.ownerDocument.activeElement)) return;
+
         let focusedKey: CollectionKey | null = null;
 
         if (autoFocus === "first") focusedKey = keyboard.getFirstKey();
