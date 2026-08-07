@@ -13,6 +13,7 @@ export * from "./error-message";
 export * from "./header";
 export * from "./icons";
 export * from "./label";
+export * from "./separator";
 export * from "./spinner";
 export * from "./toggle-button";
 export * from "./toggle-button-group";
