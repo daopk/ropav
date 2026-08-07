@@ -448,3 +448,40 @@ describe("useSelectionManager", () => {
     });
   });
 });
+
+describe("useSelectionManager with a shared focus source", () => {
+  it("reads and writes the focused key through the parent", () => {
+    const collection = createCollection(["bold", "italic", "left"]);
+    const parent = createManager({collection});
+    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+
+    parent.setFocused(true);
+    parent.setFocusedKey("italic");
+
+    // A menu whose sections each carry a selection still has one focus between them; two
+    // managers holding it separately would leave two items looking focused at once.
+    expect(scoped.isFocused.value).toBe(true);
+    expect(scoped.focusedKey.value).toBe("italic");
+  });
+
+  it("writes focus back to the parent", () => {
+    const collection = createCollection(["bold", "italic", "left"]);
+    const parent = createManager({collection});
+    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+
+    scoped.setFocusedKey("bold");
+
+    expect(parent.focusedKey.value).toBe("bold");
+  });
+
+  it("keeps a selection of its own", () => {
+    const collection = createCollection(["bold", "italic", "left"]);
+    const parent = createManager({collection, selectionMode: "single"});
+    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+
+    scoped.setSelectedKeys(["bold", "italic"]);
+
+    expect([...scoped.selectedKeys.value]).toEqual(["bold", "italic"]);
+    expect(parent.selectedKeys.value.size).toBe(0);
+  });
+});

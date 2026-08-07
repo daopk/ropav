@@ -38,6 +38,14 @@ export interface UseSelectionManagerProps {
   disabledKeys?: MaybeRefOrGetter<Iterable<CollectionKey> | undefined>;
   /** @default "all" */
   disabledBehavior?: MaybeRefOrGetter<DisabledBehavior | undefined>;
+  /**
+   * A manager to read and write the focused key through instead of holding it here.
+   *
+   * A collection has one focus but may have several selections — a menu whose sections each
+   * carry their own selection is the case this exists for. Focus has to stay shared, or arrowing
+   * from one section into the next would leave two items looking focused.
+   */
+  focusSource?: UseSelectionManagerReturn;
 }
 
 export interface UseSelectionManagerReturn {
@@ -265,10 +273,12 @@ export const useSelectionManager = (props: UseSelectionManagerProps): UseSelecti
     disabledKeys,
     extendSelection,
     firstSelectedKey: computed(() => orderedSelectedKeys.value[0] ?? null),
-    focusedKey: computed(() => focusedKeyRef.value),
+    focusedKey: props.focusSource
+      ? props.focusSource.focusedKey
+      : computed(() => focusedKeyRef.value),
     isDisabled,
     isEmpty,
-    isFocused: computed(() => isFocusedRef.value),
+    isFocused: props.focusSource ? props.focusSource.isFocused : computed(() => isFocusedRef.value),
     isSelectAll,
     isSelected,
     lastSelectedKey: computed(() => orderedSelectedKeys.value.at(-1) ?? null),
@@ -295,9 +305,21 @@ export const useSelectionManager = (props: UseSelectionManagerProps): UseSelecti
     selectionBehavior,
     selectionMode,
     setFocused: (focused) => {
+      if (props.focusSource) {
+        props.focusSource.setFocused(focused);
+
+        return;
+      }
+
       isFocusedRef.value = focused;
     },
     setFocusedKey: (key) => {
+      if (props.focusSource) {
+        props.focusSource.setFocusedKey(key);
+
+        return;
+      }
+
       // A key the collection does not hold would park focus on nothing, so it is refused
       // rather than stored and puzzled over later.
       if (key !== null && !collection.getItem(key)) return;
