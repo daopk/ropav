@@ -20,12 +20,13 @@ describe("Separator", () => {
       expect(separator.tagName).toBe("HR");
     });
 
-    it("leaves role and aria-orientation implicit", () => {
-      // An `hr` carries both by default; spelling them out would be redundant markup that
-      // would also show up as a diff against the React build.
+    it("declares the separator role and leaves aria-orientation implicit", () => {
+      // The role is redundant on an `hr`, but React Aria emits it there anyway, so matching it
+      // keeps the two builds' markup identical. `aria-orientation` genuinely is left out:
+      // horizontal is the ARIA default and React omits it too.
       const {separator} = renderSeparator();
 
-      expect(separator).not.toHaveAttribute("role");
+      expect(separator).toHaveAttribute("role", "separator");
       expect(separator).not.toHaveAttribute("aria-orientation");
     });
 
