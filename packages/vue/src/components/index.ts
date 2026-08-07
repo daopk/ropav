@@ -9,6 +9,7 @@ export * from "./card";
 export * from "./chip";
 export * from "./close-button";
 export * from "./description";
+export * from "./error-message";
 export * from "./icons";
 export * from "./label";
 export * from "./spinner";
