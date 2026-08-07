@@ -7,5 +7,6 @@ export * from "./button";
 export * from "./button-group";
 export * from "./card";
 export * from "./chip";
+export * from "./close-button";
 export * from "./icons";
 export * from "./spinner";
