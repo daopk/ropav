@@ -12,6 +12,7 @@ export * from "./description";
 export * from "./dropdown";
 export * from "./empty-state";
 export * from "./error-message";
+export * from "./form";
 export * from "./header";
 export * from "./icons";
 export * from "./kbd";
