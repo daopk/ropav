@@ -40,6 +40,17 @@ const retainModalityListeners = (): (() => void) => {
   };
 };
 
+/**
+ * Declare how the last interaction reached the page.
+ *
+ * Ported from React Aria's `setInteractionModality`. A component that moves focus itself —
+ * a slider label handing focus to its first thumb — has to say that the move came from the
+ * keyboard, or the ring it just earned would not be painted.
+ */
+export const setInteractionModality = (next: InteractionModality): void => {
+  modality.value = next;
+};
+
 export interface UseInteractionStatesOptions {
   /** Suppresses every state and keeps the element out of the interaction lifecycle. */
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
