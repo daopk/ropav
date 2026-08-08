@@ -1,6 +1,6 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {nextTick, reactive} from "vue";
 
 import {AvatarFallback} from "@/components/avatar";
 
@@ -228,6 +228,84 @@ describe("Avatar", () => {
 
       expect(imageIn(container)).not.toBeNull();
       expect(fallbackIn(container)).toBeNull();
+
+      unmount();
+    });
+  });
+
+  /**
+   * A delay exists so a fast image never flashes a fallback on its way in. Once shown the
+   * fallback stays, so the timer only ever reveals.
+   */
+  describe("fallback delay", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("holds the fallback back until the delay elapses", async () => {
+      const {container, unmount} = renderVapor(AvatarFixture, {props: {delayMs: 600}});
+
+      expect(fallbackIn(container)).toBeNull();
+
+      vi.advanceTimersByTime(600);
+      await nextTick();
+
+      expect(fallbackIn(container)?.textContent).toBe("JD");
+
+      unmount();
+    });
+
+    it("renders the fallback right away without a delay", () => {
+      const {container, unmount} = renderVapor(AvatarFixture);
+
+      expect(fallbackIn(container)).not.toBeNull();
+
+      unmount();
+    });
+
+    it("never shows the fallback when the image loads inside the delay", async () => {
+      const {container, unmount} = renderVapor(AvatarFixture, {
+        props: {delayMs: 600, src: "/jane.png"},
+      });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      vi.advanceTimersByTime(600);
+      await nextTick();
+
+      expect(imageIn(container)).not.toBeNull();
+      expect(fallbackIn(container)).toBeNull();
+
+      unmount();
+    });
+
+    it("clears a pending delay when the avatar unmounts", () => {
+      const {unmount} = renderVapor(AvatarFixture, {props: {delayMs: 600}});
+
+      // Asserted first, or a zero after unmount would also pass with no timer ever armed.
+      expect(vi.getTimerCount()).toBe(1);
+
+      unmount();
+
+      expect(vi.getTimerCount()).toBe(0);
+    });
+
+    it("re-arms the delay when it changes", async () => {
+      const props = reactive<Record<string, unknown>>({delayMs: 1000});
+      const {container, unmount} = renderVapor(AvatarFixture, {props});
+
+      props["delayMs"] = 100;
+      await nextTick();
+
+      vi.advanceTimersByTime(100);
+      await nextTick();
+
+      expect(fallbackIn(container)?.textContent).toBe("JD");
 
       unmount();
     });

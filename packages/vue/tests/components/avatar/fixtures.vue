@@ -5,6 +5,7 @@ import {Avatar} from "@/components/avatar";
 
 defineProps<
   AvatarRootProps & {
+    delayMs?: number;
     fallbackColor?: AvatarRootProps["color"];
     sizes?: string;
     src?: string;
@@ -30,6 +31,6 @@ defineEmits<{
       @load="$emit('load', $event)"
       @loading-status-change="$emit('loadingStatusChange', $event)"
     />
-    <Avatar.Fallback :color="$props.fallbackColor">JD</Avatar.Fallback>
+    <Avatar.Fallback :color="$props.fallbackColor" :delay-ms="$props.delayMs">JD</Avatar.Fallback>
   </Avatar>
 </template>

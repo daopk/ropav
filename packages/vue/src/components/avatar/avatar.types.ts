@@ -32,4 +32,9 @@ export interface AvatarFallbackProps {
   class?: string;
   /** Overrides the fallback color inherited from the root. */
   color?: AvatarVariants["color"];
+  /**
+   * How long to hold the fallback back before it may render, so an image that arrives
+   * quickly never flashes one. Without it the fallback shows immediately.
+   */
+  delayMs?: number;
 }
