@@ -6,6 +6,7 @@ import {accordionVariants} from "@heroui/styles";
 import {computed} from "vue";
 
 import {useDisclosureGroup} from "../../composables/use-disclosure-group";
+import {provideSurfaceContext, useSurfaceContext} from "../surface";
 
 import {provideAccordionContext} from "./accordion.context";
 
@@ -36,6 +37,23 @@ provideAccordionContext({
   group,
   hideSeparator: computed(() => props.hideSeparator ?? false),
   slots,
+});
+
+// Only resolves to an ancestor, since `inject` cannot see the component's own `provide`.
+const ancestorSurface = useSurfaceContext();
+
+/**
+ * Only the surface variant paints a surface, so only it changes what descendants sit on;
+ * every other variant forwards whatever is behind the accordion. The colour reported is the
+ * default surface rather than the accordion's own variant, matching what the CSS paints.
+ *
+ * The choice lives inside the computed because `provide` runs once and the variant can
+ * change afterwards.
+ */
+provideSurfaceContext({
+  variant: computed(() =>
+    props.variant === "surface" ? "default" : ancestorSurface?.variant.value,
+  ),
 });
 </script>
 
