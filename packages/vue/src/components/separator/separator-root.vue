@@ -4,17 +4,28 @@ import type {SeparatorRootProps} from "./separator.types";
 import {separatorVariants} from "@heroui/styles";
 import {computed} from "vue";
 
-const props = withDefaults(defineProps<SeparatorRootProps>(), {orientation: "horizontal"});
+import {useSeparatorContext} from "./separator.context";
+
+// `orientation` declares an explicit `undefined` default so an absent prop stays absent and
+// can fall through to the container's axis. Vue would otherwise read "no prop" as an
+// explicit `"horizontal"`, and a rule inside a toolbar could never inherit its axis.
+const props = withDefaults(defineProps<SeparatorRootProps>(), {orientation: undefined});
+
+const context = useSeparatorContext();
+
+const resolvedOrientation = computed(
+  () => props.orientation ?? context?.orientation?.value ?? "horizontal",
+);
 
 const styles = computed(() =>
   separatorVariants({
     class: props.class,
-    orientation: props.orientation,
+    orientation: resolvedOrientation.value,
     variant: props.variant,
   }),
 );
 
-const isVertical = computed(() => props.orientation === "vertical");
+const isVertical = computed(() => resolvedOrientation.value === "vertical");
 </script>
 
 <template>

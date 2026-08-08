@@ -8,12 +8,16 @@ import {computed, shallowRef} from "vue";
 import {useToggleGroupState} from "../../composables/use-toggle-group-state";
 import {useToolbar} from "../../composables/use-toolbar";
 import {dataAttr} from "../../utils/assertion";
+import {useToolbarContext} from "../toolbar/toolbar.context";
 
 import {provideToggleButtonGroupContext} from "./toggle-button-group.context";
 
+// `orientation` declares an explicit `undefined` default so an absent prop stays absent and
+// can fall through to the toolbar's axis. Vue would otherwise read "no prop" as an explicit
+// `"horizontal"`, and a group inside a vertical toolbar could never inherit it.
 const props = withDefaults(defineProps<ToggleButtonGroupRootProps>(), {
   isDetached: false,
-  orientation: "horizontal",
+  orientation: undefined,
   selectionMode: "single",
 });
 
@@ -23,11 +27,17 @@ defineSlots<{default?: () => unknown}>();
 
 const element = shallowRef<HTMLElement | null>(null);
 
+const toolbarContext = useToolbarContext();
+
+const resolvedOrientation = computed(
+  () => props.orientation ?? toolbarContext?.orientation.value ?? "horizontal",
+);
+
 const slots = computed(() =>
   toggleButtonGroupVariants({
     fullWidth: props.fullWidth,
     isDetached: props.isDetached,
-    orientation: props.orientation,
+    orientation: resolvedOrientation.value,
   }),
 );
 
@@ -40,7 +50,7 @@ const state = useToggleGroupState({
   selectionMode: () => props.selectionMode,
 });
 
-const toolbar = useToolbar({element, orientation: () => props.orientation});
+const toolbar = useToolbar({element, orientation: resolvedOrientation});
 
 /**
  * Single selection makes the group a set of mutually exclusive choices rather than a row
@@ -63,10 +73,10 @@ provideToggleButtonGroupContext({
   <div
     ref="element"
     :aria-disabled="props.isDisabled || undefined"
-    :aria-orientation="props.orientation"
+    :aria-orientation="resolvedOrientation"
     :class="slots.base({class: props.class})"
     :data-disabled="dataAttr(props.isDisabled)"
-    :data-orientation="props.orientation"
+    :data-orientation="resolvedOrientation"
     data-slot="toggle-button-group"
     :role="role"
     @focusin="toolbar.onFocusin"

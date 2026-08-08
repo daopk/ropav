@@ -1,29 +1,29 @@
-import SeparatorRoot from "./separator-root.vue";
+import ToolbarRoot from "./toolbar-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-export const Separator = Object.assign(SeparatorRoot, {
-  Root: SeparatorRoot,
+export const Toolbar = Object.assign(ToolbarRoot, {
+  Root: ToolbarRoot,
 });
 
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {SeparatorRoot};
+export {ToolbarRoot};
 
-export type {SeparatorRootProps, SeparatorRootProps as SeparatorProps} from "./separator.types";
+export type {ToolbarRootProps, ToolbarRootProps as ToolbarProps} from "./toolbar.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useSeparatorContext} from "./separator.context";
+export {useToolbarContext} from "./toolbar.context";
 
-export type {SeparatorContext} from "./separator.context";
+export type {ToolbarContext} from "./toolbar.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {separatorVariants} from "@heroui/styles";
+export {toolbarVariants} from "@heroui/styles";
 
-export type {SeparatorVariants} from "@heroui/styles";
+export type {ToolbarVariants} from "@heroui/styles";

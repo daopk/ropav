@@ -5,17 +5,27 @@ import {buttonGroupVariants} from "@heroui/styles";
 import {computed} from "vue";
 
 import {dataAttr} from "../../utils/assertion";
+import {useToolbarContext} from "../toolbar/toolbar.context";
 
 import {provideButtonGroupContext} from "./button-group.context";
 
-const props = withDefaults(defineProps<ButtonGroupRootProps>(), {orientation: "horizontal"});
+// `orientation` declares an explicit `undefined` default so an absent prop stays absent and
+// can fall through to the toolbar's axis. Vue would otherwise read "no prop" as an explicit
+// `"horizontal"`, and a group inside a vertical toolbar could never inherit it.
+const props = withDefaults(defineProps<ButtonGroupRootProps>(), {orientation: undefined});
 
 defineSlots<{default?: () => unknown}>();
+
+const toolbarContext = useToolbarContext();
+
+const resolvedOrientation = computed(
+  () => props.orientation ?? toolbarContext?.orientation.value ?? "horizontal",
+);
 
 const slots = computed(() =>
   buttonGroupVariants({
     fullWidth: props.fullWidth,
-    orientation: props.orientation,
+    orientation: resolvedOrientation.value,
   }),
 );
 
