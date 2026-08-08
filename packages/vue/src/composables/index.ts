@@ -25,6 +25,7 @@ export * from "./use-safely-mouse-to-submenu";
 export * from "./use-selection-manager";
 export * from "./use-slider";
 export * from "./use-slider-state";
+export * from "./use-slider-thumb";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
 export * from "./use-typeahead";
