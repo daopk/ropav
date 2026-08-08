@@ -11,7 +11,9 @@ import {Radio, RadioContent, RadioControl, RadioIndicator} from "../radio";
 
 import {RadioGroup} from "./index";
 
-import IconCreditCard from "~icons/gravity-ui/credit-card";
+import IconPaypal from "~icons/ic/baseline-paypal";
+import IconVisa from "~icons/streamline-logos/visa-logo-solid";
+import IconMastercard from "~icons/uim/master-card";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Radio.Content` through, so dot notation cannot be used here.
@@ -20,7 +22,9 @@ const components = {
   Description,
   FieldError,
   Form,
-  IconCreditCard,
+  IconMastercard,
+  IconPaypal,
+  IconVisa,
   Label,
   Radio,
   RadioContent,
@@ -377,12 +381,16 @@ export const DeliveryAndPaymentExample: Story = {
           value: "super-fast",
         },
       ],
-      // React draws each brand from a different Iconify collection; only `gravity-ui` is
-      // bundled for this Storybook, so one card icon stands in for all three.
+      // One brand logo each, from the same three Iconify collections React names.
       paymentOptions: [
-        {description: "Exp. on 01/2026", title: "**** 8304", value: "mastercard"},
-        {description: "Exp. on 01/2026", title: "**** 0123", value: "visa"},
-        {description: "Pay with PayPal", title: "PayPal", value: "paypal"},
+        {
+          description: "Exp. on 01/2026",
+          icon: "IconMastercard",
+          title: "**** 8304",
+          value: "mastercard",
+        },
+        {description: "Exp. on 01/2026", icon: "IconVisa", title: "**** 0123", value: "visa"},
+        {description: "Pay with PayPal", icon: "IconPaypal", title: "PayPal", value: "paypal"},
       ],
     }),
     template: `
@@ -421,7 +429,7 @@ export const DeliveryAndPaymentExample: Story = {
                   <RadioControl class="absolute end-4 top-3 size-5">
                     <RadioIndicator />
                   </RadioControl>
-                  <IconCreditCard class="size-6 text-accent" />
+                  <component :is="option.icon" class="size-6 text-accent" />
                   <div class="flex flex-col gap-1">
                     <span>{{ option.title }}</span>
                     <Description>{{ option.description }}</Description>

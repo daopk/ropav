@@ -19,6 +19,9 @@
   "devDependencies": {
     "@heroui/standard": "workspace:*",
     "@iconify-json/gravity-ui": "1.2.10",
+    "@iconify-json/ic": "1.2.4",
+    "@iconify-json/streamline-logos": "1.2.0",
+    "@iconify-json/uim": "1.2.3",
     "@storybook/addon-a11y": "10.2.10",
     "@storybook/addon-docs": "10.2.10",
     "@storybook/vue3": "10.2.10",
