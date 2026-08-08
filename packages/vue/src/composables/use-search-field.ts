@@ -1,6 +1,6 @@
 import type {PressResponder} from "./press-responder";
 import type {UseTextFieldOptions, UseTextFieldReturn} from "./use-text-field";
-import type {ComputedRef} from "vue";
+import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, toValue} from "vue";
 
@@ -10,8 +10,13 @@ import {useTextField} from "./use-text-field";
 export interface UseSearchFieldOptions extends Omit<UseTextFieldOptions, "type"> {
   /** Kind of control the browser should offer. @default "search" */
   type?: UseTextFieldOptions["type"];
-  /** Called when the search is submitted from the keyboard. */
-  onSubmit?: (value: string) => void;
+  /**
+   * Called when the search is submitted from the keyboard.
+   *
+   * A getter, because the handler's mere presence decides what Enter does and a component
+   * forwarding its own optional prop has to be able to report that it went away.
+   */
+  onSubmit?: MaybeRefOrGetter<((value: string) => void) | undefined>;
   /** Called when the value is cleared, by the button or by Escape. */
   onClear?: () => void;
 }
@@ -69,12 +74,14 @@ export const useSearchField = (options: UseSearchFieldOptions = {}): UseSearchFi
     if (isDisabled.value) return;
 
     if (event.key === "Enter") {
+      const onSubmit = toValue(options.onSubmit);
+
       // Without a submit handler the keystroke belongs to the form, which submits on Enter in
       // a single-line field of its own accord.
-      if (!options.onSubmit) return;
+      if (!onSubmit) return;
 
       event.preventDefault();
-      options.onSubmit(field.value.value);
+      onSubmit(field.value.value);
 
       return;
     }

@@ -35,7 +35,6 @@ const emit = defineEmits<{
   change: [value: string];
   "update:value": [value: string];
   clear: [];
-  submit: [value: string];
   focusChange: [isFocused: boolean];
 }>();
 
@@ -67,7 +66,7 @@ const field = useSearchField({
   },
   onClear: () => emit("clear"),
   onFocusChange: (isFocused) => emit("focusChange", isFocused),
-  onSubmit: (value) => emit("submit", value),
+  onSubmit: () => props.onSubmit,
   placeholder: () => props.placeholder,
   spellCheck: () => props.spellCheck,
   type: () => props.type,

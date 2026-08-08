@@ -65,6 +65,15 @@ export interface SearchFieldRootProps {
   ariaLabelledby?: string;
   /** Ids of the elements that describe the field, on top of any nested help text. */
   ariaDescribedby?: string;
+  /**
+   * Called when the search is submitted from the keyboard.
+   *
+   * A prop rather than an emit, because its mere presence decides what Enter does: with a
+   * handler the key is a submit and stops there, without one it belongs to the form, which
+   * submits on Enter in a single-line field of its own accord. Vue strips a declared emit from
+   * `$attrs`, so an emit gives the component no way to tell whether anyone is listening.
+   */
+  onSubmit?: (value: string) => void;
 }
 
 /** State the root hands to its slot, matching React's field render props. */
