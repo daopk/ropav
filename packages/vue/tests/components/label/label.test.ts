@@ -100,11 +100,73 @@ describe("Label", () => {
     });
   });
 
+  describe("control id", () => {
+    it("points for at the control its container named", () => {
+      // `aria-labelledby` is what names the control for assistive technology, but only `for`
+      // makes a pointer click on the label move focus into it.
+      const {label} = renderLabel({controlId: "email-input", withFieldIds: true});
+
+      expect(label).toHaveAttribute("for", "email-input");
+    });
+
+    it("renders no for when its container names no control", () => {
+      // A checkbox keeps its input inside the label, and a composite has no single control
+      // to point at, so neither hands one out. This is every container that existed before.
+      const {label} = renderLabel({withFieldIds: true});
+
+      expect(label).not.toHaveAttribute("for");
+    });
+
+    it("renders no for when it stands on its own", () => {
+      const {label} = renderLabel();
+
+      expect(label).not.toHaveAttribute("for");
+    });
+
+    it("leaves for off a label rendered as a span", async () => {
+      // Only a real `label` can carry `for`, so a composite's `span` must not grow one even
+      // when a control id is on offer.
+      const {label} = renderLabel({
+        controlId: "email-input",
+        labelElementType: "span",
+        withFieldIds: true,
+      });
+
+      expect(label.tagName).toBe("SPAN");
+      expect(label).not.toHaveAttribute("for");
+    });
+
+    it("claims its own id and points for at the control at the same time", async () => {
+      // The two directions are independent and both have to be rendered.
+      const {container, label} = renderLabel({controlId: "email-input", withFieldIds: true});
+
+      await nextTick();
+
+      const id = label.getAttribute("id");
+
+      expect(id).toBeTruthy();
+      expect(container.firstElementChild).toHaveAttribute("data-labelled-by", id!);
+      expect(label).toHaveAttribute("for", "email-input");
+    });
+  });
+
   describe("attribute passthrough", () => {
     it("forwards an undeclared attribute onto the label element", () => {
       const {label} = renderLabel({labelFor: "email-input"});
 
       expect(label).toHaveAttribute("for", "email-input");
+    });
+
+    it("lets a caller for win over the one the container offers", () => {
+      // Attribute fallthrough beats a binding declared in the template, which is the same
+      // precedence already relied on for a close button's `aria-label`.
+      const {label} = renderLabel({
+        controlId: "from-container",
+        labelFor: "from-caller",
+        withFieldIds: true,
+      });
+
+      expect(label).toHaveAttribute("for", "from-caller");
     });
   });
 });

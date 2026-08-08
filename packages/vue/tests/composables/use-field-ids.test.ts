@@ -1,19 +1,19 @@
 import type {UseFieldIdsReturn} from "@/composables/use-field-ids";
 
 import {afterEach, describe, expect, it} from "vitest";
-import {effectScope} from "vue";
+import {effectScope, shallowRef} from "vue";
 
 import {useFieldIds} from "@/composables/use-field-ids";
 
 const scopes: (() => void)[] = [];
 
 /** The container's side of the contract: one call per provider component. */
-const createFieldIds = (): UseFieldIdsReturn => {
+const createFieldIds = (options: Parameters<typeof useFieldIds>[0] = {}): UseFieldIdsReturn => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());
 
-  return scope.run(() => useFieldIds()) as UseFieldIdsReturn;
+  return scope.run(() => useFieldIds(options)) as UseFieldIdsReturn;
 };
 
 /**
@@ -118,6 +118,52 @@ describe("useFieldIds", () => {
       first.unmount();
 
       expect(field.labelId.value).toBe(first.result);
+    });
+  });
+
+  describe("labelFor", () => {
+    it("points at nothing when the container names no control", () => {
+      // A composite has no single control to point at, and every container that existed
+      // before this option was added is in exactly that position.
+      const field = createFieldIds();
+
+      expect(field.context.labelFor.value).toBeUndefined();
+    });
+
+    it("hands out the control id the container supplied", () => {
+      const field = createFieldIds({labelFor: "email-input"});
+
+      expect(field.context.labelFor.value).toBe("email-input");
+    });
+
+    it("follows a control id that changes", () => {
+      const controlId = shallowRef<string | undefined>("first");
+      const field = createFieldIds({labelFor: controlId});
+
+      expect(field.context.labelFor.value).toBe("first");
+
+      controlId.value = "second";
+
+      expect(field.context.labelFor.value).toBe("second");
+    });
+
+    it("reads a getter rather than a snapshot", () => {
+      // The id a field mints is usually derived, so the option has to accept a getter.
+      let current = "before";
+      const field = createFieldIds({labelFor: () => current});
+
+      current = "after";
+
+      expect(field.context.labelFor.value).toBe("after");
+    });
+
+    it("is independent of whether a label claimed an id", () => {
+      // The two directions are separate: `for` points at the control, the claimed id is what
+      // the control points `aria-labelledby` back at.
+      const field = createFieldIds({labelFor: "email-input"});
+
+      expect(field.labelId.value).toBeUndefined();
+      expect(field.context.labelFor.value).toBe("email-input");
     });
   });
 });

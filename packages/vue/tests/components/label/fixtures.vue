@@ -1,6 +1,8 @@
 <script setup lang="ts" vapor>
 import type {LabelRootProps} from "@/components/label";
 
+import {computed} from "vue";
+
 import {LabelRoot} from "@/components/label";
 import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
 
@@ -10,7 +12,10 @@ import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
  */
 const props = defineProps<
   LabelRootProps & {
+    /** Id of the control the container names, standing in for a field root's input. */
+    controlId?: string;
     labelElementType?: "label" | "span";
+    /** A `for` the caller puts on the label itself, to exercise attribute fallthrough. */
     labelFor?: string;
     slots?: ("label" | "description" | "errorMessage" | "heading")[];
     text?: string;
@@ -18,16 +23,25 @@ const props = defineProps<
   }
 >();
 
-const fieldIds = useFieldIds({labelElementType: props.labelElementType, slots: props.slots});
+const fieldIds = useFieldIds({
+  labelElementType: props.labelElementType,
+  labelFor: () => props.controlId,
+  slots: props.slots,
+});
 
 if (props.withFieldIds) provideFieldIdsContext(fieldIds.context);
+
+// Bound as a whole object rather than as a plain `:for`, because a key present in `$attrs`
+// suppresses the component's own binding for that key — even when its value is `undefined`.
+// Passing `:for` unconditionally would therefore hide the container's control id in every case.
+const callerAttrs = computed(() => (props.labelFor ? {for: props.labelFor} : {}));
 </script>
 
 <template>
   <div :data-labelled-by="fieldIds.labelId.value">
     <LabelRoot
+      v-bind="callerAttrs"
       :class="props.class"
-      :for="props.labelFor"
       :is-disabled="props.isDisabled"
       :is-invalid="props.isInvalid"
       :is-required="props.isRequired"
