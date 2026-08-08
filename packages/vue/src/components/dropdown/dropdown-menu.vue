@@ -6,6 +6,7 @@ import type {CollectionSelection} from "../../composables/use-selection-manager"
 import {computed} from "vue";
 
 import {useMenu} from "../../composables/use-menu";
+import {provideSeparatorContext} from "../separator/separator.context";
 
 import {useDropdownContext, useDropdownPopoverTarget} from "./dropdown.context";
 
@@ -28,6 +29,10 @@ const {slots} = useDropdownContext();
 const target = useDropdownPopoverTarget();
 
 const styles = computed(() => slots.value.menu({class: props.class}));
+
+// A menu lays its own items out, so a rule between two of them has to take part in that
+// layout rather than being the block-level `hr` it would be on its own.
+provideSeparatorContext({elementType: "div"});
 
 const menu = useMenu({
   autoFocus: target.autoFocus,

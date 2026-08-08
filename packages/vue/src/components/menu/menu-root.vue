@@ -7,6 +7,7 @@ import {menuVariants} from "@heroui/styles";
 import {computed} from "vue";
 
 import {useMenu} from "../../composables/use-menu";
+import {provideSeparatorContext} from "../separator/separator.context";
 
 // `disallowEmptySelection` and `shouldCloseOnSelect` declare an explicit `undefined` default so an
 // absent prop stays absent rather than reading as an explicit `false`.
@@ -25,6 +26,10 @@ const emit = defineEmits<{
 defineSlots<{default?: () => unknown}>();
 
 const styles = computed(() => menuVariants({class: props.class}));
+
+// A menu lays its own children out, so a rule between two of them has to take part in that
+// layout rather than being the block-level `hr` it would be on its own.
+provideSeparatorContext({elementType: "div"});
 
 const menu = useMenu({
   autoFocus: () => props.autoFocus,

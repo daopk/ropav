@@ -26,21 +26,24 @@ const styles = computed(() =>
 );
 
 const isVertical = computed(() => resolvedOrientation.value === "vertical");
+
+// A vertical rule can never be an `hr`, and a horizontal one stops being one whenever the
+// container lays its own children out — see `elementType` on the context.
+const isDiv = computed(() => isVertical.value || context?.elementType === "div");
 </script>
 
 <template>
   <!--
-    A vertical rule cannot be an `hr`, so it falls back to a `div`. Both spell out
-    `role="separator"` even though an `hr` implies it: React Aria emits it on the `hr` too,
-    and matching it keeps the rendered markup identical across the two builds.
-    `aria-orientation` is the opposite — horizontal is the ARIA default, so only the vertical
-    branch declares it.
+    Both branches spell out `role="separator"` even though an `hr` implies it: React Aria
+    emits it on the `hr` too, and matching it keeps the rendered markup identical across the
+    two builds. `aria-orientation` is the opposite — horizontal is the ARIA default, so only
+    the vertical branch declares it.
   -->
   <div
-    v-if="isVertical"
-    aria-orientation="vertical"
+    v-if="isDiv"
+    :aria-orientation="isVertical ? 'vertical' : undefined"
     :class="styles"
-    data-orientation="vertical"
+    :data-orientation="resolvedOrientation"
     data-slot="separator"
     role="separator"
   />

@@ -380,6 +380,27 @@ describe("Dropdown", () => {
     });
   });
 
+  describe("separators", () => {
+    /**
+     * A menu lays its own items out, so the rule between two of them has to take part in that
+     * layout rather than being the block-level `hr` it is on its own.
+     */
+    it("renders a rule that takes part in the menu's own layout", async () => {
+      const result = render({withSeparator: true});
+
+      await open(result);
+
+      const separator = result.baseElement.querySelector('[data-slot="separator"]')!;
+
+      expect(separator.tagName).toBe("DIV");
+      expect(separator).toHaveAttribute("role", "separator");
+      expect(separator).toHaveAttribute("data-orientation", "horizontal");
+      expect(separator).not.toHaveAttribute("aria-orientation");
+
+      result.unmount();
+    });
+  });
+
   describe("disabled items", () => {
     it("marks a disabled item and takes it out of the tab order", async () => {
       const result = render({disabledKeys: ["delete-file"]});
