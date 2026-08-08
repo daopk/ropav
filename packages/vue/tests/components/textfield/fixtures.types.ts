@@ -23,6 +23,8 @@ export interface TextFieldFixtureProps {
   ariaLabel?: string;
   /** Renders a `TextArea` in place of the `Input`, which is the other control a field takes. */
   withTextArea?: boolean;
+  /** Sets `full-width` as a bare attribute on the field and the control, as a caller writes it. */
+  attributeForm?: boolean;
   /** Whether a visible `Label` is rendered at all. */
   withLabel?: boolean;
   withDescription?: boolean;

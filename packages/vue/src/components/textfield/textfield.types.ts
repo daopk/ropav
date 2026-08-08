@@ -3,14 +3,17 @@ import type {
   ValidationDetails,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {TextFieldVariants} from "@heroui/styles";
 
+// Boolean props are declared as plain `boolean` rather than through the variants type. The
+// SFC compiler cannot resolve an imported indexed-access type into a runtime prop type, and
+// without `type: Boolean` Vue never casts a valueless attribute — `<X is-required>` would
+// arrive as `""` and read as falsy, so the modifier silently never applies.
 export interface TextFieldRootProps {
   class?: string;
   /** Visual variant handed down to the control inside. @default "primary" */
   variant?: "primary" | "secondary";
   /** Whether the field stretches to fill its container. */
-  fullWidth?: TextFieldVariants["fullWidth"];
+  fullWidth?: boolean;
   /** Text in the field. Makes it controlled. */
   value?: string;
   /** Text the field starts with, and goes back to when the form is reset. */

@@ -12,6 +12,8 @@ import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
  */
 const props = defineProps<
   LabelRootProps & {
+    /** Renders the state props as valueless attributes, the way a caller writes them. */
+    attributeForm?: boolean;
     /** Id of the control the container names, standing in for a field root's input. */
     controlId?: string;
     labelElementType?: "label" | "span";
@@ -40,6 +42,17 @@ const callerAttrs = computed(() => (props.labelFor ? {for: props.labelFor} : {})
 <template>
   <div :data-labelled-by="fieldIds.labelId.value">
     <LabelRoot
+      v-if="props.attributeForm"
+      v-bind="callerAttrs"
+      :class="props.class"
+      is-disabled
+      is-invalid
+      is-required
+    >
+      {{ props.text ?? "Email" }}
+    </LabelRoot>
+    <LabelRoot
+      v-else
       v-bind="callerAttrs"
       :class="props.class"
       :is-disabled="props.isDisabled"

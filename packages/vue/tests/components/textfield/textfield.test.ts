@@ -90,6 +90,24 @@ describe("TextField", () => {
       unmount();
     });
 
+    it("stretches the control when full-width is written as a bare attribute", () => {
+      // `full-width` hands the prop an empty string, which only becomes `true` when the prop
+      // carries a runtime `Boolean` type — the form every story uses.
+      const {container, unmount} = renderField({attributeForm: true});
+
+      expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--full-width");
+
+      unmount();
+    });
+
+    it("stretches a textarea when full-width is written as a bare attribute", () => {
+      const {container, unmount} = renderField({attributeForm: true, withTextArea: true});
+
+      expect(container.querySelector('[data-slot="textarea"]')).toHaveClass("textarea--full-width");
+
+      unmount();
+    });
+
     it("stretches the field and its control when full width", () => {
       const {container, root, unmount} = renderField({fullWidth: true});
 

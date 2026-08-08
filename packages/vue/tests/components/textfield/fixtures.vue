@@ -43,10 +43,16 @@ const props = withDefaults(defineProps<TextFieldFixtureProps>(), {
   >
     <Label v-if="props.withLabel">Email</Label>
     <TextArea
-      v-if="props.withTextArea"
+      v-if="props.withTextArea && props.attributeForm"
+      full-width
+      :placeholder="props.controlPlaceholder"
+    />
+    <TextArea
+      v-else-if="props.withTextArea"
       :placeholder="props.controlPlaceholder"
       :variant="props.controlVariant"
     />
+    <Input v-else-if="props.attributeForm" full-width :placeholder="props.controlPlaceholder" />
     <Input v-else :placeholder="props.controlPlaceholder" :variant="props.controlVariant" />
     <Description v-if="props.withDescription">We will not share it</Description>
     <FieldError v-if="props.withFieldError" />

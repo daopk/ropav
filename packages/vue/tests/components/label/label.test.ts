@@ -60,6 +60,15 @@ describe("Label", () => {
 
       expect(label).toHaveClass("label--invalid");
     });
+
+    it("applies the modifiers when the props are written as bare attributes", () => {
+      // `<Label is-required>` hands the prop an empty string, which only becomes `true` when
+      // the prop carries a runtime `Boolean` type. Declaring the type through the variants
+      // type instead leaves it untyped, and the modifier silently never applies.
+      const {label} = renderLabel({attributeForm: true});
+
+      expect(label).toHaveClass("label--disabled", "label--invalid", "label--required");
+    });
   });
 
   describe("field ids", () => {
