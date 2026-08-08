@@ -14,8 +14,10 @@ export default defineConfig({
   plugins: [
     vue({features: {vapor: true}}),
     // Story icons are compiled to Vapor components, so they render on the same path as
-    // the components they are placed in.
-    Icons({compiler: vaporIconCompiler()}),
+    // the components they are placed in. `scale: 1` because the plugin defaults to 1.2em
+    // while `@iconify/react` renders 1em — leaving it would make every icon in a Vue story
+    // 20% larger than the React one it is meant to be compared against.
+    Icons({compiler: vaporIconCompiler(), scale: 1}),
     tailwindcss(),
   ],
 });
