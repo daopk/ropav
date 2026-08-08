@@ -314,6 +314,37 @@ describe("Switch", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input is already tabbable: Safari does not focus one unless
+    // an explicit tab index says so, which is why react-aria always sets it — `useToggle` picks
+    // it up from `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {container, unmount} = renderSwitch();
+
+      expect(inputIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {container, unmount} = renderSwitch({isDisabled: true});
+
+      expect(inputIn(container).hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // Read-only is not a factor: the input stays focusable, since only a disabled switch gets
+    // the `disabled` attribute.
+    it("keeps the tab index when read only", () => {
+      const {container, unmount} = renderSwitch({isReadOnly: true});
+
+      expect(inputIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+  });
+
   describe("help text", () => {
     it("points the input at a description that is rendered", async () => {
       const {container, unmount} = renderSwitch({withDescription: true});

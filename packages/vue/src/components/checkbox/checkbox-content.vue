@@ -110,6 +110,12 @@ const onChange = (event: Event) => {
   // changed and so nothing re-renders.
   input.checked = isSelected.value;
 };
+
+// Written even though a native input is already tabbable: Safari does not focus one unless an
+// explicit tab index says so, which is the reason react-aria always sets it — `useToggle` picks
+// it up from `useFocusable`. A disabled checkbox should not be reachable at all, so it gets none.
+// Read-only is deliberately not a factor: only `isDisabled` takes the input out of the order.
+const tabindex = computed(() => (isDisabled.value ? undefined : 0));
 </script>
 
 <template>
@@ -145,6 +151,7 @@ const onChange = (event: Event) => {
         :form="form"
         :name="name"
         :required="resolvedRequired"
+        :tabindex="tabindex"
         type="checkbox"
         :value="value"
         @blur="interaction.onBlur"

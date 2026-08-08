@@ -317,6 +317,36 @@ describe("Checkbox", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input is already tabbable: Safari does not focus one unless
+    // an explicit tab index says so, which is why react-aria always sets it — `useToggle` picks
+    // it up from `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {container, unmount} = renderCheckbox();
+
+      expect(inputIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {container, unmount} = renderCheckbox({isDisabled: true});
+
+      expect(inputIn(container).hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // Read-only is not a factor: only a disabled checkbox leaves the tab order.
+    it("keeps the tab index when read only", () => {
+      const {container, unmount} = renderCheckbox({isReadOnly: true});
+
+      expect(inputIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+  });
+
   describe("labelling", () => {
     it("puts the accessible name on the input, not the wrapper", () => {
       const {container, unmount} = renderCheckbox({ariaLabel: "Accept terms"});
