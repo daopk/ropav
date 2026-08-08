@@ -281,11 +281,14 @@ describe("Accordion", () => {
       unmount();
     });
 
+    // Roving would park every unfocused trigger at -1 and leave the group one tab stop. Asserted
+    // as "nothing is -1" rather than "no tabindex at all", because every enabled trigger now
+    // carries an explicit 0 — see the tab order block for why.
     it("keeps every trigger tabbable rather than using roving tabindex", () => {
       const {container, unmount} = renderVapor(AccordionFixture);
 
       for (const trigger of triggersIn(container)) {
-        expect(trigger.hasAttribute("tabindex")).toBe(false);
+        expect(trigger.getAttribute("tabindex")).toBe("0");
       }
 
       unmount();
@@ -349,6 +352,31 @@ describe("Accordion", () => {
 
       expect(items[0]?.getAttribute("data-disabled")).toBe("true");
       expect(items[1]?.hasAttribute("data-disabled")).toBe(false);
+
+      unmount();
+    });
+  });
+
+  describe("tab order", () => {
+    // Written even though a native button is already tabbable: Safari does not focus one
+    // unless an explicit tab index says so, which is why react-aria always sets it.
+    // Every enabled trigger keeps its own stop: the accordion pattern has no roving index.
+    it("renders an explicit tab index on every trigger", () => {
+      const {container, unmount} = renderVapor(AccordionFixture, {props: {}});
+
+      for (const trigger of triggersIn(container)) {
+        expect(trigger).toHaveAttribute("tabindex", "0");
+      }
+
+      unmount();
+    });
+
+    it("drops the tab index of a disabled item, so it is not reachable at all", () => {
+      const {container, unmount} = renderVapor(AccordionFixture, {props: {disabledItem: "two"}});
+      const triggers = triggersIn(container);
+
+      expect(triggers[0]).toHaveAttribute("tabindex", "0");
+      expect(triggers[1]?.hasAttribute("tabindex")).toBe(false);
 
       unmount();
     });
