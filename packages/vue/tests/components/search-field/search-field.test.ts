@@ -352,6 +352,17 @@ describe("SearchField", () => {
       const {clearButton, unmount} = renderSearchField({isDisabled: true});
 
       expect(clearButton).toBeDisabled();
+      expect(clearButton).toHaveAttribute("data-disabled", "true");
+
+      unmount();
+    });
+
+    it("drops the tabindex once the clear button is disabled", () => {
+      // `disabled` already takes the button out of the tab order, so the explicit `-1` has
+      // nothing left to do. Matched to react-aria's DOM rather than to its source.
+      const {clearButton, unmount} = renderSearchField({isDisabled: true});
+
+      expect(clearButton).not.toHaveAttribute("tabindex");
 
       unmount();
     });
