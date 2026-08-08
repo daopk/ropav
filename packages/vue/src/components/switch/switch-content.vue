@@ -4,6 +4,7 @@ import type {SwitchContentProps, SwitchContentSlotProps} from "./switch.types";
 import {computed, shallowRef} from "vue";
 
 import {useFormReset} from "../../composables/use-form-reset";
+import {useFormValidation} from "../../composables/use-form-validation";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
@@ -30,6 +31,7 @@ const {
   name,
   setSelected,
   slots,
+  validation,
   value,
 } = useSwitchContext();
 
@@ -40,6 +42,18 @@ const setInputEl = (element: unknown) => {
 };
 
 useFormReset(inputEl, defaultSelected, setSelected);
+
+// Hands the switch's verdict to the browser and turns the browser's answer back into state.
+// A switch does not commit on blur: focus merely passing through is no reason to mark it.
+useFormValidation(inputEl, validation);
+
+// `required` is what makes the browser refuse the submit, so it is only rendered when the
+// browser is the one enforcing validation. Under `"aria"` the same fact is announced instead.
+const isNativeBehavior = computed(() => validation.validationBehavior.value === "native");
+const resolvedRequired = computed(() => (isRequired.value && isNativeBehavior.value) || undefined);
+const resolvedAriaRequired = computed(
+  () => (isRequired.value && !isNativeBehavior.value) || undefined,
+);
 
 // The stylesheet keys hover, press and focus on these attributes, so they have to be
 // rendered rather than left to the native pseudo-classes — the focus ring in particular has
@@ -109,11 +123,12 @@ const onChange = (event: Event) => {
         :aria-label="ariaLabel"
         :aria-labelledby="ariaLabelledby"
         :aria-readonly="isReadOnly || undefined"
+        :aria-required="resolvedAriaRequired"
         :checked="isSelected"
         :disabled="isDisabled || undefined"
         :form="form"
         :name="name"
-        :required="isRequired || undefined"
+        :required="resolvedRequired"
         role="switch"
         type="checkbox"
         :value="value"

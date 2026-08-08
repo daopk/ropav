@@ -1,3 +1,4 @@
+import type {FormValidationState} from "../../composables/use-form-validation-state";
 import type {switchVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
 
@@ -8,8 +9,11 @@ export interface SwitchContext {
   isSelected: ComputedRef<boolean>;
   isDisabled: ComputedRef<boolean>;
   isReadOnly: ComputedRef<boolean>;
+  /** What validation currently says, after the behaviour has decided to reveal it. */
   isInvalid: ComputedRef<boolean>;
   isRequired: ComputedRef<boolean>;
+  /** The field's validation, for the hidden input to wire the browser up to. */
+  validation: FormValidationState;
   /** Value the hidden input goes back to when the surrounding form is reset. */
   defaultSelected: ComputedRef<boolean>;
   /** Ids of the description and error message the field renders, plus the caller's own. */

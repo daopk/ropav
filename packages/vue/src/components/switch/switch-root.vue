@@ -6,15 +6,22 @@ import {computed} from "vue";
 
 import {useControllableState} from "../../composables/use-controllable-state";
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
+import {useFormValidationState} from "../../composables/use-form-validation-state";
 import {dataAttr} from "../../utils/assertion";
+import {provideFieldErrorContext} from "../field-error";
 
 import {provideSwitchContext} from "./switch.context";
 
-// `isSelected` declares an explicit `undefined` default because `undefined` is what marks
-// the switch as uncontrolled: Vue otherwise casts an absent boolean prop to `false`, which
-// reads as "the caller set false" and pins the switch permanently off, ignoring
-// `defaultSelected` and every click.
+// Both declare an explicit `undefined` default, because for both of them `undefined` means
+// something a cast `false` would destroy. Vue turns an absent boolean prop into `false`,
+// which reads as "the caller set false".
+//
+// For `isSelected` that pins the switch permanently off, ignoring `defaultSelected` and
+// every click. For `isInvalid` it is a standing claim that the switch is valid, which
+// shadows `validate`, the browser's own verdict and any server error — the whole validation
+// layer would go quiet.
 const props = withDefaults(defineProps<SwitchRootProps>(), {
+  isInvalid: undefined,
   isSelected: undefined,
 });
 
@@ -36,6 +43,17 @@ const {setState, state} = useControllableState<boolean>({
 
 const styles = computed(() => switchVariants({size: props.size}));
 
+const validation = useFormValidationState<boolean>({
+  isInvalid: () => props.isInvalid,
+  name: () => props.name,
+  validate: () => props.validate,
+  validationBehavior: () => props.validationBehavior,
+  value: () => state.value,
+});
+
+// A `FieldError` nested in the switch reads its message from here.
+provideFieldErrorContext({validation: validation.displayValidation});
+
 // Help text nested in the field claims its own id, and the hidden input points
 // `aria-describedby` at whichever ids were actually claimed.
 const {context: fieldIds, describedBy} = useFieldIds({slots: ["description", "errorMessage"]});
@@ -56,7 +74,10 @@ const resolvedDescribedBy = computed(() => {
 const resolvedIsSelected = computed(() => state.value);
 const resolvedIsDisabled = computed(() => Boolean(props.isDisabled));
 const resolvedIsReadOnly = computed(() => Boolean(props.isReadOnly));
-const resolvedIsInvalid = computed(() => Boolean(props.isInvalid));
+// Read off the displayed validation rather than the prop, so a `validate` failure or the
+// browser's own verdict styles the switch exactly as `isInvalid` does — and, under native
+// behaviour, only once the switch has committed.
+const resolvedIsInvalid = computed(() => validation.displayValidation.value.isInvalid);
 const resolvedIsRequired = computed(() => Boolean(props.isRequired));
 
 provideSwitchContext({
@@ -72,6 +93,7 @@ provideSwitchContext({
   id: computed(() => props.id),
   isSelected: resolvedIsSelected,
   name: computed(() => props.name),
+  validation,
   setSelected: setState,
   slots: styles,
   value: computed(() => props.value),

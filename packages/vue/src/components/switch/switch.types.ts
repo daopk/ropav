@@ -1,3 +1,7 @@
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "../../composables/use-form-validation-state";
 import type {SwitchVariants} from "@heroui/styles";
 
 export interface SwitchRootProps {
@@ -12,8 +16,18 @@ export interface SwitchRootProps {
   isDisabled?: boolean;
   /** Whether the value can be read but not changed. */
   isReadOnly?: boolean;
-  /** Whether the value fails validation. */
+  /**
+   * Whether the value fails validation. Setting it either way takes the field over: `false`
+   * claims the switch is valid and shadows `validate`, the browser and the server alike.
+   */
   isInvalid?: boolean;
+  /** Checks the value and returns a message when it is not acceptable. */
+  validate?: ValidationFunction<boolean>;
+  /**
+   * How the switch reports validation. Inherited from the surrounding form when unset.
+   * @default "native"
+   */
+  validationBehavior?: ValidationBehavior;
   /** Whether the switch has to be on for the form to submit. */
   isRequired?: boolean;
   /** Name submitted with the form. */
