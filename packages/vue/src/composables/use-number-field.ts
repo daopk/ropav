@@ -268,12 +268,14 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
       state.maxValue,
       () => toValue(options.step),
       state.numberValue,
-      state.realtimeValidation,
+      state.inputValue,
     ],
     () => {
       const input = element.value;
 
       if (toValue(options.commitBehavior) !== "validate") return;
+      // Read rather than watched: feeding the verdict back in changes this, and tracking it
+      // would make the watcher retrigger itself. React runs the same guard every render.
       if (state.realtimeValidation.value.isInvalid) return;
       if (!input || input.disabled) return;
 
