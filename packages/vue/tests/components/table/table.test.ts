@@ -306,7 +306,7 @@ describe("Table", () => {
       const {columns} = await renderTable({sortableColumns: SORTABLE});
       const describedBy = columns[0]!.getAttribute("aria-describedby")!;
 
-      expect(document.getElementById(describedBy)).toHaveTextContent("sortable");
+      expect(document.getElementById(describedBy)).toHaveTextContent("sortable column");
       expect(columns[2]).not.toHaveAttribute("aria-describedby");
     });
 
@@ -388,15 +388,17 @@ describe("Table", () => {
       unmount();
     });
 
+    // The class lands on the icon itself rather than on a wrapper: the stylesheet sizes the
+    // indicator to 12px, and a wrapper would take that size while the icon kept its own 16px.
     it.each(["ascending", "descending"] as const)("reflects the %s direction", (direction) => {
       const {container, unmount} = renderHeader({sortDirection: direction});
       const header = container.querySelector('[data-slot="table-sortable-column-header"]')!;
       const indicator = header.querySelector('[data-slot="table-sortable-column-indicator"]')!;
 
       expect(header).toHaveAttribute("data-direction", direction);
+      expect(indicator.tagName).toBe("svg");
       expect(indicator).toHaveAttribute("data-direction", direction);
       expect(indicator).toHaveClass("table__sortable-column-indicator");
-      expect(indicator.querySelector("svg")).not.toBeNull();
 
       unmount();
     });

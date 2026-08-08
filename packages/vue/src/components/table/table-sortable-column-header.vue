@@ -24,13 +24,12 @@ const showsIndicator = computed(() => props.showIndicator && Boolean(props.sortD
     data-slot="table-sortable-column-header"
   >
     <slot />
-    <span
-      v-if="showsIndicator"
-      :class="slots.sortableColumnIndicator()"
-      :data-direction="props.sortDirection"
-      data-slot="table-sortable-column-indicator"
-    >
-      <slot name="indicator"><IconChevronUp /></slot>
-    </span>
+    <slot v-if="showsIndicator" name="indicator">
+      <IconChevronUp
+        :class="slots.sortableColumnIndicator()"
+        :data-direction="props.sortDirection"
+        data-slot="table-sortable-column-indicator"
+      />
+    </slot>
   </span>
 </template>

@@ -64,8 +64,8 @@ const ariaSort = computed(() =>
 );
 
 // Says the header can be pressed at all — `aria-sort` reports the order but not that it is
-// yours to change.
-const {describedBy} = useDescription(() => (allowsSorting.value ? "sortable" : undefined));
+// yours to change. The wording is react-aria's own en-US string.
+const {describedBy} = useDescription(() => (allowsSorting.value ? "sortable column" : undefined));
 
 const states = useInteractionStates();
 
