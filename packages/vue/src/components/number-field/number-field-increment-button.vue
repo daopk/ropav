@@ -57,6 +57,11 @@ const takeFocus = (event: PointerEvent) => {
 };
 
 const onPointerdown = (event: PointerEvent) => {
+  // Stops the browser moving focus to the button, which it would otherwise do *after* this
+  // handler has put focus where it belongs. This is what react-aria's `preventFocusOnPress`
+  // does, and without it a mouse press lands focus on the stepper instead of the input.
+  event.preventDefault();
+
   interaction.onPointerdown(event);
   takeFocus(event);
   increment.handlers.onPressStart(event.pointerType);
