@@ -84,15 +84,33 @@ const isPressed = computed(() => interaction.isPressed.value || isSpaceHeld.valu
 const isNativeBehavior = computed(() => state.validation.validationBehavior.value === "native");
 const resolvedRequired = computed(() => (isRequired.value && isNativeBehavior.value) || undefined);
 
+/**
+ * Put the whole named group back to the selection the state actually holds.
+ *
+ * A checkbox only has to re-assert itself, but choosing a radio also *unchecks* a sibling,
+ * so restoring the clicked input alone would leave the group with nothing selected. Radios
+ * share a name, so checking the right one unchecks the rest on its own.
+ */
+const restoreSelection = (input: HTMLInputElement) => {
+  const root = input.getRootNode() as Document | ShadowRoot;
+  const selected = state.selectedValue.value;
+
+  for (const radio of Array.from(root.querySelectorAll<HTMLInputElement>('input[type="radio"]'))) {
+    if (radio.name !== name.value) continue;
+
+    radio.checked = radio.value === selected;
+  }
+};
+
 const onChange = (event: Event) => {
   const input = event.target as HTMLInputElement;
 
   if (!isReadOnly.value) select();
 
-  // Re-assert the state the group actually holds. The browser has already moved the
-  // selection, and nothing puts it back when the value did not move — a read-only group, or
-  // a controlled one whose owner declines the change — because nothing re-renders.
-  input.checked = isSelected.value;
+  // The browser has already moved the selection, and nothing puts it back when the value did
+  // not move — a read-only group, or a controlled one whose owner declines the change —
+  // because no reactive dependency changed and so nothing re-renders.
+  if (input.checked !== isSelected.value) restoreSelection(input);
 };
 
 const onInputFocus = () => {
