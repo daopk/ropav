@@ -3,6 +3,7 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 import {shallowRef} from "vue";
 
 import {Description} from "../description";
+import {FieldError} from "../field-error";
 
 import {Switch, SwitchContent, SwitchControl, SwitchIcon, SwitchThumb} from "./index";
 
@@ -21,6 +22,7 @@ import IconVolumeSlashFill from "~icons/gravity-ui/volume-slash-fill";
 // to resolve `Switch.Content` through, so dot notation cannot be used here.
 const components = {
   Description,
+  FieldError,
   IconBellFill,
   IconBellSlash,
   IconCheck,
@@ -157,6 +159,43 @@ export const WithoutLabel: Story = {
             <SwitchThumb />
           </SwitchControl>
         </SwitchContent>
+      </Switch>
+    `,
+  }),
+};
+
+export const Invalid: Story = {
+  render: () => ({
+    components,
+    template: `
+      <Switch is-invalid is-required name="notifications">
+        <SwitchContent>
+          <SwitchControl>
+            <SwitchThumb />
+          </SwitchControl>
+          Enable notifications
+        </SwitchContent>
+        <FieldError>You must enable notifications to continue</FieldError>
+      </Switch>
+    `,
+  }),
+};
+
+export const Validation: Story = {
+  render: () => ({
+    components,
+    setup: () => ({
+      validate: (isSelected: boolean) => (isSelected ? true : "You must accept to continue"),
+    }),
+    template: `
+      <Switch is-required name="terms-switch" :validate="validate">
+        <SwitchContent>
+          <SwitchControl>
+            <SwitchThumb />
+          </SwitchControl>
+          Accept terms
+        </SwitchContent>
+        <FieldError />
       </Switch>
     `,
   }),
