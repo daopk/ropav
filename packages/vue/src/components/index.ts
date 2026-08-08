@@ -36,5 +36,6 @@ export * from "./switch";
 export * from "./switch-group";
 export * from "./tag";
 export * from "./tag-group";
+export * from "./textfield";
 export * from "./toggle-button";
 export * from "./toggle-button-group";
