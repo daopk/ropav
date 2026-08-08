@@ -19,6 +19,7 @@ export * from "./use-list-keyboard";
 export * from "./use-long-press";
 export * from "./use-menu";
 export * from "./use-move";
+export * from "./use-number-field-state";
 export * from "./use-overlay-position";
 export * from "./use-overlay-trigger";
 export * from "./use-overlay-trigger-state";
