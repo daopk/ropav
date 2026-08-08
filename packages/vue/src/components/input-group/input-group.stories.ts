@@ -3,7 +3,7 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 import {shallowRef} from "vue";
 
 import {Button} from "../button";
-import {Chip} from "../chip";
+import {Chip, ChipLabel} from "../chip";
 import {Description} from "../description";
 import {FieldError} from "../field-error";
 import {Kbd, KbdAbbr, KbdContent} from "../kbd";
@@ -36,6 +36,7 @@ import IconPlus from "~icons/gravity-ui/plus";
 const components = {
   Button,
   Chip,
+  ChipLabel,
   Description,
   FieldError,
   IconArrowUp,
@@ -366,7 +367,7 @@ export const WithBadgeSuffix: Story = {
         <InputGroupRoot>
           <InputGroupInput class="w-[280px]" placeholder="Email address" />
           <InputGroupSuffix class="pe-2">
-            <Chip color="accent" size="md" variant="soft">Pro</Chip>
+            <Chip color="accent" size="md" variant="soft"><ChipLabel>Pro</ChipLabel></Chip>
           </InputGroupSuffix>
         </InputGroupRoot>
       </TextField>

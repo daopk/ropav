@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {Button} from "../button";
-import {Chip} from "../chip";
+import {Chip, ChipLabel} from "../chip";
 import {DescriptionRoot} from "../description";
 import {DropdownMenu, DropdownPopover, DropdownRoot} from "../dropdown";
 import {LabelRoot} from "../label";
@@ -327,6 +327,7 @@ export const Examples: Story = {
     components: {
       ...components,
       Chip,
+      ChipLabel,
       Description: DescriptionRoot,
       Dropdown: DropdownRoot,
       DropdownItem: MenuItemRoot,
@@ -409,7 +410,7 @@ export const Examples: Story = {
               <Button>
                 <IconCodeFork class="size-3.5" />
                 Fork
-                <Chip color="accent" size="sm" variant="soft">24</Chip>
+                <Chip color="accent" size="sm" variant="soft"><ChipLabel>24</ChipLabel></Chip>
               </Button>
               <Button aria-label="More fork options" is-icon-only>
                 <ButtonGroupSeparator />
@@ -442,7 +443,7 @@ export const Examples: Story = {
               </Button>
               <Button class="px-2">
                 <ButtonGroupSeparator />
-                <Chip color="accent" size="sm" variant="soft">104</Chip>
+                <Chip color="accent" size="sm" variant="soft"><ChipLabel>104</ChipLabel></Chip>
               </Button>
             </ButtonGroup>
             <ButtonGroup variant="tertiary">
