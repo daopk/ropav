@@ -123,6 +123,35 @@ describe("Button", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native button is already tabbable: Safari does not focus one
+    // unless an explicit tab index says so, which is why react-aria always sets it.
+    it("renders an explicit tab index", () => {
+      const {container, unmount} = renderButton();
+
+      expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {container, unmount} = renderButton({isDisabled: true});
+
+      expect(buttonIn(container)?.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // A pending button stays focusable rather than `disabled`, so it keeps its stop.
+    it("keeps the tab index while pending", () => {
+      const {container, unmount} = renderButton({isPending: true});
+
+      expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+  });
+
   describe("pending", () => {
     it("exposes data-pending, which is what the CSS keys on", () => {
       const {container, unmount} = renderButton({isPending: true});

@@ -84,6 +84,11 @@ const {
  */
 const isRadio = computed(() => group?.state.selectionMode.value === "single");
 
+// Written even though a native button is already tabbable: Safari does not focus one unless
+// an explicit tab index says so, which is the reason react-aria always sets it. A disabled
+// button should not be reachable at all, so it gets none.
+const tabindex = computed(() => (resolvedIsDisabled.value ? undefined : 0));
+
 const onClick = (event: MouseEvent) => {
   // A disabled native button never fires a click, but an `aria-disabled` one would, and
   // so does a programmatic dispatch. Selection must not move either way.
@@ -110,6 +115,7 @@ const onClick = (event: MouseEvent) => {
     data-slot="toggle-button"
     :disabled="resolvedIsDisabled || undefined"
     :role="isRadio ? 'radio' : undefined"
+    :tabindex="tabindex"
     :type="type"
     @blur="onBlur"
     @click="onClick"

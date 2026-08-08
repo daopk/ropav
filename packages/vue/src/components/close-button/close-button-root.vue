@@ -44,6 +44,12 @@ const {
   isPending: () => props.isPending,
 });
 
+// Written even though a native button is already tabbable: Safari does not focus one unless
+// an explicit tab index says so, which is the reason react-aria always sets it. A disabled
+// button should not be reachable at all, so it gets none. A driving responder can still
+// replace it — a search field's clear button is deliberately out of the tab order.
+const tabindex = computed(() => (props.isDisabled ? undefined : 0));
+
 // Blocking the click is not enough on its own: implicit submission reaches the form
 // through the button's own type, without a click ever landing on the button.
 const type = computed(() => (props.isPending && props.type === "submit" ? "button" : props.type));
@@ -83,6 +89,7 @@ const press = composePressResponder(responder, {
     :data-pressed="dataAttr(isPressed || responder?.isPressed.value)"
     data-slot="close-button"
     :disabled="props.isDisabled || undefined"
+    :tabindex="tabindex"
     :type="type"
     v-bind="responder?.attrs.value"
     @blur="onBlur"

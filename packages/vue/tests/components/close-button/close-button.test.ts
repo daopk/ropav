@@ -165,6 +165,26 @@ describe("CloseButton", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native button is already tabbable: Safari does not focus one
+    // unless an explicit tab index says so, which is why react-aria always sets it.
+    it("renders an explicit tab index", () => {
+      const {container, unmount} = renderCloseButton();
+
+      expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {container, unmount} = renderCloseButton({isDisabled: true});
+
+      expect(buttonIn(container)?.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+  });
+
   describe("pending", () => {
     it("stays focusable but stops activating", async () => {
       const onClick = vi.fn();
