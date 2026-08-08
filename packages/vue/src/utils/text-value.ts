@@ -33,7 +33,14 @@ export const getCollectionTextValue = (element: HTMLElement | null | undefined):
   const source = label ?? element;
 
   return [...source.childNodes]
-    .filter((node) => !(node instanceof Element && node.matches(EXCLUDED_FROM_TEXT_VALUE)))
+    .filter((node) => {
+      // Vapor leaves a comment anchor for every `v-if` and every slot, and a comment's
+      // `textContent` is its body — so an unfiltered walk reads "if" and "slot" as part of the
+      // item's name, and typeahead matches on words that are nowhere on screen.
+      if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) return false;
+
+      return !(node instanceof Element && node.matches(EXCLUDED_FROM_TEXT_VALUE));
+    })
     .map((node) => node.textContent ?? "")
     .join("")
     .replace(/\s+/g, " ")

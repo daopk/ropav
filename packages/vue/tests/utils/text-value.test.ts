@@ -26,6 +26,13 @@ describe("getCollectionTextValue", () => {
   });
 
   describe("exclusions", () => {
+    // Vapor leaves a comment anchor for every `v-if` and every slot, and a comment's
+    // `textContent` is its body — so an unfiltered walk reads "if" and "slot" as part of the
+    // name and typeahead matches on words that are nowhere on screen.
+    it("ignores a vapor comment anchor", () => {
+      expect(getCollectionTextValue(build("News<!--if--><!--slot-->"))).toBe("News");
+    });
+
     it("ignores an icon", () => {
       // A tag is written as an icon followed by a word; only the word names it.
       expect(getCollectionTextValue(build('<svg aria-hidden="true"></svg>News'))).toBe("News");
