@@ -35,6 +35,7 @@ export * from "./use-slider";
 export * from "./use-slider-state";
 export * from "./use-slider-thumb";
 export * from "./use-spin-button";
+export * from "./use-table-collection";
 export * from "./use-text-field";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
