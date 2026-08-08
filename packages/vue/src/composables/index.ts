@@ -26,6 +26,7 @@ export * from "./use-prevent-scroll";
 export * from "./use-press";
 export * from "./use-radio-group-state";
 export * from "./use-safely-mouse-to-submenu";
+export * from "./use-search-field";
 export * from "./use-selection-manager";
 export * from "./use-slider";
 export * from "./use-slider-state";
