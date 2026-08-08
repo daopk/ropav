@@ -61,6 +61,7 @@ const registerColumns = (
       columns.register(key, {
         element: () => elements.get(key) ?? null,
         isRowHeader: () => Boolean(options.rowHeaders?.includes(key)),
+        textValue: () => String(key),
       }),
     );
   }
@@ -128,6 +129,7 @@ describe("createTableRegistry", () => {
     const replace = registry.register("name", {
       element: () => elements.get("name") ?? null,
       isRowHeader: () => true,
+      textValue: () => "Name",
     });
 
     cleanups.get("name")!();

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
 import type {TableFixtureUser} from "./fixtures.types";
-import type {TableRootProps} from "@/components/table";
+import type {TableRootProps, TableSortDescriptor} from "@/components/table";
 
 import {
   TableBody,
@@ -12,14 +12,19 @@ import {
   TableRoot,
   TableRow,
   TableScrollContainer,
+  TableSortableColumnHeader,
 } from "@/components/table";
 
 const props = defineProps<
   TableRootProps & {
     columnClass?: string;
+    onSortChange?: (descriptor: TableSortDescriptor) => void;
     rowHeaders?: string[];
+    sortableColumns?: string[];
+    sortDescriptor?: TableSortDescriptor | null;
     users?: TableFixtureUser[];
     withFooter?: boolean;
+    withSortableHeader?: boolean;
   }
 >();
 
@@ -38,16 +43,28 @@ const defaultUsers: TableFixtureUser[] = [
 <template>
   <TableRoot :class="props.class" :variant="props.variant">
     <TableScrollContainer>
-      <TableContent aria-label="Team">
+      <TableContent
+        aria-label="Team"
+        :sort-descriptor="props.sortDescriptor"
+        @sort-change="props.onSortChange?.($event)"
+      >
         <TableHeader>
           <TableColumn
             v-for="column of columns"
             :id="column.id"
             :key="column.id"
+            v-slot="{sortDirection}"
+            :allows-sorting="(props.sortableColumns ?? []).includes(column.id)"
             :class="props.columnClass"
             :is-row-header="(props.rowHeaders ?? ['name']).includes(column.id)"
           >
-            {{ column.name }}
+            <TableSortableColumnHeader
+              v-if="props.withSortableHeader"
+              :sort-direction="sortDirection"
+            >
+              {{ column.name }}
+            </TableSortableColumnHeader>
+            <template v-else>{{ column.name }}</template>
           </TableColumn>
         </TableHeader>
         <TableBody>
