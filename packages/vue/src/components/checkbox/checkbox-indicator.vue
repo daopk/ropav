@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {CheckboxIndicatorProps} from "./checkbox.types";
+import type {CheckboxIndicatorProps, CheckboxSlotProps} from "./checkbox.types";
 
 import {computed} from "vue";
 
@@ -9,9 +9,13 @@ import {useCheckboxContext} from "./checkbox.context";
 
 const props = defineProps<CheckboxIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+// The mark a caller draws usually depends on the state — a tick that only appears once
+// selected, a different glyph while indeterminate — so the slot is handed the field state,
+// standing in for React's render-prop children.
+defineSlots<{default?: (props: CheckboxSlotProps) => unknown}>();
 
-const {isIndeterminate, isSelected, slots} = useCheckboxContext();
+const {isDisabled, isIndeterminate, isInvalid, isReadOnly, isRequired, isSelected, slots} =
+  useCheckboxContext();
 
 // The tick is drawn by revealing its stroke: the path is 22 long with a 22 dash, so an offset
 // of 66 hides it entirely and 44 slides the visible dash into place. The stylesheet animates
@@ -25,7 +29,14 @@ const checkmarkOffset = computed(() => (isSelected.value ? 44 : 66));
     :class="composeSlotClassName(slots.indicator, props.class)"
     data-slot="checkbox-indicator"
   >
-    <slot>
+    <slot
+      :is-disabled="isDisabled"
+      :is-indeterminate="isIndeterminate"
+      :is-invalid="isInvalid"
+      :is-read-only="isReadOnly"
+      :is-required="isRequired"
+      :is-selected="isSelected"
+    >
       <svg
         v-if="isIndeterminate"
         aria-hidden="true"
