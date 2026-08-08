@@ -514,6 +514,12 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
       readonly: isReadOnly.value || undefined,
       required: (isRequired.value && isNativeBehavior.value) || undefined,
       spellcheck: "false",
+      // Written even though a native input is already tabbable: Safari does not focus one unless
+      // an explicit tab index says so, which is the reason react-aria always sets it — the chain
+      // here is `useNumberField` → `useFormattedTextField` → `useTextField` → `useFocusable`. A
+      // disabled field should not be reachable at all, so it gets none and the sweep below drops
+      // the key. The steppers stay at -1, set on their own attrs.
+      tabindex: isDisabled.value ? undefined : 0,
       // Text, not number: a number input cannot hold a currency symbol or a grouping separator,
       // and rejects the very strings this field exists to accept.
       type: "text",
