@@ -73,6 +73,15 @@ describe("Switch", () => {
       unmount();
     });
 
+    it("puts the accessible name on the input rather than on the wrapper", () => {
+      const {container, unmount} = renderSwitch({ariaLabel: "Enable notifications"});
+
+      expect(inputIn(container).getAttribute("aria-label")).toBe("Enable notifications");
+      expect(slot(container, "switch").hasAttribute("aria-label")).toBe(false);
+
+      unmount();
+    });
+
     it("exposes the label text as the accessible name", () => {
       const {getByRole, unmount} = renderSwitch();
 

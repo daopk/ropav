@@ -22,6 +22,17 @@ export interface SwitchRootProps {
   value?: string;
   /** `id` of the form to submit with, for a switch rendered outside it. */
   form?: string;
+  /**
+   * Lands on the hidden input rather than on the wrapper, because the input is the switch as
+   * far as assistive technology is concerned.
+   */
+  id?: string;
+  /** Accessible name, for a switch with no visible label. */
+  ariaLabel?: string;
+  /** Ids of the elements that name the switch. */
+  ariaLabelledby?: string;
+  /** Ids of the elements that describe the switch, on top of any nested help text. */
+  ariaDescribedby?: string;
 }
 
 export interface SwitchContentProps {

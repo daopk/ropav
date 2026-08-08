@@ -16,9 +16,12 @@ const props = defineProps<SwitchContentProps>();
 defineSlots<{default?: (props: SwitchContentSlotProps) => unknown}>();
 
 const {
+  ariaLabel,
+  ariaLabelledby,
   defaultSelected,
   describedBy,
   form,
+  id,
   isDisabled,
   isInvalid,
   isReadOnly,
@@ -99,9 +102,12 @@ const onChange = (event: Event) => {
   >
     <span :style="visuallyHiddenStyle">
       <input
+        :id="id"
         :ref="setInputEl"
         :aria-describedby="describedBy"
         :aria-invalid="isInvalid || undefined"
+        :aria-label="ariaLabel"
+        :aria-labelledby="ariaLabelledby"
         :aria-readonly="isReadOnly || undefined"
         :checked="isSelected"
         :disabled="isDisabled || undefined"

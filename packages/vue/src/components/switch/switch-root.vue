@@ -42,6 +42,15 @@ const {context: fieldIds, describedBy} = useFieldIds({slots: ["description", "er
 
 provideFieldIdsContext(fieldIds);
 
+// The labelling attributes belong on the hidden input, which is the switch as far as
+// assistive technology is concerned — left on the wrapper they would name a plain `div` and
+// leave the switch itself nameless.
+const resolvedDescribedBy = computed(() => {
+  const ids = [describedBy.value, props.ariaDescribedby].filter(Boolean);
+
+  return ids.length > 0 ? ids.join(" ") : undefined;
+});
+
 // Named apart from the props they resolve: a binding that shadows a prop name is easy to
 // misread, and the value here is state rather than the prop it merges with.
 const resolvedIsSelected = computed(() => state.value);
@@ -51,13 +60,16 @@ const resolvedIsInvalid = computed(() => Boolean(props.isInvalid));
 const resolvedIsRequired = computed(() => Boolean(props.isRequired));
 
 provideSwitchContext({
+  ariaLabel: computed(() => props.ariaLabel),
+  ariaLabelledby: computed(() => props.ariaLabelledby),
   defaultSelected: computed(() => props.defaultSelected ?? false),
-  describedBy,
+  describedBy: resolvedDescribedBy,
   form: computed(() => props.form),
   isDisabled: resolvedIsDisabled,
   isInvalid: resolvedIsInvalid,
   isReadOnly: resolvedIsReadOnly,
   isRequired: resolvedIsRequired,
+  id: computed(() => props.id),
   isSelected: resolvedIsSelected,
   name: computed(() => props.name),
   setSelected: setState,

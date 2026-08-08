@@ -23,6 +23,7 @@ defineEmits<{change: [isSelected: boolean]}>();
 
 <template>
   <Switch
+    :aria-label="$props.ariaLabel"
     :class="$props.class"
     :default-selected="$props.defaultSelected"
     :form="$props.form"
