@@ -11,7 +11,7 @@ import {computed, onScopeDispose, toValue, watch} from "vue";
  */
 const visibleOverlays: object[] = [];
 
-export interface UseDismissableProps {
+export interface UseDismissableOptions {
   /** The overlay element. Interaction inside it never dismisses. */
   overlayRef: MaybeRefOrGetter<Element | null | undefined>;
   isOpen?: MaybeRefOrGetter<boolean | undefined>;
@@ -54,20 +54,20 @@ export interface UseDismissableReturn {
  * });
  * ```
  */
-export const useDismissable = (props: UseDismissableProps): UseDismissableReturn => {
+export const useDismissable = (options: UseDismissableOptions): UseDismissableReturn => {
   // Identity for this overlay in the shared stack. The element itself cannot be used: it does
   // not exist yet when the overlay registers, and it is replaced when the overlay reopens.
   const layer = {};
 
-  const isOpen = computed(() => Boolean(toValue(props.isOpen)));
-  const isDismissable = computed(() => Boolean(toValue(props.isDismissable)));
+  const isOpen = computed(() => Boolean(toValue(options.isOpen)));
+  const isDismissable = computed(() => Boolean(toValue(options.isDismissable)));
 
-  const getOverlay = () => toValue(props.overlayRef) ?? null;
+  const getOverlay = () => toValue(options.overlayRef) ?? null;
 
   const isTopMost = () => visibleOverlays.at(-1) === layer;
 
   const close = () => {
-    if (isTopMost()) props.onClose?.();
+    if (isTopMost()) options.onClose?.();
   };
 
   watch(
@@ -123,8 +123,8 @@ export const useDismissable = (props: UseDismissableProps): UseDismissableReturn
       layerAtPointerDown = visibleOverlays.at(-1);
 
       if (
-        props.shouldCloseOnInteractOutside &&
-        !props.shouldCloseOnInteractOutside(event.target as Element)
+        options.shouldCloseOnInteractOutside &&
+        !options.shouldCloseOnInteractOutside(event.target as Element)
       ) {
         return;
       }
@@ -151,8 +151,8 @@ export const useDismissable = (props: UseDismissableProps): UseDismissableReturn
       }
 
       if (
-        props.shouldCloseOnInteractOutside &&
-        !props.shouldCloseOnInteractOutside(event.target as Element)
+        options.shouldCloseOnInteractOutside &&
+        !options.shouldCloseOnInteractOutside(event.target as Element)
       ) {
         layerAtPointerDown = undefined;
 
@@ -197,12 +197,12 @@ export const useDismissable = (props: UseDismissableProps): UseDismissableReturn
   return {
     onKeydown: (event) => {
       if (event.key !== "Escape") return;
-      if (toValue(props.isKeyboardDismissDisabled)) return;
+      if (toValue(options.isKeyboardDismissDisabled)) return;
       if (!isTopMost()) return;
 
       event.preventDefault();
       event.stopPropagation();
-      props.onClose?.();
+      options.onClose?.();
     },
   };
 };

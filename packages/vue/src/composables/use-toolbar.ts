@@ -6,7 +6,7 @@ import {focusableIn} from "../utils/focus";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
-export interface UseToolbarProps {
+export interface UseToolbarOptions {
   /** The toolbar element, read imperatively to move focus between its children. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
   /** Axis the controls are laid out along, which decides the arrow keys. */
@@ -47,17 +47,17 @@ export interface UseToolbarReturn {
  * // <div :ref="element" :role="toolbar.role.value" @keydown.capture="toolbar.onKeydown">
  * ```
  */
-export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
+export const useToolbar = (options: UseToolbarOptions): UseToolbarReturn => {
   const isNested = shallowRef(false);
 
   onMounted(() => {
-    const element = toValue(props.element);
+    const element = toValue(options.element);
 
     // Read from the parent up: the toolbar's own role must not match itself.
     isNested.value = Boolean(element?.parentElement?.closest('[role="toolbar"]'));
   });
 
-  const orientation = computed(() => toValue(props.orientation) ?? "horizontal");
+  const orientation = computed(() => toValue(options.orientation) ?? "horizontal");
   const isOutermost = computed(() => !isNested.value);
   const role = computed<"toolbar" | "group">(() => (isNested.value ? "group" : "toolbar"));
 
@@ -65,7 +65,7 @@ export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
   let lastFocused: HTMLElement | null = null;
 
   const moveFocus = (step: -1 | 1) => {
-    const element = toValue(props.element);
+    const element = toValue(options.element);
 
     if (!element) return;
 
@@ -82,7 +82,7 @@ export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
   const onKeydown = (event: KeyboardEvent) => {
     if (!isOutermost.value) return;
 
-    const element = toValue(props.element);
+    const element = toValue(options.element);
     const target = event.target;
 
     // A portalled control renders elsewhere in the DOM, so its keys are not ours.
@@ -119,7 +119,7 @@ export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
   const onFocusout = (event: FocusEvent) => {
     if (!isOutermost.value) return;
 
-    const element = toValue(props.element);
+    const element = toValue(options.element);
     const next = event.relatedTarget;
 
     // Focus moving within the toolbar is not a departure, so nothing to remember.
@@ -131,7 +131,7 @@ export const useToolbar = (props: UseToolbarProps): UseToolbarReturn => {
   const onFocusin = (event: FocusEvent) => {
     if (!isOutermost.value || !lastFocused) return;
 
-    const element = toValue(props.element);
+    const element = toValue(options.element);
     const previous = event.relatedTarget;
 
     // Only a return from outside restores; moving between controls inside must not fight

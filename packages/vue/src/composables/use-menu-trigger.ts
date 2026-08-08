@@ -12,7 +12,7 @@ import {usePress} from "./use-press";
 /** How the menu is opened. */
 export type MenuTriggerType = "press" | "longPress";
 
-export interface UseMenuTriggerProps {
+export interface UseMenuTriggerOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "press" */
   trigger?: MaybeRefOrGetter<MenuTriggerType | undefined>;
@@ -60,14 +60,14 @@ export const DEFAULT_LONG_PRESS_DESCRIPTION = "Long press or press Alt + ArrowDo
  * ```
  */
 export const useMenuTrigger = (
-  props: UseMenuTriggerProps,
+  options: UseMenuTriggerOptions,
   state: MenuTriggerState,
 ): UseMenuTriggerReturn => {
   const triggerId = useId();
   const element = shallowRef<HTMLElement | null>(null);
 
-  const isDisabled = computed(() => Boolean(toValue(props.isDisabled)));
-  const triggerType = computed(() => toValue(props.trigger) ?? "press");
+  const isDisabled = computed(() => Boolean(toValue(options.isDisabled)));
+  const triggerType = computed(() => toValue(options.trigger) ?? "press");
   const isLongPress = computed(() => triggerType.value === "longPress");
 
   const {overlayId, triggerAttributes} = useOverlayTrigger({type: "menu"}, state);
@@ -103,7 +103,7 @@ export const useMenuTrigger = (
 
   const longPress = useLongPress({
     accessibilityDescription: () =>
-      toValue(props.longPressDescription) ?? DEFAULT_LONG_PRESS_DESCRIPTION,
+      toValue(options.longPressDescription) ?? DEFAULT_LONG_PRESS_DESCRIPTION,
     isDisabled: () => isDisabled.value || !isLongPress.value,
     onLongPress: () => state.open("first"),
     // Any menu already open belongs to the previous press, and it would sit over the new one.

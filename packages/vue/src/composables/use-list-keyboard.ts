@@ -8,7 +8,7 @@ import {focusableIn, isScrollable} from "../utils/focus";
 
 export type ListOrientation = "horizontal" | "vertical";
 
-export interface UseListKeyboardProps {
+export interface UseListKeyboardOptions {
   collection: UseCollectionReturn;
   selection: UseSelectionManagerReturn;
   /** The element carrying `role="listbox"` or `role="grid"`. */
@@ -62,14 +62,14 @@ export interface UseListKeyboardReturn {
  * `selectOnFocus` is only true for `selectionBehavior: "replace"`, which neither a listbox nor
  * a tag group uses.
  */
-export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardReturn => {
-  const {collection, selection} = props;
+export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboardReturn => {
+  const {collection, selection} = options;
 
-  const orientation = computed(() => toValue(props.orientation) ?? "vertical");
-  const shouldFocusWrap = computed(() => toValue(props.shouldFocusWrap) ?? false);
-  const escapeKeyBehavior = computed(() => toValue(props.escapeKeyBehavior) ?? "clearSelection");
+  const orientation = computed(() => toValue(options.orientation) ?? "vertical");
+  const shouldFocusWrap = computed(() => toValue(options.shouldFocusWrap) ?? false);
+  const escapeKeyBehavior = computed(() => toValue(options.escapeKeyBehavior) ?? "clearSelection");
 
-  const getElement = () => toValue(props.element) ?? null;
+  const getElement = () => toValue(options.element) ?? null;
 
   // Matched to the collator React Aria uses, so a search behaves the same way: case- and
   // accent-insensitive, and tuned for prefix searching rather than sorting.
@@ -274,7 +274,7 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
         return;
       }
       case "a": {
-        if (!(event.ctrlKey || event.metaKey) || toValue(props.disallowSelectAll)) return;
+        if (!(event.ctrlKey || event.metaKey) || toValue(options.disallowSelectAll)) return;
         if (selection.selectionMode.value !== "multiple") return;
 
         selection.selectAll();
@@ -305,17 +305,17 @@ export const useListKeyboard = (props: UseListKeyboardProps): UseListKeyboardRet
         return;
       }
       case "Enter": {
-        if (focused == null || toValue(props.disallowActivation)) return;
+        if (focused == null || toValue(options.disallowActivation)) return;
 
-        props.onAction?.(focused);
+        options.onAction?.(focused);
         event.preventDefault();
 
         return;
       }
       case " ": {
-        if (focused == null || toValue(props.disallowActivation)) return;
+        if (focused == null || toValue(options.disallowActivation)) return;
 
-        if (selection.selectionMode.value === "none") props.onAction?.(focused);
+        if (selection.selectionMode.value === "none") options.onAction?.(focused);
         else selection.select(focused, {isShiftPressed: event.shiftKey});
 
         event.preventDefault();

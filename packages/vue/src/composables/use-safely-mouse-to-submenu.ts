@@ -11,7 +11,7 @@ const TIMEOUT_MS = 1000;
 /** Widens the corridor by 15° at each edge, so a slightly wobbly path still counts. */
 const ANGLE_PADDING = Math.PI / 12;
 
-export interface UseSafelyMouseToSubmenuProps {
+export interface UseSafelyMouseToSubmenuOptions {
   /** The menu holding the trigger. */
   menuRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
   submenuRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
@@ -42,7 +42,7 @@ export interface UseSafelyMouseToSubmenuProps {
  * });
  * ```
  */
-export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): void => {
+export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions): void => {
   let previousPointer: {x: number; y: number} | undefined;
   let submenuSide: "left" | "right" | undefined;
   let lastProcessedAt = 0;
@@ -51,7 +51,7 @@ export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): vo
   let movementsTowardsSubmenu = ALLOWED_INVALID_MOVEMENTS;
   let preventPointerEvents = false;
 
-  const getMenu = () => toValue(props.menuRef) ?? null;
+  const getMenu = () => toValue(options.menuRef) ?? null;
 
   const setPreventPointerEvents = (next: boolean) => {
     if (preventPointerEvents === next) return;
@@ -86,10 +86,10 @@ export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): vo
 
   watch(
     [
-      () => toValue(props.isOpen),
-      () => toValue(props.isDisabled),
+      () => toValue(options.isOpen),
+      () => toValue(options.isDisabled),
       () => getMenu(),
-      () => toValue(props.submenuRef) ?? null,
+      () => toValue(options.submenuRef) ?? null,
     ],
     ([isOpen, isDisabled, menu, submenu]) => {
       detach();

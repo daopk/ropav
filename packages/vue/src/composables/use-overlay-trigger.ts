@@ -8,7 +8,7 @@ import {useId} from "./use-id";
 /** What the trigger opens, which decides how `aria-haspopup` is announced. */
 export type OverlayType = "dialog" | "menu" | "listbox" | "tree" | "grid";
 
-export interface UseOverlayTriggerProps {
+export interface UseOverlayTriggerOptions {
   type: OverlayType;
 }
 
@@ -42,14 +42,14 @@ export interface UseOverlayTriggerReturn {
  * ```
  */
 export const useOverlayTrigger = (
-  props: UseOverlayTriggerProps,
+  options: UseOverlayTriggerOptions,
   state: OverlayTriggerState,
 ): UseOverlayTriggerReturn => {
   const overlayId = useId();
 
   const hasPopup = computed<boolean | "listbox" | undefined>(() => {
-    if (props.type === "menu") return true;
-    if (props.type === "listbox") return "listbox";
+    if (options.type === "menu") return true;
+    if (options.type === "listbox") return "listbox";
 
     return undefined;
   });

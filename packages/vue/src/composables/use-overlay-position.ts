@@ -5,7 +5,7 @@ import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
 import {calculatePosition, translateRTL} from "../utils/position";
 
-export interface UseOverlayPositionProps {
+export interface UseOverlayPositionOptions {
   /** The element the overlay is positioned against. */
   targetRef: MaybeRefOrGetter<Element | null | undefined>;
   /** The overlay itself. */
@@ -76,23 +76,25 @@ const isFocusWithin = (element: Element) => {
  * });
  * ```
  */
-export const useOverlayPosition = (props: UseOverlayPositionProps): UseOverlayPositionReturn => {
+export const useOverlayPosition = (
+  options: UseOverlayPositionOptions,
+): UseOverlayPositionReturn => {
   const position = shallowRef<PositionResult | null>(null);
   const triggerWidth = shallowRef<number | null>(null);
 
-  const isOpen = computed(() => toValue(props.isOpen) ?? true);
-  const placement = computed(() => toValue(props.placement) ?? ("bottom" as Placement));
-  const containerPadding = computed(() => toValue(props.containerPadding) ?? 12);
-  const offset = computed(() => toValue(props.offset) ?? 0);
-  const crossOffset = computed(() => toValue(props.crossOffset) ?? 0);
-  const shouldFlip = computed(() => toValue(props.shouldFlip) ?? true);
-  const maxHeight = computed(() => toValue(props.maxHeight));
+  const isOpen = computed(() => toValue(options.isOpen) ?? true);
+  const placement = computed(() => toValue(options.placement) ?? ("bottom" as Placement));
+  const containerPadding = computed(() => toValue(options.containerPadding) ?? 12);
+  const offset = computed(() => toValue(options.offset) ?? 0);
+  const crossOffset = computed(() => toValue(options.crossOffset) ?? 0);
+  const shouldFlip = computed(() => toValue(options.shouldFlip) ?? true);
+  const maxHeight = computed(() => toValue(options.maxHeight));
 
-  const getTarget = () => toValue(props.targetRef) ?? null;
-  const getOverlay = () => toValue(props.overlayRef) ?? null;
-  const getScrollElement = () => toValue(props.scrollRef) ?? getOverlay();
+  const getTarget = () => toValue(options.targetRef) ?? null;
+  const getOverlay = () => toValue(options.overlayRef) ?? null;
+  const getScrollElement = () => toValue(options.scrollRef) ?? getOverlay();
   const getBoundary = () =>
-    toValue(props.boundaryElement) ?? (typeof document === "undefined" ? null : document.body);
+    toValue(options.boundaryElement) ?? (typeof document === "undefined" ? null : document.body);
 
   const updatePosition = () => {
     const overlay = getOverlay();
@@ -224,7 +226,7 @@ export const useOverlayPosition = (props: UseOverlayPositionProps): UseOverlayPo
   const scrollListeners: (() => void)[] = [];
 
   const attachCloseOnScroll = () => {
-    const onClose = props.onClose;
+    const onClose = options.onClose;
     const target = getTarget();
 
     if (!onClose || !isOpen.value || !target) return;

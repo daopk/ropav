@@ -25,7 +25,7 @@ export type DisabledBehavior = "all" | "selection";
  */
 export type CollectionSelection = "all" | Set<CollectionKey>;
 
-export interface UseSelectionManagerProps {
+export interface UseSelectionManagerOptions {
   collection: UseCollectionReturn;
   defaultSelectedKeys?: "all" | Iterable<CollectionKey>;
   selectedKeys?: MaybeRefOrGetter<"all" | Iterable<CollectionKey> | undefined>;
@@ -95,23 +95,25 @@ export interface UseSelectionManagerReturn {
  * `"all"` is held verbatim rather than expanded, because that is what React Stately reports to
  * `onSelectionChange` and a consumer persisting the value needs the same fidelity.
  */
-export const useSelectionManager = (props: UseSelectionManagerProps): UseSelectionManagerReturn => {
-  const {collection} = props;
+export const useSelectionManager = (
+  options: UseSelectionManagerOptions,
+): UseSelectionManagerReturn => {
+  const {collection} = options;
 
-  const selectionMode = computed(() => toValue(props.selectionMode) ?? "none");
-  const selectionBehavior = computed(() => toValue(props.selectionBehavior) ?? "toggle");
-  const disabledBehavior = computed(() => toValue(props.disabledBehavior) ?? "all");
-  const disallowEmptySelection = computed(() => toValue(props.disallowEmptySelection) ?? false);
-  const disabledKeys = computed(() => new Set(toValue(props.disabledKeys) ?? []));
+  const selectionMode = computed(() => toValue(options.selectionMode) ?? "none");
+  const selectionBehavior = computed(() => toValue(options.selectionBehavior) ?? "toggle");
+  const disabledBehavior = computed(() => toValue(options.disabledBehavior) ?? "all");
+  const disallowEmptySelection = computed(() => toValue(options.disallowEmptySelection) ?? false);
+  const disabledKeys = computed(() => new Set(toValue(options.disabledKeys) ?? []));
 
   const toSelection = (keys: "all" | Iterable<CollectionKey>): CollectionSelection =>
     keys === "all" ? "all" : new Set(keys);
 
   const {setState, state} = useControllableState<CollectionSelection>({
-    defaultValue: toSelection(props.defaultSelectedKeys ?? []),
-    onValueChange: props.onSelectionChange,
+    defaultValue: toSelection(options.defaultSelectedKeys ?? []),
+    onValueChange: options.onSelectionChange,
     value: () => {
-      const keys = toValue(props.selectedKeys);
+      const keys = toValue(options.selectedKeys);
 
       return keys === undefined ? undefined : toSelection(keys);
     },
@@ -273,12 +275,14 @@ export const useSelectionManager = (props: UseSelectionManagerProps): UseSelecti
     disabledKeys,
     extendSelection,
     firstSelectedKey: computed(() => orderedSelectedKeys.value[0] ?? null),
-    focusedKey: props.focusSource
-      ? props.focusSource.focusedKey
+    focusedKey: options.focusSource
+      ? options.focusSource.focusedKey
       : computed(() => focusedKeyRef.value),
     isDisabled,
     isEmpty,
-    isFocused: props.focusSource ? props.focusSource.isFocused : computed(() => isFocusedRef.value),
+    isFocused: options.focusSource
+      ? options.focusSource.isFocused
+      : computed(() => isFocusedRef.value),
     isSelectAll,
     isSelected,
     lastSelectedKey: computed(() => orderedSelectedKeys.value.at(-1) ?? null),
@@ -305,8 +309,8 @@ export const useSelectionManager = (props: UseSelectionManagerProps): UseSelecti
     selectionBehavior,
     selectionMode,
     setFocused: (focused) => {
-      if (props.focusSource) {
-        props.focusSource.setFocused(focused);
+      if (options.focusSource) {
+        options.focusSource.setFocused(focused);
 
         return;
       }
@@ -314,8 +318,8 @@ export const useSelectionManager = (props: UseSelectionManagerProps): UseSelecti
       isFocusedRef.value = focused;
     },
     setFocusedKey: (key) => {
-      if (props.focusSource) {
-        props.focusSource.setFocusedKey(key);
+      if (options.focusSource) {
+        options.focusSource.setFocusedKey(key);
 
         return;
       }

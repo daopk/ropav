@@ -31,7 +31,7 @@ const innermostContainingScope = () => {
 /** Whether the element sits inside any registered scope. */
 const isInAnyScope = (element: Element) => scopes.some((scope) => scope.root()?.contains(element));
 
-export interface UseFocusScopeProps {
+export interface UseFocusScopeOptions {
   /** The element the scope covers. */
   scopeRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
   /** Whether the scope is live. A closed overlay registers nothing. */
@@ -82,10 +82,10 @@ export interface UseFocusScopeProps {
  * });
  * ```
  */
-export const useFocusScope = (props: UseFocusScopeProps): void => {
-  const getRoot = () => toValue(props.scopeRef) ?? null;
+export const useFocusScope = (options: UseFocusScopeOptions): void => {
+  const getRoot = () => toValue(options.scopeRef) ?? null;
   const scope: RegisteredScope = {
-    contain: () => Boolean(toValue(props.contain)),
+    contain: () => Boolean(toValue(options.contain)),
     root: getRoot,
   };
 
@@ -160,7 +160,7 @@ export const useFocusScope = (props: UseFocusScopeProps): void => {
   };
 
   watch(
-    [() => getRoot(), () => toValue(props.isActive) ?? true],
+    [() => getRoot(), () => toValue(options.isActive) ?? true],
     ([root, isActive], _previous, onCleanup) => {
       detach();
 
@@ -173,7 +173,7 @@ export const useFocusScope = (props: UseFocusScopeProps): void => {
       scopes.push(scope);
       attach(root);
 
-      const autoFocus = toValue(props.autoFocus);
+      const autoFocus = toValue(options.autoFocus);
 
       if (autoFocus === "first" || autoFocus === "last") focusEnd(root, autoFocus);
       else if (autoFocus) focusElement(root);
@@ -185,7 +185,7 @@ export const useFocusScope = (props: UseFocusScopeProps): void => {
 
         if (index >= 0) scopes.splice(index, 1);
 
-        if (!toValue(props.restoreFocus)) return;
+        if (!toValue(options.restoreFocus)) return;
 
         const active = root.ownerDocument.activeElement;
         // Only restore when focus is still ours to give back. If the user has already moved

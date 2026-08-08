@@ -1,5 +1,5 @@
 import type {
-  UseDisclosureGroupProps,
+  UseDisclosureGroupOptions,
   UseDisclosureGroupReturn,
 } from "@/composables/use-disclosure-group";
 
@@ -10,7 +10,7 @@ import {useDisclosureGroup} from "@/composables/use-disclosure-group";
 
 const scopes: (() => void)[] = [];
 
-const createGroup = (props: UseDisclosureGroupProps = {}): UseDisclosureGroupReturn => {
+const createGroup = (props: UseDisclosureGroupOptions = {}): UseDisclosureGroupReturn => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());

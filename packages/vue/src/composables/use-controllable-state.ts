@@ -2,7 +2,7 @@ import type {ComputedRef, MaybeRefOrGetter, WritableComputedRef} from "vue";
 
 import {computed, shallowRef, toValue} from "vue";
 
-export interface UseControllableStateProps<T> {
+export interface UseControllableStateOptions<T> {
   /**
    * Externally controlled value. While this resolves to anything other than
    * `undefined`, the composable is in controlled mode and never mutates its own state.
@@ -41,9 +41,9 @@ export interface UseControllableStateReturn<T> {
  * ```
  */
 export const useControllableState = <T>(
-  props: UseControllableStateProps<T>,
+  options: UseControllableStateOptions<T>,
 ): UseControllableStateReturn<T> => {
-  const {defaultValue, onValueChange, value} = props;
+  const {defaultValue, onValueChange, value} = options;
 
   // `shallowRef`, not `ref` — the value is always replaced wholesale, never mutated
   // in place, so deep reactivity would only add overhead and proxy identity surprises.

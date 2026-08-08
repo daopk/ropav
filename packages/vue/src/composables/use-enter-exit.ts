@@ -2,7 +2,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
-export interface UseEnterExitProps {
+export interface UseEnterExitOptions {
   /** The animated element. */
   elementRef: MaybeRefOrGetter<HTMLElement | null | undefined>;
   /** Whether the element should be present. */
@@ -49,14 +49,14 @@ export interface UseEnterExitReturn {
  * });
  * ```
  */
-export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
+export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn => {
   const entering = shallowRef(true);
   const exitState = shallowRef<"closed" | "open" | "exiting">(
-    toValue(props.isOpen) ? "open" : "closed",
+    toValue(options.isOpen) ? "open" : "closed",
   );
 
-  const getElement = () => toValue(props.elementRef) ?? null;
-  const isReady = computed(() => toValue(props.isReady) ?? true);
+  const getElement = () => toValue(options.elementRef) ?? null;
+  const isReady = computed(() => toValue(options.isReady) ?? true);
   const isEntering = computed(() => entering.value && isReady.value);
   const isExiting = computed(() => exitState.value === "exiting");
 
@@ -130,7 +130,7 @@ export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
   // already be reported as exiting by the time the render that would otherwise remove it runs.
   // A tick later is too late — the element is gone, and what animates out is a fresh one.
   watch(
-    () => toValue(props.isOpen),
+    () => toValue(options.isOpen),
     (isOpen) => {
       if (isOpen) {
         // Reopening mid-exit: the element never left, so it goes straight back to open.
@@ -164,6 +164,6 @@ export const useEnterExit = (props: UseEnterExitProps): UseEnterExitReturn => {
   return {
     isEntering,
     isExiting,
-    isPresent: computed(() => toValue(props.isOpen) || isExiting.value),
+    isPresent: computed(() => toValue(options.isOpen) || isExiting.value),
   };
 };

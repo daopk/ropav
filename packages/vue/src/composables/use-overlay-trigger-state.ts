@@ -8,7 +8,7 @@ import {useControllableState} from "./use-controllable-state";
 /** Which end of a collection receives focus when an overlay opens. */
 export type FocusStrategy = "first" | "last";
 
-export interface UseOverlayTriggerStateProps {
+export interface UseOverlayTriggerStateOptions {
   isOpen?: MaybeRefOrGetter<boolean | undefined>;
   defaultOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
@@ -34,12 +34,12 @@ export interface OverlayTriggerState {
  * ```
  */
 export const useOverlayTriggerState = (
-  props: UseOverlayTriggerStateProps = {},
+  options: UseOverlayTriggerStateOptions = {},
 ): OverlayTriggerState => {
   const {setState, state} = useControllableState<boolean>({
-    defaultValue: props.defaultOpen ?? false,
-    onValueChange: props.onOpenChange,
-    value: props.isOpen,
+    defaultValue: options.defaultOpen ?? false,
+    onValueChange: options.onOpenChange,
+    value: options.isOpen,
   });
 
   return {
@@ -84,9 +84,9 @@ export interface RootMenuTriggerState extends MenuTriggerState {
  * ```
  */
 export const useMenuTriggerState = (
-  props: UseOverlayTriggerStateProps = {},
+  options: UseOverlayTriggerStateOptions = {},
 ): RootMenuTriggerState => {
-  const overlay = useOverlayTriggerState(props);
+  const overlay = useOverlayTriggerState(options);
   const focusStrategy = shallowRef<FocusStrategy | null>(null);
   const expandedKeys = shallowRef<CollectionKey[]>([]);
 
@@ -134,7 +134,7 @@ export interface SubmenuTriggerState extends OverlayTriggerState {
   submenuLevel: number;
 }
 
-export interface UseSubmenuTriggerStateProps {
+export interface UseSubmenuTriggerStateOptions {
   /**
    * The key of the item that opens this submenu.
    *
@@ -156,13 +156,13 @@ export interface UseSubmenuTriggerStateProps {
  * the stack it was read from changes constantly.
  */
 export const useSubmenuTriggerState = (
-  props: UseSubmenuTriggerStateProps,
+  options: UseSubmenuTriggerStateOptions,
   root: RootMenuTriggerState,
 ): SubmenuTriggerState => {
   const submenuLevel = root.expandedKeysStack.value.length;
   const focusStrategy = shallowRef<FocusStrategy | null>(null);
 
-  const triggerKey = computed(() => toValue(props.triggerKey));
+  const triggerKey = computed(() => toValue(options.triggerKey));
 
   const isOpen = computed(
     () =>

@@ -1,6 +1,6 @@
 import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
-import type {UseListKeyboardProps, UseListKeyboardReturn} from "@/composables/use-list-keyboard";
-import type {UseSelectionManagerProps} from "@/composables/use-selection-manager";
+import type {UseListKeyboardOptions, UseListKeyboardReturn} from "@/composables/use-list-keyboard";
+import type {UseSelectionManagerOptions} from "@/composables/use-selection-manager";
 
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {effectScope, nextTick} from "vue";
@@ -26,8 +26,8 @@ const setup = (
     keys?: CollectionKey[];
     disabled?: CollectionKey[];
     text?: Record<string, string>;
-    keyboard?: Partial<Omit<UseListKeyboardProps, "collection" | "selection" | "element">>;
-    selection?: Partial<Omit<UseSelectionManagerProps, "collection">>;
+    keyboard?: Partial<Omit<UseListKeyboardOptions, "collection" | "selection" | "element">>;
+    selection?: Partial<Omit<UseSelectionManagerOptions, "collection">>;
     dir?: "ltr" | "rtl";
   } = {},
 ): Harness => {

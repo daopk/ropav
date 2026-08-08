@@ -1,5 +1,5 @@
 import type {CollectionKey} from "@/composables/use-collection";
-import type {UseTypeaheadProps, UseTypeaheadReturn} from "@/composables/use-typeahead";
+import type {UseTypeaheadOptions, UseTypeaheadReturn} from "@/composables/use-typeahead";
 
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {effectScope, shallowRef} from "vue";
@@ -32,7 +32,7 @@ const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
 };
 
 const createTypeahead = (
-  props: Partial<UseTypeaheadProps> = {},
+  props: Partial<UseTypeaheadOptions> = {},
 ): UseTypeaheadReturn & {matches: CollectionKey[]; focused: ReturnType<typeof shallowRef>} => {
   const scope = effectScope();
 

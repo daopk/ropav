@@ -9,7 +9,7 @@ export type DisclosureKey = string | number;
 /** Keys that move focus between triggers, per the WAI-ARIA Accordion pattern. */
 const NAVIGATION_KEYS = new Set(["ArrowDown", "ArrowUp", "Home", "End"]);
 
-export interface UseDisclosureGroupProps {
+export interface UseDisclosureGroupOptions {
   /** Whether more than one item can be expanded at a time. */
   allowsMultipleExpanded?: MaybeRefOrGetter<boolean | undefined>;
   /** Expanded keys in uncontrolled mode. */
@@ -60,16 +60,16 @@ export interface UseDisclosureGroupReturn {
  * ```
  */
 export const useDisclosureGroup = (
-  props: UseDisclosureGroupProps = {},
+  options: UseDisclosureGroupOptions = {},
 ): UseDisclosureGroupReturn => {
-  const allowsMultipleExpanded = computed(() => toValue(props.allowsMultipleExpanded) ?? false);
-  const isDisabled = computed(() => toValue(props.isDisabled) ?? false);
+  const allowsMultipleExpanded = computed(() => toValue(options.allowsMultipleExpanded) ?? false);
+  const isDisabled = computed(() => toValue(options.isDisabled) ?? false);
 
   const {setState, state} = useControllableState<Set<DisclosureKey>>({
-    defaultValue: new Set(props.defaultExpandedKeys ?? []),
-    onValueChange: props.onExpandedChange,
+    defaultValue: new Set(options.defaultExpandedKeys ?? []),
+    onValueChange: options.onExpandedChange,
     value: () => {
-      const keys = toValue(props.expandedKeys);
+      const keys = toValue(options.expandedKeys);
 
       return keys === undefined ? undefined : new Set(keys);
     },

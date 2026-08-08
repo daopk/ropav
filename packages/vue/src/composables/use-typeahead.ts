@@ -17,7 +17,7 @@ const TYPEAHEAD_DEBOUNCE_MS = 1000;
 const getStringForKey = (key: string): string =>
   key.length === 1 || !/^[A-Z]/i.test(key) ? key : "";
 
-export interface UseTypeaheadProps {
+export interface UseTypeaheadOptions {
   /**
    * Resolve a search string to a key, preferring keys after `fromKey`. Returning `null` means
    * no match.
@@ -52,7 +52,7 @@ export interface UseTypeaheadReturn {
  * handlers: the capture-phase one consumes Space before the item can act on it, and only ever
  * while a search is in flight.
  */
-export const useTypeahead = (props: UseTypeaheadProps): UseTypeaheadReturn => {
+export const useTypeahead = (options: UseTypeaheadOptions): UseTypeaheadReturn => {
   let search = "";
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -72,17 +72,18 @@ export const useTypeahead = (props: UseTypeaheadProps): UseTypeaheadReturn => {
   /** Search forwards from the focused key, then from the top. Returns whether it landed. */
   const runSearch = (): boolean => {
     const key =
-      props.getKeyForSearch(search, toValue(props.focusedKey)) ?? props.getKeyForSearch(search);
+      options.getKeyForSearch(search, toValue(options.focusedKey)) ??
+      options.getKeyForSearch(search);
 
     if (key == null) return false;
 
-    props.onSearchMatch(key);
+    options.onSearchMatch(key);
 
     return true;
   };
 
   const onKeydownCapture = (event: KeyboardEvent) => {
-    if (toValue(props.isDisabled)) return;
+    if (toValue(options.isDisabled)) return;
     // Only mid-search. A leading Space belongs to whatever the focused item does with it.
     if (search.length === 0 || event.key !== " ") return;
 
@@ -95,7 +96,7 @@ export const useTypeahead = (props: UseTypeaheadProps): UseTypeaheadReturn => {
   };
 
   const onKeydown = (event: KeyboardEvent) => {
-    if (toValue(props.isDisabled)) return;
+    if (toValue(options.isDisabled)) return;
 
     const character = getStringForKey(event.key);
 

@@ -1,6 +1,6 @@
 import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
 import type {
-  UseSelectionManagerProps,
+  UseSelectionManagerOptions,
   UseSelectionManagerReturn,
 } from "@/composables/use-selection-manager";
 
@@ -40,7 +40,7 @@ const createCollection = (keys: CollectionKey[], disabled: CollectionKey[] = [])
 };
 
 const createManager = (
-  props: Omit<UseSelectionManagerProps, "collection"> & {collection?: UseCollectionReturn} = {},
+  props: Omit<UseSelectionManagerOptions, "collection"> & {collection?: UseCollectionReturn} = {},
 ): UseSelectionManagerReturn => {
   const scope = effectScope();
 

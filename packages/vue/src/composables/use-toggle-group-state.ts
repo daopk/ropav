@@ -8,7 +8,7 @@ export type ToggleGroupKey = string | number;
 
 export type ToggleGroupSelectionMode = "single" | "multiple";
 
-export interface UseToggleGroupStateProps {
+export interface UseToggleGroupStateOptions {
   /** Selected keys in uncontrolled mode. */
   defaultSelectedKeys?: Iterable<ToggleGroupKey>;
   /** Whether the group must always keep at least one key selected. */
@@ -58,17 +58,17 @@ export interface UseToggleGroupStateReturn {
  * ```
  */
 export const useToggleGroupState = (
-  props: UseToggleGroupStateProps = {},
+  options: UseToggleGroupStateOptions = {},
 ): UseToggleGroupStateReturn => {
-  const selectionMode = computed(() => toValue(props.selectionMode) ?? "single");
-  const disallowEmptySelection = computed(() => toValue(props.disallowEmptySelection) ?? false);
-  const isDisabled = computed(() => toValue(props.isDisabled) ?? false);
+  const selectionMode = computed(() => toValue(options.selectionMode) ?? "single");
+  const disallowEmptySelection = computed(() => toValue(options.disallowEmptySelection) ?? false);
+  const isDisabled = computed(() => toValue(options.isDisabled) ?? false);
 
   const {setState, state} = useControllableState<Set<ToggleGroupKey>>({
-    defaultValue: new Set(props.defaultSelectedKeys ?? []),
-    onValueChange: props.onSelectionChange,
+    defaultValue: new Set(options.defaultSelectedKeys ?? []),
+    onValueChange: options.onSelectionChange,
     value: () => {
-      const keys = toValue(props.selectedKeys);
+      const keys = toValue(options.selectedKeys);
 
       return keys === undefined ? undefined : new Set(keys);
     },

@@ -19,7 +19,7 @@ import {useListKeyboard} from "./use-list-keyboard";
 import {useSelectionManager} from "./use-selection-manager";
 import {useTypeahead} from "./use-typeahead";
 
-export interface UseMenuProps {
+export interface UseMenuOptions {
   /** Overrides the menu's id, which a trigger's `aria-controls` points at. */
   id?: MaybeRefOrGetter<string | undefined>;
   /** The id of the element naming the menu, normally the trigger. */
@@ -77,8 +77,8 @@ export interface UseMenuReturn {
  * // <div ref="element" v-bind="menu.menuAttributes.value" @keydown="menu.onKeydown">
  * ```
  */
-export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
-  const menuId = useId(props.id);
+export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
+  const menuId = useId(options.id);
   const collectionId = useId();
   const element = shallowRef<HTMLElement | null>(null);
 
@@ -86,14 +86,14 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
 
   const selection = useSelectionManager({
     collection,
-    defaultSelectedKeys: props.defaultSelectedKeys,
-    disabledBehavior: props.disabledBehavior,
-    disabledKeys: props.disabledKeys,
-    disallowEmptySelection: props.disallowEmptySelection,
-    onSelectionChange: props.onSelectionChange,
-    selectedKeys: props.selectedKeys,
-    selectionBehavior: props.selectionBehavior,
-    selectionMode: props.selectionMode,
+    defaultSelectedKeys: options.defaultSelectedKeys,
+    disabledBehavior: options.disabledBehavior,
+    disabledKeys: options.disabledKeys,
+    disallowEmptySelection: options.disallowEmptySelection,
+    onSelectionChange: options.onSelectionChange,
+    selectedKeys: options.selectedKeys,
+    selectionBehavior: options.selectionBehavior,
+    selectionMode: options.selectionMode,
   });
 
   const keyboard = useListKeyboard({
@@ -112,7 +112,7 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
     onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
   });
 
-  const shouldCloseOnSelect = computed(() => toValue(props.shouldCloseOnSelect) ?? true);
+  const shouldCloseOnSelect = computed(() => toValue(options.shouldCloseOnSelect) ?? true);
 
   /**
    * Cleared here, at every menu.
@@ -130,8 +130,8 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
     element,
     keyboard,
     menuId,
-    onAction: props.onAction,
-    onClose: props.onClose,
+    onAction: options.onAction,
+    onClose: options.onClose,
     selection,
     shouldCloseOnSelect,
   });
@@ -153,7 +153,7 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
 
       hasAutoFocused = true;
 
-      const autoFocus = toValue(props.autoFocus);
+      const autoFocus = toValue(options.autoFocus);
 
       if (!autoFocus) return;
 
@@ -191,7 +191,7 @@ export const useMenu = (props: UseMenuProps = {}): UseMenuReturn => {
     element,
     isEmpty: computed(() => collection.size.value === 0),
     menuAttributes: computed(() => ({
-      "aria-labelledby": toValue(props.labelledBy),
+      "aria-labelledby": toValue(options.labelledBy),
       "data-collection": collectionId.value,
       "data-empty": collection.size.value === 0 ? "true" : undefined,
       id: menuId.value,
