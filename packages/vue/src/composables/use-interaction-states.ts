@@ -174,3 +174,77 @@ export const useInteractionStates = (
     onPointerleave,
   };
 };
+
+export interface UseFocusWithinOptions {
+  /** Suppresses both states, for a group whose whole field is disabled. */
+  isDisabled?: MaybeRefOrGetter<boolean | undefined>;
+}
+
+export interface UseFocusWithinReturn {
+  isFocusWithin: ComputedRef<boolean>;
+  isFocusVisible: ComputedRef<boolean>;
+  onFocusin: () => void;
+  onFocusout: (event: FocusEvent) => void;
+}
+
+/**
+ * Track whether focus is anywhere inside an element.
+ *
+ * Ported from React Aria's `useFocusWithin`. A field that wraps its control in a bordered
+ * group — an input with a prefix, a search field, a number field with steppers — draws its
+ * focus ring on the group while focus actually lands on the input inside it.
+ *
+ * This is not interchangeable with the focus state of {@link useInteractionStates}: the
+ * stylesheet gates a group's hover on `:not([data-focus-within="true"])`, so a group that
+ * reports hover without reporting focus-within keeps its hover background while focused.
+ *
+ * Uses `focusin` / `focusout` rather than `focus` / `blur`, because only the former pair
+ * bubbles up from the control to the group.
+ *
+ * @example
+ * ```ts
+ * const focus = useFocusWithin({isDisabled: () => props.isDisabled});
+ * // <div :data-focus-within="dataAttr(focus.isFocusWithin.value)" @focusin="focus.onFocusin">
+ * ```
+ */
+export const useFocusWithin = (options: UseFocusWithinOptions = {}): UseFocusWithinReturn => {
+  const focusWithin = shallowRef(false);
+
+  const isDisabled = computed(() => Boolean(toValue(options.isDisabled)));
+
+  const onFocusin = () => {
+    focusWithin.value = true;
+  };
+
+  const onFocusout = (event: FocusEvent) => {
+    // Focus moving from one child to another leaves the group focused throughout, yet the
+    // browser still reports a `focusout` on the way. What settles it is where focus is
+    // going: a target still inside this element means the group never lost it.
+    const {currentTarget, relatedTarget} = event;
+
+    if (
+      currentTarget instanceof Node &&
+      relatedTarget instanceof Node &&
+      currentTarget.contains(relatedTarget)
+    ) {
+      return;
+    }
+
+    focusWithin.value = false;
+  };
+
+  const releaseModalityListeners = retainModalityListeners();
+
+  onScopeDispose(() => {
+    releaseModalityListeners();
+  }, true);
+
+  return {
+    isFocusVisible: computed(
+      () => focusWithin.value && !isDisabled.value && modality.value === "keyboard",
+    ),
+    isFocusWithin: computed(() => focusWithin.value && !isDisabled.value),
+    onFocusin,
+    onFocusout,
+  };
+};
