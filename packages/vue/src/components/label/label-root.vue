@@ -28,13 +28,16 @@ const id = fieldIds?.claimLabelId();
 // `label` implies a labelable form control to point at, which a composite like a tag group has
 // none of, so such a field asks for a `span` instead.
 const isSpan = computed(() => fieldIds?.labelElementType === "span");
+// Only a real `label` can carry `for`, and only a field that lays its control out beside the
+// label supplies one — a checkbox keeps its input inside the label, so a click already lands.
+const labelFor = computed(() => fieldIds?.labelFor.value);
 </script>
 
 <template>
   <span v-if="isSpan" :id="id" :class="styles" data-slot="label">
     <slot />
   </span>
-  <label v-else :id="id" :class="styles" data-slot="label">
+  <label v-else :id="id" :class="styles" data-slot="label" :for="labelFor">
     <slot />
   </label>
 </template>

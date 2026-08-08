@@ -1,6 +1,6 @@
-import type {ComputedRef} from "vue";
+import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
-import {computed, onScopeDispose, shallowRef} from "vue";
+import {computed, onScopeDispose, shallowRef, toValue} from "vue";
 
 import {createContext} from "../utils/create-context";
 
@@ -33,6 +33,16 @@ export interface FieldIdsContext {
    * form control needs a `span`: `label` implies a labelable control to point at.
    */
   labelElementType?: "label" | "span";
+  /**
+   * Id of the control the label names, for the label's own `for`.
+   *
+   * A field that lays its label out *beside* the control needs both directions: the control
+   * points `aria-labelledby` back at the label so assistive technology reads a name, but only
+   * `for` makes a pointer click on the label move focus into the control. `undefined` when
+   * there is nothing single to point at — a composite like a slider or a tag group, or a
+   * control that already sits inside its own label the way a checkbox does.
+   */
+  labelFor: ComputedRef<string | undefined>;
   /**
    * Role to put on the heading, when the container needs one that is not the element's
    * own. A listbox section sets `"presentation"`: ARIA does not allow a heading inside a
@@ -83,6 +93,8 @@ export const useFieldIds = (
   options: {
     headingRole?: string;
     labelElementType?: "label" | "span";
+    /** Id of the control the label points `for` at. Omit when there is none. */
+    labelFor?: MaybeRefOrGetter<string | undefined>;
     /** Slots this container actually references. @default all of them */
     slots?: FieldSlot[];
   } = {},
@@ -134,6 +146,7 @@ export const useFieldIds = (
       claimLabelId: () => claim("label"),
       headingRole: options.headingRole,
       labelElementType: options.labelElementType,
+      labelFor: computed(() => toValue(options.labelFor)),
     },
     describedBy: computed(() => {
       const parts = [descriptionId.value, errorMessageId.value].filter(Boolean);
