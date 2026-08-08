@@ -1,7 +1,7 @@
 import {describe, expect, it} from "vitest";
 import {effectScope, shallowRef} from "vue";
 
-import {useInteractionStates} from "@/composables/use-interaction-states";
+import {useFocusWithin, useInteractionStates} from "@/composables/use-interaction-states";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -21,6 +21,46 @@ const setPointerModality = () => {
 
 const setKeyboardModality = () => {
   document.dispatchEvent(new KeyboardEvent("keydown", {key: "Tab"}));
+};
+
+/**
+ * A group with a control inside it, because focus-within is decided by whether the element
+ * focus moves to is contained by the one being watched.
+ */
+const createGroup = () => {
+  const group = document.createElement("div");
+  const input = document.createElement("input");
+  const sibling = document.createElement("input");
+
+  group.appendChild(input);
+  document.body.append(group, sibling);
+
+  return {
+    cleanup: () => {
+      group.remove();
+      sibling.remove();
+    },
+    group,
+    input,
+    sibling,
+  };
+};
+
+/**
+ * Dispatch a real `focusout` on the group, rather than hand-building the event: `currentTarget`
+ * is set by the DOM during dispatch and cannot be assigned, and it is what the containment
+ * check reads. Attaching the handler as a listener is also how the template wires it.
+ */
+const focusOutTo = (
+  group: HTMLElement,
+  handler: (event: FocusEvent) => void,
+  relatedTarget: Element | null,
+) => {
+  const listener = handler as EventListener;
+
+  group.addEventListener("focusout", listener);
+  group.dispatchEvent(new FocusEvent("focusout", {relatedTarget}));
+  group.removeEventListener("focusout", listener);
 };
 
 describe("useInteractionStates", () => {
@@ -249,5 +289,95 @@ describe("useInteractionStates", () => {
 
       disposeThird();
     });
+  });
+});
+
+describe("useFocusWithin", () => {
+  it("reports focus anywhere inside the element", () => {
+    const {cleanup, group} = createGroup();
+    const [focus, dispose] = withScope(() => useFocusWithin());
+
+    expect(focus.isFocusWithin.value).toBe(false);
+
+    focus.onFocusin();
+
+    expect(focus.isFocusWithin.value).toBe(true);
+
+    focusOutTo(group, focus.onFocusout, null);
+
+    expect(focus.isFocusWithin.value).toBe(false);
+
+    dispose();
+    cleanup();
+  });
+
+  it("stays focused while focus moves between two children", () => {
+    // The browser reports a focusout on the way even though the group never lost focus, so
+    // acting on it would flicker the ring off and on for a group with several controls.
+    const {cleanup, group} = createGroup();
+    const second = document.createElement("button");
+
+    group.appendChild(second);
+
+    const [focus, dispose] = withScope(() => useFocusWithin());
+
+    focus.onFocusin();
+    focusOutTo(group, focus.onFocusout, second);
+
+    expect(focus.isFocusWithin.value).toBe(true);
+
+    dispose();
+    cleanup();
+  });
+
+  it("gives up focus when it leaves for an element outside", () => {
+    const {cleanup, group, sibling} = createGroup();
+    const [focus, dispose] = withScope(() => useFocusWithin());
+
+    focus.onFocusin();
+    focusOutTo(group, focus.onFocusout, sibling);
+
+    expect(focus.isFocusWithin.value).toBe(false);
+
+    dispose();
+    cleanup();
+  });
+
+  it("reports focus as visible only after a keyboard interaction", () => {
+    const {cleanup, group} = createGroup();
+    const [focus, dispose] = withScope(() => useFocusWithin());
+
+    setPointerModality();
+    focus.onFocusin();
+
+    expect(focus.isFocusWithin.value).toBe(true);
+    expect(focus.isFocusVisible.value).toBe(false);
+
+    focusOutTo(group, focus.onFocusout, null);
+    setKeyboardModality();
+    focus.onFocusin();
+
+    expect(focus.isFocusVisible.value).toBe(true);
+
+    dispose();
+    cleanup();
+  });
+
+  it("suppresses both states while disabled", () => {
+    const isDisabled = shallowRef(false);
+    const [focus, dispose] = withScope(() => useFocusWithin({isDisabled: () => isDisabled.value}));
+
+    setKeyboardModality();
+    focus.onFocusin();
+
+    expect(focus.isFocusWithin.value).toBe(true);
+
+    // Disabling mid-focus must not leave a stale state behind the prop that suppressed it.
+    isDisabled.value = true;
+
+    expect(focus.isFocusWithin.value).toBe(false);
+    expect(focus.isFocusVisible.value).toBe(false);
+
+    dispose();
   });
 });
