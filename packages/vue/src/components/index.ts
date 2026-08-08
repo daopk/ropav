@@ -41,6 +41,7 @@ export * from "./spinner";
 export * from "./surface";
 export * from "./switch";
 export * from "./switch-group";
+export * from "./table";
 export * from "./tag";
 export * from "./tag-group";
 export * from "./textarea";
