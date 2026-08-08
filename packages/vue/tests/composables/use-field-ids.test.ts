@@ -1,4 +1,4 @@
-import type {UseFieldIdsReturn} from "@/composables/use-field-ids";
+import type {UseFieldIdsOptions, UseFieldIdsReturn} from "@/composables/use-field-ids";
 
 import {afterEach, describe, expect, it} from "vitest";
 import {effectScope, shallowRef} from "vue";
@@ -8,7 +8,7 @@ import {useFieldIds} from "@/composables/use-field-ids";
 const scopes: (() => void)[] = [];
 
 /** The container's side of the contract: one call per provider component. */
-const createFieldIds = (options: Parameters<typeof useFieldIds>[0] = {}): UseFieldIdsReturn => {
+const createFieldIds = (options: UseFieldIdsOptions = {}): UseFieldIdsReturn => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());

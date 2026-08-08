@@ -63,6 +63,26 @@ export const [useFieldIdsContext, provideFieldIdsContext] = createContext<FieldI
   strict: false,
 });
 
+export interface UseFieldIdsOptions {
+  /**
+   * Role to put on the heading, when the container needs one that is not the element's own.
+   * @see {@link FieldIdsContext.headingRole}
+   */
+  headingRole?: string;
+  /**
+   * Element the label should render as.
+   * @see {@link FieldIdsContext.labelElementType}
+   */
+  labelElementType?: "label" | "span";
+  /**
+   * Id of the control the label points `for` at. Omit when there is none.
+   * @see {@link FieldIdsContext.labelFor}
+   */
+  labelFor?: MaybeRefOrGetter<string | undefined>;
+  /** Slots this container actually references. @default all of them */
+  slots?: FieldSlot[];
+}
+
 export interface UseFieldIdsReturn {
   /** Pass to `provideFieldIdsContext`. */
   context: FieldIdsContext;
@@ -89,16 +109,7 @@ export interface UseFieldIdsReturn {
  * // <div role="option" :aria-labelledby="labelId" :aria-describedby="describedBy">
  * ```
  */
-export const useFieldIds = (
-  options: {
-    headingRole?: string;
-    labelElementType?: "label" | "span";
-    /** Id of the control the label points `for` at. Omit when there is none. */
-    labelFor?: MaybeRefOrGetter<string | undefined>;
-    /** Slots this container actually references. @default all of them */
-    slots?: FieldSlot[];
-  } = {},
-): UseFieldIdsReturn => {
+export const useFieldIds = (options: UseFieldIdsOptions = {}): UseFieldIdsReturn => {
   const baseId = useId();
 
   const ids = {
