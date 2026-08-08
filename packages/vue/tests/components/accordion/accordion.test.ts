@@ -1,10 +1,11 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import {nextTick, reactive} from "vue";
 
 import {AccordionItem} from "@/components/accordion";
 
 import AccordionFixture from "./fixtures.vue";
+import SurfaceFixture from "./surface-fixtures.vue";
 
 const triggersIn = (container: HTMLElement) => [
   ...container.querySelectorAll<HTMLButtonElement>("[data-slot='accordion-trigger']"),
@@ -470,6 +471,64 @@ describe("Accordion", () => {
       expect(() => renderVapor(AccordionItem)).toThrow(/`AccordionContext` was consumed outside/);
 
       warn.mockRestore();
+    });
+  });
+  describe("surface context", () => {
+    const surfaceOf = (props: Record<string, unknown> = {}) => {
+      const result = renderVapor(SurfaceFixture, {props});
+      const consumer = result.container.querySelector('[data-testid="consumer"]');
+
+      if (!consumer) throw new Error("consumer not rendered");
+
+      return {...result, consumer};
+    };
+
+    it("tells descendants they sit on a surface accordion", () => {
+      // The surface variant paints the default surface colour, whatever the accordion is called.
+      const {consumer, unmount} = surfaceOf({variant: "surface"});
+
+      expect(consumer).toHaveAttribute("data-surface", "default");
+
+      unmount();
+    });
+
+    it("offers no surface for the default variant standing alone", () => {
+      const {consumer, unmount} = surfaceOf();
+
+      expect(consumer).toHaveAttribute("data-surface", "none");
+
+      unmount();
+    });
+
+    it("forwards the surface behind a non-surface accordion", () => {
+      const {consumer, unmount} = surfaceOf({outerVariant: "secondary"});
+
+      expect(consumer).toHaveAttribute("data-surface", "secondary");
+
+      unmount();
+    });
+
+    it("shadows an outer surface when it paints one itself", () => {
+      const {consumer, unmount} = surfaceOf({outerVariant: "tertiary", variant: "surface"});
+
+      expect(consumer).toHaveAttribute("data-surface", "default");
+
+      unmount();
+    });
+
+    it("follows the variant when it changes", async () => {
+      // `provide` runs once, so the variant has to be read on every access.
+      const props = reactive({outerVariant: "tertiary", variant: "surface"});
+      const {consumer, unmount} = surfaceOf(props);
+
+      expect(consumer).toHaveAttribute("data-surface", "default");
+
+      props.variant = "default";
+      await nextTick();
+
+      expect(consumer).toHaveAttribute("data-surface", "tertiary");
+
+      unmount();
     });
   });
 });
