@@ -4,6 +4,7 @@ export * from "./compose";
 export * from "./create-context";
 export * from "./focus";
 export * from "./number";
+export * from "./platform";
 export * from "./position";
 export * from "./text-value";
 export * from "./visually-hidden";
