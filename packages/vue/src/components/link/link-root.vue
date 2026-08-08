@@ -36,10 +36,13 @@ const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
 // that a disabled link has no href for a stray click or a middle-click to follow.
 const isAnchor = computed(() => Boolean(props.href) && !resolvedIsDisabled.value);
 
-// A span has to be told it is a link, and put in the tab order — unless it is disabled, in
-// which case it should not be reachable at all.
+// A span has to be told it is a link.
 const role = computed(() => (isAnchor.value ? undefined : "link"));
-const tabindex = computed(() => (isAnchor.value || resolvedIsDisabled.value ? undefined : 0));
+
+// Set even on an anchor, which is already tabbable: Safari does not focus a native link or
+// button unless an explicit tab index says so, which is the reason react-aria always writes one.
+// A disabled link should not be reachable at all, so it gets none.
+const tabindex = computed(() => (resolvedIsDisabled.value ? undefined : 0));
 
 const isCurrent = computed(() => Boolean(props.ariaCurrent));
 
@@ -76,6 +79,7 @@ const onPointerleave = (event: PointerEvent) => {
     :ping="props.ping"
     :referrerpolicy="props.referrerPolicy"
     :rel="props.rel"
+    :tabindex="tabindex"
     :target="props.target"
     @blur="interaction.onBlur"
     @click="press.handlers.onClick"

@@ -29,6 +29,9 @@ describe("Link", () => {
       expect(link.tagName).toBe("A");
       expect(link).toHaveAttribute("href", "#target");
       expect(link).not.toHaveAttribute("role");
+      // Written even on an anchor, which is already tabbable: Safari does not focus a native
+      // link without one, which is why react-aria always sets it.
+      expect(link).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
