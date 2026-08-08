@@ -366,7 +366,7 @@ export const WithBadgeSuffix: Story = {
         <InputGroupRoot>
           <InputGroupInput class="w-[280px]" placeholder="Email address" />
           <InputGroupSuffix class="pe-2">
-            <Chip color="accent" label="Pro" size="md" variant="soft" />
+            <Chip color="accent" size="md" variant="soft">Pro</Chip>
           </InputGroupSuffix>
         </InputGroupRoot>
       </TextField>

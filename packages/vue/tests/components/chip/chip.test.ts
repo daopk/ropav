@@ -9,8 +9,8 @@ const slot = (container: HTMLElement, name: string) =>
   container.querySelector(`[data-slot='${name}']`);
 
 describe("Chip", () => {
-  describe("label shorthand", () => {
-    it("renders the label prop through Chip.Label", () => {
+  describe("label", () => {
+    it("wraps a text-only child in Chip.Label", () => {
       const {container, unmount} = renderVapor(ChipFixture, {props: {label: "Label"}});
       const label = slot(container, "chip-label");
 
@@ -20,21 +20,16 @@ describe("Chip", () => {
       unmount();
     });
 
-    it("renders slot content instead of the label prop when both are given", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {
-        props: {label: "Ignored", withSlot: true},
-      });
+    it("leaves an explicit Chip.Label alone", () => {
+      const {container, unmount} = renderVapor(ChipFixture, {props: {withSlot: true}});
 
       expect(slot(container, "chip-label")?.textContent).toBe("Explicit label");
-      expect(container.textContent).not.toContain("Ignored");
 
       unmount();
     });
 
     it("renders exactly one label element, never a nested pair", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {
-        props: {label: "Ignored", withSlot: true},
-      });
+      const {container, unmount} = renderVapor(ChipFixture, {props: {withSlot: true}});
 
       expect(container.querySelectorAll("[data-slot='chip-label']")).toHaveLength(1);
 

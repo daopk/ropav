@@ -5,7 +5,6 @@ import {chipVariants} from "@heroui/styles";
 import {computed} from "vue";
 
 import ChipAutoLabel from "./chip-auto-label";
-import ChipLabel from "./chip-label.vue";
 import {provideChipContext} from "./chip.context";
 
 const props = defineProps<ChipRootProps>();
@@ -22,9 +21,7 @@ provideChipContext({slots});
 <template>
   <span :class="slots.base({class: props.class})" data-slot="chip">
     <ChipAutoLabel>
-      <slot>
-        <ChipLabel>{{ props.label }}</ChipLabel>
-      </slot>
+      <slot />
     </ChipAutoLabel>
   </span>
 </template>

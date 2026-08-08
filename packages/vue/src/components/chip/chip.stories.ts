@@ -38,7 +38,7 @@ export const Default: Story = {
   render: (args) => ({
     components,
     setup: () => ({args}),
-    template: `<Chip label="Label" v-bind="args" />`,
+    template: `<Chip v-bind="args">Label</Chip>`,
   }),
 };
 
@@ -48,7 +48,7 @@ export const Sizes: Story = {
     setup: () => ({sizes: ["sm", "md", "lg"]}),
     template: `
       <div class="flex items-center gap-3">
-        <Chip v-for="size in sizes" :key="size" :label="size" :size="size" />
+        <Chip v-for="size in sizes" :key="size" :size="size">{{ size }}</Chip>
       </div>
     `,
   }),
@@ -60,7 +60,7 @@ export const Colors: Story = {
     setup: () => ({colors: ["default", "accent", "success", "warning", "danger"]}),
     template: `
       <div class="flex items-center gap-3">
-        <Chip v-for="color in colors" :key="color" :color="color" :label="color" />
+        <Chip v-for="color in colors" :key="color" :color="color">{{ color }}</Chip>
       </div>
     `,
   }),
@@ -72,15 +72,15 @@ export const Variants: Story = {
     setup: () => ({variants: ["primary", "secondary", "tertiary", "soft"]}),
     template: `
       <div class="flex items-center gap-3">
-        <Chip v-for="variant in variants" :key="variant" :label="variant" :variant="variant" />
+        <Chip v-for="variant in variants" :key="variant" :variant="variant">{{ variant }}</Chip>
       </div>
     `,
   }),
 };
 
 /**
- * Icons need the default slot, which means the label has to be explicit. The `label`
- * shorthand only renders when no slot content is passed.
+ * A chip mixing an icon with its label needs `Chip.Label` written out: automatic wrapping
+ * only applies when the children are nothing but text.
  */
 export const WithIcons: Story = {
   render: () => ({

@@ -409,7 +409,7 @@ export const Examples: Story = {
               <Button>
                 <IconCodeFork class="size-3.5" />
                 Fork
-                <Chip color="accent" label="24" size="sm" variant="soft" />
+                <Chip color="accent" size="sm" variant="soft">24</Chip>
               </Button>
               <Button aria-label="More fork options" is-icon-only>
                 <ButtonGroupSeparator />
@@ -442,7 +442,7 @@ export const Examples: Story = {
               </Button>
               <Button class="px-2">
                 <ButtonGroupSeparator />
-                <Chip color="accent" label="104" size="sm" variant="soft" />
+                <Chip color="accent" size="sm" variant="soft">104</Chip>
               </Button>
             </ButtonGroup>
             <ButtonGroup variant="tertiary">
