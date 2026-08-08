@@ -25,6 +25,7 @@ export * from "./menu-section";
 export * from "./separator";
 export * from "./spinner";
 export * from "./surface";
+export * from "./switch";
 export * from "./tag";
 export * from "./tag-group";
 export * from "./toggle-button";
