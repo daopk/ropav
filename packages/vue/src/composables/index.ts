@@ -23,6 +23,7 @@ export * from "./use-prevent-scroll";
 export * from "./use-press";
 export * from "./use-safely-mouse-to-submenu";
 export * from "./use-selection-manager";
+export * from "./use-slider-state";
 export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
 export * from "./use-typeahead";
