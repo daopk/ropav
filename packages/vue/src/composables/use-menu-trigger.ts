@@ -157,24 +157,20 @@ export const useMenuTrigger = (
   };
 
   const responder: PressResponder = {
-    bind: computed(() => {
+    attrs: computed(() => ({
+      ...triggerAttributes.value,
+      "aria-describedby": longPress.describedBy.value,
+      id: triggerId.value,
+    })),
+    handlers: computed(() => {
       const handlers = isLongPress.value ? longPress.handlers : press.handlers;
 
       return {
-        ...triggerAttributes.value,
-        "aria-describedby": longPress.describedBy.value,
-        id: triggerId.value,
-        onClick: handlers.onClick,
-        onDragstart: handlers.onDragstart,
+        ...handlers,
         onKeydown: (event: KeyboardEvent) => {
           handlers.onKeydown(event);
           onKeydown(event);
         },
-        onMousedown: handlers.onMousedown,
-        onPointerdown: handlers.onPointerdown,
-        onPointerenter: handlers.onPointerenter,
-        onPointerleave: handlers.onPointerleave,
-        onPointerup: handlers.onPointerup,
       };
     }),
     isPressed: press.isPressed,

@@ -4,7 +4,7 @@ import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
 import {buttonVariants} from "@heroui/styles";
 import {computed, watch} from "vue";
 
-import {usePressResponder} from "../../composables/press-responder";
+import {composePressResponder, usePressResponder} from "../../composables/press-responder";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {announce} from "../../utils/live-announcer";
@@ -97,6 +97,15 @@ const onClick = (event: MouseEvent) => {
 
   emit("click", event);
 };
+
+// A responder's listeners are chained here rather than spread with `v-bind`, which in vapor
+// re-attaches them on every render — see `composePressResponder`.
+const press = composePressResponder(responder, {
+  onClick,
+  onPointerdown,
+  onPointerenter,
+  onPointerleave,
+});
 </script>
 
 <template>
@@ -113,13 +122,17 @@ const onClick = (event: MouseEvent) => {
     data-slot="button"
     :disabled="resolvedIsDisabled || undefined"
     :type="type"
-    v-bind="responder?.bind.value"
+    v-bind="responder?.attrs.value"
     @blur="onBlur"
-    @click="onClick"
+    @click="press.onClick"
+    @dragstart="press.onDragstart"
     @focus="onFocus"
-    @pointerdown="onPointerdown"
-    @pointerenter="onPointerenter"
-    @pointerleave="onPointerleave"
+    @keydown="press.onKeydown"
+    @mousedown="press.onMousedown"
+    @pointerdown="press.onPointerdown"
+    @pointerenter="press.onPointerenter"
+    @pointerleave="press.onPointerleave"
+    @pointerup="press.onPointerup"
   >
     <slot
       :is-disabled="Boolean(resolvedIsDisabled)"

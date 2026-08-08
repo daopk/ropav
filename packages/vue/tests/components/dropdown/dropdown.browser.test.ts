@@ -56,6 +56,17 @@ const place = (result: RenderResult) => {
  */
 const measure = (element: Element) => element.getBoundingClientRect();
 
+/** Close an open menu and let its exit animation finish, leaving focus where the page would. */
+const dismiss = async (result: RenderResult) => {
+  const popover = result.screen.queryByRole("dialog") as HTMLElement | null;
+
+  await userEvent.keyboard("{Escape}");
+
+  if (popover) await settled(popover);
+  await nextTick();
+  await nextTick();
+};
+
 const open = async (result: RenderResult) => {
   press(result.getByRole("button", {name: "Menu"}));
   await nextTick();
@@ -251,6 +262,62 @@ describe("Dropdown (browser)", () => {
 
       expect(result.baseElement.querySelector('[data-slot="dropdown-popover"]')).toBeNull();
 
+      result.unmount();
+    });
+  });
+
+  /**
+   * The rest of the suite opens the menu with a synthesised pointer sequence, which cannot see
+   * this: a real press has to move the pointer onto the trigger first, and hovering re-renders
+   * it. In vapor a re-render re-attaches every listener that arrived through `v-bind`, which both
+   * put the responder's press behind the button's own and dropped it mid-dispatch — so the menu
+   * opened under a synthetic press and never under a real one.
+   */
+  describe("real pointer input", () => {
+    it("opens on a press from the pointer itself", async () => {
+      const result = render();
+      const trigger = result.getByRole("button", {name: "Menu"});
+
+      await userEvent.click(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
+      expect(result.screen.getByRole("menu")).toBeInTheDocument();
+
+      await dismiss(result);
+      result.unmount();
+    });
+
+    it("opens a custom trigger on a press from the pointer itself", async () => {
+      const result = render({withCustomTrigger: true});
+      const trigger = result.getByRole("button", {name: "Menu"});
+
+      await userEvent.click(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("aria-expanded", "true");
+      expect(result.screen.getByRole("menu")).toBeInTheDocument();
+
+      await dismiss(result);
+      result.unmount();
+    });
+
+    it("keeps the button's own hover state alongside the responder's press", async () => {
+      const result = render();
+      const trigger = result.getByRole("button", {name: "Menu"});
+
+      await userEvent.hover(trigger);
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-hovered", "true");
+
+      await userEvent.click(trigger);
+      await nextTick();
+
+      // A trigger looks pressed for as long as its menu is open.
+      expect(trigger).toHaveAttribute("data-pressed", "true");
+
+      await dismiss(result);
       result.unmount();
     });
   });
