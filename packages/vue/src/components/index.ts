@@ -30,6 +30,7 @@ export * from "./menu-item";
 export * from "./menu-section";
 export * from "./radio";
 export * from "./radio-group";
+export * from "./search-field";
 export * from "./separator";
 export * from "./slider";
 export * from "./spinner";
