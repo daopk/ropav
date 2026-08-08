@@ -22,6 +22,7 @@ export * from "./input";
 export * from "./input-group";
 export * from "./kbd";
 export * from "./label";
+export * from "./link";
 export * from "./list-box";
 export * from "./list-box-item";
 export * from "./list-box-section";
