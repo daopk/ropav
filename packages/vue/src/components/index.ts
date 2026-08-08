@@ -18,6 +18,7 @@ export * from "./field-error";
 export * from "./form";
 export * from "./header";
 export * from "./icons";
+export * from "./input";
 export * from "./kbd";
 export * from "./label";
 export * from "./list-box";
