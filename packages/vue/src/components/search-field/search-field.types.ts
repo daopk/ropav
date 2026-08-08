@@ -104,6 +104,12 @@ export interface SearchFieldGroupSlotProps {
 export interface SearchFieldInputProps {
   class?: string;
   /**
+   * Text in the control. Set here it takes the control over from the field, so the caller owns
+   * the value — exactly as a `value` prop does in React. Without a listener to go with it the
+   * text is pinned.
+   */
+  value?: string;
+  /**
    * Placeholder shown while the control is empty. Declared so it can also be set here rather
    * than only on the field; every other native attribute arrives by attribute fallthrough.
    */
