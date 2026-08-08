@@ -36,6 +36,8 @@ export interface SearchFieldFixtureProps {
   customClearIcon?: boolean;
   /** Placeholder set on the control itself, to check a local prop beats the field's. */
   controlPlaceholder?: string;
+  /** Value owned by the control itself, which takes it over from the field. */
+  controlValue?: string;
   onChange?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;

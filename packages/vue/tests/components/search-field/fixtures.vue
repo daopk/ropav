@@ -73,7 +73,7 @@ const props = withDefaults(defineProps<SearchFieldFixtureProps>(), {
         </svg>
       </SearchFieldSearchIcon>
       <SearchFieldSearchIcon v-else-if="props.withSearchIcon" />
-      <SearchFieldInput :placeholder="props.controlPlaceholder" />
+      <SearchFieldInput :placeholder="props.controlPlaceholder" :value="props.controlValue" />
       <SearchFieldClearButton v-if="props.withClearButton && props.customClearIcon">
         <svg data-testid="custom-clear" viewBox="0 0 16 16">
           <path d="M0 0h16v16H0z" />

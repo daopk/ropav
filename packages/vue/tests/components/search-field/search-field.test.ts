@@ -482,6 +482,22 @@ describe("SearchField", () => {
       unmount();
     });
 
+    it("lets the control own the value, taking it over from the field", async () => {
+      const {control, unmount} = renderSearchField({
+        controlValue: "pinned",
+        defaultValue: "from the field",
+      });
+
+      expect(control).toHaveValue("pinned");
+
+      type(control, "typed over it");
+      await nextTick();
+
+      expect(control).toHaveValue("pinned");
+
+      unmount();
+    });
+
     it("follows an owner that accepts the change", async () => {
       const props = reactive<Record<string, unknown>>({value: "a"});
 
