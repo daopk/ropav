@@ -1,5 +1,5 @@
 import type {SliderState} from "./use-slider-state";
-import type {ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
 import {computed, onScopeDispose, toValue} from "vue";
 
@@ -21,26 +21,26 @@ export interface UseSliderOptions {
   ariaDescribedby?: MaybeRefOrGetter<string | undefined>;
 }
 
-export interface SliderGroupProps {
+export interface SliderGroupAttrs {
   role: "group";
   id: string;
   "aria-label": string | undefined;
   "aria-labelledby": string | undefined;
 }
 
-export interface SliderOutputProps {
+export interface SliderOutputAttrs {
   for: string;
   "aria-live": "off";
 }
 
 export interface UseSliderReturn {
   /** For the root element: the thumbs are inputs, and the group is what names them together. */
-  groupProps: ComputedRef<SliderGroupProps>;
+  groupProps: ComputedRef<SliderGroupAttrs>;
   /** Bind with `v-bind` on the track, which accepts clicks and drags for the nearest thumb. */
   trackHandlers: {onPointerdown: (event: PointerEvent) => void};
   /** Inline styles the track needs whatever the stylesheet says. */
-  trackStyle: {position: "relative"; touchAction: "none"};
-  outputProps: ComputedRef<SliderOutputProps>;
+  trackStyle: CSSProperties;
+  outputProps: ComputedRef<SliderOutputAttrs>;
   getThumbId: (index: number) => string;
   /** Id each thumb points `aria-labelledby` at. */
   labelledBy: ComputedRef<string | undefined>;

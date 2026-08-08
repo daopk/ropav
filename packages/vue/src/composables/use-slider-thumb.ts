@@ -1,5 +1,5 @@
 import type {SliderOrientation, SliderState} from "./use-slider-state";
-import type {ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
 import {computed, onScopeDispose, toValue, watch, watchEffect} from "vue";
 
@@ -30,7 +30,7 @@ export interface UseSliderThumbOptions {
   form?: MaybeRefOrGetter<string | undefined>;
 }
 
-export interface SliderThumbInputProps {
+export interface SliderThumbInputAttrs {
   id: string;
   type: "range";
   tabindex: number | undefined;
@@ -47,17 +47,9 @@ export interface SliderThumbInputProps {
   "aria-describedby": string | undefined;
 }
 
-export interface SliderThumbStyle {
-  position: "absolute";
-  top?: string;
-  left?: string;
-  transform: string;
-  touchAction: "none";
-}
-
 export interface UseSliderThumbReturn {
   /** For the visually hidden range input. */
-  inputProps: ComputedRef<SliderThumbInputProps>;
+  inputProps: ComputedRef<SliderThumbInputAttrs>;
   /** Bind on the input: keyboard and pointer changes both end up here. */
   inputHandlers: {
     onBlur: () => void;
@@ -70,7 +62,7 @@ export interface UseSliderThumbReturn {
     onPointerdown: (event: PointerEvent) => void;
   };
   /** Position along the track, as inline styles. */
-  thumbStyle: ComputedRef<SliderThumbStyle>;
+  thumbStyle: ComputedRef<CSSProperties>;
   isDragging: ComputedRef<boolean>;
   isFocused: ComputedRef<boolean>;
   isDisabled: ComputedRef<boolean>;
