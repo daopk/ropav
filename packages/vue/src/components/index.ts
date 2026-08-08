@@ -6,6 +6,7 @@ export * from "./avatar";
 export * from "./button";
 export * from "./button-group";
 export * from "./card";
+export * from "./checkbox-group";
 export * from "./chip";
 export * from "./close-button";
 export * from "./description";
