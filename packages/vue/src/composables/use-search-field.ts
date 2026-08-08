@@ -110,11 +110,14 @@ export const useSearchField = (options: UseSearchFieldOptions = {}): UseSearchFi
 
   const clearButtonResponder: PressResponder = {
     attrs: computed(() => ({
-      // Out of the tab order on purpose: Escape does the same job from the keyboard, and a stop
-      // that only appears once there is text would shift the tab order as the user types.
       "aria-label": "Clear search",
+      "data-disabled": isDisabled.value ? "true" : undefined,
       disabled: isDisabled.value || undefined,
-      tabindex: -1,
+      // Out of the tab order on purpose: Escape does the same job from the keyboard, and a stop
+      // that only appears once there is text would shift the tab order as the user types. Left
+      // off once disabled, because `disabled` already takes the button out and react-aria drops
+      // it for the same reason — measured against its DOM.
+      tabindex: isDisabled.value ? undefined : -1,
     })),
     handlers: computed(() => handlers),
     isPressed,
