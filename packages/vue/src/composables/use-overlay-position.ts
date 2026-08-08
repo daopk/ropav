@@ -183,11 +183,18 @@ export const useOverlayPosition = (props: UseOverlayPositionProps): UseOverlayPo
     ([overlay, target, open]) => {
       stopObserving();
 
-      if (!open) {
+      // Dropped only when the overlay leaves the DOM, so the next open measures afresh rather
+      // than animating in from wherever the last one happened to sit.
+      if (!overlay) {
         position.value = null;
 
         return;
       }
+
+      // A closed overlay that is still rendered is animating out, and it animates out from where
+      // it was: clearing the position here would drop it at the viewport origin — which is where
+      // an unmeasured overlay is put — for the length of the animation.
+      if (!open) return;
 
       updatePosition();
       observe(overlay);

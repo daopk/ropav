@@ -206,6 +206,31 @@ describe("Dropdown (browser)", () => {
       result.unmount();
     });
 
+    it("holds its position through the exit animation", async () => {
+      const result = render();
+
+      place(result);
+
+      const popover = await open(result);
+      const before = popover.getBoundingClientRect();
+
+      press(document.body);
+      await nextTick();
+      await nextTick();
+
+      expect(popover).toHaveAttribute("data-exiting", "true");
+
+      // The position is measured, so losing it while the popover is still on screen drops it at
+      // the viewport origin for the length of the animation.
+      const during = popover.getBoundingClientRect();
+
+      expect(during.left).toBeCloseTo(before.left, 0);
+      expect(during.top).toBeCloseTo(before.top, 0);
+      expect(popover).toHaveAttribute("data-placement");
+
+      result.unmount();
+    });
+
     it("stays in the DOM through its exit animation", async () => {
       const result = render();
       const popover = await open(result);
