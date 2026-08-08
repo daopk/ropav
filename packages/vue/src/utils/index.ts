@@ -5,3 +5,4 @@ export * from "./create-context";
 export * from "./focus";
 export * from "./position";
 export * from "./text-value";
+export * from "./visually-hidden";
