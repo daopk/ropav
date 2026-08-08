@@ -1,9 +1,11 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
+import {nextTick, reactive} from "vue";
 
 import {CardHeader} from "@/components/card";
 
 import CardFixture from "./fixtures.vue";
+import SurfaceFixture from "./surface-fixtures.vue";
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector(`[data-slot='${name}']`);
@@ -84,6 +86,77 @@ describe("Card", () => {
 
       expect(root?.classList.contains("card")).toBe(true);
       expect(root?.classList.contains("w-96")).toBe(true);
+
+      unmount();
+    });
+  });
+
+  describe("surface context", () => {
+    const surfaceOf = (props: Record<string, unknown> = {}) => {
+      const result = renderVapor(SurfaceFixture, {props});
+      const consumer = result.container.querySelector('[data-testid="consumer"]');
+
+      if (!consumer) throw new Error("consumer not rendered");
+
+      return {...result, consumer};
+    };
+
+    it.each(["default", "secondary", "tertiary"] as const)(
+      "tells descendants they sit on a %s card",
+      (variant) => {
+        const {consumer, unmount} = surfaceOf({variant});
+
+        expect(consumer).toHaveAttribute("data-surface", variant);
+
+        unmount();
+      },
+    );
+
+    it("passes the default variant down, not undefined", () => {
+      const {consumer, unmount} = surfaceOf();
+
+      expect(consumer).toHaveAttribute("data-surface", "default");
+
+      unmount();
+    });
+
+    it("offers no surface for a transparent card standing alone", () => {
+      // Transparent shows the page behind it, so there is no surface to report.
+      const {consumer, unmount} = surfaceOf({variant: "transparent"});
+
+      expect(consumer).toHaveAttribute("data-surface", "none");
+
+      unmount();
+    });
+
+    it("forwards the surface behind a transparent card", () => {
+      const {consumer, unmount} = surfaceOf({outerVariant: "secondary", variant: "transparent"});
+
+      expect(consumer).toHaveAttribute("data-surface", "secondary");
+
+      unmount();
+    });
+
+    it("shadows an outer surface with its own variant", () => {
+      const {consumer, unmount} = surfaceOf({outerVariant: "tertiary", variant: "secondary"});
+
+      expect(consumer).toHaveAttribute("data-surface", "secondary");
+
+      unmount();
+    });
+
+    it("follows the variant when it changes", async () => {
+      // `provide` runs once, so the transparent decision has to be read on every access
+      // rather than fixed at setup.
+      const props = reactive({outerVariant: "tertiary", variant: "default"});
+      const {consumer, unmount} = surfaceOf(props);
+
+      expect(consumer).toHaveAttribute("data-surface", "default");
+
+      props.variant = "transparent";
+      await nextTick();
+
+      expect(consumer).toHaveAttribute("data-surface", "tertiary");
 
       unmount();
     });

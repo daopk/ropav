@@ -3,7 +3,7 @@ import type {SurfaceRootProps} from "@/components/surface";
 
 import {SurfaceRoot} from "@/components/surface";
 
-import SurfaceConsumer from "./surface-consumer.vue";
+import SurfaceConsumer from "../../fixtures/surface-consumer.vue";
 
 const props = defineProps<SurfaceRootProps & {nestedVariant?: SurfaceRootProps["variant"]}>();
 </script>
