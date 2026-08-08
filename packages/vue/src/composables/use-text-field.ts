@@ -280,7 +280,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
   const attrs = computed<Record<string, unknown>>(() => {
     const role = toValue(options.role);
 
-    return {
+    const all: Record<string, unknown> = {
       "aria-activedescendant": toValue(options.ariaActivedescendant),
       "aria-autocomplete": toValue(options.ariaAutocomplete),
       "aria-controls": toValue(options.ariaControls),
@@ -314,6 +314,17 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
       type: isTextArea.value ? undefined : (toValue(options.type) ?? "text"),
       value: value.value,
     };
+
+    // An absent value is dropped rather than handed over as `undefined`. Two reasons, both
+    // load-bearing: some of these are reflected DOM properties, so writing `undefined` sets
+    // the property to its coerced default and renders an attribute that was never asked for
+    // (`spellcheck="false"` is the one that showed up); and a control merging this bag on top
+    // of its own props would otherwise have them wiped by keys the field never set.
+    for (const key of Object.keys(all)) {
+      if (all[key] === undefined) delete all[key];
+    }
+
+    return all;
   });
 
   const handlers: TextFieldHandlers = {

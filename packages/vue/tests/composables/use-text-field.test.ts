@@ -99,6 +99,21 @@ describe("useTextField", () => {
       expect(control).toHaveAttribute("pattern", "[0-9]*");
     });
 
+    it("drops an absent key instead of handing it over as undefined", () => {
+      // Handing `undefined` on has two failure modes: a reflected DOM property gets set to
+      // its coerced default and renders an attribute nobody asked for, and a control merging
+      // this bag over its own props has them wiped by keys the field never set.
+      const {field} = renderField();
+
+      const undefinedKeys = Object.entries(field.attrs.value)
+        .filter(([, value]) => value === undefined)
+        .map(([key]) => key);
+
+      expect(undefinedKeys).toEqual([]);
+      expect(field.attrs.value).not.toHaveProperty("spellcheck");
+      expect(field.attrs.value).not.toHaveProperty("placeholder");
+    });
+
     it("leaves an absent state off rather than rendering it false", () => {
       const {control, field} = renderField();
 

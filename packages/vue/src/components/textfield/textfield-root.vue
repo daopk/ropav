@@ -15,12 +15,18 @@ import {provideTextFieldContext} from "./textfield.context";
 // boolean to `false`, and a `false` here reads as the caller claiming that state: for
 // `isInvalid` in particular it would pin the field valid and turn the whole validation
 // layer into dead code.
+//
+// `spellCheck` needs it for the same reason even though it is not a boolean prop. Its type
+// merely *includes* `boolean`, which is enough for Vue to cast an absent value to `false` —
+// and that reaches the control as `spellcheck="false"`, turning spell checking off on every
+// field that never asked.
 const props = withDefaults(defineProps<TextFieldRootProps>(), {
   fullWidth: undefined,
   isDisabled: undefined,
   isInvalid: undefined,
   isReadOnly: undefined,
   isRequired: undefined,
+  spellCheck: undefined,
   variant: undefined,
 });
 
