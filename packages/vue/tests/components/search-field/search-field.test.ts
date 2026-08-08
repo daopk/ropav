@@ -391,6 +391,41 @@ describe("SearchField", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input and textarea are already tabbable: Safari does not
+    // focus one unless an explicit tab index says so, which is why react-aria always sets it —
+    // `useTextField` picks it up from `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {control, unmount} = renderSearchField();
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {control, unmount} = renderSearchField({isDisabled: true});
+
+      expect(control.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // The clear button is deliberately out of the tab order — Escape does the same job, and a
+    // stop that only appears once there is text would shift the order as the user types. Its
+    // responder has to win over the tab index a close button gives itself.
+    it("keeps the clear button out of the tab order", async () => {
+      const {clearButton, control, unmount} = renderSearchField();
+
+      type(control, "shoes");
+      await nextTick();
+
+      expect(clearButton).toHaveAttribute("tabindex", "-1");
+
+      unmount();
+    });
+  });
+
   describe("submitting", () => {
     it("reports Enter as a submit and keeps it off the form", () => {
       const onSubmit = vi.fn();

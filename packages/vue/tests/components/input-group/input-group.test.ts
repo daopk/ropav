@@ -229,6 +229,45 @@ describe("InputGroup", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input and textarea are already tabbable: Safari does not
+    // focus one unless an explicit tab index says so, which is why react-aria always sets it —
+    // `useTextField` picks it up from `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {control, unmount} = renderGroup({withField: true});
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("renders an explicit tab index on a textarea", () => {
+      const {control, unmount} = renderGroup({withField: true, withTextArea: true});
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when the field is disabled", () => {
+      const {control, unmount} = renderGroup({fieldIsDisabled: true, withField: true});
+
+      expect(control.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // The tab index rides along with the field, so a group standing on its own carries none —
+    // which is what React does too, where a bare `Input` never reaches `useTextField`.
+    it("writes no tab index without a field around it", () => {
+      const {control, unmount} = renderGroup();
+
+      expect(control.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+  });
+
   describe("hover and focus", () => {
     it("reports hover on the group", async () => {
       const {group, unmount} = renderGroup();

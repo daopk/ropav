@@ -311,6 +311,11 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
       required: (isRequired.value && isNativeBehavior.value) || undefined,
       role: role === null ? undefined : role,
       spellcheck: toValue(options.spellCheck),
+      // Written even though an input and a textarea are already tabbable: Safari does not focus
+      // a native one unless an explicit tab index says so, which is the reason react-aria always
+      // sets it — `useTextField` picks it up from `useFocusable`. A disabled control should not
+      // be reachable at all, so it gets none, and the sweep below drops the key.
+      tabindex: isDisabled.value ? undefined : 0,
       type: isTextArea.value ? undefined : (toValue(options.type) ?? "text"),
       value: value.value,
     };

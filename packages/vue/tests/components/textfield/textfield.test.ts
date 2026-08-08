@@ -348,6 +348,44 @@ describe("TextField", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input and textarea are already tabbable: Safari does not
+    // focus one unless an explicit tab index says so, which is why react-aria always sets it —
+    // `useTextField` picks it up from `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {control, unmount} = renderField();
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("renders an explicit tab index on a textarea", () => {
+      const {control, unmount} = renderField({withTextArea: true});
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {control, unmount} = renderField({isDisabled: true});
+
+      expect(control.hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // Read-only is not a factor: only a disabled control leaves the tab order.
+    it("keeps the tab index when read only", () => {
+      const {control, unmount} = renderField({isReadOnly: true});
+
+      expect(control).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+  });
+
   describe("states", () => {
     it("supports isDisabled", () => {
       const {control, root, unmount} = renderField({isDisabled: true});
