@@ -24,8 +24,8 @@ export interface AvatarImageProps {
   sizes?: string;
   /** Image source. */
   src?: string;
-  /** Responsive source set. */
-  srcset?: string;
+  /** Responsive source set. Rendered as the `srcset` attribute. */
+  srcSet?: string;
 }
 
 export interface AvatarFallbackProps {

@@ -57,7 +57,7 @@ watch(
     :referrerpolicy="props.referrerPolicy"
     :sizes="props.sizes"
     :src="props.src"
-    :srcset="props.srcset"
+    :srcset="props.srcSet"
     @error="emit('error', $event)"
     @load="emit('load', $event)"
   />

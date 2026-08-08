@@ -114,6 +114,24 @@ describe("Avatar", () => {
       unmount();
     });
 
+    // The prop is `srcSet` for consistency with `crossOrigin` beside it; the attribute it
+    // renders is still the `srcset` the DOM knows.
+    it("renders srcSet and sizes on the loaded image", async () => {
+      const {container, unmount} = renderVapor(AvatarFixture, {
+        props: {sizes: "64px", src: "/jane.png", srcSet: "/jane-2x.png 2x"},
+      });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      const image = imageIn(container);
+
+      expect(image?.getAttribute("srcset")).toBe("/jane-2x.png 2x");
+      expect(image?.getAttribute("sizes")).toBe("64px");
+
+      unmount();
+    });
+
     it("renders the image element class", async () => {
       const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
 
