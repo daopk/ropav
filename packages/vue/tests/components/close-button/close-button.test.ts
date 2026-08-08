@@ -4,6 +4,8 @@ import {nextTick, reactive} from "vue";
 
 import {CloseButton} from "@/components/close-button";
 
+import ResponderFixture from "./fixtures.vue";
+
 const renderCloseButton = (props: Record<string, unknown> = {}) =>
   renderVapor(CloseButton, {props});
 
@@ -196,5 +198,112 @@ describe("CloseButton", () => {
 
       unmount();
     });
+  });
+});
+
+describe("CloseButton driven from above", () => {
+  const renderWithResponder = (props: Record<string, unknown> = {}) =>
+    renderVapor(ResponderFixture, {props});
+
+  it("reports its element to whatever supplied the press", () => {
+    // The responder acts on the element and positions against it, so it has to be handed one.
+    const onRegister = vi.fn();
+    const {container, unmount} = renderWithResponder({onRegister});
+
+    expect(onRegister).toHaveBeenCalledWith(buttonIn(container));
+
+    unmount();
+  });
+
+  it("renders the attributes the supplied press asks for", () => {
+    const {container, unmount} = renderWithResponder({
+      attrs: {"aria-controls": "menu-1", "aria-expanded": "true", "aria-haspopup": "true"},
+    });
+    const button = buttonIn(container);
+
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(button).toHaveAttribute("aria-haspopup", "true");
+    expect(button).toHaveAttribute("aria-controls", "menu-1");
+
+    unmount();
+  });
+
+  it("passes a click to the supplied press", async () => {
+    const onResponderClick = vi.fn();
+    const {container, unmount} = renderWithResponder({onResponderClick});
+
+    buttonIn(container)?.click();
+    await nextTick();
+
+    expect(onResponderClick).toHaveBeenCalledOnce();
+
+    unmount();
+  });
+
+  it("runs the supplied press ahead of the button's own click", async () => {
+    // Order is the whole reason the listeners are chained rather than spread: what comes
+    // from above decides first, and the element's own handler follows.
+    const calls: string[] = [];
+    const {container, unmount} = renderWithResponder({
+      onOwnClick: () => calls.push("own"),
+      onResponderClick: () => calls.push("responder"),
+      withOwnClick: true,
+    });
+
+    buttonIn(container)?.click();
+    await nextTick();
+
+    expect(calls).toEqual(["responder", "own"]);
+
+    unmount();
+  });
+
+  it("passes keyboard and pointer activation to the supplied press", async () => {
+    // A trigger opens on the way down for a mouse but on release for touch, so it needs
+    // more than the click.
+    const onResponderKeydown = vi.fn();
+    const onResponderPointerdown = vi.fn();
+    const {container, unmount} = renderWithResponder({
+      onResponderKeydown,
+      onResponderPointerdown,
+    });
+    const button = buttonIn(container);
+
+    button?.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+    button?.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+    await nextTick();
+
+    expect(onResponderKeydown).toHaveBeenCalledOnce();
+    expect(onResponderPointerdown).toHaveBeenCalledOnce();
+
+    unmount();
+  });
+
+  it("looks pressed while the supplied press says it is", async () => {
+    const props = reactive({isPressed: false});
+    const {container, unmount} = renderWithResponder(props);
+
+    expect(buttonIn(container)).not.toHaveAttribute("data-pressed");
+
+    props.isPressed = true;
+    await nextTick();
+
+    expect(buttonIn(container)).toHaveAttribute("data-pressed", "true");
+
+    unmount();
+  });
+
+  it("stays an ordinary button when nothing supplies a press", async () => {
+    // Most close buttons have nobody above them, and the optional context must not change
+    // how those behave.
+    const onClick = vi.fn();
+    const {container, unmount} = renderCloseButton({onClick});
+
+    buttonIn(container)?.click();
+    await nextTick();
+
+    expect(onClick).toHaveBeenCalledOnce();
+
+    unmount();
   });
 });
