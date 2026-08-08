@@ -1,7 +1,11 @@
+import type {TableSortDescriptor} from "./table.types";
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
+import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
+import {Button} from "../button";
+import {Chip, ChipLabel} from "../chip";
 import {EmptyState} from "../empty-state";
 import {
   Pagination,
@@ -25,14 +29,29 @@ import {
   TableHeader,
   TableRow,
   TableScrollContainer,
+  TableSortableColumnHeader,
 } from "./index";
 
+import IconCopy from "~icons/gravity-ui/copy";
+import IconEye from "~icons/gravity-ui/eye";
+import IconPencil from "~icons/gravity-ui/pencil";
+import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconTray from "~icons/gravity-ui/tray";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.
 const components = {
+  Avatar: AvatarRoot,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  Chip,
+  ChipLabel,
   EmptyState,
+  IconCopy,
+  IconEye,
+  IconPencil,
+  IconTrashBin,
   IconTray,
   Pagination,
   PaginationContent,
@@ -52,6 +71,7 @@ const components = {
   TableHeader,
   TableRow,
   TableScrollContainer,
+  TableSortableColumnHeader,
 };
 
 const meta: Meta = {
@@ -238,6 +258,146 @@ const PAGINATION_FOOTER = `
     </Pagination>
   </TableFooter>
 `;
+
+const STATUS_COLOR: Record<string, "success" | "danger" | "warning"> = {
+  Active: "success",
+  Inactive: "danger",
+  "On Leave": "warning",
+};
+
+/** The shared state behind `Default` and `SecondaryVariant`: sorted, then paginated. */
+const useSortedUsers = () => {
+  const sortDescriptor = shallowRef<TableSortDescriptor>({column: "name", direction: "ascending"});
+
+  const sortedUsers = computed(() => {
+    const {column, direction} = sortDescriptor.value;
+
+    return [...users].sort((a, b) => {
+      const comparison = String(a[column as keyof User]).localeCompare(
+        String(b[column as keyof User]),
+      );
+
+      return direction === "descending" ? -comparison : comparison;
+    });
+  });
+
+  return {sortDescriptor, ...usePagination(() => sortedUsers.value)};
+};
+
+const DEFAULT_TEMPLATE = `
+  <div class="w-full max-w-4xl">
+    <Table :variant="variant">
+      <TableScrollContainer>
+        <TableContent
+          v-model:sort-descriptor="sortDescriptor"
+          aria-label="Custom cells"
+          class="min-w-[800px]"
+        >
+          <TableHeader>
+            <TableColumn
+              v-for="column of sortableColumns"
+              :id="column.id"
+              :key="column.id"
+              v-slot="{sortDirection}"
+              allows-sorting
+              :class="column.class"
+              :is-row-header="column.isRowHeader"
+            >
+              <TableSortableColumnHeader :sort-direction="sortDirection">
+                {{ column.name }}
+              </TableSortableColumnHeader>
+            </TableColumn>
+            <TableColumn class="text-end">Actions</TableColumn>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="user of paginatedItems" :id="user.id" :key="user.id">
+              <TableCell class="font-medium">
+                <div class="flex items-center gap-2">
+                  #{{ user.id }}
+                  <Button is-icon-only size="sm" variant="ghost">
+                    <IconCopy class="size-4 text-muted" />
+                  </Button>
+                </div>
+              </TableCell>
+              <TableCell>
+                <div class="flex items-center gap-3">
+                  <Avatar size="sm">
+                    <AvatarImage :src="user.image_url" />
+                    <AvatarFallback>{{ initials(user.name) }}</AvatarFallback>
+                  </Avatar>
+                  <div class="flex flex-col">
+                    <span class="text-xs">{{ user.name }}</span>
+                    <span class="text-xs text-muted">{{ user.email }}</span>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell class="min-w-52">{{ user.role }}</TableCell>
+              <TableCell class="min-w-25">
+                <Chip :color="statusColor[user.status]" size="sm" variant="soft">
+                  <ChipLabel>{{ user.status }}</ChipLabel>
+                </Chip>
+              </TableCell>
+              <TableCell>
+                <div class="flex items-center gap-1">
+                  <Button is-icon-only size="sm" variant="tertiary">
+                    <IconEye class="size-4" />
+                  </Button>
+                  <Button is-icon-only size="sm" variant="tertiary">
+                    <IconPencil class="size-4" />
+                  </Button>
+                  <Button is-icon-only size="sm" variant="danger-soft">
+                    <IconTrashBin class="size-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </TableContent>
+      </TableScrollContainer>
+      ${PAGINATION_FOOTER}
+    </Table>
+  </div>
+`;
+
+const SORTABLE_COLUMNS = [
+  {class: "after:hidden", id: "id", isRowHeader: true, name: "Worker ID"},
+  {id: "name", name: "Member"},
+  {id: "role", name: "Role"},
+  {id: "status", name: "Status"},
+];
+
+const defaultSetup = (variant: "primary" | "secondary") => () => ({
+  initials: (name: string) =>
+    name
+      .split(" ")
+      .map((part) => part[0])
+      .join(""),
+  sortableColumns: SORTABLE_COLUMNS,
+  statusColor: STATUS_COLOR,
+  variant,
+  ...useSortedUsers(),
+});
+
+/** Custom cells — avatars, chips, action buttons — over sortable columns. */
+export const Default: Story = {
+  args: {
+    variant: "primary",
+  },
+  render: (args) => ({
+    components,
+    setup: defaultSetup((args["variant"] as "primary" | "secondary") ?? "primary"),
+    template: DEFAULT_TEMPLATE,
+  }),
+};
+
+/** The same content as `Default`, with the secondary styling. */
+export const SecondaryVariant: Story = {
+  render: () => ({
+    components,
+    setup: defaultSetup("secondary"),
+    template: DEFAULT_TEMPLATE,
+  }),
+};
 
 /**
  * Rows and cells come from a `v-for` over the caller's data — Vue's answer to React Aria's
