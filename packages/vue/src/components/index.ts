@@ -19,6 +19,7 @@ export * from "./form";
 export * from "./header";
 export * from "./icons";
 export * from "./input";
+export * from "./input-group";
 export * from "./kbd";
 export * from "./label";
 export * from "./list-box";
