@@ -10,11 +10,17 @@ import AvatarFixture from "./fixtures.vue";
 class FakeImage {
   static instances: FakeImage[] = [];
 
+  /** Sources the browser is pretending to hold already, so `complete` is true on assignment. */
+  static cached = new Set<string>();
+
+  complete = false;
+  naturalWidth = 0;
   crossOrigin: string | null = null;
   referrerPolicy = "";
-  src = "";
   onload: (() => void) | null = null;
   onerror: (() => void) | null = null;
+
+  #src = "";
 
   constructor() {
     FakeImage.instances.push(this);
@@ -23,10 +29,24 @@ class FakeImage {
   static get last() {
     return FakeImage.instances.at(-1);
   }
+
+  get src() {
+    return this.#src;
+  }
+
+  set src(value: string) {
+    this.#src = value;
+
+    if (FakeImage.cached.has(value)) {
+      this.complete = true;
+      this.naturalWidth = 1;
+    }
+  }
 }
 
 beforeEach(() => {
   FakeImage.instances = [];
+  FakeImage.cached.clear();
   window.Image = FakeImage as unknown as typeof window.Image;
 });
 
@@ -101,6 +121,95 @@ describe("Avatar", () => {
       await nextTick();
 
       expect(imageIn(container)?.classList.contains("avatar__image")).toBe(true);
+
+      unmount();
+    });
+  });
+
+  /**
+   * The probe's verdict and the element's own events are two channels on purpose. The probe
+   * is the only one that speaks before the `<img>` exists, so it is the only one that can
+   * report a failure; the element's events are the only ones that describe the real DOM.
+   */
+  describe("loading status", () => {
+    it("calls loadingStatusChange as the image resolves", async () => {
+      const onLoadingStatusChange = vi.fn();
+      const {unmount} = renderVapor(AvatarFixture, {
+        props: {onLoadingStatusChange, src: "/jane.png"},
+      });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      expect(onLoadingStatusChange.mock.calls.map(([status]) => status)).toEqual([
+        "loading",
+        "loaded",
+      ]);
+
+      unmount();
+    });
+
+    it("calls loadingStatusChange with error when there is no src", () => {
+      const onLoadingStatusChange = vi.fn();
+      const {unmount} = renderVapor(AvatarFixture, {props: {onLoadingStatusChange}});
+
+      expect(onLoadingStatusChange).toHaveBeenCalledWith("error");
+
+      unmount();
+    });
+
+    it("does not call error when there is no src", () => {
+      const onError = vi.fn();
+      const {unmount} = renderVapor(AvatarFixture, {props: {onError}});
+
+      // There is no `<img>` to fail, so nothing failed.
+      expect(onError).not.toHaveBeenCalled();
+
+      unmount();
+    });
+
+    it("never reports idle", async () => {
+      const onLoadingStatusChange = vi.fn();
+      const {unmount} = renderVapor(AvatarFixture, {
+        props: {onLoadingStatusChange, src: "/jane.png"},
+      });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      expect(onLoadingStatusChange).not.toHaveBeenCalledWith("idle");
+
+      unmount();
+    });
+
+    it("calls load from the rendered image", async () => {
+      const onLoad = vi.fn();
+      const {container, unmount} = renderVapor(AvatarFixture, {
+        props: {onLoad, src: "/jane.png"},
+      });
+
+      FakeImage.last?.onload?.();
+      await nextTick();
+
+      const image = imageIn(container)!;
+
+      image.dispatchEvent(new Event("load"));
+
+      expect(onLoad).toHaveBeenCalledTimes(1);
+      expect(onLoad.mock.calls[0]![0].target).toBe(image);
+
+      unmount();
+    });
+
+    // The fixture puts the image before the fallback, which is what lets the fallback read an
+    // already-loaded status the moment it is created.
+    it("renders a cached image without showing the fallback first", () => {
+      FakeImage.cached.add("/jane.png");
+
+      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+
+      expect(imageIn(container)).not.toBeNull();
+      expect(fallbackIn(container)).toBeNull();
 
       unmount();
     });

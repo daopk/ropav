@@ -27,6 +27,13 @@ export type {
 } from "./avatar.types";
 
 /* -------------------------------------------------------------------------------------------------
+ * Loading Status
+ * -----------------------------------------------------------------------------------------------*/
+// Re-exported so a caller can type a `loadingStatusChange` handler without reaching for the
+// composable the status comes from.
+export type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
+
+/* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
 export {avatarVariants} from "@heroui/styles";

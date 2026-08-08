@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type {AvatarImageProps} from "./avatar.types";
+import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
 
 import {watch} from "vue";
 
@@ -10,7 +11,17 @@ import {useAvatarContext} from "./avatar.context";
 
 const props = defineProps<AvatarImageProps>();
 
-const emit = defineEmits<{error: []; load: []}>();
+/**
+ * `load` and `error` come from the rendered `<img>`, so they carry a real event and cannot
+ * fire when there is no element to fire them — a missing `src` reports nothing. The probe's
+ * verdict is a separate channel, because it is the only one that speaks before the element
+ * exists, and so the only one that can report a failure at all.
+ */
+const emit = defineEmits<{
+  error: [event: Event];
+  load: [event: Event];
+  loadingStatusChange: [status: ImageLoadingStatus];
+}>();
 
 const {setImageStatus, slots} = useAvatarContext();
 
@@ -22,12 +33,16 @@ const status = useImageLoadingStatus(() => props.src, {
 watch(
   status,
   (value) => {
+    // "idle" means the probe never ran because there is no DOM. That is not a verdict about
+    // the image, so nobody hears about it.
+    if (value === "idle") return;
+
     // Publish upwards so the fallback renders until the image is actually usable.
     setImageStatus(value);
-
-    if (value === "loaded") emit("load");
-    if (value === "error") emit("error");
+    emit("loadingStatusChange", value);
   },
+  // A cached image resolves synchronously, so without this the one status that matters most
+  // would be the one nobody is told about.
   {immediate: true},
 );
 </script>
@@ -43,5 +58,7 @@ watch(
     :sizes="props.sizes"
     :src="props.src"
     :srcset="props.srcset"
+    @error="emit('error', $event)"
+    @load="emit('load', $event)"
   />
 </template>
