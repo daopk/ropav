@@ -3,6 +3,7 @@ import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
 import SwitchFixture from "./fixtures.vue";
+import SwitchFormFixture from "./form-fixtures.vue";
 
 const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, {props});
 
@@ -411,6 +412,261 @@ describe("Switch", () => {
 
       unmount();
       form.remove();
+    });
+  });
+});
+
+describe("Switch validation", () => {
+  const renderInForm = (props: Record<string, unknown> = {}) => {
+    const rendered = renderVapor(SwitchFormFixture, {props});
+    const at = (testId: string) =>
+      rendered.container.querySelector<HTMLElement>(`[data-testid='${testId}']`)!;
+    const error = () => rendered.container.querySelector<HTMLElement>("[data-slot='field-error']");
+
+    return {...rendered, at, error};
+  };
+
+  /** Press submit with the form's own navigation suppressed. */
+  const submit = (container: HTMLElement) => {
+    const form = container.querySelector("form")!;
+    const onSubmit = (event: Event) => event.preventDefault();
+
+    form.addEventListener("submit", onSubmit);
+    container.querySelector<HTMLButtonElement>("[data-testid='submit']")!.click();
+
+    return () => form.removeEventListener("submit", onSubmit);
+  };
+
+  describe("prop-driven", () => {
+    it("shows a field error as soon as the caller says the value is invalid", async () => {
+      const {container, unmount} = renderSwitch({isInvalid: true, withFieldError: true});
+
+      await nextTick();
+
+      expect(container.querySelector("[data-slot='field-error']")).not.toBeNull();
+
+      unmount();
+    });
+
+    it("leaves the switch alone when no claim is made either way", async () => {
+      const {container, unmount} = renderSwitch({withFieldError: true});
+
+      await nextTick();
+
+      expect(slot(container, "switch").getAttribute("data-invalid")).toBeNull();
+      expect(container.querySelector("[data-slot='field-error']")).toBeNull();
+
+      unmount();
+    });
+  });
+
+  describe("validate", () => {
+    it("keeps the message back until the switch commits", async () => {
+      const {container, unmount} = renderSwitch({
+        validate: (isSelected: boolean) => (isSelected ? true : "must be on"),
+        withFieldError: true,
+      });
+
+      await nextTick();
+
+      // The browser already knows — that is what blocks the submit — but the user does not.
+      expect(inputIn(container).validity.customError).toBe(true);
+      expect(container.querySelector("[data-slot='field-error']")).toBeNull();
+
+      unmount();
+    });
+
+    it("shows the message at once under aria behaviour", async () => {
+      const {container, unmount} = renderSwitch({
+        validate: () => "not acceptable",
+        validationBehavior: "aria",
+        withFieldError: true,
+      });
+
+      await nextTick();
+
+      expect(container.querySelector("[data-slot='field-error']")?.textContent).toContain(
+        "not acceptable",
+      );
+
+      unmount();
+    });
+
+    it("describes the switch with the message it shows", async () => {
+      const {container, unmount} = renderSwitch({
+        validate: () => "not acceptable",
+        validationBehavior: "aria",
+        withFieldError: true,
+      });
+
+      await nextTick();
+      await nextTick();
+
+      const error = container.querySelector("[data-slot='field-error']")!;
+
+      expect(inputIn(container).getAttribute("aria-describedby")).toBe(error.id);
+
+      unmount();
+    });
+
+    it("clears the message once the value becomes acceptable", async () => {
+      const {container, unmount} = renderSwitch({
+        validate: (isSelected: boolean) => (isSelected ? true : "must be on"),
+        validationBehavior: "aria",
+        withFieldError: true,
+      });
+
+      await nextTick();
+      expect(container.querySelector("[data-slot='field-error']")).not.toBeNull();
+
+      await clickAndSettle(slot(container, "switch-content"));
+      await nextTick();
+
+      expect(container.querySelector("[data-slot='field-error']")).toBeNull();
+
+      unmount();
+    });
+
+    it("lets the caller word the message from what validation reported", async () => {
+      const {container, unmount} = renderSwitch({
+        validate: () => ["too soon", "and wrong"],
+        validationBehavior: "aria",
+        withCustomError: true,
+      });
+
+      await nextTick();
+
+      expect(container.querySelector("[data-testid='custom-error']")?.textContent).toBe(
+        "2 problem(s)",
+      );
+
+      unmount();
+    });
+  });
+
+  describe("required", () => {
+    it("asks the browser to enforce it under native behaviour", () => {
+      const {container, unmount} = renderSwitch({isRequired: true});
+
+      expect(inputIn(container).required).toBe(true);
+      expect(inputIn(container).getAttribute("aria-required")).toBeNull();
+
+      unmount();
+    });
+
+    it("announces it instead under aria behaviour", () => {
+      const {container, unmount} = renderSwitch({
+        isRequired: true,
+        validationBehavior: "aria",
+      });
+
+      expect(inputIn(container).required).toBe(false);
+      expect(inputIn(container).getAttribute("aria-required")).toBe("true");
+
+      unmount();
+    });
+  });
+
+  describe("inside a form", () => {
+    it("blocks the submit while the value is not acceptable", async () => {
+      const onSubmit = vi.fn((event: Event) => event.preventDefault());
+      const {container, unmount} = renderInForm({validate: () => "no"});
+
+      await nextTick();
+      container.querySelector("form")!.addEventListener("submit", onSubmit);
+      container.querySelector<HTMLButtonElement>("[data-testid='submit']")!.click();
+
+      expect(onSubmit).not.toHaveBeenCalled();
+
+      unmount();
+    });
+
+    it("reveals the message on a failed submit", async () => {
+      const {container, error, unmount} = renderInForm({
+        validate: () => "must be on",
+        withFieldError: true,
+      });
+
+      await nextTick();
+      expect(error()).toBeNull();
+
+      const release = submit(container);
+
+      await nextTick();
+      await nextTick();
+
+      expect(error()?.textContent).toContain("must be on");
+
+      release();
+      unmount();
+    });
+
+    it("takes its validation behaviour from the form", async () => {
+      const {error, unmount} = renderInForm({
+        validate: () => "shown at once",
+        validationBehavior: "aria",
+        withFieldError: true,
+      });
+
+      await nextTick();
+
+      expect(error()?.textContent).toContain("shown at once");
+
+      unmount();
+    });
+
+    it("shows a server error registered under its name", async () => {
+      const {error, unmount} = renderInForm({
+        name: "notifications",
+        validationErrors: {notifications: "rejected upstream"},
+        withFieldError: true,
+      });
+
+      await nextTick();
+
+      expect(error()?.textContent).toContain("rejected upstream");
+
+      unmount();
+    });
+
+    it("hides the server error once the user acts on the switch", async () => {
+      const {container, error, unmount} = renderInForm({
+        name: "notifications",
+        validationErrors: {notifications: "rejected upstream"},
+        withFieldError: true,
+      });
+
+      await nextTick();
+      expect(error()).not.toBeNull();
+
+      await clickAndSettle(slot(container, "switch-content"));
+      await nextTick();
+
+      expect(error()).toBeNull();
+
+      unmount();
+    });
+
+    it("clears a revealed message when the form is reset", async () => {
+      const {container, error, unmount} = renderInForm({
+        validate: () => "must be on",
+        withFieldError: true,
+      });
+
+      await nextTick();
+      const release = submit(container);
+
+      await nextTick();
+      await nextTick();
+      expect(error()).not.toBeNull();
+
+      container.querySelector("form")!.reset();
+      await nextTick();
+
+      expect(error()).toBeNull();
+
+      release();
+      unmount();
     });
   });
 });
