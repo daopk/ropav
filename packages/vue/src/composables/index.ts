@@ -11,6 +11,7 @@ export * from "./use-focus-scope";
 export * from "./use-form-reset";
 export * from "./use-form-validation";
 export * from "./use-form-validation-state";
+export * from "./use-formatted-text-field";
 export * from "./use-id";
 export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
