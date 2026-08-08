@@ -609,6 +609,16 @@ describe("Dropdown", () => {
   });
 
   describe("the trigger", () => {
+    // Written even though a native button is already tabbable: Safari does not focus one unless
+    // an explicit tab index says so, which is why react-aria always sets it.
+    it("renders an explicit tab index", () => {
+      const result = render();
+
+      expect(result.getByRole("button", {name: "Menu"})).toHaveAttribute("tabindex", "0");
+
+      result.unmount();
+    });
+
     it("looks pressed for as long as its menu is open", async () => {
       const result = render();
       const trigger = result.getByRole("button", {name: "Menu"});
