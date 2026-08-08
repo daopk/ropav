@@ -7,11 +7,20 @@ import {useImageLoadingStatus} from "@/composables/use-image-loading-status";
 class FakeImage {
   static instances: FakeImage[] = [];
 
+  /** Sources the browser is pretending to hold already, so `complete` is true on assignment. */
+  static cached = new Set<string>();
+
+  complete = false;
+  naturalWidth = 0;
   crossOrigin: string | null = null;
   referrerPolicy = "";
-  src = "";
   onload: (() => void) | null = null;
   onerror: (() => void) | null = null;
+
+  /** What `crossOrigin` was at the moment the request started, so the ordering is provable. */
+  crossOriginAtRequest: string | null = null;
+
+  #src = "";
 
   constructor() {
     FakeImage.instances.push(this);
@@ -19,6 +28,20 @@ class FakeImage {
 
   static get last() {
     return FakeImage.instances.at(-1);
+  }
+
+  get src() {
+    return this.#src;
+  }
+
+  set src(value: string) {
+    this.#src = value;
+    this.crossOriginAtRequest = this.crossOrigin;
+
+    if (FakeImage.cached.has(value)) {
+      this.complete = true;
+      this.naturalWidth = 1;
+    }
   }
 }
 
@@ -31,6 +54,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
 
 beforeEach(() => {
   FakeImage.instances = [];
+  FakeImage.cached.clear();
   window.Image = FakeImage as unknown as typeof window.Image;
 });
 
@@ -72,6 +96,18 @@ describe("useImageLoadingStatus", () => {
     dispose();
   });
 
+  // The whole point of probing rather than rendering and hoping: a src the browser already
+  // holds is usable now, so nothing should ever ask for a fallback. No tick, on purpose.
+  it("reports loaded without waiting when the image is already cached", () => {
+    FakeImage.cached.add("/cached.png");
+
+    const [status, dispose] = withScope(() => useImageLoadingStatus("/cached.png"));
+
+    expect(status.value).toBe("loaded");
+
+    dispose();
+  });
+
   it("forwards crossOrigin and referrerPolicy to the probe image", () => {
     const [, dispose] = withScope(() =>
       useImageLoadingStatus("/avatar.png", {
@@ -86,33 +122,76 @@ describe("useImageLoadingStatus", () => {
     dispose();
   });
 
-  it("restarts the probe when the src changes", async () => {
+  it("applies crossOrigin before it starts the request", () => {
+    const [, dispose] = withScope(() =>
+      useImageLoadingStatus("/avatar.png", {crossOrigin: "anonymous"}),
+    );
+
+    // Set afterwards, the attribute would apply to a request already in flight.
+    expect(FakeImage.last?.crossOriginAtRequest).toBe("anonymous");
+
+    dispose();
+  });
+
+  it("points the same probe at a new src", async () => {
     const src = shallowRef<string | undefined>("/first.png");
     const [status, dispose] = withScope(() => useImageLoadingStatus(src));
 
     src.value = "/second.png";
     await nextTick();
 
-    expect(FakeImage.instances).toHaveLength(2);
+    // One probe for the scope: assigning a new src is what aborts the previous request.
+    expect(FakeImage.instances).toHaveLength(1);
     expect(FakeImage.last?.src).toBe("/second.png");
     expect(status.value).toBe("loading");
 
     dispose();
   });
 
-  it("ignores a resolution from a stale probe", async () => {
+  it("keeps the probe when the src round-trips back", async () => {
+    const src = shallowRef<string | undefined>("/first.png");
+    const [, dispose] = withScope(() => useImageLoadingStatus(src));
+
+    src.value = undefined;
+    await nextTick();
+    src.value = "/first.png";
+    await nextTick();
+
+    // The request was never aborted, so there is nothing to start again.
+    expect(FakeImage.instances).toHaveLength(1);
+    expect(FakeImage.last?.src).toBe("/first.png");
+
+    dispose();
+  });
+
+  it("ignores a resolution for a src it no longer wants", async () => {
     const src = shallowRef<string | undefined>("/first.png");
     const [status, dispose] = withScope(() => useImageLoadingStatus(src));
 
-    const stale = FakeImage.last;
-
+    // The window this closes: props have moved on but the watcher has not flushed yet, so
+    // the probe is still pointed at the old src when its resolution arrives.
     src.value = "/second.png";
-    await nextTick();
-
-    stale?.onload?.();
+    FakeImage.last?.onload?.();
 
     expect(status.value).toBe("loading");
 
+    await nextTick();
+
+    expect(FakeImage.last?.src).toBe("/second.png");
+    expect(status.value).toBe("loading");
+
     dispose();
+  });
+
+  it("stops reporting once the scope is disposed", () => {
+    const [status, dispose] = withScope(() => useImageLoadingStatus("/avatar.png"));
+
+    // Captured before disposing, so what is proven is the guard rather than the detach.
+    const load = FakeImage.last!.onload!;
+
+    dispose();
+    load();
+
+    expect(status.value).toBe("loading");
   });
 });
