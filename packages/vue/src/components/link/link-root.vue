@@ -7,6 +7,7 @@ import {computed} from "vue";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {usePress} from "../../composables/use-press";
 import {dataAttr} from "../../utils/assertion";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 
 import {provideLinkContext} from "./link.context";
 
@@ -14,7 +15,9 @@ const props = withDefaults(defineProps<LinkRootProps>(), {isDisabled: undefined}
 
 defineSlots<{default?: (props: LinkRootSlotProps) => unknown}>();
 
-const resolvedIsDisabled = computed(() => Boolean(props.isDisabled));
+const fieldset = useFieldsetContext();
+
+const resolvedIsDisabled = computed(() => Boolean(props.isDisabled ?? fieldset?.isDisabled.value));
 
 const slots = computed(() => linkVariants());
 

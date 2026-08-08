@@ -9,6 +9,7 @@ import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {announce} from "../../utils/live-announcer";
 import {useButtonGroupContext} from "../button-group/button-group.context";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 
 // The boolean props declare an explicit `undefined` default so an absent prop stays
 // absent: Vue otherwise casts a missing boolean to `false`, which reads as "the caller
@@ -27,6 +28,7 @@ defineSlots<{default?: (props: ButtonSlotProps) => unknown}>();
 // can still override for itself. `isIconOnly` is deliberately left out: it describes the
 // content of one button rather than the shape of the group.
 const group = useButtonGroupContext();
+const fieldset = useFieldsetContext();
 
 // Something above may be driving this button — a dropdown makes its first child the trigger —
 // in which case it supplies the ARIA wiring and the press behaviour, and the button stays an
@@ -40,7 +42,9 @@ const setElement = (element: unknown) => {
 // Named apart from the props they resolve: a binding that shadows a prop name is read as
 // the prop inside the template, which would silently drop the value coming from the group.
 const resolvedFullWidth = computed(() => props.fullWidth ?? group?.fullWidth.value);
-const resolvedIsDisabled = computed(() => props.isDisabled ?? group?.isDisabled.value);
+const resolvedIsDisabled = computed(
+  () => props.isDisabled ?? group?.isDisabled.value ?? fieldset?.isDisabled.value,
+);
 const resolvedSize = computed(() => props.size ?? group?.size.value);
 const resolvedVariant = computed(() => props.variant ?? group?.variant.value);
 

@@ -8,6 +8,7 @@ import {computed, shallowRef} from "vue";
 import {useToggleGroupState} from "../../composables/use-toggle-group-state";
 import {useToolbar} from "../../composables/use-toolbar";
 import {dataAttr} from "../../utils/assertion";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 import {useToolbarContext} from "../toolbar/toolbar.context";
 
 import {provideToggleButtonGroupContext} from "./toggle-button-group.context";
@@ -17,6 +18,7 @@ import {provideToggleButtonGroupContext} from "./toggle-button-group.context";
 // `"horizontal"`, and a group inside a vertical toolbar could never inherit it.
 const props = withDefaults(defineProps<ToggleButtonGroupRootProps>(), {
   isDetached: false,
+  isDisabled: undefined,
   orientation: undefined,
   selectionMode: "single",
 });
@@ -28,10 +30,13 @@ defineSlots<{default?: () => unknown}>();
 const element = shallowRef<HTMLElement | null>(null);
 
 const toolbarContext = useToolbarContext();
+const fieldset = useFieldsetContext();
 
 const resolvedOrientation = computed(
   () => props.orientation ?? toolbarContext?.orientation.value ?? "horizontal",
 );
+
+const resolvedIsDisabled = computed(() => props.isDisabled ?? fieldset?.isDisabled.value);
 
 const slots = computed(() =>
   toggleButtonGroupVariants({
@@ -44,7 +49,7 @@ const slots = computed(() =>
 const state = useToggleGroupState({
   defaultSelectedKeys: props.defaultSelectedKeys,
   disallowEmptySelection: () => props.disallowEmptySelection,
-  isDisabled: () => props.isDisabled,
+  isDisabled: () => resolvedIsDisabled.value,
   onSelectionChange: (keys) => emit("selectionChange", keys),
   selectedKeys: () => props.selectedKeys,
   selectionMode: () => props.selectionMode,
@@ -72,10 +77,10 @@ provideToggleButtonGroupContext({
 <template>
   <div
     ref="element"
-    :aria-disabled="props.isDisabled || undefined"
+    :aria-disabled="resolvedIsDisabled || undefined"
     :aria-orientation="resolvedOrientation"
     :class="slots.base({class: props.class})"
-    :data-disabled="dataAttr(props.isDisabled)"
+    :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-orientation="resolvedOrientation"
     data-slot="toggle-button-group"
     :role="role"

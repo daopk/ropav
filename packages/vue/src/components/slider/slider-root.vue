@@ -9,10 +9,17 @@ import {useId} from "../../composables/use-id";
 import {useSlider} from "../../composables/use-slider";
 import {useSliderState} from "../../composables/use-slider-state";
 import {dataAttr} from "../../utils/assertion";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 
 import {provideSliderContext} from "./slider.context";
 
-const props = defineProps<SliderRootProps>();
+const props = withDefaults(defineProps<SliderRootProps>(), {isDisabled: undefined});
+
+const fieldset = useFieldsetContext();
+
+// The slider renders as a `<div>`, which `<fieldset disabled>` does not reach, so the state has
+// to be told outright.
+const fieldsetIsDisabled = computed(() => props.isDisabled ?? fieldset?.isDisabled.value);
 
 const emit = defineEmits<{
   change: [value: number | number[]];
@@ -30,7 +37,7 @@ const numberFormatter = computed(() => new Intl.NumberFormat(undefined, props.fo
 
 const state = useSliderState({
   defaultValue: () => props.defaultValue,
-  isDisabled: () => props.isDisabled,
+  isDisabled: () => fieldsetIsDisabled.value,
   maxValue: () => props.maxValue,
   minValue: () => props.minValue,
   numberFormatter,

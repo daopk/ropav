@@ -8,13 +8,23 @@ import {useCheckboxGroupState} from "../../composables/use-checkbox-group-state"
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
 import {dataAttr} from "../../utils/assertion";
 import {provideFieldErrorContext} from "../field-error";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 
 import {provideCheckboxGroupContext} from "./checkbox-group.context";
 
 // `isInvalid` declares an explicit `undefined` default because it is a three-state prop:
 // absent means "no claim", while `false` is a standing claim that the group is valid, which
 // would shadow `validate`, the browser's verdict and any server error alike.
-const props = withDefaults(defineProps<CheckboxGroupRootProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<CheckboxGroupRootProps>(), {
+  isDisabled: undefined,
+  isInvalid: undefined,
+});
+
+const fieldset = useFieldsetContext();
+
+// The group renders as a `<div>`, which `<fieldset disabled>` does not reach, so the state has
+// to be told outright.
+const fieldsetIsDisabled = computed(() => props.isDisabled ?? fieldset?.isDisabled.value);
 
 const emit = defineEmits<{
   change: [value: string[]];
@@ -25,7 +35,7 @@ defineSlots<{default?: (props: CheckboxGroupSlotProps) => unknown}>();
 
 const state = useCheckboxGroupState({
   defaultValue: () => props.defaultValue,
-  isDisabled: () => props.isDisabled,
+  isDisabled: () => fieldsetIsDisabled.value,
   isInvalid: () => props.isInvalid,
   isReadOnly: () => props.isReadOnly,
   isRequired: () => props.isRequired,
@@ -90,7 +100,7 @@ provideCheckboxGroupContext({
   variant: computed(() => props.variant),
 });
 
-const resolvedIsDisabled = computed(() => Boolean(props.isDisabled));
+const resolvedIsDisabled = computed(() => state.isDisabled.value);
 const resolvedIsRequired = computed(() => Boolean(props.isRequired));
 </script>
 

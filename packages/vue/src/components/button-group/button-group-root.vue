@@ -12,7 +12,13 @@ import {provideButtonGroupContext} from "./button-group.context";
 // `orientation` declares an explicit `undefined` default so an absent prop stays absent and
 // can fall through to the toolbar's axis. Vue would otherwise read "no prop" as an explicit
 // `"horizontal"`, and a group inside a vertical toolbar could never inherit it.
-const props = withDefaults(defineProps<ButtonGroupRootProps>(), {orientation: undefined});
+const props = withDefaults(defineProps<ButtonGroupRootProps>(), {
+  // `isDisabled` declares an explicit `undefined` default so an absent prop stays absent: a
+  // cast `false` would read as the group claiming its buttons are enabled, and a button could
+  // never fall through to a disabled fieldset above.
+  isDisabled: undefined,
+  orientation: undefined,
+});
 
 defineSlots<{default?: () => unknown}>();
 

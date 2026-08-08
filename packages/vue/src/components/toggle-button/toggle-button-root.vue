@@ -7,6 +7,7 @@ import {computed} from "vue";
 import {useControllableState} from "../../composables/use-controllable-state";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
+import {useFieldsetContext} from "../fieldset/fieldset.context";
 import {useToggleButtonGroupContext} from "../toggle-button-group/toggle-button-group.context";
 
 // These booleans declare an explicit `undefined` default so an absent prop stays absent:
@@ -28,6 +29,7 @@ const emit = defineEmits<{
 defineSlots<{default?: (props: ToggleButtonSlotProps) => unknown}>();
 
 const group = useToggleButtonGroupContext();
+const fieldset = useFieldsetContext();
 
 // Standalone selection state. Inside a group this is left untouched — the group's keyed
 // state is the single source of truth, so two buttons can never both think they are on.
@@ -45,7 +47,10 @@ const isSelected = computed(() =>
 // the prop inside the template, which would silently drop the value coming from the group.
 const resolvedSize = computed(() => props.size ?? group?.size.value);
 const resolvedIsDisabled = computed(
-  () => props.isDisabled ?? (group ? group.state.isDisabled.value : undefined),
+  () =>
+    props.isDisabled ??
+    (group ? group.state.isDisabled.value : undefined) ??
+    fieldset?.isDisabled.value,
 );
 
 const styles = computed(() =>
