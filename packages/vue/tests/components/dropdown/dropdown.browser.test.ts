@@ -537,6 +537,43 @@ describe("Dropdown (browser)", () => {
 
       result.unmount();
     });
+
+    it("clears a path across the menu for a pointer aimed at the submenu", async () => {
+      const result = render({withSubmenu: true});
+
+      place(result);
+      await open(result);
+
+      const {trigger} = await openSubmenu(result);
+      const menu = result.screen.getAllByRole("menu")[0]!;
+      const triggerRect = trigger.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+
+      // A diagonal aimed at the submenu, which opens level with the trigger and hangs below it.
+      // Kept inside the menu, because that is the stretch where the items would otherwise take the
+      // pointer; a pointer already past the menu's edge has nothing left to cross.
+      const from = {x: triggerRect.left + 8, y: triggerRect.top + 2};
+      const to = {x: menuRect.right - 2, y: menuRect.bottom - 2};
+
+      for (let step = 0; step <= 3; step++) {
+        window.dispatchEvent(
+          new PointerEvent("pointermove", {
+            ...POINTER,
+            clientX: from.x + ((to.x - from.x) * step) / 3,
+            clientY: from.y + ((to.y - from.y) * step) / 3,
+          }),
+        );
+
+        // Pointer moves are throttled, so the steps have to be further apart than that to count.
+        await new Promise((resolve) => setTimeout(resolve, 60));
+      }
+
+      // The corridor is only read from a real layout: measured before the popover is placed it
+      // would point at the corner of the viewport, and the menu would keep taking the pointer.
+      expect(menu.style.pointerEvents).toBe("none");
+
+      result.unmount();
+    });
   });
 
   describe("accessibility", () => {

@@ -44,7 +44,6 @@ export interface UseSafelyMouseToSubmenuProps {
  */
 export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): void => {
   let previousPointer: {x: number; y: number} | undefined;
-  let submenuRect: DOMRect | undefined;
   let submenuSide: "left" | "right" | undefined;
   let lastProcessedAt = 0;
   let stillTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -97,7 +96,6 @@ export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): vo
 
       if (!isOpen || isDisabled || !menu || !submenu) return;
 
-      submenuRect = submenu.getBoundingClientRect();
       submenuSide = undefined;
 
       const onPointermove = (event: PointerEvent) => {
@@ -118,7 +116,12 @@ export const useSafelyMouseToSubmenu = (props: UseSafelyMouseToSubmenuProps): vo
           return;
         }
 
-        if (!submenuRect) return;
+        // Measured now rather than when the submenu opened: the popover is laid out before it is
+        // placed, so a rectangle taken at that moment is the one it had at the document's origin,
+        // and the corridor would then point at the corner of the viewport. Measuring here also
+        // survives the popover being moved afterwards — flipped to the other side, or shifted to
+        // stay on screen.
+        const submenuRect = submenu.getBoundingClientRect();
 
         // Which way the submenu opened. Fixed on first use, so a pointer crossing over the
         // submenu's own edge does not flip the corridor mid-journey.
