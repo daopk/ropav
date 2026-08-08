@@ -31,6 +31,7 @@ export * from "./menu";
 export * from "./menu-item";
 export * from "./menu-section";
 export * from "./number-field";
+export * from "./pagination";
 export * from "./radio";
 export * from "./radio-group";
 export * from "./search-field";
