@@ -208,6 +208,46 @@ describe("NumberField", () => {
     });
   });
 
+  describe("tab order", () => {
+    // Written even though a native input is already tabbable: Safari does not focus one unless
+    // an explicit tab index says so, which is why react-aria always sets it — the chain here is
+    // `useNumberField` → `useFormattedTextField` → `useTextField` → `useFocusable`.
+    it("renders an explicit tab index on the input", () => {
+      const {input, unmount} = renderNumberField();
+
+      expect(input()).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    it("drops the tab index when disabled, so it is not reachable at all", () => {
+      const {input, unmount} = renderNumberField({isDisabled: true});
+
+      expect(input().hasAttribute("tabindex")).toBe(false);
+
+      unmount();
+    });
+
+    // Read-only is not a factor: only a disabled field leaves the tab order.
+    it("keeps the tab index when read only", () => {
+      const {input, unmount} = renderNumberField({isReadOnly: true});
+
+      expect(input()).toHaveAttribute("tabindex", "0");
+
+      unmount();
+    });
+
+    // The steppers are reached through the field itself, so they stay out of the order.
+    it("keeps both steppers out of the tab order", () => {
+      const {decrement, increment, unmount} = renderNumberField();
+
+      expect(increment()).toHaveAttribute("tabindex", "-1");
+      expect(decrement()).toHaveAttribute("tabindex", "-1");
+
+      unmount();
+    });
+  });
+
   describe("submitting", () => {
     it("submits the number, not the formatted text", () => {
       // The visible input carries a currency symbol and grouping separators, which is not what a
