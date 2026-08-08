@@ -4,6 +4,7 @@ import type {ChipRootProps} from "./chip.types";
 import {chipVariants} from "@heroui/styles";
 import {computed} from "vue";
 
+import ChipAutoLabel from "./chip-auto-label";
 import ChipLabel from "./chip-label.vue";
 import {provideChipContext} from "./chip.context";
 
@@ -20,12 +21,10 @@ provideChipContext({slots});
 
 <template>
   <span :class="slots.base({class: props.class})" data-slot="chip">
-    <!--
-      Slot fallback, not a check on the slot's contents: reading a slot in Vapor renders
-      it, so the `label` shorthand is expressed as what renders when nothing is passed.
-    -->
-    <slot>
-      <ChipLabel>{{ props.label }}</ChipLabel>
-    </slot>
+    <ChipAutoLabel>
+      <slot>
+        <ChipLabel>{{ props.label }}</ChipLabel>
+      </slot>
+    </ChipAutoLabel>
   </span>
 </template>
