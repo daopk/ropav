@@ -24,7 +24,7 @@ import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";
 
-export interface ListOptions<T> {
+export interface UseListDataOptions<T> {
   /** Initial items in the list. */
   initialItems?: T[];
   /** The keys for the initially selected items. */
@@ -126,7 +126,7 @@ const moveItems = <T>(state: ListState<T>, indices: number[], toIndex: number): 
  * Items and filter text are kept together so the unfiltered list is never lost: filtering is a
  * view over `items`, not a destructive edit.
  */
-export const useListData = <T>(options: ListOptions<T> = {}): ListData<T> => {
+export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T> => {
   const {
     filter,
     getKey = (item: any) => item.id ?? item.key,

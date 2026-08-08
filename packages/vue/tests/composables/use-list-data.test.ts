@@ -1,4 +1,4 @@
-import type {ListData, ListOptions} from "@/composables/use-list-data";
+import type {ListData, UseListDataOptions} from "@/composables/use-list-data";
 
 import {afterEach, describe, expect, it} from "vitest";
 import {effectScope} from "vue";
@@ -19,7 +19,7 @@ const ITEMS: Item[] = [
   {id: "4", name: "Shopping"},
 ];
 
-const createList = (options: ListOptions<Item> = {}): ListData<Item> => {
+const createList = (options: UseListDataOptions<Item> = {}): ListData<Item> => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());
