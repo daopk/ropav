@@ -4,6 +4,7 @@ import type {CloseButtonRootProps, CloseButtonSlotProps} from "./close-button.ty
 import {closeButtonVariants} from "@heroui/styles";
 import {computed} from "vue";
 
+import {composePressResponder, usePressResponder} from "../../composables/press-responder";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {IconClose} from "../icons";
@@ -13,6 +14,16 @@ const props = withDefaults(defineProps<CloseButtonRootProps>(), {type: "button"}
 const emit = defineEmits<{click: [event: MouseEvent]}>();
 
 defineSlots<{default?: (props: CloseButtonSlotProps) => unknown}>();
+
+// Something above may be driving this button — a search field owns its clear button, a
+// dropdown makes its first child the trigger — in which case the press behaviour and the
+// ARIA wiring are handed down and this stays an ordinary button. React reaches the same
+// place through the button context a `CloseButton` reads there.
+const responder = usePressResponder();
+
+const setElement = (element: unknown) => {
+  responder?.registerElement((element as HTMLElement | null) ?? null);
+};
 
 const styles = computed(() => closeButtonVariants({class: props.class, variant: props.variant}));
 
@@ -47,10 +58,20 @@ const onClick = (event: MouseEvent) => {
 
   emit("click", event);
 };
+
+// A responder's listeners are chained here rather than spread with `v-bind`, which in vapor
+// re-attaches them on every render — see `composePressResponder`.
+const press = composePressResponder(responder, {
+  onClick,
+  onPointerdown,
+  onPointerenter,
+  onPointerleave,
+});
 </script>
 
 <template>
   <button
+    :ref="setElement"
     :aria-disabled="props.isPending || undefined"
     aria-label="Close"
     :class="styles"
@@ -59,16 +80,21 @@ const onClick = (event: MouseEvent) => {
     :data-focused="dataAttr(isFocused)"
     :data-hovered="dataAttr(isHovered)"
     :data-pending="dataAttr(props.isPending)"
-    :data-pressed="dataAttr(isPressed)"
+    :data-pressed="dataAttr(isPressed || responder?.isPressed.value)"
     data-slot="close-button"
     :disabled="props.isDisabled || undefined"
     :type="type"
+    v-bind="responder?.attrs.value"
     @blur="onBlur"
-    @click="onClick"
+    @click="press.onClick"
+    @dragstart="press.onDragstart"
     @focus="onFocus"
-    @pointerdown="onPointerdown"
-    @pointerenter="onPointerenter"
-    @pointerleave="onPointerleave"
+    @keydown="press.onKeydown"
+    @mousedown="press.onMousedown"
+    @pointerdown="press.onPointerdown"
+    @pointerenter="press.onPointerenter"
+    @pointerleave="press.onPointerleave"
+    @pointerup="press.onPointerup"
   >
     <slot
       :is-disabled="Boolean(props.isDisabled)"
