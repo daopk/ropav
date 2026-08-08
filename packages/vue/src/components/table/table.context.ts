@@ -1,3 +1,4 @@
+import type {TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {TableCellMeta, TableRegistry, UseTableCollectionReturn} from "../../composables";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {tableVariants} from "@heroui/styles";
@@ -23,6 +24,10 @@ export interface TableGridContext {
   tableId: ComputedRef<string>;
   /** Shared marker so a part can tell which grid it belongs to. */
   collectionId: ComputedRef<string>;
+  /** The column being sorted and its direction, or `null` while nothing is sorted. */
+  sortDescriptor: ComputedRef<TableSortDescriptor | null>;
+  /** Ask for a sort. Without a direction, the current one flips. */
+  sort: (columnKey: CollectionKey, direction?: TableSortDirection) => void;
 }
 
 /**

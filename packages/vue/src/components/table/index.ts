@@ -56,6 +56,8 @@ export type {
   TableCellProps,
   TableFooterProps,
   TableSortableColumnHeaderProps,
+  TableColumnSlotProps,
+  TableSortDescriptor,
   TableSortDirection,
 } from "./table.types";
 

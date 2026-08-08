@@ -14,9 +14,14 @@ export interface TableRegistryMeta {
 export interface TableColumnMeta extends TableRegistryMeta {
   /** Whether cells under this column name their row. */
   isRowHeader: () => boolean;
+  /** The column's own text, which is how a sort is announced by name. */
+  textValue: () => string;
 }
 
-export interface TableCellMeta extends TableRegistryMeta {}
+export interface TableCellMeta extends TableRegistryMeta {
+  /** Text this cell contributes to its row's text value. */
+  textValue: () => string;
+}
 
 export interface TableRegistry<M extends TableRegistryMeta> {
   /** Register an entry and return the call that unregisters it. */

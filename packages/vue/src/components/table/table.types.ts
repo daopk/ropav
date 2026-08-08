@@ -13,6 +13,11 @@ export interface TableScrollContainerProps {
 
 export interface TableContentProps {
   class?: string;
+  /**
+   * The column being sorted and the direction it is sorted in. Controlled with no internal
+   * fallback, exactly as React Aria has it: pass back what `sortChange` hands you.
+   */
+  sortDescriptor?: TableSortDescriptor | null;
 }
 
 export interface TableHeaderProps {
@@ -21,6 +26,11 @@ export interface TableHeaderProps {
 
 export interface TableColumnProps {
   class?: string;
+  /**
+   * Whether pressing this column header sorts the table. Declared as `boolean` so Vue casts a
+   * bare `allows-sorting` attribute instead of reading `""`.
+   */
+  allowsSorting?: boolean;
   /** Identity of the column. Falls back to a generated key. */
   id?: CollectionKey;
   /**
@@ -53,6 +63,23 @@ export interface TableFooterProps {
 }
 
 export type TableSortDirection = "ascending" | "descending";
+
+export interface TableSortDescriptor {
+  column: CollectionKey;
+  direction: TableSortDirection;
+}
+
+/** State handed to the default slot of a column header. */
+export interface TableColumnSlotProps {
+  allowsSorting: boolean;
+  isFocusVisible: boolean;
+  isHovered: boolean;
+  isPressed: boolean;
+  /** The direction this column is sorted in, or `undefined` when another column is. */
+  sortDirection?: TableSortDirection;
+  /** Sort by this column. Without a direction, flips the current one. */
+  sort: (direction?: TableSortDirection) => void;
+}
 
 export interface TableSortableColumnHeaderProps {
   class?: string;
