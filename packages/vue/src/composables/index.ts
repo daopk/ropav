@@ -1,3 +1,4 @@
+export * from "./drag-collection";
 export * from "./drag-manager";
 export * from "./drag-modality";
 export * from "./droppable-collection-registry";
@@ -16,6 +17,7 @@ export * from "./use-dialog-trigger";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";
 export * from "./use-drag";
+export * from "./use-drag-and-drop";
 export * from "./use-draggable-collection";
 export * from "./use-draggable-collection-state";
 export * from "./use-draggable-item";
