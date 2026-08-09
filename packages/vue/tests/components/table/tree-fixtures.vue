@@ -3,12 +3,13 @@ import type {CollectionKey} from "@/composables/use-collection";
 
 import {computed, shallowRef} from "vue";
 
+import {Button} from "@/components/button";
 import {
   TableBody,
   TableCell,
   TableColumn,
   TableContent,
-  TableExpandButton,
+  TableExpandTrigger,
   TableHeader,
   TableRoot,
   TableRow,
@@ -119,7 +120,9 @@ const rows = computed(() => flatten(data));
           :text-value="row.node.title"
         >
           <TableCell v-slot="{hasChildRows, isTreeColumn}" :text-value="row.node.title">
-            <TableExpandButton v-if="hasChildRows && isTreeColumn">chevron</TableExpandButton>
+            <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
+              <Button is-icon-only size="sm" variant="ghost">chevron</Button>
+            </TableExpandTrigger>
             <span>{{ row.node.title }}</span>
           </TableCell>
           <TableCell>{{ row.node.type }}</TableCell>

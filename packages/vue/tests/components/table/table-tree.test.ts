@@ -114,14 +114,14 @@ describe("Table tree grid", () => {
     it("only appears on a row with children, in the tree column", async () => {
       const {rows} = await render({defaultExpandedKeys: ["5"]});
 
-      expect(rows()[0]!.querySelectorAll('[data-slot="table-expand-button"]')).toHaveLength(1);
+      expect(rows()[0]!.querySelectorAll('[data-slot="button"]')).toHaveLength(1);
       // "Image 1" is a leaf.
-      expect(rows()[2]!.querySelectorAll('[data-slot="table-expand-button"]')).toHaveLength(0);
+      expect(rows()[2]!.querySelectorAll('[data-slot="button"]')).toHaveLength(0);
     });
 
     it("says what pressing it will do", async () => {
       const {rows} = await render();
-      const button = rows()[0]!.querySelector('[data-slot="table-expand-button"]')!;
+      const button = rows()[0]!.querySelector('[data-slot="button"]')!;
 
       expect(button).toHaveAttribute("aria-label", "Expand");
       // Named by the row as well, so it is clear which row is opening.
@@ -132,25 +132,25 @@ describe("Table tree grid", () => {
     // walking a tree slower.
     it("stays out of the tab order", async () => {
       const {rows} = await render();
-      const button = rows()[0]!.querySelector('[data-slot="table-expand-button"]')!;
+      const button = rows()[0]!.querySelector('[data-slot="button"]')!;
 
       expect(button).toHaveAttribute("tabindex", "-1");
     });
 
     it("opens and closes the row", async () => {
       const {rows} = await render();
-      const button = rows()[0]!.querySelector<HTMLElement>('[data-slot="table-expand-button"]')!;
+      const button = rows()[0]!.querySelector<HTMLElement>('[data-slot="button"]')!;
 
       button.click();
       await nextTick();
 
       expect(titles(rows())).toEqual(["Documents", "Project", "Photos"]);
-      expect(rows()[0]!.querySelector('[data-slot="table-expand-button"]')).toHaveAttribute(
+      expect(rows()[0]!.querySelector('[data-slot="button"]')).toHaveAttribute(
         "aria-label",
         "Collapse",
       );
 
-      rows()[0]!.querySelector<HTMLElement>('[data-slot="table-expand-button"]')!.click();
+      rows()[0]!.querySelector<HTMLElement>('[data-slot="button"]')!.click();
       await nextTick();
 
       expect(titles(rows())).toEqual(["Documents", "Photos"]);
@@ -160,7 +160,7 @@ describe("Table tree grid", () => {
       const onExpandedChange = vi.fn();
       const {rows} = await render({onExpandedChange});
 
-      rows()[0]!.querySelector<HTMLElement>('[data-slot="table-expand-button"]')!.click();
+      rows()[0]!.querySelector<HTMLElement>('[data-slot="button"]')!.click();
 
       expect(onExpandedChange).toHaveBeenCalledWith(new Set(["1"]));
     });
@@ -171,7 +171,7 @@ describe("Table tree grid", () => {
 
       expect(titles(rows())).toEqual(["Documents", "Photos", "Image 1", "Image 2"]);
 
-      rows()[0]!.querySelector<HTMLElement>('[data-slot="table-expand-button"]')!.click();
+      rows()[0]!.querySelector<HTMLElement>('[data-slot="button"]')!.click();
       await nextTick();
 
       // The caller was told, and nothing moved on its own.
