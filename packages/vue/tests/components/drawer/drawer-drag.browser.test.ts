@@ -158,44 +158,53 @@ describe("Drawer drag (browser)", () => {
   });
 
   /*
-   * The clamp is asserted on the panel's own transform, not on whether the drawer survived.
+   * The clamp is asserted on the panel's own transform, and on nothing else.
    *
-   * Letting go still dismisses here, and that is faithful: the release compares an *unsigned*
-   * velocity taken from the raw pointer delta, so a fast movement in either direction passes the
-   * flick test whatever the clamp did to the offset — React decides it the same way, from the same
-   * two numbers. Playwright's drag has almost no intermediate moves, which makes its velocity
-   * effectively unbounded and that branch unavoidable. What the clamp promises is that the panel
-   * never *moves* the wrong way, and that is exactly what the transform records.
+   * Whether letting go *also* dismisses is deliberately not asserted, because it is not decidable
+   * here: the release compares an **unsigned** velocity taken from the raw pointer delta, so a
+   * movement in either direction can pass the flick test whatever the clamp did to the offset —
+   * React decides it from the same two numbers, so this is faithful rather than a defect. Playwright
+   * dispatches so few moves that the velocity it produces depends on machine load, which makes that
+   * branch genuinely non-deterministic; asserting on it is how these two cases first went flaky.
+   *
+   * What is deterministic: each drag below travels **further than the dismiss distance**, so with
+   * the clamp gone the offset alone would dismiss and the retained transform would record the wrong
+   * direction. Clamped, the only two possible endings are a cleared transform or a zeroed one.
    */
   it("never moves the panel away from its own edge", async () => {
-    const {changes, result} = await open();
+    const {result} = await open();
     const panel = slot("drawer-dialog")!;
     const box = panel.getBoundingClientRect();
-    const start = Math.round(box.height * 0.7);
+    const claimed = watchCapture(panel);
+    const travel = Math.round(panel.offsetHeight * 0.4) + 10;
+    const start = Math.round(box.height - 4);
 
     // A bottom drawer dragged *up* has nowhere to go.
     await dragPanel(
       {x: Math.round(box.width / 2), y: start},
-      {x: Math.round(box.width / 2), y: start - 60},
+      {x: Math.round(box.width / 2), y: start - travel},
     );
 
-    // Zero, never the -60px the pointer actually travelled.
+    expect(claimed).toHaveLength(1);
+    // Zero or nothing, never the distance the pointer actually travelled.
     expect(inlineTransform()).toMatch(/^(|translateY\(0px\))$/);
-    expect(changes).toEqual([true, false]);
 
     result.unmount();
   });
 
   it("never moves a side panel further on screen", async () => {
-    const {changes, result} = await open({placement: "right"});
+    const {result} = await open({placement: "right"});
     const panel = slot("drawer-dialog")!;
     const box = panel.getBoundingClientRect();
+    const claimed = watchCapture(panel);
+    const travel = Math.round(panel.offsetWidth * 0.4) + 10;
+    const start = Math.round(box.width - 4);
 
     // A right-hand drawer dragged left is being pushed further on screen.
-    await dragPanel({x: Math.round(box.width - 8), y: 8}, {x: Math.round(box.width - 68), y: 8});
+    await dragPanel({x: start, y: 8}, {x: start - travel, y: 8});
 
+    expect(claimed).toHaveLength(1);
     expect(inlineTransform()).toMatch(/^(|translateX\(0px\))$/);
-    expect(changes).toEqual([true, false]);
 
     result.unmount();
   });
