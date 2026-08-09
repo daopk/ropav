@@ -2,6 +2,7 @@
 //  Components
 //  ===================================
 export * from "./accordion";
+export * from "./alert-dialog";
 export * from "./avatar";
 export * from "./button";
 export * from "./button-group";
