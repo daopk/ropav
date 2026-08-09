@@ -1,7 +1,14 @@
 import "@testing-library/jest-dom/vitest";
 
+import {installDataTransfer} from "./data-transfer";
+
 // Vapor components rely on native DOM behaviour rather than a pointer-event
 // abstraction, so no `installPointerEvent()` equivalent is needed here.
+
+// jsdom implements none of `DataTransfer`, `DataTransferItem` or `DragEvent`, so drag and drop
+// has nothing to carry a payload on. See `./data-transfer.ts` for what the stub does and does
+// not promise.
+installDataTransfer();
 
 // Common jsdom gaps used by overlays and measured layouts.
 if (typeof globalThis.ResizeObserver === "undefined") {
