@@ -3,7 +3,7 @@ import type {MoveMoveEvent} from "./use-move";
 import type {ColorChannel} from "../utils/color-types";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import {computed, nextTick, onScopeDispose, shallowRef, toValue} from "vue";
 
 import {colorStrings} from "../i18n/color";
 import {visuallyHiddenStyle} from "../utils/visually-hidden";
@@ -135,7 +135,29 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     element.value?.focus({preventScroll: true});
   };
 
-  useFormReset(inputXEl, () => state.defaultValue.value, state.setValue);
+  /**
+   * Put both inputs back to what the state holds.
+   *
+   * Vapor writes `value` as a property and skips the write when the bound value has not changed —
+   * and a form reset does not go through the binding at all. Neither input carries a `value`
+   * *attribute*, so the browser puts a reset range input back to the **midpoint of its range**,
+   * which for a hue is 180°. So one axis of a reset colour area shows a value the state never had.
+   */
+  const reassert = () => {
+    if (inputXEl.value) inputXEl.value.value = String(state.xValue.value);
+    if (inputYEl.value) inputYEl.value.value = String(state.yValue.value);
+  };
+
+  useFormReset(
+    inputXEl,
+    () => state.defaultValue.value,
+    (value) => {
+      state.setValue(value);
+      // A tick later, on purpose: the `reset` event is dispatched *before* the browser puts the
+      // controls back, so a write from inside the listener is thrown away. Measured, not assumed.
+      void nextTick(reassert);
+    },
+  );
 
   /** Where the thumb is during a drag, in fractions of the area — not in pixels. */
   let currentPosition: {x: number; y: number} | null = null;

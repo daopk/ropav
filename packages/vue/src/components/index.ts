@@ -11,6 +11,7 @@ export * from "./checkbox";
 export * from "./checkbox-group";
 export * from "./chip";
 export * from "./close-button";
+export * from "./color-area";
 export * from "./color-slider";
 export * from "./color-swatch";
 export * from "./date-field";
