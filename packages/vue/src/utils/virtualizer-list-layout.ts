@@ -122,25 +122,30 @@ export class ListLayout<
   }
 
   /**
-   * Every layout info inside `rect`, parents before children.
+   * The rectangle grown to whole rows.
    *
-   * The rectangle is first grown to whole rows. Without that a one-pixel scroll would change
-   * which rows fall inside it, and the set of rendered elements would churn on every frame.
+   * Without this a one-pixel scroll would change which rows fall inside the rectangle, and the set
+   * of rendered elements would churn on every frame. A table snaps differently — its own row
+   * stride ignores the gap — so this is the one part of the walk a subclass replaces.
    */
+  protected snapVisibleRect(rect: Rect): Rect {
+    if (rect.height <= 1) return rect;
+
+    const rowSize = (this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE) + this.gap;
+    const snapped = rect.copy();
+
+    const y = Math.floor(snapped.y / rowSize) * rowSize;
+    const height = snapped.height + snapped.y - y;
+
+    snapped.y = y;
+    snapped.height = Math.ceil(height / rowSize) * rowSize;
+
+    return snapped;
+  }
+
+  /** Every layout info inside `rect`, snapped to whole rows, parents before children. */
   getVisibleLayoutInfos(rect: Rect): LayoutInfo[] {
-    let searchRect = rect;
-
-    if (searchRect.height > 1) {
-      const rowSize = (this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE) + this.gap;
-
-      searchRect = searchRect.copy();
-
-      const y = Math.floor(searchRect.y / rowSize) * rowSize;
-      const height = searchRect.height + searchRect.y - y;
-
-      searchRect.y = y;
-      searchRect.height = Math.ceil(height / rowSize) * rowSize;
-    }
+    const searchRect = this.snapVisibleRect(rect);
 
     this.layoutIfNeeded(searchRect);
 
