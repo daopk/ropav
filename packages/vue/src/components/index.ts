@@ -10,6 +10,7 @@ export * from "./checkbox";
 export * from "./checkbox-group";
 export * from "./chip";
 export * from "./close-button";
+export * from "./color-swatch";
 export * from "./description";
 export * from "./dnd";
 export * from "./dropdown";
