@@ -1,4 +1,5 @@
 import type {TableSortDescriptor} from "./table.types";
+import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
@@ -29,6 +30,7 @@ import {
   TableHeader,
   TableRow,
   TableScrollContainer,
+  TableSelectionCheckbox,
   TableSortableColumnHeader,
 } from "./index";
 
@@ -71,6 +73,7 @@ const components = {
   TableHeader,
   TableRow,
   TableScrollContainer,
+  TableSelectionCheckbox,
   TableSortableColumnHeader,
 };
 
@@ -289,11 +292,16 @@ const DEFAULT_TEMPLATE = `
     <Table :variant="variant">
       <TableScrollContainer>
         <TableContent
+          v-model:selected-keys="selectedKeys"
           v-model:sort-descriptor="sortDescriptor"
           aria-label="Custom cells"
           class="min-w-[800px]"
+          selection-mode="multiple"
         >
           <TableHeader>
+            <TableColumn class="pe-0">
+              <TableSelectionCheckbox />
+            </TableColumn>
             <TableColumn
               v-for="column of sortableColumns"
               :id="column.id"
@@ -311,9 +319,11 @@ const DEFAULT_TEMPLATE = `
           </TableHeader>
           <TableBody>
             <TableRow v-for="user of paginatedItems" :id="user.id" :key="user.id">
+              <TableCell class="pe-0">
+                <TableSelectionCheckbox variant="secondary" />
+              </TableCell>
               <TableCell class="font-medium">
-                <div class="flex items-center gap-2">
-                  #{{ user.id }}
+                <div class="flex items-center gap-2">#{{ user.id }}
                   <Button is-icon-only size="sm" variant="ghost">
                     <IconCopy class="size-4 text-muted" />
                   </Button>
@@ -372,6 +382,7 @@ const defaultSetup = (variant: "primary" | "secondary") => () => ({
       .split(" ")
       .map((part) => part[0])
       .join(""),
+  selectedKeys: shallowRef<CollectionSelection>(new Set()),
   sortableColumns: SORTABLE_COLUMNS,
   statusColor: STATUS_COLOR,
   variant,
@@ -424,6 +435,60 @@ export const DynamicCollection: Story = {
               </TableHeader>
               <TableBody>
                 <TableRow v-for="user of paginatedItems" :id="user.id" :key="user.id">
+                  <TableCell v-for="column of columns" :key="column.id">
+                    {{ user[column.id] }}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+          ${PAGINATION_FOOTER}
+        </Table>
+      </div>
+    `,
+  }),
+};
+
+/**
+ * The same dynamic shape with a selection column: a static checkbox cell in front of the cells
+ * that come from the data.
+ */
+export const DynamicWithSelection: Story = {
+  render: () => ({
+    components,
+    setup: () => ({
+      columns,
+      selectedKeys: shallowRef<CollectionSelection>(new Set()),
+      ...usePagination(() => users),
+    }),
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              v-model:selected-keys="selectedKeys"
+              aria-label="Dynamic with selection"
+              class="min-w-[650px]"
+              selection-mode="multiple"
+            >
+              <TableHeader>
+                <TableColumn>
+                  <TableSelectionCheckbox />
+                </TableColumn>
+                <TableColumn
+                  v-for="column of columns"
+                  :id="column.id"
+                  :key="column.id"
+                  :is-row-header="column.isRowHeader"
+                >
+                  {{ column.name }}
+                </TableColumn>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="user of paginatedItems" :id="user.id" :key="user.id">
+                  <TableCell>
+                    <TableSelectionCheckbox variant="secondary" />
+                  </TableCell>
                   <TableCell v-for="column of columns" :key="column.id">
                     {{ user[column.id] }}
                   </TableCell>
