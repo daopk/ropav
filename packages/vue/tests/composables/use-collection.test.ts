@@ -1,9 +1,11 @@
 import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
+import type {VirtualizerCollection} from "@/utils/virtualizer-layout";
 
 import {afterEach, describe, expect, it} from "vitest";
 import {effectScope} from "vue";
 
 import {useCollection} from "@/composables/use-collection";
+import {createListCollection} from "@/utils/virtualizer-collection";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];
@@ -14,6 +16,16 @@ const createCollection = (): UseCollectionReturn => {
   scopes.push(() => scope.stop());
 
   return scope.run(() => useCollection()) as UseCollectionReturn;
+};
+
+const createSourcedCollection = (
+  source: () => VirtualizerCollection | null,
+): UseCollectionReturn => {
+  const scope = effectScope();
+
+  scopes.push(() => scope.stop());
+
+  return scope.run(() => useCollection({source})) as UseCollectionReturn;
 };
 
 /**
@@ -265,5 +277,75 @@ describe("useCollection", () => {
       expect(collection.getElement("a")).toBe(elements.get("a"));
       expect(collection.getElement("nope")).toBeNull();
     });
+  });
+});
+
+describe("useCollection with a data source", () => {
+  const users = Array.from({length: 1000}, (_, index) => ({
+    id: `user-${index}`,
+    name: `User ${index}`,
+  }));
+
+  const listSource = (): VirtualizerCollection =>
+    createListCollection({
+      getTextValue: (user) => user.name,
+      isDisabled: (user) => user.id === "user-4",
+      items: users,
+    });
+
+  it("answers for every item while the DOM holds none of them", () => {
+    const collection = createSourcedCollection(listSource);
+
+    expect(collection.size.value).toBe(1000);
+    expect(collection.orderedKeys()).toHaveLength(1000);
+    expect(collection.getFirstKey()).toBe("user-0");
+    expect(collection.getLastKey()).toBe("user-999");
+    expect(collection.getKeyAfter("user-0")).toBe("user-1");
+    expect(collection.getKeyBefore("user-999")).toBe("user-998");
+    expect(collection.getIndex("user-500")).toBe(500);
+  });
+
+  it("reads text and disabled state of an item that never rendered", () => {
+    const collection = createSourcedCollection(listSource);
+
+    expect(collection.getItem("user-4")?.textValue()).toBe("User 4");
+    expect(collection.getItem("user-4")?.isDisabled()).toBe(true);
+    expect(collection.getItem("user-5")?.isDisabled()).toBe(false);
+    expect(collection.getItem("nobody")).toBeUndefined();
+  });
+
+  it("has no element for an item outside the rendered window", () => {
+    const collection = createSourcedCollection(listSource);
+    const {elements} = populate(collection, ["user-3"]);
+
+    // Registered: the element is the one thing the data cannot answer, so focus needs it.
+    expect(collection.getElement("user-3")).toBe(elements.get("user-3"));
+    expect(collection.getItem("user-3")?.element()).toBe(elements.get("user-3"));
+    // Not registered: known to the collection, absent from the DOM.
+    expect(collection.getElement("user-900")).toBeNull();
+    expect(collection.getItem("user-900")?.element()).toBeNull();
+  });
+
+  it("keeps data order rather than the order a window registered in", () => {
+    const collection = createSourcedCollection(listSource);
+
+    // A window scrolled into view registers whatever it renders, in whatever order.
+    populate(collection, ["user-7", "user-5", "user-6"]);
+
+    expect(collection.orderedKeys().slice(5, 8)).toEqual(["user-5", "user-6", "user-7"]);
+    expect(collection.getFirstKey()).toBe("user-0");
+  });
+
+  it("falls back to the DOM when the source is gone", () => {
+    let sourced = true;
+    const collection = createSourcedCollection(() => (sourced ? listSource() : null));
+
+    expect(collection.size.value).toBe(1000);
+
+    sourced = false;
+    populate(collection, ["a", "b"]);
+
+    expect(collection.size.value).toBe(2);
+    expect(collection.orderedKeys()).toEqual(["a", "b"]);
   });
 });
