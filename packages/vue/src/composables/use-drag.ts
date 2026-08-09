@@ -12,13 +12,13 @@ import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 
 import {computed, onScopeDispose, shallowRef, toValue} from "vue";
 
+import {dndStrings} from "../i18n/dnd";
 import {
   DROP_EFFECT_TO_DROP_OPERATION,
   DROP_OPERATION,
   EFFECT_ALLOWED,
 } from "../utils/dnd-constants";
 import {writeToDataTransfer} from "../utils/dnd-data-transfer";
-import {DRAG_DESCRIPTION, END_DRAG_DESCRIPTION} from "../utils/dnd-messages";
 import {
   globalDropEffect,
   setGlobalAllowedDropOperations,
@@ -29,6 +29,7 @@ import {isIOS, isWebKit} from "../utils/platform";
 import {beginDragging} from "./drag-manager";
 import {useDragModality} from "./drag-modality";
 import {useDescription} from "./use-description";
+import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
 import {isVirtualClick, isVirtualPointerEvent} from "./use-press";
 
 export interface UseDragOptions {
@@ -103,9 +104,19 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
   let lastY = 0;
   let releaseDropGuard: (() => void) | null = null;
 
-  const description = computed(() =>
-    isDragging.value ? END_DRAG_DESCRIPTION[modality.value] : DRAG_DESCRIPTION[modality.value],
-  );
+  const stringFormatter = useLocalizedStringFormatter(dndStrings);
+
+  /** How to start the drag, or — once it is running — how to cancel it. */
+  const description = computed(() => {
+    const keys = {
+      keyboard: {end: "endDragKeyboard", start: "dragDescriptionKeyboard"},
+      touch: {end: "endDragTouch", start: "dragDescriptionTouch"},
+      virtual: {end: "endDragVirtual", start: "dragDescriptionVirtual"},
+    } as const;
+    const key = keys[modality.value];
+
+    return stringFormatter.value.format(isDragging.value ? key.end : key.start);
+  });
   const {describedBy} = useDescription(description);
 
   const allowedOperations = (): DropOperation[] =>
@@ -121,15 +132,18 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
       y: rect.y + rect.height / 2,
     });
 
-    beginDragging({
-      allowedDropOperations: allowedOperations(),
-      element: target,
-      items: options.getItems(),
-      onDragEnd(event) {
-        draggingElement.value = null;
-        options.onDragEnd?.(event);
+    beginDragging(
+      {
+        allowedDropOperations: allowedOperations(),
+        element: target,
+        items: options.getItems(),
+        onDragEnd(event) {
+          draggingElement.value = null;
+          options.onDragEnd?.(event);
+        },
       },
-    });
+      stringFormatter,
+    );
 
     draggingElement.value = target;
   };

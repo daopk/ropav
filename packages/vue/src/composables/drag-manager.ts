@@ -1,3 +1,4 @@
+import type {DndStringKey} from "../i18n/dnd";
 import type {
   DragEndEvent,
   DragItem,
@@ -9,13 +10,13 @@ import type {
   DropOperation,
   DropTarget as DropTargetDescriptor,
 } from "../utils/dnd-types";
-import type {Ref, ShallowRef} from "vue";
+import type {LocalizedString, LocalizedStringFormatter} from "@internationalized/string";
+import type {ComputedRef, Ref, ShallowRef} from "vue";
 
 import {onScopeDispose, readonly, shallowRef} from "vue";
 
 import {ariaHideOutside} from "../utils/aria-hide-outside";
 import {getTypes} from "../utils/dnd-data-transfer";
-import {DRAG_STARTED, DROP_CANCELED, DROP_COMPLETE} from "../utils/dnd-messages";
 import {announce} from "../utils/live-announcer";
 
 import {getDragModality} from "./drag-modality";
@@ -57,6 +58,17 @@ export interface DragManagerDropItem {
   getDropOperation?: (types: Set<string>, allowedOperations: DropOperation[]) => DropOperation;
   activateButtonRef?: ShallowRef<FocusableElement | null>;
 }
+
+/**
+ * The message table, resolved in the locale that applies.
+ *
+ * Threaded in from `useDrag` rather than resolved here: this module is a singleton with no Vue
+ * scope, so it cannot inject a locale — only a composable can. Held as a ref so a locale change
+ * mid-drag still reaches the announcements.
+ */
+export type DndStringFormatter = ComputedRef<
+  LocalizedStringFormatter<DndStringKey, LocalizedString>
+>;
 
 export interface DragManagerDragTarget {
   element: FocusableElement;
@@ -159,10 +171,13 @@ export const registerDropItem = (item: DragManagerDropItem): (() => void) => {
  * propagating — attaching the capture listeners synchronously would make the session swallow the
  * tail of the very event that started it.
  */
-export const beginDragging = (target: DragManagerDragTarget): void => {
+export const beginDragging = (
+  target: DragManagerDragTarget,
+  stringFormatter: DndStringFormatter,
+): void => {
   if (dragSession) throw new Error("Cannot begin dragging while already dragging");
 
-  dragSession = new DragSession(target);
+  dragSession = new DragSession(target, stringFormatter);
   requestAnimationFrame(() => {
     if (!dragSession) return;
 
@@ -237,9 +252,11 @@ export class DragSession {
   private restoreAriaHidden: (() => void) | null = null;
   private isVirtualClick = false;
   private initialFocused = false;
+  private stringFormatter: DndStringFormatter;
 
-  constructor(target: DragManagerDragTarget) {
+  constructor(target: DragManagerDragTarget, stringFormatter: DndStringFormatter) {
     this.dragTarget = target;
+    this.stringFormatter = stringFormatter;
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
@@ -265,7 +282,13 @@ export class DragSession {
     this.mutationObserver = new MutationObserver(() => this.updateValidDropTargets());
     this.updateValidDropTargets();
 
-    announce(DRAG_STARTED[getDragModality()]);
+    const started = {
+      keyboard: "dragStartedKeyboard",
+      touch: "dragStartedTouch",
+      virtual: "dragStartedVirtual",
+    } as const;
+
+    announce(this.stringFormatter.value.format(started[getDragModality()]));
   }
 
   teardown(): void {
@@ -657,7 +680,7 @@ export class DragSession {
     if (!this.dragTarget.element.closest(HIDDEN_SELECTOR)) this.dragTarget.element.focus();
 
     document.activeElement?.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
-    announce(DROP_CANCELED);
+    announce(this.stringFormatter.value.format("dropCanceled"));
   }
 
   drop(item?: DragManagerDropItem): void {
@@ -701,7 +724,7 @@ export class DragSession {
     }
 
     this.end();
-    announce(DROP_COMPLETE);
+    announce(this.stringFormatter.value.format("dropComplete"));
   }
 
   activate(

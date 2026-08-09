@@ -13,7 +13,6 @@ export * from "./dnd-constants";
 export * from "./dnd-data-transfer";
 export * from "./dnd-drop-target-navigation";
 export * from "./dnd-list-drop-target-delegate";
-export * from "./dnd-messages";
 export * from "./dnd-state";
 export * from "./dnd-types";
 export * from "./focus";

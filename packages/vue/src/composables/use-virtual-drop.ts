@@ -2,11 +2,12 @@ import type {ComputedRef} from "vue";
 
 import {computed} from "vue";
 
-import {DROP_DESCRIPTION} from "../utils/dnd-messages";
+import {dndStrings} from "../i18n/dnd";
 
 import {useDragSession} from "./drag-manager";
 import {useDragModality} from "./drag-modality";
 import {useDescription} from "./use-description";
+import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
 
 export interface UseVirtualDropReturn {
   /** Attributes for the drop target. Never carries a listener — see the note on `handlers`. */
@@ -24,8 +25,14 @@ export interface UseVirtualDropReturn {
 export const useVirtualDrop = (): UseVirtualDropReturn => {
   const modality = useDragModality();
   const session = useDragSession();
+  const stringFormatter = useLocalizedStringFormatter(dndStrings);
+  const keys = {
+    keyboard: "dropDescriptionKeyboard",
+    touch: "dropDescriptionTouch",
+    virtual: "dropDescriptionVirtual",
+  } as const;
   const {describedBy} = useDescription(() =>
-    session.value ? DROP_DESCRIPTION[modality.value] : "",
+    session.value ? stringFormatter.value.format(keys[modality.value]) : "",
   );
 
   return {
