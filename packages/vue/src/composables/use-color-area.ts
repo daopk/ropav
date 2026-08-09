@@ -3,9 +3,10 @@ import type {MoveMoveEvent} from "./use-move";
 import type {ColorChannel} from "../utils/color-types";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
-import {computed, nextTick, onScopeDispose, shallowRef, toValue} from "vue";
+import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
 import {colorStrings} from "../i18n/color";
+import {setFormValue} from "../utils/form-value";
 import {visuallyHiddenStyle} from "../utils/visually-hidden";
 
 import {useColorAreaGradient} from "./use-color-area-gradient";
@@ -136,25 +137,31 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
   };
 
   /**
-   * Put both inputs back to what the state holds.
+   * Put both inputs back to what the state holds, attribute included.
    *
    * Vapor writes `value` as a property and skips the write when the bound value has not changed —
-   * and a form reset does not go through the binding at all. Neither input carries a `value`
-   * *attribute*, so the browser puts a reset range input back to the **midpoint of its range**,
-   * which for a hue is 180°. So one axis of a reset colour area shows a value the state never had.
+   * and a form reset does not go through the binding at all. Without a `value` *attribute* the
+   * browser puts a reset range input back to the **midpoint of its range**, which for a hue is
+   * 180°, so one axis of a reset colour area would show a value the state never had. Keeping the
+   * attribute in step is what makes the restore land on the right value. See {@link setFormValue}.
    */
   const reassert = () => {
-    if (inputXEl.value) inputXEl.value.value = String(state.xValue.value);
-    if (inputYEl.value) inputYEl.value.value = String(state.yValue.value);
+    setFormValue(inputXEl.value, String(state.xValue.value));
+    setFormValue(inputYEl.value, String(state.yValue.value));
   };
+
+  watch([inputXEl, inputYEl, state.xValue, state.yValue], reassert, {
+    flush: "post",
+    immediate: true,
+  });
 
   useFormReset(
     inputXEl,
     () => state.defaultValue.value,
     (value) => {
       state.setValue(value);
-      // A tick later, on purpose: the `reset` event is dispatched *before* the browser puts the
-      // controls back, so a write from inside the listener is thrown away. Measured, not assumed.
+      // Belt and braces alongside the attribute the watcher above keeps in step: this covers a
+      // reset called from script, where the restore happens before that watcher has run.
       void nextTick(reassert);
     },
   );

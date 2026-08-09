@@ -10,6 +10,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 import {NumberFormatter} from "@internationalized/number";
 import {computed, nextTick, shallowRef, toValue, watch} from "vue";
 
+import {setFormValue} from "../utils/form-value";
 import {announce} from "../utils/live-announcer";
 import {isAndroid, isIOS, isIPhone} from "../utils/platform";
 
@@ -171,10 +172,10 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     value: state.numberValue,
   });
 
+  // Writes the `value` attribute as well as the property, which is what makes a form reset put
+  // the field back rather than blank it. See {@link setFormValue}.
   const reassert = () => {
-    const input = element.value;
-
-    if (input && input.value !== state.inputValue.value) input.value = state.inputValue.value;
+    setFormValue(element.value, state.inputValue.value);
   };
 
   // Vapor skips writing `value` when the bound value has not changed, and by then the browser has
@@ -246,11 +247,9 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     () => state.defaultNumberValue.value,
     (value) => {
       state.setNumberValue(value);
-      // A tick later, on purpose. The `reset` event is dispatched *before* the browser puts the
-      // controls back, so a write from inside the listener is thrown away — and the browser has
-      // nothing to put back, because a Vapor binding writes `value` as a property and never as
-      // an attribute. With the state already holding the default nothing changes either, so no
-      // binding write follows and the field would be left empty. Measured, not assumed.
+      // Belt and braces. The attribute the field keeps in step covers a reset the browser starts;
+      // this covers one called from script, where the restore happens before the watcher that
+      // mirrors the attribute has run.
       void nextTick(reassert);
     },
   );

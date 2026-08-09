@@ -18,6 +18,7 @@ export * from "./dnd-state";
 export * from "./dnd-tree-drop-target-delegate";
 export * from "./dnd-types";
 export * from "./focus";
+export * from "./form-value";
 export * from "./incomplete-date";
 export * from "./locale";
 export * from "./number";

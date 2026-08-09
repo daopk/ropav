@@ -5,6 +5,8 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, nextTick, shallowRef, toValue, watch} from "vue";
 
+import {setFormValue} from "../utils/form-value";
+
 import {useColorFieldState} from "./use-color-field-state";
 import {useFormReset} from "./use-form-reset";
 import {useFormattedTextField} from "./use-formatted-text-field";
@@ -122,10 +124,19 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     value: () => (state.colorValue.value ? state.colorValue.value.toHexInt() : undefined),
   });
 
-  // Vapor skips writing `value` when the bound value has not changed, and by then the browser has
-  // already moved the text. Committing normalises the text without necessarily changing the
-  // colour, so the write has to be made outright.
-  watch(state.inputValue, field.reassert, {flush: "post"});
+  /**
+   * Put the control's text back to what the state holds, attribute included.
+   *
+   * Vapor skips writing `value` when the bound value has not changed, and by then the browser has
+   * already moved the text — committing normalises the text without necessarily changing the
+   * colour, so the write has to be made outright. The attribute goes with it, which is what makes
+   * a form reset put the field back rather than blank it. See {@link setFormValue}.
+   */
+  const reassert = () => {
+    setFormValue(element.value, state.inputValue.value);
+  };
+
+  watch([element, state.inputValue], reassert, {flush: "post", immediate: true});
 
   useFormattedTextField(() => element.value, {
     setInputValue: state.setInputValue,
@@ -137,9 +148,9 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     () => state.defaultColorValue.value,
     (value) => {
       state.setColorValue(value);
-      // A tick later, on purpose: the `reset` event is dispatched *before* the browser puts the
-      // controls back, so a write from inside the listener is thrown away. Measured, not assumed.
-      void nextTick(field.reassert);
+      // Belt and braces alongside the attribute the watcher above keeps in step: this covers a
+      // reset called from script, where the restore happens before that watcher has run.
+      void nextTick(reassert);
     },
   );
 
@@ -192,7 +203,7 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
       isFocused.value = false;
       spin.onBlur();
       state.commit();
-      field.reassert();
+      reassert();
       field.handlers.onBlur(event);
     },
     onFocus: (event) => {
@@ -217,7 +228,7 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     isInvalid: field.isInvalid,
     isReadOnly,
     isRequired: field.isRequired,
-    reassert: field.reassert,
+    reassert,
     registerElement: field.registerElement,
     state,
   };

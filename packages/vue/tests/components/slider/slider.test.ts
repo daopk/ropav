@@ -483,6 +483,29 @@ describe("Slider", () => {
       unmount();
       form.remove();
     });
+
+    it("carries the value as an attribute, which is what a reset restores from", async () => {
+      /*
+       * The `value` *attribute*, not just the property a Vapor binding writes. It is the only thing
+       * a browser-initiated reset can restore from, and a range input with none goes back to the
+       * midpoint of its range — 50 for a slider defaulting to 30. Re-asserting after the event
+       * cannot save it either: when the browser starts the reset it drains microtasks before it
+       * restores the controls, so the write lands too early. A `form.reset()` called from script
+       * orders those two the other way around, which is why the test above passes with or without
+       * the attribute and this one does not.
+       */
+      const {container, unmount} = renderSlider({defaultValue: 30, name: "volume", step: 10});
+
+      await nextTick();
+
+      expect(inputIn(container).getAttribute("value")).toBe("30");
+
+      await key(slot(container, "slider-thumb"), "ArrowRight");
+
+      expect(inputIn(container).getAttribute("value")).toBe("40");
+
+      unmount();
+    });
   });
 
   describe("label", () => {

@@ -3,6 +3,7 @@ import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
 import {computed, nextTick, onScopeDispose, toValue, watch, watchEffect} from "vue";
 
+import {setFormValue} from "../utils/form-value";
 import {clamp} from "../utils/number";
 
 import {useFormReset} from "./use-form-reset";
@@ -222,21 +223,26 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
     () => state.defaultValues.value[index.value] ?? 0,
     (value) => {
       state.setThumbValue(index.value, value);
-      /*
-       * A tick later, on purpose. The `reset` event is dispatched *before* the browser puts the
-       * controls back, so a write from inside the listener is thrown away — and the input carries
-       * no `value` *attribute* (the binding writes the property), so the browser has nothing to
-       * restore from and puts a range input back to the **midpoint of its range**. When the value
-       * had not moved, the binding has nothing to re-render and that midpoint is what stays on
-       * screen: a slider defaulting to 30 reads 50 after a reset.
-       */
+      // Belt and braces alongside the attribute the thumb keeps in step below: this covers a reset
+      // called from script, where the restore happens before that watcher has run.
       void nextTick(() => {
-        const input = inputEl.value;
-        const restored = String(state.getThumbValue(index.value));
-
-        if (input && input.value !== restored) input.value = restored;
+        setFormValue(inputEl.value, String(state.getThumbValue(index.value)));
       });
     },
+  );
+
+  /*
+   * Keep the input's `value` attribute in step with the thumb.
+   *
+   * Without it the browser has nothing to restore on a form reset and puts a range input back to
+   * the **midpoint of its range** — a slider defaulting to 30 reads 50. Re-asserting after the
+   * event is not enough on its own: a reset the browser starts drains microtasks before it
+   * restores the controls. See {@link setFormValue}.
+   */
+  watch(
+    [inputEl, () => state.getThumbValue(index.value)],
+    ([input, value]) => setFormValue(input, String(value)),
+    {flush: "post", immediate: true},
   );
 
   onScopeDispose(() => detachRelease?.(), true);

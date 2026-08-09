@@ -372,6 +372,42 @@ describe("ColorArea (browser)", () => {
     });
   });
 
+  describe("a form reset", () => {
+    it("puts both channels back when the reset comes from a real click", async () => {
+      /*
+       * The reset a script performs and the reset a user performs are not the same event, and only
+       * this one catches the difference: when the browser starts the reset it drains microtasks
+       * *between* dispatching `reset` and restoring the controls, so a `nextTick` re-assert lands
+       * too early and is overwritten. What holds is the `value` attribute the area keeps in step —
+       * without it the browser puts a range input back to the midpoint of its range, which for a
+       * hue is 180°.
+       */
+      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)", withForm: true});
+
+      await nextTick();
+
+      const [x, y] = inputs(container) as [HTMLInputElement, HTMLInputElement];
+
+      expect([x.value, y.value]).toEqual(["30", "100"]);
+
+      // Focused rather than clicked: the input is visually hidden with `pointer-events: none`, so
+      // the thumb over it takes every click.
+      x.focus();
+      await userEvent.keyboard("{ArrowRight}{ArrowDown}");
+      await nextTick();
+
+      expect([x.value, y.value]).toEqual(["31", "99"]);
+
+      await userEvent.click(container.querySelector<HTMLElement>("[data-testid='reset']")!);
+      await nextTick();
+      await nextTick();
+
+      expect([x.value, y.value]).toEqual(["30", "100"]);
+
+      unmount();
+    });
+  });
+
   it("has no accessibility violations", async () => {
     const {container, unmount} = renderArea({ariaLabel: "Pick a colour"});
 
