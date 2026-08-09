@@ -14,6 +14,7 @@ export * from "./use-color-area-gradient";
 export * from "./use-color-area-state";
 export * from "./use-color-slider";
 export * from "./use-color-slider-state";
+export * from "./use-calendar-state";
 export * from "./use-color-swatch";
 export * from "./use-controllable-state";
 export * from "./use-css-variable";
