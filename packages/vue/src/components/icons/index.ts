@@ -1,3 +1,4 @@
+export {default as DangerIcon} from "./danger-icon.vue";
 export {default as ExternalLinkIcon} from "./external-link-icon.vue";
 export {default as IconChevronDown} from "./icon-chevron-down.vue";
 export {default as IconChevronLeft} from "./icon-chevron-left.vue";
@@ -8,3 +9,6 @@ export {default as IconMinus} from "./icon-minus.vue";
 export {default as IconOverlayArrow} from "./icon-overlay-arrow.vue";
 export {default as IconPlus} from "./icon-plus.vue";
 export {default as IconSearch} from "./icon-search.vue";
+export {default as InfoIcon} from "./info-icon.vue";
+export {default as SuccessIcon} from "./success-icon.vue";
+export {default as WarningIcon} from "./warning-icon.vue";
