@@ -34,6 +34,8 @@ export interface DropdownPopoverProps {
   shouldFlip?: boolean;
   /** Distance kept between the popover and the edge of the viewport. @default 12 */
   containerPadding?: number;
+  /** Distance kept between the arrow and the corner of the popover. @default 0 */
+  arrowBoundaryOffset?: number;
   /** @default false */
   isKeyboardDismissDisabled?: boolean;
 }

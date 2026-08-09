@@ -2,7 +2,7 @@
 import type {DropdownRootProps} from "./dropdown.types";
 
 import {dropdownVariants} from "@heroui/styles";
-import {computed, shallowRef} from "vue";
+import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";
 import {useMenuTrigger} from "../../composables/use-menu-trigger";
@@ -47,7 +47,6 @@ const trigger = useMenuTrigger(
 providePressResponder(trigger.responder);
 
 provideDropdownContext({
-  popoverContainer: shallowRef<HTMLElement | null>(null),
   slots: computed(() => dropdownVariants()),
   state,
 });
