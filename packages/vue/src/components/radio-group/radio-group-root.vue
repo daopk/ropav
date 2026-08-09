@@ -5,6 +5,7 @@ import {radioGroupVariants} from "@heroui/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
+import {useLocale} from "../../composables/use-locale";
 import {useRadioGroupState} from "../../composables/use-radio-group-state";
 import {dataAttr} from "../../utils/assertion";
 import {provideFieldErrorContext} from "../field-error";
@@ -52,6 +53,7 @@ const state = useRadioGroupState({
 const styles = computed(() => radioGroupVariants({class: props.class, variant: props.variant}));
 
 const resolvedOrientation = computed(() => props.orientation ?? "vertical");
+const locale = useLocale();
 
 // A `<label>` implies a labelable control to point at, and a group is not one, so its label
 // renders as a `span` the group names itself after.
@@ -121,11 +123,16 @@ const focusableRadios = () => {
 // ignores `isReadOnly` — so it is done here and the native handling is suppressed, rather
 // than letting the two run and move focus twice.
 //
-// Left/right are not flipped for right-to-left reading: the port has no locale layer yet,
-// the same limitation `Slider` carries.
+// Left and right follow the reading direction, and only they do: up and down are always
+// previous and next, and a vertical group keeps left/right unflipped as well, because there
+// the arrows no longer point along the row.
 const onKeydown = (event: KeyboardEvent) => {
-  const isNext = event.key === "ArrowDown" || event.key === "ArrowRight";
-  const isPrevious = event.key === "ArrowUp" || event.key === "ArrowLeft";
+  const isHorizontalFlip =
+    locale.value.direction === "rtl" && resolvedOrientation.value !== "vertical";
+  const isNext =
+    event.key === "ArrowDown" || event.key === (isHorizontalFlip ? "ArrowLeft" : "ArrowRight");
+  const isPrevious =
+    event.key === "ArrowUp" || event.key === (isHorizontalFlip ? "ArrowRight" : "ArrowLeft");
 
   if (!isNext && !isPrevious) return;
   if (state.isDisabled.value || state.isReadOnly.value) return;
