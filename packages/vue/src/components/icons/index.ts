@@ -5,5 +5,6 @@ export {default as IconChevronRight} from "./icon-chevron-right.vue";
 export {default as IconChevronUp} from "./icon-chevron-up.vue";
 export {default as IconClose} from "./icon-close.vue";
 export {default as IconMinus} from "./icon-minus.vue";
+export {default as IconOverlayArrow} from "./icon-overlay-arrow.vue";
 export {default as IconPlus} from "./icon-plus.vue";
 export {default as IconSearch} from "./icon-search.vue";
