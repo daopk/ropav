@@ -22,6 +22,7 @@ export * from "./use-drag-and-drop";
 export * from "./use-draggable-collection";
 export * from "./use-draggable-collection-state";
 export * from "./use-draggable-item";
+export * from "./use-drawer-drag";
 export * from "./use-drop";
 export * from "./use-drop-indicator";
 export * from "./use-droppable-collection";
