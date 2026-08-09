@@ -483,6 +483,9 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
   });
 
   const style = computed<Record<string, string>>(() => {
+    // A literal is punctuation, not a control: it has no caret to hide and no direction to pin.
+    if (segment.value.type === "literal") return {};
+
     const all: Record<string, string> = {caretColor: "transparent"};
 
     if (locale.value.direction !== "rtl") return all;
