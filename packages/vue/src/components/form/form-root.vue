@@ -16,13 +16,16 @@ provideFormContext({
   validationErrors: computed(() => props.validationErrors ?? {}),
 });
 
+// No `data-slot`: React's form is a thin pass-through to the React Aria one, which renders none,
+// and a hook the stylesheet never reads is not worth a divergence.
+//
 // Under `"aria"` the fields report through ARIA alone, so the browser's own blocking and its
 // error bubbles are turned off. Under `"native"` they are exactly what does the work.
 const isNoValidate = computed(() => props.validationBehavior === "aria" || undefined);
 </script>
 
 <template>
-  <form :class="props.class" data-slot="form" :novalidate="isNoValidate">
+  <form :class="props.class" :novalidate="isNoValidate">
     <slot />
   </form>
 </template>

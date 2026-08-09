@@ -26,11 +26,13 @@ const renderFormWithField = (props: Record<string, unknown> = {}) => {
 
 describe("Form", () => {
   describe("structure", () => {
-    it("renders a form element carrying its data-slot", () => {
+    // No `data-slot`, matching React: its form is a thin pass-through to the React Aria one, and
+    // that renders none. Pinned so it does not grow one back.
+    it("renders a form element with no slot marker of its own", () => {
       const {form, unmount} = renderForm();
 
       expect(form).not.toBeNull();
-      expect(form.getAttribute("data-slot")).toBe("form");
+      expect(form).not.toHaveAttribute("data-slot");
 
       unmount();
     });
