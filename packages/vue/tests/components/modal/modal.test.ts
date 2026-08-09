@@ -180,7 +180,7 @@ describe("Modal", () => {
     });
 
     it("names the dialog by its trigger when nothing inside does", async () => {
-      const result = render();
+      const result = render({withoutHeading: true});
       const trigger = result.container.querySelector("[data-slot='button']")!;
 
       press(trigger);
@@ -440,6 +440,199 @@ describe("Modal", () => {
 
       expect(changes).toEqual([false]);
       // Held open by the caller, so it stays.
+      expect(result.screen.queryByRole("dialog")).toBeTruthy();
+
+      result.unmount();
+    });
+  });
+
+  describe("parts", () => {
+    it("renders every part with its own slot and class", async () => {
+      const result = render({defaultOpen: true, withCloseTrigger: true, withIcon: true});
+
+      await settle();
+
+      const expected: [string, string][] = [
+        ["modal-header", "modal__header"],
+        ["modal-icon", "modal__icon"],
+        ["modal-heading", "modal__heading"],
+        ["modal-body", "modal__body"],
+        ["modal-footer", "modal__footer"],
+        ["modal-close-trigger", "modal__close-trigger"],
+      ];
+
+      for (const [name, className] of expected) {
+        const element = slot(name);
+
+        expect(element, name).toBeTruthy();
+        expect(element!.classList.contains(className), name).toBe(true);
+      }
+
+      result.unmount();
+    });
+
+    it("renders the heading two levels down", async () => {
+      const result = render({defaultOpen: true});
+
+      await settle();
+
+      // A dialog is a document of its own to assistive technology, so its heading starts one level
+      // below the page title rather than continuing the page's outline.
+      expect(slot("modal-heading")!.tagName).toBe("H2");
+
+      result.unmount();
+    });
+
+    it("carries the size and scroll modifiers the container decided", async () => {
+      const result = render({defaultOpen: true, scroll: "outside", size: "lg"});
+
+      await settle();
+
+      const dialog = slot("modal-dialog")!;
+
+      expect(dialog.classList.contains("modal__dialog--lg")).toBe(true);
+      expect(dialog.classList.contains("modal__dialog--scroll-outside")).toBe(true);
+      expect(slot("modal-container")!.classList.contains("modal__container--scroll-outside")).toBe(
+        true,
+      );
+      expect(slot("modal-body")!.classList.contains("modal__body--scroll-outside")).toBe(true);
+
+      result.unmount();
+    });
+
+    it("defaults to the medium size scrolling inside", async () => {
+      const result = render({defaultOpen: true});
+
+      await settle();
+
+      expect(slot("modal-dialog")!.classList.contains("modal__dialog--md")).toBe(true);
+      expect(slot("modal-dialog")!.classList.contains("modal__dialog--scroll-inside")).toBe(true);
+      expect(slot("modal-body")!.classList.contains("modal__body--scroll-inside")).toBe(true);
+
+      result.unmount();
+    });
+
+    it("carries the backdrop variant the backdrop decided", async () => {
+      const result = render({defaultOpen: true, variant: "blur"});
+
+      await settle();
+
+      expect(slot("modal-backdrop")!.classList.contains("modal__backdrop--blur")).toBe(true);
+
+      result.unmount();
+    });
+
+    it("defaults to an opaque backdrop", async () => {
+      const result = render({defaultOpen: true});
+
+      await settle();
+
+      expect(slot("modal-backdrop")!.classList.contains("modal__backdrop--opaque")).toBe(true);
+
+      result.unmount();
+    });
+
+    it("reports the placement on the container and the dialog", async () => {
+      const result = render({defaultOpen: true, placement: "top"});
+
+      await settle();
+
+      // Both, because the container animates from it and the dialog takes its margins from it.
+      expect(slot("modal-container")!.getAttribute("data-placement")).toBe("top");
+      expect(slot("modal-dialog")!.getAttribute("data-placement")).toBe("top");
+
+      result.unmount();
+    });
+
+    it("places automatically by default", async () => {
+      const result = render({defaultOpen: true});
+
+      await settle();
+
+      expect(slot("modal-container")!.getAttribute("data-placement")).toBe("auto");
+      expect(slot("modal-dialog")!.getAttribute("data-placement")).toBe("auto");
+
+      result.unmount();
+    });
+  });
+
+  describe("labelling", () => {
+    it("names the dialog by its heading", async () => {
+      const result = render({defaultOpen: true});
+
+      await settle();
+
+      const heading = slot("modal-heading")!;
+
+      expect(heading.id).toBeTruthy();
+      // What the dialog says names it, in preference to the button that opened it.
+      expect(result.screen.getByRole("dialog").getAttribute("aria-labelledby")).toBe(heading.id);
+
+      result.unmount();
+    });
+
+    it("hands out no heading id when there is no heading", async () => {
+      const result = render({defaultOpen: true, withoutHeading: true});
+
+      await settle();
+
+      // An idref to an element that is not rendered is worse than none.
+      expect(slot("modal-heading")).toBeNull();
+      expect(result.screen.getByRole("dialog").getAttribute("aria-labelledby")).toBe(
+        result.container.querySelector("[data-slot='button']")!.id,
+      );
+
+      result.unmount();
+    });
+  });
+
+  describe("closing", () => {
+    it("closes from the close trigger", async () => {
+      const result = render({defaultOpen: true, withCloseTrigger: true});
+
+      await settle();
+
+      press(slot("modal-close-trigger")!);
+      await settle();
+
+      expect(result.screen.queryByRole("dialog")).toBeNull();
+
+      result.unmount();
+    });
+
+    it("closes from a wrapped button and still runs its own handler", async () => {
+      const result = render({defaultOpen: true, withCloseWrapper: true});
+
+      await settle();
+
+      expect(result.screen.getByTestId("saved").textContent).toBe("not saved");
+
+      press(result.screen.getByRole("button", {name: "Confirm"}));
+      await settle();
+
+      // Both, in that order: the wrapper's close is chained ahead of the button's own handler, the
+      // same way React merges a context's props before the element's.
+      expect(result.screen.queryByRole("dialog")).toBeNull();
+      expect(result.screen.getByTestId("saved").textContent).toBe("saved");
+
+      result.unmount();
+    });
+
+    it("leaves an unmarked button inside alone", async () => {
+      const result = render({defaultOpen: true, withInsideButton: true});
+
+      await settle();
+
+      const inside = result.screen.getByRole("button", {name: "Inside action"});
+
+      // Opt-in, matching React: the default slot carries nothing, so an ordinary button in a
+      // footer does not close the dialog.
+      expect(inside.getAttribute("aria-expanded")).toBeNull();
+      expect(inside.getAttribute("aria-controls")).toBeNull();
+
+      press(inside);
+      await settle();
+
       expect(result.screen.queryByRole("dialog")).toBeTruthy();
 
       result.unmount();

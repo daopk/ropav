@@ -1,6 +1,8 @@
 <script setup lang="ts" vapor>
 import type {ModalFixtureProps} from "./fixtures.types";
 
+import {shallowRef} from "vue";
+
 import {ButtonRoot} from "@/components/button";
 import {Modal} from "@/components/modal";
 
@@ -17,19 +19,29 @@ const props = withDefaults(defineProps<ModalFixtureProps>(), {
   scroll: undefined,
   size: undefined,
   variant: undefined,
+  withCloseTrigger: undefined,
+  withCloseWrapper: undefined,
   withCustomTrigger: undefined,
+  withIcon: undefined,
   withInsideButton: undefined,
+  withoutHeading: undefined,
 });
 
 const emit = defineEmits<{openChange: [isOpen: boolean]}>();
 
 const shouldCloseOnInteractOutside = (element: Element) =>
   !props.keepOpenFor || !element.closest(`#${props.keepOpenFor}`);
+
+/** Set by the button inside `Modal.Close`, so a test can prove both handlers ran. */
+const saved = shallowRef(false);
+
+defineExpose({saved});
 </script>
 
 <template>
   <div>
     <button id="outside" type="button">Outside</button>
+    <span data-testid="saved">{{ saved ? "saved" : "not saved" }}</span>
     <Modal
       :default-open="props.defaultOpen"
       :is-open="props.isOpen"
@@ -48,9 +60,19 @@ const shouldCloseOnInteractOutside = (element: Element) =>
       >
         <Modal.Container :placement="props.placement" :scroll="props.scroll" :size="props.size">
           <Modal.Dialog v-slot="{close}">
-            <p>Modal body</p>
-            <ButtonRoot v-if="props.withInsideButton">Inside action</ButtonRoot>
-            <button data-testid="close-from-slot" type="button" @click="close()">Done</button>
+            <Modal.CloseTrigger v-if="props.withCloseTrigger" aria-label="Close" />
+            <Modal.Header>
+              <Modal.Icon v-if="props.withIcon">!</Modal.Icon>
+              <Modal.Heading v-if="!props.withoutHeading">Modal heading</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>Modal body</Modal.Body>
+            <Modal.Footer>
+              <ButtonRoot v-if="props.withInsideButton">Inside action</ButtonRoot>
+              <Modal.Close v-if="props.withCloseWrapper">
+                <ButtonRoot @click="saved = true">Confirm</ButtonRoot>
+              </Modal.Close>
+              <button data-testid="close-from-slot" type="button" @click="close()">Done</button>
+            </Modal.Footer>
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>

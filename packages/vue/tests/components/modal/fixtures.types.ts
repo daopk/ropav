@@ -12,6 +12,10 @@ export interface ModalFixtureProps {
   scroll?: ModalVariants["scroll"];
   size?: ModalVariants["size"];
   variant?: ModalVariants["variant"];
+  withCloseTrigger?: boolean;
+  withCloseWrapper?: boolean;
   withCustomTrigger?: boolean;
+  withIcon?: boolean;
   withInsideButton?: boolean;
+  withoutHeading?: boolean;
 }
