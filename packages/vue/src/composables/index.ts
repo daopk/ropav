@@ -11,6 +11,7 @@ export * from "./use-collection";
 export * from "./use-color-swatch";
 export * from "./use-controllable-state";
 export * from "./use-css-variable";
+export * from "./use-date-field-state";
 export * from "./use-date-formatter";
 export * from "./use-description";
 export * from "./use-dialog-trigger";
