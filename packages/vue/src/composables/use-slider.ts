@@ -36,7 +36,11 @@ export interface SliderOutputAttrs {
 export interface UseSliderReturn {
   /** For the root element: the thumbs are inputs, and the group is what names them together. */
   groupProps: ComputedRef<SliderGroupAttrs>;
-  /** Bind with `v-bind` on the track, which accepts clicks and drags for the nearest thumb. */
+  /**
+   * The track accepts clicks and drags for the nearest thumb. Attach with `@pointerdown`, never
+   * through `v-bind`: a vapor render re-attaches every `on*` key that arrived that way, which
+   * drops the listener when the press itself is what re-rendered the element.
+   */
   trackHandlers: {onPointerdown: (event: PointerEvent) => void};
   /** Inline styles the track needs whatever the stylesheet says. */
   trackStyle: CSSProperties;
@@ -62,7 +66,8 @@ export interface UseSliderReturn {
  * @example
  * ```ts
  * const slider = useSlider({id: sliderId, state, trackEl});
- * // <div v-bind="slider.groupProps.value"> … <div v-bind="slider.trackHandlers" ref="track">
+ * // <div v-bind="slider.groupProps.value">
+ * //   <div ref="track" @pointerdown="slider.trackHandlers.onPointerdown">
  * ```
  */
 export const useSlider = (options: UseSliderOptions): UseSliderReturn => {

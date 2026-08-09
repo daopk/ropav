@@ -48,7 +48,6 @@ const fill = computed(() => {
 <template>
   <div
     :ref="setTrackEl"
-    v-bind="slider.trackHandlers"
     :class="composeSlotClassName(slots.track, props.class)"
     :data-disabled="dataAttr(state.isDisabled.value)"
     :data-fill-end="dataAttr(fill.end)"
@@ -57,6 +56,7 @@ const fill = computed(() => {
     :data-orientation="state.orientation.value"
     data-slot="slider-track"
     :style="slider.trackStyle"
+    @pointerdown="slider.trackHandlers.onPointerdown"
     @pointerenter="onPointerenter"
     @pointerleave="onPointerleave"
   >
