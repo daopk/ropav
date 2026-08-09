@@ -1,6 +1,7 @@
 import type {TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {TableCellMeta, TableRegistry, UseTableCollectionReturn} from "../../composables";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {tableVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
 
@@ -26,6 +27,8 @@ export interface TableGridContext {
   collectionId: ComputedRef<string>;
   /** The column being sorted and its direction, or `null` while nothing is sorted. */
   sortDescriptor: ComputedRef<TableSortDescriptor | null>;
+  /** Selected and focused rows. Runs on `collection.rows`, so a row key is the item key. */
+  selection: UseSelectionManagerReturn;
   /** Ask for a sort. Without a direction, the current one flips. */
   sort: (columnKey: CollectionKey, direction?: TableSortDirection) => void;
 }
@@ -44,6 +47,24 @@ export interface TableRowContext {
   cells: TableRegistry<TableCellMeta>;
 }
 
-export const [useTableRowContext, provideTableRowContext] = createContext<TableRowContext>({
-  name: "TableRowContext",
-});
+/**
+ * Loose, so a part can ask **whether** it sits inside a row: the selection checkbox is the same
+ * component in the header and in a row, and which of the two it is decides what it toggles.
+ */
+export const [useTableRowContextOptional, provideTableRowContext] =
+  createContext<TableRowContext | null>({
+    defaultValue: null,
+    name: "TableRowContext",
+    strict: false,
+  });
+
+/** The row a part is required to sit inside, for the parts that mean nothing outside one. */
+export const useTableRowContext = (): TableRowContext => {
+  const context = useTableRowContextOptional();
+
+  if (!context) {
+    throw new Error("`TableRowContext` was consumed outside of its provider component.");
+  }
+
+  return context;
+};

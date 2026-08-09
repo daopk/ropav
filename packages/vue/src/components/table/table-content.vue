@@ -1,21 +1,29 @@
 <script setup lang="ts" vapor>
 import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {CollectionSelection} from "../../composables/use-selection-manager";
 
 import {computed, watch} from "vue";
 
 import {useDescription} from "../../composables/use-description";
 import {useId} from "../../composables/use-id";
+import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
 import {composeSlotClassName} from "../../utils/compose";
 import {announce} from "../../utils/live-announcer";
 
 import {provideTableGridContext, useTableContext} from "./table.context";
 
-const props = defineProps<TableContentProps>();
+// `disallowEmptySelection` carries three states: a Boolean prop with no default is cast to
+// `false`, which reads as a caller decision the selection manager would then honour.
+const props = withDefaults(defineProps<TableContentProps>(), {
+  disallowEmptySelection: undefined,
+});
 
 const emit = defineEmits<{
+  selectionChange: [keys: CollectionSelection];
   sortChange: [descriptor: TableSortDescriptor];
+  "update:selectedKeys": [keys: CollectionSelection];
   "update:sortDescriptor": [descriptor: TableSortDescriptor];
 }>();
 
@@ -27,6 +35,26 @@ const tableId = useId();
 const collectionId = useId();
 
 const collection = useTableCollection();
+
+/**
+ * Selection runs on the **row** collection rather than on a collection of rows and cells, which
+ * is how React Aria has it. Nothing about a selection is two-dimensional, and keeping the manager
+ * one-dimensional is what lets the listbox's manager be reused here unchanged.
+ */
+const selection = useSelectionManager({
+  collection: collection.rows,
+  defaultSelectedKeys: props.defaultSelectedKeys,
+  disabledBehavior: () => props.disabledBehavior,
+  disabledKeys: () => props.disabledKeys,
+  disallowEmptySelection: () => props.disallowEmptySelection,
+  onSelectionChange: (keys) => {
+    emit("selectionChange", keys);
+    emit("update:selectedKeys", keys);
+  },
+  selectedKeys: () => props.selectedKeys,
+  selectionBehavior: () => props.selectionBehavior,
+  selectionMode: () => props.selectionMode,
+});
 
 const sortDescriptor = computed(() => props.sortDescriptor ?? null);
 
@@ -53,7 +81,7 @@ const sort = (columnKey: CollectionKey, direction?: TableSortDirection) => {
   emit("update:sortDescriptor", next);
 };
 
-provideTableGridContext({collection, collectionId, sort, sortDescriptor, tableId});
+provideTableGridContext({collection, collectionId, selection, sort, sortDescriptor, tableId});
 
 /**
  * What the table itself is described by while it is sorted. `aria-sort` on the column already
@@ -83,6 +111,7 @@ watch(sortDescription, (description) => {
   <table
     :id="tableId"
     :aria-describedby="describedBy"
+    :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     :class="composeSlotClassName(slots.content, props.class)"
     :data-collection="collectionId"
     data-slot="table-content"

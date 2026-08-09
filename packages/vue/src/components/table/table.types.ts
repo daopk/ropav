@@ -1,4 +1,9 @@
 import type {CollectionKey} from "../../composables/use-collection";
+import type {
+  DisabledBehavior,
+  SelectionBehavior,
+  SelectionMode,
+} from "../../composables/use-selection-manager";
 import type {TableVariants} from "@heroui/styles";
 
 export interface TableRootProps {
@@ -18,6 +23,23 @@ export interface TableContentProps {
    * fallback, exactly as React Aria has it: pass back what `sortChange` hands you.
    */
   sortDescriptor?: TableSortDescriptor | null;
+  /** Whether one, many or no rows can be selected. @default "none" */
+  selectionMode?: SelectionMode;
+  /** What a press on a row means when several rows can be selected. @default "toggle" */
+  selectionBehavior?: SelectionBehavior;
+  /** Selected row keys, for controlled use. */
+  selectedKeys?: "all" | Iterable<CollectionKey>;
+  /** Selected row keys the table starts with. */
+  defaultSelectedKeys?: "all" | Iterable<CollectionKey>;
+  /** Row keys that cannot be selected, and by default cannot be focused either. */
+  disabledKeys?: Iterable<CollectionKey>;
+  /** Whether a disabled row is also unfocusable. @default "all" */
+  disabledBehavior?: DisabledBehavior;
+  /**
+   * Whether the table must always keep a row selected. Declared as `boolean` so Vue casts a
+   * bare attribute instead of reading `""`.
+   */
+  disallowEmptySelection?: boolean;
 }
 
 export interface TableHeaderProps {
@@ -50,6 +72,17 @@ export interface TableRowProps {
   id?: CollectionKey;
   /** Text the row is matched on by typeahead. Derived from its row header cells when absent. */
   textValue?: string;
+}
+
+/** State handed to the default slot of a row. */
+export interface TableRowSlotProps {
+  isDisabled: boolean;
+  isFocusVisible: boolean;
+  isFocused: boolean;
+  isHovered: boolean;
+  isPressed: boolean;
+  isSelected: boolean;
+  selectionMode: SelectionMode;
 }
 
 export interface TableCellProps {
