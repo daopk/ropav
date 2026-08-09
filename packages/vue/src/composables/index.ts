@@ -1,3 +1,5 @@
+export * from "./drag-manager";
+export * from "./drag-modality";
 export * from "./focus-responder";
 export * from "./press-responder";
 export * from "./use-checkbox-group-state";
@@ -46,9 +48,9 @@ export * from "./use-table-collection";
 export * from "./use-table-column-layout";
 export * from "./use-text-field";
 export * from "./use-toggle-group-state";
+export * from "./use-toolbar";
 export * from "./use-tooltip-trigger";
 export * from "./use-tooltip-trigger-state";
-export * from "./use-toolbar";
 export * from "./use-typeahead";
 export * from "./use-virtualizer";
 export * from "./use-virtualizer-scroll";
