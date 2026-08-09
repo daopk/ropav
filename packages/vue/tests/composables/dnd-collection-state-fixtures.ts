@@ -17,6 +17,8 @@ export interface FixtureItem {
   parentKey?: DragKey | null;
   /** Anything other than `"item"` is a row that is not a drop target. */
   type?: string;
+  /** What a drop indicator names the item by. Defaults to the key. */
+  textValue?: string;
   value?: unknown;
 }
 
@@ -56,6 +58,7 @@ export const createFixtureCollection = (items: FixtureItem[]): DragCollection<un
       nextKey: siblings[index + 1] ?? null,
       parentKey,
       prevKey: siblings[index - 1] ?? null,
+      textValue: item.textValue ?? String(item.key),
       type: item.type ?? "item",
       value: item.value ?? {id: item.key},
     });
@@ -97,23 +100,32 @@ export const createFixtureKeyboardDelegate = (collection: DragCollection<unknown
 };
 
 /**
- * A selection manager with only the three members the drag state reads.
+ * A selection manager with the members the drag and drop layer reads.
  *
- * Cast rather than implemented in full: `useSelectionManager` has thirty members and the drag
- * layer touches `isSelected`, `selectedKeys` and `setFocused`. Standing up the real one would
- * need a real collection and would test that instead of this.
+ * Not the real one: `useSelectionManager` has thirty members and needs a live collection, so
+ * standing it up here would test that instead of what is under test. What it does have to cover
+ * is everything the collection-level hooks touch — focus and selection both, because a drop
+ * decides where focus lands afterwards.
  */
 export const createFixtureSelection = (
   selected: DragKey[] = [],
+  options: {focusedKey?: DragKey | null; selectionMode?: string} = {},
 ): UseSelectionManagerReturn & {focusedCalls: boolean[]} => {
   const keys = shallowRef(new Set(selected));
+  const focusedKey = shallowRef<DragKey | null>(options.focusedKey ?? null);
   const focusedCalls: boolean[] = [];
 
   return {
+    firstSelectedKey: computed(() => [...keys.value][0] ?? null),
     focusedCalls,
+    focusedKey: computed(() => focusedKey.value),
     isSelected: (key: DragKey) => keys.value.has(key),
+    lastSelectedKey: computed(() => [...keys.value][keys.value.size - 1] ?? null),
     selectedKeys: computed(() => keys.value),
+    selectionMode: computed(() => options.selectionMode ?? "multiple"),
     setFocused: (isFocused: boolean) => focusedCalls.push(isFocused),
+    setFocusedKey: (key: DragKey | null) => (focusedKey.value = key),
+    setSelectedKeys: (next: Iterable<DragKey>) => (keys.value = new Set(next)),
   } as unknown as UseSelectionManagerReturn & {focusedCalls: boolean[]};
 };
 
