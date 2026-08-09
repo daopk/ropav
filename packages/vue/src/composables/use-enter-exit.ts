@@ -61,8 +61,17 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
   const isExiting = computed(() => exitState.value === "exiting");
 
   let cancelled = false;
-  /** Identifies the latest wait, so a superseded one cannot resolve over the top of it. */
-  let generation = 0;
+
+  /**
+   * The latest wait of each phase, so a superseded one cannot resolve over the top of it.
+   *
+   * One counter per phase rather than one shared: entry and exit are waited for independently, and
+   * a single counter meant an exit beginning while the entry was still animating invalidated that
+   * entry's wait for good. Nothing ever cleared the entry state after that, and the element stayed
+   * at the first frame of its entry animation — scaled down and fully transparent, so an overlay
+   * closed and reopened quickly became invisible until it was destroyed.
+   */
+  const generations = {entering: 0, exiting: 0};
 
   /**
    * Resolve once every animation running on the element has settled.
@@ -72,11 +81,11 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
    * finds no animations at all — which would clear the state again and leave the animation never
    * playing.
    */
-  const whenSettled = (onEnd: () => void) => {
-    const current = ++generation;
+  const whenSettled = (phase: "entering" | "exiting", onEnd: () => void) => {
+    const current = ++generations[phase];
 
     void nextTick(() => {
-      if (cancelled || current !== generation) return;
+      if (cancelled || current !== generations[phase]) return;
 
       const element = getElement();
 
@@ -97,7 +106,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
       // `allSettled`, not `all`: an interrupted animation rejects, and an interrupted entry still
       // has to clear the entering state or the element would stay stuck at its start frame.
       void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-        if (!cancelled && current === generation) onEnd();
+        if (!cancelled && current === generations[phase]) onEnd();
       });
     });
   };
@@ -119,7 +128,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
         }
       }
 
-      whenSettled(() => {
+      whenSettled("entering", () => {
         entering.value = false;
       });
     },
@@ -150,7 +159,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
     ([active]) => {
       if (!active) return;
 
-      whenSettled(() => {
+      whenSettled("exiting", () => {
         if (exitState.value === "exiting") exitState.value = "closed";
       });
     },
