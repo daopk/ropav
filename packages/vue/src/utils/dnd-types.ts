@@ -94,6 +94,22 @@ export interface DragTypes {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * Preview
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Renders the image that follows the pointer during a drag.
+ *
+ * Callback-shaped rather than returning the node, because `setDragImage` only has effect while
+ * the `dragstart` handler is still on the stack: the renderer must produce the node and hand it
+ * back within the same tick, and the callback is what enforces that.
+ */
+export type DragPreviewRenderer = (
+  items: DragItem[],
+  callback: (node: HTMLElement | null, x?: number, y?: number) => void,
+) => void;
+
+/* -------------------------------------------------------------------------------------------------
  * Targets
  * -----------------------------------------------------------------------------------------------*/
 

@@ -60,8 +60,9 @@ describe("dnd constants", () => {
     });
 
     // The same collision as above, between `none` and `cancel`. React Aria patches only the
-    // `all` case and so resolves the empty mask to `"cancel"`, which `effectAllowed` rejects —
-    // leaving the transfer `"uninitialized"`, i.e. everything allowed rather than nothing.
+    // `all` case and resolves the empty mask to `"cancel"`, a value `effectAllowed` rejects; it
+    // gets away with it because `useDrag` rewrites `"cancel"` to `"none"` before assigning.
+    // Fixing the constant makes that workaround unnecessary.
     it("resolves the empty mask to none rather than cancel", () => {
       expect(EFFECT_ALLOWED[0]).toBe("none");
     });

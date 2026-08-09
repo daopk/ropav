@@ -59,10 +59,13 @@ export type EffectAllowed =
  * **Deviation from React Aria**, which reasserts only `all`. Its `EFFECT_ALLOWED[0]` is
  * therefore `"cancel"` — verified against the shipped `react-aria@3.51.0` build, not inferred.
  * That is not one of the values `effectAllowed` accepts (`none`, `copy`, `copyLink`, `copyMove`,
- * `link`, `linkMove`, `move`, `all`, `uninitialized`), so a browser ignores the assignment and
- * leaves the transfer at `uninitialized` — which means *every* operation is permitted, the exact
- * opposite of the empty mask being written. Both collisions are the same mistake; upstream
- * simply patched one of them.
+ * `link`, `linkMove`, `move`, `all`, `uninitialized`), and assigning it would leave the transfer
+ * at `uninitialized`, meaning *every* operation is permitted rather than none.
+ *
+ * Upstream is not actually broken by this: `useDrag` patches it back at the point of use, with
+ * `effectAllowed === 'cancel' ? 'none' : effectAllowed`. Fixing the constant instead makes that
+ * guard unnecessary and stops the next consumer inheriting a value the DOM rejects — both
+ * collisions are the same mistake, and this repairs the one upstream works around.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/effectAllowed
  */

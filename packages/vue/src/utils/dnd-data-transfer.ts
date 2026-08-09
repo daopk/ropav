@@ -108,6 +108,46 @@ export const writeToDataTransfer = (dataTransfer: DataTransfer, items: DragItem[
 };
 
 /**
+ * The matching rules a drop target's type question is answered by.
+ *
+ * Shared rather than living on the class, because the same question is asked on the keyboard
+ * path where there is no `DataTransfer` to build from — only a plain set of type strings. Both
+ * paths have to answer identically, or a `getDropOperation` written with a wildcard would accept
+ * a pointer drag and refuse the same drag driven from the keyboard.
+ */
+const matchesType = (
+  types: Set<string>,
+  includesUnknownTypes: boolean,
+  type: DragType | DragType[],
+): boolean => {
+  if (Array.isArray(type)) {
+    return type.some((candidate) => matchesType(types, includesUnknownTypes, candidate));
+  }
+
+  if (
+    includesUnknownTypes ||
+    (type === DIRECTORY_DRAG_TYPE && types.has(GENERIC_TYPE)) ||
+    type === "*/*"
+  ) {
+    return true;
+  }
+
+  if (typeof type !== "string") return false;
+
+  if (type.endsWith("/*")) {
+    const prefix = type.slice(0, -2);
+
+    for (const key of types) {
+      if (key.startsWith(prefix)) return true;
+    }
+
+    return false;
+  }
+
+  return types.has(type);
+};
+
+/**
  * What a drag carries, as far as a drop target may know while the drag is still moving.
  *
  * Ported from React Aria's `DragTypes`. Built once per `dragenter`/`dragover` because a
@@ -143,33 +183,23 @@ export class DataTransferDragTypes implements DragTypes {
   }
 
   has(type: DragType | DragType[]): boolean {
-    if (Array.isArray(type)) return type.some((candidate) => this.has(candidate));
-
-    if (
-      this.includesUnknownTypes ||
-      (type === DIRECTORY_DRAG_TYPE && this.types.has(GENERIC_TYPE)) ||
-      type === "*/*"
-    ) {
-      return true;
-    }
-
-    if (typeof type === "string") {
-      if (type.endsWith("/*")) {
-        const prefix = type.slice(0, -2);
-
-        for (const key of this.types) {
-          if (key.startsWith(prefix)) return true;
-        }
-
-        return false;
-      }
-
-      return this.types.has(type);
-    }
-
-    return false;
+    return matchesType(this.types, this.includesUnknownTypes, type);
   }
 }
+
+/**
+ * The same question answered from a plain set of type strings.
+ *
+ * The keyboard drag session never touches a `DataTransfer` — it knows the dragged items directly
+ * — so it holds the types as a `Set<string>`. React Aria hands that set straight to
+ * `getDropOperation`, where it duck-types as `DragTypes` because a `Set` also has a `has`
+ * method. That silently loses wildcard and directory matching on the keyboard path: `has("image/*")`
+ * against a set containing `"image/png"` answers `false`. Wrapping restores parity between the
+ * two paths.
+ */
+export const dragTypesFromSet = (types: Set<string>): DragTypes => ({
+  has: (type) => matchesType(types, false, type),
+});
 
 /**
  * Read drop items back off a native `DataTransfer`.
