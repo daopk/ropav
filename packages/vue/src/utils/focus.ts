@@ -30,6 +30,19 @@ export const focusableIn = (element: HTMLElement): HTMLElement[] =>
   [...element.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(isElementVisible);
 
 /**
+ * The controls inside `element` that Tab actually visits.
+ *
+ * Narrower than {@link focusableIn}, and the difference matters: the selector cannot express
+ * "not `tabindex="-1"`" for an element that is focusable by its tag alone, so a
+ * `<button tabindex="-1">` matches `button:not([disabled])` and counts as focusable. That is
+ * right for anything moving focus itself — a collection with a roving tab index holds every item
+ * at `-1` and still has to page through them — and wrong for anything modelling the tab order,
+ * where such a button is deliberately not a stop.
+ */
+export const tabbableIn = (element: HTMLElement): HTMLElement[] =>
+  focusableIn(element).filter((child) => child.tabIndex >= 0);
+
+/**
  * Whether an element scrolls its own content.
  *
  * Ported from React Aria's `isScrollable`. Paging keys need this: in a list that does not

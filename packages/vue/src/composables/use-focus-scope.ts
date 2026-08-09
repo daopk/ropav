@@ -2,7 +2,7 @@ import type {MaybeRefOrGetter} from "vue";
 
 import {onScopeDispose, toValue, watch} from "vue";
 
-import {focusableIn} from "../utils/focus";
+import {tabbableIn} from "../utils/focus";
 
 interface RegisteredScope {
   root: () => HTMLElement | null;
@@ -96,7 +96,7 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
   };
 
   const focusEnd = (root: HTMLElement, end: "first" | "last") => {
-    const focusable = focusableIn(root);
+    const focusable = tabbableIn(root);
     const target = end === "first" ? focusable[0] : focusable.at(-1);
 
     // Falls back to the scope itself, which is focusable precisely so that an overlay with no
@@ -117,7 +117,7 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
       if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return;
       if (innermostContainingScope() !== scope) return;
 
-      const focusable = focusableIn(root);
+      const focusable = tabbableIn(root);
 
       if (focusable.length === 0) {
         // Nothing to move to, so the scope element keeps focus rather than letting Tab out.
