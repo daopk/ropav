@@ -238,6 +238,30 @@ useFocusScope({
 usePreventScroll({isDisabled: () => isNonModal.value || !target.state.isOpen.value});
 
 /**
+ * Focus the overlay itself once it appears, when it is the dialog and nothing inside holds focus.
+ *
+ * Without this a keyboard user is left on the trigger with the overlay open beside them, and a
+ * screen reader never enters it.
+ *
+ * Only for an overlay whose trigger handed it a dialog id, which is what distinguishes an overlay
+ * that is itself the destination from one whose content manages focus for itself — a menu decides
+ * which item to start on, and taking focus here would undo that choice. React Aria focuses in both
+ * cases and lets the menu move focus afterwards; the narrower rule is a deliberate difference.
+ */
+watch(
+  [element, isDialog],
+  ([popover, dialog]) => {
+    if (!popover || !dialog || target.dialogId === undefined) return;
+    if (popover.contains(document.activeElement)) return;
+
+    // Never scrolls: the overlay is positioned by measurement, and letting focus scroll the page
+    // under it would leave it beside nothing.
+    popover.focus({preventScroll: true});
+  },
+  {flush: "post", immediate: true},
+);
+
+/**
  * The writing direction the overlay is placed in.
  *
  * Read from the trigger rather than inherited: the overlay is rendered at the end of the document,
