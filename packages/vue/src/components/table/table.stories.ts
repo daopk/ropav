@@ -1191,3 +1191,80 @@ export const DragAndDrop: Story = {
     `,
   }),
 };
+
+/**
+ * Reordering a thousand rows, of which only a screenful is ever in the DOM.
+ *
+ * Two things a plain table gets for free have to be arranged here, and both are what debt #47
+ * was about:
+ *
+ * - **The pointer resolves against the layout, not the DOM.** The element-searching delegate
+ *   would only ever find the rows that happen to be rendered; the layout knows where all thousand
+ *   *would* be, so the drop target is right at any scroll position.
+ * - **The indicators come from the body.** Every row is absolutely positioned, so an indicator
+ *   has to be a sibling of the row wrappers to be measured from the same origin — which is a
+ *   level the caller's row slot sits inside rather than beside.
+ */
+export const VirtualizedDragAndDrop: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const all = generateUsers(1000);
+      const order = shallowRef(all.map((user) => user.id));
+      const byId = new Map(all.map((user) => [user.id, user]));
+
+      const {dragAndDropHooks} = useDragAndDrop({
+        getItems: (keys) => [...keys].map((key) => ({"text/plain": byId.get(Number(key))!.name})),
+        onReorder(event) {
+          const moving = [...event.keys].map(Number);
+          const rest = order.value.filter((key) => !moving.includes(key));
+          const index = rest.indexOf(Number(event.target.key));
+          const at = event.target.dropPosition === "before" ? index : index + 1;
+
+          order.value = [...rest.slice(0, at), ...moving, ...rest.slice(at)];
+        },
+      });
+
+      return {
+        dragAndDropHooks,
+        layout: TableLayout,
+        users: computed(() => order.value.map((id) => byId.get(id)!)),
+      };
+    },
+    template: `
+      <Virtualizer :layout="layout" :layout-options="{rowHeight: 42, headingHeight: 42}">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              aria-label="Reorderable virtualized table"
+              class="h-[500px] min-w-[700px] scrollbar overflow-auto"
+              :drag-and-drop-hooks="dragAndDropHooks"
+              selection-mode="multiple"
+            >
+              <TableHeader class="h-full w-full">
+                <TableColumn id="drag" :max-width="48" :min-width="48" />
+                <TableColumn id="name" is-row-header :min-width="160">Name</TableColumn>
+                <TableColumn id="role" :min-width="220">Role</TableColumn>
+              </TableHeader>
+              <TableBody :item-text-value="(user) => user.name" :items="users">
+                <template #default="{item}">
+                  <TableRow :id="item.id" :text-value="item.name">
+                    <TableCell>
+                      <TableDragHandle>
+                        <Button is-icon-only size="sm" variant="ghost">
+                          <IconGrip />
+                        </Button>
+                      </TableDragHandle>
+                    </TableCell>
+                    <TableCell :text-value="item.name">{{ item.name }}</TableCell>
+                    <TableCell>{{ item.role }}</TableCell>
+                  </TableRow>
+                </template>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+        </Table>
+      </Virtualizer>
+    `,
+  }),
+};

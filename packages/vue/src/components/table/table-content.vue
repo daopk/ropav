@@ -4,12 +4,14 @@ import type {CollectionKey} from "../../composables/use-collection";
 import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {TableCollectionItems} from "../../composables/use-table-collection";
+import type {DropTargetDelegate} from "../../utils/dnd-types";
 
 import {computed, shallowRef, watch} from "vue";
 
 import {toTableDragCollection} from "../../composables/table-drag-collection";
 import {useControllableState} from "../../composables/use-controllable-state";
 import {useDescription} from "../../composables/use-description";
+import {useDndPersistedKeys} from "../../composables/use-dnd-persisted-keys";
 import {useGridKeyboard} from "../../composables/use-grid-keyboard";
 import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection-announcement";
 import {useId} from "../../composables/use-id";
@@ -178,17 +180,53 @@ const toggleExpanded = (rowKey: CollectionKey) => {
   expanded.setState(next);
 };
 
-/**
- * The focused row stays rendered wherever it is, exactly as React Aria does — the roving tab stop
- * lives on that element, and letting it leave the DOM drops focus to the document. Its cells come
- * with it, because every cell of a placed row is placed. Selected rows are deliberately *not*
- * kept: React does not keep them either.
- */
-const persistedKeys = computed(() => {
-  const key = selection.focusedKey.value;
+/* -------------------------------------------------------------------------------------------------
+ * Drag and drop — state
+ * -----------------------------------------------------------------------------------------------*/
 
-  return key == null ? new Set<CollectionKey>() : new Set([key]);
+/**
+ * Both halves are opt-in, and the hooks only exist when the caller asked for them.
+ *
+ * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag
+ * and drop layer out of a table that does not use it.
+ *
+ * Split in two: the state is built here because the persisted keys are derived from it and the
+ * virtualizer needs those, while the hooks that *use* the state need the keyboard delegate and so
+ * have to wait until below it.
+ */
+const dnd = props.dragAndDropHooks;
+const dragCollection = toTableDragCollection(collection);
+// Named apart from `sort`'s own `direction` parameter, which is a sort order rather than a
+// writing direction.
+const locale = useLocale();
+const textDirection = computed(() => locale.value.direction);
+
+const dragState = dnd?.useDraggableCollectionState?.({
+  collection: dragCollection,
+  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
+  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
+  isDisabled: dnd.options.isDisabled,
+  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
+  onDragStart: (event) => dnd.options.onDragStart?.(event),
+  selectionManager: selection,
 });
+
+const dropState = dnd?.useDroppableCollectionState?.({
+  ...dnd.options,
+  collection: dragCollection,
+  selectionManager: selection,
+});
+
+/**
+ * The rows kept rendered wherever they are.
+ *
+ * The focused row always, exactly as React Aria does — the roving tab stop lives on that element,
+ * and letting it leave the DOM drops focus to the document; its cells come with it, because every
+ * cell of a placed row is placed. During a keyboard or screen reader drag the drop target joins
+ * it, because that one is reached by pressing a key rather than by scrolling to it. Selected rows
+ * are deliberately *not* kept: React does not keep them either.
+ */
+const persistedKeys = useDndPersistedKeys(() => selection.focusedKey.value, dnd, dropState);
 
 const virtualizer =
   isVirtualized && collection.virtualized
@@ -273,39 +311,10 @@ const keyboard = useGridKeyboard({
 useGridSelectionAnnouncement({collection: collection.rows, selection});
 
 /* -------------------------------------------------------------------------------------------------
- * Drag and drop
+ * Drag and drop — wiring
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * Both halves are opt-in, and the hooks only exist when the caller asked for them.
- *
- * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag
- * and drop layer out of a table that does not use it.
- */
-const dnd = props.dragAndDropHooks;
-const dragCollection = toTableDragCollection(collection);
-// Named apart from `sort`'s own `direction` parameter, which is a sort order rather than a
-// writing direction.
-const locale = useLocale();
-const textDirection = computed(() => locale.value.direction);
-
-const dragState = dnd?.useDraggableCollectionState?.({
-  collection: dragCollection,
-  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
-  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
-  isDisabled: dnd.options.isDisabled,
-  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
-  onDragStart: (event) => dnd.options.onDragStart?.(event),
-  selectionManager: selection,
-});
-
 if (dnd && dragState) dnd.useDraggableCollection?.(dragState, element);
-
-const dropState = dnd?.useDroppableCollectionState?.({
-  ...dnd.options,
-  collection: dragCollection,
-  selectionManager: selection,
-});
 
 /**
  * Rows in document order, which is the walk a drag makes down the table.
@@ -339,11 +348,15 @@ if (dnd && dropState) {
    */
   const pointerDelegate =
     dnd.dropTargetDelegate ??
-    new dnd.ListDropTargetDelegate!(dragCollection, element, {
-      direction: textDirection.value,
-      layout: "stack",
-      orientation: "vertical",
-    });
+    // The DOM-based delegate searches for elements, and outside the window there are none — so
+    // a virtualized table asks its layout instead, which knows where every row *would* be.
+    (virtualizerConfig?.layout.value.getDropTargetFromPoint != null
+      ? (virtualizerConfig.layout.value as DropTargetDelegate)
+      : new dnd.ListDropTargetDelegate!(dragCollection, element, {
+          direction: textDirection.value,
+          layout: "stack",
+          orientation: "vertical",
+        }));
 
   droppable = dnd.useDroppableCollection?.(
     {
@@ -450,6 +463,9 @@ if (virtualizer && collection.virtualized && scroll) {
   });
 
   provideVirtualizerStateContext({
+    getDropTargetLayoutInfo: virtualizerConfig!.layout.value.getDropTargetLayoutInfo?.bind(
+      virtualizerConfig!.layout.value,
+    ),
     getIndex: (key) => collection.rows.getIndex(key),
     getLayoutInfo: virtualizer.getLayoutInfo,
     itemCount: computed(() => collection.rows.size.value),

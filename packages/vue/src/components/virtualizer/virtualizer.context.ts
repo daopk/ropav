@@ -1,3 +1,4 @@
+import type {ItemDropTarget} from "../../utils/dnd-types";
 import type {Size} from "../../utils/virtualizer-geometry";
 import type {Layout} from "../../utils/virtualizer-layout";
 import type {LayoutInfo, VirtualizerKey} from "../../utils/virtualizer-layout-info";
@@ -35,6 +36,14 @@ export interface VirtualizerStateContext {
   /** An item's position among all of them, zero-based. */
   getIndex: (key: VirtualizerKey) => number;
   getLayoutInfo: (key: VirtualizerKey) => LayoutInfo | null;
+  /**
+   * Where a drop indicator for the given gap belongs, when the layout can say.
+   *
+   * A gap is not in the collection, so nothing has laid it out — only the layout knows how wide
+   * the line is and which boundary it straddles. Absent when the layout has no drag and drop
+   * support, which is what makes an indicator fall back to ordinary flow.
+   */
+  getDropTargetLayoutInfo?: (target: ItemDropTarget) => LayoutInfo;
   /** Records an element's measured size, for a layout working from estimates. */
   updateItemSize: (key: VirtualizerKey, size: Size) => void;
   shouldObserveItemSize: ComputedRef<boolean>;

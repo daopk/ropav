@@ -3,6 +3,7 @@ import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {DropTargetDelegate} from "../../utils/dnd-types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
 import {listboxVariants} from "@heroui/styles";
@@ -10,6 +11,7 @@ import {computed, shallowRef} from "vue";
 
 import {toDragCollection} from "../../composables/drag-collection";
 import {useCollection} from "../../composables/use-collection";
+import {useDndPersistedKeys} from "../../composables/use-dnd-persisted-keys";
 import {useId} from "../../composables/use-id";
 import {useListKeyboard} from "../../composables/use-list-keyboard";
 import {useSelectionManager} from "../../composables/use-selection-manager";
@@ -24,6 +26,7 @@ import {
   useVirtualizerConfigContext,
 } from "../virtualizer/virtualizer.context";
 
+import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
 import {provideListBoxContext} from "./list-box.context";
 
 /** Stands in while a virtualized listbox has no data yet, so the layout has something to read. */
@@ -94,16 +97,48 @@ const selection = useSelectionManager({
 
 const onAction = (key: CollectionKey) => emit("action", key);
 
-/**
- * The focused key is kept rendered wherever it is, exactly as React Aria does — the roving tab
- * stop lives on that element, and letting it leave the DOM drops focus to the document. Selected
- * keys are deliberately *not* kept: React does not keep them either.
- */
-const persistedKeys = computed(() => {
-  const key = selection.focusedKey.value;
+/* -------------------------------------------------------------------------------------------------
+ * Drag and drop — state
+ * -----------------------------------------------------------------------------------------------*/
 
-  return key == null ? new Set<CollectionKey>() : new Set([key]);
+/**
+ * Both halves are opt-in, and the hooks only exist when the caller asked for them.
+ *
+ * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag and
+ * drop layer out of a listbox that does not use it.
+ *
+ * Split in two: the state is built here because the persisted keys are derived from it and the
+ * virtualizer needs those, while the hooks that *use* the state need the keyboard delegate and so
+ * have to wait until below it.
+ */
+const dnd = props.dragAndDropHooks;
+const dragCollection = toDragCollection(collection);
+
+const dragState = dnd?.useDraggableCollectionState?.({
+  collection: dragCollection,
+  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
+  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
+  isDisabled: dnd.options.isDisabled,
+  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
+  onDragStart: (event) => dnd.options.onDragStart?.(event),
+  selectionManager: selection,
 });
+
+const dropState = dnd?.useDroppableCollectionState?.({
+  ...dnd.options,
+  collection: dragCollection,
+  selectionManager: selection,
+});
+
+/**
+ * The keys kept rendered wherever they are.
+ *
+ * The focused key always, exactly as React Aria does — the roving tab stop lives on that element,
+ * and letting it leave the DOM drops focus to the document. During a keyboard or screen reader
+ * drag the drop target joins it, because that one is reached by pressing a key rather than by
+ * scrolling to it. Selected keys are deliberately *not* kept: React does not keep them either.
+ */
+const persistedKeys = useDndPersistedKeys(() => selection.focusedKey.value, dnd, dropState);
 
 const virtualizer = virtualizerConfig
   ? useVirtualizer({
@@ -152,35 +187,10 @@ const keyboard = useListKeyboard({
 });
 
 /* -------------------------------------------------------------------------------------------------
- * Drag and drop
+ * Drag and drop — wiring
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * Both halves are opt-in, and the hooks only exist when the caller asked for them.
- *
- * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag and
- * drop layer out of a listbox that does not use it.
- */
-const dnd = props.dragAndDropHooks;
-const dragCollection = toDragCollection(collection);
-
-const dragState = dnd?.useDraggableCollectionState?.({
-  collection: dragCollection,
-  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
-  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
-  isDisabled: dnd.options.isDisabled,
-  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
-  onDragStart: (event) => dnd.options.onDragStart?.(event),
-  selectionManager: selection,
-});
-
 if (dnd && dragState) dnd.useDraggableCollection?.(dragState, element);
-
-const dropState = dnd?.useDroppableCollectionState?.({
-  ...dnd.options,
-  collection: dragCollection,
-  selectionManager: selection,
-});
 
 /**
  * The pointer half of dropping, attached statically below.
@@ -191,17 +201,27 @@ const dropState = dnd?.useDroppableCollectionState?.({
 let droppable: UseDroppableCollectionReturn | undefined;
 
 if (dnd && dropState) {
+  /**
+   * Which delegate resolves a pointer position.
+   *
+   * The DOM-based one searches for elements, and outside the window there are none — so a
+   * virtualized list asks its layout instead, which knows where every item *would* be. The
+   * layout only answers when it implements the method, so one without drag and drop support
+   * falls back.
+   */
+  const dropLayout = virtualizerConfig?.layout.value;
+  const pointerDelegate: DropTargetDelegate =
+    dropLayout?.getDropTargetFromPoint != null
+      ? (dropLayout as DropTargetDelegate)
+      : new dnd.ListDropTargetDelegate!(dragCollection, element, {
+          layout: "stack",
+          orientation: "vertical",
+        });
+
   droppable = dnd.useDroppableCollection?.(
     {
       ...dnd.options,
-      // The listbox's own delegate unless the caller brought one — a virtualized list answers
-      // from its layout rather than from the DOM.
-      dropTargetDelegate:
-        dnd.dropTargetDelegate ??
-        new dnd.ListDropTargetDelegate!(dragCollection, element, {
-          layout: "stack",
-          orientation: "vertical",
-        }),
+      dropTargetDelegate: dnd.dropTargetDelegate ?? pointerDelegate,
       keyboardDelegate: keyboard,
     },
     dropState,
@@ -211,6 +231,19 @@ if (dnd && dropState) {
 
 /** Whether the collection as a whole is the current drop target. */
 const isRootDropTarget = computed(() => dropState?.isDropTarget({type: "root"}) ?? false);
+
+/**
+ * A windowed listbox renders its own drop indicators; a plain one leaves them to the caller.
+ *
+ * Not a second way of doing the same thing — it is the only way. An indicator is positioned
+ * against the item wrappers it sits between, which makes it their **sibling**, and this is the
+ * level that produces them. Markup written in the item slot lands *inside* one wrapper, where an
+ * absolute offset would be measured from the wrong origin and clipped by its overflow.
+ */
+const rendersDropIndicators = computed(() => isVirtualized.value && dropState != null);
+
+/** The gap after the last item, which no item's own "before" indicator covers. */
+const lastItemKey = computed(() => collection.getLastKey());
 
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
@@ -233,6 +266,9 @@ provideListBoxContext({
 if (virtualizer && virtualizerConfig) {
   provideVirtualizerStateContext({
     getIndex: (key) => collection.getIndex(key),
+    getDropTargetLayoutInfo: virtualizerConfig.layout.value.getDropTargetLayoutInfo?.bind(
+      virtualizerConfig.layout.value,
+    ),
     getLayoutInfo: virtualizer.getLayoutInfo,
     itemCount: computed(() => source.value?.itemCount ?? 0),
     shouldObserveItemSize: virtualizerConfig.shouldObserveItemSize,
@@ -275,13 +311,19 @@ const onKeydown = (event: KeyboardEvent) => {
     @keydown.capture="typeahead.onKeydownCapture"
   >
     <div v-if="isVirtualized" role="presentation" :style="scroll?.contentStyle.value">
-      <VirtualizerItem
-        v-for="view in virtualizer?.visibleViews.value"
-        :key="view.key"
-        :layout-info="view.layoutInfo"
-      >
-        <slot :index="view.node?.index" :item="itemOf(view.node)" />
-      </VirtualizerItem>
+      <template v-for="view in virtualizer?.visibleViews.value" :key="view.key">
+        <ListBoxDropIndicator
+          v-if="rendersDropIndicators"
+          :target="{dropPosition: 'before', key: view.key, type: 'item'}"
+        />
+        <VirtualizerItem :layout-info="view.layoutInfo">
+          <slot :index="view.node?.index" :item="itemOf(view.node)" />
+        </VirtualizerItem>
+      </template>
+      <ListBoxDropIndicator
+        v-if="rendersDropIndicators && lastItemKey != null"
+        :target="{dropPosition: 'after', key: lastItemKey, type: 'item'}"
+      />
     </div>
     <slot v-else />
   </div>

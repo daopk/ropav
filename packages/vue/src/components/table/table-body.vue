@@ -7,6 +7,7 @@ import {computed, onMounted, shallowRef, watch} from "vue";
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 
+import TableDropIndicator from "./table-drop-indicator.vue";
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
 
@@ -19,7 +20,7 @@ defineSlots<{
 }>();
 
 const {slots} = useTableContext();
-const {collection} = useTableGridContext();
+const {collection, dropState} = useTableGridContext();
 
 const virtualizer = useTableVirtualizerContext();
 
@@ -79,6 +80,19 @@ const layoutInfo = computed(() =>
  * `aria-colspan` and takes itself out of the layout — the row it stands in for has no geometry.
  */
 const emptyStateStyle = computed(() => (virtualizer ? {display: "contents"} : undefined));
+
+/**
+ * A windowed body renders its own drop indicators; a plain one leaves them to the caller.
+ *
+ * Not a second way of doing the same thing — it is the only way. An indicator is positioned
+ * against the row wrappers it sits between, which makes it their **sibling**, and this is the
+ * level that produces them. Markup written in the row slot lands *inside* one wrapper, where an
+ * absolute offset would be measured from the wrong origin and clipped by its overflow.
+ */
+const rendersDropIndicators = computed(() => virtualizer != null && dropState != null);
+
+/** The gap after the last row, which no row's own "before" indicator covers. */
+const lastRowKey = computed(() => collection.rows.getLastKey());
 </script>
 
 <template>
@@ -91,14 +105,19 @@ const emptyStateStyle = computed(() => (virtualizer ? {display: "contents"} : un
       role="rowgroup"
     >
       <template v-if="virtualizer">
-        <TableVirtualizerItem
-          v-for="view in virtualizer.rowViews.value"
-          :key="view.key"
-          :layout-info="view.layoutInfo"
-          :parent-layout-info="layoutInfo"
-        >
-          <slot :index="view.node?.index" :item="itemOf(view.node)" />
-        </TableVirtualizerItem>
+        <template v-for="view in virtualizer.rowViews.value" :key="view.key">
+          <TableDropIndicator
+            v-if="rendersDropIndicators"
+            :target="{dropPosition: 'before', key: view.key, type: 'item'}"
+          />
+          <TableVirtualizerItem :layout-info="view.layoutInfo" :parent-layout-info="layoutInfo">
+            <slot :index="view.node?.index" :item="itemOf(view.node)" />
+          </TableVirtualizerItem>
+        </template>
+        <TableDropIndicator
+          v-if="rendersDropIndicators && lastRowKey != null"
+          :target="{dropPosition: 'after', key: lastRowKey, type: 'item'}"
+        />
       </template>
       <slot v-else />
       <slot name="loader" />

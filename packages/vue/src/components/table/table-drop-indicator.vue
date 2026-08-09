@@ -5,7 +5,9 @@ import {computed, shallowRef} from "vue";
 
 import {dataAttr} from "../../utils/assertion";
 import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
 
+import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {useTableGridContext, useTableVirtualizerContext} from "./table.context";
 
 /**
@@ -27,6 +29,7 @@ const props = defineProps<TableDropIndicatorProps>();
 
 const {columnCount, dragAndDropHooks, dropState} = useTableGridContext();
 const virtualizer = useTableVirtualizerContext();
+const virtualizerState = useVirtualizerStateContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -44,33 +47,62 @@ const level = computed(() => {
 
   return (dropState?.collection.getItem(props.target.key)?.level ?? 0) + 1;
 });
+
+/**
+ * Where the gap sits, when the table is windowed.
+ *
+ * Every row of a virtualized table is placed absolutely, so an indicator left in ordinary flow
+ * would collapse to nothing at the top of the scroll box. The layout is the only thing that knows
+ * where the boundary between two rows is — and for a `root` target there is no boundary, so it
+ * stays where the rows themselves would put it.
+ */
+const layoutInfo = computed(() => {
+  if (!virtualizerState?.getDropTargetLayoutInfo || props.target.type !== "item") return null;
+
+  return virtualizerState.getDropTargetLayoutInfo(props.target);
+});
+
+/**
+ * The body's own geometry, which the offset above is measured from.
+ *
+ * Read here rather than passed in: every wrapper in a virtualized table is positioned against
+ * its parent, and a gap between two rows belongs to the same rowgroup they do.
+ */
+const parentLayoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(virtualizer.collection.value.bodyKey) : null,
+);
 </script>
 
 <template>
-  <component
-    :is="virtualizer ? 'div' : 'tr'"
+  <TableVirtualizerItem
     v-if="!isHidden"
-    :aria-level="level"
-    class="table__drop-indicator"
-    :class="props.class"
-    :data-drop-target="dataAttr(isDropTarget)"
-    data-slot="table-drop-indicator"
-    role="row"
-    :style="{'--table-row-level': level}"
+    :layout-info="layoutInfo"
+    :parent-layout-info="parentLayoutInfo"
   >
     <component
-      :is="virtualizer ? 'div' : 'td'"
-      :colspan="virtualizer ? undefined : columnCount"
-      role="gridcell"
-      :style="{padding: 0}"
+      :is="virtualizer ? 'div' : 'tr'"
+      :aria-level="level"
+      class="table__drop-indicator"
+      :class="props.class"
+      :data-drop-target="dataAttr(isDropTarget)"
+      data-slot="table-drop-indicator"
+      role="row"
+      :style="{'--table-row-level': level}"
     >
-      <div
-        ref="element"
-        v-bind="indicator?.attrs.value"
-        role="button"
-        :style="visuallyHiddenStyle"
-        @click="indicator?.handlers.onClick()"
-      />
+      <component
+        :is="virtualizer ? 'div' : 'td'"
+        :colspan="virtualizer ? undefined : columnCount"
+        role="gridcell"
+        :style="{padding: 0}"
+      >
+        <div
+          ref="element"
+          v-bind="indicator?.attrs.value"
+          role="button"
+          :style="visuallyHiddenStyle"
+          @click="indicator?.handlers.onClick()"
+        />
+      </component>
     </component>
-  </component>
+  </TableVirtualizerItem>
 </template>

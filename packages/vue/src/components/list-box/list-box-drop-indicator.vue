@@ -4,6 +4,8 @@ import type {ListBoxDropIndicatorProps} from "./list-box.types";
 import {computed, shallowRef} from "vue";
 
 import {dataAttr} from "../../utils/assertion";
+import {VirtualizerItem} from "../virtualizer";
+import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
 
 import {useListBoxContext} from "./list-box.context";
 
@@ -21,6 +23,7 @@ import {useListBoxContext} from "./list-box.context";
 const props = defineProps<ListBoxDropIndicatorProps>();
 
 const {dragAndDropHooks, dropState} = useListBoxContext();
+const virtualizer = useVirtualizerStateContext();
 const element = shallowRef<HTMLElement | null>(null);
 
 const indicator =
@@ -30,18 +33,38 @@ const indicator =
 
 const isHidden = computed(() => indicator?.isHidden.value ?? true);
 const isDropTarget = computed(() => indicator?.isDropTarget.value ?? false);
+
+/**
+ * Where the gap sits, when the list is windowed.
+ *
+ * Every item in a virtualized list is placed absolutely, so an indicator left in ordinary flow
+ * would collapse to nothing at the top of the scroll box. The layout is the only thing that knows
+ * where the boundary between two items is — and for a `root` target there is no boundary, so it
+ * stays in flow. `null` everywhere else, which is what leaves the wrapper out entirely.
+ */
+const layoutInfo = computed(() => {
+  if (!virtualizer?.getDropTargetLayoutInfo || props.target.type !== "item") return null;
+
+  return virtualizer.getDropTargetLayoutInfo(props.target);
+});
+
+/** Attributes only, never listeners — see §3.4. */
+const attrs = computed(() => ({
+  ...indicator?.attrs.value,
+  class: ["list-box__drop-indicator", props.class],
+  "data-drop-target": dataAttr(isDropTarget.value),
+  "data-slot": "list-box-drop-indicator",
+  role: "option",
+}));
 </script>
 
 <template>
-  <div
-    v-if="!isHidden"
-    ref="element"
-    v-bind="indicator?.attrs.value"
-    class="list-box__drop-indicator"
-    :class="props.class"
-    :data-drop-target="dataAttr(isDropTarget)"
-    data-slot="list-box-drop-indicator"
-    role="option"
-    @click="indicator?.handlers.onClick()"
-  />
+  <template v-if="!isHidden">
+    <!-- Wrapped only when windowed: outside a virtualizer there is nothing to position against,
+         and the extra element would sit between the listbox and its own option. -->
+    <VirtualizerItem v-if="layoutInfo" :layout-info="layoutInfo">
+      <div ref="element" v-bind="attrs" @click="indicator?.handlers.onClick()" />
+    </VirtualizerItem>
+    <div v-else ref="element" v-bind="attrs" @click="indicator?.handlers.onClick()" />
+  </template>
 </template>
