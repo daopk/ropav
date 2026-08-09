@@ -18,10 +18,10 @@ import type {CalendarDate, DateDuration, DateValue} from "@internationalized/dat
 export interface CalendarRootProps {
   class?: string;
   id?: string;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-  "aria-describedby"?: string;
-  "aria-details"?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
+  ariaDetails?: string;
   value?: CalendarValue;
   defaultValue?: CalendarValue;
   focusedValue?: DateValue | null;

@@ -93,10 +93,10 @@ const state = useCalendarState({
 
 const calendar = useCalendar(
   {
-    ariaDescribedby: () => props["aria-describedby"],
-    ariaDetails: () => props["aria-details"],
-    ariaLabel: () => props["aria-label"],
-    ariaLabelledby: () => props["aria-labelledby"],
+    ariaDescribedby: () => props.ariaDescribedby,
+    ariaDetails: () => props.ariaDetails,
+    ariaLabel: () => props.ariaLabel,
+    ariaLabelledby: () => props.ariaLabelledby,
     id: () => props.id,
     isDisabled: () => props.isDisabled,
     isInvalid: () => props.isInvalid,
