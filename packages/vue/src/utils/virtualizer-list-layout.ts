@@ -1,4 +1,8 @@
-import type {InvalidationContext, VirtualizerNode} from "./virtualizer-layout";
+import type {
+  InvalidationContext,
+  VirtualizerCollection,
+  VirtualizerNode,
+} from "./virtualizer-layout";
 import type {VirtualizerKey} from "./virtualizer-layout-info";
 
 import {Rect, Size} from "./virtualizer-geometry";
@@ -11,6 +15,11 @@ import {LayoutInfo} from "./virtualizer-layout-info";
  * Items are placed one after another along the block axis, each as wide as the scroll container
  * minus the padding. With `rowSize` given the geometry is arithmetic; without it each item is
  * placed at an estimate and corrected once it has been measured.
+ *
+ * The layout is lazy. It computes rows for the region it has been asked about — `requestedRect` —
+ * and accounts for everything outside it arithmetically, so a thousand rows cost about as much as
+ * a screenful. `validRect` records how much of that region is known-good, which is what lets a
+ * measured row survive the next pass instead of being placed at an estimate again.
  *
  * Two things are deliberately absent, both recorded as debt: the horizontal orientation, which no
  * HeroUI collection uses, and the `section`/`header`/`separator` node types, which cannot reach a
@@ -80,6 +89,16 @@ export class ListLayout<
 
   protected contentSize = new Size();
 
+  /** The region rows have been computed for. Everything outside it is only accounted for. */
+  protected requestedRect = new Rect();
+
+  /** The part of `requestedRect` whose rows are known-good. */
+  protected validRect = new Rect();
+
+  protected lastCollection: VirtualizerCollection | null = null;
+
+  private invalidateEverything = false;
+
   constructor(options: ListLayoutOptions = {}) {
     super();
     this.rowSize = options.rowSize ?? options.rowHeight ?? null;
@@ -97,6 +116,8 @@ export class ListLayout<
   }
 
   getLayoutInfo(key: VirtualizerKey): LayoutInfo | null {
+    this.ensureLayoutInfo(key);
+
     return this.layoutNodes.get(key)?.layoutInfo ?? null;
   }
 
@@ -121,6 +142,8 @@ export class ListLayout<
       searchRect.height = Math.ceil(height / rowSize) * rowSize;
     }
 
+    this.layoutIfNeeded(searchRect);
+
     const result: LayoutInfo[] = [];
 
     const addNodes = (nodes: LayoutNode[]) => {
@@ -138,6 +161,17 @@ export class ListLayout<
   }
 
   override update(context: InvalidationContext<Options>): void {
+    const collection = this.host!.collection;
+
+    // Everything cached is worthless when the container resized or a size option changed, so the
+    // requested region shrinks back to what is on screen rather than being recomputed whole.
+    this.invalidateEverything = this.shouldInvalidateEverything(context);
+
+    if (this.invalidateEverything) {
+      this.requestedRect = this.host!.visibleRect.copy();
+      this.layoutNodes.clear();
+    }
+
     const options = context.layoutOptions;
 
     this.rowSize = options?.rowSize ?? options?.rowHeight ?? this.rowSize;
@@ -151,24 +185,199 @@ export class ListLayout<
     this.padding = options?.padding ?? this.padding;
 
     this.rootNodes = this.buildCollection();
+
+    if (this.lastCollection && collection !== this.lastCollection) {
+      for (const key of this.lastCollection.keys) {
+        if (!collection.getNode(key)) this.layoutNodes.delete(key);
+      }
+    }
+
+    this.lastCollection = collection;
+    this.invalidateEverything = false;
+    this.validRect = this.requestedRect.copy();
+  }
+
+  override shouldInvalidateLayoutOptions(newOptions: Options, oldOptions: Options): boolean {
+    return (
+      (newOptions?.rowSize ?? newOptions?.rowHeight) !==
+        (oldOptions?.rowSize ?? oldOptions?.rowHeight) ||
+      (newOptions?.estimatedRowSize ?? newOptions?.estimatedRowHeight) !==
+        (oldOptions?.estimatedRowSize ?? oldOptions?.estimatedRowHeight) ||
+      (newOptions?.headingSize ?? newOptions?.headingHeight) !==
+        (oldOptions?.headingSize ?? oldOptions?.headingHeight) ||
+      (newOptions?.estimatedHeadingSize ?? newOptions?.estimatedHeadingHeight) !==
+        (oldOptions?.estimatedHeadingSize ?? oldOptions?.estimatedHeadingHeight) ||
+      (newOptions?.loaderSize ?? newOptions?.loaderHeight) !==
+        (oldOptions?.loaderSize ?? oldOptions?.loaderHeight) ||
+      newOptions?.gap !== oldOptions?.gap ||
+      newOptions?.padding !== oldOptions?.padding
+    );
+  }
+
+  /**
+   * Records a row's measured size.
+   *
+   * Returns whether anything moved, which is the virtualizer's cue to lay out again. The rows
+   * below this one are the ones that moved, so the valid region is cut off at this row's offset
+   * rather than thrown away entirely.
+   */
+  override updateItemSize(key: VirtualizerKey, size: Size): boolean {
+    const layoutNode = this.layoutNodes.get(key);
+
+    if (!layoutNode) return false;
+
+    const layoutInfo = layoutNode.layoutInfo;
+
+    layoutInfo.estimatedSize = false;
+
+    if (layoutInfo.rect.height === size.height) return false;
+
+    // Copied rather than mutated, so anything holding the old layout info sees it go stale.
+    const measured = layoutInfo.copy();
+
+    measured.rect.height = size.height;
+    layoutNode.layoutInfo = measured;
+
+    this.validRect.height = Math.min(this.validRect.height, layoutInfo.rect.y - this.validRect.y);
+
+    if (layoutNode.node?.type === "item" || layoutNode.node?.type === "row") {
+      this.requestedRect.height += measured.rect.height - layoutInfo.rect.height;
+    }
+
+    this.replaceLayoutInfo(key, layoutInfo, measured);
+
+    let parentKey = layoutInfo.parentKey;
+
+    while (parentKey != null) {
+      this.replaceLayoutInfo(parentKey, layoutInfo, measured);
+      parentKey = this.layoutNodes.get(parentKey)?.layoutInfo.parentKey ?? null;
+    }
+
+    return true;
+  }
+
+  protected shouldInvalidateEverything(context: InvalidationContext<Options>): boolean {
+    const options = context.layoutOptions;
+
+    return Boolean(
+      context.sizeChanged ||
+      this.rowSize !== (options?.rowSize ?? options?.rowHeight ?? this.rowSize) ||
+      this.headingSize !== (options?.headingSize ?? options?.headingHeight ?? this.headingSize) ||
+      this.loaderSize !== (options?.loaderSize ?? options?.loaderHeight ?? this.loaderSize) ||
+      this.gap !== (options?.gap ?? this.gap) ||
+      this.padding !== (options?.padding ?? this.padding),
+    );
+  }
+
+  /** Extends the computed region to cover `rect`, and to cover every persisted key. */
+  protected layoutIfNeeded(rect: Rect): void {
+    if (!this.lastCollection) return;
+
+    if (!this.requestedRect.containsRect(rect)) {
+      this.requestedRect = this.requestedRect.union(rect);
+      this.rootNodes = this.buildCollection();
+    }
+
+    for (const key of this.host!.persistedKeys) {
+      if (this.ensureLayoutInfo(key)) return;
+    }
+  }
+
+  /**
+   * Computes the whole layout when a key is asked about that the lazy pass never reached.
+   *
+   * Pressing End, or restoring focus to a selected row, asks about a key at an arbitrary offset;
+   * there is no way to know where it sits without laying out everything above it.
+   */
+  private ensureLayoutInfo(key: VirtualizerKey): boolean {
+    if (
+      this.layoutNodes.has(key) ||
+      !this.lastCollection ||
+      this.requestedRect.area >= this.contentSize.area
+    ) {
+      return false;
+    }
+
+    this.requestedRect = new Rect(0, 0, Infinity, Infinity);
+    this.rootNodes = this.buildCollection();
+    this.requestedRect = new Rect(0, 0, this.contentSize.width, this.contentSize.height);
+
+    return true;
+  }
+
+  private replaceLayoutInfo(
+    key: VirtualizerKey,
+    oldLayoutInfo: LayoutInfo,
+    newLayoutInfo: LayoutInfo,
+  ) {
+    const layoutNode = this.layoutNodes.get(key);
+
+    if (!layoutNode) return;
+
+    layoutNode.validRect = layoutNode.validRect.intersection(this.validRect);
+
+    if (layoutNode.layoutInfo === oldLayoutInfo) layoutNode.layoutInfo = newLayoutInfo;
   }
 
   protected buildCollection(offset: number = this.padding): LayoutNode[] {
     const collection = this.host!.collection;
+    const rootKeys = collection.rootKeys;
     const nodes: LayoutNode[] = [];
     const isEmpty = collection.itemCount === 0;
+    const rowStride = (this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE) + this.gap;
+    // Loaders are kept whatever the window is: a sentinel that is not in the DOM can never
+    // report that it came into view, so the next page would never be asked for.
+    const pendingLoaderKeys = rootKeys.filter((key) => collection.getNode(key)?.type === "loader");
 
     let y = isEmpty ? 0 : offset;
 
-    for (const key of collection.rootKeys) {
+    for (const [index, key] of rootKeys.entries()) {
       const node = collection.getNode(key);
 
       if (!node) continue;
+
+      const isRow = node.type === "item" || node.type === "row";
+
+      // Rows that end above the region asked about are accounted for, not built. This is what
+      // makes a thousand-row collection cost a screenful.
+      if (isRow && y + rowStride < this.requestedRect.y && !this.isValid(node, y)) {
+        y += rowStride;
+        continue;
+      }
 
       const layoutNode = this.buildChild(node, this.padding, y, null);
 
       y = layoutNode.layoutInfo.rect.maxY + this.gap;
       nodes.push(layoutNode);
+
+      if (node.type === "loader") {
+        pendingLoaderKeys.splice(pendingLoaderKeys.indexOf(key), 1);
+      }
+
+      if (!(isRow || node.type === "loader") || y <= this.requestedRect.maxY) continue;
+
+      // Past the region: place any remaining loader at its estimated offset, then account for
+      // the rows in between so the scrollbar still describes the whole collection.
+      let lastIndex = index;
+
+      for (const loaderKey of pendingLoaderKeys) {
+        const loaderNode = collection.getNode(loaderKey);
+
+        if (!loaderNode) continue;
+
+        const loaderIndex = rootKeys.indexOf(loaderKey);
+
+        y += (loaderIndex - lastIndex - 1) * rowStride;
+
+        const loader = this.buildChild(loaderNode, this.padding, y, null);
+
+        nodes.push(loader);
+        y = loader.layoutInfo.rect.maxY;
+        lastIndex = loaderIndex;
+      }
+
+      y += (rootKeys.length - lastIndex - 1) * rowStride;
+      break;
     }
 
     // The gap only sits *between* items, so the one added after the last is taken back.
@@ -186,6 +395,8 @@ export class ListLayout<
     y: number,
     parentKey: VirtualizerKey | null,
   ): LayoutNode {
+    if (this.isValid(node, y)) return this.layoutNodes.get(node.key)!;
+
     const layoutNode = this.buildNode(node, x, y);
 
     layoutNode.layoutInfo.parentKey = parentKey;
@@ -211,12 +422,60 @@ export class ListLayout<
 
   protected buildItem(node: VirtualizerNode, x: number, y: number): LayoutNode {
     const width = this.host!.size.width - this.padding - x;
-    const height = this.rowSize ?? this.estimatedRowSize ?? DEFAULT_ROW_SIZE;
-    const layoutInfo = new LayoutInfo(node.type, node.key, new Rect(x, y, width, height));
+    let height = this.rowSize;
+    let isEstimated = false;
 
-    layoutInfo.estimatedSize = this.rowSize == null;
+    if (height == null) {
+      const previous = this.layoutNodes.get(node.key);
 
-    return {children: [], layoutInfo, node, validRect: layoutInfo.rect.copy()};
+      // A row that has already been measured keeps that height. It is only an estimate again if
+      // the row got narrower or wider, or if the datum behind it changed — either can reflow it.
+      if (previous) {
+        height = previous.layoutInfo.rect.height;
+        isEstimated =
+          width !== previous.layoutInfo.rect.width ||
+          node !== previous.node ||
+          previous.layoutInfo.estimatedSize;
+      } else {
+        height = this.estimatedRowSize;
+        isEstimated = true;
+      }
+    }
+
+    const layoutInfo = new LayoutInfo(
+      node.type,
+      node.key,
+      new Rect(x, y, width, height ?? DEFAULT_ROW_SIZE),
+    );
+
+    layoutInfo.estimatedSize = isEstimated;
+
+    return {
+      children: [],
+      layoutInfo,
+      node,
+      validRect: layoutInfo.rect.intersection(this.requestedRect),
+    };
+  }
+
+  /**
+   * Whether a cached row can be reused as it stands.
+   *
+   * Everything here has to hold: nothing global was invalidated, the datum is the same object,
+   * the row is at the same offset, it sits inside the known-good region, and the part of it that
+   * was computed covers the part now being asked about.
+   */
+  protected isValid(node: VirtualizerNode, y: number): boolean {
+    const cached = this.layoutNodes.get(node.key);
+
+    return (
+      !this.invalidateEverything &&
+      !!cached &&
+      cached.node === node &&
+      cached.layoutInfo.rect.y === y &&
+      cached.layoutInfo.rect.intersects(this.validRect) &&
+      cached.validRect.containsRect(cached.layoutInfo.rect.intersection(this.requestedRect))
+    );
   }
 
   protected buildLoader(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -226,7 +485,12 @@ export class ListLayout<
 
     layoutInfo.estimatedSize = this.loaderSize == null && this.rowSize == null;
 
-    return {children: [], layoutInfo, node, validRect: layoutInfo.rect.copy()};
+    return {
+      children: [],
+      layoutInfo,
+      node,
+      validRect: layoutInfo.rect.intersection(this.requestedRect),
+    };
   }
 
   /**
