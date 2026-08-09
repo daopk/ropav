@@ -1,7 +1,7 @@
 import type {SliderOrientation, SliderState} from "./use-slider-state";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
-import {computed, onScopeDispose, toValue, watch, watchEffect} from "vue";
+import {computed, nextTick, onScopeDispose, toValue, watch, watchEffect} from "vue";
 
 import {clamp} from "../utils/number";
 
@@ -220,7 +220,23 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
   useFormReset(
     inputEl,
     () => state.defaultValues.value[index.value] ?? 0,
-    (value) => state.setThumbValue(index.value, value),
+    (value) => {
+      state.setThumbValue(index.value, value);
+      /*
+       * A tick later, on purpose. The `reset` event is dispatched *before* the browser puts the
+       * controls back, so a write from inside the listener is thrown away — and the input carries
+       * no `value` *attribute* (the binding writes the property), so the browser has nothing to
+       * restore from and puts a range input back to the **midpoint of its range**. When the value
+       * had not moved, the binding has nothing to re-render and that midpoint is what stays on
+       * screen: a slider defaulting to 30 reads 50 after a reset.
+       */
+      void nextTick(() => {
+        const input = inputEl.value;
+        const restored = String(state.getThumbValue(index.value));
+
+        if (input && input.value !== restored) input.value = restored;
+      });
+    },
   );
 
   onScopeDispose(() => detachRelease?.(), true);

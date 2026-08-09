@@ -429,5 +429,26 @@ describe("useSliderThumb", () => {
 
       dispose();
     });
+
+    it("puts the input itself back, not only the state", async () => {
+      const {dispose, form, input} = setup({defaultValue: 30, step: 10, withForm: true});
+
+      await nextTick();
+
+      expect(input.value).toBe("30");
+
+      // A real reset, not a synthetic `reset` event: only the real one makes the browser put the
+      // controls back, and that is where this goes wrong. The `reset` event is dispatched *before*
+      // the controls are restored, and the input carries no `value` attribute for the browser to
+      // restore from — so a range input lands on the midpoint of its range. With the value already
+      // at its default the binding has nothing to re-render, and 50 is what would stay on screen.
+      form!.reset();
+      await nextTick();
+      await nextTick();
+
+      expect(input.value).toBe("30");
+
+      dispose();
+    });
   });
 });
