@@ -47,6 +47,14 @@ const elementsFor = (keys: CollectionKey[]) => {
   return {container, elements};
 };
 
+/** A column that leaves every width to the browser, which is every column outside a resize. */
+const NO_WIDTHS = {
+  defaultWidth: () => undefined,
+  maxWidth: () => undefined,
+  minWidth: () => undefined,
+  width: () => undefined,
+};
+
 const registerColumns = (
   columns: TableRegistry<TableColumnMeta>,
   keys: CollectionKey[],
@@ -59,6 +67,7 @@ const registerColumns = (
     cleanups.set(
       key,
       columns.register(key, {
+        ...NO_WIDTHS,
         element: () => elements.get(key) ?? null,
         isRowHeader: () => Boolean(options.rowHeaders?.includes(key)),
         textValue: () => String(key),
@@ -127,6 +136,7 @@ describe("createTableRegistry", () => {
     const {cleanups, elements} = registerColumns(registry, ["name"]);
 
     const replace = registry.register("name", {
+      ...NO_WIDTHS,
       element: () => elements.get("name") ?? null,
       isRowHeader: () => true,
       textValue: () => "Name",
