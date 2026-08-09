@@ -109,10 +109,10 @@ export const useColorFieldState = (options: UseColorFieldStateOptions = {}): Col
   const {step} = MIN_COLOR.getChannelRange("red");
 
   const controlledValue = computed(() => parseColorValue(toValue(options.value)));
-  const initialDefaultValue = parseColorValue(toValue(options.defaultValue));
+  const defaultValue = computed(() => parseColorValue(toValue(options.defaultValue)));
 
   const {setState: setColorValue, state: colorValue} = useControllableState<Color | null>({
-    defaultValue: initialDefaultValue ?? null,
+    defaultValue: defaultValue.value ?? null,
     onValueChange: (value) => options.onChange?.(value),
     value: () => controlledValue.value,
   });
@@ -232,7 +232,7 @@ export const useColorFieldState = (options: UseColorFieldStateOptions = {}): Col
     commit,
     decrement: () => step1(-step),
     decrementToMin: () => safelySetColorValue(MIN_COLOR),
-    defaultColorValue: computed(() => initialDefaultValue ?? initialValue),
+    defaultColorValue: computed(() => defaultValue.value ?? initialValue),
     increment: () => step1(step),
     incrementToMax: () => safelySetColorValue(MAX_COLOR),
     inputValue: computed(() => inputValue.value),
