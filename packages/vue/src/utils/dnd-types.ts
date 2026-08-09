@@ -225,6 +225,8 @@ export interface DragCollectionNode<T = unknown> {
   nextKey?: DragKey | null;
   /** The last child, for stepping past a whole expanded subtree. */
   lastChildKey?: DragKey | null;
+  /** The item's text, used to name it in a drop indicator's label. */
+  textValue?: string;
   /** The caller's own data for this item, handed back when building drag items. */
   value?: T;
 }
