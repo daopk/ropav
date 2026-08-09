@@ -9,6 +9,7 @@ export * from "./use-auto-scroll";
 export * from "./use-checkbox-group-state";
 export * from "./use-collator";
 export * from "./use-collection";
+export * from "./use-color-slider";
 export * from "./use-color-slider-state";
 export * from "./use-color-swatch";
 export * from "./use-controllable-state";
