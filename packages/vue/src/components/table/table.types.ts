@@ -4,6 +4,7 @@ import type {
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
+import type {TableColumnSize} from "../../composables/use-table-column-layout";
 import type {CheckboxVariants, TableVariants} from "@heroui/styles";
 
 export interface TableRootProps {
@@ -60,6 +61,27 @@ export interface TableColumnProps {
    * the variants type, so Vue casts a bare `is-row-header` attribute instead of reading `""`.
    */
   isRowHeader?: boolean;
+  /**
+   * Width the caller controls, in pixels, as a percentage of the table, or in `fr` units. A
+   * resize never changes it. Only read inside a `Table.ResizableContainer`.
+   */
+  width?: TableColumnSize;
+  /** Width the column starts at, when the caller is not controlling it. @default "1fr" */
+  defaultWidth?: TableColumnSize;
+  /** Smallest width a resize may reach. Cannot be given in `fr`. @default 75 */
+  minWidth?: TableColumnSize;
+  /** Largest width a resize may reach. Cannot be given in `fr`. */
+  maxWidth?: TableColumnSize;
+}
+
+export interface TableResizableContainerProps {
+  class?: string;
+}
+
+export interface TableColumnResizerProps {
+  class?: string;
+  /** Accessible name of the resizer. @default "Resize column" */
+  ariaLabel?: string;
 }
 
 export interface TableBodyProps {
@@ -119,6 +141,10 @@ export interface TableColumnSlotProps {
   isFocusVisible: boolean;
   isHovered: boolean;
   isPressed: boolean;
+  /** Whether this column is the one being resized. */
+  isResizing: boolean;
+  /** Begin resizing this column. Does nothing outside a `Table.ResizableContainer`. */
+  startResize: () => void;
   /** The direction this column is sorted in, or `undefined` when another column is. */
   sortDirection?: TableSortDirection;
   /** Sort by this column. Without a direction, flips the current one. */

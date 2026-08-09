@@ -32,6 +32,8 @@ export interface UseGridKeyboardOptions {
   /** The element carrying `role="grid"`. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
   disallowSelectAll?: MaybeRefOrGetter<boolean | undefined>;
+  /** Hands every key back, for as long as something else owns them — a column being resized. */
+  isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
 }
@@ -360,6 +362,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     const element = getElement();
     const target = event.target;
 
+    if (toValue(options.isDisabled)) return;
     if (!element || !(target instanceof Node) || !element.contains(target)) return;
     // A control inside a cell answers its own keys — a checkbox's Space, a button's Enter.
     if (isTableCellControl(target)) return;
@@ -493,6 +496,11 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
     selection.setFocused(true);
 
+    // While something else owns the keys — a column being resized — the grid still tracks that it
+    // holds focus, but it must not decide where focus goes. React Aria swaps its whole collection
+    // handler set for exactly this pair while keyboard navigation is off.
+    if (toValue(options.isDisabled)) return;
+
     if (focused.value.rowKey != null || focused.value.columnKey != null) return;
 
     const from = event.relatedTarget;
@@ -526,7 +534,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
   watch(
     () => focused.value,
     (target) => {
-      if (!selection.isFocused.value) return;
+      if (!selection.isFocused.value || toValue(options.isDisabled)) return;
       if (target.rowKey == null && target.columnKey == null) return;
 
       const element = elementFor(target);

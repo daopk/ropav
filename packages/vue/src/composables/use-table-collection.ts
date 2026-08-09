@@ -1,4 +1,5 @@
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
+import type {TableColumnSize} from "./use-table-column-layout";
 import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";
@@ -18,6 +19,12 @@ export interface TableColumnMeta extends TableRegistryMeta {
   isRowHeader: () => boolean;
   /** The column's own text, which is how a sort is announced by name. */
   textValue: () => string;
+  /** A width the caller controls, which a resize never writes to. */
+  width: () => TableColumnSize | null | undefined;
+  /** The width the column starts at while the caller is not controlling it. */
+  defaultWidth: () => TableColumnSize | null | undefined;
+  minWidth: () => TableColumnSize | null | undefined;
+  maxWidth: () => TableColumnSize | null | undefined;
 }
 
 export interface TableCellMeta extends TableRegistryMeta {

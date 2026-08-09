@@ -11,11 +11,17 @@ import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection
 import {useId} from "../../composables/use-id";
 import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
+import {useTableColumnLayout} from "../../composables/use-table-column-layout";
 import {useTypeahead} from "../../composables/use-typeahead";
 import {composeSlotClassName} from "../../utils/compose";
 import {announce} from "../../utils/live-announcer";
 
-import {provideTableGridContext, useTableContext} from "./table.context";
+import {
+  provideTableColumnLayoutContext,
+  provideTableGridContext,
+  useTableContext,
+  useTableResizableContainerContext,
+} from "./table.context";
 
 // `disallowEmptySelection` carries three states: a Boolean prop with no default is cast to
 // `false`, which reads as a caller decision the selection manager would then honour.
@@ -61,7 +67,43 @@ const selection = useSelectionManager({
   selectionMode: () => props.selectionMode,
 });
 
-const keyboard = useGridKeyboard({collection, element, selection});
+/**
+ * Column widths only exist inside a resizable container, which is what supplies the width they
+ * are laid out against. The layout is built here rather than there because it needs the
+ * collection, and only the grid has one — the same split React Aria makes.
+ */
+const resizableContainer = useTableResizableContainerContext();
+
+const columnDefinitions = () =>
+  collection.columns.orderedKeys.value.map((key) => {
+    const column = collection.columns.getItem(key);
+
+    return {
+      defaultWidth: column?.defaultWidth(),
+      key,
+      maxWidth: column?.maxWidth(),
+      minWidth: column?.minWidth(),
+      width: column?.width(),
+    };
+  });
+
+const layout = resizableContainer
+  ? useTableColumnLayout({
+      columns: columnDefinitions,
+      tableWidth: resizableContainer.tableWidth,
+    })
+  : null;
+
+provideTableColumnLayoutContext(layout ? {...resizableContainer!, layout} : null);
+
+const keyboard = useGridKeyboard({
+  collection,
+  element,
+  // Arrow keys belong to the resizer while a column is being dragged, exactly as React Aria
+  // disables the grid's own navigation for the duration.
+  isDisabled: () => layout?.resizingColumn.value != null,
+  selection,
+});
 
 useGridSelectionAnnouncement({collection: collection.rows, selection});
 
@@ -147,6 +189,7 @@ watch(sortDescription, (description) => {
     :data-collection="collectionId"
     data-slot="table-content"
     role="grid"
+    :style="layout ? {tableLayout: 'fixed', width: 'min-content'} : undefined"
     :tabindex="keyboard.collectionTabIndex.value"
     @focusin="keyboard.onFocusin"
     @focusout="keyboard.onFocusout"

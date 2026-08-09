@@ -3,6 +3,10 @@ import type {TableCellMeta, TableRegistry, UseTableCollectionReturn} from "../..
 import type {CollectionKey} from "../../composables/use-collection";
 import type {UseGridKeyboardReturn} from "../../composables/use-grid-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
+import type {
+  TableColumnSize,
+  UseTableColumnLayoutReturn,
+} from "../../composables/use-table-column-layout";
 import type {tableVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
 
@@ -73,3 +77,49 @@ export const useTableRowContext = (): TableRowContext => {
 
   return context;
 };
+
+export interface TableResizableContainerContext {
+  /** Width the columns are laid out against: the scrollable box, not the table element. */
+  tableWidth: ComputedRef<number>;
+  onResizeStart: (widths: Map<CollectionKey, TableColumnSize>) => void;
+  onResize: (widths: Map<CollectionKey, TableColumnSize>) => void;
+  onResizeEnd: (widths: Map<CollectionKey, TableColumnSize>) => void;
+}
+
+/**
+ * Loose: resizing is opt-in. A table wrapped in the plain scroll container has no width to lay
+ * columns out against, and reads `null` here.
+ */
+export const [useTableResizableContainerContext, provideTableResizableContainerContext] =
+  createContext<TableResizableContainerContext | null>({
+    defaultValue: null,
+    name: "TableResizableContainerContext",
+    strict: false,
+  });
+
+export interface TableColumnLayoutContext extends TableResizableContainerContext {
+  layout: UseTableColumnLayoutReturn;
+}
+
+/**
+ * Loose for the same reason, and provided by the grid rather than the container: the layout needs
+ * the collection, and only the grid has it. This mirrors React Aria, where the container carries
+ * the width and the table itself builds the resize state.
+ */
+export const [useTableColumnLayoutContext, provideTableColumnLayoutContext] =
+  createContext<TableColumnLayoutContext | null>({
+    defaultValue: null,
+    name: "TableColumnLayoutContext",
+    strict: false,
+  });
+
+export interface TableColumnContext {
+  columnKey: ComputedRef<CollectionKey>;
+  /** Id of the `th`, which the resizer's own accessible name points at. */
+  headerId: ComputedRef<string>;
+}
+
+/** Strict: a resizer outside a column header has no column to resize. */
+export const [useTableColumnContext, provideTableColumnContext] = createContext<TableColumnContext>(
+  {name: "TableColumnContext"},
+);

@@ -11,7 +11,12 @@ import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 import {getCollectionTextValue} from "../../utils/text-value";
 
-import {useTableContext, useTableGridContext} from "./table.context";
+import {
+  provideTableColumnContext,
+  useTableColumnLayoutContext,
+  useTableContext,
+  useTableGridContext,
+} from "./table.context";
 
 const props = defineProps<TableColumnProps>();
 
@@ -36,9 +41,13 @@ watch(
 
     onCleanup(
       collection.columns.register(columnKey.value, {
+        defaultWidth: () => props.defaultWidth,
         element: () => element.value,
         isRowHeader: () => Boolean(props.isRowHeader),
+        maxWidth: () => props.maxWidth,
+        minWidth: () => props.minWidth,
         textValue: () => getCollectionTextValue(element.value),
+        width: () => props.width,
       }),
     );
   },
@@ -66,6 +75,32 @@ const ariaSort = computed(() =>
 // Says the header can be pressed at all — `aria-sort` reports the order but not that it is
 // yours to change. The wording is react-aria's own en-US string.
 const {describedBy} = useDescription(() => (allowsSorting.value ? "sortable column" : undefined));
+
+const headerId = computed(() => tableColumnHeaderId(tableId.value, columnKey.value));
+
+provideTableColumnContext({columnKey, headerId});
+
+// Only inside a resizable container does a column have a width of its own; otherwise the browser
+// lays the table out and the attribute would fight it.
+const resizable = useTableColumnLayoutContext();
+
+const isResizing = computed(() => resizable?.layout.resizingColumn.value === columnKey.value);
+
+const width = computed(() =>
+  resizable ? `${resizable.layout.getColumnWidth(columnKey.value)}px` : undefined,
+);
+
+const startResize = () => {
+  if (!resizable || isResizing.value) return;
+
+  resizable.onResizeStart(
+    resizable.layout.updateResizedColumns(
+      columnKey.value,
+      resizable.layout.getColumnWidth(columnKey.value),
+    ),
+  );
+  resizable.layout.startResize(columnKey.value);
+};
 
 const states = useInteractionStates();
 
@@ -110,7 +145,7 @@ const onKeydown = (event: KeyboardEvent) => {
 
 <template>
   <th
-    :id="tableColumnHeaderId(tableId, columnKey)"
+    :id="headerId"
     ref="element"
     :aria-colindex="ariaColIndex"
     :aria-describedby="describedBy"
@@ -123,9 +158,11 @@ const onKeydown = (event: KeyboardEvent) => {
     :data-hovered="dataAttr(isHovered)"
     :data-key="columnKey"
     :data-pressed="dataAttr(isPressed)"
+    :data-resizing="dataAttr(isResizing)"
     data-slot="table-column"
     :data-sort-direction="sortDirection"
     role="columnheader"
+    :style="width ? {width} : undefined"
     :tabindex="keyboard.columnTabIndex(columnKey)"
     @blur="states.onBlur"
     @click="onClick"
@@ -140,8 +177,10 @@ const onKeydown = (event: KeyboardEvent) => {
       :is-focus-visible="states.isFocusVisible.value"
       :is-hovered="isHovered"
       :is-pressed="isPressed"
+      :is-resizing="isResizing"
       :sort="sortByThisColumn"
       :sort-direction="sortDirection"
+      :start-resize="startResize"
     />
   </th>
 </template>

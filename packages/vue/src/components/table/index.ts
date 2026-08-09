@@ -1,9 +1,11 @@
 import TableBody from "./table-body.vue";
 import TableCell from "./table-cell.vue";
+import TableColumnResizer from "./table-column-resizer.vue";
 import TableColumn from "./table-column.vue";
 import TableContent from "./table-content.vue";
 import TableFooter from "./table-footer.vue";
 import TableHeader from "./table-header.vue";
+import TableResizableContainer from "./table-resizable-container.vue";
 import TableRoot from "./table-root.vue";
 import TableRow from "./table-row.vue";
 import TableScrollContainer from "./table-scroll-container.vue";
@@ -18,9 +20,11 @@ import TableSortableColumnHeader from "./table-sortable-column-header.vue";
 export const Table = Object.assign(TableRoot, {
   Root: TableRoot,
   ScrollContainer: TableScrollContainer,
+  ResizableContainer: TableResizableContainer,
   Content: TableContent,
   Header: TableHeader,
   Column: TableColumn,
+  ColumnResizer: TableColumnResizer,
   Body: TableBody,
   Row: TableRow,
   Cell: TableCell,
@@ -36,9 +40,11 @@ export const Table = Object.assign(TableRoot, {
 export {
   TableRoot,
   TableScrollContainer,
+  TableResizableContainer,
   TableContent,
   TableHeader,
   TableColumn,
+  TableColumnResizer,
   TableBody,
   TableRow,
   TableCell,
@@ -51,9 +57,11 @@ export type {
   TableRootProps,
   TableRootProps as TableProps,
   TableScrollContainerProps,
+  TableResizableContainerProps,
   TableContentProps,
   TableHeaderProps,
   TableColumnProps,
+  TableColumnResizerProps,
   TableBodyProps,
   TableRowProps,
   TableCellProps,
