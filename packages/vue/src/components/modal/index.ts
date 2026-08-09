@@ -1,5 +1,7 @@
 import ModalBackdrop from "./modal-backdrop.vue";
 import ModalBody from "./modal-body.vue";
+import ModalCloseTrigger from "./modal-close-trigger.vue";
+import ModalClose from "./modal-close.vue";
 import ModalContainer from "./modal-container.vue";
 import ModalDialog from "./modal-dialog.vue";
 import ModalFooter from "./modal-footer.vue";
@@ -15,6 +17,8 @@ import ModalTrigger from "./modal-trigger.vue";
 export const Modal = Object.assign(ModalRoot, {
   Backdrop: ModalBackdrop,
   Body: ModalBody,
+  Close: ModalClose,
+  CloseTrigger: ModalCloseTrigger,
   Container: ModalContainer,
   Dialog: ModalDialog,
   Footer: ModalFooter,
@@ -31,6 +35,8 @@ export const Modal = Object.assign(ModalRoot, {
 export {
   ModalBackdrop,
   ModalBody,
+  ModalClose,
+  ModalCloseTrigger,
   ModalContainer,
   ModalDialog,
   ModalFooter,
@@ -44,6 +50,7 @@ export {
 export type {
   ModalBackdropProps,
   ModalBodyProps,
+  ModalCloseTriggerProps,
   ModalContainerProps,
   ModalDialogProps,
   ModalDialogSlotProps,
