@@ -235,9 +235,9 @@ export const Controlled: Story = {
           <Description>Current value: {{ value ? value.toString("hex") : "(empty)" }}</Description>
         </ColorField>
         <div class="flex gap-2">
-          <Button variant="tertiary" @press="setValue('#EF4444')">Set Red</Button>
-          <Button variant="tertiary" @press="setValue('#10B981')">Set Green</Button>
-          <Button variant="tertiary" @press="setValue(null)">Clear</Button>
+          <Button variant="tertiary" @click="setValue('#EF4444')">Set Red</Button>
+          <Button variant="tertiary" @click="setValue('#10B981')">Set Green</Button>
+          <Button variant="tertiary" @click="setValue(null)">Clear</Button>
         </div>
       </div>
     `,
