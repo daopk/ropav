@@ -7,6 +7,7 @@ import TableHeader from "./table-header.vue";
 import TableRoot from "./table-root.vue";
 import TableRow from "./table-row.vue";
 import TableScrollContainer from "./table-scroll-container.vue";
+import TableSelectionCheckbox from "./table-selection-checkbox.vue";
 import TableSortableColumnHeader from "./table-sortable-column-header.vue";
 
 /* -------------------------------------------------------------------------------------------------
@@ -24,6 +25,7 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Cell: TableCell,
   Footer: TableFooter,
+  SelectionCheckbox: TableSelectionCheckbox,
   SortableColumnHeader: TableSortableColumnHeader,
 });
 /* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
@@ -41,6 +43,7 @@ export {
   TableRow,
   TableCell,
   TableFooter,
+  TableSelectionCheckbox,
   TableSortableColumnHeader,
 };
 
@@ -55,8 +58,10 @@ export type {
   TableRowProps,
   TableCellProps,
   TableFooterProps,
+  TableSelectionCheckboxProps,
   TableSortableColumnHeaderProps,
   TableColumnSlotProps,
+  TableRowSlotProps,
   TableSortDescriptor,
   TableSortDirection,
 } from "./table.types";

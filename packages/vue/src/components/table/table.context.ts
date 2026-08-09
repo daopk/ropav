@@ -43,6 +43,8 @@ export const [useTableGridContext, provideTableGridContext] = createContext<Tabl
 
 export interface TableRowContext {
   rowKey: ComputedRef<CollectionKey>;
+  /** Ids of the cells that name this row, which a selection checkbox borrows for its own name. */
+  ariaLabelledBy: ComputedRef<string>;
   /** The cells of this row, which is how a cell learns which column it sits under. */
   cells: TableRegistry<TableCellMeta>;
 }

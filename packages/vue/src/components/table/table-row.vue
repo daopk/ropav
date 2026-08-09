@@ -26,8 +26,6 @@ const rowKey = computed(() => props.id ?? generatedKey.value);
 
 const cells = createTableRegistry<TableCellMeta>();
 
-provideTableRowContext({cells, rowKey});
-
 const element = shallowRef<HTMLElement | null>(null);
 
 /**
@@ -73,6 +71,8 @@ const ariaLabelledBy = computed(() =>
     .map((columnKey) => tableCellId(tableId.value, rowKey.value, columnKey))
     .join(" "),
 );
+
+provideTableRowContext({ariaLabelledBy, cells, rowKey});
 
 const selectionMode = computed(() => selection.selectionMode.value);
 const isSelected = computed(() => selection.isSelected(rowKey.value));

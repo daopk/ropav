@@ -4,7 +4,7 @@ import type {
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type {TableVariants} from "@heroui/styles";
+import type {CheckboxVariants, TableVariants} from "@heroui/styles";
 
 export interface TableRootProps {
   class?: string;
@@ -93,6 +93,17 @@ export interface TableCellProps {
 
 export interface TableFooterProps {
   class?: string;
+}
+
+export interface TableSelectionCheckboxProps {
+  class?: string;
+  /** Visual variant of the checkbox. */
+  variant?: CheckboxVariants["variant"];
+  /**
+   * Accessible name. Defaults to what React Aria names it: `Select All` in the header of a
+   * multiple-selection table, `Select` for a row or for a single-selection table.
+   */
+  ariaLabel?: string;
 }
 
 export type TableSortDirection = "ascending" | "descending";
