@@ -78,3 +78,80 @@ export const getScrollParent = (element: HTMLElement | null): HTMLElement | null
 
   return null;
 };
+
+export interface FocusManagerOptions {
+  /** Where to move from, when it should not be whatever holds focus right now. */
+  from?: Element | null;
+  /** Whether running off one end continues at the other. */
+  wrap?: boolean;
+}
+
+export interface FocusManager {
+  /** Move focus to the first stop inside the root, and return it. */
+  focusFirst: () => HTMLElement | null;
+  focusLast: () => HTMLElement | null;
+  focusNext: (options?: FocusManagerOptions) => HTMLElement | null;
+  focusPrevious: (options?: FocusManagerOptions) => HTMLElement | null;
+}
+
+/**
+ * Move focus around inside an element from the outside.
+ *
+ * Ported from React Aria's `createFocusManager`. A date field needs this because typing into one
+ * segment moves focus to the next: the segment knows it is finished, but only its field knows what
+ * comes after it.
+ *
+ * Takes a getter rather than an element so it can be built before the element exists, which is the
+ * order a component sets things up in.
+ *
+ * React walks the tree with a `TreeWalker` and stops on anything focusable; this reads the list
+ * {@link focusableIn} already builds. The two agree wherever nothing is held at `tabindex="-1"`,
+ * which no field of segments does.
+ */
+export const createFocusManager = (getRoot: () => HTMLElement | null | undefined): FocusManager => {
+  const stops = (): HTMLElement[] => {
+    const root = getRoot();
+
+    return root ? focusableIn(root) : [];
+  };
+
+  const move = (step: 1 | -1, options: FocusManagerOptions = {}): HTMLElement | null => {
+    const list = stops();
+
+    if (list.length === 0) return null;
+
+    const from = options.from ?? getRoot()?.ownerDocument.activeElement ?? null;
+    const index = from instanceof HTMLElement ? list.indexOf(from) : -1;
+    // Focus sitting outside the root counts as being just before the first stop, or just after
+    // the last one, so the first move lands on an end rather than doing nothing.
+    const target =
+      index === -1
+        ? list[step === 1 ? 0 : list.length - 1]
+        : (list[index + step] ??
+          (options.wrap ? list[step === 1 ? 0 : list.length - 1] : undefined));
+
+    target?.focus();
+
+    return target ?? null;
+  };
+
+  return {
+    focusFirst: () => {
+      const [first] = stops();
+
+      first?.focus();
+
+      return first ?? null;
+    },
+    focusLast: () => {
+      const list = stops();
+      const last = list[list.length - 1];
+
+      last?.focus();
+
+      return last ?? null;
+    },
+    focusNext: (options) => move(1, options),
+    focusPrevious: (options) => move(-1, options),
+  };
+};
