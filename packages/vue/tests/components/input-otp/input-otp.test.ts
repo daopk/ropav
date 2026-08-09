@@ -54,7 +54,7 @@ describe("InputOTP", () => {
     it("marks the container with the engine's own attribute", () => {
       const {control, root, unmount} = renderInputOTP();
 
-      expect(root).toHaveAttribute("data-input-otp-container");
+      expect(root).toHaveAttribute("data-input-otp-container", "true");
       expect(root).not.toHaveAttribute("data-slot");
       expect(control).toHaveAttribute("data-input-otp", "true");
 

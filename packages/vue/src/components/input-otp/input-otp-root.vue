@@ -89,7 +89,7 @@ const wrapperStyle = {inset: "0", pointerEvents: "none", position: "absolute"} a
   <div
     :ref="otp.registerContainer"
     :class="containerStyles"
-    data-input-otp-container
+    data-input-otp-container="true"
     :style="otp.rootStyle.value"
   >
     <slot />
