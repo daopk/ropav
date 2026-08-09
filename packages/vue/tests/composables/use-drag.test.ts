@@ -1,37 +1,33 @@
-import type {UseDragOptions, UseDragReturn} from "@/composables/use-drag";
+import type {DragHarnessOptions, DragHarnessReady} from "../fixtures/dnd-harness.types";
 
+import {renderVapor} from "@heroui/testing/helpers/vue";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope} from "vue";
 
 import {getDragSession} from "@/composables/drag-manager";
-import {useDrag} from "@/composables/use-drag";
 import {setInteractionModality} from "@/composables/use-interaction-states";
 import {CUSTOM_DRAG_TYPE} from "@/utils/dnd-constants";
 import {globalAllowedDropOperations} from "@/utils/dnd-state";
 
+import Harness from "../fixtures/drag-harness.vue";
+
 /**
- * `useDrag` outside a component.
+ * `useDrag`, mounted.
  *
- * Runs in an `effectScope` because the composable registers scope cleanup; without one, the
- * unmount path that fires `onDragEnd` for a removed element would never run.
+ * It resolves a locale, and injecting one only works inside a component — so the composable is
+ * driven through a harness rather than an `effectScope`. Handlers are still called directly, so
+ * a test controls the event it hands over.
  */
-const scopes: ReturnType<typeof effectScope>[] = [];
+const unmounts: (() => void)[] = [];
 
-const mount = (options: UseDragOptions): UseDragReturn => {
-  const scope = effectScope();
+const mount = (options: DragHarnessOptions = {}): DragHarnessReady => {
+  let ready!: DragHarnessReady;
+  const rendered = renderVapor(Harness, {
+    props: {onReady: (value: DragHarnessReady) => (ready = value), options},
+  });
 
-  scopes.push(scope);
+  unmounts.push(rendered.unmount);
 
-  return scope.run(() => useDrag(options))!;
-};
-
-const element = (): HTMLElement => {
-  const node = document.createElement("div");
-
-  node.tabIndex = 0;
-  document.body.appendChild(node);
-
-  return node;
+  return ready;
 };
 
 /**
@@ -62,7 +58,7 @@ beforeEach(() => {
 
 afterEach(() => {
   getDragSession()?.cancel();
-  while (scopes.length) scopes.pop()?.stop();
+  while (unmounts.length) unmounts.pop()?.();
   document.body.innerHTML = "";
   vi.restoreAllMocks();
 });
@@ -98,8 +94,7 @@ describe("useDrag", () => {
 
   describe("native drag", () => {
     it("writes the items onto the data transfer", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "payload"}]});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "payload"}]});
       const event = new DragEvent("dragstart", {
         bubbles: true,
         cancelable: true,
@@ -114,8 +109,7 @@ describe("useDrag", () => {
     });
 
     it("serializes several representations through the custom type", () => {
-      const node = element();
-      const {handlers} = mount({
+      const {element: node, handlers} = mount({
         getItems: () => [{"text/html": "<b>a</b>", "text/plain": "a"}],
       });
       const event = new DragEvent("dragstart", {dataTransfer: new DataTransfer()});
@@ -127,8 +121,7 @@ describe("useDrag", () => {
     });
 
     it("records the allowed operations globally for the drop side to read", () => {
-      const node = element();
-      const {handlers} = mount({
+      const {element: node, handlers} = mount({
         getAllowedDropOperations: () => ["copy"],
         getItems: () => [{"text/plain": "a"}],
       });
@@ -144,8 +137,7 @@ describe("useDrag", () => {
     // With no operations allowed the transfer must say "none". `"cancel"` is not a value
     // `effectAllowed` accepts, and the browser would silently fall back to allowing everything.
     it("writes none rather than cancel for an empty operation set", () => {
-      const node = element();
-      const {handlers} = mount({
+      const {element: node, handlers} = mount({
         getAllowedDropOperations: () => [],
         getItems: () => [{"text/plain": "a"}],
       });
@@ -158,8 +150,7 @@ describe("useDrag", () => {
     });
 
     it("reports the drag as started only after a frame", async () => {
-      const node = element();
-      const {handlers, isDragging} = mount({getItems: () => [{"text/plain": "a"}]});
+      const {element: node, handlers, isDragging} = mount({getItems: () => [{"text/plain": "a"}]});
 
       handlers.onDragstart(dragEvent("dragstart", node));
 
@@ -170,9 +161,8 @@ describe("useDrag", () => {
     });
 
     it("reports movement, ignoring events where the pointer has not moved", () => {
-      const node = element();
       const onDragMove = vi.fn();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}], onDragMove});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}], onDragMove});
 
       handlers.onDragstart(dragEvent("dragstart", node, {clientX: 10, clientY: 10}));
       handlers.onDrag(new DragEvent("drag", {clientX: 10, clientY: 10}));
@@ -183,9 +173,8 @@ describe("useDrag", () => {
     });
 
     it("reports the operation the drop side settled on when the drag ends", async () => {
-      const node = element();
       const onDragEnd = vi.fn();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}], onDragEnd});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}], onDragEnd});
 
       handlers.onDragstart(dragEvent("dragstart", node));
       await flushFrame();
@@ -201,8 +190,7 @@ describe("useDrag", () => {
 
   describe("keyboard drag", () => {
     it("starts an accessible drag on Enter", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}]});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const keyup = new KeyboardEvent("keyup", {bubbles: true, cancelable: true, key: "Enter"});
 
       Object.defineProperty(keyup, "currentTarget", {configurable: true, value: node});
@@ -214,8 +202,7 @@ describe("useDrag", () => {
 
     // Captured and swallowed so selection or an item action never also fires on the same key.
     it("swallows the Enter that starts the drag", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}]});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const keydown = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "Enter"});
 
       Object.defineProperty(keydown, "currentTarget", {configurable: true, value: node});
@@ -227,12 +214,11 @@ describe("useDrag", () => {
 
     // Enter on a child belongs to that child, not to the draggable wrapper.
     it("ignores Enter that came from a descendant", () => {
-      const node = element();
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const child = document.createElement("button");
 
       node.appendChild(child);
 
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const keyup = new KeyboardEvent("keyup", {bubbles: true, cancelable: true, key: "Enter"});
 
       Object.defineProperty(keyup, "currentTarget", {configurable: true, value: node});
@@ -243,8 +229,10 @@ describe("useDrag", () => {
     });
 
     it("leaves the keyboard path alone when a drag button owns it", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}], hasDragButton: true});
+      const {element: node, handlers} = mount({
+        getItems: () => [{"text/plain": "a"}],
+        hasDragButton: true,
+      });
       const keyup = new KeyboardEvent("keyup", {bubbles: true, cancelable: true, key: "Enter"});
 
       Object.defineProperty(keyup, "currentTarget", {configurable: true, value: node});
@@ -255,8 +243,7 @@ describe("useDrag", () => {
     });
 
     it("starts a drag from a drag button pressed by keyboard", () => {
-      const node = element();
-      const {onDragButtonPress} = mount({
+      const {element: node, onDragButtonPress} = mount({
         getItems: () => [{"text/plain": "a"}],
         hasDragButton: true,
       });
@@ -267,8 +254,7 @@ describe("useDrag", () => {
     });
 
     it("ignores a drag button pressed by a real pointer, which drags natively instead", () => {
-      const node = element();
-      const {onDragButtonPress} = mount({
+      const {element: node, onDragButtonPress} = mount({
         getItems: () => [{"text/plain": "a"}],
         hasDragButton: true,
       });
@@ -282,8 +268,7 @@ describe("useDrag", () => {
   describe("screen reader drag", () => {
     // A click with no pointer data behind it is how NVDA and JAWS activate in browse mode.
     it("starts an accessible drag from a virtual click", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}]});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const click = new MouseEvent("click", {bubbles: true, cancelable: true});
 
       Object.defineProperty(click, "target", {configurable: true, value: node});
@@ -293,8 +278,7 @@ describe("useDrag", () => {
     });
 
     it("ignores a click that came from a real pointer", () => {
-      const node = element();
-      const {handlers} = mount({getItems: () => [{"text/plain": "a"}]});
+      const {element: node, handlers} = mount({getItems: () => [{"text/plain": "a"}]});
       const click = new MouseEvent("click", {bubbles: true, cancelable: true, detail: 1});
 
       Object.defineProperty(click, "target", {configurable: true, value: node});
@@ -306,8 +290,11 @@ describe("useDrag", () => {
 
   describe("disabled", () => {
     it("does nothing on any accessible entry point", () => {
-      const node = element();
-      const {handlers, isDragging} = mount({
+      const {
+        element: node,
+        handlers,
+        isDragging,
+      } = mount({
         getItems: () => [{"text/plain": "a"}],
         isDisabled: true,
       });

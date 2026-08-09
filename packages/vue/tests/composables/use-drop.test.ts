@@ -1,11 +1,14 @@
-import type {UseDropOptions, UseDropReturn} from "@/composables/use-drop";
+import type {DropHarnessOptions, DropHarnessReady} from "../fixtures/dnd-harness.types";
+import type {DndStringFormatter} from "@/composables/drag-manager";
 
+import {renderVapor} from "@heroui/testing/helpers/vue";
+import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import {computed, shallowRef} from "vue";
 
 import {beginDragging, getDragSession} from "@/composables/drag-manager";
-import {useDrop} from "@/composables/use-drop";
 import {setInteractionModality} from "@/composables/use-interaction-states";
+import {dndStrings} from "@/i18n/dnd";
 import {DROP_OPERATION} from "@/utils/dnd-constants";
 import {writeToDataTransfer} from "@/utils/dnd-data-transfer";
 import {
@@ -16,8 +19,29 @@ import {
   setGlobalDropEffect,
 } from "@/utils/dnd-state";
 
-const scopes: ReturnType<typeof effectScope>[] = [];
+import Harness from "../fixtures/drop-harness.vue";
 
+/**
+ * `useDrop`, mounted.
+ *
+ * It resolves a locale, and injecting one only works inside a component — so the composable is
+ * driven through a harness rather than an `effectScope`. The harness owns the element, because
+ * `useDrop` registers it with the drag session on mount.
+ */
+const unmounts: (() => void)[] = [];
+
+const mount = (options: DropHarnessOptions = {}): DropHarnessReady & {node: HTMLElement} => {
+  let ready!: DropHarnessReady;
+  const rendered = renderVapor(Harness, {
+    props: {onReady: (value: DropHarnessReady) => (ready = value), options},
+  });
+
+  unmounts.push(rendered.unmount);
+
+  return {...ready, node: ready.element};
+};
+
+/** A bare element, for the cases that only need something to point a drag source at. */
 const element = (): HTMLElement => {
   const node = document.createElement("div");
 
@@ -25,19 +49,6 @@ const element = (): HTMLElement => {
   document.body.appendChild(node);
 
   return node;
-};
-
-const mount = (
-  options: Omit<UseDropOptions, "ref"> & {element?: HTMLElement} = {},
-): UseDropReturn & {node: HTMLElement} => {
-  const node = options.element ?? element();
-  const scope = effectScope();
-
-  scopes.push(scope);
-
-  const result = scope.run(() => useDrop({...options, ref: shallowRef(node)}))!;
-
-  return {...result, node};
 };
 
 /**
@@ -77,6 +88,16 @@ const dragEvent = (
   return event;
 };
 
+/**
+ * The message formatter `beginDragging` requires.
+ *
+ * Built once here rather than through `useLocalizedStringFormatter`, which needs a Vue scope to
+ * inject a locale from. These tests drive the manager directly, so the default locale is enough.
+ */
+const stringFormatter = computed(
+  () => new LocalizedStringFormatter("en-US", new LocalizedStringDictionary(dndStrings)),
+) as DndStringFormatter;
+
 beforeEach(() => {
   setInteractionModality("keyboard");
   setGlobalAllowedDropOperations(DROP_OPERATION.none);
@@ -86,7 +107,7 @@ beforeEach(() => {
 
 afterEach(() => {
   getDragSession()?.cancel();
-  while (scopes.length) scopes.pop()?.stop();
+  while (unmounts.length) unmounts.pop()?.();
   document.body.innerHTML = "";
 });
 
@@ -127,12 +148,8 @@ describe("useDrop", () => {
      * off and on.
      */
     it("stays a drop target while the pointer moves onto a child", () => {
-      const node = element();
-      const child = document.createElement("span");
-
-      node.appendChild(child);
-
-      const {handlers, isDropTarget} = mount({element: node});
+      const {handlers, isDropTarget, node} = mount();
+      const child = node.querySelector<HTMLElement>('[data-testid="child"]')!;
 
       handlers.onDragenter(dragEvent("dragenter", node));
       handlers.onDragenter(dragEvent("dragenter", node, {eventTarget: child}));
@@ -243,11 +260,14 @@ describe("useDrop", () => {
       const source = element();
       const {node} = mount({getDropOperation: () => "move"});
 
-      beginDragging({
-        allowedDropOperations: ["move"],
-        element: source,
-        items: [{"text/plain": "a"}],
-      });
+      beginDragging(
+        {
+          allowedDropOperations: ["move"],
+          element: source,
+          items: [{"text/plain": "a"}],
+        },
+        stringFormatter,
+      );
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
       expect(getDragSession()?.validDropTargets.map((t) => t.element)).toContain(node);
@@ -257,11 +277,14 @@ describe("useDrop", () => {
       const source = element();
       const {node} = mount({isDisabled: true});
 
-      beginDragging({
-        allowedDropOperations: ["move"],
-        element: source,
-        items: [{"text/plain": "a"}],
-      });
+      beginDragging(
+        {
+          allowedDropOperations: ["move"],
+          element: source,
+          items: [{"text/plain": "a"}],
+        },
+        stringFormatter,
+      );
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
       expect(getDragSession()?.validDropTargets.map((t) => t.element)).not.toContain(node);
@@ -279,11 +302,14 @@ describe("useDrop", () => {
       const getDropOperation = vi.fn(() => "move" as const);
 
       mount({getDropOperation});
-      beginDragging({
-        allowedDropOperations: ["move"],
-        element: source,
-        items: [{"text/plain": "a"}],
-      });
+      beginDragging(
+        {
+          allowedDropOperations: ["move"],
+          element: source,
+          items: [{"text/plain": "a"}],
+        },
+        stringFormatter,
+      );
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
       const [types] = getDropOperation.mock.calls[0] as unknown as [{has: (t: string) => boolean}];

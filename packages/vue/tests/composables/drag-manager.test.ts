@@ -1,6 +1,12 @@
-import type {DragManagerDragTarget, DragManagerDropTarget} from "@/composables/drag-manager";
+import type {
+  DndStringFormatter,
+  DragManagerDragTarget,
+  DragManagerDropTarget,
+} from "@/composables/drag-manager";
 
+import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {computed} from "vue";
 
 import {
   beginDragging,
@@ -11,6 +17,7 @@ import {
   registerDropTarget,
 } from "@/composables/drag-manager";
 import {setInteractionModality} from "@/composables/use-interaction-states";
+import {dndStrings} from "@/i18n/dnd";
 
 /**
  * The keyboard drag session.
@@ -65,6 +72,16 @@ const dragTargetFor = (
   ...overrides,
 });
 
+/**
+ * The message formatter `beginDragging` requires.
+ *
+ * Built once here rather than through `useLocalizedStringFormatter`, which needs a Vue scope to
+ * inject a locale from. These tests drive the manager directly, so the default locale is enough.
+ */
+const stringFormatter = computed(
+  () => new LocalizedStringFormatter("en-US", new LocalizedStringDictionary(dndStrings)),
+) as DndStringFormatter;
+
 beforeEach(() => {
   setInteractionModality("keyboard");
 });
@@ -85,7 +102,7 @@ describe("drag manager", () => {
     it("starts a session and reports it in flight", async () => {
       const source = addElement("source");
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       expect(isVirtualDragging()).toBe(true);
@@ -97,16 +114,18 @@ describe("drag manager", () => {
     it("refuses to start a second session while one is in flight", async () => {
       const source = addElement("source");
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
-      expect(() => beginDragging(dragTargetFor(source))).toThrow(/already dragging/i);
+      expect(() => beginDragging(dragTargetFor(source), stringFormatter)).toThrow(
+        /already dragging/i,
+      );
     });
 
     it("ends the session on cancel", async () => {
       const source = addElement("source");
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
       getDragSession()?.cancel();
 
@@ -132,7 +151,7 @@ describe("drag manager", () => {
       addDropTarget("accepts");
       addDropTarget("refuses", {getDropOperation: () => "cancel"});
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       const ids = getDragSession()?.validDropTargets.map((target) => target.element.id);
@@ -145,7 +164,10 @@ describe("drag manager", () => {
       const getDropOperation = vi.fn(() => "move" as const);
 
       addDropTarget("target", {getDropOperation});
-      beginDragging(dragTargetFor(source, {items: [{"text/html": "<b>a</b>", "text/plain": "a"}]}));
+      beginDragging(
+        dragTargetFor(source, {items: [{"text/html": "<b>a</b>", "text/plain": "a"}]}),
+        stringFormatter,
+      );
       await flushFrame();
 
       const [types, allowed] = getDropOperation.mock.calls[0] as unknown as [Set<string>, string[]];
@@ -162,7 +184,7 @@ describe("drag manager", () => {
       addDropTarget("first");
       addDropTarget("second");
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       expect(getDragSession()?.currentDropTarget?.element.id).toBe("first");
@@ -174,7 +196,7 @@ describe("drag manager", () => {
       addDropTarget("first");
       addDropTarget("second");
 
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Tab");
@@ -190,7 +212,7 @@ describe("drag manager", () => {
       const source = addElement("source");
 
       addDropTarget("only");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Tab");
@@ -204,7 +226,7 @@ describe("drag manager", () => {
 
       addDropTarget("first");
       addDropTarget("second");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Tab", {ctrlKey: true});
@@ -217,7 +239,7 @@ describe("drag manager", () => {
       const onKeyDown = vi.fn();
 
       addDropTarget("target", {onKeyDown});
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("ArrowDown");
@@ -233,7 +255,7 @@ describe("drag manager", () => {
       const onDrop = vi.fn();
 
       addDropTarget("target", {onDrop});
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Enter");
@@ -247,7 +269,7 @@ describe("drag manager", () => {
       const onDrop = vi.fn();
 
       addDropTarget("target", {onDrop});
-      beginDragging(dragTargetFor(source, {items: [{"text/plain": "payload"}]}));
+      beginDragging(dragTargetFor(source, {items: [{"text/plain": "payload"}]}), stringFormatter);
       await flushFrame();
       press("Enter");
 
@@ -265,7 +287,10 @@ describe("drag manager", () => {
       const onDragEnd = vi.fn();
 
       addDropTarget("target", {getDropOperation: () => "copy", onDrop: vi.fn()});
-      beginDragging(dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}));
+      beginDragging(
+        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        stringFormatter,
+      );
       await flushFrame();
       press("Enter");
 
@@ -280,7 +305,7 @@ describe("drag manager", () => {
       const onDropActivate = vi.fn();
 
       addDropTarget("target", {onDrop, onDropActivate});
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Enter", {altKey: true});
@@ -294,7 +319,7 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onDragEnd = vi.fn();
 
-      beginDragging(dragTargetFor(source, {onDragEnd}));
+      beginDragging(dragTargetFor(source, {onDragEnd}), stringFormatter);
       await flushFrame();
 
       press("Enter");
@@ -309,7 +334,7 @@ describe("drag manager", () => {
       const source = addElement("source");
 
       addDropTarget("target");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("Escape");
@@ -323,7 +348,7 @@ describe("drag manager", () => {
       const onDragEnd = vi.fn();
 
       addDropTarget("target");
-      beginDragging(dragTargetFor(source, {onDragEnd}));
+      beginDragging(dragTargetFor(source, {onDragEnd}), stringFormatter);
       await flushFrame();
 
       press("Escape");
@@ -342,7 +367,7 @@ describe("drag manager", () => {
 
       bystander.addEventListener("pointerdown", onPointerDown);
       addDropTarget("target");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       bystander.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true}));
@@ -356,7 +381,7 @@ describe("drag manager", () => {
       const source = addElement("source");
 
       addDropTarget("target");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       const pointerup = new PointerEvent("pointerup", {bubbles: true, cancelable: true});
@@ -373,7 +398,7 @@ describe("drag manager", () => {
 
       bystander.addEventListener("pointerdown", onPointerDown);
       addDropTarget("target");
-      beginDragging(dragTargetFor(source));
+      beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
       press("Escape");
 
@@ -418,7 +443,10 @@ describe("drag manager", () => {
       const {element} = addCollectionWithItem("copy");
       const onDragEnd = vi.fn();
 
-      beginDragging(dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}));
+      beginDragging(
+        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        stringFormatter,
+      );
       await flushFrame();
 
       virtualClick(element);
@@ -440,7 +468,10 @@ describe("drag manager", () => {
 
       const onDragEnd = vi.fn();
 
-      beginDragging(dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}));
+      beginDragging(
+        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        stringFormatter,
+      );
       await flushFrame();
 
       press("Enter");
