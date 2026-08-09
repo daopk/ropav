@@ -19,6 +19,7 @@ import {useFormattedTextField} from "./use-formatted-text-field";
 import {useId} from "./use-id";
 import {useLocale} from "./use-locale";
 import {useNumberFieldState} from "./use-number-field-state";
+import {useScrollWheel} from "./use-scroll-wheel";
 import {useSpinButton} from "./use-spin-button";
 
 /** What a stepper button gets from the field, kept apart from its listeners. */
@@ -46,6 +47,15 @@ export interface UseNumberFieldOptions extends UseNumberFieldStateOptions {
   decrementAriaLabel?: MaybeRefOrGetter<string | undefined>;
   /** Whether the wheel over a focused field is ignored. */
   isWheelDisabled?: MaybeRefOrGetter<boolean | undefined>;
+  /**
+   * State built elsewhere, for a field whose number is a view of something else.
+   *
+   * A colour channel field is the case this exists for: the number it edits is one channel of a
+   * colour, so the state has to be built on top of the colour and then handed down — letting
+   * this composable start a second state over the same number would give the field two values
+   * that disagree. Same escape hatch as `validationState` on {@link useTextField}.
+   */
+  state?: NumberFieldState;
   onFocusChange?: (isFocused: boolean) => void;
   onKeydown?: (event: KeyboardEvent) => void;
   onKeyup?: (event: KeyboardEvent) => void;
@@ -107,7 +117,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     element.value = next;
   };
 
-  const state = useNumberFieldState(options);
+  const state = options.state ?? useNumberFieldState(options);
 
   const inputId = useId(() => toValue(options.id));
   const incrementId = useId();
@@ -212,35 +222,19 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
    * gesture: a trackpad reports both axes at once, and a sideways scroll past the field is not
    * someone asking to change the number.
    */
-  const onWheel = (event: WheelEvent) => {
-    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+  useScrollWheel(element, {
+    isDisabled: () =>
+      Boolean(toValue(options.isWheelDisabled)) ||
+      isDisabled.value ||
+      isReadOnly.value ||
+      !isFocusWithin.value,
+    onScroll: ({deltaX, deltaY}) => {
+      if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
 
-    event.preventDefault();
-
-    if (event.deltaY > 0) state.increment();
-    else if (event.deltaY < 0) state.decrement();
-  };
-
-  // Attached directly, and non-passive so the page can be stopped from scrolling. A listener
-  // declared in the template would be passive by default and could not.
-  watch(
-    [element, isFocusWithin, isDisabled, isReadOnly, () => toValue(options.isWheelDisabled)],
-    ([input], _previous, onCleanup) => {
-      if (!input) return;
-      if (
-        toValue(options.isWheelDisabled) ||
-        isDisabled.value ||
-        isReadOnly.value ||
-        !isFocusWithin.value
-      ) {
-        return;
-      }
-
-      input.addEventListener("wheel", onWheel, {passive: false});
-      onCleanup(() => input.removeEventListener("wheel", onWheel));
+      if (deltaY > 0) state.increment();
+      else if (deltaY < 0) state.decrement();
     },
-    {flush: "post", immediate: true},
-  );
+  });
 
   useFormattedTextField(element, {
     setInputValue: state.setInputValue,

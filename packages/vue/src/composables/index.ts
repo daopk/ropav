@@ -81,6 +81,7 @@ export * from "./use-radio-group-state";
 export * from "./use-range-calendar";
 export * from "./use-range-calendar-state";
 export * from "./use-safely-mouse-to-submenu";
+export * from "./use-scroll-wheel";
 export * from "./use-search-field";
 export * from "./use-selection-manager";
 export * from "./use-slider";

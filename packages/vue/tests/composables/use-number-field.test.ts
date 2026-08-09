@@ -552,6 +552,22 @@ describe("useNumberField", () => {
       unmount();
     });
 
+    it("ignores a pinch zoom", async () => {
+      // A wheel gesture with the ctrl key held is a zoom, not a scroll. The browser reports it
+      // with a vertical delta like any other, so without the check a pinch on a trackpad would
+      // run the number up while the page zoomed.
+      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+
+      input().dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, ctrlKey: true, deltaY: 10}));
+
+      expect(field().state.numberValue.value).toBe(5);
+
+      unmount();
+    });
+
     it("ignores the wheel when it is turned off", async () => {
       const {field, input, unmount} = mount({
         defaultValue: 5,
