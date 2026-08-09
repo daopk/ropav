@@ -6,6 +6,7 @@ import {computed, shallowRef} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
 import {useId} from "../../composables/use-id";
+import {useNumberFormatter} from "../../composables/use-number-formatter";
 import {useSlider} from "../../composables/use-slider";
 import {useSliderState} from "../../composables/use-slider-state";
 import {dataAttr} from "../../utils/assertion";
@@ -31,9 +32,10 @@ defineSlots<{default?: (props: SliderSlotProps) => unknown}>();
 
 const sliderId = useId(() => props.id);
 
-// No locale layer here, so the labels are formatted in the runtime default. React takes it
-// from its own i18n provider, which resolves to the same thing outside one.
-const numberFormatter = computed(() => new Intl.NumberFormat(undefined, props.formatOptions));
+// `@internationalized/number` rather than `Intl` directly, so the `signDisplay` and unit-style
+// fallbacks are there for engines that lack them — and so the locale comes from whatever is in
+// force above rather than from the runtime default.
+const numberFormatter = useNumberFormatter(() => props.formatOptions);
 
 const state = useSliderState({
   defaultValue: () => props.defaultValue,
