@@ -537,6 +537,56 @@ describe("Table", () => {
     });
   });
 
+  describe("loading more rows", () => {
+    // Always present, so there is something for the observer to watch even before the first page
+    // fills the box. Inert and zero height so it is neither read nor laid out.
+    it("keeps a sentinel row in the body at all times", async () => {
+      const {body} = await renderTable({withLoadMore: true});
+      const sentinel = body.querySelector<HTMLElement>("tr[inert]")!;
+
+      expect(sentinel.style.height).toBe("0px");
+
+      const cell = sentinel.querySelector<HTMLElement>("td")!;
+
+      expect(cell.style.padding).toBe("0px");
+      expect(cell.firstElementChild).toHaveStyle({height: "1px", width: "1px"});
+    });
+
+    it("renders no indicator row until it is loading", async () => {
+      const {body} = await renderTable({withLoadMore: true});
+
+      expect(body.querySelector('[data-slot="table-load-more"]')).toBeNull();
+    });
+
+    it("spans the indicator row across every column", async () => {
+      const {body} = await renderTable({isLoading: true, withLoadMore: true});
+      const row = body.querySelector<HTMLElement>('[data-slot="table-load-more"]')!;
+      const cell = row.querySelector<HTMLElement>("td")!;
+
+      expect(row).toHaveClass("table__load-more");
+      expect(row).toHaveAttribute("role", "row");
+      // A flat table still reports the level a tree grid would use.
+      expect(row).toHaveAttribute("aria-level", "1");
+      expect(row).toHaveAttribute("data-level", "1");
+      expect(cell).toHaveAttribute("role", "rowheader");
+      expect(cell).toHaveAttribute("colspan", "3");
+    });
+
+    it("styles the content inside the indicator row", async () => {
+      const {body} = await renderTable({isLoading: true, withLoadMore: true});
+      const content = body.querySelector('[data-slot="table-load-more-content"]')!;
+
+      expect(content).toHaveClass("table__load-more-content");
+      expect(content).toHaveTextContent("Loading");
+    });
+
+    it("leaves the sentinel out of a table that is not loading more", async () => {
+      const {body} = await renderTable();
+
+      expect(body.querySelector("tr[inert]")).toBeNull();
+    });
+  });
+
   describe("keyboard navigation", () => {
     /**
      * Focus lands on a row as soon as it enters the grid, the way React Aria has it: the grid is

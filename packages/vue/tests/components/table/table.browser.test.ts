@@ -1,6 +1,6 @@
 import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
@@ -245,6 +245,46 @@ describe("Table (browser)", () => {
 
       unmount();
     });
+  });
+});
+
+describe("Table load more (browser)", () => {
+  // jsdom has no `IntersectionObserver` at all, so whether the sentinel is actually watched — and
+  // against which box — can only be settled here.
+  it("asks for more as soon as the end is within reach", async () => {
+    const onLoadMore = vi.fn();
+    const {unmount} = await render({onLoadMore, withLoadMore: true});
+
+    await vi.waitFor(() => expect(onLoadMore).toHaveBeenCalled());
+
+    unmount();
+  });
+
+  it("waits until the end is scrolled into view", async () => {
+    const onLoadMore = vi.fn();
+    const {root, unmount} = await render({
+      onLoadMore,
+      scrollContainerStyle: {height: "60px", overflowY: "auto"},
+      scrollOffset: 0,
+      users: Array.from({length: 40}, (_, index) => ({
+        email: `user${index}@acme.com`,
+        id: index + 1,
+        name: `User ${index}`,
+        role: "Engineer",
+      })),
+      withLoadMore: true,
+    });
+    const scroll = root.querySelector<HTMLElement>('[data-slot="table-scroll-container"]')!;
+
+    // Give the observer a frame to report the sentinel far below the fold.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(onLoadMore).not.toHaveBeenCalled();
+
+    scroll.scrollTop = scroll.scrollHeight;
+
+    await vi.waitFor(() => expect(onLoadMore).toHaveBeenCalled());
+
+    unmount();
   });
 });
 

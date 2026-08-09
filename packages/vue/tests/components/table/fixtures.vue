@@ -16,6 +16,8 @@ import {
   TableContent,
   TableFooter,
   TableHeader,
+  TableLoadMore,
+  TableLoadMoreContent,
   TableRoot,
   TableRow,
   TableScrollContainer,
@@ -42,7 +44,12 @@ const props = withDefaults(
       sortableColumns?: string[];
       sortDescriptor?: TableSortDescriptor | null;
       users?: TableFixtureUser[];
+      isLoading?: boolean;
+      onLoadMore?: () => void;
+      scrollContainerStyle?: Record<string, string>;
+      scrollOffset?: number;
       withFooter?: boolean;
+      withLoadMore?: boolean;
       withSelectionColumn?: boolean;
       withSortableHeader?: boolean;
     }
@@ -54,6 +61,11 @@ const props = withDefaults(
     disabledBehavior: undefined,
     disabledKeys: undefined,
     disallowEmptySelection: undefined,
+    isLoading: undefined,
+    onLoadMore: undefined,
+    scrollContainerStyle: undefined,
+    scrollOffset: undefined,
+    withLoadMore: undefined,
     onSelectionChange: undefined,
     onSortChange: undefined,
     rowHeaders: undefined,
@@ -84,7 +96,7 @@ const defaultUsers: TableFixtureUser[] = [
 
 <template>
   <TableRoot :class="props.class" :variant="props.variant">
-    <TableScrollContainer>
+    <TableScrollContainer :style="props.scrollContainerStyle">
       <TableContent
         aria-label="Team"
         :default-selected-keys="props.defaultSelectedKeys"
@@ -130,6 +142,14 @@ const defaultUsers: TableFixtureUser[] = [
             <TableCell>{{ user.role }}</TableCell>
             <TableCell>{{ user.email }}</TableCell>
           </TableRow>
+          <TableLoadMore
+            v-if="props.withLoadMore"
+            :is-loading="props.isLoading"
+            :scroll-offset="props.scrollOffset"
+            @load-more="props.onLoadMore?.()"
+          >
+            <TableLoadMoreContent>Loading</TableLoadMoreContent>
+          </TableLoadMore>
         </TableBody>
       </TableContent>
     </TableScrollContainer>
