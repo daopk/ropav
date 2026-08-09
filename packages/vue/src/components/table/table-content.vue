@@ -324,6 +324,10 @@ if (dnd && dragState) dnd.useDraggableCollection?.(dragState, element);
  * split, constructing a fresh `ListKeyboardDelegate` for the drop side.
  */
 const dropKeyboardDelegate = {
+  // Landing focus goes through the grid's own `focusCell`, which knows to wait a render for a
+  // windowed row that is not in the DOM yet.
+  focusKey: (key: CollectionKey) =>
+    keyboard.focusCell({columnKey: null, rowKey: key}, {scroll: true}),
   getFirstKey: () => collection.rows.getFirstKey(),
   getKeyAbove: (key: CollectionKey) => collection.rows.getKeyBefore(key),
   getKeyBelow: (key: CollectionKey) => collection.rows.getKeyAfter(key),

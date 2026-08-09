@@ -40,6 +40,15 @@ import {useLocale} from "./use-locale";
 export interface DroppableCollectionKeyboardDelegate extends DragKeyboardDelegate {
   getKeyPageAbove?: (key: DragKey) => DragKey | null;
   getKeyPageBelow?: (key: DragKey) => DragKey | null;
+  /**
+   * Put real focus on a key, which the collection needs once a drop has landed.
+   *
+   * A keyboard drag holds focus on the drop indicator, and the indicator is unmounted by the drop
+   * — so something has to say where focus goes next. The collection knows *which* key, and only
+   * its own keyboard knows how to reach that key's element, including waiting a render for a
+   * windowed row that is not in the DOM yet.
+   */
+  focusKey?: (key: DragKey) => void;
 }
 
 export interface UseDroppableCollectionOptions extends Omit<
@@ -70,6 +79,8 @@ const FOCUS_AFTER_DROP_DELAY = 50;
 /** What the collection looked like when a drop began, for comparing against afterwards. */
 interface DroppingState {
   collectionSize: number;
+  /** Whether the collection held focus as the drop began, and so owes it somewhere to go. */
+  hadFocus: boolean;
   keys: Set<DragKey>;
   focusedKey: DragKey | null;
   selectedKeys: Set<DragKey>;
@@ -182,7 +193,8 @@ export const useDroppableCollection = (
   const updateFocusAfterDrop = () => {
     if (!droppingState) return;
 
-    const {collectionSize, draggingKeys, focusedKey, isInternal, keys, target} = droppingState;
+    const {collectionSize, draggingKeys, focusedKey, hadFocus, isInternal, keys, target} =
+      droppingState;
     const {selectionManager} = state;
     const currentKeys = collectionKeys(state.collection);
 
@@ -228,6 +240,28 @@ export const useDroppableCollection = (
     }
 
     selectionManager.setFocused(true);
+
+    /**
+     * Put real focus back where the collection just decided it belongs.
+     *
+     * Everything above settles the *focused key*, which moves the roving tab stop but not the
+     * caret. During a keyboard drag the caret is on the drop indicator, and the drop unmounts it
+     * — so without this last step focus falls to the document and a keyboard user is returned to
+     * the page with the collection behind them. `preventFocusOnDrop` tells the drag session to
+     * leave focus to the collection precisely so this can happen here.
+     *
+     * Only when the collection had focus to begin with: a pointer drop from elsewhere on the page
+     * must not steal it.
+     */
+    const landOn = selectionManager.focusedKey.value;
+
+    if (!hadFocus || landOn == null) return;
+
+    const active = document.activeElement;
+
+    if (element.value && active && element.value.contains(active)) return;
+
+    options.keyboardDelegate.focusKey?.(landOn);
   };
 
   const applyDrop = (event: DropEvent, target: DropTarget) => {
@@ -235,6 +269,9 @@ export const useDroppableCollection = (
       collectionSize: collectionKeys(state.collection).size,
       draggingKeys: globalDndState.draggingKeys,
       focusedKey: state.selectionManager.focusedKey.value,
+      hadFocus: Boolean(
+        element.value && document.activeElement && element.value.contains(document.activeElement),
+      ),
       isInternal: isInternalDropOperation(element),
       keys: collectionKeys(state.collection),
       selectedKeys: state.selectionManager.selectedKeys.value,
