@@ -7,6 +7,7 @@ import {computed, shallowRef, watch} from "vue";
 
 import {useDescription} from "../../composables/use-description";
 import {useGridKeyboard} from "../../composables/use-grid-keyboard";
+import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection-announcement";
 import {useId} from "../../composables/use-id";
 import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
@@ -61,6 +62,8 @@ const selection = useSelectionManager({
 });
 
 const keyboard = useGridKeyboard({collection, element, selection});
+
+useGridSelectionAnnouncement({collection: collection.rows, selection});
 
 const typeahead = useTypeahead({
   focusedKey: () => keyboard.focusedCell.value.rowKey,

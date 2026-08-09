@@ -13,6 +13,7 @@ export * from "./use-form-validation";
 export * from "./use-form-validation-state";
 export * from "./use-formatted-text-field";
 export * from "./use-grid-keyboard";
+export * from "./use-grid-selection-announcement";
 export * from "./use-id";
 export * from "./use-image-loading-status";
 export * from "./use-interaction-states";
