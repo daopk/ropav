@@ -27,6 +27,8 @@ export * from "./use-list-data";
 export * from "./use-list-keyboard";
 export * from "./use-long-press";
 export * from "./use-menu";
+export * from "./use-modal-overlay";
+export * from "./use-modal-transition";
 export * from "./use-move";
 export * from "./use-number-field";
 export * from "./use-number-field-state";
