@@ -1,9 +1,11 @@
 import type {CollectionKey} from "../../composables/use-collection";
+import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
 import type {
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
+import type {DropTarget} from "../../utils/dnd-types";
 import type {ListBoxVariants} from "@heroui/styles";
 
 /**
@@ -47,6 +49,8 @@ export interface ListBoxRootProps<T = unknown> {
   disallowEmptySelection?: boolean;
   /** Visual variant. */
   variant?: ListBoxVariants["variant"];
+  /** Drag and drop behaviour, from `useDragAndDrop`. */
+  dragAndDropHooks?: DragAndDropHooks;
 }
 
 export interface ListBoxRootSlotProps<T = unknown> {
@@ -54,4 +58,10 @@ export interface ListBoxRootSlotProps<T = unknown> {
   item?: T;
   /** The row's position among all of them, zero-based. */
   index?: number;
+}
+
+export interface ListBoxDropIndicatorProps {
+  /** The position this indicator stands for. */
+  target: DropTarget;
+  class?: string;
 }

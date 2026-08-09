@@ -1,12 +1,14 @@
 import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
 import {ListBoxSectionRoot} from "../list-box-section";
 
+import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
 import ListBoxRoot from "./list-box-root.vue";
 
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
 export const ListBox = Object.assign(ListBoxRoot, {
+  DropIndicator: ListBoxDropIndicator,
   Item: ListBoxItemRoot,
   ItemIndicator: ListBoxItemIndicator,
   Root: ListBoxRoot,
@@ -16,9 +18,13 @@ export const ListBox = Object.assign(ListBoxRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ListBoxRoot};
+export {ListBoxDropIndicator, ListBoxRoot};
 
-export type {ListBoxRootProps, ListBoxRootProps as ListBoxProps} from "./list-box.types";
+export type {
+  ListBoxDropIndicatorProps,
+  ListBoxRootProps,
+  ListBoxRootProps as ListBoxProps,
+} from "./list-box.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context

@@ -7,6 +7,7 @@ import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 import {listboxVariants} from "@heroui/styles";
 import {computed, shallowRef} from "vue";
 
+import {toDragCollection} from "../../composables/drag-collection";
 import {useCollection} from "../../composables/use-collection";
 import {useId} from "../../composables/use-id";
 import {useListKeyboard} from "../../composables/use-list-keyboard";
@@ -149,13 +150,76 @@ const keyboard = useListKeyboard({
   selection,
 });
 
+/* -------------------------------------------------------------------------------------------------
+ * Drag and drop
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Both halves are opt-in, and the hooks only exist when the caller asked for them.
+ *
+ * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag and
+ * drop layer out of a listbox that does not use it.
+ */
+const dnd = props.dragAndDropHooks;
+const dragCollection = toDragCollection(collection);
+
+const dragState = dnd?.useDraggableCollectionState?.({
+  collection: dragCollection,
+  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
+  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
+  isDisabled: dnd.options.isDisabled,
+  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
+  onDragStart: (event) => dnd.options.onDragStart?.(event),
+  selectionManager: selection,
+});
+
+if (dnd && dragState) dnd.useDraggableCollection?.(dragState, element);
+
+const dropState = dnd?.useDroppableCollectionState?.({
+  ...dnd.options,
+  collection: dragCollection,
+  selectionManager: selection,
+});
+
+if (dnd && dropState) {
+  dnd.useDroppableCollection?.(
+    {
+      ...dnd.options,
+      // The listbox's own delegate unless the caller brought one — a virtualized list answers
+      // from its layout rather than from the DOM.
+      dropTargetDelegate:
+        dnd.dropTargetDelegate ??
+        new dnd.ListDropTargetDelegate!(dragCollection, element, {
+          layout: "stack",
+          orientation: "vertical",
+        }),
+      keyboardDelegate: keyboard,
+    },
+    dropState,
+    element,
+  );
+}
+
+/** Whether the collection as a whole is the current drop target. */
+const isRootDropTarget = computed(() => dropState?.isDropTarget({type: "root"}) ?? false);
+
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
   getKeyForSearch: keyboard.getKeyForSearch,
   onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
 });
 
-provideListBoxContext({collection, collectionId, keyboard, listId, onAction, selection});
+provideListBoxContext({
+  collection,
+  collectionId,
+  dragAndDropHooks: dnd,
+  dragState,
+  dropState,
+  keyboard,
+  listId,
+  onAction,
+  selection,
+});
 
 if (virtualizer && virtualizerConfig) {
   provideVirtualizerStateContext({
@@ -182,7 +246,9 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-multiselectable="props.selectionMode === 'multiple' ? true : undefined"
     aria-orientation="vertical"
     :class="styles"
+    :data-allows-dragging="dataAttr(dragState != null)"
     :data-collection="collectionId"
+    :data-drop-target="dataAttr(isRootDropTarget)"
     :data-empty="dataAttr(collection.size.value === 0)"
     :data-focus-visible="dataAttr(selection.isFocused.value)"
     data-layout="stack"

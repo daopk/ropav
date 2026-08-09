@@ -18,7 +18,17 @@ const props = defineProps<ListBoxItemRootProps>();
 
 defineSlots<{default?: (props: ListBoxItemSlotProps) => unknown}>();
 
-const {collection, collectionId, keyboard, listId, onAction, selection} = useListBoxContext();
+const {
+  collection,
+  collectionId,
+  dragAndDropHooks,
+  dragState,
+  dropState,
+  keyboard,
+  listId,
+  onAction,
+  selection,
+} = useListBoxContext();
 
 const virtualizer = useVirtualizerStateContext();
 
@@ -106,7 +116,59 @@ const onFocus = (event: FocusEvent) => {
   selection.setFocusedKey(itemKey.value);
 };
 
+/* -------------------------------------------------------------------------------------------------
+ * Drag and drop
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * An option drags itself rather than offering a handle.
+ *
+ * `hasAction` is what moves the keyboard gesture to Alt+Enter: a listbox item already does
+ * something on Enter — selects, or fires an action — so plain Enter cannot also mean "drag me".
+ * A row in a table is different, which is why that side gets a drag button instead.
+ */
+const draggable =
+  dragState && dragAndDropHooks?.useDraggableItem
+    ? dragAndDropHooks.useDraggableItem({hasAction: true, key: itemKey.value}, dragState)
+    : null;
+
+const droppable =
+  dropState && dragAndDropHooks?.useDroppableItem
+    ? dragAndDropHooks.useDroppableItem(
+        {target: {dropPosition: "on", key: itemKey.value, type: "item"}},
+        dropState,
+        element,
+      )
+    : null;
+
+const isDragging = computed(() => dragState?.isDragging(itemKey.value) ?? false);
+const isDropTarget = computed(() => droppable?.isDropTarget.value ?? false);
+
+/**
+ * Attributes from both halves, merged. Never listeners — see §3.4.
+ *
+ * `aria-describedby` is pulled out and merged by hand below: the item already binds one for its
+ * description slot, and an explicit binding beats `v-bind` whichever order they appear in, so
+ * leaving it here would silently drop the drag instructions.
+ */
+const dndAttrs = computed(() => {
+  const {["aria-describedby"]: _drag, ...drag} = draggable?.attrs.value ?? {};
+  const {["aria-describedby"]: _drop, ...drop} = droppable?.attrs.value ?? {};
+
+  return {...drag, ...drop};
+});
+
+/** The drag instructions, or the item's own description when there is no drag to describe. */
+const describedBy = computed(
+  () =>
+    (draggable?.attrs.value["aria-describedby"] as string | undefined) ??
+    fieldIds.describedBy.value,
+);
+
 const onClick = (event: MouseEvent) => {
+  draggable?.handlers.onClick?.(event);
+  droppable?.handlers.onClick();
+
   if (isDisabled.value) return;
 
   keyboard.focusKey(itemKey.value);
@@ -128,14 +190,18 @@ const onClick = (event: MouseEvent) => {
   <div
     :id="`${listId}-option-${itemKey}`"
     ref="element"
-    :aria-describedby="fieldIds.describedBy.value"
+    :aria-describedby="describedBy"
     :aria-disabled="isDisabled || undefined"
     :aria-posinset="positionInSet"
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
     :aria-setsize="setSize"
     :class="slots.item({class: props.class})"
+    v-bind="dndAttrs"
+    :data-allows-dragging="dataAttr(draggable != null)"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"
+    :data-dragging="dataAttr(isDragging)"
+    :data-drop-target="dataAttr(isDropTarget)"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-focused="dataAttr(isFocused)"
     :data-hovered="dataAttr(isHovered)"
@@ -148,13 +214,20 @@ const onClick = (event: MouseEvent) => {
     :tabindex="keyboard.itemTabIndex(itemKey)"
     @blur="onBlur"
     @click="onClick"
+    @drag="draggable?.handlers.onDrag($event)"
+    @dragend="draggable?.handlers.onDragend($event)"
+    @dragstart="draggable?.handlers.onDragstart($event)"
     @focus="onFocus"
+    @keydown.capture="draggable?.handlers.onKeydownCapture?.($event)"
+    @keyup.capture="draggable?.handlers.onKeyupCapture?.($event)"
     @pointerdown="onPointerdown"
     @pointerenter="onPointerenter"
     @pointerleave="onPointerleave"
   >
     <slot
       :is-disabled="isDisabled"
+      :is-dragging="isDragging"
+      :is-drop-target="isDropTarget"
       :is-focus-visible="isFocusVisible"
       :is-focused="isFocused"
       :is-hovered="isHovered"

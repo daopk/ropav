@@ -14,6 +14,10 @@ export interface ListBoxItemRootProps {
 }
 
 export interface ListBoxItemSlotProps {
+  /** Whether this item is travelling with the drag in flight. */
+  isDragging?: boolean;
+  /** Whether a drop would land on this item. */
+  isDropTarget?: boolean;
   isDisabled: boolean;
   isFocusVisible: boolean;
   isFocused: boolean;

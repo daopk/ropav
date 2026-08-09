@@ -1,4 +1,7 @@
 import type {CollectionKey, UseCollectionReturn} from "../../composables/use-collection";
+import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
+import type {UseDraggableCollectionStateReturn} from "../../composables/use-draggable-collection-state";
+import type {UseDroppableCollectionStateReturn} from "../../composables/use-droppable-collection-state";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {ComputedRef} from "vue";
@@ -15,6 +18,15 @@ export interface ListBoxContext {
   collectionId: ComputedRef<string>;
   /** Called when an item is activated rather than selected. */
   onAction?: (key: CollectionKey) => void;
+  /**
+   * The drag and drop configuration, when there is any.
+   *
+   * Items read the hooks from here rather than importing them, so a listbox without drag and
+   * drop leaves the whole layer out of the bundle.
+   */
+  dragAndDropHooks?: DragAndDropHooks;
+  dragState?: UseDraggableCollectionStateReturn<unknown>;
+  dropState?: UseDroppableCollectionStateReturn<unknown>;
 }
 
 /**
