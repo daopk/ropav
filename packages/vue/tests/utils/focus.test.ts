@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
 
-import {FOCUSABLE_SELECTOR, focusableIn, isElementVisible} from "@/utils/focus";
+import {FOCUSABLE_SELECTOR, createFocusManager, focusableIn, isElementVisible} from "@/utils/focus";
 
 const build = (html: string) => {
   const container = document.createElement("div");
@@ -79,6 +79,110 @@ describe("focus utils", () => {
       element.checkVisibility = () => false;
 
       expect(isElementVisible(element)).toBe(false);
+    });
+  });
+
+  describe("createFocusManager", () => {
+    /** Three tab stops in a row, which is the shape of a field of date segments. */
+    const row = () => {
+      const container = build(`
+        <span tabindex="0" id="first">mm</span>
+        <span>/</span>
+        <span tabindex="0" id="second">dd</span>
+        <span>/</span>
+        <span tabindex="0" id="third">yyyy</span>
+      `);
+
+      return {
+        active: () => document.activeElement?.id,
+        container,
+        manager: createFocusManager(() => container),
+      };
+    };
+
+    it("moves to each end", () => {
+      const {active, manager} = row();
+
+      expect(manager.focusFirst()?.id).toBe("first");
+      expect(active()).toBe("first");
+      expect(manager.focusLast()?.id).toBe("third");
+      expect(active()).toBe("third");
+    });
+
+    it("steps from whatever holds focus", () => {
+      const {active, manager} = row();
+
+      manager.focusFirst();
+      manager.focusNext();
+      expect(active()).toBe("second");
+      manager.focusNext();
+      expect(active()).toBe("third");
+      manager.focusPrevious();
+      expect(active()).toBe("second");
+    });
+
+    it("skips whatever is not a stop", () => {
+      // The separators between segments are not focusable, so one arrow press crosses them.
+      const {active, manager} = row();
+
+      manager.focusFirst();
+      manager.focusNext();
+
+      expect(active()).toBe("second");
+    });
+
+    it("stops at the ends", () => {
+      const {active, manager} = row();
+
+      manager.focusLast();
+      expect(manager.focusNext()).toBeNull();
+      expect(active()).toBe("third");
+
+      manager.focusFirst();
+      expect(manager.focusPrevious()).toBeNull();
+      expect(active()).toBe("first");
+    });
+
+    it("continues at the other end when asked to wrap", () => {
+      const {manager} = row();
+
+      manager.focusLast();
+      expect(manager.focusNext({wrap: true})?.id).toBe("first");
+      expect(manager.focusPrevious({wrap: true})?.id).toBe("third");
+    });
+
+    it("starts at an end when focus is elsewhere", () => {
+      const {manager} = row();
+      const outside = document.createElement("button");
+
+      document.body.appendChild(outside);
+      outside.focus();
+
+      expect(manager.focusNext()?.id).toBe("first");
+
+      outside.focus();
+      expect(manager.focusPrevious()?.id).toBe("third");
+      outside.remove();
+    });
+
+    it("moves from a given element rather than from focus", () => {
+      const {container, manager} = row();
+      const second = container.querySelector<HTMLElement>("#second")!;
+
+      manager.focusFirst();
+
+      expect(manager.focusNext({from: second})?.id).toBe("third");
+    });
+
+    it("does nothing before its root exists", () => {
+      // The manager is built while the element is still null, which is the order a component
+      // sets things up in.
+      const manager = createFocusManager(() => null);
+
+      expect(manager.focusFirst()).toBeNull();
+      expect(manager.focusLast()).toBeNull();
+      expect(manager.focusNext()).toBeNull();
+      expect(manager.focusPrevious()).toBeNull();
     });
   });
 });
