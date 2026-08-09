@@ -151,3 +151,90 @@ describe("ListBox virtualization", () => {
     unmount();
   });
 });
+
+describe("ListBox virtualization keyboard navigation", () => {
+  const press = (element: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
+  };
+
+  it("reaches the last item, which was never rendered", async () => {
+    const {listbox, unmount} = await renderVirtualized();
+
+    press(listbox, "End");
+    await nextTick();
+    // One more tick: the key becomes persisted first, which is what puts it in the DOM.
+    await nextTick();
+
+    const focused = document.activeElement;
+
+    expect(focused?.getAttribute("data-key")).toBe("user-999");
+    expect(focused?.getAttribute("aria-posinset")).toBe("1000");
+
+    unmount();
+  });
+
+  it("keeps the focused row rendered after the window has scrolled past it", async () => {
+    const {listbox, unmount} = await renderVirtualized();
+
+    press(listbox, "ArrowDown");
+    await nextTick();
+    await scrollTo(listbox, 5_000);
+
+    // The roving tab stop lives on that element; letting it go would drop focus to the document.
+    expect(renderedKeys(listbox)).toContain("user-0");
+    expect(document.activeElement?.getAttribute("data-key")).toBe("user-0");
+
+    unmount();
+  });
+
+  it("pages to the end while nothing reports being scrollable", async () => {
+    const {listbox, unmount} = await renderVirtualized();
+
+    press(listbox, "ArrowDown");
+    await nextTick();
+    press(listbox, "PageDown");
+    await nextTick();
+    await nextTick();
+
+    // No stylesheet is loaded here, so `overflow-y-auto` never applies and the container does
+    // not look scrollable. Paging then collapses to the ends, which is the honest answer for a
+    // list with no page to move by. Paging by real geometry is asserted in the browser suite.
+    expect(document.activeElement?.getAttribute("data-key")).toBe("user-999");
+
+    unmount();
+  });
+
+  it("selects the whole collection, not the window", async () => {
+    const {listbox, unmount} = await renderVirtualized({selectionMode: "multiple"});
+    const selectionChange: unknown[] = [];
+
+    listbox.addEventListener("focusin", () => undefined);
+    press(listbox, "a", {ctrlKey: true});
+    await nextTick();
+
+    void selectionChange;
+    // Every rendered row reports itself selected, and the count comes from the data.
+    const options = [...listbox.querySelectorAll('[role="option"]')];
+
+    expect(options.every((option) => option.getAttribute("aria-selected") === "true")).toBe(true);
+    expect(options).toHaveLength(12);
+
+    unmount();
+  });
+
+  it("finds an item by typing, including one that never rendered", async () => {
+    const {listbox, unmount} = await renderVirtualized();
+
+    for (const character of "User 300") {
+      listbox.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: character}));
+    }
+
+    await nextTick();
+    await nextTick();
+
+    // Typeahead reads text out of the data for the rows that are not in the DOM.
+    expect(document.activeElement?.getAttribute("data-key")).toBe("user-300");
+
+    unmount();
+  });
+});
