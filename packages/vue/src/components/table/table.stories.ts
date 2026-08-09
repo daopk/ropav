@@ -1,7 +1,14 @@
 import type {TableSortDescriptor} from "./table.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {Meta, StoryObj} from "@storybook/vue3";
+import type {SortingState, Updater} from "@tanstack/vue-table";
 
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useVueTable,
+} from "@tanstack/vue-table";
 import {computed, shallowRef} from "vue";
 
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
@@ -763,6 +770,160 @@ export const ExpandableRows: Story = {
               </TableBody>
             </TableContent>
           </TableScrollContainer>
+        </Table>
+      </div>
+    `,
+  }),
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * TanStack Table
+ * -----------------------------------------------------------------------------------------------*/
+const TANSTACK_COLUMNS = [
+  {accessorKey: "name", header: "Name"},
+  {accessorKey: "role", header: "Role"},
+  {accessorKey: "status", header: "Status"},
+  {accessorKey: "email", header: "Email"},
+];
+
+/** TanStack's sorting state, as the table's own descriptor. */
+const toSortDescriptor = (sorting: SortingState): TableSortDescriptor | undefined => {
+  const first = sorting[0];
+
+  if (!first) return undefined;
+
+  return {column: first.id, direction: first.desc ? "descending" : "ascending"};
+};
+
+/** And back the other way, for what the header hands out when it is pressed. */
+const toSortingState = (descriptor: TableSortDescriptor): SortingState => [
+  {desc: descriptor.direction === "descending", id: String(descriptor.column)},
+];
+
+/**
+ * Sorting, pagination and the row model come from `@tanstack/vue-table`; the grid semantics, the
+ * keyboard and the styling come from here.
+ *
+ * `useVueTable` is state only — it renders nothing — so the two layers meet at data rather than at
+ * markup. Cells are rendered with `v-for` rather than TanStack's `FlexRender`: that is a VDOM
+ * component, and a VDOM component inside a Vapor component's slot is a live interop bug.
+ */
+export const TanStackTable: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const sorting = shallowRef<SortingState>([]);
+
+      const table = useVueTable({
+        get columns() {
+          return TANSTACK_COLUMNS;
+        },
+        get data() {
+          return users;
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        initialState: {pagination: {pageSize: ROWS_PER_PAGE}},
+        onSortingChange: (updater: Updater<SortingState>) => {
+          sorting.value = typeof updater === "function" ? updater(sorting.value) : updater;
+        },
+        state: {
+          get sorting() {
+            return sorting.value;
+          },
+        },
+      });
+
+      const pageIndex = computed(() => table.getState().pagination.pageIndex);
+
+      return {
+        end: computed(() => Math.min((pageIndex.value + 1) * ROWS_PER_PAGE, users.length)),
+        headers: computed(() => table.getHeaderGroups()[0]!.headers),
+        onSortChange: (descriptor: TableSortDescriptor) => {
+          sorting.value = toSortingState(descriptor);
+        },
+        page: computed(() => pageIndex.value + 1),
+        pages: computed(() => Array.from({length: table.getPageCount()}, (_, index) => index + 1)),
+        rows: computed(() => table.getRowModel().rows),
+        sortDescriptor: computed(() => toSortDescriptor(sorting.value)),
+        start: computed(() => pageIndex.value * ROWS_PER_PAGE + 1),
+        statusColor: STATUS_COLOR,
+        table,
+        total: users.length,
+      };
+    },
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              aria-label="TanStack Table example"
+              class="min-w-[600px]"
+              :sort-descriptor="sortDescriptor"
+              @sort-change="onSortChange"
+            >
+              <TableHeader>
+                <TableColumn
+                  v-for="header of headers"
+                  :id="header.id"
+                  :key="header.id"
+                  v-slot="{sortDirection}"
+                  :allows-sorting="header.column.getCanSort()"
+                  :is-row-header="header.id === 'name'"
+                >
+                  <TableSortableColumnHeader :sort-direction="sortDirection">
+                    {{ header.column.columnDef.header }}
+                  </TableSortableColumnHeader>
+                </TableColumn>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="row of rows" :id="row.id" :key="row.id">
+                  <TableCell v-for="cell of row.getVisibleCells()" :key="cell.id">
+                    <Chip
+                      v-if="cell.column.id === 'status'"
+                      :color="statusColor[cell.getValue()]"
+                      size="sm"
+                      variant="soft"
+                    >
+                      <ChipLabel>{{ cell.getValue() }}</ChipLabel>
+                    </Chip>
+                    <template v-else>{{ cell.getValue() }}</template>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+          <TableFooter>
+            <Pagination size="sm">
+              <PaginationSummary>{{ start }} to {{ end }} of {{ total }} results</PaginationSummary>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    :is-disabled="!table.getCanPreviousPage()"
+                    @click="table.previousPage()"
+                  >
+                    <PaginationPreviousIcon />
+                    Prev
+                  </PaginationPrevious>
+                </PaginationItem>
+                <PaginationItem v-for="entry of pages" :key="entry">
+                  <PaginationLink
+                    :is-active="entry === page"
+                    @click="table.setPageIndex(entry - 1)"
+                  >
+                    {{ entry }}
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext :is-disabled="!table.getCanNextPage()" @click="table.nextPage()">
+                    Next
+                    <PaginationNextIcon />
+                  </PaginationNext>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </TableFooter>
         </Table>
       </div>
     `,
