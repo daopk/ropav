@@ -8,4 +8,7 @@ export * from "./number";
 export * from "./platform";
 export * from "./position";
 export * from "./text-value";
+export * from "./virtualizer-geometry";
+export * from "./virtualizer-layout";
+export * from "./virtualizer-layout-info";
 export * from "./visually-hidden";
