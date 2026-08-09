@@ -55,6 +55,7 @@ const shared = {
   ariaLabelledby: () => props.ariaLabelledby,
   autoFocus: () => props.autoFocus,
   defaultValue: () => props.defaultValue,
+  id: () => props.id,
   isDisabled: () => props.isDisabled,
   isReadOnly: () => props.isReadOnly,
   isRequired: () => props.isRequired,
@@ -89,7 +90,6 @@ const branch:
       field: useColorField({
         ...shared,
         form: () => props.form,
-        id: () => props.id,
         isInvalid: () => props.isInvalid,
         name: () => props.name,
         validate: () => props.validate,

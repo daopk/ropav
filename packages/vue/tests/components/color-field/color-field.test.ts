@@ -70,6 +70,26 @@ describe("ColorField", () => {
       unmount();
     });
 
+    it("puts a caller's id on the control, on either branch", () => {
+      // The control is the field as far as assistive technology is concerned, so an id given to
+      // the field belongs on it — and the label's `for` has to follow.
+      const {container, unmount} = renderField({defaultValue: "#0485F7", id: "brand-color"});
+
+      expect(input(container)).toHaveAttribute("id", "brand-color");
+      expect(slot(container, "label")).toHaveAttribute("for", "brand-color");
+      unmount();
+
+      const {container: channel, unmount: unmountChannel} = renderField({
+        channel: "red",
+        colorSpace: "rgb",
+        defaultValue: "#3B82F6",
+        id: "red-channel",
+      });
+
+      expect(input(channel)).toHaveAttribute("id", "red-channel");
+      unmountChannel();
+    });
+
     it("wires the label both ways", () => {
       // The control points back at the label so a screen reader reads a name, and the label points
       // `for` at the control so a pointer click moves focus into it.
