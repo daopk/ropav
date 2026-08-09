@@ -7,6 +7,10 @@ export {default as OverlayArrow} from "./overlay-arrow.vue";
 export {default as OverlayDismissButton} from "./overlay-dismiss-button.vue";
 export {default as OverlayPopover} from "./overlay-popover.vue";
 
+export {createOverlaySlotContexts} from "./overlay-slots";
+
+export type {OverlaySlotContexts} from "./overlay-slots";
+
 export type {OverlayArrowProps, OverlayPopoverProps} from "./overlay.types";
 
 export {

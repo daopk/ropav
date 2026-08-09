@@ -3,7 +3,12 @@ import type {PopoverContentProps} from "./popover.types";
 
 import {computed} from "vue";
 
-import {OverlayPopover} from "../overlay";
+import {
+  OverlayPopover,
+  createOverlaySlotContexts,
+  provideOverlayArrowContext,
+  provideOverlayScopeContext,
+} from "../overlay";
 
 import {usePopoverContext} from "./popover.context";
 
@@ -22,6 +27,18 @@ defineSlots<{default?: () => unknown}>();
 
 const {slots} = usePopoverContext();
 
+/**
+ * Owned here rather than by the overlay itself.
+ *
+ * The overlay renders its content into a teleport, and a `provide` made there does not reach
+ * content handed in from outside and forwarded through this component's slot — so the dialog and
+ * the arrow would find nothing. Provided from here, where they are direct descendants, it holds.
+ */
+const contexts = createOverlaySlotContexts();
+
+provideOverlayArrowContext(contexts.arrow);
+provideOverlayScopeContext(contexts.scope);
+
 const styles = computed(() => slots.value.base({class: props.class}));
 </script>
 
@@ -39,6 +56,7 @@ const styles = computed(() => slots.value.base({class: props.class}));
     :placement="props.placement"
     :should-close-on-interact-outside="props.shouldCloseOnInteractOutside"
     :should-flip="props.shouldFlip"
+    :slot-contexts="contexts"
   >
     <slot />
   </OverlayPopover>

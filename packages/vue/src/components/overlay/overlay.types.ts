@@ -1,7 +1,15 @@
+import type {OverlaySlotContexts} from "./overlay-slots";
 import type {Placement} from "../../utils/position";
 
 export interface OverlayPopoverProps {
   class?: string;
+  /**
+   * The contexts offered to the content inside, when a wrapper owns them.
+   *
+   * A wrapper has to, because a `provide` from here would not reach content forwarded into this
+   * overlay's slot from outside. Omitted for an overlay used on its own.
+   */
+  slotContexts?: OverlaySlotContexts;
   /**
    * Rendered as `data-slot`.
    *

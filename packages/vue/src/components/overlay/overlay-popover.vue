@@ -14,6 +14,7 @@ import {dataAttr} from "../../utils/assertion";
 import {provideSurfaceContext} from "../surface";
 
 import OverlayDismissButton from "./overlay-dismiss-button.vue";
+import {createOverlaySlotContexts} from "./overlay-slots";
 import {
   provideOverlayArrowContext,
   provideOverlayGroupContext,
@@ -52,7 +53,10 @@ const shouldCloseOnInteractOutside = (element: Element) =>
 
 const element = shallowRef<HTMLElement | null>(null);
 const ownContainer = shallowRef<HTMLElement | null>(null);
-const arrow = shallowRef<Element | null>(null);
+
+// Owned here only when nothing above owns them, which is the overlay-on-its-own case.
+const contexts = props.slotContexts ?? createOverlaySlotContexts();
+const arrow = contexts.arrowElement;
 
 /**
  * Whether this overlay opens a group of its own, or joins one already open.
@@ -104,13 +108,10 @@ const {arrowStyle, overlayStyle, placement} = useOverlayPosition({
   targetRef: target.triggerElement,
 });
 
-provideOverlayArrowContext({
-  placement,
-  registerElement: (next) => {
-    arrow.value = next;
-  },
-  style: arrowStyle,
-});
+// Provided as well as published: the overlay's own dismiss buttons read the scope, and an
+// overlay used without a wrapper has nobody else to provide for it.
+provideOverlayArrowContext(contexts.arrow);
+provideOverlayScopeContext(contexts.scope);
 
 /**
  * Whether the overlay element is itself the dialog.
@@ -122,8 +123,7 @@ provideOverlayArrowContext({
  */
 const shouldBeDialog = computed(() => !isNonModal.value || target.trigger === "SubmenuTrigger");
 
-let dialogCount = 0;
-const registeredDialogs = shallowRef(0);
+const {focusContainRequests, registeredDialogs} = contexts;
 const domHasDialog = shallowRef(false);
 const isDialog = computed(
   () => shouldBeDialog.value && registeredDialogs.value === 0 && !domHasDialog.value,
@@ -139,26 +139,11 @@ watch(
   {flush: "post", immediate: true},
 );
 
-let containRequests = 0;
-const focusContainRequests = shallowRef(0);
-
-provideOverlayScopeContext({
+contexts.publish({
   close: target.state.close,
   dialogId: computed(() => (isDialog.value ? undefined : target.dialogId?.value)),
-  registerDialog: () => {
-    registeredDialogs.value = ++dialogCount;
-
-    return () => {
-      registeredDialogs.value = --dialogCount;
-    };
-  },
-  requestFocusContain: () => {
-    focusContainRequests.value = ++containRequests;
-
-    return () => {
-      focusContainRequests.value = --containRequests;
-    };
-  },
+  placement,
+  style: arrowStyle,
 });
 
 // Held in the DOM through the exit animation, which is otherwise a contradiction: the overlay has
