@@ -4,6 +4,10 @@ import type {ComputedRef, ShallowRef} from "vue";
 
 import {computed, shallowRef} from "vue";
 
+import {providePressResponder} from "../../composables/press-responder";
+
+import {provideOverlayArrowContext, provideOverlayScopeContext} from "./overlay.context";
+
 /**
  * What an overlay offers the content inside it, owned separately from the overlay itself.
  *
@@ -86,4 +90,23 @@ export const createOverlaySlotContexts = (): OverlaySlotContexts => {
       },
     },
   };
+};
+
+/**
+ * Establish the boundary the overlay's content resolves its contexts against.
+ *
+ * Every wrapper around the shared overlay calls this and passes the same contexts down, because
+ * content forwarded through a wrapper's slot resolves against the wrapper — not against the overlay
+ * that renders it into a teleport. Provided anywhere further in, none of it is found.
+ *
+ * The press responder is cleared here for the same reason it is offered here. Nothing inside an
+ * overlay is the trigger, so a button in a popover's content must not inherit the trigger's press —
+ * otherwise it toggles the overlay, and worse, registers itself as the element the overlay is
+ * positioned against and claims the trigger's id. React Aria clears the same context at the same
+ * boundary.
+ */
+export const provideOverlaySlotContexts = (contexts: OverlaySlotContexts): void => {
+  provideOverlayArrowContext(contexts.arrow);
+  provideOverlayScopeContext(contexts.scope);
+  providePressResponder(null);
 };

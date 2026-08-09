@@ -3,7 +3,6 @@ import type {OverlayPopoverProps} from "./overlay.types";
 
 import {computed, shallowRef, watch} from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
 import {useDismissable} from "../../composables/use-dismissable";
 import {useEnterExit} from "../../composables/use-enter-exit";
 import {useFocusScope} from "../../composables/use-focus-scope";
@@ -14,11 +13,9 @@ import {dataAttr} from "../../utils/assertion";
 import {provideSurfaceContext} from "../surface";
 
 import OverlayDismissButton from "./overlay-dismiss-button.vue";
-import {createOverlaySlotContexts} from "./overlay-slots";
+import {createOverlaySlotContexts, provideOverlaySlotContexts} from "./overlay-slots";
 import {
-  provideOverlayArrowContext,
   provideOverlayGroupContext,
-  provideOverlayScopeContext,
   useOverlayGroupContext,
   useOverlayTargetContext,
 } from "./overlay.context";
@@ -82,15 +79,6 @@ const contentTarget = computed(() => groupContainer.value);
 // surface it sits on — a field, a chip — reads the overlay rather than the page behind it.
 provideSurfaceContext({variant: computed(() => "default" as const)});
 
-/**
- * Nothing inside the overlay is the trigger.
- *
- * The trigger hands its press down through this context, and a context reaches every descendant —
- * so without clearing it here every button inside the overlay would also toggle the overlay.
- * React Aria clears the same context at the same boundary for the same reason.
- */
-providePressResponder(null);
-
 const {arrowStyle, overlayStyle, placement} = useOverlayPosition({
   arrowBoundaryOffset: () => props.arrowBoundaryOffset,
   arrowRef: arrow,
@@ -108,10 +96,9 @@ const {arrowStyle, overlayStyle, placement} = useOverlayPosition({
   targetRef: target.triggerElement,
 });
 
-// Provided as well as published: the overlay's own dismiss buttons read the scope, and an
-// overlay used without a wrapper has nobody else to provide for it.
-provideOverlayArrowContext(contexts.arrow);
-provideOverlayScopeContext(contexts.scope);
+// Provided as well as published: the overlay's own dismiss buttons read the scope, and content
+// written directly inside the overlay rather than forwarded through a wrapper resolves here.
+provideOverlaySlotContexts(contexts);
 
 /**
  * Whether the overlay element is itself the dialog.
