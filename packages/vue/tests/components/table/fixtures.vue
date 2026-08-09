@@ -1,6 +1,13 @@
 <script setup lang="ts" vapor>
 import type {TableFixtureUser} from "./fixtures.types";
 import type {TableRootProps, TableSortDescriptor} from "@/components/table";
+import type {CollectionKey} from "@/composables/use-collection";
+import type {
+  CollectionSelection,
+  DisabledBehavior,
+  SelectionBehavior,
+  SelectionMode,
+} from "@/composables/use-selection-manager";
 
 import {
   TableBody,
@@ -12,21 +19,56 @@ import {
   TableRoot,
   TableRow,
   TableScrollContainer,
+  TableSelectionCheckbox,
   TableSortableColumnHeader,
 } from "@/components/table";
 
-const props = defineProps<
-  TableRootProps & {
-    columnClass?: string;
-    onSortChange?: (descriptor: TableSortDescriptor) => void;
-    rowHeaders?: string[];
-    sortableColumns?: string[];
-    sortDescriptor?: TableSortDescriptor | null;
-    users?: TableFixtureUser[];
-    withFooter?: boolean;
-    withSortableHeader?: boolean;
-  }
->();
+// Every three-state Boolean declares an explicit `undefined` default: Vue casts an absent
+// Boolean prop to `false`, and forwarding that would read as a decision the test never made.
+const props = withDefaults(
+  defineProps<
+    TableRootProps & {
+      columnClass?: string;
+      disabledKeys?: CollectionKey[];
+      disallowEmptySelection?: boolean;
+      defaultSelectedKeys?: CollectionKey[];
+      disabledBehavior?: DisabledBehavior;
+      onSelectionChange?: (keys: CollectionSelection) => void;
+      onSortChange?: (descriptor: TableSortDescriptor) => void;
+      rowHeaders?: string[];
+      selectedKeys?: CollectionKey[];
+      selectionBehavior?: SelectionBehavior;
+      selectionMode?: SelectionMode;
+      sortableColumns?: string[];
+      sortDescriptor?: TableSortDescriptor | null;
+      users?: TableFixtureUser[];
+      withFooter?: boolean;
+      withSelectionColumn?: boolean;
+      withSortableHeader?: boolean;
+    }
+  >(),
+  {
+    class: undefined,
+    columnClass: undefined,
+    defaultSelectedKeys: undefined,
+    disabledBehavior: undefined,
+    disabledKeys: undefined,
+    disallowEmptySelection: undefined,
+    onSelectionChange: undefined,
+    onSortChange: undefined,
+    rowHeaders: undefined,
+    selectedKeys: undefined,
+    selectionBehavior: undefined,
+    selectionMode: undefined,
+    sortDescriptor: undefined,
+    sortableColumns: undefined,
+    users: undefined,
+    variant: undefined,
+    withFooter: undefined,
+    withSelectionColumn: undefined,
+    withSortableHeader: undefined,
+  },
+);
 
 const columns = [
   {id: "name", name: "Name"},
@@ -45,10 +87,21 @@ const defaultUsers: TableFixtureUser[] = [
     <TableScrollContainer>
       <TableContent
         aria-label="Team"
+        :default-selected-keys="props.defaultSelectedKeys"
+        :disabled-behavior="props.disabledBehavior"
+        :disabled-keys="props.disabledKeys"
+        :disallow-empty-selection="props.disallowEmptySelection"
+        :selected-keys="props.selectedKeys"
+        :selection-behavior="props.selectionBehavior"
+        :selection-mode="props.selectionMode"
         :sort-descriptor="props.sortDescriptor"
+        @selection-change="props.onSelectionChange?.($event)"
         @sort-change="props.onSortChange?.($event)"
       >
         <TableHeader>
+          <TableColumn v-if="props.withSelectionColumn" id="selection">
+            <TableSelectionCheckbox />
+          </TableColumn>
           <TableColumn
             v-for="column of columns"
             :id="column.id"
@@ -70,6 +123,9 @@ const defaultUsers: TableFixtureUser[] = [
         <TableBody>
           <template #empty>Nothing here</template>
           <TableRow v-for="user of props.users ?? defaultUsers" :id="user.id" :key="user.id">
+            <TableCell v-if="props.withSelectionColumn">
+              <TableSelectionCheckbox variant="secondary" />
+            </TableCell>
             <TableCell>{{ user.name }}</TableCell>
             <TableCell>{{ user.role }}</TableCell>
             <TableCell>{{ user.email }}</TableCell>

@@ -1,5 +1,5 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import {TableSortableColumnHeader} from "@/components/table";
@@ -22,12 +22,18 @@ const renderTable = async (props: Record<string, unknown> = {}) => {
   return {
     ...result,
     body: table.querySelector<HTMLElement>("tbody")!,
+    checkboxes: [...table.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')],
     columns: [...table.querySelectorAll<HTMLElement>('[data-slot="table-column"]')],
     head: table.querySelector<HTMLElement>("thead")!,
     root,
     rows: [...table.querySelectorAll<HTMLElement>('[data-slot="table-row"]')],
     table,
   };
+};
+
+/** A click carrying modifier keys, which `HTMLElement.click()` cannot express. */
+const clickWith = (element: HTMLElement, modifiers: {ctrlKey?: boolean; shiftKey?: boolean}) => {
+  element.dispatchEvent(new MouseEvent("click", {bubbles: true, ...modifiers}));
 };
 
 const cellsOf = (row: HTMLElement) => [...row.querySelectorAll<HTMLElement>("td")];
@@ -370,6 +376,247 @@ describe("Table", () => {
 
       expect(indicator).toHaveAttribute("data-direction", "ascending");
       expect(columns[1]!.querySelector('[data-slot="table-sortable-column-indicator"]')).toBeNull();
+    });
+  });
+
+  describe("selection", () => {
+    it("leaves every selection attribute off when nothing can be selected", async () => {
+      const {rows, table} = await renderTable();
+
+      expect(table).not.toHaveAttribute("aria-multiselectable");
+      expect(rows[0]).not.toHaveAttribute("aria-selected");
+      expect(rows[0]).not.toHaveAttribute("data-selection-mode");
+    });
+
+    it("reports the mode on the table and on every row", async () => {
+      const {rows, table} = await renderTable({selectionMode: "multiple"});
+
+      expect(table).toHaveAttribute("aria-multiselectable", "true");
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+      expect(rows[0]).toHaveAttribute("data-selection-mode", "multiple");
+    });
+
+    // Single selection is not multi-selectable, so the attribute has to stay off rather than
+    // be rendered as "false" — which is what React Aria does.
+    it("keeps the table out of multi-select in single mode", async () => {
+      const {table} = await renderTable({selectionMode: "single"});
+
+      expect(table).not.toHaveAttribute("aria-multiselectable");
+    });
+
+    it("selects a row on click", async () => {
+      const {rows} = await renderTable({selectionMode: "multiple"});
+
+      rows[0]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[0]).toHaveAttribute("data-selected", "true");
+    });
+
+    it("replaces the selection in single mode", async () => {
+      const {rows} = await renderTable({selectionMode: "single"});
+
+      rows[0]!.click();
+      rows[1]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("adds to the selection in multiple mode", async () => {
+      const {rows} = await renderTable({selectionMode: "multiple"});
+
+      rows[0]!.click();
+      rows[1]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("extends the selection across a shift-click", async () => {
+      const users = [
+        {email: "a@acme.com", id: 1, name: "Ann", role: "CEO"},
+        {email: "b@acme.com", id: 2, name: "Bob", role: "CTO"},
+        {email: "c@acme.com", id: 3, name: "Cleo", role: "COO"},
+      ];
+      const {rows} = await renderTable({selectionMode: "multiple", users});
+
+      rows[0]!.click();
+      clickWith(rows[2]!, {shiftKey: true});
+      await nextTick();
+
+      expect(rows.map((row) => row.getAttribute("aria-selected"))).toEqual([
+        "true",
+        "true",
+        "true",
+      ]);
+    });
+
+    it("reports the keys it was asked to change to", async () => {
+      const onSelectionChange = vi.fn();
+      const {rows} = await renderTable({onSelectionChange, selectionMode: "multiple"});
+
+      rows[1]!.click();
+
+      expect(onSelectionChange).toHaveBeenCalledWith(new Set([5273849]));
+    });
+
+    it("starts from the default keys", async () => {
+      const {rows} = await renderTable({
+        defaultSelectedKeys: [5273849],
+        selectionMode: "multiple",
+      });
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("marks a disabled row and ignores a click on it", async () => {
+      const {rows} = await renderTable({disabledKeys: [4586932], selectionMode: "multiple"});
+
+      expect(rows[0]).toHaveAttribute("aria-disabled", "true");
+      expect(rows[0]).toHaveAttribute("data-disabled", "true");
+
+      rows[0]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("refuses to empty a selection it must keep", async () => {
+      const {rows} = await renderTable({
+        defaultSelectedKeys: [4586932],
+        disallowEmptySelection: true,
+        selectionMode: "multiple",
+      });
+
+      rows[0]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+    });
+
+    // React Aria's press hook stops propagation, so a control inside a cell never lets the row
+    // see the press. The row has to recognise the same case from the click that reaches it.
+    it("leaves the row alone when a control inside a cell was clicked", async () => {
+      const {rows} = await renderTable({selectionMode: "multiple"});
+      const button = document.createElement("button");
+
+      rows[0]!.querySelector("td")!.append(button);
+      button.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+  });
+
+  describe("selection checkbox", () => {
+    const renderWithCheckboxes = (props: Record<string, unknown> = {}) =>
+      renderTable({selectionMode: "multiple", withSelectionColumn: true, ...props});
+
+    it("names the header checkbox for the whole table and each row's for its row", async () => {
+      const {checkboxes, rows} = await renderWithCheckboxes();
+      const [selectAll, first] = checkboxes;
+
+      expect(selectAll).toHaveAttribute("aria-label", "Select All");
+      expect(first).toHaveAttribute("aria-label", "Select");
+      // Its own name first, then the row's, so hearing it read out says which row it selects.
+      expect(first).toHaveAttribute(
+        "aria-labelledby",
+        `${first!.id} ${rows[0]!.getAttribute("aria-labelledby")}`,
+      );
+    });
+
+    it("names a single-selection header checkbox without the plural", async () => {
+      const {checkboxes} = await renderWithCheckboxes({selectionMode: "single"});
+
+      expect(checkboxes[0]).toHaveAttribute("aria-label", "Select");
+    });
+
+    it("toggles its own row", async () => {
+      const {checkboxes, rows} = await renderWithCheckboxes();
+
+      checkboxes[1]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(checkboxes[1]!.checked).toBe(true);
+
+      checkboxes[1]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    // The checkbox sits inside the row, so a press it did not claim would reach the row's own
+    // handler as well — and there a modifier means something else entirely. Shift is what makes
+    // that visible: the row would extend a range where the checkbox only ticks one box.
+    it("claims the press rather than letting the row read the modifiers", async () => {
+      const users = [
+        {email: "a@acme.com", id: 1, name: "Ann", role: "CEO"},
+        {email: "b@acme.com", id: 2, name: "Bob", role: "CTO"},
+        {email: "c@acme.com", id: 3, name: "Cleo", role: "COO"},
+      ];
+      const {rows} = await renderWithCheckboxes({users});
+
+      rows[0]!.click();
+      clickWith(rows[2]!.querySelector<HTMLElement>('[data-slot="checkbox-control"]')!, {
+        shiftKey: true,
+      });
+      await nextTick();
+
+      expect(rows.map((row) => row.getAttribute("aria-selected"))).toEqual([
+        "true",
+        "false",
+        "true",
+      ]);
+    });
+
+    it("toggles every row from the header", async () => {
+      const {checkboxes, rows} = await renderWithCheckboxes();
+
+      checkboxes[0]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+
+      checkboxes[0]!.click();
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("shows the mixed state while only some rows are selected", async () => {
+      const {checkboxes} = await renderWithCheckboxes();
+
+      checkboxes[1]!.click();
+      await nextTick();
+
+      expect(checkboxes[0]!.indeterminate).toBe(true);
+      expect(checkboxes[0]!.checked).toBe(false);
+
+      checkboxes[2]!.click();
+      await nextTick();
+
+      expect(checkboxes[0]!.indeterminate).toBe(false);
+      expect(checkboxes[0]!.checked).toBe(true);
+    });
+
+    it("disables the header checkbox unless several rows can be selected", async () => {
+      const {checkboxes} = await renderWithCheckboxes({selectionMode: "single"});
+
+      expect(checkboxes[0]!.disabled).toBe(true);
+    });
+
+    it("disables the checkbox of a row that cannot be selected", async () => {
+      const {checkboxes} = await renderWithCheckboxes({disabledKeys: [4586932]});
+
+      expect(checkboxes[1]!.disabled).toBe(true);
+      expect(checkboxes[2]!.disabled).toBe(false);
     });
   });
 
