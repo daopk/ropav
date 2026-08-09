@@ -41,7 +41,11 @@ export interface UseMoveHandlers {
 }
 
 export interface UseMoveReturn {
-  /** Bind with `v-bind` so the element gets both the pointer and the keyboard entry points. */
+  /**
+   * The pointer and the keyboard entry points. Attach each one statically with `@event`, never
+   * through `v-bind`: a vapor render re-attaches every `on*` key that arrived that way, which
+   * drops the listener when the interaction itself is what re-rendered the element.
+   */
   handlers: UseMoveHandlers;
 }
 
@@ -76,7 +80,7 @@ const KEYBOARD_DELTA: Record<string, [deltaX: number, deltaY: number]> = {
  * const {handlers} = useMove({
  *   onMove: ({deltaX}) => { offset.value += deltaX; },
  * });
- * // <div v-bind="handlers" />
+ * // <div @keydown="handlers.onKeydown" @pointerdown="handlers.onPointerdown" />
  * ```
  */
 export const useMove = (options: UseMoveOptions): UseMoveReturn => {
