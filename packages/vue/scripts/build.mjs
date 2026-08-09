@@ -11,7 +11,7 @@ const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 
 /** Directories under `src/components` that are not components */
-const SKIP_DIRS = new Set(["icons", "utils", "composables"]);
+const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay"]);
 
 async function clean() {
   console.log("🧹 Cleaning dist directory...");
