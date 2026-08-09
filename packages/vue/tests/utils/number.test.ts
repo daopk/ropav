@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
 
-import {clamp, roundToStepPrecision, snapValueToStep} from "@/utils/number";
+import {clamp, roundToStepPrecision, snapValueToStep, toFixedNumber} from "@/utils/number";
 
 describe("clamp", () => {
   it("keeps a value inside the range", () => {
@@ -66,5 +66,24 @@ describe("snapValueToStep", () => {
   it("snaps to a coarse step", () => {
     expect(snapValueToStep(137, 0, 1000, 50)).toBe(150);
     expect(snapValueToStep(50, 0, 1000, 50)).toBe(50);
+  });
+});
+
+describe("toFixedNumber", () => {
+  it("rounds to the given number of digits and stays a number", () => {
+    // These three are the exact roundings the colour conversions depend on.
+    expect(toFixedNumber(33.333333, 2)).toBe(33.33);
+    expect(toFixedNumber(66.666666, 2)).toBe(66.67);
+    expect(toFixedNumber(29.87999, 2)).toBe(29.88);
+  });
+
+  it("leaves a value that already fits alone", () => {
+    expect(toFixedNumber(100, 2)).toBe(100);
+    expect(toFixedNumber(0, 2)).toBe(0);
+  });
+
+  it("rounds in another base when asked", () => {
+    expect(toFixedNumber(1.5, 0, 2)).toBe(2);
+    expect(toFixedNumber(1.5, 1, 2)).toBe(1.5);
   });
 });
