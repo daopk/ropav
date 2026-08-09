@@ -46,6 +46,7 @@ export * from "./use-table-collection";
 export * from "./use-table-column-layout";
 export * from "./use-text-field";
 export * from "./use-toggle-group-state";
+export * from "./use-tooltip-trigger";
 export * from "./use-tooltip-trigger-state";
 export * from "./use-toolbar";
 export * from "./use-typeahead";
