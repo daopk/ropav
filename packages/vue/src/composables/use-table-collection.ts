@@ -110,6 +110,48 @@ export const createTableRegistry = <M extends TableRegistryMeta>(): TableRegistr
   };
 };
 
+/** Where a row sits in a tree, for the rows of a tree grid. */
+export interface TableRowNodeMeta extends TableRegistryMeta {
+  /** Depth from the body, counted from zero. */
+  level: () => number;
+  /** The row this one hangs off, or `null` for a top-level row. */
+  parentKey: () => CollectionKey | null;
+  /** Whether the row has children at all, which is what decides if it reports expansion. */
+  hasChildRows: () => boolean;
+}
+
+export interface TableTree extends TableRegistry<TableRowNodeMeta> {
+  /** Where the row sits among its siblings, both one-based, as a treegrid reports it. */
+  position: (key: CollectionKey) => {posinset: number; setsize: number};
+}
+
+/**
+ * The nesting of a tree grid's rows, held beside the row collection rather than inside it.
+ *
+ * The row collection stays a plain `useCollection` — that is what lets the selection manager and
+ * the typeahead take it unchanged — so depth lives here. It is a `createTableRegistry` rather than
+ * another `useCollection` for the same reason the columns are: `aria-posinset` and `aria-setsize`
+ * are read **during render**, so the order has to be a `computed` and not a function.
+ */
+export const createTableTree = (): TableTree => {
+  const registry = createTableRegistry<TableRowNodeMeta>();
+
+  const siblingsOf = (parentKey: CollectionKey | null) =>
+    registry.orderedKeys.value.filter(
+      (key) => (registry.getItem(key)?.parentKey() ?? null) === parentKey,
+    );
+
+  return {
+    ...registry,
+    position: (key) => {
+      const siblings = siblingsOf(registry.getItem(key)?.parentKey() ?? null);
+      const index = siblings.indexOf(key);
+
+      return {posinset: index + 1, setsize: siblings.length};
+    },
+  };
+};
+
 export interface UseTableCollectionReturn {
   /** Column headers, in document order. */
   columns: TableRegistry<TableColumnMeta>;
@@ -120,6 +162,8 @@ export interface UseTableCollectionReturn {
   rows: UseCollectionReturn;
   /** Columns whose cells carry `role="rowheader"` and name their row. */
   rowHeaderColumnKeys: ComputedRef<Set<CollectionKey>>;
+  /** How the rows nest, for a tree grid. Empty for a flat table. */
+  tree: TableTree;
 }
 
 /**
@@ -152,6 +196,7 @@ export const useTableCollection = (): UseTableCollectionReturn => {
       return new Set(first == null ? [] : [first]);
     }),
     rows,
+    tree: createTableTree(),
   };
 };
 

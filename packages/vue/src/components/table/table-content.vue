@@ -5,6 +5,7 @@ import type {CollectionSelection} from "../../composables/use-selection-manager"
 
 import {computed, shallowRef, watch} from "vue";
 
+import {useControllableState} from "../../composables/use-controllable-state";
 import {useDescription} from "../../composables/use-description";
 import {useGridKeyboard} from "../../composables/use-grid-keyboard";
 import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection-announcement";
@@ -30,7 +31,9 @@ const props = withDefaults(defineProps<TableContentProps>(), {
 });
 
 const emit = defineEmits<{
+  expandedChange: [keys: Set<CollectionKey>];
   selectionChange: [keys: CollectionSelection];
+  "update:expandedKeys": [keys: Set<CollectionKey>];
   sortChange: [descriptor: TableSortDescriptor];
   "update:selectedKeys": [keys: CollectionSelection];
   "update:sortDescriptor": [descriptor: TableSortDescriptor];
@@ -96,9 +99,48 @@ const layout = resizableContainer
 
 provideTableColumnLayoutContext(layout ? {...resizableContainer!, layout} : null);
 
+const treeColumn = computed(() => props.treeColumn ?? null);
+
+/**
+ * Which rows are open. Held as its own controllable state rather than through the selection
+ * manager: expansion is not a selection — it does not follow the selection mode, it is not
+ * announced, and a row can be open and unselected at once.
+ */
+const expanded = useControllableState<Set<CollectionKey>>({
+  defaultValue: new Set(props.defaultExpandedKeys ?? []),
+  onValueChange: (keys) => {
+    emit("expandedChange", keys);
+    emit("update:expandedKeys", keys);
+  },
+  value: () => (props.expandedKeys === undefined ? undefined : new Set(props.expandedKeys)),
+});
+
+const expandedKeys = computed<Set<CollectionKey>>(() =>
+  treeColumn.value == null ? new Set() : expanded.state.value,
+);
+
+const toggleExpanded = (rowKey: CollectionKey) => {
+  if (treeColumn.value == null) return;
+
+  const next = new Set(expanded.state.value);
+
+  if (next.has(rowKey)) next.delete(rowKey);
+  else next.add(rowKey);
+
+  expanded.setState(next);
+};
+
 const keyboard = useGridKeyboard({
   collection,
   element,
+  // Expansion rides on the horizontal arrows, so the grid has to ask before it navigates.
+  expansion: {
+    hasChildRows: (rowKey) => Boolean(collection.tree.getItem(rowKey)?.hasChildRows()),
+    isExpanded: (rowKey) => expandedKeys.value.has(rowKey),
+    isTree: () => treeColumn.value != null,
+    parentKey: (rowKey) => collection.tree.getItem(rowKey)?.parentKey() ?? null,
+    toggle: toggleExpanded,
+  },
   // Arrow keys belong to the resizer while a column is being dragged, exactly as React Aria
   // disables the grid's own navigation for the duration.
   isDisabled: () => layout?.resizingColumn.value != null,
@@ -148,11 +190,14 @@ const sort = (columnKey: CollectionKey, direction?: TableSortDirection) => {
 provideTableGridContext({
   collection,
   collectionId,
+  expandedKeys,
   keyboard,
   selection,
   sort,
   sortDescriptor,
   tableId,
+  toggleExpanded,
+  treeColumn,
 });
 
 /**
@@ -188,7 +233,7 @@ watch(sortDescription, (description) => {
     :class="composeSlotClassName(slots.content, props.class)"
     :data-collection="collectionId"
     data-slot="table-content"
-    role="grid"
+    :role="treeColumn == null ? 'grid' : 'treegrid'"
     :style="layout ? {tableLayout: 'fixed', width: 'min-content'} : undefined"
     :tabindex="keyboard.collectionTabIndex.value"
     @focusin="keyboard.onFocusin"

@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {TableCellProps} from "./table.types";
+import type {TableCellProps, TableCellSlotProps} from "./table.types";
 
 import {computed, shallowRef, watch} from "vue";
 
@@ -14,11 +14,11 @@ import {useTableContext, useTableGridContext, useTableRowContext} from "./table.
 
 const props = defineProps<TableCellProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{default?: (props: TableCellSlotProps) => unknown}>();
 
 const {slots} = useTableContext();
-const {collection, collectionId, keyboard, selection, tableId} = useTableGridContext();
-const {cells, rowKey} = useTableRowContext();
+const {collection, collectionId, keyboard, selection, tableId, treeColumn} = useTableGridContext();
+const {cells, hasChildRows, isExpanded, level, rowKey} = useTableRowContext();
 
 // A cell has no identity of its own in the public API — it is the nth cell of its row — so the
 // registration key is internal and the rendered key is derived from the column it lands under.
@@ -61,6 +61,12 @@ const cellId = computed(() =>
 const isSelected = computed(() => selection.isSelected(rowKey.value));
 const isDisabled = computed(() => selection.isDisabled(rowKey.value));
 
+// The stylesheet indents this one cell by `--table-row-level`, which is what makes a tree read as
+// a tree; every other cell in the row stays flush.
+const isTreeColumn = computed(
+  () => treeColumn.value != null && columnKey.value === treeColumn.value,
+);
+
 // The stylesheet draws the cell's focus ring from `data-focus-visible`; its pseudo-class branch
 // is never reached, the same as everywhere else in the design system.
 const states = useInteractionStates({isDisabled: () => isDisabled.value});
@@ -82,19 +88,28 @@ const onFocus = (event: FocusEvent) => {
     :data-collection="collectionId"
     :data-column-index="index < 0 ? undefined : index"
     :data-disabled="dataAttr(isDisabled)"
+    :data-expanded="dataAttr(isExpanded)"
     :data-focus-visible="dataAttr(states.isFocusVisible.value)"
     :data-focused="dataAttr(states.isFocused.value)"
+    :data-has-child-items="dataAttr(hasChildRows)"
     :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
-    data-level="1"
+    :data-level="level"
     :data-pressed="dataAttr(states.isPressed.value)"
     :data-selected="dataAttr(isSelected)"
     data-slot="table-cell"
+    :data-tree-column="dataAttr(isTreeColumn)"
     :role="isRowHeader ? 'rowheader' : 'gridcell'"
     :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
     @blur="states.onBlur"
     @focus="onFocus"
     @pointerdown="states.onPointerdown"
   >
-    <slot />
+    <slot
+      :has-child-rows="hasChildRows"
+      :is-disabled="isDisabled"
+      :is-expanded="isExpanded"
+      :is-selected="isSelected"
+      :is-tree-column="isTreeColumn"
+    />
   </td>
 </template>

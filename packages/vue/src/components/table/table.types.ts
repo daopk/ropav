@@ -41,6 +41,15 @@ export interface TableContentProps {
    * bare attribute instead of reading `""`.
    */
   disallowEmptySelection?: boolean;
+  /**
+   * The column that carries the expand control and the indentation, which is what turns the
+   * grid into a tree grid.
+   */
+  treeColumn?: CollectionKey;
+  /** Expanded row keys, for controlled use. */
+  expandedKeys?: Iterable<CollectionKey>;
+  /** Expanded row keys the table starts with. */
+  defaultExpandedKeys?: Iterable<CollectionKey>;
 }
 
 export interface TableHeaderProps {
@@ -109,10 +118,23 @@ export interface TableRowProps {
   id?: CollectionKey;
   /** Text the row is matched on by typeahead. Derived from its row header cells when absent. */
   textValue?: string;
+  /** Depth in a tree grid, counted from zero. @default 0 */
+  level?: number;
+  /** The row this one hangs off, in a tree grid. */
+  parentKey?: CollectionKey;
+  /**
+   * Whether the row has children, which is what decides whether it reports expansion at all.
+   * Declared as `boolean` so Vue casts a bare attribute instead of reading `""`.
+   */
+  hasChildRows?: boolean;
 }
 
 /** State handed to the default slot of a row. */
 export interface TableRowSlotProps {
+  /** Whether the row has children to expand. */
+  hasChildRows: boolean;
+  /** Whether the row is expanded, in a tree grid. */
+  isExpanded: boolean;
   isDisabled: boolean;
   isFocusVisible: boolean;
   isFocused: boolean;
@@ -126,6 +148,27 @@ export interface TableCellProps {
   class?: string;
   /** Text this cell contributes to its row's text value. Derived from its content when absent. */
   textValue?: string;
+}
+
+/** State handed to the default slot of a cell. */
+export interface TableCellSlotProps {
+  /** Whether this cell sits under the tree column, which is the one that carries the chevron. */
+  isTreeColumn: boolean;
+  /** Whether the row has children to expand. */
+  hasChildRows: boolean;
+  /** Whether the row is expanded. */
+  isExpanded: boolean;
+  isDisabled: boolean;
+  isSelected: boolean;
+}
+
+export interface TableExpandButtonProps {
+  class?: string;
+  /**
+   * Accessible name. Defaults to what React Aria names it: `Expand` while the row is collapsed,
+   * `Collapse` while it is open.
+   */
+  ariaLabel?: string;
 }
 
 export interface TableFooterProps {

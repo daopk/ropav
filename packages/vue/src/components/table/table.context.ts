@@ -38,6 +38,12 @@ export interface TableGridContext {
   keyboard: UseGridKeyboardReturn;
   /** Ask for a sort. Without a direction, the current one flips. */
   sort: (columnKey: CollectionKey, direction?: TableSortDirection) => void;
+  /** The column that carries the chevron and the indentation, or `null` for a flat table. */
+  treeColumn: ComputedRef<CollectionKey | null>;
+  /** Rows currently expanded. Always empty for a flat table. */
+  expandedKeys: ComputedRef<Set<CollectionKey>>;
+  /** Open or close a row. Does nothing outside a tree grid. */
+  toggleExpanded: (rowKey: CollectionKey) => void;
 }
 
 /**
@@ -50,6 +56,16 @@ export const [useTableGridContext, provideTableGridContext] = createContext<Tabl
 
 export interface TableRowContext {
   rowKey: ComputedRef<CollectionKey>;
+  /** Whether the row has children to expand, which the chevron and the cell both read. */
+  hasChildRows: ComputedRef<boolean>;
+  /** Whether the row is expanded. */
+  isExpanded: ComputedRef<boolean>;
+  isDisabled: ComputedRef<boolean>;
+  isSelected: ComputedRef<boolean>;
+  /** Depth on the wire, counted from one, which the cells repeat. */
+  level: ComputedRef<number>;
+  /** Open or close this row. */
+  toggle: () => void;
   /** Ids of the cells that name this row, which a selection checkbox borrows for its own name. */
   ariaLabelledBy: ComputedRef<string>;
   /** The cells of this row, which is how a cell learns which column it sits under. */

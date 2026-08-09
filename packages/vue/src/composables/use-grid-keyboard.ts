@@ -26,6 +26,15 @@ export interface GridFocusTarget {
   columnKey: CollectionKey | null;
 }
 
+/** What the grid needs to know to open and close rows from the horizontal arrows. */
+export interface GridExpansion {
+  isTree: () => boolean;
+  isExpanded: (rowKey: CollectionKey) => boolean;
+  hasChildRows: (rowKey: CollectionKey) => boolean;
+  parentKey: (rowKey: CollectionKey) => CollectionKey | null;
+  toggle: (rowKey: CollectionKey) => void;
+}
+
 export interface UseGridKeyboardOptions {
   collection: UseTableCollectionReturn;
   selection: UseSelectionManagerReturn;
@@ -34,6 +43,8 @@ export interface UseGridKeyboardOptions {
   disallowSelectAll?: MaybeRefOrGetter<boolean | undefined>;
   /** Hands every key back, for as long as something else owns them — a column being resized. */
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
+  /** Supplied by a tree grid, where the horizontal arrows expand and collapse rows. */
+  expansion?: GridExpansion;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
 }
@@ -346,6 +357,57 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
   /* ---------------------------------------------------------------------------------------------
    * Keyboard
    * -------------------------------------------------------------------------------------------*/
+  /**
+   * Open or close the focused row, ported from react-aria's `useTableRow`.
+   *
+   * Which physical arrow does which is mirrored in RTL, and collapsing a row that is already
+   * closed walks **up** to its parent instead — which is what makes a keyboard user able to leave
+   * a branch without arrowing back through every child. Only a row itself answers these keys: with
+   * focus on a cell the arrows belong to the cells.
+   */
+  const handleExpansion = (
+    event: KeyboardEvent,
+    from: GridFocusTarget,
+    intent: "expand" | "collapse",
+  ) => {
+    const {expansion} = options;
+
+    if (!expansion?.isTree()) return false;
+    if (from.rowKey == null || from.columnKey != null) return false;
+
+    const rowKey = from.rowKey;
+    const isExpanded = expansion.isExpanded(rowKey);
+    const hasChildRows = expansion.hasChildRows(rowKey);
+
+    if (intent === "expand") {
+      if (!hasChildRows || isExpanded) return false;
+
+      expansion.toggle(rowKey);
+      event.preventDefault();
+      event.stopPropagation();
+
+      return true;
+    }
+
+    if (hasChildRows && isExpanded) {
+      expansion.toggle(rowKey);
+      event.preventDefault();
+      event.stopPropagation();
+
+      return true;
+    }
+
+    const parentKey = expansion.parentKey(rowKey);
+
+    if (parentKey == null) return false;
+
+    focusCell({columnKey: null, rowKey: parentKey}, {scroll: true});
+    event.preventDefault();
+    event.stopPropagation();
+
+    return true;
+  };
+
   const onKeydown = (event: KeyboardEvent) => {
     const element = getElement();
     const target = event.target;
@@ -383,11 +445,13 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
         return;
       }
       case "ArrowRight": {
+        if (handleExpansion(event, from, isReversed() ? "collapse" : "expand")) return;
         move(keyRightOf(from));
 
         return;
       }
       case "ArrowLeft": {
+        if (handleExpansion(event, from, isReversed() ? "expand" : "collapse")) return;
         move(keyLeftOf(from));
 
         return;
