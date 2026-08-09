@@ -97,8 +97,17 @@ const grid = `
   </CalendarGrid>
 `;
 
-/** The header with a plain heading between the two nav buttons. */
+/** The header the shared template uses: the heading first, then both nav buttons. */
 const header = `
+  <CalendarHeader>
+    <CalendarHeading />
+    <CalendarNavButton v-bind="PREVIOUS" />
+    <CalendarNavButton v-bind="NEXT" />
+  </CalendarHeader>
+`;
+
+/** The header with the heading between the two nav buttons, as some stories arrange it. */
+const headerNavFirst = `
   <CalendarHeader>
     <CalendarNavButton v-bind="PREVIOUS" />
     <CalendarHeading />
@@ -527,7 +536,7 @@ export const WithIndicators: Story = {
     }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date">
-        ${header}
+        ${headerNavFirst}
         <CalendarGrid>
           <CalendarGridHeader>
             <template #default="{day}">
@@ -562,7 +571,7 @@ export const TodayIndicator: Story = {
     }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
-        ${header}
+        ${headerNavFirst}
         <CalendarGrid>
           <CalendarGridHeader>
             <template #default="{day}">
@@ -822,7 +831,7 @@ export const BookingCalendar: Story = {
           :value="value"
           @update:value="value = $event"
         >
-          ${header}
+          ${headerNavFirst}
           <CalendarGrid>
             <CalendarGridHeader>
               <template #default="{day}">

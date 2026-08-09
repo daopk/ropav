@@ -154,6 +154,10 @@ const slotProps = computed<CalendarRootSlotProps>(() => ({
  * reader user meets it first — and it repeats the calendar's own name, because VoiceOver on iOS does
  * not announce a grid's label. The second is another next button after the grid, so reaching the end
  * of a month can page on without swiping all the way back to the start.
+ *
+ * That second button carries `type="button"`, which React's does not. A `<button>` with no type
+ * submits, so React's would submit any form the calendar sits inside — the one place this port
+ * deliberately does not reproduce what React renders.
  */
 provideCalendarContext({dayView, slots});
 provideCalendarStateContext({calendar, state});

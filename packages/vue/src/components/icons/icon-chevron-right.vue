@@ -1,5 +1,14 @@
 <script setup lang="ts" vapor>
-defineProps<{class?: string}>();
+/*
+ * The size is a prop rather than a fixed attribute so a caller can ask for `1em` and have the icon
+ * follow the surrounding text — which is what the year-picker indicator needs. React's icons take it
+ * the same way, by spreading props over their own defaults.
+ */
+withDefaults(defineProps<{class?: string; height?: string | number; width?: string | number}>(), {
+  class: undefined,
+  height: 16,
+  width: 16,
+});
 </script>
 
 <template>
@@ -7,10 +16,10 @@ defineProps<{class?: string}>();
     aria-hidden="true"
     :class="$props.class"
     fill="none"
-    height="16"
+    :height="$props.height"
     role="presentation"
     viewBox="0 0 16 16"
-    width="16"
+    :width="$props.width"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

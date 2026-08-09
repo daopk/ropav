@@ -27,6 +27,11 @@ const {
   slots,
 } = useYearPickerGridContext();
 
+/*
+ * Reported through `data-selected` only, not `aria-selected`, which matches React: the year cells are
+ * buttons rather than options, and RAC drops `aria-selected` on a button rather than emitting ARIA
+ * the role does not allow.
+ */
 const isSelected = computed(() => props.year === focusedYear.value);
 const formattedYear = computed(() => getFormattedYear(props.year));
 const styles = computed(() => slots.value.yearCell({class: props.class}));
@@ -61,7 +66,6 @@ const onFocus = () => {
 <template>
   <button
     :aria-label="formattedYear"
-    :aria-selected="isSelected"
     :class="styles"
     :data-focus-visible="dataAttr(interaction.isFocusVisible.value)"
     :data-hovered="dataAttr(interaction.isHovered.value)"
