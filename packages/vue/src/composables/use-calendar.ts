@@ -1,5 +1,5 @@
 import type {CalendarSelectionMode, CalendarState} from "./use-calendar-state";
-import type {CalendarDate, DateFormatter} from "@internationalized/date";
+import type {CalendarDate, DateFormatter, DateValue} from "@internationalized/date";
 import type {LocalizedStringFormatter} from "@internationalized/string";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
@@ -35,14 +35,26 @@ export interface RangeCalendarStateExtras {
   focusNearestAvailableDate: (date: CalendarDate) => void;
 }
 
-/** Two dates and everything between them. */
+/** Two dates and everything between them, as the calendar on screen numbers them. */
 export interface CalendarRange {
   start: CalendarDate;
   end: CalendarDate;
 }
 
+/**
+ * A selected range, as the caller's own value spells it.
+ *
+ * Kept apart from `CalendarRange` because the two are not the same thing: what is highlighted is
+ * always plain dates in the calendar system on screen, while the value keeps whatever system and
+ * whatever time of day the caller passed in.
+ */
+export interface DateRange {
+  start: DateValue;
+  end: DateValue;
+}
+
 /** Whatever this calendar has selected: one date, a set of them, or a range. */
-export type CalendarSelectedValue = CalendarDate | CalendarDate[] | CalendarRange | null;
+export type CalendarSelectedValue = CalendarDate | CalendarDate[] | DateRange | null;
 
 /**
  * Either kind of calendar state, since every behaviour hook below takes both.
@@ -58,7 +70,7 @@ export type AnyCalendarState = Omit<CalendarState, "selectionMode" | "setValue" 
 
 /** A range calendar's state: the shared surface, plus the extras, with `value` narrowed to a range. */
 export type RangeCalendarLikeState = Omit<AnyCalendarState, "value"> &
-  RangeCalendarStateExtras & {value: ComputedRef<CalendarRange | null>};
+  RangeCalendarStateExtras & {value: ComputedRef<DateRange | null>};
 
 /** Whether a range calendar's own state is in play, which is how react-aria branches. */
 export const isRangeCalendarState = (state: AnyCalendarState): state is RangeCalendarLikeState =>
