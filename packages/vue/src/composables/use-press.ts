@@ -63,7 +63,12 @@ export interface UsePressHandlers {
 
 export interface UsePressReturn {
   isPressed: ComputedRef<boolean>;
-  /** Bind with `v-bind` so every listener the press machine needs is attached. */
+  /**
+   * Every listener the press machine needs. Attach each one statically with `@event`, never
+   * through `v-bind`: a vapor render re-attaches every `on*` key that arrived that way, which
+   * both reorders the listeners and drops one mid-dispatch. `composePressResponder` wraps these
+   * for that, and is where the reason is written out.
+   */
   handlers: UsePressHandlers;
 }
 
@@ -138,7 +143,8 @@ const contains = (root: EventTarget | null, target: EventTarget | null): boolean
  *   onPressStart: (event) => { if (event.pointerType !== "touch") state.open(); },
  *   onPress: (event) => { if (event.pointerType === "touch") state.toggle(); },
  * });
- * // <button v-bind="press.handlers" :data-pressed="dataAttr(press.isPressed.value)">
+ * // <button :data-pressed="dataAttr(press.isPressed.value)"
+ * //   @click="press.handlers.onClick" @pointerdown="press.handlers.onPointerdown">
  * ```
  */
 export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
