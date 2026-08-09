@@ -283,9 +283,9 @@ const setContainer = (next: unknown) => {
       :tabindex="isDialog ? -1 : undefined"
       @keydown="onKeydown"
     >
-      <OverlayDismissButton v-if="!isNonModal" />
+      <OverlayDismissButton v-if="!isNonModal" :close="target.state.close" />
       <slot />
-      <OverlayDismissButton />
+      <OverlayDismissButton :close="target.state.close" />
     </div>
   </Teleport>
 </template>
