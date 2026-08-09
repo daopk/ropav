@@ -2,6 +2,7 @@ import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {ref} from "vue";
 
+import {ListLayout} from "../../utils/virtualizer-list-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {DescriptionRoot} from "../description";
 import {HeaderRoot} from "../header";
@@ -11,6 +12,7 @@ import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
 import {ListBoxSectionRoot} from "../list-box-section";
 import {SeparatorRoot} from "../separator";
 import {SurfaceRoot} from "../surface";
+import {VirtualizerRoot} from "../virtualizer";
 
 import {ListBoxRoot} from "./index";
 
@@ -32,6 +34,7 @@ const components = {
   ListBoxSection: ListBoxSectionRoot,
   Separator: SeparatorRoot,
   Surface: SurfaceRoot,
+  Virtualizer: VirtualizerRoot,
 };
 
 const meta: Meta = {
@@ -269,6 +272,98 @@ export const Controlled: Story = {
         </Surface>
         <p class="text-sm text-muted">Selected: {{ [...selected].join(", ") || "none" }}</p>
       </div>
+    `,
+  }),
+};
+
+const FIRST_NAMES = [
+  "Emma",
+  "Liam",
+  "Olivia",
+  "Noah",
+  "Ava",
+  "James",
+  "Sophia",
+  "Oliver",
+  "Isabella",
+  "Lucas",
+  "Mia",
+  "Ethan",
+  "Charlotte",
+  "Mason",
+  "Amelia",
+  "Logan",
+  "Harper",
+  "Alexander",
+  "Ella",
+  "Benjamin",
+];
+
+const LAST_NAMES = [
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Rodriguez",
+  "Martinez",
+  "Anderson",
+  "Taylor",
+  "Thomas",
+  "Jackson",
+  "White",
+  "Harris",
+  "Clark",
+  "Lewis",
+  "Robinson",
+  "Walker",
+];
+
+interface VirtualizedUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
+/** The same names in the same order as the React story, so the two can be compared row by row. */
+const generateUsers = (count: number): VirtualizedUser[] =>
+  Array.from({length: count}, (_, index) => {
+    const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
+    const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
+
+    return {
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@acme.com`,
+      id: index + 1,
+      name: `${firstName} ${lastName}`,
+    };
+  });
+
+export const Virtualization: Story = {
+  render: () => ({
+    components,
+    setup: () => ({layout: ListLayout, users: generateUsers(1000)}),
+    template: `
+      <Virtualizer :layout="layout" :layout-options="{rowHeight: 50}">
+        <ListBox
+          aria-label="Virtualized list with 1000 items"
+          class="h-[400px] w-[300px] overflow-y-auto"
+          :item-text-value="(user) => user.name"
+          :items="users"
+        >
+          <template #default="{item}">
+            <ListBoxItem :id="item.id" :text-value="item.name">
+              <div class="flex flex-col">
+                <Label>{{ item.name }}</Label>
+                <Description>{{ item.email }}</Description>
+              </div>
+              <ListBoxItemIndicator />
+            </ListBoxItem>
+          </template>
+        </ListBox>
+      </Virtualizer>
     `,
   }),
 };
