@@ -13,6 +13,7 @@ export * from "./chip";
 export * from "./close-button";
 export * from "./color-slider";
 export * from "./color-swatch";
+export * from "./date-field";
 export * from "./description";
 export * from "./dnd";
 export * from "./drawer";
