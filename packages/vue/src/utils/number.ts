@@ -72,3 +72,15 @@ export const snapValueToStep = (
 
   return roundToStepPrecision(snappedValue, step);
 };
+
+/**
+ * Round a value to a fixed number of digits.
+ *
+ * Ported from React Stately's `toFixedNumber`. Unlike `Number.prototype.toFixed` this keeps
+ * the result a number, and `base` lets a caller round in something other than base 10.
+ */
+export const toFixedNumber = (value: number, digits: number, base = 10): number => {
+  const pow = Math.pow(base, digits);
+
+  return Math.round(value * pow) / pow;
+};
