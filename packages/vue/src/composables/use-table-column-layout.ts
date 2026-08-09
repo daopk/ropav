@@ -208,6 +208,45 @@ export const calculateColumnSizes = (
   return sizes;
 };
 
+export interface BuildColumnWidthsOptions {
+  /** @default "1fr" */
+  getDefaultWidth?: (column: TableColumnDefinition) => TableColumnSize | null | undefined;
+  /** @default 75 */
+  getDefaultMinWidth?: (column: TableColumnDefinition) => TableColumnSize | null | undefined;
+}
+
+/**
+ * Every column's width in pixels, keyed by column, ported from react-stately's
+ * `TableColumnLayout.buildColumnWidths`.
+ *
+ * The sizing itself is `calculateColumnSizes` above; what this adds is the pair of defaults a
+ * table falls back to — `1fr` for a width nobody declared, and a 75px floor — and the mapping back
+ * onto keys. Both the resizable container and the virtualizer's table layout need exactly that,
+ * and the two must agree: a column laid out at one width by the browser and at another by the
+ * layout would put every cell in the wrong place.
+ *
+ * @param changedWidths Widths that override what the columns declare, as a resize in flight does.
+ */
+export const buildColumnWidths = (
+  availableWidth: number,
+  columns: TableColumnDefinition[],
+  changedWidths: Map<CollectionKey, TableColumnSize> = new Map(),
+  options: BuildColumnWidthsOptions = {},
+): Map<CollectionKey, number> => {
+  const getDefaultWidth = options.getDefaultWidth ?? (() => "1fr");
+  const getDefaultMinWidth = options.getDefaultMinWidth ?? (() => 75);
+
+  const sizes = calculateColumnSizes(
+    availableWidth,
+    columns,
+    changedWidths,
+    (index) => getDefaultWidth(columns[index]!),
+    (index) => getDefaultMinWidth(columns[index]!),
+  );
+
+  return new Map(columns.map((column, index) => [column.key, sizes[index] ?? 0]));
+};
+
 export interface UseTableColumnLayoutOptions {
   /** The table's columns, in document order. */
   columns: () => TableColumnDefinition[];
@@ -289,26 +328,21 @@ export const useTableColumnLayout = (
   const layout = computed(() => {
     const columns = options.columns();
     const tableWidth = toValue(options.tableWidth);
-    const sizes = calculateColumnSizes(
-      tableWidth,
-      columns,
-      combinedWidths(),
-      (index) => getDefaultWidth(columns[index]!),
-      (index) => getDefaultMinWidth(columns[index]!),
-    );
+    const widths = buildColumnWidths(tableWidth, columns, combinedWidths(), {
+      getDefaultMinWidth,
+      getDefaultWidth,
+    });
 
-    const widths = new Map<CollectionKey, number>();
     const minWidths = new Map<CollectionKey, number>();
     const maxWidths = new Map<CollectionKey, number>();
 
-    columns.forEach((column, index) => {
-      widths.set(column.key, sizes[index] ?? 0);
+    for (const column of columns) {
       minWidths.set(
         column.key,
         getMinWidth(column.minWidth ?? getDefaultMinWidth(column), tableWidth),
       );
       maxWidths.set(column.key, getMaxWidth(column.maxWidth, tableWidth));
-    });
+    }
 
     return {maxWidths, minWidths, widths};
   });
