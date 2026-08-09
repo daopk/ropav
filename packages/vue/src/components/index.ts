@@ -19,6 +19,7 @@ export * from "./field-error";
 export * from "./fieldset";
 export * from "./form";
 export * from "./header";
+export * from "./i18n-provider";
 export * from "./icons";
 export * from "./input";
 export * from "./input-group";
