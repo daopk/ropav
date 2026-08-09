@@ -30,7 +30,11 @@ export interface UseDraggableItemOptions {
 export interface UseDraggableItemReturn {
   attrs: ComputedRef<Record<string, unknown>>;
   handlers: UseDragHandlers;
-  dragButtonAttrs: ComputedRef<{"aria-label": string | undefined; isDisabled: boolean}>;
+  dragButtonAttrs: ComputedRef<{
+    "aria-describedby": string | undefined;
+    "aria-label": string | undefined;
+    isDisabled: boolean;
+  }>;
   onDragButtonPress: (event: PressEvent) => void;
 }
 
@@ -133,6 +137,9 @@ export const useDraggableItem = (
       return attrs;
     }),
     dragButtonAttrs: computed(() => ({
+      // The description belongs to the control that starts the drag, and with a drag button
+      // that is this one rather than the item — so it has to be carried through from `useDrag`.
+      ...drag.dragButtonAttrs.value,
       "aria-label": dragButtonLabel.value,
       isDisabled: isDisabled.value,
     })),
