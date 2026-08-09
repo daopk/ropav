@@ -711,9 +711,15 @@ importers:
       '@heroui/styles':
         specifier: workspace:*
         version: link:../styles
+      '@internationalized/date':
+        specifier: 3.12.3
+        version: 3.12.3
       '@internationalized/number':
         specifier: 3.6.7
         version: 3.6.7
+      '@internationalized/string':
+        specifier: 3.2.10
+        version: 3.2.10
       tailwind-variants:
         specifier: 3.3.1
         version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.0)

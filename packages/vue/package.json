@@ -63,7 +63,9 @@
   "clean-package": "./clean-package.config.json",
   "dependencies": {
     "@heroui/styles": "workspace:*",
+    "@internationalized/date": "3.12.3",
     "@internationalized/number": "3.6.7",
+    "@internationalized/string": "3.2.10",
     "tailwind-variants": "3.3.1"
   },
   "devDependencies": {
