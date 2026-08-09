@@ -1,4 +1,8 @@
-import type {VirtualizerCollection, VirtualizerLayoutHost} from "@/utils/virtualizer-layout";
+import type {
+  VirtualizerCollection,
+  VirtualizerLayoutHost,
+  VirtualizerNode,
+} from "@/utils/virtualizer-layout";
 import type {VirtualizerKey} from "@/utils/virtualizer-layout-info";
 
 import {describe, expect, it} from "vitest";
@@ -32,7 +36,7 @@ const createHost = (options: HostOptions = {}): VirtualizerLayoutHost => {
   };
 };
 
-const attach = <O extends object>(layout: ListLayout<O>, host: VirtualizerLayoutHost) => {
+const attach = <L extends ListLayout>(layout: L, host: VirtualizerLayoutHost): L => {
   layout.host = host;
   layout.update({});
 
@@ -195,5 +199,143 @@ describe("ListLayout", () => {
 
     // The wrapper is sized by the layout; a focus ring drawn inside it is not.
     expect(layout.getLayoutInfo("item-0")?.allowOverflow).toBe(true);
+  });
+});
+
+/** Counts the rows actually placed, which is the only way to observe laziness from outside. */
+class CountingListLayout extends ListLayout {
+  built: VirtualizerKey[] = [];
+
+  protected override buildItem(node: VirtualizerNode, x: number, y: number) {
+    this.built.push(node.key);
+
+    return super.buildItem(node, x, y);
+  }
+}
+
+describe("ListLayout laziness", () => {
+  it("places a screenful rather than the whole collection", () => {
+    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+
+    // One row is placed to learn the stride; the other 999 are accounted for arithmetically,
+    // which is why the scrollbar is right without a thousand rects existing.
+    expect(new Set(layout.built)).toEqual(new Set(["item-0"]));
+    expect(layout.getContentSize()).toEqual(new Size(300, 50_000));
+
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+
+    // The window asked about, and nothing below it.
+    expect(new Set(layout.built)).toEqual(
+      new Set(Array.from({length: 9}, (_, index) => `item-${index}`)),
+    );
+  });
+
+  it("grows the placed region as the window moves down, and never shrinks it", () => {
+    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+    layout.getVisibleLayoutInfos(new Rect(0, 500, 300, 400));
+
+    // The requested region is a union, so scrolling down extends it rather than moving it.
+    // Rows above stay placed, which is what makes scrolling back up cost nothing.
+    const placed = new Set(layout.built);
+
+    expect(placed.has("item-0")).toBe(true);
+    // The union reaches 900px, so row 18 is the last one placed and row 19 is still only counted.
+    expect(placed.has("item-18")).toBe(true);
+    expect(placed.has("item-19")).toBe(false);
+  });
+
+  it("skips the rows above the region after the container resizes mid-scroll", () => {
+    const scrolled = createHost({itemCount: 1000, visibleRect: new Rect(0, 20_000, 300, 400)});
+    const layout = attach(new CountingListLayout({rowSize: 50}), scrolled);
+
+    layout.built.length = 0;
+    // A resize is what drops the cache and re-anchors the region on what is on screen. Only
+    // then can the layout skip: rows 0 to 398 are counted, not placed.
+    layout.update({sizeChanged: true});
+    layout.getVisibleLayoutInfos(scrolled.visibleRect);
+
+    const placed = new Set(layout.built);
+
+    expect(placed.has("item-100")).toBe(false);
+    expect(placed.has("item-400")).toBe(true);
+    expect(placed.size).toBeLessThan(20);
+  });
+
+  it("computes the whole layout when asked about a key it never reached", () => {
+    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+
+    layout.built.length = 0;
+
+    // What pressing End does: a key at an arbitrary offset, whose position cannot be known
+    // without placing everything above it.
+    expect(layout.getLayoutInfo("item-999")?.rect).toEqual(new Rect(0, 49_950, 300, 50));
+    expect(new Set(layout.built).size).toBe(1000);
+  });
+});
+
+describe("ListLayout measured rows", () => {
+  const measuredLayout = () => {
+    const layout = attach(new ListLayout({estimatedRowSize: 40}), createHost({itemCount: 100}));
+
+    layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
+
+    return layout;
+  };
+
+  it("reports whether a measurement moved anything", () => {
+    const layout = measuredLayout();
+
+    expect(layout.updateItemSize("item-1", new Size(300, 90))).toBe(true);
+    // Measuring the same height again changes nothing, so the virtualizer is not asked to
+    // lay out again — that is what keeps measurement from looping.
+    expect(layout.updateItemSize("item-1", new Size(300, 90))).toBe(false);
+    expect(layout.updateItemSize("nobody", new Size(300, 90))).toBe(false);
+  });
+
+  it("stops calling a row estimated once it has been measured", () => {
+    const layout = measuredLayout();
+
+    expect(layout.getLayoutInfo("item-1")?.estimatedSize).toBe(true);
+
+    layout.updateItemSize("item-1", new Size(300, 90));
+
+    expect(layout.getLayoutInfo("item-1")?.estimatedSize).toBe(false);
+    expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(90);
+  });
+
+  it("moves the rows below a measured row, and keeps the measurement", () => {
+    const layout = measuredLayout();
+
+    layout.updateItemSize("item-1", new Size(300, 90));
+    layout.update({itemSizeChanged: true});
+
+    expect(layout.getLayoutInfo("item-0")?.rect).toEqual(new Rect(0, 0, 300, 40));
+    expect(layout.getLayoutInfo("item-1")?.rect).toEqual(new Rect(0, 40, 300, 90));
+    // 40 + 90 rather than 40 + 40: the row below sits under the measurement, not the estimate.
+    expect(layout.getLayoutInfo("item-2")?.rect).toEqual(new Rect(0, 130, 300, 40));
+  });
+
+  it("throws the measurement away when the container resizes", () => {
+    const layout = measuredLayout();
+
+    layout.updateItemSize("item-1", new Size(300, 90));
+    layout.update({sizeChanged: true});
+
+    // A row's height depends on its width, so a resize makes every measurement a guess again.
+    expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(40);
+    expect(layout.getLayoutInfo("item-1")?.estimatedSize).toBe(true);
+  });
+
+  it("knows which option changes require a fresh layout", () => {
+    const layout = new ListLayout({rowSize: 50});
+
+    expect(layout.shouldInvalidateLayoutOptions({rowSize: 50}, {rowSize: 50})).toBe(false);
+    expect(layout.shouldInvalidateLayoutOptions({rowSize: 60}, {rowSize: 50})).toBe(true);
+    expect(layout.shouldInvalidateLayoutOptions({gap: 4}, {})).toBe(true);
+    // The deprecated alias has to compare against the current name, or a story that passes
+    // `rowHeight` would look unchanged forever.
+    expect(layout.shouldInvalidateLayoutOptions({rowSize: 50}, {rowHeight: 50})).toBe(false);
   });
 });
