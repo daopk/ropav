@@ -50,6 +50,13 @@ export interface FieldIdsContext {
    * visual label the section points `aria-labelledby` at.
    */
   headingRole?: string;
+  /**
+   * Called when the label is clicked.
+   *
+   * Only for a container whose label points `for` at nothing: a date field's label names a group
+   * of segments, and with no single control to point at, the click has to be answered by hand.
+   */
+  onLabelClick?: () => void;
 }
 
 /**
@@ -79,6 +86,11 @@ export interface UseFieldIdsOptions {
    * @see {@link FieldIdsContext.labelFor}
    */
   labelFor?: MaybeRefOrGetter<string | undefined>;
+  /**
+   * Called when the label is clicked.
+   * @see {@link FieldIdsContext.onLabelClick}
+   */
+  onLabelClick?: () => void;
   /** Slots this container actually references. @default all of them */
   slots?: FieldSlot[];
 }
@@ -158,6 +170,7 @@ export const useFieldIds = (options: UseFieldIdsOptions = {}): UseFieldIdsReturn
       headingRole: options.headingRole,
       labelElementType: options.labelElementType,
       labelFor: computed(() => toValue(options.labelFor)),
+      onLabelClick: options.onLabelClick,
     },
     describedBy: computed(() => {
       const parts = [descriptionId.value, errorMessageId.value].filter(Boolean);

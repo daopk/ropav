@@ -31,13 +31,17 @@ const isSpan = computed(() => fieldIds?.labelElementType === "span");
 // Only a real `label` can carry `for`, and only a field that lays its control out beside the
 // label supplies one — a checkbox keeps its input inside the label, so a click already lands.
 const labelFor = computed(() => fieldIds?.labelFor.value);
+// A label with nothing to point `for` at cannot move focus on its own, so the container answers
+// the click instead — most fields have a single control to name and supply nothing here. Always a
+// function: a vapor template calls its `@click` binding unconditionally, so an absent one throws.
+const onClick = () => fieldIds?.onLabelClick?.();
 </script>
 
 <template>
-  <span v-if="isSpan" :id="id" :class="styles" data-slot="label">
+  <span v-if="isSpan" :id="id" :class="styles" data-slot="label" @click="onClick">
     <slot />
   </span>
-  <label v-else :id="id" :class="styles" data-slot="label" :for="labelFor">
+  <label v-else :id="id" :class="styles" data-slot="label" :for="labelFor" @click="onClick">
     <slot />
   </label>
 </template>
