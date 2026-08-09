@@ -3,6 +3,7 @@ export * from "./press-responder";
 export * from "./use-checkbox-group-state";
 export * from "./use-collection";
 export * from "./use-controllable-state";
+export * from "./use-css-variable";
 export * from "./use-description";
 export * from "./use-dialog-trigger";
 export * from "./use-disclosure-group";

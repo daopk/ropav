@@ -3,6 +3,7 @@ export * from "./assertion";
 export * from "./block";
 export * from "./compose";
 export * from "./create-context";
+export * from "./css";
 export * from "./focus";
 export * from "./number";
 export * from "./platform";
