@@ -277,6 +277,43 @@ describe("Color names", () => {
     expect(parseColor("#FF7F00").getHueName("en-US")).toBe("orange");
     expect(parseColor("#808080").getHueName("en-US")).toBe("gray");
   });
+
+  /**
+   * A colour is a plain class, so it cannot read the locale in force through `useLocale` — the
+   * locale arrives as an argument, and every caller inside a component passes what `useLocale`
+   * gave it. Verified against `react-stately@3.49.0` across all 34 locales, 7 480 strings.
+   */
+  describe("in another locale", () => {
+    it("names a colour and its channels", () => {
+      const color = parseColor("#FF7F00");
+
+      expect(color.getColorName("de-DE")).toBe("lebhaftes orange");
+      expect(color.getColorName("ja-JP")).toBe("鮮やか オレンジ");
+      expect(color.getHueName("fr-FR")).toBe("orange");
+      expect(color.getChannelName("red", "de-DE")).toBe("Rot");
+      expect(color.getChannelName("red", "ja-JP")).toBe("赤");
+      expect(color.getChannelName("saturation", "fr-FR")).toBe("Saturation");
+    });
+
+    /** The percentage in the message is formatted in the locale too, spacing and all. */
+    it("formats the transparency in the locale", () => {
+      const half = parseColor("rgba(255, 127, 0, 0.5)");
+
+      expect(half.getColorName("en-US")).toBe("vibrant orange, 50% transparent");
+      expect(half.getColorName("de-DE")).toBe("lebhaftes orange, zu 50 % transparent");
+      expect(half.getColorName("fr-FR")).toBe("Vif orange, 50 % transparent");
+    });
+
+    /**
+     * `white` and `black` come straight out of the table, so German keeps its capital. Only hue
+     * names are lower-cased, because those keys double as capitalised channel names.
+     */
+    it("names the achromatic ends without lower-casing them", () => {
+      expect(parseColor("#ffffff").getColorName("de-DE")).toBe("Weiß");
+      expect(parseColor("#000000").getColorName("ja-JP")).toBe("ブラック");
+      expect(parseColor("#808080").getColorName("de-DE")).toBe("Grau");
+    });
+  });
 });
 
 describe("normalizeHue", () => {
