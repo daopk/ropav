@@ -7,6 +7,7 @@ import {afterEach, describe, expect, it} from "vitest";
 import {effectScope, shallowRef} from "vue";
 
 import {
+  buildColumnWidths,
   calculateColumnSizes,
   getMaxWidth,
   getMinWidth,
@@ -146,6 +147,48 @@ describe("useTableColumnLayout", () => {
       );
 
       expect(result).toEqual([600, 300]);
+    });
+  });
+
+  describe("building the column widths", () => {
+    it("keys every column's width, falling back to a fraction and a 75px floor", () => {
+      // `b` declares nothing, so it takes the `1fr` default; `c` is pushed to the 75px floor even
+      // though an even three-way split would give it a third of 300.
+      const widths = buildColumnWidths(300, [
+        column("a", {width: 150}),
+        column("b"),
+        column("c", {maxWidth: 20}),
+      ]);
+
+      expect([...widths]).toEqual([
+        ["a", 150],
+        ["b", 75],
+        ["c", 75],
+      ]);
+    });
+
+    it("takes the overriding widths a resize in flight supplies", () => {
+      const widths = buildColumnWidths(1000, [column("a"), column("b")], new Map([["a", 700]]));
+
+      expect(widths.get("a")).toBe(700);
+      expect(widths.get("b")).toBe(300);
+    });
+
+    it("takes the defaults it is given over its own", () => {
+      const widths = buildColumnWidths(1000, [column("a"), column("b")], new Map(), {
+        getDefaultWidth: (candidate) => (candidate.key === "a" ? 200 : "1fr"),
+      });
+
+      expect(widths.get("a")).toBe(200);
+      expect(widths.get("b")).toBe(800);
+    });
+
+    it("agrees with the resizable layout on the same columns", () => {
+      const columns = [column("a", {minWidth: 100}), column("b"), column("c", {width: "20%"})];
+      const {layout} = setUp(columns, 900);
+      const widths = buildColumnWidths(900, columns);
+
+      for (const {key} of columns) expect(widths.get(key)).toBe(layout.getColumnWidth(key));
     });
   });
 
