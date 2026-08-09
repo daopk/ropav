@@ -44,3 +44,4 @@ export * from "./use-toggle-group-state";
 export * from "./use-toolbar";
 export * from "./use-typeahead";
 export * from "./use-virtualizer";
+export * from "./use-virtualizer-scroll";
