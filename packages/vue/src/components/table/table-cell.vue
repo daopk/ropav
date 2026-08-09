@@ -4,7 +4,9 @@ import type {TableCellProps} from "./table.types";
 import {computed, shallowRef, watch} from "vue";
 
 import {useId} from "../../composables/use-id";
+import {useInteractionStates} from "../../composables/use-interaction-states";
 import {tableCellId} from "../../composables/use-table-collection";
+import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 import {getCollectionTextValue} from "../../utils/text-value";
 
@@ -15,7 +17,7 @@ const props = defineProps<TableCellProps>();
 defineSlots<{default?: () => unknown}>();
 
 const {slots} = useTableContext();
-const {collection, collectionId, tableId} = useTableGridContext();
+const {collection, collectionId, keyboard, selection, tableId} = useTableGridContext();
 const {cells, rowKey} = useTableRowContext();
 
 // A cell has no identity of its own in the public API — it is the nth cell of its row — so the
@@ -55,6 +57,21 @@ const cellId = computed(() =>
     ? tableCellId(tableId.value, rowKey.value, columnKey.value)
     : undefined,
 );
+
+const isSelected = computed(() => selection.isSelected(rowKey.value));
+const isDisabled = computed(() => selection.isDisabled(rowKey.value));
+
+// The stylesheet draws the cell's focus ring from `data-focus-visible`; its pseudo-class branch
+// is never reached, the same as everywhere else in the design system.
+const states = useInteractionStates({isDisabled: () => isDisabled.value});
+
+const onFocus = (event: FocusEvent) => {
+  states.onFocus();
+
+  if (event.target !== element.value) return;
+
+  keyboard.claimFocus({columnKey: columnKey.value, rowKey: rowKey.value});
+};
 </script>
 
 <template>
@@ -64,11 +81,19 @@ const cellId = computed(() =>
     :class="composeSlotClassName(slots.cell, props.class)"
     :data-collection="collectionId"
     :data-column-index="index < 0 ? undefined : index"
+    :data-disabled="dataAttr(isDisabled)"
+    :data-focus-visible="dataAttr(states.isFocusVisible.value)"
+    :data-focused="dataAttr(states.isFocused.value)"
     :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
     data-level="1"
+    :data-pressed="dataAttr(states.isPressed.value)"
+    :data-selected="dataAttr(isSelected)"
     data-slot="table-cell"
     :role="isRowHeader ? 'rowheader' : 'gridcell'"
-    :tabindex="-1"
+    :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
+    @blur="states.onBlur"
+    @focus="onFocus"
+    @pointerdown="states.onPointerdown"
   >
     <slot />
   </td>

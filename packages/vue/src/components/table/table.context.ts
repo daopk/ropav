@@ -1,6 +1,7 @@
 import type {TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {TableCellMeta, TableRegistry, UseTableCollectionReturn} from "../../composables";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {UseGridKeyboardReturn} from "../../composables/use-grid-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {tableVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
@@ -29,6 +30,8 @@ export interface TableGridContext {
   sortDescriptor: ComputedRef<TableSortDescriptor | null>;
   /** Selected and focused rows. Runs on `collection.rows`, so a row key is the item key. */
   selection: UseSelectionManagerReturn;
+  /** Where focus sits in the grid, and the roving tab index every part reads from it. */
+  keyboard: UseGridKeyboardReturn;
   /** Ask for a sort. Without a direction, the current one flips. */
   sort: (columnKey: CollectionKey, direction?: TableSortDirection) => void;
 }

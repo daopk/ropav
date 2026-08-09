@@ -18,7 +18,7 @@ const props = defineProps<TableColumnProps>();
 defineSlots<{default?: (props: TableColumnSlotProps) => unknown}>();
 
 const {slots} = useTableContext();
-const {collection, collectionId, sort, sortDescriptor, tableId} = useTableGridContext();
+const {collection, collectionId, keyboard, sort, sortDescriptor, tableId} = useTableGridContext();
 
 // Falls back to a generated key so a column without an `id` still has a stable identity — the
 // same thing React Aria does when a `<Column>` carries no key.
@@ -82,6 +82,17 @@ const sortByThisColumn = (direction?: TableSortDirection) => {
 
 const onClick = () => sortByThisColumn();
 
+// Focus can arrive without the grid having moved it — a click, a screen reader stepping through,
+// `.focus()` from anywhere — and a focused target that disagrees with real focus would leave the
+// roving tab stop on one part while the ring is on another.
+const onFocus = (event: FocusEvent) => {
+  states.onFocus();
+
+  if (event.target !== element.value) return;
+
+  keyboard.claimFocus({columnKey: columnKey.value, rowKey: null});
+};
+
 /**
  * A `th` is not a button, so Enter and Space never reach it as a click. React Aria's `usePress`
  * covers this for every pressable element; here the two keys are handled where they land.
@@ -115,10 +126,10 @@ const onKeydown = (event: KeyboardEvent) => {
     data-slot="table-column"
     :data-sort-direction="sortDirection"
     role="columnheader"
-    :tabindex="-1"
+    :tabindex="keyboard.columnTabIndex(columnKey)"
     @blur="states.onBlur"
     @click="onClick"
-    @focus="states.onFocus"
+    @focus="onFocus"
     @keydown="onKeydown"
     @pointerdown="states.onPointerdown"
     @pointerenter="states.onPointerenter"

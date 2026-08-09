@@ -3,12 +3,14 @@ import type {TableContentProps, TableSortDescriptor, TableSortDirection} from ".
 import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 
-import {computed, watch} from "vue";
+import {computed, shallowRef, watch} from "vue";
 
 import {useDescription} from "../../composables/use-description";
+import {useGridKeyboard} from "../../composables/use-grid-keyboard";
 import {useId} from "../../composables/use-id";
 import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
+import {useTypeahead} from "../../composables/use-typeahead";
 import {composeSlotClassName} from "../../utils/compose";
 import {announce} from "../../utils/live-announcer";
 
@@ -34,6 +36,8 @@ const {slots} = useTableContext();
 const tableId = useId();
 const collectionId = useId();
 
+const element = shallowRef<HTMLElement | null>(null);
+
 const collection = useTableCollection();
 
 /**
@@ -55,6 +59,21 @@ const selection = useSelectionManager({
   selectionBehavior: () => props.selectionBehavior,
   selectionMode: () => props.selectionMode,
 });
+
+const keyboard = useGridKeyboard({collection, element, selection});
+
+const typeahead = useTypeahead({
+  focusedKey: () => keyboard.focusedCell.value.rowKey,
+  getKeyForSearch: keyboard.getKeyForSearch,
+  onSearchMatch: (rowKey) => keyboard.focusCell({columnKey: null, rowKey}, {scroll: true}),
+});
+
+// Typeahead runs first on both phases: it has to claim a Space that is extending a search before
+// the focused row treats the same key as a selection.
+const onKeydown = (event: KeyboardEvent) => {
+  typeahead.onKeydown(event);
+  if (!event.defaultPrevented) keyboard.onKeydown(event);
+};
 
 const sortDescriptor = computed(() => props.sortDescriptor ?? null);
 
@@ -81,7 +100,15 @@ const sort = (columnKey: CollectionKey, direction?: TableSortDirection) => {
   emit("update:sortDescriptor", next);
 };
 
-provideTableGridContext({collection, collectionId, selection, sort, sortDescriptor, tableId});
+provideTableGridContext({
+  collection,
+  collectionId,
+  keyboard,
+  selection,
+  sort,
+  sortDescriptor,
+  tableId,
+});
 
 /**
  * What the table itself is described by while it is sorted. `aria-sort` on the column already
@@ -110,13 +137,18 @@ watch(sortDescription, (description) => {
 <template>
   <table
     :id="tableId"
+    ref="element"
     :aria-describedby="describedBy"
     :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     :class="composeSlotClassName(slots.content, props.class)"
     :data-collection="collectionId"
     data-slot="table-content"
     role="grid"
-    :tabindex="0"
+    :tabindex="keyboard.collectionTabIndex.value"
+    @focusin="keyboard.onFocusin"
+    @focusout="keyboard.onFocusout"
+    @keydown="onKeydown"
+    @keydown.capture="typeahead.onKeydownCapture"
   >
     <slot />
   </table>

@@ -3,6 +3,8 @@ import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";
 
+import {FOCUSABLE_SELECTOR} from "../utils/focus";
+
 import {useCollection} from "./use-collection";
 
 /** The least a registry needs from an entry: where it sits in the document. */
@@ -166,3 +168,21 @@ export const tableCellId = (
   rowKey: CollectionKey,
   columnKey: CollectionKey,
 ): string => `${tableId}-${normalizeIdKey(rowKey)}-${normalizeIdKey(columnKey)}`;
+
+/**
+ * Whether an event landed on a control inside a cell rather than on a part of the grid.
+ *
+ * React Aria never has to ask: its press hook stops propagation, so a button or a checkbox in a
+ * cell never lets the row or the grid see the interaction. Nothing stops propagation here, so both
+ * the row's click handler and the grid's key handler have to recognise the case themselves.
+ *
+ * The grid's own parts are told apart by their collection marker — a cell holding the roving tab
+ * stop matches the focusable selector without being content.
+ */
+export const isTableCellControl = (target: EventTarget | null): boolean => {
+  if (!(target instanceof Element)) return false;
+
+  const control = target.closest(FOCUSABLE_SELECTOR);
+
+  return control != null && !control.hasAttribute("data-collection");
+};

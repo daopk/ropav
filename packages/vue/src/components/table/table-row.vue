@@ -6,10 +6,13 @@ import {computed, shallowRef, watch} from "vue";
 
 import {useId} from "../../composables/use-id";
 import {useInteractionStates} from "../../composables/use-interaction-states";
-import {createTableRegistry, tableCellId} from "../../composables/use-table-collection";
+import {
+  createTableRegistry,
+  isTableCellControl,
+  tableCellId,
+} from "../../composables/use-table-collection";
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
-import {FOCUSABLE_SELECTOR} from "../../utils/focus";
 
 import {provideTableRowContext, useTableContext, useTableGridContext} from "./table.context";
 
@@ -18,7 +21,7 @@ const props = defineProps<TableRowProps>();
 defineSlots<{default?: (props: TableRowSlotProps) => unknown}>();
 
 const {slots} = useTableContext();
-const {collection, collectionId, selection, tableId} = useTableGridContext();
+const {collection, collectionId, keyboard, selection, tableId} = useTableGridContext();
 
 // Falls back to a generated key so a row without an `id` still has a stable identity.
 const generatedKey = useId();
@@ -80,25 +83,19 @@ const isDisabled = computed(() => selection.isDisabled(rowKey.value));
 
 const states = useInteractionStates({isDisabled: () => isDisabled.value});
 
-/**
- * Whether a control inside a cell owns this click.
- *
- * React Aria gets this for free: its press hook stops propagation, so a button in a cell never
- * lets the row see the press. Here the row hears every click that bubbles, so the control has to
- * be recognised. The grid's own parts are excluded by their collection marker — a cell taking a
- * roving tab stop matches the focusable selector without being content.
- */
-const ownsClick = (target: EventTarget | null) => {
-  if (!(target instanceof Element)) return false;
+// Focus that arrived on its own still has to be recorded, or the roving tab stop and the focus
+// ring would disagree about where focus is.
+const onFocus = (event: FocusEvent) => {
+  states.onFocus();
 
-  const control = target.closest(FOCUSABLE_SELECTOR);
+  if (event.target !== element.value) return;
 
-  return control != null && !control.hasAttribute("data-collection");
+  keyboard.claimFocus({columnKey: null, rowKey: rowKey.value});
 };
 
 const onClick = (event: MouseEvent) => {
   if (isDisabled.value || selectionMode.value === "none") return;
-  if (ownsClick(event.target)) return;
+  if (isTableCellControl(event.target)) return;
 
   selection.select(rowKey.value, {
     isCtrlPressed: event.ctrlKey || event.metaKey,
@@ -127,10 +124,10 @@ const onClick = (event: MouseEvent) => {
     data-slot="table-row"
     role="row"
     :style="{'--table-row-level': 1}"
-    :tabindex="-1"
+    :tabindex="keyboard.rowTabIndex(rowKey)"
     @blur="states.onBlur"
     @click="onClick"
-    @focus="states.onFocus"
+    @focus="onFocus"
     @pointerdown="states.onPointerdown"
     @pointerenter="states.onPointerenter"
     @pointerleave="states.onPointerleave"
