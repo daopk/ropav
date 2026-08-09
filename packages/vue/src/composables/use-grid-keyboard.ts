@@ -529,7 +529,14 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
       if (!selection.isFocused.value) return;
       if (target.rowKey == null && target.columnKey == null) return;
 
-      elementFor(target)?.focus();
+      const element = elementFor(target);
+
+      // Focus already **inside** the target is not focus to take away: tabbing to a checkbox in
+      // a cell claims the row as the tab stop, and pulling focus onto the row would make that
+      // checkbox unreachable. React Aria guards its entry focus with the same test.
+      if (!element || element.contains(document.activeElement)) return;
+
+      element.focus();
     },
     {flush: "post"},
   );
