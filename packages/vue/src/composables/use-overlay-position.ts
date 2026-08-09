@@ -3,7 +3,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
-import {calculatePosition, translateRTL} from "../utils/position";
+import {calculatePosition, getRect, translateRTL} from "../utils/position";
 
 export interface UseOverlayPositionOptions {
   /** The element the overlay is positioned against. */
@@ -27,6 +27,18 @@ export interface UseOverlayPositionOptions {
   shouldFlip?: MaybeRefOrGetter<boolean | undefined>;
   /** @default document.body */
   boundaryElement?: MaybeRefOrGetter<Element | null | undefined>;
+  /**
+   * The arrow pointing at the trigger, if the overlay has one.
+   *
+   * Reported rather than measured from a size option, because the arrow is styled by the
+   * stylesheet and only it knows how big it is. Its width reserves room on the cross axis, so
+   * the overlay never sits so far along its trigger that the arrow would point past the edge.
+   */
+  arrowRef?: MaybeRefOrGetter<Element | null | undefined>;
+  /** Overrides the measured arrow width, for a caller that knows it up front. */
+  arrowSize?: MaybeRefOrGetter<number | undefined>;
+  /** Distance kept between the arrow and the corner of the overlay. @default 0 */
+  arrowBoundaryOffset?: MaybeRefOrGetter<number | undefined>;
   isOpen?: MaybeRefOrGetter<boolean | undefined>;
   maxHeight?: MaybeRefOrGetter<number | undefined>;
   /** Called when a scroll makes the position untrustworthy. */
@@ -38,6 +50,13 @@ export interface UseOverlayPositionReturn {
   overlayStyle: ComputedRef<Record<string, string>>;
   /** The side the overlay ended up on, for the stylesheet to key its entry animation on. */
   placement: ComputedRef<PlacementAxis | null>;
+  /**
+   * Inline style for the arrow: where along the overlay's edge it sits.
+   *
+   * Empty until the first measurement, so the arrow stays where its own stylesheet put it
+   * rather than jumping in from a corner.
+   */
+  arrowStyle: ComputedRef<Record<string, string>>;
   /** Recompute the position, for a caller that changed something this cannot observe. */
   updatePosition: () => void;
 }
@@ -89,12 +108,28 @@ export const useOverlayPosition = (
   const crossOffset = computed(() => toValue(options.crossOffset) ?? 0);
   const shouldFlip = computed(() => toValue(options.shouldFlip) ?? true);
   const maxHeight = computed(() => toValue(options.maxHeight));
+  const arrowBoundaryOffset = computed(() => toValue(options.arrowBoundaryOffset) ?? 0);
 
   const getTarget = () => toValue(options.targetRef) ?? null;
   const getOverlay = () => toValue(options.overlayRef) ?? null;
   const getScrollElement = () => toValue(options.scrollRef) ?? getOverlay();
   const getBoundary = () =>
     toValue(options.boundaryElement) ?? (typeof document === "undefined" ? null : document.body);
+  const getArrow = () => toValue(options.arrowRef) ?? null;
+
+  /**
+   * Measured without its scale transform: an entering overlay is animating from a smaller size,
+   * and a scaled-down arrow would reserve too little room on the cross axis.
+   */
+  const getArrowSize = () => {
+    const declared = toValue(options.arrowSize);
+
+    if (declared !== undefined) return declared;
+
+    const arrow = getArrow();
+
+    return arrow ? getRect(arrow, true).width : 0;
+  };
 
   const updatePosition = () => {
     const overlay = getOverlay();
@@ -129,6 +164,8 @@ export const useOverlayPosition = (
 
     const direction = getComputedStyle(overlay).direction === "rtl" ? "rtl" : "ltr";
     const next = calculatePosition({
+      arrowBoundaryOffset: arrowBoundaryOffset.value,
+      arrowSize: getArrowSize(),
       boundaryElement: boundary,
       crossOffset: crossOffset.value,
       maxHeight: maxHeight.value,
@@ -178,10 +215,11 @@ export const useOverlayPosition = (
     for (const stop of observers.splice(0)) stop();
   };
 
-  // Reposition when either element changes size: the overlay may need to flip, and the trigger
-  // moving means the overlay is no longer beside it.
+  // Reposition when any of the three changes size: the overlay may need to flip, the trigger
+  // moving means the overlay is no longer beside it, and a restyled arrow reserves different
+  // room on the cross axis.
   watch(
-    [() => getOverlay(), () => getTarget(), isOpen],
+    [() => getOverlay(), () => getTarget(), isOpen, () => getArrow()],
     ([overlay, target, open]) => {
       stopObserving();
 
@@ -201,12 +239,13 @@ export const useOverlayPosition = (
       updatePosition();
       observe(overlay);
       observe(target);
+      observe(getArrow());
     },
     {flush: "post", immediate: true},
   );
 
   watch(
-    [placement, containerPadding, offset, crossOffset, shouldFlip, maxHeight],
+    [placement, containerPadding, offset, crossOffset, shouldFlip, maxHeight, arrowBoundaryOffset],
     () => updatePosition(),
     {flush: "post"},
   );
@@ -274,6 +313,18 @@ export const useOverlayPosition = (
   }, true);
 
   return {
+    arrowStyle: computed(() => {
+      const resolved = position.value;
+
+      if (!resolved) return {};
+
+      const style: Record<string, string> = {};
+
+      if (resolved.arrowOffsetLeft !== undefined) style["left"] = `${resolved.arrowOffsetLeft}px`;
+      if (resolved.arrowOffsetTop !== undefined) style["top"] = `${resolved.arrowOffsetTop}px`;
+
+      return style;
+    }),
     overlayStyle: computed(() => {
       const resolved = position.value;
 
