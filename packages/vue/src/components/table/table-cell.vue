@@ -10,7 +10,13 @@ import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 import {getCollectionTextValue} from "../../utils/text-value";
 
-import {useTableContext, useTableGridContext, useTableRowContext} from "./table.context";
+import TableVirtualizerItem from "./table-virtualizer-item.vue";
+import {
+  useTableContext,
+  useTableGridContext,
+  useTableRowContext,
+  useTableVirtualizerContext,
+} from "./table.context";
 
 const props = defineProps<TableCellProps>();
 
@@ -78,38 +84,64 @@ const onFocus = (event: FocusEvent) => {
 
   keyboard.claimFocus({columnKey: columnKey.value, rowKey: rowKey.value});
 };
+
+/**
+ * Virtualized, the cell sits inside a wrapper carrying the column's width and offset.
+ *
+ * The geometry is found by the cell the row and the column meet at, which means the row has to
+ * carry the `id` its item was keyed by — that key is half of the pair. Until the cell registry has
+ * settled the column is unknown and there is no wrapper yet, the same tick `data-column-index` is
+ * missing for.
+ */
+const virtualizer = useTableVirtualizerContext();
+
+const layoutInfo = computed(() => {
+  if (!virtualizer || columnKey.value == null) return null;
+
+  const collection = virtualizer.collection.value;
+
+  return virtualizer.getLayoutInfo(collection.cellKey(rowKey.value, columnKey.value));
+});
+
+const parentLayoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(rowKey.value) : null,
+);
 </script>
 
 <template>
-  <td
-    :id="cellId"
-    ref="element"
-    :class="composeSlotClassName(slots.cell, props.class)"
-    :data-collection="collectionId"
-    :data-column-index="index < 0 ? undefined : index"
-    :data-disabled="dataAttr(isDisabled)"
-    :data-expanded="dataAttr(isExpanded)"
-    :data-focus-visible="dataAttr(states.isFocusVisible.value)"
-    :data-focused="dataAttr(states.isFocused.value)"
-    :data-has-child-items="dataAttr(hasChildRows)"
-    :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
-    :data-level="level"
-    :data-pressed="dataAttr(states.isPressed.value)"
-    :data-selected="dataAttr(isSelected)"
-    data-slot="table-cell"
-    :data-tree-column="dataAttr(isTreeColumn)"
-    :role="isRowHeader ? 'rowheader' : 'gridcell'"
-    :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
-    @blur="states.onBlur"
-    @focus="onFocus"
-    @pointerdown="states.onPointerdown"
-  >
-    <slot
-      :has-child-rows="hasChildRows"
-      :is-disabled="isDisabled"
-      :is-expanded="isExpanded"
-      :is-selected="isSelected"
-      :is-tree-column="isTreeColumn"
-    />
-  </td>
+  <TableVirtualizerItem :layout-info="layoutInfo" :parent-layout-info="parentLayoutInfo">
+    <component
+      :is="virtualizer ? 'div' : 'td'"
+      :id="cellId"
+      ref="element"
+      :aria-colindex="virtualizer && index >= 0 ? index + 1 : undefined"
+      :class="composeSlotClassName(slots.cell, props.class)"
+      :data-collection="collectionId"
+      :data-column-index="index < 0 ? undefined : index"
+      :data-disabled="dataAttr(isDisabled)"
+      :data-expanded="dataAttr(isExpanded)"
+      :data-focus-visible="dataAttr(states.isFocusVisible.value)"
+      :data-focused="dataAttr(states.isFocused.value)"
+      :data-has-child-items="dataAttr(hasChildRows)"
+      :data-key="columnKey == null ? undefined : `${rowKey}:${columnKey}`"
+      :data-level="level"
+      :data-pressed="dataAttr(states.isPressed.value)"
+      :data-selected="dataAttr(isSelected)"
+      data-slot="table-cell"
+      :data-tree-column="dataAttr(isTreeColumn)"
+      :role="isRowHeader ? 'rowheader' : 'gridcell'"
+      :tabindex="keyboard.cellTabIndex(rowKey, columnKey)"
+      @blur="states.onBlur"
+      @focus="onFocus"
+      @pointerdown="states.onPointerdown"
+    >
+      <slot
+        :has-child-rows="hasChildRows"
+        :is-disabled="isDisabled"
+        :is-expanded="isExpanded"
+        :is-selected="isSelected"
+        :is-tree-column="isTreeColumn"
+      />
+    </component>
+  </TableVirtualizerItem>
 </template>

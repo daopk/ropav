@@ -21,8 +21,15 @@ export interface VirtualizerRootProps<Options extends object = object> {
 }
 
 export interface VirtualizerItemProps {
-  /** Where this element goes, as the layout worked it out. */
-  layoutInfo: LayoutInfo;
+  /**
+   * Where this element goes, as the layout worked it out.
+   *
+   * `null` while the layout cannot say yet. A table's columns are registered from the DOM, so the
+   * first render is the one that tells the layout they exist — until it has, a column has a
+   * wrapper but no geometry. The wrapper has to be there for that render anyway: making its very
+   * existence depend on the geometry would tear down the element whose registration produced it.
+   */
+  layoutInfo?: LayoutInfo | null;
   /** The enclosing element's layout info, when this one is nested. */
   parentLayoutInfo?: LayoutInfo | null;
 }

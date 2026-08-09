@@ -11,11 +11,13 @@ import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 import {getCollectionTextValue} from "../../utils/text-value";
 
+import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {
   provideTableColumnContext,
   useTableColumnLayoutContext,
   useTableContext,
   useTableGridContext,
+  useTableVirtualizerContext,
 } from "./table.context";
 
 const props = defineProps<TableColumnProps>();
@@ -90,6 +92,20 @@ const width = computed(() =>
   resizable ? `${resizable.layout.getColumnWidth(columnKey.value)}px` : undefined,
 );
 
+/**
+ * Virtualized, the column sits inside a wrapper that carries its width and its place in the row;
+ * the width below stays on the element itself, because that is what a resizable CSS table needs.
+ */
+const virtualizer = useTableVirtualizerContext();
+
+const layoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(columnKey.value) : null,
+);
+
+const parentLayoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(virtualizer.collection.value.headerRowKey) : null,
+);
+
 const startResize = () => {
   if (!resizable || isResizing.value) return;
 
@@ -144,43 +160,46 @@ const onKeydown = (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <th
-    :id="headerId"
-    ref="element"
-    :aria-colindex="ariaColIndex"
-    :aria-describedby="describedBy"
-    :aria-sort="ariaSort"
-    :class="composeSlotClassName(slots.column, props.class)"
-    :data-allows-sorting="dataAttr(allowsSorting)"
-    :data-collection="collectionId"
-    :data-focus-visible="dataAttr(states.isFocusVisible.value)"
-    :data-focused="dataAttr(states.isFocused.value)"
-    :data-hovered="dataAttr(isHovered)"
-    :data-key="columnKey"
-    :data-pressed="dataAttr(isPressed)"
-    :data-resizing="dataAttr(isResizing)"
-    data-slot="table-column"
-    :data-sort-direction="sortDirection"
-    role="columnheader"
-    :style="width ? {width} : undefined"
-    :tabindex="keyboard.columnTabIndex(columnKey)"
-    @blur="states.onBlur"
-    @click="onClick"
-    @focus="onFocus"
-    @keydown="onKeydown"
-    @pointerdown="states.onPointerdown"
-    @pointerenter="states.onPointerenter"
-    @pointerleave="states.onPointerleave"
-  >
-    <slot
-      :allows-sorting="allowsSorting"
-      :is-focus-visible="states.isFocusVisible.value"
-      :is-hovered="isHovered"
-      :is-pressed="isPressed"
-      :is-resizing="isResizing"
-      :sort="sortByThisColumn"
-      :sort-direction="sortDirection"
-      :start-resize="startResize"
-    />
-  </th>
+  <TableVirtualizerItem :layout-info="layoutInfo" :parent-layout-info="parentLayoutInfo">
+    <component
+      :is="virtualizer ? 'div' : 'th'"
+      :id="headerId"
+      ref="element"
+      :aria-colindex="ariaColIndex"
+      :aria-describedby="describedBy"
+      :aria-sort="ariaSort"
+      :class="composeSlotClassName(slots.column, props.class)"
+      :data-allows-sorting="dataAttr(allowsSorting)"
+      :data-collection="collectionId"
+      :data-focus-visible="dataAttr(states.isFocusVisible.value)"
+      :data-focused="dataAttr(states.isFocused.value)"
+      :data-hovered="dataAttr(isHovered)"
+      :data-key="columnKey"
+      :data-pressed="dataAttr(isPressed)"
+      :data-resizing="dataAttr(isResizing)"
+      data-slot="table-column"
+      :data-sort-direction="sortDirection"
+      role="columnheader"
+      :style="width ? {width} : undefined"
+      :tabindex="keyboard.columnTabIndex(columnKey)"
+      @blur="states.onBlur"
+      @click="onClick"
+      @focus="onFocus"
+      @keydown="onKeydown"
+      @pointerdown="states.onPointerdown"
+      @pointerenter="states.onPointerenter"
+      @pointerleave="states.onPointerleave"
+    >
+      <slot
+        :allows-sorting="allowsSorting"
+        :is-focus-visible="states.isFocusVisible.value"
+        :is-hovered="isHovered"
+        :is-pressed="isPressed"
+        :is-resizing="isResizing"
+        :sort="sortByThisColumn"
+        :sort-direction="sortDirection"
+        :start-resize="startResize"
+      />
+    </component>
+  </TableVirtualizerItem>
 </template>

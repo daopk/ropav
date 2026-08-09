@@ -108,8 +108,36 @@ export interface TableColumnResizerProps {
   ariaLabel?: string;
 }
 
-export interface TableBodyProps {
+export interface TableBodyProps<T = unknown> {
   class?: string;
+  /**
+   * The rows' data, for a table inside a `Virtualizer`.
+   *
+   * Only then: without one every row would be rendered anyway, which is what the plain slot
+   * already does. Each row is rendered from the default slot, and has to carry the `id` its item
+   * is keyed by — that key is what pairs the row's cells with the geometry the layout worked out
+   * for them.
+   */
+  items?: readonly T[];
+  /** A row's key. Defaults to the item's own `id`, then `key`, then its index. */
+  itemKey?: (item: T, index: number) => CollectionKey;
+  /**
+   * Text a row is matched on by typeahead.
+   *
+   * A prop that `@heroui/react` does not have: it reads the text of a row's row header cells, and
+   * can do so for a row nobody scrolled to because its collection is built by a hidden render
+   * pass. Rendering is what creates cells here, so a row outside the window has to be named from
+   * the data.
+   */
+  itemTextValue?: (item: T) => string | undefined;
+}
+
+/** State handed to the default slot of a body that was given its rows as data. */
+export interface TableBodySlotProps<T = unknown> {
+  /** The datum this row is rendered from, absent for a body rendering authored rows. */
+  item?: T;
+  /** The row's position among all of them, zero-based. */
+  index?: number;
 }
 
 export interface TableRowProps {

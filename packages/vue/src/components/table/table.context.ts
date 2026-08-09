@@ -1,5 +1,10 @@
 import type {TableSortDescriptor, TableSortDirection} from "./table.types";
-import type {TableCellMeta, TableRegistry, UseTableCollectionReturn} from "../../composables";
+import type {
+  TableCellMeta,
+  TableCollectionItems,
+  TableRegistry,
+  UseTableCollectionReturn,
+} from "../../composables";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {UseGridKeyboardReturn} from "../../composables/use-grid-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
@@ -7,6 +12,9 @@ import type {
   TableColumnSize,
   UseTableColumnLayoutReturn,
 } from "../../composables/use-table-column-layout";
+import type {VirtualizerView} from "../../composables/use-virtualizer";
+import type {VirtualizerTableCollection} from "../../utils/virtualizer-collection";
+import type {LayoutInfo, VirtualizerKey} from "../../utils/virtualizer-layout-info";
 import type {tableVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
 
@@ -139,3 +147,37 @@ export interface TableColumnContext {
 export const [useTableColumnContext, provideTableColumnContext] = createContext<TableColumnContext>(
   {name: "TableColumnContext"},
 );
+
+export interface TableVirtualizerContext {
+  /**
+   * The collection the layout walks. It is what names the header, the body and each cell, so a
+   * part can look up the geometry that was worked out for it.
+   */
+  collection: ComputedRef<VirtualizerTableCollection>;
+  getLayoutInfo: (key: VirtualizerKey) => LayoutInfo | null;
+  /** The rows inside the window, in order. Each carries the geometry of its own wrapper. */
+  rowViews: ComputedRef<VirtualizerView[]>;
+  /** What gives the scroll box the height of the whole collection rather than of the window. */
+  contentStyle: ComputedRef<Record<string, string | number | undefined>>;
+  /**
+   * The rows' data, handed **up** from the body.
+   *
+   * `items` sits on `Table.Body` to match `@heroui/react`, but the collection belongs to the grid:
+   * it is the grid that scrolls, that the keyboard walks, and that the selection runs over. So the
+   * body registers what it was given rather than owning it.
+   */
+  setItems: (items: TableCollectionItems | null) => void;
+  /** Register that a loading sentinel is present, so the layout reserves a place for it. */
+  setHasLoader: (hasLoader: boolean) => void;
+}
+
+/**
+ * Loose: a table renders the same way with or without a `Virtualizer` above it, and requiring one
+ * would make every table in the library carry a layout.
+ */
+export const [useTableVirtualizerContext, provideTableVirtualizerContext] =
+  createContext<TableVirtualizerContext | null>({
+    defaultValue: null,
+    name: "TableVirtualizerContext",
+    strict: false,
+  });

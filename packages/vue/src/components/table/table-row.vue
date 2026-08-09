@@ -14,7 +14,12 @@ import {
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
 
-import {provideTableRowContext, useTableContext, useTableGridContext} from "./table.context";
+import {
+  provideTableRowContext,
+  useTableContext,
+  useTableGridContext,
+  useTableVirtualizerContext,
+} from "./table.context";
 
 const props = defineProps<TableRowProps>();
 
@@ -132,6 +137,21 @@ const onFocus = (event: FocusEvent) => {
   keyboard.claimFocus({columnKey: null, rowKey: rowKey.value});
 };
 
+/**
+ * A virtualized row reports where it sits in the whole collection, since only a window of the rows
+ * is in the DOM for anything to count. One-based, and the header row is row one — which is why the
+ * body's first row is two. A tree grid reports depth instead, exactly as React Aria does.
+ */
+const virtualizer = useTableVirtualizerContext();
+
+const ariaRowIndex = computed(() => {
+  if (!virtualizer || isTree.value) return undefined;
+
+  const index = collection.rows.getIndex(rowKey.value);
+
+  return index < 0 ? undefined : index + 2;
+});
+
 const onClick = (event: MouseEvent) => {
   if (isDisabled.value || selectionMode.value === "none") return;
   if (isTableCellControl(event.target)) return;
@@ -144,13 +164,15 @@ const onClick = (event: MouseEvent) => {
 </script>
 
 <template>
-  <tr
+  <component
+    :is="virtualizer ? 'div' : 'tr'"
     ref="element"
     :aria-disabled="isDisabled || undefined"
     :aria-expanded="isTree && hasChildRows ? isExpanded : undefined"
     :aria-labelledby="ariaLabelledBy || undefined"
     :aria-level="isTree ? level : undefined"
     :aria-posinset="isTree ? position.posinset : undefined"
+    :aria-rowindex="ariaRowIndex"
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
     :aria-setsize="isTree ? position.setsize : undefined"
     :class="composeSlotClassName(slots.row, props.class)"
@@ -188,5 +210,5 @@ const onClick = (event: MouseEvent) => {
       :is-selected="isSelected"
       :selection-mode="selectionMode"
     />
-  </tr>
+  </component>
 </template>

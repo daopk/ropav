@@ -16,7 +16,9 @@ const virtualizer = useVirtualizerStateContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
-const style = computed(() => layoutInfoToStyle(props.layoutInfo, props.parentLayoutInfo));
+const style = computed(() =>
+  props.layoutInfo ? layoutInfoToStyle(props.layoutInfo, props.parentLayoutInfo) : undefined,
+);
 
 /**
  * Measure what the layout could only estimate.
@@ -38,7 +40,7 @@ const measure = () => {
 
   current.style.height = height;
 
-  virtualizer?.updateItemSize(props.layoutInfo.key, measured);
+  if (props.layoutInfo) virtualizer?.updateItemSize(props.layoutInfo.key, measured);
 };
 
 // A row placed at an estimate is measured as soon as it is in the DOM, every time it is placed
@@ -46,7 +48,7 @@ const measure = () => {
 watch(
   () => [element.value, props.layoutInfo] as const,
   ([current, layoutInfo]) => {
-    if (current && layoutInfo.estimatedSize) measure();
+    if (current && layoutInfo?.estimatedSize) measure();
   },
   {flush: "post", immediate: true},
 );

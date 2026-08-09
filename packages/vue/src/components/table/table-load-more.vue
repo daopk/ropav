@@ -6,7 +6,8 @@ import {computed, onUnmounted, shallowRef, watch} from "vue";
 import {composeSlotClassName} from "../../utils/compose";
 import {getScrollParent} from "../../utils/focus";
 
-import {useTableContext, useTableGridContext} from "./table.context";
+import TableVirtualizerItem from "./table-virtualizer-item.vue";
+import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
 
 const props = withDefaults(defineProps<TableLoadMoreProps>(), {
   isLoading: undefined,
@@ -24,6 +25,34 @@ const sentinel = shallowRef<HTMLElement | null>(null);
 
 // One is the floor: `colspan="0"` means "to the end of the section" in some engines.
 const columnCount = computed(() => Math.max(1, collection.columns.size.value));
+
+/**
+ * Virtualized, the sentinel is a row of the collection like any other — which is what makes the
+ * layout keep a place for it and, crucially, keep it rendered wherever the window is. A sentinel
+ * that is not in the DOM can never report that it came into view, so the next page would never be
+ * asked for.
+ */
+const virtualizer = useTableVirtualizerContext();
+
+if (virtualizer) {
+  virtualizer.setHasLoader(true);
+  onUnmounted(() => virtualizer.setHasLoader(false));
+}
+
+const layoutInfo = computed(() => {
+  const loaderKey = virtualizer?.collection.value.loaderKey;
+
+  return loaderKey == null ? null : (virtualizer?.getLayoutInfo(loaderKey) ?? null);
+});
+
+// The sentinel is a child of the body, like a row, so its offset is measured from there.
+const parentLayoutInfo = computed(() =>
+  virtualizer ? virtualizer.getLayoutInfo(virtualizer.collection.value.bodyKey) : null,
+);
+
+// The indicator is not a cell that can span columns once the elements are divs, so it says so
+// with `aria-colspan` and takes itself out of the layout the wrapper already positioned.
+const indicatorStyle = computed(() => (virtualizer ? {display: "contents"} : undefined));
 
 let observer: IntersectionObserver | undefined;
 
@@ -74,21 +103,30 @@ onUnmounted(disconnect);
 </script>
 
 <template>
-  <tr inert :style="{height: '0px'}">
-    <td :style="{border: 0, padding: 0}">
-      <div ref="sentinel" :style="{height: '1px', position: 'relative', width: '1px'}" />
-    </td>
-  </tr>
-  <tr
-    v-if="props.isLoading"
-    aria-level="1"
-    :class="composeSlotClassName(slots.loadMore, props.class)"
-    data-level="1"
-    data-slot="table-load-more"
-    role="row"
-  >
-    <td :colspan="columnCount" role="rowheader">
-      <slot />
-    </td>
-  </tr>
+  <TableVirtualizerItem :layout-info="layoutInfo" :parent-layout-info="parentLayoutInfo">
+    <component :is="virtualizer ? 'div' : 'tr'" inert :style="{height: '0px'}">
+      <component :is="virtualizer ? 'div' : 'td'" :style="{border: 0, padding: 0}">
+        <div ref="sentinel" :style="{height: '1px', position: 'relative', width: '1px'}" />
+      </component>
+    </component>
+    <component
+      :is="virtualizer ? 'div' : 'tr'"
+      v-if="props.isLoading"
+      aria-level="1"
+      :class="composeSlotClassName(slots.loadMore, props.class)"
+      data-level="1"
+      data-slot="table-load-more"
+      role="row"
+    >
+      <component
+        :is="virtualizer ? 'div' : 'td'"
+        :aria-colspan="virtualizer ? columnCount : undefined"
+        :colspan="virtualizer ? undefined : columnCount"
+        role="rowheader"
+        :style="indicatorStyle"
+      >
+        <slot />
+      </component>
+    </component>
+  </TableVirtualizerItem>
 </template>

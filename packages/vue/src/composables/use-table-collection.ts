@@ -1,10 +1,12 @@
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
 import type {TableColumnSize} from "./use-table-column-layout";
+import type {VirtualizerTableCollection} from "../utils/virtualizer-collection";
 import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";
 
 import {FOCUSABLE_SELECTOR} from "../utils/focus";
+import {createTableCollection} from "../utils/virtualizer-collection";
 
 import {useCollection} from "./use-collection";
 
@@ -152,6 +154,28 @@ export const createTableTree = (): TableTree => {
   };
 };
 
+export interface TableCollectionItems {
+  items: readonly unknown[];
+  /** A row's key. Defaults to the item's own `id`, then `key`, then its index. */
+  getKey?: (item: unknown, index: number) => CollectionKey;
+  /** Text a row is matched on by typeahead, for a row that has not rendered. */
+  getTextValue?: (item: unknown) => string | undefined;
+}
+
+export interface UseTableCollectionOptions {
+  /**
+   * The rows' data, for a virtualized table.
+   *
+   * Given, the rows come from the data rather than from the DOM — which is the only source that
+   * knows about a row nobody has scrolled to. Absent, the registry answers as it always has.
+   */
+  items?: () => TableCollectionItems | null | undefined;
+  /** Whether a loading sentinel follows the last row. */
+  hasLoader?: () => boolean;
+  /** Prefix for the keys of the nodes the data does not name. Scope it to the table. */
+  idPrefix?: () => string;
+}
+
 export interface UseTableCollectionReturn {
   /** Column headers, in document order. */
   columns: TableRegistry<TableColumnMeta>;
@@ -164,6 +188,12 @@ export interface UseTableCollectionReturn {
   rowHeaderColumnKeys: ComputedRef<Set<CollectionKey>>;
   /** How the rows nest, for a tree grid. Empty for a flat table. */
   tree: TableTree;
+  /**
+   * The two-dimensional collection a virtualizer's layout walks, or `null` when the table's rows
+   * come from the DOM. Built here because it is built out of the columns, which are registered
+   * here.
+   */
+  virtualized: ComputedRef<VirtualizerTableCollection> | null;
 }
 
 /**
@@ -176,9 +206,29 @@ export interface UseTableCollectionReturn {
  * asks the DOM for the order. A cell therefore learns which column it belongs to from **where
  * it sits among its siblings**, exactly as React Aria pairs the nth cell with the nth column.
  */
-export const useTableCollection = (): UseTableCollectionReturn => {
+export const useTableCollection = (
+  options: UseTableCollectionOptions = {},
+): UseTableCollectionReturn => {
   const columns = createTableRegistry<TableColumnMeta>();
-  const rows = useCollection();
+
+  const items = options.items;
+
+  // The columns are what the header and every cell are placed against, so the collection is
+  // rebuilt whenever one registers, leaves, or moves.
+  const virtualized = items
+    ? computed(() =>
+        createTableCollection({
+          columnKeys: columns.orderedKeys.value,
+          getKey: items()?.getKey,
+          getTextValue: items()?.getTextValue,
+          hasLoader: options.hasLoader?.() ?? false,
+          idPrefix: options.idPrefix?.() ?? "table",
+          items: items()?.items ?? [],
+        }),
+      )
+    : null;
+
+  const rows = useCollection({source: () => virtualized?.value.rows});
 
   return {
     columns,
@@ -197,6 +247,7 @@ export const useTableCollection = (): UseTableCollectionReturn => {
     }),
     rows,
     tree: createTableTree(),
+    virtualized,
   };
 };
 

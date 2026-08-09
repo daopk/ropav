@@ -2,6 +2,7 @@
 import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {TableCollectionItems} from "../../composables/use-table-collection";
 
 import {computed, shallowRef, watch} from "vue";
 
@@ -12,14 +13,22 @@ import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection
 import {useId} from "../../composables/use-id";
 import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
-import {useTableColumnLayout} from "../../composables/use-table-column-layout";
+import {buildColumnWidths, useTableColumnLayout} from "../../composables/use-table-column-layout";
 import {useTypeahead} from "../../composables/use-typeahead";
+import {useVirtualizer} from "../../composables/use-virtualizer";
+import {useVirtualizerScroll} from "../../composables/use-virtualizer-scroll";
 import {composeSlotClassName} from "../../utils/compose";
 import {announce} from "../../utils/live-announcer";
+import {Size} from "../../utils/virtualizer-geometry";
+import {
+  provideVirtualizerStateContext,
+  useVirtualizerConfigContext,
+} from "../virtualizer/virtualizer.context";
 
 import {
   provideTableColumnLayoutContext,
   provideTableGridContext,
+  provideTableVirtualizerContext,
   useTableContext,
   useTableResizableContainerContext,
 } from "./table.context";
@@ -48,7 +57,28 @@ const collectionId = useId();
 
 const element = shallowRef<HTMLElement | null>(null);
 
-const collection = useTableCollection();
+/**
+ * Whether the rows are windowed, which is decided by the presence of a `Virtualizer` above and
+ * nothing else — the same thing that decides it in React Aria.
+ *
+ * It has to be known here, before the children run: it is what the table's elements *are*. A
+ * `Virtualizer` whose body was given no rows renders a header and no rows, which is the honest
+ * answer to asking for a window over nothing.
+ */
+const virtualizerConfig = useVirtualizerConfigContext();
+const isVirtualized = virtualizerConfig != null;
+
+/** The rows' data, registered by the body. Empty until the body's own setup has run. */
+const bodyItems = shallowRef<TableCollectionItems | null>(null);
+const hasLoader = shallowRef(false);
+/** The scroll box's own size, which is what the columns are divided up over. */
+const containerSize = shallowRef(new Size());
+
+const collection = useTableCollection({
+  hasLoader: isVirtualized ? () => hasLoader.value : undefined,
+  idPrefix: () => collectionId.value,
+  items: isVirtualized ? () => bodyItems.value : undefined,
+});
 
 /**
  * Selection runs on the **row** collection rather than on a collection of rows and cells, which
@@ -99,6 +129,19 @@ const layout = resizableContainer
 
 provideTableColumnLayoutContext(layout ? {...resizableContainer!, layout} : null);
 
+/**
+ * How wide each column is, for the layout to place cells at.
+ *
+ * The same numbers the browser lays a plain table out with: inside a resizable container they come
+ * from the resize state, exactly as React Aria's `TableLayout.useLayoutOptions` reads them, and
+ * otherwise they are divided out over the scroll box here.
+ */
+const columnWidths = computed(() =>
+  layout
+    ? layout.columnWidths.value
+    : buildColumnWidths(containerSize.value.width, columnDefinitions()),
+);
+
 const treeColumn = computed(() => props.treeColumn ?? null);
 
 /**
@@ -130,6 +173,80 @@ const toggleExpanded = (rowKey: CollectionKey) => {
   expanded.setState(next);
 };
 
+/**
+ * The focused row stays rendered wherever it is, exactly as React Aria does — the roving tab stop
+ * lives on that element, and letting it leave the DOM drops focus to the document. Its cells come
+ * with it, because every cell of a placed row is placed. Selected rows are deliberately *not*
+ * kept: React does not keep them either.
+ */
+const persistedKeys = computed(() => {
+  const key = selection.focusedKey.value;
+
+  return key == null ? new Set<CollectionKey>() : new Set([key]);
+});
+
+const virtualizer =
+  isVirtualized && collection.virtualized
+    ? useVirtualizer({
+        collection: () => collection.virtualized!.value,
+        layout: () => virtualizerConfig!.layout.value,
+        // Merged rather than replaced: the caller's `Virtualizer` carries the row heights, and the
+        // table carries the widths, which is the split React Aria makes with `useLayoutOptions`.
+        layoutOptions: () => ({
+          ...virtualizerConfig!.layoutOptions.value,
+          columnWidths: columnWidths.value,
+        }),
+        persistedKeys: () => persistedKeys.value,
+      })
+    : null;
+
+const scroll =
+  virtualizer &&
+  useVirtualizerScroll({
+    contentSize: () => virtualizer.contentSize.value,
+    element,
+    isScrolling: () => virtualizer.isScrolling.value,
+    onScrollEnd: virtualizer.endScrolling,
+    onScrollStart: virtualizer.startScrolling,
+    onSizeChange: (size) => {
+      containerSize.value = size;
+      virtualizer.setSize(size);
+    },
+    onVisibleRectChange: virtualizer.setVisibleRect,
+  });
+
+/**
+ * The rows inside the window. The body renders these rather than every row it was given.
+ *
+ * Rows only: the body's other child is the loading sentinel, which the layout keeps rendered
+ * wherever the window is and which `Table.LoadMore` renders itself, from its own slot.
+ */
+const rowViews = computed(() => {
+  if (!virtualizer || !collection.virtualized) return [];
+
+  const bodyKey = collection.virtualized.value.bodyKey;
+  const body = virtualizer.visibleViews.value.find((view) => view.key === bodyKey);
+
+  return (body?.children ?? []).filter((view) => view.node?.type === "row");
+});
+
+/**
+ * Paging asks the layout where the rows are, not the DOM.
+ *
+ * `PageDown` in a virtualized table has to move by a viewport of *collection*, and most of that
+ * viewport is not rendered. Without a virtualizer there is no delegate and paging measures
+ * elements as before.
+ */
+const keyboardLayout = computed(() =>
+  virtualizer
+    ? {
+        getContentSize: () => virtualizer.contentSize.value,
+        getItemRect: (key: CollectionKey) => virtualizer.getLayoutInfo(key)?.rect ?? null,
+        getVisibleRect: () => virtualizer.visibleRect.value,
+      }
+    : null,
+);
+
 const keyboard = useGridKeyboard({
   collection,
   element,
@@ -144,6 +261,7 @@ const keyboard = useGridKeyboard({
   // Arrow keys belong to the resizer while a column is being dragged, exactly as React Aria
   // disables the grid's own navigation for the duration.
   isDisabled: () => layout?.resizingColumn.value != null,
+  layout: () => keyboardLayout.value,
   selection,
 });
 
@@ -187,6 +305,29 @@ const sort = (columnKey: CollectionKey, direction?: TableSortDirection) => {
   emit("update:sortDescriptor", next);
 };
 
+if (virtualizer && collection.virtualized && scroll) {
+  provideTableVirtualizerContext({
+    collection: collection.virtualized,
+    contentStyle: scroll.contentStyle,
+    getLayoutInfo: virtualizer.getLayoutInfo,
+    rowViews,
+    setHasLoader: (value) => {
+      hasLoader.value = value;
+    },
+    setItems: (items) => {
+      bodyItems.value = items;
+    },
+  });
+
+  provideVirtualizerStateContext({
+    getIndex: (key) => collection.rows.getIndex(key),
+    getLayoutInfo: virtualizer.getLayoutInfo,
+    itemCount: computed(() => collection.rows.size.value),
+    shouldObserveItemSize: virtualizerConfig!.shouldObserveItemSize,
+    updateItemSize: virtualizer.updateItemSize,
+  });
+}
+
 provideTableGridContext({
   collection,
   collectionId,
@@ -222,25 +363,40 @@ const {describedBy} = useDescription(sortDescription);
 watch(sortDescription, (description) => {
   if (description) announce(description);
 });
+
+/**
+ * A CSS table lays its own columns out, and the two declarations below are how a resizable one is
+ * held to the widths it was given. Virtualized there is no CSS table to hold: the elements are
+ * divs, every cell is placed absolutely, and `min-content` on a div would collapse it.
+ */
+const tableStyle = computed(() =>
+  layout && !isVirtualized ? {tableLayout: "fixed", width: "min-content"} : undefined,
+);
 </script>
 
 <template>
-  <table
+  <component
+    :is="isVirtualized ? 'div' : 'table'"
     :id="tableId"
     ref="element"
+    :aria-colcount="isVirtualized ? collection.columns.size.value : undefined"
     :aria-describedby="describedBy"
     :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
+    :aria-rowcount="isVirtualized ? collection.rows.size.value + 1 : undefined"
     :class="composeSlotClassName(slots.content, props.class)"
     :data-collection="collectionId"
     data-slot="table-content"
     :role="treeColumn == null ? 'grid' : 'treegrid'"
-    :style="layout ? {tableLayout: 'fixed', width: 'min-content'} : undefined"
+    :style="tableStyle"
     :tabindex="keyboard.collectionTabIndex.value"
     @focusin="keyboard.onFocusin"
     @focusout="keyboard.onFocusout"
     @keydown="onKeydown"
     @keydown.capture="typeahead.onKeydownCapture"
   >
-    <slot />
-  </table>
+    <div v-if="isVirtualized" role="presentation" :style="scroll?.contentStyle.value">
+      <slot />
+    </div>
+    <slot v-else />
+  </component>
 </template>
