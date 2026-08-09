@@ -1,3 +1,4 @@
+export * from "./focus-responder";
 export * from "./press-responder";
 export * from "./use-checkbox-group-state";
 export * from "./use-collection";
