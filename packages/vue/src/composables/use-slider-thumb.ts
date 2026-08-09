@@ -56,7 +56,11 @@ export interface UseSliderThumbReturn {
     onChange: (event: Event) => void;
     onFocus: () => void;
   };
-  /** Bind with `v-bind` on the thumb element, which is what the pointer actually drags. */
+  /**
+   * The thumb element is what the pointer actually drags. Attach with `@keydown` and
+   * `@pointerdown`, never through `v-bind`: a vapor render re-attaches every `on*` key that
+   * arrived that way, which drops the listener when the press itself is what re-rendered it.
+   */
   thumbHandlers: {
     onKeydown: (event: KeyboardEvent) => void;
     onPointerdown: (event: PointerEvent) => void;

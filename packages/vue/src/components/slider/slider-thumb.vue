@@ -54,7 +54,6 @@ const onInputFocus = () => {
 
 <template>
   <div
-    v-bind="thumb.thumbHandlers"
     :class="composeSlotClassName(slots.thumb, props.class)"
     :data-disabled="dataAttr(thumb.isDisabled.value)"
     :data-dragging="dataAttr(thumb.isDragging.value)"
@@ -63,6 +62,8 @@ const onInputFocus = () => {
     :data-hovered="dataAttr(isHovered)"
     data-slot="slider-thumb"
     :style="thumb.thumbStyle.value"
+    @keydown="thumb.thumbHandlers.onKeydown"
+    @pointerdown="thumb.thumbHandlers.onPointerdown"
     @pointerenter="onPointerenter"
     @pointerleave="onPointerleave"
   >
