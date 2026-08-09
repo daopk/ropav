@@ -29,6 +29,7 @@ export * from "./use-number-field-state";
 export * from "./use-overlay-position";
 export * from "./use-overlay-trigger";
 export * from "./use-overlay-trigger-state";
+export * from "./use-password-manager-badge";
 export * from "./use-press";
 export * from "./use-prevent-scroll";
 export * from "./use-radio-group-state";
