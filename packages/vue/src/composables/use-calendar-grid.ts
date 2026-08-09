@@ -172,7 +172,7 @@ export const useCalendarGrid = (
       ...labels.value,
       "aria-disabled": state.isDisabled.value || undefined,
       "aria-multiselectable":
-        isRangeCalendarState(state) || state.selectionMode.value === "multiple" || undefined,
+        isRangeCalendarState(state) || state.selectionMode?.value === "multiple" || undefined,
       "aria-readonly": state.isReadOnly.value || undefined,
       role: "grid",
     })),

@@ -1,4 +1,4 @@
-import type {CalendarState} from "./use-calendar-state";
+import type {CalendarSelectionMode, CalendarState} from "./use-calendar-state";
 import type {CalendarDate, DateFormatter} from "@internationalized/date";
 import type {LocalizedStringFormatter} from "@internationalized/string";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
@@ -24,7 +24,7 @@ import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
  */
 export interface RangeCalendarStateExtras {
   /** The range under the cursor, which is the pending one while a drag is in progress. */
-  highlightedRange: ComputedRef<{start: CalendarDate; end: CalendarDate} | null>;
+  highlightedRange: ComputedRef<CalendarRange | null>;
   /** The end the user pinned first, or `null` when no range is being built. */
   anchorDate: ComputedRef<CalendarDate | null>;
   /** Whether a pointer is dragging a range out. */
@@ -35,13 +35,34 @@ export interface RangeCalendarStateExtras {
   focusNearestAvailableDate: (date: CalendarDate) => void;
 }
 
-/** Either kind of calendar state, since every behaviour hook below takes both. */
-export type AnyCalendarState = CalendarState & Partial<RangeCalendarStateExtras>;
+/** Two dates and everything between them. */
+export interface CalendarRange {
+  start: CalendarDate;
+  end: CalendarDate;
+}
+
+/** Whatever this calendar has selected: one date, a set of them, or a range. */
+export type CalendarSelectedValue = CalendarDate | CalendarDate[] | CalendarRange | null;
+
+/**
+ * Either kind of calendar state, since every behaviour hook below takes both.
+ *
+ * `value` is widened rather than left as the single calendar's, and `selectionMode` becomes optional
+ * — a range calendar has no mode of its own. Everything else the hooks read is common to both, so
+ * they need no narrowing except where they genuinely branch.
+ */
+export type AnyCalendarState = Omit<CalendarState, "selectionMode" | "setValue" | "value"> & {
+  value: ComputedRef<CalendarSelectedValue>;
+  selectionMode?: ComputedRef<CalendarSelectionMode>;
+} & Partial<RangeCalendarStateExtras>;
+
+/** A range calendar's state: the shared surface, plus the extras, with `value` narrowed to a range. */
+export type RangeCalendarLikeState = Omit<AnyCalendarState, "value"> &
+  RangeCalendarStateExtras & {value: ComputedRef<CalendarRange | null>};
 
 /** Whether a range calendar's own state is in play, which is how react-aria branches. */
-export const isRangeCalendarState = (
-  state: AnyCalendarState,
-): state is CalendarState & RangeCalendarStateExtras => "highlightedRange" in state;
+export const isRangeCalendarState = (state: AnyCalendarState): state is RangeCalendarLikeState =>
+  "highlightedRange" in state;
 
 /**
  * Whether a date needs its era spelled out.
@@ -101,9 +122,11 @@ export const useSelectedDateDescription = (state: AnyCalendarState): ComputedRef
 
     const value = state.value.value;
 
-    return Array.isArray(value)
-      ? {end: value.at(-1), start: value[0]}
-      : {end: value ?? undefined, start: value ?? undefined};
+    if (Array.isArray(value)) return {end: value.at(-1), start: value[0]};
+
+    const date = value && "start" in value ? null : value;
+
+    return {end: date ?? undefined, start: date ?? undefined};
   });
 
   const dateFormatter = useDateFormatter(() => ({
