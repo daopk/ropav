@@ -39,6 +39,8 @@ const position = (
     crossOffset?: number;
     padding?: number;
     maxHeight?: number;
+    arrowSize?: number;
+    arrowBoundaryOffset?: number;
   } = {},
 ) =>
   calculatePositionInternal(
@@ -56,8 +58,8 @@ const position = (
     options.crossOffset ?? 0,
     false,
     options.maxHeight,
-    0,
-    0,
+    options.arrowSize ?? 0,
+    options.arrowBoundaryOffset ?? 0,
     false,
     null,
   );
@@ -238,6 +240,81 @@ describe("calculatePosition", () => {
 
       expect(result.triggerAnchorPoint.x).toBe(0);
       expect(result.triggerAnchorPoint.y).toBe(0);
+    });
+  });
+
+  describe("arrow", () => {
+    /** Matches the 12x12 arrow the stylesheet draws. */
+    const ARROW = 12;
+
+    it("centres the arrow on the trigger", () => {
+      const result = position("bottom left", TRIGGER, OVERLAY, {arrowSize: ARROW});
+
+      // The overlay starts at the trigger's left edge, so the trigger's centre is half its
+      // width into the overlay.
+      expect(result.position.left).toBe(TRIGGER.left);
+      expect(result.arrowOffsetLeft).toBe(TRIGGER.width / 2);
+    });
+
+    it("centres the arrow on the trigger when the overlay is centred", () => {
+      const result = position("bottom", TRIGGER, OVERLAY, {arrowSize: ARROW});
+
+      expect(result.position.left).toBe(130);
+      expect(result.arrowOffsetLeft).toBe(OVERLAY.width / 2);
+    });
+
+    it("reports the offset along the cross axis only", () => {
+      const result = position("right top", TRIGGER, OVERLAY, {arrowSize: ARROW});
+
+      expect(result.arrowOffsetTop).toBe(TRIGGER.height / 2);
+      expect(result.arrowOffsetLeft).toBeUndefined();
+    });
+
+    it("keeps the overlay overlapping its trigger by at least the arrow's width", () => {
+      // A cross offset this large would slide the overlay clean past the trigger, leaving an
+      // arrow that points at nothing.
+      const withArrow = position("bottom left", TRIGGER, OVERLAY, {
+        arrowSize: ARROW,
+        crossOffset: 300,
+      });
+
+      expect(withArrow.position.left).toBe(TRIGGER.left + TRIGGER.width - ARROW);
+
+      const withoutArrow = position("bottom left", TRIGGER, OVERLAY, {crossOffset: 300});
+
+      expect(withoutArrow.position.left).toBe(TRIGGER.left + TRIGGER.width);
+    });
+
+    it("keeps the arrow inside the overlay's own edges", () => {
+      // A trigger whose centre sits past the padded boundary: the overlay is pushed inwards to
+      // stay on screen, so the trigger's centre lands outside it.
+      const trigger = {height: 40, left: 980, top: 400, width: 16};
+      const result = position("bottom left", trigger, OVERLAY, {arrowSize: ARROW});
+
+      expect(result.position.left).toBe(768);
+      expect(result.arrowOffsetLeft).toBe(OVERLAY.width - ARROW / 2);
+    });
+
+    it("keeps the arrow further from the corner when a boundary offset is given", () => {
+      const trigger = {height: 40, left: 980, top: 400, width: 16};
+      const result = position("bottom left", trigger, OVERLAY, {
+        arrowBoundaryOffset: 10,
+        arrowSize: ARROW,
+      });
+
+      expect(result.arrowOffsetLeft).toBe(OVERLAY.width - ARROW / 2 - 10);
+    });
+
+    it("anchors the overlay to the arrow rather than to the aligned edge", () => {
+      // The stylesheet uses the anchor point as `transform-origin`, so an overlay with an arrow
+      // has to grow out of the arrow instead of out of the corner it is aligned to.
+      const withArrow = position("bottom right", TRIGGER, OVERLAY, {arrowSize: ARROW});
+
+      expect(withArrow.triggerAnchorPoint.x).toBe(withArrow.arrowOffsetLeft);
+
+      const withoutArrow = position("bottom right", TRIGGER, OVERLAY);
+
+      expect(withoutArrow.triggerAnchorPoint.x).toBe(OVERLAY.width);
     });
   });
 });
