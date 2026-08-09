@@ -1,3 +1,4 @@
+import type {DisplayNames} from "@/composables/use-display-names";
 import type {Filter} from "@/composables/use-filter";
 import type {CalendarStringKey} from "@/i18n/calendar";
 import type {DateFormatter} from "@internationalized/date";
@@ -8,6 +9,7 @@ import type {ComputedRef} from "vue";
 export interface I18nHostReady {
   collator: ComputedRef<Intl.Collator>;
   dateFormatter: ComputedRef<DateFormatter>;
+  displayNames: ComputedRef<DisplayNames>;
   filter: ComputedRef<Filter>;
   numberFormatter: ComputedRef<Intl.NumberFormat>;
   strings: ComputedRef<LocalizedStringFormatter<CalendarStringKey, LocalizedString>>;
