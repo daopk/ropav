@@ -6,6 +6,7 @@ export * from "./use-auto-scroll";
 export * from "./use-checkbox-group-state";
 export * from "./use-collator";
 export * from "./use-collection";
+export * from "./use-color-swatch";
 export * from "./use-controllable-state";
 export * from "./use-css-variable";
 export * from "./use-date-formatter";
