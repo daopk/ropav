@@ -254,6 +254,59 @@ describe("Slider (browser)", () => {
     unmount();
   });
 
+  /**
+   * Every other pointer test here synthesises its own events, which cannot see how a listener is
+   * attached: a real press has to move the pointer onto the element first, and that hover
+   * re-renders it before the press even lands. A handler spread onto a vapor element is
+   * re-attached by each of those renders, so only a real pointer exercises the path a user takes.
+   */
+  describe("real pointer input", () => {
+    it("drags the nearest thumb from a press on the track itself", async () => {
+      const {container, unmount} = renderSlider({defaultValue: 0, step: 1});
+
+      await nextTick();
+
+      const track = slot(container, "slider-track");
+      const box = track.getBoundingClientRect();
+      const middle = box.height / 2;
+
+      await userEvent.dragAndDrop(track, track, {
+        sourcePosition: {x: box.width / 4, y: middle},
+        targetPosition: {x: (box.width * 3) / 4, y: middle},
+      });
+      await nextTick();
+
+      // The press lands a quarter along and the drag carries the thumb another half.
+      expect(Number(container.querySelector("input")!.value)).toBeGreaterThan(70);
+      expect(Number(container.querySelector("input")!.value)).toBeLessThan(80);
+      // The release closed the drag rather than leaving the thumb stuck to the pointer.
+      expect(slot(container, "slider-thumb").hasAttribute("data-dragging")).toBe(false);
+
+      unmount();
+    });
+
+    it("drags the thumb itself under a real pointer", async () => {
+      const {container, unmount} = renderSlider({defaultValue: 50, step: 1});
+
+      await nextTick();
+
+      const track = slot(container, "slider-track");
+      const thumb = slot(container, "slider-thumb");
+      const box = track.getBoundingClientRect();
+
+      await userEvent.dragAndDrop(thumb, track, {
+        targetPosition: {x: (box.width * 3) / 4, y: box.height / 2},
+      });
+      await nextTick();
+
+      expect(Number(container.querySelector("input")!.value)).toBeGreaterThan(70);
+      expect(Number(container.querySelector("input")!.value)).toBeLessThan(80);
+      expect(thumb.hasAttribute("data-dragging")).toBe(false);
+
+      unmount();
+    });
+  });
+
   it("has no accessibility violations", async () => {
     const {container, unmount} = renderSlider({defaultValue: 30});
 
