@@ -10,6 +10,7 @@ export * from "./dnd-messages";
 export * from "./dnd-state";
 export * from "./dnd-types";
 export * from "./focus";
+export * from "./locale";
 export * from "./number";
 export * from "./platform";
 export * from "./position";
