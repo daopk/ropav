@@ -289,7 +289,7 @@ export interface UseCalendarOptions {
 }
 
 /** A previous/next button, which the calendar owns because only it knows where the bounds are. */
-export interface CalendarNavButton {
+export interface CalendarPageButton {
   /** Spread with `v-bind`. Never carries an `on*` key. */
   attrs: ComputedRef<Record<string, unknown>>;
   isDisabled: ComputedRef<boolean>;
@@ -315,8 +315,8 @@ export interface CalendarShared {
 export interface UseCalendarReturn {
   /** Spread with `v-bind` onto the calendar's own element. */
   attrs: ComputedRef<Record<string, unknown>>;
-  prevButton: CalendarNavButton;
-  nextButton: CalendarNavButton;
+  prevButton: CalendarPageButton;
+  nextButton: CalendarPageButton;
   errorMessageProps: ComputedRef<{id: string | undefined}>;
   /** A description of the visible range, for the calendar's heading. */
   title: ComputedRef<string>;
