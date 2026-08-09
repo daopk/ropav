@@ -301,36 +301,65 @@ describe("useInteractionStates", () => {
 
 describe("interaction modality", () => {
   /**
-   * The tooltip case: a pointer moving across the page is how the user is driving it, but it is
-   * not an interaction that decides whether a focus ring is painted.
+   * The listeners are page-wide and reference-counted, so a case that fails before releasing would
+   * leave them attached and every later case would read a modality it never set. Released here so
+   * one failure stays one failure.
    */
-  it("follows the pointer without disturbing focus visibility", () => {
+  const whileTracking = (body: () => void) => {
     const release = retainInteractionModality();
 
-    setKeyboardModality();
+    try {
+      body();
+    } finally {
+      release();
+    }
+  };
 
-    expect(getInteractionModality()).toBe("keyboard");
-    expect(isFocusVisible()).toBe(true);
+  /**
+   * The tooltip case: a pointer moving across the page is how the user is driving it, and a
+   * tooltip asks exactly that before opening on hover — but it is not an interaction that decides
+   * whether a focus ring is painted.
+   */
+  it("follows the pointer for the question a tooltip asks", () => {
+    whileTracking(() => {
+      setKeyboardModality();
+
+      expect(getInteractionModality()).toBe("keyboard");
+      expect(isFocusVisible()).toBe(true);
+
+      document.dispatchEvent(pointerEvent("pointermove"));
+
+      // Both answers move, because both are asking how the user is driving the page right now.
+      expect(getInteractionModality()).toBe("pointer");
+      expect(isFocusVisible()).toBe(false);
+    });
+  });
+
+  it("leaves a ring already on screen alone when the pointer merely moves", () => {
+    const [states, dispose] = withScope(() => useInteractionStates());
+
+    setKeyboardModality();
+    states.onFocus();
+
+    expect(states.isFocusVisible.value).toBe(true);
 
     document.dispatchEvent(pointerEvent("pointermove"));
 
-    expect(getInteractionModality()).toBe("pointer");
-    // A ring already on screen stays on screen: nothing was pressed.
-    expect(isFocusVisible()).toBe(true);
+    // The ring is the other question, and it reads the answer that only a press or a keystroke
+    // moves — otherwise reaching for the mouse would erase a ring the keyboard had earned.
+    expect(states.isFocusVisible.value).toBe(true);
 
-    release();
+    dispose();
   });
 
   it("follows a press for both answers", () => {
-    const release = retainInteractionModality();
+    whileTracking(() => {
+      setKeyboardModality();
+      setPointerModality();
 
-    setKeyboardModality();
-    setPointerModality();
-
-    expect(getInteractionModality()).toBe("pointer");
-    expect(isFocusVisible()).toBe(false);
-
-    release();
+      expect(getInteractionModality()).toBe("pointer");
+      expect(isFocusVisible()).toBe(false);
+    });
   });
 
   it("keeps tracking with no other consumer, and stops once released", () => {

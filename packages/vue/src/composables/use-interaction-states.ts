@@ -81,12 +81,18 @@ export const retainInteractionModality = (): (() => void) => retainModalityListe
 export const getInteractionModality = (): InteractionModality => latestModality;
 
 /**
- * Whether focus is currently the kind that earns a visible ring.
+ * Whether focus arriving right now is the kind that came from a keyboard.
  *
- * Ported from React Aria's `isFocusVisible`. The reactive answer, so a component may read it
- * outside a handler and re-render when it changes.
+ * Ported from React Aria's `isFocusVisible`, and reads the same answer React Aria reads — the one
+ * that follows the pointer as it moves. Read it inside a handler: a tooltip asks it on focus to
+ * tell tabbing to a button apart from clicking it, and only the pointer-following answer knows the
+ * user had already reached for the mouse.
+ *
+ * Not the answer that decides whether a ring is painted. That one lives on `useInteractionStates`
+ * and deliberately ignores a bare mouse move, so moving the pointer cannot erase a ring that is
+ * already there. The two can disagree, and that is the point.
  */
-export const isFocusVisible = (): boolean => modality.value === "keyboard";
+export const isFocusVisible = (): boolean => latestModality === "keyboard";
 
 /**
  * Declare how the last interaction reached the page.
