@@ -52,12 +52,15 @@ export const Default: Story = {
 
 export const WithDots: Story = {
   args: defaultArgs,
+  // `showDots` is forced into the bound object rather than written as a static `show-dots` beside
+  // `v-bind="args"`: a story template is compiled at runtime, and there the bound object wins over
+  // a static attribute — so the control's `false` would quietly beat the story's own intent.
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({args: {...args, showDots: true}}),
     template: `
       <div class="w-[300px]">
-        <ColorArea v-bind="args" show-dots>
+        <ColorArea v-bind="args">
           <ColorAreaThumb />
         </ColorArea>
       </div>

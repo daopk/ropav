@@ -1,5 +1,4 @@
 import type {Color, ColorChannel, ColorSpace} from "../../utils/color-types";
-import type {ColorAreaVariants} from "@heroui/styles";
 
 export interface ColorAreaRootProps {
   class?: string;
@@ -34,8 +33,15 @@ export interface ColorAreaRootProps {
   yName?: string;
   /** `id` of the form to submit with, for an area rendered outside it. */
   form?: string;
-  /** Overlays a dot pattern, purely decorative. @default false */
-  showDots?: ColorAreaVariants["showDots"];
+  /**
+   * Overlays a dot pattern, purely decorative. @default false
+   *
+   * Declared as a plain `boolean` rather than as `ColorAreaVariants["showDots"]`: Vue's compiler
+   * only casts a bare `show-dots` attribute to `true` for a prop it can see is Boolean, and an
+   * indexed access into an imported type is not something it can resolve. Written the other way
+   * the attribute arrives as `""`, which no variant matches, and the dots silently never appear.
+   */
+  showDots?: boolean;
 }
 
 export interface ColorAreaThumbProps {
