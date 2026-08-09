@@ -21,6 +21,7 @@ export * from "./header";
 export * from "./icons";
 export * from "./input";
 export * from "./input-group";
+export * from "./input-otp";
 export * from "./kbd";
 export * from "./label";
 export * from "./link";
