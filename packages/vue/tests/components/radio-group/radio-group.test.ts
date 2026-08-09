@@ -23,6 +23,22 @@ const clickAndSettle = async (element: HTMLElement) => {
   await nextTick();
 };
 
+/**
+ * Point the browser's locale somewhere for the rest of the test.
+ *
+ * `navigator.language` is read-only, and the shared browser locale is module state, so the event
+ * that refreshes it has to be dispatched too.
+ */
+const stubLanguage = (language: string) => {
+  vi.spyOn(navigator, "language", "get").mockReturnValue(language);
+  window.dispatchEvent(new Event("languagechange"));
+};
+
+const restoreLanguage = () => {
+  vi.restoreAllMocks();
+  window.dispatchEvent(new Event("languagechange"));
+};
+
 const pressKey = async (element: HTMLElement, key: string) => {
   const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key});
 
@@ -327,6 +343,51 @@ describe("RadioGroup", () => {
       expect(inputs()[0]!.checked).toBe(true);
 
       unmount();
+    });
+
+    it("follows the reading direction for left and right", async () => {
+      // No provider above the fixture, so the browser's own locale is what answers here.
+      stubLanguage("ar-AE");
+      const {inputs, unmount} = renderGroup({defaultValue: "basic", orientation: "horizontal"});
+
+      inputs()[0]!.focus();
+      await pressKey(inputs()[0]!, "ArrowLeft");
+      expect(inputs()[1]!.checked).toBe(true);
+
+      await pressKey(inputs()[1]!, "ArrowRight");
+      expect(inputs()[0]!.checked).toBe(true);
+
+      unmount();
+      restoreLanguage();
+    });
+
+    it("keeps down and up pointing the same way when reading right to left", async () => {
+      // Only left and right turn around; the vertical arrows still mean previous and next.
+      stubLanguage("ar-AE");
+      const {inputs, unmount} = renderGroup({defaultValue: "basic", orientation: "horizontal"});
+
+      inputs()[0]!.focus();
+      await pressKey(inputs()[0]!, "ArrowDown");
+      expect(inputs()[1]!.checked).toBe(true);
+
+      await pressKey(inputs()[1]!, "ArrowUp");
+      expect(inputs()[0]!.checked).toBe(true);
+
+      unmount();
+      restoreLanguage();
+    });
+
+    it("leaves left and right alone in a vertical group read right to left", async () => {
+      // The arrows no longer point along the run of radios, so React Aria does not flip them.
+      stubLanguage("ar-AE");
+      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+
+      inputs()[0]!.focus();
+      await pressKey(inputs()[0]!, "ArrowRight");
+      expect(inputs()[1]!.checked).toBe(true);
+
+      unmount();
+      restoreLanguage();
     });
 
     it("wraps around at the end", async () => {
