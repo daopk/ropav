@@ -11,6 +11,7 @@ import {
 } from "@tanstack/vue-table";
 import {computed, shallowRef} from "vue";
 
+import {useDragAndDrop} from "../../composables/use-drag-and-drop";
 import {TableLayout} from "../../utils/virtualizer-table-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {Button} from "../button";
@@ -37,6 +38,8 @@ import {
   TableColumn,
   TableColumnResizer,
   TableContent,
+  TableDragHandle,
+  TableDropIndicator,
   TableExpandTrigger,
   TableFooter,
   TableHeader,
@@ -52,6 +55,7 @@ import {
 import IconChevronRight from "~icons/gravity-ui/chevron-right";
 import IconCopy from "~icons/gravity-ui/copy";
 import IconEye from "~icons/gravity-ui/eye";
+import IconGrip from "~icons/gravity-ui/grip";
 import IconPencil from "~icons/gravity-ui/pencil";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconTray from "~icons/gravity-ui/tray";
@@ -69,6 +73,7 @@ const components = {
   IconChevronRight,
   IconCopy,
   IconEye,
+  IconGrip,
   IconPencil,
   IconTrashBin,
   IconTray,
@@ -88,6 +93,8 @@ const components = {
   TableColumn,
   TableColumnResizer,
   TableContent,
+  TableDragHandle,
+  TableDropIndicator,
   TableExpandTrigger,
   TableFooter,
   TableHeader,
@@ -1091,6 +1098,96 @@ export const Virtualization: Story = {
           </TableScrollContainer>
         </Table>
       </Virtualizer>
+    `,
+  }),
+};
+
+/**
+ * Reordering rows, by pointer and by keyboard.
+ *
+ * The whole configuration is `useDragAndDrop`: `getItems` says what a row *is* on the drag, and
+ * `onReorder` is what makes the table droppable at all — a table with nothing to do with an
+ * arriving row is not a drop target.
+ *
+ * Two things are the caller's here, deliberately:
+ *
+ * - **The drop indicator has no styling of its own.** `@heroui/styles` has no rule for one, and
+ *   React Aria ships its own unstyled too, so the line is styled through the indicator's own
+ *   `class` here rather than by adding a rule to the shared stylesheet. `data-drop-target` and
+ *   the `table__drop-indicator` class are emitted either way, so a rule added there later would
+ *   need no change to this story.
+ * - **`Table.DragHandle` is not a hit target.** The row is what the browser drags; the handle
+ *   exists so a keyboard or screen reader user has something to press. Tab to it and press Enter.
+ */
+export const DragAndDrop: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const order = shallowRef(users.map((user) => String(user.id)));
+      const byId = new Map(users.map((user) => [String(user.id), user]));
+
+      const {dragAndDropHooks} = useDragAndDrop({
+        getItems: (keys) =>
+          [...keys].map((key) => ({"text/plain": byId.get(String(key))?.name ?? ""})),
+        onReorder(event) {
+          const moving = [...event.keys].map(String);
+          const rest = order.value.filter((key) => !moving.includes(key));
+          const index = rest.indexOf(String(event.target.key));
+          const at = event.target.dropPosition === "before" ? index : index + 1;
+
+          order.value = [...rest.slice(0, at), ...moving, ...rest.slice(at)];
+        },
+      });
+
+      return {
+        dragAndDropHooks,
+        rows: computed(() => order.value.map((key) => byId.get(key)!)),
+      };
+    },
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              aria-label="Reorderable team"
+              class="min-w-[600px]"
+              :drag-and-drop-hooks="dragAndDropHooks"
+              selection-mode="multiple"
+            >
+              <TableHeader>
+                <TableColumn id="drag" :max-width="48" :min-width="48" />
+                <TableColumn id="name" is-row-header>Member</TableColumn>
+                <TableColumn id="role">Role</TableColumn>
+                <TableColumn id="status">Status</TableColumn>
+              </TableHeader>
+              <TableBody>
+                <template v-for="user of rows" :key="user.id">
+                  <TableDropIndicator
+                    class="h-0.5 data-[drop-target=true]:bg-accent"
+                    :target="{type: 'item', key: String(user.id), dropPosition: 'before'}"
+                  />
+                  <TableRow :id="String(user.id)" :text-value="user.name">
+                    <TableCell>
+                      <TableDragHandle>
+                        <Button is-icon-only size="sm" variant="ghost">
+                          <IconGrip />
+                        </Button>
+                      </TableDragHandle>
+                    </TableCell>
+                    <TableCell :text-value="user.name">{{ user.name }}</TableCell>
+                    <TableCell>{{ user.role }}</TableCell>
+                    <TableCell>{{ user.status }}</TableCell>
+                  </TableRow>
+                </template>
+                <TableDropIndicator
+                  class="h-0.5 data-[drop-target=true]:bg-accent"
+                  :target="{type: 'item', key: rows[rows.length - 1].id + '', dropPosition: 'after'}"
+                />
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+        </Table>
+      </div>
     `,
   }),
 };

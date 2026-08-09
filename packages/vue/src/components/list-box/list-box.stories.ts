@@ -1,7 +1,8 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
+import {useDragAndDrop} from "../../composables/use-drag-and-drop";
 import {ListLayout} from "../../utils/virtualizer-list-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {DescriptionRoot} from "../description";
@@ -14,7 +15,7 @@ import {SeparatorRoot} from "../separator";
 import {SurfaceRoot} from "../surface";
 import {VirtualizerRoot} from "../virtualizer";
 
-import {ListBoxRoot} from "./index";
+import {ListBoxDropIndicator, ListBoxRoot} from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "ListBox.Item".
@@ -29,6 +30,7 @@ const components = {
   KbdContent,
   Label: LabelRoot,
   ListBox: ListBoxRoot,
+  ListBoxDropIndicator,
   ListBoxItem: ListBoxItemRoot,
   ListBoxItemIndicator,
   ListBoxSection: ListBoxSectionRoot,
@@ -364,6 +366,68 @@ export const Virtualization: Story = {
           </template>
         </ListBox>
       </Virtualizer>
+    `,
+  }),
+};
+
+/**
+ * Reordering items, by pointer and by keyboard.
+ *
+ * The whole configuration is `useDragAndDrop`: `getItems` says what an item *is* on the drag, and
+ * `onReorder` is what makes the listbox droppable at all — a listbox with nothing to do with an
+ * arriving item is not a drop target.
+ *
+ * Unlike a table row, an option has no drag handle: it drags itself, so the keyboard gesture is
+ * **Alt+Enter** rather than plain Enter, because Enter already selects. The option's own
+ * description says so, and a screen reader reads it out on focus.
+ *
+ * The drop indicator carries no styling of its own — `@heroui/styles` has no rule for one, and
+ * React Aria ships its own unstyled too — so the line is the indicator's own `class` here.
+ */
+export const DragAndDrop: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const order = ref(USERS.slice(0, 3).map((user) => user.id));
+      const byId = new Map(USERS.map((user) => [user.id, user]));
+
+      const {dragAndDropHooks} = useDragAndDrop({
+        getItems: (keys) =>
+          [...keys].map((key) => ({"text/plain": byId.get(String(key))?.name ?? ""})),
+        onReorder(event) {
+          const moving = [...event.keys].map(String);
+          const rest = order.value.filter((key) => !moving.includes(key));
+          const index = rest.indexOf(String(event.target.key));
+          const at = event.target.dropPosition === "before" ? index : index + 1;
+
+          order.value = [...rest.slice(0, at), ...moving, ...rest.slice(at)];
+        },
+      });
+
+      return {
+        dragAndDropHooks,
+        items: computed(() => order.value.map((id) => byId.get(id)!)),
+      };
+    },
+    template: `
+      <ListBox
+        aria-label="Reorderable users"
+        class="w-[220px]"
+        :drag-and-drop-hooks="dragAndDropHooks"
+        selection-mode="multiple"
+      >
+        <template v-for="user of items" :key="user.id">
+          <ListBoxDropIndicator
+            class="h-0.5 data-[drop-target=true]:bg-accent"
+            :target="{type: 'item', key: user.id, dropPosition: 'before'}"
+          />
+          <ListBoxItem :id="user.id" :text-value="user.name">{{ user.name }}</ListBoxItem>
+        </template>
+        <ListBoxDropIndicator
+          class="h-0.5 data-[drop-target=true]:bg-accent"
+          :target="{type: 'item', key: items[items.length - 1].id, dropPosition: 'after'}"
+        />
+      </ListBox>
     `,
   }),
 };
