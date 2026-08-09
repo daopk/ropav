@@ -13,7 +13,7 @@ export interface InputOTPHostProps {
   isDisabled?: boolean;
   pushPasswordManagerStrategy?: PushPasswordManagerStrategy;
   pasteTransformer?: (pasted: string) => string;
-  noScriptCSSFallback?: string | null;
+  noScriptCss?: string | null;
   onChange?: (value: string) => void;
   onComplete?: (value: string) => void;
   /** Hands the engine out, since a composable cannot be reached from outside its component. */

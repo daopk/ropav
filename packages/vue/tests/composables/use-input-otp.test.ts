@@ -620,7 +620,7 @@ describe("useInputOTP", () => {
     });
 
     it("renders none when the caller turns it off", () => {
-      const {otp, unmount} = mount({noScriptCSSFallback: null});
+      const {otp, unmount} = mount({noScriptCss: null});
 
       expect(otp().noScriptCss.value).toBeNull();
 

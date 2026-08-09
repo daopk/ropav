@@ -77,7 +77,7 @@ export interface UseInputOTPOptions {
    * Styles applied when scripting is off, or `null` to render none. Only reaches the page
    * through a `<noscript>`, so it is the one place the invisible control has to be made visible.
    */
-  noScriptCSSFallback?: MaybeRefOrGetter<string | null | undefined>;
+  noScriptCss?: MaybeRefOrGetter<string | null | undefined>;
   onChange?: (value: string) => void;
   /** Called once the last slot is filled. */
   onComplete?: (value: string) => void;
@@ -655,7 +655,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
     isFocused: computed(() => isFocused.value),
     isHovering: computed(() => !isDisabled.value && isHoveringInput.value),
     noScriptCss: computed(() => {
-      const fallback = toValue(options.noScriptCSSFallback);
+      const fallback = toValue(options.noScriptCss);
 
       return fallback === undefined ? NOSCRIPT_CSS_FALLBACK : fallback;
     }),
