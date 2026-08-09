@@ -1,11 +1,12 @@
 import type {CollectionKey} from "./use-collection";
+import type {ListKeyboardLayoutDelegate} from "./use-list-keyboard";
 import type {UseSelectionManagerReturn} from "./use-selection-manager";
 import type {UseTableCollectionReturn} from "./use-table-collection";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import {computed, nextTick, shallowRef, toValue, watch} from "vue";
 
-import {focusableIn, getScrollParent} from "../utils/focus";
+import {focusableIn, getScrollParent, isScrollable} from "../utils/focus";
 
 import {isTableCellControl} from "./use-table-collection";
 
@@ -45,6 +46,13 @@ export interface UseGridKeyboardOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** Supplied by a tree grid, where the horizontal arrows expand and collapse rows. */
   expansion?: GridExpansion;
+  /**
+   * Where the rows are, when a layout knows better than the DOM does.
+   *
+   * The same delegate a virtualized listbox pages by: measuring elements can only answer for the
+   * rows that rendered, which in a virtualized table is a screenful.
+   */
+  layout?: MaybeRefOrGetter<ListKeyboardLayoutDelegate | null | undefined>;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
 }
@@ -122,8 +130,12 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     const index = columnIndex(columnKey);
 
     // The nth cell of a row belongs to the nth column, which is the same pairing every other part
-    // of the table is built on, so no separate cell registry is needed to find it.
-    return index < 0 ? null : ((row.children[index] as HTMLElement | undefined) ?? null);
+    // of the table is built on — but the cell is found by the index it renders rather than by its
+    // position among the row's children, because a virtualized row holds each of its cells inside
+    // a wrapper of its own and so has none of them as a direct child.
+    return index < 0
+      ? null
+      : row.querySelector<HTMLElement>(`[data-slot="table-cell"][data-column-index="${index}"]`);
   };
 
   /* ---------------------------------------------------------------------------------------------
@@ -272,7 +284,55 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     return row == null ? null : {columnKey: null, rowKey: row};
   };
 
+  /**
+   * Paging by the layout's own geometry, ported from React Aria's `ListKeyboardDelegate`.
+   *
+   * Walks row by row until one is a viewport away from where it started, which is the same answer
+   * measuring elements would give — except it can also answer for the rows that are not in the DOM.
+   */
+  const pageStepByLayout = (
+    layout: ListKeyboardLayoutDelegate,
+    from: GridFocusTarget,
+    step: -1 | 1,
+  ): GridFocusTarget | null => {
+    if (from.rowKey == null) return step === 1 ? keyBelow(from) : null;
+
+    const element = getElement();
+
+    let rect = layout.getItemRect(from.rowKey);
+
+    if (!rect) return null;
+    if (element && !isScrollable(element)) {
+      return step === 1 ? lastKey(from, true) : firstKey(from, true);
+    }
+
+    const visibleRect = layout.getVisibleRect();
+    // A page stops one row short of a full viewport, so the row that was at the bottom edge is at
+    // the top edge afterwards rather than scrolling straight past.
+    const pageY =
+      step === 1
+        ? Math.min(layout.getContentSize().height, rect.y - rect.height + visibleRect.height)
+        : Math.max(0, rect.y + rect.height - visibleRect.height);
+
+    let target = from;
+
+    while (rect && (step === 1 ? rect.y < pageY : rect.y > pageY)) {
+      const next = step === 1 ? keyBelow(target) : keyAbove(target);
+
+      if (!next || next.rowKey == null) break;
+
+      target = next;
+      rect = layout.getItemRect(next.rowKey);
+    }
+
+    return target === from ? null : target;
+  };
+
   const pageStep = (from: GridFocusTarget, step: -1 | 1): GridFocusTarget | null => {
+    const layout = toValue(options.layout);
+
+    if (layout) return pageStepByLayout(layout, from, step);
+
     const container = getScrollParent(getElement());
 
     // No scroll means no page to move by, so the ends are the honest answer.
@@ -340,18 +400,38 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     selection.setFocusedKey(target.rowKey);
   };
 
+  const land = (element: HTMLElement, scroll: boolean | undefined) => {
+    element.focus();
+    // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
+    if (scroll && typeof element.scrollIntoView === "function") {
+      element.scrollIntoView({block: "nearest"});
+    }
+  };
+
+  /**
+   * Move focus to a target, waiting a tick for it to exist if it does not yet.
+   *
+   * In a virtualized table a row outside the window has no element at all, and what puts it in the
+   * DOM is claiming it as focused — so the element can only be reached after the claim has been
+   * rendered. React Aria has no equivalent: its virtualizer returns early when the element is
+   * missing, and nothing brings the row in.
+   */
   const focusCell = (target: GridFocusTarget, focusOptions: {scroll?: boolean} = {}) => {
     claimFocus(target);
 
     const element = elementFor(target);
 
-    if (!element) return;
+    if (element) {
+      land(element, focusOptions.scroll);
 
-    element.focus();
-    // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
-    if (focusOptions.scroll && typeof element.scrollIntoView === "function") {
-      element.scrollIntoView({block: "nearest"});
+      return;
     }
+
+    void nextTick(() => {
+      const rendered = elementFor(target);
+
+      if (rendered) land(rendered, focusOptions.scroll);
+    });
   };
 
   /* ---------------------------------------------------------------------------------------------
