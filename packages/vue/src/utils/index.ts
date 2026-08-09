@@ -14,6 +14,7 @@ export * from "./dnd-data-transfer";
 export * from "./dnd-drop-target-navigation";
 export * from "./dnd-list-drop-target-delegate";
 export * from "./dnd-state";
+export * from "./dnd-tree-drop-target-delegate";
 export * from "./dnd-types";
 export * from "./focus";
 export * from "./incomplete-date";

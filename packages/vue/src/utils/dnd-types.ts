@@ -225,6 +225,15 @@ export interface DragCollectionNode<T = unknown> {
   nextKey?: DragKey | null;
   /** The last child, for stepping past a whole expanded subtree. */
   lastChildKey?: DragKey | null;
+  /** The first child, for dropping at the top of an expanded subtree. */
+  firstChildKey?: DragKey | null;
+  /**
+   * Whether the item can contain others at all.
+   *
+   * Distinct from having any right now: a collapsed row's children are absent from the
+   * collection, and an empty expandable row still accepts a drop into it.
+   */
+  hasChildItems?: boolean;
   /** The item's text, used to name it in a drop indicator's label. */
   textValue?: string;
   /** The caller's own data for this item, handed back when building drag items. */
