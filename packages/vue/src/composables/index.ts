@@ -3,6 +3,7 @@ export * from "./use-checkbox-group-state";
 export * from "./use-collection";
 export * from "./use-controllable-state";
 export * from "./use-description";
+export * from "./use-dialog-trigger";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";
 export * from "./use-enter-exit";
