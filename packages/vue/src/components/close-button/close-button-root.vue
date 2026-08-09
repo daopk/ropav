@@ -4,6 +4,7 @@ import type {CloseButtonRootProps, CloseButtonSlotProps} from "./close-button.ty
 import {closeButtonVariants} from "@heroui/styles";
 import {computed} from "vue";
 
+import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";
 import {composePressResponder, usePressResponder} from "../../composables/press-responder";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
@@ -65,13 +66,34 @@ const onClick = (event: MouseEvent) => {
   emit("click", event);
 };
 
+// Hover and focus can also be handed down — a tooltip wrapped around this button watches it
+// without the button having to know. Kept on its own channel: the press above may be a menu
+// trigger's, and one channel would mean the two replace each other.
+const focusResponder = useFocusResponder();
+const focus = composeFocusResponder(focusResponder, {onBlur, onFocus});
+
+const attrs = computed(() => ({
+  ...focusResponder?.attrs.value,
+  ...responder?.attrs.value,
+}));
+
 // A responder's listeners are chained here rather than spread with `v-bind`, which in vapor
 // re-attaches them on every render — see `composePressResponder`.
 const press = composePressResponder(responder, {
   onClick,
-  onPointerdown,
-  onPointerenter,
-  onPointerleave,
+  onKeydown: focus.onKeydown,
+  onPointerdown: (event) => {
+    onPointerdown(event);
+    focus.onPointerdown(event);
+  },
+  onPointerenter: (event) => {
+    onPointerenter(event);
+    focus.onPointerenter(event);
+  },
+  onPointerleave: (event) => {
+    onPointerleave();
+    focus.onPointerleave(event);
+  },
 });
 </script>
 
@@ -91,11 +113,11 @@ const press = composePressResponder(responder, {
     :disabled="props.isDisabled || undefined"
     :tabindex="tabindex"
     :type="type"
-    v-bind="responder?.attrs.value"
-    @blur="onBlur"
+    v-bind="attrs"
+    @blur="focus.onBlur"
     @click="press.onClick"
     @dragstart="press.onDragstart"
-    @focus="onFocus"
+    @focus="focus.onFocus"
     @keydown="press.onKeydown"
     @mousedown="press.onMousedown"
     @pointerdown="press.onPointerdown"
