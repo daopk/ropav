@@ -195,6 +195,100 @@ export interface DropEvent extends DragDropEvent {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * Collections
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * What the drag and drop state layer needs to know about one item.
+ *
+ * React Aria reads a full `Node` off its collection, which it can do because it builds the whole
+ * tree by rendering into a hidden pass. This package has no such pass — items register themselves
+ * — so instead of forcing every collection into a common node shape, the state layer names only
+ * the four facts it actually uses and each collection supplies them its own way.
+ */
+export interface DragCollectionNode<T = unknown> {
+  key: DragKey;
+  /** The containing item in a tree, or `null` at the top level. */
+  parentKey?: DragKey | null;
+  /** The previous sibling, used to recognise two ways of naming the same gap between items. */
+  prevKey?: DragKey | null;
+  nextKey?: DragKey | null;
+  /** The caller's own data for this item, handed back when building drag items. */
+  value?: T;
+}
+
+/** The slice of a collection the drag and drop state layer reads. */
+export interface DragCollection<T = unknown> {
+  getItem: (key: DragKey) => DragCollectionNode<T> | null | undefined;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Collection events
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface DroppableCollectionEnterEvent extends DropEnterEvent {
+  target: DropTarget;
+}
+
+export interface DroppableCollectionMoveEvent extends DropMoveEvent {
+  target: DropTarget;
+}
+
+export interface DroppableCollectionActivateEvent extends DropActivateEvent {
+  target: DropTarget;
+}
+
+export interface DroppableCollectionExitEvent extends DropExitEvent {
+  target: DropTarget;
+}
+
+export interface DroppableCollectionDropEvent extends DropEvent {
+  target: DropTarget;
+}
+
+/** Items from elsewhere dropped into a gap between two items. */
+export interface DroppableCollectionInsertDropEvent {
+  items: DropItem[];
+  dropOperation: DropOperation;
+  target: ItemDropTarget;
+}
+
+/** Items from elsewhere dropped on the collection itself rather than any item. */
+export interface DroppableCollectionRootDropEvent {
+  items: DropItem[];
+  dropOperation: DropOperation;
+}
+
+/** Items dropped onto an item — a folder, say — rather than between two. */
+export interface DroppableCollectionOnItemDropEvent {
+  items: DropItem[];
+  dropOperation: DropOperation;
+  isInternal: boolean;
+  target: ItemDropTarget;
+}
+
+/** Items from this same collection moved to a new position. */
+export interface DroppableCollectionReorderEvent {
+  keys: Set<DragKey>;
+  dropOperation: DropOperation;
+  target: ItemDropTarget;
+}
+
+export interface DraggableCollectionStartEvent extends DragStartEvent {
+  keys: Set<DragKey>;
+}
+
+export interface DraggableCollectionMoveEvent extends DragMoveEvent {
+  keys: Set<DragKey>;
+}
+
+export interface DraggableCollectionEndEvent extends DragEndEvent {
+  keys: Set<DragKey>;
+  /** Whether the drop landed in the collection the drag started from. */
+  isInternal: boolean;
+}
+
+/* -------------------------------------------------------------------------------------------------
  * Guards
  * -----------------------------------------------------------------------------------------------*/
 
