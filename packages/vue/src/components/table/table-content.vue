@@ -1,23 +1,28 @@
 <script setup lang="ts" vapor>
 import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {TableCollectionItems} from "../../composables/use-table-collection";
 
 import {computed, shallowRef, watch} from "vue";
 
+import {toTableDragCollection} from "../../composables/table-drag-collection";
 import {useControllableState} from "../../composables/use-controllable-state";
 import {useDescription} from "../../composables/use-description";
 import {useGridKeyboard} from "../../composables/use-grid-keyboard";
 import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection-announcement";
 import {useId} from "../../composables/use-id";
+import {useLocale} from "../../composables/use-locale";
 import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTableCollection} from "../../composables/use-table-collection";
 import {buildColumnWidths, useTableColumnLayout} from "../../composables/use-table-column-layout";
 import {useTypeahead} from "../../composables/use-typeahead";
 import {useVirtualizer} from "../../composables/use-virtualizer";
 import {useVirtualizerScroll} from "../../composables/use-virtualizer-scroll";
+import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
+import {TreeDropTargetDelegate} from "../../utils/dnd-tree-drop-target-delegate";
 import {announce} from "../../utils/live-announcer";
 import {Size} from "../../utils/virtualizer-geometry";
 import {
@@ -267,6 +272,131 @@ const keyboard = useGridKeyboard({
 
 useGridSelectionAnnouncement({collection: collection.rows, selection});
 
+/* -------------------------------------------------------------------------------------------------
+ * Drag and drop
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Both halves are opt-in, and the hooks only exist when the caller asked for them.
+ *
+ * Reading them off `dragAndDropHooks` rather than importing them is what keeps the whole drag
+ * and drop layer out of a table that does not use it.
+ */
+const dnd = props.dragAndDropHooks;
+const dragCollection = toTableDragCollection(collection);
+// Named apart from `sort`'s own `direction` parameter, which is a sort order rather than a
+// writing direction.
+const locale = useLocale();
+const textDirection = computed(() => locale.value.direction);
+
+const dragState = dnd?.useDraggableCollectionState?.({
+  collection: dragCollection,
+  getAllowedDropOperations: dnd.options.getAllowedDropOperations,
+  getItems: (keys) => dnd.options.getItems?.(keys) ?? [],
+  isDisabled: dnd.options.isDisabled,
+  onDragEnd: (event) => dnd.options.onDragEnd?.(event),
+  onDragStart: (event) => dnd.options.onDragStart?.(event),
+  selectionManager: selection,
+});
+
+if (dnd && dragState) dnd.useDraggableCollection?.(dragState, element);
+
+const dropState = dnd?.useDroppableCollectionState?.({
+  ...dnd.options,
+  collection: dragCollection,
+  selectionManager: selection,
+});
+
+/**
+ * Rows in document order, which is the walk a drag makes down the table.
+ *
+ * Built here rather than reusing `keyboard`: the grid's own navigation moves through cells and
+ * column headers as well as rows, and a drag only ever lands on a row. React Aria makes the same
+ * split, constructing a fresh `ListKeyboardDelegate` for the drop side.
+ */
+const dropKeyboardDelegate = {
+  getFirstKey: () => collection.rows.getFirstKey(),
+  getKeyAbove: (key: CollectionKey) => collection.rows.getKeyBefore(key),
+  getKeyBelow: (key: CollectionKey) => collection.rows.getKeyAfter(key),
+  getLastKey: () => collection.rows.getLastKey(),
+};
+
+/**
+ * The pointer half of dropping, attached statically below.
+ *
+ * A keyboard drag runs through the session's own document listeners, so it works without these;
+ * a pointer drag reaches nothing but the element's own `dragover`, and has to be given them.
+ */
+let droppable: UseDroppableCollectionReturn | undefined;
+
+if (dnd && dropState) {
+  /**
+   * The tree delegate wraps the flat one rather than replacing it.
+   *
+   * Finding which row the pointer is over is the same problem either way; what differs is what
+   * the gap under the last child of a subtree *means*, which is the ambiguity the wrapper
+   * resolves. A flat table has no such gaps, so it costs nothing there.
+   */
+  const pointerDelegate =
+    dnd.dropTargetDelegate ??
+    new dnd.ListDropTargetDelegate!(dragCollection, element, {
+      direction: textDirection.value,
+      layout: "stack",
+      orientation: "vertical",
+    });
+
+  droppable = dnd.useDroppableCollection?.(
+    {
+      ...dnd.options,
+      dropTargetDelegate: new TreeDropTargetDelegate(pointerDelegate, {
+        collection: () => dragCollection,
+        direction: () => textDirection.value,
+        expandedKeys: () => expandedKeys.value,
+      }),
+      keyboardDelegate: dropKeyboardDelegate,
+      /**
+       * A drag resting on a closed row opens it, so its children become reachable.
+       *
+       * Only opens for a pointer: with a keyboard or a screen reader the same gesture toggles,
+       * because there is no "rest here" to distinguish from "step past".
+       */
+      onDropActivate(event) {
+        dnd.options.onDropActivate?.(event);
+
+        if (event.target.type !== "item") return;
+
+        const key = event.target.key;
+        const hasChildRows = Boolean(collection.tree.getItem(key)?.hasChildRows());
+
+        if (!hasChildRows) return;
+        if (expandedKeys.value.has(key) && !dnd.isVirtualDragging?.()) return;
+
+        toggleExpanded(key);
+      },
+      // Left and right open and close the row being dropped *on*, which is the only way to
+      // reach a collapsed row's children during a keyboard drag.
+      onKeyDown(event) {
+        const target = dropState.target.value;
+
+        if (target?.type !== "item" || target.dropPosition !== "on") return;
+        if (!collection.tree.getItem(target.key)?.hasChildRows()) return;
+
+        const isExpanded = expandedKeys.value.has(target.key);
+        const expandKey = textDirection.value === "rtl" ? "ArrowLeft" : "ArrowRight";
+        const collapseKey = textDirection.value === "rtl" ? "ArrowRight" : "ArrowLeft";
+
+        if (event.key === expandKey && !isExpanded) toggleExpanded(target.key);
+        else if (event.key === collapseKey && isExpanded) toggleExpanded(target.key);
+      },
+    },
+    dropState,
+    element,
+  );
+}
+
+/** Whether the table as a whole is the current drop target. */
+const isRootDropTarget = computed(() => dropState?.isDropTarget({type: "root"}) ?? false);
+
 const typeahead = useTypeahead({
   focusedKey: () => keyboard.focusedCell.value.rowKey,
   getKeyForSearch: keyboard.getKeyForSearch,
@@ -331,6 +461,10 @@ if (virtualizer && collection.virtualized && scroll) {
 provideTableGridContext({
   collection,
   collectionId,
+  columnCount: computed(() => collection.columns.size.value),
+  dragAndDropHooks: dnd,
+  dragState,
+  dropState,
   expandedKeys,
   keyboard,
   selection,
@@ -384,11 +518,17 @@ const tableStyle = computed(() =>
     :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     :aria-rowcount="isVirtualized ? collection.rows.size.value + 1 : undefined"
     :class="composeSlotClassName(slots.content, props.class)"
+    :data-allows-dragging="dataAttr(dragState != null)"
     :data-collection="collectionId"
+    :data-drop-target="dataAttr(isRootDropTarget)"
     data-slot="table-content"
     :role="treeColumn == null ? 'grid' : 'treegrid'"
     :style="tableStyle"
     :tabindex="keyboard.collectionTabIndex.value"
+    @dragenter="droppable?.handlers.onDragenter($event)"
+    @dragleave="droppable?.handlers.onDragleave($event)"
+    @dragover="droppable?.handlers.onDragover($event)"
+    @drop="droppable?.handlers.onDrop($event)"
     @focusin="keyboard.onFocusin"
     @focusout="keyboard.onFocusout"
     @keydown="onKeydown"

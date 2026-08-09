@@ -6,6 +6,10 @@ import type {
   UseTableCollectionReturn,
 } from "../../composables";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
+import type {UseDraggableCollectionStateReturn} from "../../composables/use-draggable-collection-state";
+import type {UseDraggableItemReturn} from "../../composables/use-draggable-item";
+import type {UseDroppableCollectionStateReturn} from "../../composables/use-droppable-collection-state";
 import type {UseGridKeyboardReturn} from "../../composables/use-grid-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {
@@ -52,6 +56,17 @@ export interface TableGridContext {
   expandedKeys: ComputedRef<Set<CollectionKey>>;
   /** Open or close a row. Does nothing outside a tree grid. */
   toggleExpanded: (rowKey: CollectionKey) => void;
+  /** How many columns the rows span, which a drop indicator's single cell has to cover. */
+  columnCount: ComputedRef<number>;
+  /**
+   * The drag and drop configuration, when there is any.
+   *
+   * Rows read the hooks from here rather than importing them, so a table without drag and drop
+   * leaves the whole layer out of the bundle.
+   */
+  dragAndDropHooks?: DragAndDropHooks;
+  dragState?: UseDraggableCollectionStateReturn<unknown>;
+  dropState?: UseDroppableCollectionStateReturn<unknown>;
 }
 
 /**
@@ -78,6 +93,14 @@ export interface TableRowContext {
   ariaLabelledBy: ComputedRef<string>;
   /** The cells of this row, which is how a cell learns which column it sits under. */
   cells: TableRegistry<TableCellMeta>;
+  /**
+   * What `Table.DragHandle` needs to turn a pressable into this row's drag control, or `null`
+   * when the table is not draggable.
+   *
+   * The row itself carries the native drag; this is only the accessible path, for a keyboard or
+   * a screen reader that has no drag gesture to make.
+   */
+  drag: UseDraggableItemReturn | null;
 }
 
 /**

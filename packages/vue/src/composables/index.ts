@@ -4,6 +4,7 @@ export * from "./drag-modality";
 export * from "./droppable-collection-registry";
 export * from "./focus-responder";
 export * from "./press-responder";
+export * from "./table-drag-collection";
 export * from "./use-auto-scroll";
 export * from "./use-checkbox-group-state";
 export * from "./use-collator";

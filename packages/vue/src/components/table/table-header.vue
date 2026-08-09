@@ -1,18 +1,24 @@
 <script setup lang="ts" vapor>
-import type {TableHeaderProps} from "./table.types";
+import type {TableHeaderProps, TableHeaderSlotProps} from "./table.types";
 
 import {computed} from "vue";
 
 import {composeSlotClassName} from "../../utils/compose";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import {useTableContext, useTableVirtualizerContext} from "./table.context";
+import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
 
 const props = defineProps<TableHeaderProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{default?: (props: TableHeaderSlotProps) => unknown}>();
 
 const {slots} = useTableContext();
+
+// React Aria's `useTableOptions().allowsDragging`, handed to the slot rather than to a hook:
+// the header renders an extra leading column for the drag handles, and repeating the condition
+// the caller already gave `useDragAndDrop` would be a second place to get it wrong.
+const {dragState} = useTableGridContext();
+const allowsDragging = computed(() => dragState != null);
 
 /**
  * Virtualized, the header is the one part of the table that is always rendered: it is sticky, so
@@ -41,7 +47,7 @@ const layoutInfo = computed(() =>
         :aria-rowindex="virtualizer ? 1 : undefined"
         role="row"
       >
-        <slot />
+        <slot :allows-dragging="allowsDragging" />
       </component>
     </component>
   </TableVirtualizerItem>

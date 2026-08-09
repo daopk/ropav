@@ -1,10 +1,12 @@
 import type {CollectionKey} from "../../composables/use-collection";
+import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
 import type {
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
 import type {TableColumnSize} from "../../composables/use-table-column-layout";
+import type {DropTarget} from "../../utils/dnd-types";
 import type {CheckboxVariants, TableVariants} from "@heroui/styles";
 
 export interface TableRootProps {
@@ -50,10 +52,34 @@ export interface TableContentProps {
   expandedKeys?: Iterable<CollectionKey>;
   /** Expanded row keys the table starts with. */
   defaultExpandedKeys?: Iterable<CollectionKey>;
+  /** Drag and drop behaviour, from `useDragAndDrop`. */
+  dragAndDropHooks?: DragAndDropHooks;
 }
 
 export interface TableHeaderProps {
   class?: string;
+}
+
+/** State handed to the default slot of the header. */
+export interface TableHeaderSlotProps {
+  /**
+   * Whether the rows can be dragged, which is React Aria's `useTableOptions().allowsDragging`.
+   *
+   * Read it to render the extra leading column the drag handles sit under, so a table whose
+   * dragging is conditional does not have to repeat the condition.
+   */
+  allowsDragging: boolean;
+}
+
+export interface TableDragHandleProps {
+  /** Accessible name. Defaults to naming the row, or the whole selection when several travel. */
+  ariaLabel?: string;
+}
+
+export interface TableDropIndicatorProps {
+  class?: string;
+  /** The position this indicator stands for. */
+  target: DropTarget;
 }
 
 export interface TableColumnProps {
@@ -170,6 +196,12 @@ export interface TableRowSlotProps {
   isPressed: boolean;
   isSelected: boolean;
   selectionMode: SelectionMode;
+  /** Whether this row is one of those currently being dragged. */
+  isDragging: boolean;
+  /** Whether a drop would land on this row. */
+  isDropTarget: boolean;
+  /** Whether the rows can be dragged at all. */
+  allowsDragging: boolean;
 }
 
 export interface TableCellProps {

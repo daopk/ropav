@@ -3,6 +3,8 @@ import TableCell from "./table-cell.vue";
 import TableColumnResizer from "./table-column-resizer.vue";
 import TableColumn from "./table-column.vue";
 import TableContent from "./table-content.vue";
+import TableDragHandle from "./table-drag-handle.vue";
+import TableDropIndicator from "./table-drop-indicator.vue";
 import TableExpandTrigger from "./table-expand-trigger.vue";
 import TableFooter from "./table-footer.vue";
 import TableHeader from "./table-header.vue";
@@ -32,6 +34,8 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Cell: TableCell,
   ExpandTrigger: TableExpandTrigger,
+  DragHandle: TableDragHandle,
+  DropIndicator: TableDropIndicator,
   Footer: TableFooter,
   LoadMore: TableLoadMore,
   LoadMoreContent: TableLoadMoreContent,
@@ -55,6 +59,8 @@ export {
   TableRow,
   TableCell,
   TableExpandTrigger,
+  TableDragHandle,
+  TableDropIndicator,
   TableFooter,
   TableLoadMore,
   TableLoadMoreContent,
@@ -69,12 +75,15 @@ export type {
   TableResizableContainerProps,
   TableContentProps,
   TableHeaderProps,
+  TableHeaderSlotProps,
   TableColumnProps,
   TableColumnResizerProps,
   TableBodyProps,
   TableRowProps,
   TableCellProps,
   TableCellSlotProps,
+  TableDragHandleProps,
+  TableDropIndicatorProps,
   TableFooterProps,
   TableLoadMoreProps,
   TableLoadMoreContentProps,
