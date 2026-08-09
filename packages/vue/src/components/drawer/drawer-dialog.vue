@@ -3,6 +3,7 @@ import type {DrawerDialogProps} from "./drawer.types";
 
 import {computed, shallowRef, watch} from "vue";
 
+import {useDrawerDrag} from "../../composables/use-drawer-drag";
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
 import {provideSurfaceContext} from "../surface";
 
@@ -46,6 +47,23 @@ const isDismissable = computed(() => overlay?.isDismissable.value ?? true);
  */
 const style = computed(() => (isDismissable.value ? {touchAction: "none"} : undefined));
 
+/**
+ * Dragging the panel towards its own edge dismisses the drawer.
+ *
+ * The handlers are bound one by one below rather than spread, so their identities never change
+ * across a gesture — and every write the drag makes goes straight to the element's style, so a
+ * finger travelling across the screen causes no renders at all.
+ *
+ * Chained with anything a caller attached, rather than replacing it: React spreads these *before*
+ * the caller's props, so a caller's own `onPointerDown` silently takes the drag away. Here both run.
+ */
+const drag = useDrawerDrag({
+  elementRef: element,
+  isDismissable: () => isDismissable.value,
+  onDismiss: () => state.close(),
+  placement: () => placement.value,
+});
+
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
 };
@@ -79,6 +97,10 @@ watch(
     role="dialog"
     :style="style"
     tabindex="-1"
+    @pointercancel="drag.handlers.onPointercancel"
+    @pointerdown="drag.handlers.onPointerdown"
+    @pointermove="drag.handlers.onPointermove"
+    @pointerup="drag.handlers.onPointerup"
   >
     <slot :close="state.close" />
   </section>
