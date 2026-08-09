@@ -25,9 +25,11 @@ import {
   TableBody,
   TableCell,
   TableColumn,
+  TableColumnResizer,
   TableContent,
   TableFooter,
   TableHeader,
+  TableResizableContainer,
   TableRow,
   TableScrollContainer,
   TableSelectionCheckbox,
@@ -68,9 +70,11 @@ const components = {
   TableBody,
   TableCell,
   TableColumn,
+  TableColumnResizer,
   TableContent,
   TableFooter,
   TableHeader,
+  TableResizableContainer,
   TableRow,
   TableScrollContainer,
   TableSelectionCheckbox,
@@ -497,6 +501,51 @@ export const DynamicWithSelection: Story = {
             </TableContent>
           </TableScrollContainer>
           ${PAGINATION_FOOTER}
+        </Table>
+      </div>
+    `,
+  }),
+};
+
+/** Drag the handle between two column headers, or press Enter on it and use the arrow keys. */
+export const ColumnResizing: Story = {
+  render: () => ({
+    components,
+    setup: () => ({statusColor: STATUS_COLOR, users}),
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table>
+          <TableResizableContainer>
+            <TableContent aria-label="Column resizing" class="min-w-[700px]">
+              <TableHeader>
+                <TableColumn id="name" is-row-header default-width="1fr" :min-width="160">
+                  Name
+                  <TableColumnResizer />
+                </TableColumn>
+                <TableColumn id="role" default-width="1fr" :min-width="220">
+                  Role
+                  <TableColumnResizer />
+                </TableColumn>
+                <TableColumn id="status" default-width="1fr" :min-width="100">
+                  Status
+                  <TableColumnResizer />
+                </TableColumn>
+                <TableColumn id="email" default-width="1fr" :min-width="200">Email</TableColumn>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="user of users" :id="user.id" :key="user.id">
+                  <TableCell>{{ user.name }}</TableCell>
+                  <TableCell>{{ user.role }}</TableCell>
+                  <TableCell>
+                    <Chip :color="statusColor[user.status]" size="sm" variant="soft">
+                      <ChipLabel>{{ user.status }}</ChipLabel>
+                    </Chip>
+                  </TableCell>
+                  <TableCell>{{ user.email }}</TableCell>
+                </TableRow>
+              </TableBody>
+            </TableContent>
+          </TableResizableContainer>
         </Table>
       </div>
     `,
