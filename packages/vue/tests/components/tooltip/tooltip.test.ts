@@ -101,7 +101,9 @@ describe("Tooltip", () => {
       // through the document rather than the container.
       expect(result.container.querySelector("[role=tooltip]")).toBeNull();
       expect(tooltip).toBeTruthy();
-      expect(tooltip.getAttribute("data-slot")).toBe("tooltip-content");
+      // No `data-slot` of its own, matching both React and the popover: the role is the handle,
+      // and a marker neither framework emits would be an extra attribute in the shared contract.
+      expect(tooltip.hasAttribute("data-slot")).toBe(false);
 
       result.unmount();
     });

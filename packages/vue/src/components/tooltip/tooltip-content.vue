@@ -108,7 +108,6 @@ const onPointerleave = () => state.close();
       :data-entering="dataAttr(isEntering)"
       :data-exiting="dataAttr(isExiting)"
       :data-placement="placement ?? undefined"
-      data-slot="tooltip-content"
       role="tooltip"
       :style="overlayStyle"
       @pointerenter="onPointerenter"
