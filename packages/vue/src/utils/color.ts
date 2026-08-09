@@ -6,8 +6,12 @@ import type {
   ColorFormat,
   ColorSpace,
 } from "./color-types";
+import type {ColorStringKey} from "../i18n/color";
 
 import {NumberFormatter} from "@internationalized/number";
+import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
+
+import {colorStrings} from "../i18n/color";
 
 import {
   GRAY_THRESHOLD,
@@ -17,7 +21,6 @@ import {
   YELLOW_GREEN_LIGHTNESS_THRESHOLD,
   rgbToOKLCH,
 } from "./color-oklch";
-import {formatColorName, formatTransparentColorName, getColorString} from "./color-strings";
 import {clamp, toFixedNumber} from "./number";
 
 /**
@@ -26,13 +29,33 @@ import {clamp, toFixedNumber} from "./number";
  * Ported from React Stately's `color/Color.ts` (react-stately 3.49.0). `@internationalized/color`
  * does not exist — the implementation lives inside `react-stately`, which peer-depends React — so
  * there is no package to depend on and this is a hand port. The parse regexes, the channel ranges
- * and the conversion arithmetic are reproduced exactly; the only thing shed is the localised
- * string layer, which becomes the English table in `color-strings.ts`.
+ * and the conversion arithmetic are reproduced exactly, and the localised strings go through this
+ * package's own locale layer via `i18n/color.ts`.
  *
  * Reproduced exactly includes the warts. `parseColor("rgb(1.5, 2.4, 3)")` really does stringify to
  * `"#1.82.666666666666603"`, because `rgb()` parsing clamps but never rounds. Tests pin those, so
  * a later "fix" shows up as a deliberate divergence rather than a silent one.
  */
+
+/**
+ * One dictionary for the whole module, exactly as upstream keeps one.
+ *
+ * A colour is a plain class, not a component, so it cannot reach the locale in force through
+ * `useLocale` — which is why every naming method takes a `locale` argument instead. Upstream also
+ * consults a global dictionary a server may have pre-loaded; this package has no such handoff, and
+ * `useLocalizedStringFormatter` drops that lookup for the same reason.
+ */
+const dictionary = new LocalizedStringDictionary(colorStrings);
+
+/**
+ * Read one plain string out of the table.
+ *
+ * The cast is the honest shape of the lookup: hue names are composed at runtime
+ * (`` `${hueName} ${nextName}` ``), so the key is only known to be one of the table's keys by
+ * construction. Every name the buckets can compose is present in the table.
+ */
+const stringFor = (key: string, locale: string): string =>
+  dictionary.getStringForLocale(key as ColorStringKey, locale) as string;
 
 /**
  * Read and write channels by name without giving up type safety.
@@ -87,8 +110,8 @@ abstract class ColorBase implements Color {
     return next;
   }
 
-  getChannelName(channel: ColorChannel, _locale: string): string {
-    return getColorString(channel);
+  getChannelName(channel: ColorChannel, locale: string): string {
+    return stringFor(channel, locale);
   }
 
   /**
@@ -121,8 +144,8 @@ abstract class ColorBase implements Color {
       rgb.getChannelValue("blue"),
     );
 
-    if (lightnessValue > 0.999) return getColorString("white");
-    if (lightnessValue < 0.001) return getColorString("black");
+    if (lightnessValue > 0.999) return stringFor("white", locale);
+    if (lightnessValue < 0.001) return stringFor("black", locale);
 
     const [hue, l] = this.getOklchHue(lightnessValue, chromaValue, hueValue, locale);
 
@@ -147,18 +170,27 @@ abstract class ColorBase implements Color {
       lightness = "very light";
     }
 
-    if (chroma) chroma = getColorString(chroma);
-    if (lightness) lightness = getColorString(lightness);
+    if (chroma) chroma = stringFor(chroma, locale);
+    if (lightness) lightness = stringFor(lightness, locale);
 
     const alpha = this.getChannelValue("alpha");
+    const formatter = new LocalizedStringFormatter(locale, dictionary);
 
+    /**
+     * The collapse matters: any of the three words may be empty — a mid-lightness, mid-chroma
+     * colour is named by its hue alone — and the message template joins them with spaces
+     * regardless, so without it a screen reader would read `"  orange"`.
+     */
     if (alpha < 1) {
       const percentTransparent = new NumberFormatter(locale, {style: "percent"}).format(1 - alpha);
 
-      return formatTransparentColorName({chroma, hue, lightness, percentTransparent});
+      return formatter
+        .format("transparentColorName", {chroma, hue, lightness, percentTransparent})
+        .replace(/\s+/g, " ")
+        .trim();
     }
 
-    return formatColorName({chroma, hue, lightness});
+    return formatter.format("colorName", {chroma, hue, lightness}).replace(/\s+/g, " ").trim();
   }
 
   getHueName(locale: string): string {
@@ -183,7 +215,7 @@ abstract class ColorBase implements Color {
    * "cyan blue" and "yellow green" come from.
    */
   private getOklchHue(l: number, c: number, h: number, locale: string): [string, number] {
-    if (c < GRAY_THRESHOLD) return [getColorString("gray"), l];
+    if (c < GRAY_THRESHOLD) return [stringFor("gray", locale), l];
 
     let lightness = l;
 
@@ -208,7 +240,9 @@ abstract class ColorBase implements Color {
           hueName = "yellow green";
         }
 
-        return [getColorString(hueName).toLocaleLowerCase(locale), lightness];
+        // Lower-cased because `red`/`green`/`blue` are channel names too, capitalised for that
+        // reading; a hue wants the same key read as a colour.
+        return [stringFor(hueName, locale).toLocaleLowerCase(locale), lightness];
       }
     }
 
