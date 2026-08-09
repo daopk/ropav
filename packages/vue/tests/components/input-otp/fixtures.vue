@@ -10,6 +10,8 @@ import {Label} from "@/components/label";
 // field to inherit them from, so a cast `false` says exactly what an absent prop says.
 // The field error goes *inside* the field, which is where the verdict is published — the same as
 // React, whose provider wraps the engine rather than sitting above it.
+const passThrough = (pasted: string) => pasted;
+
 const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
   maxLength: 6,
   variant: undefined,
@@ -32,6 +34,7 @@ const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
       :is-invalid="props.isInvalid"
       :max-length="props.maxLength"
       :name="props.name"
+      :paste-transformer="props.withPasteTransformer ? passThrough : props.pasteTransformer"
       :pattern="props.pattern"
       :placeholder="props.placeholder"
       :text-align="props.textAlign"

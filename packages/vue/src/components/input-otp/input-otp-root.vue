@@ -29,7 +29,7 @@ const otp = useInputOTP({
     emit("update:value", value);
   },
   onComplete: (value) => emit("complete", value),
-  pasteTransformer: (pasted) => props.pasteTransformer?.(pasted) ?? pasted,
+  pasteTransformer: () => props.pasteTransformer,
   pattern: () => props.pattern,
   placeholder: () => props.placeholder,
   pushPasswordManagerStrategy: () => props.pushPasswordManagerStrategy,

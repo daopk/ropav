@@ -28,6 +28,20 @@ const type = (control: HTMLInputElement, value: string) => {
   control.dispatchEvent(new Event("input"));
 };
 
+/**
+ * A paste event carrying text.
+ *
+ * jsdom has no `DataTransfer`, so the payload is attached by hand. What a real clipboard does is
+ * covered in the browser suite; this exercises the branch that decides who handles the paste.
+ */
+const pasteEvent = (text: string) => {
+  const event = new Event("paste", {bubbles: true, cancelable: true});
+
+  Object.defineProperty(event, "clipboardData", {value: {getData: () => text}});
+
+  return event;
+};
+
 afterEach(() => {
   document.getElementById("input-otp-style")?.remove();
 });
@@ -309,6 +323,38 @@ describe("InputOTP", () => {
 
       expect(control).toHaveValue("1");
       expect(slotAt(1)).toHaveTextContent("");
+
+      unmount();
+    });
+  });
+
+  describe("paste", () => {
+    /**
+     * The transformer reaches the engine as something to read, not as something to call. Handing
+     * the engine a wrapper that forwards to it would make it always look present, and its presence
+     * is what decides whether the engine takes the paste over from the browser at all — a wrapper
+     * read as a getter also returns nothing, so the transformer would never run either way.
+     */
+    it("rewrites pasted text through the transformer it was given", () => {
+      const {control, unmount} = renderInputOTP({
+        pasteTransformer: (pasted: string) => pasted.replace(/\D/g, ""),
+      });
+
+      control.dispatchEvent(pasteEvent("1-2 3"));
+
+      expect(control.value).toBe("123");
+
+      unmount();
+    });
+
+    it("leaves the paste to the browser when nothing needs rewriting", () => {
+      const {control, unmount} = renderInputOTP();
+      const event = pasteEvent("123");
+
+      control.dispatchEvent(event);
+
+      expect(event.defaultPrevented).toBe(false);
+      expect(control.value).toBe("");
 
       unmount();
     });

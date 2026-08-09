@@ -26,6 +26,13 @@ export interface InputOTPFixtureProps {
   withLabel?: boolean;
   withDescription?: boolean;
   withFieldError?: boolean;
+  /**
+   * Hands the field an identity paste transformer. Its mere presence makes the engine take the
+   * paste over from the browser on every platform, which is the only way to reach that code from
+   * a desktop test — a native paste is the browser's own work.
+   */
+  withPasteTransformer?: boolean;
+  pasteTransformer?: (pasted: string) => string;
   /** Renders one more box than the code is long, to pin what an out-of-range index draws. */
   withExtraSlot?: boolean;
   onChange?: (value: string) => void;
