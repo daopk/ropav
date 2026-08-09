@@ -11,6 +11,7 @@ import {
 } from "@tanstack/vue-table";
 import {computed, shallowRef} from "vue";
 
+import {TableLayout} from "../../utils/virtualizer-table-layout";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {Button} from "../button";
 import {Chip, ChipLabel} from "../chip";
@@ -27,6 +28,7 @@ import {
   PaginationSummary,
 } from "../pagination";
 import {Spinner} from "../spinner";
+import {VirtualizerRoot} from "../virtualizer";
 
 import {
   Table,
@@ -96,6 +98,7 @@ const components = {
   TableScrollContainer,
   TableSelectionCheckbox,
   TableSortableColumnHeader,
+  Virtualizer: VirtualizerRoot,
 };
 
 const meta: Meta = {
@@ -967,6 +970,127 @@ export const EmptyStateDemo: Story = {
           </TableScrollContainer>
         </Table>
       </div>
+    `,
+  }),
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Virtualization
+ * -----------------------------------------------------------------------------------------------*/
+const ROLES = [
+  "Software Engineer",
+  "Senior Engineer",
+  "Staff Engineer",
+  "Product Manager",
+  "Designer",
+  "Data Analyst",
+  "QA Engineer",
+  "DevOps Engineer",
+  "Marketing Manager",
+  "Sales Representative",
+];
+
+const STATUSES: User["status"][] = ["Active", "Inactive", "On Leave"];
+
+const FIRST_NAMES = [
+  "Emma",
+  "Liam",
+  "Olivia",
+  "Noah",
+  "Ava",
+  "James",
+  "Sophia",
+  "Oliver",
+  "Isabella",
+  "Lucas",
+  "Mia",
+  "Ethan",
+  "Charlotte",
+  "Mason",
+  "Amelia",
+  "Logan",
+  "Harper",
+  "Alexander",
+  "Ella",
+  "Benjamin",
+];
+
+const LAST_NAMES = [
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Rodriguez",
+  "Martinez",
+  "Anderson",
+  "Taylor",
+  "Thomas",
+  "Jackson",
+  "White",
+  "Harris",
+  "Clark",
+  "Lewis",
+  "Robinson",
+  "Walker",
+];
+
+/** The same rows in the same order as the React story, so the two can be compared row by row. */
+const generateUsers = (count: number): User[] =>
+  Array.from({length: count}, (_, index) => {
+    const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
+    const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
+
+    return {
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@acme.com`,
+      id: index + 1,
+      image_url: `${AVATARS}/red.jpg`,
+      name: `${firstName} ${lastName}`,
+      role: ROLES[index % ROLES.length]!,
+      status: STATUSES[index % STATUSES.length]!,
+    };
+  });
+
+/**
+ * A thousand rows, of which only a screenful is ever in the DOM.
+ *
+ * Two things differ from the React story, both because there is no hidden render pass to read a
+ * collection out of: the row carries the `id` its item is keyed by, and `itemTextValue` names a row
+ * that typeahead has to reach before it has rendered.
+ */
+export const Virtualization: Story = {
+  render: () => ({
+    components,
+    setup: () => ({layout: TableLayout, users: generateUsers(1000)}),
+    template: `
+      <Virtualizer :layout="layout" :layout-options="{rowHeight: 42, headingHeight: 42}">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              aria-label="Virtualized table with 1000 rows"
+              class="h-[500px] min-w-[700px] scrollbar overflow-auto"
+            >
+              <TableHeader class="h-full w-full">
+                <TableColumn id="name" is-row-header :min-width="160">Name</TableColumn>
+                <TableColumn id="role" :min-width="220">Role</TableColumn>
+                <TableColumn id="email" :min-width="240">Email</TableColumn>
+              </TableHeader>
+              <TableBody :item-text-value="(user) => user.name" :items="users">
+                <template #default="{item}">
+                  <TableRow :id="item.id">
+                    <TableCell>{{ item.name }}</TableCell>
+                    <TableCell>{{ item.role }}</TableCell>
+                    <TableCell>{{ item.email }}</TableCell>
+                  </TableRow>
+                </template>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+        </Table>
+      </Virtualizer>
     `,
   }),
 };
