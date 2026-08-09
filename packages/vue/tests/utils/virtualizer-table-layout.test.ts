@@ -201,8 +201,8 @@ describe("TableLayout", () => {
         itemCount: 1000,
       });
 
-      // 666.67 rounds up to 16 rows of 42, so the row starting exactly at 672 still counts —
-      // `intersects` treats a shared edge as an intersection.
+      // 666.67 rounds up to 16 rows of 42, so the row starting exactly on the bottom edge still
+      // counts — the search closes at the bottom and opens at the top.
       expect(rowsIn(layout, new Rect(0, 0, 700, 500 + 500 / 3))).toEqual(
         Array.from({length: 16}, (_, index) => index + 1),
       );
@@ -237,8 +237,9 @@ describe("TableLayout", () => {
 
       expect(keys).toContain("t-header");
       expect(keys).not.toContain(1);
-      // Snapped back to 4998, which row 118 ends exactly on — a shared edge counts.
-      expect(rowsIn(layout, new Rect(0, 5000, 700, 500))[0]).toBe(118);
+      // Snapped back to 4998, which row 118 ends exactly on — and a row ending on the top edge
+      // counts as being above the window, not in it.
+      expect(rowsIn(layout, new Rect(0, 5000, 700, 500))[0]).toBe(119);
     });
 
     it("keeps a persisted row in view wherever it is", () => {

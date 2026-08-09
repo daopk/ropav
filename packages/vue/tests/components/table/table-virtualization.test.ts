@@ -87,10 +87,11 @@ describe("Table virtualization", () => {
 
       await scrollTo(grid, 5_000);
 
-      // Snapped back to 4998, which row 118 ends exactly on — a shared edge counts as visible.
-      expect(rowKeys(grid)[0]).toBe("118");
+      // Snapped back to 4998, which row 118 ends exactly on — and a row ending on the top edge
+      // counts as being above the window.
+      expect(rowKeys(grid)[0]).toBe("119");
       expect(rowKeys(grid)).not.toContain("1");
-      expect(wrapperOf(rowsOf(grid)[0]!).style.top).toBe(`${117 * 42}px`);
+      expect(wrapperOf(rowsOf(grid)[0]!).style.top).toBe(`${118 * 42}px`);
 
       unmount();
     });
