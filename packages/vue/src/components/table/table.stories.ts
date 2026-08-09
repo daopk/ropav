@@ -19,6 +19,7 @@ import {
   PaginationPreviousIcon,
   PaginationSummary,
 } from "../pagination";
+import {Spinner} from "../spinner";
 
 import {
   Table,
@@ -29,6 +30,8 @@ import {
   TableContent,
   TableFooter,
   TableHeader,
+  TableLoadMore,
+  TableLoadMoreContent,
   TableResizableContainer,
   TableRow,
   TableScrollContainer,
@@ -66,6 +69,7 @@ const components = {
   PaginationPrevious,
   PaginationPreviousIcon,
   PaginationSummary,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -74,6 +78,8 @@ const components = {
   TableContent,
   TableFooter,
   TableHeader,
+  TableLoadMore,
+  TableLoadMoreContent,
   TableResizableContainer,
   TableRow,
   TableScrollContainer,
@@ -546,6 +552,87 @@ export const ColumnResizing: Story = {
               </TableBody>
             </TableContent>
           </TableResizableContainer>
+        </Table>
+      </div>
+    `,
+  }),
+};
+
+const ITEMS_PER_PAGE = 6;
+
+/** Rows arriving a page at a time, with the next page fetched as the end comes into view. */
+const useAsyncUsers = () => {
+  const items = shallowRef(users.slice(0, ITEMS_PER_PAGE));
+  const isLoading = shallowRef(false);
+
+  return {
+    hasMore: computed(() => items.value.length < users.length),
+    isLoading,
+    items,
+    loadMore: () => {
+      if (isLoading.value || items.value.length >= users.length) return;
+
+      isLoading.value = true;
+      // Stands in for a request, so the indicator row is on screen long enough to see.
+      setTimeout(() => {
+        items.value = users.slice(0, items.value.length + ITEMS_PER_PAGE);
+        isLoading.value = false;
+      }, 1500);
+    },
+  };
+};
+
+export const AsyncLoading: Story = {
+  args: {
+    variant: "primary",
+  },
+  render: (args) => ({
+    components,
+    setup: () => ({
+      columns,
+      statusColor: STATUS_COLOR,
+      variant: (args["variant"] as "primary" | "secondary") ?? "primary",
+      ...useAsyncUsers(),
+    }),
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table :variant="variant">
+          <TableScrollContainer class="h-[280px] overflow-y-auto">
+            <TableContent aria-label="Async loading" class="min-w-[600px]">
+              <TableHeader class="sticky top-0 z-10 bg-surface-secondary">
+                <TableColumn
+                  v-for="column of columns"
+                  :id="column.id"
+                  :key="column.id"
+                  :is-row-header="column.isRowHeader"
+                >
+                  {{ column.name }}
+                </TableColumn>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="user of items" :id="user.id" :key="user.id">
+                  <TableCell>{{ user.name }}</TableCell>
+                  <TableCell>{{ user.role }}</TableCell>
+                  <TableCell>
+                    <Chip :color="statusColor[user.status]" size="sm" variant="soft">
+                      <ChipLabel>{{ user.status }}</ChipLabel>
+                    </Chip>
+                  </TableCell>
+                  <TableCell>{{ user.email }}</TableCell>
+                </TableRow>
+                <TableLoadMore
+                  v-if="hasMore"
+                  :is-loading="isLoading"
+                  :scroll-offset="0"
+                  @load-more="loadMore"
+                >
+                  <TableLoadMoreContent>
+                    <Spinner size="md" />
+                  </TableLoadMoreContent>
+                </TableLoadMore>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
         </Table>
       </div>
     `,
