@@ -8,6 +8,7 @@ import {useInputOTP} from "@/composables/use-input-otp";
 const props = withDefaults(defineProps<InputOTPHostProps>(), {isDisabled: undefined});
 
 const otp = useInputOTP({
+  autoComplete: () => props.autoComplete,
   defaultValue: () => props.defaultValue,
   inputMode: () => props.inputMode,
   isDisabled: () => props.isDisabled,

@@ -60,6 +60,8 @@ export interface UseInputOTPOptions {
   textAlign?: MaybeRefOrGetter<InputOTPTextAlign | undefined>;
   /** Keyboard a touch device should offer. @default "numeric" */
   inputMode?: MaybeRefOrGetter<string | undefined>;
+  /** What the browser should offer to fill in. @default "one-time-code" */
+  autoComplete?: MaybeRefOrGetter<string | undefined>;
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** Whether the control shrinks to clear a password manager's badge. @default "increase-width" */
   pushPasswordManagerStrategy?: MaybeRefOrGetter<PushPasswordManagerStrategy | undefined>;
@@ -621,7 +623,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
   const attrs = computed<Record<string, unknown>>(() => {
     const all: Record<string, unknown> = {
       "aria-placeholder": placeholder.value,
-      autocomplete: "one-time-code",
+      autocomplete: toValue(options.autoComplete) || "one-time-code",
       "data-input-otp": "true",
       "data-input-otp-mse": mirrorSelectionEnd.value,
       "data-input-otp-mss": mirrorSelectionStart.value,

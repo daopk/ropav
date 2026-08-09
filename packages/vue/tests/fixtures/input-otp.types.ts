@@ -9,6 +9,7 @@ export interface InputOTPHostProps {
   placeholder?: string;
   textAlign?: InputOTPTextAlign;
   inputMode?: string;
+  autoComplete?: string;
   isDisabled?: boolean;
   pushPasswordManagerStrategy?: PushPasswordManagerStrategy;
   pasteTransformer?: (pasted: string) => string;

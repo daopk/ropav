@@ -512,6 +512,14 @@ describe("useInputOTP", () => {
       unmount();
     });
 
+    it("lets the caller name a different autofill hint", () => {
+      const {control, unmount} = mount({autoComplete: "off"});
+
+      expect(control()).toHaveAttribute("autocomplete", "off");
+
+      unmount();
+    });
+
     it("names the field for assistive technology when a placeholder is given", () => {
       const {control, unmount} = mount({placeholder: "······"});
 
