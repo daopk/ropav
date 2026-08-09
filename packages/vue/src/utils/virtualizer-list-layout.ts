@@ -1,3 +1,4 @@
+import type {DropTarget, ItemDropTarget} from "./dnd-types";
 import type {
   InvalidationContext,
   VirtualizerCollection,
@@ -44,6 +45,8 @@ export interface ListLayoutOptions {
   gap?: number;
   /** The space around the whole list, in px. */
   padding?: number;
+  /** How thick the line marking a gap between two items is, in px. @default 2 */
+  dropIndicatorThickness?: number;
   /** @deprecated Use `rowSize`. Accepted because React Aria still does. */
   rowHeight?: number;
   /** @deprecated Use `estimatedRowSize`. */
@@ -83,6 +86,8 @@ export class ListLayout<
 
   protected padding: number;
 
+  protected dropIndicatorThickness: number;
+
   protected layoutNodes = new Map<VirtualizerKey, LayoutNode>();
 
   protected rootNodes: LayoutNode[] = [];
@@ -109,6 +114,7 @@ export class ListLayout<
     this.loaderSize = options.loaderSize ?? options.loaderHeight ?? null;
     this.gap = options.gap ?? 0;
     this.padding = options.padding ?? 0;
+    this.dropIndicatorThickness = options.dropIndicatorThickness ?? 2;
   }
 
   getContentSize(): Size {
@@ -188,6 +194,7 @@ export class ListLayout<
     this.loaderSize = options?.loaderSize ?? options?.loaderHeight ?? this.loaderSize;
     this.gap = options?.gap ?? this.gap;
     this.padding = options?.padding ?? this.padding;
+    this.dropIndicatorThickness = options?.dropIndicatorThickness ?? this.dropIndicatorThickness;
 
     this.rootNodes = this.buildCollection();
 
@@ -514,5 +521,127 @@ export class ListLayout<
       node.layoutInfo.type === "loader" ||
       this.host!.isPersistedKey(node.layoutInfo.key)
     );
+  }
+
+  /* -----------------------------------------------------------------------------------------
+   * Drop targets
+   * ---------------------------------------------------------------------------------------*/
+
+  /**
+   * Whether a laid-out element is somewhere a drop could land.
+   *
+   * The one thing a table changes: its rendered set holds cells and column headers as well as
+   * rows, and only a row is a drop target.
+   */
+  protected isDropCandidate(_layoutInfo: LayoutInfo): boolean {
+    return true;
+  }
+
+  /**
+   * The nearest row edge to a point, ported from React Aria's `ListLayout`.
+   *
+   * The search is a one-pixel-wide sliver rather than a hit test, and it measures distance to
+   * each candidate's **edges** rather than to its middle — the question a drop asks is "which
+   * boundary is this nearest", and between two rows the answer belongs to whichever edge is
+   * closer, not to whichever row the pointer happens to be over.
+   */
+  override getDropTargetFromPoint(
+    x: number,
+    y: number,
+    isValidDropTarget: (target: DropTarget) => boolean,
+  ): DropTarget | null {
+    const visibleRect = this.host!.visibleRect;
+    const pointX = x + visibleRect.x;
+    const pointY = y + visibleRect.y;
+
+    // Tall enough to reach across the gap between two rows, and no taller: anything further
+    // away is a different boundary.
+    const searchRect = new Rect(
+      pointX,
+      Math.max(0, pointY - this.gap),
+      1,
+      Math.max(1, this.gap * 2),
+    );
+
+    let key: VirtualizerKey | null = null;
+    let minDistance = Infinity;
+
+    for (const candidate of this.getVisibleLayoutInfos(searchRect)) {
+      // A persisted key is in the rendered set wherever it is, so it can come back from far
+      // outside the sliver.
+      if (!this.isDropCandidate(candidate) || !candidate.rect.intersects(searchRect)) continue;
+
+      const distance = Math.min(
+        Math.abs(candidate.rect.y - pointY),
+        Math.abs(candidate.rect.maxY - pointY),
+      );
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        key = candidate.key;
+      }
+    }
+
+    if (key == null || this.host!.collection.itemCount === 0) return {type: "root"};
+
+    const layoutInfo = this.getLayoutInfo(key);
+
+    if (!layoutInfo) return null;
+
+    const rect = layoutInfo.rect;
+    const target: DropTarget = {dropPosition: "on", key: layoutInfo.key, type: "item"};
+
+    /**
+     * Where within the row the point means.
+     *
+     * Dropping on the row wins the middle when it is allowed, and before/after only take the
+     * outer 10px. When it is not allowed the row splits down the middle instead, so every
+     * pixel resolves to one side or the other.
+     */
+    if (!isValidDropTarget(target)) {
+      if (
+        pointY <= rect.y + rect.height / 2 &&
+        isValidDropTarget({...target, dropPosition: "before"})
+      ) {
+        target.dropPosition = "before";
+      } else if (isValidDropTarget({...target, dropPosition: "after"})) {
+        target.dropPosition = "after";
+      }
+    } else if (pointY <= rect.y + 10 && isValidDropTarget({...target, dropPosition: "before"})) {
+      target.dropPosition = "before";
+    } else if (pointY >= rect.maxY - 10 && isValidDropTarget({...target, dropPosition: "after"})) {
+      target.dropPosition = "after";
+    }
+
+    return target;
+  }
+
+  /**
+   * Where the indicator for a gap is placed.
+   *
+   * A band of `dropIndicatorThickness` straddling the boundary — half above it and half below —
+   * so a two-pixel line sits *on* the edge rather than pushing the rows apart. Dropping onto a
+   * row instead covers the whole row, which is what lets it be highlighted.
+   *
+   * One branch of React Aria's version is deliberately absent: it walks "after" down past the
+   * target's descendants so the line lands below a whole open subtree. A `VirtualizerNode` here
+   * carries no level, because a windowed collection is built from flat data and this build has
+   * no virtualized tree to be wrong about. It would have to come back with one.
+   */
+  override getDropTargetLayoutInfo(target: ItemDropTarget): LayoutInfo {
+    const layoutInfo = this.getLayoutInfo(target.key);
+    const rect = layoutInfo?.rect ?? new Rect();
+    const thickness = this.dropIndicatorThickness;
+    let indicatorRect: Rect;
+
+    if (target.dropPosition === "before") {
+      indicatorRect = new Rect(rect.x, Math.max(0, rect.y - thickness / 2), rect.width, thickness);
+    } else if (target.dropPosition === "after") {
+      indicatorRect = new Rect(rect.x, rect.maxY - thickness / 2, rect.width, thickness);
+    } else {
+      indicatorRect = rect;
+    }
+
+    return new LayoutInfo("dropIndicator", `${target.key}:${target.dropPosition}`, indicatorRect);
   }
 }

@@ -1,3 +1,4 @@
+import type {DropTarget, ItemDropTarget} from "./dnd-types";
 import type {Rect, Size} from "./virtualizer-geometry";
 import type {LayoutInfo, VirtualizerKey} from "./virtualizer-layout-info";
 
@@ -118,6 +119,32 @@ export abstract class Layout<Options = unknown> {
 
   /** Records a measured size. Returns whether it changed anything. */
   updateItemSize?(key: VirtualizerKey, size: Size): boolean;
+
+  /**
+   * Resolves a pointer position to a drop target, making the layout its own
+   * {@link DropTargetDelegate}.
+   *
+   * Optional, and the reason it has to be: the DOM-based delegate searches for elements, and
+   * outside the window there are none. A layout knows where every row *would* be, rendered or
+   * not, so a windowed collection asks it instead.
+   *
+   * @param x - Horizontal offset from the collection container's top left corner.
+   * @param y - Vertical offset from the same corner.
+   */
+  getDropTargetFromPoint?(
+    x: number,
+    y: number,
+    isValidDropTarget: (target: DropTarget) => boolean,
+  ): DropTarget | null;
+
+  /**
+   * Where a drop indicator for the given target belongs.
+   *
+   * A drop indicator is not in the collection — it sits between two things that are — so nothing
+   * has laid it out. This is where the layout says how a gap is placed, which for a stack means
+   * a thin band straddling the boundary.
+   */
+  getDropTargetLayoutInfo?(target: ItemDropTarget): LayoutInfo;
 
   getItemRect(key: VirtualizerKey): Rect | null {
     return this.getLayoutInfo(key)?.rect ?? null;

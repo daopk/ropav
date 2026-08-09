@@ -1,3 +1,4 @@
+import type {ItemDropTarget} from "./dnd-types";
 import type {VirtualizerTableCollection} from "./virtualizer-collection";
 import type {InvalidationContext, VirtualizerNode} from "./virtualizer-layout";
 import type {VirtualizerKey} from "./virtualizer-layout-info";
@@ -482,5 +483,34 @@ export class TableLayout<
       child.layoutInfo = child.layoutInfo.copy();
       child.layoutInfo.rect.height = height;
     }
+  }
+
+  /**
+   * Only a row is somewhere a drop can land.
+   *
+   * The whole search inherited from the list layout is right; what differs is what it searches
+   * over. A table's rendered set also holds the sticky header and its columns, which sit at an
+   * offset the visible rectangle does not describe — near the top of the collection they are the
+   * nearest thing to the pointer, and naming one would offer a drop into the header. Cells are
+   * excluded too, though they would lose anyway: a row is reported before its own cells, and the
+   * comparison keeps the first of equals.
+   */
+  protected override isDropCandidate(layoutInfo: LayoutInfo): boolean {
+    return layoutInfo.type === "row";
+  }
+
+  /**
+   * The indicator belongs to the body, not to the table.
+   *
+   * Every layout info in a table is positioned against its parent, and a gap between two rows
+   * sits inside the same rowgroup they do. Without the parent it would be placed against the
+   * table's own origin and land under the header.
+   */
+  override getDropTargetLayoutInfo(target: ItemDropTarget): LayoutInfo {
+    const layoutInfo = super.getDropTargetLayoutInfo(target);
+
+    layoutInfo.parentKey = this.host!.collection.getNode(target.key)?.parentKey ?? null;
+
+    return layoutInfo;
   }
 }
