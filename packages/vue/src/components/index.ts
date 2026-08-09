@@ -51,4 +51,5 @@ export * from "./textfield";
 export * from "./toggle-button";
 export * from "./toggle-button-group";
 export * from "./toolbar";
+export * from "./tooltip";
 export * from "./virtualizer";
