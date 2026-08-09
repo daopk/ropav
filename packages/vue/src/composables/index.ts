@@ -78,6 +78,7 @@ export * from "./use-password-manager-badge";
 export * from "./use-press";
 export * from "./use-prevent-scroll";
 export * from "./use-radio-group-state";
+export * from "./use-range-calendar";
 export * from "./use-range-calendar-state";
 export * from "./use-safely-mouse-to-submenu";
 export * from "./use-search-field";
