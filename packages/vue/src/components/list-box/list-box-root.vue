@@ -291,7 +291,6 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-multiselectable="props.selectionMode === 'multiple' ? true : undefined"
     aria-orientation="vertical"
     :class="styles"
-    :data-allows-dragging="dataAttr(dragState != null)"
     :data-collection="collectionId"
     :data-drop-target="dataAttr(isRootDropTarget)"
     :data-empty="dataAttr(collection.size.value === 0)"

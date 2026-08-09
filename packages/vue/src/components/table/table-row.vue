@@ -247,7 +247,6 @@ const onClick = (event: MouseEvent) => {
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
     :aria-setsize="isTree ? position.setsize : undefined"
     :class="composeSlotClassName(slots.row, props.class)"
-    :data-allows-dragging="dataAttr(allowsDragging)"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"
     :data-dragging="dataAttr(isDragging)"

@@ -57,6 +57,9 @@ const activateHandle = (handle: HTMLElement) => {
 
 const flushFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
+/** The collection settles focus on a timer after the drop, so waiting a tick is not enough. */
+const settleFocus = () => new Promise<void>((resolve) => setTimeout(resolve, 120));
+
 beforeEach(() => {
   setInteractionModality("keyboard");
 });
@@ -75,12 +78,18 @@ afterEach(() => {
 
 describe("Table drag and drop", () => {
   describe("advertising that it drags", () => {
-    it("marks the table and every row as draggable", async () => {
+    /**
+     * On the table, and deliberately not on the rows.
+     *
+     * React Aria marks the collection here and the item in a `ListBox` — the two are not
+     * symmetric, and measuring 6006 against 6007 is what caught this build marking both.
+     */
+    it("marks the table as draggable and leaves the rows to say they drag", async () => {
       const {rows, table} = await renderTable();
 
       expect(table).toHaveAttribute("data-allows-dragging", "true");
       for (const row of rows()) {
-        expect(row).toHaveAttribute("data-allows-dragging", "true");
+        expect(row).not.toHaveAttribute("data-allows-dragging");
         expect(row).toHaveAttribute("draggable", "true");
       }
     });
@@ -231,6 +240,42 @@ describe("Table drag and drop", () => {
 
       expect(onReorder).not.toHaveBeenCalled();
       expect(names()).toEqual(["Ada", "Grace", "Alan"]);
+    });
+  });
+
+  /**
+   * Where focus goes once the drop has landed.
+   *
+   * A keyboard drag holds focus on the drop indicator, and the drop unmounts it — so unless the
+   * collection puts focus back, a keyboard user is returned to the document with the table behind
+   * them. The settling runs on a timer, which is why these wait rather than only flushing ticks.
+   */
+  describe("focus after the drag", () => {
+    it("leaves focus on a row once the drop has landed", async () => {
+      const {handles, rows, table} = await renderTable();
+
+      activateHandle(handles()[0]!);
+      await flushFrame();
+      press("ArrowDown");
+      press("ArrowDown");
+      press("Enter");
+      await settleFocus();
+
+      expect(table.contains(document.activeElement)).toBe(true);
+      expect(document.activeElement).toBe(rows().find((row) => row.dataset["key"] === "Ada"));
+    });
+
+    // Nothing moved, so the control the drag started from is where the user still is.
+    it("returns focus to the handle when the drag is cancelled", async () => {
+      const {handles} = await renderTable();
+
+      activateHandle(handles()[0]!);
+      await flushFrame();
+      press("ArrowDown");
+      press("Escape");
+      await nextTick();
+
+      expect(document.activeElement).toBe(handles()[0]);
     });
   });
 

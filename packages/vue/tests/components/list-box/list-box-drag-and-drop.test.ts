@@ -66,10 +66,16 @@ afterEach(() => {
 
 describe("ListBox drag and drop", () => {
   describe("advertising that it drags", () => {
-    it("marks the list and every option as draggable", async () => {
+    /**
+     * On the options, and deliberately not on the listbox.
+     *
+     * React Aria marks the item here and the collection in a `Table` — the two are not
+     * symmetric, and measuring 6006 against 6007 is what caught this build marking both.
+     */
+    it("marks every option as draggable", async () => {
       const {list, options} = await renderList();
 
-      expect(list).toHaveAttribute("data-allows-dragging", "true");
+      expect(list).not.toHaveAttribute("data-allows-dragging");
       for (const option of options()) {
         expect(option).toHaveAttribute("data-allows-dragging", "true");
         expect(option).toHaveAttribute("draggable", "true");
