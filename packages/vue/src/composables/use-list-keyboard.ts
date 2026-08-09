@@ -1,15 +1,30 @@
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
 import type {UseSelectionManagerReturn} from "./use-selection-manager";
+import type {Rect, Size} from "../utils/virtualizer-geometry";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
-import {computed, toValue, watch} from "vue";
+import {computed, nextTick, toValue, watch} from "vue";
 
 import {focusableIn, isScrollable} from "../utils/focus";
 
 export type ListOrientation = "horizontal" | "vertical";
 
+/**
+ * Geometry from a layout, for a collection that does not have every item in the DOM.
+ *
+ * Paging needs to know where an item sits and how tall the viewport is. Measuring elements can
+ * only answer for the items that rendered, which in a virtualized collection is a screenful.
+ */
+export interface ListKeyboardLayoutDelegate {
+  getItemRect: (key: CollectionKey) => Rect | null;
+  getVisibleRect: () => Rect;
+  getContentSize: () => Size;
+}
+
 export interface UseListKeyboardOptions {
   collection: UseCollectionReturn;
+  /** Where the items are, when a layout knows better than the DOM does. */
+  layout?: MaybeRefOrGetter<ListKeyboardLayoutDelegate | null | undefined>;
   selection: UseSelectionManagerReturn;
   /** The element carrying `role="listbox"` or `role="grid"`. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
@@ -130,7 +145,56 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
   const rectOf = (key: CollectionKey) => collection.getElement(key)?.getBoundingClientRect();
 
+  /**
+   * Paging by the layout's own geometry, ported from React Aria's `ListKeyboardDelegate`.
+   *
+   * Walks item by item until one is a viewport away from where it started, which is the same
+   * answer measuring elements would give — except it can also answer for the items that are not
+   * in the DOM.
+   */
+  const pageStepByLayout = (
+    layout: ListKeyboardLayoutDelegate,
+    key: CollectionKey,
+    step: -1 | 1,
+  ): CollectionKey | null => {
+    const element = getElement();
+    let itemRect = layout.getItemRect(key);
+
+    if (!itemRect) return null;
+    if (element && !isScrollable(element)) return step === 1 ? getLastKey() : getFirstKey();
+
+    const visibleRect = layout.getVisibleRect();
+    let next: CollectionKey | null = key;
+
+    if (step === 1) {
+      const pageY = Math.min(
+        layout.getContentSize().height,
+        itemRect.y - itemRect.height + visibleRect.height,
+      );
+
+      while (itemRect && itemRect.y < pageY && next != null) {
+        next = getKeyBelow(next);
+        itemRect = next == null ? null : layout.getItemRect(next);
+      }
+
+      return next ?? getLastKey();
+    }
+
+    const pageY = Math.max(0, itemRect.y + itemRect.height - visibleRect.height);
+
+    while (itemRect && itemRect.y > pageY && next != null) {
+      next = getKeyAbove(next);
+      itemRect = next == null ? null : layout.getItemRect(next);
+    }
+
+    return next ?? getFirstKey();
+  };
+
   const pageStep = (key: CollectionKey, step: -1 | 1): CollectionKey | null => {
+    const layout = toValue(options.layout);
+
+    if (layout) return pageStepByLayout(layout, key, step);
+
     const element = getElement();
 
     // No scroll means no page to move by, so the ends are the honest answer. This is also
@@ -183,7 +247,15 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     return null;
   };
 
-  const focusKey = (key: CollectionKey | null, options: {scroll?: boolean} = {}) => {
+  const land = (element: HTMLElement, scroll?: boolean) => {
+    element.focus();
+    // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
+    if (scroll && typeof element.scrollIntoView === "function") {
+      element.scrollIntoView({block: "nearest"});
+    }
+  };
+
+  const focusKey = (key: CollectionKey | null, focusOptions: {scroll?: boolean} = {}) => {
     // Claimed before focus moves, so the focus event that follows knows the collection already
     // decided where it goes.
     selection.setFocused(true);
@@ -193,13 +265,23 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
     const element = collection.getElement(key);
 
-    if (!element) return;
+    if (element) {
+      land(element, focusOptions.scroll);
 
-    element.focus();
-    // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
-    if (options.scroll && typeof element.scrollIntoView === "function") {
-      element.scrollIntoView({block: "nearest"});
+      return;
     }
+
+    /**
+     * Nothing to focus yet, which happens in a virtualized collection when the key is outside
+     * the rendered window. Setting the focused key above is what brings it into the DOM — a
+     * collection persists its focused key wherever it sits — so the element exists one tick
+     * later, and focus lands then.
+     */
+    nextTick(() => {
+      const rendered = collection.getElement(key);
+
+      if (rendered) land(rendered, focusOptions.scroll);
+    });
   };
 
   /** Where focus should land when it first enters the collection. */

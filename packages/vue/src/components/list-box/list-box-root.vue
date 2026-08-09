@@ -82,21 +82,6 @@ const selection = useSelectionManager({
 
 const onAction = (key: CollectionKey) => emit("action", key);
 
-const keyboard = useListKeyboard({
-  collection,
-  element,
-  onAction,
-  selection,
-});
-
-const typeahead = useTypeahead({
-  focusedKey: () => selection.focusedKey.value,
-  getKeyForSearch: keyboard.getKeyForSearch,
-  onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
-});
-
-provideListBoxContext({collection, collectionId, keyboard, listId, onAction, selection});
-
 /**
  * The focused key is kept rendered wherever it is, exactly as React Aria does — the roving tab
  * stop lives on that element, and letting it leave the DOM drops focus to the document. Selected
@@ -128,6 +113,39 @@ const scroll =
     onSizeChange: virtualizer.setSize,
     onVisibleRectChange: virtualizer.setVisibleRect,
   });
+
+/**
+ * Paging asks the layout where the rows are, not the DOM.
+ *
+ * `PageDown` in a virtualized listbox has to move by a viewport of *collection*, and most of
+ * that viewport is not rendered. Without a virtualizer above, there is no delegate and paging
+ * measures elements as before.
+ */
+const keyboardLayout = computed(() =>
+  virtualizer
+    ? {
+        getContentSize: () => virtualizer.contentSize.value,
+        getItemRect: (key: CollectionKey) => virtualizer.getLayoutInfo(key)?.rect ?? null,
+        getVisibleRect: () => virtualizer.visibleRect.value,
+      }
+    : null,
+);
+
+const keyboard = useListKeyboard({
+  collection,
+  element,
+  layout: () => keyboardLayout.value,
+  onAction,
+  selection,
+});
+
+const typeahead = useTypeahead({
+  focusedKey: () => selection.focusedKey.value,
+  getKeyForSearch: keyboard.getKeyForSearch,
+  onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
+});
+
+provideListBoxContext({collection, collectionId, keyboard, listId, onAction, selection});
 
 if (virtualizer && virtualizerConfig) {
   provideVirtualizerStateContext({
