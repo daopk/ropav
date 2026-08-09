@@ -587,6 +587,32 @@ describe("Modal", () => {
   });
 
   describe("closing", () => {
+    it("names the close trigger without being told to", async () => {
+      const result = render({defaultOpen: true, withCloseTrigger: true});
+
+      await settle();
+
+      // The close button names itself, and nothing above it may quietly erase that: an icon-only
+      // button with no accessible name is unusable with a screen reader.
+      expect(slot("modal-close-trigger")!.getAttribute("aria-label")).toBe("Close");
+
+      result.unmount();
+    });
+
+    it("lets a caller rename the close trigger", async () => {
+      const result = render({
+        closeTriggerLabel: "Dismiss",
+        defaultOpen: true,
+        withCloseTrigger: true,
+      });
+
+      await settle();
+
+      expect(slot("modal-close-trigger")!.getAttribute("aria-label")).toBe("Dismiss");
+
+      result.unmount();
+    });
+
     it("closes from the close trigger", async () => {
       const result = render({defaultOpen: true, withCloseTrigger: true});
 

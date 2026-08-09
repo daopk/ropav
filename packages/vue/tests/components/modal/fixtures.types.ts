@@ -12,6 +12,7 @@ export interface ModalFixtureProps {
   scroll?: ModalVariants["scroll"];
   size?: ModalVariants["size"];
   variant?: ModalVariants["variant"];
+  closeTriggerLabel?: string;
   withCloseTrigger?: boolean;
   withCloseWrapper?: boolean;
   withCustomTrigger?: boolean;

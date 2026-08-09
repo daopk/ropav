@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ModalFixtureProps} from "./fixtures.types";
 
-import {shallowRef} from "vue";
+import {computed, shallowRef} from "vue";
 
 import {ButtonRoot} from "@/components/button";
 import {Modal} from "@/components/modal";
@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<ModalFixtureProps>(), {
   scroll: undefined,
   size: undefined,
   variant: undefined,
+  closeTriggerLabel: undefined,
   withCloseTrigger: undefined,
   withCloseWrapper: undefined,
   withCustomTrigger: undefined,
@@ -31,6 +32,16 @@ const emit = defineEmits<{openChange: [isOpen: boolean]}>();
 
 const shouldCloseOnInteractOutside = (element: Element) =>
   !props.keepOpenFor || !element.closest(`#${props.keepOpenFor}`);
+
+/**
+ * The label is omitted rather than bound as `undefined`.
+ *
+ * A bound attribute always reaches the child, and fallthrough merges it **over** the child's own
+ * static one — so binding `undefined` erases the default name instead of leaving it alone.
+ */
+const closeTriggerAttrs = computed(() =>
+  props.closeTriggerLabel === undefined ? {} : {"aria-label": props.closeTriggerLabel},
+);
 
 /** Set by the button inside `Modal.Close`, so a test can prove both handlers ran. */
 const saved = shallowRef(false);
@@ -60,7 +71,7 @@ defineExpose({saved});
       >
         <Modal.Container :placement="props.placement" :scroll="props.scroll" :size="props.size">
           <Modal.Dialog v-slot="{close}">
-            <Modal.CloseTrigger v-if="props.withCloseTrigger" aria-label="Close" />
+            <Modal.CloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
             <Modal.Header>
               <Modal.Icon v-if="props.withIcon">!</Modal.Icon>
               <Modal.Heading v-if="!props.withoutHeading">Modal heading</Modal.Heading>
