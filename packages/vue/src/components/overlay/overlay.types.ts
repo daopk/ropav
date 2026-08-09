@@ -21,6 +21,13 @@ export interface OverlayPopoverProps {
   containerPadding?: number;
   /** Distance kept between the arrow and the corner of the overlay. @default 0 */
   arrowBoundaryOffset?: number;
+  /**
+   * Whether the page behind stays interactive. Overrides what the trigger declared, because this
+   * is a property of the overlay rather than of the thing that opened it.
+   */
+  isNonModal?: boolean;
+  /** Filters which outside elements dismiss the overlay. Overrides the trigger's own filter. */
+  shouldCloseOnInteractOutside?: (element: Element) => boolean;
   /** @default false */
   isKeyboardDismissDisabled?: boolean;
   /** Forces the entry state, for a caller driving the animation itself. */

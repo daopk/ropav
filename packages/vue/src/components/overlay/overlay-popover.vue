@@ -28,6 +28,8 @@ const props = withDefaults(defineProps<OverlayPopoverProps>(), {
   isEntering: undefined,
   isExiting: undefined,
   isKeyboardDismissDisabled: undefined,
+  isNonModal: undefined,
+  shouldCloseOnInteractOutside: undefined,
   shouldFlip: undefined,
 });
 
@@ -35,6 +37,18 @@ defineSlots<{default?: () => unknown}>();
 
 const target = useOverlayTargetContext();
 const group = useOverlayGroupContext();
+
+/**
+ * Modality belongs to the overlay, not to the thing that opened it.
+ *
+ * The trigger states what it opens by default — a menu is modal, a submenu is not — and the
+ * overlay may say otherwise, which is how a popover renders non-modal without a second kind of
+ * trigger having to exist for it.
+ */
+const isNonModal = computed(() => props.isNonModal ?? target.isNonModal);
+
+const shouldCloseOnInteractOutside = (element: Element) =>
+  (props.shouldCloseOnInteractOutside ?? target.shouldCloseOnInteractOutside)?.(element) ?? true;
 
 const element = shallowRef<HTMLElement | null>(null);
 const ownContainer = shallowRef<HTMLElement | null>(null);
@@ -106,7 +120,7 @@ provideOverlayArrowContext({
  * inner one be it. A non-modal overlay is not a dialog at all, with the exception of a submenu:
  * the menu behind it stays live, but it is still a thing you are inside.
  */
-const shouldBeDialog = computed(() => !target.isNonModal || target.trigger === "SubmenuTrigger");
+const shouldBeDialog = computed(() => !isNonModal.value || target.trigger === "SubmenuTrigger");
 
 let dialogCount = 0;
 const registeredDialogs = shallowRef(0);
@@ -166,12 +180,12 @@ const isPresent = computed(
 const dismissable = useDismissable({
   // A submenu is dismissable too: the menu behind it stays live, but a click outside the whole
   // tree still has to close it.
-  isDismissable: computed(() => !target.isNonModal || target.trigger === "SubmenuTrigger"),
+  isDismissable: computed(() => !isNonModal.value || target.trigger === "SubmenuTrigger"),
   isKeyboardDismissDisabled: () => props.isKeyboardDismissDisabled,
   isOpen: () => target.state.isOpen.value,
   onClose: target.state.close,
   overlayRef: element,
-  shouldCloseOnInteractOutside: target.shouldCloseOnInteractOutside,
+  shouldCloseOnInteractOutside,
 });
 
 // Whatever opened the overlay gets the key first: a submenu closes on ArrowLeft, which dismissal
@@ -192,11 +206,11 @@ const onKeydown = (event: KeyboardEvent) => {
  * hiding began, which is why it asks to be exempted rather than assuming.
  */
 watch(
-  [() => target.state.isOpen.value, element, ownContainer],
+  [() => target.state.isOpen.value, element, ownContainer, isNonModal],
   ([isOpen, popover, container], _previous, onCleanup) => {
     if (!isOpen || !popover) return;
 
-    if (target.isNonModal) {
+    if (isNonModal.value) {
       onCleanup(keepVisible(popover) ?? (() => {}));
 
       return;
@@ -221,7 +235,7 @@ useFocusScope({
 });
 
 // A non-modal overlay leaves the page live, so only a modal one holds it still.
-usePreventScroll({isDisabled: () => target.isNonModal || !target.state.isOpen.value});
+usePreventScroll({isDisabled: () => isNonModal.value || !target.state.isOpen.value});
 
 /**
  * The writing direction the overlay is placed in.
@@ -273,7 +287,7 @@ const setContainer = (next: unknown) => {
       :tabindex="isDialog ? -1 : undefined"
       @keydown="onKeydown"
     >
-      <OverlayDismissButton v-if="!target.isNonModal" />
+      <OverlayDismissButton v-if="!isNonModal" />
       <slot />
       <OverlayDismissButton />
     </div>
