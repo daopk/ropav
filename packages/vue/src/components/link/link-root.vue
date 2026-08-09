@@ -11,7 +11,15 @@ import {useFieldsetContext} from "../fieldset/fieldset.context";
 
 import {provideLinkContext} from "./link.context";
 
-const props = withDefaults(defineProps<LinkRootProps>(), {isDisabled: undefined});
+// Every prop whose type *includes* `boolean` declares an explicit `undefined` default. Vue casts
+// an absent boolean to `false`, and a union containing boolean is enough for that to happen — the
+// cast value then reaches the DOM, so every link would carry `aria-current="false"` claiming it is
+// not the current page, and `download="false"` offering a file named "false".
+const props = withDefaults(defineProps<LinkRootProps>(), {
+  ariaCurrent: undefined,
+  download: undefined,
+  isDisabled: undefined,
+});
 
 defineSlots<{default?: (props: LinkRootSlotProps) => unknown}>();
 

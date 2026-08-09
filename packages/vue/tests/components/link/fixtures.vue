@@ -23,11 +23,13 @@ const props = withDefaults(defineProps<LinkFixtureProps>(), {isDisabled: undefin
       <LinkIcon v-if="props.withIcon" :class="props.iconClass" />
     </LinkRoot>
   </Fieldset>
+  <LinkRoot v-else-if="props.bare" href="/next">Call to action</LinkRoot>
   <LinkRoot
     v-else
     :aria-current="props.ariaCurrent"
     :aria-label="props.ariaLabel"
     :class="props.class"
+    :download="props.download"
     :href="props.href"
     :is-disabled="props.isDisabled"
     :rel="props.rel"

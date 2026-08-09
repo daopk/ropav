@@ -5,6 +5,9 @@ export interface LinkFixtureProps {
   rel?: string;
   isDisabled?: boolean;
   ariaCurrent?: "page" | "step";
+  download?: string | boolean;
+  /** Sets no optional prop at all, as a caller writing the bare component does. */
+  bare?: boolean;
   ariaLabel?: string;
   /** Renders a `Link.Icon` at all. */
   withIcon?: boolean;

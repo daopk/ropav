@@ -140,6 +140,36 @@ describe("Link", () => {
 
       unmount();
     });
+
+    /**
+     * `aria-current` is typed as a union that *includes* `boolean`, which is enough for Vue to cast
+     * an absent prop to `false` — and `false` reaches the DOM as a real attribute, so every link
+     * would state outright that it is not the current page. Written as a bare component, because a
+     * caller passing `:aria-current="undefined"` never triggers it.
+     */
+    it("says nothing at all about the current page when it was not asked", () => {
+      const {link, unmount} = renderLink({bare: true});
+
+      expect(link).not.toHaveAttribute("aria-current");
+
+      unmount();
+    });
+
+    it("offers no download when it was not asked", () => {
+      const {link, unmount} = renderLink({bare: true});
+
+      expect(link).not.toHaveAttribute("download");
+
+      unmount();
+    });
+
+    it("offers a download when it is asked", () => {
+      const {link, unmount} = renderLink({download: "report.pdf", href: "/report"});
+
+      expect(link).toHaveAttribute("download", "report.pdf");
+
+      unmount();
+    });
   });
 
   describe("interaction", () => {
