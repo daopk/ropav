@@ -10,6 +10,7 @@ import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {getCollectionTextValue} from "../../utils/text-value";
 import {useListBoxContext} from "../list-box/list-box.context";
+import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
 
 import {provideListBoxItemContext} from "./list-box-item.context";
 
@@ -18,6 +19,25 @@ const props = defineProps<ListBoxItemRootProps>();
 defineSlots<{default?: (props: ListBoxItemSlotProps) => unknown}>();
 
 const {collection, collectionId, keyboard, listId, onAction, selection} = useListBoxContext();
+
+const virtualizer = useVirtualizerStateContext();
+
+/**
+ * Where this option sits in the whole set.
+ *
+ * Only emitted when the listbox is virtualized: without the window, the options in the DOM *are*
+ * the set, and a screen reader counts them itself. With one, most of the set is absent, so the
+ * position and the total have to be stated.
+ */
+const positionInSet = computed(() => {
+  if (!virtualizer) return undefined;
+
+  const index = virtualizer.getIndex(itemKey.value);
+
+  return index < 0 ? undefined : index + 1;
+});
+
+const setSize = computed(() => (virtualizer ? virtualizer.itemCount.value : undefined));
 
 const slots = computed(() => listboxItemVariants({variant: props.variant}));
 
@@ -110,7 +130,9 @@ const onClick = (event: MouseEvent) => {
     ref="element"
     :aria-describedby="fieldIds.describedBy.value"
     :aria-disabled="isDisabled || undefined"
+    :aria-posinset="positionInSet"
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
+    :aria-setsize="setSize"
     :class="slots.item({class: props.class})"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"
