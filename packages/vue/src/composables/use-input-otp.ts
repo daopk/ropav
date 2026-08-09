@@ -65,8 +65,14 @@ export interface UseInputOTPOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** Whether the control shrinks to clear a password manager's badge. @default "increase-width" */
   pushPasswordManagerStrategy?: MaybeRefOrGetter<PushPasswordManagerStrategy | undefined>;
-  /** Rewrites pasted text before it is accepted — to strip spaces or a prefix, say. */
-  pasteTransformer?: (pasted: string) => string;
+  /**
+   * Rewrites pasted text before it is accepted — to strip spaces or a prefix, say.
+   *
+   * Read through a getter rather than taken once, because its mere presence decides whether the
+   * engine takes the paste over from the browser at all. A wrapper that forwards to an absent
+   * prop is always truthy, which would hijack every paste on every platform.
+   */
+  pasteTransformer?: MaybeRefOrGetter<((pasted: string) => string) | undefined>;
   /**
    * Styles applied when scripting is off, or `null` to render none. Only reaches the page
    * through a `<noscript>`, so it is the one place the invisible control has to be made visible.
@@ -509,17 +515,18 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
    */
   const onPaste = (event: ClipboardEvent) => {
     const input = inputEl.value;
+    const transformer = toValue(options.pasteTransformer);
     const isIOS =
       typeof window !== "undefined" &&
       Boolean(window.CSS?.supports?.("-webkit-touch-callout", "none"));
 
-    if (!options.pasteTransformer && !isIOS) return;
+    if (!transformer && !isIOS) return;
     // Guarded where the upstream engine is not: with a transformer set it reads the clipboard
     // without checking there is one, which throws on a paste that carries no text.
     if (!event.clipboardData || !input) return;
 
     const pasted = event.clipboardData.getData("text/plain");
-    const content = options.pasteTransformer ? options.pasteTransformer(pasted) : pasted;
+    const content = transformer ? transformer(pasted) : pasted;
 
     event.preventDefault();
 

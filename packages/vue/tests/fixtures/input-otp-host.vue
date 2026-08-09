@@ -16,9 +16,7 @@ const otp = useInputOTP({
   noScriptCSSFallback: () => props.noScriptCSSFallback,
   onChange: (value) => props.onChange?.(value),
   onComplete: (value) => props.onComplete?.(value),
-  pasteTransformer: props.pasteTransformer
-    ? (pasted) => props.pasteTransformer!(pasted)
-    : undefined,
+  pasteTransformer: () => props.pasteTransformer,
   pattern: () => props.pattern,
   placeholder: () => props.placeholder,
   pushPasswordManagerStrategy: () => props.pushPasswordManagerStrategy,
