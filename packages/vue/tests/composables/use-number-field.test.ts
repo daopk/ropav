@@ -585,6 +585,50 @@ describe("useNumberField", () => {
     });
   });
 
+  describe("a form reset", () => {
+    it("puts the input itself back when the text never moved", async () => {
+      // A real reset, not a synthetic `reset` event. The browser restores a control from its
+      // `value` *attribute*, which a Vapor binding never writes, so the element is blanked — and
+      // with the state already holding the default, nothing changes and no binding write follows,
+      // so the field would be left empty. The write also has to be a tick out: the `reset` event
+      // is dispatched before the browser puts the controls back.
+      const {input, unmount} = mount({defaultValue: 5, step: 1, withForm: true});
+
+      await nextTick();
+
+      expect(input().value).toBe("5");
+
+      input().form!.reset();
+      await nextTick();
+      await nextTick();
+
+      expect(input().value).toBe("5");
+
+      unmount();
+    });
+
+    it("puts the default back after the value was edited", async () => {
+      const {field, input, unmount} = mount({defaultValue: 5, step: 1, withForm: true});
+
+      await nextTick();
+      input().value = "9";
+      input().dispatchEvent(new Event("input"));
+      input().dispatchEvent(new FocusEvent("blur"));
+      await nextTick();
+
+      expect(field().state.numberValue.value).toBe(9);
+
+      input().form!.reset();
+      await nextTick();
+      await nextTick();
+
+      expect(field().state.numberValue.value).toBe(5);
+      expect(input().value).toBe("5");
+
+      unmount();
+    });
+  });
+
   describe("reporting changes", () => {
     it("reports a step to its owner", () => {
       const onChange = vi.fn();

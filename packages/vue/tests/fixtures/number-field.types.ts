@@ -44,6 +44,8 @@ export interface NumberFieldFullHostProps {
   ariaLabel?: string;
   incrementAriaLabel?: string;
   decrementAriaLabel?: string;
+  /** Wraps the input in a form, so a real reset can be exercised. */
+  withForm?: boolean;
   onChange?: (value: number) => void;
   /** Hands the composable out, since it cannot be reached from outside its component. */
   onReady: (field: UseNumberFieldReturn) => void;

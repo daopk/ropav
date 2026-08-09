@@ -8,7 +8,7 @@ import type {SpinStepperHandlers} from "./use-spin-button";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {NumberFormatter} from "@internationalized/number";
-import {computed, shallowRef, toValue, watch} from "vue";
+import {computed, nextTick, shallowRef, toValue, watch} from "vue";
 
 import {announce} from "../utils/live-announcer";
 import {isAndroid, isIOS, isIPhone} from "../utils/platform";
@@ -241,7 +241,19 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
     validate: state.validate,
   });
 
-  useFormReset(element, () => state.defaultNumberValue.value, state.setNumberValue);
+  useFormReset(
+    element,
+    () => state.defaultNumberValue.value,
+    (value) => {
+      state.setNumberValue(value);
+      // A tick later, on purpose. The `reset` event is dispatched *before* the browser puts the
+      // controls back, so a write from inside the listener is thrown away — and the browser has
+      // nothing to put back, because a Vapor binding writes `value` as a property and never as
+      // an attribute. With the state already holding the default nothing changes either, so no
+      // binding write follows and the field would be left empty. Measured, not assumed.
+      void nextTick(reassert);
+    },
+  );
 
   /**
    * Range validation borrowed from a real number input.

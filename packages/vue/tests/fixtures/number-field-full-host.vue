@@ -44,7 +44,22 @@ props.onReady(field);
 </script>
 
 <template>
+  <form v-if="$props.withForm" data-testid="form">
+    <input
+      :ref="setElement"
+      data-testid="input"
+      v-bind="field.attrs.value"
+      @blur="field.onBlur"
+      @focus="field.onFocus"
+      @input="field.onInput"
+      @keydown="field.onKeydown"
+      @keyup="field.onKeyup"
+      @paste="field.onPaste"
+    />
+    <button data-testid="reset" type="reset">Reset</button>
+  </form>
   <div
+    v-else
     data-testid="group"
     v-bind="field.groupAttrs.value"
     @focusin="field.onFocusin"
