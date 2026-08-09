@@ -155,11 +155,15 @@ describe("ColorField", () => {
       unmount();
     });
 
-    it("rebuilds the field when the channel changes", async () => {
-      // Two different controls, not one control reconfigured — so React swaps components and so
-      // does this. The visible proof is the value: a hex field shows `#7F007F`, a hue field 300.
-      // Both keys are present from the start: `renderVapor` wraps the keys the props object has
-      // at mount, so one added later never reaches the component.
+    it("settles the branch when the field is created", async () => {
+      // Deliberate, and the reason the two branches live in one component: the field hands its
+      // wiring to the control through `provide`, and a provide made one component deeper than the
+      // one a caller's slot content was handed to never reaches that content from a VDOM host. So
+      // `channel` is read once — React remounts on a change here, and a caller who really needs
+      // that writes `:key`, which the next test covers.
+      //
+      // Both keys are present from the start: `renderVapor` wraps the keys the props object has at
+      // mount, so one added later never reaches the component.
       const props = reactive<{channel?: string; colorSpace?: string; defaultValue: string}>({
         channel: undefined,
         colorSpace: undefined,
@@ -171,6 +175,33 @@ describe("ColorField", () => {
 
       props.channel = "hue";
       props.colorSpace = "hsl";
+      await nextTick();
+      await nextTick();
+
+      expect(input(container).value).toBe("#7F007F");
+
+      unmount();
+    });
+
+    it("rebuilds the field when the caller keys it", async () => {
+      const props = reactive<{
+        channel?: string;
+        colorSpace?: string;
+        defaultValue: string;
+        fieldKey: string;
+      }>({
+        channel: undefined,
+        colorSpace: undefined,
+        defaultValue: "#7F007F",
+        fieldKey: "hex",
+      });
+      const {container, unmount} = renderField(props);
+
+      expect(input(container).value).toBe("#7F007F");
+
+      props.channel = "hue";
+      props.colorSpace = "hsl";
+      props.fieldKey = "hue";
       await nextTick();
       await nextTick();
 

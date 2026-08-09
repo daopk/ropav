@@ -17,6 +17,8 @@ withDefaults(
       withFieldError?: boolean;
       withPrefix?: boolean;
       withSuffix?: boolean;
+      /** Drives `:key` on the field, so a remount can be asked for from the outside. */
+      fieldKey?: string;
       /** Wraps the field in a form, so a real reset and a real submit have something to act on. */
       withForm?: boolean;
     }
@@ -28,6 +30,7 @@ withDefaults(
     isInvalid: undefined,
     isReadOnly: undefined,
     isRequired: undefined,
+    fieldKey: undefined,
     isWheelDisabled: undefined,
     placeholder: undefined,
     variant: undefined,
@@ -64,6 +67,7 @@ defineEmits<{
   <ColorField
     v-else
     :id="$props.id"
+    :key="$props.fieldKey"
     :aria-describedby="$props.ariaDescribedby"
     :aria-label="$props.ariaLabel"
     :aria-labelledby="$props.ariaLabelledby"
