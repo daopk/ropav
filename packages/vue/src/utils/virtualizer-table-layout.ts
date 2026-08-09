@@ -25,6 +25,11 @@ import {ListLayout} from "./virtualizer-list-layout";
  * split across the cells the window happens to want. So every cell of a built row is placed, which
  * makes the sticky bookkeeping unnecessary rather than missing.
  *
+ * **Persisted rows are recognised by key rather than by index.** Upstream keeps a map of parent to
+ * child indices, rebuilt whenever the persisted set changes, and then walks it alongside the
+ * visible range in three passes. Asking the virtualizer about each candidate instead gives the same
+ * set in the same order, because the children are already in order.
+ *
  * **The visible rectangle is copied before it is snapped**, where upstream writes through the
  * argument. The caller hands over a throwaway rectangle either way, so the result is the same.
  */
@@ -98,6 +103,87 @@ export class TableLayout<
     snapped.height = Math.ceil(snapped.height / rowHeight) * rowHeight;
 
     return snapped;
+  }
+
+  /**
+   * Every layout info to render, parents before children.
+   *
+   * The rows are found by a binary search rather than by testing each one against the rectangle,
+   * and the two do not agree at the edges: the search treats a row whose bottom edge is exactly the
+   * rectangle's top edge as **above** the window, while an intersection test counts a shared edge
+   * as an overlap. Since the rectangle is snapped to whole rows, its top edge lands on a row
+   * boundary nearly always — so the difference is a whole extra row, every time. That is what makes
+   * this a port and not a simplification.
+   */
+  override getVisibleLayoutInfos(rect: Rect): LayoutInfo[] {
+    const searchRect = this.snapVisibleRect(rect);
+
+    this.layoutIfNeeded(searchRect);
+
+    const result: LayoutInfo[] = [];
+
+    for (const node of this.rootNodes) {
+      result.push(node.layoutInfo);
+      this.addVisibleLayoutInfos(result, node, searchRect);
+    }
+
+    return result;
+  }
+
+  private addVisibleLayoutInfos(result: LayoutInfo[], node: LayoutNode, rect: Rect): void {
+    // A row group that built nothing is a table with nothing on screen; the search below would
+    // clamp its way to a row that is not there.
+    if (node.children.length === 0) return;
+
+    if (node.layoutInfo.type === "rowgroup") {
+      const first = this.binarySearch(node.children, rect.y);
+      const last = this.binarySearch(node.children, rect.maxY);
+
+      for (const [index, child] of node.children.entries()) {
+        const keep =
+          (index >= first && index <= last) ||
+          // A sentinel is kept wherever the window is: one that is not in the DOM can never
+          // report that it came into view. A persisted row is kept because the roving tab stop
+          // lives on it.
+          child.layoutInfo.type === "loader" ||
+          this.host!.isPersistedKey(child.layoutInfo.key);
+
+        if (!keep) continue;
+
+        result.push(child.layoutInfo);
+        this.addVisibleLayoutInfos(result, child, rect);
+      }
+
+      return;
+    }
+
+    // The header, its row, and a row: every child of these is placed, so every one is reported.
+    for (const child of node.children) {
+      result.push(child.layoutInfo);
+      this.addVisibleLayoutInfos(result, child, rect);
+    }
+  }
+
+  /**
+   * The child whose band contains `y`, clamped to the ends.
+   *
+   * A row ending exactly on `y` counts as being before it, which is the edge rule the whole window
+   * turns on.
+   */
+  private binarySearch(items: LayoutNode[], y: number): number {
+    let low = 0;
+    let high = items.length - 1;
+
+    while (low <= high) {
+      const mid = (low + high) >> 1;
+      const rect = items[mid]!.layoutInfo.rect;
+
+      if (rect.maxY <= y) low = mid + 1;
+      else if (rect.y > y) high = mid - 1;
+      else return mid;
+    }
+
+    return Math.max(0, Math.min(items.length - 1, low));
   }
 
   protected getEstimatedRowHeight(): number {
@@ -232,6 +318,13 @@ export class TableLayout<
     const rowHeight = this.getEstimatedRowHeight() + this.gap;
     const startY = y;
 
+    // Until the scroll box has been measured there is no window, so no row is inside one. Upstream
+    // never reaches this: its collection is known before the first paint, so its header already
+    // has a height and every row already starts below the empty rectangle. Here the columns are
+    // registered from the DOM, so on the very first pass the header is nothing tall and the first
+    // row sits at the origin — inside an empty rectangle, if nothing said otherwise.
+    const hasWindow = this.requestedRect.area > 0;
+
     let width = 0;
 
     for (const child of collection.getChildNodes(node.key)) {
@@ -239,6 +332,7 @@ export class TableLayout<
       // makes a thousand rows cost a screenful. A loader is always built: a sentinel that is not
       // in the DOM can never report that it came into view, so the next page is never asked for.
       if (
+        (!hasWindow && child.type !== "loader") ||
         (y + rowHeight < this.requestedRect.y && !this.isValid(child, y)) ||
         (y > this.requestedRect.maxY && child.type !== "loader")
       ) {
