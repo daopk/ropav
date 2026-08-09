@@ -1,5 +1,14 @@
+import type {Component, VNodeChild} from "vue";
+
 import {getQueriesForElement} from "@testing-library/dom";
-import {createComponent, createVaporApp, defineVaporComponent} from "vue";
+import {
+  createApp,
+  createComponent,
+  createVaporApp,
+  defineVaporComponent,
+  h,
+  vaporInteropPlugin,
+} from "vue";
 
 /** `VaporComponent` is not part of vue's public types, so it is read off the runtime. */
 type VaporComponent = Parameters<typeof createComponent>[0];
@@ -68,6 +77,62 @@ export const renderVapor = (component: VaporComponent, options: RenderVaporOptio
 
   const app = createVaporApp(Root);
 
+  app.mount(container);
+
+  return {
+    ...getQueriesForElement(container),
+    app,
+    /** The element the whole document is queried from, for scoping a query by hand. */
+    baseElement: document.body,
+    container,
+    /** Document-wide queries, so a teleported overlay is reachable. */
+    screen: getQueriesForElement(document.body),
+    unmount: () => {
+      app.unmount();
+      container.remove();
+    },
+  };
+};
+
+export interface RenderInteropOptions {
+  props?: Record<string, unknown>;
+  /** Slot functions returning vnodes. Any slot props the component passes arrive as the argument. */
+  slots?: Record<string, (slotProps?: Record<string, unknown>) => VNodeChild>;
+}
+
+export type RenderInteropResult = ReturnType<typeof renderInterop>;
+
+/**
+ * Mount a Vapor component from a **VDOM** host, with its slot content authored in the host.
+ *
+ * A different shape from `renderVapor` rather than a convenience over it, and the difference is
+ * the point: content authored in a VDOM host and forwarded through a Vapor component's slot
+ * resolves `inject` against the host's tree, so a `provide` made deeper in the Vapor tree is never
+ * found. Content authored in Vapor resolves against the component that renders it and does find it.
+ *
+ * Anything a component provides *for* its content therefore has to be proven here as well.
+ * `renderVapor` cannot fail on it, so a component can be green in every Vapor test while being
+ * broken in every host that mounts it the ordinary way.
+ *
+ * The host builds its tree with `h` rather than a template, because the vapor runtime bundle the
+ * tests alias `vue` to carries no template compiler.
+ *
+ * @example
+ * ```ts
+ * const {screen, unmount} = renderInterop(PopoverRoot, {
+ *   slots: {default: () => [h(PopoverContent, null, {default: () => h(ButtonRoot)})]},
+ * });
+ * ```
+ */
+export const renderInterop = (component: Component, options: RenderInteropOptions = {}) => {
+  const {props = {}, slots = {}} = options;
+  const container = document.createElement("div");
+
+  document.body.appendChild(container);
+
+  const app = createApp({render: () => h(component, props, slots)});
+
+  app.use(vaporInteropPlugin);
   app.mount(container);
 
   return {
