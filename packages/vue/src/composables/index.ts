@@ -52,5 +52,6 @@ export * from "./use-toolbar";
 export * from "./use-tooltip-trigger";
 export * from "./use-tooltip-trigger-state";
 export * from "./use-typeahead";
+export * from "./use-viewport-size";
 export * from "./use-virtualizer";
 export * from "./use-virtualizer-scroll";
