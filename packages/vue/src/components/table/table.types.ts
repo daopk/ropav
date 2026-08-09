@@ -78,6 +78,21 @@ export interface TableResizableContainerProps {
   class?: string;
 }
 
+export interface TableLoadMoreProps {
+  class?: string;
+  /** Whether the next page is on its way, which is when the indicator row is rendered. */
+  isLoading?: boolean;
+  /**
+   * How far from the end of the scroll box loading starts, as a multiple of the box's own height.
+   * `1` is one screen ahead; `0` waits until the very end comes into view. @default 1
+   */
+  scrollOffset?: number;
+}
+
+export interface TableLoadMoreContentProps {
+  class?: string;
+}
+
 export interface TableColumnResizerProps {
   class?: string;
   /** Accessible name of the resizer. @default "Resize column" */

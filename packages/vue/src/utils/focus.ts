@@ -47,3 +47,21 @@ export const isScrollable = (element: Element | null): boolean => {
 
   return /(auto|scroll)/.test(style.overflow + style.overflowX + style.overflowY);
 };
+
+/**
+ * The nearest ancestor that scrolls its own content, or `null` when nothing up to the root does.
+ *
+ * Ported from React Aria's `getScrollParent`. Anything that watches for the edge of a list coming
+ * into view has to observe against that box rather than the viewport, or a list inside a scrolling
+ * panel would never report anything.
+ */
+export const getScrollParent = (element: HTMLElement | null): HTMLElement | null => {
+  let current = element;
+
+  while (current) {
+    if (isScrollable(current)) return current;
+    current = current.parentElement;
+  }
+
+  return null;
+};

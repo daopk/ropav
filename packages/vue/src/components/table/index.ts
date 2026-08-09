@@ -5,6 +5,8 @@ import TableColumn from "./table-column.vue";
 import TableContent from "./table-content.vue";
 import TableFooter from "./table-footer.vue";
 import TableHeader from "./table-header.vue";
+import TableLoadMoreContent from "./table-load-more-content.vue";
+import TableLoadMore from "./table-load-more.vue";
 import TableResizableContainer from "./table-resizable-container.vue";
 import TableRoot from "./table-root.vue";
 import TableRow from "./table-row.vue";
@@ -29,6 +31,8 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Cell: TableCell,
   Footer: TableFooter,
+  LoadMore: TableLoadMore,
+  LoadMoreContent: TableLoadMoreContent,
   SelectionCheckbox: TableSelectionCheckbox,
   SortableColumnHeader: TableSortableColumnHeader,
 });
@@ -49,6 +53,8 @@ export {
   TableRow,
   TableCell,
   TableFooter,
+  TableLoadMore,
+  TableLoadMoreContent,
   TableSelectionCheckbox,
   TableSortableColumnHeader,
 };
@@ -66,6 +72,8 @@ export type {
   TableRowProps,
   TableCellProps,
   TableFooterProps,
+  TableLoadMoreProps,
+  TableLoadMoreContentProps,
   TableSelectionCheckboxProps,
   TableSortableColumnHeaderProps,
   TableColumnSlotProps,

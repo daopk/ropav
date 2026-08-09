@@ -5,7 +5,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, shallowRef, toValue, watch} from "vue";
 
-import {focusableIn, isScrollable} from "../utils/focus";
+import {focusableIn, getScrollParent} from "../utils/focus";
 
 import {isTableCellControl} from "./use-table-collection";
 
@@ -261,20 +261,8 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     return row == null ? null : {columnKey: null, rowKey: row};
   };
 
-  /** The element a page step measures against: the nearest thing that actually scrolls. */
-  const scrollParent = () => {
-    let element: HTMLElement | null = getElement();
-
-    while (element) {
-      if (isScrollable(element)) return element;
-      element = element.parentElement;
-    }
-
-    return null;
-  };
-
   const pageStep = (from: GridFocusTarget, step: -1 | 1): GridFocusTarget | null => {
-    const container = scrollParent();
+    const container = getScrollParent(getElement());
 
     // No scroll means no page to move by, so the ends are the honest answer.
     if (!container) return step === 1 ? lastKey(from, true) : firstKey(from, true);
