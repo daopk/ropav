@@ -208,18 +208,57 @@ export interface DropEvent extends DragDropEvent {
  */
 export interface DragCollectionNode<T = unknown> {
   key: DragKey;
+  /**
+   * What the node is.
+   *
+   * Only `"item"` is a drop target. A collection may also hold rows that are not items — a
+   * load-more sentinel, a section header — and every traversal has to step over them rather
+   * than offer them as somewhere to drop.
+   */
+  type?: "item" | (string & {});
+  /** Depth in a tree, counting from 0. Flat collections may leave it undefined. */
+  level?: number;
   /** The containing item in a tree, or `null` at the top level. */
   parentKey?: DragKey | null;
   /** The previous sibling, used to recognise two ways of naming the same gap between items. */
   prevKey?: DragKey | null;
   nextKey?: DragKey | null;
+  /** The last child, for stepping past a whole expanded subtree. */
+  lastChildKey?: DragKey | null;
   /** The caller's own data for this item, handed back when building drag items. */
   value?: T;
 }
 
-/** The slice of a collection the drag and drop state layer reads. */
+/**
+ * The slice of a collection the drag and drop layer reads.
+ *
+ * `getKeyAfter`/`getKeyBefore` walk the collection in **document order**, descending into
+ * expanded children — which is a different question from `nextKey`/`prevKey` on a node, and both
+ * are needed: document order is how a drag steps down the list, sibling order is how it decides
+ * where a subtree ends.
+ */
 export interface DragCollection<T = unknown> {
   getItem: (key: DragKey) => DragCollectionNode<T> | null | undefined;
+  getKeyAfter: (key: DragKey) => DragKey | null;
+  getKeyBefore: (key: DragKey) => DragKey | null;
+  /** Every key in document order. */
+  getKeys: () => Iterable<DragKey>;
+}
+
+/**
+ * Where the keyboard would move focus from a given key.
+ *
+ * Satisfied by this package's `useListKeyboard` and `useGridKeyboard`. Drag navigation asks it
+ * rather than walking the collection itself, so a drag moves through a grid the same way focus
+ * does — down a column, not along a row.
+ */
+export interface DragKeyboardDelegate {
+  getKeyBelow?: (key: DragKey) => DragKey | null;
+  getKeyAbove?: (key: DragKey) => DragKey | null;
+  getKeyLeftOf?: (key: DragKey) => DragKey | null;
+  getKeyRightOf?: (key: DragKey) => DragKey | null;
+  getFirstKey?: () => DragKey | null;
+  getLastKey?: () => DragKey | null;
 }
 
 /* -------------------------------------------------------------------------------------------------
