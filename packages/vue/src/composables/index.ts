@@ -7,6 +7,7 @@ export * from "./press-responder";
 export * from "./table-drag-collection";
 export * from "./use-auto-scroll";
 export * from "./use-calendar";
+export * from "./use-calendar-grid";
 export * from "./use-calendar-state";
 export * from "./use-checkbox-group-state";
 export * from "./use-collator";
