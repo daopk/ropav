@@ -1,6 +1,11 @@
 import ModalBackdrop from "./modal-backdrop.vue";
+import ModalBody from "./modal-body.vue";
 import ModalContainer from "./modal-container.vue";
 import ModalDialog from "./modal-dialog.vue";
+import ModalFooter from "./modal-footer.vue";
+import ModalHeader from "./modal-header.vue";
+import ModalHeading from "./modal-heading.vue";
+import ModalIcon from "./modal-icon.vue";
 import ModalRoot from "./modal-root.vue";
 import ModalTrigger from "./modal-trigger.vue";
 
@@ -9,8 +14,13 @@ import ModalTrigger from "./modal-trigger.vue";
  * -----------------------------------------------------------------------------------------------*/
 export const Modal = Object.assign(ModalRoot, {
   Backdrop: ModalBackdrop,
+  Body: ModalBody,
   Container: ModalContainer,
   Dialog: ModalDialog,
+  Footer: ModalFooter,
+  Header: ModalHeader,
+  Heading: ModalHeading,
+  Icon: ModalIcon,
   Root: ModalRoot,
   Trigger: ModalTrigger,
 });
@@ -18,13 +28,29 @@ export const Modal = Object.assign(ModalRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ModalBackdrop, ModalContainer, ModalDialog, ModalRoot, ModalTrigger};
+export {
+  ModalBackdrop,
+  ModalBody,
+  ModalContainer,
+  ModalDialog,
+  ModalFooter,
+  ModalHeader,
+  ModalHeading,
+  ModalIcon,
+  ModalRoot,
+  ModalTrigger,
+};
 
 export type {
   ModalBackdropProps,
+  ModalBodyProps,
   ModalContainerProps,
   ModalDialogProps,
   ModalDialogSlotProps,
+  ModalFooterProps,
+  ModalHeaderProps,
+  ModalHeadingProps,
+  ModalIconProps,
   ModalPlacement,
   ModalRootEmits,
   ModalRootProps,
