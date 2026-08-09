@@ -1,15 +1,42 @@
 import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import {afterEach, describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
 import Fixture from "./fixtures.vue";
 
-const renderSearchField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const mounted: {unmount: () => void}[] = [];
+
+const renderSearchField = (props: Record<string, unknown> = {}) => {
+  const result = renderVapor(Fixture, {props});
+
+  mounted.push(result);
+
+  return result;
+};
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
+
+/**
+ * Tear down whatever is still mounted, including after a failure.
+ *
+ * Every case here also unmounts itself, which is enough while they pass — but a case that throws
+ * never reaches that line, and what it leaves behind is a field in the document that may still hold
+ * focus. The next case to read `document.activeElement` then finds the *previous* case's control and
+ * fails for a reason that has nothing to do with it, which is how one broken assertion here reads as
+ * two.
+ */
+afterEach(() => {
+  while (mounted.length > 0) {
+    try {
+      mounted.pop()!.unmount();
+    } catch {
+      // Already unmounted by the case itself, which is the normal path.
+    }
+  }
+});
 
 /**
  * The parts of a search field only a real browser can show: the `:has()` rules that shape the
@@ -174,9 +201,17 @@ describe("SearchField (browser)", () => {
     expect(hovered).not.toBe(idle);
 
     await userEvent.click(control);
-    await nextTick();
 
-    expect(getComputedStyle(group).backgroundColor).not.toBe(hovered);
+    /*
+     * Polled rather than checked after a single tick.
+     *
+     * The fill is dropped by `data-focus-within`, which is written from a `focusin` handler — so it
+     * lands a tick or more after the click resolves, and how many depends on how busy the page is.
+     * A fixed `nextTick()` happened to be enough most of the time and not always, which is exactly
+     * what a flake is.
+     */
+    await expect.poll(() => getComputedStyle(group).backgroundColor).not.toBe(hovered);
+    expect(group).toHaveAttribute("data-focus-within", "true");
 
     unmount();
   });
@@ -189,9 +224,10 @@ describe("SearchField (browser)", () => {
     expect(label).toHaveAttribute("for", control.id);
 
     await userEvent.click(label);
-    await nextTick();
 
-    expect(document.activeElement).toBe(control);
+    // Polled for the same reason: the browser moves focus in response to the click on its own
+    // schedule, and this is the one assertion in the suite that reads document-wide state.
+    await expect.poll(() => document.activeElement).toBe(control);
 
     unmount();
   });
