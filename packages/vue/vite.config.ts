@@ -13,7 +13,7 @@ const COMPONENTS_DIR = "src/components";
 /** Directories under `src/components` that are not components. Kept in step with `scripts/`. */
 // `overlay` is the shared layer positioned overlays are built on, not a component of its own:
 // `@heroui/react` publishes no equivalent, so it gets no subpath and no entry.
-const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay"]);
+const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd"]);
 
 /**
  * Replace the version placeholder in `src/version.ts` with the real version.

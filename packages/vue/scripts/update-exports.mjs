@@ -14,7 +14,7 @@ const COMPONENTS_DIR = path.join(rootDir, "src/components");
 /** Directories to skip when scanning components */
 // `overlay` is the shared layer positioned overlays are built on, not a component of its own:
 // `@heroui/react` publishes no equivalent, so it gets no subpath and no entry.
-const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay"]);
+const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd"]);
 
 /**
  * Scan the components directory and return sorted component names

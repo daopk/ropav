@@ -11,6 +11,7 @@ export * from "./checkbox-group";
 export * from "./chip";
 export * from "./close-button";
 export * from "./description";
+export * from "./dnd";
 export * from "./dropdown";
 export * from "./empty-state";
 export * from "./error-message";
