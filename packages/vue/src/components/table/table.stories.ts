@@ -1155,7 +1155,9 @@ export const DragAndDrop: Story = {
               selection-mode="multiple"
             >
               <TableHeader>
-                <TableColumn id="drag" :max-width="48" :min-width="48" />
+                <TableColumn id="drag" :max-width="48" :min-width="48">
+                  <span class="sr-only">Reorder</span>
+                </TableColumn>
                 <TableColumn id="name" is-row-header>Member</TableColumn>
                 <TableColumn id="role">Role</TableColumn>
                 <TableColumn id="status">Status</TableColumn>
@@ -1242,7 +1244,9 @@ export const VirtualizedDragAndDrop: Story = {
               selection-mode="multiple"
             >
               <TableHeader class="h-full w-full">
-                <TableColumn id="drag" :max-width="48" :min-width="48" />
+                <TableColumn id="drag" :max-width="48" :min-width="48">
+                  <span class="sr-only">Reorder</span>
+                </TableColumn>
                 <TableColumn id="name" is-row-header :min-width="160">Name</TableColumn>
                 <TableColumn id="role" :min-width="220">Role</TableColumn>
               </TableHeader>

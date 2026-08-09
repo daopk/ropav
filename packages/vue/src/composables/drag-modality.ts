@@ -34,11 +34,19 @@ const mapModality = (modality: InteractionModality): DragModality => {
  * that cannot express a native drag, so it gets the click-to-drop flow. A coarse pointer narrows
  * that to touch, which is announced differently ("double tap" rather than "click").
  *
- * One narrowing against React Aria: its modality can also be `null` or `"virtual"`, neither of
- * which this package's tracker ever produces — `InteractionModality` here is only
- * `"keyboard" | "pointer"`, initialized to `"keyboard"`. Both of those unreachable inputs map to
- * `"virtual"` upstream, which is exactly where `"pointer"` lands, so every reachable answer is
- * the same one React Aria gives.
+ * One narrowing against React Aria, and it is visible in exactly one place. Its modality can also
+ * be `null` or `"virtual"`; this package's tracker produces neither — `InteractionModality` here
+ * is only `"keyboard" | "pointer"`, initialized to `"keyboard"` so a focus ring is painted before
+ * anything has happened. Upstream maps both of those to `"virtual"`, which is also where
+ * `"pointer"` lands, so once the user has done *anything* the two agree: a keydown gives
+ * `"keyboard"` on both sides, a pointer or a touch gives `"virtual"` on both.
+ *
+ * They differ only in the window before the first event, where upstream says `"virtual"` ("Click
+ * to start dragging") and this says `"keyboard"` ("Press Enter to start dragging"). Narrow in
+ * practice — a screen reader's browse-mode arrows fire `keydown`, and a tap fires `pointerdown`,
+ * so both settle it before anything is read out — and the wording it lands on still works, since
+ * Enter on the control produces the same click. Widening the tracker to a third state would touch
+ * every focus ring in the library for this one sentence, so it is recorded instead.
  */
 export const getDragModality = (): DragModality => mapModality(getInteractionModality());
 
