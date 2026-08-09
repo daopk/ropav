@@ -30,6 +30,7 @@ export * from "./use-input-otp";
 export * from "./use-interaction-states";
 export * from "./use-list-data";
 export * from "./use-list-keyboard";
+export * from "./use-locale";
 export * from "./use-long-press";
 export * from "./use-menu";
 export * from "./use-modal-overlay";
