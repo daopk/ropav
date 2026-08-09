@@ -15,6 +15,7 @@ import {useDescription} from "./use-description";
 import {useFieldIds} from "./use-field-ids";
 import {useFormReset} from "./use-form-reset";
 import {useFormValidation} from "./use-form-validation";
+import {useId} from "./use-id";
 import {useFocusWithin} from "./use-interaction-states";
 import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
 
@@ -33,6 +34,8 @@ export interface UseDateFieldOptions {
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
   /** The hidden input a form submits and the browser validates against. */
   inputElement: Ref<HTMLInputElement | null | undefined>;
+  /** Id for the group around the segments, which is where React puts a field's own id too. */
+  id?: MaybeRefOrGetter<string | undefined>;
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
   ariaLabelledBy?: MaybeRefOrGetter<string | undefined>;
   ariaDescribedBy?: MaybeRefOrGetter<string | undefined>;
@@ -103,6 +106,8 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
   } = useFieldIds({
     // A group is not a labelable control, so its label cannot be a `label` element.
     labelElementType: "span",
+    // And with nothing to point `for` at, clicking it has to be answered by hand.
+    onLabelClick: () => focusManager.focusFirst(),
     slots: ["label", "description", "errorMessage"],
   });
 
@@ -113,6 +118,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     setOpen: options.setOpen,
   });
 
+  const groupId = useId(() => toValue(options.id));
   const strings = useLocalizedStringFormatter(datepickerStrings);
 
   /**
@@ -222,6 +228,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
       "aria-disabled": toValue(options.isDisabled) || undefined,
       "aria-label": toValue(options.ariaLabel),
       "aria-labelledby": labelledBy.value,
+      id: groupId.value,
       role: "group",
     };
 
