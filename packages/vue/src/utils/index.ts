@@ -1,6 +1,7 @@
 export * from "./aria-hide-outside";
 export * from "./assertion";
 export * from "./block";
+export * from "./calendar";
 export * from "./color";
 export * from "./color-types";
 export * from "./compose";
