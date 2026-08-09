@@ -18,6 +18,7 @@ export * from "./use-grid-keyboard";
 export * from "./use-grid-selection-announcement";
 export * from "./use-id";
 export * from "./use-image-loading-status";
+export * from "./use-input-otp";
 export * from "./use-interaction-states";
 export * from "./use-list-data";
 export * from "./use-list-keyboard";
