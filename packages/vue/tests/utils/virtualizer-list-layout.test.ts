@@ -1,3 +1,4 @@
+import type {DropTarget} from "@/utils/dnd-types";
 import type {
   VirtualizerCollection,
   VirtualizerLayoutHost,
@@ -337,5 +338,134 @@ describe("ListLayout measured rows", () => {
     // The deprecated alias has to compare against the current name, or a story that passes
     // `rowHeight` would look unchanged forever.
     expect(layout.shouldInvalidateLayoutOptions({rowSize: 50}, {rowHeight: 50})).toBe(false);
+  });
+  /**
+   * Resolving a drop from a point, which is the whole reason a layout can be a drop delegate.
+   *
+   * The DOM-based delegate searches for elements, and outside the window there are none — so
+   * every case below uses a point over a row nobody has scrolled to, which is exactly what it
+   * cannot answer.
+   */
+  describe("drop targets", () => {
+    const dropLayout = (options: {scrollTop?: number; itemCount?: number} = {}) =>
+      attach(
+        new ListLayout({rowSize: 50}),
+        createHost({
+          itemCount: options.itemCount ?? 1000,
+          visibleRect: new Rect(0, options.scrollTop ?? 0, 300, 400),
+        }),
+      );
+
+    const anything = () => true;
+    /** What a reorder-only collection allows: between rows, never onto one. */
+    const gapsOnly = (target: DropTarget) => target.type === "item" && target.dropPosition !== "on";
+
+    it("answers for a row far outside the window", () => {
+      const layout = dropLayout({scrollTop: 25_000});
+
+      // 25 000 / 50 is row 500, and the point is 20px into it.
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({
+        dropPosition: "on",
+        key: "item-500",
+        type: "item",
+      });
+    });
+
+    // The same offset means a different row at every scroll position, which is the one thing a
+    // DOM search gets right for free and arithmetic has to be told.
+    it("moves with the scroll offset", () => {
+      const keys = [0, 1_000, 5_000, 25_000, 49_600].map((scrollTop) => {
+        const target = dropLayout({scrollTop}).getDropTargetFromPoint(10, 20, anything);
+
+        return target?.type === "item" ? target.key : null;
+      });
+
+      expect(keys).toEqual(["item-0", "item-20", "item-100", "item-500", "item-992"]);
+    });
+
+    // Dropping onto a row wins the middle; the outer 10px still belong to the gaps.
+    it("keeps the edges for the gaps when dropping on a row is allowed", () => {
+      const layout = dropLayout();
+
+      expect(layout.getDropTargetFromPoint(10, 4, anything)).toMatchObject({
+        dropPosition: "before",
+        key: "item-0",
+      });
+      expect(layout.getDropTargetFromPoint(10, 46, anything)).toMatchObject({
+        dropPosition: "after",
+        key: "item-0",
+      });
+      expect(layout.getDropTargetFromPoint(10, 25, anything)).toMatchObject({
+        dropPosition: "on",
+        key: "item-0",
+      });
+    });
+
+    // With nowhere to drop on, the row splits down the middle so every pixel resolves.
+    it("splits the row in half when dropping on it is refused", () => {
+      const layout = dropLayout();
+
+      expect(layout.getDropTargetFromPoint(10, 20, gapsOnly)).toMatchObject({
+        dropPosition: "before",
+        key: "item-0",
+      });
+      expect(layout.getDropTargetFromPoint(10, 30, gapsOnly)).toMatchObject({
+        dropPosition: "after",
+        key: "item-0",
+      });
+    });
+
+    it("falls back to the whole collection when there is nothing to drop near", () => {
+      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 0}));
+
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
+    });
+
+    /**
+     * The indicator straddles the boundary rather than sitting under it, so a 2px line lands
+     * *on* the edge instead of pushing the rows apart.
+     */
+    it("places a gap indicator across the boundary", () => {
+      const layout = dropLayout();
+
+      expect(
+        layout.getDropTargetLayoutInfo({dropPosition: "before", key: "item-4", type: "item"}).rect,
+      ).toEqual(new Rect(0, 199, 300, 2));
+      expect(
+        layout.getDropTargetLayoutInfo({dropPosition: "after", key: "item-4", type: "item"}).rect,
+      ).toEqual(new Rect(0, 249, 300, 2));
+    });
+
+    // The very first gap has nothing above it to straddle into.
+    it("keeps the first indicator inside the content", () => {
+      const layout = dropLayout();
+      const info = layout.getDropTargetLayoutInfo({
+        dropPosition: "before",
+        key: "item-0",
+        type: "item",
+      });
+
+      expect(info.rect.y).toBe(0);
+    });
+
+    // Dropping onto a row covers the row, which is what lets it be highlighted whole.
+    it("covers the row when the drop lands on it", () => {
+      const layout = dropLayout();
+
+      expect(
+        layout.getDropTargetLayoutInfo({dropPosition: "on", key: "item-4", type: "item"}).rect,
+      ).toEqual(new Rect(0, 200, 300, 50));
+    });
+
+    it("takes the thickness from the layout options", () => {
+      const layout = attach(
+        new ListLayout({dropIndicatorThickness: 8, rowSize: 50}),
+        createHost({itemCount: 10}),
+      );
+
+      expect(
+        layout.getDropTargetLayoutInfo({dropPosition: "before", key: "item-4", type: "item"}).rect,
+      ).toEqual(new Rect(0, 196, 300, 8));
+    });
   });
 });

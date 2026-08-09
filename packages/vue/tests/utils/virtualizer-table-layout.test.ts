@@ -339,4 +339,80 @@ describe("TableLayout", () => {
       expect(layout.updateItemSize?.("nothing", new Size(230, 80))).toBe(false);
     });
   });
+  /**
+   * A table's rendered set holds the column headers and every cell as well as the rows, and a
+   * cell shares its row's edges exactly — so the nearest-edge search inherited from the list
+   * layout has to be told that only a row is somewhere a drop can land.
+   */
+  describe("drop targets", () => {
+    const dropSetUp = (scrollTop = 0) =>
+      setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+        itemCount: 1000,
+        visibleRect: new Rect(0, scrollTop, 700, 500),
+      });
+
+    const anything = () => true;
+
+    // A row's key is the item's own; a cell's is `<row>:<column>`.
+    it("names a row rather than one of its cells", () => {
+      const {layout} = dropSetUp(21_000);
+
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({
+        dropPosition: "on",
+        key: 500,
+        type: "item",
+      });
+    });
+
+    it("moves with the scroll offset", () => {
+      const keys = [5_000, 21_000, 41_542].map((scrollTop) => {
+        const target = dropSetUp(scrollTop).layout.getDropTargetFromPoint(10, 20, anything);
+
+        return target?.type === "item" ? target.key : null;
+      });
+
+      expect(keys).toEqual([119, 500, 989]);
+    });
+
+    /**
+     * The header floats above the rows at an offset the visible rectangle does not describe, so
+     * near the top of the collection it is the nearest thing to the pointer — and it is what the
+     * search names without the row filter, offering a drop into the header. A point over it is
+     * not over anything droppable, which leaves the collection as a whole.
+     */
+    it("means the whole collection over the sticky header", () => {
+      const {layout} = dropSetUp();
+
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
+      expect(layout.getDropTargetFromPoint(10, 60, anything)).toMatchObject({key: 1});
+    });
+
+    it("falls back to the whole collection when there are no rows", () => {
+      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 0});
+
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
+    });
+
+    /**
+     * The gap belongs to the body, not to the table.
+     *
+     * Every wrapper is positioned against its parent, so an indicator without one would be
+     * placed from the table's own origin and land under the sticky header.
+     */
+    it("hangs the indicator off the body", () => {
+      const {collection, layout} = dropSetUp();
+      const info = layout.getDropTargetLayoutInfo({dropPosition: "before", key: 5, type: "item"});
+
+      expect(info.parentKey).toBe(collection.bodyKey);
+    });
+
+    it("places the gap across the boundary between two rows", () => {
+      const {layout} = dropSetUp();
+      const rowRect = layout.getLayoutInfo(5)!.rect;
+
+      expect(
+        layout.getDropTargetLayoutInfo({dropPosition: "before", key: 5, type: "item"}).rect,
+      ).toEqual(new Rect(rowRect.x, rowRect.y - 1, rowRect.width, 2));
+    });
+  });
 });
