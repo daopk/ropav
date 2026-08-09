@@ -6,6 +6,7 @@ export * from "./color-types";
 export * from "./compose";
 export * from "./create-context";
 export * from "./css";
+export * from "./date-placeholder";
 export * from "./dnd-constants";
 export * from "./dnd-data-transfer";
 export * from "./dnd-drop-target-navigation";
