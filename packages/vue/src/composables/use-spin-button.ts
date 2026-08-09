@@ -2,7 +2,10 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, onScopeDispose, toValue, watch} from "vue";
 
+import {spinbuttonStrings} from "../i18n/spinbutton";
 import {announce} from "../utils/live-announcer";
+
+import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
 
 /**
  * How long a held button waits before it starts repeating, and how fast it repeats after that.
@@ -86,6 +89,8 @@ export const useSpinButton = (options: UseSpinButtonOptions = {}): UseSpinButton
 
   onScopeDispose(clearAsync);
 
+  const stringFormatter = useLocalizedStringFormatter(spinbuttonStrings);
+
   const isDisabled = computed(() => Boolean(toValue(options.isDisabled)));
   const isReadOnly = computed(() => Boolean(toValue(options.isReadOnly)));
 
@@ -104,7 +109,7 @@ export const useSpinButton = (options: UseSpinButtonOptions = {}): UseSpinButton
   const ariaTextValue = computed(() => {
     const text = toValue(options.textValue);
 
-    if (text === "") return "Empty";
+    if (text === "") return stringFormatter.value.format("Empty");
 
     return (text ?? String(value.value)).replace("-", "−");
   });
