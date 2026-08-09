@@ -100,7 +100,33 @@ export const useFormValidation = (
     event.preventDefault();
   };
 
+  /**
+   * Re-read the browser's verdict before revealing it.
+   *
+   * The effect above only re-runs when one of the reactive values it reads changes, and reading
+   * `input.validity` tracks nothing — so for a field with no `validate`, no `isInvalid` and no
+   * server errors, *nothing* it depends on ever changes and the snapshot taken at mount is the one
+   * a later commit reveals. That is how a required field ends up marked invalid after being filled
+   * in correctly: the commit on `change` reads a "value missing" verdict from when the field was
+   * still empty, and nothing commits again to clear it.
+   *
+   * React gets this for free because its effect runs on every render and a keystroke is always a
+   * render. Nothing is revealed by this on its own — under native behaviour `updateValidation` only
+   * records what a commit *would* say — so it cannot make an error appear before its time.
+   */
+  const refreshNativeValidity = () => {
+    if (state.validationBehavior.value !== "native") return;
+
+    const input = element.value;
+
+    if (!input || input.disabled) return;
+    if (state.realtimeValidation.value.isInvalid) return;
+
+    state.updateValidation(getNativeValidation(input));
+  };
+
   const onChange = () => {
+    refreshNativeValidity();
     state.commitValidation();
   };
 

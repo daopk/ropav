@@ -508,6 +508,31 @@ describe("TextField", () => {
   });
 
   describe("validation", () => {
+    it("does not stay invalid once a required field has been filled in", async () => {
+      /*
+       * The browser's verdict is read inside a post-flush effect, and reading `input.validity`
+       * tracks nothing — so for a field with no `validate`, no `isInvalid` and no server errors
+       * there is nothing reactive to make that effect run again. The snapshot taken while the
+       * field was still empty was what the commit on `change` then revealed, and nothing
+       * committed afterwards to clear it: a required field went red *after* being filled in
+       * correctly, and stayed red. React never sees this because its effect runs on every
+       * render and a keystroke is always a render.
+       */
+      const {control, root, unmount} = renderField({isRequired: true, name: "email"});
+
+      await nextTick();
+      control.value = "hello";
+      control.dispatchEvent(new Event("input", {bubbles: true}));
+      control.dispatchEvent(new Event("change", {bubbles: true}));
+      await nextTick();
+      await nextTick();
+
+      expect(control.validity.valid).toBe(true);
+      expect(root).not.toHaveAttribute("data-invalid");
+
+      unmount();
+    });
+
     it("blocks the submit while the value is not acceptable", async () => {
       const onSubmit = vi.fn();
       const {form, submitButton, unmount} = renderForm({
