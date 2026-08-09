@@ -33,15 +33,15 @@ const props = withDefaults(
     <ListBoxRoot
       aria-label="Users"
       class="h-[400px] w-[300px] overflow-y-auto"
-      :item-text-value="(item) => (item as FixtureItem).name"
+      :item-text-value="(item) => item.name"
       :items="props.items"
       :selection-mode="props.selectionMode"
     >
       <template #default="{item}">
-        <ListBoxItemRoot :id="(item as FixtureItem).id">
+        <ListBoxItemRoot :id="item!.id">
           <div class="flex flex-col">
-            <LabelRoot>{{ (item as FixtureItem).name }}</LabelRoot>
-            <DescriptionRoot>{{ (item as FixtureItem).email }}</DescriptionRoot>
+            <LabelRoot>{{ item!.name }}</LabelRoot>
+            <DescriptionRoot>{{ item!.email }}</DescriptionRoot>
           </div>
           <ListBoxItemIndicator />
         </ListBoxItemRoot>

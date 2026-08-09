@@ -1,7 +1,8 @@
-<script setup lang="ts" vapor>
+<script setup lang="ts" vapor generic="T">
 import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
 import {listboxVariants} from "@heroui/styles";
 import {computed, shallowRef} from "vue";
@@ -26,7 +27,7 @@ import {provideListBoxContext} from "./list-box.context";
 /** Stands in while a virtualized listbox has no data yet, so the layout has something to read. */
 const EMPTY_COLLECTION = createListCollection({items: []});
 
-const props = defineProps<ListBoxRootProps>();
+const props = defineProps<ListBoxRootProps<T>>();
 
 const emit = defineEmits<{
   action: [key: CollectionKey];
@@ -34,7 +35,16 @@ const emit = defineEmits<{
   "update:selectedKeys": [keys: CollectionSelection];
 }>();
 
-defineSlots<{default?: (props: ListBoxRootSlotProps) => unknown}>();
+defineSlots<{default?: (props: ListBoxRootSlotProps<T>) => unknown}>();
+
+/**
+ * A node's datum, back as the item type it came in as.
+ *
+ * `VirtualizerNode.content` is `unknown` on purpose — the virtualizer carries data it never looks
+ * at, and the same layout serves a table. This listbox is the one place that knows better: it
+ * built the collection out of its own `items`, so naming `T` here restates what went in.
+ */
+const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
 const styles = computed(() => listboxVariants({class: props.class, variant: props.variant}));
 
@@ -191,7 +201,7 @@ const onKeydown = (event: KeyboardEvent) => {
         :key="view.key"
         :layout-info="view.layoutInfo"
       >
-        <slot :index="view.node?.index" :item="view.node?.content" />
+        <slot :index="view.node?.index" :item="itemOf(view.node)" />
       </VirtualizerItem>
     </div>
     <slot v-else />

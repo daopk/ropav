@@ -6,27 +6,31 @@ import type {
 } from "../../composables/use-selection-manager";
 import type {ListBoxVariants} from "@heroui/styles";
 
-export interface ListBoxRootProps {
+/**
+ * @typeParam T - The item type, inferred from `items`.
+ *
+ * Vapor costs the type parameter nothing: `vapor` picks which codegen the SFC compiles to, while
+ * `generic` is read by `vue-tsc`, and the two never meet. The emitted `.d.ts` carries `<T>` either
+ * way.
+ */
+export interface ListBoxRootProps<T = unknown> {
   class?: string;
   /**
    * The data to render, for a virtualized listbox.
    *
    * Only meaningful inside a `Virtualizer`, which renders a window of the items rather than all
    * of them. The listbox then calls its default slot once per rendered item.
-   *
-   * Typed `unknown` rather than a generic: a generic `<script setup>` compiles in Vapor but the
-   * type parameter is dropped, so it would read as typed while being nothing of the sort.
    */
-  items?: readonly unknown[];
+  items?: readonly T[];
   /** An item's key. Defaults to its own `id`, then `key`, then its index. */
-  itemKey?: (item: unknown, index: number) => CollectionKey;
+  itemKey?: (item: T, index: number) => CollectionKey;
   /**
    * Text an item is matched on by typeahead.
    *
    * A rendered item names itself from its content, as in the React build. This is for the items
    * that are *not* rendered: typeahead has to reach them, and only the data can answer.
    */
-  itemTextValue?: (item: unknown) => string | undefined;
+  itemTextValue?: (item: T) => string | undefined;
   /** Whether one, many or no items can be selected. @default "none" */
   selectionMode?: SelectionMode;
   /** What a press means when several items can be selected. @default "toggle" */
@@ -45,9 +49,9 @@ export interface ListBoxRootProps {
   variant?: ListBoxVariants["variant"];
 }
 
-export interface ListBoxRootSlotProps {
+export interface ListBoxRootSlotProps<T = unknown> {
   /** The datum this row was built from, when the listbox is virtualized. */
-  item?: unknown;
+  item?: T;
   /** The row's position among all of them, zero-based. */
   index?: number;
 }
