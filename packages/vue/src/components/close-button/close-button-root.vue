@@ -22,8 +22,23 @@ defineSlots<{default?: (props: CloseButtonSlotProps) => unknown}>();
 // place through the button context a `CloseButton` reads there.
 const responder = usePressResponder();
 
+// Hover and focus can also be handed down — a tooltip wrapped around this button watches it
+// without the button having to know. Kept on its own channel: the press above may be a menu
+// trigger's, and one channel would mean the two replace each other.
+const focusResponder = useFocusResponder();
+
+/**
+ * Reported to both channels, because both need the element for different reasons.
+ *
+ * A press responder needs it to know what was pressed; a focus responder needs it as the thing it
+ * watches and positions against — a tooltip is placed relative to this button, and without the
+ * report it has nothing to measure and never appears anywhere.
+ */
 const setElement = (element: unknown) => {
-  responder?.registerElement((element as HTMLElement | null) ?? null);
+  const next = (element as HTMLElement | null) ?? null;
+
+  responder?.registerElement(next);
+  focusResponder?.registerElement(next);
 };
 
 const styles = computed(() => closeButtonVariants({class: props.class, variant: props.variant}));
@@ -66,10 +81,6 @@ const onClick = (event: MouseEvent) => {
   emit("click", event);
 };
 
-// Hover and focus can also be handed down — a tooltip wrapped around this button watches it
-// without the button having to know. Kept on its own channel: the press above may be a menu
-// trigger's, and one channel would mean the two replace each other.
-const focusResponder = useFocusResponder();
 const focus = composeFocusResponder(focusResponder, {onBlur, onFocus});
 
 const attrs = computed(() => ({
