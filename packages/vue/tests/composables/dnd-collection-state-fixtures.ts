@@ -4,28 +4,35 @@ import type {DragCollection, DragCollectionNode, DragKey} from "@/utils/dnd-type
 import {computed, shallowRef} from "vue";
 
 /**
- * Stand-ins for the two things the drag and drop state layer reads.
+ * Stand-ins for the two things the drag and drop layer reads.
  *
- * The state layer names only the slice of a collection it needs — parent, siblings and value —
- * so a test can supply that directly instead of mounting a real ListBox or Table. Everything
- * here is plain data; nothing touches the DOM.
+ * The layer names only the slice of a collection it needs, so a test can supply that directly
+ * instead of mounting a real ListBox or Table. Everything here is plain data; nothing touches
+ * the DOM.
  */
 
 export interface FixtureItem {
   key: DragKey;
+  /** Omit for a top-level item. Children must be listed after their parent. */
   parentKey?: DragKey | null;
+  /** Anything other than `"item"` is a row that is not a drop target. */
+  type?: string;
   value?: unknown;
 }
 
 /**
- * Build a collection from a flat list, deriving siblings from adjacency within a parent.
+ * Build a collection from a list given in **document order** — the order rows would render,
+ * with each child following its parent.
  *
- * `prevKey`/`nextKey` are sibling links rather than "the row above" — a child's next sibling is
- * the next item sharing its parent, not the next item in the list.
+ * Two orders come out of that and they are not the same: `prevKey`/`nextKey` link **siblings**,
+ * while `getKeyAfter`/`getKeyBefore` walk **document order** and descend into children. Drag
+ * navigation needs both, and conflating them is the easiest way to get tree traversal wrong.
  */
 export const createFixtureCollection = (items: FixtureItem[]): DragCollection<unknown> => {
+  const order = items.map((item) => item.key);
   const nodes = new Map<DragKey, DragCollectionNode<unknown>>();
   const siblingsByParent = new Map<DragKey | null, DragKey[]>();
+  const levels = new Map<DragKey, number>();
 
   for (const item of items) {
     const parentKey = item.parentKey ?? null;
@@ -33,23 +40,60 @@ export const createFixtureCollection = (items: FixtureItem[]): DragCollection<un
 
     siblings.push(item.key);
     siblingsByParent.set(parentKey, siblings);
+    levels.set(item.key, parentKey == null ? 0 : (levels.get(parentKey) ?? 0) + 1);
   }
 
   for (const item of items) {
     const parentKey = item.parentKey ?? null;
     const siblings = siblingsByParent.get(parentKey)!;
     const index = siblings.indexOf(item.key);
+    const children = siblingsByParent.get(item.key) ?? [];
 
     nodes.set(item.key, {
       key: item.key,
+      lastChildKey: children[children.length - 1] ?? null,
+      level: levels.get(item.key) ?? 0,
       nextKey: siblings[index + 1] ?? null,
       parentKey,
       prevKey: siblings[index - 1] ?? null,
+      type: item.type ?? "item",
       value: item.value ?? {id: item.key},
     });
   }
 
-  return {getItem: (key) => nodes.get(key) ?? null};
+  return {
+    getItem: (key) => nodes.get(key) ?? null,
+    getKeyAfter: (key) => order[order.indexOf(key) + 1] ?? null,
+    getKeyBefore: (key) => {
+      const index = order.indexOf(key);
+
+      return index > 0 ? (order[index - 1] ?? null) : null;
+    },
+    getKeys: () => order,
+  };
+};
+
+/**
+ * A keyboard delegate that walks document order, as a flat list's would.
+ *
+ * Only item rows are included. A real delegate navigates what can hold focus, and a loader row
+ * or section header cannot — the traversal under test trusts that and does not re-check.
+ */
+export const createFixtureKeyboardDelegate = (collection: DragCollection<unknown>) => {
+  const keys = [...collection.getKeys()].filter(
+    (key) => (collection.getItem(key)?.type ?? "item") === "item",
+  );
+
+  return {
+    getFirstKey: () => keys[0] ?? null,
+    getKeyAbove: (key: DragKey) => {
+      const index = keys.indexOf(key);
+
+      return index > 0 ? (keys[index - 1] ?? null) : null;
+    },
+    getKeyBelow: (key: DragKey) => keys[keys.indexOf(key) + 1] ?? null,
+    getLastKey: () => keys[keys.length - 1] ?? null,
+  };
 };
 
 /**
