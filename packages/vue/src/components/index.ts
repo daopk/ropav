@@ -48,6 +48,7 @@ export * from "./pagination";
 export * from "./popover";
 export * from "./radio";
 export * from "./radio-group";
+export * from "./range-calendar";
 export * from "./search-field";
 export * from "./separator";
 export * from "./slider";
