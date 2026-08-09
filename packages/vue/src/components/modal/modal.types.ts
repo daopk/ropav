@@ -95,5 +95,4 @@ export interface ModalFooterProps {
 
 export interface ModalCloseTriggerProps {
   class?: string;
-  "aria-label"?: string;
 }
