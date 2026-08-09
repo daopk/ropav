@@ -28,6 +28,7 @@ import {
   TableColumn,
   TableColumnResizer,
   TableContent,
+  TableExpandTrigger,
   TableFooter,
   TableHeader,
   TableLoadMore,
@@ -39,6 +40,7 @@ import {
   TableSortableColumnHeader,
 } from "./index";
 
+import IconChevronRight from "~icons/gravity-ui/chevron-right";
 import IconCopy from "~icons/gravity-ui/copy";
 import IconEye from "~icons/gravity-ui/eye";
 import IconPencil from "~icons/gravity-ui/pencil";
@@ -55,6 +57,7 @@ const components = {
   Chip,
   ChipLabel,
   EmptyState,
+  IconChevronRight,
   IconCopy,
   IconEye,
   IconPencil,
@@ -76,6 +79,7 @@ const components = {
   TableColumn,
   TableColumnResizer,
   TableContent,
+  TableExpandTrigger,
   TableFooter,
   TableHeader,
   TableLoadMore,
@@ -630,6 +634,132 @@ export const AsyncLoading: Story = {
                     <Spinner size="md" />
                   </TableLoadMoreContent>
                 </TableLoadMore>
+              </TableBody>
+            </TableContent>
+          </TableScrollContainer>
+        </Table>
+      </div>
+    `,
+  }),
+};
+
+interface FileNode {
+  id: string;
+  title: string;
+  type: string;
+  date: string;
+  children: FileNode[];
+}
+
+const files: FileNode[] = [
+  {
+    children: [
+      {
+        children: [
+          {children: [], date: "7/10/2025", id: "3", title: "Weekly Report", type: "File"},
+          {children: [], date: "8/20/2025", id: "4", title: "Budget", type: "File"},
+        ],
+        date: "8/2/2025",
+        id: "2",
+        title: "Project",
+        type: "Directory",
+      },
+    ],
+    date: "10/20/2025",
+    id: "1",
+    title: "Documents",
+    type: "Directory",
+  },
+  {
+    children: [
+      {children: [], date: "1/23/2026", id: "6", title: "Image 1", type: "File"},
+      {children: [], date: "2/3/2026", id: "7", title: "Image 2", type: "File"},
+    ],
+    date: "2/3/2026",
+    id: "5",
+    title: "Photos",
+    type: "Directory",
+  },
+];
+
+interface FlatFileRow {
+  node: FileNode;
+  level: number;
+  parentKey?: string;
+}
+
+/**
+ * The rows a tree shows, flattened. A `<tr>` cannot nest inside another `<tr>`, so the caller says
+ * how deep each row sits instead of nesting the markup — which is where React Aria's hidden
+ * collection pass would have done it.
+ */
+const flattenFiles = (
+  nodes: FileNode[],
+  expanded: Set<string>,
+  level = 0,
+  parentKey?: string,
+): FlatFileRow[] =>
+  nodes.flatMap((node) => [
+    {level, node, parentKey},
+    ...(expanded.has(node.id) ? flattenFiles(node.children, expanded, level + 1, node.id) : []),
+  ]);
+
+/** Rows that nest, with the tree column carrying the chevron and the indentation. */
+export const ExpandableRows: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const expandedKeys = shallowRef(new Set(["1"]));
+
+      return {
+        expandedKeys,
+        rows: computed(() => flattenFiles(files, expandedKeys.value)),
+      };
+    },
+    template: `
+      <div class="w-full max-w-4xl">
+        <Table>
+          <TableScrollContainer>
+            <TableContent
+              v-model:expanded-keys="expandedKeys"
+              aria-label="Files"
+              class="min-w-[520px]"
+              tree-column="name"
+            >
+              <TableHeader>
+                <TableColumn id="name" is-row-header>Name</TableColumn>
+                <TableColumn id="type">Type</TableColumn>
+                <TableColumn id="date">Date Modified</TableColumn>
+              </TableHeader>
+              <TableBody>
+                <TableRow
+                  v-for="row of rows"
+                  :id="row.node.id"
+                  :key="row.node.id"
+                  :has-child-rows="row.node.children.length > 0"
+                  :level="row.level"
+                  :parent-key="row.parentKey"
+                  :text-value="row.node.title"
+                >
+                  <TableCell
+                    v-slot="{hasChildRows, isExpanded, isTreeColumn}"
+                    :text-value="row.node.title"
+                  >
+                    <span class="flex items-center gap-1">
+                      <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
+                        <Button is-icon-only size="sm" variant="ghost">
+                          <IconChevronRight
+                            class="size-4 text-muted transition-transform duration-150"
+                            :class="isExpanded ? 'rotate-90' : 'rtl:rotate-180'"
+                          />
+                        </Button>
+                      </TableExpandTrigger>
+                      <span>{{ row.node.title }}</span>
+                    </span>
+                  </TableCell>
+                  <TableCell>{{ row.node.type }}</TableCell>
+                  <TableCell>{{ row.node.date }}</TableCell>
+                </TableRow>
               </TableBody>
             </TableContent>
           </TableScrollContainer>

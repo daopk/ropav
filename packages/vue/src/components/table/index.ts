@@ -3,7 +3,7 @@ import TableCell from "./table-cell.vue";
 import TableColumnResizer from "./table-column-resizer.vue";
 import TableColumn from "./table-column.vue";
 import TableContent from "./table-content.vue";
-import TableExpandButton from "./table-expand-button.vue";
+import TableExpandTrigger from "./table-expand-trigger.vue";
 import TableFooter from "./table-footer.vue";
 import TableHeader from "./table-header.vue";
 import TableLoadMoreContent from "./table-load-more-content.vue";
@@ -31,7 +31,7 @@ export const Table = Object.assign(TableRoot, {
   Body: TableBody,
   Row: TableRow,
   Cell: TableCell,
-  ExpandButton: TableExpandButton,
+  ExpandTrigger: TableExpandTrigger,
   Footer: TableFooter,
   LoadMore: TableLoadMore,
   LoadMoreContent: TableLoadMoreContent,
@@ -54,7 +54,7 @@ export {
   TableBody,
   TableRow,
   TableCell,
-  TableExpandButton,
+  TableExpandTrigger,
   TableFooter,
   TableLoadMore,
   TableLoadMoreContent,
@@ -75,7 +75,6 @@ export type {
   TableRowProps,
   TableCellProps,
   TableCellSlotProps,
-  TableExpandButtonProps,
   TableFooterProps,
   TableLoadMoreProps,
   TableLoadMoreContentProps,

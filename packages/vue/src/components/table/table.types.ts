@@ -162,15 +162,6 @@ export interface TableCellSlotProps {
   isSelected: boolean;
 }
 
-export interface TableExpandButtonProps {
-  class?: string;
-  /**
-   * Accessible name. Defaults to what React Aria names it: `Expand` while the row is collapsed,
-   * `Collapse` while it is open.
-   */
-  ariaLabel?: string;
-}
-
 export interface TableFooterProps {
   class?: string;
 }
