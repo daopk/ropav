@@ -17,6 +17,7 @@ import {useFieldIds} from "./use-field-ids";
 import {useFormReset} from "./use-form-reset";
 import {useFormattedTextField} from "./use-formatted-text-field";
 import {useId} from "./use-id";
+import {useLocale} from "./use-locale";
 import {useNumberFieldState} from "./use-number-field-state";
 import {useSpinButton} from "./use-spin-button";
 
@@ -128,9 +129,8 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
   });
 
   const formatOptions = computed(() => toValue(options.formatOptions));
-  const locale = computed(
-    () => toValue(options.locale) ?? new Intl.NumberFormat().resolvedOptions().locale,
-  );
+  const resolvedLocale = useLocale();
+  const locale = computed(() => toValue(options.locale) ?? resolvedLocale.value.locale);
 
   /**
    * How the value is read out, which is not always how it is written.

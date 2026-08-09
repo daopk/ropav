@@ -12,6 +12,7 @@ import {clamp, snapValueToStep} from "../utils/number";
 
 import {useControllableState} from "./use-controllable-state";
 import {useFormValidationState} from "./use-form-validation-state";
+import {useLocale} from "./use-locale";
 
 /**
  * What happens to the value once the user is done editing.
@@ -127,11 +128,10 @@ const formatOptionsKey = (options: Intl.NumberFormatOptions | undefined): string
  */
 export const useNumberFieldState = (options: UseNumberFieldStateOptions = {}): NumberFieldState => {
   // `@internationalized/number` needs a real locale tag, where `Intl` accepts `undefined` and
-  // works it out itself. There is no locale layer here yet, so the runtime's own choice is asked
-  // for by name — the same locale `new Intl.NumberFormat(undefined)` would have resolved to.
-  const locale = computed(
-    () => toValue(options.locale) ?? new Intl.NumberFormat().resolvedOptions().locale,
-  );
+  // works it out itself. The option stays an override, because the component exposes it as a prop;
+  // absent, the locale in force here answers, so a field inherits its surroundings.
+  const resolvedLocale = useLocale();
+  const locale = computed(() => toValue(options.locale) ?? resolvedLocale.value.locale);
   const minValue = computed(() => toValue(options.minValue));
   const maxValue = computed(() => toValue(options.maxValue));
   const step = computed(() => toValue(options.step));
