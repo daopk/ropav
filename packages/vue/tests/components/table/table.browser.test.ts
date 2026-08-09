@@ -5,6 +5,7 @@ import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
 import Fixture from "./fixtures.vue";
+import ResizableFixture from "./resizable-fixtures.vue";
 
 const render = async (props: Record<string, unknown> = {}) => {
   const result = renderVapor(Fixture, {props});
@@ -244,5 +245,80 @@ describe("Table (browser)", () => {
 
       unmount();
     });
+  });
+});
+
+describe("Table column resizing (browser)", () => {
+  const renderResizable = async (props: Record<string, unknown> = {}) => {
+    const result = renderVapor(ResizableFixture, {props});
+
+    await nextTick();
+
+    const table = result.container.querySelector<HTMLTableElement>('[data-slot="table-content"]')!;
+
+    return {
+      ...result,
+      columns: [...table.querySelectorAll<HTMLElement>('[data-slot="table-column"]')],
+      resizers: [...table.querySelectorAll<HTMLElement>('[data-slot="table-column-resizer"]')],
+      table,
+    };
+  };
+
+  const widthOf = (column: HTMLElement) => parseFloat(column.style.width);
+
+  it("divides a real container width between the columns", async () => {
+    const {columns, container, unmount} = await renderResizable();
+    const box = container.querySelector<HTMLElement>('[data-slot="table-resizable-container"]')!;
+    const total = columns.reduce((sum, column) => sum + widthOf(column), 0);
+
+    // Measured from the scrollable box rather than from the table, which is what lets a table
+    // wider than its container keep its columns and scroll.
+    expect(box.clientWidth).toBeGreaterThan(0);
+    expect(total).toBe(box.clientWidth);
+
+    unmount();
+  });
+
+  /**
+   * The handle is translated half-way out of its own column header, so its centre lands exactly on
+   * the boundary where the next header covers it. Every pointer position here is inside the half
+   * that belongs to this column — which is also the half a user can reach in React.
+   */
+  it("moves the edge under a real pointer drag", async () => {
+    const {columns, resizers, unmount} = await renderResizable();
+    const before = widthOf(columns[0]!);
+
+    await userEvent.dragAndDrop(resizers[0]!, resizers[1]!, {
+      sourcePosition: {x: 4, y: 8},
+      targetPosition: {x: 4, y: 8},
+    });
+
+    expect(widthOf(columns[0]!)).toBeGreaterThan(before);
+    // The drag closed on release, so the resizer is not left in edit mode.
+    expect(resizers[0]).not.toHaveAttribute("data-resizing");
+
+    unmount();
+  });
+
+  it("shows the handle under a real pointer", async () => {
+    const {resizers, unmount} = await renderResizable();
+
+    await userEvent.hover(resizers[0]!, {position: {x: 4, y: 8}});
+
+    expect(resizers[0]).toHaveAttribute("data-hovered", "true");
+    // The hairline separator becomes a full-height accent bar, which is the only affordance
+    // saying the edge can be dragged.
+    expect(getComputedStyle(resizers[0]!).width).toBe("2px");
+
+    unmount();
+  });
+
+  it("has no violations as a resizable grid", async () => {
+    const {container, unmount} = await renderResizable();
+
+    // Same palette shortfall as the other grids; every other rule still runs.
+    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+
+    unmount();
   });
 });
