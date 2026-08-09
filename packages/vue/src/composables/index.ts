@@ -20,6 +20,7 @@ export * from "./use-description";
 export * from "./use-dialog-trigger";
 export * from "./use-disclosure-group";
 export * from "./use-dismissable";
+export * from "./use-display-names";
 export * from "./use-drag";
 export * from "./use-drag-and-drop";
 export * from "./use-draggable-collection";
