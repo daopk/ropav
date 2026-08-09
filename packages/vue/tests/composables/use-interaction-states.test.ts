@@ -1,7 +1,14 @@
 import {describe, expect, it} from "vitest";
 import {effectScope, shallowRef} from "vue";
 
-import {useFocusWithin, useInteractionStates} from "@/composables/use-interaction-states";
+import {
+  getInteractionModality,
+  isFocusVisible,
+  retainInteractionModality,
+  setInteractionModality,
+  useFocusWithin,
+  useInteractionStates,
+} from "@/composables/use-interaction-states";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -289,6 +296,81 @@ describe("useInteractionStates", () => {
 
       disposeThird();
     });
+  });
+});
+
+describe("interaction modality", () => {
+  /**
+   * The tooltip case: a pointer moving across the page is how the user is driving it, but it is
+   * not an interaction that decides whether a focus ring is painted.
+   */
+  it("follows the pointer without disturbing focus visibility", () => {
+    const release = retainInteractionModality();
+
+    setKeyboardModality();
+
+    expect(getInteractionModality()).toBe("keyboard");
+    expect(isFocusVisible()).toBe(true);
+
+    document.dispatchEvent(pointerEvent("pointermove"));
+
+    expect(getInteractionModality()).toBe("pointer");
+    // A ring already on screen stays on screen: nothing was pressed.
+    expect(isFocusVisible()).toBe(true);
+
+    release();
+  });
+
+  it("follows a press for both answers", () => {
+    const release = retainInteractionModality();
+
+    setKeyboardModality();
+    setPointerModality();
+
+    expect(getInteractionModality()).toBe("pointer");
+    expect(isFocusVisible()).toBe(false);
+
+    release();
+  });
+
+  it("keeps tracking with no other consumer, and stops once released", () => {
+    // The modality is page-wide and outlives any one component, so the starting point is set
+    // here rather than assumed.
+    const setup = retainInteractionModality();
+
+    setKeyboardModality();
+    setup();
+
+    // Nothing is holding the listeners now, so the page is not being watched at all.
+    setPointerModality();
+
+    expect(getInteractionModality()).toBe("keyboard");
+
+    const release = retainInteractionModality();
+
+    setPointerModality();
+
+    expect(getInteractionModality()).toBe("pointer");
+
+    release();
+    setKeyboardModality();
+
+    expect(getInteractionModality()).toBe("pointer");
+  });
+
+  it("supports declaring the modality directly", () => {
+    setInteractionModality("keyboard");
+
+    expect(getInteractionModality()).toBe("keyboard");
+    expect(isFocusVisible()).toBe(true);
+
+    setInteractionModality("pointer");
+
+    expect(getInteractionModality()).toBe("pointer");
+    expect(isFocusVisible()).toBe(false);
+
+    // Left as the suite found it, since the modality is page-wide.
+    setInteractionModality("keyboard");
   });
 });
 
