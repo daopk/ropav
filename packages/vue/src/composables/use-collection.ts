@@ -1,3 +1,4 @@
+import type {VirtualizerCollection} from "../utils/virtualizer-layout";
 import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";
@@ -13,6 +14,18 @@ export interface CollectionItemMeta {
   isDisabled: () => boolean;
 }
 
+export interface UseCollectionOptions {
+  /**
+   * Where the collection's contents come from, when they do not come from the DOM.
+   *
+   * A virtualized collection renders only a window of its items, so the registry below can only
+   * ever see that window. Given a source, order, size and metadata are read from the data, and
+   * the registry is left with the one job the data cannot do: handing out the element a key
+   * currently occupies.
+   */
+  source?: () => VirtualizerCollection | null | undefined;
+}
+
 export interface UseCollectionReturn {
   /** How many items are registered. Read during render, so it has to be reactive. */
   size: ComputedRef<number>;
@@ -24,6 +37,8 @@ export interface UseCollectionReturn {
   getLastKey: () => CollectionKey | null;
   getKeyAfter: (key: CollectionKey) => CollectionKey | null;
   getKeyBefore: (key: CollectionKey) => CollectionKey | null;
+  /** The item's position among its siblings, or `-1` when it is not in the collection. */
+  getIndex: (key: CollectionKey) => number;
   /** Register an item and return the call that unregisters it. */
   register: (key: CollectionKey, meta: CollectionItemMeta) => () => void;
 }
@@ -48,8 +63,14 @@ export interface UseCollectionReturn {
  * silently break arrow navigation. Order is only ever read on an interaction (a keypress, a
  * focus change, extending a selection), never during render, so re-sorting per call is both
  * correct and cheap. `size` stays reactive because it *is* read during render.
+ *
+ * A collection that is virtualized cannot work that way at all: all but a window of its items are
+ * absent from the DOM, so asking the DOM would answer for the window and call the rest
+ * non-existent. Such a collection passes a `source`, and then order, size and metadata come from
+ * the data while the registry keeps the one job the data cannot do — saying which element a key
+ * currently occupies, for focus.
  */
-export const useCollection = (): UseCollectionReturn => {
+export const useCollection = (options: UseCollectionOptions = {}): UseCollectionReturn => {
   // A plain Map rather than `reactive`: the values are getter bundles, and wrapping them in a
   // proxy would only add identity surprises. Reactivity comes from `version` instead.
   const items = new Map<CollectionKey, CollectionItemMeta>();
@@ -69,7 +90,37 @@ export const useCollection = (): UseCollectionReturn => {
     };
   };
 
-  const orderedKeys = () =>
+  const source = () => options.source?.() ?? null;
+
+  /**
+   * Metadata for an item the data knows about but the DOM does not hold yet.
+   *
+   * Typeahead and the disabled check are asked about every key, not only the rendered ones, so
+   * an item outside the window has to answer for itself out of the data.
+   */
+  const metaFromSource = (key: CollectionKey): CollectionItemMeta | undefined => {
+    const node = source()?.getNode(key);
+
+    if (!node) return undefined;
+
+    return {
+      element: () => null,
+      isDisabled: () => Boolean(node.isDisabled),
+      textValue: () => node.textValue ?? "",
+    };
+  };
+
+  const orderedKeys = (): CollectionKey[] => {
+    const sourced = source();
+
+    // Data order is the collection's order. Reading the DOM would answer for the window only,
+    // and would put the first key at whatever happens to be scrolled into view.
+    if (sourced) return sourced.keys;
+
+    return domOrderedKeys();
+  };
+
+  const domOrderedKeys = () =>
     [...items.entries()]
       // A detached node makes `compareDocumentPosition` return DISCONNECTED, which leaves the
       // comparator non-transitive — enough to throw inside the engine's sort on some shapes.
@@ -115,10 +166,11 @@ export const useCollection = (): UseCollectionReturn => {
       return items.get(key)?.element() ?? null;
     },
     getFirstKey: () => keyAt(0),
+    getIndex: (key) => orderedKeys().indexOf(key),
     getItem: (key) => {
       track();
 
-      return items.get(key);
+      return items.get(key) ?? metaFromSource(key);
     },
     getKeyAfter: (key) => neighbour(key, 1),
     getKeyBefore: (key) => neighbour(key, -1),
@@ -128,7 +180,7 @@ export const useCollection = (): UseCollectionReturn => {
     size: computed(() => {
       track();
 
-      return items.size;
+      return source()?.itemCount ?? items.size;
     }),
   };
 };
