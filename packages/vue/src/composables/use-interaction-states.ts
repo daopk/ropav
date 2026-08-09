@@ -81,6 +81,26 @@ export const retainInteractionModality = (): (() => void) => retainModalityListe
 export const getInteractionModality = (): InteractionModality => latestModality;
 
 /**
+ * The same answer as a reactive ref, for text that is rendered rather than read in a handler.
+ *
+ * A drag description ("Press Enter to start dragging" against "Double tap to start dragging")
+ * lives in the DOM and has to be rewritten when the user switches input method, which a plain
+ * read cannot do.
+ *
+ * Follows the ring-safe ref rather than `latestModality`, so a bare mouse move does not rewrite
+ * the description — only a keystroke or a press does. Retains the shared listeners for as long
+ * as the calling scope lives, since a component asking this is otherwise not taking part in the
+ * interaction lifecycle.
+ */
+export const useInteractionModality = (): ComputedRef<InteractionModality> => {
+  const release = retainModalityListeners();
+
+  onScopeDispose(release);
+
+  return computed(() => modality.value);
+};
+
+/**
  * Whether focus arriving right now is the kind that came from a keyboard.
  *
  * Ported from React Aria's `isFocusVisible`, and reads the same answer React Aria reads — the one

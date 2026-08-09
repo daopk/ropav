@@ -1,10 +1,26 @@
-import {getInteractionModality} from "./use-interaction-states";
+import type {InteractionModality} from "./use-interaction-states";
+import type {ComputedRef} from "vue";
+
+import {computed} from "vue";
+
+import {getInteractionModality, useInteractionModality} from "./use-interaction-states";
 
 /**
  * How a drag was started, which decides both the wording of every announcement and which keys
  * or gestures end it.
  */
 export type DragModality = "keyboard" | "touch" | "virtual";
+
+const mapModality = (modality: InteractionModality): DragModality => {
+  if (modality === "keyboard") return "keyboard";
+
+  const isCoarse =
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(pointer: coarse)").matches;
+
+  return isCoarse ? "touch" : "virtual";
+};
 
 /**
  * How the drag currently in flight is being driven.
@@ -24,13 +40,17 @@ export type DragModality = "keyboard" | "touch" | "virtual";
  * `"virtual"` upstream, which is exactly where `"pointer"` lands, so every reachable answer is
  * the same one React Aria gives.
  */
-export const getDragModality = (): DragModality => {
-  if (getInteractionModality() === "keyboard") return "keyboard";
+export const getDragModality = (): DragModality => mapModality(getInteractionModality());
 
-  const isCoarse =
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(pointer: coarse)").matches;
+/**
+ * The drag modality as a reactive ref, for a description rendered into the DOM.
+ *
+ * The wording of "how to start a drag" differs per modality and lives in an `aria-describedby`
+ * node, so it has to be rewritten when the user switches input method — something the plain
+ * read above cannot do.
+ */
+export const useDragModality = (): ComputedRef<DragModality> => {
+  const modality = useInteractionModality();
 
-  return isCoarse ? "touch" : "virtual";
+  return computed(() => mapModality(modality.value));
 };
