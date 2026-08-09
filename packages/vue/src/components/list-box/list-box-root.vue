@@ -1,6 +1,7 @@
 <script setup lang="ts" vapor generic="T">
 import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
@@ -181,8 +182,16 @@ const dropState = dnd?.useDroppableCollectionState?.({
   selectionManager: selection,
 });
 
+/**
+ * The pointer half of dropping, attached statically below.
+ *
+ * A keyboard drag runs through the session's own document listeners, so it works without these;
+ * a pointer drag reaches nothing but the element's own `dragover`, and has to be given them.
+ */
+let droppable: UseDroppableCollectionReturn | undefined;
+
 if (dnd && dropState) {
-  dnd.useDroppableCollection?.(
+  droppable = dnd.useDroppableCollection?.(
     {
       ...dnd.options,
       // The listbox's own delegate unless the caller brought one — a virtualized list answers
@@ -256,6 +265,10 @@ const onKeydown = (event: KeyboardEvent) => {
     data-slot="list-box"
     role="listbox"
     :tabindex="keyboard.collectionTabIndex.value"
+    @dragenter="droppable?.handlers.onDragenter($event)"
+    @dragleave="droppable?.handlers.onDragleave($event)"
+    @dragover="droppable?.handlers.onDragover($event)"
+    @drop="droppable?.handlers.onDrop($event)"
     @focusin="keyboard.onFocusin"
     @focusout="keyboard.onFocusout"
     @keydown="onKeydown"
