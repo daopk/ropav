@@ -1,8 +1,9 @@
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
+import {beforeEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import {TableSortableColumnHeader} from "@/components/table";
+import {announce} from "@/utils/live-announcer";
 
 import Fixture from "./fixtures.vue";
 import SortableFixture from "./sortable-fixtures.vue";
@@ -29,6 +30,29 @@ const renderTable = async (props: Record<string, unknown> = {}) => {
     rows: [...table.querySelectorAll<HTMLElement>('[data-slot="table-row"]')],
     table,
   };
+};
+
+/** Send a key to whatever holds focus, the way a keypress actually arrives. */
+const press = (key: string, modifiers: Record<string, boolean> = {}) => {
+  document.activeElement!.dispatchEvent(
+    new KeyboardEvent("keydown", {bubbles: true, key, ...modifiers}),
+  );
+};
+
+/** What holds focus, named the way the table's own attributes name it. */
+const focusName = () => {
+  const active = document.activeElement as HTMLElement | null;
+
+  if (!active) return null;
+
+  const slot = active.getAttribute("data-slot");
+
+  if (slot === "table-content") return "table";
+  if (slot === "table-column") return `column:${active.getAttribute("data-key")}`;
+  if (slot === "table-row") return `row:${active.getAttribute("data-key")}`;
+  if (slot === "table-cell") return `cell:${active.getAttribute("data-key")}`;
+
+  return active.tagName.toLowerCase();
 };
 
 /** A click carrying modifier keys, which `HTMLElement.click()` cannot express. */
@@ -510,6 +534,371 @@ describe("Table", () => {
       await nextTick();
 
       expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+  });
+
+  describe("keyboard navigation", () => {
+    /**
+     * Focus lands on a row as soon as it enters the grid, the way React Aria has it: the grid is
+     * the tab stop only until something inside takes over.
+     */
+    const renderGrid = async (props: Record<string, unknown> = {}) => {
+      const result = await renderTable({selectionMode: "multiple", ...props});
+
+      result.table.focus();
+      await nextTick();
+
+      return result;
+    };
+
+    it("hands the tab stop to the first row as focus enters", async () => {
+      const {table} = await renderTable({selectionMode: "multiple"});
+
+      expect(table).toHaveAttribute("tabindex", "0");
+
+      table.focus();
+      await nextTick();
+
+      expect(table).toHaveAttribute("tabindex", "-1");
+      expect(focusName()).toBe("row:4586932");
+    });
+
+    it("keeps exactly one part tabbable at a time", async () => {
+      const {rows} = await renderGrid();
+
+      expect(rows[0]).toHaveAttribute("tabindex", "0");
+      expect(rows[1]).toHaveAttribute("tabindex", "-1");
+    });
+
+    it("moves down and up the rows", async () => {
+      await renderGrid();
+
+      press("ArrowDown");
+      await nextTick();
+
+      expect(focusName()).toBe("row:5273849");
+
+      press("ArrowUp");
+      await nextTick();
+
+      expect(focusName()).toBe("row:4586932");
+    });
+
+    it("stops at the last row", async () => {
+      await renderGrid();
+
+      press("ArrowDown");
+      press("ArrowDown");
+      await nextTick();
+
+      expect(focusName()).toBe("row:5273849");
+    });
+
+    // Focus mode is "row", so running off the end of a row lands on the row rather than
+    // carrying on into the next one.
+    it("steps into the cells of a row and back out to the row", async () => {
+      await renderGrid();
+
+      press("ArrowRight");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:name");
+
+      press("ArrowRight");
+      press("ArrowRight");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:email");
+
+      press("ArrowRight");
+      await nextTick();
+
+      expect(focusName()).toBe("row:4586932");
+    });
+
+    it("steps backwards from the row into its last cell", async () => {
+      await renderGrid();
+
+      press("ArrowLeft");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:email");
+    });
+
+    it("carries the column across when moving between rows", async () => {
+      await renderGrid();
+
+      press("ArrowRight");
+      press("ArrowRight");
+      press("ArrowDown");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:5273849:role");
+    });
+
+    it("goes up from the first row into the header", async () => {
+      await renderGrid();
+
+      press("ArrowUp");
+      await nextTick();
+
+      expect(focusName()).toBe("column:name");
+    });
+
+    it("goes up from a cell to the column above it", async () => {
+      await renderGrid();
+
+      press("ArrowRight");
+      press("ArrowRight");
+      press("ArrowUp");
+      await nextTick();
+
+      expect(focusName()).toBe("column:role");
+    });
+
+    it("comes back down from a column header into the cell under it", async () => {
+      const {columns} = await renderGrid();
+
+      columns[1]!.focus();
+      press("ArrowDown");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:role");
+    });
+
+    it("stays in the header on the way up", async () => {
+      const {columns} = await renderGrid();
+
+      columns[0]!.focus();
+      press("ArrowUp");
+      await nextTick();
+
+      expect(focusName()).toBe("column:name");
+    });
+
+    // The header row wraps, unlike the cells of a body row.
+    it("wraps around the column headers", async () => {
+      const {columns} = await renderGrid();
+
+      columns[0]!.focus();
+      press("ArrowLeft");
+      await nextTick();
+
+      expect(focusName()).toBe("column:email");
+
+      press("ArrowRight");
+      await nextTick();
+
+      expect(focusName()).toBe("column:name");
+    });
+
+    it("takes Home and End to the ends of the row it is in", async () => {
+      await renderGrid();
+
+      press("ArrowRight");
+      press("End");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:email");
+
+      press("Home");
+      await nextTick();
+
+      expect(focusName()).toBe("cell:4586932:name");
+    });
+
+    it("takes a modified Home and End to the ends of the whole grid", async () => {
+      await renderGrid();
+
+      press("End", {ctrlKey: true});
+      await nextTick();
+
+      expect(focusName()).toBe("row:5273849");
+
+      press("Home", {ctrlKey: true});
+      await nextTick();
+
+      expect(focusName()).toBe("row:4586932");
+    });
+
+    it("selects everything on the select-all chord", async () => {
+      const {rows} = await renderGrid();
+
+      press("a", {ctrlKey: true});
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("clears the selection on Escape", async () => {
+      const {rows} = await renderGrid();
+
+      press(" ");
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+
+      press("Escape");
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("toggles the focused row on Space", async () => {
+      const {rows} = await renderGrid();
+
+      press(" ");
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+
+      press(" ");
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("extends the selection across a shifted arrow", async () => {
+      const {rows} = await renderGrid();
+
+      press(" ");
+      press("ArrowDown", {shiftKey: true});
+      await nextTick();
+
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    // The selection manager runs on rows alone, so extending a range has to work the same
+    // whether the focused position is a row or one of its cells.
+    it("extends a range while focus is on a cell", async () => {
+      const {rows} = await renderGrid();
+
+      press("ArrowRight");
+      press(" ");
+      press("ArrowDown", {shiftKey: true});
+      await nextTick();
+
+      expect(focusName()).toBe("cell:5273849:name");
+      expect(rows[0]).toHaveAttribute("aria-selected", "true");
+      expect(rows[1]).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("focuses the row a typed prefix matches", async () => {
+      await renderGrid();
+
+      press("j");
+      await nextTick();
+
+      expect(focusName()).toBe("row:5273849");
+    });
+
+    it("wraps a search round the end of the grid", async () => {
+      await renderGrid();
+
+      press("ArrowDown");
+      press("k");
+      await nextTick();
+
+      expect(focusName()).toBe("row:4586932");
+    });
+
+    it("skips a disabled row", async () => {
+      await renderGrid({disabledKeys: [4586932]});
+
+      expect(focusName()).toBe("row:5273849");
+    });
+
+    it("leaves a disabled row out of the tab order entirely", async () => {
+      const {rows} = await renderTable({disabledKeys: [4586932], selectionMode: "multiple"});
+
+      // React Aria omits the attribute rather than setting it to -1.
+      expect(rows[0]).not.toHaveAttribute("tabindex");
+      expect(rows[1]).toHaveAttribute("tabindex", "-1");
+    });
+
+    // A checkbox needs its own Space, and a button its own Enter.
+    it("leaves keys pressed on a control inside a cell alone", async () => {
+      const {rows} = await renderGrid({withSelectionColumn: true});
+      const checkbox = rows[0]!.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
+
+      checkbox.focus();
+      press(" ");
+      await nextTick();
+
+      // Nothing moved, and the grid did not treat the key as a row selection either.
+      expect(document.activeElement).toBe(checkbox);
+      expect(rows[0]).toHaveAttribute("aria-selected", "false");
+    });
+  });
+
+  describe("announcing selection", () => {
+    const liveRegion = () => document.querySelector('[data-slot="live-announcer"]');
+
+    // The live region is one shared element for the whole page, so it outlives a test.
+    beforeEach(() => announce(""));
+
+    const renderAnnouncing = async (props: Record<string, unknown> = {}) => {
+      const result = await renderTable({selectionMode: "multiple", ...props});
+
+      result.table.focus();
+      await nextTick();
+
+      return result;
+    };
+
+    // Most screen readers say nothing when a grid row is selected, so the change is spoken here.
+    it("names the row and the running total", async () => {
+      await renderAnnouncing();
+
+      press(" ");
+      await nextTick();
+
+      // No running total yet: saying "1 item selected" straight after naming the row would only
+      // repeat it. React Aria skips the count for the first row of a selection too.
+      expect(liveRegion()).toHaveTextContent("Kate Moore selected.");
+    });
+
+    it("says a row was deselected", async () => {
+      await renderAnnouncing();
+
+      press(" ");
+      await nextTick();
+      press(" ");
+      await nextTick();
+
+      expect(liveRegion()).toHaveTextContent("Kate Moore not selected.");
+    });
+
+    it("reports a select-all as one thing rather than row by row", async () => {
+      await renderAnnouncing();
+
+      press("a", {ctrlKey: true});
+      await nextTick();
+
+      expect(liveRegion()).toHaveTextContent("All items selected.");
+    });
+
+    it("drops the row name once more than one row is involved", async () => {
+      await renderAnnouncing();
+
+      press(" ");
+      await nextTick();
+      press("ArrowDown", {shiftKey: true});
+      await nextTick();
+
+      expect(liveRegion()).toHaveTextContent("2 items selected.");
+    });
+
+    // A selection the grid did not make is not the grid's news to report.
+    it("stays quiet while focus is outside the grid", async () => {
+      const {rows} = await renderTable({selectionMode: "multiple"});
+
+      rows[0]!.click();
+      await nextTick();
+
+      expect(liveRegion()?.textContent ?? "").toBe("");
     });
   });
 
