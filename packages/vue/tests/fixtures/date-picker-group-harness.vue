@@ -5,8 +5,14 @@ import {provideLocale} from "@/composables/use-locale";
 
 import DatePickerGroupHost from "./date-picker-group-host.vue";
 
-// The locale has to come from an ancestor, so the harness is a component of its own.
-const props = defineProps<DatePickerGroupHarnessProps>();
+/*
+ * The locale has to come from an ancestor, so the harness is a component of its own. Its
+ * three-state boolean defaults to undefined for the same reason the host's does: a cast `false`
+ * forwarded on is not the same as absent.
+ */
+const props = withDefaults(defineProps<DatePickerGroupHarnessProps>(), {
+  disableArrowNavigation: undefined,
+});
 
 provideLocale(() => props.locale);
 </script>
