@@ -18,6 +18,8 @@ export * from "./use-collection";
 export * from "./use-color-area";
 export * from "./use-color-area-gradient";
 export * from "./use-color-area-state";
+export * from "./use-color-field";
+export * from "./use-color-field-state";
 export * from "./use-color-slider";
 export * from "./use-color-slider-state";
 export * from "./use-color-swatch";
