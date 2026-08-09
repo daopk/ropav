@@ -421,6 +421,13 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
       // The trailing separator is deliberate: the referenced label reads on after this one.
       "aria-label": `${name.value ?? ""}${label ? `, ${label}` : ""}${labelledBy ? ", " : ""}`,
       "aria-labelledby": labelledBy,
+      /*
+       * The segment's own id, not one of its own: with both a label and a list of labelling ids,
+       * `useLabels` prepends the element's id so its `aria-label` counts as the first part of the
+       * name — and an id belonging to nothing would point the name at nothing. React arrives at the
+       * same place through `mergeIds`, which aliases the two ids together after the fact.
+       */
+      id: id.value,
     };
   });
 
