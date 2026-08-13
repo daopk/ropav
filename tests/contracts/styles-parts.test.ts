@@ -49,7 +49,7 @@ import {
     toastParts,
     toastViewportParts,
     tooltipParts,
-} from './index';
+} from '@/index';
 
 describe('public semantic part catalog', () => {
     it('contains only the documented semantic parts', () => {

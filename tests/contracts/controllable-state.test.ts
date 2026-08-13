@@ -1,38 +1,38 @@
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, shallowRef, type ShallowRef } from 'vue';
 
-import { click, flush, mountDom, waitForAssertion } from '../tests/utils/vue';
-import { useDelayedOpen } from './internal/composables/useDelayedOpen';
-import Alert from './components/alert/alert.vue';
-import DialogRoot from './components/dialog/dialog-root.vue';
-import DropdownMenuCheckboxItem from './components/dropdown-menu/dropdown-menu-checkbox-item.vue';
-import DropdownMenuContent from './components/dropdown-menu/dropdown-menu-content.vue';
-import DropdownMenuRadioGroup from './components/dropdown-menu/dropdown-menu-radio-group.vue';
-import DropdownMenuRadioItem from './components/dropdown-menu/dropdown-menu-radio-item.vue';
-import DropdownMenuRoot from './components/dropdown-menu/dropdown-menu-root.vue';
-import DropdownMenuSub from './components/dropdown-menu/dropdown-menu-sub.vue';
-import NumberInput from './components/number-input/number-input.vue';
-import Select from './components/select/select.vue';
-import Toast from './components/toast/toast.vue';
-import { useAccordion } from './components/accordion/useAccordion';
-import { useCollapse } from './components/collapse/useCollapse';
-import { useDropdownMenu } from './components/dropdown-menu/useDropdownMenu';
-import { useHoverDisclosure } from './components/floating/useHoverDisclosure';
-import { useModal } from './components/modal/useModal';
-import { usePopover } from './components/popover/usePopover';
-import { useRadioGroup } from './components/radio/useRadio';
-import { useTabs } from './components/tabs/useTabs';
-import { useToastState } from './components/toast/useToastState';
-import type { AccordionModelValue, AccordionProps } from './components/accordion/types';
+import { click, flush, mountDom, waitForAssertion } from '../utils/vue';
+import { useDelayedOpen } from '@/internal/composables/useDelayedOpen';
+import Alert from '@/components/alert/alert.vue';
+import DialogRoot from '@/components/dialog/dialog-root.vue';
+import DropdownMenuCheckboxItem from '@/components/dropdown-menu/dropdown-menu-checkbox-item.vue';
+import DropdownMenuContent from '@/components/dropdown-menu/dropdown-menu-content.vue';
+import DropdownMenuRadioGroup from '@/components/dropdown-menu/dropdown-menu-radio-group.vue';
+import DropdownMenuRadioItem from '@/components/dropdown-menu/dropdown-menu-radio-item.vue';
+import DropdownMenuRoot from '@/components/dropdown-menu/dropdown-menu-root.vue';
+import DropdownMenuSub from '@/components/dropdown-menu/dropdown-menu-sub.vue';
+import NumberInput from '@/components/number-input/number-input.vue';
+import Select from '@/components/select/select.vue';
+import Toast from '@/components/toast/toast.vue';
+import { useAccordion } from '@/components/accordion/useAccordion';
+import { useCollapse } from '@/components/collapse/useCollapse';
+import { useDropdownMenu } from '@/components/dropdown-menu/useDropdownMenu';
+import { useHoverDisclosure } from '@/components/floating/useHoverDisclosure';
+import { useModal } from '@/components/modal/useModal';
+import { usePopover } from '@/components/popover/usePopover';
+import { useRadioGroup } from '@/components/radio/useRadio';
+import { useTabs } from '@/components/tabs/useTabs';
+import { useToastState } from '@/components/toast/useToastState';
+import type { AccordionModelValue, AccordionProps } from '@/components/accordion/types';
 import type {
     DropdownMenuCheckedState,
     DropdownMenuItemValue,
     DropdownMenuProps,
-} from './components/dropdown-menu/types';
-import type { ModalProps } from './components/modal/types';
-import type { PopoverProps } from './components/popover/types';
-import type { RadioGroupProps } from './components/radio/types';
-import type { TabsProps, TabsValue } from './components/tabs/types';
+} from '@/components/dropdown-menu/types';
+import type { ModalProps } from '@/components/modal/types';
+import type { PopoverProps } from '@/components/popover/types';
+import type { RadioGroupProps } from '@/components/radio/types';
+import type { TabsProps, TabsValue } from '@/components/tabs/types';
 
 interface ContractHarness {
     initial: unknown;

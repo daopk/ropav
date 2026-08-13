@@ -53,7 +53,7 @@ export default mergeConfig(
                     test: {
                         name: 'unit',
                         environment: 'jsdom',
-                        include: ['src/**/*.test.ts'],
+                        include: ['src/**/*.test.ts', 'tests/contracts/**/*.test.ts'],
                         css: false,
                     },
                 },
