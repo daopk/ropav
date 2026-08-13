@@ -1,0 +1,786 @@
+{
+  "font": {
+    "family": {
+      "base": {
+        "$type": "fontFamily",
+        "$value": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "size": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.25,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "weight": {
+      "normal": {
+        "$type": "fontWeight",
+        "$value": 400,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    }
+  },
+  "line-height": {
+    "xs": {
+      "$type": "number",
+      "$value": 1.4,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "sm": {
+      "$type": "number",
+      "$value": 1.45,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "md": {
+      "$type": "number",
+      "$value": 1.55,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "lg": {
+      "$type": "number",
+      "$value": 1.6,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "xl": {
+      "$type": "number",
+      "$value": 1.65,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  },
+  "heading": {
+    "h1": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.3,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "h2": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.35,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "h3": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.375,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.4,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "h4": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.45,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "h5": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.5,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "h6": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "line-height": {
+        "$type": "number",
+        "$value": 1.5,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "font-weight": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    }
+  },
+  "color": {
+    "$type": "color",
+    "white": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ]
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "black": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0,
+          0
+        ]
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  },
+  "spacing": {
+    "0": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "1": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.25,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.5,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.25,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.5,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "10": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2.5,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": {
+        "value": 3,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  },
+  "radius": {
+    "none": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.25,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.375,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.5,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  },
+  "border": {
+    "width": {
+      "thin": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "medium": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    }
+  },
+  "size": {
+    "control": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 30,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 42,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 50,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 60,
+          "unit": "px"
+        },
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    }
+  },
+  "z-index": {
+    "dropdown": {
+      "$type": "number",
+      "$value": 100
+    },
+    "tooltip": {
+      "$type": "number",
+      "$value": 1000
+    }
+  },
+  "opacity": {
+    "disabled": {
+      "$type": "number",
+      "$value": 0.65,
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  },
+  "transition": {
+    "fast": {
+      "$type": "transition",
+      "$value": {
+        "duration": {
+          "value": 150,
+          "unit": "ms"
+        },
+        "delay": {
+          "value": 0,
+          "unit": "ms"
+        },
+        "timingFunction": [
+          0.25,
+          0.1,
+          0.25,
+          1
+        ]
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "base": {
+      "$type": "transition",
+      "$value": {
+        "duration": {
+          "value": 200,
+          "unit": "ms"
+        },
+        "delay": {
+          "value": 0,
+          "unit": "ms"
+        },
+        "timingFunction": [
+          0.25,
+          0.1,
+          0.25,
+          1
+        ]
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    },
+    "slow": {
+      "$type": "transition",
+      "$value": {
+        "duration": {
+          "value": 300,
+          "unit": "ms"
+        },
+        "delay": {
+          "value": 0,
+          "unit": "ms"
+        },
+        "timingFunction": [
+          0.25,
+          0.1,
+          0.25,
+          1
+        ]
+      },
+      "$extensions": {
+        "umberkit": {
+          "public": true
+        }
+      }
+    }
+  }
+}

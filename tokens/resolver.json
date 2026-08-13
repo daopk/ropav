@@ -1,0 +1,29 @@
+{
+  "version": "2025.10",
+  "name": "ropav",
+  "sets": {
+    "base": {
+      "sources": [
+        { "$ref": "base.tokens.json" },
+        { "$ref": "semantic.tokens.json" },
+        { "$ref": "components.tokens.json" }
+      ]
+    }
+  },
+  "modifiers": {
+    "scheme": {
+      "contexts": {
+        "light": [
+          { "$ref": "generated/light.tokens.json" },
+          { "$ref": "shadows.light.tokens.json" }
+        ],
+        "dark": [
+          { "$ref": "generated/dark.tokens.json" },
+          { "$ref": "shadows.dark.tokens.json" }
+        ]
+      },
+      "default": "light"
+    }
+  },
+  "resolutionOrder": [{ "$ref": "#/modifiers/scheme" }, { "$ref": "#/sets/base" }]
+}

@@ -1,0 +1,1376 @@
+{
+  "color": {
+    "$type": "color",
+    "gray": {
+      "filled": {
+        "$value": "{color.gray.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.gray.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.gray.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.gray.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.gray.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.gray.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.gray.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "red": {
+      "filled": {
+        "$value": "{color.red.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.red.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.red.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.red.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.red.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.red.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.red.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "pink": {
+      "filled": {
+        "$value": "{color.pink.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.pink.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.pink.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.pink.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.pink.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.pink.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.pink.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "grape": {
+      "filled": {
+        "$value": "{color.grape.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.grape.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.grape.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.grape.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.grape.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.grape.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.grape.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "violet": {
+      "filled": {
+        "$value": "{color.violet.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.violet.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.violet.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.violet.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.violet.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.violet.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.violet.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "indigo": {
+      "filled": {
+        "$value": "{color.indigo.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.indigo.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.indigo.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.indigo.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.indigo.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.indigo.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.indigo.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "blue": {
+      "filled": {
+        "$value": "{color.blue.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.blue.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.blue.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.blue.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.blue.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.blue.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.blue.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "cyan": {
+      "filled": {
+        "$value": "{color.cyan.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.cyan.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.cyan.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.cyan.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.cyan.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.cyan.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.cyan.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "teal": {
+      "filled": {
+        "$value": "{color.teal.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.teal.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.teal.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.teal.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.teal.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.teal.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.teal.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "green": {
+      "filled": {
+        "$value": "{color.green.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.green.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.green.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.green.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.green.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.green.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.green.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "lime": {
+      "filled": {
+        "$value": "{color.lime.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.lime.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.lime.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.lime.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.lime.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.lime.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.lime.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "yellow": {
+      "filled": {
+        "$value": "{color.yellow.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.yellow.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.yellow.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.yellow.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.yellow.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.yellow.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.yellow.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "orange": {
+      "filled": {
+        "$value": "{color.orange.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.orange.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.orange.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.orange.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.orange.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.orange.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.orange.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "primary": {
+      "1": {
+        "$value": "{color.blue.1}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$value": "{color.blue.2}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$value": "{color.blue.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$value": "{color.blue.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$value": "{color.blue.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$value": "{color.blue.6}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$value": "{color.blue.7}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$value": "{color.blue.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$value": "{color.blue.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$value": "{color.blue.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$value": "{color.blue.11}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$value": "{color.blue.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$value": "{color.blue.a1}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$value": "{color.blue.a2}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$value": "{color.blue.a3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$value": "{color.blue.a4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$value": "{color.blue.a5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$value": "{color.blue.a6}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$value": "{color.blue.a7}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$value": "{color.blue.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$value": "{color.blue.a9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$value": "{color.blue.a10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$value": "{color.blue.a11}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$value": "{color.blue.a12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled": {
+        "$value": "{color.blue.9}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "filled-hover": {
+        "$value": "{color.blue.10}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$value": "{color.blue.contrast}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light": {
+        "$value": "{color.blue.3}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-hover": {
+        "$value": "{color.blue.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-color": {
+        "$value": "{color.blue.12}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline": {
+        "$value": "{color.blue.8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "outline-hover": {
+        "$value": "{color.blue.a8}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    },
+    "bright": {
+      "$value": "{color.gray.12}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "text": {
+      "$value": "{color.gray.12}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "body": {
+      "$value": "{color.gray.1}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "placeholder": {
+      "$value": "{color.gray.10}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "default": {
+      "$value": "{color.gray.2}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "default-hover": {
+      "$value": "{color.gray.3}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "default-color": {
+      "$value": "{color.gray.12}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "default-border": {
+      "$value": "{color.gray.7}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "default-border-hover": {
+      "$value": "{color.gray.8}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "dimmed": {
+      "$value": "{color.gray.11}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "disabled": {
+      "$value": "{color.gray.3}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "disabled-color": {
+      "$value": "{color.gray.8}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "disabled-border": {
+      "$value": "{color.gray.6}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "focus-ring": {
+      "$value": "{color.primary.a6}",
+      "$extensions": {
+        "umberkit": {
+          "tier": "semantic",
+          "public": true
+        }
+      }
+    },
+    "control": {
+      "bg": {
+        "$value": "{color.default}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "readonly-bg": {
+        "$value": "{color.default-hover}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "fg": {
+        "$value": "{color.default-color}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "placeholder": {
+        "$value": "{color.placeholder}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "icon": {
+        "$value": "{color.dimmed}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "border": {
+        "$value": "{color.default-border}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "border-hover": {
+        "$value": "{color.default-border-hover}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "border-focus": {
+        "$value": "{color.primary.filled}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "track-bg": {
+        "$value": "{color.disabled-border}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "thumb-bg": {
+        "$value": "{color.white}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "selected-bg": {
+        "$value": "{color.primary.filled}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "selected-fg": {
+        "$value": "{color.primary.contrast}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      }
+    }
+  }
+}

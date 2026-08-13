@@ -300,6 +300,7 @@
     "storybook-addon-pseudo-states": "^10.5.3",
     "style-dictionary": "5.5.0",
     "typescript": "~6.0.3",
+    "umberkit": "0.0.1",
     "unplugin-icons": "^23.0.1",
     "vite": "^8.1.5",
     "vite-plugin-dts": "^5.0.3",

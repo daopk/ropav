@@ -1,0 +1,5717 @@
+{
+  "$extensions": {
+    "umberkit": {
+      "generated": {
+        "algoVersion": 2,
+        "mode": "dark",
+        "palettes": {
+          "blue": "oklch(54.26% 0.1485 251.67)",
+          "cyan": "oklch(67.77% 0.1144 210.62)",
+          "grape": "oklch(62.39% 0.2251 318.91)",
+          "gray": "oklch(64.28% 0.0152 248.06)",
+          "green": "oklch(71.46% 0.1835 146.44)",
+          "indigo": "oklch(58.96% 0.2054 268.62)",
+          "lime": "oklch(76% 0.1996 131.08)",
+          "orange": "oklch(72.65% 0.1832 51.48)",
+          "pink": "oklch(63.96% 0.1968 3.19)",
+          "red": "oklch(67.06% 0.2045 24.52)",
+          "teal": "oklch(69.46% 0.1435 164.88)",
+          "violet": "oklch(56.92% 0.2289 288.56)",
+          "yellow": "oklch(80.69% 0.1674 78.12)"
+        }
+      }
+    }
+  },
+  "color": {
+    "blue": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0146,
+            251.67
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0191,
+            251.67
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0484,
+            251.67
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0704,
+            251.67
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0791,
+            251.67
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.0843,
+            251.67
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.0929,
+            251.67
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1125,
+            251.67
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5426,
+            0.1485,
+            251.67
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5796,
+            0.1412,
+            251.67
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1183,
+            251.67
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0476,
+            251.67
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8102,
+            0.0982,
+            252.01
+          ],
+          "alpha": 0.1025
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7975,
+            0.1052,
+            252
+          ],
+          "alpha": 0.1287
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7063,
+            0.1578,
+            252.42
+          ],
+          "alpha": 0.2361
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6755,
+            0.1762,
+            252.63
+          ],
+          "alpha": 0.3223
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6868,
+            0.1696,
+            252.31
+          ],
+          "alpha": 0.3902
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7042,
+            0.1593,
+            252.05
+          ],
+          "alpha": 0.4566
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7168,
+            0.1519,
+            251.89
+          ],
+          "alpha": 0.5461
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7094,
+            0.1563,
+            251.83
+          ],
+          "alpha": 0.6663
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6623,
+            0.1849,
+            251.95
+          ],
+          "alpha": 0.7608
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6864,
+            0.1702,
+            251.8
+          ],
+          "alpha": 0.7935
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1183,
+            251.66
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0475,
+            251.65
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "cyan": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0112,
+            210.62
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0147,
+            210.62
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0373,
+            210.62
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0536,
+            210.62
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0609,
+            210.62
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.0649,
+            210.62
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.0716,
+            210.62
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.0867,
+            210.62
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6777,
+            0.1144,
+            210.62
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7147,
+            0.1088,
+            210.62
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.0976,
+            210.62
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0443,
+            210.62
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9062,
+            0.082,
+            210.96
+          ],
+          "alpha": 0.0883
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8988,
+            0.0886,
+            211.01
+          ],
+          "alpha": 0.1098
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8439,
+            0.1354,
+            212.07
+          ],
+          "alpha": 0.1866
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8284,
+            0.1452,
+            213.31
+          ],
+          "alpha": 0.2476
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8318,
+            0.1449,
+            212.52
+          ],
+          "alpha": 0.3041
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.84,
+            0.1409,
+            211.54
+          ],
+          "alpha": 0.3616
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.847,
+            0.1357,
+            211.16
+          ],
+          "alpha": 0.4373
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8417,
+            0.1408,
+            211.11
+          ],
+          "alpha": 0.5307
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8408,
+            0.1428,
+            210.84
+          ],
+          "alpha": 0.749
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8536,
+            0.1311,
+            210.72
+          ],
+          "alpha": 0.7883
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8752,
+            0.1111,
+            210.65
+          ],
+          "alpha": 0.8496
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9466,
+            0.0465,
+            210.62
+          ],
+          "alpha": 0.9419
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "grape": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0221,
+            318.91
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0289,
+            318.91
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0733,
+            318.91
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.1067,
+            318.91
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.1198,
+            318.91
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1278,
+            318.91
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1408,
+            318.91
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1705,
+            318.91
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6239,
+            0.2251,
+            318.91
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6609,
+            0.2141,
+            318.91
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7897,
+            0.1699,
+            318.91
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0731,
+            318.91
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8146,
+            0.1479,
+            318.85
+          ],
+          "alpha": 0.1021
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8022,
+            0.1586,
+            318.84
+          ],
+          "alpha": 0.1282
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7152,
+            0.2369,
+            318.71
+          ],
+          "alpha": 0.2341
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6857,
+            0.2646,
+            318.65
+          ],
+          "alpha": 0.319
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6952,
+            0.256,
+            318.74
+          ],
+          "alpha": 0.3863
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.711,
+            0.2414,
+            318.81
+          ],
+          "alpha": 0.4525
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7226,
+            0.2307,
+            318.85
+          ],
+          "alpha": 0.5414
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.715,
+            0.2379,
+            318.87
+          ],
+          "alpha": 0.6603
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.698,
+            0.2541,
+            318.89
+          ],
+          "alpha": 0.8588
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7188,
+            0.2345,
+            318.9
+          ],
+          "alpha": 0.8926
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7897,
+            0.1699,
+            318.92
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.073,
+            318.92
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "gray": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0015,
+            248.06
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0019,
+            248.06
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0049,
+            248.06
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0072,
+            248.06
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0081,
+            248.06
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.0086,
+            248.06
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.0095,
+            248.06
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.0115,
+            248.06
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6428,
+            0.0152,
+            248.06
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6798,
+            0.0144,
+            248.06
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.013,
+            248.06
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0059,
+            248.06
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.975,
+            0.0124,
+            248.11
+          ],
+          "alpha": 0.0796
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9728,
+            0.0135,
+            248.11
+          ],
+          "alpha": 0.0982
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9539,
+            0.023,
+            248.12
+          ],
+          "alpha": 0.1559
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9464,
+            0.0269,
+            248.12
+          ],
+          "alpha": 0.2022
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9496,
+            0.0252,
+            248.1
+          ],
+          "alpha": 0.2503
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.954,
+            0.023,
+            248.09
+          ],
+          "alpha": 0.3023
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9571,
+            0.0214,
+            248.08
+          ],
+          "alpha": 0.3696
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9555,
+            0.0222,
+            248.08
+          ],
+          "alpha": 0.4461
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9532,
+            0.0234,
+            248.07
+          ],
+          "alpha": 0.5882
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9579,
+            0.021,
+            248.07
+          ],
+          "alpha": 0.631
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9669,
+            0.0165,
+            248.07
+          ],
+          "alpha": 0.7441
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9869,
+            0.0065,
+            248.06
+          ],
+          "alpha": 0.8913
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "green": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.018,
+            146.44
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0235,
+            146.44
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0598,
+            146.44
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.087,
+            146.44
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0977,
+            146.44
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1042,
+            146.44
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1148,
+            146.44
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.139,
+            146.44
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7146,
+            0.1835,
+            146.44
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7516,
+            0.1745,
+            146.44
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1565,
+            146.44
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.071,
+            146.44
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9248,
+            0.138,
+            145.82
+          ],
+          "alpha": 0.086
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9193,
+            0.1494,
+            145.83
+          ],
+          "alpha": 0.1067
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8818,
+            0.2382,
+            145.41
+          ],
+          "alpha": 0.1763
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8706,
+            0.2693,
+            144.97
+          ],
+          "alpha": 0.2314
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.873,
+            0.2608,
+            145.46
+          ],
+          "alpha": 0.2845
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8787,
+            0.2443,
+            145.83
+          ],
+          "alpha": 0.3405
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8833,
+            0.2318,
+            146.05
+          ],
+          "alpha": 0.4137
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8797,
+            0.2407,
+            146.11
+          ],
+          "alpha": 0.5004
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8836,
+            0.23,
+            146.34
+          ],
+          "alpha": 0.7529
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.892,
+            0.2096,
+            146.38
+          ],
+          "alpha": 0.7956
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9028,
+            0.1845,
+            146.4
+          ],
+          "alpha": 0.8154
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9562,
+            0.0754,
+            146.44
+          ],
+          "alpha": 0.9294
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "indigo": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0201,
+            268.62
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0264,
+            268.62
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0669,
+            268.62
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0973,
+            268.62
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.1094,
+            268.62
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1166,
+            268.62
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1285,
+            268.62
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1556,
+            268.62
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5896,
+            0.2054,
+            268.62
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6266,
+            0.1953,
+            268.62
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1139,
+            268.62
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0457,
+            268.62
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.753,
+            0.1259,
+            267.78
+          ],
+          "alpha": 0.1132
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7382,
+            0.1343,
+            267.81
+          ],
+          "alpha": 0.1431
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6351,
+            0.1949,
+            267.62
+          ],
+          "alpha": 0.2735
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6014,
+            0.2156,
+            267.75
+          ],
+          "alpha": 0.3783
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6137,
+            0.208,
+            268.01
+          ],
+          "alpha": 0.4553
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6328,
+            0.1963,
+            268.21
+          ],
+          "alpha": 0.5285
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6468,
+            0.1878,
+            268.37
+          ],
+          "alpha": 0.6283
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6386,
+            0.1927,
+            268.48
+          ],
+          "alpha": 0.7689
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.607,
+            0.2122,
+            268.59
+          ],
+          "alpha": 0.9608
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6316,
+            0.1971,
+            268.61
+          ],
+          "alpha": 0.9893
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1139,
+            268.62
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0457,
+            268.61
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "lime": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0196,
+            131.08
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0256,
+            131.08
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.065,
+            131.08
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0845,
+            131.08
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0971,
+            131.08
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1104,
+            131.08
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1249,
+            131.08
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1445,
+            131.08
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.76,
+            0.1996,
+            131.08
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.797,
+            0.1899,
+            131.08
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1703,
+            131.08
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0773,
+            131.08
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9359,
+            0.151,
+            131.85
+          ],
+          "alpha": 0.0846
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9315,
+            0.1635,
+            131.86
+          ],
+          "alpha": 0.1047
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9011,
+            0.2495,
+            133.27
+          ],
+          "alpha": 0.1705
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8982,
+            0.2563,
+            133.65
+          ],
+          "alpha": 0.2197
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9001,
+            0.2543,
+            133.06
+          ],
+          "alpha": 0.2715
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9016,
+            0.2528,
+            132.61
+          ],
+          "alpha": 0.3283
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9037,
+            0.2498,
+            132.06
+          ],
+          "alpha": 0.4009
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9039,
+            0.2505,
+            131.9
+          ],
+          "alpha": 0.4821
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9084,
+            0.2404,
+            131.22
+          ],
+          "alpha": 0.7882
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9146,
+            0.2196,
+            131.15
+          ],
+          "alpha": 0.8324
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9193,
+            0.2043,
+            131.15
+          ],
+          "alpha": 0.796
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9629,
+            0.0826,
+            131.08
+          ],
+          "alpha": 0.9209
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "orange": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.018,
+            51.48
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0235,
+            51.48
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0597,
+            51.48
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.08,
+            51.48
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0919,
+            51.48
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.104,
+            51.48
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1146,
+            51.48
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1368,
+            51.48
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7265,
+            0.1832,
+            51.48
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7635,
+            0.157,
+            51.48
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7797,
+            0.1441,
+            51.48
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0559,
+            51.48
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8092,
+            0.1205,
+            50.55
+          ],
+          "alpha": 0.1032
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7977,
+            0.1291,
+            50.5
+          ],
+          "alpha": 0.1295
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7181,
+            0.1896,
+            47.42
+          ],
+          "alpha": 0.2337
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7048,
+            0.199,
+            45.75
+          ],
+          "alpha": 0.3073
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7103,
+            0.196,
+            47.16
+          ],
+          "alpha": 0.3756
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7152,
+            0.1933,
+            48.36
+          ],
+          "alpha": 0.4499
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7255,
+            0.1868,
+            50.05
+          ],
+          "alpha": 0.5392
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7212,
+            0.1905,
+            50.04
+          ],
+          "alpha": 0.6534
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7308,
+            0.1843,
+            51.47
+          ],
+          "alpha": 0.9922
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7635,
+            0.157,
+            51.48
+          ]
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7797,
+            0.1441,
+            51.48
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0559,
+            51.49
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "pink": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0193,
+            3.19
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0253,
+            3.19
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0641,
+            3.19
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0933,
+            3.19
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.1048,
+            3.19
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1117,
+            3.19
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1232,
+            3.19
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1491,
+            3.19
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6396,
+            0.1968,
+            3.19
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6766,
+            0.1872,
+            3.19
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7847,
+            0.1334,
+            3.19
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0522,
+            3.19
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7911,
+            0.1272,
+            4.84
+          ],
+          "alpha": 0.1066
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7795,
+            0.1361,
+            4.74
+          ],
+          "alpha": 0.1338
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7,
+            0.2024,
+            5.14
+          ],
+          "alpha": 0.2426
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6749,
+            0.2262,
+            5.05
+          ],
+          "alpha": 0.3281
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6831,
+            0.219,
+            4.48
+          ],
+          "alpha": 0.3973
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6971,
+            0.2064,
+            4.04
+          ],
+          "alpha": 0.466
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7076,
+            0.1972,
+            3.73
+          ],
+          "alpha": 0.558
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7009,
+            0.2035,
+            3.54
+          ],
+          "alpha": 0.6791
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6904,
+            0.2137,
+            3.28
+          ],
+          "alpha": 0.902
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7086,
+            0.1968,
+            3.23
+          ],
+          "alpha": 0.9395
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7847,
+            0.1334,
+            3.18
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0522,
+            3.18
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "red": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.02,
+            24.52
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0262,
+            24.52
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0666,
+            24.52
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0969,
+            24.52
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.1089,
+            24.52
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1161,
+            24.52
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1279,
+            24.52
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1549,
+            24.52
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6706,
+            0.2045,
+            24.52
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7076,
+            0.1845,
+            24.52
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7797,
+            0.1286,
+            24.52
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0492,
+            24.52
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7774,
+            0.1302,
+            25.6
+          ],
+          "alpha": 0.1094
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7653,
+            0.1391,
+            25.58
+          ],
+          "alpha": 0.1375
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6836,
+            0.2051,
+            25.98
+          ],
+          "alpha": 0.2518
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6578,
+            0.2285,
+            25.9
+          ],
+          "alpha": 0.3415
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6657,
+            0.2212,
+            25.5
+          ],
+          "alpha": 0.413
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6796,
+            0.2087,
+            25.17
+          ],
+          "alpha": 0.4834
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6901,
+            0.1994,
+            24.93
+          ],
+          "alpha": 0.5779
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.683,
+            0.2056,
+            24.79
+          ],
+          "alpha": 0.7038
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6806,
+            0.2078,
+            24.53
+          ],
+          "alpha": 0.9804
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7076,
+            0.1844,
+            24.52
+          ]
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7797,
+            0.1286,
+            24.52
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0492,
+            24.52
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "teal": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0141,
+            164.88
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0184,
+            164.88
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0467,
+            164.88
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0651,
+            164.88
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0747,
+            164.88
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.0814,
+            164.88
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.0898,
+            164.88
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1087,
+            164.88
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6946,
+            0.1435,
+            164.88
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7316,
+            0.1365,
+            164.88
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1224,
+            164.88
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0555,
+            164.88
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9302,
+            0.1073,
+            163.39
+          ],
+          "alpha": 0.0853
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9249,
+            0.1162,
+            163.41
+          ],
+          "alpha": 0.1058
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8892,
+            0.183,
+            162.16
+          ],
+          "alpha": 0.1745
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8832,
+            0.1961,
+            161.18
+          ],
+          "alpha": 0.2277
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8839,
+            0.1937,
+            162.04
+          ],
+          "alpha": 0.281
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.886,
+            0.1882,
+            163.19
+          ],
+          "alpha": 0.3375
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8897,
+            0.1803,
+            163.84
+          ],
+          "alpha": 0.4101
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8862,
+            0.1869,
+            163.93
+          ],
+          "alpha": 0.4962
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8869,
+            0.1849,
+            164.52
+          ],
+          "alpha": 0.7216
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8952,
+            0.1689,
+            164.68
+          ],
+          "alpha": 0.7638
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9081,
+            0.145,
+            164.78
+          ],
+          "alpha": 0.8091
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9595,
+            0.0591,
+            164.87
+          ],
+          "alpha": 0.9251
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "violet": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0224,
+            288.56
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0294,
+            288.56
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0745,
+            288.56
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.1085,
+            288.56
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.1218,
+            288.56
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.1299,
+            288.56
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.1432,
+            288.56
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1734,
+            288.56
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5692,
+            0.2289,
+            288.56
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6062,
+            0.2176,
+            288.56
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1222,
+            288.56
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0489,
+            288.56
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7459,
+            0.138,
+            287.05
+          ],
+          "alpha": 0.1146
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.731,
+            0.1471,
+            287.14
+          ],
+          "alpha": 0.1449
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6276,
+            0.212,
+            286.88
+          ],
+          "alpha": 0.278
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5943,
+            0.2344,
+            287.12
+          ],
+          "alpha": 0.3851
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6065,
+            0.227,
+            287.57
+          ],
+          "alpha": 0.4632
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6255,
+            0.2149,
+            287.91
+          ],
+          "alpha": 0.5372
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6395,
+            0.2061,
+            288.17
+          ],
+          "alpha": 0.6382
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6313,
+            0.2117,
+            288.35
+          ],
+          "alpha": 0.7813
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5913,
+            0.2387,
+            288.5
+          ],
+          "alpha": 0.949
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.6165,
+            0.2217,
+            288.54
+          ],
+          "alpha": 0.9771
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1222,
+            288.56
+          ]
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0489,
+            288.56
+          ]
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    },
+    "yellow": {
+      "1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.1896,
+            0.0164,
+            78.12
+          ]
+        },
+        "$description": "App background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2097,
+            0.0215,
+            78.12
+          ]
+        },
+        "$description": "Subtle background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2659,
+            0.0545,
+            78.12
+          ]
+        },
+        "$description": "UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3089,
+            0.0644,
+            78.12
+          ]
+        },
+        "$description": "Hovered UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3547,
+            0.0739,
+            78.12
+          ]
+        },
+        "$description": "Active / selected UI element background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4033,
+            0.084,
+            78.12
+          ]
+        },
+        "$description": "Subtle border and separator",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.4638,
+            0.0966,
+            78.12
+          ]
+        },
+        "$description": "UI element border and focus ring",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.5282,
+            0.1101,
+            78.12
+          ]
+        },
+        "$description": "Hovered UI element border",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8069,
+            0.1674,
+            78.12
+          ]
+        },
+        "$description": "Solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8439,
+            0.1445,
+            78.12
+          ]
+        },
+        "$description": "Hovered solid background",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7747,
+            0.1428,
+            78.12
+          ]
+        },
+        "$description": "Low-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9048,
+            0.0648,
+            78.12
+          ]
+        },
+        "$description": "High-contrast text",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a1": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.87,
+            0.1154,
+            76.98
+          ],
+          "alpha": 0.0932
+        },
+        "$description": "App background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8606,
+            0.124,
+            76.82
+          ],
+          "alpha": 0.1164
+        },
+        "$description": "Subtle background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a3": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7928,
+            0.1706,
+            70.59
+          ],
+          "alpha": 0.2029
+        },
+        "$description": "UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a4": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7979,
+            0.1707,
+            72.18
+          ],
+          "alpha": 0.2571
+        },
+        "$description": "Hovered UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a5": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.803,
+            0.1705,
+            73.67
+          ],
+          "alpha": 0.3159
+        },
+        "$description": "Active / selected UI element background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a6": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8068,
+            0.1704,
+            74.78
+          ],
+          "alpha": 0.3805
+        },
+        "$description": "Subtle border and separator (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a7": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8102,
+            0.1704,
+            75.75
+          ],
+          "alpha": 0.4637
+        },
+        "$description": "UI element border and focus ring (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a8": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8127,
+            0.1704,
+            76.48
+          ],
+          "alpha": 0.5552
+        },
+        "$description": "Hovered UI element border (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a9": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8189,
+            0.17,
+            78.08
+          ],
+          "alpha": 0.9804
+        },
+        "$description": "Solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a10": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8439,
+            0.1445,
+            78.13
+          ]
+        },
+        "$description": "Hovered solid background (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a11": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.8339,
+            0.1544,
+            78.04
+          ],
+          "alpha": 0.9062
+        },
+        "$description": "Low-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "a12": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.9249,
+            0.0663,
+            78.12
+          ],
+          "alpha": 0.9712
+        },
+        "$description": "High-contrast text (alpha)",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ]
+        },
+        "$description": "Foreground that reads on step 9",
+        "$extensions": {
+          "umberkit": {
+            "public": true
+          }
+        }
+      }
+    }
+  }
+}

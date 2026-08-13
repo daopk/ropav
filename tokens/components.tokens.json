@@ -1,0 +1,20 @@
+{
+  "component": {
+    "menu": {
+      "min-width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 180,
+          "unit": "px"
+        }
+      },
+      "max-height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 240,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

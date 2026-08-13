@@ -26,3 +26,6 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# umberkit build output (tokens/generated + tokens/manifest.json ARE committed)
+src/styles/generated
