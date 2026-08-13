@@ -1,5 +1,41 @@
 # ropav
 
+## [0.2.0](https://github.com/daopk/ropav/compare/v0.1.9...v0.2.0) (2026-08-13)
+
+### ⚠ BREAKING CHANGES
+
+* **tokens:** the token pipeline is now umberkit.
+- Palettes are generated 12-step OKLCH scales (steps 1-12 replace shades
+  0-9, the 'dark' palette is folded into the scheme-flipping gray).
+- Dark mode switches with [data-scheme="dark"] on <html> (light-dark()
+  values) instead of html.dark / [data-rp-color-scheme="dark"].
+- --rp-primary-color-* renamed to --rp-color-primary-*; heading vars are
+  now --rp-heading-h*-*; per-shade -contrast/-active-contrast vars are
+  replaced by Radix step-band rules in componentColors.
+- SCSS $variables with raw values are gone; the emitted tokens.scss
+  exposes $rp-* vars referencing the canonical custom properties.
+- ./styles-manifest exports now point at umberkit's tokens/manifest.json;
+  docs/public-tokens.md is replaced by generated tokens.md + showcase.html.
+- tokens:build/check now run umberkit generate/build/check; the old
+  scripts and their tests are removed.
+
+### Features
+
+* **editor:** add formatting toolbar ([66466e8](https://github.com/daopk/ropav/commit/66466e83075e5ae0ad4c663abe0e7d652d300220))
+* **editor:** add Tiptap editor package ([70f8e5f](https://github.com/daopk/ropav/commit/70f8e5f0ef19142e649ae033954223a5a4c385bd))
+* **storybook:** add editor demos ([47b1fb7](https://github.com/daopk/ropav/commit/47b1fb7c616114d6274166b2e3ee64e068d1bcc1))
+* **tokens:** replace the style-dictionary pipeline with umberkit ([7b8e648](https://github.com/daopk/ropav/commit/7b8e648ac148eaf7acb2e6bd5554903e9b8a6e66))
+* **tokens:** scaffold umberkit token tree alongside the old pipeline ([f667246](https://github.com/daopk/ropav/commit/f667246e1a87d9772cc7db8f444f3ef2c4bb5074))
+* **toolbar:** add accessible toolbar component ([701dac4](https://github.com/daopk/ropav/commit/701dac4bcdcf1561ce0728b2830a449401bb2488))
+
+### Bug Fixes
+
+* **editor:** harden state synchronization and package exports ([e52aed8](https://github.com/daopk/ropav/commit/e52aed8f4a77c62c7b318ffe9350769e673d408b))
+* **editor:** harden Tiptap package integration ([21e4463](https://github.com/daopk/ropav/commit/21e446388a93787dbf167d1516dbf59a085d4141))
+* **repo:** commit generated changelogs in the release ([80f4af8](https://github.com/daopk/ropav/commit/80f4af8327f881e57f8c0ac5eb1666d3cfcfdb36))
+* **repo:** harden pnpm monorepo safeguards ([ef24811](https://github.com/daopk/ropav/commit/ef2481103ae4451153e959e8d36394308b3a3e66))
+* **tokens:** tune palette seeds and gray text steps for the WCAG a11y gate ([bc1b0b4](https://github.com/daopk/ropav/commit/bc1b0b4e0bc28e3a955bfbcdd7b5026315615d2d))
+
 ## [0.1.9](https://github.com/daopk/ropav/compare/v0.1.8...v0.1.9) (2026-08-02)
 
 ### Features
