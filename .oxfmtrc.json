@@ -10,8 +10,9 @@
     "CHANGELOG.md",
     "dist/**",
     "storybook-static/**",
-    "src/styles/_tokens.scss",
-    "src/styles/_variables.scss"
+    "src/styles/generated/**",
+    "tokens/generated/**",
+    "tokens/manifest.json"
   ],
   "overrides": [
     {

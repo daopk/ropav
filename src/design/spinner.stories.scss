@@ -19,8 +19,8 @@
     }
 
     h1 {
-        font-size: var(--rp-h1-font-size);
-        line-height: var(--rp-h1-line-height);
+        font-size: var(--rp-heading-h1-font-size);
+        line-height: var(--rp-heading-h1-line-height);
     }
 
     p:not(.rp-spinner-story__eyebrow) {
@@ -31,7 +31,7 @@
 }
 
 .rp-spinner-story__eyebrow {
-    color: var(--rp-primary-color-light-color);
+    color: var(--rp-color-primary-light-color);
     font-size: var(--rp-font-size-sm);
     font-weight: var(--rp-font-weight-semibold);
     text-transform: uppercase;
@@ -65,8 +65,8 @@
     }
 
     h2 {
-        font-size: var(--rp-h3-font-size);
-        line-height: var(--rp-h3-line-height);
+        font-size: var(--rp-heading-h3-font-size);
+        line-height: var(--rp-heading-h3-line-height);
     }
 
     p {
@@ -91,7 +91,7 @@
     min-width: 112px;
     padding: var(--rp-spacing-4);
     color: var(--rp-color-text);
-    font-size: var(--rp-h3-font-size);
+    font-size: var(--rp-heading-h3-font-size);
     background: var(--rp-color-default-hover);
     border: var(--rp-border-width-thin) solid var(--rp-color-default-border);
     border-radius: var(--rp-radius-md);
@@ -108,7 +108,7 @@
 }
 
 .rp-spinner-sample--lg {
-    font-size: var(--rp-h1-font-size);
+    font-size: var(--rp-heading-h1-font-size);
 }
 
 .rp-spinner-section {

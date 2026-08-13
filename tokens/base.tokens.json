@@ -1,13 +1,19 @@
 {
   "font": {
     "family": {
-      "base": {
-        "$type": "fontFamily",
-        "$value": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-        "$extensions": {
-          "umberkit": {
-            "public": true
-          }
+      "$type": "fontFamily",
+      "$value": [
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif"
+      ],
+      "$extensions": {
+        "umberkit": {
+          "public": true
         }
       }
     },
@@ -359,11 +365,7 @@
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
-        "components": [
-          1,
-          1,
-          1
-        ]
+        "components": [1, 1, 1]
       },
       "$extensions": {
         "umberkit": {
@@ -375,11 +377,7 @@
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
-        "components": [
-          0,
-          0,
-          0
-        ]
+        "components": [0, 0, 0]
       },
       "$extensions": {
         "umberkit": {
@@ -721,12 +719,7 @@
           "value": 0,
           "unit": "ms"
         },
-        "timingFunction": [
-          0.25,
-          0.1,
-          0.25,
-          1
-        ]
+        "timingFunction": [0.25, 0.1, 0.25, 1]
       },
       "$extensions": {
         "umberkit": {
@@ -745,12 +738,7 @@
           "value": 0,
           "unit": "ms"
         },
-        "timingFunction": [
-          0.25,
-          0.1,
-          0.25,
-          1
-        ]
+        "timingFunction": [0.25, 0.1, 0.25, 1]
       },
       "$extensions": {
         "umberkit": {
@@ -769,12 +757,7 @@
           "value": 0,
           "unit": "ms"
         },
-        "timingFunction": [
-          0.25,
-          0.1,
-          0.25,
-          1
-        ]
+        "timingFunction": [0.25, 0.1, 0.25, 1]
       },
       "$extensions": {
         "umberkit": {

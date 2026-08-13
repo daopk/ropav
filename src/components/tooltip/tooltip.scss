@@ -12,7 +12,7 @@
         --_rp-tooltip-fg: var(--rp-color-default);
 
         position: absolute;
-        z-index: $z-index-tooltip;
+        z-index: $rp-z-index-tooltip;
         box-sizing: border-box;
         width: max-content;
         max-width: min(18rem, calc(100vw - var(--rp-spacing-6)));

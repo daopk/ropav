@@ -87,36 +87,24 @@ export const ValidationStates: Story = {
         const validationStates = canvasElement.querySelector<HTMLElement>(
             '[data-validation-states]',
         )!;
-        const darkValidationStates = validationStates.cloneNode(true) as HTMLElement;
+        const valid = validationStates.querySelector<HTMLElement>('.rp-input--valid')!;
+        const invalid = validationStates.querySelector<HTMLElement>('.rp-input--invalid')!;
 
-        darkValidationStates.removeAttribute('data-validation-states');
-        darkValidationStates.setAttribute('data-rp-color-scheme', 'dark');
-        darkValidationStates.setAttribute('aria-hidden', 'true');
-        darkValidationStates.style.position = 'absolute';
-        darkValidationStates.style.visibility = 'hidden';
-        darkValidationStates.style.pointerEvents = 'none';
-        canvasElement.append(darkValidationStates);
+        // The storybook-light and storybook-dark test projects run this story in
+        // both schemes, so scheme coverage comes from the html-level data-scheme.
+        await waitFor(() => {
+            const validStyle = getComputedStyle(valid);
+            const invalidStyle = getComputedStyle(invalid);
 
-        const valid = darkValidationStates.querySelector<HTMLElement>('.rp-input--valid')!;
-        const invalid = darkValidationStates.querySelector<HTMLElement>('.rp-input--invalid')!;
-
-        try {
-            await waitFor(() => {
-                const validStyle = getComputedStyle(valid);
-                const invalidStyle = getComputedStyle(invalid);
-
-                expect(validStyle.getPropertyValue('--_rp-input-valid-border').trim()).toBe(
-                    validStyle.getPropertyValue('--rp-color-green-outline').trim(),
-                );
-                expect(validStyle.borderColor).toBe('rgb(105, 219, 124)');
-                expect(invalidStyle.getPropertyValue('--_rp-input-invalid-border').trim()).toBe(
-                    invalidStyle.getPropertyValue('--rp-color-red-outline').trim(),
-                );
-                expect(invalidStyle.borderColor).toBe('rgb(255, 135, 135)');
-            });
-        } finally {
-            darkValidationStates.remove();
-        }
+            expect(validStyle.getPropertyValue('--_rp-input-valid-border').trim()).toBe(
+                validStyle.getPropertyValue('--rp-color-green-outline').trim(),
+            );
+            expect(invalidStyle.getPropertyValue('--_rp-input-invalid-border').trim()).toBe(
+                invalidStyle.getPropertyValue('--rp-color-red-outline').trim(),
+            );
+            expect(validStyle.borderColor).not.toBe(invalidStyle.borderColor);
+            expect(validStyle.borderColor).not.toBe(getComputedStyle(validationStates).borderColor);
+        });
     },
 };
 

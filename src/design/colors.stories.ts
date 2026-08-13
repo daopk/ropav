@@ -1,41 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import coreTokensSource from '../../tokens/default/core.tokens.json?raw';
 import ColorSwatch from '../components/color-swatch/color-swatch.vue';
 import { componentColors, componentColorShades } from '../utils/componentColors';
 import './colors.stories.scss';
 
-type TokenValue = string | number;
-
-interface DesignToken {
-    $type?: string;
-    $value: TokenValue;
-}
-
-interface TokenTree {
-    [key: string]: DesignToken | TokenTree;
-}
-
-interface TokenFile {
-    color: TokenTree;
-}
-
-type TokenValueMap = Map<string, TokenValue>;
-
-const coreTokens = JSON.parse(coreTokensSource) as TokenFile;
-const defaultTokenValues = collectTokenValueMap(coreTokens);
 const variantSuffixes = [
     'filled',
     'filled-hover',
     'contrast',
     'light',
     'light-hover',
+    'light-active',
     'light-color',
     'outline',
     'outline-hover',
 ];
 const schemeVariables = [
-    '--rp-color-scheme',
     '--rp-color-text',
     '--rp-color-body',
     '--rp-color-default',
@@ -57,34 +37,32 @@ const schemeVariables = [
     '--rp-color-control-selected-fg',
 ];
 const primaryVariables = [
-    ...componentColorShades.map((shade) => `--rp-primary-color-${shade}`),
-    ...variantSuffixes.map((suffix) => `--rp-primary-color-${suffix}`),
+    ...componentColorShades.map((shade) => `--rp-color-primary-${shade}`),
+    ...variantSuffixes.map((suffix) => `--rp-color-primary-${suffix}`),
 ];
 
-const paletteColors = componentColors.map((name) => ({
-    name,
-    shades: componentColorShades.map((shade) => {
-        const token = getColorToken([name, shade]);
-
-        return {
-            shade,
-            label: `${name}.${shade}`,
-            value: resolveTokenValue(token.$value, defaultTokenValues),
-            variable: `--rp-color-${name}-${shade}`,
-            contrastVariable: `--rp-color-${name}-${shade}-contrast`,
-        };
-    }),
+const paletteColors = componentColors
+    .filter((name) => name !== 'primary')
+    .map((name) => ({
+        name,
+        shades: [
+            ...componentColorShades.map((shade) => ({
+                shade,
+                label: `${name}.${shade}`,
+                variable: `--rp-color-${name}-${shade}`,
+            })),
+            {
+                shade: 'contrast',
+                label: `${name}.contrast`,
+                variable: `--rp-color-${name}-contrast`,
+            },
+        ],
+    }));
+const fixedColors = ['white', 'black'].map((name) => ({
+    shade: name,
+    label: name,
+    variable: `--rp-color-${name}`,
 }));
-const fixedColors = ['white', 'black'].map((name) => {
-    const token = getColorToken([name]);
-
-    return {
-        shade: name,
-        label: name,
-        value: resolveTokenValue(token.$value, defaultTokenValues),
-        variable: `--rp-color-${name}`,
-    };
-});
 const variantVariables = componentColors.map((name) => ({
     name,
     variables: variantSuffixes.map((suffix) => ({
@@ -128,9 +106,10 @@ const meta = {
             const updateThemeLabel = () => {
                 if (!themeLabel.value) return;
 
-                const themeName = document.documentElement.classList.contains('dark')
-                    ? 'Dark'
-                    : 'Light';
+                const themeName =
+                    document.documentElement.getAttribute('data-scheme') === 'dark'
+                        ? 'Dark'
+                        : 'Light';
                 updateTextNode(themeLabel.value, `${themeName} theme`);
             };
 
@@ -146,7 +125,7 @@ const meta = {
                 observer = new MutationObserver(scheduleComputedValueUpdate);
                 observer.observe(document.documentElement, {
                     attributes: true,
-                    attributeFilter: ['class'],
+                    attributeFilter: ['data-scheme'],
                 });
             });
 
@@ -184,14 +163,16 @@ const meta = {
                             class="rp-color-token"
                         >
                             <ColorSwatch
-                                :color="color.value"
+                                :color="'var(' + color.variable + ')'"
                                 :size="56"
                                 aria-hidden="true"
                             />
                             <span class="rp-color-token__meta">
                                 <strong>{{ color.label }}</strong>
                                 <code>{{ color.variable }}</code>
-                                <code>{{ color.value }}</code>
+                                <code :data-rp-color-variable="color.variable">
+                                    {{ color.variable }}
+                                </code>
                             </span>
                         </article>
                     </div>
@@ -210,10 +191,9 @@ const meta = {
                                 >
                                     <span
                                         class="rp-color-scale__swatch"
-                                        :style="{ backgroundColor: shade.value }"
+                                        :style="{ backgroundColor: 'var(' + shade.variable + ')' }"
                                     />
                                     <code>{{ shade.shade }}</code>
-                                    <code>{{ shade.contrastVariable }}</code>
                                 </span>
                             </div>
                         </article>
@@ -221,7 +201,7 @@ const meta = {
                 </section>
 
                 <section class="rp-color-section" aria-labelledby="variant-colors-title">
-                    <h2 id="variant-colors-title">Generated variants</h2>
+                    <h2 id="variant-colors-title">Semantic variants</h2>
                     <div class="rp-color-variant-grid">
                         <article
                             v-for="color in variantVariables"
@@ -306,62 +286,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Palette: Story = {};
-
-function getColorToken(path: string[]): DesignToken {
-    let current: DesignToken | TokenTree = coreTokens.color;
-
-    for (const segment of path) {
-        current = (current as TokenTree)[segment];
-    }
-
-    if (!isDesignToken(current)) {
-        throw new Error(`Missing color token: color.${path.join('.')}`);
-    }
-
-    return current;
-}
-
-function isDesignToken(value: DesignToken | TokenTree): value is DesignToken {
-    return '$value' in value;
-}
-
-function collectTokenValueMap(...files: TokenFile[]): TokenValueMap {
-    const values = new Map<string, TokenValue>();
-
-    for (const file of files) {
-        collectTokenValues(file as unknown as TokenTree, [], values);
-    }
-
-    return values;
-}
-
-function collectTokenValues(tree: TokenTree, path: string[], values: TokenValueMap) {
-    for (const [key, value] of Object.entries(tree)) {
-        const nextPath = [...path, key];
-
-        if (isDesignToken(value)) {
-            values.set(nextPath.join('.'), value.$value);
-            continue;
-        }
-
-        collectTokenValues(value, nextPath, values);
-    }
-}
-
-function resolveTokenValue(value: TokenValue, tokenValues: TokenValueMap): string {
-    if (typeof value !== 'string') return String(value);
-
-    const exactReference = value.match(/^\{([^}]+)\}$/);
-    if (exactReference) {
-        const referencedValue = tokenValues.get(exactReference[1]);
-        return referencedValue == null ? value : resolveTokenValue(referencedValue, tokenValues);
-    }
-
-    return value.replace(/\{([^}]+)\}/g, (match, path) => {
-        const referencedValue = tokenValues.get(path);
-        return referencedValue == null ? match : resolveTokenValue(referencedValue, tokenValues);
-    });
-}
 
 function updateTextNode(element: HTMLElement, value: string) {
     const textNode = element.firstChild;

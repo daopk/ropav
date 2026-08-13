@@ -5,7 +5,7 @@
 
     position: fixed;
     inset: 0;
-    z-index: $z-index-tooltip;
+    z-index: $rp-z-index-tooltip;
     box-sizing: border-box;
     display: grid;
     place-items: center;

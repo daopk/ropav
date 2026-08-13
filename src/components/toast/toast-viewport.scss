@@ -3,7 +3,7 @@
     --_rp-toast-viewport-shift-y: calc(var(--rp-spacing-3) * -1);
 
     position: fixed;
-    z-index: $z-index-tooltip + 1;
+    z-index: $rp-z-index-tooltip + 1;
     display: flex;
     box-sizing: border-box;
     width: min(24rem, 100vw);

@@ -83,8 +83,8 @@ function getTabColorStyle(color: TabColor) {
     const roles = getComponentColorRoles(color)!;
 
     return {
-        '--rp-primary-color-filled': roles.filled,
-        '--rp-primary-color-filled-hover': roles.hover,
+        '--rp-color-primary-filled': roles.filled,
+        '--rp-color-primary-filled-hover': roles.hover,
     };
 }
 

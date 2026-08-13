@@ -197,7 +197,7 @@
         }
 
         &--selected:hover:not(:disabled) {
-            background-color: var(--rp-primary-color-filled-hover);
+            background-color: var(--rp-color-primary-filled-hover);
         }
 
         &:disabled {

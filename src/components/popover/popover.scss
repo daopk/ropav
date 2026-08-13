@@ -11,9 +11,9 @@
         --_rp-popover-arrow-size: 0.5rem;
 
         position: absolute;
-        z-index: $z-index-dropdown;
+        z-index: $rp-z-index-dropdown;
         box-sizing: border-box;
-        min-width: $component-menu-min-width;
+        min-width: var(--rp-component-menu-min-width);
         max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
         padding: var(--rp-spacing-4);
         color: var(--rp-color-text);

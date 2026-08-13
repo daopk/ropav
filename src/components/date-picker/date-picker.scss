@@ -6,7 +6,7 @@
 
     :deep(.rp-input) {
         width: 100%;
-        min-width: $component-menu-min-width;
+        min-width: var(--rp-component-menu-min-width);
     }
 
     &__clear,

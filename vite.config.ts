@@ -11,7 +11,7 @@ import { vaporIconCompiler } from './src/unplugin-icons';
 
 const declarationRoot = resolve(__dirname, 'dist');
 const sourceRoot = resolve(__dirname, 'src');
-const scssPrelude = `@use "@/styles/variables" as *;\n@use "@/styles/mixins" as *;\n`;
+const scssPrelude = `@use "@/styles/generated/tokens.scss" as *;\n@use "@/styles/mixins" as *;\n`;
 
 function addRopavScssLayers(source: string, filename: string) {
     const isComponentStyle =

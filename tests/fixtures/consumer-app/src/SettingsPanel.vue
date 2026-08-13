@@ -169,7 +169,7 @@ function save() {
     }
 
     .modalTitle {
-        color: var(--rp-primary-color-filled);
+        color: var(--rp-color-primary-filled);
     }
 }
 </style>

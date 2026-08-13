@@ -17,10 +17,7 @@
           { "$ref": "generated/light.tokens.json" },
           { "$ref": "shadows.light.tokens.json" }
         ],
-        "dark": [
-          { "$ref": "generated/dark.tokens.json" },
-          { "$ref": "shadows.dark.tokens.json" }
-        ]
+        "dark": [{ "$ref": "generated/dark.tokens.json" }, { "$ref": "shadows.dark.tokens.json" }]
       },
       "default": "light"
     }

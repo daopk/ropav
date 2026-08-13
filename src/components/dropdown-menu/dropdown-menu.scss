@@ -22,10 +22,10 @@
     &__content {
         @include menu-surface($radius: var(--_rp-dropdown-menu-radius));
         position: absolute;
-        z-index: $z-index-dropdown;
-        min-width: $component-menu-min-width;
+        z-index: $rp-z-index-dropdown;
+        min-width: var(--rp-component-menu-min-width);
         max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
-        max-height: $component-menu-max-height;
+        max-height: var(--rp-component-menu-max-height);
         overflow-y: auto;
         padding: var(--rp-spacing-1);
         color: var(--rp-color-text);
@@ -166,9 +166,9 @@
         position: absolute;
         top: calc(-1 * var(--rp-spacing-1));
         left: calc(100% + var(--rp-spacing-1));
-        min-width: $component-menu-min-width;
+        min-width: var(--rp-component-menu-min-width);
         max-width: min(24rem, calc(100vw - var(--rp-spacing-6)));
-        max-height: $component-menu-max-height;
+        max-height: var(--rp-component-menu-max-height);
         overflow-y: auto;
         padding: var(--rp-spacing-1);
         color: var(--rp-color-text);

@@ -1,5 +1,5 @@
 <template>
-    <main :class="css.page" :data-consumer-theme="dark ? 'dark' : 'light'">
+    <main :class="css.page">
         <header :class="css.header">
             <h1>Account settings</h1>
             <Button
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup vapor>
-import { ref, useCssModule } from 'vue';
+import { ref, useCssModule, watchEffect } from 'vue';
 import { Button, ToastProvider, ToastViewport } from 'ropav';
 import { ButtonLink } from 'ropav/button-link';
 import { IconButton } from 'ropav/icon-button';
@@ -50,6 +50,12 @@ import SettingsPanel from './SettingsPanel.vue';
 
 const dark = ref(false);
 const css = useCssModule();
+
+// light-dark() token values resolve against the color scheme of the element
+// they are declared on (:root), so the scheme attribute must live on <html>.
+watchEffect(() => {
+    document.documentElement.dataset.scheme = dark.value ? 'dark' : 'light';
+});
 </script>
 
 <style module>

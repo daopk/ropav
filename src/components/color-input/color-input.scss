@@ -4,8 +4,8 @@
     --_rp-color-input-preview-inset: calc(
         (var(--_rp-color-input-height) - var(--_rp-color-input-preview-size)) / 2
     );
-    --_rp-color-input-empty-tile: var(--rp-color-gray-3);
-    --_rp-color-input-empty-tile-alt: var(--rp-color-white);
+    --_rp-color-input-empty-tile: var(--rp-color-gray-5);
+    --_rp-color-input-empty-tile-alt: var(--rp-color-gray-1);
     --_rp-color-input-empty-grid: conic-gradient(
         var(--_rp-color-input-empty-tile) 25%,
         var(--_rp-color-input-empty-tile-alt) 0 50%,
@@ -38,15 +38,9 @@
         --_rp-color-input-height: var(--rp-size-control-xl);
     }
 
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
-        --_rp-color-input-empty-tile: var(--rp-color-dark-6);
-        --_rp-color-input-empty-tile-alt: var(--rp-color-dark-4);
-    }
-
     :deep(.rp-input) {
         width: 100%;
-        min-width: $component-menu-min-width;
+        min-width: var(--rp-component-menu-min-width);
         padding-inline-start: calc(
             var(--_rp-color-input-preview-inset) - var(--rp-border-width-thin)
         );

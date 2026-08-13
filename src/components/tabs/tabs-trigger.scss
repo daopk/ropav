@@ -133,7 +133,7 @@
 
     &--active {
         --_rp-tabs-trigger-fg: var(--rp-color-text);
-        --_rp-tabs-trigger-indicator: var(--rp-primary-color-filled);
+        --_rp-tabs-trigger-indicator: var(--rp-color-primary-filled);
     }
 
     &--pills,
@@ -150,8 +150,8 @@
 
     &--pills#{&}--active {
         --_rp-tabs-trigger-fg: var(--rp-color-white);
-        --_rp-tabs-trigger-bg: var(--rp-primary-color-filled);
-        --_rp-tabs-trigger-bg-hover: var(--rp-primary-color-filled-hover);
+        --_rp-tabs-trigger-bg: var(--rp-color-primary-filled);
+        --_rp-tabs-trigger-bg-hover: var(--rp-color-primary-filled-hover);
     }
 
     &--outline {

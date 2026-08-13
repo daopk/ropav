@@ -1,8 +1,8 @@
 .rp-color-swatch {
     --_rp-color-swatch-size: 24px;
     --_rp-color-swatch-radius: var(--rp-radius-sm);
-    --_rp-color-swatch-checkerboard-tile: var(--rp-color-gray-3);
-    --_rp-color-swatch-checkerboard-tile-alt: var(--rp-color-white);
+    --_rp-color-swatch-checkerboard-tile: var(--rp-color-gray-5);
+    --_rp-color-swatch-checkerboard-tile-alt: var(--rp-color-gray-1);
     --_rp-color-swatch-checkerboard: conic-gradient(
         var(--_rp-color-swatch-checkerboard-tile) 25%,
         var(--_rp-color-swatch-checkerboard-tile-alt) 0 50%,
@@ -34,12 +34,6 @@
     line-height: 1;
     overflow: hidden;
     vertical-align: middle;
-
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
-        --_rp-color-swatch-checkerboard-tile: var(--rp-color-dark-6);
-        --_rp-color-swatch-checkerboard-tile-alt: var(--rp-color-dark-4);
-    }
 
     &__icon {
         @include flex-center;

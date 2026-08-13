@@ -352,6 +352,17 @@
         "scheme=dark": "var(--rp-color-blue-3)"
       }
     },
+    "color.blue.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-blue-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-blue-5)",
+        "scheme=dark": "var(--rp-color-blue-5)"
+      }
+    },
     "color.blue.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -858,6 +869,17 @@
         "scheme=dark": "var(--rp-color-cyan-3)"
       }
     },
+    "color.cyan.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-cyan-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-cyan-5)",
+        "scheme=dark": "var(--rp-color-cyan-5)"
+      }
+    },
     "color.cyan.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -1320,6 +1342,17 @@
         "scheme=dark": "var(--rp-color-grape-3)"
       }
     },
+    "color.grape.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-grape-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-grape-5)",
+        "scheme=dark": "var(--rp-color-grape-5)"
+      }
+    },
     "color.grape.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -1670,6 +1703,17 @@
       "values": {
         "scheme=light": "var(--rp-color-gray-3)",
         "scheme=dark": "var(--rp-color-gray-3)"
+      }
+    },
+    "color.gray.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-gray-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-gray-5)",
+        "scheme=dark": "var(--rp-color-gray-5)"
       }
     },
     "color.gray.light-color": {
@@ -2024,6 +2068,17 @@
         "scheme=dark": "var(--rp-color-green-3)"
       }
     },
+    "color.green.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-green-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-green-5)",
+        "scheme=dark": "var(--rp-color-green-5)"
+      }
+    },
     "color.green.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -2374,6 +2429,17 @@
       "values": {
         "scheme=light": "var(--rp-color-indigo-3)",
         "scheme=dark": "var(--rp-color-indigo-3)"
+      }
+    },
+    "color.indigo.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-indigo-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-indigo-5)",
+        "scheme=dark": "var(--rp-color-indigo-5)"
       }
     },
     "color.indigo.light-color": {
@@ -2728,6 +2794,17 @@
         "scheme=dark": "var(--rp-color-lime-3)"
       }
     },
+    "color.lime.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-lime-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-lime-5)",
+        "scheme=dark": "var(--rp-color-lime-5)"
+      }
+    },
     "color.lime.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -3080,6 +3157,17 @@
         "scheme=dark": "var(--rp-color-orange-3)"
       }
     },
+    "color.orange.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-orange-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-orange-5)",
+        "scheme=dark": "var(--rp-color-orange-5)"
+      }
+    },
     "color.orange.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -3430,6 +3518,17 @@
       "values": {
         "scheme=light": "var(--rp-color-pink-3)",
         "scheme=dark": "var(--rp-color-pink-3)"
+      }
+    },
+    "color.pink.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-pink-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-pink-5)",
+        "scheme=dark": "var(--rp-color-pink-5)"
       }
     },
     "color.pink.light-color": {
@@ -3795,6 +3894,17 @@
         "scheme=dark": "var(--rp-color-blue-3)"
       }
     },
+    "color.primary.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-primary-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-blue-5)",
+        "scheme=dark": "var(--rp-color-blue-5)"
+      }
+    },
     "color.primary.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -4147,6 +4257,17 @@
         "scheme=dark": "var(--rp-color-red-3)"
       }
     },
+    "color.red.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-red-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-red-5)",
+        "scheme=dark": "var(--rp-color-red-5)"
+      }
+    },
     "color.red.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -4497,6 +4618,17 @@
       "values": {
         "scheme=light": "var(--rp-color-teal-3)",
         "scheme=dark": "var(--rp-color-teal-3)"
+      }
+    },
+    "color.teal.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-teal-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-teal-5)",
+        "scheme=dark": "var(--rp-color-teal-5)"
       }
     },
     "color.teal.light-color": {
@@ -4862,6 +4994,17 @@
         "scheme=dark": "var(--rp-color-violet-3)"
       }
     },
+    "color.violet.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-violet-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-violet-5)",
+        "scheme=dark": "var(--rp-color-violet-5)"
+      }
+    },
     "color.violet.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -5225,6 +5368,17 @@
         "scheme=dark": "var(--rp-color-yellow-3)"
       }
     },
+    "color.yellow.light-active": {
+      "type": "color",
+      "tier": "semantic",
+      "public": true,
+      "deprecated": false,
+      "css": "--rp-color-yellow-light-active",
+      "values": {
+        "scheme=light": "var(--rp-color-yellow-5)",
+        "scheme=dark": "var(--rp-color-yellow-5)"
+      }
+    },
     "color.yellow.light-color": {
       "type": "color",
       "tier": "semantic",
@@ -5291,15 +5445,15 @@
         "scheme=dark": "180px"
       }
     },
-    "font.family.base": {
+    "font.family": {
       "type": "fontFamily",
       "tier": "primitive",
       "public": true,
       "deprecated": false,
-      "css": "--rp-font-family-base",
+      "css": "--rp-font-family",
       "values": {
-        "scheme=light": "\"system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif\"",
-        "scheme=dark": "\"system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif\""
+        "scheme=light": "system-ui, -apple-system, \"Segoe UI\", \"Roboto\", \"Helvetica Neue\", \"Arial\", sans-serif",
+        "scheme=dark": "system-ui, -apple-system, \"Segoe UI\", \"Roboto\", \"Helvetica Neue\", \"Arial\", sans-serif"
       }
     },
     "font.size.lg": {

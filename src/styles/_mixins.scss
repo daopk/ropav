@@ -1,8 +1,4 @@
-@use 'variables' as *;
-
-$rp-component-colors:
-    'dark', 'gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green',
-    'lime', 'yellow', 'orange';
+@use 'generated/tokens.scss' as *;
 
 @mixin flex-center {
     display: inline-flex;
@@ -96,7 +92,7 @@ $rp-component-colors:
 }
 
 @mixin menu-surface(
-    $z-index: $z-index-dropdown,
+    $z-index: $rp-z-index-dropdown,
     $surface: var(--rp-color-default),
     $radius: var(--rp-radius-lg)
 ) {

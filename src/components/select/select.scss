@@ -77,8 +77,7 @@
         );
     }
 
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
+    [data-scheme='dark'] & {
         --_rp-select-invalid-border: var(--rp-color-red-light-color);
         --_rp-select-invalid-ring: color-mix(
             in srgb,
@@ -96,7 +95,7 @@
         @include flex-center;
         justify-content: space-between;
         width: 100%;
-        min-width: $component-menu-min-width;
+        min-width: var(--rp-component-menu-min-width);
         height: var(--_rp-select-height);
         padding: 0 var(--_rp-select-padding-x);
         font-size: var(--_rp-select-font-size);
@@ -205,7 +204,7 @@
         position: absolute;
         width: 100%;
         @include menu-surface($radius: var(--_rp-select-radius));
-        max-height: $component-menu-max-height;
+        max-height: var(--rp-component-menu-max-height);
         padding: var(--rp-spacing-1);
     }
 
@@ -229,7 +228,7 @@
         }
 
         &--selected {
-            color: var(--rp-primary-color-light-color);
+            color: var(--rp-color-primary-light-color);
         }
 
         &--disabled {

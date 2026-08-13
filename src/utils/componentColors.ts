@@ -1,7 +1,7 @@
 import { parseCssColor, type ParsedCssColor } from './color';
 
 export const componentColors = [
-    'dark',
+    'primary',
     'gray',
     'red',
     'pink',
@@ -17,7 +17,20 @@ export const componentColors = [
     'orange',
 ] as const;
 
-export const componentColorShades = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+export const componentColorShades = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+] as const;
 
 export type ComponentColor = (typeof componentColors)[number];
 export type ComponentColorShade = (typeof componentColorShades)[number];
@@ -83,7 +96,6 @@ export interface ComponentCheckedColorStyleOptions extends ComponentContrastColo
 export type ParsedComponentColor =
     | { kind: 'empty' }
     | { kind: 'preset'; color: ComponentColor }
-    | { kind: 'primary' }
     | { kind: 'shade'; color: ComponentColor; shade: ComponentColorShade }
     | { kind: 'custom'; value: string }
     | { kind: 'invalid'; value: string };
@@ -100,7 +112,6 @@ export function isComponentPresetColor(
 
 export function parseComponentColor(color: ComponentColorValue | undefined): ParsedComponentColor {
     if (!color) return { kind: 'empty' };
-    if (color === 'primary') return { kind: 'primary' };
 
     if (componentColorNames.has(color)) {
         return { kind: 'preset', color: color as ComponentColor };
@@ -123,7 +134,6 @@ export function parseComponentColor(color: ComponentColorValue | undefined): Par
 export function getComponentColorValue(color: ComponentColorValue | undefined) {
     const parsed = parseComponentColor(color);
 
-    if (parsed.kind === 'primary') return 'var(--rp-primary-color-filled)';
     if (parsed.kind === 'preset') return `var(--rp-color-${parsed.color}-filled)`;
     if (parsed.kind === 'shade') return `var(--rp-color-${parsed.color}-${parsed.shade})`;
     if (parsed.kind === 'custom') return parsed.value;
@@ -191,8 +201,6 @@ export function getComponentColorRoles(color: ComponentColorValue | undefined) {
         case 'empty':
         case 'invalid':
             return undefined;
-        case 'primary':
-            return createPrimaryColorRoles();
         case 'preset':
             return createPresetColorRoles(parsed.color);
         case 'shade':
@@ -202,39 +210,43 @@ export function getComponentColorRoles(color: ComponentColorValue | undefined) {
     }
 }
 
-function createPrimaryColorRoles() {
-    return createComponentColorRoles('var(--rp-primary-color-filled)', {
-        hover: 'var(--rp-primary-color-filled-hover)',
-        contrast: 'var(--rp-primary-color-contrast)',
-        light: 'var(--rp-primary-color-light)',
-        lightHover: 'var(--rp-primary-color-light-hover)',
-        outline: 'var(--rp-primary-color-outline)',
-        outlineHover: 'color-mix(in srgb, var(--rp-primary-color-outline) 62%, transparent)',
-        foreground: 'var(--rp-primary-color-light-color)',
-    });
-}
-
 function createPresetColorRoles(color: ComponentColor) {
     return createComponentColorRoles(`var(--rp-color-${color}-filled)`, {
         hover: `var(--rp-color-${color}-filled-hover)`,
         contrast: `var(--rp-color-${color}-contrast)`,
         light: `var(--rp-color-${color}-light)`,
         lightHover: `var(--rp-color-${color}-light-hover)`,
+        lightActive: `var(--rp-color-${color}-light-active)`,
         outline: `var(--rp-color-${color}-outline)`,
-        outlineHover: `color-mix(in srgb, var(--rp-color-${color}-outline) 62%, transparent)`,
+        outlineHover: `var(--rp-color-${color}-outline-hover)`,
         foreground: `var(--rp-color-${color}-light-color)`,
     });
 }
 
+/**
+ * Readable text for content sitting on a palette step, by Radix band:
+ * steps 1-8 are backgrounds/borders (step-12 text reads on all of them),
+ * 9-10 are solids (the generated companion foreground), 11-12 are themselves
+ * text colors (step-1 is the app background they invert against).
+ */
+function getShadeContrastColor(color: ComponentColor, step: number) {
+    if (step >= 11) return `var(--rp-color-${color}-1)`;
+    if (step >= 9) return `var(--rp-color-${color}-contrast)`;
+    return `var(--rp-color-${color}-12)`;
+}
+
 function createShadeColorRoles(color: ComponentColor, shade: ComponentColorShade) {
-    const base = `var(--rp-color-${color}-${shade})`;
-    const hoverShade = Math.min(Number(shade) + 1, 9);
+    const step = Number(shade);
+    const hoverStep = Math.min(step + 1, 12);
+    const activeStep = Math.min(step + 2, 12);
+    const base = `var(--rp-color-${color}-${step})`;
 
     return createComponentColorRoles(base, {
-        hover: `var(--rp-color-${color}-${hoverShade})`,
-        contrast: `var(--rp-color-${color}-${shade}-contrast)`,
-        contrastHover: `var(--rp-color-${color}-${hoverShade}-contrast)`,
-        contrastActive: `var(--rp-color-${color}-${shade}-active-contrast)`,
+        hover: `var(--rp-color-${color}-${hoverStep})`,
+        active: `var(--rp-color-${color}-${activeStep})`,
+        contrast: getShadeContrastColor(color, step),
+        contrastHover: getShadeContrastColor(color, hoverStep),
+        contrastActive: getShadeContrastColor(color, activeStep),
         foreground: base,
     });
 }

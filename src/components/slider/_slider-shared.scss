@@ -53,8 +53,7 @@
     font-size: var(--_rp-#{$prefix}-font-size);
     line-height: var(--rp-line-height-md);
 
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
+    [data-scheme='dark'] & {
         --_rp-#{$prefix}-thumb-bg: var(--_rp-#{$prefix}-color);
         --_rp-#{$prefix}-thumb-border: var(--rp-color-control-thumb-bg);
     }

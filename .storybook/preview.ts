@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/vue3-vite';
 import { setup } from '@storybook/vue3-vite';
-import { withThemeByClassName } from '@storybook/addon-themes';
+import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { vaporInteropPlugin } from 'vue';
 import '../src/styles/base.scss';
 import './preview.scss';
@@ -50,9 +50,10 @@ const preview: Preview = {
         },
     },
     decorators: [
-        withThemeByClassName({
+        withThemeByDataAttribute({
+            attributeName: 'data-scheme',
             themes: {
-                light: '',
+                light: 'light',
                 dark: 'dark',
             },
             defaultTheme,

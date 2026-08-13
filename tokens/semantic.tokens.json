@@ -38,6 +38,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.gray.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.gray.12}",
         "$extensions": {
@@ -96,6 +105,15 @@
       },
       "light-hover": {
         "$value": "{color.red.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.red.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -168,6 +186,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.pink.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.pink.12}",
         "$extensions": {
@@ -226,6 +253,15 @@
       },
       "light-hover": {
         "$value": "{color.grape.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.grape.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -298,6 +334,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.violet.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.violet.12}",
         "$extensions": {
@@ -356,6 +401,15 @@
       },
       "light-hover": {
         "$value": "{color.indigo.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.indigo.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -428,6 +482,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.blue.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.blue.12}",
         "$extensions": {
@@ -486,6 +549,15 @@
       },
       "light-hover": {
         "$value": "{color.cyan.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.cyan.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -558,6 +630,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.teal.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.teal.12}",
         "$extensions": {
@@ -616,6 +697,15 @@
       },
       "light-hover": {
         "$value": "{color.green.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.green.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -688,6 +778,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.lime.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.lime.12}",
         "$extensions": {
@@ -753,6 +852,15 @@
           }
         }
       },
+      "light-active": {
+        "$value": "{color.yellow.5}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
       "light-color": {
         "$value": "{color.yellow.12}",
         "$extensions": {
@@ -811,6 +919,15 @@
       },
       "light-hover": {
         "$value": "{color.orange.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.orange.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",
@@ -1101,6 +1218,15 @@
       },
       "light-hover": {
         "$value": "{color.blue.4}",
+        "$extensions": {
+          "umberkit": {
+            "tier": "semantic",
+            "public": true
+          }
+        }
+      },
+      "light-active": {
+        "$value": "{color.blue.5}",
         "$extensions": {
           "umberkit": {
             "tier": "semantic",

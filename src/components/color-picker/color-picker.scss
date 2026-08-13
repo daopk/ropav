@@ -103,8 +103,8 @@ $color-picker-sizes: (
         0px,
         calc(var(--_rp-color-picker-saturation-height) - var(--_rp-color-picker-thumb-size))
     );
-    --_rp-color-picker-checkerboard-tile: var(--rp-color-gray-3);
-    --_rp-color-picker-checkerboard-tile-alt: var(--rp-color-white);
+    --_rp-color-picker-checkerboard-tile: var(--rp-color-gray-5);
+    --_rp-color-picker-checkerboard-tile-alt: var(--rp-color-gray-1);
     --_rp-color-picker-checkerboard: conic-gradient(
         var(--_rp-color-picker-checkerboard-tile) 25%,
         var(--_rp-color-picker-checkerboard-tile-alt) 0 50%,
@@ -125,12 +125,6 @@ $color-picker-sizes: (
     color: var(--rp-color-text);
     user-select: none;
     vertical-align: top;
-
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
-        --_rp-color-picker-checkerboard-tile: var(--rp-color-dark-6);
-        --_rp-color-picker-checkerboard-tile-alt: var(--rp-color-dark-4);
-    }
 
     &--readonly {
         cursor: default;

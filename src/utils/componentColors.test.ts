@@ -35,34 +35,36 @@ describe('component color resolver', () => {
         expect(getComponentColorRoles('blue.6')).toMatchObject({
             filled: 'var(--rp-color-blue-6)',
             hover: 'var(--rp-color-blue-7)',
-            contrast: 'var(--rp-color-blue-6-contrast)',
-            contrastHover: 'var(--rp-color-blue-7-contrast)',
-            contrastActive: 'var(--rp-color-blue-6-active-contrast)',
+            active: 'var(--rp-color-blue-8)',
+            contrast: 'var(--rp-color-blue-12)',
+            contrastHover: 'var(--rp-color-blue-12)',
+            contrastActive: 'var(--rp-color-blue-12)',
             foreground: 'var(--rp-color-blue-6)',
         });
     });
 
     it('resolves primary color tokens', () => {
-        expect(parseComponentColor('primary')).toEqual({ kind: 'primary' });
-        expect(getComponentColorValue('primary')).toBe('var(--rp-primary-color-filled)');
+        expect(parseComponentColor('primary')).toEqual({ kind: 'preset', color: 'primary' });
+        expect(getComponentColorValue('primary')).toBe('var(--rp-color-primary-filled)');
         expect(getComponentColorRoles('primary')).toMatchObject({
-            filled: 'var(--rp-primary-color-filled)',
-            hover: 'var(--rp-primary-color-filled-hover)',
-            contrast: 'var(--rp-primary-color-contrast)',
-            light: 'var(--rp-primary-color-light)',
-            outline: 'var(--rp-primary-color-outline)',
-            foreground: 'var(--rp-primary-color-light-color)',
+            filled: 'var(--rp-color-primary-filled)',
+            hover: 'var(--rp-color-primary-filled-hover)',
+            contrast: 'var(--rp-color-primary-contrast)',
+            light: 'var(--rp-color-primary-light)',
+            outline: 'var(--rp-color-primary-outline)',
+            foreground: 'var(--rp-color-primary-light-color)',
         });
     });
 
     it('does not resolve invalid palette shade strings', () => {
-        expect(isComponentPresetColor('blue.10')).toBe(false);
-        expect(parseComponentColor('blue.10')).toEqual({ kind: 'invalid', value: 'blue.10' });
-        expect(getComponentColorValue('blue.10')).toBeUndefined();
-        expect(getComponentColorRoles('blue.10')).toBeUndefined();
+        expect(isComponentPresetColor('blue.13')).toBe(false);
+        expect(parseComponentColor('blue.13')).toEqual({ kind: 'invalid', value: 'blue.13' });
+        expect(parseComponentColor('blue.0')).toEqual({ kind: 'invalid', value: 'blue.0' });
+        expect(getComponentColorValue('blue.13')).toBeUndefined();
+        expect(getComponentColorRoles('blue.13')).toBeUndefined();
         expect(
             getComponentVariantColorRoles({
-                color: 'blue.10',
+                color: 'blue.13',
                 variant: 'solid',
                 defaultColor: undefined,
             }),
@@ -88,7 +90,7 @@ describe('component color resolver', () => {
 
     it('resolves readable contrast by default and allows opting out', () => {
         expect(getComponentContrastColor('blue')).toBe('var(--rp-color-blue-contrast)');
-        expect(getComponentContrastColor('yellow.6')).toBe('var(--rp-color-yellow-6-contrast)');
+        expect(getComponentContrastColor('yellow.6')).toBe('var(--rp-color-yellow-12)');
         expect(getComponentContrastColor('#fab005')).toBe('var(--rp-color-black)');
         expect(getComponentContrastColor('#82c91e', { autoContrast: true })).toBe(
             'var(--rp-color-black)',
@@ -225,10 +227,10 @@ describe('component color resolver', () => {
         ).toMatchObject({
             background: 'var(--rp-color-red-8)',
             hover: 'var(--rp-color-red-9)',
-            active: 'color-mix(in srgb, var(--rp-color-red-8) 80%, var(--rp-color-black))',
-            color: 'var(--rp-color-red-8-contrast)',
-            colorHover: 'var(--rp-color-red-9-contrast)',
-            colorActive: 'var(--rp-color-red-8-active-contrast)',
+            active: 'var(--rp-color-red-10)',
+            color: 'var(--rp-color-red-12)',
+            colorHover: 'var(--rp-color-red-contrast)',
+            colorActive: 'var(--rp-color-red-contrast)',
         });
 
         expect(
@@ -264,7 +266,7 @@ describe('component color resolver', () => {
         ).toBeUndefined();
         expect(
             getComponentCheckedColorStyle({
-                color: 'blue.10',
+                color: 'blue.13',
                 colorProperty: '--control-color',
                 checkedColorProperty: '--control-checked-color',
             }),

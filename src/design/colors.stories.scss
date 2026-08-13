@@ -17,8 +17,8 @@
 
     h1 {
         margin: 0;
-        font-size: var(--rp-h1-font-size);
-        line-height: var(--rp-h1-line-height);
+        font-size: var(--rp-heading-h1-font-size);
+        line-height: var(--rp-heading-h1-line-height);
     }
 }
 
@@ -33,10 +33,10 @@
 .rp-color-story__theme {
     flex: 0 0 auto;
     padding: var(--rp-spacing-2) var(--rp-spacing-3);
-    color: var(--rp-primary-color-light-color);
+    color: var(--rp-color-primary-light-color);
     font-size: var(--rp-font-size-sm);
     font-weight: var(--rp-font-weight-semibold);
-    border: var(--rp-border-width-thin) solid var(--rp-primary-color-outline);
+    border: var(--rp-border-width-thin) solid var(--rp-color-primary-outline);
     border-radius: var(--rp-radius-md);
 }
 
@@ -51,8 +51,8 @@
     }
 
     h2 {
-        font-size: var(--rp-h3-font-size);
-        line-height: var(--rp-h3-line-height);
+        font-size: var(--rp-heading-h3-font-size);
+        line-height: var(--rp-heading-h3-line-height);
     }
 
     h3 {

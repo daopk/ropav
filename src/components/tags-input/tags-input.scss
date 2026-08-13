@@ -16,7 +16,7 @@
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
-    min-width: $component-menu-min-width;
+    min-width: var(--rp-component-menu-min-width);
     min-height: var(--_rp-tags-input-height);
     padding: var(--rp-spacing-1) var(--_rp-tags-input-padding-x);
     gap: var(--rp-spacing-2);

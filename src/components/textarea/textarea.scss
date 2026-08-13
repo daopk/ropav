@@ -72,8 +72,7 @@
         }
     }
 
-    html.dark &,
-    [data-rp-color-scheme='dark'] & {
+    [data-scheme='dark'] & {
         --_rp-textarea-valid-border: var(--rp-color-green-light-color);
         --_rp-textarea-valid-ring: color-mix(
             in srgb,

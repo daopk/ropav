@@ -31,8 +31,8 @@
     }
 
     h1 {
-        font-size: var(--rp-h1-font-size);
-        line-height: var(--rp-h1-line-height);
+        font-size: var(--rp-heading-h1-font-size);
+        line-height: var(--rp-heading-h1-line-height);
     }
 
     p:not(.cascade-contract-story__eyebrow) {
@@ -43,7 +43,7 @@
 }
 
 .cascade-contract-story__eyebrow {
-    color: var(--rp-primary-color-light-color);
+    color: var(--rp-color-primary-light-color);
     font-size: var(--rp-font-size-sm);
     font-weight: var(--rp-font-weight-semibold);
     letter-spacing: 0.04em;
@@ -136,8 +136,8 @@
         flex: 0 0 auto;
         width: 28px;
         height: 28px;
-        color: var(--rp-primary-color-light-color);
-        background: var(--rp-primary-color-light);
+        color: var(--rp-color-primary-light-color);
+        background: var(--rp-color-primary-light);
         border-radius: var(--rp-radius-full);
         place-items: center;
     }
@@ -188,7 +188,7 @@
 }
 
 .cascade-contract-case__number {
-    color: var(--rp-primary-color-light-color);
+    color: var(--rp-color-primary-light-color);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: var(--rp-font-size-sm);
     font-weight: var(--rp-font-weight-semibold);
@@ -212,8 +212,8 @@
     }
 
     h2 {
-        font-size: var(--rp-h3-font-size);
-        line-height: var(--rp-h3-line-height);
+        font-size: var(--rp-heading-h3-font-size);
+        line-height: var(--rp-heading-h3-line-height);
     }
 
     p {

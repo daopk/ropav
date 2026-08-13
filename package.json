@@ -11,7 +11,8 @@
     "dist",
     "docs",
     "src/styles/**/*.scss",
-    "src/styles/styles-manifest.json"
+    "src/styles/generated",
+    "tokens/manifest.json"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -226,8 +227,8 @@
       "import": "./dist/unplugin-icons.js"
     },
     "./base.css": "./dist/base.css",
-    "./styles-manifest": "./src/styles/styles-manifest.json",
-    "./styles-manifest.json": "./src/styles/styles-manifest.json",
+    "./styles-manifest": "./tokens/manifest.json",
+    "./styles-manifest.json": "./tokens/manifest.json",
     "./scss/*.scss": "./src/styles/*.scss"
   },
   "scripts": {
@@ -242,22 +243,23 @@
     "publication:sync": "node scripts/sync-package-publication.mjs --write",
     "publication:check": "node scripts/sync-package-publication.mjs --check",
     "publication:verify": "node scripts/verify-package-publication.mjs",
-    "tokens:build": "style-dictionary build --config scripts/tokens.config.mjs --silent",
-    "tokens:check": "node scripts/check-tokens.mjs",
+    "tokens:build": "umberkit generate && umberkit build",
+    "tokens:check": "umberkit check",
     "typecheck": "vue-tsc -b tsconfig.app.json tsconfig.node.json tsconfig.test.json",
     "typecheck:storybook": "vue-tsc -p tsconfig.storybook.json --noEmit",
-    "test": "vitest run --project=unit --project=tooling",
+    "test": "pnpm run tokens:emit && vitest run --project=unit --project=tooling",
     "test:consumer-types:built": "tsc -p tests/fixtures/consumer-types/tsconfig.bundler.json && tsc -p tests/fixtures/consumer-types/tsconfig.nodenext.json",
     "test:bundle:built": "node scripts/check-package-bundle.mjs",
     "test:consumer-fixture:built": "node tests/fixtures/consumer-app/check.mjs && vue-tsc -p tests/fixtures/consumer-app/tsconfig.json --noEmit && vite build --config tests/fixtures/consumer-app/vite.config.ts && node tests/fixtures/consumer-app/assertions.mjs",
     "test:package": "pnpm run build && pnpm run publication:verify && pnpm run test:bundle:built && pnpm run test:consumer-types:built && pnpm run test:consumer-fixture:built",
-    "test:watch": "vitest --project=unit --project=tooling",
-    "test:storybook": "vitest run --project=storybook-light --project=storybook-dark",
-    "build": "pnpm run publication:check && pnpm run tokens:check && pnpm run typecheck && vite build",
+    "test:watch": "pnpm run tokens:emit && vitest --project=unit --project=tooling",
+    "test:storybook": "pnpm run tokens:emit && vitest run --project=storybook-light --project=storybook-dark",
+    "build": "pnpm run publication:check && pnpm run tokens:check && pnpm run tokens:emit && pnpm run typecheck && vite build",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run test:workspace && pnpm run typecheck:storybook && pnpm run test && pnpm run test:storybook && pnpm run test:package",
     "preview": "vite preview",
-    "storybook": "pnpm run tokens:check && storybook dev -p 6006 --no-open",
-    "build-storybook": "pnpm run tokens:check && pnpm run typecheck:storybook && storybook build"
+    "storybook": "pnpm run tokens:emit && storybook dev -p 6006 --no-open",
+    "build-storybook": "pnpm run tokens:emit && pnpm run typecheck:storybook && storybook build",
+    "tokens:emit": "umberkit build"
   },
   "peerDependencies": {
     "@vue/compiler-vapor": "3.6.0-rc.2",
@@ -311,5 +313,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/daopk/ropav"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=24.7.0",
+      "onFail": "error"
+    }
   }
 }

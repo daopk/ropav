@@ -368,11 +368,11 @@ export const packagePublicationManifest = {
         },
         {
             subpath: './styles-manifest',
-            target: './src/styles/styles-manifest.json',
+            target: './tokens/manifest.json',
         },
         {
             subpath: './styles-manifest.json',
-            target: './src/styles/styles-manifest.json',
+            target: './tokens/manifest.json',
         },
         {
             subpath: './scss/*.scss',
