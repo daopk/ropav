@@ -6,15 +6,15 @@
         "mode": "dark",
         "palettes": {
           "blue": "oklch(54.26% 0.1485 251.67)",
-          "cyan": "oklch(67.77% 0.1144 210.62)",
-          "grape": "oklch(62.39% 0.2251 318.91)",
-          "gray": "oklch(64.28% 0.0152 248.06)",
+          "cyan": "oklch(50.9% 0.0875 215.07)",
+          "grape": "oklch(57.83% 0.2186 319.15)",
+          "gray": "oklch(42.76% 0.0147 248.17)",
           "green": "oklch(71.46% 0.1835 146.44)",
-          "indigo": "oklch(58.96% 0.2054 268.62)",
+          "indigo": "oklch(55.66% 0.2082 268.35)",
           "lime": "oklch(76% 0.1996 131.08)",
-          "orange": "oklch(72.65% 0.1832 51.48)",
-          "pink": "oklch(63.96% 0.1968 3.19)",
-          "red": "oklch(67.06% 0.2045 24.52)",
+          "orange": "oklch(58.6% 0.1853 37.97)",
+          "pink": "oklch(58.81% 0.201 5.25)",
+          "red": "oklch(59.28% 0.2106 26.53)",
           "teal": "oklch(69.46% 0.1435 164.88)",
           "violet": "oklch(56.92% 0.2289 288.56)",
           "yellow": "oklch(80.69% 0.1674 78.12)"
@@ -467,8 +467,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.0112,
-            210.62
+            0.0086,
+            215.07
           ]
         },
         "$description": "App background",
@@ -484,8 +484,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0147,
-            210.62
+            0.0112,
+            215.07
           ]
         },
         "$description": "Subtle background",
@@ -501,8 +501,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0373,
-            210.62
+            0.0285,
+            215.07
           ]
         },
         "$description": "UI element background",
@@ -518,8 +518,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.0536,
-            210.62
+            0.0415,
+            215.07
           ]
         },
         "$description": "Hovered UI element background",
@@ -535,8 +535,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.0609,
-            210.62
+            0.0466,
+            215.07
           ]
         },
         "$description": "Active / selected UI element background",
@@ -552,8 +552,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.0649,
-            210.62
+            0.0496,
+            215.07
           ]
         },
         "$description": "Subtle border and separator",
@@ -569,8 +569,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.0716,
-            210.62
+            0.0547,
+            215.07
           ]
         },
         "$description": "UI element border and focus ring",
@@ -586,8 +586,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.0867,
-            210.62
+            0.0663,
+            215.07
           ]
         },
         "$description": "Hovered UI element border",
@@ -602,9 +602,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6777,
-            0.1144,
-            210.62
+            0.509,
+            0.0875,
+            215.07
           ]
         },
         "$description": "Solid background",
@@ -619,9 +619,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7147,
-            0.1088,
-            210.62
+            0.546,
+            0.0832,
+            215.07
           ]
         },
         "$description": "Hovered solid background",
@@ -637,8 +637,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7747,
-            0.0976,
-            210.62
+            0.0746,
+            215.07
           ]
         },
         "$description": "Low-contrast text",
@@ -654,8 +654,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0443,
-            210.62
+            0.0339,
+            215.07
           ]
         },
         "$description": "High-contrast text",
@@ -670,11 +670,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9062,
-            0.082,
-            210.96
+            0.9171,
+            0.0648,
+            215.39
           ],
-          "alpha": 0.0883
+          "alpha": 0.0866
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -688,11 +688,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8988,
-            0.0886,
-            211.01
+            0.9104,
+            0.0701,
+            215.4
           ],
-          "alpha": 0.1098
+          "alpha": 0.1076
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -706,11 +706,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8439,
-            0.1354,
-            212.07
+            0.8584,
+            0.1116,
+            215.91
           ],
-          "alpha": 0.1866
+          "alpha": 0.1809
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -724,11 +724,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8284,
-            0.1452,
-            213.31
+            0.8391,
+            0.1271,
+            216.14
           ],
-          "alpha": 0.2476
+          "alpha": 0.2397
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -742,11 +742,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8318,
-            0.1449,
-            212.52
+            0.8458,
+            0.1223,
+            215.8
           ],
-          "alpha": 0.3041
+          "alpha": 0.294
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -760,11 +760,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.84,
-            0.1409,
-            211.54
+            0.8564,
+            0.1143,
+            215.52
           ],
-          "alpha": 0.3616
+          "alpha": 0.3504
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -778,11 +778,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.847,
-            0.1357,
-            211.16
+            0.8639,
+            0.1084,
+            215.36
           ],
-          "alpha": 0.4373
+          "alpha": 0.4246
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -796,11 +796,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8417,
-            0.1408,
-            211.11
+            0.8593,
+            0.1124,
+            215.3
           ],
-          "alpha": 0.5307
+          "alpha": 0.5148
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -814,11 +814,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8408,
-            0.1428,
-            210.84
+            0.8206,
+            0.1434,
+            215.84
           ],
-          "alpha": 0.749
+          "alpha": 0.5216
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -832,11 +832,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8536,
-            0.1311,
-            210.72
+            0.8367,
+            0.131,
+            215.44
           ],
-          "alpha": 0.7883
+          "alpha": 0.5595
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -850,11 +850,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8752,
-            0.1111,
-            210.65
+            0.8908,
+            0.0867,
+            215.1
           ],
-          "alpha": 0.8496
+          "alpha": 0.8298
         },
         "$description": "Low-contrast text (alpha)",
         "$extensions": {
@@ -868,11 +868,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9466,
-            0.0465,
-            210.62
+            0.9539,
+            0.0358,
+            215.07
           ],
-          "alpha": 0.9419
+          "alpha": 0.9324
         },
         "$description": "High-contrast text (alpha)",
         "$extensions": {
@@ -906,8 +906,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.0221,
-            318.91
+            0.0214,
+            319.15
           ]
         },
         "$description": "App background",
@@ -923,8 +923,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0289,
-            318.91
+            0.028,
+            319.15
           ]
         },
         "$description": "Subtle background",
@@ -940,8 +940,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0733,
-            318.91
+            0.0712,
+            319.15
           ]
         },
         "$description": "UI element background",
@@ -957,8 +957,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.1067,
-            318.91
+            0.1036,
+            319.15
           ]
         },
         "$description": "Hovered UI element background",
@@ -974,8 +974,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.1198,
-            318.91
+            0.1164,
+            319.15
           ]
         },
         "$description": "Active / selected UI element background",
@@ -991,8 +991,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.1278,
-            318.91
+            0.1241,
+            319.15
           ]
         },
         "$description": "Subtle border and separator",
@@ -1008,8 +1008,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.1408,
-            318.91
+            0.1368,
+            319.15
           ]
         },
         "$description": "UI element border and focus ring",
@@ -1025,8 +1025,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.1705,
-            318.91
+            0.1656,
+            319.15
           ]
         },
         "$description": "Hovered UI element border",
@@ -1041,9 +1041,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6239,
-            0.2251,
-            318.91
+            0.5783,
+            0.2186,
+            319.15
           ]
         },
         "$description": "Solid background",
@@ -1058,9 +1058,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6609,
-            0.2141,
-            318.91
+            0.6153,
+            0.2079,
+            319.15
           ]
         },
         "$description": "Hovered solid background",
@@ -1076,8 +1076,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7897,
-            0.1699,
-            318.91
+            0.1708,
+            319.15
           ]
         },
         "$description": "Low-contrast text",
@@ -1093,8 +1093,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0731,
-            318.91
+            0.0734,
+            319.15
           ]
         },
         "$description": "High-contrast text",
@@ -1109,11 +1109,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8146,
-            0.1479,
-            318.85
+            0.8192,
+            0.1448,
+            319.1
           ],
-          "alpha": 0.1021
+          "alpha": 0.1013
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -1127,11 +1127,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8022,
-            0.1586,
-            318.84
+            0.8071,
+            0.1553,
+            319.1
           ],
-          "alpha": 0.1282
+          "alpha": 0.1271
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -1145,11 +1145,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7152,
-            0.2369,
-            318.71
+            0.721,
+            0.2328,
+            318.97
           ],
-          "alpha": 0.2341
+          "alpha": 0.2313
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -1163,11 +1163,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6857,
-            0.2646,
-            318.65
+            0.6917,
+            0.2604,
+            318.92
           ],
-          "alpha": 0.319
+          "alpha": 0.3147
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -1181,11 +1181,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6952,
-            0.256,
-            318.74
+            0.7013,
+            0.2516,
+            319
           ],
-          "alpha": 0.3863
+          "alpha": 0.3814
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -1199,11 +1199,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.711,
-            0.2414,
-            318.81
+            0.7171,
+            0.237,
+            319.06
           ],
-          "alpha": 0.4525
+          "alpha": 0.447
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -1217,11 +1217,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7226,
-            0.2307,
-            318.85
+            0.7287,
+            0.2263,
+            319.09
           ],
-          "alpha": 0.5414
+          "alpha": 0.5352
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -1235,11 +1235,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.715,
-            0.2379,
-            318.87
+            0.7212,
+            0.2333,
+            319.11
           ],
-          "alpha": 0.6603
+          "alpha": 0.6526
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -1253,11 +1253,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.698,
-            0.2541,
-            318.89
+            0.689,
+            0.2641,
+            319.11
           ],
-          "alpha": 0.8588
+          "alpha": 0.7882
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -1271,11 +1271,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7188,
-            0.2345,
-            318.9
+            0.7109,
+            0.2432,
+            319.13
           ],
-          "alpha": 0.8926
+          "alpha": 0.8221
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -1290,8 +1290,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7897,
-            0.1699,
-            318.92
+            0.1708,
+            319.15
           ]
         },
         "$description": "Low-contrast text (alpha)",
@@ -1307,8 +1307,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.073,
-            318.92
+            0.0734,
+            319.16
           ]
         },
         "$description": "High-contrast text (alpha)",
@@ -1343,8 +1343,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.0015,
-            248.06
+            0.0014,
+            248.17
           ]
         },
         "$description": "App background",
@@ -1361,7 +1361,7 @@
           "components": [
             0.2097,
             0.0019,
-            248.06
+            248.17
           ]
         },
         "$description": "Subtle background",
@@ -1377,8 +1377,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0049,
-            248.06
+            0.0048,
+            248.17
           ]
         },
         "$description": "UI element background",
@@ -1394,8 +1394,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.0072,
-            248.06
+            0.007,
+            248.17
           ]
         },
         "$description": "Hovered UI element background",
@@ -1411,8 +1411,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.0081,
-            248.06
+            0.0078,
+            248.17
           ]
         },
         "$description": "Active / selected UI element background",
@@ -1428,8 +1428,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.0086,
-            248.06
+            0.0083,
+            248.17
           ]
         },
         "$description": "Subtle border and separator",
@@ -1445,8 +1445,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.0095,
-            248.06
+            0.0092,
+            248.17
           ]
         },
         "$description": "UI element border and focus ring",
@@ -1462,8 +1462,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.0115,
-            248.06
+            0.0111,
+            248.17
           ]
         },
         "$description": "Hovered UI element border",
@@ -1478,9 +1478,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6428,
-            0.0152,
-            248.06
+            0.4276,
+            0.0147,
+            248.17
           ]
         },
         "$description": "Solid background",
@@ -1495,9 +1495,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6798,
-            0.0144,
-            248.06
+            0.4646,
+            0.014,
+            248.17
           ]
         },
         "$description": "Hovered solid background",
@@ -1513,8 +1513,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7747,
-            0.013,
-            248.06
+            0.0125,
+            248.17
           ]
         },
         "$description": "Low-contrast text",
@@ -1530,8 +1530,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0059,
-            248.06
+            0.0057,
+            248.17
           ]
         },
         "$description": "High-contrast text",
@@ -1546,11 +1546,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.975,
-            0.0124,
-            248.11
+            0.9757,
+            0.012,
+            248.22
           ],
-          "alpha": 0.0796
+          "alpha": 0.0795
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -1564,11 +1564,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9728,
-            0.0135,
-            248.11
+            0.9736,
+            0.0131,
+            248.22
           ],
-          "alpha": 0.0982
+          "alpha": 0.0981
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -1582,11 +1582,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9539,
-            0.023,
-            248.12
+            0.9552,
+            0.0224,
+            248.23
           ],
-          "alpha": 0.1559
+          "alpha": 0.1556
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -1600,11 +1600,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9464,
-            0.0269,
-            248.12
+            0.9479,
+            0.0261,
+            248.22
           ],
-          "alpha": 0.2022
+          "alpha": 0.2018
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -1618,11 +1618,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9496,
-            0.0252,
-            248.1
+            0.9511,
+            0.0245,
+            248.21
           ],
-          "alpha": 0.2503
+          "alpha": 0.2498
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -1636,11 +1636,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.954,
-            0.023,
-            248.09
+            0.9554,
+            0.0223,
+            248.2
           ],
-          "alpha": 0.3023
+          "alpha": 0.3017
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -1654,11 +1654,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9571,
-            0.0214,
-            248.08
+            0.9583,
+            0.0208,
+            248.19
           ],
-          "alpha": 0.3696
+          "alpha": 0.369
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -1672,11 +1672,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9555,
-            0.0222,
-            248.08
+            0.9568,
+            0.0216,
+            248.19
           ],
-          "alpha": 0.4461
+          "alpha": 0.4453
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -1690,11 +1690,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9532,
-            0.0234,
-            248.07
+            0.9296,
+            0.0355,
+            248.21
           ],
-          "alpha": 0.5882
+          "alpha": 0.3412
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -1708,11 +1708,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9579,
-            0.021,
-            248.07
+            0.9386,
+            0.0308,
+            248.2
           ],
-          "alpha": 0.631
+          "alpha": 0.3802
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -1726,11 +1726,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9669,
-            0.0165,
-            248.07
+            0.9679,
+            0.016,
+            248.17
           ],
-          "alpha": 0.7441
+          "alpha": 0.7431
         },
         "$description": "Low-contrast text (alpha)",
         "$extensions": {
@@ -1744,11 +1744,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.9869,
-            0.0065,
-            248.06
+            0.9873,
+            0.0062,
+            248.17
           ],
-          "alpha": 0.8913
+          "alpha": 0.8908
         },
         "$description": "High-contrast text (alpha)",
         "$extensions": {
@@ -2221,8 +2221,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.0201,
-            268.62
+            0.0204,
+            268.35
           ]
         },
         "$description": "App background",
@@ -2238,8 +2238,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0264,
-            268.62
+            0.0267,
+            268.35
           ]
         },
         "$description": "Subtle background",
@@ -2255,8 +2255,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0669,
-            268.62
+            0.0678,
+            268.35
           ]
         },
         "$description": "UI element background",
@@ -2272,8 +2272,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.0973,
-            268.62
+            0.0987,
+            268.35
           ]
         },
         "$description": "Hovered UI element background",
@@ -2289,8 +2289,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.1094,
-            268.62
+            0.1108,
+            268.35
           ]
         },
         "$description": "Active / selected UI element background",
@@ -2306,8 +2306,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.1166,
-            268.62
+            0.1182,
+            268.35
           ]
         },
         "$description": "Subtle border and separator",
@@ -2323,8 +2323,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.1285,
-            268.62
+            0.1303,
+            268.35
           ]
         },
         "$description": "UI element border and focus ring",
@@ -2340,8 +2340,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.1556,
-            268.62
+            0.1577,
+            268.35
           ]
         },
         "$description": "Hovered UI element border",
@@ -2356,9 +2356,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.5896,
-            0.2054,
-            268.62
+            0.5566,
+            0.2082,
+            268.35
           ]
         },
         "$description": "Solid background",
@@ -2373,9 +2373,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6266,
-            0.1953,
-            268.62
+            0.5936,
+            0.198,
+            268.35
           ]
         },
         "$description": "Hovered solid background",
@@ -2392,7 +2392,7 @@
           "components": [
             0.7747,
             0.1139,
-            268.62
+            268.35
           ]
         },
         "$description": "Low-contrast text",
@@ -2409,7 +2409,7 @@
           "components": [
             0.9048,
             0.0457,
-            268.62
+            268.35
           ]
         },
         "$description": "High-contrast text",
@@ -2424,11 +2424,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.753,
-            0.1259,
-            267.78
+            0.7508,
+            0.1272,
+            267.52
           ],
-          "alpha": 0.1132
+          "alpha": 0.1137
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -2442,11 +2442,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7382,
-            0.1343,
-            267.81
+            0.7359,
+            0.1355,
+            267.55
           ],
-          "alpha": 0.1431
+          "alpha": 0.1437
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -2460,11 +2460,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6351,
-            0.1949,
-            267.62
+            0.6324,
+            0.1964,
+            267.36
           ],
-          "alpha": 0.2735
+          "alpha": 0.2751
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -2478,11 +2478,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6014,
-            0.2156,
-            267.75
+            0.5987,
+            0.2173,
+            267.49
           ],
-          "alpha": 0.3783
+          "alpha": 0.3809
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -2496,11 +2496,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6137,
-            0.208,
-            268.01
+            0.611,
+            0.2096,
+            267.75
           ],
-          "alpha": 0.4553
+          "alpha": 0.4583
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -2514,11 +2514,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6328,
-            0.1963,
-            268.21
+            0.6301,
+            0.1979,
+            267.95
           ],
-          "alpha": 0.5285
+          "alpha": 0.5317
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -2532,11 +2532,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6468,
-            0.1878,
-            268.37
+            0.6441,
+            0.1894,
+            268.11
           ],
-          "alpha": 0.6283
+          "alpha": 0.6319
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -2550,11 +2550,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6386,
-            0.1927,
-            268.48
+            0.6359,
+            0.1944,
+            268.21
           ],
-          "alpha": 0.7689
+          "alpha": 0.7735
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -2568,11 +2568,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.607,
-            0.2122,
-            268.59
+            0.5905,
+            0.2224,
+            268.29
           ],
-          "alpha": 0.9608
+          "alpha": 0.9216
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -2586,11 +2586,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6316,
-            0.1971,
-            268.61
+            0.6162,
+            0.2064,
+            268.32
           ],
-          "alpha": 0.9893
+          "alpha": 0.9498
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -2606,7 +2606,7 @@
           "components": [
             0.7747,
             0.1139,
-            268.62
+            268.35
           ]
         },
         "$description": "Low-contrast text (alpha)",
@@ -2623,7 +2623,7 @@
           "components": [
             0.9048,
             0.0457,
-            268.61
+            268.34
           ]
         },
         "$description": "High-contrast text (alpha)",
@@ -3097,8 +3097,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.018,
-            51.48
+            0.0182,
+            37.97
           ]
         },
         "$description": "App background",
@@ -3114,8 +3114,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0235,
-            51.48
+            0.0238,
+            37.97
           ]
         },
         "$description": "Subtle background",
@@ -3131,8 +3131,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0597,
-            51.48
+            0.0603,
+            37.97
           ]
         },
         "$description": "UI element background",
@@ -3148,8 +3148,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.08,
-            51.48
+            0.0878,
+            37.97
           ]
         },
         "$description": "Hovered UI element background",
@@ -3165,8 +3165,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.0919,
-            51.48
+            0.0986,
+            37.97
           ]
         },
         "$description": "Active / selected UI element background",
@@ -3182,8 +3182,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.104,
-            51.48
+            0.1052,
+            37.97
           ]
         },
         "$description": "Subtle border and separator",
@@ -3199,8 +3199,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.1146,
-            51.48
+            0.1159,
+            37.97
           ]
         },
         "$description": "UI element border and focus ring",
@@ -3216,8 +3216,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.1368,
-            51.48
+            0.1404,
+            37.97
           ]
         },
         "$description": "Hovered UI element border",
@@ -3232,9 +3232,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7265,
-            0.1832,
-            51.48
+            0.586,
+            0.1853,
+            37.97
           ]
         },
         "$description": "Solid background",
@@ -3249,9 +3249,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7635,
-            0.157,
-            51.48
+            0.623,
+            0.1762,
+            37.97
           ]
         },
         "$description": "Hovered solid background",
@@ -3267,8 +3267,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7797,
-            0.1441,
-            51.48
+            0.1323,
+            37.97
           ]
         },
         "$description": "Low-contrast text",
@@ -3284,8 +3284,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0559,
-            51.48
+            0.051,
+            37.97
           ]
         },
         "$description": "High-contrast text",
@@ -3300,11 +3300,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.8092,
-            0.1205,
-            50.55
+            0.7953,
+            0.1211,
+            38.03
           ],
-          "alpha": 0.1032
+          "alpha": 0.1058
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -3318,11 +3318,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7977,
-            0.1291,
-            50.5
+            0.7835,
+            0.1295,
+            38.02
           ],
-          "alpha": 0.1295
+          "alpha": 0.1328
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -3336,11 +3336,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7181,
-            0.1896,
-            47.42
+            0.7025,
+            0.193,
+            37.45
           ],
-          "alpha": 0.2337
+          "alpha": 0.2412
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -3354,11 +3354,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7048,
-            0.199,
-            45.75
+            0.6764,
+            0.2154,
+            36.74
           ],
-          "alpha": 0.3073
+          "alpha": 0.3265
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -3372,11 +3372,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7103,
-            0.196,
-            47.16
+            0.685,
+            0.2081,
+            37.24
           ],
-          "alpha": 0.3756
+          "alpha": 0.3954
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -3390,11 +3390,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7152,
-            0.1933,
-            48.36
+            0.6993,
+            0.1958,
+            37.63
           ],
-          "alpha": 0.4499
+          "alpha": 0.4637
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -3408,11 +3408,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7255,
+            0.7101,
             0.1868,
-            50.05
+            37.8
           ],
-          "alpha": 0.5392
+          "alpha": 0.5551
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -3426,11 +3426,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7212,
-            0.1905,
-            50.04
+            0.7033,
+            0.1926,
+            37.83
           ],
-          "alpha": 0.6534
+          "alpha": 0.6759
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -3444,11 +3444,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7308,
-            0.1843,
-            51.47
+            0.6763,
+            0.2162,
+            37.73
           ],
-          "alpha": 0.9922
+          "alpha": 0.8235
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -3462,10 +3462,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7635,
-            0.157,
-            51.48
-          ]
+            0.6961,
+            0.1988,
+            37.9
+          ],
+          "alpha": 0.8605
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -3480,8 +3481,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7797,
-            0.1441,
-            51.48
+            0.1323,
+            37.97
           ]
         },
         "$description": "Low-contrast text (alpha)",
@@ -3497,8 +3498,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0559,
-            51.49
+            0.0509,
+            37.98
           ]
         },
         "$description": "High-contrast text (alpha)",
@@ -3533,8 +3534,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.0193,
-            3.19
+            0.0197,
+            5.25
           ]
         },
         "$description": "App background",
@@ -3550,8 +3551,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0253,
-            3.19
+            0.0258,
+            5.25
           ]
         },
         "$description": "Subtle background",
@@ -3567,8 +3568,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0641,
-            3.19
+            0.0655,
+            5.25
           ]
         },
         "$description": "UI element background",
@@ -3584,8 +3585,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.0933,
-            3.19
+            0.0953,
+            5.25
           ]
         },
         "$description": "Hovered UI element background",
@@ -3601,8 +3602,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.1048,
-            3.19
+            0.107,
+            5.25
           ]
         },
         "$description": "Active / selected UI element background",
@@ -3618,8 +3619,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.1117,
-            3.19
+            0.1141,
+            5.25
           ]
         },
         "$description": "Subtle border and separator",
@@ -3635,8 +3636,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.1232,
-            3.19
+            0.1258,
+            5.25
           ]
         },
         "$description": "UI element border and focus ring",
@@ -3652,8 +3653,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.1491,
-            3.19
+            0.1523,
+            5.25
           ]
         },
         "$description": "Hovered UI element border",
@@ -3668,9 +3669,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6396,
-            0.1968,
-            3.19
+            0.5881,
+            0.201,
+            5.25
           ]
         },
         "$description": "Solid background",
@@ -3685,9 +3686,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6766,
-            0.1872,
-            3.19
+            0.6251,
+            0.1912,
+            5.25
           ]
         },
         "$description": "Hovered solid background",
@@ -3703,8 +3704,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7847,
-            0.1334,
-            3.19
+            0.1318,
+            5.25
           ]
         },
         "$description": "Low-contrast text",
@@ -3720,8 +3721,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0522,
-            3.19
+            0.0516,
+            5.25
           ]
         },
         "$description": "High-contrast text",
@@ -3736,11 +3737,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7911,
-            0.1272,
-            4.84
+            0.7866,
+            0.1291,
+            6.94
           ],
-          "alpha": 0.1066
+          "alpha": 0.1075
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -3754,11 +3755,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7795,
-            0.1361,
-            4.74
+            0.7749,
+            0.138,
+            6.84
           ],
-          "alpha": 0.1338
+          "alpha": 0.135
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -3772,11 +3773,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7,
-            0.2024,
-            5.14
+            0.695,
+            0.2045,
+            7.29
           ],
-          "alpha": 0.2426
+          "alpha": 0.2454
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -3790,11 +3791,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6749,
-            0.2262,
-            5.05
+            0.6698,
+            0.2283,
+            7.22
           ],
-          "alpha": 0.3281
+          "alpha": 0.3321
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -3808,11 +3809,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6831,
-            0.219,
-            4.48
+            0.6779,
+            0.2213,
+            6.62
           ],
-          "alpha": 0.3973
+          "alpha": 0.402
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -3826,11 +3827,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6971,
-            0.2064,
-            4.04
+            0.6917,
+            0.2088,
+            6.15
           ],
-          "alpha": 0.466
+          "alpha": 0.4713
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -3844,11 +3845,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7076,
-            0.1972,
-            3.73
+            0.7022,
+            0.1995,
+            5.81
           ],
-          "alpha": 0.558
+          "alpha": 0.564
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -3862,11 +3863,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7009,
-            0.2035,
-            3.54
+            0.6955,
+            0.206,
+            5.62
           ],
-          "alpha": 0.6791
+          "alpha": 0.6865
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -3880,11 +3881,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6904,
-            0.2137,
-            3.28
+            0.6695,
+            0.2309,
+            5.47
           ],
-          "alpha": 0.902
+          "alpha": 0.8392
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -3898,11 +3899,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7086,
-            0.1968,
-            3.23
+            0.6889,
+            0.2123,
+            5.37
           ],
-          "alpha": 0.9395
+          "alpha": 0.8768
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -3917,8 +3918,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7847,
-            0.1334,
-            3.18
+            0.1318,
+            5.24
           ]
         },
         "$description": "Low-contrast text (alpha)",
@@ -3934,8 +3935,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0522,
-            3.18
+            0.0516,
+            5.24
           ]
         },
         "$description": "High-contrast text (alpha)",
@@ -3970,8 +3971,8 @@
           "colorSpace": "oklch",
           "components": [
             0.1896,
-            0.02,
-            24.52
+            0.0206,
+            26.53
           ]
         },
         "$description": "App background",
@@ -3987,8 +3988,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2097,
-            0.0262,
-            24.52
+            0.027,
+            26.53
           ]
         },
         "$description": "Subtle background",
@@ -4004,8 +4005,8 @@
           "colorSpace": "oklch",
           "components": [
             0.2659,
-            0.0666,
-            24.52
+            0.0686,
+            26.53
           ]
         },
         "$description": "UI element background",
@@ -4021,8 +4022,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3089,
-            0.0969,
-            24.52
+            0.0998,
+            26.53
           ]
         },
         "$description": "Hovered UI element background",
@@ -4038,8 +4039,8 @@
           "colorSpace": "oklch",
           "components": [
             0.3547,
-            0.1089,
-            24.52
+            0.1121,
+            26.53
           ]
         },
         "$description": "Active / selected UI element background",
@@ -4055,8 +4056,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4033,
-            0.1161,
-            24.52
+            0.1196,
+            26.53
           ]
         },
         "$description": "Subtle border and separator",
@@ -4072,8 +4073,8 @@
           "colorSpace": "oklch",
           "components": [
             0.4638,
-            0.1279,
-            24.52
+            0.1318,
+            26.53
           ]
         },
         "$description": "UI element border and focus ring",
@@ -4089,8 +4090,8 @@
           "colorSpace": "oklch",
           "components": [
             0.5282,
-            0.1549,
-            24.52
+            0.1596,
+            26.53
           ]
         },
         "$description": "Hovered UI element border",
@@ -4105,9 +4106,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6706,
-            0.2045,
-            24.52
+            0.5928,
+            0.2106,
+            26.53
           ]
         },
         "$description": "Solid background",
@@ -4122,9 +4123,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7076,
-            0.1845,
-            24.52
+            0.6298,
+            0.2003,
+            26.53
           ]
         },
         "$description": "Hovered solid background",
@@ -4140,8 +4141,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7797,
-            0.1286,
-            24.52
+            0.1287,
+            26.53
           ]
         },
         "$description": "Low-contrast text",
@@ -4157,8 +4158,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0492,
-            24.52
+            0.0493,
+            26.53
           ]
         },
         "$description": "High-contrast text",
@@ -4173,11 +4174,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7774,
-            0.1302,
-            25.6
+            0.7735,
+            0.1332,
+            27.52
           ],
-          "alpha": 0.1094
+          "alpha": 0.1103
         },
         "$description": "App background (alpha)",
         "$extensions": {
@@ -4191,11 +4192,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7653,
-            0.1391,
-            25.58
+            0.7613,
+            0.1422,
+            27.5
           ],
-          "alpha": 0.1375
+          "alpha": 0.1386
         },
         "$description": "Subtle background (alpha)",
         "$extensions": {
@@ -4209,11 +4210,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6836,
-            0.2051,
-            25.98
+            0.6794,
+            0.209,
+            27.8
           ],
-          "alpha": 0.2518
+          "alpha": 0.2544
         },
         "$description": "UI element background (alpha)",
         "$extensions": {
@@ -4227,11 +4228,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6578,
-            0.2285,
-            25.9
+            0.6536,
+            0.2325,
+            27.66
           ],
-          "alpha": 0.3415
+          "alpha": 0.3453
         },
         "$description": "Hovered UI element background (alpha)",
         "$extensions": {
@@ -4245,11 +4246,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6657,
-            0.2212,
-            25.5
+            0.6612,
+            0.2254,
+            27.35
           ],
-          "alpha": 0.413
+          "alpha": 0.4175
         },
         "$description": "Active / selected UI element background (alpha)",
         "$extensions": {
@@ -4263,11 +4264,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6796,
-            0.2087,
-            25.17
+            0.6749,
+            0.2129,
+            27.09
           ],
-          "alpha": 0.4834
+          "alpha": 0.4884
         },
         "$description": "Subtle border and separator (alpha)",
         "$extensions": {
@@ -4281,11 +4282,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6901,
-            0.1994,
-            24.93
+            0.6853,
+            0.2036,
+            26.89
           ],
-          "alpha": 0.5779
+          "alpha": 0.5836
         },
         "$description": "UI element border and focus ring (alpha)",
         "$extensions": {
@@ -4299,11 +4300,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.683,
-            0.2056,
-            24.79
+            0.6781,
+            0.21,
+            26.76
           ],
-          "alpha": 0.7038
+          "alpha": 0.7109
         },
         "$description": "Hovered UI element border (alpha)",
         "$extensions": {
@@ -4317,11 +4318,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6806,
-            0.2078,
-            24.53
+            0.6526,
+            0.2334,
+            26.63
           ],
-          "alpha": 0.9804
+          "alpha": 0.8784
         },
         "$description": "Solid background (alpha)",
         "$extensions": {
@@ -4335,10 +4336,11 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.7076,
-            0.1844,
-            24.52
-          ]
+            0.6725,
+            0.215,
+            26.59
+          ],
+          "alpha": 0.9152
         },
         "$description": "Hovered solid background (alpha)",
         "$extensions": {
@@ -4353,8 +4355,8 @@
           "colorSpace": "oklch",
           "components": [
             0.7797,
-            0.1286,
-            24.52
+            0.1287,
+            26.53
           ]
         },
         "$description": "Low-contrast text (alpha)",
@@ -4370,8 +4372,8 @@
           "colorSpace": "oklch",
           "components": [
             0.9048,
-            0.0492,
-            24.52
+            0.0493,
+            26.53
           ]
         },
         "$description": "High-contrast text (alpha)",

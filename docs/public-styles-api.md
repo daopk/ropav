@@ -121,13 +121,15 @@ Active menu and listbox descendants use `data-highlighted`. Actual DOM keyboard 
 
 ## Public CSS variables
 
-The exact entries in [`styles-manifest.json`](../src/styles/styles-manifest.json) are the public contract. A design token enters that manifest only when it opts in with `$extensions.ropav.public: true`. Emitting a CSS variable is a separate runtime concern: neither emission nor a name prefix makes a variable public. Undocumented variables, underscore-prefixed variables, DOM structure and internal component selectors are not part of the public contract and may change.
+The exact entries in the packaged [`tokens/manifest.json`](../tokens/manifest.json) (also exported as `ropav/styles-manifest`) are the public contract. A design token enters that manifest only when it opts in with `$extensions.umberkit.public: true`. Emitting a CSS variable is a separate runtime concern: neither emission nor a name prefix makes a variable public. Undocumented variables, underscore-prefixed variables, DOM structure and internal component selectors are not part of the public contract and may change.
 
-The manifest contains design tokens plus a deliberately small component-geometry allowlist. Slider and RangeSlider share the `--rp-slider-*` namespace. Size presets provide fallbacks, while a consumer value wins for the individual dimension. See the generated [token table](./public-tokens.md).
+Tokens are built with [umberkit](https://www.npmjs.com/package/umberkit): 12-step OKLCH palettes generated from one seed per hue (Radix step semantics — 1-2 backgrounds, 3-5 component backgrounds, 6-8 borders, 9-10 solids, 11-12 text), plus hand-authored semantic roles (`--rp-color-<hue>-filled`, `-light`, `-outline`, …) and scheme semantics (`--rp-color-body`, `-text`, `-default`, …). The generated `tokens.md` and `showcase.html` shipped in `src/styles/generated/` document every token and render the ramps with a contrast grid.
 
-The schema-v2 manifest does not pin a Git commit. `tokens:check` resolves compatibility from release tags, so the baseline advances with releases instead of remaining hard-coded.
+A deliberately small component-geometry namespace (`--rp-switch-*`, `--rp-slider-*`, `--rp-radio-*`) stays outside the token tree: those variables are consumer override hooks with size-preset fallbacks, so they are intentionally undefined by default. Slider and RangeSlider share the `--rp-slider-*` namespace; size presets provide fallbacks, while a consumer value wins for the individual dimension.
 
-Palette shades and their normal and active `*-contrast` companions are required override groups because `autoContrast` consumes state-specific companions selected at build time. The [color override contract](./public-tokens.md#color-override-contract) documents the state pairings and preset-role requirements.
+## Color scheme
+
+Every color token is emitted as `light-dark()`. Set `data-scheme="dark"` (or `"light"`) on `<html>` to switch schemes; without the attribute the operating-system preference applies. Because `light-dark()` values resolve against the color scheme of the element they are declared on (`:root`), the attribute must be set on the document element — subtree scheme switching is not supported.
 
 ## Cascade layers and migration
 
@@ -144,6 +146,6 @@ Place global resets in `reset` and application overrides in `app`. Import order 
 - Typed parts, state attributes, manifest entries, geometry variables and cascade layers form the current Public Styles API.
 - Renaming or removing a documented part, state attribute or variable changes the public contract.
 - Adding a public part, state attribute or variable extends the public contract.
-- `tokens:check` compares the current manifest with the latest reachable `ropav@*` release tag that contains one. Until the first package-specific release exists, it falls back to legacy `v*` tags and their pre-monorepo manifest path. Released variables cannot be removed, renamed or changed semantically; adding a variable requires incrementing the manifest's `contractVersion`.
-- Release tags must be available in the Git checkout that runs the check. `PUBLIC_STYLES_BASELINE_REF` can explicitly select another Git ref that contains a manifest.
+- `tokens:check` runs `umberkit check`: lint, generated-palette and manifest drift, and the contract ratchet against the latest reachable `v*` release tag. Removing, renaming, retyping or un-publishing a released public token fails until `contract.version` rises in `umberkit.config.ts`.
+- Release tags must be available in the Git checkout that runs the check (`fetch-depth: 0` in CI). `umberkit check --against <ref>` can explicitly select another baseline.
 - Internal DOM, selectors and undocumented variables are outside the public contract.

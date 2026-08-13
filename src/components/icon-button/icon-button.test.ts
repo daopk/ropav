@@ -225,7 +225,7 @@ describe('IconButton', () => {
         );
         expect(button.style.getPropertyValue('--_rp-button-border')).toBe('transparent');
         expect(button.style.getPropertyValue('--_rp-button-fg')).toBe(
-            'color-mix(in srgb, #ff3366 70%, var(--rp-color-bright))',
+            'color-mix(in srgb, #ff3366 68%, var(--rp-color-bright))',
         );
     });
 

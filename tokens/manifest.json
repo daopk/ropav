@@ -568,8 +568,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0025 210.62)",
-        "scheme=dark": "oklch(18.96% 0.0112 210.62)"
+        "scheme=light": "oklch(99.36% 0.0019 215.07)",
+        "scheme=dark": "oklch(18.96% 0.0086 215.07)"
       }
     },
     "color.cyan.10": {
@@ -579,8 +579,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-10",
       "values": {
-        "scheme=light": "oklch(65.01% 0.1109 210.62)",
-        "scheme=dark": "oklch(71.47% 0.1088 210.62)"
+        "scheme=light": "oklch(48.14% 0.0848 215.07)",
+        "scheme=dark": "oklch(54.6% 0.0832 215.07)"
       }
     },
     "color.cyan.11": {
@@ -590,8 +590,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-11",
       "values": {
-        "scheme=light": "oklch(54.21% 0.094 210.6)",
-        "scheme=dark": "oklch(77.47% 0.0976 210.62)"
+        "scheme=light": "oklch(54.71% 0.0788 215.07)",
+        "scheme=dark": "oklch(77.47% 0.0746 215.07)"
       }
     },
     "color.cyan.12": {
@@ -601,8 +601,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.0542 210.62)",
-        "scheme=dark": "oklch(90.48% 0.0443 210.62)"
+        "scheme=light": "oklch(32.83% 0.0414 215.07)",
+        "scheme=dark": "oklch(90.48% 0.0339 215.07)"
       }
     },
     "color.cyan.2": {
@@ -612,8 +612,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0063 210.62)",
-        "scheme=dark": "oklch(20.97% 0.0147 210.62)"
+        "scheme=light": "oklch(98.19% 0.0049 215.07)",
+        "scheme=dark": "oklch(20.97% 0.0112 215.07)"
       }
     },
     "color.cyan.3": {
@@ -623,8 +623,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0144 210.62)",
-        "scheme=dark": "oklch(26.59% 0.0373 210.62)"
+        "scheme=light": "oklch(95.78% 0.011 215.07)",
+        "scheme=dark": "oklch(26.59% 0.0285 215.07)"
       }
     },
     "color.cyan.4": {
@@ -634,8 +634,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0255 210.62)",
-        "scheme=dark": "oklch(30.89% 0.0536 210.6)"
+        "scheme=light": "oklch(93.11% 0.0195 215.07)",
+        "scheme=dark": "oklch(30.89% 0.0415 215.07)"
       }
     },
     "color.cyan.5": {
@@ -645,8 +645,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0354 210.62)",
-        "scheme=dark": "oklch(35.47% 0.0609 210.62)"
+        "scheme=light": "oklch(89.86% 0.027 215.07)",
+        "scheme=dark": "oklch(35.47% 0.0466 215.07)"
       }
     },
     "color.cyan.6": {
@@ -656,8 +656,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0465 210.62)",
-        "scheme=dark": "oklch(40.33% 0.0649 210.62)"
+        "scheme=light": "oklch(85.87% 0.0355 215.07)",
+        "scheme=dark": "oklch(40.33% 0.0496 215.07)"
       }
     },
     "color.cyan.7": {
@@ -667,8 +667,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.0589 210.62)",
-        "scheme=dark": "oklch(46.38% 0.0716 210.62)"
+        "scheme=light": "oklch(80.5% 0.045 215.07)",
+        "scheme=dark": "oklch(46.38% 0.0547 215.07)"
       }
     },
     "color.cyan.8": {
@@ -678,8 +678,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.0788 210.62)",
-        "scheme=dark": "oklch(52.82% 0.0867 210.62)"
+        "scheme=light": "oklch(73.12% 0.0603 215.07)",
+        "scheme=dark": "oklch(52.82% 0.0663 215.07)"
       }
     },
     "color.cyan.9": {
@@ -689,8 +689,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-9",
       "values": {
-        "scheme=light": "oklch(67.77% 0.1144 210.62)",
-        "scheme=dark": "oklch(67.77% 0.1144 210.62)"
+        "scheme=light": "oklch(50.9% 0.0875 215.07)",
+        "scheme=dark": "oklch(50.9% 0.0875 215.07)"
       }
     },
     "color.cyan.a1": {
@@ -700,8 +700,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a1",
       "values": {
-        "scheme=light": "oklch(61.83% 0.1111 218 / 0.0152)",
-        "scheme=dark": "oklch(90.62% 0.082 210.96 / 0.0883)"
+        "scheme=light": "oklch(54.85% 0.1034 224.4 / 0.0136)",
+        "scheme=dark": "oklch(91.71% 0.0648 215.39 / 0.0866)"
       }
     },
     "color.cyan.a10": {
@@ -711,8 +711,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a10",
       "values": {
-        "scheme=light": "oklch(63.51% 0.1105 211.6 / 0.9495)",
-        "scheme=dark": "oklch(85.36% 0.1311 210.72 / 0.7883)"
+        "scheme=light": "oklch(47.93% 0.0848 215.2 / 0.9957)",
+        "scheme=dark": "oklch(83.67% 0.131 215.44 / 0.5595)"
       }
     },
     "color.cyan.a11": {
@@ -722,8 +722,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a11",
       "values": {
-        "scheme=light": "oklch(54.21% 0.094 210.6)",
-        "scheme=dark": "oklch(87.52% 0.1111 210.65 / 0.8496)"
+        "scheme=light": "oklch(44.84% 0.0816 219.9 / 0.8162)",
+        "scheme=dark": "oklch(89.08% 0.0867 215.1 / 0.8298)"
       }
     },
     "color.cyan.a12": {
@@ -733,8 +733,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a12",
       "values": {
-        "scheme=light": "oklch(31.3% 0.0543 211.01 / 0.9796)",
-        "scheme=dark": "oklch(94.66% 0.0465 210.62 / 0.9419)"
+        "scheme=light": "oklch(24.51% 0.0438 217.12 / 0.9033)",
+        "scheme=dark": "oklch(95.39% 0.0358 215.07 / 0.9324)"
       }
     },
     "color.cyan.a2": {
@@ -744,8 +744,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a2",
       "values": {
-        "scheme=light": "oklch(59.31% 0.1065 217.89 / 0.0413)",
-        "scheme=dark": "oklch(89.88% 0.0886 211.01 / 0.1098)"
+        "scheme=light": "oklch(52.39% 0.0986 224.24 / 0.0369)",
+        "scheme=dark": "oklch(91.04% 0.0701 215.4 / 0.1076)"
       }
     },
     "color.cyan.a3": {
@@ -755,8 +755,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a3",
       "values": {
-        "scheme=light": "oklch(58.7% 0.1054 217.9 / 0.0953)",
-        "scheme=dark": "oklch(84.39% 0.1354 212.07 / 0.1866)"
+        "scheme=light": "oklch(51.78% 0.0974 224.2 / 0.0853)",
+        "scheme=dark": "oklch(85.84% 0.1116 215.91 / 0.1809)"
       }
     },
     "color.cyan.a4": {
@@ -766,8 +766,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a4",
       "values": {
-        "scheme=light": "oklch(60.69% 0.109 217.94 / 0.1615)",
-        "scheme=dark": "oklch(82.84% 0.1452 213.3 / 0.2476)"
+        "scheme=light": "oklch(53.7% 0.101 224.23 / 0.1433)",
+        "scheme=dark": "oklch(83.91% 0.1271 216.1 / 0.2397)"
       }
     },
     "color.cyan.a5": {
@@ -777,8 +777,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a5",
       "values": {
-        "scheme=light": "oklch(59.29% 0.1064 217.84 / 0.2322)",
-        "scheme=dark": "oklch(83.18% 0.1449 212.52 / 0.3041)"
+        "scheme=light": "oklch(52.29% 0.0983 224.1 / 0.2062)",
+        "scheme=dark": "oklch(84.58% 0.1223 215.8 / 0.294)"
       }
     },
     "color.cyan.a6": {
@@ -788,8 +788,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a6",
       "values": {
-        "scheme=light": "oklch(57.95% 0.1039 217.67 / 0.3166)",
-        "scheme=dark": "oklch(84% 0.1409 211.54 / 0.3616)"
+        "scheme=light": "oklch(50.92% 0.0955 223.8 / 0.2812)",
+        "scheme=dark": "oklch(85.64% 0.1143 215.5 / 0.3504)"
       }
     },
     "color.cyan.a7": {
@@ -799,8 +799,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a7",
       "values": {
-        "scheme=light": "oklch(56.09% 0.1004 217.4 / 0.4239)",
-        "scheme=dark": "oklch(84.7% 0.1357 211.16 / 0.4373)"
+        "scheme=light": "oklch(48.99% 0.0916 223.48 / 0.3762)",
+        "scheme=dark": "oklch(86.39% 0.1084 215.36 / 0.4246)"
       }
     },
     "color.cyan.a8": {
@@ -810,8 +810,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a8",
       "values": {
-        "scheme=light": "oklch(56.17% 0.1001 216.61 / 0.5893)",
-        "scheme=dark": "oklch(84.17% 0.1408 211.11 / 0.5307)"
+        "scheme=light": "oklch(48.64% 0.0905 222.92 / 0.5151)",
+        "scheme=dark": "oklch(85.93% 0.1124 215.3 / 0.5148)"
       }
     },
     "color.cyan.a9": {
@@ -821,8 +821,8 @@
       "deprecated": false,
       "css": "--rp-color-cyan-a9",
       "values": {
-        "scheme=light": "oklch(65.49% 0.1142 212.21 / 0.9176)",
-        "scheme=dark": "oklch(84.08% 0.1428 210.8 / 0.749)"
+        "scheme=light": "oklch(48.85% 0.0869 216.35 / 0.9569)",
+        "scheme=dark": "oklch(82.06% 0.1434 215.84 / 0.5216)"
       }
     },
     "color.cyan.contrast": {
@@ -1041,8 +1041,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0048 318.9)",
-        "scheme=dark": "oklch(18.96% 0.0221 318.91)"
+        "scheme=light": "oklch(99.36% 0.0047 319.15)",
+        "scheme=dark": "oklch(18.96% 0.0214 319.15)"
       }
     },
     "color.grape.10": {
@@ -1052,8 +1052,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-10",
       "values": {
-        "scheme=light": "oklch(59.63% 0.2182 318.91)",
-        "scheme=dark": "oklch(66.09% 0.2141 318.91)"
+        "scheme=light": "oklch(55.07% 0.2119 319.15)",
+        "scheme=dark": "oklch(61.53% 0.2079 319.15)"
       }
     },
     "color.grape.11": {
@@ -1063,8 +1063,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.2027 318.91)",
-        "scheme=dark": "oklch(78.97% 0.1699 318.91)"
+        "scheme=light": "oklch(55.21% 0.1969 319.15)",
+        "scheme=dark": "oklch(78.97% 0.1708 319.15)"
       }
     },
     "color.grape.12": {
@@ -1074,8 +1074,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.1066 318.91)",
-        "scheme=dark": "oklch(90.48% 0.0731 318.9)"
+        "scheme=light": "oklch(32.83% 0.1035 319.15)",
+        "scheme=dark": "oklch(90.48% 0.0734 319.15)"
       }
     },
     "color.grape.2": {
@@ -1085,8 +1085,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0125 318.91)",
-        "scheme=dark": "oklch(20.97% 0.0289 318.91)"
+        "scheme=light": "oklch(98.19% 0.0121 319.15)",
+        "scheme=dark": "oklch(20.97% 0.028 319.15)"
       }
     },
     "color.grape.3": {
@@ -1096,8 +1096,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0284 318.91)",
-        "scheme=dark": "oklch(26.59% 0.0733 318.91)"
+        "scheme=light": "oklch(95.78% 0.0276 319.15)",
+        "scheme=dark": "oklch(26.59% 0.0712 319.15)"
       }
     },
     "color.grape.4": {
@@ -1107,8 +1107,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0502 318.91)",
-        "scheme=dark": "oklch(30.89% 0.1067 318.91)"
+        "scheme=light": "oklch(93.11% 0.0487 319.15)",
+        "scheme=dark": "oklch(30.89% 0.1036 319.15)"
       }
     },
     "color.grape.5": {
@@ -1118,8 +1118,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0696 318.91)",
-        "scheme=dark": "oklch(35.47% 0.1198 318.91)"
+        "scheme=light": "oklch(89.86% 0.0676 319.15)",
+        "scheme=dark": "oklch(35.47% 0.1164 319.15)"
       }
     },
     "color.grape.6": {
@@ -1129,8 +1129,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0914 318.91)",
-        "scheme=dark": "oklch(40.33% 0.1278 318.91)"
+        "scheme=light": "oklch(85.87% 0.0888 319.15)",
+        "scheme=dark": "oklch(40.33% 0.1241 319.15)"
       }
     },
     "color.grape.7": {
@@ -1140,8 +1140,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.1159 318.91)",
-        "scheme=dark": "oklch(46.38% 0.1408 318.91)"
+        "scheme=light": "oklch(80.5% 0.1125 319.15)",
+        "scheme=dark": "oklch(46.38% 0.1368 319.15)"
       }
     },
     "color.grape.8": {
@@ -1151,8 +1151,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.1551 318.91)",
-        "scheme=dark": "oklch(52.82% 0.1705 318.91)"
+        "scheme=light": "oklch(73.12% 0.1506 319.15)",
+        "scheme=dark": "oklch(52.82% 0.1656 319.15)"
       }
     },
     "color.grape.9": {
@@ -1162,8 +1162,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-9",
       "values": {
-        "scheme=light": "oklch(62.39% 0.2251 318.91)",
-        "scheme=dark": "oklch(62.39% 0.2251 318.91)"
+        "scheme=light": "oklch(57.83% 0.2186 319.15)",
+        "scheme=dark": "oklch(57.83% 0.2186 319.15)"
       }
     },
     "color.grape.a1": {
@@ -1173,8 +1173,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a1",
       "values": {
-        "scheme=light": "oklch(62.34% 0.306 315.65 / 0.012)",
-        "scheme=dark": "oklch(81.46% 0.1479 318.85 / 0.1021)"
+        "scheme=light": "oklch(62.42% 0.3062 315.8 / 0.012)",
+        "scheme=dark": "oklch(81.92% 0.1448 319.1 / 0.1013)"
       }
     },
     "color.grape.a10": {
@@ -1184,8 +1184,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a10",
       "values": {
-        "scheme=light": "oklch(50.3% 0.2457 316.57 / 0.7307)",
-        "scheme=dark": "oklch(71.88% 0.2345 318.9 / 0.8926)"
+        "scheme=light": "oklch(46.87% 0.2283 317.14 / 0.7821)",
+        "scheme=dark": "oklch(71.09% 0.2432 319.13 / 0.8221)"
       }
     },
     "color.grape.a11": {
@@ -1195,8 +1195,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a11",
       "values": {
-        "scheme=light": "oklch(45.61% 0.2227 316.7 / 0.7617)",
-        "scheme=dark": "oklch(78.97% 0.1699 318.92)"
+        "scheme=light": "oklch(44.84% 0.2186 316.96 / 0.7519)",
+        "scheme=dark": "oklch(78.97% 0.1708 319.15)"
       }
     },
     "color.grape.a12": {
@@ -1206,8 +1206,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a12",
       "values": {
-        "scheme=light": "oklch(23.66% 0.1148 317.83 / 0.8816)",
-        "scheme=dark": "oklch(90.48% 0.073 318.92)"
+        "scheme=light": "oklch(23.22% 0.1125 318.14 / 0.8779)",
+        "scheme=dark": "oklch(90.48% 0.0734 319.16)"
       }
     },
     "color.grape.a2": {
@@ -1217,8 +1217,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a2",
       "values": {
-        "scheme=light": "oklch(59.86% 0.2943 315.36 / 0.0332)",
-        "scheme=dark": "oklch(80.22% 0.1586 318.84 / 0.1282)"
+        "scheme=light": "oklch(59.01% 0.2894 315.84 / 0.0329)",
+        "scheme=dark": "oklch(80.71% 0.1553 319.1 / 0.1271)"
       }
     },
     "color.grape.a3": {
@@ -1228,8 +1228,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a3",
       "values": {
-        "scheme=light": "oklch(58.77% 0.2889 315.39 / 0.0768)",
-        "scheme=dark": "oklch(71.52% 0.2369 318.71 / 0.2341)"
+        "scheme=light": "oklch(57.94% 0.2841 315.87 / 0.0763)",
+        "scheme=dark": "oklch(72.1% 0.2328 318.97 / 0.2313)"
       }
     },
     "color.grape.a4": {
@@ -1239,8 +1239,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a4",
       "values": {
-        "scheme=light": "oklch(60.9% 0.2994 315.37 / 0.1286)",
-        "scheme=dark": "oklch(68.57% 0.2646 318.65 / 0.319)"
+        "scheme=light": "oklch(60.06% 0.2946 315.8 / 0.1276)",
+        "scheme=dark": "oklch(69.17% 0.2604 318.92 / 0.3147)"
       }
     },
     "color.grape.a5": {
@@ -1250,8 +1250,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a5",
       "values": {
-        "scheme=light": "oklch(58.69% 0.2884 315.43 / 0.1862)",
-        "scheme=dark": "oklch(69.52% 0.256 318.74 / 0.3863)"
+        "scheme=light": "oklch(57.87% 0.2837 315.88 / 0.1847)",
+        "scheme=dark": "oklch(70.13% 0.2516 319 / 0.3814)"
       }
     },
     "color.grape.a6": {
@@ -1261,8 +1261,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a6",
       "values": {
-        "scheme=light": "oklch(56.49% 0.2776 315.5 / 0.2555)",
-        "scheme=dark": "oklch(71.1% 0.2414 318.81 / 0.4525)"
+        "scheme=light": "oklch(55.7% 0.273 315.93 / 0.2535)",
+        "scheme=dark": "oklch(71.71% 0.237 319.06 / 0.447)"
       }
     },
     "color.grape.a7": {
@@ -1272,8 +1272,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a7",
       "values": {
-        "scheme=light": "oklch(53.55% 0.263 315.6 / 0.3449)",
-        "scheme=dark": "oklch(72.26% 0.2307 318.85 / 0.5414)"
+        "scheme=light": "oklch(52.79% 0.2586 316.02 / 0.342)",
+        "scheme=dark": "oklch(72.87% 0.2263 319.1 / 0.5352)"
       }
     },
     "color.grape.a8": {
@@ -1283,8 +1283,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a8",
       "values": {
-        "scheme=light": "oklch(52.23% 0.2562 315.77 / 0.4753)",
-        "scheme=dark": "oklch(71.5% 0.2379 318.87 / 0.6603)"
+        "scheme=light": "oklch(51.47% 0.252 316.15 / 0.4709)",
+        "scheme=dark": "oklch(72.12% 0.2333 319.11 / 0.6526)"
       }
     },
     "color.grape.a9": {
@@ -1294,8 +1294,8 @@
       "deprecated": false,
       "css": "--rp-color-grape-a9",
       "values": {
-        "scheme=light": "oklch(53.06% 0.2594 316.5 / 0.7059)",
-        "scheme=dark": "oklch(69.8% 0.2541 318.89 / 0.8588)"
+        "scheme=light": "oklch(49.3% 0.2403 317.01 / 0.7569)",
+        "scheme=dark": "oklch(68.9% 0.2641 319.11 / 0.7882)"
       }
     },
     "color.grape.contrast": {
@@ -1404,8 +1404,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0003 248.06)",
-        "scheme=dark": "oklch(18.96% 0.0015 248.06)"
+        "scheme=light": "oklch(99.36% 0.0003 248.17)",
+        "scheme=dark": "oklch(18.96% 0.0014 248.17)"
       }
     },
     "color.gray.10": {
@@ -1415,8 +1415,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-10",
       "values": {
-        "scheme=light": "oklch(61.52% 0.0147 248.06)",
-        "scheme=dark": "oklch(67.98% 0.0144 248.06)"
+        "scheme=light": "oklch(40% 0.0143 248.17)",
+        "scheme=dark": "oklch(46.46% 0.014 248.17)"
       }
     },
     "color.gray.11": {
@@ -1426,8 +1426,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.0137 248.06)",
-        "scheme=dark": "oklch(77.47% 0.013 248.06)"
+        "scheme=light": "oklch(52.38% 0.0128 243.82)",
+        "scheme=dark": "oklch(77.47% 0.0125 248.17)"
       }
     },
     "color.gray.12": {
@@ -1437,8 +1437,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.0072 248.06)",
-        "scheme=dark": "oklch(90.48% 0.0059 248.06)"
+        "scheme=light": "oklch(26.21% 0.0095 248.19)",
+        "scheme=dark": "oklch(90.48% 0.0057 248.17)"
       }
     },
     "color.gray.2": {
@@ -1448,8 +1448,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0008 248.06)",
-        "scheme=dark": "oklch(20.97% 0.0019 248.06)"
+        "scheme=light": "oklch(98.19% 0.0008 248.17)",
+        "scheme=dark": "oklch(20.97% 0.0019 248.17)"
       }
     },
     "color.gray.3": {
@@ -1459,8 +1459,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0019 248.06)",
-        "scheme=dark": "oklch(26.59% 0.0049 248.06)"
+        "scheme=light": "oklch(95.78% 0.0019 248.17)",
+        "scheme=dark": "oklch(26.59% 0.0048 248.17)"
       }
     },
     "color.gray.4": {
@@ -1470,8 +1470,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0034 248.06)",
-        "scheme=dark": "oklch(30.89% 0.0072 248.06)"
+        "scheme=light": "oklch(93.11% 0.0033 248.17)",
+        "scheme=dark": "oklch(30.89% 0.007 248.17)"
       }
     },
     "color.gray.5": {
@@ -1481,8 +1481,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0047 248.06)",
-        "scheme=dark": "oklch(35.47% 0.0081 248.06)"
+        "scheme=light": "oklch(89.86% 0.0045 248.17)",
+        "scheme=dark": "oklch(35.47% 0.0078 248.17)"
       }
     },
     "color.gray.6": {
@@ -1492,8 +1492,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0062 248.06)",
-        "scheme=dark": "oklch(40.33% 0.0086 248.06)"
+        "scheme=light": "oklch(85.87% 0.006 248.17)",
+        "scheme=dark": "oklch(40.33% 0.0083 248.17)"
       }
     },
     "color.gray.7": {
@@ -1503,8 +1503,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.0078 248.06)",
-        "scheme=dark": "oklch(46.38% 0.0095 248.06)"
+        "scheme=light": "oklch(80.5% 0.0076 248.17)",
+        "scheme=dark": "oklch(46.38% 0.0092 248.17)"
       }
     },
     "color.gray.8": {
@@ -1514,8 +1514,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.0105 248.06)",
-        "scheme=dark": "oklch(52.82% 0.0115 248.06)"
+        "scheme=light": "oklch(73.12% 0.0101 248.17)",
+        "scheme=dark": "oklch(52.82% 0.0111 248.17)"
       }
     },
     "color.gray.9": {
@@ -1525,8 +1525,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-9",
       "values": {
-        "scheme=light": "oklch(64.28% 0.0152 248.06)",
-        "scheme=dark": "oklch(64.28% 0.0152 248.06)"
+        "scheme=light": "oklch(42.76% 0.0147 248.17)",
+        "scheme=dark": "oklch(42.76% 0.0147 248.17)"
       }
     },
     "color.gray.a1": {
@@ -1536,8 +1536,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a1",
       "values": {
-        "scheme=light": "oklch(19.27% 0.0527 248.69 / 0.0091)",
-        "scheme=dark": "oklch(97.5% 0.0124 248.11 / 0.0796)"
+        "scheme=light": "oklch(18.96% 0.0516 248.49 / 0.009)",
+        "scheme=dark": "oklch(97.57% 0.012 248.22 / 0.0795)"
       }
     },
     "color.gray.a10": {
@@ -1547,8 +1547,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a10",
       "values": {
-        "scheme=light": "oklch(16.35% 0.0412 245 / 0.5058)",
-        "scheme=dark": "oklch(95.79% 0.021 248.07 / 0.631)"
+        "scheme=light": "oklch(13.27% 0.0293 237.76 / 0.7418)",
+        "scheme=dark": "oklch(93.86% 0.0308 248.2 / 0.3802)"
       }
     },
     "color.gray.a11": {
@@ -1558,8 +1558,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a11",
       "values": {
-        "scheme=light": "oklch(14.81% 0.0352 242.04 / 0.5761)",
-        "scheme=dark": "oklch(96.69% 0.0165 248.1 / 0.7441)"
+        "scheme=light": "oklch(14.42% 0.0317 237.37 / 0.6079)",
+        "scheme=dark": "oklch(96.79% 0.016 248.2 / 0.7431)"
       }
     },
     "color.gray.a12": {
@@ -1569,8 +1569,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a12",
       "values": {
-        "scheme=light": "oklch(10.03% 0.0209 233.52 / 0.8035)",
-        "scheme=dark": "oklch(98.69% 0.0065 248.1 / 0.8913)"
+        "scheme=light": "oklch(10.52% 0.0219 233.51 / 0.8706)",
+        "scheme=dark": "oklch(98.73% 0.0062 248.17 / 0.8908)"
       }
     },
     "color.gray.a2": {
@@ -1580,8 +1580,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a2",
       "values": {
-        "scheme=light": "oklch(18.36% 0.0492 247.8 / 0.0254)",
-        "scheme=dark": "oklch(97.28% 0.0135 248.11 / 0.0982)"
+        "scheme=light": "oklch(18.07% 0.0481 247.57 / 0.0254)",
+        "scheme=dark": "oklch(97.36% 0.0131 248.22 / 0.0981)"
       }
     },
     "color.gray.a3": {
@@ -1591,8 +1591,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a3",
       "values": {
-        "scheme=light": "oklch(18.12% 0.0482 247.53 / 0.059)",
-        "scheme=dark": "oklch(95.39% 0.023 248.12 / 0.1559)"
+        "scheme=light": "oklch(17.84% 0.0472 247.3 / 0.0589)",
+        "scheme=dark": "oklch(95.52% 0.0224 248.2 / 0.1556)"
       }
     },
     "color.gray.a4": {
@@ -1602,8 +1602,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a4",
       "values": {
-        "scheme=light": "oklch(18.76% 0.0507 248.19 / 0.0965)",
-        "scheme=dark": "oklch(94.64% 0.0269 248.12 / 0.2022)"
+        "scheme=light": "oklch(18.47% 0.0497 247.98 / 0.0963)",
+        "scheme=dark": "oklch(94.79% 0.0261 248.22 / 0.2018)"
       }
     },
     "color.gray.a5": {
@@ -1613,8 +1613,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a5",
       "values": {
-        "scheme=light": "oklch(18.21% 0.0486 247.61 / 0.1408)",
-        "scheme=dark": "oklch(94.96% 0.0252 248.1 / 0.2503)"
+        "scheme=light": "oklch(17.93% 0.0476 247.38 / 0.1405)",
+        "scheme=dark": "oklch(95.11% 0.0245 248.2 / 0.2498)"
       }
     },
     "color.gray.a6": {
@@ -1624,8 +1624,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a6",
       "values": {
-        "scheme=light": "oklch(17.68% 0.0465 246.98 / 0.1944)",
-        "scheme=dark": "oklch(95.4% 0.023 248.09 / 0.3023)"
+        "scheme=light": "oklch(17.41% 0.0455 246.74 / 0.194)",
+        "scheme=dark": "oklch(95.54% 0.0223 248.2 / 0.3017)"
       }
     },
     "color.gray.a7": {
@@ -1635,8 +1635,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a7",
       "values": {
-        "scheme=light": "oklch(16.95% 0.0436 246.02 / 0.2649)",
-        "scheme=dark": "oklch(95.71% 0.0214 248.08 / 0.3696)"
+        "scheme=light": "oklch(16.7% 0.0427 245.75 / 0.2644)",
+        "scheme=dark": "oklch(95.83% 0.0208 248.19 / 0.369)"
       }
     },
     "color.gray.a8": {
@@ -1646,8 +1646,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a8",
       "values": {
-        "scheme=light": "oklch(16.64% 0.0424 245.53 / 0.3605)",
-        "scheme=dark": "oklch(95.55% 0.0222 248.08 / 0.4461)"
+        "scheme=light": "oklch(16.4% 0.0415 245.25 / 0.3599)",
+        "scheme=dark": "oklch(95.68% 0.0216 248.2 / 0.4453)"
       }
     },
     "color.gray.a9": {
@@ -1657,8 +1657,8 @@
       "deprecated": false,
       "css": "--rp-color-gray-a9",
       "values": {
-        "scheme=light": "oklch(17.17% 0.0444 246.21 / 0.4745)",
-        "scheme=dark": "oklch(95.32% 0.0234 248.07 / 0.5882)"
+        "scheme=light": "oklch(13.69% 0.0308 239.02 / 0.7137)",
+        "scheme=dark": "oklch(92.96% 0.0355 248.21 / 0.3412)"
       }
     },
     "color.gray.contrast": {
@@ -2130,8 +2130,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.003 268.6)",
-        "scheme=dark": "oklch(18.96% 0.0201 268.62)"
+        "scheme=light": "oklch(99.36% 0.003 268.4)",
+        "scheme=dark": "oklch(18.96% 0.0204 268.35)"
       }
     },
     "color.indigo.10": {
@@ -2141,8 +2141,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-10",
       "values": {
-        "scheme=light": "oklch(56.2% 0.1991 268.62)",
-        "scheme=dark": "oklch(62.66% 0.1953 268.62)"
+        "scheme=light": "oklch(52.9% 0.2018 268.35)",
+        "scheme=dark": "oklch(59.36% 0.198 268.35)"
       }
     },
     "color.indigo.11": {
@@ -2152,8 +2152,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.185 268.62)",
-        "scheme=dark": "oklch(77.47% 0.1139 268.62)"
+        "scheme=light": "oklch(55.21% 0.1875 268.35)",
+        "scheme=dark": "oklch(77.47% 0.1139 268.35)"
       }
     },
     "color.indigo.12": {
@@ -2163,8 +2163,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.0972 268.62)",
-        "scheme=dark": "oklch(90.48% 0.0457 268.62)"
+        "scheme=light": "oklch(32.83% 0.0986 268.35)",
+        "scheme=dark": "oklch(90.48% 0.0457 268.35)"
       }
     },
     "color.indigo.2": {
@@ -2174,8 +2174,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0085 268.6)",
-        "scheme=dark": "oklch(20.97% 0.0264 268.62)"
+        "scheme=light": "oklch(98.19% 0.0085 268.4)",
+        "scheme=dark": "oklch(20.97% 0.0267 268.35)"
       }
     },
     "color.indigo.3": {
@@ -2185,8 +2185,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0199 268.6)",
-        "scheme=dark": "oklch(26.59% 0.0669 268.62)"
+        "scheme=light": "oklch(95.78% 0.0199 268.4)",
+        "scheme=dark": "oklch(26.59% 0.0678 268.35)"
       }
     },
     "color.indigo.4": {
@@ -2196,8 +2196,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0328 268.6)",
-        "scheme=dark": "oklch(30.89% 0.0973 268.62)"
+        "scheme=light": "oklch(93.11% 0.0328 268.4)",
+        "scheme=dark": "oklch(30.89% 0.0987 268.35)"
       }
     },
     "color.indigo.5": {
@@ -2207,8 +2207,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0488 268.62)",
-        "scheme=dark": "oklch(35.47% 0.1094 268.62)"
+        "scheme=light": "oklch(89.86% 0.0488 268.35)",
+        "scheme=dark": "oklch(35.47% 0.1108 268.35)"
       }
     },
     "color.indigo.6": {
@@ -2218,8 +2218,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0691 268.62)",
-        "scheme=dark": "oklch(40.33% 0.1166 268.62)"
+        "scheme=light": "oklch(85.87% 0.0691 268.35)",
+        "scheme=dark": "oklch(40.33% 0.1182 268.35)"
       }
     },
     "color.indigo.7": {
@@ -2229,8 +2229,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.0974 268.62)",
-        "scheme=dark": "oklch(46.38% 0.1285 268.62)"
+        "scheme=light": "oklch(80.5% 0.0974 268.35)",
+        "scheme=dark": "oklch(46.38% 0.1303 268.35)"
       }
     },
     "color.indigo.8": {
@@ -2240,8 +2240,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.1383 268.62)",
-        "scheme=dark": "oklch(52.82% 0.1556 268.62)"
+        "scheme=light": "oklch(73.12% 0.1383 268.4)",
+        "scheme=dark": "oklch(52.82% 0.1577 268.35)"
       }
     },
     "color.indigo.9": {
@@ -2251,8 +2251,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-9",
       "values": {
-        "scheme=light": "oklch(58.96% 0.2054 268.62)",
-        "scheme=dark": "oklch(58.96% 0.2054 268.62)"
+        "scheme=light": "oklch(55.66% 0.2082 268.35)",
+        "scheme=dark": "oklch(55.66% 0.2082 268.35)"
       }
     },
     "color.indigo.a1": {
@@ -2262,8 +2262,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a1",
       "values": {
-        "scheme=light": "oklch(51.43% 0.2717 263.43 / 0.0117)",
-        "scheme=dark": "oklch(75.3% 0.1259 267.78 / 0.1132)"
+        "scheme=light": "oklch(51.56% 0.2709 263.38 / 0.0118)",
+        "scheme=dark": "oklch(75.08% 0.1272 267.5 / 0.1137)"
       }
     },
     "color.indigo.a10": {
@@ -2273,8 +2273,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a10",
       "values": {
-        "scheme=light": "oklch(43.94% 0.2623 264.1 / 0.7252)",
-        "scheme=dark": "oklch(63.16% 0.1971 268.6 / 0.9893)"
+        "scheme=light": "oklch(42.13% 0.2528 264.12 / 0.7635)",
+        "scheme=dark": "oklch(61.62% 0.2064 268.32 / 0.9498)"
       }
     },
     "color.indigo.a11": {
@@ -2284,8 +2284,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a11",
       "values": {
-        "scheme=light": "oklch(41.89% 0.2462 264.1 / 0.7239)",
-        "scheme=dark": "oklch(77.47% 0.1139 268.62)"
+        "scheme=light": "oklch(42.31% 0.2478 264.04 / 0.729)",
+        "scheme=dark": "oklch(77.47% 0.1139 268.35)"
       }
     },
     "color.indigo.a12": {
@@ -2295,8 +2295,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a12",
       "values": {
-        "scheme=light": "oklch(22.4% 0.1155 263.22 / 0.8727)",
-        "scheme=dark": "oklch(90.48% 0.0457 268.61)"
+        "scheme=light": "oklch(22.66% 0.1165 263.19 / 0.875)",
+        "scheme=dark": "oklch(90.48% 0.0457 268.34)"
       }
     },
     "color.indigo.a2": {
@@ -2306,8 +2306,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a2",
       "values": {
-        "scheme=light": "oklch(51.37% 0.2721 263.45 / 0.0331)",
-        "scheme=dark": "oklch(73.82% 0.1343 267.81 / 0.1431)"
+        "scheme=light": "oklch(51.5% 0.2713 263.4 / 0.0332)",
+        "scheme=dark": "oklch(73.59% 0.1355 267.55 / 0.1437)"
       }
     },
     "color.indigo.a3": {
@@ -2317,8 +2317,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a3",
       "values": {
-        "scheme=light": "oklch(51.31% 0.2725 263.47 / 0.0771)",
-        "scheme=dark": "oklch(63.51% 0.1949 267.6 / 0.2735)"
+        "scheme=light": "oklch(51.44% 0.2717 263.4 / 0.0774)",
+        "scheme=dark": "oklch(63.24% 0.1964 267.36 / 0.2751)"
       }
     },
     "color.indigo.a4": {
@@ -2328,8 +2328,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a4",
       "values": {
-        "scheme=light": "oklch(51.24% 0.273 263.5 / 0.1257)",
-        "scheme=dark": "oklch(60.14% 0.2156 267.75 / 0.3783)"
+        "scheme=light": "oklch(51.37% 0.2721 263.45 / 0.1261)",
+        "scheme=dark": "oklch(59.87% 0.2173 267.5 / 0.3809)"
       }
     },
     "color.indigo.a5": {
@@ -2339,8 +2339,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a5",
       "values": {
-        "scheme=light": "oklch(51.15% 0.2736 263.5 / 0.1847)",
-        "scheme=dark": "oklch(61.37% 0.208 268.01 / 0.4553)"
+        "scheme=light": "oklch(51.28% 0.2727 263.48 / 0.1853)",
+        "scheme=dark": "oklch(61.1% 0.2096 267.75 / 0.4583)"
       }
     },
     "color.indigo.a6": {
@@ -2350,8 +2350,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a6",
       "values": {
-        "scheme=light": "oklch(51% 0.2745 263.57 / 0.2567)",
-        "scheme=dark": "oklch(63.28% 0.1963 268.2 / 0.5285)"
+        "scheme=light": "oklch(51.14% 0.2736 263.53 / 0.2576)",
+        "scheme=dark": "oklch(63.01% 0.1979 267.95 / 0.5317)"
       }
     },
     "color.indigo.a7": {
@@ -2361,8 +2361,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a7",
       "values": {
-        "scheme=light": "oklch(50.74% 0.2762 263.65 / 0.3529)",
-        "scheme=dark": "oklch(64.68% 0.1878 268.37 / 0.6283)"
+        "scheme=light": "oklch(50.88% 0.2753 263.61 / 0.3541)",
+        "scheme=dark": "oklch(64.41% 0.1894 268.11 / 0.6319)"
       }
     },
     "color.indigo.a8": {
@@ -2372,8 +2372,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a8",
       "values": {
-        "scheme=light": "oklch(50.2% 0.2797 263.8 / 0.4829)",
-        "scheme=dark": "oklch(63.86% 0.1927 268.48 / 0.7689)"
+        "scheme=light": "oklch(50.35% 0.2788 263.76 / 0.4848)",
+        "scheme=dark": "oklch(63.59% 0.1944 268.21 / 0.7735)"
       }
     },
     "color.indigo.a9": {
@@ -2383,8 +2383,8 @@
       "deprecated": false,
       "css": "--rp-color-indigo-a9",
       "values": {
-        "scheme=light": "oklch(46.52% 0.278 264.11 / 0.702)",
-        "scheme=dark": "oklch(60.7% 0.2122 268.59 / 0.9608)"
+        "scheme=light": "oklch(44.56% 0.2674 264.12 / 0.7412)",
+        "scheme=dark": "oklch(59.05% 0.2224 268.29 / 0.9216)"
       }
     },
     "color.indigo.contrast": {
@@ -2856,8 +2856,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0035 51.48)",
-        "scheme=dark": "oklch(18.96% 0.018 51.48)"
+        "scheme=light": "oklch(99.36% 0.0032 37.97)",
+        "scheme=dark": "oklch(18.96% 0.0182 37.97)"
       }
     },
     "color.orange.10": {
@@ -2867,8 +2867,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-10",
       "values": {
-        "scheme=light": "oklch(69.89% 0.1776 51.48)",
-        "scheme=dark": "oklch(76.35% 0.157 51.48)"
+        "scheme=light": "oklch(55.84% 0.1796 37.97)",
+        "scheme=dark": "oklch(62.3% 0.1762 37.97)"
       }
     },
     "color.orange.11": {
@@ -2878,8 +2878,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.143 51.48)",
-        "scheme=dark": "oklch(77.97% 0.1441 51.48)"
+        "scheme=light": "oklch(55.21% 0.1668 37.97)",
+        "scheme=dark": "oklch(77.97% 0.1323 37.97)"
       }
     },
     "color.orange.12": {
@@ -2889,8 +2889,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.085 51.48)",
-        "scheme=dark": "oklch(90.48% 0.0559 51.48)"
+        "scheme=light": "oklch(32.83% 0.0877 37.97)",
+        "scheme=dark": "oklch(90.48% 0.051 37.97)"
       }
     },
     "color.orange.2": {
@@ -2900,8 +2900,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.01 51.48)",
-        "scheme=dark": "oklch(20.97% 0.0235 51.48)"
+        "scheme=light": "oklch(98.19% 0.0091 37.97)",
+        "scheme=dark": "oklch(20.97% 0.0238 37.97)"
       }
     },
     "color.orange.3": {
@@ -2911,8 +2911,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0231 51.48)",
-        "scheme=dark": "oklch(26.59% 0.0597 51.48)"
+        "scheme=light": "oklch(95.78% 0.0216 37.97)",
+        "scheme=dark": "oklch(26.59% 0.0603 37.97)"
       }
     },
     "color.orange.4": {
@@ -2922,8 +2922,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0397 51.48)",
-        "scheme=dark": "oklch(30.89% 0.08 51.48)"
+        "scheme=light": "oklch(93.11% 0.0361 37.97)",
+        "scheme=dark": "oklch(30.89% 0.0878 37.97)"
       }
     },
     "color.orange.5": {
@@ -2933,8 +2933,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0566 51.48)",
-        "scheme=dark": "oklch(35.47% 0.0919 51.48)"
+        "scheme=light": "oklch(89.86% 0.0546 37.97)",
+        "scheme=dark": "oklch(35.47% 0.0986 37.97)"
       }
     },
     "color.orange.6": {
@@ -2944,8 +2944,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0744 51.48)",
-        "scheme=dark": "oklch(40.33% 0.104 51.48)"
+        "scheme=light": "oklch(85.87% 0.0753 37.97)",
+        "scheme=dark": "oklch(40.33% 0.1052 37.97)"
       }
     },
     "color.orange.7": {
@@ -2955,8 +2955,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.0943 51.48)",
-        "scheme=dark": "oklch(46.38% 0.1146 51.48)"
+        "scheme=light": "oklch(80.5% 0.0954 37.97)",
+        "scheme=dark": "oklch(46.38% 0.1159 37.97)"
       }
     },
     "color.orange.8": {
@@ -2966,8 +2966,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.1262 51.48)",
-        "scheme=dark": "oklch(52.82% 0.1368 51.48)"
+        "scheme=light": "oklch(73.12% 0.1277 37.97)",
+        "scheme=dark": "oklch(52.82% 0.1404 37.97)"
       }
     },
     "color.orange.9": {
@@ -2977,8 +2977,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-9",
       "values": {
-        "scheme=light": "oklch(72.65% 0.1832 51.48)",
-        "scheme=dark": "oklch(72.65% 0.1832 51.48)"
+        "scheme=light": "oklch(58.6% 0.1853 37.97)",
+        "scheme=dark": "oklch(58.6% 0.1853 37.97)"
       }
     },
     "color.orange.a1": {
@@ -2988,8 +2988,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a1",
       "values": {
-        "scheme=light": "oklch(68.32% 0.2124 40.48 / 0.0166)",
-        "scheme=dark": "oklch(80.92% 0.1205 50.55 / 0.1032)"
+        "scheme=light": "oklch(65.31% 0.2352 33.94 / 0.0143)",
+        "scheme=dark": "oklch(79.53% 0.1211 38.03 / 0.1058)"
       }
     },
     "color.orange.a10": {
@@ -2999,8 +2999,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a10",
       "values": {
-        "scheme=light": "oklch(68.58% 0.1836 49.11 / 0.9447)",
-        "scheme=dark": "oklch(76.35% 0.157 51.48)"
+        "scheme=light": "oklch(54.96% 0.183 37.23 / 0.9725)",
+        "scheme=dark": "oklch(69.61% 0.1988 37.9 / 0.8605)"
       }
     },
     "color.orange.a11": {
@@ -3010,8 +3010,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.143 51.48)",
-        "scheme=dark": "oklch(77.97% 0.1441 51.48)"
+        "scheme=light": "oklch(51.85% 0.1788 35.71 / 0.9065)",
+        "scheme=dark": "oklch(77.97% 0.1323 37.97)"
       }
     },
     "color.orange.a12": {
@@ -3021,8 +3021,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.085 51.47)",
-        "scheme=dark": "oklch(90.48% 0.0559 51.49)"
+        "scheme=light": "oklch(28.71% 0.0936 38.2 / 0.9416)",
+        "scheme=dark": "oklch(90.48% 0.0509 37.98)"
       }
     },
     "color.orange.a2": {
@@ -3032,8 +3032,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a2",
       "values": {
-        "scheme=light": "oklch(68.31% 0.2124 40.46 / 0.0469)",
-        "scheme=dark": "oklch(79.77% 0.1291 50.5 / 0.1295)"
+        "scheme=light": "oklch(65.3% 0.2353 33.92 / 0.0405)",
+        "scheme=dark": "oklch(78.35% 0.1295 38.02 / 0.1328)"
       }
     },
     "color.orange.a3": {
@@ -3043,8 +3043,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a3",
       "values": {
-        "scheme=light": "oklch(67.64% 0.2099 40.56 / 0.1084)",
-        "scheme=dark": "oklch(71.81% 0.1896 47.42 / 0.2337)"
+        "scheme=light": "oklch(65.3% 0.2352 33.93 / 0.0949)",
+        "scheme=dark": "oklch(70.25% 0.193 37.45 / 0.2412)"
       }
     },
     "color.orange.a4": {
@@ -3054,8 +3054,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a4",
       "values": {
-        "scheme=light": "oklch(68.4% 0.2118 40.67 / 0.1813)",
-        "scheme=dark": "oklch(70.48% 0.199 45.75 / 0.3073)"
+        "scheme=light": "oklch(65.31% 0.2352 33.95 / 0.156)",
+        "scheme=dark": "oklch(67.64% 0.2154 36.74 / 0.3265)"
       }
     },
     "color.orange.a5": {
@@ -3065,8 +3065,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a5",
       "values": {
-        "scheme=light": "oklch(67.16% 0.2071 40.88 / 0.2626)",
-        "scheme=dark": "oklch(71.03% 0.196 47.16 / 0.3756)"
+        "scheme=light": "oklch(65.31% 0.2351 33.96 / 0.2317)",
+        "scheme=dark": "oklch(68.5% 0.2081 37.24 / 0.3954)"
       }
     },
     "color.orange.a6": {
@@ -3076,8 +3076,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a6",
       "values": {
-        "scheme=light": "oklch(65.18% 0.1998 41.17 / 0.3552)",
-        "scheme=dark": "oklch(71.52% 0.1933 48.36 / 0.4499)"
+        "scheme=light": "oklch(64.18% 0.2308 33.99 / 0.3205)",
+        "scheme=dark": "oklch(69.93% 0.1958 37.63 / 0.4637)"
       }
     },
     "color.orange.a7": {
@@ -3087,8 +3087,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a7",
       "values": {
-        "scheme=light": "oklch(62.52% 0.19 41.62 / 0.4706)",
-        "scheme=dark": "oklch(72.55% 0.1868 50.05 / 0.5392)"
+        "scheme=light": "oklch(60.97% 0.2187 34.1 / 0.4249)",
+        "scheme=dark": "oklch(71.01% 0.1868 37.8 / 0.5551)"
       }
     },
     "color.orange.a8": {
@@ -3098,8 +3098,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a8",
       "values": {
-        "scheme=light": "oklch(61.27% 0.1828 42.61 / 0.6478)",
-        "scheme=dark": "oklch(72.12% 0.1905 50.04 / 0.6534)"
+        "scheme=light": "oklch(58.92% 0.211 34.16 / 0.5782)",
+        "scheme=dark": "oklch(70.33% 0.1926 37.83 / 0.6759)"
       }
     },
     "color.orange.a9": {
@@ -3109,8 +3109,8 @@
       "deprecated": false,
       "css": "--rp-color-orange-a9",
       "values": {
-        "scheme=light": "oklch(70.99% 0.1925 48.28 / 0.9216)",
-        "scheme=dark": "oklch(73.08% 0.1843 51.47 / 0.9922)"
+        "scheme=light": "oklch(56.85% 0.193 36.39 / 0.9412)",
+        "scheme=dark": "oklch(67.63% 0.2162 37.73 / 0.8235)"
       }
     },
     "color.orange.contrast": {
@@ -3219,8 +3219,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0033 3.19)",
-        "scheme=dark": "oklch(18.96% 0.0193 3.19)"
+        "scheme=light": "oklch(99.36% 0.0032 5.25)",
+        "scheme=dark": "oklch(18.96% 0.0197 5.25)"
       }
     },
     "color.pink.10": {
@@ -3230,8 +3230,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-10",
       "values": {
-        "scheme=light": "oklch(61.2% 0.1908 3.19)",
-        "scheme=dark": "oklch(67.66% 0.1872 3.19)"
+        "scheme=light": "oklch(56.05% 0.1949 5.25)",
+        "scheme=dark": "oklch(62.51% 0.1912 5.25)"
       }
     },
     "color.pink.11": {
@@ -3241,8 +3241,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.1772 3.19)",
-        "scheme=dark": "oklch(78.47% 0.1334 3.19)"
+        "scheme=light": "oklch(55.21% 0.181 5.25)",
+        "scheme=dark": "oklch(78.47% 0.1318 5.25)"
       }
     },
     "color.pink.12": {
@@ -3252,8 +3252,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.0932 3.19)",
-        "scheme=dark": "oklch(90.48% 0.0522 3.19)"
+        "scheme=light": "oklch(32.83% 0.0952 5.25)",
+        "scheme=dark": "oklch(90.48% 0.0516 5.25)"
       }
     },
     "color.pink.2": {
@@ -3263,8 +3263,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0093 3.19)",
-        "scheme=dark": "oklch(20.97% 0.0253 3.19)"
+        "scheme=light": "oklch(98.19% 0.0092 5.25)",
+        "scheme=dark": "oklch(20.97% 0.0258 5.25)"
       }
     },
     "color.pink.3": {
@@ -3274,8 +3274,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0221 3.19)",
-        "scheme=dark": "oklch(26.59% 0.0641 3.19)"
+        "scheme=light": "oklch(95.78% 0.0218 5.25)",
+        "scheme=dark": "oklch(26.59% 0.0655 5.25)"
       }
     },
     "color.pink.4": {
@@ -3285,8 +3285,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0369 3.19)",
-        "scheme=dark": "oklch(30.89% 0.0933 3.19)"
+        "scheme=light": "oklch(93.11% 0.0365 5.25)",
+        "scheme=dark": "oklch(30.89% 0.0953 5.25)"
       }
     },
     "color.pink.5": {
@@ -3296,8 +3296,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0559 3.19)",
-        "scheme=dark": "oklch(35.47% 0.1048 3.19)"
+        "scheme=light": "oklch(89.86% 0.0553 5.25)",
+        "scheme=dark": "oklch(35.47% 0.107 5.25)"
       }
     },
     "color.pink.6": {
@@ -3307,8 +3307,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.08 3.19)",
-        "scheme=dark": "oklch(40.33% 0.1117 3.19)"
+        "scheme=light": "oklch(85.87% 0.0801 5.25)",
+        "scheme=dark": "oklch(40.33% 0.1141 5.25)"
       }
     },
     "color.pink.7": {
@@ -3318,8 +3318,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.1013 3.19)",
-        "scheme=dark": "oklch(46.38% 0.1232 3.19)"
+        "scheme=light": "oklch(80.5% 0.1035 5.25)",
+        "scheme=dark": "oklch(46.38% 0.1258 5.25)"
       }
     },
     "color.pink.8": {
@@ -3329,8 +3329,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.1356 3.19)",
-        "scheme=dark": "oklch(52.82% 0.1491 3.19)"
+        "scheme=light": "oklch(73.12% 0.1385 5.25)",
+        "scheme=dark": "oklch(52.82% 0.1523 5.25)"
       }
     },
     "color.pink.9": {
@@ -3340,8 +3340,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-9",
       "values": {
-        "scheme=light": "oklch(63.96% 0.1968 3.19)",
-        "scheme=dark": "oklch(63.96% 0.1968 3.19)"
+        "scheme=light": "oklch(58.81% 0.201 5.25)",
+        "scheme=dark": "oklch(58.81% 0.201 5.25)"
       }
     },
     "color.pink.a1": {
@@ -3351,8 +3351,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a1",
       "values": {
-        "scheme=light": "oklch(63.07% 0.2548 23.49 / 0.0117)",
-        "scheme=dark": "oklch(79.11% 0.1272 4.84 / 0.1066)"
+        "scheme=light": "oklch(63% 0.2554 24.91 / 0.0116)",
+        "scheme=dark": "oklch(78.66% 0.1291 6.94 / 0.1075)"
       }
     },
     "color.pink.a10": {
@@ -3362,8 +3362,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a10",
       "values": {
-        "scheme=light": "oklch(53.94% 0.2156 13.41 / 0.7377)",
-        "scheme=dark": "oklch(70.86% 0.1968 3.23 / 0.9395)"
+        "scheme=light": "oklch(51.18% 0.2045 13.01 / 0.8249)",
+        "scheme=dark": "oklch(68.89% 0.2123 5.37 / 0.8768)"
       }
     },
     "color.pink.a11": {
@@ -3373,8 +3373,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a11",
       "values": {
-        "scheme=light": "oklch(47.99% 0.1918 12.35 / 0.788)",
-        "scheme=dark": "oklch(78.47% 0.1334 3.18)"
+        "scheme=light": "oklch(48.67% 0.1945 14.19 / 0.7983)",
+        "scheme=dark": "oklch(78.47% 0.1318 5.24)"
       }
     },
     "color.pink.a12": {
@@ -3384,8 +3384,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a12",
       "values": {
-        "scheme=light": "oklch(25.1% 0.1004 9.36 / 0.8926)",
-        "scheme=dark": "oklch(90.48% 0.0522 3.18)"
+        "scheme=light": "oklch(25.5% 0.1019 11.4 / 0.8963)",
+        "scheme=dark": "oklch(90.48% 0.0516 5.24)"
       }
     },
     "color.pink.a2": {
@@ -3395,8 +3395,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a2",
       "values": {
-        "scheme=light": "oklch(63.08% 0.2548 23.4 / 0.033)",
-        "scheme=dark": "oklch(77.95% 0.1361 4.74 / 0.1338)"
+        "scheme=light": "oklch(63% 0.2553 24.84 / 0.0329)",
+        "scheme=dark": "oklch(77.49% 0.138 6.84 / 0.135)"
       }
     },
     "color.pink.a3": {
@@ -3406,8 +3406,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a3",
       "values": {
-        "scheme=light": "oklch(63.09% 0.2547 23.14 / 0.0773)",
-        "scheme=dark": "oklch(70% 0.2024 5.14 / 0.2426)"
+        "scheme=light": "oklch(63.02% 0.2552 24.62 / 0.077)",
+        "scheme=dark": "oklch(69.5% 0.2045 7.29 / 0.2454)"
       }
     },
     "color.pink.a4": {
@@ -3417,8 +3417,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a4",
       "values": {
-        "scheme=light": "oklch(63.11% 0.2546 22.8 / 0.1271)",
-        "scheme=dark": "oklch(67.49% 0.2262 5.05 / 0.3281)"
+        "scheme=light": "oklch(63.03% 0.2551 24.34 / 0.1266)",
+        "scheme=dark": "oklch(66.98% 0.2283 7.22 / 0.3321)"
       }
     },
     "color.pink.a5": {
@@ -3428,8 +3428,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a5",
       "values": {
-        "scheme=light": "oklch(63.14% 0.2545 22.31 / 0.1889)",
-        "scheme=dark": "oklch(68.31% 0.219 4.48 / 0.3973)"
+        "scheme=light": "oklch(63.05% 0.255 23.93 / 0.1881)",
+        "scheme=dark": "oklch(67.79% 0.2213 6.62 / 0.402)"
       }
     },
     "color.pink.a6": {
@@ -3439,8 +3439,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a6",
       "values": {
-        "scheme=light": "oklch(62.78% 0.2527 21.6 / 0.266)",
-        "scheme=dark": "oklch(69.71% 0.2064 4.04 / 0.466)"
+        "scheme=light": "oklch(63.08% 0.2548 23.31 / 0.266)",
+        "scheme=dark": "oklch(69.17% 0.2088 6.15 / 0.4713)"
       }
     },
     "color.pink.a7": {
@@ -3450,8 +3450,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a7",
       "values": {
-        "scheme=light": "oklch(58.92% 0.2368 20.58 / 0.358)",
-        "scheme=dark": "oklch(70.76% 0.1972 3.73 / 0.558)"
+        "scheme=light": "oklch(59.75% 0.2409 22.38 / 0.3605)",
+        "scheme=dark": "oklch(70.22% 0.1995 5.81 / 0.564)"
       }
     },
     "color.pink.a8": {
@@ -3461,8 +3461,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a8",
       "values": {
-        "scheme=light": "oklch(56.49% 0.2265 18.75 / 0.4929)",
-        "scheme=dark": "oklch(70.09% 0.2035 3.54 / 0.6791)"
+        "scheme=light": "oklch(57.24% 0.2301 20.67 / 0.497)",
+        "scheme=dark": "oklch(69.55% 0.206 5.62 / 0.6865)"
       }
     },
     "color.pink.a9": {
@@ -3472,8 +3472,8 @@
       "deprecated": false,
       "css": "--rp-color-pink-a9",
       "values": {
-        "scheme=light": "oklch(56.92% 0.2275 13.84 / 0.7137)",
-        "scheme=dark": "oklch(69.04% 0.2137 3.28 / 0.902)"
+        "scheme=light": "oklch(53.75% 0.2148 13.66 / 0.8)",
+        "scheme=dark": "oklch(66.95% 0.2309 5.47 / 0.8392)"
       }
     },
     "color.pink.contrast": {
@@ -3582,8 +3582,8 @@
       "deprecated": false,
       "css": "--rp-color-placeholder",
       "values": {
-        "scheme=light": "var(--rp-color-gray-10)",
-        "scheme=dark": "var(--rp-color-gray-10)"
+        "scheme=light": "var(--rp-color-gray-11)",
+        "scheme=dark": "var(--rp-color-gray-11)"
       }
     },
     "color.primary.1": {
@@ -3956,8 +3956,8 @@
       "deprecated": false,
       "css": "--rp-color-red-1",
       "values": {
-        "scheme=light": "oklch(99.36% 0.0031 24.52)",
-        "scheme=dark": "oklch(18.96% 0.02 24.52)"
+        "scheme=light": "oklch(99.36% 0.0031 26.53)",
+        "scheme=dark": "oklch(18.96% 0.0206 26.53)"
       }
     },
     "color.red.10": {
@@ -3967,8 +3967,8 @@
       "deprecated": false,
       "css": "--rp-color-red-10",
       "values": {
-        "scheme=light": "oklch(64.3% 0.1983 24.52)",
-        "scheme=dark": "oklch(70.76% 0.1845 24.52)"
+        "scheme=light": "oklch(56.52% 0.2042 26.53)",
+        "scheme=dark": "oklch(62.98% 0.2003 26.53)"
       }
     },
     "color.red.11": {
@@ -3978,8 +3978,8 @@
       "deprecated": false,
       "css": "--rp-color-red-11",
       "values": {
-        "scheme=light": "oklch(55.21% 0.1841 24.52)",
-        "scheme=dark": "oklch(77.97% 0.1286 24.52)"
+        "scheme=light": "oklch(55.21% 0.1897 26.53)",
+        "scheme=dark": "oklch(77.97% 0.1287 26.53)"
       }
     },
     "color.red.12": {
@@ -3989,8 +3989,8 @@
       "deprecated": false,
       "css": "--rp-color-red-12",
       "values": {
-        "scheme=light": "oklch(32.83% 0.0968 24.52)",
-        "scheme=dark": "oklch(90.48% 0.0492 24.52)"
+        "scheme=light": "oklch(32.83% 0.0997 26.53)",
+        "scheme=dark": "oklch(90.48% 0.0493 26.53)"
       }
     },
     "color.red.2": {
@@ -4000,8 +4000,8 @@
       "deprecated": false,
       "css": "--rp-color-red-2",
       "values": {
-        "scheme=light": "oklch(98.19% 0.0088 24.52)",
-        "scheme=dark": "oklch(20.97% 0.0262 24.52)"
+        "scheme=light": "oklch(98.19% 0.0088 26.53)",
+        "scheme=dark": "oklch(20.97% 0.027 26.53)"
       }
     },
     "color.red.3": {
@@ -4011,8 +4011,8 @@
       "deprecated": false,
       "css": "--rp-color-red-3",
       "values": {
-        "scheme=light": "oklch(95.78% 0.0209 24.52)",
-        "scheme=dark": "oklch(26.59% 0.0666 24.52)"
+        "scheme=light": "oklch(95.78% 0.0209 26.53)",
+        "scheme=dark": "oklch(26.59% 0.0686 26.53)"
       }
     },
     "color.red.4": {
@@ -4022,8 +4022,8 @@
       "deprecated": false,
       "css": "--rp-color-red-4",
       "values": {
-        "scheme=light": "oklch(93.11% 0.0348 24.52)",
-        "scheme=dark": "oklch(30.89% 0.0969 24.52)"
+        "scheme=light": "oklch(93.11% 0.0349 26.53)",
+        "scheme=dark": "oklch(30.89% 0.0998 26.53)"
       }
     },
     "color.red.5": {
@@ -4033,8 +4033,8 @@
       "deprecated": false,
       "css": "--rp-color-red-5",
       "values": {
-        "scheme=light": "oklch(89.86% 0.0527 24.52)",
-        "scheme=dark": "oklch(35.47% 0.1089 24.52)"
+        "scheme=light": "oklch(89.86% 0.0528 26.53)",
+        "scheme=dark": "oklch(35.47% 0.1121 26.53)"
       }
     },
     "color.red.6": {
@@ -4044,8 +4044,8 @@
       "deprecated": false,
       "css": "--rp-color-red-6",
       "values": {
-        "scheme=light": "oklch(85.87% 0.0763 24.52)",
-        "scheme=dark": "oklch(40.33% 0.1161 24.52)"
+        "scheme=light": "oklch(85.87% 0.0764 26.53)",
+        "scheme=dark": "oklch(40.33% 0.1196 26.53)"
       }
     },
     "color.red.7": {
@@ -4055,8 +4055,8 @@
       "deprecated": false,
       "css": "--rp-color-red-7",
       "values": {
-        "scheme=light": "oklch(80.5% 0.1053 24.52)",
-        "scheme=dark": "oklch(46.38% 0.1279 24.52)"
+        "scheme=light": "oklch(80.5% 0.1084 26.53)",
+        "scheme=dark": "oklch(46.38% 0.1318 26.53)"
       }
     },
     "color.red.8": {
@@ -4066,8 +4066,8 @@
       "deprecated": false,
       "css": "--rp-color-red-8",
       "values": {
-        "scheme=light": "oklch(73.12% 0.1409 24.52)",
-        "scheme=dark": "oklch(52.82% 0.1549 24.52)"
+        "scheme=light": "oklch(73.12% 0.1451 26.53)",
+        "scheme=dark": "oklch(52.82% 0.1596 26.53)"
       }
     },
     "color.red.9": {
@@ -4077,8 +4077,8 @@
       "deprecated": false,
       "css": "--rp-color-red-9",
       "values": {
-        "scheme=light": "oklch(67.06% 0.2045 24.52)",
-        "scheme=dark": "oklch(67.06% 0.2045 24.52)"
+        "scheme=light": "oklch(59.28% 0.2106 26.53)",
+        "scheme=dark": "oklch(59.28% 0.2106 26.53)"
       }
     },
     "color.red.a1": {
@@ -4088,8 +4088,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a1",
       "values": {
-        "scheme=light": "oklch(63.32% 0.2527 30.16 / 0.0124)",
-        "scheme=dark": "oklch(77.74% 0.1302 25.6 / 0.1094)"
+        "scheme=light": "oklch(63.53% 0.2507 30.55 / 0.0127)",
+        "scheme=dark": "oklch(77.35% 0.1332 27.52 / 0.1103)"
       }
     },
     "color.red.a10": {
@@ -4099,8 +4099,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a10",
       "values": {
-        "scheme=light": "oklch(58.07% 0.2383 29.19 / 0.7026)",
-        "scheme=dark": "oklch(70.76% 0.1844 24.52)"
+        "scheme=light": "oklch(52.85% 0.2168 29.11 / 0.8336)",
+        "scheme=dark": "oklch(67.25% 0.215 26.59 / 0.9152)"
       }
     },
     "color.red.a11": {
@@ -4110,8 +4110,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a11",
       "values": {
-        "scheme=light": "oklch(49.35% 0.2022 28.75 / 0.7972)",
-        "scheme=dark": "oklch(77.97% 0.1286 24.52)"
+        "scheme=light": "oklch(50.23% 0.2053 29.36 / 0.8161)",
+        "scheme=dark": "oklch(77.97% 0.1287 26.53)"
       }
     },
     "color.red.a12": {
@@ -4121,8 +4121,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a12",
       "values": {
-        "scheme=light": "oklch(25.8% 0.1052 29.46 / 0.8966)",
-        "scheme=dark": "oklch(90.48% 0.0492 24.52)"
+        "scheme=light": "oklch(26.91% 0.1064 30.48 / 0.9098)",
+        "scheme=dark": "oklch(90.48% 0.0493 26.53)"
       }
     },
     "color.red.a2": {
@@ -4132,8 +4132,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a2",
       "values": {
-        "scheme=light": "oklch(63.31% 0.2528 30.15 / 0.035)",
-        "scheme=dark": "oklch(76.53% 0.1391 25.58 / 0.1375)"
+        "scheme=light": "oklch(63.53% 0.2508 30.54 / 0.0358)",
+        "scheme=dark": "oklch(76.13% 0.1422 27.5 / 0.1386)"
       }
     },
     "color.red.a3": {
@@ -4143,8 +4143,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a3",
       "values": {
-        "scheme=light": "oklch(63.3% 0.2529 30.12 / 0.0819)",
-        "scheme=dark": "oklch(68.36% 0.2051 25.98 / 0.2518)"
+        "scheme=light": "oklch(63.51% 0.2509 30.51 / 0.0838)",
+        "scheme=dark": "oklch(67.94% 0.209 27.8 / 0.2544)"
       }
     },
     "color.red.a4": {
@@ -4154,8 +4154,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a4",
       "values": {
-        "scheme=light": "oklch(63.28% 0.2531 30.09 / 0.1342)",
-        "scheme=dark": "oklch(65.78% 0.2285 25.9 / 0.3415)"
+        "scheme=light": "oklch(63.5% 0.2511 30.48 / 0.1373)",
+        "scheme=dark": "oklch(65.36% 0.2325 27.66 / 0.3453)"
       }
     },
     "color.red.a5": {
@@ -4165,8 +4165,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a5",
       "values": {
-        "scheme=light": "oklch(63.26% 0.2533 30.05 / 0.1985)",
-        "scheme=dark": "oklch(66.57% 0.2212 25.5 / 0.413)"
+        "scheme=light": "oklch(63.47% 0.2513 30.44 / 0.2033)",
+        "scheme=dark": "oklch(66.12% 0.2254 27.35 / 0.4175)"
       }
     },
     "color.red.a6": {
@@ -4176,8 +4176,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a6",
       "values": {
-        "scheme=light": "oklch(63.21% 0.2537 29.98 / 0.2787)",
-        "scheme=dark": "oklch(67.96% 0.2087 25.17 / 0.4834)"
+        "scheme=light": "oklch(63.43% 0.2517 30.36 / 0.2857)",
+        "scheme=dark": "oklch(67.49% 0.2129 27.09 / 0.4884)"
       }
     },
     "color.red.a7": {
@@ -4187,8 +4187,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a7",
       "values": {
-        "scheme=light": "oklch(61.74% 0.2485 29.88 / 0.3821)",
-        "scheme=dark": "oklch(69.01% 0.1994 24.93 / 0.5779)"
+        "scheme=light": "oklch(62.73% 0.2499 30.23 / 0.3962)",
+        "scheme=dark": "oklch(68.53% 0.2036 26.89 / 0.5836)"
       }
     },
     "color.red.a8": {
@@ -4198,8 +4198,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a8",
       "values": {
-        "scheme=light": "oklch(59% 0.2387 29.71 / 0.5172)",
-        "scheme=dark": "oklch(68.3% 0.2056 24.79 / 0.7038)"
+        "scheme=light": "oklch(60.01% 0.2404 30.04 / 0.5368)",
+        "scheme=dark": "oklch(67.81% 0.21 26.76 / 0.7109)"
       }
     },
     "color.red.a9": {
@@ -4209,8 +4209,8 @@
       "deprecated": false,
       "css": "--rp-color-red-a9",
       "values": {
-        "scheme=light": "oklch(61.42% 0.252 29.23 / 0.6784)",
-        "scheme=dark": "oklch(68.06% 0.2078 24.53 / 0.9804)"
+        "scheme=light": "oklch(55.52% 0.2278 29.23 / 0.8078)",
+        "scheme=dark": "oklch(65.26% 0.2334 26.63 / 0.8784)"
       }
     },
     "color.red.contrast": {

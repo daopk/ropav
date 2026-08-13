@@ -1290,7 +1290,7 @@
       }
     },
     "placeholder": {
-      "$value": "{color.gray.10}",
+      "$value": "{color.gray.11}",
       "$extensions": {
         "umberkit": {
           "tier": "semantic",

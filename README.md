@@ -140,7 +140,9 @@ import IconSearch from '~icons/lucide/search';
 
 Use typed `classNames` and `styles`, documented state attributes, and variables listed in the packaged styles manifest. DOM nesting, internal selectors and undocumented variables are private implementation details.
 
-See the [Public Styles API](./docs/public-styles-api.md) and [public token table](./docs/public-tokens.md). Consumers can declare `reset, ropav.tokens, ropav.components, app` to establish their cascade layer order.
+See the [Public Styles API](./docs/public-styles-api.md) and the generated token docs shipped in `src/styles/generated/` (`tokens.md`, `showcase.html`). Consumers can declare `reset, ropav.tokens, ropav.components, app` to establish their cascade layer order.
+
+Dark mode: set `data-scheme="dark"` on `<html>` (tokens are `light-dark()` values; without the attribute the OS preference applies).
 
 For headless floating content and custom overlay markup, see the
 [public floating API](./docs/public-floating-api.md).

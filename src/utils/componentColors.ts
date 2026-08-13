@@ -440,6 +440,9 @@ function createComponentColorRoles(
 type RgbColor = Pick<ParsedCssColor, 'red' | 'green' | 'blue'>;
 
 const customForegroundBackgroundMixes = [0, 0.12, 0.18, 0.24];
+// Slightly above WCAG 4.5 so browser color-mix rounding cannot land the
+// rendered pair a hair under the threshold axe checks.
+const customForegroundMinimumContrast = 4.6;
 
 function getCustomForegroundColor(color: string) {
     const parsed = parseCssColor(color);
@@ -459,8 +462,9 @@ function getCustomForegroundColor(color: string) {
             const darkBackground = mixOpaqueColors(parsed, backgroundWeight, darkBody);
 
             return (
-                contrastRatio(lightForeground, lightBackground) >= 4.5 &&
-                contrastRatio(darkForeground, darkBackground) >= 4.5
+                contrastRatio(lightForeground, lightBackground) >=
+                    customForegroundMinimumContrast &&
+                contrastRatio(darkForeground, darkBackground) >= customForegroundMinimumContrast
             );
         });
 
