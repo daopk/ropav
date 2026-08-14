@@ -65,3 +65,14 @@ export interface ListBoxDropIndicatorProps {
   target: DropTarget;
   class?: string;
 }
+
+export interface ListBoxLoadMoreItemProps {
+  class?: string;
+  /** Whether the next page is on its way, which is when the indicator row is rendered. */
+  isLoading?: boolean;
+  /**
+   * How far from the end of the scroll box loading starts, as a multiple of the box's own height.
+   * `1` is one screen ahead; `0` waits until the very end comes into view. @default 1
+   */
+  scrollOffset?: number;
+}
