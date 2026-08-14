@@ -20,6 +20,7 @@ export * from "./color-swatch";
 export * from "./color-swatch-picker";
 export * from "./date-field";
 export * from "./date-picker";
+export * from "./date-range-picker";
 export * from "./description";
 export * from "./dnd";
 export * from "./drawer";
