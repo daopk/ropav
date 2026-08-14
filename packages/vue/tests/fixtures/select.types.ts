@@ -2,7 +2,7 @@ import type {ValidationBehavior, ValidationFunction} from "@/composables/use-for
 import type {UseSelectReturn} from "@/composables/use-select";
 import type {
   SelectSelectionMode,
-  SelectValue,
+  SelectedValue,
   UseSelectStateReturn,
 } from "@/composables/use-select-state";
 
@@ -16,18 +16,18 @@ export interface SelectFixtureItem {
 export interface SelectStateHostProps {
   items?: SelectFixtureItem[];
   selectionMode?: SelectSelectionMode;
-  value?: SelectValue;
-  defaultValue?: SelectValue;
+  value?: SelectedValue;
+  defaultValue?: SelectedValue;
   isOpen?: boolean;
   defaultOpen?: boolean;
   shouldCloseOnSelect?: boolean;
   allowsEmptyCollection?: boolean;
   disabledKeys?: Iterable<string>;
   isInvalid?: boolean;
-  validate?: ValidationFunction<SelectValue>;
+  validate?: ValidationFunction<SelectedValue>;
   validationBehavior?: ValidationBehavior;
   name?: string;
-  onChange?: (value: SelectValue) => void;
+  onChange?: (value: SelectedValue) => void;
   onOpenChange?: (isOpen: boolean) => void;
   /** Hands the live state back to the test. */
   onReady?: (state: UseSelectStateReturn<SelectFixtureItem>) => void;
