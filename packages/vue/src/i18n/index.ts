@@ -4,4 +4,5 @@ export * from "./date-placeholders";
 export * from "./date-validation";
 export * from "./datepicker";
 export * from "./dnd";
+export * from "./select";
 export * from "./spinbutton";
