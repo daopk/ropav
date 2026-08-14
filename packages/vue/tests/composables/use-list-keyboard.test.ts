@@ -8,6 +8,7 @@ import {effectScope, nextTick} from "vue";
 import {useCollection} from "@/composables/use-collection";
 import {useListKeyboard} from "@/composables/use-list-keyboard";
 import {useSelectionManager} from "@/composables/use-selection-manager";
+import {Rect, Size} from "@/utils/virtualizer-geometry";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];
@@ -29,6 +30,13 @@ const setup = (
     keyboard?: Partial<Omit<UseListKeyboardOptions, "collection" | "selection" | "element">>;
     selection?: Partial<Omit<UseSelectionManagerOptions, "collection">>;
     dir?: "ltr" | "rtl";
+    /**
+     * Where each item sits, keyed the same way as the collection.
+     *
+     * jsdom has no layout, so every rect is zeroes and every item reads as sharing one row.
+     * Grid navigation is geometry, so it has to be told.
+     */
+    rects?: Record<string, {x: number; y: number}>;
   } = {},
 ): Harness => {
   const scope = effectScope();
@@ -50,6 +58,14 @@ const setup = (
 
     element.textContent = options.text?.[String(key)] ?? String(key);
     container.appendChild(element);
+
+    const rect = options.rects?.[String(key)];
+
+    if (rect) {
+      element.getBoundingClientRect = () =>
+        ({height: 32, width: 32, x: rect.x, y: rect.y}) as DOMRect;
+    }
+
     items.set(key, element);
   }
 
@@ -226,6 +242,175 @@ describe("useListKeyboard", () => {
       press("ArrowDown");
 
       expect(selection.focusedKey.value).toBe("b");
+    });
+  });
+
+  describe("grid navigation", () => {
+    // Three columns, two full rows. Only x and y are read, so the size never matters.
+    const GRID = {
+      a: {x: 0, y: 0},
+      b: {x: 32, y: 0},
+      c: {x: 64, y: 0},
+      d: {x: 0, y: 32},
+      e: {x: 32, y: 32},
+      f: {x: 64, y: 32},
+    };
+
+    const KEYS = ["a", "b", "c", "d", "e", "f"];
+
+    const grid = (options: Parameters<typeof setup>[0] = {}) =>
+      setup({
+        keys: KEYS,
+        rects: GRID,
+        ...options,
+        keyboard: {layout: "grid", ...options.keyboard},
+      });
+
+    it("steps down a column rather than to the next item", () => {
+      const {press, selection} = grid();
+
+      press("ArrowDown");
+      press("ArrowRight");
+
+      expect(selection.focusedKey.value).toBe("b");
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("e");
+    });
+
+    it("steps back up the same column", () => {
+      const {press, selection} = grid();
+
+      press("ArrowUp");
+
+      expect(selection.focusedKey.value).toBe("f");
+
+      press("ArrowUp");
+
+      expect(selection.focusedKey.value).toBe("c");
+    });
+
+    it("stays put at the last row", () => {
+      const {press, selection} = grid();
+
+      press("ArrowDown");
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("d");
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("d");
+    });
+
+    it("walks the flat order with the inline arrows, across row boundaries", () => {
+      // Left and right are plain next/previous in a grid: the item to the right of the last one
+      // in a row is the first one in the next.
+      const {press, selection} = grid();
+
+      press("ArrowUp");
+      press("ArrowLeft");
+      press("ArrowLeft");
+
+      expect(selection.focusedKey.value).toBe("d");
+
+      press("ArrowLeft");
+
+      expect(selection.focusedKey.value).toBe("c");
+    });
+
+    it("claims the inline arrows instead of leaving them to the page", () => {
+      const {press} = grid();
+
+      press("ArrowDown");
+
+      expect(press("ArrowRight").defaultPrevented).toBe(true);
+    });
+
+    it("gives up when the item below is disabled", () => {
+      /**
+       * A surprise worth pinning, and it is upstream's: the walk steps over disabled items, so it
+       * passes the one directly below and then never finds another in that column. React Aria's
+       * `findKey` returns null the same way.
+       */
+      const {press, selection} = grid({disabled: ["e"]});
+
+      press("ArrowDown");
+      press("ArrowRight");
+
+      expect(selection.focusedKey.value).toBe("b");
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("b");
+    });
+
+    it("reads the layout's geometry when there is one", () => {
+      // A virtualized grid has only a screenful in the DOM, so the delegate has to be able to
+      // answer instead. Every element here reports zeroes, so only the delegate can.
+      const {press, selection} = setup({
+        keyboard: {
+          layout: "grid",
+          layoutDelegate: {
+            getContentSize: () => new Size(96, 64),
+            getItemRect: (key) => {
+              const rect = GRID[key as keyof typeof GRID];
+
+              return rect ? new Rect(rect.x, rect.y, 32, 32) : null;
+            },
+            getVisibleRect: () => new Rect(0, 0, 96, 64),
+          },
+        },
+        keys: KEYS,
+      });
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("a");
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("d");
+    });
+
+    it("mirrors the inline arrows in a right-to-left grid", () => {
+      const {press, selection} = grid({dir: "rtl"});
+
+      press("ArrowDown");
+      press("ArrowLeft");
+
+      expect(selection.focusedKey.value).toBe("b");
+
+      press("ArrowRight");
+
+      expect(selection.focusedKey.value).toBe("a");
+    });
+
+    it("crosses columns with the inline arrows when the grid is horizontal", () => {
+      // Orientation flips which axis wraps: a horizontal grid fills a column before moving
+      // across, so right of an item is the one in the same row of the next column.
+      const {press, selection} = setup({
+        keyboard: {layout: "grid", orientation: "horizontal"},
+        keys: KEYS,
+        rects: {
+          a: {x: 0, y: 0},
+          b: {x: 0, y: 32},
+          c: {x: 0, y: 64},
+          d: {x: 32, y: 0},
+          e: {x: 32, y: 32},
+          f: {x: 32, y: 64},
+        },
+      });
+
+      press("ArrowDown");
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("b");
+
+      press("ArrowRight");
+
+      expect(selection.focusedKey.value).toBe("e");
     });
   });
 
