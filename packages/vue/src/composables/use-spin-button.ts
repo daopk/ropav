@@ -237,6 +237,14 @@ export const useSpinButton = (options: UseSpinButtonOptions = {}): UseSpinButton
   const onKeydown = (event: KeyboardEvent) => {
     if (isDisabled.value || isReadOnly.value) return;
 
+    /*
+     * A key held with a modifier is a different key, and none of these are bound with one. Upstream
+     * matches the whole combination rather than the key alone, so Alt with an arrow falls through
+     * to whatever is listening above — which is how a date picker's popover is opened from a
+     * segment.
+     */
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
     const shortcut = shortcuts[event.key as SpinKey];
 
     if (!shortcut) return;

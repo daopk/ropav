@@ -341,6 +341,29 @@ describe("useDateSegment", () => {
       unmount();
     });
 
+    it("leaves an arrow held with a modifier alone", async () => {
+      /*
+       * A key held with a modifier is a different key, and none of the stepping shortcuts are bound
+       * with one. Alt with an arrow has to fall through to whatever is listening above, which is how
+       * a date picker's popover is opened from a segment.
+       */
+      const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+
+      const event = new KeyboardEvent("keydown", {
+        altKey: true,
+        bubbles: true,
+        cancelable: true,
+        key: "ArrowDown",
+      });
+
+      part("day").dispatchEvent(event);
+      await nextTick();
+
+      expect(ready().state.value.value?.day).toBe(5);
+      expect(event.cancelBubble).toBe(false);
+      unmount();
+    });
+
     it("pages the day by a week", async () => {
       const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
 
