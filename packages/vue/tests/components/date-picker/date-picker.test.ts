@@ -142,6 +142,27 @@ describe("DatePicker", () => {
       picker.unmount();
     });
 
+    it("has every segment read the picker's name after its own", () => {
+      /*
+       * A segment reads as a bare number, so it repeats what names the picker: "month, Appointment".
+       * The trailing separator on its own label is what runs the two together.
+       */
+      const picker = renderPicker({label: "Appointment"});
+      const month = picker.segment("month");
+
+      expect(month.getAttribute("aria-labelledby")).toBe(`${month.id} ${picker.slot("label").id}`);
+      expect(month.getAttribute("aria-label")).toBe("month, ");
+      picker.unmount();
+    });
+
+    it("leaves the separator off a segment with nothing to run on to", () => {
+      // A picker with no label: "month, " followed by nothing would be worse than "month".
+      const picker = renderPicker();
+
+      expect(picker.segment("month").getAttribute("aria-label")).toBe("month");
+      picker.unmount();
+    });
+
     it("carries the picker's id, which is what a label points at", () => {
       const picker = renderPicker({id: "appointment"});
 

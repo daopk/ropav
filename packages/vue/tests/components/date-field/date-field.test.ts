@@ -120,6 +120,23 @@ describe("DateField", () => {
       unmount();
     });
 
+    it("shows the field's state on the group around the segments", () => {
+      /*
+       * The group is styled from these, not from the field above it: `status-disabled` dims it and
+       * takes it out of the pointer's reach, and the focus ring is drawn from the invalid state.
+       */
+      const disabled = renderDateField({isDisabled: true});
+
+      expect(disabled.group()).toHaveAttribute("data-disabled", "true");
+      expect(disabled.group()).toHaveAttribute("aria-disabled", "true");
+      disabled.unmount();
+
+      const invalid = renderDateField({isInvalid: true});
+
+      expect(invalid.group()).toHaveAttribute("data-invalid", "true");
+      invalid.unmount();
+    });
+
     it("reports being read only without leaving the tab order", () => {
       const {root, segment, unmount} = renderDateField({isReadOnly: true});
 

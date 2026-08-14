@@ -137,6 +137,7 @@ const fieldState = useDateFieldState({
 
 const field = useDateField({
   ariaDescribedBy: picker.field.ariaDescribedBy,
+  ariaLabelledBy: picker.field.ariaLabelledBy,
   autoFocus: () => props.autoFocus,
   element: inputGroupElement,
   focusManager: picker.field.focusManager,
@@ -233,6 +234,7 @@ provideDateFieldControlContext({resolve: () => control});
 provideDateInputGroupOwnerContext({
   attrs: picker.groupAttrs,
   handlers: picker.groupHandlers,
+  isDisabled: computed(() => props.isDisabled ?? false),
   isInvalid: state.isInvalid,
   setElement: (next) => {
     groupElement.value = next;

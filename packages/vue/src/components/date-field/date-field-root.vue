@@ -11,7 +11,10 @@ import {useDateField} from "../../composables/use-date-field";
 import {useDateFieldState} from "../../composables/use-date-field-state";
 import {provideFieldIdsContext} from "../../composables/use-field-ids";
 import {dataAttr} from "../../utils/assertion";
-import {provideDateFieldControlContext} from "../date-input-group";
+import {
+  provideDateFieldControlContext,
+  provideDateInputGroupOwnerContext,
+} from "../date-input-group";
 import DateInputGroupHiddenInput from "../date-input-group/date-input-group-hidden-input.vue";
 import {provideFieldErrorContext} from "../field-error";
 
@@ -103,6 +106,26 @@ const control: DateFieldControl = {
 };
 
 provideDateFieldControlContext({resolve: () => control});
+
+/*
+ * The group around the segments is the field's, so it shows the field's state without being told.
+ * Everything that names it is deliberately left out: react-aria-components hands the same props to
+ * the group and to the row of segments inside it, so both end up with one id between them, and the
+ * name is announced twice for two nested groups. Here only the inner one carries them.
+ */
+provideDateInputGroupOwnerContext({
+  attrs: computed(() => ({"aria-disabled": state.isDisabled.value || undefined})),
+  handlers: {
+    ...field.handlers,
+    onFocusin: field.onFocusin,
+    onFocusout: field.onFocusout,
+    onKeydown: field.onKeydown,
+  },
+  isDisabled: state.isDisabled,
+  isInvalid: field.isInvalid,
+  // Nothing above needs it: the field's own element is the row of segments, which reports itself.
+  setElement: () => {},
+});
 provideFieldErrorContext({validation: state.displayValidation});
 
 const styles = computed(() => dateFieldVariants({class: props.class, fullWidth: props.fullWidth}));

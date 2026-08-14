@@ -54,6 +54,14 @@ export interface DatePickerFieldOptions {
   id: ComputedRef<string>;
   ariaDescribedBy: ComputedRef<string | undefined>;
   /**
+   * What names the picker, for the segments to repeat after their own part of the date.
+   *
+   * Not the same as what names the group: this one is empty when nothing labels the picker, where
+   * the group falls back to pointing at itself. A segment reading "month, " and then nothing would
+   * be worse than a segment reading "month".
+   */
+  ariaLabelledBy: ComputedRef<string | undefined>;
+  /**
    * `"presentation"`, always.
    *
    * The picker already carries the group role, its name and its description; a second group role
@@ -175,6 +183,11 @@ export const useDatePicker = (
         .join(" ") || undefined,
   );
 
+  /** The label this picker actually has, which is nothing at all when none was rendered. */
+  const ownLabelledBy = computed(
+    () => [labelId.value, toValue(options.ariaLabelledby)].filter(Boolean).join(" ") || undefined,
+  );
+
   /**
    * What names the picker: an explicit reference, else its own label, else the group itself.
    *
@@ -256,6 +269,7 @@ export const useDatePicker = (
     })),
     field: {
       ariaDescribedBy: describedBy,
+      ariaLabelledBy: ownLabelledBy,
       focusManager,
       id: fieldId,
       role: "presentation",

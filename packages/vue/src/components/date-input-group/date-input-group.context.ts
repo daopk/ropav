@@ -73,6 +73,8 @@ export interface DateInputGroupOwnerContext {
     onFocusin: (event: FocusEvent) => void;
     onFocusout: (event: FocusEvent) => void;
   };
+  /** Whether the owner reads as disabled, so the group shows it without being told. */
+  isDisabled: ComputedRef<boolean>;
   /** Whether the owner reads as invalid, so the group shows it without being told. */
   isInvalid: ComputedRef<boolean>;
   /**

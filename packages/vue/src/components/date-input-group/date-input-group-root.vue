@@ -43,15 +43,17 @@ const styles = computed(() => slots.value.base({class: props.class}));
  */
 const owner = useDateInputGroupOwnerContext();
 
-// Hover is read off this one only; press has no meaning for a shell around a control.
-const interaction = useInteractionStates({isDisabled: () => props.isDisabled});
-const focusWithin = useFocusWithin();
-
 /*
- * The invalid state is the owner's when there is one: a picker holds the value and the bounds, so
- * it is the only thing that can judge them. A prop still wins, for markup that says so outright.
+ * The disabled and invalid states are the owner's when there is one: a picker holds the value and
+ * the bounds, so it is the only thing that can judge them. A prop still wins, for markup that says
+ * so outright.
  */
+const isDisabled = computed(() => props.isDisabled ?? owner?.isDisabled.value);
 const isInvalid = computed(() => props.isInvalid ?? owner?.isInvalid.value);
+
+// Hover is read off this one only; press has no meaning for a shell around a control.
+const interaction = useInteractionStates({isDisabled});
+const focusWithin = useFocusWithin();
 
 const setElement = (next: unknown) => {
   owner?.setElement(next instanceof HTMLElement ? next : null);
@@ -98,7 +100,7 @@ const onPointerleave = (event: PointerEvent) => {
     :ref="setElement"
     v-bind="owner?.attrs.value"
     :class="styles"
-    :data-disabled="dataAttr(props.isDisabled)"
+    :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(focusWithin.isFocusVisible.value)"
     :data-focus-within="dataAttr(focusWithin.isFocusWithin.value)"
     :data-hovered="dataAttr(interaction.isHovered.value)"
@@ -118,7 +120,7 @@ const onPointerleave = (event: PointerEvent) => {
     @pointerup="onPointerup"
   >
     <slot
-      :is-disabled="Boolean(props.isDisabled)"
+      :is-disabled="Boolean(isDisabled)"
       :is-focus-visible="focusWithin.isFocusVisible.value"
       :is-focus-within="focusWithin.isFocusWithin.value"
       :is-hovered="interaction.isHovered.value"
