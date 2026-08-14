@@ -12,7 +12,7 @@ import {useDateFieldControlContext, useDateInputGroupContext} from "./date-input
 const props = defineProps<DateInputGroupSegmentProps>();
 
 const group = useDateInputGroupContext();
-const {field, state} = useDateFieldControlContext();
+const {field, state} = useDateFieldControlContext().resolve();
 
 const element = shallowRef<HTMLElement | null>(null);
 

@@ -1,6 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TimeFieldRootProps, TimeFieldRootSlotProps} from "./time-field.types";
 import type {TimeValue} from "../../utils/date-format";
+import type {DateFieldControl} from "../date-input-group";
 
 import {timeFieldVariants} from "@heroui/styles";
 import {computed, shallowRef} from "vue";
@@ -80,7 +81,12 @@ const field = useTimeField({
 });
 
 provideFieldIdsContext(field.fieldIds);
-provideDateFieldControlContext({
+
+/*
+ * Wrapped in a `resolve` that ignores the slot: a field owns one value, so every part
+ * inside it edits the same one however it asks.
+ */
+const control: DateFieldControl = {
   field,
   setElement: (next) => {
     element.value = next;
@@ -89,7 +95,9 @@ provideDateFieldControlContext({
     inputElement.value = next;
   },
   state,
-});
+};
+
+provideDateFieldControlContext({resolve: () => control});
 provideFieldErrorContext({validation: state.displayValidation});
 
 const styles = computed(() => timeFieldVariants({class: props.class, fullWidth: props.fullWidth}));

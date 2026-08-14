@@ -39,11 +39,18 @@ export type {
 export {
   provideDateFieldControlContext,
   provideDateInputGroupContext,
+  provideDateInputGroupOwnerContext,
   useDateFieldControlContext,
   useDateInputGroupContext,
+  useDateInputGroupOwnerContext,
 } from "./date-input-group.context";
 
-export type {DateFieldControlContext, DateInputGroupContext} from "./date-input-group.context";
+export type {
+  DateFieldControl,
+  DateFieldControlContext,
+  DateInputGroupContext,
+  DateInputGroupOwnerContext,
+} from "./date-input-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

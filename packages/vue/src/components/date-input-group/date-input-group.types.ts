@@ -32,6 +32,13 @@ export interface DateInputGroupRootSlotProps {
 
 export interface DateInputGroupInputProps {
   class?: string;
+  /**
+   * Which end of a range this edits, for an input inside a range picker.
+   *
+   * A range picker owns two fields and renders neither, so the markup is what says which one a
+   * given row of segments belongs to. Left unset by a field that owns a single value.
+   */
+  slot?: "start" | "end";
 }
 
 /** One segment per slot call, in the order the locale writes them. */

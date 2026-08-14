@@ -1,5 +1,6 @@
 import type {UseDateFieldReturn} from "../../composables/use-date-field";
 import type {DateFieldState} from "../../composables/use-date-field-state";
+import type {UsePressHandlers} from "../../composables/use-press";
 import type {dateInputGroupVariants} from "@heroui/styles";
 import type {ComputedRef} from "vue";
 
@@ -23,7 +24,8 @@ export const [useDateInputGroupContext, provideDateInputGroupContext] =
     strict: false,
   });
 
-export interface DateFieldControlContext {
+/** One field, and the two elements it needs but does not render itself. */
+export interface DateFieldControl {
   state: DateFieldState;
   field: UseDateFieldReturn;
   /**
@@ -35,6 +37,18 @@ export interface DateFieldControlContext {
    */
   setElement: (element: HTMLElement | null) => void;
   setInputElement: (element: HTMLInputElement | null) => void;
+}
+
+export interface DateFieldControlContext {
+  /**
+   * The field a part edits, picked by the part's own `slot`.
+   *
+   * A function rather than the field itself because a range picker owns two of them, and which one
+   * a part edits is a question only the part can answer — mirroring how react-aria-components
+   * resolves a slotted context. Throws when asked for a slot the owner does not have, so a
+   * mistyped `slot` is an error rather than a field that silently edits the wrong end.
+   */
+  resolve: (slot?: string) => DateFieldControl;
 }
 
 /**
@@ -49,3 +63,37 @@ export interface DateFieldControlContext {
  */
 export const [useDateFieldControlContext, provideDateFieldControlContext] =
   createContext<DateFieldControlContext>({name: "DateFieldControlContext"});
+
+export interface DateInputGroupOwnerContext {
+  /** Attributes for the group element. Spread with `v-bind`. Never carries an `on*` key. */
+  attrs: ComputedRef<Record<string, unknown>>;
+  /** Listeners for the group. Attach each one statically, never through `v-bind`. */
+  handlers: UsePressHandlers & {onKeydown: (event: KeyboardEvent) => void};
+  /** Whether the owner reads as invalid, so the group shows it without being told. */
+  isInvalid: ComputedRef<boolean>;
+  /**
+   * The group reports its own element back.
+   *
+   * A picker needs it for two things it cannot do from above: positioning its popover, which is
+   * anchored to the whole group rather than to the button inside it, and moving focus along the
+   * row of segments, which for a range spans both fields.
+   */
+  setElement: (element: HTMLElement | null) => void;
+}
+
+/**
+ * Carries a picker's own group wiring down to the group it renders.
+ *
+ * The group around the segments belongs to the picker, not to the field inside it: it is what
+ * carries the picker's name and description, what its popover is positioned against, and what
+ * answers a click on the empty space beside the segments. But the element itself is rendered by a
+ * part further down, so the wiring has to travel to meet it.
+ *
+ * Loose: a plain `DateField` has nothing above it, and then the group is simply its own.
+ */
+export const [useDateInputGroupOwnerContext, provideDateInputGroupOwnerContext] =
+  createContext<DateInputGroupOwnerContext | null>({
+    defaultValue: null,
+    name: "DateInputGroupOwnerContext",
+    strict: false,
+  });

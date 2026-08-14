@@ -20,7 +20,7 @@ import {useDateFieldControlContext} from "./date-input-group.context";
  * nothing to fill in. Its `form` is deliberately empty, so what it holds is never submitted — the
  * field's own hidden input is what a form reads.
  */
-const {state} = useDateFieldControlContext();
+const {state} = useDateFieldControlContext().resolve();
 
 const props = defineProps<{
   /** What kind of value the browser may offer to fill in. */

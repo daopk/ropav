@@ -149,6 +149,27 @@ describe("useDateField", () => {
       field.unmount();
     });
 
+    it("carries the id the picker gave it, and nothing else", () => {
+      /*
+       * The id is the one prop that survives upstream's filter on the way into a presentational
+       * field, so it is the one attribute besides the role that appears.
+       */
+      const field = setup({ariaDescribedBy: "hint", id: "the-field", role: "presentation"});
+      const group = field.group();
+
+      expect(group.getAttribute("id")).toBe("the-field");
+      expect(group.getAttribute("aria-describedby")).toBeNull();
+      field.unmount();
+    });
+
+    it("renders no id when the picker gave it none", () => {
+      // A range picker names neither of its two fields, and a minted id would be one React has not.
+      const field = setup({role: "presentation"});
+
+      expect(field.group().hasAttribute("id")).toBe(false);
+      field.unmount();
+    });
+
     it("leaves the arrow keys to the picker", () => {
       // A picker steers one row of segments across two fields, so a field cannot steer its own.
       const field = setup({role: "presentation"});

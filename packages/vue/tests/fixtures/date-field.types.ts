@@ -17,7 +17,10 @@ export interface TimeFieldReady {
 }
 
 interface SharedProps {
+  /** Id for the group around the segments, which a picker hands its field. */
+  id?: string;
   ariaLabel?: string;
+  ariaDescribedBy?: string;
   autoFocus?: boolean;
   isDisabled?: boolean;
   isRequired?: boolean;

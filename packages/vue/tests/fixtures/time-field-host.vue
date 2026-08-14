@@ -28,9 +28,11 @@ const state = useTimeFieldState({
 });
 
 const field = useTimeField({
+  ariaDescribedBy: () => props.ariaDescribedBy,
   ariaLabel: () => props.ariaLabel,
   autoFocus: () => props.autoFocus,
   element,
+  id: () => props.id,
   inputElement,
   isDisabled: () => props.isDisabled,
   isRequired: () => props.isRequired,

@@ -9,14 +9,30 @@ import {computed} from "vue";
 import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 
-import {useDateFieldControlContext, useDateInputGroupContext} from "./date-input-group.context";
+import {
+  provideDateFieldControlContext,
+  useDateFieldControlContext,
+  useDateInputGroupContext,
+} from "./date-input-group.context";
 
 const props = defineProps<DateInputGroupInputProps>();
 
 defineSlots<{default?: (props: DateInputGroupInputSlotProps) => unknown}>();
 
 const group = useDateInputGroupContext();
-const {field, setElement, setInputElement, state} = useDateFieldControlContext();
+
+/*
+ * Resolved once, at setup: which end of a range this input edits is a fact about the markup, and
+ * the segments below capture the field they were built against.
+ */
+const control = useDateFieldControlContext().resolve(props.slot);
+const {field, setElement, setInputElement, state} = control;
+
+/*
+ * Republished flat, so the segments below need to know nothing about slots: they read whichever
+ * field is nearest above them, which inside this input is always this one.
+ */
+provideDateFieldControlContext({resolve: () => control});
 
 const styles = computed(() => group?.slots.value.input({class: props.class}) ?? props.class);
 
@@ -50,12 +66,19 @@ const onFocusout = (event: FocusEvent) => {
 const setGroupElement = (next: unknown) => setElement(next instanceof HTMLElement ? next : null);
 const setHiddenInput = (next: unknown) =>
   setInputElement(next instanceof HTMLInputElement ? next : null);
+
+/*
+ * `slot` is bound from here rather than written in the template because Vue 2 read a literal `slot`
+ * attribute as slot syntax, and the linter still flags either spelling. The vapor compiler passes
+ * it straight through — measured in the DOM. React puts it there too, which is why it is kept.
+ */
+const attrs = computed(() => ({...field.attrs.value, slot: props.slot}));
 </script>
 
 <template>
   <div
     :ref="setGroupElement"
-    v-bind="field.attrs.value"
+    v-bind="attrs"
     :class="styles"
     :data-disabled="dataAttr(state.isDisabled.value)"
     :data-focus-visible="dataAttr(focusWithin.isFocusVisible.value)"

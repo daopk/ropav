@@ -221,7 +221,17 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
   );
 
   const attrs = computed<Record<string, unknown>>(() => {
-    if (isPresentation.value) return {role: "presentation"};
+    /*
+     * A presentational field carries its id and nothing else. Upstream filters the field's props
+     * down to the DOM ones before merging them in, and `id` is the only one that survives: a
+     * picker hands its field an id, a range picker's two fields are given none, and then there is
+     * none to render.
+     */
+    if (isPresentation.value) {
+      const ownId = toValue(options.id);
+
+      return ownId ? {id: ownId, role: "presentation"} : {role: "presentation"};
+    }
 
     const all: Record<string, unknown> = {
       "aria-describedby": describedBy.value,

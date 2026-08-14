@@ -21,6 +21,8 @@ provideLocale(() => props.locale);
 
 <template>
   <DateFieldHost
+    :id="props.id"
+    :aria-described-by="props.ariaDescribedBy"
     :aria-label="props.ariaLabel"
     :auto-focus="props.autoFocus"
     :default-value="props.defaultValue"
