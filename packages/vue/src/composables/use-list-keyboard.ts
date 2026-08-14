@@ -10,6 +10,15 @@ import {focusableIn, isScrollable} from "../utils/focus";
 export type ListOrientation = "horizontal" | "vertical";
 
 /**
+ * How the items are arranged, which decides how many axes the arrow keys drive.
+ *
+ * A `"stack"` runs along one axis, so the cross-axis arrows stay free for the page's own
+ * scrolling. A `"grid"` wraps, so both axes navigate — and the cross-axis answer has to be found
+ * by geometry rather than by counting, because a collection is a flat list either way.
+ */
+export type ListKeyboardLayout = "grid" | "stack";
+
+/**
  * Geometry from a layout, for a collection that does not have every item in the DOM.
  *
  * Paging needs to know where an item sits and how tall the viewport is. Measuring elements can
@@ -24,7 +33,9 @@ export interface ListKeyboardLayoutDelegate {
 export interface UseListKeyboardOptions {
   collection: UseCollectionReturn;
   /** Where the items are, when a layout knows better than the DOM does. */
-  layout?: MaybeRefOrGetter<ListKeyboardLayoutDelegate | null | undefined>;
+  layoutDelegate?: MaybeRefOrGetter<ListKeyboardLayoutDelegate | null | undefined>;
+  /** @default "stack" */
+  layout?: MaybeRefOrGetter<ListKeyboardLayout | undefined>;
   selection: UseSelectionManagerReturn;
   /** The element carrying `role="listbox"` or `role="grid"`. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
@@ -81,6 +92,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   const {collection, selection} = options;
 
   const orientation = computed(() => toValue(options.orientation) ?? "vertical");
+  const layout = computed(() => toValue(options.layout) ?? "stack");
   const shouldFocusWrap = computed(() => toValue(options.shouldFocusWrap) ?? false);
   const escapeKeyBehavior = computed(() => toValue(options.escapeKeyBehavior) ?? "clearSelection");
 
@@ -90,13 +102,19 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   // accent-insensitive, and tuned for prefix searching rather than sorting.
   const collator = new Intl.Collator(undefined, {sensitivity: "base", usage: "search"});
 
+  /**
+   * A vertical stack deliberately does not answer the inline arrows: React Aria deletes the
+   * methods outright so they stay free for the page's own scrolling. A grid navigates both axes,
+   * so it answers whatever its orientation is.
+   */
+  const answersInlineAxis = () => layout.value === "grid" || orientation.value === "horizontal";
+
   const isDirectionReversed = () => {
     const element = getElement();
 
-    // RTL mirrors the inline axis only, so a vertical list reads top to bottom either way.
-    return (
-      orientation.value === "horizontal" && element && getComputedStyle(element).direction === "rtl"
-    );
+    // RTL mirrors the inline axis only, so a vertical stack reads top to bottom either way — but
+    // a grid navigates the inline axis whichever way it is oriented.
+    return Boolean(answersInlineAxis() && element && getComputedStyle(element).direction === "rtl");
   };
 
   /** Walk `step` from `key`, skipping items focus cannot land on. */
@@ -126,24 +144,89 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     return previous ?? (shouldFocusWrap.value ? getLastKey() : null);
   };
 
-  const getKeyBelow = (key: CollectionKey) => getNextKey(key);
-  const getKeyAbove = (key: CollectionKey) => getPreviousKey(key);
+  const rectOf = (key: CollectionKey) => collection.getElement(key)?.getBoundingClientRect();
 
-  // A vertical stack deliberately does not answer these: React Aria deletes the methods
-  // outright so the horizontal arrows stay free for the page's own scrolling.
+  /**
+   * Where an item sits, asking the layout first for the same reason paging does: in a
+   * virtualized collection the DOM only knows about a screenful.
+   *
+   * Only `x` and `y` are read, so a `DOMRect` and a layout's `Rect` are interchangeable here.
+   */
+  const positionOf = (key: CollectionKey): {x: number; y: number} | null => {
+    const delegate = toValue(options.layoutDelegate);
+
+    return delegate ? delegate.getItemRect(key) : (rectOf(key) ?? null);
+  };
+
+  /**
+   * Walk with `nextKey` until an item lands somewhere `shouldSkip` accepts, ported from React
+   * Aria's `ListKeyboardDelegate.findKey`.
+   *
+   * `from` is the rect of the item the walk *started* on and never advances, so "the item below"
+   * means below the original — not below whatever was stepped over on the way.
+   */
+  const findKey = (
+    key: CollectionKey,
+    nextKey: (key: CollectionKey) => CollectionKey | null,
+    shouldSkip: (from: {x: number; y: number}, item: {x: number; y: number}) => boolean,
+  ): CollectionKey | null => {
+    const from = positionOf(key);
+
+    if (!from) return null;
+
+    let candidate: CollectionKey | null = key;
+    let position: {x: number; y: number} | null = from;
+
+    do {
+      candidate = nextKey(candidate);
+      if (candidate == null) break;
+      position = positionOf(candidate);
+    } while (position && shouldSkip(from, position));
+
+    return candidate;
+  };
+
+  // Skip while the candidate shares a row with where we started, or sits in a different column:
+  // what is left is the item directly across the row boundary in the same column.
+  const isSameRow = (from: {x: number; y: number}, item: {x: number; y: number}) =>
+    from.y === item.y || from.x !== item.x;
+
+  const isSameColumn = (from: {x: number; y: number}, item: {x: number; y: number}) =>
+    from.x === item.x || from.y !== item.y;
+
+  const isGridAcross = () => layout.value === "grid" && orientation.value === "vertical";
+
+  const getKeyBelow = (key: CollectionKey) =>
+    isGridAcross() ? findKey(key, getNextKey, isSameRow) : getNextKey(key);
+
+  const getKeyAbove = (key: CollectionKey) =>
+    isGridAcross() ? findKey(key, getPreviousKey, isSameRow) : getPreviousKey(key);
+
   const getKeyRightOf = (key: CollectionKey) => {
-    if (orientation.value !== "horizontal") return null;
+    if (!answersInlineAxis()) return null;
 
-    return isDirectionReversed() ? getPreviousKey(key) : getNextKey(key);
+    const step = isDirectionReversed() ? getPreviousKey : getNextKey;
+
+    // A horizontal grid wraps along the block axis, so the item to the right of the last one in
+    // a column is found by geometry, the same way a vertical grid finds the one below.
+    if (layout.value === "grid" && orientation.value === "horizontal") {
+      return findKey(key, step, isSameColumn);
+    }
+
+    return step(key);
   };
 
   const getKeyLeftOf = (key: CollectionKey) => {
-    if (orientation.value !== "horizontal") return null;
+    if (!answersInlineAxis()) return null;
 
-    return isDirectionReversed() ? getNextKey(key) : getPreviousKey(key);
+    const step = isDirectionReversed() ? getNextKey : getPreviousKey;
+
+    if (layout.value === "grid" && orientation.value === "horizontal") {
+      return findKey(key, step, isSameColumn);
+    }
+
+    return step(key);
   };
-
-  const rectOf = (key: CollectionKey) => collection.getElement(key)?.getBoundingClientRect();
 
   /**
    * Paging by the layout's own geometry, ported from React Aria's `ListKeyboardDelegate`.
@@ -191,9 +274,9 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   };
 
   const pageStep = (key: CollectionKey, step: -1 | 1): CollectionKey | null => {
-    const layout = toValue(options.layout);
+    const delegate = toValue(options.layoutDelegate);
 
-    if (layout) return pageStepByLayout(layout, key, step);
+    if (delegate) return pageStepByLayout(delegate, key, step);
 
     const element = getElement();
 
@@ -321,13 +404,13 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
         return;
       }
       case "ArrowRight": {
-        if (orientation.value !== "horizontal") return;
+        if (!answersInlineAxis()) return;
         move(focused == null ? getFirstKey() : getKeyRightOf(focused));
 
         return;
       }
       case "ArrowLeft": {
-        if (orientation.value !== "horizontal") return;
+        if (!answersInlineAxis()) return;
         move(focused == null ? getLastKey() : getKeyLeftOf(focused));
 
         return;

@@ -202,7 +202,7 @@ const keyboardLayout = computed(() =>
 const keyboard = useListKeyboard({
   collection,
   element,
-  layout: () => keyboardLayout.value,
+  layoutDelegate: () => keyboardLayout.value,
   onAction,
   selection,
 });
