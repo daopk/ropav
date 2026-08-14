@@ -7,10 +7,11 @@ import type {DropTargetDelegate} from "../../utils/dnd-types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
 import {listboxVariants} from "@heroui/styles";
-import {computed, shallowRef} from "vue";
+import {computed, shallowRef, toValue} from "vue";
 
 import {toDragCollection} from "../../composables/drag-collection";
 import {useCollection} from "../../composables/use-collection";
+import {useCollectionAutoFocus} from "../../composables/use-collection-auto-focus";
 import {useDndPersistedKeys} from "../../composables/use-dnd-persisted-keys";
 import {useId} from "../../composables/use-id";
 import {useListKeyboard} from "../../composables/use-list-keyboard";
@@ -27,7 +28,7 @@ import {
 } from "../virtualizer/virtualizer.context";
 
 import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
-import {provideListBoxContext} from "./list-box.context";
+import {provideListBoxContext, useListBoxStateContext} from "./list-box.context";
 
 /** Stands in while a virtualized listbox has no data yet, so the layout has something to read. */
 const EMPTY_COLLECTION = createListCollection({items: []});
@@ -53,8 +54,26 @@ const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
 const styles = computed(() => listboxVariants({class: props.class, variant: props.variant}));
 
-const listId = useId();
+/**
+ * The state this listbox runs on, which is not always its own.
+ *
+ * A picker above owns the collection and the selection, because it has to answer for them while
+ * the listbox does not exist — the value in its trigger, the options in its hidden control. When
+ * one is there the listbox borrows it whole rather than keeping a second copy that would drift.
+ */
+const owner = useListBoxStateContext();
+
+const ownListId = useId();
 const collectionId = useId();
+
+// The owner names the listbox when it has to point at it from outside; otherwise the listbox
+// names itself.
+const listId = computed(() => toValue(owner?.listId) ?? ownListId.value);
+
+const labelledBy = computed(() => toValue(owner?.labelledBy));
+
+const shouldFocusOnHover = computed(() => Boolean(toValue(owner?.shouldFocusOnHover)));
+
 const element = shallowRef<HTMLElement | null>(null);
 
 const virtualizerConfig = useVirtualizerConfigContext();
@@ -78,22 +97,24 @@ const source = computed(() => {
 
 const isVirtualized = computed(() => source.value != null);
 
-const collection = useCollection({source: () => source.value});
+const collection = owner?.collection ?? useCollection({source: () => source.value});
 
-const selection = useSelectionManager({
-  collection,
-  defaultSelectedKeys: props.defaultSelectedKeys,
-  disabledBehavior: () => props.disabledBehavior,
-  disabledKeys: () => props.disabledKeys,
-  disallowEmptySelection: () => props.disallowEmptySelection,
-  onSelectionChange: (keys) => {
-    emit("selectionChange", keys);
-    emit("update:selectedKeys", keys);
-  },
-  selectedKeys: () => props.selectedKeys,
-  selectionBehavior: () => props.selectionBehavior,
-  selectionMode: () => props.selectionMode,
-});
+const selection =
+  owner?.selection ??
+  useSelectionManager({
+    collection,
+    defaultSelectedKeys: props.defaultSelectedKeys,
+    disabledBehavior: () => props.disabledBehavior,
+    disabledKeys: () => props.disabledKeys,
+    disallowEmptySelection: () => props.disallowEmptySelection,
+    onSelectionChange: (keys) => {
+      emit("selectionChange", keys);
+      emit("update:selectedKeys", keys);
+    },
+    selectedKeys: () => props.selectedKeys,
+    selectionBehavior: () => props.selectionBehavior,
+    selectionMode: () => props.selectionMode,
+  });
 
 const onAction = (key: CollectionKey) => emit("action", key);
 
@@ -261,7 +282,18 @@ provideListBoxContext({
   listId,
   onAction,
   selection,
+  shouldFocusOnHover,
 });
+
+/**
+ * A listbox owned from above appears already open, so it has to place focus itself.
+ *
+ * One standing on its own is part of the page and never does: taking focus on mount would steal
+ * it from wherever the user actually is.
+ */
+if (owner) {
+  useCollectionAutoFocus({autoFocus: owner.autoFocus, element, keyboard, selection});
+}
 
 if (virtualizer && virtualizerConfig) {
   provideVirtualizerStateContext({
@@ -288,7 +320,8 @@ const onKeydown = (event: KeyboardEvent) => {
   <div
     :id="listId"
     ref="element"
-    :aria-multiselectable="props.selectionMode === 'multiple' ? true : undefined"
+    :aria-labelledby="labelledBy"
+    :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     aria-orientation="vertical"
     :class="styles"
     :data-collection="collectionId"

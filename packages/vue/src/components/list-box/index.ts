@@ -29,9 +29,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useListBoxContext} from "./list-box.context";
+export {
+  provideListBoxStateContext,
+  useListBoxContext,
+  useListBoxStateContext,
+} from "./list-box.context";
 
-export type {ListBoxContext} from "./list-box.context";
+export type {ListBoxContext, ListBoxStateContext} from "./list-box.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

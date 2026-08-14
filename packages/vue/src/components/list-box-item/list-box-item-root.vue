@@ -28,6 +28,7 @@ const {
   listId,
   onAction,
   selection,
+  shouldFocusOnHover,
 } = useListBoxContext();
 
 const virtualizer = useVirtualizerStateContext();
@@ -94,9 +95,26 @@ const {
   onBlur,
   onFocus: onFocusState,
   onPointerdown,
-  onPointerenter,
+  onPointerenter: onPointerenterState,
   onPointerleave,
 } = useInteractionStates({isDisabled: () => isDisabled.value});
+
+/**
+ * Hovering an option moves focus to it, but only inside a picker.
+ *
+ * There the pointer and the keyboard drive the same single choice, so the highlight has to follow
+ * the mouse — otherwise the next arrow press would jump back to whatever the keyboard last
+ * touched. A listbox standing on its own leaves focus alone, which is what React Aria does too:
+ * `shouldFocusOnHover` is off by default and only `useSelect` turns it on.
+ */
+const onPointerenter = (event: PointerEvent) => {
+  onPointerenterState(event);
+
+  if (!shouldFocusOnHover.value || isDisabled.value || isFocusVisible.value) return;
+
+  selection.setFocused(true);
+  keyboard.focusKey(itemKey.value);
+};
 
 /**
  * Keep the collection's focused key on whatever actually holds focus.
