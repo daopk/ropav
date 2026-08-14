@@ -263,8 +263,8 @@ export const Controlled: Story = {
           <Description>Current value: {{ value }}</Description>
         </NumberFieldRoot>
         <div class="flex gap-2">
-          <Button variant="tertiary" @press="value = 0">Reset to 0</Button>
-          <Button variant="tertiary" @press="value = 2048">Set to 2048</Button>
+          <Button variant="tertiary" @click="value = 0">Reset to 0</Button>
+          <Button variant="tertiary" @click="value = 2048">Set to 2048</Button>
         </div>
       </div>
     `,

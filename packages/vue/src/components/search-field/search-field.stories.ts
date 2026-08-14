@@ -241,8 +241,8 @@ export const Controlled: Story = {
           <Description>Current value: {{ value || "(empty)" }}</Description>
         </SearchFieldRoot>
         <div class="flex gap-2">
-          <Button variant="tertiary" @press="value = ''">Clear</Button>
-          <Button variant="tertiary" @press="value = 'example query'">Set example</Button>
+          <Button variant="tertiary" @click="value = ''">Clear</Button>
+          <Button variant="tertiary" @click="value = 'example query'">Set example</Button>
         </div>
       </div>
     `,

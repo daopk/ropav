@@ -207,8 +207,8 @@ export const Controlled: Story = {
           <Description>Current value: {{ value ? value.toString() : "(empty)" }}</Description>
         </TimeFieldRoot>
         <div class="flex gap-2">
-          <Button variant="tertiary" @press="setNow">Set now</Button>
-          <Button variant="tertiary" @press="clear">Clear</Button>
+          <Button variant="tertiary" @click="setNow">Set now</Button>
+          <Button variant="tertiary" @click="clear">Clear</Button>
         </div>
       </div>
     `,

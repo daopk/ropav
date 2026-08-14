@@ -312,7 +312,7 @@ export const PasswordWithToggle: Story = {
               :aria-label="isVisible ? 'Hide password' : 'Show password'"
               size="sm"
               variant="ghost"
-              @press="isVisible = !isVisible"
+              @click="isVisible = !isVisible"
             >
               <IconEye v-if="isVisible" class="size-4" />
               <IconEyeSlash v-else class="size-4" />
@@ -514,7 +514,7 @@ export const WithTextArea: Story = {
                 aria-label="Send prompt"
                 :is-disabled="!value.trim()"
                 :is-pending="isSubmitting"
-                @press="onSubmit"
+                @click="onSubmit"
               >
                 <Spinner v-if="isPending" color="current" size="sm" />
                 <IconArrowUp v-else />
