@@ -125,6 +125,12 @@ export const useTimeFieldState = (options: UseTimeFieldStateOptions): TimeFieldS
     return "day" in current ? toTime(current) : current;
   });
 
+  /*
+   * Left `undefined` when the owner passed no validator, so that its absence still means "nothing
+   * to validate" rather than "a validator that always passes".
+   */
+  const validateTime = options.validate ? () => options.validate!(value.value) : undefined;
+
   const state = useDateFieldState({
     // A time field never shows a calendar, so which one it uses cannot matter.
     createCalendar: () => new GregorianCalendar(),
@@ -153,8 +159,15 @@ export const useTimeFieldState = (options: UseTimeFieldStateOptions): TimeFieldS
     },
     placeholderValue: () => placeholderDate.value ?? undefined,
     shouldForceLeadingZeros: () => toValue(options.shouldForceLeadingZeros),
-    // The date field validates the padded-out date; the owner asked about the time.
-    validate: () => options.validate?.(value.value),
+    /*
+     * The date field validates the padded-out date; the owner asked about the time, so the
+     * validator handed down ignores the date it is given and judges the time instead.
+     *
+     * Handed over as a plain callback, which is what this option is: the field wraps it in a getter
+     * of its own before `useFormValidationState` resolves it with `toValue`. Calling the owner's
+     * validator here instead would hand a message string back where a validator was expected.
+     */
+    validate: validateTime,
     validationBehavior: () => toValue(options.validationBehavior),
     value: () => toDateTime(value.value),
   });

@@ -1,4 +1,5 @@
 import type {DateFieldState} from "@/composables/use-date-field-state";
+import type {DateValue} from "@internationalized/date";
 
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate, CalendarDateTime, createCalendar} from "@internationalized/date";
@@ -369,6 +370,34 @@ describe("useDateFieldState", () => {
   });
 
   describe("validation", () => {
+    it("reports the message a custom validator returns", () => {
+      // The validator is resolved through `toValue`, so handing it over bare gets it *called* with
+      // no argument, and a message returned that way is then invoked as if it were a function.
+      const {state} = setup({
+        granularity: "day",
+        validate: (value: DateValue | null) => (value && value.day > 15 ? "too late" : null),
+        validationBehavior: "aria",
+        value: new CalendarDate(2026, 6, 20),
+      });
+
+      expect(state().displayValidation.value.validationErrors).toEqual(["too late"]);
+      expect(state().isInvalid.value).toBe(true);
+    });
+
+    it("hands a custom validator the value it is judging", () => {
+      const validate = vi.fn().mockReturnValue(null);
+      const {state} = setup({
+        granularity: "day",
+        validate,
+        validationBehavior: "aria",
+        value: new CalendarDate(2026, 6, 20),
+      });
+
+      // Reading the result is what runs the validator — nothing is validated until it is asked for.
+      expect(state().displayValidation.value.validationErrors).toEqual([]);
+      expect(String(validate.mock.calls[0]?.[0])).toBe("2026-06-20");
+    });
+
     it("reports a date below the minimum", () => {
       const {state} = setup({
         granularity: "day",

@@ -381,7 +381,13 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
     builtinValidation,
     isInvalid: () => toValue(options.isInvalid),
     name: () => toValue(options.name),
-    validate: options.validate,
+    /*
+     * Read through a getter, not handed over bare. `useFormValidationState` resolves this option
+     * with `toValue`, which cannot tell a function-valued option from a getter — a bare validator
+     * would be *called* here with no argument, so one returning a message would then be invoked as
+     * if the message were itself a function.
+     */
+    validate: () => options.validate,
     validationBehavior: () => toValue(options.validationBehavior),
     validationState: options.validationState,
     value: () => value.value,

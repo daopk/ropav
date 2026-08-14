@@ -342,6 +342,19 @@ describe("useTimeFieldState", () => {
       expect(field.state().isInvalid.value).toBe(false);
     });
 
+    it("reports the message a custom validator returns", () => {
+      // The validator is resolved through `toValue`, so handing it over bare — or handing over the
+      // result of calling it — ends with a message being invoked as if it were a function.
+      const field = setup({
+        validate: () => "not during lunch",
+        validationBehavior: "aria",
+        value: new Time(12, 30),
+      });
+
+      expect(field.state().displayValidation.value.validationErrors).toEqual(["not during lunch"]);
+      expect(field.state().isInvalid.value).toBe(true);
+    });
+
     it("hands a custom validator the time, not the date it travelled as", () => {
       const validate = vi.fn().mockReturnValue(null);
       const field = setup({validate, validationBehavior: "aria", value: new Time(13, 45)});
