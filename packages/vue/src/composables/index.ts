@@ -31,6 +31,7 @@ export * from "./use-css-variable";
 export * from "./use-date-field";
 export * from "./use-date-field-state";
 export * from "./use-date-formatter";
+export * from "./use-date-picker";
 export * from "./use-date-picker-group";
 export * from "./use-date-picker-state";
 export * from "./use-date-segment";
