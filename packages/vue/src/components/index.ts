@@ -17,6 +17,7 @@ export * from "./color-area";
 export * from "./color-field";
 export * from "./color-slider";
 export * from "./color-swatch";
+export * from "./color-swatch-picker";
 export * from "./date-field";
 export * from "./description";
 export * from "./dnd";

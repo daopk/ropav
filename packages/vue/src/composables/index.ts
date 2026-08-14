@@ -23,6 +23,7 @@ export * from "./use-color-channel-field";
 export * from "./use-color-channel-field-state";
 export * from "./use-color-field";
 export * from "./use-color-field-state";
+export * from "./use-color-picker-state";
 export * from "./use-color-slider";
 export * from "./use-color-slider-state";
 export * from "./use-color-swatch";
