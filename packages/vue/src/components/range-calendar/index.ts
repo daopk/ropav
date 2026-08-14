@@ -80,9 +80,18 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Contexts
  * -----------------------------------------------------------------------------------------------*/
-export {provideRangeCalendarContext, useRangeCalendarContext} from "./range-calendar.context";
+export {
+  provideRangeCalendarContext,
+  provideRangeCalendarOwnerContext,
+  useRangeCalendarContext,
+  useRangeCalendarOwnerContext,
+} from "./range-calendar.context";
 
-export type {RangeCalendarContext} from "./range-calendar.context";
+export type {
+  RangeCalendarContext,
+  RangeCalendarOwnedProps,
+  RangeCalendarOwnerContext,
+} from "./range-calendar.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

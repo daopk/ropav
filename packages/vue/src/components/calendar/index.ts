@@ -84,9 +84,18 @@ export type {
  * Published here as well as consumed internally: a range calendar publishes the same state context,
  * and a date picker reaches the calendar's parts without a calendar root of its own.
  */
-export {provideCalendarStateContext, useCalendarStateContext} from "./calendar.context";
+export {
+  provideCalendarOwnerContext,
+  provideCalendarStateContext,
+  useCalendarOwnerContext,
+  useCalendarStateContext,
+} from "./calendar.context";
 
-export type {CalendarStateContext} from "./calendar.context";
+export type {
+  CalendarOwnedProps,
+  CalendarOwnerContext,
+  CalendarStateContext,
+} from "./calendar.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants

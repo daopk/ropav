@@ -2,6 +2,7 @@
 import type {RangeCalendarRootProps, RangeCalendarRootSlotProps} from "./range-calendar.types";
 import type {DateRange} from "../../composables/use-calendar";
 import type {CalendarDayViewContext} from "../calendar/calendar.context";
+import type {CalendarDate as CalendarDateValue, DateValue} from "@internationalized/date";
 
 import {rangeCalendarVariants} from "@heroui/styles";
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
@@ -17,7 +18,7 @@ import {visuallyHiddenStyle} from "../../utils/visually-hidden";
 import {provideCalendarStateContext} from "../calendar/calendar.context";
 import {provideYearPickerContext} from "../calendar-year-picker/calendar-year-picker.context";
 
-import {provideRangeCalendarContext} from "./range-calendar.context";
+import {provideRangeCalendarContext, useRangeCalendarOwnerContext} from "./range-calendar.context";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to
@@ -47,6 +48,26 @@ const element = shallowRef<HTMLElement | null>(null);
 const locale = useLocale();
 
 /**
+ * A picker above, when there is one, which holds the range and the bounds this calendar draws.
+ *
+ * A prop written on the calendar itself always wins — the story labels the calendar in markup
+ * while leaving everything else to the picker.
+ */
+const owner = useRangeCalendarOwnerContext();
+const owned = computed(() => owner?.props.value ?? {});
+
+/*
+ * Left absent when neither this calendar nor the picker above it has a predicate, which is not the
+ * same as one that always answers false: the state only walks to a neighbouring available date when
+ * it has a predicate at all, and otherwise hands the date straight back.
+ */
+const hasDateUnavailable = Boolean(props.isDateUnavailable ?? owned.value.isDateUnavailable);
+const isDateUnavailable = hasDateUnavailable
+  ? (date: DateValue, anchorDate: CalendarDateValue | null) =>
+      Boolean((props.isDateUnavailable ?? owned.value.isDateUnavailable)?.(date, anchorDate))
+  : undefined;
+
+/**
  * Default bounds spanning 1900 to 2099, expressed in the locale's own calendar system.
  *
  * Without them the year picker would have nothing to size itself against. The offset is what keeps
@@ -64,31 +85,41 @@ const calendarSystem = computed(() =>
 const yearOffset = computed(() => getGregorianYearOffset(calendarSystem.value.identifier));
 
 const minValue = computed(
-  () => props.minValue ?? new CalendarDate(calendarSystem.value, 1900 + yearOffset.value, 1, 1),
+  () =>
+    props.minValue ??
+    owned.value.minValue ??
+    new CalendarDate(calendarSystem.value, 1900 + yearOffset.value, 1, 1),
 );
 const maxValue = computed(
-  () => props.maxValue ?? new CalendarDate(calendarSystem.value, 2099 + yearOffset.value, 12, 31),
+  () =>
+    props.maxValue ??
+    owned.value.maxValue ??
+    new CalendarDate(calendarSystem.value, 2099 + yearOffset.value, 12, 31),
 );
 
 const state = useRangeCalendarState({
-  allowsNonContiguousRanges: () => props.allowsNonContiguousRanges,
-  autoFocus: () => props.autoFocus,
+  allowsNonContiguousRanges: () =>
+    props.allowsNonContiguousRanges ?? owned.value.allowsNonContiguousRanges,
+  autoFocus: () => props.autoFocus ?? owned.value.autoFocus,
   createCalendar,
-  defaultFocusedValue: () => props.defaultFocusedValue,
+  defaultFocusedValue: () => props.defaultFocusedValue ?? owned.value.defaultFocusedValue,
   defaultValue: () => props.defaultValue,
-  firstDayOfWeek: () => props.firstDayOfWeek,
+  firstDayOfWeek: () => props.firstDayOfWeek ?? owned.value.firstDayOfWeek,
   focusedValue: () => props.focusedValue,
-  isDateUnavailable: props.isDateUnavailable,
-  isDisabled: () => props.isDisabled,
-  isInvalid: () => props.isInvalid,
-  isReadOnly: () => props.isReadOnly,
+  isDateUnavailable,
+  isDisabled: () => props.isDisabled ?? owned.value.isDisabled,
+  isInvalid: () => props.isInvalid ?? owned.value.isInvalid,
+  isReadOnly: () => props.isReadOnly ?? owned.value.isReadOnly,
   maxValue,
   minValue,
-  onChange: (value) => emit("update:value", value),
+  onChange: (value) => {
+    emit("update:value", value);
+    owned.value.onChange?.(value);
+  },
   onFocusChange: (date) => emit("update:focusedValue", date),
-  pageBehavior: () => props.pageBehavior,
+  pageBehavior: () => props.pageBehavior ?? owned.value.pageBehavior,
   selectionAlignment: () => props.selectionAlignment,
-  value: () => props.value,
+  value: () => props.value ?? owned.value.value,
   visibleDuration: () => props.visibleDuration,
   weeksInMonth: () => props.weeksInMonth,
 });
@@ -97,13 +128,13 @@ const calendar = useRangeCalendar(
   {
     ariaDescribedby: () => props.ariaDescribedby,
     ariaDetails: () => props.ariaDetails,
-    ariaLabel: () => props.ariaLabel,
+    ariaLabel: () => props.ariaLabel ?? owned.value.ariaLabel,
     ariaLabelledby: () => props.ariaLabelledby,
     commitBehavior: () => props.commitBehavior,
     element,
     id: () => props.id,
-    isDisabled: () => props.isDisabled,
-    isInvalid: () => props.isInvalid,
+    isDisabled: () => props.isDisabled ?? owned.value.isDisabled,
+    isInvalid: () => props.isInvalid ?? owned.value.isInvalid,
   },
   state,
 );
@@ -146,7 +177,7 @@ const styles = computed(() =>
 );
 
 const slotProps = computed<RangeCalendarRootSlotProps>(() => ({
-  isDisabled: props.isDisabled ?? false,
+  isDisabled: props.isDisabled ?? owned.value.isDisabled ?? false,
   isInvalid: state.isValueInvalid.value,
   state,
 }));
@@ -181,7 +212,7 @@ provideYearPickerContext({
   <div
     ref="element"
     :class="styles"
-    :data-disabled="dataAttr(props.isDisabled)"
+    :data-disabled="dataAttr(props.isDisabled ?? owned.isDisabled)"
     :data-invalid="dataAttr(state.isValueInvalid.value)"
     data-slot="range-calendar"
     v-bind="calendar.attrs.value"

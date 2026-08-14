@@ -1,7 +1,8 @@
 import type {AnyCalendarState, UseCalendarReturn} from "../../composables/use-calendar";
+import type {CalendarValue, PageBehavior} from "../../composables/use-calendar-state";
 import type {DayOfWeek, WeekdayStyle} from "../../utils/calendar";
 import type {calendarVariants} from "@heroui/styles";
-import type {CalendarDate} from "@internationalized/date";
+import type {CalendarDate, DateValue} from "@internationalized/date";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";
@@ -65,4 +66,47 @@ export const [useCalendarGridContext, provideCalendarGridContext] =
   createContext<CalendarGridContext>({
     errorMessage: "Calendar grid parts must be used inside <Calendar.Grid>.",
     name: "CalendarGridContext",
+  });
+
+/**
+ * What a calendar will take from something above it instead of from its own markup.
+ *
+ * Everything is optional and a prop written on the calendar itself always wins, so a calendar
+ * standing on its own behaves exactly as before.
+ */
+export interface CalendarOwnedProps {
+  ariaLabel?: string;
+  autoFocus?: boolean;
+  value?: CalendarValue;
+  onChange?: (value: CalendarValue) => void;
+  minValue?: DateValue | null;
+  maxValue?: DateValue | null;
+  isDateUnavailable?: (date: DateValue) => boolean;
+  isDisabled?: boolean;
+  isReadOnly?: boolean;
+  isInvalid?: boolean;
+  /** Which month opens when nothing is selected yet, so a picker opens where the value would go. */
+  defaultFocusedValue?: DateValue | null;
+  firstDayOfWeek?: DayOfWeek;
+  pageBehavior?: PageBehavior;
+}
+
+export interface CalendarOwnerContext {
+  props: ComputedRef<CalendarOwnedProps>;
+}
+
+/**
+ * A calendar driven by whatever it sits inside.
+ *
+ * A date picker holds the value, the bounds and the verdict about them, so the calendar in its
+ * popover cannot be told any of that in markup — the story writes `<Calendar>` with nothing on it
+ * but a label. Mirrors what react-aria-components does with `CalendarContext`.
+ *
+ * Loose, and absent is the ordinary case: a calendar on its own owns everything it needs.
+ */
+export const [useCalendarOwnerContext, provideCalendarOwnerContext] =
+  createContext<CalendarOwnerContext | null>({
+    defaultValue: null,
+    name: "CalendarOwnerContext",
+    strict: false,
   });
