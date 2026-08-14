@@ -1,5 +1,6 @@
 export {default as DangerIcon} from "./danger-icon.vue";
 export {default as ExternalLinkIcon} from "./external-link-icon.vue";
+export {default as IconCalendar} from "./icon-calendar.vue";
 export {default as IconChevronDown} from "./icon-chevron-down.vue";
 export {default as IconChevronLeft} from "./icon-chevron-left.vue";
 export {default as IconChevronRight} from "./icon-chevron-right.vue";

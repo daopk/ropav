@@ -73,6 +73,20 @@ const onPointerenter = (event: PointerEvent) => {
   owner?.handlers.onPointerenter(event);
 };
 
+/*
+ * Two things watch focus here: the state the stylesheet reads, and the picker above, which reports
+ * focus entering and leaving the whole thing to its caller.
+ */
+const onFocusin = (event: FocusEvent) => {
+  focusWithin.onFocusin();
+  owner?.handlers.onFocusin(event);
+};
+
+const onFocusout = (event: FocusEvent) => {
+  focusWithin.onFocusout(event);
+  owner?.handlers.onFocusout(event);
+};
+
 const onPointerleave = (event: PointerEvent) => {
   interaction.onPointerleave();
   owner?.handlers.onPointerleave(event);
@@ -94,8 +108,8 @@ const onPointerleave = (event: PointerEvent) => {
     role="group"
     @click="onClick"
     @dragstart="onDragstart"
-    @focusin="focusWithin.onFocusin"
-    @focusout="focusWithin.onFocusout"
+    @focusin="onFocusin"
+    @focusout="onFocusout"
     @keydown="onKeydown"
     @mousedown="onMousedown"
     @pointerdown="onPointerdown"

@@ -68,7 +68,11 @@ export interface DateInputGroupOwnerContext {
   /** Attributes for the group element. Spread with `v-bind`. Never carries an `on*` key. */
   attrs: ComputedRef<Record<string, unknown>>;
   /** Listeners for the group. Attach each one statically, never through `v-bind`. */
-  handlers: UsePressHandlers & {onKeydown: (event: KeyboardEvent) => void};
+  handlers: UsePressHandlers & {
+    onKeydown: (event: KeyboardEvent) => void;
+    onFocusin: (event: FocusEvent) => void;
+    onFocusout: (event: FocusEvent) => void;
+  };
   /** Whether the owner reads as invalid, so the group shows it without being told. */
   isInvalid: ComputedRef<boolean>;
   /**

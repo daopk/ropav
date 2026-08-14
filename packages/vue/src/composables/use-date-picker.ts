@@ -1,10 +1,14 @@
+import type {PageBehavior} from "./use-calendar-state";
 import type {DatePickerState} from "./use-date-picker-state";
 import type {FieldIdsContext} from "./use-field-ids";
 import type {FormValidationState} from "./use-form-validation-state";
 import type {UsePressHandlers} from "./use-press";
+import type {DayOfWeek} from "../utils/calendar";
 import type {FocusManager} from "../utils/focus";
+import type {DateValue} from "@internationalized/date";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
+import {toCalendarDate} from "@internationalized/date";
 import {computed, toValue} from "vue";
 
 import {datepickerStrings} from "../i18n/datepicker";
@@ -24,8 +28,24 @@ export interface UseDatePickerOptions {
   ariaDescribedby?: MaybeRefOrGetter<string | undefined>;
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   isReadOnly?: MaybeRefOrGetter<boolean | undefined>;
+  minValue?: MaybeRefOrGetter<DateValue | null | undefined>;
+  maxValue?: MaybeRefOrGetter<DateValue | null | undefined>;
+  /**
+   * Rules a date out even though it is inside the range.
+   *
+   * A plain callback rather than a getter: `toValue` cannot tell a predicate from a getter that
+   * returns one, so it would invoke the predicate with no date and use whatever came back.
+   */
+  isDateUnavailable?: (date: DateValue) => boolean;
+  /** Which month the calendar opens on while nothing is chosen yet. */
+  placeholderValue?: MaybeRefOrGetter<DateValue | null | undefined>;
+  firstDayOfWeek?: MaybeRefOrGetter<DayOfWeek | undefined>;
+  pageBehavior?: MaybeRefOrGetter<PageBehavior | undefined>;
   /** The group around the segments and the trigger. A getter: it does not exist yet at setup. */
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
+  onFocus?: (event: FocusEvent) => void;
+  onBlur?: (event: FocusEvent) => void;
+  onFocusChange?: (isFocused: boolean) => void;
 }
 
 /** What the date field nested inside the picker needs from it. */
@@ -51,19 +71,47 @@ export interface DatePickerFieldOptions {
   validationState: FormValidationState;
 }
 
+/**
+ * What the calendar inside the popover is driven by.
+ *
+ * The picker holds the value, the bounds and the verdict about them, so the calendar is told all of
+ * it rather than being given any of it in markup.
+ */
+export interface DatePickerCalendarProps {
+  ariaLabel: string;
+  autoFocus: boolean;
+  value: DateValue | null;
+  onChange: (value: DateValue | DateValue[] | null) => void;
+  minValue?: DateValue | null;
+  maxValue?: DateValue | null;
+  isDateUnavailable?: (date: DateValue) => boolean;
+  isDisabled?: boolean;
+  isReadOnly?: boolean;
+  isInvalid: boolean;
+  defaultFocusedValue?: DateValue | null;
+  firstDayOfWeek?: DayOfWeek;
+  pageBehavior?: PageBehavior;
+}
+
 export interface UseDatePickerReturn {
   /** Spread with `v-bind` onto the group around the segments. Never carries an `on*` key. */
   groupAttrs: ComputedRef<Record<string, unknown>>;
   /** Wire with `@event`, never with `v-bind`. */
-  groupHandlers: UsePressHandlers & {onKeydown: (event: KeyboardEvent) => void};
+  groupHandlers: UsePressHandlers & {
+    onKeydown: (event: KeyboardEvent) => void;
+    onFocusin: (event: FocusEvent) => void;
+    onFocusout: (event: FocusEvent) => void;
+  };
   /** Spread onto the button that opens the popover. */
   triggerAttrs: ComputedRef<Record<string, unknown>>;
+  /** Whether the button is out of action: a read-only picker has nothing to pick. */
+  isTriggerDisabled: ComputedRef<boolean>;
   /** Opens the popover. Not disabled here — the button reports that itself. */
   onTriggerPress: () => void;
   /** Spread onto the popover's dialog element. */
   dialogAttrs: ComputedRef<Record<string, unknown>>;
   /** Bind onto the calendar inside the popover. */
-  calendarProps: ComputedRef<Record<string, unknown>>;
+  calendarProps: ComputedRef<DatePickerCalendarProps>;
   field: DatePickerFieldOptions;
   /** Pass to `provideFieldIdsContext` so the label, description and error message get their ids. */
   fieldIds: FieldIdsContext;
@@ -143,14 +191,63 @@ export const useDatePicker = (
     setOpen: (open) => state.setOpen(open),
   });
 
+  /**
+   * Whether focus is somewhere inside the picker, tracked by hand rather than through
+   * `useFocusWithin`.
+   *
+   * Moving from a segment to the trigger never left the picker, and neither does opening the
+   * popover — focus lands in the calendar, which is not in this subtree at all but is still part of
+   * the same picker as far as the caller is concerned.
+   */
+  let isFocused = false;
+
+  const onFocusin = (event: FocusEvent) => {
+    if (isFocused) return;
+
+    isFocused = true;
+    options.onFocus?.(event);
+    options.onFocusChange?.(true);
+  };
+
+  const onFocusout = (event: FocusEvent) => {
+    if (!isFocused) return;
+
+    const next = event.relatedTarget;
+
+    // Focus moving from segment to segment, or out into the popover, has not left the picker.
+    if (next instanceof Node) {
+      const element = toValue(options.element);
+
+      if (element?.contains(next)) return;
+      if (document.getElementById(dialogId.value)?.contains(next)) return;
+    }
+
+    isFocused = false;
+    options.onBlur?.(event);
+    options.onFocusChange?.(false);
+  };
+
   return {
     calendarProps: computed(() => ({
-      "aria-label": strings.value.format("calendar"),
+      ariaLabel: strings.value.format("calendar"),
       // The calendar takes focus as it appears: the popover exists to be navigated.
       autoFocus: true,
+      // Where to open when nothing is chosen yet. Left alone once something is, so reopening the
+      // popover lands on the month the value is in rather than on the placeholder's.
+      defaultFocusedValue: state.dateValue.value ? undefined : toValue(options.placeholderValue),
+      firstDayOfWeek: toValue(options.firstDayOfWeek),
+      isDateUnavailable: options.isDateUnavailable,
       isDisabled: toValue(options.isDisabled),
       isInvalid: state.isInvalid.value,
       isReadOnly: toValue(options.isReadOnly),
+      maxValue: toValue(options.maxValue),
+      minValue: toValue(options.minValue),
+      onChange: (value) => {
+        // A single-selection calendar always answers with one date; the wider type is the shape it
+        // shares with a calendar that takes several.
+        if (value && !Array.isArray(value)) state.setDateValue(toCalendarDate(value));
+      },
+      pageBehavior: toValue(options.pageBehavior),
       value: state.dateValue.value,
     })),
     dialogAttrs: computed(() => ({
@@ -175,7 +272,10 @@ export const useDatePicker = (
       id: groupId.value,
       role: "group",
     })),
-    groupHandlers: {...group.handlers, onKeydown: group.onKeydown},
+    groupHandlers: {...group.handlers, onFocusin, onFocusout, onKeydown: group.onKeydown},
+    isTriggerDisabled: computed(
+      () => Boolean(toValue(options.isDisabled)) || Boolean(toValue(options.isReadOnly)),
+    ),
     onTriggerPress: () => state.setOpen(true),
     triggerAttrs: computed(() => ({
       "aria-describedby": describedBy.value,
