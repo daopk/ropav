@@ -9,6 +9,7 @@ import {
   DEFAULT_VALIDATION_RESULT,
   VALID_VALIDITY_STATE,
   isEqualValidation,
+  mergeValidation,
 } from "@/composables/use-form-validation-state";
 
 import Harness from "../fixtures/form-validation-harness.vue";
@@ -484,6 +485,53 @@ describe("useFormValidationState", () => {
       expect(read(borrower.container, "display-errors")).toBe("from the owner");
       borrower.unmount();
       owner.unmount();
+    });
+  });
+
+  describe("mergeValidation", () => {
+    it("is valid when nothing was merged", () => {
+      expect(mergeValidation()).toEqual(DEFAULT_VALIDATION_RESULT);
+    });
+
+    it("says a shared complaint once", () => {
+      // Two parts of one value failing the same way is one thing to tell the user, not two.
+      const failure = {
+        isInvalid: true,
+        validationDetails: {...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false},
+        validationErrors: ["Too late"],
+      };
+
+      expect(mergeValidation(failure, failure).validationErrors).toEqual(["Too late"]);
+    });
+
+    it("collects which constraints failed across the parts", () => {
+      const merged = mergeValidation(
+        {
+          isInvalid: true,
+          validationDetails: {...VALID_VALIDITY_STATE, rangeUnderflow: true, valid: false},
+          validationErrors: ["Too early"],
+        },
+        {
+          isInvalid: true,
+          validationDetails: {...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false},
+          validationErrors: ["Too late"],
+        },
+      );
+
+      expect(merged.validationDetails.rangeUnderflow).toBe(true);
+      expect(merged.validationDetails.rangeOverflow).toBe(true);
+      expect(merged.validationErrors).toEqual(["Too early", "Too late"]);
+    });
+
+    it("is invalid as soon as one part is", () => {
+      const merged = mergeValidation(DEFAULT_VALIDATION_RESULT, {
+        isInvalid: true,
+        validationDetails: CUSTOM_VALIDITY_STATE,
+        validationErrors: ["Nope"],
+      });
+
+      expect(merged.isInvalid).toBe(true);
+      expect(merged.validationDetails.valid).toBe(false);
     });
   });
 

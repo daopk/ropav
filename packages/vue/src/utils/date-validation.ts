@@ -5,6 +5,7 @@ import type {DateValue} from "@internationalized/date";
 import {DateFormatter} from "@internationalized/date";
 import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
 
+import {VALID_VALIDITY_STATE, mergeValidation} from "../composables/use-form-validation-state";
 import {dateValidationStrings} from "../i18n/date-validation";
 
 import {getFormatOptions} from "./date-format";
@@ -78,4 +79,43 @@ export const getDateValidationResult = (
     },
     validationErrors: errors,
   };
+};
+
+/**
+ * Whether both ends of a range are inside their allowed bounds, and in the right order.
+ *
+ * Only the two ends are checked against `isDateUnavailable`, never the days between them: a range
+ * spanning an unavailable date is a question for the calendar, which decides whether a range may
+ * cross one at all. A reversed range is reported as both an overflow and an underflow, because
+ * neither end alone is the one at fault.
+ */
+export const getRangeValidationResult = (
+  value: {start: DateValue | null; end: DateValue | null} | null,
+  minValue: DateValue | null | undefined,
+  maxValue: DateValue | null | undefined,
+  isDateUnavailable: ((date: DateValue) => boolean) | undefined,
+  options: FormatterOptions,
+): ValidationResult => {
+  const merged = mergeValidation(
+    getDateValidationResult(value?.start ?? null, minValue, maxValue, isDateUnavailable, options),
+    getDateValidationResult(value?.end ?? null, minValue, maxValue, isDateUnavailable, options),
+  );
+
+  if (value?.start == null || value.end == null || value.end.compare(value.start) >= 0) {
+    return merged;
+  }
+
+  const {locale} = getDefaultLocale();
+  const formatter = new LocalizedStringFormatter(locale, dictionary);
+
+  return mergeValidation(merged, {
+    isInvalid: true,
+    validationDetails: {
+      ...VALID_VALIDITY_STATE,
+      rangeOverflow: true,
+      rangeUnderflow: true,
+      valid: false,
+    },
+    validationErrors: [formatter.format("rangeReversed")],
+  });
 };

@@ -72,6 +72,32 @@ export const DEFAULT_VALIDATION_RESULT: ValidationResult = Object.freeze({
   validationErrors: [],
 });
 
+/**
+ * One verdict out of several, for a control whose value has more than one part.
+ *
+ * Invalid if any part is, with the messages collected in order and deduplicated — two ends of a
+ * range that are both out of bounds say the same thing, and saying it twice is not more helpful.
+ */
+export const mergeValidation = (...results: ValidationResult[]): ValidationResult => {
+  const errors = new Set<string>();
+  const details = {...VALID_VALIDITY_STATE};
+  let isInvalid = false;
+
+  for (const result of results) {
+    for (const error of result.validationErrors) errors.add(error);
+
+    isInvalid ||= result.isInvalid;
+
+    for (const key of Object.keys(details) as (keyof ValidationDetails)[]) {
+      details[key] ||= result.validationDetails[key];
+    }
+  }
+
+  details.valid = !isInvalid;
+
+  return {isInvalid, validationDetails: details, validationErrors: [...errors]};
+};
+
 /** Form controls that take part in constraint validation. */
 export type ValidatableElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
