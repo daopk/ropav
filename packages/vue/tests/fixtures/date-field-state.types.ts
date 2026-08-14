@@ -1,5 +1,8 @@
 import type {DateFieldState, UseDateFieldStateOptions} from "@/composables/use-date-field-state";
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
+import type {
+  FormValidationState,
+  ValidationBehavior,
+} from "@/composables/use-form-validation-state";
 import type {Granularity, MaxGranularity} from "@/utils/date-format";
 import type {DateValue} from "@internationalized/date";
 
@@ -25,6 +28,8 @@ export interface DateFieldStateHostProps {
   isInvalid?: boolean;
   validate?: UseDateFieldStateOptions["validate"];
   validationBehavior?: ValidationBehavior;
+  /** A state owned from outside, which the field should report through rather than replace. */
+  validationState?: FormValidationState;
   name?: string;
   locale?: string;
   onChange?: (value: DateValue | null) => void;

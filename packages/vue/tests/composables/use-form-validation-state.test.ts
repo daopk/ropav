@@ -439,6 +439,54 @@ describe("useFormValidationState", () => {
     });
   });
 
+  describe("a state owned from outside", () => {
+    it("hands it straight back rather than building one", () => {
+      // A picker holds the value and the bounds, so its verdict is the only one that can be
+      // right; a second state built here would disagree with it about the same value.
+      const owner = renderState({validate: () => "from the owner", value: "x"});
+      const borrower = renderState({validationState: owner.state, value: "x"});
+
+      expect(borrower.state).toBe(owner.state);
+      borrower.unmount();
+      owner.unmount();
+    });
+
+    it("ignores every other option it was given", () => {
+      const owner = renderState({value: "x"});
+      const borrower = renderState({
+        isInvalid: true,
+        validate: () => "ignored",
+        validationState: owner.state,
+        value: "x",
+      });
+
+      expect(borrower.state.displayValidation.value.isInvalid).toBe(false);
+      expect(read(borrower.container, "display-invalid")).toBe("false");
+      borrower.unmount();
+      owner.unmount();
+    });
+
+    it("reports what the owner reveals", async () => {
+      const owner = renderState({validate: () => "from the owner", value: "x"});
+      const borrower = renderState({validationState: owner.state, value: "x"});
+
+      expect(read(borrower.container, "display-invalid")).toBe("false");
+
+      owner.state.commitValidation();
+
+      // Three ticks: the commit writes a ref, the computed chain settles, then the DOM is written.
+      await nextTick();
+      await nextTick();
+      await nextTick();
+
+      expect(borrower.state.displayValidation.value.isInvalid).toBe(true);
+      expect(read(borrower.container, "display-invalid")).toBe("true");
+      expect(read(borrower.container, "display-errors")).toBe("from the owner");
+      borrower.unmount();
+      owner.unmount();
+    });
+  });
+
   describe("isEqualValidation", () => {
     it("holds for the same reference", () => {
       expect(isEqualValidation(DEFAULT_VALIDATION_RESULT, DEFAULT_VALIDATION_RESULT)).toBe(true);

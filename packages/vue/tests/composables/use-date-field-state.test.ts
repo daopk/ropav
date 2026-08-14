@@ -336,6 +336,38 @@ describe("useDateFieldState", () => {
     });
   });
 
+  describe("a validation state owned by the picker above", () => {
+    it("reports through it instead of judging the value itself", () => {
+      // A picker holds the value and the bounds, so its verdict is the only one that can be right.
+      // Without this the field would reach a second, disagreeing answer about the same date.
+      const owner = setup({
+        granularity: "day",
+        minValue: new CalendarDate(2026, 6, 1),
+        validationBehavior: "aria",
+        value: new CalendarDate(2026, 1, 1),
+      });
+      const borrowed = setup({granularity: "day", validationState: owner.state()});
+
+      expect(borrowed.state().isInvalid.value).toBe(true);
+      expect(borrowed.state().displayValidation.value.validationErrors).toEqual([
+        "Value must be 6/1/2026 or later.",
+      ]);
+    });
+
+    it("keeps its own bounds out of the borrowed verdict", () => {
+      const owner = setup({granularity: "day", validationBehavior: "aria"});
+      const borrowed = setup({
+        granularity: "day",
+        minValue: new CalendarDate(2026, 6, 1),
+        validationBehavior: "aria",
+        validationState: owner.state(),
+        value: new CalendarDate(2026, 1, 1),
+      });
+
+      expect(borrowed.state().isInvalid.value).toBe(false);
+    });
+  });
+
   describe("validation", () => {
     it("reports a date below the minimum", () => {
       const {state} = setup({

@@ -13,6 +13,8 @@ export interface FormValidationHostProps {
   validationBehavior?: ValidationBehavior;
   name?: string | string[];
   builtinValidation?: ValidationResult;
+  /** A state owned from outside, which the composable should report through rather than replace. */
+  validationState?: FormValidationState;
   /** Hands the live state back so a test can drive it. */
   onReady?: (state: FormValidationState) => void;
 }

@@ -137,6 +137,15 @@ export interface UseFormValidationStateOptions<T> {
   name?: MaybeRefOrGetter<string | string[] | undefined>;
   /** Validity a composite field worked out from its own parts. */
   builtinValidation?: MaybeRefOrGetter<ValidationResult | undefined>;
+  /**
+   * A validation state owned by something above, which this field reports through instead of
+   * keeping one of its own.
+   *
+   * A date picker holds the value, the bounds and the availability rule, so its own state is the
+   * only one that can judge them; the date field inside it must not reach a second, disagreeing
+   * verdict about the same value. Every other option is ignored when this is present.
+   */
+  validationState?: FormValidationState;
 }
 
 export interface FormValidationState {
@@ -227,6 +236,12 @@ export const isEqualValidation = (
 export const useFormValidationState = <T>(
   options: UseFormValidationStateOptions<T>,
 ): FormValidationState => {
+  /*
+   * Handed straight back, exactly as upstream does: whoever passed it in is the one that owns the
+   * verdict, and building a second state here would mean two answers about one value.
+   */
+  if (options.validationState) return options.validationState;
+
   const form = useFormContext();
 
   // React Aria's raw hooks default to `"aria"`, but React Aria Components — which is what

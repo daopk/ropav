@@ -41,6 +41,7 @@ props.onReady?.(
     shouldForceLeadingZeros: () => props.shouldForceLeadingZeros,
     validate: props.validate,
     validationBehavior: () => props.validationBehavior,
+    validationState: props.validationState,
     value: () => props.value,
   }),
 );

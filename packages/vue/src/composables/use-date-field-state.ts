@@ -102,6 +102,13 @@ export interface UseDateFieldStateOptions {
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
   validate?: (value: DateValue | null) => string | string[] | true | null | undefined;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
+  /**
+   * A validation state owned by the picker above, which this field reports through.
+   *
+   * The picker holds the value and the bounds, so it is the one that can judge them; without this
+   * the field would build a second state and the two could disagree about the same date.
+   */
+  validationState?: FormValidationState;
   name?: MaybeRefOrGetter<string | undefined>;
   /** Overrides the locale in force, for a field that must not follow its surroundings. */
   locale?: MaybeRefOrGetter<string | undefined>;
@@ -410,6 +417,7 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
     name: () => toValue(options.name),
     validate: options.validate,
     validationBehavior: () => toValue(options.validationBehavior),
+    validationState: options.validationState,
     value: () => value.value,
   });
 

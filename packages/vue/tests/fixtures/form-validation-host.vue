@@ -15,6 +15,7 @@ const state = useFormValidationState({
   name: () => props.name,
   validate: () => props.validate as ValidationFunction<unknown> | undefined,
   validationBehavior: () => props.validationBehavior,
+  validationState: props.validationState,
   value: () => props.value,
 });
 

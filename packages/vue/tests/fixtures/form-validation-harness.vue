@@ -27,6 +27,7 @@ if (props.withForm) {
     :on-ready="props.onReady"
     :validate="props.validate"
     :validation-behavior="props.validationBehavior"
+    :validation-state="props.validationState"
     :value="props.value"
   />
 </template>
