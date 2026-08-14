@@ -34,6 +34,8 @@ const optionsIn = (container: HTMLElement) => [
   ...container.querySelectorAll<HTMLElement>("[role='option']"),
 ];
 
+const optionAt = (container: HTMLElement, index: number) => optionsIn(container)[index]!;
+
 const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}) => {
   element.dispatchEvent(
     new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: keyName, ...init}),
@@ -77,7 +79,7 @@ describe("ColorSwatchPicker", () => {
     it("renders an option per swatch, keyed by its colour with alpha", async () => {
       const {container, unmount} = await renderPicker();
 
-      expect(optionsIn(container).map((option) => option.dataset.key)).toEqual([
+      expect(optionsIn(container).map((option) => option.dataset["key"])).toEqual([
         "#F43F5EFF",
         "#D946EFFF",
         "#8B5CF6FF",
@@ -90,7 +92,7 @@ describe("ColorSwatchPicker", () => {
       const {container, unmount} = await renderPicker();
       const root = slot(container, "color-swatch-picker");
 
-      expect(optionsIn(container)[0]).toHaveAttribute("id", `${root.id}-option-#F43F5EFF`);
+      expect(optionAt(container, 0)).toHaveAttribute("id", `${root.id}-option-#F43F5EFF`);
 
       unmount();
     });
@@ -100,7 +102,7 @@ describe("ColorSwatchPicker", () => {
       const root = slot(container, "color-swatch-picker");
 
       for (const option of optionsIn(container)) {
-        expect(option).toHaveAttribute("data-collection", root.dataset.collection);
+        expect(option).toHaveAttribute("data-collection", root.dataset["collection"]);
         expect(option).toHaveAttribute("data-selection-mode", "single");
       }
 
@@ -242,7 +244,7 @@ describe("ColorSwatchPicker", () => {
       await key(root, "v");
       await key(root, "i");
 
-      expect(optionsIn(container)[0]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 0)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -254,7 +256,7 @@ describe("ColorSwatchPicker", () => {
       // back out of the variable.
       const {container, unmount} = await renderPicker();
 
-      expect(optionsIn(container)[0].style.getPropertyValue("--color-swatch-current")).toBe(
+      expect(optionAt(container, 0).style.getPropertyValue("--color-swatch-current")).toBe(
         "rgba(244, 63, 94, 1)",
       );
 
@@ -275,7 +277,7 @@ describe("ColorSwatchPicker", () => {
     it("treats an item with no colour as transparent", async () => {
       const {container, unmount} = await renderPicker({colors: [undefined]});
 
-      expect(optionsIn(container)[0]).toHaveAttribute("data-key", "#00000000");
+      expect(optionAt(container, 0)).toHaveAttribute("data-key", "#00000000");
       expect(slot(container, "color-swatch-picker-swatch")).toHaveAttribute(
         "aria-label",
         "transparent",
@@ -287,7 +289,7 @@ describe("ColorSwatchPicker", () => {
     it("accepts a parsed colour as well as a string", async () => {
       const {container, unmount} = await renderPicker({colors: [parseColor("hsl(0, 100%, 50%)")]});
 
-      expect(optionsIn(container)[0]).toHaveAttribute("data-key", "#FF0000FF");
+      expect(optionAt(container, 0)).toHaveAttribute("data-key", "#FF0000FF");
 
       unmount();
     });
@@ -319,12 +321,12 @@ describe("ColorSwatchPicker", () => {
       const onChange = vi.fn();
       const {container, unmount} = await renderPicker({onChange});
 
-      optionsIn(container)[2].click();
+      optionAt(container, 2).click();
       await nextTick();
 
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect((onChange.mock.calls[0][0] as Color).toString("hex")).toBe("#8B5CF6");
-      expect(optionsIn(container)[2]).toHaveAttribute("data-selected", "true");
+      expect((onChange.mock.calls[0]![0] as Color).toString("hex")).toBe("#8B5CF6");
+      expect(optionAt(container, 2)).toHaveAttribute("data-selected", "true");
 
       unmount();
     });
@@ -333,10 +335,10 @@ describe("ColorSwatchPicker", () => {
       // A palette is a palette rather than a set of toggles: there is always one colour.
       const {container, unmount} = await renderPicker({defaultValue: "#F43F5E"});
 
-      optionsIn(container)[0].click();
+      optionAt(container, 0).click();
       await nextTick();
 
-      expect(optionsIn(container)[0]).toHaveAttribute("data-selected", "true");
+      expect(optionAt(container, 0)).toHaveAttribute("data-selected", "true");
 
       unmount();
     });
@@ -345,13 +347,13 @@ describe("ColorSwatchPicker", () => {
       const props = reactive<Record<string, unknown>>({value: "#F43F5E"});
       const {container, unmount} = await renderReactive(props);
 
-      expect(optionsIn(container)[0]).toHaveAttribute("data-selected", "true");
+      expect(optionAt(container, 0)).toHaveAttribute("data-selected", "true");
 
-      props.value = "#8B5CF6";
+      props["value"] = "#8B5CF6";
       await nextTick();
 
-      expect(optionsIn(container)[0]).not.toHaveAttribute("data-selected");
-      expect(optionsIn(container)[2]).toHaveAttribute("data-selected", "true");
+      expect(optionAt(container, 0)).not.toHaveAttribute("data-selected");
+      expect(optionAt(container, 2)).toHaveAttribute("data-selected", "true");
 
       unmount();
     });
@@ -361,12 +363,12 @@ describe("ColorSwatchPicker", () => {
       const props = reactive<Record<string, unknown>>({onChange, value: "#F43F5E"});
       const {container, unmount} = await renderReactive(props);
 
-      optionsIn(container)[1].click();
+      optionAt(container, 1).click();
       await nextTick();
 
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(optionsIn(container)[0]).toHaveAttribute("data-selected", "true");
-      expect(optionsIn(container)[1]).not.toHaveAttribute("data-selected");
+      expect(optionAt(container, 0)).toHaveAttribute("data-selected", "true");
+      expect(optionAt(container, 1)).not.toHaveAttribute("data-selected");
 
       unmount();
     });
@@ -378,11 +380,11 @@ describe("ColorSwatchPicker", () => {
       // The first arrow press enters the collection rather than stepping, so it takes two to
       // reach the swatch beside the selected one.
       await key(root, "ArrowRight");
-      await key(optionsIn(container)[0], "ArrowRight");
-      await key(optionsIn(container)[1], " ");
+      await key(optionAt(container, 0), "ArrowRight");
+      await key(optionAt(container, 1), " ");
 
-      expect(optionsIn(container)[1]).toHaveAttribute("data-selected", "true");
-      expect(optionsIn(container)[0]).not.toHaveAttribute("data-selected");
+      expect(optionAt(container, 1)).toHaveAttribute("data-selected", "true");
+      expect(optionAt(container, 0)).not.toHaveAttribute("data-selected");
 
       unmount();
     });
@@ -404,11 +406,11 @@ describe("ColorSwatchPicker", () => {
       const onChange = vi.fn();
       const {container, unmount} = await renderPicker({disabled: ["#D946EF"], onChange});
 
-      optionsIn(container)[1].click();
+      optionAt(container, 1).click();
       await nextTick();
 
       expect(onChange).not.toHaveBeenCalled();
-      expect(optionsIn(container)[1]).not.toHaveAttribute("data-selected");
+      expect(optionAt(container, 1)).not.toHaveAttribute("data-selected");
 
       unmount();
     });
@@ -420,7 +422,7 @@ describe("ColorSwatchPicker", () => {
       await key(root, "ArrowRight");
       await key(root, "ArrowRight");
 
-      expect(optionsIn(container)[2]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 2)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -439,7 +441,7 @@ describe("ColorSwatchPicker", () => {
       await key(root, "ArrowRight");
 
       expect(root).toHaveAttribute("tabindex", "-1");
-      expect(optionsIn(container)[0]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 0)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -459,7 +461,7 @@ describe("ColorSwatchPicker", () => {
       await nextTick();
 
       expect(event.defaultPrevented).toBe(true);
-      expect(optionsIn(container)[0]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 0)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -469,13 +471,13 @@ describe("ColorSwatchPicker", () => {
       const root = slot(container, "color-swatch-picker");
 
       await key(root, "ArrowRight");
-      await key(optionsIn(container)[0], "ArrowRight");
+      await key(optionAt(container, 0), "ArrowRight");
 
-      expect(optionsIn(container)[1]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 1)).toHaveAttribute("tabindex", "0");
 
-      await key(optionsIn(container)[1], "ArrowLeft");
+      await key(optionAt(container, 1), "ArrowLeft");
 
-      expect(optionsIn(container)[0]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 0)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -486,11 +488,11 @@ describe("ColorSwatchPicker", () => {
 
       await key(root, "End");
 
-      expect(optionsIn(container)[2]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 2)).toHaveAttribute("tabindex", "0");
 
-      await key(optionsIn(container)[2], "Home");
+      await key(optionAt(container, 2), "Home");
 
-      expect(optionsIn(container)[0]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 0)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -500,9 +502,9 @@ describe("ColorSwatchPicker", () => {
       const root = slot(container, "color-swatch-picker");
 
       await key(root, "End");
-      await key(optionsIn(container)[2], "ArrowRight");
+      await key(optionAt(container, 2), "ArrowRight");
 
-      expect(optionsIn(container)[2]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 2)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -514,7 +516,7 @@ describe("ColorSwatchPicker", () => {
       root.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
       await nextTick();
 
-      expect(optionsIn(container)[2]).toHaveAttribute("tabindex", "0");
+      expect(optionAt(container, 2)).toHaveAttribute("tabindex", "0");
 
       unmount();
     });
@@ -523,7 +525,7 @@ describe("ColorSwatchPicker", () => {
   describe("interaction states", () => {
     it("reports a hovered swatch", async () => {
       const {container, unmount} = await renderPicker();
-      const [first] = optionsIn(container);
+      const first = optionAt(container, 0);
 
       first.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
       await nextTick();
@@ -540,7 +542,7 @@ describe("ColorSwatchPicker", () => {
 
     it("reports a focused swatch", async () => {
       const {container, unmount} = await renderPicker();
-      const [first] = optionsIn(container);
+      const first = optionAt(container, 0);
 
       first.focus();
       await nextTick();
@@ -552,7 +554,7 @@ describe("ColorSwatchPicker", () => {
 
     it("does not report hover on a disabled swatch", async () => {
       const {container, unmount} = await renderPicker({disabled: ["#F43F5E"]});
-      const [first] = optionsIn(container);
+      const first = optionAt(container, 0);
 
       first.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
       await nextTick();
