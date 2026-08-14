@@ -100,6 +100,24 @@ describe("useDefaultDateProps", () => {
       expect(resolved().defaultTimeZone.value).toBe("America/New_York");
     });
 
+    it("remembers a value that arrived and was cleared inside one turn", () => {
+      /*
+       * No tick in between, which is what makes this the discriminating case: with a deferred
+       * watcher the datetime is never seen at all, so clearing takes the control back to the
+       * date-only default and its time segments disappear. A picker reads `hasTime` in the same
+       * turn its owner writes the value, so the answer cannot be a tick behind.
+       */
+      const props = reactive<{value: CalendarDate | CalendarDateTime | null}>({
+        value: new CalendarDate(2026, 6, 15),
+      });
+      const {resolved} = setup(props);
+
+      props.value = new CalendarDateTime(2026, 6, 15, 13, 45);
+      props.value = null;
+
+      expect(resolved().granularity.value).toBe("minute");
+    });
+
     it("follows a value that changes shape", async () => {
       const props = reactive<{value: CalendarDate | CalendarDateTime | null}>({
         value: new CalendarDate(2026, 6, 15),

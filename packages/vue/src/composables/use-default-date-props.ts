@@ -30,6 +30,12 @@ export const useDefaultDateProps = (
   const shape = computed(() => toValue(value) ?? null);
   const remembered = shallowRef<[Granularity, string | undefined]>(["day", undefined]);
 
+  /*
+   * Synchronously, because a caller reads the answer in the same turn it changed the value:
+   * `setDateValue` on a picker asks `hasTime` right after committing, and a granularity that were
+   * still a tick behind would drop the time half of the value it had just assembled. React updates
+   * this during render, which has the same effect.
+   */
   watch(
     shape,
     (current) => {
@@ -40,7 +46,7 @@ export const useDefaultDateProps = (
         "timeZone" in current ? current.timeZone : undefined,
       ];
     },
-    {immediate: true},
+    {flush: "sync", immediate: true},
   );
 
   return {
