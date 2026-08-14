@@ -16,7 +16,7 @@ import {
   toCalendar,
 } from "@internationalized/date";
 import {NumberFormatter} from "@internationalized/number";
-import {computed, shallowRef, toValue, watch} from "vue";
+import {computed, shallowRef, toValue} from "vue";
 
 import {convertValue, createPlaceholderDate, getFormatOptions} from "../utils/date-format";
 import {getDatePlaceholder} from "../utils/date-placeholder";
@@ -24,6 +24,7 @@ import {getDateValidationResult} from "../utils/date-validation";
 import {IncompleteDate} from "../utils/incomplete-date";
 
 import {useControllableState} from "./use-controllable-state";
+import {useDefaultDateProps} from "./use-default-date-props";
 import {useFormValidationState} from "./use-form-validation-state";
 import {useLocale} from "./use-locale";
 
@@ -176,45 +177,10 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
       null,
   );
 
-  /*
-   * Granularity and time zone are remembered rather than recomputed, so clearing a field does not
-   * collapse it: a date-and-time field emptied by the user must keep its time segments instead of
-   * falling back to the date-only default.
-   */
-  const remembered = shallowRef<[Granularity, string | undefined]>(["day", undefined]);
-
-  watch(
-    shape,
-    (value) => {
-      if (!value) return;
-
-      remembered.value = [
-        "minute" in value ? "minute" : "day",
-        "timeZone" in value ? value.timeZone : undefined,
-      ];
-    },
-    {immediate: true},
-  );
-
-  const granularity = computed<Granularity>(() => {
-    const value = shape.value;
-    const requested = toValue(options.granularity);
-
-    if (value && requested && !(requested in value)) {
-      throw new Error(`Invalid granularity ${requested} for value ${value.toString()}`);
-    }
-
-    if (requested) return requested;
-
-    return value ? (("minute" in value ? "minute" : "day") as Granularity) : remembered.value[0];
-  });
-
-  const defaultTimeZone = computed(() =>
-    shape.value
-      ? "timeZone" in shape.value
-        ? shape.value.timeZone
-        : undefined
-      : remembered.value[1],
+  // Shared with both pickers rather than worked out here: all three have to agree on how precise
+  // the control is, or a picker would drop the time its own field is showing segments for.
+  const {defaultTimeZone, granularity} = useDefaultDateProps(shape, () =>
+    toValue(options.granularity),
   );
 
   const timeZone = computed(() => defaultTimeZone.value || "UTC");
