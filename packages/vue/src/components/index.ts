@@ -51,6 +51,7 @@ export * from "./radio";
 export * from "./radio-group";
 export * from "./range-calendar";
 export * from "./search-field";
+export * from "./select";
 export * from "./separator";
 export * from "./slider";
 export * from "./spinner";

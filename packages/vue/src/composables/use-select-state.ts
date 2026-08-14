@@ -27,7 +27,7 @@ import {useSelectionManager} from "./use-selection-manager";
 export type SelectSelectionMode = "single" | "multiple";
 
 /** What a select holds: one key, or a list of them. */
-export type SelectValue = CollectionKey | readonly CollectionKey[] | null;
+export type SelectedValue = CollectionKey | readonly CollectionKey[] | null;
 
 export interface UseSelectStateOptions<T> {
   /**
@@ -48,9 +48,9 @@ export interface UseSelectStateOptions<T> {
   itemDisabled?: (item: T) => boolean;
   /** Whether one or several options can be chosen. @default "single" */
   selectionMode?: MaybeRefOrGetter<SelectSelectionMode | undefined>;
-  value?: MaybeRefOrGetter<SelectValue | undefined>;
-  defaultValue?: SelectValue;
-  onChange?: (value: SelectValue) => void;
+  value?: MaybeRefOrGetter<SelectedValue | undefined>;
+  defaultValue?: SelectedValue;
+  onChange?: (value: SelectedValue) => void;
   isOpen?: MaybeRefOrGetter<boolean | undefined>;
   defaultOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
@@ -62,7 +62,7 @@ export interface UseSelectStateOptions<T> {
   /** @default "all" */
   disabledBehavior?: MaybeRefOrGetter<DisabledBehavior | undefined>;
   isInvalid?: MaybeRefOrGetter<boolean | undefined>;
-  validate?: MaybeRefOrGetter<ValidationFunction<SelectValue> | undefined>;
+  validate?: MaybeRefOrGetter<ValidationFunction<SelectedValue> | undefined>;
   validationBehavior?: MaybeRefOrGetter<ValidationBehavior | undefined>;
   name?: MaybeRefOrGetter<string | undefined>;
 }
@@ -81,10 +81,10 @@ export interface UseSelectStateReturn<T> extends MenuTriggerState, FormValidatio
   selection: UseSelectionManagerReturn;
   selectionMode: ComputedRef<SelectSelectionMode>;
   /** The current value: one key when single, a list of them when multiple. */
-  value: ComputedRef<SelectValue>;
+  value: ComputedRef<SelectedValue>;
   /** The value a form reset goes back to. */
-  defaultValue: ComputedRef<SelectValue>;
-  setValue: (value: SelectValue) => void;
+  defaultValue: ComputedRef<SelectedValue>;
+  setValue: (value: SelectedValue) => void;
   /** The first chosen key, which is the whole value when single. */
   selectedKey: ComputedRef<CollectionKey | null>;
   selectedItems: ComputedRef<SelectedItem<T>[]>;
@@ -93,8 +93,33 @@ export interface UseSelectStateReturn<T> extends MenuTriggerState, FormValidatio
   setFocused: (isFocused: boolean) => void;
 }
 
+/**
+ * The text an option shows and is matched on, when the caller named no accessor.
+ *
+ * The React build reads this off the option's rendered children, which is nothing at all before
+ * the popover has ever opened. A datum that *is* its own label — a string, a number — answers for
+ * itself, and an object is asked for the fields a label conventionally lives in. Anything else
+ * has to say so with `itemTextValue`, or the trigger would show an empty value.
+ */
+const defaultItemTextValue = (item: unknown): string | undefined => {
+  if (typeof item === "string") return item;
+  if (typeof item === "number") return String(item);
+
+  if (item && typeof item === "object") {
+    const record = item as Record<string, unknown>;
+
+    for (const field of ["textValue", "label", "name"]) {
+      const candidate = record[field];
+
+      if (typeof candidate === "string") return candidate;
+    }
+  }
+
+  return undefined;
+};
+
 /** The keys a value stands for, as the selection manager wants them. */
-const toKeys = (value: SelectValue): CollectionKey[] => {
+const toKeys = (value: SelectedValue): CollectionKey[] => {
   if (value == null) return [];
 
   return Array.isArray(value) ? [...value] : [value as CollectionKey];
@@ -134,7 +159,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
   const source = computed(() =>
     createListCollection({
       getKey: options.itemKey,
-      getTextValue: options.itemTextValue,
+      getTextValue: options.itemTextValue ?? defaultItemTextValue,
       isDisabled: options.itemDisabled,
       items: toValue(options.items),
     }),
@@ -142,11 +167,11 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
 
   const collection = useCollection({source: () => source.value});
 
-  const defaultValue = computed<SelectValue>(
+  const defaultValue = computed<SelectedValue>(
     () => options.defaultValue ?? (selectionMode.value === "single" ? null : []),
   );
 
-  const controllable = useControllableState<SelectValue>({
+  const controllable = useControllableState<SelectedValue>({
     defaultValue: defaultValue.value,
     onValueChange: (next) => options.onChange?.(next),
     value: () => toValue(options.value),
@@ -158,7 +183,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
    * A caller switching a controlled select from multiple to single would otherwise leave several
    * options looking chosen under a trigger that can only show one.
    */
-  const displayValue = computed<SelectValue>(() => {
+  const displayValue = computed<SelectedValue>(() => {
     const current = controllable.state.value;
 
     if (selectionMode.value === "single" && Array.isArray(current)) return current[0] ?? null;
@@ -166,7 +191,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
     return current;
   });
 
-  const setValue = (next: SelectValue) => {
+  const setValue = (next: SelectedValue) => {
     if (selectionMode.value === "single") {
       controllable.setState(Array.isArray(next) ? (next[0] ?? null) : next);
 
@@ -176,7 +201,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
     controllable.setState(toKeys(next));
   };
 
-  const validation = useFormValidationState<SelectValue>({
+  const validation = useFormValidationState<SelectedValue>({
     isInvalid: options.isInvalid,
     name: options.name,
     validate: options.validate,
