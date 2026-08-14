@@ -8,12 +8,13 @@ import type {
 } from "./use-selection-manager";
 import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 
-import {computed, nextTick, shallowRef, toValue, watch} from "vue";
+import {computed, shallowRef, toValue} from "vue";
 
 import {provideMenuContext} from "../components/menu/menu.context";
 import {provideMenuItemPopupContext} from "../components/menu-item/menu-item.context";
 
 import {useCollection} from "./use-collection";
+import {useCollectionAutoFocus} from "./use-collection-auto-focus";
 import {useId} from "./use-id";
 import {useListKeyboard} from "./use-list-keyboard";
 import {useSelectionManager} from "./use-selection-manager";
@@ -136,55 +137,7 @@ export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
     shouldCloseOnSelect,
   });
 
-  /**
-   * Move focus in once, when the menu appears.
-   *
-   * A selected item wins over the requested end of the list, because reopening a menu of choices
-   * on the choice already made is where the user left off. With nothing selected and no end asked
-   * for, the menu itself takes focus — that is what makes the first arrow press start from the
-   * top rather than from wherever focus happened to be.
-   */
-  let hasAutoFocused = false;
-
-  watch(
-    element,
-    (current) => {
-      if (!current || hasAutoFocused) return;
-
-      hasAutoFocused = true;
-
-      const autoFocus = toValue(options.autoFocus);
-
-      if (!autoFocus) return;
-
-      // One tick behind the element, because the items register themselves post-flush too and
-      // this one is queued first — asking for the first key any sooner asks an empty collection.
-      // Still within the same task, so nothing is painted with focus in the wrong place.
-      void nextTick(() => {
-        // Something already took focus inside the menu while this was waiting — a submenu opened
-        // from an item, most plainly — and moving it now would undo what the user just did.
-        if (current.contains(current.ownerDocument.activeElement)) return;
-
-        let focusedKey: CollectionKey | null = null;
-
-        if (autoFocus === "first") focusedKey = keyboard.getFirstKey();
-        if (autoFocus === "last") focusedKey = keyboard.getLastKey();
-
-        for (const key of selection.selectedKeys.value) {
-          if (selection.canSelectItem(key)) {
-            focusedKey = key;
-            break;
-          }
-        }
-
-        selection.setFocused(true);
-
-        if (focusedKey == null) current.focus({preventScroll: true});
-        else keyboard.focusKey(focusedKey);
-      });
-    },
-    {flush: "post"},
-  );
+  useCollectionAutoFocus({autoFocus: options.autoFocus, element, keyboard, selection});
 
   return {
     collectionId,

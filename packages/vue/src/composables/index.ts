@@ -15,6 +15,7 @@ export * from "./use-calendar-year-picker";
 export * from "./use-checkbox-group-state";
 export * from "./use-collator";
 export * from "./use-collection";
+export * from "./use-collection-auto-focus";
 export * from "./use-color-area";
 export * from "./use-color-area-gradient";
 export * from "./use-color-area-state";
