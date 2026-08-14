@@ -19,11 +19,18 @@ export const FOCUSABLE_SELECTOR = [
  *
  * `checkVisibility()` is the only reliable read of this — `offsetParent` is always `null` in
  * jsdom, and a `display: none` ancestor is invisible to a bounding-rect check. jsdom does not
- * implement `checkVisibility` either, so there everything counts, which is what tests
+ * implement `checkVisibility` either, so there everything else counts, which is what tests
  * exercising key order want anyway.
+ *
+ * `hidden` is read separately because it needs no layout and is the one case that matters even in
+ * jsdom: a field's hidden input sits among the segments a picker moves focus through, and moving
+ * onto something no browser will focus would leave focus where it was instead of moving on.
  */
-export const isElementVisible = (element: HTMLElement): boolean =>
-  typeof element.checkVisibility === "function" ? element.checkVisibility() : true;
+export const isElementVisible = (element: HTMLElement): boolean => {
+  if (element.hidden) return false;
+
+  return typeof element.checkVisibility === "function" ? element.checkVisibility() : true;
+};
 
 /** The focusable controls inside `element`, in document order, skipping hidden ones. */
 export const focusableIn = (element: HTMLElement): HTMLElement[] =>

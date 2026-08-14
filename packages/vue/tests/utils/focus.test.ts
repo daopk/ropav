@@ -62,6 +62,13 @@ describe("focus utils", () => {
 
       expect(focusableIn(container)).toHaveLength(1);
     });
+
+    it("leaves out a hidden control", () => {
+      // A field's hidden input sits beside its segments, and no browser will focus one.
+      const container = build(`<span tabindex="0">mm</span><input hidden />`);
+
+      expect(focusableIn(container).map((el) => el.tagName)).toEqual(["SPAN"]);
+    });
   });
 
   describe("isElementVisible", () => {
@@ -71,6 +78,18 @@ describe("focus utils", () => {
       const element = document.createElement("button");
 
       expect(isElementVisible(element)).toBe(true);
+    });
+
+    it("rules out a hidden element even where the platform cannot answer", () => {
+      /*
+       * No browser will focus one, and a field's hidden input sits among the segments a picker
+       * moves focus through — landing on it would leave focus where it was instead of moving on.
+       */
+      const element = document.createElement("input");
+
+      element.hidden = true;
+
+      expect(isElementVisible(element)).toBe(false);
     });
 
     it("defers to checkVisibility when the platform provides it", () => {
