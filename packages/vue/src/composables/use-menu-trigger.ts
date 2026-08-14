@@ -1,4 +1,5 @@
 import type {PressResponder} from "./press-responder";
+import type {OverlayType} from "./use-overlay-trigger";
 import type {FocusStrategy, MenuTriggerState} from "./use-overlay-trigger-state";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
@@ -16,6 +17,16 @@ export interface UseMenuTriggerOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "press" */
   trigger?: MaybeRefOrGetter<MenuTriggerType | undefined>;
+  /**
+   * What the trigger opens, which decides how `aria-haspopup` is announced.
+   *
+   * A select opens a listbox rather than a menu, and the two are announced differently — but the
+   * gesture is the same one, which is why React Aria's `useSelect` reaches for this hook instead
+   * of repeating it.
+   *
+   * @default "menu"
+   */
+  type?: OverlayType;
   /**
    * Told to assistive technology when the menu opens on a long press, which nothing on screen
    * conveys.
@@ -70,7 +81,7 @@ export const useMenuTrigger = (
   const triggerType = computed(() => toValue(options.trigger) ?? "press");
   const isLongPress = computed(() => triggerType.value === "longPress");
 
-  const {overlayId, triggerAttributes} = useOverlayTrigger({type: "menu"}, state);
+  const {overlayId, triggerAttributes} = useOverlayTrigger({type: options.type ?? "menu"}, state);
 
   /** Focus the trigger before opening, so focus has somewhere to come back to on close. */
   const focusTrigger = () => {
