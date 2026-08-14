@@ -86,6 +86,16 @@ export interface FocusManagerOptions {
   wrap?: boolean;
 }
 
+export interface CreateFocusManagerOptions {
+  /**
+   * Which focusable elements count as stops.
+   *
+   * A range picker's group holds the button that opens its popover between the two rows of
+   * segments, and moving along the row must not step onto it.
+   */
+  accept?: (element: HTMLElement) => boolean;
+}
+
 export interface FocusManager {
   /** Move focus to the first stop inside the root, and return it. */
   focusFirst: () => HTMLElement | null;
@@ -108,11 +118,15 @@ export interface FocusManager {
  * {@link focusableIn} already builds. The two agree wherever nothing is held at `tabindex="-1"`,
  * which no field of segments does.
  */
-export const createFocusManager = (getRoot: () => HTMLElement | null | undefined): FocusManager => {
+export const createFocusManager = (
+  getRoot: () => HTMLElement | null | undefined,
+  options: CreateFocusManagerOptions = {},
+): FocusManager => {
   const stops = (): HTMLElement[] => {
     const root = getRoot();
+    const all = root ? focusableIn(root) : [];
 
-    return root ? focusableIn(root) : [];
+    return options.accept ? all.filter(options.accept) : all;
   };
 
   const move = (step: 1 | -1, options: FocusManagerOptions = {}): HTMLElement | null => {
