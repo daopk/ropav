@@ -32,6 +32,7 @@ export * from "./use-date-field";
 export * from "./use-date-field-state";
 export * from "./use-date-formatter";
 export * from "./use-date-picker-group";
+export * from "./use-date-picker-state";
 export * from "./use-date-segment";
 export * from "./use-default-date-props";
 export * from "./use-description";
