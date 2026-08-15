@@ -775,7 +775,7 @@ export const AsynchronousLoading: Story = {
             <SelectIndicator />
           </SelectTrigger>
           <SelectPopover>
-            <ListBox class="max-h-64">
+            <ListBox>
               ${optionsTemplate}
               <ListBoxLoadMoreItem :is-loading="isLoading" @load-more="loadMore">
                 <div class="flex items-center justify-center gap-2 py-2">
