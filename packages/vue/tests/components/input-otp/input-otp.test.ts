@@ -2,6 +2,8 @@ import {renderVapor} from "@heroui/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
+import {expectResetSource} from "../../harness/form-reset";
+
 import Fixture from "./fixtures.vue";
 
 // The props object is handed over as it arrives rather than spread, so a reactive object passed in
@@ -403,6 +405,55 @@ describe("InputOTP", () => {
       const {control, unmount} = renderInputOTP({inputMode: "text"});
 
       expect(control).toHaveAttribute("inputmode", "text");
+
+      unmount();
+    });
+  });
+
+  describe("a form", () => {
+    it("carries the value a reset restores from", async () => {
+      const {control, unmount} = renderInputOTP({
+        defaultValue: "123",
+        name: "code",
+        withForm: true,
+      });
+
+      await nextTick();
+      expectResetSource(control, "123");
+
+      control.value = "456789";
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expectResetSource(control, "456789");
+
+      unmount();
+    });
+
+    it("goes back to its default when the form is reset", async () => {
+      // Nothing did this before the reset source was written: the field had no `useFormReset` at
+      // all, so a reset blanked the input while the state kept the code the boxes were showing,
+      // and the form went on submitting an empty string for a field the user could see was filled.
+      const {container, control, slotAt, unmount} = renderInputOTP({
+        defaultValue: "123",
+        name: "code",
+        withForm: true,
+      });
+
+      await nextTick();
+
+      control.value = "456789";
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expect(slotAt(0).textContent).toBe("4");
+
+      container.querySelector("form")!.reset();
+      await nextTick();
+
+      // Both halves: the boxes the user reads, and the input the form submits.
+      expect(slotAt(0).textContent).toBe("1");
+      expect(control.value).toBe("123");
 
       unmount();
     });

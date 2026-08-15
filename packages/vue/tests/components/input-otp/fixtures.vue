@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
 </script>
 
 <template>
-  <div>
+  <component :is="props.withForm ? 'form' : 'div'">
     <Label v-if="props.withLabel">Verify account</Label>
     <InputOTPRoot
       :id="props.id"
@@ -60,5 +60,7 @@ const props = withDefaults(defineProps<InputOTPFixtureProps>(), {
       <FieldError v-if="props.withFieldError" />
     </InputOTPRoot>
     <Description v-if="props.withDescription">Enter the code we sent you</Description>
-  </div>
+    <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
+    <button v-if="props.withForm" data-testid="submit" type="submit">Submit</button>
+  </component>
 </template>

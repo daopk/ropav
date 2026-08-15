@@ -30,6 +30,7 @@ withDefaults(defineProps<CheckboxFixtureProps & FormRootProps>(), {
       :with-custom-error="$props.withCustomError"
       :with-field-error="$props.withFieldError"
     />
+    <button data-testid="reset" type="reset">Reset</button>
     <button data-testid="submit" type="submit">Submit</button>
   </Form>
 </template>

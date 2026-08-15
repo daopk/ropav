@@ -4,6 +4,8 @@ import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {pressRealReset} from "../../harness/real-reset";
+
 import RadioGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
@@ -173,6 +175,36 @@ describe("RadioGroup (browser)", () => {
       // 6006 (`oklch(0.6532 0.2328 25.74)`), so it is a `@heroui/styles` shortfall both
       // frameworks share rather than anything this port introduced.
       await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+
+      unmount();
+    });
+  });
+
+  describe("a reset the browser performs", () => {
+    it("leaves the group with exactly its starting choice", async () => {
+      /*
+       * The group is the claim. A browser restores each radio independently from its own default,
+       * so two of them carrying it would leave a reset group with two selections and none of them
+       * would leave it empty — and neither outcome is reachable from a jsdom test, which restores
+       * inside the dispatch and lets the post-flush state mirror cover the gap.
+       */
+      const {container, contents, inputs, unmount} = renderGroup({
+        defaultValue: "basic",
+        name: "plan",
+        withForm: true,
+      });
+
+      await nextTick();
+      await userEvent.click(contents()[1]!);
+
+      expect(inputs()[1]!.checked).toBe(true);
+
+      await pressRealReset(container);
+      await nextTick();
+      await nextTick();
+
+      expect(inputs().filter((input) => input.checked)).toEqual([inputs()[0]]);
+      expect(new FormData(container.querySelector("form")!).get("plan")).toBe("basic");
 
       unmount();
     });

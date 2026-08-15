@@ -5,6 +5,7 @@ import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import Host from "../fixtures/number-field-full-host.vue";
+import {expectResetSource} from "../harness/form-reset";
 
 const mount = (props: Record<string, unknown> = {}) => {
   let field!: UseNumberFieldReturn;
@@ -650,6 +651,34 @@ describe("useNumberField", () => {
       expect(input().value).toBe("5");
 
       unmount();
+    });
+  });
+
+  describe("the value a reset restores from", () => {
+    it("is there before anyone has typed", async () => {
+      /*
+       * The watcher keeping this in step used to depend on the value alone, so the default was
+       * only written once the text first moved — and a field nobody had touched, which is the one
+       * a reset is most likely to find, had no reset source at all and was blanked by it.
+       */
+      const field = mount({defaultValue: 10});
+
+      await nextTick();
+      expectResetSource(field.input(), "10");
+
+      field.unmount();
+    });
+
+    it("follows the text as it is typed", async () => {
+      const field = mount({defaultValue: 10});
+
+      await nextTick();
+      type(field.input(), "25");
+      await nextTick();
+
+      expectResetSource(field.input(), "25");
+
+      field.unmount();
     });
   });
 });

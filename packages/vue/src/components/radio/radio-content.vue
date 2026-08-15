@@ -1,13 +1,14 @@
 <script setup lang="ts" vapor>
 import type {RadioContentProps, RadioContentSlotProps} from "./radio.types";
 
-import {computed, shallowRef} from "vue";
+import {computed, shallowRef, watch} from "vue";
 
 import {useFormReset} from "../../composables/use-form-reset";
 import {useFormValidation} from "../../composables/use-form-validation";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
+import {setFormChecked} from "../../utils/form-value";
 import {visuallyHiddenStyle} from "../../utils/visually-hidden";
 import {useRadioGroupContext} from "../radio-group/radio-group.context";
 
@@ -47,6 +48,21 @@ const setInputEl = (element: unknown) => {
 // The whole group goes back to its starting selection, so every radio resets to the group's
 // default rather than to a value of its own.
 useFormReset(inputEl, state.defaultSelectedValue, state.setSelectedValue);
+
+/*
+ * Every radio keeps its own reset source, and the group falls out of that: they all mirror the same
+ * selected value, so exactly one of them settles on `true` in the same flush and the browser — which
+ * restores each radio independently from this half — puts the group back intact. No walk needed
+ * here, unlike `restoreSelection` below, which has a different job.
+ *
+ * In a watcher rather than in the `reset` listener because the browser drains microtasks between
+ * dispatching `reset` and restoring the controls, so a write made from the listener lands too
+ * early. See {@link setFormChecked}.
+ */
+watch([inputEl, isSelected], ([input, selected]) => setFormChecked(input, selected), {
+  flush: "post",
+  immediate: true,
+});
 
 // Validity belongs to the group, and every radio in it reports the same verdict, so each
 // input wires the browser up to the same state.
@@ -98,7 +114,7 @@ const restoreSelection = (input: HTMLInputElement) => {
   for (const radio of Array.from(root.querySelectorAll<HTMLInputElement>('input[type="radio"]'))) {
     if (radio.name !== name.value) continue;
 
-    radio.checked = radio.value === selected;
+    setFormChecked(radio, radio.value === selected);
   }
 };
 

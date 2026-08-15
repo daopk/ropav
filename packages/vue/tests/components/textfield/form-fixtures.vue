@@ -28,6 +28,7 @@ withDefaults(defineProps<TextFieldFormFixtureProps>(), {
       :with-field-error="$props.withFieldError"
       :with-text-area="$props.withTextArea"
     />
+    <button data-testid="reset" type="reset">Reset</button>
     <button data-testid="submit" type="submit">Submit</button>
   </Form>
 </template>

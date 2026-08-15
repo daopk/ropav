@@ -6,6 +6,7 @@ import {computed, shallowRef, watch} from "vue";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {useTextFieldControlContext} from "../../composables/use-text-field";
 import {dataAttr} from "../../utils/assertion";
+import {setFormValue} from "../../utils/form-value";
 
 import {useSearchFieldContext} from "./search-field.context";
 
@@ -61,22 +62,36 @@ const onInput = (event: Event) => {
 };
 
 /**
- * Put the text back to what the caller holds. A `value` set on the control makes the caller the
- * owner of it, and a caller that keeps it unchanged means the typing is rejected — but the
- * browser has already moved the text, and Vapor skips writing `value` when the bound value has
- * not changed, so nothing would put it back.
+ * Put the text back to what the caller holds, reset source included. A `value` set on the control
+ * makes the caller the owner of it, and a caller that keeps it unchanged means the typing is
+ * rejected — but the browser has already moved the text, and Vapor skips writing `value` when the
+ * bound value has not changed, so nothing would put it back.
  *
- * Post-flush, because the value only settles once the listener that heard the change has
- * updated whatever holds it.
+ * Post-flush, because the value only settles once the listener that heard the change has updated
+ * whatever holds it. `immediate`, and with the element in the dependencies, because the reset
+ * source has to be there before a reset rather than after the first keystroke — `inputCount` alone
+ * never fires on a control nobody has typed into. See {@link setFormValue}.
  */
 watch(
-  inputCount,
-  () => {
-    const el = element.value;
+  [element, () => props.value, inputCount],
+  ([el, pinned]) => {
+    if (pinned === undefined) return;
 
-    if (el && props.value !== undefined && el.value !== props.value) el.value = props.value;
+    setFormValue(el, pinned);
   },
-  {flush: "post"},
+  {flush: "post", immediate: true},
+);
+
+/*
+ * Told to the field synchronously, before any post-flush write can happen: the field keeps the
+ * element in step with its own state, and the two would otherwise fight over one value on the
+ * flush that mounts the control. `setFormValue` above is then the only thing writing this element,
+ * reset source included.
+ */
+watch(
+  () => props.value !== undefined,
+  (owned) => control?.setValueOwned(owned),
+  {immediate: true},
 );
 
 const onFocus = (event: FocusEvent) => {

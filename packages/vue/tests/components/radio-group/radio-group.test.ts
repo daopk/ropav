@@ -2,6 +2,8 @@ import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
+import {expectRadioGroupResetSource} from "../../harness/form-reset";
+
 import RadioGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
@@ -599,6 +601,23 @@ describe("RadioGroup", () => {
       expect(new FormData(form).get("plan")).toBe("premium");
 
       form.remove();
+      unmount();
+    });
+
+    it("leaves exactly one radio carrying the checked default", async () => {
+      // The group is the claim, not the radio that was clicked: a browser restores each radio
+      // independently from its own default, so two of them carrying it would leave a reset group
+      // with two selections, and none of them would leave it empty. Every radio settling its own
+      // default in the same flush is what makes that come out right without any group-wide walk.
+      const {contents, inputs, unmount} = renderGroup({defaultValue: "basic", withForm: true});
+
+      await nextTick();
+      expectRadioGroupResetSource(inputs(), "basic");
+
+      await clickAndSettle(contents()[1]!);
+
+      expectRadioGroupResetSource(inputs(), inputs()[1]!.value);
+
       unmount();
     });
 

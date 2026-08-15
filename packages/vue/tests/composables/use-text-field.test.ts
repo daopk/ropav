@@ -5,6 +5,7 @@ import {afterEach, describe, expect, it, vi} from "vitest";
 import {effectScope, nextTick, reactive} from "vue";
 
 import Harness from "../fixtures/text-field-harness.vue";
+import {expectResetSource} from "../harness/form-reset";
 
 const cleanups: (() => void)[] = [];
 
@@ -316,6 +317,43 @@ describe("useTextField", () => {
       await nextTick();
 
       expect(field.value.value).toBe("typed");
+    });
+
+    it("carries the value a reset restores from, on an input", async () => {
+      // The assertion the three tests below cannot make. A reset in jsdom is synchronous, so the
+      // post-flush property write always lands after it and their `control.value` check passes
+      // whether or not the reset source is written at all. This one goes red without it.
+      const {control} = renderField({defaultValue: "default", withForm: true});
+
+      await nextTick();
+      expectResetSource(control, "default");
+
+      control.value = "typed";
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      // In step with the state, not pinned to the default: whatever order the browser restores in,
+      // it restores what the field already holds.
+      expectResetSource(control, "typed");
+    });
+
+    it("carries the text a reset restores from, on a textarea", async () => {
+      // A different mechanism, not a second case of the same one: a textarea has no `value`
+      // attribute, so its default lives in its child text content.
+      const {control} = renderField({
+        defaultValue: "default",
+        elementType: "textarea",
+        withForm: true,
+      });
+
+      await nextTick();
+      expectResetSource(control, "default");
+
+      control.value = "typed";
+      control.dispatchEvent(new Event("input"));
+      await nextTick();
+
+      expectResetSource(control, "typed");
     });
 
     it("stays out of the way for a field that restores its own value", async () => {

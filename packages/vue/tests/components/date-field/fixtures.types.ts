@@ -21,6 +21,8 @@ export interface DateFieldFixtureProps {
   ariaLabel?: string;
   /** Sets `full-width` as a bare attribute rather than a bound one, as a caller writes it. */
   attributeForm?: boolean;
+  /** Wraps the field in a real form, with a real reset button, for the reset path. */
+  withForm?: boolean;
   withLabel?: boolean;
   withDescription?: boolean;
   withFieldError?: boolean;

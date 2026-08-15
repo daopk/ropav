@@ -181,7 +181,11 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
   // Vapor skips writing `value` when the bound value has not changed, and by then the browser has
   // already moved the text. Committing normalises the text without necessarily changing the
   // number, so the write has to be made outright.
-  watch(state.inputValue, reassert, {flush: "post"});
+  //
+  // The element is in the dependencies and the watcher is `immediate` for the reset half rather
+  // than the typing half: without them the default is only written once the value first moves, so
+  // a field nobody has touched yet has no reset source and a real reset blanks it.
+  watch([element, state.inputValue], reassert, {flush: "post", immediate: true});
 
   /**
    * Normalise the text and say what it became.

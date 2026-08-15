@@ -5,10 +5,11 @@ import type {TimeFieldState} from "./use-time-field-state";
 import type {FocusManager} from "../utils/focus";
 import type {ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
-import {computed, toValue, watchEffect} from "vue";
+import {computed, toValue, watch, watchEffect} from "vue";
 
 import {datepickerStrings} from "../i18n/datepicker";
 import {createFocusManager} from "../utils/focus";
+import {setFormValue} from "../utils/form-value";
 
 import {useDatePickerGroup} from "./use-date-picker-group";
 import {useDescription} from "./use-description";
@@ -34,6 +35,11 @@ export interface UseDateFieldOptions {
   element: MaybeRefOrGetter<HTMLElement | null | undefined>;
   /** The hidden input a form submits and the browser validates against. */
   inputElement: Ref<HTMLInputElement | null | undefined>;
+  /**
+   * What that input carries, when it is not the field's own value. A time field holds a whole date
+   * internally so the segment machinery has something to work with; a form gets the time alone.
+   */
+  inputValue?: MaybeRefOrGetter<string | undefined>;
   /** Id for the group around the segments, which is where React puts a field's own id too. */
   id?: MaybeRefOrGetter<string | undefined>;
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
@@ -201,7 +207,30 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     options.onFocusChange?.(false);
   };
 
+  /*
+   * One source for the string the hidden input carries, because two would drift: a time field
+   * overrides it, and a watcher reading `state.value` directly would then re-assert a whole date
+   * over the time a form is supposed to receive.
+   */
+  const inputValue = computed(
+    () => toValue(options.inputValue) ?? state.value.value?.toString() ?? "",
+  );
+
   useFormReset(options.inputElement, state.defaultValue, state.setValue);
+
+  /*
+   * Keep the input's reset source in step. Under native behaviour this is a real control —
+   * `type="text"` plus the `hidden` attribute, so that an empty required field can stop a submit —
+   * and a real control is restored from its default, which a binding never writes. Under `"aria"`
+   * it is `type="hidden"`, which has no reset algorithm at all, so the write is merely harmless.
+   *
+   * Not in the `reset` listener above: the browser drains microtasks between dispatching `reset`
+   * and restoring the controls, so a write made from there lands too early. See {@link setFormValue}.
+   */
+  watch([options.inputElement, inputValue], ([input, text]) => setFormValue(input, text), {
+    flush: "post",
+    immediate: true,
+  });
   useFormValidation(options.inputElement, state, {focus: () => focusManager.focusFirst()});
 
   /*
@@ -264,7 +293,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
       name: toValue(options.name),
       required: (isNative && toValue(options.isRequired)) || undefined,
       type: isNative ? "text" : "hidden",
-      value: state.value.value?.toString() ?? "",
+      value: inputValue.value,
     };
 
     for (const key of Object.keys(all)) {
@@ -309,14 +338,8 @@ export interface UseTimeFieldOptions extends Omit<UseDateFieldOptions, "state"> 
  * Ported from React Aria's `useTimeField`. A time field carries a date internally so the segment
  * machinery has something whole to work with; what a form receives has to be the time alone.
  */
-export const useTimeField = (options: UseTimeFieldOptions): UseDateFieldReturn => {
-  const field = useDateField(options);
-
-  return {
-    ...field,
-    inputAttrs: computed(() => ({
-      ...field.inputAttrs.value,
-      value: options.state.timeValue.value?.toString() ?? "",
-    })),
-  };
-};
+export const useTimeField = (options: UseTimeFieldOptions): UseDateFieldReturn =>
+  useDateField({
+    ...options,
+    inputValue: () => options.state.timeValue.value?.toString() ?? "",
+  });

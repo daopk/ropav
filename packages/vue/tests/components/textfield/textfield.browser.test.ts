@@ -4,7 +4,10 @@ import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {pressRealReset} from "../../harness/real-reset";
+
 import Fixture from "./fixtures.vue";
+import FormFixture from "./form-fixtures.vue";
 
 const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
 
@@ -171,5 +174,65 @@ describe("TextField (browser)", () => {
     await expectNoA11yViolations(container);
 
     unmount();
+  });
+
+  describe("a reset the browser performs", () => {
+    it("puts a textarea back to its default", async () => {
+      /*
+       * The mechanism nothing else covers. A textarea has no `value` attribute at all — its reset
+       * source is its child text content — and no jsdom test can stand in for this one: jsdom
+       * restores the controls inside the dispatch, so the post-flush write mirroring the state
+       * always lands afterwards and passes with or without the fix. Here the browser drains
+       * microtasks between dispatching `reset` and restoring, so the restore goes first and reads
+       * whatever the element actually carries.
+       */
+      const {container, unmount} = renderVapor(FormFixture, {
+        props: {defaultValue: "hello", name: "bio", withTextArea: true},
+      });
+      const control = slot(container, "textarea") as HTMLTextAreaElement;
+
+      await nextTick();
+      await userEvent.click(control);
+      await userEvent.keyboard(" there");
+
+      expect(control.value).toBe("hello there");
+
+      await pressRealReset(container);
+      await nextTick();
+      await nextTick();
+
+      expect(control.value).toBe("hello");
+
+      // Replacing the child text does not leave the control unable to take more typing, which is
+      // the half of the mechanism that only a real caret can show.
+      await userEvent.click(control);
+      await userEvent.keyboard("!");
+      expect(control.value).toBe("hello!");
+
+      unmount();
+    });
+
+    it("puts an input back to its default, and submits it", async () => {
+      const {container, unmount} = renderVapor(FormFixture, {
+        props: {defaultValue: "hello", name: "q"},
+      });
+      const control = slot(container, "input") as HTMLInputElement;
+
+      await nextTick();
+      await userEvent.click(control);
+      await userEvent.keyboard(" there");
+
+      expect(control.value).toBe("hello there");
+
+      await pressRealReset(container);
+      await nextTick();
+      await nextTick();
+
+      expect(control.value).toBe("hello");
+      // What the user actually loses when this is wrong: the form submits the wrong thing.
+      expect(new FormData(container.querySelector("form")!).get("q")).toBe("hello");
+
+      unmount();
+    });
   });
 });

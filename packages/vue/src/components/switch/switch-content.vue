@@ -1,13 +1,14 @@
 <script setup lang="ts" vapor>
 import type {SwitchContentProps, SwitchContentSlotProps} from "./switch.types";
 
-import {computed, shallowRef} from "vue";
+import {computed, shallowRef, watch} from "vue";
 
 import {useFormReset} from "../../composables/use-form-reset";
 import {useFormValidation} from "../../composables/use-form-validation";
 import {useInteractionStates} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {composeSlotClassName} from "../../utils/compose";
+import {setFormChecked} from "../../utils/form-value";
 import {visuallyHiddenStyle} from "../../utils/visually-hidden";
 
 import {useSwitchContext} from "./switch.context";
@@ -42,6 +43,18 @@ const setInputEl = (element: unknown) => {
 };
 
 useFormReset(inputEl, defaultSelected, setSelected);
+
+/*
+ * `checked` is a property with nothing behind it, so a binding leaves the input without the half a
+ * form reset restores from: a real reset turns a switch off while the state still says on, and the
+ * form submits nothing for it. In a watcher rather than in the `reset` listener, because the
+ * browser drains microtasks between dispatching `reset` and restoring the controls, so a write
+ * made from the listener lands too early. See {@link setFormChecked}.
+ */
+watch([inputEl, isSelected], ([input, selected]) => setFormChecked(input, selected), {
+  flush: "post",
+  immediate: true,
+});
 
 // Hands the switch's verdict to the browser and turns the browser's answer back into state.
 // A switch does not commit on blur: focus merely passing through is no reason to mark it.

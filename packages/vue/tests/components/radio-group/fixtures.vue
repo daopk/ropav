@@ -57,6 +57,7 @@ const items = computed(() => props.items ?? ["basic", "premium", "team"]);
       </Radio>
       <FieldError v-if="props.withFieldError" />
     </RadioGroup>
+    <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
     <button v-if="props.withForm" data-testid="submit" type="submit">Submit</button>
   </component>
 </template>

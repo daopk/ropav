@@ -4,8 +4,10 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 import {computed, onMounted, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
 import {createContext} from "../utils/create-context";
+import {setFormValue} from "../utils/form-value";
 
 import {useControllableState} from "./use-controllable-state";
+import {useFormReset} from "./use-form-reset";
 import {usePasswordManagerBadge} from "./use-password-manager-badge";
 
 /** Ready-made patterns for the three code alphabets almost every one-time code uses. */
@@ -280,12 +282,29 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
    * Vapor skips writing `value` when the bound value has not changed, and the browser has
    * already moved the text by then. So a rejected keystroke would stay on screen, with nothing
    * left to re-render and put it back.
+   *
+   * This also keeps the control's *reset source* in step — the half a binding never writes, and the
+   * half a form reset restores from. See {@link setFormValue}.
    */
   const reassert = () => {
-    const input = inputEl.value;
-
-    if (input && input.value !== value.value) input.value = value.value;
+    setFormValue(inputEl.value, value.value);
   };
+
+  /*
+   * The reset source has to be in step before a reset rather than after it: the browser drains
+   * microtasks between dispatching `reset` and restoring the controls, so nothing written in
+   * response to the event arrives in time.
+   */
+  watch([inputEl, value], reassert, {flush: "post", immediate: true});
+
+  /*
+   * Nothing did this at all before. A reset blanked the input while the state kept the code the
+   * slots were still showing, and the two never met again — the form submitting an empty string
+   * for a field the user could see was filled in.
+   */
+  const initialValue = value.value;
+
+  useFormReset(inputEl, () => toValue(options.defaultValue) ?? initialValue, setState);
 
   const setValue = (next: string) => {
     setState(next);

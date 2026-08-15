@@ -2,6 +2,8 @@ import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
+import {expectCheckedResetSource} from "../../harness/form-reset";
+
 import SwitchFixture from "./fixtures.vue";
 import SwitchFormFixture from "./form-fixtures.vue";
 
@@ -129,6 +131,33 @@ describe("Switch", () => {
       expect(slot(container, "switch-content").getAttribute("data-selected")).toBe("true");
 
       unmount();
+    });
+
+    it("carries the checked state a reset restores from", async () => {
+      // What the test above cannot see: jsdom resets synchronously, so the post-flush write
+      // mirroring the state always lands after it and `checked` reads correct with or without the
+      // fix. A real browser restores from the half asserted here, and turns a switch off that the
+      // state still calls on.
+      const form = document.createElement("form");
+
+      document.body.append(form);
+
+      const {container, unmount} = renderSwitch({
+        defaultSelected: true,
+        form: formId(form),
+        name: "notifications",
+      });
+
+      await nextTick();
+      expectCheckedResetSource(inputIn(container), true);
+
+      await clickAndSettle(slot(container, "switch-content"));
+
+      // In step with the state, not pinned to the default.
+      expectCheckedResetSource(inputIn(container), false);
+
+      unmount();
+      form.remove();
     });
 
     it("toggles when the label is clicked", async () => {

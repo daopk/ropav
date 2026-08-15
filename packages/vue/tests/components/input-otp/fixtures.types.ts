@@ -22,6 +22,8 @@ export interface InputOTPFixtureProps {
   ariaDescribedby?: string;
   /** Whether a separator splits the boxes into two groups, as the default composition does. */
   withSeparator?: boolean;
+  /** Wraps the field in a real form, with a real reset button, for the reset path. */
+  withForm?: boolean;
   /** Renders a label and a description around the field. */
   withLabel?: boolean;
   withDescription?: boolean;

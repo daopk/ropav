@@ -5,6 +5,8 @@ import {afterEach, describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {pressRealReset} from "../../harness/real-reset";
+
 import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
@@ -234,6 +236,38 @@ describe("DateField (browser)", () => {
       await nextTick();
 
       expect(groupOf(result).contains(document.activeElement)).toBe(false);
+    });
+  });
+
+  describe("a reset the browser performs", () => {
+    it("puts the hidden control back, and submits it", async () => {
+      /*
+       * Under native validation the control a form reads is a real one — `type="text"` plus the
+       * `hidden` attribute, so that an empty required field can stop a submit — and a real control
+       * is restored from a default the binding never wrote. Only a browser can show it: jsdom
+       * restores inside the dispatch and lets the post-flush state mirror cover the gap.
+       */
+      const result = mount({
+        defaultValue: jun(5),
+        name: "born",
+        validationBehavior: "native",
+        withForm: true,
+      });
+      const hidden = result.container.querySelector<HTMLInputElement>("input[name='born']")!;
+
+      await nextTick();
+      await userEvent.click(segmentOf(result, "day"));
+      await userEvent.keyboard("20");
+      await nextTick();
+
+      expect(hidden.value).toBe("2026-06-20");
+
+      await pressRealReset(result.container);
+      await nextTick();
+      await nextTick();
+
+      expect(hidden.value).toBe("2026-06-05");
+      expect(new FormData(result.container.querySelector("form")!).get("born")).toBe("2026-06-05");
     });
   });
 });

@@ -38,35 +38,38 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
       </DateFieldInput>
     </DateFieldGroup>
   </DateFieldRoot>
-  <DateFieldRoot
-    v-else
-    :aria-label="props.withLabel ? undefined : (props.ariaLabel ?? 'Date')"
-    :class="props.class"
-    :default-value="props.defaultValue"
-    :full-width="props.fullWidth"
-    :granularity="props.granularity"
-    :is-disabled="props.isDisabled"
-    :is-invalid="props.isInvalid"
-    :is-read-only="props.isReadOnly"
-    :is-required="props.isRequired"
-    :locale="props.locale"
-    :max-value="props.maxValue"
-    :min-value="props.minValue"
-    :name="props.name"
-    :validation-behavior="props.validationBehavior"
-    :value="props.value"
-  >
-    <Label v-if="props.withLabel">Date</Label>
-    <DateFieldGroup :variant="props.variant">
-      <DateFieldPrefix v-if="props.withPrefix">before</DateFieldPrefix>
-      <DateFieldInput>
-        <template #default="{segment}">
-          <DateFieldSegment :segment="segment" />
-        </template>
-      </DateFieldInput>
-      <DateFieldSuffix v-if="props.withSuffix">after</DateFieldSuffix>
-    </DateFieldGroup>
-    <Description v-if="props.withDescription">When born</Description>
-    <FieldError v-if="props.withFieldError" />
-  </DateFieldRoot>
+  <component :is="props.withForm ? 'form' : 'div'" v-else>
+    <DateFieldRoot
+      :aria-label="props.withLabel ? undefined : (props.ariaLabel ?? 'Date')"
+      :class="props.class"
+      :default-value="props.defaultValue"
+      :full-width="props.fullWidth"
+      :granularity="props.granularity"
+      :is-disabled="props.isDisabled"
+      :is-invalid="props.isInvalid"
+      :is-read-only="props.isReadOnly"
+      :is-required="props.isRequired"
+      :locale="props.locale"
+      :max-value="props.maxValue"
+      :min-value="props.minValue"
+      :name="props.name"
+      :validation-behavior="props.validationBehavior"
+      :value="props.value"
+    >
+      <Label v-if="props.withLabel">Date</Label>
+      <DateFieldGroup :variant="props.variant">
+        <DateFieldPrefix v-if="props.withPrefix">before</DateFieldPrefix>
+        <DateFieldInput>
+          <template #default="{segment}">
+            <DateFieldSegment :segment="segment" />
+          </template>
+        </DateFieldInput>
+        <DateFieldSuffix v-if="props.withSuffix">after</DateFieldSuffix>
+      </DateFieldGroup>
+      <Description v-if="props.withDescription">When born</Description>
+      <FieldError v-if="props.withFieldError" />
+    </DateFieldRoot>
+    <button v-if="props.withForm" data-testid="reset" type="reset">Reset</button>
+    <button v-if="props.withForm" data-testid="submit" type="submit">Submit</button>
+  </component>
 </template>

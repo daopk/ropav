@@ -9,6 +9,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 import {computed, shallowRef, toValue, watch} from "vue";
 
 import {createContext} from "../utils/create-context";
+import {setFormValue} from "../utils/form-value";
 
 import {useControllableState} from "./use-controllable-state";
 import {useFieldIds} from "./use-field-ids";
@@ -52,6 +53,12 @@ export interface TextFieldControlContext {
   handlers: TextFieldHandlers;
   /** The control reports its element, which the browser wiring hangs off. */
   registerElement: (element: TextFieldElement | null) => void;
+  /**
+   * Declared by a control that supplies its own `value`, which makes the caller the owner of it.
+   * The field then stops writing the element at all — the live text *and* the reset source — because
+   * two owners of one value fight over it, and the control's prop is the one that wins by design.
+   */
+  setValueOwned: (owned: boolean) => void;
   isDisabled: ComputedRef<boolean>;
   isInvalid: ComputedRef<boolean>;
   isReadOnly: ComputedRef<boolean>;
@@ -212,16 +219,35 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     slots: ["label", "description", "errorMessage"],
   });
 
+  /** Whether a control has taken the value over, in which case the field writes nothing. */
+  const isValueOwned = shallowRef(false);
+
+  const setValueOwned = (owned: boolean) => {
+    isValueOwned.value = owned;
+  };
+
   /**
    * Vapor skips writing `value` when the bound value has not changed, and the browser has
    * already moved the text by then. So a controlled field whose owner declines the change
    * would keep the rejected text on screen, with nothing left to re-render and put it back.
+   *
+   * This also keeps the control's *reset source* in step — the half a binding never writes, and
+   * the half a form reset restores from. See {@link setFormValue}.
    */
   const reassert = () => {
-    const control = element.value;
+    if (isValueOwned.value) return;
 
-    if (control && control.value !== value.value) control.value = value.value;
+    setFormValue(element.value, value.value);
   };
+
+  /*
+   * The reset source has to be in step *before* a reset happens, which is what this watcher is
+   * for and what the `reset` listener below cannot do: the browser drains microtasks between
+   * dispatching `reset` and restoring the controls, so a write made from the listener lands too
+   * early and is overwritten. `immediate`, and with the element in the dependencies, because a
+   * field nobody has typed into yet is exactly the one a reset is most likely to find.
+   */
+  watch([element, value, isValueOwned], reassert, {flush: "post", immediate: true});
 
   const setValue = (next: string) => {
     setState(next);
@@ -231,18 +257,10 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
   const initialValue = value.value;
 
   if (!options.skipFormReset) {
-    useFormReset(
-      element,
-      () => toValue(options.defaultValue) ?? initialValue,
-      (next) => {
-        setState(next);
-        // A reset restores the element from its `value` *attribute*, which the binding never
-        // wrote, so the element has to be told the restored value outright.
-        const control = element.value;
-
-        if (control) control.value = next;
-      },
-    );
+    // State only: moving it is what makes the watcher above write both halves, and that write is
+    // the one that survives whichever order the browser chooses. Writing the element from in here
+    // is the thing that looked right and did not work.
+    useFormReset(element, () => toValue(options.defaultValue) ?? initialValue, setState);
   }
 
   useFormValidation(element, validation, {commitOnBlur: () => toValue(options.commitOnBlur)});
@@ -367,6 +385,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     reassert,
     registerElement,
     setValue,
+    setValueOwned,
     validation,
     value: computed(() => value.value),
   };

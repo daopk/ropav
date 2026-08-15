@@ -7,6 +7,7 @@ import {nextTick} from "vue";
 
 import Harness from "../fixtures/date-field-harness.vue";
 import TimeHost from "../fixtures/time-field-host.vue";
+import {expectResetSource} from "../harness/form-reset";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: DateFieldReady;
@@ -195,8 +196,36 @@ describe("useDateField", () => {
       const field = setup({defaultValue: new CalendarDate(2026, 6, 5), name: "born"});
 
       expect(field.input().getAttribute("name")).toBe("born");
-      // Read as a property: Vue writes an input's value there rather than to the attribute.
       expect(field.input().value).toBe("2026-06-05");
+      field.unmount();
+    });
+
+    it("carries the value a reset restores from", async () => {
+      /*
+       * The binding writes the property alone, and under native validation this is a real control
+       * — `type="text"` plus `hidden` — so a real reset restores it from the default asserted here
+       * and would otherwise blank it while the segments still show the date. Not visible to a jsdom
+       * reset, which is synchronous and lets the post-flush state mirror cover the gap.
+       */
+      const field = setup({
+        defaultValue: new CalendarDate(2026, 6, 5),
+        name: "born",
+        validationBehavior: "native",
+      });
+
+      await nextTick();
+      expectResetSource(field.input(), "2026-06-05");
+      field.unmount();
+    });
+
+    it("carries the time alone for a time field, not the date it holds", async () => {
+      // One source for the string, which is the whole reason `inputValue` exists: a watcher reading
+      // the field's own value would re-assert a full date over the time a form is meant to receive.
+      const field = setupTime({defaultValue: new Time(9, 30), name: "at"});
+
+      await nextTick();
+      expect(field.input().value).toBe("09:30:00");
+      expectResetSource(field.input(), "09:30:00");
       field.unmount();
     });
 

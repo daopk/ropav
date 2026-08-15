@@ -4,6 +4,8 @@ import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {pressRealReset} from "../../harness/real-reset";
+
 import CheckboxFixture from "./fixtures.vue";
 import CheckboxFormFixture from "./form-fixtures.vue";
 
@@ -208,6 +210,37 @@ describe("Checkbox (browser)", () => {
 
       await nextTick();
       await expectNoA11yViolations(container);
+
+      unmount();
+    });
+  });
+
+  describe("a reset the browser performs", () => {
+    it("puts the box back to its default, and submits it", async () => {
+      /*
+       * `checked` reflects nothing, so a binding leaves the input with no reset source and this is
+       * the only kind of test that can see it: jsdom restores the controls inside the dispatch, so
+       * the post-flush write mirroring the state lands afterwards and covers the gap even when the
+       * test clicks this very button. Here the browser drains microtasks in between, the restore
+       * goes first, and an unticked box is what the form submits.
+       */
+      const {container, unmount} = renderVapor(CheckboxFormFixture, {
+        props: {defaultSelected: true, name: "terms", value: "yes"},
+      });
+      const input = container.querySelector("input")!;
+
+      await nextTick();
+      await userEvent.click(slot(container, "checkbox-content"));
+
+      expect(input.checked).toBe(false);
+
+      await pressRealReset(container);
+      await nextTick();
+      await nextTick();
+
+      expect(input.checked).toBe(true);
+      // What the user actually loses when this is wrong.
+      expect(new FormData(container.querySelector("form")!).get("terms")).toBe("yes");
 
       unmount();
     });

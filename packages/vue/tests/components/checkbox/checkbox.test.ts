@@ -2,6 +2,8 @@ import {renderVapor} from "@heroui/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
+import {expectCheckedResetSource} from "../../harness/form-reset";
+
 import CheckboxFixture from "./fixtures.vue";
 import CheckboxFormFixture from "./form-fixtures.vue";
 
@@ -428,6 +430,26 @@ describe("Checkbox", () => {
       const {container, unmount} = renderCheckbox({defaultSelected: true, name: "terms"});
 
       expect(inputIn(container).value).toBe("on");
+
+      unmount();
+    });
+
+    it("carries the checked state a reset restores from", async () => {
+      // The test below cannot see this. A reset in jsdom is synchronous, so the post-flush write
+      // mirroring the state always lands after it and `checked` reads correct either way; a real
+      // browser drains microtasks in between, restores from the half asserted here, and unticks a
+      // box the state still calls selected. Red without the fix.
+      const {container, unmount} = renderVapor(CheckboxFormFixture, {
+        props: {defaultSelected: true, name: "terms"},
+      });
+
+      await nextTick();
+      expectCheckedResetSource(inputIn(container), true);
+
+      await clickAndSettle(slot(container, "checkbox-content"));
+
+      // In step with the state, not pinned to the default.
+      expectCheckedResetSource(inputIn(container), false);
 
       unmount();
     });

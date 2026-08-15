@@ -4,6 +4,8 @@ import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {pressRealReset} from "../../harness/real-reset";
+
 import Fixture from "./fixtures.vue";
 
 const renderInputOTP = (props: Record<string, unknown> = {}) => {
@@ -330,5 +332,39 @@ describe("InputOTP (browser)", () => {
     await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
 
     unmount();
+  });
+
+  describe("a reset the browser performs", () => {
+    it("puts the code back to its default, and submits it", async () => {
+      /*
+       * Two things at once, because before this sweep neither existed: the field had no
+       * `useFormReset` at all, and no reset source on its input. A real reset therefore blanked
+       * the input while the boxes kept showing the typed code, and the form submitted an empty
+       * string for a field the user could see was filled in.
+       */
+      const {container, control, slotAt, unmount} = renderInputOTP({
+        defaultValue: "123",
+        name: "code",
+        withForm: true,
+      });
+
+      await nextTick();
+      await userEvent.click(control);
+      await userEvent.keyboard("456");
+      await nextTick();
+
+      expect(control.value).toBe("123456");
+
+      await pressRealReset(container);
+      await nextTick();
+      await nextTick();
+
+      // Both halves: what the form submits, and what the boxes show.
+      expect(control.value).toBe("123");
+      expect(slotAt(0).textContent).toBe("1");
+      expect(new FormData(container.querySelector("form")!).get("code")).toBe("123");
+
+      unmount();
+    });
   });
 });
