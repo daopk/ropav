@@ -5,6 +5,8 @@ import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 
 import {computed, toValue, watch} from "vue";
 
+import {createContext} from "../utils/create-context";
+
 import {useControllableState} from "./use-controllable-state";
 
 /** The `inputType` values that mean text was typed forwards rather than edited. */
@@ -60,6 +62,30 @@ export interface UseAutocompleteReturn {
   /** Put virtual focus on the first option that can take it. */
   focusFirstItem: () => void;
 }
+
+/**
+ * What an autocomplete hands down to whichever control renders its text input.
+ *
+ * Lives with the composable rather than with the component, for the same reason
+ * `TextFieldControlContext` does: `SearchField` is the control that consumes it, and routing it
+ * through the autocomplete's own directory would make that component depend on this one.
+ *
+ * Loose, and absent is the ordinary case — a search field standing on its own filters nothing.
+ */
+export interface AutocompleteInputContext extends Pick<
+  UseAutocompleteReturn,
+  "inputAttributes" | "inputValue" | "onBlur" | "onKeydown" | "onKeyup" | "setInputValue"
+> {
+  /** The control reports its element, which the beforeinput and pointer wiring hangs off. */
+  setInputElement: (element: HTMLInputElement | null) => void;
+}
+
+export const [useAutocompleteInputContext, provideAutocompleteInputContext] =
+  createContext<AutocompleteInputContext | null>({
+    defaultValue: null,
+    name: "AutocompleteInputContext",
+    strict: false,
+  });
 
 /**
  * An input that drives a collection beside it, ported from React Aria's

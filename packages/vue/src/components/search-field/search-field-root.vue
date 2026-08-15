@@ -2,9 +2,10 @@
 import type {SearchFieldRootProps, SearchFieldRootSlotProps} from "./search-field.types";
 
 import {searchFieldVariants} from "@heroui/styles";
-import {computed} from "vue";
+import {computed, watch} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";
+import {useAutocompleteInputContext} from "../../composables/use-autocomplete";
 import {provideFieldIdsContext} from "../../composables/use-field-ids";
 import {useSearchField} from "../../composables/use-search-field";
 import {provideTextFieldControlContext} from "../../composables/use-text-field";
@@ -40,16 +41,30 @@ const emit = defineEmits<{
 
 defineSlots<{default?: (props: SearchFieldRootSlotProps) => unknown}>();
 
+/**
+ * The autocomplete this field filters, when it is inside one.
+ *
+ * The field then stops owning its own text and stops owning its own keys: the value belongs to
+ * the autocomplete, and the arrows, Enter and the aria wiring belong to the collection beside it.
+ * A search field standing on its own finds nothing here and behaves exactly as before.
+ */
+const autocomplete = useAutocompleteInputContext();
+
+const autocompleteAttrs = computed(() => autocomplete?.inputAttributes.value);
+
 const field = useSearchField({
+  ariaActivedescendant: () => autocompleteAttrs.value?.["aria-activedescendant"],
+  ariaAutocomplete: () => autocompleteAttrs.value?.["aria-autocomplete"],
+  ariaControls: () => autocompleteAttrs.value?.["aria-controls"],
   ariaDescribedby: () => props.ariaDescribedby,
   ariaLabel: () => props.ariaLabel,
   ariaLabelledby: () => props.ariaLabelledby,
   autoCapitalize: () => props.autoCapitalize,
-  autoComplete: () => props.autoComplete,
-  autoCorrect: () => props.autoCorrect,
+  autoComplete: () => autocompleteAttrs.value?.autocomplete ?? props.autoComplete,
+  autoCorrect: () => autocompleteAttrs.value?.autocorrect ?? props.autoCorrect,
   autoFocus: () => props.autoFocus,
   defaultValue: () => props.defaultValue,
-  enterKeyHint: () => props.enterKeyHint,
+  enterKeyHint: () => autocompleteAttrs.value?.enterkeyhint ?? props.enterKeyHint,
   form: () => props.form,
   id: () => props.id,
   inputMode: () => props.inputMode,
@@ -61,19 +76,39 @@ const field = useSearchField({
   minLength: () => props.minLength,
   name: () => props.name,
   onChange: (value) => {
+    autocomplete?.setInputValue(value);
     emit("change", value);
     emit("update:value", value);
   },
   onClear: () => emit("clear"),
-  onFocusChange: (isFocused) => emit("focusChange", isFocused),
+  onFocusChange: (isFocused) => {
+    if (!isFocused) autocomplete?.onBlur();
+    emit("focusChange", isFocused);
+  },
+  // Wrapped rather than forwarded: the composable calls these unconditionally, and handing over
+  // a value that may be absent would throw on the first keystroke.
+  onKeydown: (event) => autocomplete?.onKeydown(event),
+  onKeyup: (event) => autocomplete?.onKeyup(event),
   onSubmit: () => props.onSubmit,
   placeholder: () => props.placeholder,
-  spellCheck: () => props.spellCheck,
+  spellCheck: () => autocompleteAttrs.value?.spellcheck ?? props.spellCheck,
   type: () => props.type,
   validate: () => props.validate,
   validationBehavior: () => props.validationBehavior,
-  value: () => props.value,
+  value: () => autocomplete?.inputValue.value ?? props.value,
 });
+
+/*
+ * The autocomplete attaches `beforeinput` and `pointerdown` to the control itself. Neither is a
+ * text field's business — one reports what an edit did to the text before it lands, the other has
+ * to run ahead of the click's focus handling — and adding them to the field composable would pull
+ * every other control that renders one along with it.
+ */
+watch(
+  field.element,
+  (element) => autocomplete?.setInputElement((element as HTMLInputElement | null) ?? null),
+  {flush: "post", immediate: true},
+);
 
 const slots = computed(() =>
   searchFieldVariants({fullWidth: props.fullWidth, variant: props.variant}),
