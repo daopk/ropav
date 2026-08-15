@@ -48,6 +48,8 @@ export interface AutocompleteFixtureProps {
   withCustomIndicator?: boolean;
   /** Whether the listbox says something when nothing matches. */
   withEmptyState?: boolean;
+  /** Whether the whole thing sits in a `<form>` with a real reset button. */
+  withForm?: boolean;
   onChange?: (value: SelectedValue) => void;
   onOpenChange?: (isOpen: boolean) => void;
   onClear?: () => void;

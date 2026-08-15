@@ -317,8 +317,8 @@ describe("Autocomplete", () => {
 
       expect(input).toHaveAttribute("aria-activedescendant", first!.id);
       expect(first!.id).toBe(`${listbox.id}-option-cat`);
-      // Asserted alongside: the attribute would read the same while real focus had quietly moved
-      // onto the option, which is the failure this whole layer exists to prevent.
+      // Asserted alongside because the popover places focus of its own when it appears, and that
+      // is the half that would take the field's focus away.
       expect(input).toHaveFocus();
     });
 
