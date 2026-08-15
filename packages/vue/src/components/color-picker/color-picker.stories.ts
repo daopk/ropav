@@ -111,6 +111,15 @@ const PRESETS = `
   </ColorSwatchPickerItem>
 `;
 
+/**
+ * A colour space names itself.
+ *
+ * The select builds its collection from `items`, and an item's key defaults to its own `id`, then
+ * `key`, then its index — so a bare string would be keyed by position and never match the `id` the
+ * option carries, leaving the trigger showing a placeholder over a value the select holds.
+ */
+const identity = (space: string) => space;
+
 const SPACE_OPTIONS = `
   <ListBoxItem v-for="space in spaces" :id="space" :key="space" :text-value="space">
     {{ space }}
@@ -246,6 +255,7 @@ export const WidthFields: Story = {
       return {
         channels: computed(() => CHANNELS_BY_SPACE[colorSpace.value]),
         colorSpace,
+        identity,
         spaces: Object.keys(CHANNELS_BY_SPACE),
       };
     },
@@ -267,6 +277,8 @@ export const WidthFields: Story = {
           <Select
             v-model:value="colorSpace"
             aria-label="Color space"
+            :item-key="identity"
+            :item-text-value="identity"
             :items="spaces"
             variant="secondary"
           >
@@ -312,6 +324,7 @@ export const WithSliders: Story = {
       return {
         channels: computed(() => SLIDER_CHANNELS_BY_SPACE[colorSpace.value]),
         colorSpace,
+        identity,
         spaces: Object.keys(SLIDER_CHANNELS_BY_SPACE),
       };
     },
@@ -325,6 +338,8 @@ export const WithSliders: Story = {
           <Select
             v-model:value="colorSpace"
             aria-label="Color space"
+            :item-key="identity"
+            :item-text-value="identity"
             :items="spaces"
             variant="secondary"
           >
