@@ -10,6 +10,8 @@ defineProps<
     colors?: (Color | string)[];
     /** Colours rendered as disabled items. */
     disabled?: string[];
+    /** A style put on every item by the caller, to see what survives. */
+    itemStyle?: string;
     /** Renders a caller's own indicator content instead of the checkmark. */
     withCustomIndicator?: boolean;
     /** Leaves the indicator out, so an item is a bare swatch. */
@@ -37,6 +39,7 @@ defineEmits<{change: [value: Color]}>();
       :key="String(color)"
       :color="color"
       :is-disabled="$props.disabled?.includes(String(color))"
+      :style="$props.itemStyle"
     >
       <ColorSwatchPicker.Swatch />
       <ColorSwatchPicker.Indicator v-if="$props.withCustomIndicator">

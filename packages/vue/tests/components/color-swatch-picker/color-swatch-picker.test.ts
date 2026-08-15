@@ -274,6 +274,22 @@ describe("ColorSwatchPicker", () => {
       unmount();
     });
 
+    it("keeps a caller's own style beside the variable", async () => {
+      /**
+       * A recorded divergence: React's item passes its `style` function *after* spreading the
+       * caller's props, so the caller's style is dropped and only the variable survives. Here both
+       * are kept, which is the Vue convention everywhere else in the colour group — and the only
+       * place React does not merge.
+       */
+      const {container, unmount} = await renderPicker({itemStyle: "outline: 1px solid red"});
+      const style = optionAt(container, 0).getAttribute("style");
+
+      expect(style).toContain("--color-swatch-current: rgba(244, 63, 94, 1)");
+      expect(style).toContain("outline: 1px solid red");
+
+      unmount();
+    });
+
     it("treats an item with no colour as transparent", async () => {
       const {container, unmount} = await renderPicker({colors: [undefined]});
 
