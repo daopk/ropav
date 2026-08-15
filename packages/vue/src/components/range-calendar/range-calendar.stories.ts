@@ -28,8 +28,9 @@ import {
 import {Description} from "../description";
 import {I18nProvider} from "../i18n-provider";
 import {Label} from "../label";
-import {RadioContent, RadioControl, RadioIndicator, RadioRoot} from "../radio";
-import {RadioGroupRoot} from "../radio-group";
+import {ListBoxRoot} from "../list-box";
+import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
+import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
 
 import {
   RangeCalendarCell,
@@ -58,11 +59,9 @@ const components = {
   Description,
   I18nProvider,
   Label,
-  RadioContent,
-  RadioControl,
-  RadioGroupRoot,
-  RadioIndicator,
-  RadioRoot,
+  ListBox: ListBoxRoot,
+  ListBoxItem: ListBoxItemRoot,
+  ListBoxItemIndicator,
   RangeCalendarCell,
   RangeCalendarCellIndicator,
   RangeCalendarGrid,
@@ -73,6 +72,11 @@ const components = {
   RangeCalendarHeading,
   RangeCalendarNavButton,
   RangeCalendarRoot,
+  Select: SelectRoot,
+  SelectIndicator,
+  SelectPopover,
+  SelectTrigger,
+  SelectValue,
 };
 
 /*
@@ -712,6 +716,29 @@ export const ThreeMonths: Story = {
   }),
 };
 
+/** A picker reads an option's label off the item rather than the key. */
+const byName = (option: {name: string}) => option.name;
+
+const DAY_VIEW_OPTIONS = [
+  {id: "1", name: "1 day"},
+  {id: "5", name: "5 days"},
+  {id: "7", name: "7 days"},
+  {id: "8", name: "8 days"},
+  {id: "10", name: "10 days"},
+  {id: "14", name: "14 days"},
+  {id: "21", name: "21 days"},
+];
+
+const WEEK_VIEW_OPTIONS = [
+  {id: "1", name: "1 week"},
+  {id: "2", name: "2 weeks"},
+  {id: "3", name: "3 weeks"},
+  {id: "4", name: "4 weeks"},
+  {id: "5", name: "5 weeks"},
+  {id: "6", name: "6 weeks"},
+  {id: "8", name: "8 weeks"},
+];
+
 export const DayView: Story = {
   render: (args) => ({
     components,
@@ -722,20 +749,34 @@ export const DayView: Story = {
         NEXT,
         PREVIOUS,
         args,
+        byName,
         days,
-        options: ["1", "5", "7", "8", "10", "14", "21"],
+        options: DAY_VIEW_OPTIONS,
         visibleDuration: computed(() => ({days: Number(days.value)})),
       };
     },
     template: `
       <div class="flex flex-col items-center gap-6">
-        <RadioGroupRoot orientation="horizontal" :value="days" @update:value="days = $event">
+        <Select v-model:value="days" class="w-40" :item-text-value="byName" :items="options">
           <Label>Visible days</Label>
-          <RadioRoot v-for="option in options" :key="option" :value="option">
-            <RadioControl><RadioIndicator /></RadioControl>
-            <RadioContent>{{ option }}</RadioContent>
-          </RadioRoot>
-        </RadioGroupRoot>
+          <SelectTrigger>
+            <SelectValue />
+            <SelectIndicator />
+          </SelectTrigger>
+          <SelectPopover>
+            <ListBox>
+              <ListBoxItem
+                v-for="option in options"
+                :id="option.id"
+                :key="option.id"
+                :text-value="option.name"
+              >
+                {{ option.name }}
+                <ListBoxItemIndicator />
+              </ListBoxItem>
+            </ListBox>
+          </SelectPopover>
+        </Select>
         <RangeCalendarRoot v-bind="args" aria-label="Trip dates" :visible-duration="visibleDuration">
           ${header}
           ${grid}
@@ -755,20 +796,34 @@ export const WeekView: Story = {
         NEXT,
         PREVIOUS,
         args,
-        options: ["1", "2", "3", "4", "5", "6", "8"],
+        byName,
+        options: WEEK_VIEW_OPTIONS,
         visibleDuration: computed(() => ({weeks: Number(weeks.value)})),
         weeks,
       };
     },
     template: `
       <div class="flex flex-col items-center gap-6">
-        <RadioGroupRoot orientation="horizontal" :value="weeks" @update:value="weeks = $event">
+        <Select v-model:value="weeks" class="w-40" :item-text-value="byName" :items="options">
           <Label>Visible weeks</Label>
-          <RadioRoot v-for="option in options" :key="option" :value="option">
-            <RadioControl><RadioIndicator /></RadioControl>
-            <RadioContent>{{ option }}</RadioContent>
-          </RadioRoot>
-        </RadioGroupRoot>
+          <SelectTrigger>
+            <SelectValue />
+            <SelectIndicator />
+          </SelectTrigger>
+          <SelectPopover>
+            <ListBox>
+              <ListBoxItem
+                v-for="option in options"
+                :id="option.id"
+                :key="option.id"
+                :text-value="option.name"
+              >
+                {{ option.name }}
+                <ListBoxItemIndicator />
+              </ListBoxItem>
+            </ListBox>
+          </SelectPopover>
+        </Select>
         <RangeCalendarRoot v-bind="args" aria-label="Trip dates" :visible-duration="visibleDuration">
           ${header}
           ${grid}
