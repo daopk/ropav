@@ -6,7 +6,7 @@ import {computed, shallowRef} from "vue";
 
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {ButtonRoot} from "../button";
-import {ChipRoot} from "../chip";
+import {ChipLabel, ChipRoot} from "../chip";
 import {DescriptionRoot} from "../description";
 import {FieldErrorRoot} from "../field-error";
 import {FormRoot} from "../form";
@@ -34,6 +34,7 @@ const components = {
   AvatarImage,
   Button: ButtonRoot,
   Chip: ChipRoot,
+  ChipLabel,
   Description: DescriptionRoot,
   FieldError: FieldErrorRoot,
   Form: FormRoot,
@@ -579,7 +580,7 @@ export const CustomValueMultiple: Story = {
                   <AvatarImage :src="item.value.avatarUrl" />
                   <AvatarFallback>{{ item.value.fallback }}</AvatarFallback>
                 </Avatar>
-                {{ item.value.name }}
+                <ChipLabel>{{ item.value.name }}</ChipLabel>
               </Chip>
             </template>
           </SelectValue>
