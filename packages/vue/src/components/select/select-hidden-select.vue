@@ -64,27 +64,42 @@ useFormValidation(element, state, {
   focus: () => select.triggerElement.value?.focus(),
 });
 
+const defaultValues = computed(() => {
+  const initial = state.defaultValue.value;
+
+  if (initial == null) return [];
+
+  return (Array.isArray(initial) ? initial : [initial]).map(String);
+});
+
 /**
  * The chosen options are written onto the element by hand, every time either side moves.
  *
- * Binding `selected` per option is not enough: the browser owns the control's own state once it
- * exists, and a form reset restores it from **attributes** that a binding never wrote. Both paths
- * end here, so both end up agreeing with the state.
+ * Two halves, and both are needed. `selected` is the live state, which a binding could carry —
+ * except the browser owns the control once it exists, so it is written here alongside everything
+ * else. `defaultSelected` is the `selected` **attribute**, and it is the half a form reset reads:
+ * the browser restores each option's *default* selectedness, so without it a reset lands on the
+ * blank leading option and the form would submit nothing while the trigger still showed a value.
+ *
+ * Re-asserting after the `reset` event does not stand in for it: a reset from a real click drains
+ * microtasks *between* dispatching the event and restoring the controls, so a post-flush write is
+ * overwritten — the exact shape that leaves a script-driven test green while the real thing is
+ * broken.
  */
 watch(
-  [element, value, keys],
+  [element, value, keys, defaultValues],
   ([control]) => {
     if (!control) return;
 
-    if (isMultiple.value) {
-      const chosen = new Set(values.value);
+    const chosen = new Set(values.value);
+    const initial = new Set(defaultValues.value);
 
-      for (const option of control.options) option.selected = chosen.has(option.value);
-
-      return;
+    for (const option of control.options) {
+      option.defaultSelected = initial.has(option.value);
+      if (isMultiple.value) option.selected = chosen.has(option.value);
     }
 
-    control.value = values.value[0] ?? "";
+    if (!isMultiple.value) control.value = values.value[0] ?? "";
   },
   {flush: "post", immediate: true},
 );
