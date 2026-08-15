@@ -13,6 +13,7 @@ import {useColorField} from "../../composables/use-color-field";
 import {provideFieldIdsContext} from "../../composables/use-field-ids";
 import {dataAttr} from "../../utils/assertion";
 import {provideColorInputGroupControlContext} from "../color-input-group";
+import {useColorValueContext} from "../color-picker/color-picker.context";
 import {provideFieldErrorContext} from "../field-error";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -49,6 +50,14 @@ defineSlots<{default?: (props: ColorFieldRootSlotProps) => unknown}>();
  */
 const channel = props.channel;
 
+/**
+ * The colour a `ColorPicker` above is holding, when there is one.
+ *
+ * A prop still wins whenever it is present — including a deliberate `null`, which is why the
+ * fallback below tests for `undefined` rather than using `??`. See `ColorValueContext`.
+ */
+const owner = useColorValueContext();
+
 const shared = {
   ariaDescribedby: () => props.ariaDescribedby,
   ariaLabel: () => props.ariaLabel,
@@ -61,12 +70,15 @@ const shared = {
   isRequired: () => props.isRequired,
   isWheelDisabled: () => props.isWheelDisabled,
   onChange: (value: Color | null) => {
+    // Only a real colour goes back to the picker: an emptied field means the caller has
+    // nothing to say about the colour, not that the picker should become black.
+    if (value) owner?.setValue(value);
     emit("change", value);
     emit("update:value", value);
   },
   onFocusChange: (isFocused: boolean) => emit("focusChange", isFocused),
   validationBehavior: () => props.validationBehavior,
-  value: () => props.value,
+  value: () => (props.value !== undefined ? props.value : owner?.value.value),
 };
 
 // `isInvalid` and `validate` reach the hex branch only. React drops both on a channel field — its

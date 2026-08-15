@@ -8,6 +8,7 @@ import {computed, shallowRef} from "vue";
 import {useColorArea} from "../../composables/use-color-area";
 import {useColorAreaState} from "../../composables/use-color-area-state";
 import {dataAttr} from "../../utils/assertion";
+import {useColorValueContext} from "../color-picker/color-picker.context";
 
 import {provideColorAreaContext} from "./color-area.context";
 
@@ -37,15 +38,25 @@ const setInputYEl = (element: unknown) => {
   inputYEl.value = element instanceof HTMLInputElement ? element : null;
 };
 
+/**
+ * The colour a `ColorPicker` above is holding, when there is one.
+ *
+ * A prop still wins whenever it is present, and the picker is told about every change as well as
+ * the caller — chained, not replaced, so a component with its own handler does not cut the
+ * picker's update path. See `ColorValueContext`.
+ */
+const owner = useColorValueContext();
+
 const state = useColorAreaState({
   colorSpace: () => props.colorSpace,
   defaultValue: () => props.defaultValue,
   onChange: (value) => {
+    owner?.setValue(value);
     emit("change", value);
     emit("update:value", value);
   },
   onChangeEnd: (value) => emit("changeEnd", value),
-  value: () => props.value,
+  value: () => (props.value !== undefined ? props.value : owner?.value.value),
   xChannel: () => props.xChannel,
   yChannel: () => props.yChannel,
 });

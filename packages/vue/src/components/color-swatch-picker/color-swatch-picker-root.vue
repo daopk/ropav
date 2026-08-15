@@ -19,6 +19,7 @@ import {useSelectionManager} from "../../composables/use-selection-manager";
 import {useTypeahead} from "../../composables/use-typeahead";
 import {colorStrings} from "../../i18n/color";
 import {dataAttr} from "../../utils/assertion";
+import {useColorValueContext} from "../color-picker/color-picker.context";
 
 import {provideColorSwatchPickerContext} from "./color-swatch-picker.context";
 
@@ -33,13 +34,23 @@ defineSlots<{default?: (props: ColorSwatchPickerRootSlotProps) => unknown}>();
 
 const strings = useLocalizedStringFormatter(colorStrings);
 
+/**
+ * The colour a `ColorPicker` above is holding, when there is one.
+ *
+ * A prop still wins whenever it is present, and the picker is told about every change as well as
+ * the caller — chained, not replaced, so a component with its own handler does not cut the
+ * picker's update path. See `ColorValueContext`.
+ */
+const owner = useColorValueContext();
+
 const state = useColorPickerState({
   defaultValue: () => props.defaultValue,
   onChange: (value) => {
+    owner?.setValue(value);
     emit("change", value);
     emit("update:value", value);
   },
-  value: () => props.value,
+  value: () => (props.value !== undefined ? props.value : owner?.value.value),
 });
 
 const listId = useId();

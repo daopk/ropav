@@ -5,15 +5,24 @@ import {colorSwatchVariants} from "@heroui/styles";
 import {computed} from "vue";
 
 import {useColorSwatch} from "../../composables/use-color-swatch";
+import {useColorValueContext} from "../color-picker/color-picker.context";
 
 const props = defineProps<ColorSwatchRootProps>();
 
 defineSlots<{default?: (props: ColorSwatchSlotProps) => unknown}>();
 
+/**
+ * The colour a `ColorPicker` above is holding, when there is one.
+ *
+ * A swatch is the read-only half of the contract — React hands it `{color}` and nothing else — so
+ * there is no handler to chain here, only a colour to fall back to.
+ */
+const owner = useColorValueContext();
+
 const swatch = useColorSwatch({
   ariaLabel: () => props.ariaLabel,
   ariaLabelledby: () => props.ariaLabelledby,
-  color: () => props.color,
+  color: () => (props.color !== undefined ? props.color : owner?.value.value),
   colorName: () => props.colorName,
   id: () => props.id,
 });

@@ -10,6 +10,7 @@ import {useColorSliderState} from "../../composables/use-color-slider-state";
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
 import {useId} from "../../composables/use-id";
 import {dataAttr} from "../../utils/assertion";
+import {useColorValueContext} from "../color-picker/color-picker.context";
 
 import {provideColorSliderContext} from "./color-slider.context";
 
@@ -73,18 +74,28 @@ const sliderId = useId(() => props.id);
 const channel = computed(() => props.channel);
 const colorSpace = computed(() => getValidColorSpace(props.channel, props.colorSpace));
 
+/**
+ * The colour a `ColorPicker` above is holding, when there is one.
+ *
+ * A prop still wins whenever it is present, and the picker is told about every change as well as
+ * the caller — chained, not replaced, so a component with its own handler does not cut the
+ * picker's update path. See `ColorValueContext`.
+ */
+const owner = useColorValueContext();
+
 const state = useColorSliderState({
   channel,
   colorSpace,
   defaultValue: () => props.defaultValue,
   isDisabled: () => props.isDisabled,
   onChange: (value) => {
+    owner?.setValue(value);
     emit("change", value);
     emit("update:value", value);
   },
   onChangeEnd: (value) => emit("changeEnd", value),
   orientation: () => props.orientation,
-  value: () => props.value,
+  value: () => (props.value !== undefined ? props.value : owner?.value.value),
 });
 
 const trackEl = shallowRef<HTMLElement | null>(null);
