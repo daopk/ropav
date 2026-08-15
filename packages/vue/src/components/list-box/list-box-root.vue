@@ -7,7 +7,7 @@ import type {DropTargetDelegate} from "../../utils/dnd-types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
 import {listboxVariants} from "@heroui/styles";
-import {computed, shallowRef, toValue} from "vue";
+import {computed, onScopeDispose, shallowRef, toValue} from "vue";
 
 import {toDragCollection} from "../../composables/drag-collection";
 import {useCollection} from "../../composables/use-collection";
@@ -220,6 +220,13 @@ const keyboard = useListKeyboard({
   selection,
   shouldUseVirtualFocus,
 });
+
+// Reported straight away rather than through a watcher: the object is built once and stays the
+// same, and an owner driving the collection from outside needs it before the first keystroke.
+if (owner?.registerKeyboard) {
+  owner.registerKeyboard(keyboard);
+  onScopeDispose(() => owner.registerKeyboard?.(null));
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Drag and drop — wiring

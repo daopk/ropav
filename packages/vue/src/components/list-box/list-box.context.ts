@@ -72,6 +72,15 @@ export interface ListBoxStateContext {
    * @default false
    */
   shouldUseVirtualFocus?: MaybeRefOrGetter<boolean | undefined>;
+  /**
+   * Handed the listbox's keyboard behaviour once the listbox exists, and `null` when it goes away.
+   *
+   * The counterpart of virtual focus: the owner is the one holding the control the arrows are
+   * pressed in, so it needs the behaviour that answers them — but only the listbox can build it,
+   * because only the listbox knows its own element and its own layout. That is what makes paging
+   * and virtualized paging work from outside instead of falling back to the ends of the list.
+   */
+  registerKeyboard?: (keyboard: UseListKeyboardReturn | null) => void;
 }
 
 /**

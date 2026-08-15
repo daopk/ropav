@@ -37,6 +37,8 @@ const setup = (
       >
     >;
     selectionMode?: "single" | "multiple";
+    /** Stands in for a collection that has not mounted yet. */
+    withoutKeyboard?: boolean;
   } = {},
 ): Harness => {
   const scope = effectScope();
@@ -92,7 +94,7 @@ const setup = (
       collection,
       collectionId: "list",
       inputElement,
-      keyboard,
+      keyboard: options.withoutKeyboard ? null : keyboard,
       selection,
       ...options.autocomplete,
     });
@@ -407,6 +409,24 @@ describe("useAutocomplete", () => {
       autocomplete.onBlur();
 
       expect(selection.focusedKey.value).toBeNull();
+    });
+  });
+
+  describe("before the collection exists", () => {
+    it("leaves every key alone until the collection reports its keyboard", () => {
+      const {press, selection} = setup({withoutKeyboard: true});
+      const event = press("ArrowDown");
+
+      // The overlay a picker's collection lives in is not mounted while the picker is shut, so
+      // there is a window where the input exists and the collection does not.
+      expect(selection.focusedKey.value).toBeNull();
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it("names no option", () => {
+      const {autocomplete} = setup({withoutKeyboard: true});
+
+      expect(autocomplete.inputAttributes.value["aria-activedescendant"]).toBeUndefined();
     });
   });
 

@@ -22,8 +22,14 @@ export interface AutocompleteInputAttributes {
 }
 
 export interface UseAutocompleteOptions {
-  /** The keyboard behaviour of the collection below, with virtual focus turned on. */
-  keyboard: UseListKeyboardReturn;
+  /**
+   * The keyboard behaviour of the collection below, with virtual focus turned on.
+   *
+   * Read through a getter because only the collection can build it — it is the one that knows
+   * its own element and its own layout — so it arrives once the collection has mounted, which in
+   * a picker is when the overlay opens.
+   */
+  keyboard: MaybeRefOrGetter<UseListKeyboardReturn | null | undefined>;
   selection: UseSelectionManagerReturn;
   collection: UseCollectionReturn;
   /** The input that keeps real focus, reported by whichever control renders it. */
@@ -82,7 +88,9 @@ export interface UseAutocompleteReturn {
  * ```
  */
 export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocompleteReturn => {
-  const {collection, keyboard, selection} = options;
+  const {collection, selection} = options;
+
+  const keyboard = computed(() => toValue(options.keyboard) ?? null);
 
   const isVirtual = computed(() => !toValue(options.disableVirtualFocus));
 
@@ -97,7 +105,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
   };
 
   const focusFirstItem = () => {
-    const first = keyboard.getFirstKey();
+    const first = keyboard.value?.getFirstKey() ?? null;
 
     if (first == null) {
       clearVirtualFocus();
@@ -106,7 +114,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
     }
 
     selection.setFocused(true);
-    keyboard.focusKey(first, {scroll: true});
+    keyboard.value?.focusKey(first, {scroll: true});
   };
 
   const setInputValue = (value: string) => {
@@ -190,7 +198,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
     key === "PageDown";
 
   const onKeydown = (event: KeyboardEvent) => {
-    if (!isVirtual.value || event.isComposing) return;
+    if (!isVirtual.value || event.isComposing || !keyboard.value) return;
 
     const focused = selection.focusedKey.value;
 
@@ -226,7 +234,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
           return;
         }
 
-        keyboard.onKeydown(event);
+        keyboard.value?.onKeydown(event);
         clearVirtualFocus();
 
         return;
@@ -242,7 +250,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
         // Claimed before the collection sees it so the caret does not also run to the end.
         event.preventDefault();
         selection.setFocused(true);
-        keyboard.onKeydown(event);
+        keyboard.value?.onKeydown(event);
       }
     }
   };
@@ -280,7 +288,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
     clearVirtualFocus,
     focusFirstItem,
     inputAttributes: computed(() => ({
-      "aria-activedescendant": keyboard.focusedNodeId.value,
+      "aria-activedescendant": keyboard.value?.focusedNodeId.value,
       // Only ever `"list"`: the input is never completed in place, so `"both"` would be a lie.
       "aria-autocomplete": "list",
       "aria-controls": toValue(options.collectionId),
