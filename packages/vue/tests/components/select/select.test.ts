@@ -2,7 +2,7 @@ import type {SelectFixtureProps} from "./fixtures.types";
 
 import {renderVapor} from "@heroui/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import {nextTick, reactive} from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -255,6 +255,45 @@ describe("Select", () => {
 
       expect(onOpenChange).toHaveBeenCalledWith(true);
       expect(root).toHaveAttribute("data-open", "true");
+    });
+  });
+
+  describe("a collection that arrives late", () => {
+    it("opens on an empty collection when told it may, and fills as data lands", async () => {
+      const props = reactive<Record<string, unknown>>({allowsEmptyCollection: true, items: []});
+      const result = renderVapor(Fixture, {props});
+
+      cleanups.push(result.unmount);
+      await nextTick();
+
+      const trigger = result.container.querySelector<HTMLElement>('[data-slot="select-trigger"]')!;
+
+      press(trigger);
+      await settle();
+
+      // The popover has to be able to open with nothing in it, or an async list never gets the
+      // chance to ask for its first page.
+      expect(result.screen.queryByRole("listbox")).not.toBeNull();
+      expect(result.screen.queryAllByRole("option")).toHaveLength(0);
+
+      props["items"] = [
+        {id: "bulbasaur", name: "Bulbasaur"},
+        {id: "ivysaur", name: "Ivysaur"},
+      ];
+      await settle();
+
+      expect(
+        result.screen.queryAllByRole("option").map((node) => node.textContent!.trim()),
+      ).toEqual(["Bulbasaur", "Ivysaur"]);
+    });
+
+    it("refuses to open an empty collection otherwise", async () => {
+      const {listbox, trigger} = await render({items: []});
+
+      press(trigger);
+      await settle();
+
+      expect(listbox()).toBeNull();
     });
   });
 

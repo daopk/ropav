@@ -24,6 +24,7 @@ import {
  * The default list is written inline because `withDefaults` is hoisted out of `setup()`.
  */
 const props = withDefaults(defineProps<SelectFixtureProps>(), {
+  allowsEmptyCollection: undefined,
   defaultOpen: undefined,
   defaultValue: undefined,
   fullWidth: undefined,
@@ -50,6 +51,7 @@ const emit = defineEmits<{
 
 <template>
   <SelectRoot
+    :allows-empty-collection="props.allowsEmptyCollection"
     :class="props.rootClass"
     :default-open="props.defaultOpen"
     :default-value="props.defaultValue"

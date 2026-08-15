@@ -24,6 +24,8 @@ export interface SelectFixtureProps {
   isDisabled?: boolean;
   isRequired?: boolean;
   isInvalid?: boolean;
+  /** Whether the popover may open with no options in it, as an async list needs. */
+  allowsEmptyCollection?: boolean;
   name?: string;
   placeholder?: string;
   variant?: "primary" | "secondary";
