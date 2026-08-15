@@ -50,6 +50,23 @@ export interface UseListKeyboardOptions {
   /** Called when an item is activated rather than selected. */
   onAction?: (key: CollectionKey) => void;
   /**
+   * Whether focus over the collection is nominal rather than real.
+   *
+   * A control *outside* the collection keeps real DOM focus — a text input, typically — and
+   * points `aria-activedescendant` at whichever item the arrows landed on. Nothing inside the
+   * collection is focused or tabbable then, so the roving tab stop, the focus tracking and the
+   * `.focus()` calls all have to stand down: focusing an item would take the caret out of the
+   * input, which is the one place it has to stay.
+   */
+  shouldUseVirtualFocus?: MaybeRefOrGetter<boolean | undefined>;
+  /**
+   * The collection element's id, which item ids are derived from.
+   *
+   * Only read to build {@link UseListKeyboardReturn.focusedNodeId}, which is the id an outside
+   * control has to name — so a collection with real focus has no use for it.
+   */
+  listId?: MaybeRefOrGetter<string | undefined>;
+  /**
    * Leaves Enter and Space to the items.
    *
    * A menu needs this: its sections may each hold their own selection, so only the item knows
@@ -59,9 +76,14 @@ export interface UseListKeyboardOptions {
 }
 
 export interface UseListKeyboardReturn {
-  /** `0` while nothing inside is focused, `-1` afterwards. */
-  collectionTabIndex: ComputedRef<number>;
+  /** `0` while nothing inside is focused, `-1` afterwards. `undefined` under virtual focus. */
+  collectionTabIndex: ComputedRef<number | undefined>;
   itemTabIndex: (key: CollectionKey) => number | undefined;
+  /**
+   * The DOM id of the focused item, for a control outside the collection to point
+   * `aria-activedescendant` at. Only ever set under virtual focus.
+   */
+  focusedNodeId: ComputedRef<string | undefined>;
   onKeydown: (event: KeyboardEvent) => void;
   onFocusin: (event: FocusEvent) => void;
   onFocusout: (event: FocusEvent) => void;
@@ -87,6 +109,11 @@ export interface UseListKeyboardReturn {
  * has been focused. Arrow keys move focus without changing the selection, because
  * `selectOnFocus` is only true for `selectionBehavior: "replace"`, which neither a listbox nor
  * a tag group uses.
+ *
+ * `shouldUseVirtualFocus` inverts that, for a collection driven from a control beside it: the
+ * caret stays where it is, the focused key is published as
+ * {@link UseListKeyboardReturn.focusedNodeId} for that control to name, and nothing inside the
+ * collection is focused or tabbable.
  */
 export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboardReturn => {
   const {collection, selection} = options;
@@ -95,6 +122,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   const layout = computed(() => toValue(options.layout) ?? "stack");
   const shouldFocusWrap = computed(() => toValue(options.shouldFocusWrap) ?? false);
   const escapeKeyBehavior = computed(() => toValue(options.escapeKeyBehavior) ?? "clearSelection");
+  const isVirtual = computed(() => Boolean(toValue(options.shouldUseVirtualFocus)));
 
   const getElement = () => toValue(options.element) ?? null;
 
@@ -331,7 +359,9 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   };
 
   const land = (element: HTMLElement, scroll?: boolean) => {
-    element.focus();
+    // Under virtual focus the caret belongs to a control outside the collection, so the item is
+    // only scrolled to. Focusing it here is the one thing that would take the caret away.
+    if (!isVirtual.value) element.focus();
     // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
     if (scroll && typeof element.scrollIntoView === "function") {
       element.scrollIntoView({block: "nearest"});
@@ -378,7 +408,10 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     const element = getElement();
     const target = event.target;
 
-    if (!element || !(target instanceof Node) || !element.contains(target)) return;
+    // Under virtual focus the keys arrive from a control that is not inside the collection at
+    // all — that is the whole arrangement — so only the collection's own existence is required.
+    if (!element) return;
+    if (!isVirtual.value && (!(target instanceof Node) || !element.contains(target))) return;
 
     const focused = selection.focusedKey.value;
 
@@ -460,6 +493,10 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
         return;
       }
       case "Tab": {
+        // Nothing inside is a tab stop under virtual focus, so there is nothing to park and the
+        // key belongs to whatever holds real focus.
+        if (isVirtual.value) return;
+
         // Park focus at the far end and hand back to the browser, so one Tab leaves the whole
         // collection rather than stepping through every item.
         const focusable = focusableIn(element);
@@ -493,6 +530,10 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   };
 
   const onFocusin = (event: FocusEvent) => {
+    // Real focus never enters the collection under virtual focus, so any event reaching here
+    // belongs to something else and following it would move the focused key for no reason.
+    if (isVirtual.value) return;
+
     const element = getElement();
     const target = event.target;
     const isInside = element && target instanceof Node && element.contains(target);
@@ -526,6 +567,8 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   };
 
   const onFocusout = (event: FocusEvent) => {
+    if (isVirtual.value) return;
+
     const element = getElement();
     const next = event.relatedTarget;
 
@@ -539,7 +582,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   watch(
     () => selection.focusedKey.value,
     (key) => {
-      if (key == null || !selection.isFocused.value) return;
+      if (key == null || isVirtual.value || !selection.isFocused.value) return;
 
       collection.getElement(key)?.focus();
     },
@@ -547,8 +590,25 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   );
 
   return {
-    collectionTabIndex: computed(() => (selection.focusedKey.value == null ? 0 : -1)),
+    collectionTabIndex: computed(() => {
+      if (isVirtual.value) return undefined;
+
+      return selection.focusedKey.value == null ? 0 : -1;
+    }),
     focusKey,
+    /*
+     * Built from the same parts an item builds its own id from, rather than read back off the
+     * element: the focused item may not be in the DOM yet in a virtualized collection, and the
+     * control naming it has to be able to say so on the same tick the key moved.
+     */
+    focusedNodeId: computed(() => {
+      const key = selection.focusedKey.value;
+      const listId = toValue(options.listId);
+
+      if (key == null || !isVirtual.value || !listId) return undefined;
+
+      return `${listId}-option-${key}`;
+    }),
     getFirstKey,
     getKeyAbove,
     getKeyBelow,
@@ -559,8 +619,9 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     getKeyRightOf,
     getLastKey,
     itemTabIndex: (key) => {
-      // A disabled item carries no tabindex at all, rather than -1, matching React Aria.
-      if (selection.isDisabled(key)) return undefined;
+      // A disabled item carries no tabindex at all, rather than -1, matching React Aria. Neither
+      // does any item under virtual focus: the collection is not in the tab order at all.
+      if (isVirtual.value || selection.isDisabled(key)) return undefined;
 
       return key === selection.focusedKey.value ? 0 : -1;
     },
