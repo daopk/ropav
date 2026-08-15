@@ -6,6 +6,7 @@ export * from "./focus-responder";
 export * from "./press-responder";
 export * from "./table-drag-collection";
 export * from "./use-auto-scroll";
+export * from "./use-autocomplete";
 export * from "./use-calendar";
 export * from "./use-calendar-cell";
 export * from "./use-calendar-grid";
