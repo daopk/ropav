@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Label} from "../label";
 
@@ -8,7 +9,7 @@ import {Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack} from "./inde
 // to resolve `Slider.Track` through, so dot notation cannot be used here.
 const components = {Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
       control: {type: "boolean"},

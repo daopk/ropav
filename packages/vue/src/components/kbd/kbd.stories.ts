@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {KbdAbbr, KbdContent, KbdRoot} from "./index";
 
@@ -6,7 +7,7 @@ import {KbdAbbr, KbdContent, KbdRoot} from "./index";
 // metadata, so a dotted tag would be looked up as a component literally named "Kbd.Abbr".
 const components = {Kbd: KbdRoot, KbdAbbr, KbdContent};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     variant: {
       control: "select",

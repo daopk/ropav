@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Button} from "../button";
 import {Chip, ChipLabel} from "../chip";
@@ -33,7 +34,7 @@ import IconVideo from "~icons/gravity-ui/video";
 // registered on its own.
 const components = {Button, ButtonGroup, ButtonGroupSeparator};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     fullWidth: {
       control: {type: "boolean"},
@@ -349,7 +350,6 @@ export const Examples: Story = {
       IconThumbsDown,
       IconThumbsUp,
       IconVideo,
-      Label: LabelRoot,
       Label: LabelRoot,
     },
     setup: () => ({

@@ -62,7 +62,9 @@ async function generateTypes() {
         target: "ESNext",
         verbatimModuleSyntax: true,
       },
-      exclude: ["node_modules", "**/*.stories.*", "**/*.test.*", "dist"],
+      // `story-meta.ts` is a story-authoring type only, and it names a devDependency —
+      // shipping its declaration would leave a dangling reference in the package.
+      exclude: ["node_modules", "**/*.stories.*", "**/*.test.*", "src/utils/story-meta.ts", "dist"],
       include: ["src"],
     },
     {spaces: 2},

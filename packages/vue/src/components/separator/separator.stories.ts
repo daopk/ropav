@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {SeparatorRoot} from "./index";
 
@@ -6,7 +7,7 @@ import {SeparatorRoot} from "./index";
 // metadata, so a dotted tag would be looked up as a component literally named "Separator.Root".
 const components = {Separator: SeparatorRoot};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     orientation: {
       control: {type: "radio"},

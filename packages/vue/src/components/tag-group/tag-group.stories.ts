@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {ref} from "vue";
 
@@ -23,7 +24,7 @@ const components = {
   TagRemoveButton,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: TagGroupRoot,
   parameters: {
     layout: "centered",

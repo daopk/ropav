@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
@@ -52,7 +53,7 @@ const blurMask = {
   maskSize: "100% 100%",
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     variant: {
       control: {type: "select"},

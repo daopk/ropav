@@ -1,6 +1,7 @@
-import type {TableSortDescriptor} from "./table.types";
+import type {TableRootProps, TableSortDescriptor} from "./table.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 import type {SortingState, Updater} from "@tanstack/vue-table";
 
 import {
@@ -108,7 +109,7 @@ const components = {
   Virtualizer: VirtualizerRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     variant: {
       control: {type: "select"},
@@ -124,7 +125,9 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+// Args are spelled out rather than inferred: `StoryMeta` hides `component`, which is
+// where `StoryObj` would otherwise read them from.
+type Story = StoryObj<{variant: TableRootProps["variant"]}>;
 
 /* -------------------------------------------------------------------------------------------------
  * Sample Data
@@ -427,7 +430,7 @@ export const Default: Story = {
   },
   render: (args) => ({
     components,
-    setup: defaultSetup((args["variant"] as "primary" | "secondary") ?? "primary"),
+    setup: defaultSetup(args.variant ?? "primary"),
     template: DEFAULT_TEMPLATE,
   }),
 };
@@ -612,7 +615,7 @@ export const AsyncLoading: Story = {
     setup: () => ({
       columns,
       statusColor: STATUS_COLOR,
-      variant: (args["variant"] as "primary" | "secondary") ?? "primary",
+      variant: args.variant ?? "primary",
       ...useAsyncUsers(),
     }),
     template: `

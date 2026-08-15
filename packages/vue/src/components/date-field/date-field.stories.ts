@@ -1,6 +1,8 @@
 import type {SelectedValue} from "../../composables/use-select-state";
-import type {Granularity} from "../../utils/date-format";
-import type {Meta, StoryObj} from "@storybook/vue3";
+// Aliased: the `Granularity` story below would otherwise merge with the type name.
+import type {Granularity as DateGranularity} from "../../utils/date-format";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, parseDate, parseZonedDateTime, today} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
@@ -68,7 +70,7 @@ const input = `
 `;
 
 /** The four granularities a date field can show, as data — a Vue select reads its options. */
-const GRANULARITY_OPTIONS: {id: Granularity; label: string}[] = [
+const GRANULARITY_OPTIONS: {id: DateGranularity; label: string}[] = [
   {id: "day", label: "Day"},
   {id: "hour", label: "Hour"},
   {id: "minute", label: "Minute"},
@@ -77,7 +79,7 @@ const GRANULARITY_OPTIONS: {id: Granularity; label: string}[] = [
 
 const byLabel = (option: {label: string}) => option.label;
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: DateFieldRoot,
   parameters: {
     layout: "centered",
@@ -403,7 +405,7 @@ export const Granularity: Story = {
   render: () => ({
     components,
     setup: () => {
-      const granularity = shallowRef<Granularity>("day");
+      const granularity = shallowRef<DateGranularity>("day");
       // A date-only value has no time to show, so the finer granularities need a zoned one.
       const defaultValue = computed(() =>
         granularity.value === "day"
@@ -412,7 +414,7 @@ export const Granularity: Story = {
       );
 
       const onGranularityChange = (value: SelectedValue) => {
-        granularity.value = value as Granularity;
+        granularity.value = value as DateGranularity;
       };
 
       return {

@@ -1,6 +1,7 @@
 import type {CollectionKey} from "../../composables/use-collection";
 import type {SelectedValue} from "../../composables/use-select-state";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
@@ -55,7 +56,7 @@ const components = {
   Spinner: SpinnerRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: SelectRoot,
   parameters: {
     layout: "centered",

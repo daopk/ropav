@@ -1,5 +1,6 @@
+import type {StoryMeta} from "../../utils/story-meta";
 import type {DateValue} from "@internationalized/date";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, today} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
@@ -132,7 +133,7 @@ const field = `
   </DatePickerGroup>
 `;
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: DatePickerRoot,
   parameters: {
     layout: "centered",

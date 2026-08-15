@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Surface} from "../surface";
 
@@ -10,7 +11,7 @@ const components = {Surface, TextArea};
 
 // The title says `Textarea` while the component is `TextArea`, matching React so the two
 // Storybook sidebars line up.
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {},
   component: TextArea,
   parameters: {layout: "centered"},

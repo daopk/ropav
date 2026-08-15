@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {computed, ref} from "vue";
 
@@ -39,7 +40,7 @@ const components = {
   Virtualizer: VirtualizerRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: ListBoxRoot,
   parameters: {
     layout: "centered",

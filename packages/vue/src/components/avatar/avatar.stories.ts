@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {SeparatorRoot} from "../separator";
 
@@ -40,7 +41,7 @@ const circles = [
   {id: 5, imageUrl: CIRCLE("black"), name: "B"},
 ];
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     color: {
       control: {type: "select"},

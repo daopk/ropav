@@ -62,7 +62,9 @@ const meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
+// Args are spelled out rather than inferred: `meta` names no component, so there is
+// nothing for `StoryObj` to read them from.
+type Story = StoryObj<{showArrow: boolean}>;
 
 // The delay is what makes a tooltip readable in use and unusable in a story, so every story opens
 // at once. `showArrow` only reserves the offset; the arrow itself is a part.

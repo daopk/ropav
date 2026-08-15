@@ -1,5 +1,6 @@
 import type {Color} from "../../utils/color-types";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
@@ -16,7 +17,7 @@ const components = {
   ColorSwatch: ColorSwatchRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     showDots: {
       control: "boolean",

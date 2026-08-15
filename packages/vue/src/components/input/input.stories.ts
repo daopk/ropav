@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Surface} from "../surface";
 
@@ -8,7 +9,7 @@ import {Input} from "./index";
 // to resolve dot notation through.
 const components = {Input, Surface};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {},
   component: Input,
   parameters: {layout: "centered"},

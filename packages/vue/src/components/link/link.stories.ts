@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {buttonVariants} from "../button";
 import {ExternalLinkIcon} from "../icons";
@@ -9,7 +10,7 @@ import {Link, LinkIcon, LinkRoot} from "./index";
 // resolve `Link.Icon` through, so dot notation cannot be used here.
 const components = {ExternalLinkIcon, LinkIcon, LinkRoot};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: Link,
   parameters: {
     layout: "centered",

@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {ColorSwatchRoot} from "./index";
 
@@ -6,7 +7,7 @@ import {ColorSwatchRoot} from "./index";
 // so a dotted tag would be looked up as a component literally named "ColorSwatch.Root".
 const components = {ColorSwatch: ColorSwatchRoot};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     color: {control: "color"},
     shape: {

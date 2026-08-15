@@ -4,8 +4,11 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    // `types` overrides rather than merges, so `vite/client` from the base config is repeated.
+    // `unplugin-icons` declares the `~icons/*` virtual modules the stories import.
+    "types": ["vite/client", "unplugin-icons/types/vue3"]
   },
   "include": ["src", "tests", "vite.config.ts", "vitest.config.ts", "../testing/globals.d.ts"],
-  "exclude": ["node_modules", "dist", "**/*.stories.*"]
+  "exclude": ["node_modules", "dist"]
 }

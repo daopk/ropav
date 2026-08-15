@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {SeparatorRoot} from "../separator";
 
@@ -24,7 +25,7 @@ const components = {
   Separator: SeparatorRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     color: {
       control: {type: "select"},

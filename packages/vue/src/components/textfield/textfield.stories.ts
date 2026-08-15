@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
@@ -14,7 +15,7 @@ import {TextField} from "./index";
 // to resolve dot notation through.
 const components = {Description, FieldError, Input, Label, TextArea, TextField};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     isDisabled: {control: {type: "boolean"}},
     variant: {control: {type: "select"}, options: ["primary", "secondary"]},

@@ -1,7 +1,7 @@
 import type {Color} from "../../utils/color-types";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
-import {Icon} from "@iconify/vue";
 import {shallowRef} from "vue";
 
 import {parseColor} from "../../utils/color";
@@ -13,6 +13,8 @@ import {
   ColorSwatchPickerSwatch,
 } from "./index";
 
+import IconStarFill from "~icons/gravity-ui/star-fill";
+
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "ColorSwatchPicker.Item".
 const components = {
@@ -22,7 +24,7 @@ const components = {
   ColorSwatchPickerSwatch,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     layout: {
       control: "select",
@@ -186,14 +188,14 @@ export const WithDefaultValue: Story = {
 
 export const WithCustomIndicator: Story = {
   render: () => ({
-    components: {...components, Icon},
+    components: {...components, IconStarFill},
     setup: () => ({colors: defaultColors}),
     template: `
       <ColorSwatchPicker>
         <ColorSwatchPickerItem v-for="color in colors" :key="color" :color="color">
           <ColorSwatchPickerSwatch />
           <ColorSwatchPickerIndicator>
-            <Icon icon="gravity-ui:star-fill" />
+            <IconStarFill />
           </ColorSwatchPickerIndicator>
         </ColorSwatchPickerItem>
       </ColorSwatchPicker>

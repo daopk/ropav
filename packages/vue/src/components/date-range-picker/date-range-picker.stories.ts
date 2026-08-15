@@ -1,5 +1,6 @@
 import type {DateRange} from "../../composables/use-calendar";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, today} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
@@ -145,7 +146,7 @@ const field = `
   </DateRangePickerGroup>
 `;
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: DateRangePickerRoot,
   parameters: {
     layout: "centered",

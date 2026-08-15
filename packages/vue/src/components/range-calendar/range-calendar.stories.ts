@@ -1,6 +1,7 @@
 import type {DateRange} from "../../composables/use-calendar";
+import type {StoryMeta} from "../../utils/story-meta";
 import type {CalendarDate, DateValue} from "@internationalized/date";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryObj} from "@storybook/vue3";
 
 import {
   getLocalTimeZone,
@@ -139,7 +140,7 @@ const yearPickerGrid = `
   </CalendarYearPickerGrid>
 `;
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     allowsNonContiguousRanges: {control: "boolean"},
     isDisabled: {control: "boolean"},

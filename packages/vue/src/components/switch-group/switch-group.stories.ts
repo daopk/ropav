@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
@@ -11,7 +12,7 @@ import {SwitchGroup} from "./index";
 // to resolve `Switch.Content` through, so dot notation cannot be used here.
 const components = {Button, Switch, SwitchContent, SwitchControl, SwitchGroup, SwitchThumb};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     orientation: {
       control: {type: "select"},

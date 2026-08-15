@@ -1,5 +1,6 @@
+import type {StoryMeta} from "../../utils/story-meta";
 import type {DateValue} from "@internationalized/date";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryObj} from "@storybook/vue3";
 
 import {
   getLocalTimeZone,
@@ -138,7 +139,7 @@ const yearPickerGrid = `
   </CalendarYearPickerGrid>
 `;
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     isDisabled: {control: "boolean"},
     isReadOnly: {control: "boolean"},

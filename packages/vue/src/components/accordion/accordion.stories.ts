@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {
   Accordion,
@@ -44,7 +45,7 @@ const ITEMS = [
   },
 ];
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     allowsMultipleExpanded: {control: {type: "boolean"}},
     hideSeparator: {control: {type: "boolean"}},

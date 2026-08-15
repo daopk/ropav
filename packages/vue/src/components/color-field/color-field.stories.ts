@@ -1,5 +1,6 @@
 import type {Color} from "../../utils/color-types";
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
@@ -35,7 +36,7 @@ const components = {
   Label: LabelRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   component: ColorFieldRoot,
   parameters: {
     layout: "centered",

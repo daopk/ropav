@@ -1,10 +1,11 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Spinner} from "./index";
 
 const components = {Spinner};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     color: {
       control: {type: "select"},

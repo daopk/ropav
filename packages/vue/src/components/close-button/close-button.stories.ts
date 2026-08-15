@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
 
@@ -8,7 +9,7 @@ import IconCircleXmark from "~icons/gravity-ui/circle-xmark";
 
 const components = {CloseButton};
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
       control: {type: "boolean"},

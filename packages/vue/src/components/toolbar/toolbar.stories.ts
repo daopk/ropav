@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {Button} from "../button";
 import {ButtonGroup, ButtonGroupSeparator} from "../button-group";
@@ -42,7 +43,7 @@ const components = {
   Toolbar,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     isAttached: {
       control: {type: "boolean"},

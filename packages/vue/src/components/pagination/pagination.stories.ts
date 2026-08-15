@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type {StoryMeta} from "../../utils/story-meta";
+import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
 
@@ -38,7 +39,7 @@ const components = {
   Separator: SeparatorRoot,
 };
 
-const meta: Meta = {
+const meta: StoryMeta = {
   argTypes: {
     size: {
       control: {type: "select"},
