@@ -101,7 +101,7 @@ export interface UseSelectStateReturn<T> extends MenuTriggerState, FormValidatio
  * itself, and an object is asked for the fields a label conventionally lives in. Anything else
  * has to say so with `itemTextValue`, or the trigger would show an empty value.
  */
-const defaultItemTextValue = (item: unknown): string | undefined => {
+export const defaultItemTextValue = (item: unknown): string | undefined => {
   if (typeof item === "string") return item;
   if (typeof item === "number") return String(item);
 

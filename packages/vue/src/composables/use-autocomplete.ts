@@ -143,37 +143,47 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
     keyboard.value?.focusKey(first, {scroll: true});
   };
 
-  const setInputValue = (value: string) => {
-    setState(value);
+  /** What the edit currently in flight is doing to the text. Only `beforeinput` carries it. */
+  let lastInputType = "";
+
+  const onBeforeinput = (event: Event) => {
+    lastInputType = (event as InputEvent).inputType ?? "";
   };
 
   /**
-   * What the last edit did to the text, which decides where virtual focus goes.
+   * The new text, and with it the decision about where virtual focus goes.
    *
-   * Only `beforeinput` carries it, so it is remembered here and read when the value arrives. IME
-   * composition reports `insertCompositionText`/`insertFromComposition` rather than `insertText`,
-   * and all three mean the same thing to a user: they typed forwards, so the first match should
-   * light up. Anything else — a paste, a backspace, an undo — moves the caret over text that is
-   * already there, and lighting an option then would announce a choice nobody made.
+   * Read here rather than in the `beforeinput` handler, and that ordering is the whole point: the
+   * options are narrowed by this very value, so asking for the first match any earlier asks the
+   * list the user is leaving behind — and that option is often one of the ones about to go.
+   *
+   * IME composition reports `insertCompositionText`/`insertFromComposition` rather than
+   * `insertText`, and all three mean the same thing to a user: they typed forwards, so the first
+   * match should light up. Anything else — a paste, a backspace, an undo — moves the caret over
+   * text that is already there, and lighting an option then would announce a choice nobody made.
    */
-  const onBeforeinput = (event: Event) => {
-    const inputType = (event as InputEvent).inputType;
+  const setInputValue = (value: string) => {
+    setState(value);
 
-    if (!inputType || !isVirtual.value) return;
+    if (!isVirtual.value || !lastInputType) return;
 
-    if (TYPED_FORWARD.includes(inputType)) {
+    if (TYPED_FORWARD.includes(lastInputType)) {
       if (!toValue(options.disableAutoFocusFirst)) focusFirstItem();
 
       return;
     }
 
     if (
-      inputType.includes("insert") ||
-      inputType.includes("delete") ||
-      inputType.includes("history")
+      lastInputType.includes("insert") ||
+      lastInputType.includes("delete") ||
+      lastInputType.includes("history")
     ) {
       clearVirtualFocus();
     }
+
+    // Forgotten once acted on, so a caller writing the value by hand later is not treated as a
+    // keystroke and does not move focus on its own.
+    lastInputType = "";
   };
 
   /**
