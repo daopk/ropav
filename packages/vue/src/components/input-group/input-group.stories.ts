@@ -11,6 +11,7 @@ import {Kbd, KbdAbbr, KbdContent} from "../kbd";
 import {Label} from "../label";
 import {Spinner} from "../spinner";
 import {TextField} from "../textfield";
+import {TooltipContent, TooltipRoot} from "../tooltip";
 
 import {
   InputGroup,
@@ -61,6 +62,8 @@ const components = {
   Label,
   Spinner,
   TextField,
+  Tooltip: TooltipRoot,
+  TooltipContent,
 };
 
 const meta: StoryMeta = {
@@ -460,9 +463,6 @@ export const Disabled: Story = {
   }),
 };
 
-// The buttons in the suffix carry an `aria-label` and nothing else: React wraps each of them
-// in a `Tooltip`, which is not ported yet, and a stand-in would change the geometry this story
-// exists to show.
 export const WithTextArea: Story = {
   render: () => ({
     components,
@@ -499,27 +499,50 @@ export const WithTextArea: Story = {
             :rows="5"
           />
           <InputGroupSuffix class="flex w-full items-center gap-1.5 px-3 py-0">
-            <Button is-icon-only aria-label="Attach file" size="sm" variant="tertiary">
-              <IconPlus />
-            </Button>
-            <Button is-icon-only aria-label="Connect Apps" size="sm" variant="tertiary">
-              <IconPlugConnection />
-            </Button>
+            <Tooltip :delay="0">
+              <Button is-icon-only aria-label="Attach file" size="sm" variant="tertiary">
+                <IconPlus />
+              </Button>
+              <TooltipContent>
+                <p class="text-xs">Add a files and more</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip :delay="0">
+              <Button is-icon-only aria-label="Connect Apps" size="sm" variant="tertiary">
+                <IconPlugConnection />
+              </Button>
+              <TooltipContent>
+                <p class="text-xs">Connect apps</p>
+              </TooltipContent>
+            </Tooltip>
             <div class="ms-auto flex items-center gap-1.5">
-              <Button is-icon-only aria-label="Voice input" size="sm" variant="ghost">
-                <IconMicrophone />
-              </Button>
-              <Button
-                v-slot="{isPending}"
-                is-icon-only
-                aria-label="Send prompt"
-                :is-disabled="!value.trim()"
-                :is-pending="isSubmitting"
-                @click="onSubmit"
-              >
-                <Spinner v-if="isPending" color="current" size="sm" />
-                <IconArrowUp v-else />
-              </Button>
+              <Tooltip :delay="0">
+                <Button is-icon-only aria-label="Voice input" size="sm" variant="ghost">
+                  <IconMicrophone />
+                </Button>
+                <TooltipContent>
+                  <p class="text-xs">Voice input</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip :delay="0">
+                <Button
+                  v-slot="{isPending}"
+                  is-icon-only
+                  aria-label="Send prompt"
+                  :is-disabled="!value.trim()"
+                  :is-pending="isSubmitting"
+                  @click="onSubmit"
+                >
+                  <Spinner v-if="isPending" color="current" size="sm" />
+                  <IconArrowUp v-else />
+                </Button>
+                <TooltipContent class="flex items-center gap-1">
+                  <p class="text-xs">Send</p>
+                  <Kbd class="h-4 rounded-sm px-1">
+                    <KbdAbbr key-value="enter" />
+                  </Kbd>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </InputGroupSuffix>
         </InputGroupRoot>
