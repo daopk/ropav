@@ -36,6 +36,8 @@ export interface SelectFixtureProps {
   withFieldError?: boolean;
   /** Whether the value renders through its slot rather than showing plain text. */
   withCustomValue?: boolean;
+  /** Whether the value slot renders one node per chosen option, as a chip list does. */
+  withCustomValueList?: boolean;
   /** Whether the indicator is given an icon of its own. */
   withCustomIndicator?: boolean;
   onChange?: (value: SelectedValue) => void;

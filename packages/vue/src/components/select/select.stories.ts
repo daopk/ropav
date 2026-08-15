@@ -574,15 +574,13 @@ export const CustomValueMultiple: Story = {
           <SelectValue class="no-truncate flex flex-wrap gap-2">
             <template #default="{isPlaceholder, placeholder, selectedItems}">
               <span v-if="isPlaceholder">{{ placeholder }}</span>
-              <template v-else>
-                <Chip v-for="item in selectedItems" :key="item.key" variant="soft">
-                  <Avatar class="size-4" size="sm">
-                    <AvatarImage :src="item.value.avatarUrl" />
-                    <AvatarFallback>{{ item.value.fallback }}</AvatarFallback>
-                  </Avatar>
-                  {{ item.value.name }}
-                </Chip>
-              </template>
+              <Chip v-for="item in selectedItems" :key="item.key" variant="soft">
+                <Avatar class="size-4" size="sm">
+                  <AvatarImage :src="item.value.avatarUrl" />
+                  <AvatarFallback>{{ item.value.fallback }}</AvatarFallback>
+                </Avatar>
+                {{ item.value.name }}
+              </Chip>
             </template>
           </SelectValue>
           <SelectIndicator />

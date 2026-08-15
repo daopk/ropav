@@ -22,11 +22,12 @@ const callerSlots = useSlots();
  * a size, since a glyph of its own brings one.
  *
  * Read off whether a slot was handed over at all, never by running it: presence is knowable in
- * vapor, contents are not.
+ * vapor, contents are not. Branching on it also keeps the built-in icon out of `<slot>` fallback
+ * content, which drops the slots of components a VDOM host nests inside.
  */
-const dataSlot = computed(() =>
-  callerSlots["default"] ? "select-indicator" : "select-default-indicator",
-);
+const hasSlot = computed(() => Boolean(callerSlots["default"]));
+
+const dataSlot = computed(() => (hasSlot.value ? "select-indicator" : "select-default-indicator"));
 
 // Resolved here rather than in the template: a template unwraps the ref, and one of the slots is
 // itself named `value`, so `slots.value` in a template reads that slot instead of the ref.
@@ -40,8 +41,7 @@ const styles = computed(() => composeSlotClassName(slots.value.indicator, props.
     a custom icon arrives as slot content instead and sizes itself.
   -->
   <span :class="styles" :data-open="dataAttr(state.isOpen.value)" :data-slot="dataSlot">
-    <slot>
-      <IconChevronDown />
-    </slot>
+    <slot v-if="hasSlot" />
+    <IconChevronDown v-else />
   </span>
 </template>

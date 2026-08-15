@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SelectValueProps, SelectValueSlotProps} from "./select.types";
 
-import {computed} from "vue";
+import {computed, useSlots} from "vue";
 
 import {dataAttr} from "../../utils/assertion";
 
@@ -21,6 +21,17 @@ defineSlots<{default?: (props: SelectValueSlotProps) => unknown}>();
 
 const {placeholder, select, selectedItems, selectedText, slots} = useSelectContext();
 
+const callerSlots = useSlots();
+
+/**
+ * Whether the caller wrote a slot at all, read off its presence and never by running it.
+ *
+ * The default cannot be `<slot>` fallback content: a slot given content by a VDOM host drops the
+ * *nested* components' own slots on the first render when a fallback is declared beside them — a
+ * chip in the trigger comes out as an empty chip. Branching on presence keeps both paths intact.
+ */
+const hasSlot = computed(() => Boolean(callerSlots["default"]));
+
 const isPlaceholder = computed(() => selectedItems.value.length === 0);
 
 const styles = computed(() => slots.value.value({class: props.class}));
@@ -34,12 +45,12 @@ const styles = computed(() => slots.value.value({class: props.class}));
     data-slot="select-value"
   >
     <slot
+      v-if="hasSlot"
       :is-placeholder="isPlaceholder"
       :placeholder="placeholder"
       :selected-items="selectedItems"
       :selected-text="selectedText"
-    >
-      {{ isPlaceholder ? placeholder : selectedText }}
-    </slot>
+    />
+    <template v-else>{{ isPlaceholder ? placeholder : selectedText }}</template>
   </span>
 </template>

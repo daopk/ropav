@@ -146,6 +146,18 @@ describe("Select", () => {
       expect(value).toHaveTextContent("Florida and Texas");
     });
 
+    it("hands every chosen datum to a slot that renders one node each", async () => {
+      const {screen} = await render({
+        defaultValue: ["florida", "texas"],
+        selectionMode: "multiple",
+        withCustomValueList: true,
+      });
+
+      expect(screen.queryAllByTestId("value-item").map((node) => node.textContent!.trim())).toEqual(
+        ["Florida", "Texas"],
+      );
+    });
+
     it("hands the chosen data to its slot", async () => {
       const {screen} = await render({defaultValue: "california", withCustomValue: true});
 

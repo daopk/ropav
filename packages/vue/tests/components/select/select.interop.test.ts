@@ -2,6 +2,7 @@ import {renderInterop} from "@heroui/testing/helpers/vue";
 import {afterEach, describe, expect, it} from "vitest";
 import {h, nextTick} from "vue";
 
+import {ChipRoot} from "@/components/chip";
 import {LabelRoot} from "@/components/label";
 import {ListBoxRoot} from "@/components/list-box";
 import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
@@ -78,8 +79,12 @@ const press = (element: Element) => {
   element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
 };
 
+const cleanups: Array<() => void> = [];
+
 describe("Select (interop)", () => {
   afterEach(() => {
+    while (cleanups.length > 0) cleanups.pop()?.();
+
     // The overlay writes `inert` and `aria-hidden` outside its own container, so a leftover would
     // surface in an unrelated test rather than this one.
     document.querySelectorAll("[inert]").forEach((element) => element.removeAttribute("inert"));
@@ -162,6 +167,88 @@ describe("Select (interop)", () => {
     expect(options[2]).toHaveAttribute("aria-selected", "true");
 
     result.unmount();
+  });
+
+  it("hands every chosen datum to a value slot the host wrote", async () => {
+    const result = renderInterop(Select, {
+      props: {
+        defaultValue: ["florida", "california"],
+        itemTextValue: (item: {name: string}) => item.name,
+        items: ITEMS,
+        selectionMode: "multiple",
+      },
+      slots: {
+        default: () => [
+          h(Select.Trigger, null, {
+            default: () => [
+              h(Select.Value, null, {
+                // One node per chosen option, which is the shape a chip list takes — and the
+                // shape a single node hides: a slot re-run per item is where a stale first
+                // entry shows up.
+                default: ({
+                  selectedItems,
+                }: {
+                  selectedItems: Array<{key: string; value: {name: string}}>;
+                }) =>
+                  selectedItems.map((item) =>
+                    h("span", {"data-testid": "value-item", key: item.key}, item.value.name),
+                  ),
+              }),
+            ],
+          }),
+        ],
+      },
+    });
+
+    cleanups.push(result.unmount);
+
+    await settle();
+
+    expect(
+      result.screen.queryAllByTestId("value-item").map((node) => node.textContent!.trim()),
+    ).toEqual(["Florida", "California"]);
+  });
+
+  it("keeps the slots of components the host nested in the value", async () => {
+    const result = renderInterop(Select, {
+      props: {
+        defaultValue: ["florida", "california"],
+        itemTextValue: (item: {name: string}) => item.name,
+        items: ITEMS,
+        selectionMode: "multiple",
+      },
+      slots: {
+        default: () => [
+          h(Select.Trigger, null, {
+            default: () => [
+              h(Select.Value, null, {
+                // A component of its own inside the value, which is what a chip list is. Declare
+                // the default as `<slot>` fallback content beside this and the nested component
+                // renders with an empty slot on the first pass — an empty chip.
+                default: ({
+                  selectedItems,
+                }: {
+                  selectedItems: Array<{key: string; value: {name: string}}>;
+                }) =>
+                  selectedItems.map((item) =>
+                    h(ChipRoot, {key: item.key}, {default: () => item.value.name}),
+                  ),
+              }),
+            ],
+          }),
+        ],
+      },
+    });
+
+    cleanups.push(result.unmount);
+
+    await settle();
+
+    expect(
+      [...result.container.querySelectorAll('[data-slot="chip"]')].map((node) =>
+        node.textContent!.trim(),
+      ),
+    ).toEqual(["Florida", "California"]);
   });
 
   it("writes a choice made in the host's listbox back into the trigger", async () => {

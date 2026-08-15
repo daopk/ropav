@@ -76,6 +76,11 @@ const emit = defineEmits<{
             {{ isPlaceholder ? "nothing" : selectedItems.map((item) => item.key).join("+") }}
           </span>
         </template>
+        <template v-else-if="props.withCustomValueList" #default="{selectedItems}">
+          <span v-for="item in selectedItems" :key="item.key" data-testid="value-item">
+            {{ (item.value as SelectFixtureItem).name }}
+          </span>
+        </template>
       </SelectValue>
       <SelectIndicator v-if="props.withCustomIndicator" :class="props.indicatorClass">
         <IconChevronDown data-testid="custom-icon" />
