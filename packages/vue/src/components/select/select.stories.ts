@@ -754,6 +754,10 @@ export const AsynchronousLoading: Story = {
       }
     };
 
+    // The first page is fetched on mount, the way `useAsyncList` does it upstream: waiting for the
+    // sentinel would leave the popover empty until something scrolled it into view.
+    void loadMore();
+
     return {
       components,
       setup: () => ({byName, isLoading, items, loadMore}),
