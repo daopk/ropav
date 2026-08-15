@@ -1,3 +1,5 @@
+import type {SelectedValue} from "../../composables/use-select-state";
+import type {Granularity} from "../../utils/date-format";
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, parseDate, parseZonedDateTime, today} from "@internationalized/date";
@@ -8,9 +10,10 @@ import {Description} from "../description";
 import {FieldError} from "../field-error";
 import {Form} from "../form";
 import {Label} from "../label";
-import {RadioContent, RadioControl, RadioIndicator, RadioRoot} from "../radio";
-import {RadioGroupRoot} from "../radio-group";
-import {Tooltip, TooltipContent} from "../tooltip";
+import {ListBoxRoot} from "../list-box";
+import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
+import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../tooltip";
 
 import {
   DateFieldGroup,
@@ -42,13 +45,17 @@ const components = {
   IconChevronDown,
   IconCircleQuestion,
   Label,
-  RadioContent,
-  RadioControl,
-  RadioGroupRoot,
-  RadioIndicator,
-  RadioRoot,
+  ListBox: ListBoxRoot,
+  ListBoxItem: ListBoxItemRoot,
+  ListBoxItemIndicator,
+  Select: SelectRoot,
+  SelectIndicator,
+  SelectPopover,
+  SelectTrigger,
+  SelectValue,
   Tooltip,
   TooltipContent,
+  TooltipTrigger,
 };
 
 /** The input and its segments, which every story below repeats. */
@@ -59,6 +66,16 @@ const input = `
     </template>
   </DateFieldInput>
 `;
+
+/** The four granularities a date field can show, as data — a Vue select reads its options. */
+const GRANULARITY_OPTIONS: {id: Granularity; label: string}[] = [
+  {id: "day", label: "Day"},
+  {id: "hour", label: "Hour"},
+  {id: "minute", label: "Minute"},
+  {id: "second", label: "Second"},
+];
+
+const byLabel = (option: {label: string}) => option.label;
 
 const meta: Meta = {
   component: DateFieldRoot,
@@ -386,7 +403,7 @@ export const Granularity: Story = {
   render: () => ({
     components,
     setup: () => {
-      const granularity = shallowRef<"day" | "hour" | "minute" | "second">("day");
+      const granularity = shallowRef<Granularity>("day");
       // A date-only value has no time to show, so the finer granularities need a zoned one.
       const defaultValue = computed(() =>
         granularity.value === "day"
@@ -394,7 +411,17 @@ export const Granularity: Story = {
           : parseZonedDateTime("2025-02-03T08:45:00[America/Los_Angeles]"),
       );
 
-      return {defaultValue, granularity};
+      const onGranularityChange = (value: SelectedValue) => {
+        granularity.value = value as Granularity;
+      };
+
+      return {
+        byLabel,
+        defaultValue,
+        granularity,
+        onGranularityChange,
+        options: GRANULARITY_OPTIONS,
+      };
     },
     template: `
       <div class="flex gap-4">
@@ -412,9 +439,9 @@ export const Granularity: Story = {
           <div class="flex items-center gap-2">
             <Label>Granularity</Label>
             <Tooltip :delay="0">
-              <Button aria-label="Granularity information" is-icon-only variant="tertiary">
+              <TooltipTrigger aria-label="Granularity information">
                 <IconCircleQuestion class="size-4 text-muted" />
-              </Button>
+              </TooltipTrigger>
               <TooltipContent placement="bottom start">
                 <p>
                   Determines the smallest unit displayed in the date picker. By default, this is
@@ -423,32 +450,33 @@ export const Granularity: Story = {
               </TooltipContent>
             </Tooltip>
           </div>
-          <RadioGroupRoot :value="granularity" @change="granularity = $event">
-            <RadioRoot value="day">
-              <RadioContent>
-                <RadioControl><RadioIndicator /></RadioControl>
-                Day
-              </RadioContent>
-            </RadioRoot>
-            <RadioRoot value="hour">
-              <RadioContent>
-                <RadioControl><RadioIndicator /></RadioControl>
-                Hour
-              </RadioContent>
-            </RadioRoot>
-            <RadioRoot value="minute">
-              <RadioContent>
-                <RadioControl><RadioIndicator /></RadioControl>
-                Minute
-              </RadioContent>
-            </RadioRoot>
-            <RadioRoot value="second">
-              <RadioContent>
-                <RadioControl><RadioIndicator /></RadioControl>
-                Second
-              </RadioContent>
-            </RadioRoot>
-          </RadioGroupRoot>
+          <Select
+            class="w-[110px]"
+            :item-text-value="byLabel"
+            :items="options"
+            placeholder="Select granularity"
+            :value="granularity"
+            variant="secondary"
+            @change="onGranularityChange"
+          >
+            <SelectTrigger>
+              <SelectValue />
+              <SelectIndicator />
+            </SelectTrigger>
+            <SelectPopover>
+              <ListBox>
+                <ListBoxItem
+                  v-for="option in options"
+                  :id="option.id"
+                  :key="option.id"
+                  :text-value="option.label"
+                >
+                  {{ option.label }}
+                  <ListBoxItemIndicator />
+                </ListBoxItem>
+              </ListBox>
+            </SelectPopover>
+          </Select>
         </div>
       </div>
     `,
