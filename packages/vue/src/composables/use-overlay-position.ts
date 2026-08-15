@@ -162,6 +162,20 @@ export const useOverlayPosition = (
       overlay.style.maxHeight = `${window.visualViewport?.height ?? window.innerHeight}px`;
     }
 
+    /**
+     * The trigger's width, written onto the element **before** the overlay is measured.
+     *
+     * The stylesheet turns this into the overlay's `min-width` for a picker, so publishing it
+     * only through the reactive style below would measure the overlay at its content width and
+     * place it there — and nothing repositions it once the rule widens it a flush later. Written
+     * imperatively for the same reason `top` and `maxHeight` are above: the measurement has to
+     * happen under the constraints the overlay will actually be laid out with.
+     */
+    const width = target.getBoundingClientRect().width;
+
+    overlay.style.setProperty("--trigger-width", `${width}px`);
+    triggerWidth.value = width;
+
     const direction = getComputedStyle(overlay).direction === "rtl" ? "rtl" : "ltr";
     const next = calculatePosition({
       arrowBoundaryOffset: arrowBoundaryOffset.value,
@@ -187,8 +201,6 @@ export const useOverlayPosition = (
     }
 
     overlay.style.maxHeight = next.maxHeight != null ? `${next.maxHeight}px` : "";
-
-    triggerWidth.value = target.getBoundingClientRect().width;
 
     if (anchor && document.activeElement && scrollElement) {
       const anchorRect = document.activeElement.getBoundingClientRect();
