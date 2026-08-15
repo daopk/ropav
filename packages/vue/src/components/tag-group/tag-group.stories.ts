@@ -1,8 +1,12 @@
+import type {CollectionKey} from "../../composables/use-collection";
+import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
+import {useListData} from "../../composables/use-list-data";
+import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
 import {DescriptionRoot} from "../description";
 import {EmptyStateRoot} from "../empty-state";
 import {ErrorMessageRoot} from "../error-message";
@@ -14,6 +18,9 @@ import {TagGroupList, TagGroupRoot} from "./index";
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "TagGroup.List".
 const components = {
+  Avatar: AvatarRoot,
+  AvatarFallback,
+  AvatarImage,
   Description: DescriptionRoot,
   EmptyState: EmptyStateRoot,
   ErrorMessage: ErrorMessageRoot,
@@ -201,6 +208,123 @@ export const WithRemoveButton: Story = {
           </TagGroupList>
           <Description>Click the X to remove tags</Description>
         </TagGroup>
+      </div>
+    `,
+  }),
+};
+
+interface TeamMember {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  fallback: string;
+}
+
+const TEAM_MEMBERS: TeamMember[] = [
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
+    fallback: "F",
+    id: "fred",
+    name: "Fred",
+  },
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    fallback: "M",
+    id: "michael",
+    name: "Michael",
+  },
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    fallback: "J",
+    id: "jane",
+    name: "Jane",
+  },
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    fallback: "A",
+    id: "alice",
+    name: "Alice",
+  },
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+    fallback: "B",
+    id: "bob",
+    name: "Bob",
+  },
+  {
+    avatarUrl: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/black.jpg",
+    fallback: "C",
+    id: "charlie",
+    name: "Charlie",
+  },
+];
+
+export const WithListData: Story = {
+  render: () => ({
+    components,
+    setup: () => {
+      const list = useListData<TeamMember>({
+        getKey: (item) => item.id,
+        initialItems: TEAM_MEMBERS,
+        initialSelectedKeys: ["fred", "michael"],
+      });
+
+      return {
+        items: list.items,
+
+        onRemove: (keys: Set<CollectionKey>) => list.remove(...keys),
+
+        onSelectionChange: (keys: CollectionSelection) => list.setSelectedKeys(keys),
+
+        selectedKeys: list.selectedKeys,
+        // "all" carries no keys to look up, so the readout only has something to show for a
+        // concrete set.
+        selectedMembers: computed(() =>
+          list.selectedKeys.value === "all"
+            ? []
+            : [...list.selectedKeys.value].flatMap((key) => list.getItem(key) ?? []),
+        ),
+      };
+    },
+    template: `
+      <div class="w-sm">
+        <TagGroup
+          :on-remove="onRemove"
+          :selected-keys="selectedKeys"
+          selection-mode="multiple"
+          @update:selected-keys="onSelectionChange"
+        >
+          <Label>Team Members</Label>
+          <TagGroupList>
+            <Tag v-for="user in items" :key="user.id" :id="user.id" :text-value="user.name">
+              <Avatar class="size-4" size="sm">
+                <AvatarImage :src="user.avatarUrl" />
+                <AvatarFallback>{{ user.fallback }}</AvatarFallback>
+              </Avatar>
+              {{ user.name }}
+            </Tag>
+            <template #empty>
+              <EmptyState class="p-1">No team members</EmptyState>
+            </template>
+          </TagGroupList>
+          <Description>Select team members for your project</Description>
+        </TagGroup>
+        <div v-if="selectedMembers.length" class="mt-4 flex flex-col gap-2">
+          <p class="text-sm font-medium text-muted">Selected:</p>
+          <div class="flex flex-wrap gap-2">
+            <div
+              v-for="user in selectedMembers"
+              :key="user.id + '-selected'"
+              class="flex items-center gap-2 rounded-lg bg-surface-tertiary px-2 py-1"
+            >
+              <Avatar class="size-4" size="sm">
+                <AvatarImage :src="user.avatarUrl" />
+                <AvatarFallback>{{ user.fallback }}</AvatarFallback>
+              </Avatar>
+              <span class="text-sm">{{ user.name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     `,
   }),
