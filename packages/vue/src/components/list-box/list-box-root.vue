@@ -42,7 +42,11 @@ const emit = defineEmits<{
   "update:selectedKeys": [keys: CollectionSelection];
 }>();
 
-defineSlots<{default?: (props: ListBoxRootSlotProps<T>) => unknown}>();
+const callerSlots = defineSlots<{
+  default?: (props: ListBoxRootSlotProps<T>) => unknown;
+  /** Shown instead of nothing when there is not a single option to show. */
+  empty?: () => unknown;
+}>();
 
 /**
  * A node's datum, back as the item type it came in as.
@@ -332,6 +336,15 @@ const onKeydown = (event: KeyboardEvent) => {
   typeahead.onKeydown(event);
   if (!event.defaultPrevented) keyboard.onKeydown(event);
 };
+
+const isEmpty = computed(() => collection.size.value === 0);
+
+/*
+ * Read off whether the slot was handed over, never by running it, and rendered *beside* the
+ * options rather than instead of them: an unowned listbox learns its collection from what
+ * rendered, so swapping the options out for the empty state would leave it empty for good.
+ */
+const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
 </script>
 
 <template>
@@ -344,7 +357,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :class="styles"
     :data-collection="collectionId"
     :data-drop-target="dataAttr(isRootDropTarget)"
-    :data-empty="dataAttr(collection.size.value === 0)"
+    :data-empty="dataAttr(isEmpty)"
     :data-focus-visible="dataAttr(selection.isFocused.value)"
     data-layout="stack"
     data-orientation="vertical"
@@ -360,6 +373,9 @@ const onKeydown = (event: KeyboardEvent) => {
     @keydown="onKeydown"
     @keydown.capture="typeahead.onKeydownCapture"
   >
+    <div v-if="hasEmptySlot && isEmpty" role="presentation">
+      <slot name="empty" />
+    </div>
     <div v-if="isVirtualized" role="presentation" :style="scroll?.contentStyle.value">
       <template v-for="view in virtualizer?.visibleViews.value" :key="view.key">
         <ListBoxDropIndicator

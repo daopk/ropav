@@ -23,7 +23,11 @@ const emit = defineEmits<{
   "update:selectedKeys": [keys: CollectionSelection];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+const callerSlots = defineSlots<{
+  default?: () => unknown;
+  /** Shown instead of nothing when there is not a single item to show. */
+  empty?: () => unknown;
+}>();
 
 const styles = computed(() => menuVariants({class: props.class}));
 
@@ -56,6 +60,13 @@ const menu = useMenu({
 const setElement = (element: unknown) => {
   menu.element.value = (element as HTMLElement | null) ?? null;
 };
+
+/*
+ * Read off whether the slot was handed over, never by running it, and rendered *beside* the items
+ * rather than instead of them: the collection is learnt from what rendered, so swapping the items
+ * out for the empty state would leave the menu empty for good.
+ */
+const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
 </script>
 
 <template>
@@ -69,6 +80,9 @@ const setElement = (element: unknown) => {
     @keydown="menu.onKeydown"
     @keydown.capture="menu.onKeydownCapture"
   >
+    <div v-if="hasEmptySlot && menu.isEmpty.value" role="presentation">
+      <slot name="empty" />
+    </div>
     <slot />
   </div>
 </template>
