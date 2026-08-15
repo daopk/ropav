@@ -29,6 +29,7 @@ const {
   onAction,
   selection,
   shouldFocusOnHover,
+  shouldUseVirtualFocus,
 } = useListBoxContext();
 
 const virtualizer = useVirtualizerStateContext();
@@ -88,8 +89,8 @@ provideFieldIdsContext(fieldIds.context);
 provideListBoxItemContext({isSelected, slots});
 
 const {
-  isFocusVisible,
-  isFocused,
+  isFocusVisible: isRealFocusVisible,
+  isFocused: isRealFocused,
   isHovered,
   isPressed,
   onBlur,
@@ -98,6 +99,22 @@ const {
   onPointerenter: onPointerenterState,
   onPointerleave,
 } = useInteractionStates({isDisabled: () => isDisabled.value});
+
+/**
+ * Whether the collection considers this the focused option without any element being focused.
+ *
+ * The interaction states above are built out of focus events, and under virtual focus no element
+ * inside the listbox ever receives one — the caret is in a control beside it. So the focused key
+ * is the only thing left that knows, and without reading it an option arrowed to would carry no
+ * ring at all.
+ */
+const isVirtuallyFocused = computed(
+  () => shouldUseVirtualFocus.value && selection.focusedKey.value === itemKey.value,
+);
+
+const isFocused = computed(() => isRealFocused.value || isVirtuallyFocused.value);
+
+const isFocusVisible = computed(() => isRealFocusVisible.value || isVirtuallyFocused.value);
 
 /**
  * Hovering an option moves focus to it, but only inside a picker.

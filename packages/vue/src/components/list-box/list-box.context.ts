@@ -28,6 +28,13 @@ export interface ListBoxContext {
    */
   shouldFocusOnHover: ComputedRef<boolean>;
   /**
+   * Whether focus over the options is nominal rather than real.
+   *
+   * An option cannot read its focus off focus events then — nothing inside ever receives one —
+   * so the focused key is what it has to draw its ring from.
+   */
+  shouldUseVirtualFocus: ComputedRef<boolean>;
+  /**
    * The drag and drop configuration, when there is any.
    *
    * Items read the hooks from here rather than importing them, so a listbox without drag and
@@ -59,6 +66,12 @@ export interface ListBoxStateContext {
   autoFocus?: MaybeRefOrGetter<boolean | FocusStrategy | undefined>;
   /** Whether hovering an option moves focus to it. @default false */
   shouldFocusOnHover?: MaybeRefOrGetter<boolean | undefined>;
+  /**
+   * Whether focus over the options is nominal, because a control beside the listbox holds the
+   * caret and names the focused option with `aria-activedescendant`.
+   * @default false
+   */
+  shouldUseVirtualFocus?: MaybeRefOrGetter<boolean | undefined>;
 }
 
 /**

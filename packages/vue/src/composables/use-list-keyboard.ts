@@ -44,7 +44,6 @@ export interface UseListKeyboardOptions {
   /** Whether arrow keys wrap at the ends. Menus and tag groups do; listboxes do not. */
   shouldFocusWrap?: MaybeRefOrGetter<boolean | undefined>;
   disallowSelectAll?: MaybeRefOrGetter<boolean | undefined>;
-  disallowTypeAhead?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
   /** Called when an item is activated rather than selected. */

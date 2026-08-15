@@ -75,6 +75,13 @@ const labelledBy = computed(() => toValue(owner?.labelledBy));
 
 const shouldFocusOnHover = computed(() => Boolean(toValue(owner?.shouldFocusOnHover)));
 
+/**
+ * Whether the caret stays outside the listbox while the arrows drive it.
+ *
+ * Only an owner can turn this on, because only an owner has a control to keep the caret in.
+ */
+const shouldUseVirtualFocus = computed(() => Boolean(toValue(owner?.shouldUseVirtualFocus)));
+
 const element = shallowRef<HTMLElement | null>(null);
 
 const virtualizerConfig = useVirtualizerConfigContext();
@@ -204,8 +211,10 @@ const keyboard = useListKeyboard({
   collection,
   element,
   layoutDelegate: () => keyboardLayout.value,
+  listId,
   onAction,
   selection,
+  shouldUseVirtualFocus,
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -274,6 +283,9 @@ provideSeparatorContext({elementType: "div"});
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
   getKeyForSearch: keyboard.getKeyForSearch,
+  // Under virtual focus the characters are text the user is typing into the control beside the
+  // listbox, which filters the options — searching them at the same time would fight over them.
+  isDisabled: shouldUseVirtualFocus,
   onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
 });
 
@@ -288,6 +300,7 @@ provideListBoxContext({
   onAction,
   selection,
   shouldFocusOnHover,
+  shouldUseVirtualFocus,
 });
 
 /**
