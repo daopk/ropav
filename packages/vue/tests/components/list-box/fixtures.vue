@@ -4,6 +4,7 @@ import type {ListBoxRootProps} from "@/components/list-box";
 import type {CollectionSelection} from "@/composables/use-selection-manager";
 
 import {DescriptionRoot} from "@/components/description";
+import {EmptyStateRoot} from "@/components/empty-state";
 import {HeaderRoot} from "@/components/header";
 import {LabelRoot} from "@/components/label";
 import {ListBoxRoot} from "@/components/list-box";
@@ -23,6 +24,8 @@ const props = withDefaults(
       items?: FixtureItem[];
       withIndicator?: boolean;
       withSections?: boolean;
+      /** Whether the caller hands over an empty slot at all. */
+      withEmptyState?: boolean;
     }
   >(),
   {
@@ -32,6 +35,7 @@ const props = withDefaults(
       {email: "fred@heroui.com", id: "2", name: "Fred"},
       {email: "martha@heroui.com", id: "3", name: "Martha"},
     ],
+    withEmptyState: undefined,
     withIndicator: undefined,
     withSections: undefined,
   },
@@ -58,6 +62,9 @@ const emit = defineEmits<{
     @action="emit('action', $event)"
     @selection-change="emit('selectionChange', $event)"
   >
+    <template v-if="props.withEmptyState" #empty>
+      <EmptyStateRoot>Nothing here</EmptyStateRoot>
+    </template>
     <ListBoxSectionRoot v-if="props.withSections">
       <HeaderRoot>People</HeaderRoot>
       <ListBoxItemRoot

@@ -7,6 +7,7 @@ import type {CollectionSelection, SelectionMode} from "@/composables/use-selecti
 import {ButtonRoot} from "@/components/button";
 import {DescriptionRoot} from "@/components/description";
 import {Dropdown} from "@/components/dropdown";
+import {EmptyStateRoot} from "@/components/empty-state";
 import {HeaderRoot} from "@/components/header";
 import {LabelRoot} from "@/components/label";
 import {SeparatorRoot} from "@/components/separator";
@@ -25,6 +26,8 @@ const props = withDefaults(
     withSeparator?: boolean;
     withSubmenu?: boolean;
     withCustomTrigger?: boolean;
+    /** Whether the caller hands over an empty slot at all. */
+    withEmptyState?: boolean;
   }>(),
   {
     disabledKeys: undefined,
@@ -32,6 +35,7 @@ const props = withDefaults(
     selectedKeys: undefined,
     selectionMode: undefined,
     trigger: undefined,
+    withEmptyState: undefined,
     items: (): DropdownFixtureItem[] => [
       {id: "new-file", label: "New file"},
       {id: "copy-link", label: "Copy link"},
@@ -63,6 +67,9 @@ const emit = defineEmits<{
         @action="emit('action', $event)"
         @selection-change="emit('selectionChange', $event)"
       >
+        <template v-if="props.withEmptyState" #empty>
+          <EmptyStateRoot>Nothing here</EmptyStateRoot>
+        </template>
         <Dropdown.Section v-if="props.withSection">
           <HeaderRoot v-if="props.withHeader">Actions</HeaderRoot>
           <Dropdown.Item

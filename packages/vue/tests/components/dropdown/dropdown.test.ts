@@ -352,6 +352,47 @@ describe("Dropdown", () => {
     });
   });
 
+  describe("empty state", () => {
+    it("shows the empty slot when there is nothing to show", async () => {
+      const result = render({items: [], withEmptyState: true});
+      const menu = await open(result);
+
+      expect(menu.querySelector('[data-slot="empty-state"]')).toHaveTextContent("Nothing here");
+
+      result.unmount();
+    });
+
+    it("hides the empty slot as soon as there is something", async () => {
+      const result = render({withEmptyState: true});
+      const menu = await open(result);
+
+      expect(menu.querySelector('[data-slot="empty-state"]')).toBeNull();
+
+      result.unmount();
+    });
+
+    it("wraps the empty state so it is not read as an item", async () => {
+      const result = render({items: [], withEmptyState: true});
+      const menu = await open(result);
+      const wrapper = menu.querySelector('[role="presentation"]')!;
+
+      expect(wrapper.querySelector('[data-slot="empty-state"]')).not.toBeNull();
+      expect(menu.querySelectorAll('[role="menuitem"]')).toHaveLength(0);
+
+      result.unmount();
+    });
+
+    it("renders nothing extra when no empty slot was handed over", async () => {
+      const result = render({items: []});
+      const menu = await open(result);
+
+      expect(menu.querySelector('[role="presentation"]')).toBeNull();
+      expect(menu.childElementCount).toBe(0);
+
+      result.unmount();
+    });
+  });
+
   describe("sections", () => {
     it("groups items and names the group after its header", async () => {
       const result = render({withHeader: true, withSection: true});

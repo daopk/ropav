@@ -293,6 +293,41 @@ describe("ListBox", () => {
     });
   });
 
+  describe("empty state", () => {
+    it("shows the empty slot when there is nothing to show", async () => {
+      const {listbox} = await render({items: [], withEmptyState: true});
+
+      expect(listbox).toHaveAttribute("data-empty", "true");
+      expect(listbox.querySelector('[data-slot="empty-state"]')).toHaveTextContent("Nothing here");
+    });
+
+    it("hides the empty slot as soon as there is something", async () => {
+      const {listbox} = await render({withEmptyState: true});
+
+      expect(listbox).not.toHaveAttribute("data-empty");
+      expect(listbox.querySelector('[data-slot="empty-state"]')).toBeNull();
+    });
+
+    it("wraps the empty state so it is not read as an option", async () => {
+      const {listbox} = await render({items: [], withEmptyState: true});
+      const wrapper = listbox.querySelector('[role="presentation"]')!;
+
+      expect(wrapper).not.toBeNull();
+      expect(wrapper.querySelector('[data-slot="empty-state"]')).not.toBeNull();
+      expect(listbox.querySelectorAll('[role="option"]')).toHaveLength(0);
+    });
+
+    it("renders nothing extra when no empty slot was handed over", async () => {
+      const {listbox} = await render({items: []});
+
+      // The `data-empty` half is unchanged either way, which is what a listbox that never asked
+      // for an empty state relies on.
+      expect(listbox).toHaveAttribute("data-empty", "true");
+      expect(listbox.querySelector('[role="presentation"]')).toBeNull();
+      expect(listbox.childElementCount).toBe(0);
+    });
+  });
+
   describe("description", () => {
     it("points the option at its description", async () => {
       const {items} = await render();
