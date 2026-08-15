@@ -21,6 +21,7 @@ import {useVirtualizer} from "../../composables/use-virtualizer";
 import {useVirtualizerScroll} from "../../composables/use-virtualizer-scroll";
 import {dataAttr} from "../../utils/assertion";
 import {createListCollection} from "../../utils/virtualizer-collection";
+import {provideSeparatorContext} from "../separator/separator.context";
 import {VirtualizerItem} from "../virtualizer";
 import {
   provideVirtualizerStateContext,
@@ -265,6 +266,10 @@ const rendersDropIndicators = computed(() => isVirtualized.value && dropState !=
 
 /** The gap after the last item, which no item's own "before" indicator covers. */
 const lastItemKey = computed(() => collection.getLastKey());
+
+// A listbox lays its own options out, so a rule between two of them has to take part in that
+// layout rather than being the block-level `hr` it would be on its own.
+provideSeparatorContext({elementType: "div"});
 
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
