@@ -786,4 +786,112 @@ describe("useListKeyboard", () => {
       expect(selection.focusedKey.value).toBeNull();
     });
   });
+
+  describe("virtual focus", () => {
+    it("moves the focused key without focusing anything", () => {
+      const {items, press, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+
+      press("ArrowDown");
+
+      expect(selection.focusedKey.value).toBe("a");
+      // Both halves asserted: the focused key alone would still pass while real focus was
+      // quietly moving as well, which is the whole failure this branch exists to prevent.
+      expect(items.get("a")).not.toHaveFocus();
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it("scrolls the focused item into view even so", () => {
+      const {items, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const scrollIntoView = vi.fn();
+
+      items.get("b")!.scrollIntoView = scrollIntoView;
+      press("ArrowDown");
+      press("ArrowDown");
+
+      expect(scrollIntoView).toHaveBeenCalledWith({block: "nearest"});
+    });
+
+    it("leaves nothing inside the collection tabbable", () => {
+      const {keyboard, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+
+      expect(keyboard.collectionTabIndex.value).toBeUndefined();
+      expect(keyboard.itemTabIndex("a")).toBeUndefined();
+
+      press("ArrowDown");
+
+      expect(keyboard.collectionTabIndex.value).toBeUndefined();
+      expect(keyboard.itemTabIndex("a")).toBeUndefined();
+    });
+
+    it("takes a key event from outside the collection", () => {
+      const {keyboard, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const input = document.createElement("input");
+      const event = new KeyboardEvent("keydown", {cancelable: true, key: "ArrowDown"});
+
+      document.body.appendChild(input);
+      containers.push(input);
+      Object.defineProperty(event, "target", {value: input});
+      keyboard.onKeydown(event);
+      input.remove();
+
+      // The whole arrangement: the caret is in a control that is not in the collection, so
+      // refusing outside events would leave the arrows doing nothing at all.
+      expect(selection.focusedKey.value).toBe("a");
+    });
+
+    it("names the focused option for an outside control", () => {
+      const {keyboard, press} = setup({keyboard: {listId: "list", shouldUseVirtualFocus: true}});
+
+      expect(keyboard.focusedNodeId.value).toBeUndefined();
+
+      press("ArrowDown");
+
+      expect(keyboard.focusedNodeId.value).toBe("list-option-a");
+    });
+
+    it("names nothing while focus is real", () => {
+      const {keyboard, press} = setup({keyboard: {listId: "list"}});
+
+      press("ArrowDown");
+
+      expect(keyboard.focusedNodeId.value).toBeUndefined();
+    });
+
+    it("leaves Tab alone rather than parking focus at an end", () => {
+      const {items, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+
+      press("ArrowDown");
+      press("Tab");
+
+      expect(items.get("a")).not.toHaveFocus();
+      expect(items.get("d")).not.toHaveFocus();
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it("ignores focus arriving inside the collection", () => {
+      const {container, items, keyboard, selection} = setup({
+        keyboard: {shouldUseVirtualFocus: true},
+      });
+
+      keyboard.onFocusin(focusin(items.get("c")!));
+
+      expect(selection.isFocused.value).toBe(false);
+      expect(selection.focusedKey.value).toBeNull();
+
+      keyboard.focusKey("c");
+      keyboard.onFocusout(focusin(container));
+
+      expect(selection.isFocused.value).toBe(true);
+    });
+
+    it("does not follow a focused key set from outside with real focus", async () => {
+      const {items, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+
+      selection.setFocused(true);
+      selection.setFocusedKey("b");
+      await nextTick();
+
+      expect(items.get("b")).not.toHaveFocus();
+    });
+  });
 });

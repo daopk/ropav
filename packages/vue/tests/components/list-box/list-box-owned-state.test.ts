@@ -131,6 +131,49 @@ describe("ListBox driven from above", () => {
     });
   });
 
+  describe("virtual focus", () => {
+    it("takes itself out of the tab order entirely", async () => {
+      const {items, listbox} = await render({shouldUseVirtualFocus: true});
+
+      expect(listbox).not.toHaveAttribute("tabindex");
+      items().forEach((item) => expect(item).not.toHaveAttribute("tabindex"));
+    });
+
+    it("rings the option the owner focused, with the caret left outside", async () => {
+      const {getByTestId, items} = await render({focusedKey: "2", shouldUseVirtualFocus: true});
+      const outside = getByTestId("outside");
+
+      outside.focus();
+      await nextTick();
+
+      expect(items()[1]).toHaveAttribute("data-focused", "true");
+      expect(items()[1]).toHaveAttribute("data-focus-visible", "true");
+      // Asserted alongside, because the ring would look right with real focus quietly moving too.
+      expect(outside).toHaveFocus();
+    });
+
+    it("rings one option at a time", async () => {
+      const {items} = await render({focusedKey: "2", shouldUseVirtualFocus: true});
+
+      expect(items()[0]).not.toHaveAttribute("data-focused");
+      expect(items()[2]).not.toHaveAttribute("data-focused");
+    });
+
+    it("focuses the option the owner focused when focus is real", async () => {
+      const {items} = await render({focusedKey: "2"});
+
+      // The counterpart of the case above, and the reason both are here: the same owner writing
+      // the same key moves the caret onto the option without virtual focus, and must not with it.
+      expect(items()[1]).toHaveFocus();
+    });
+
+    it("stays a tab stop with real focus", async () => {
+      const {listbox} = await render();
+
+      expect(listbox).toHaveAttribute("tabindex", "0");
+    });
+  });
+
   describe("hover", () => {
     it("moves focus to a hovered option when the owner asks for it", async () => {
       const {items} = await render({shouldFocusOnHover: true});

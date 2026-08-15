@@ -3,7 +3,7 @@ import type {FixtureItem} from "./fixtures.types";
 import type {FocusStrategy} from "@/composables/use-overlay-trigger-state";
 import type {CollectionSelection} from "@/composables/use-selection-manager";
 
-import {computed} from "vue";
+import {computed, watch} from "vue";
 
 import {ListBoxRoot, provideListBoxStateContext} from "@/components/list-box";
 import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
@@ -28,12 +28,16 @@ const props = withDefaults(
     listId?: string;
     autoFocus?: boolean | FocusStrategy;
     shouldFocusOnHover?: boolean;
+    shouldUseVirtualFocus?: boolean;
+    /** The key the owner puts virtual focus on, standing in for a control beside the listbox. */
+    focusedKey?: string;
     selectionMode?: "none" | "single" | "multiple";
     defaultSelectedKeys?: Iterable<string>;
   }>(),
   {
     autoFocus: undefined,
     defaultSelectedKeys: undefined,
+    focusedKey: undefined,
     fromData: undefined,
     items: (): FixtureItem[] => [
       {id: "1", name: "Bob"},
@@ -45,6 +49,7 @@ const props = withDefaults(
     renderItems: true,
     selectionMode: "single",
     shouldFocusOnHover: undefined,
+    shouldUseVirtualFocus: undefined,
   },
 );
 
@@ -68,6 +73,23 @@ const selection = useSelectionManager({
   selectionMode: () => props.selectionMode,
 });
 
+/*
+ * The focused key moves from out here, which is how it moves under virtual focus: the arrows are
+ * pressed in a control beside the listbox and the collection is told where they landed. Waits a
+ * tick because the options only register post-flush, and a key the collection does not hold is
+ * refused.
+ */
+watch(
+  [() => props.focusedKey, collection.size],
+  ([key]) => {
+    if (key == null) return;
+
+    selection.setFocused(true);
+    selection.setFocusedKey(key);
+  },
+  {flush: "post", immediate: true},
+);
+
 provideListBoxStateContext({
   autoFocus: () => props.autoFocus,
   collection,
@@ -75,6 +97,7 @@ provideListBoxStateContext({
   listId: () => props.listId,
   selection,
   shouldFocusOnHover: () => props.shouldFocusOnHover,
+  shouldUseVirtualFocus: () => props.shouldUseVirtualFocus,
 });
 
 defineExpose({collection, selection});
@@ -82,6 +105,7 @@ defineExpose({collection, selection});
 
 <template>
   <span v-if="props.labelledBy" :id="props.labelledBy">Users</span>
+  <input v-if="props.shouldUseVirtualFocus" data-testid="outside" type="text" />
   <ListBoxRoot>
     <ListBoxItemRoot
       v-for="item in props.renderItems ? props.items : []"
