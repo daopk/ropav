@@ -25,6 +25,7 @@ import {
  */
 const props = withDefaults(defineProps<SelectFixtureProps>(), {
   allowsEmptyCollection: undefined,
+  form: undefined,
   defaultOpen: undefined,
   defaultValue: undefined,
   fullWidth: undefined,
@@ -55,6 +56,7 @@ const emit = defineEmits<{
     :class="props.rootClass"
     :default-open="props.defaultOpen"
     :default-value="props.defaultValue"
+    :form="props.form"
     :full-width="props.fullWidth"
     :is-disabled="props.isDisabled"
     :is-invalid="props.isInvalid"

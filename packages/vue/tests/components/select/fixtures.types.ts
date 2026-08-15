@@ -27,6 +27,8 @@ export interface SelectFixtureProps {
   /** Whether the popover may open with no options in it, as an async list needs. */
   allowsEmptyCollection?: boolean;
   name?: string;
+  /** Id of the form the hidden control belongs to, wired by attribute. */
+  form?: string;
   placeholder?: string;
   variant?: "primary" | "secondary";
   fullWidth?: boolean;

@@ -452,6 +452,59 @@ describe("Select", () => {
       ]);
     });
 
+    it("marks the starting options as the ones a reset goes back to", async () => {
+      const {root} = await render({defaultValue: "texas", name: "state"});
+
+      const control = root.querySelector<HTMLSelectElement>("select")!;
+      const defaults = [...control.options]
+        .filter((option) => option.defaultSelected)
+        .map((option) => option.value);
+
+      // A reset restores each option's *default* selectedness, which lives in the `selected`
+      // attribute — a binding only ever writes the property. Without this the browser would put
+      // the control back on the blank leading option and the form would submit nothing while the
+      // trigger still showed a value.
+      expect(defaults).toEqual(["texas"]);
+      expect(control.options[3]!.hasAttribute("selected")).toBe(true);
+    });
+
+    it("marks every starting option in multiple mode", async () => {
+      const {root} = await render({
+        defaultValue: ["florida", "texas"],
+        name: "state",
+        selectionMode: "multiple",
+      });
+
+      const control = root.querySelector<HTMLSelectElement>("select")!;
+
+      expect(
+        [...control.options].filter((option) => option.defaultSelected).map((o) => o.value),
+      ).toEqual(["florida", "texas"]);
+    });
+
+    it("marks nothing when the select starts empty", async () => {
+      const {root} = await render({name: "state"});
+
+      const control = root.querySelector<HTMLSelectElement>("select")!;
+
+      expect([...control.options].some((option) => option.defaultSelected)).toBe(false);
+    });
+
+    it("submits the chosen value under its name", async () => {
+      const form = document.createElement("form");
+
+      form.id = "select-form";
+      document.body.append(form);
+
+      const {root} = await render({defaultValue: "texas", form: "select-form", name: "state"});
+
+      // Joined by attribute, which is how a control reaches a form the harness did not wrap it in.
+      expect(root.querySelector("select")!.form).toBe(form);
+      expect(new FormData(form).get("state")).toBe("texas");
+
+      form.remove();
+    });
+
     it("is hidden from assistive technology and out of the tab order", async () => {
       const {root} = await render({name: "state"});
 
