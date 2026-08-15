@@ -105,9 +105,7 @@ const selectedText = computed(() => {
   return new Intl.ListFormat(locale.value.locale).format(texts);
 });
 
-const styles = computed(() =>
-  selectVariants({class: props.class, fullWidth: props.fullWidth, variant: props.variant}),
-);
+const styles = computed(() => selectVariants({fullWidth: props.fullWidth, variant: props.variant}));
 
 provideFieldIdsContext(select.fieldIds.context);
 provideFieldErrorContext({validation: state.displayValidation});
@@ -156,7 +154,7 @@ providePressResponder(select.responder);
 
 <template>
   <div
-    :class="styles.base()"
+    :class="styles.base({class: props.class})"
     :data-disabled="dataAttr(props.isDisabled)"
     :data-focused="dataAttr(state.isFocused.value)"
     :data-invalid="dataAttr(select.isInvalid.value)"

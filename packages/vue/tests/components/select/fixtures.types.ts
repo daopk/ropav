@@ -9,6 +9,12 @@ export interface SelectFixtureItem {
 }
 
 export interface SelectFixtureProps {
+  /** A class per part, so each one can be shown to merge rather than replace its BEM class. */
+  rootClass?: string;
+  triggerClass?: string;
+  valueClass?: string;
+  indicatorClass?: string;
+  popoverClass?: string;
   items?: SelectFixtureItem[];
   selectionMode?: "single" | "multiple";
   value?: SelectedValue;

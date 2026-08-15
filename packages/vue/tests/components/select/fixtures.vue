@@ -50,6 +50,7 @@ const emit = defineEmits<{
 
 <template>
   <SelectRoot
+    :class="props.rootClass"
     :default-open="props.defaultOpen"
     :default-value="props.defaultValue"
     :full-width="props.fullWidth"
@@ -68,21 +69,21 @@ const emit = defineEmits<{
     @open-change="emit('openChange', $event)"
   >
     <LabelRoot v-if="props.withLabel">State</LabelRoot>
-    <SelectTrigger>
-      <SelectValue>
+    <SelectTrigger :class="props.triggerClass">
+      <SelectValue :class="props.valueClass">
         <template v-if="props.withCustomValue" #default="{isPlaceholder, selectedItems}">
           <span data-testid="custom-value">
             {{ isPlaceholder ? "nothing" : selectedItems.map((item) => item.key).join("+") }}
           </span>
         </template>
       </SelectValue>
-      <SelectIndicator v-if="props.withCustomIndicator">
+      <SelectIndicator v-if="props.withCustomIndicator" :class="props.indicatorClass">
         <IconChevronDown data-testid="custom-icon" />
       </SelectIndicator>
-      <SelectIndicator v-else />
+      <SelectIndicator v-else :class="props.indicatorClass" />
     </SelectTrigger>
     <DescriptionRoot v-if="props.withDescription">Pick a state</DescriptionRoot>
-    <SelectPopover>
+    <SelectPopover :class="props.popoverClass">
       <ListBoxRoot>
         <ListBoxItemRoot
           v-for="item in props.items"

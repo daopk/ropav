@@ -86,6 +86,34 @@ describe("Select", () => {
       expect(trigger).toHaveClass("select__trigger--full-width");
     });
 
+    it("keeps a caller's class on every part, beside the BEM one", async () => {
+      const {root, trigger, value} = await render({
+        indicatorClass: "my-indicator",
+        popoverClass: "my-popover",
+        rootClass: "my-root",
+        triggerClass: "my-trigger",
+        valueClass: "my-value",
+      });
+
+      // A class that replaced the BEM one, or was dropped on the way, leaves the part unstyled
+      // while every other assertion in this file still passes.
+      expect(root).toHaveClass("select", "my-root");
+      expect(trigger).toHaveClass("select__trigger", "my-trigger");
+      expect(value).toHaveClass("select__value", "my-value");
+      expect(root.querySelector('[data-slot="select-default-indicator"]')).toHaveClass(
+        "select__indicator",
+        "my-indicator",
+      );
+
+      press(trigger);
+      await settle();
+
+      expect(document.querySelector('[data-slot="select-popover"]')).toHaveClass(
+        "select__popover",
+        "my-popover",
+      );
+    });
+
     it("renders no listbox until it is opened", async () => {
       const {listbox} = await render();
 
