@@ -1,4 +1,5 @@
 export * from "./autocomplete";
+export * from "./breadcrumbs";
 export * from "./calendar";
 export * from "./color";
 export * from "./date-placeholders";
