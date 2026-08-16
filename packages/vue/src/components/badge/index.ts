@@ -1,0 +1,32 @@
+import BadgeAnchor from "./badge-anchor.vue";
+import BadgeLabel from "./badge-label.vue";
+import BadgeRoot from "./badge-root.vue";
+
+/* -------------------------------------------------------------------------------------------------
+ * Compound Component
+ * -----------------------------------------------------------------------------------------------*/
+// Part order mirrors `@heroui/react`.
+export const Badge = Object.assign(BadgeRoot, {
+  Anchor: BadgeAnchor,
+  Label: BadgeLabel,
+  Root: BadgeRoot,
+});
+
+/* -------------------------------------------------------------------------------------------------
+ * Named Components
+ * -----------------------------------------------------------------------------------------------*/
+export {BadgeAnchor, BadgeLabel, BadgeRoot};
+
+export type {
+  BadgeAnchorProps,
+  BadgeLabelProps,
+  BadgeRootProps,
+  BadgeRootProps as BadgeProps,
+} from "./badge.types";
+
+/* -------------------------------------------------------------------------------------------------
+ * Variants
+ * -----------------------------------------------------------------------------------------------*/
+export {badgeVariants} from "@heroui/styles";
+
+export type {BadgeVariants} from "@heroui/styles";
