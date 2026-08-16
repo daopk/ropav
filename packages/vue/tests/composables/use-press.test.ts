@@ -18,9 +18,18 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
  * reads `currentTarget`, checks containment, and attaches its release listeners to the
  * element's own document.
  */
-const setup = (options: Parameters<typeof usePress>[0] = {}) => {
+const createButton = () => {
   const element = document.createElement("button");
 
+  element.type = "button";
+
+  return element;
+};
+
+const setup = (
+  options: Parameters<typeof usePress>[0] = {},
+  element: HTMLElement = createButton(),
+) => {
   document.body.appendChild(element);
 
   const events: string[] = [];
@@ -194,6 +203,86 @@ describe("usePress", () => {
 
       expect(event.defaultPrevented).toBe(true);
 
+      dispose();
+    });
+
+    it("leaves native link activation to the browser and preserves modifier keys", () => {
+      const element = document.createElement("a");
+
+      element.href = "#target";
+
+      const {dispose, events, received} = setup({}, element);
+      const keydown = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        ctrlKey: true,
+        key: "Enter",
+      });
+      const keyup = new KeyboardEvent("keyup", {
+        bubbles: true,
+        cancelable: true,
+        ctrlKey: true,
+        key: "Enter",
+      });
+
+      element.dispatchEvent(keydown);
+      element.dispatchEvent(keyup);
+
+      expect(keydown.defaultPrevented).toBe(false);
+      expect(keyup.defaultPrevented).toBe(false);
+      expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
+      expect(received.every((event) => event.ctrlKey)).toBe(true);
+
+      dispose();
+    });
+
+    it("keeps the macOS Enter context-menu shortcut available", () => {
+      const platform = vi.spyOn(navigator, "platform", "get").mockReturnValue("MacIntel");
+      const element = document.createElement("div");
+      const {dispose} = setup({}, element);
+      const keydown = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: "Enter",
+      });
+      const keyup = new KeyboardEvent("keyup", {
+        bubbles: true,
+        cancelable: true,
+        key: "Enter",
+      });
+
+      element.dispatchEvent(keydown);
+      element.dispatchEvent(keyup);
+
+      expect(keydown.defaultPrevented).toBe(false);
+      expect(keyup.defaultPrevented).toBe(false);
+
+      platform.mockRestore();
+      dispose();
+    });
+
+    it("prevents Enter defaults on a custom pressable outside macOS", () => {
+      const platform = vi.spyOn(navigator, "platform", "get").mockReturnValue("Linux x86_64");
+      const element = document.createElement("div");
+      const {dispose} = setup({}, element);
+      const keydown = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: "Enter",
+      });
+      const keyup = new KeyboardEvent("keyup", {
+        bubbles: true,
+        cancelable: true,
+        key: "Enter",
+      });
+
+      element.dispatchEvent(keydown);
+      element.dispatchEvent(keyup);
+
+      expect(keydown.defaultPrevented).toBe(true);
+      expect(keyup.defaultPrevented).toBe(true);
+
+      platform.mockRestore();
       dispose();
     });
 

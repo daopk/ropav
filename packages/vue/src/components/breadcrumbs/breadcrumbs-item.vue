@@ -67,8 +67,12 @@ const onClick = (event: MouseEvent) => {
   }
 
   emit("click", event);
-  context.onAction(itemKey.value);
 };
+
+// Activation rides the press, not the click. An item with no href renders as a span, where Enter
+// is prevented and no click follows, so the click alone would drop every keyboard activation on
+// those items. The press composable already withholds the press while the item is disabled.
+const onPress = () => context.onAction(itemKey.value);
 </script>
 
 <template>
@@ -95,6 +99,7 @@ const onClick = (event: MouseEvent) => {
       :rel="$props.rel"
       :target="$props.target"
       @click="onClick"
+      @press="onPress"
     >
       <slot :is-current="isCurrent" :is-disabled="isDisabled" />
     </LinkRoot>

@@ -1,5 +1,6 @@
 <script setup lang="ts" vapor>
 import type {LinkRootProps, LinkRootSlotProps} from "./link.types";
+import type {PressEvent} from "../../composables/use-press";
 
 import {linkVariants} from "@heroui/styles";
 import {computed} from "vue";
@@ -21,7 +22,10 @@ const props = withDefaults(defineProps<LinkRootProps>(), {
   isDisabled: undefined,
 });
 
-const emit = defineEmits<{click: [event: MouseEvent]}>();
+// Activation is published as a press rather than left to the DOM click. A link with no href
+// renders as a span, where Enter is prevented and no click follows — so a consumer listening for
+// clicks would never hear a keyboard activation. React routes the same signal through `onPress`.
+const emit = defineEmits<{press: [event: PressEvent]}>();
 
 defineSlots<{default?: (props: LinkRootSlotProps) => unknown}>();
 
@@ -40,13 +44,7 @@ const styles = computed(() => slots.value.base({class: props.class}));
 // only watch the pointer. Hover and focus still come from there.
 const press = usePress({
   isDisabled: resolvedIsDisabled,
-  // usePress prevents the native Enter default so it can model pressed state consistently. Finish
-  // that keyboard path with a click; pointer and virtual paths already arrived as a real click.
-  onPress: (event) => {
-    if (event.pointerType === "keyboard" && event.target instanceof HTMLElement) {
-      event.target.click();
-    }
-  },
+  onPress: (event) => emit("press", event),
 });
 const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
 
@@ -64,12 +62,6 @@ const role = computed(() => (isAnchor.value ? undefined : "link"));
 const tabindex = computed(() => (resolvedIsDisabled.value ? undefined : 0));
 
 const isCurrent = computed(() => Boolean(props.ariaCurrent));
-
-const onClick = (event: MouseEvent) => {
-  press.handlers.onClick(event);
-
-  if (!resolvedIsDisabled.value) emit("click", event);
-};
 
 // Chained by hand rather than spread: a listener reaching a vapor element through `v-bind` is
 // re-attached on every render and can be dropped mid-dispatch.
@@ -107,7 +99,7 @@ const onPointerleave = (event: PointerEvent) => {
     :tabindex="tabindex"
     :target="props.target"
     @blur="interaction.onBlur"
-    @click="onClick"
+    @click="press.handlers.onClick"
     @dragstart="press.handlers.onDragstart"
     @focus="interaction.onFocus"
     @keydown="press.handlers.onKeydown"
@@ -144,7 +136,7 @@ const onPointerleave = (event: PointerEvent) => {
     :role="role"
     :tabindex="tabindex"
     @blur="interaction.onBlur"
-    @click="onClick"
+    @click="press.handlers.onClick"
     @dragstart="press.handlers.onDragstart"
     @focus="interaction.onFocus"
     @keydown="press.handlers.onKeydown"

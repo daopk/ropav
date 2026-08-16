@@ -2,6 +2,8 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
 
+import {isMac} from "../utils/platform";
+
 /**
  * How the press reached the element.
  *
@@ -95,7 +97,25 @@ export const isVirtualClick = (event: MouseEvent): boolean => {
 export const isVirtualPointerEvent = (event: PointerEvent): boolean =>
   event.width === 0 && event.height === 0;
 
-const isEnterOrSpace = (key: string) => key === "Enter" || key === " ";
+const NON_TEXT_INPUT_TYPES = new Set([
+  "button",
+  "checkbox",
+  "color",
+  "file",
+  "image",
+  "radio",
+  "range",
+  "reset",
+  "submit",
+]);
+
+const isHtmlAnchorLink = (target: Element): boolean =>
+  target.tagName === "A" && target.hasAttribute("href");
+
+const isValidInputKey = (target: HTMLInputElement, key: string): boolean =>
+  target.type === "checkbox" || target.type === "radio"
+    ? key === " "
+    : NON_TEXT_INPUT_TYPES.has(target.type);
 
 /**
  * Whether Enter or Space on this element means "press it".
@@ -104,17 +124,51 @@ const isEnterOrSpace = (key: string) => key === "Enter" || key === " ";
  * scrolls the page there.
  */
 const isValidKeyboardEvent = (event: KeyboardEvent, target: Element): boolean => {
-  if (!isEnterOrSpace(event.key)) return false;
+  if (
+    event.key !== "Enter" &&
+    event.key !== " " &&
+    event.key !== "Spacebar" &&
+    event.code !== "Space"
+  ) {
+    return false;
+  }
 
   const element = target as HTMLElement;
 
   if (element instanceof HTMLTextAreaElement || element.isContentEditable) return false;
-  if (element instanceof HTMLInputElement && element.type === "text") return false;
+  if (element instanceof HTMLInputElement && !isValidInputKey(element, event.key)) return false;
 
   const role = element.getAttribute("role");
-  const isLink = role === "link" || (!role && element instanceof HTMLAnchorElement);
+  const isLink = role === "link" || (!role && isHtmlAnchorLink(element));
 
   return !(isLink && event.key !== "Enter");
+};
+
+/** Whether the release default belongs to the browser rather than the press abstraction. */
+const shouldPreventDefaultUp = (target: Element): boolean => {
+  if (target instanceof HTMLInputElement) return false;
+  if (target instanceof HTMLButtonElement)
+    return target.type !== "submit" && target.type !== "reset";
+  if (isHtmlAnchorLink(target)) return false;
+
+  return true;
+};
+
+/**
+ * Match React Aria's keyboard-default carve-outs. Native links must retain their own activation
+ * so modifier keys survive, while macOS Enter must remain available to the context-menu shortcut.
+ */
+const shouldPreventDefaultKeyboard = (target: Element, key: string): boolean => {
+  if (isMac() && key === "Enter") return false;
+
+  if (target instanceof HTMLInputElement) {
+    // Enter submits a form around a checkbox/radio; it must not toggle the control.
+    if (key === "Enter" && (target.type === "checkbox" || target.type === "radio")) return false;
+
+    return !isValidInputKey(target, key);
+  }
+
+  return shouldPreventDefaultUp(target);
 };
 
 /** Whether an element in the tree from `root` down received the event. */
@@ -337,6 +391,10 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
   const onKeyup = (event: KeyboardEvent) => {
     if (!state.isPressed || !state.target || !isValidKeyboardEvent(event, state.target)) return;
 
+    const eventTarget = event.target instanceof Element ? event.target : state.target;
+
+    if (shouldPreventDefaultKeyboard(eventTarget, event.key)) event.preventDefault();
+
     const wasPressed = contains(state.target, event.target);
 
     triggerPressEnd(
@@ -363,9 +421,9 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
     if (!isValidKeyboardEvent(event, currentTarget)) return;
     if (!contains(currentTarget, event.target)) return;
 
-    // Space would scroll the page and Enter would submit a surrounding form, neither of which
-    // is what activating this control means.
-    event.preventDefault();
+    const eventTarget = event.target instanceof Element ? event.target : currentTarget;
+
+    if (shouldPreventDefaultKeyboard(eventTarget, event.key)) event.preventDefault();
 
     let shouldStopPropagation = true;
 
