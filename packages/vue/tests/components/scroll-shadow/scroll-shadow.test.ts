@@ -116,6 +116,26 @@ describe("ScrollShadow", () => {
     unmount();
   });
 
+  it("replaces controlled visibility when switching back to automatic detection", async () => {
+    const onVisibilityChange = vi.fn();
+    const props = reactive({onVisibilityChange, visibility: "top" as "auto" | "top"});
+    const {root, unmount} = renderScrollShadow(props);
+
+    setGeometry(root, {clientHeight: 100, scrollHeight: 300});
+    await nextTick();
+    expect(root).toHaveAttribute("data-top-scroll", "true");
+
+    props.visibility = "auto";
+    await nextTick();
+    root.dispatchEvent(new Event("scroll"));
+
+    expect(root).toHaveAttribute("data-top-scroll", "false");
+    expect(root).toHaveAttribute("data-bottom-scroll", "true");
+    expect(onVisibilityChange).toHaveBeenLastCalledWith("bottom");
+
+    unmount();
+  });
+
   it("detects vertical overflow and reports visibility transitions", async () => {
     const onVisibilityChange = vi.fn();
     const {root, unmount} = renderScrollShadow({onVisibilityChange});

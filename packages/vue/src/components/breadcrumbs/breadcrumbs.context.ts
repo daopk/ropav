@@ -1,6 +1,6 @@
 import type {CollectionKey, UseCollectionReturn} from "../../composables/use-collection";
 import type {breadcrumbsVariants} from "@heroui/styles";
-import type {ComputedRef} from "vue";
+import type {ComputedRef, ShallowRef} from "vue";
 
 import {createContext} from "../../utils/create-context";
 
@@ -8,6 +8,8 @@ export interface BreadcrumbsContext {
   collection: UseCollectionReturn;
   isDisabled: ComputedRef<boolean>;
   onAction: (key: CollectionKey) => void;
+  /** Invalidates current-item state when existing DOM children move without changing size. */
+  orderVersion: Readonly<ShallowRef<number>>;
   separator: ComputedRef<unknown>;
   slots: ComputedRef<ReturnType<typeof breadcrumbsVariants>>;
 }

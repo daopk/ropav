@@ -5,6 +5,7 @@ import {nextTick, reactive} from "vue";
 import {BreadcrumbsItem} from "@/components/breadcrumbs";
 
 import Fixture from "./fixtures.vue";
+import SeparatorFixture from "./separator-fixture.vue";
 
 const renderBreadcrumbs = async (props: Record<string, unknown> = {}) => {
   const result = renderVapor(Fixture, {props});
@@ -83,6 +84,69 @@ describe("Breadcrumbs", () => {
     expect(items[0]?.textContent?.replaceAll(/\s/g, "")).toBe("Home/");
     expect(items[1]?.textContent?.replaceAll(/\s/g, "")).toBe("Products/");
     expect(items[2]).toHaveTextContent("Laptop");
+
+    unmount();
+  });
+
+  it.each(["", 0])("uses the default chevron for falsy separator %j", async (separator) => {
+    const {root, unmount} = await renderBreadcrumbs({separator});
+
+    expect(root.querySelectorAll("[data-slot='breadcrumbs-separator']")).toHaveLength(2);
+
+    unmount();
+  });
+
+  it("renders a component separator with the separator slot styling", async () => {
+    const {root, unmount} = await renderBreadcrumbs({separator: SeparatorFixture});
+    const separators = root.querySelectorAll("[data-testid='custom-separator']");
+
+    expect(separators).toHaveLength(2);
+    expect(
+      [...separators].every((separator) => separator.classList.contains("breadcrumbs__separator")),
+    ).toBe(true);
+    expect(
+      [...separators].every(
+        (separator) => separator.getAttribute("data-slot") === "breadcrumbs-separator",
+      ),
+    ).toBe(true);
+
+    unmount();
+  });
+
+  it("moves current state, disabled state, and separators after a keyed reorder", async () => {
+    const props = reactive<{
+      items: {href?: string; id: string; label: string}[];
+    }>({
+      items: [
+        {href: "#a", id: "a", label: "A"},
+        {href: "#b", id: "b", label: "B"},
+        {href: "#c", id: "c", label: "C"},
+      ],
+    });
+    const {root, unmount} = await renderBreadcrumbs(props);
+
+    expect(root.querySelector("[data-current='true']")).toHaveAttribute("data-testid", "c");
+
+    props.items = [props.items[2]!, props.items[1]!, props.items[0]!];
+    await nextTick();
+    await Promise.resolve();
+    await nextTick();
+
+    const items = [...root.querySelectorAll<HTMLElement>("[data-slot='breadcrumbs-item']")];
+
+    expect(items.map((item) => item.dataset["testid"])).toEqual(["c", "b", "a"]);
+    expect(root.querySelector("[data-current='true']")).toHaveAttribute("data-testid", "a");
+    expect(root.querySelector("[data-testid='a'] [data-slot='link']")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(root.querySelector("[data-testid='c'] [data-slot='link']")).not.toHaveAttribute(
+      "aria-disabled",
+    );
+    expect(
+      root.querySelector("[data-testid='c'] [data-slot='breadcrumbs-separator']"),
+    ).not.toBeNull();
+    expect(root.querySelector("[data-testid='a'] [data-slot='breadcrumbs-separator']")).toBeNull();
 
     unmount();
   });

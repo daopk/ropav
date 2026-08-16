@@ -21,6 +21,8 @@ const props = withDefaults(defineProps<LinkRootProps>(), {
   isDisabled: undefined,
 });
 
+const emit = defineEmits<{click: [event: MouseEvent]}>();
+
 defineSlots<{default?: (props: LinkRootSlotProps) => unknown}>();
 
 const fieldset = useFieldsetContext();
@@ -36,7 +38,16 @@ const styles = computed(() => slots.value.base({class: props.class}));
 // Press comes from `usePress` rather than from the interaction states, because a link activates
 // on Enter and the pressed styling has to follow the key being held — the interaction states
 // only watch the pointer. Hover and focus still come from there.
-const press = usePress({isDisabled: resolvedIsDisabled});
+const press = usePress({
+  isDisabled: resolvedIsDisabled,
+  // usePress prevents the native Enter default so it can model pressed state consistently. Finish
+  // that keyboard path with a click; pointer and virtual paths already arrived as a real click.
+  onPress: (event) => {
+    if (event.pointerType === "keyboard" && event.target instanceof HTMLElement) {
+      event.target.click();
+    }
+  },
+});
 const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
 
 // An anchor with no destination is not a link to the browser, and neither is a disabled one —
@@ -53,6 +64,12 @@ const role = computed(() => (isAnchor.value ? undefined : "link"));
 const tabindex = computed(() => (resolvedIsDisabled.value ? undefined : 0));
 
 const isCurrent = computed(() => Boolean(props.ariaCurrent));
+
+const onClick = (event: MouseEvent) => {
+  press.handlers.onClick(event);
+
+  if (!resolvedIsDisabled.value) emit("click", event);
+};
 
 // Chained by hand rather than spread: a listener reaching a vapor element through `v-bind` is
 // re-attached on every render and can be dropped mid-dispatch.
@@ -90,7 +107,7 @@ const onPointerleave = (event: PointerEvent) => {
     :tabindex="tabindex"
     :target="props.target"
     @blur="interaction.onBlur"
-    @click="press.handlers.onClick"
+    @click="onClick"
     @dragstart="press.handlers.onDragstart"
     @focus="interaction.onFocus"
     @keydown="press.handlers.onKeydown"
@@ -127,7 +144,7 @@ const onPointerleave = (event: PointerEvent) => {
     :role="role"
     :tabindex="tabindex"
     @blur="interaction.onBlur"
-    @click="press.handlers.onClick"
+    @click="onClick"
     @dragstart="press.handlers.onDragstart"
     @focus="interaction.onFocus"
     @keydown="press.handlers.onKeydown"

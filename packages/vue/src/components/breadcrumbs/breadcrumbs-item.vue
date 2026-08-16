@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<BreadcrumbsItemProps>(), {
   isDisabled: undefined,
 });
 
-const emit = defineEmits<{click: [event: MouseEvent]; press: [event: MouseEvent]}>();
+const emit = defineEmits<{click: [event: MouseEvent]}>();
 
 defineSlots<{default?: (props: BreadcrumbsItemSlotProps) => unknown}>();
 
@@ -44,8 +44,9 @@ watch(
 );
 
 const isCurrent = computed(() => {
-  // Registration is the reactive invalidation; DOM order supplies the truth, including reorders.
+  // Size handles append/remove; orderVersion handles keyed moves that keep the same registrations.
   void context.collection.size.value;
+  void context.orderVersion.value;
 
   return context.collection.getLastKey() === itemKey.value;
 });
@@ -66,7 +67,6 @@ const onClick = (event: MouseEvent) => {
   }
 
   emit("click", event);
-  emit("press", event);
   context.onAction(itemKey.value);
 };
 </script>
@@ -101,7 +101,7 @@ const onClick = (event: MouseEvent) => {
 
     <template v-if="!isCurrent">
       <IconChevronRight
-        v-if="context.separator.value == null"
+        v-if="!context.separator.value"
         :class="context.slots.value.separator()"
         data-slot="breadcrumbs-separator"
       />

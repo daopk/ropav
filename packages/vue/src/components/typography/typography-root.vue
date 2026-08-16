@@ -1,28 +1,17 @@
 <script setup lang="ts" vapor>
-import type {TypographyRootProps, TypographyType} from "./typography.types";
+import type {TypographyRootProps} from "./typography.types";
 
 import {typographyVariants} from "@heroui/styles";
 import {computed} from "vue";
+
+import {DEFAULT_ELEMENT_BY_TYPE} from "./typography.constants";
 
 const props = defineProps<TypographyRootProps>();
 
 defineSlots<{default?: () => unknown}>();
 
-const defaultElementByType: Record<TypographyType, string> = {
-  body: "p",
-  "body-sm": "p",
-  "body-xs": "p",
-  code: "code",
-  h1: "h1",
-  h2: "h2",
-  h3: "h3",
-  h4: "h4",
-  h5: "h5",
-  h6: "h6",
-};
-
 const resolvedType = computed(() => props.type ?? "body");
-const tag = computed(() => defaultElementByType[resolvedType.value]);
+const tag = computed(() => DEFAULT_ELEMENT_BY_TYPE[resolvedType.value]);
 const styles = computed(() =>
   typographyVariants({
     align: props.align,
