@@ -52,6 +52,7 @@ describe("Alert under a vdom host", () => {
     expect(container.querySelector('[data-slot="alert-description"]')).toHaveClass(
       "alert__description",
     );
+    expect(container.querySelector('[data-slot="alert-default-icon"]')).not.toBeNull();
 
     unmount();
   });
@@ -63,6 +64,14 @@ describe("Alert under a vdom host", () => {
       "data-surface",
       "default",
     );
+
+    unmount();
+  });
+
+  it("renders the fallback icon for an explicitly empty host slot", () => {
+    const {container, unmount} = render(() => []);
+
+    expect(container.querySelector('[data-slot="alert-default-icon"]')).not.toBeNull();
 
     unmount();
   });

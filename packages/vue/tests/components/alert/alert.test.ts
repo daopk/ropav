@@ -164,15 +164,17 @@ describe("Alert", () => {
   });
 
   describe("context", () => {
-    it.each([AlertIndicator, AlertContent, AlertTitle, AlertDescription])(
-      "rejects a compound part rendered outside the root",
-      (component) => {
-        const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it.each([
+      ["Indicator", AlertIndicator],
+      ["Content", AlertContent],
+      ["Title", AlertTitle],
+      ["Description", AlertDescription],
+    ])("rejects %s rendered outside the root", (_name, component) => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-        expect(() => renderVapor(component)).toThrow(/`AlertContext` was consumed outside/);
+      expect(() => renderVapor(component)).toThrow(/`AlertContext` was consumed outside/);
 
-        warn.mockRestore();
-      },
-    );
+      warn.mockRestore();
+    });
   });
 });
