@@ -4,8 +4,7 @@ import type {ProgressCircleRootProps, ProgressCircleSlotProps} from "./progress-
 import {progressCircleVariants} from "@heroui/styles";
 import {computed} from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
+import {useProgressLabeling} from "../../composables/use-progress-labeling";
 import {useProgressValue} from "../../composables/use-progress-value";
 import {composeSlotClassName} from "../../utils/compose";
 
@@ -15,13 +14,11 @@ const props = withDefaults(defineProps<ProgressCircleRootProps>(), {isIndetermin
 
 defineSlots<{default?: (props: ProgressCircleSlotProps) => unknown}>();
 
-const id = useId(() => props.id);
-const {context: fieldIds, labelId} = useFieldIds({
-  labelElementType: "span",
-  slots: props.ariaLabel || props.ariaLabelledby ? [] : ["label"],
+const {ariaLabelledby, id} = useProgressLabeling({
+  ariaLabel: () => props.ariaLabel,
+  ariaLabelledby: () => props.ariaLabelledby,
+  id: () => props.id,
 });
-
-provideFieldIdsContext(fieldIds);
 
 const state = useProgressValue({
   formatOptions: () => props.formatOptions,
@@ -32,17 +29,6 @@ const state = useProgressValue({
   valueLabel: () => props.valueLabel,
 });
 const slots = computed(() => progressCircleVariants({color: props.color, size: props.size}));
-const ariaLabelledby = computed(() => {
-  const external = props.ariaLabelledby?.trim().split(/\s+/).filter(Boolean) ?? [];
-  const ids = props.ariaLabel
-    ? external.length > 0
-      ? [id.value, ...external]
-      : []
-    : [labelId.value, ...external];
-  const unique = [...new Set(ids.filter((value): value is string => Boolean(value)))];
-
-  return unique.length > 0 ? unique.join(" ") : undefined;
-});
 
 provideProgressCircleContext({slots, state});
 </script>

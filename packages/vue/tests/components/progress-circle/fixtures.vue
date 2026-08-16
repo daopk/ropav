@@ -49,4 +49,5 @@ withDefaults(
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>
   </ProgressCircle>
+  <span id="ext">External</span>
 </template>

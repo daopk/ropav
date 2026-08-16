@@ -11,6 +11,7 @@ withDefaults(
       fillClass?: string;
       outputClass?: string;
       trackClass?: string;
+      withLabel?: boolean;
     }
   >(),
   {
@@ -18,6 +19,7 @@ withDefaults(
     isIndeterminate: undefined,
     outputClass: undefined,
     trackClass: undefined,
+    withLabel: true,
   },
 );
 </script>
@@ -40,7 +42,7 @@ withDefaults(
     :value="$props.value"
     :value-label="$props.valueLabel"
   >
-    <Label>Loading</Label>
+    <Label v-if="$props.withLabel">Loading</Label>
     <ProgressBar.Output v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
       Custom
     </ProgressBar.Output>
@@ -56,4 +58,5 @@ withDefaults(
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>
   </ProgressBar>
+  <span id="ext">External</span>
 </template>

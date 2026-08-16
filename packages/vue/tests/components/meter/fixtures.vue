@@ -4,14 +4,23 @@ import type {MeterRootProps} from "@/components/meter";
 import {Label} from "@/components/label";
 import {Meter} from "@/components/meter";
 
-defineProps<
-  MeterRootProps & {
-    customOutput?: boolean;
-    fillClass?: string;
-    outputClass?: string;
-    trackClass?: string;
-  }
->();
+withDefaults(
+  defineProps<
+    MeterRootProps & {
+      customOutput?: boolean;
+      fillClass?: string;
+      outputClass?: string;
+      trackClass?: string;
+      withLabel?: boolean;
+    }
+  >(),
+  {
+    fillClass: undefined,
+    outputClass: undefined,
+    trackClass: undefined,
+    withLabel: true,
+  },
+);
 </script>
 
 <template>
@@ -31,7 +40,7 @@ defineProps<
     :value="$props.value"
     :value-label="$props.valueLabel"
   >
-    <Label>Storage</Label>
+    <Label v-if="$props.withLabel">Storage</Label>
     <Meter.Output v-if="$props.customOutput" :class="$props.outputClass" data-testid="output">
       Custom
     </Meter.Output>
@@ -46,4 +55,5 @@ defineProps<
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>
     <span data-testid="slot-value-text">{{ slotProps.valueText }}</span>
   </Meter>
+  <span id="ext">External</span>
 </template>

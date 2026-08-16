@@ -73,6 +73,35 @@ describe("ProgressBar", () => {
     unmount();
   });
 
+  it("combines an explicit aria-label with the visible label", async () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabel: "Transfer status", value: 40},
+    });
+    const root = part(container, "progress-bar")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-labelledby", `${root.id} ${label.id}`);
+
+    unmount();
+  });
+
+  it("combines a visible label with external aria-labelledby ids", async () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabelledby: "ext", value: 40},
+    });
+    const root = part(container, "progress-bar")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-labelledby", `${label.id} ext`);
+    expect(root).toHaveAccessibleName("Loading External");
+
+    unmount();
+  });
+
   it.each(["default", "accent", "success", "warning", "danger"] as const)(
     "applies the %s color modifier",
     (color) => {

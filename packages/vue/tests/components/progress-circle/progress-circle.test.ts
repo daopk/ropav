@@ -7,10 +7,17 @@ import {
   ProgressCircleTrack,
   ProgressCircleTrackCircle,
 } from "@/components/progress-circle";
+import {
+  CENTER,
+  CIRCUMFERENCE,
+  RADIUS,
+  ROTATION,
+  STROKE_WIDTH,
+  VIEW_BOX,
+} from "@/components/progress-circle/progress-circle.constants";
 
 import Fixture from "./fixtures.vue";
 
-const circumference = 2 * Math.PI * 16;
 const part = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`);
 
@@ -29,6 +36,35 @@ describe("ProgressCircle", () => {
     unmount();
   });
 
+  it("combines an explicit aria-label with the visible label", async () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabel: "Upload status", value: 60, withLabel: true},
+    });
+    const root = part(container, "progress-circle")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-labelledby", `${root.id} ${label.id}`);
+
+    unmount();
+  });
+
+  it("combines a visible label with external aria-labelledby ids", async () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabelledby: "ext", value: 60, withLabel: true},
+    });
+    const root = part(container, "progress-circle")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-labelledby", `${label.id} ext`);
+    expect(root).toHaveAccessibleName("Loading External");
+
+    unmount();
+  });
+
   it("renders progress semantics and the exact SVG geometry", () => {
     const {container, unmount} = renderVapor(Fixture, {
       props: {ariaLabel: "Loading", value: 60},
@@ -43,16 +79,16 @@ describe("ProgressCircle", () => {
     expect(root).toHaveAttribute("aria-valuenow", "60");
     expect(root).toHaveAttribute("aria-valuetext", "60%");
     expect(track?.tagName).toBe("svg");
-    expect(track).toHaveAttribute("viewBox", "0 0 36 36");
+    expect(track).toHaveAttribute("viewBox", VIEW_BOX);
     expect(trackCircle?.tagName).toBe("circle");
-    expect(trackCircle).toHaveAttribute("cx", "18");
-    expect(trackCircle).toHaveAttribute("cy", "18");
-    expect(trackCircle).toHaveAttribute("r", "16");
-    expect(trackCircle).toHaveAttribute("stroke-width", "4");
-    expect(fillCircle).toHaveAttribute("stroke-dasharray", String(circumference));
-    expect(fillCircle).toHaveAttribute("stroke-dashoffset", String(circumference * 0.4));
+    expect(trackCircle).toHaveAttribute("cx", String(CENTER));
+    expect(trackCircle).toHaveAttribute("cy", String(CENTER));
+    expect(trackCircle).toHaveAttribute("r", String(RADIUS));
+    expect(trackCircle).toHaveAttribute("stroke-width", String(STROKE_WIDTH));
+    expect(fillCircle).toHaveAttribute("stroke-dasharray", String(CIRCUMFERENCE));
+    expect(fillCircle).toHaveAttribute("stroke-dashoffset", String(CIRCUMFERENCE * 0.4));
     expect(fillCircle).toHaveAttribute("stroke-linecap", "round");
-    expect(fillCircle).toHaveAttribute("transform", "rotate(-90 18 18)");
+    expect(fillCircle).toHaveAttribute("transform", ROTATION);
 
     unmount();
   });
@@ -66,7 +102,7 @@ describe("ProgressCircle", () => {
     expect(part(container, "progress-circle")).not.toHaveAttribute("aria-valuetext");
     expect(part(container, "progress-circle-fill-circle")).toHaveAttribute(
       "stroke-dashoffset",
-      String(circumference * 0.75),
+      String(CIRCUMFERENCE * 0.75),
     );
     expect(container.querySelector("[data-testid='slot-indeterminate']")).toHaveTextContent("true");
 
@@ -81,7 +117,7 @@ describe("ProgressCircle", () => {
     expect(part(container, "progress-circle")).toHaveAttribute("aria-valuenow", "20");
     expect(part(container, "progress-circle-fill-circle")).toHaveAttribute(
       "stroke-dashoffset",
-      String(circumference),
+      String(CIRCUMFERENCE),
     );
 
     unmount();
@@ -157,7 +193,7 @@ describe("ProgressCircle", () => {
 
     expect(part(container, "progress-circle-fill-circle")).toHaveAttribute(
       "stroke-dashoffset",
-      String(circumference * 0.25),
+      String(CIRCUMFERENCE * 0.25),
     );
 
     unmount();

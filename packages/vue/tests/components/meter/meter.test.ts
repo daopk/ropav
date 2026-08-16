@@ -79,14 +79,63 @@ describe("Meter", () => {
     unmount();
   });
 
-  it("uses an explicit accessible name without a dangling label reference", () => {
+  it("combines an explicit aria-label with the visible label", async () => {
     const {container, unmount} = renderVapor(Fixture, {
       props: {ariaLabel: "Storage usage", value: 45},
     });
+    const root = part(container, "meter")!;
+    const label = part(container, "label")!;
 
-    expect(part(container, "meter")).toHaveAttribute("aria-label", "Storage usage");
-    expect(part(container, "meter")).not.toHaveAttribute("aria-labelledby");
-    expect(part(container, "label")).not.toHaveAttribute("id");
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-label", "Storage usage");
+    expect(label).toHaveAttribute("id");
+    expect(root).toHaveAttribute("aria-labelledby", `${root.id} ${label.id}`);
+
+    unmount();
+  });
+
+  it("combines a visible label with external aria-labelledby ids", async () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabelledby: "ext", value: 45},
+    });
+    const root = part(container, "meter")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-labelledby", `${label.id} ext`);
+    expect(root).toHaveAccessibleName("Storage External");
+
+    unmount();
+  });
+
+  it("combines aria-label and aria-labelledby without a visible label", () => {
+    const {container, unmount} = renderVapor(Fixture, {
+      props: {ariaLabel: "Storage usage", ariaLabelledby: "ext", value: 45, withLabel: false},
+    });
+    const root = part(container, "meter")!;
+
+    expect(part(container, "label")).toBeNull();
+    expect(root).toHaveAttribute("aria-labelledby", `${root.id} ext`);
+
+    unmount();
+  });
+
+  it("updates label composition when aria-label changes", async () => {
+    const props = reactive({ariaLabel: undefined as string | undefined, value: 45});
+    const {container, unmount} = renderVapor(Fixture, {props});
+    const root = part(container, "meter")!;
+    const label = part(container, "label")!;
+
+    await nextTick();
+    expect(root).toHaveAttribute("aria-labelledby", label.id);
+
+    props.ariaLabel = "Storage usage";
+    await nextTick();
+
+    expect(root).toHaveAttribute("aria-label", "Storage usage");
+    expect(root).toHaveAttribute("aria-labelledby", `${root.id} ${label.id}`);
 
     unmount();
   });

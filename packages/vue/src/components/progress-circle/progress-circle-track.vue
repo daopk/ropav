@@ -3,6 +3,7 @@ import type {ProgressCircleTrackProps} from "./progress-circle.types";
 
 import {composeSlotClassName} from "../../utils/compose";
 
+import {VIEW_BOX} from "./progress-circle.constants";
 import {useProgressCircleContext} from "./progress-circle.context";
 
 const props = defineProps<ProgressCircleTrackProps>();
@@ -17,7 +18,7 @@ const {slots} = useProgressCircleContext();
     :class="composeSlotClassName(slots.track, props.class)"
     data-slot="progress-circle-track"
     fill="none"
-    viewBox="0 0 36 36"
+    :viewBox="VIEW_BOX"
   >
     <slot />
   </svg>

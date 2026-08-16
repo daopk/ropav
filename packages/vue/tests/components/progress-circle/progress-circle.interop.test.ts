@@ -9,8 +9,7 @@ import {
   ProgressCircleTrack,
   ProgressCircleTrackCircle,
 } from "@/components/progress-circle";
-
-const circumference = 2 * Math.PI * 16;
+import {CIRCUMFERENCE} from "@/components/progress-circle/progress-circle.constants";
 
 const render = (isIndeterminate = false) =>
   renderInterop(ProgressCircleRoot, {
@@ -40,7 +39,7 @@ describe("ProgressCircle under a vdom host", () => {
     );
     expect(container.querySelector('[data-slot="progress-circle-fill-circle"]')).toHaveAttribute(
       "stroke-dashoffset",
-      String(circumference * 0.75),
+      String(CIRCUMFERENCE * 0.75),
     );
 
     unmount();
@@ -54,7 +53,7 @@ describe("ProgressCircle under a vdom host", () => {
     );
     expect(container.querySelector('[data-slot="progress-circle-fill-circle"]')).toHaveAttribute(
       "stroke-dashoffset",
-      String(circumference * 0.75),
+      String(CIRCUMFERENCE * 0.75),
     );
 
     unmount();
