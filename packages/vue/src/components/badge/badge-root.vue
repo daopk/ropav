@@ -4,6 +4,8 @@ import type {BadgeRootProps} from "./badge.types";
 import {badgeVariants} from "@heroui/styles";
 import {computed} from "vue";
 
+import {composeSlotClassName} from "../../utils/compose";
+
 import BadgeAutoLabel from "./badge-auto-label";
 import {provideBadgeContext} from "./badge.context";
 
@@ -24,7 +26,7 @@ provideBadgeContext({slots});
 </script>
 
 <template>
-  <span :class="slots.base({class: props.class})" data-slot="badge">
+  <span :class="composeSlotClassName(slots.base, props.class)" data-slot="badge">
     <BadgeAutoLabel>
       <slot />
     </BadgeAutoLabel>

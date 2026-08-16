@@ -5,6 +5,17 @@ import {h} from "vue";
 import {BadgeLabel, BadgeRoot} from "@/components/badge";
 
 describe("Badge under a vdom host", () => {
+  it("leaves bare host text unwrapped because the host fills its slot only on insertion", () => {
+    const {container, unmount} = renderInterop(BadgeRoot, {
+      slots: {default: () => "5"},
+    });
+
+    expect(container.querySelector('[data-slot="badge"]')).toHaveTextContent("5");
+    expect(container.querySelector('[data-slot="badge-label"]')).toBeNull();
+
+    unmount();
+  });
+
   it("styles a label written in and forwarded from the host", () => {
     const {container, unmount} = renderInterop(BadgeRoot, {
       props: {color: "danger", size: "lg"},

@@ -10,6 +10,8 @@ import BadgeLabel from "./badge-label.vue";
  *
  * The slot has already rendered by the time it returns its block. Inspecting that block therefore
  * preserves its effects and lets the exact same text nodes move into the label component.
+ * A slot forwarded from a VDOM host is filled only when inserted, so it cannot be inspected here;
+ * those callers (including runtime-compiled stories) must render `Badge.Label` explicitly.
  */
 const BadgeAutoLabel = defineVaporComponent(
   (_props, {slots}) => {
