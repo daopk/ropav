@@ -24,7 +24,13 @@ const styles = computed(() =>
 </script>
 
 <template>
-  <component :is="tag" :class="styles" data-slot="typography" :data-type="resolvedType">
+  <component
+    :is="tag"
+    v-bind="{slot: props.slot}"
+    :class="styles"
+    data-slot="typography"
+    :data-type="resolvedType"
+  >
     <slot />
   </component>
 </template>

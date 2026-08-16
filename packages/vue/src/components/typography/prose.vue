@@ -12,7 +12,7 @@ const styles = computed(() => typographyVariants().prose({class: props.class}));
 </script>
 
 <template>
-  <div :class="styles" data-slot="prose">
+  <div v-bind="{slot: props.slot}" :class="styles" data-slot="prose">
     <slot />
   </div>
 </template>

@@ -8,8 +8,17 @@ const props = defineProps<
     HeadingProps &
     ParagraphProps & {
       mode?: "root" | "heading" | "paragraph" | "code" | "prose";
+      onNativeClick?: (event: MouseEvent) => void;
     }
 >();
+
+const nativeAttributes = {
+  "aria-label": "Typography target",
+  id: "typography-target",
+  slot: "description",
+  style: {maxWidth: "42px"},
+  title: "Native title",
+};
 </script>
 
 <template>
@@ -21,7 +30,9 @@ const props = defineProps<
     data-foo="bar"
     :level="props.level"
     :truncate="props.truncate"
+    v-bind="nativeAttributes"
     :weight="props.weight"
+    @click="props.onNativeClick"
   >
     Section title
   </Heading>
@@ -30,11 +41,27 @@ const props = defineProps<
     :class="props.class"
     data-foo="bar"
     :size="props.size"
+    v-bind="nativeAttributes"
+    @click="props.onNativeClick"
   >
     Body copy
   </Paragraph>
-  <Code v-else-if="props.mode === 'code'" :class="props.class" data-foo="bar"> const x = 1; </Code>
-  <Prose v-else-if="props.mode === 'prose'" :class="props.class" data-foo="bar">
+  <Code
+    v-else-if="props.mode === 'code'"
+    :class="props.class"
+    data-foo="bar"
+    v-bind="nativeAttributes"
+    @click="props.onNativeClick"
+  >
+    const x = 1;
+  </Code>
+  <Prose
+    v-else-if="props.mode === 'prose'"
+    :class="props.class"
+    data-foo="bar"
+    v-bind="nativeAttributes"
+    @click="props.onNativeClick"
+  >
     <h2>Prose heading</h2>
     <p>Prose content</p>
   </Prose>
@@ -46,7 +73,9 @@ const props = defineProps<
     data-foo="bar"
     :truncate="props.truncate"
     :type="props.type"
+    v-bind="nativeAttributes"
     :weight="props.weight"
+    @click="props.onNativeClick"
   >
     HeroUI Typography
   </TypographyRoot>

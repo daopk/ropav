@@ -1,5 +1,7 @@
+import type {ProseProps, Typography, TypographyRootProps} from "@/components/typography";
+
 import {renderVapor} from "@heroui/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
 import Fixture from "./fixtures.vue";
@@ -12,6 +14,20 @@ const renderTypography = (props: Record<string, unknown> = {}) => {
 };
 
 describe("Typography", () => {
+  it("exports native HTML props through both direct and compound prop types", () => {
+    const props = {
+      "aria-label": "Typed label",
+      id: "typed-id",
+      onClick: (_event: MouseEvent) => undefined,
+      style: {maxWidth: "42px"},
+    } satisfies TypographyRootProps;
+    const compoundProps: Typography["Props"] = props;
+    const proseProps: ProseProps = props;
+
+    expect(compoundProps.id).toBe("typed-id");
+    expect(proseProps["aria-label"]).toBe("Typed label");
+  });
+
   it("renders body text as a paragraph by default", () => {
     const {element, unmount} = renderTypography();
 
@@ -67,6 +83,29 @@ describe("Typography", () => {
 
     expect(element).toHaveClass("typography", "max-w-prose");
     expect(element).toHaveAttribute("data-foo", "bar");
+
+    unmount();
+  });
+
+  it.each([
+    [undefined, "P"],
+    ["heading", "H1"],
+    ["paragraph", "P"],
+    ["code", "CODE"],
+    ["prose", "DIV"],
+  ] as const)("forwards native attributes and events through %s", (mode, tagName) => {
+    const onNativeClick = vi.fn();
+    const {element, unmount} = renderTypography({mode, onNativeClick});
+
+    expect(element.tagName).toBe(tagName);
+    expect(element).toHaveAttribute("aria-label", "Typography target");
+    expect(element).toHaveAttribute("id", "typography-target");
+    expect(element).toHaveAttribute("slot", "description");
+    expect(element).toHaveAttribute("title", "Native title");
+    expect(element.style.maxWidth).toBe("42px");
+
+    element.click();
+    expect(onNativeClick).toHaveBeenCalledOnce();
 
     unmount();
   });

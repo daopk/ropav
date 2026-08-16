@@ -1,11 +1,15 @@
 import type {TypographyVariants} from "@heroui/styles";
+import type {HTMLAttributes} from "vue";
 
 export type TypographyType = NonNullable<TypographyVariants["type"]>;
 export type TypographyAlign = NonNullable<TypographyVariants["align"]>;
 export type TypographyColor = NonNullable<TypographyVariants["color"]>;
 export type TypographyWeight = NonNullable<TypographyVariants["weight"]>;
 
-export interface TypographyRootProps {
+export interface TypographyRootProps extends /* @vue-ignore */ Omit<
+  HTMLAttributes,
+  "class" | "color"
+> {
   class?: string;
   /** Text alignment. @default "start" */
   align?: TypographyAlign;
@@ -13,6 +17,8 @@ export interface TypographyRootProps {
   color?: TypographyColor;
   /** Semantic and visual text style. @default "body" */
   type?: TypographyType;
+  /** Native slot name, matching the DOM prop accepted by the React primitive. */
+  slot?: string;
   /** Truncates overflowing text to one line. */
   truncate?: boolean;
   weight?: TypographyWeight;
@@ -30,6 +36,7 @@ export interface ParagraphProps extends Omit<TypographyRootProps, "type"> {
 
 export interface CodeProps extends Omit<TypographyRootProps, "type"> {}
 
-export interface ProseProps {
+export interface ProseProps extends /* @vue-ignore */ Omit<HTMLAttributes, "class" | "color"> {
   class?: string;
+  slot?: string;
 }

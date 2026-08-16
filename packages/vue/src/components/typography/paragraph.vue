@@ -16,6 +16,7 @@ const type = computed<TypographyType>(() =>
 
 <template>
   <TypographyRoot
+    v-bind="{slot: props.slot}"
     :align="props.align"
     :class="props.class"
     :color="props.color"

@@ -1,3 +1,11 @@
+import type {
+  CodeProps,
+  HeadingProps,
+  ParagraphProps,
+  ProseProps,
+  TypographyRootProps,
+} from "./typography.types";
+
 import Code from "./code.vue";
 import Heading from "./heading.vue";
 import Paragraph from "./paragraph.vue";
@@ -14,6 +22,15 @@ export const Typography = Object.assign(TypographyRoot, {
   Prose,
   Root: TypographyRoot,
 });
+
+export type Typography = {
+  CodeProps: CodeProps;
+  HeadingProps: HeadingProps;
+  ParagraphProps: ParagraphProps;
+  ProseProps: ProseProps;
+  Props: TypographyRootProps;
+  RootProps: TypographyRootProps;
+};
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
