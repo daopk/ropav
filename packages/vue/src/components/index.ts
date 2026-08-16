@@ -55,6 +55,7 @@ export * from "./number-field";
 export * from "./pagination";
 export * from "./popover";
 export * from "./progress-bar";
+export * from "./progress-circle";
 export * from "./radio";
 export * from "./radio-group";
 export * from "./range-calendar";
