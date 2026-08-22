@@ -41,7 +41,7 @@ defineEmits<{expandedChange: [isExpanded: boolean]}>();
     <Disclosure.Content>
       <Disclosure.Body>
         Hidden content revealed on expand.
-        <Button data-testid="body-button">Body action</Button>
+        <Button data-testid="body-button" variant="secondary">Body action</Button>
       </Disclosure.Body>
     </Disclosure.Content>
   </Disclosure>
