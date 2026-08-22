@@ -559,9 +559,15 @@ importers:
       '@iconify-json/ic':
         specifier: 1.2.4
         version: 1.2.4
+      '@iconify-json/logos':
+        specifier: 1.2.13
+        version: 1.2.13
       '@iconify-json/streamline-logos':
         specifier: 1.2.0
         version: 1.2.0
+      '@iconify-json/tabler':
+        specifier: 1.2.38
+        version: 1.2.38
       '@iconify-json/uim':
         specifier: 1.2.3
         version: 1.2.3
@@ -1455,8 +1461,14 @@ packages:
   '@iconify-json/ic@1.2.4':
     resolution: {integrity: sha512-pzPMmrZrBQuwT7nmtrYdkttun8KalRGgZPIL1Ny9KpF2zjRGIUPN+npTfuD3lrgO/OnSwAoJWuekQwBpt/Cqrw==}
 
+  '@iconify-json/logos@1.2.13':
+    resolution: {integrity: sha512-Up54ZnIuiuBgGAsuzhR1nvKqwq8VE6YM3XLwVB6IgY+7NAasz6WKu9Ay5hGfAkfuOKowodfwDC8ozReEBYrWRg==}
+
   '@iconify-json/streamline-logos@1.2.0':
     resolution: {integrity: sha512-eEMC8BvJTCUiR/xdAjKuJwRGnKV5v9Prp2wgONFLKILq1om/5Pz+EUsFXVqYSVeIAUfguaB2tjy1wM7wJbs0IQ==}
+
+  '@iconify-json/tabler@1.2.38':
+    resolution: {integrity: sha512-9v6ooRU/bKOK/Whv4w2aiK5gBnfCV9Ei+uD1iDDeLu2b+EnF3G3ZKkRKWEOOLG8bJyfKn6XEia6gUQ9oO7cF+Q==}
 
   '@iconify-json/uim@1.2.3':
     resolution: {integrity: sha512-rCOU5nrRbcg5s5ZhL9Esoj/acyPeb6hPetVQYMJ18/wJwYsQtcwrFJXy6XOwyFs9TTLnjFGynLJO/TYihOQtDg==}
@@ -9742,7 +9754,15 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/logos@1.2.13':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/streamline-logos@1.2.0':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/tabler@1.2.38':
     dependencies:
       '@iconify/types': 2.0.0
 
