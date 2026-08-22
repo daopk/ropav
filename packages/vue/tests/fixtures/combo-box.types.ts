@@ -1,3 +1,4 @@
+import type {UseComboBoxReturn} from "@/composables/use-combo-box";
 import type {
   ComboBoxFilter,
   ComboBoxMenuTrigger,
@@ -38,4 +39,18 @@ export interface ComboBoxStateHostProps {
   onOpenChange?: (isOpen: boolean, menuTrigger?: ComboBoxMenuTrigger) => void;
   /** Hands the live state back to the test. */
   onReady?: (state: UseComboBoxStateReturn<ComboBoxFixtureItem>) => void;
+}
+
+export interface ComboBoxHostProps extends ComboBoxStateHostProps {
+  isDisabled?: boolean;
+  isRequired?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  ariaDescribedby?: string;
+  /** Whether the listbox is rendered at all, which is what hands the keyboard layer over. */
+  withListBox?: boolean;
+  onFocusChange?: (isFocused: boolean) => void;
+  onKeydown?: (event: KeyboardEvent) => void;
+  /** Hands the live behaviour layer back to the test. */
+  onComboBoxReady?: (comboBox: UseComboBoxReturn) => void;
 }

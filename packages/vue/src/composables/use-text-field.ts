@@ -133,6 +133,8 @@ export interface UseTextFieldOptions {
   ariaAutocomplete?: MaybeRefOrGetter<string | undefined>;
   ariaHaspopup?: MaybeRefOrGetter<string | boolean | undefined>;
   ariaControls?: MaybeRefOrGetter<string | undefined>;
+  /** Whether what this control controls is showing. For a control that is itself a combobox. */
+  ariaExpanded?: MaybeRefOrGetter<boolean | undefined>;
   onFocusChange?: (isFocused: boolean) => void;
   onKeydown?: (event: KeyboardEvent) => void;
   onKeyup?: (event: KeyboardEvent) => void;
@@ -304,6 +306,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
       "aria-controls": toValue(options.ariaControls),
       "aria-describedby": resolvedDescribedby.value,
       "aria-errormessage": toValue(options.ariaErrormessage),
+      "aria-expanded": toValue(options.ariaExpanded),
       "aria-haspopup": toValue(options.ariaHaspopup),
       "aria-invalid": isInvalid.value || undefined,
       "aria-label": toValue(options.ariaLabel),

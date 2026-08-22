@@ -17,6 +17,7 @@ export * from "./use-checkbox-group-state";
 export * from "./use-collator";
 export * from "./use-collection";
 export * from "./use-collection-auto-focus";
+export * from "./use-combo-box";
 export * from "./use-combo-box-state";
 export * from "./use-color-area";
 export * from "./use-color-area-gradient";
