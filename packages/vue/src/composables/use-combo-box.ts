@@ -258,11 +258,16 @@ export const useComboBox = <T>(
     ariaLabelledby: options.ariaLabelledby,
     autoComplete: () => autocomplete.inputAttributes.value.autocomplete,
     autoCorrect: () => autocomplete.inputAttributes.value.autocorrect,
+    /*
+     * `enterkeyhint` is the one attribute of the autocomplete layer's bag that is *not* forwarded.
+     * It labels the on-screen keyboard's action key "go", which is right for a search field whose
+     * Enter runs a search — but Enter here settles a value in place, and `useComboBox` upstream
+     * sets no hint at all.
+     */
     autoFocus: options.autoFocus,
     // The text and the value are two halves of one thing, so the field reports through the combo
     // box's validation rather than starting a second one over the string it happens to hold.
     defaultValue: () => state.defaultInputValue.value,
-    enterKeyHint: () => autocomplete.inputAttributes.value.enterkeyhint,
     form: options.form,
     id: options.id,
     inputMode: options.inputMode,

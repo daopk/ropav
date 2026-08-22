@@ -122,7 +122,18 @@ export interface ComboBoxRootEmits {
   focusChange: [isFocused: boolean];
 }
 
-export interface ComboBoxRootSlotProps {
+export interface ComboBoxRootSlotProps<T = unknown> {
+  /**
+   * The options that match what has been typed, which is what the listbox should render.
+   *
+   * The React build has no counterpart because it does not need one: RAC renders its listbox from
+   * the filtered *collection*, so the options written as markup are narrowed for the caller. Here
+   * the markup is what renders, so the matches have to reach whoever writes it — the same seam
+   * `Autocomplete.Filter` hands its own caller.
+   */
+  items: readonly T[];
+  /** What has been typed so far. */
+  inputValue: string;
   isOpen: boolean;
   isDisabled: boolean;
   isInvalid: boolean;
@@ -135,9 +146,11 @@ export interface ComboBoxInputGroupProps {
 }
 
 export interface ComboBoxInputGroupSlotProps {
+  isHovered: boolean;
+  isFocusWithin: boolean;
+  isFocusVisible: boolean;
   isDisabled: boolean;
   isInvalid: boolean;
-  isOpen: boolean;
 }
 
 export interface ComboBoxTriggerProps {

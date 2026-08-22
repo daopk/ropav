@@ -111,6 +111,14 @@ export interface UseComboBoxStateOptions<T> {
 export interface UseComboBoxStateReturn<T> extends MenuTriggerState, FormValidationState {
   /** The options on screen: the matches while open, and frozen at what they were while closing. */
   collection: UseCollectionReturn;
+  /**
+   * The same options as data, in the same order.
+   *
+   * Handed out because the markup for the options is written by the caller here, not rendered from
+   * the collection the way React Aria does it — so whoever writes the listbox needs the list. Read
+   * off the displayed collection rather than filtered again, so it freezes with it.
+   */
+  displayedItems: ComputedRef<T[]>;
   /** The selection, over **every** option rather than only the matches. */
   selection: UseSelectionManagerReturn;
   selectionMode: ComputedRef<SelectSelectionMode>;
@@ -274,6 +282,14 @@ export const useComboBoxState = <T>(
   });
 
   const collection = useCollection({source: () => displayed.value});
+
+  const displayedItems = computed<T[]>(() =>
+    displayed.value.keys.flatMap((key) => {
+      const node = displayed.value.getNode(key) as VirtualizerNode | undefined;
+
+      return node ? [node.content as T] : [];
+    }),
+  );
 
   const textOf = (key: CollectionKey | null) => {
     if (key == null) return "";
@@ -666,6 +682,7 @@ export const useComboBoxState = <T>(
     commit,
     defaultInputValue,
     defaultValue,
+    displayedItems,
     focusStrategy: trigger.focusStrategy,
     inputValue,
     isFocused: computed(() => isFocusedRef.value),

@@ -57,7 +57,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: ComboBoxRootSlotProps) => unknown}>();
+defineSlots<{default?: (props: ComboBoxRootSlotProps<T>) => unknown}>();
 
 const state = useComboBoxState<T>({
   allowsCustomValue: () => props.allowsCustomValue,
@@ -161,6 +161,15 @@ const styles = computed(() => comboBoxVariants({fullWidth: props.fullWidth}));
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
+/**
+ * The options that matched, handed to whoever writes the listbox.
+ *
+ * Read off the displayed collection rather than by filtering `items` a second time: that collection
+ * is already the answer, and it is the one that freezes while the popover closes — so a listbox
+ * rendered from it does not rearrange itself on the way out.
+ */
+const matches = computed(() => state.displayedItems.value as readonly T[]);
+
 provideFieldIdsContext(comboBox.fieldIds);
 provideFieldErrorContext({validation: state.displayValidation});
 
@@ -226,7 +235,12 @@ provideOverlayTargetContext({
   autoFocus: computed(() => false),
   closeAll: state.close,
   isNonModal: true,
-  labelledBy: comboBox.labelId,
+  /*
+   * Nothing names the popover, which matches the React build: it carries no role, so an
+   * `aria-labelledby` on it would be ignored anywhere it was read. The listbox inside is the thing
+   * with a role, and it is named through `ListBoxStateContext` above.
+   */
+  labelledBy: computed(() => undefined),
   overlayId: comboBox.listId,
   placement: "bottom start",
   registerOverlayElement: (element) => {
@@ -253,11 +267,13 @@ providePressResponder(comboBox.triggerResponder);
     data-slot="combo-box"
   >
     <slot
+      :input-value="state.inputValue.value"
       :is-disabled="Boolean(props.isDisabled)"
       :is-invalid="comboBox.isInvalid.value"
       :is-open="state.isOpen.value"
       :is-read-only="Boolean(props.isReadOnly)"
       :is-required="Boolean(props.isRequired)"
+      :items="matches"
     />
     <ComboBoxHiddenInput
       v-if="formValue === 'key' && props.name"
