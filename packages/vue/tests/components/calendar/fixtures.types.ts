@@ -5,7 +5,7 @@ import type {
   SelectionAlignment,
 } from "@/composables/use-calendar-state";
 import type {DayOfWeek, WeekdayStyle} from "@/utils/calendar";
-import type {DateDuration, DateValue} from "@internationalized/date";
+import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
 
 export interface CalendarFixtureProps {
   class?: string;
@@ -18,8 +18,13 @@ export interface CalendarFixtureProps {
    * `:value` is bound on the calendar below — so the emit never reached the test.
    * `onUpdate:yearPickerOpen` needs no such treatment: it pairs with `isYearPickerOpen`,
    * and only a matching name triggers the bug.
+   *
+   * `update:focusedValue` needs it for the same reason as `update:value` — `:focused-value` is
+   * bound below — and it is one of the emits with no React-named callback beside it, so this
+   * prop is the only way a test can reach it.
    */
   "onUpdate:value"?: (value: CalendarValue) => void;
+  "onUpdate:focusedValue"?: (value: CalendarDate) => void;
   defaultValue?: CalendarValue;
   focusedValue?: DateValue | null;
   defaultFocusedValue?: DateValue | null;

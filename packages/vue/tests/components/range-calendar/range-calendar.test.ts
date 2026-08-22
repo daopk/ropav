@@ -342,6 +342,36 @@ describe("RangeCalendar", () => {
       calendar.unmount();
     });
 
+    it("emits update:yearPickerOpen when the year picker is opened", async () => {
+      const onUpdate = vi.fn();
+      const calendar = renderRangeCalendar({
+        "onUpdate:yearPickerOpen": onUpdate,
+        withYearPicker: true,
+      });
+
+      calendar.slot("calendar-year-picker-trigger").click();
+      await nextTick();
+
+      // No fixture forwarding needed here: the emit is `update:yearPickerOpen` while the bound
+      // prop is `isYearPickerOpen`, so the names do not collide and fallthrough delivers it.
+      expect(onUpdate).toHaveBeenCalledWith(true);
+      calendar.unmount();
+    });
+
+    it("emits update:focusedValue when the arrow keys move focus", async () => {
+      const onUpdate = vi.fn();
+      const calendar = renderRangeCalendar({"onUpdate:focusedValue": onUpdate});
+
+      calendar.cell(15).focus();
+      calendar
+        .slot("range-calendar-grid")
+        .dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+      await nextTick();
+
+      expect(String(onUpdate.mock.lastCall![0])).toBe("2026-06-16");
+      calendar.unmount();
+    });
+
     it("takes a range from the keyboard", async () => {
       const onValueChange = vi.fn();
       const calendar = renderRangeCalendar({onValueChange});

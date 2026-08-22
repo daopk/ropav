@@ -262,6 +262,22 @@ describe("Calendar", () => {
       calendar.unmount();
     });
 
+    it("emits update:focusedValue when the arrow keys move focus", async () => {
+      const onUpdate = vi.fn();
+      const calendar = renderCalendar({"onUpdate:focusedValue": onUpdate});
+
+      calendar.cell(15).focus();
+      calendar
+        .slot("calendar-grid")
+        .dispatchEvent(
+          new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+        );
+      await nextTick();
+
+      expect(String(onUpdate.mock.lastCall![0])).toBe("2026-06-16");
+      calendar.unmount();
+    });
+
     it("selects a date when a cell is pressed", async () => {
       const onValueChange = vi.fn();
       const calendar = renderCalendar({"onUpdate:value": onValueChange});

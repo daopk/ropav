@@ -31,6 +31,13 @@ export interface RangeCalendarFixtureProps {
   defaultYearPickerOpen?: boolean;
   locale?: string;
   onValueChange?: (value: DateRange | null) => void;
+  /**
+   * Declared and forwarded rather than left to attribute fallthrough: `:focused-value` is bound
+   * on the calendar below, and a fallthrough `onUpdate:X` never reaches a child whose call site
+   * binds `:X` (ROADMAP nợ #99). `update:focusedValue` has no React-named callback beside it, so
+   * this prop is the only way a test can reach that emit.
+   */
+  "onUpdate:focusedValue"?: (value: CalendarDate) => void;
   /** Renders the year-picker trigger and grid instead of a plain heading. */
   withYearPicker?: boolean;
   /** Renders a second grid, for the multi-month layout. */

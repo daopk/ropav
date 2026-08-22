@@ -84,6 +84,7 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
     :value="props.value"
     :visible-duration="props.visibleDuration"
     :weeks-in-month="props.weeksInMonth"
+    @update:focused-value="(value) => props['onUpdate:focusedValue']?.(value)"
     @update:value="props.onValueChange"
   >
     <RangeCalendarHeader>
