@@ -125,13 +125,47 @@ describe("Accordion (browser)", () => {
     unmount();
   });
 
-  it("shows a focus ring on the trigger when focused by keyboard", async () => {
+  it("paints a focus ring on the trigger when focused by keyboard", async () => {
+    const {container, unmount} = renderVapor(AccordionFixture);
+    const trigger = triggersIn(container)[0]!;
+    const shadowBefore = getComputedStyle(trigger).boxShadow;
+
+    await userEvent.tab();
+    await nextTick();
+
+    // Measured rather than inferred from `:focus-visible`: the ring is drawn with `box-shadow`,
+    // and the only rule that reaches it is `[data-focus-visible="true"]` — the
+    // `&:focus-visible:not(:focus)` branch beside it can never match on a real button (debt #14).
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute("data-focus-visible", "true");
+    expect(getComputedStyle(trigger).boxShadow).not.toBe(shadowBefore);
+    expect(getComputedStyle(trigger).boxShadow).not.toBe("none");
+
+    unmount();
+  });
+
+  it("paints no focus ring when focused by pointer", async () => {
     const {container, unmount} = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
 
-    trigger.focus();
+    await userEvent.click(trigger);
+    await nextTick();
 
-    expect(trigger.matches(":focus-visible")).toBe(true);
+    expect(trigger).toHaveFocus();
+    expect(trigger).not.toHaveAttribute("data-focus-visible");
+    expect(getComputedStyle(trigger).boxShadow).toBe("none");
+
+    unmount();
+  });
+
+  it("reports hover from a real pointer", async () => {
+    const {container, unmount} = renderVapor(AccordionFixture);
+    const trigger = triggersIn(container)[0]!;
+
+    await userEvent.hover(trigger);
+    await nextTick();
+
+    expect(trigger).toHaveAttribute("data-hovered", "true");
 
     unmount();
   });

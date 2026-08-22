@@ -383,6 +383,83 @@ describe("Accordion", () => {
     });
   });
 
+  describe("interaction states", () => {
+    // React builds the trigger on React Aria's `Button`, which renders these. They are not
+    // cosmetic here: `accordion.css` reaches the focus ring only through
+    // `[data-focus-visible="true"]`, since the `&:focus-visible:not(:focus)` branch beside it
+    // can never match on a real button (debt #14).
+    it("reports hover, which the stylesheet keys the trigger background on", async () => {
+      const {container, unmount} = renderVapor(AccordionFixture);
+      const trigger = triggersIn(container)[0]!;
+
+      trigger.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-hovered", "true");
+
+      trigger.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true}));
+      await nextTick();
+
+      expect(trigger).not.toHaveAttribute("data-hovered");
+
+      unmount();
+    });
+
+    it("reports focus, the only path left for the focus ring", async () => {
+      const {container, unmount} = renderVapor(AccordionFixture);
+      const trigger = triggersIn(container)[0]!;
+
+      trigger.dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-focused", "true");
+      expect(trigger).toHaveAttribute("data-focus-visible", "true");
+
+      trigger.dispatchEvent(new FocusEvent("blur"));
+      await nextTick();
+
+      expect(trigger).not.toHaveAttribute("data-focused");
+      expect(trigger).not.toHaveAttribute("data-focus-visible");
+
+      unmount();
+    });
+
+    it("reports press until the pointer is released, even away from the trigger", async () => {
+      const {container, unmount} = renderVapor(AccordionFixture);
+      const trigger = triggersIn(container)[0]!;
+
+      trigger.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      await nextTick();
+
+      expect(trigger).toHaveAttribute("data-pressed", "true");
+
+      window.dispatchEvent(new PointerEvent("pointerup"));
+      await nextTick();
+
+      expect(trigger).not.toHaveAttribute("data-pressed");
+
+      unmount();
+    });
+
+    it("reports none of them on a disabled trigger", async () => {
+      const {container, unmount} = renderVapor(AccordionFixture, {props: {disabledItem: "one"}});
+      const trigger = triggersIn(container)[0]!;
+
+      expect(trigger).toHaveAttribute("data-disabled", "true");
+
+      trigger.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
+      trigger.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      trigger.dispatchEvent(new FocusEvent("focus"));
+      await nextTick();
+
+      expect(trigger).not.toHaveAttribute("data-hovered");
+      expect(trigger).not.toHaveAttribute("data-pressed");
+      expect(trigger).not.toHaveAttribute("data-focus-visible");
+
+      unmount();
+    });
+  });
+
   describe("indicator", () => {
     it("renders the built-in chevron when no slot content is passed", () => {
       const {container, unmount} = renderVapor(AccordionFixture);
