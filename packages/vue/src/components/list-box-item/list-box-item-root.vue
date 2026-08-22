@@ -6,7 +6,10 @@ import {computed, shallowRef, watch} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
 import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
+import {
+  useInteractionModality,
+  useInteractionStates,
+} from "../../composables/use-interaction-states";
 import {dataAttr} from "../../utils/assertion";
 import {getCollectionTextValue} from "../../utils/text-value";
 import {useListBoxContext} from "../list-box/list-box.context";
@@ -114,7 +117,44 @@ const isVirtuallyFocused = computed(
 
 const isFocused = computed(() => isRealFocused.value || isVirtuallyFocused.value);
 
-const isFocusVisible = computed(() => isRealFocusVisible.value || isVirtuallyFocused.value);
+/**
+ * How the user is driving the page, which is what decides whether a ring is painted.
+ *
+ * Reactive here rather than read inside a handler, because the ring has to appear and disappear as
+ * the modality changes under an option that is already the focused one — arrowing onto an option and
+ * then moving the mouse are the same focused key with two different answers.
+ */
+const modality = useInteractionModality();
+
+/**
+ * Under virtual focus, pressing an option must not move focus.
+ *
+ * The caret belongs to a control beside the listbox, and the browser's default for a mousedown is
+ * to focus what was pressed — which takes it away. Where the popover contains focus that shows as a
+ * flicker on the way out and back; where it does not, focus lands on the body and the field reads
+ * the blur as the user leaving, so its ring drops and it commits mid-press. This is the same guard
+ * React Aria's `useSelectableItem` applies as `preventFocusOnPress: shouldUseVirtualFocus`, and
+ * `mousedown` is the event that carries it — preventing the pointer event does not stop focus.
+ */
+const onMousedown = (event: MouseEvent) => {
+  if (event.button !== 0 || !shouldUseVirtualFocus.value) return;
+
+  event.preventDefault();
+};
+
+/**
+ * Whether to paint a ring, which is a narrower question than being the focused option.
+ *
+ * Virtual focus follows the mouse in a picker (`shouldFocusOnHover`), so equating the two would ring
+ * every option the pointer passed over — a keyboard affordance drawn for a gesture that never asked
+ * for one. React Aria splits them the same way: `useSelectableItem` moves the focused key on hover
+ * while `useFocusRing` answers separately from the modality, so a hovered option there carries
+ * `data-focused` and a background but no ring. Real focus keeps its own answer, which already
+ * accounts for the modality.
+ */
+const isFocusVisible = computed(
+  () => isRealFocusVisible.value || (isVirtuallyFocused.value && modality.value === "keyboard"),
+);
 
 /**
  * Hovering an option moves focus to it, but only inside a picker.
@@ -255,6 +295,7 @@ const onClick = (event: MouseEvent) => {
     @focus="onFocus"
     @keydown.capture="draggable?.handlers.onKeydownCapture?.($event)"
     @keyup.capture="draggable?.handlers.onKeyupCapture?.($event)"
+    @mousedown="onMousedown"
     @pointerdown="onPointerdown"
     @pointerenter="onPointerenter"
     @pointerleave="onPointerleave"
