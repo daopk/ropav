@@ -6,6 +6,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 import {computed, nextTick, toValue, watch} from "vue";
 
 import {focusableIn, isScrollable} from "../utils/focus";
+import {isAppleDevice} from "../utils/platform";
 
 export type ListOrientation = "horizontal" | "vertical";
 
@@ -43,6 +44,18 @@ export interface UseListKeyboardOptions {
   orientation?: MaybeRefOrGetter<ListOrientation | undefined>;
   /** Whether arrow keys wrap at the ends. Menus and tag groups do; listboxes do not. */
   shouldFocusWrap?: MaybeRefOrGetter<boolean | undefined>;
+  /**
+   * Whether moving focus with the keyboard also replaces the selection.
+   *
+   * Defaults to whether the collection's selection behaviour is to replace, which is the case
+   * where moving focus and choosing are the same gesture. A tab list overrides it: its behaviour
+   * is to toggle, and whether the arrows choose is the caller's own question about how
+   * activation works rather than the manager's about what a press means.
+   *
+   * Held off while the non-contiguous modifier is down, so focus can move past an item without
+   * taking the selection along. A jump to either end is deliberately not held off.
+   */
+  selectOnFocus?: MaybeRefOrGetter<boolean | undefined>;
   disallowSelectAll?: MaybeRefOrGetter<boolean | undefined>;
   /** @default "clearSelection" */
   escapeKeyBehavior?: MaybeRefOrGetter<"clearSelection" | "none" | undefined>;
@@ -100,14 +113,29 @@ export interface UseListKeyboardReturn {
 }
 
 /**
+ * Whether the modifier that means "move focus without touching the selection" is down.
+ *
+ * Ported from React Aria's `isNonContiguousSelectionModifier`
+ * (`react-aria/src/selection/utils.ts`, react-aria 3.51.0). Ctrl plus an arrow already means
+ * something system-wide on Apple platforms, so Alt stands in there; Alt plus Space means
+ * something on Windows and Ubuntu, so Ctrl stands in everywhere else.
+ */
+const isNonContiguousSelectionModifier = (event: KeyboardEvent): boolean =>
+  isAppleDevice() ? event.altKey : event.ctrlKey;
+
+/**
  * Keyboard navigation and focus management for a collection, ported from React Aria's
- * `useSelectableCollection` and `ListKeyboardDelegate`.
+ * `useSelectableCollection` and `ListKeyboardDelegate`
+ * (`react-aria/src/selection/`, react-aria 3.51.0).
  *
  * Focus is real DOM focus with a roving tabindex, not `aria-activedescendant`: exactly one
  * item is tabbable at a time and the collection itself is the tab stop until something inside
- * has been focused. Arrow keys move focus without changing the selection, because
- * `selectOnFocus` is only true for `selectionBehavior: "replace"`, which neither a listbox nor
- * a tag group uses.
+ * has been focused.
+ *
+ * Whether moving focus also chooses is `selectOnFocus`, which defaults to the collection's
+ * selection behaviour being to replace. A listbox and a tag group toggle, so their arrows only
+ * move focus; a tab list opts in by hand, because for it the question is whether activation is
+ * automatic rather than what a press means.
  *
  * `shouldUseVirtualFocus` inverts that, for a collection driven from a control beside it: the
  * caret stays where it is, the focused key is published as
@@ -122,6 +150,9 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   const shouldFocusWrap = computed(() => toValue(options.shouldFocusWrap) ?? false);
   const escapeKeyBehavior = computed(() => toValue(options.escapeKeyBehavior) ?? "clearSelection");
   const isVirtual = computed(() => Boolean(toValue(options.shouldUseVirtualFocus)));
+  const selectOnFocus = computed(
+    () => toValue(options.selectOnFocus) ?? selection.selectionBehavior.value === "replace",
+  );
 
   const getElement = () => toValue(options.element) ?? null;
 
@@ -414,10 +445,22 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
     const focused = selection.focusedKey.value;
 
-    const move = (key: CollectionKey | null) => {
+    /**
+     * `respectsModifier` is false only for a jump to either end: React Aria's `home` and `end`
+     * replace the selection under `selectOnFocus` without consulting the modifier, where its
+     * `navigateToKey` — the arrows and the paging keys — does consult it.
+     */
+    const move = (key: CollectionKey | null, respectsModifier = true) => {
       if (key == null) return false;
 
+      // Focus first, so the focus event that follows finds the key already claimed, then the
+      // selection — the order React Aria's `navigateToKey` uses.
       focusKey(key, {scroll: true});
+
+      if (selectOnFocus.value && !(respectsModifier && isNonContiguousSelectionModifier(event))) {
+        selection.replaceSelection(key);
+      }
+
       event.preventDefault();
       event.stopPropagation();
 
@@ -450,13 +493,13 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
       case "Home": {
         // Shift+Home from nowhere would extend a selection that has no anchor.
         if (focused == null && event.shiftKey) return;
-        move(getFirstKey());
+        move(getFirstKey(), false);
 
         return;
       }
       case "End": {
         if (focused == null && event.shiftKey) return;
-        move(getLastKey());
+        move(getLastKey(), false);
 
         return;
       }
@@ -562,7 +605,15 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
       element.compareDocumentPosition(from) & Node.DOCUMENT_POSITION_FOLLOWING,
     );
 
-    selection.setFocusedKey(entryKey(fromLater));
+    const entry = entryKey(fromLater);
+
+    selection.setFocusedKey(entry);
+
+    // Entering a collection that chooses on focus chooses. Guarded on the key not already being
+    // the selection, which is what keeps entering a tab list from reporting a change nobody made.
+    if (entry != null && selectOnFocus.value && !selection.isSelected(entry)) {
+      selection.replaceSelection(entry);
+    }
   };
 
   const onFocusout = (event: FocusEvent) => {

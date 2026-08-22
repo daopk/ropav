@@ -195,7 +195,7 @@ describe("useListKeyboard", () => {
     });
 
     it("does not select while moving", () => {
-      // `selectOnFocus` is only true for replace behaviour, which a listbox never uses.
+      // Selecting on focus is derived from replace behaviour, which a listbox never uses.
       const {press, selection} = setup();
 
       press("ArrowDown");
@@ -892,6 +892,126 @@ describe("useListKeyboard", () => {
       await nextTick();
 
       expect(items.get("b")).not.toHaveFocus();
+    });
+  });
+
+  describe("select on focus", () => {
+    const SELECT_ON_FOCUS = {
+      keyboard: {orientation: "horizontal" as const, selectOnFocus: true, shouldFocusWrap: true},
+      selection: {selectionMode: "single" as const},
+    };
+
+    /** The modifier that means "move focus only" differs by platform, so the platform is pinned. */
+    const onPlatform = (platform: string) =>
+      vi.spyOn(navigator, "platform", "get").mockReturnValue(platform);
+
+    it("replaces the selection as focus moves when told to", () => {
+      const {press, selection} = setup(SELECT_ON_FOCUS);
+
+      press("ArrowRight");
+
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+
+      press("ArrowRight");
+
+      expect([...selection.selectedKeys.value]).toEqual(["b"]);
+
+      press("ArrowLeft");
+
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+    });
+
+    it("defaults to the collection's replace behaviour", () => {
+      const {press, selection} = setup({
+        selection: {selectionBehavior: "replace", selectionMode: "single"},
+      });
+
+      press("ArrowDown");
+      press("ArrowDown");
+
+      expect([...selection.selectedKeys.value]).toEqual(["b"]);
+    });
+
+    it("holds off while the non-contiguous modifier is down on an Apple platform", () => {
+      const platform = onPlatform("MacIntel");
+      const {press, selection} = setup(SELECT_ON_FOCUS);
+
+      press("ArrowRight", {altKey: true});
+
+      expect(selection.focusedKey.value).toBe("a");
+      expect(selection.isEmpty.value).toBe(true);
+
+      press("ArrowRight", {ctrlKey: true});
+
+      expect([...selection.selectedKeys.value]).toEqual(["b"]);
+
+      platform.mockRestore();
+    });
+
+    it("holds off while the non-contiguous modifier is down elsewhere", () => {
+      const platform = onPlatform("Linux x86_64");
+      const {press, selection} = setup(SELECT_ON_FOCUS);
+
+      press("ArrowRight", {ctrlKey: true});
+
+      expect(selection.focusedKey.value).toBe("a");
+      expect(selection.isEmpty.value).toBe(true);
+
+      press("ArrowRight", {altKey: true});
+
+      expect([...selection.selectedKeys.value]).toEqual(["b"]);
+
+      platform.mockRestore();
+    });
+
+    it("selects on a jump to either end even with the modifier down", () => {
+      // React Aria's `home` and `end` replace the selection without consulting the modifier,
+      // where its arrow and paging path consults it.
+      const platform = onPlatform("Linux x86_64");
+      const {press, selection} = setup(SELECT_ON_FOCUS);
+
+      press("End", {ctrlKey: true});
+
+      expect([...selection.selectedKeys.value]).toEqual(["d"]);
+
+      press("Home", {ctrlKey: true});
+
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+
+      platform.mockRestore();
+    });
+
+    it("chooses the entry key when focus first lands inside", () => {
+      const {items, keyboard, selection} = setup(SELECT_ON_FOCUS);
+
+      keyboard.onFocusin(focusin(items.get("a")!));
+
+      expect([...selection.selectedKeys.value]).toEqual(["a"]);
+    });
+
+    it("leaves an entry key that is already selected alone", () => {
+      const onSelectionChange = vi.fn();
+      const {items, keyboard} = setup({
+        ...SELECT_ON_FOCUS,
+        selection: {
+          defaultSelectedKeys: ["b"],
+          onSelectionChange,
+          selectionMode: "single",
+        },
+      });
+
+      keyboard.onFocusin(focusin(items.get("b")!));
+
+      expect(onSelectionChange).not.toHaveBeenCalled();
+    });
+
+    it("does not choose on entry when focus was already inside", () => {
+      const {items, keyboard, selection} = setup(SELECT_ON_FOCUS);
+
+      selection.setFocused(true);
+      keyboard.onFocusin(focusin(items.get("c")!));
+
+      expect(selection.isEmpty.value).toBe(true);
     });
   });
 });
