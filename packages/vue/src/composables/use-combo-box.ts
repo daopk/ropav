@@ -12,7 +12,7 @@ import {computed, shallowRef, toValue, watch} from "vue";
 import {comboBoxStrings} from "../i18n/combobox";
 import {ariaHideOutside} from "../utils/aria-hide-outside";
 import {announce} from "../utils/live-announcer";
-import {isIOS, isMac} from "../utils/platform";
+import {isAppleDevice} from "../utils/platform";
 
 import {useAutocomplete} from "./use-autocomplete";
 import {useFormReset} from "./use-form-reset";
@@ -22,15 +22,6 @@ import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
 import {useOverlayTrigger} from "./use-overlay-trigger";
 import {usePress} from "./use-press";
 import {useTextField} from "./use-text-field";
-
-/**
- * Whether this is a platform whose screen reader needs the focused option read out by hand.
- *
- * VoiceOver does not reliably announce a change of `aria-activedescendant`, so the option is put
- * through a live region instead. Every other screen reader does announce it, and announcing twice
- * is worse than not announcing at all.
- */
-const isAppleDevice = () => isMac() || isIOS();
 
 /** How long two touchend events have to be apart to count as two taps rather than one. */
 const DOUBLE_TOUCH_MS = 500;

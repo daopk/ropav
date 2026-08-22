@@ -32,6 +32,15 @@ export const isIOS = (): boolean => isIPhone() || isIPad();
 
 export const isAndroid = (): boolean => test(/Android/i);
 
+/**
+ * Whether this is a platform whose screen reader needs some things read out by hand.
+ *
+ * VoiceOver does not reliably announce a change of `aria-activedescendant`, so a widget with
+ * nominal focus has to put the focused option through a live region instead. Every other screen
+ * reader announces it, and announcing twice is worse than not announcing at all.
+ */
+export const isAppleDevice = (): boolean => isMac() || isIOS();
+
 export const isChrome = (): boolean => test(/Chrome/i);
 
 /**

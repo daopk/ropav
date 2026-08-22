@@ -4,6 +4,8 @@ import {afterEach, describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
 
+import {isAppleDevice} from "@/utils/platform";
+
 import {pressRealReset} from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
@@ -320,6 +322,114 @@ describe("ComboBox (browser)", () => {
         "",
         "Panda",
       ]);
+    });
+  });
+
+  describe("what it announces", () => {
+    /**
+     * Every message written to the live region, in order.
+     *
+     * A snapshot of the region is not enough: several of these fire off one keystroke and each
+     * overwrites the last, so reading it once only ever sees whichever landed most recently — and
+     * which that is depends on the platform. Recording them all makes the assertions stable
+     * wherever the suite runs.
+     */
+    const recordAnnouncements = () => {
+      const messages: string[] = [];
+      const region = document.body.querySelector(
+        '[data-slot="live-announcer"][data-politeness="assertive"]',
+      );
+      const observer = new MutationObserver(() => {
+        const text = region?.textContent?.trim();
+
+        if (text && messages.at(-1) !== text) messages.push(text);
+      });
+
+      if (region) observer.observe(region, {characterData: true, childList: true, subtree: true});
+      cleanups.push(() => observer.disconnect());
+
+      return messages;
+    };
+
+    it("says how many options are left as the list narrows", async () => {
+      const result = mount();
+
+      await nextTick();
+      await open(result.container);
+
+      const input = inputOf(result.container);
+
+      input.focus();
+      await nextTick();
+
+      const messages = recordAnnouncements();
+
+      await userEvent.type(input, "a");
+      await nextTick();
+      await nextTick();
+      await userEvent.type(input, "t");
+      await nextTick();
+      await nextTick();
+
+      /*
+       * The one announcement that is **not** gated on the platform, and the gate upstream is
+       * narrower than it first looks: `isAppleDevice()` there only widens the "opened with nothing
+       * focused" branch, while a change in the *count* is announced everywhere — no screen reader
+       * reads that of its own accord. Singular and plural both, which is what the locale's plural
+       * rule is here to get right.
+       */
+      expect(messages).toContain("2 options available.");
+      expect(messages).toContain("1 option available.");
+    });
+
+    it("reads the focused option out where the platform needs it", async () => {
+      const result = mount();
+
+      await nextTick();
+      await open(result.container);
+
+      inputOf(result.container).focus();
+      await nextTick();
+
+      const messages = recordAnnouncements();
+
+      await userEvent.keyboard("{ArrowDown}");
+      await nextTick();
+      await nextTick();
+
+      /*
+       * Gated on the platform in the source, so the assertion is gated the same way rather than
+       * skipped: VoiceOver does not reliably announce a change of `aria-activedescendant`, and every
+       * other screen reader does — announcing twice is worse than not at all. This machine runs the
+       * suite in Chromium *on macOS*, where it does fire; a Linux runner takes the other branch, and
+       * then the claim is that nothing is said.
+       */
+      const named = messages.filter((message) => /^(Cat|Dog|Panda)$/.test(message));
+
+      if (isAppleDevice()) expect(named.length).toBeGreaterThan(0);
+      else expect(named).toEqual([]);
+    });
+
+    it("says what was chosen where the platform needs it", async () => {
+      const result = mount();
+
+      await nextTick();
+      await open(result.container);
+
+      inputOf(result.container).focus();
+      await nextTick();
+
+      const messages = recordAnnouncements();
+
+      await userEvent.click(optionsOf()[1]!);
+      await nextTick();
+      await nextTick();
+
+      // Gated the same way, and for the same reason: other screen readers report a selection change
+      // on their own. Recorded rather than snapshotted because choosing moves the count and the
+      // focused option too, and each of those overwrites the region in turn.
+      if (isAppleDevice()) expect(messages).toContain("Dog, selected");
+      else expect(messages).not.toContain("Dog, selected");
     });
   });
 
