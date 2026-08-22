@@ -265,7 +265,7 @@ export const ProseBlock: Story = {
           <li><strong>Layout</strong> — Card, Surface, Header, Separator</li>
           <li><strong>Navigation</strong> — Tabs, Accordion, Breadcrumbs, Link, Pagination</li>
           <li><strong>Forms</strong> — TextField, Checkbox, Radio, Select, Switch</li>
-          <li><strong>Feedback</strong> — Alert, Spinner, Progress, Skeleton</li>
+          <li><strong>Feedback</strong> — Alert, Spinner, Toast, Progress, Skeleton</li>
           <li><strong>Typography</strong> — Typography, Heading, Code, Prose</li>
         </ol>
         <hr />
