@@ -43,6 +43,7 @@ export * from "./use-default-date-props";
 export * from "./use-description";
 export * from "./use-dialog-trigger";
 export * from "./use-disclosure-group";
+export * from "./use-disclosure-panel";
 export * from "./use-dismissable";
 export * from "./use-display-names";
 export * from "./use-drag";
