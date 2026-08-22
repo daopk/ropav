@@ -12,6 +12,14 @@ export interface CalendarFixtureProps {
   id?: string;
   ariaLabel?: string;
   value?: CalendarValue;
+  /**
+   * Declared as a prop, not left to attribute fallthrough. `vue@3.6.0-rc.5` drops a
+   * fallthrough `onUpdate:X` listener when the same call site binds `:X` dynamically, and
+   * `:value` is bound on the calendar below — so the emit never reached the test.
+   * `onUpdate:yearPickerOpen` needs no such treatment: it pairs with `isYearPickerOpen`,
+   * and only a matching name triggers the bug.
+   */
+  "onUpdate:value"?: (value: CalendarValue) => void;
   defaultValue?: CalendarValue;
   focusedValue?: DateValue | null;
   defaultFocusedValue?: DateValue | null;

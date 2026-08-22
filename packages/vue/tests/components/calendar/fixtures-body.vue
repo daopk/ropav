@@ -82,6 +82,7 @@ const props = withDefaults(defineProps<CalendarFixtureProps>(), {
     :value="props.value"
     :visible-duration="props.visibleDuration"
     :weeks-in-month="props.weeksInMonth"
+    @update:value="(value) => props['onUpdate:value']?.(value)"
   >
     <CalendarHeader>
       <CalendarNavButton v-bind="PREVIOUS" />
