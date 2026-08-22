@@ -81,13 +81,29 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     else options.onResumeAll();
   };
 
-  watch(hover.isHovered, updateTimers);
+  /**
+   * Hover has to settle the clocks *in the handler*, not in a watcher on the state it sets.
+   *
+   * A watcher runs a tick later, and a tick is long enough for a toast to expire under the
+   * pointer that was supposed to be holding it — which is the entire job. The state is still
+   * reported through `useInteractionStates` so touch is filtered out the same way the stylesheet
+   * filters it.
+   */
+  const onPointerenter = (event: PointerEvent) => {
+    hover.onPointerenter(event);
+    updateTimers();
+  };
+
+  const onPointerleave = () => {
+    hover.onPointerleave();
+    updateTimers();
+  };
 
   /** The alertdialog elements, as of the last change to the visible toasts. */
   let toastElements: HTMLElement[] = [];
   let previousToasts: ToastIdentity[] = toValue(options.visibleToasts);
 
-  /** Index into `toastElements` of the toast holding focus; `-1` for none. */
+  /** Index of the toast holding focus, in visible-toast order; `-1` for none. */
   let focusedIndex = -1;
 
   /** Where focus came from before it entered the region. */
@@ -211,8 +227,16 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
 
     const {target} = event;
     const toast = target instanceof Element ? target.closest<HTMLElement>(TOAST_SELECTOR) : null;
+    const element = toValue(options.elementRef);
 
-    focusedIndex = toast ? toastElements.indexOf(toast) : -1;
+    // Read off the document now rather than from the list the last change left behind. Upstream
+    // reuses that list, which is only ever refreshed by an effect that bails whenever nothing has
+    // focus — so the very first focus into the region resolves against an empty list and the
+    // recovery below can never run.
+    focusedIndex =
+      toast && element
+        ? [...element.querySelectorAll<HTMLElement>(TOAST_SELECTOR)].indexOf(toast)
+        : -1;
   };
 
   const onFocusout = (event: FocusEvent) => {
@@ -241,8 +265,8 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   return {
     onFocusin,
     onFocusout,
-    onPointerenter: hover.onPointerenter,
-    onPointerleave: hover.onPointerleave,
+    onPointerenter,
+    onPointerleave,
     regionAttrs: computed(() => ({
       "aria-label":
         toValue(options.ariaLabel) ||
