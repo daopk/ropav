@@ -100,6 +100,7 @@ export * from "./use-search-field";
 export * from "./use-select";
 export * from "./use-select-state";
 export * from "./use-selection-manager";
+export * from "./use-shared-element";
 export * from "./use-slider";
 export * from "./use-slider-state";
 export * from "./use-slider-thumb";
