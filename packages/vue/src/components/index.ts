@@ -80,6 +80,7 @@ export * from "./tag-group";
 export * from "./textarea";
 export * from "./textfield";
 export * from "./time-field";
+export * from "./toast";
 export * from "./toggle-button";
 export * from "./toggle-button-group";
 export * from "./toolbar";

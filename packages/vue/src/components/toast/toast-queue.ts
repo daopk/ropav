@@ -1,4 +1,5 @@
 import type {
+  QueuedToast,
   ToastAction,
   ToastAddOptions,
   ToastContentValue,
@@ -61,12 +62,6 @@ export class Timer {
 /* -------------------------------------------------------------------------------------------------
  * Queue
  * -----------------------------------------------------------------------------------------------*/
-export interface QueuedToast<T = ToastContentValue> extends ToastOptions {
-  content: T;
-  key: string;
-  timer?: Timer;
-}
-
 /**
  * The order toasts are shown in, and the clocks that close them.
  *

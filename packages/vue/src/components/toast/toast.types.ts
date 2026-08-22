@@ -1,3 +1,4 @@
+import type {Timer, ToastQueue} from "./toast-queue";
 import type {ButtonRootProps} from "../button";
 import type {ToastVariants} from "@heroui/styles";
 import type {Component} from "vue";
@@ -82,4 +83,85 @@ export interface ToastPromiseOptions<T = unknown> {
   error: ToastRenderable | ((error: Error) => ToastRenderable);
   loading: ToastRenderable;
   success: ToastRenderable | ((data: T) => ToastRenderable);
+}
+
+/** One toast as the queue holds it. */
+export interface QueuedToast<T = ToastContentValue> extends ToastOptions {
+  content: T;
+  key: string;
+  timer?: Timer;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Parts
+ * -----------------------------------------------------------------------------------------------*/
+export interface ToastProviderProps {
+  /** Names the region explicitly instead of with its notification count. */
+  ariaLabel?: string;
+  class?: string;
+  /** Pixels between stacked toasts. @default 12 */
+  gap?: number;
+  /**
+   * How many toasts are drawn at once. Visual only — the rest are faded out, not dropped.
+   *
+   * Defaults to the queue's own hint, and to 3 when it has none.
+   */
+  maxVisibleToasts?: number;
+  /** Where the stack sits. @default "bottom" */
+  placement?: ToastVariants["placement"];
+  /** Where the region is rendered. @default "body" */
+  portalContainer?: HTMLElement | string;
+  /** The queue to render. Defaults to the one the imperative `toast()` writes to. */
+  queue?: ToastQueue;
+  /** How much smaller each toast is drawn than the one in front of it. @default 0.05 */
+  scaleFactor?: number;
+  /** A number is read as pixels. @default 460 */
+  width?: number | string;
+}
+
+/** What a custom toast tree is handed for each toast. */
+export interface ToastProviderSlotProps {
+  isLoading: boolean;
+  toast: QueuedToast;
+}
+
+export interface ToastRootProps {
+  class?: string;
+  /** Overrides the region's placement for this toast. */
+  placement?: ToastVariants["placement"];
+  /** Overrides the region's scale factor for this toast. */
+  scaleFactor?: number;
+  toast: QueuedToast;
+  variant?: ToastVariants["variant"];
+}
+
+export interface ToastContentProps {
+  class?: string;
+}
+
+export interface ToastIndicatorProps {
+  class?: string;
+  /** Picks the default icon. Falls back to the toast's own variant. */
+  variant?: ToastVariants["variant"];
+}
+
+export interface ToastTitleProps {
+  class?: string;
+}
+
+export interface ToastDescriptionProps {
+  class?: string;
+}
+
+export interface ToastCloseButtonProps {
+  class?: string;
+}
+
+export interface ToastActionButtonProps extends ButtonRootProps {
+  class?: string;
+}
+
+/** Renders a title, description, indicator or action label handed in through the queue. */
+export interface ToastRenderableProps {
+  value?: ToastRenderable | null;
 }
