@@ -197,6 +197,26 @@ describe("useComboBoxState", () => {
       expect(state.collection.orderedKeys()).toEqual(["cat", "dog", "panda"]);
     });
 
+    it("keeps the reason and the focus strategy of whatever opened it", async () => {
+      const onOpenChange = vi.fn();
+      const state = mount({menuTrigger: "focus", onOpenChange});
+
+      state.toggle("first", "manual");
+      await settle();
+      /*
+       * Focus arriving on an already-open field has nothing left to open. Reaching for it again
+       * would rewrite both answers with a later, weaker cause — the strategy back to `null`, so the
+       * option the keyboard asked to land on is lost. React never meets this: both writes are
+       * deferred there, so only one of them ever sees a shut popover.
+       */
+      state.setFocused(true);
+      await settle();
+
+      expect(state.focusStrategy.value).toBe("first");
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(true, "manual");
+    });
+
     it("drops back to the matches as soon as anything is typed again", async () => {
       const state = mount();
 

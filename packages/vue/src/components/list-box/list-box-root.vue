@@ -76,6 +76,7 @@ const collectionId = useId();
 const listId = computed(() => toValue(owner?.listId) ?? ownListId.value);
 
 const labelledBy = computed(() => toValue(owner?.labelledBy));
+const ownerAriaLabel = computed(() => toValue(owner?.ariaLabel));
 
 const shouldFocusOnHover = computed(() => Boolean(toValue(owner?.shouldFocusOnHover)));
 
@@ -358,6 +359,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
   <div
     :id="listId"
     ref="element"
+    :aria-label="ownerAriaLabel"
     :aria-labelledby="labelledBy"
     :aria-multiselectable="selection.selectionMode.value === 'multiple' ? true : undefined"
     aria-orientation="vertical"

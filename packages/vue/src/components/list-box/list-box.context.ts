@@ -62,6 +62,15 @@ export interface ListBoxStateContext {
   listId?: MaybeRefOrGetter<string | undefined>;
   /** Id of the element naming the listbox, normally the owner's label. */
   labelledBy?: MaybeRefOrGetter<string | undefined>;
+  /**
+   * A name of the listbox's own, for an owner whose label alone does not say what the list is.
+   *
+   * A combo box's suggestions are one: its label names the *field*, so the list beside it needs to
+   * announce itself as the suggestions for that field rather than as the field a second time.
+   * Rendered alongside `labelledBy`, which is why that one leads with the listbox's own id — an
+   * `aria-label` is dropped outright when `aria-labelledby` is present and does not include it.
+   */
+  ariaLabel?: MaybeRefOrGetter<string | undefined>;
   /** Where focus lands when the listbox appears, given how its owner was opened. */
   autoFocus?: MaybeRefOrGetter<boolean | FocusStrategy | undefined>;
   /** Whether hovering an option moves focus to it. @default false */

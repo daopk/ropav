@@ -15,6 +15,7 @@ import {announce} from "../utils/live-announcer";
 import {isIOS, isMac} from "../utils/platform";
 
 import {useAutocomplete} from "./use-autocomplete";
+import {useFormReset} from "./use-form-reset";
 import {useId} from "./use-id";
 import {useLabels} from "./use-labels";
 import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
@@ -284,6 +285,19 @@ export const useComboBox = <T>(
     value: () => state.inputValue.value,
   });
 
+  /*
+   * A reset puts the chosen key back as well as the text.
+   *
+   * The field composable already restores its own half, and it is the right element to hang this
+   * off too: the hidden inputs carrying the key are rendered *from* the state, so restoring the
+   * state is what puts the right ones back — the other way round leaves a stale set behind.
+   */
+  useFormReset(
+    computed(() => inputElement.value),
+    () => state.defaultValue.value,
+    state.setValue,
+  );
+
   /**
    * Whether focus is still somewhere inside the combo box.
    *
@@ -341,23 +355,33 @@ export const useComboBox = <T>(
   const triggerPress = usePress({
     isDisabled: () => isDisabled.value || isReadOnly.value,
     isPressed: () => state.isOpen.value,
+    /*
+     * The order of these two lines is reversed from upstream, and it has to be.
+     *
+     * React focuses the field first and toggles second; both writes are deferred, so the toggle
+     * still reads a shut popover and the gesture ends open. A write lands at once here, so focusing
+     * a `menuTrigger: "focus"` combo box *opens* it — and the toggle that followed would read that
+     * as "already open" and shut it again on the very press meant to open it. Toggling first asks
+     * the question the user actually asked; the focus that follows then finds it open and leaves it
+     * alone. Nothing is lost by the swap: both happen in one handler, and the DOM settles once.
+     */
     onPress: (event) => {
       // A finger still on the glass has not chosen anything yet, so touch waits for the release.
       if (event.pointerType !== "touch") return;
 
-      focusInput();
       state.toggle(null, "manual");
+      focusInput();
     },
     onPressStart: (event) => {
       if (event.pointerType === "touch") return;
 
-      focusInput();
       // A keyboard or a screen reader has no pointer to carry on with, so it lands on the first
       // option; a real pointer leaves the list unfocused, ready for the arrow keys.
       const strategy =
         event.pointerType === "keyboard" || event.pointerType === "virtual" ? "first" : null;
 
       state.toggle(strategy, "manual");
+      focusInput();
     },
     // The field keeps focus throughout — that is what makes the button not a tab stop.
     preventFocusOnPress: true,

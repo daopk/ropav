@@ -401,11 +401,20 @@ export const useComboBoxState = <T>(
     (displayAllItems && source.value.itemCount > 0);
 
   const open = (focusStrategy: FocusStrategy | null = null, source?: ComboBoxMenuTrigger) => {
+    /*
+     * An already-open popover is left entirely alone, which upstream does not bother with because
+     * it does not have to: React's writes are deferred, so two calls in one gesture both read a
+     * shut popover and settle into one open. Here the first lands at once, and rewriting the reason
+     * and the focus strategy on the second would report the *later* cause of an opening that had
+     * already happened.
+     */
+    if (trigger.isOpen.value) return;
+
     const displayAllItems = showsAllFor(source);
 
     if (!canOpen(displayAllItems)) return;
 
-    if (displayAllItems && !trigger.isOpen.value) showAllItems.value = true;
+    if (displayAllItems) showAllItems.value = true;
 
     menuOpenTrigger = source;
     trigger.open(focusStrategy);

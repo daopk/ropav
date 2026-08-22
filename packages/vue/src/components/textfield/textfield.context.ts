@@ -11,8 +11,9 @@ export interface TextFieldContext {
  * Carries the variant alone, kept apart from the control context that carries the behaviour.
  *
  * Two contexts rather than one because they have different providers: every field root hands
- * down behaviour, but only a `TextField` hands down a variant — a `SearchField` styles its
- * own control from its own variants, exactly as in React.
+ * down behaviour, but only a root whose control is styled from *its* variants hands down a
+ * variant — `TextField` and `ComboBox` do, while a `SearchField` styles its own control from its
+ * own variants, exactly as in React.
  *
  * Loose: an `Input` outside any field is legal.
  */

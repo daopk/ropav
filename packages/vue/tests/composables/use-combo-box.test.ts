@@ -192,6 +192,19 @@ describe("useComboBox", () => {
       expect(document.activeElement).toBe(input);
     });
 
+    it("opens a field that opens on focus, rather than closing it again", async () => {
+      const {state, trigger} = mount({menuTrigger: "focus"});
+
+      await press(trigger);
+
+      /*
+       * The press focuses the field, and a field that opens on focus is open by the time the toggle
+       * is asked — so a toggle running second would read that as "already open" and shut it on the
+       * very press meant to open it. React never meets this because both writes are deferred.
+       */
+      expect(state.isOpen.value).toBe(true);
+    });
+
     it("shows every option, whatever the field says", async () => {
       const {input, state, trigger} = mount();
 
