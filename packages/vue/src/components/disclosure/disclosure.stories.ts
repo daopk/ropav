@@ -128,9 +128,7 @@ export const Controlled: Story = {
       <div class="w-full max-w-md space-y-4">
         <div class="flex items-center gap-4">
           <Button variant="primary" @click="toggle">{{ label }} from outside</Button>
-          <Chip :color="isExpanded ? 'success' : 'default'">
-            State: {{ isExpanded ? "Expanded" : "Collapsed" }}
-          </Chip>
+          <Chip :color="isExpanded ? 'success' : 'default'">State: {{ isExpanded ? "Expanded" : "Collapsed" }}</Chip>
         </div>
         <Disclosure :is-disabled="args.isDisabled" :is-expanded="isExpanded" @expanded-change="isExpanded = $event">
           <DisclosureTrigger class="mb-2 flex w-full items-center justify-between rounded-md border border-gray-300 px-4 py-2 text-start hover:bg-gray-50">
