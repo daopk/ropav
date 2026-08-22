@@ -286,6 +286,25 @@ describe("useSharedElement", () => {
       expect(outgoing.shared.isPresent.value).toBe(false);
     });
 
+    it("stays when it is shown again before the leaving is settled", async () => {
+      /*
+       * The element is told it is not needed and then needed again inside one tick, which is what
+       * a collection does on mount: nothing is selected while it is still empty, and the
+       * selection resolves onto an element the moment it registers. Leaving after that would
+       * undo the arrival.
+       */
+      const scope = createSharedElementScope();
+      const {shared, show} = mount(scope, {isVisible: false});
+
+      // Flipped without awaiting, so it lands in the same tick as the leaving that was just
+      // deferred — awaiting first would let the deferral run and there would be no race left.
+      show(true);
+      await settle();
+
+      expect(shared.isPresent.value).toBe(true);
+      expect(shared.isExiting.value).toBe(false);
+    });
+
     it("exits when nothing takes the snapshot", async () => {
       const scope = createSharedElementScope();
       const {shared, show} = mount(scope);

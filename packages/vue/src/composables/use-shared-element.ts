@@ -253,6 +253,11 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
     void nextTick(() => {
       if (cancelled) return;
 
+      // Shown again before the deferral got here, which is what happens when the element is
+      // told it is not needed and the selection then resolves onto it in the same tick. Leaving
+      // would undo that.
+      if (isVisible.value) return;
+
       const mine = stored;
 
       stored = null;
