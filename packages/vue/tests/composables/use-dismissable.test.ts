@@ -65,6 +65,25 @@ describe("useDismissable", () => {
       dispose();
     });
 
+    it("leaves the overlay alone on a press inside a top layer", () => {
+      const {dispose, onClose} = setup();
+      const region = document.createElement("div");
+      const button = document.createElement("button");
+
+      region.setAttribute("data-heroui-top-layer", "true");
+      region.appendChild(button);
+      document.body.appendChild(region);
+
+      // A toast is rendered outside every overlay and yet is not "outside" it: dismissing a
+      // popover because the user closed a toast that appeared over it is not what they asked for.
+      pressOutside(button);
+
+      expect(onClose).not.toHaveBeenCalled();
+
+      region.remove();
+      dispose();
+    });
+
     it("leaves the overlay alone on a press inside it", () => {
       const {dispose, inside, onClose} = setup();
 

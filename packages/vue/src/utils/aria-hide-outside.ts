@@ -1,3 +1,5 @@
+import {TOP_LAYER_SELECTOR} from "./top-layer";
+
 const supportsInert = typeof HTMLElement !== "undefined" && "inert" in HTMLElement.prototype;
 
 /**
@@ -20,7 +22,7 @@ interface Layer {
 const layers: Layer[] = [];
 
 /** Content that must never be hidden, however deep in the page it sits. */
-const ALWAYS_VISIBLE_SELECTOR = "[data-live-announcer], [data-heroui-top-layer]";
+const ALWAYS_VISIBLE_SELECTOR = `[data-live-announcer], ${TOP_LAYER_SELECTOR}`;
 
 const isAlwaysVisible = (node: Element) =>
   node instanceof HTMLElement && node.matches(ALWAYS_VISIBLE_SELECTOR);

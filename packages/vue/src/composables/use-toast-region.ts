@@ -3,6 +3,7 @@ import type {ComputedRef, MaybeRefOrGetter} from "vue";
 import {computed, onScopeDispose, toValue, watch} from "vue";
 
 import {toastStrings} from "../i18n/toast";
+import {TOP_LAYER_ATTRIBUTE} from "../utils/top-layer";
 
 import {getInteractionModality, useInteractionStates} from "./use-interaction-states";
 import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
@@ -26,7 +27,7 @@ export interface UseToastRegionOptions {
 
 export interface ToastRegionAttrs {
   "aria-label": string;
-  "data-heroui-top-layer": true;
+  [TOP_LAYER_ATTRIBUTE]: true;
   role: "region";
   tabindex: -1;
 }
@@ -268,12 +269,13 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     onPointerenter,
     onPointerleave,
     regionAttrs: computed(() => ({
+      // Marks the region as a top layer, so it is not hidden from assistive technology when an
+      // overlay opens and a press on it does not dismiss that overlay.
+      [TOP_LAYER_ATTRIBUTE]: true as const,
+
       "aria-label":
         toValue(options.ariaLabel) ||
         strings.value.format("notifications", {count: toValue(options.visibleToasts).length}),
-      // Marks the region as a top layer, so it is not hidden from assistive technology when an
-      // overlay opens and a click on it does not dismiss that overlay.
-      "data-heroui-top-layer": true as const,
       role: "region" as const,
       tabindex: -1 as const,
     })),

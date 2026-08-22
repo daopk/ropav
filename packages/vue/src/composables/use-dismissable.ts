@@ -2,6 +2,8 @@ import type {MaybeRefOrGetter} from "vue";
 
 import {computed, onScopeDispose, toValue, watch} from "vue";
 
+import {isInTopLayer} from "../utils/top-layer";
+
 /**
  * Open overlays, innermost last.
  *
@@ -101,6 +103,11 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
     if (!(target instanceof Element) || !target.ownerDocument.documentElement.contains(target)) {
       return false;
     }
+
+    // A top layer is drawn over every overlay without belonging to any of them. Pressing a toast
+    // that happened to appear over a popover is not a press outside that popover — dismissing it
+    // is not what the user asked for. React Aria draws the same exemption in the same place.
+    if (isInTopLayer(target)) return false;
 
     // `composedPath` rather than `contains`, so a target inside an open shadow root resolves
     // to the real element rather than to the shadow root.
