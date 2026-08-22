@@ -157,6 +157,10 @@ const dismissable = useDismissable({
   isOpen: () => target.state.isOpen.value,
   onClose: target.state.close,
   overlayRef: element,
+  // Always, as in `usePopover`. Only a non-modal overlay can observe it: a modal one contains
+  // focus, so focus never leaves to blur away from. That makes this the one way out of an overlay
+  // that leaves the page live besides Escape — a press outside is meant for what it landed on.
+  shouldCloseOnBlur: true,
   shouldCloseOnInteractOutside,
 });
 
@@ -281,6 +285,7 @@ const setContainer = (next: unknown) => {
       :role="isDialog ? 'dialog' : undefined"
       :style="overlayStyle"
       :tabindex="isDialog ? -1 : undefined"
+      @focusout="dismissable.onFocusout"
       @keydown="onKeydown"
     >
       <OverlayDismissButton v-if="!isNonModal" :close="target.state.close" />

@@ -50,6 +50,12 @@ const shouldCloseOnInteractOutside = (element: Element) =>
       >
         <template v-if="props.withoutDialog">
           <p>Bare content</p>
+          <!--
+            Focusable, so the shape that does not contain focus can be driven by real focus moves:
+            a non-modal popover with no dialog inside is the only one focus can leave.
+          -->
+          <button data-testid="bare-first" type="button">Bare one</button>
+          <button data-testid="bare-second" type="button">Bare two</button>
         </template>
         <Popover.Dialog v-else v-slot="{close}">
           <Popover.Arrow v-if="props.withArrow">

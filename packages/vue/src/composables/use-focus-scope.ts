@@ -28,8 +28,19 @@ const innermostContainingScope = () => {
   return null;
 };
 
-/** Whether the element sits inside any registered scope. */
-const isInAnyScope = (element: Element) => scopes.some((scope) => scope.root()?.contains(element));
+/**
+ * Whether the element sits inside any registered scope.
+ *
+ * Any scope rather than only the descendants of one, because an overlay opened from inside
+ * another is a **sibling** in the DOM rather than a descendant — a submenu renders into its root
+ * popover's container, and a dropdown opened from a popover makes a container of its own. There
+ * is no tree to walk here, so a scope boundary is the thing that answers "focus is still in an
+ * overlay". React Aria walks its scope tree and asks the narrower question; the difference shows
+ * only when two unrelated overlays are open at once and focus moves between them, where this
+ * errs towards leaving them open.
+ */
+export const isElementInAnyFocusScope = (element: Element): boolean =>
+  scopes.some((scope) => scope.root()?.contains(element));
 
 export interface UseFocusScopeOptions {
   /** The element the scope covers. */
@@ -145,7 +156,7 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
       if (!(target instanceof Element)) return;
       // A submenu is a sibling of the menu it belongs to rather than a descendant, so
       // containment has to allow focus into any scope, not only into this one.
-      if (isInAnyScope(target)) return;
+      if (isElementInAnyFocusScope(target)) return;
 
       focusElement(root);
     };

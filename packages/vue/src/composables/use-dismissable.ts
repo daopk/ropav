@@ -4,6 +4,8 @@ import {computed, onScopeDispose, toValue, watch} from "vue";
 
 import {isInTopLayer} from "../utils/top-layer";
 
+import {isElementInAnyFocusScope} from "./use-focus-scope";
+
 /**
  * Open overlays, innermost last.
  *
@@ -23,6 +25,16 @@ export interface UseDismissableOptions {
   /** @default false */
   isKeyboardDismissDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /**
+   * Whether focus leaving the overlay dismisses it.
+   *
+   * Not the same question as `isDismissable`, and the two do not overlap: a popover that leaves
+   * the page live is not dismissed by a press outside — the press was meant for whatever it
+   * landed on — but tabbing away from it is the user leaving, and it has nothing left to say.
+   *
+   * @default false
+   */
+  shouldCloseOnBlur?: MaybeRefOrGetter<boolean | undefined>;
+  /**
    * Filters which outside elements dismiss the overlay. Return `false` for an element that
    * should be left alone — the trigger of an already-open submenu, for one.
    */
@@ -32,6 +44,8 @@ export interface UseDismissableOptions {
 export interface UseDismissableReturn {
   /** Bind to the overlay so Escape dismisses it. */
   onKeydown: (event: KeyboardEvent) => void;
+  /** Bind to the overlay so focus leaving it dismisses it, when `shouldCloseOnBlur` is set. */
+  onFocusout: (event: FocusEvent) => void;
 }
 
 /**
@@ -45,6 +59,10 @@ export interface UseDismissableReturn {
  *
  * Escape and the outside click both stop at the innermost open overlay, so dismissing a submenu
  * leaves the menu it came from open.
+ *
+ * Focus leaving is a third way out, off by default and asked for separately — `shouldCloseOnBlur`.
+ * It is the only way an overlay that leaves the page live gets closed by a pointer at all, since
+ * such an overlay is not dismissable by an outside press.
  *
  * @example
  * ```ts
@@ -201,7 +219,44 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
 
   onScopeDispose(() => detach(), true);
 
+  /**
+   * Dismiss when focus leaves the overlay entirely.
+   *
+   * `focusout` is dispatched at the element losing focus and bubbles, so this only ever runs for
+   * focus that was inside — which is the `onBlurWithin` of React Aria's `useFocusWithin`, the
+   * shape `useOverlay` reads there.
+   */
+  const onFocusout = (event: FocusEvent) => {
+    if (!toValue(options.shouldCloseOnBlur) || !isOpen.value) return;
+
+    const next = event.relatedTarget;
+
+    // Focus lost to nothing at all — the window went away, or the user switched tabs. React Aria
+    // returns here for the same reason and names the same bug: a press that lands on the page is
+    // the outside-interaction path's business, and it already ran.
+    if (!(next instanceof Element)) return;
+
+    // Still inside. `focusout` fires on every hop between children, so most of them land here.
+    if (getOverlay()?.contains(next)) return;
+
+    // A top layer is drawn over every overlay without belonging to any of them, exactly as in
+    // `isOutside` above.
+    if (isInTopLayer(next)) return;
+
+    // An overlay opened from inside this one is a DOM sibling rather than a descendant, so the
+    // question is answered by focus scope rather than by containment.
+    if (isElementInAnyFocusScope(next)) return;
+
+    if (options.shouldCloseOnInteractOutside && !options.shouldCloseOnInteractOutside(next)) return;
+
+    // Deliberately not `close()`: React Aria calls `onClose` straight through here rather than
+    // going by the innermost overlay, because focus has said where it went and the stack has not
+    // been consulted about it.
+    options.onClose?.();
+  };
+
   return {
+    onFocusout,
     onKeydown: (event) => {
       if (event.key !== "Escape") return;
       if (toValue(options.isKeyboardDismissDisabled)) return;

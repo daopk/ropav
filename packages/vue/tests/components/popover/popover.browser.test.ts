@@ -176,6 +176,72 @@ describe("Popover (browser)", () => {
     });
   });
 
+  describe("focus leaving", () => {
+    /*
+     * The counterpart of the press test above: a popover that leaves the page live ignores a press
+     * outside, so focus leaving it is the only pointer path out. Driven by real focus moves,
+     * because the guards that decide this — `relatedTarget`, containment, focus scopes — read
+     * state jsdom does not produce on its own.
+     *
+     * Without a dialog inside, since `Popover.Dialog` asks the popover to contain focus and a
+     * contained popover is one focus never leaves.
+     */
+    const LEAVABLE = {isNonModal: true, withoutDialog: true} as const;
+
+    const bare = (popover: HTMLElement, name: "first" | "second") =>
+      popover.querySelector<HTMLElement>(`[data-testid="bare-${name}"]`)!;
+
+    it("closes once focus reaches something outside it", async () => {
+      const result = render(LEAVABLE);
+
+      place(result);
+
+      const popover = await open(result);
+
+      await userEvent.click(bare(popover, "first"));
+      await nextTick();
+
+      expect(popover.contains(document.activeElement)).toBe(true);
+
+      await userEvent.click(result.container.querySelector<HTMLElement>("#outside")!);
+      await nextTick();
+
+      // Read from the trigger rather than the DOM: the popover is held in the document through
+      // its exit animation, so it is still there for a moment after it has closed.
+      expect(triggerOf(result)).toHaveAttribute("aria-expanded", "false");
+
+      // Awaited before unmounting, or the node left mid-animation is the `.popover` the next test
+      // finds.
+      await settled(popover);
+      await nextTick();
+
+      expect(document.body.querySelector(".popover")).toBeNull();
+
+      result.unmount();
+    });
+
+    it("stays open while focus moves between its own children", async () => {
+      const result = render(LEAVABLE);
+
+      place(result);
+
+      const popover = await open(result);
+
+      await userEvent.click(bare(popover, "first"));
+      await nextTick();
+
+      await userEvent.tab();
+      await nextTick();
+      await nextTick();
+
+      expect(document.activeElement).toBe(bare(popover, "second"));
+      expect(document.body.querySelector(".popover")).toBeTruthy();
+
+      await close(popover);
+      result.unmount();
+    });
+  });
+
   describe("position", () => {
     it("sits below its trigger, offset from it", async () => {
       const result = render();

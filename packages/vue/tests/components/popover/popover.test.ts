@@ -29,6 +29,10 @@ const pressOutside = (element: Element) => {
   element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
 };
 
+/** Focus leaving `element` for `relatedTarget`, which is what `focusout` reports. */
+const blurTo = (element: Element, relatedTarget: Element | null) =>
+  element.dispatchEvent(new FocusEvent("focusout", {bubbles: true, relatedTarget}));
+
 const key = (element: Element, name: string) => {
   element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
   element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: name}));
@@ -371,6 +375,72 @@ describe("Popover", () => {
       await settle();
 
       expect(result.screen.getByRole("dialog")).toBeTruthy();
+
+      result.unmount();
+    });
+
+    /*
+     * A popover that leaves the page live is not dismissable by a press outside, so focus leaving
+     * is the only pointer path out of it. React Aria passes `shouldCloseOnBlur: true` for every
+     * popover, modal or not; only a shape that lets focus out can observe it.
+     *
+     * That shape is non-modal *and* without a dialog inside: `Popover.Dialog` asks the popover to
+     * contain focus, and a modal popover is the dialog itself and contains it too.
+     */
+    const LEAVABLE = {defaultOpen: true, isNonModal: true, withoutDialog: true} as const;
+
+    const bare = (name: "first" | "second") =>
+      document.body.querySelector<HTMLElement>(`[data-testid="bare-${name}"]`)!;
+
+    it("closes a popover focus can leave once focus reaches something outside it", async () => {
+      const onOpenChange = vi.fn();
+      const result = render({...LEAVABLE, onOpenChange});
+
+      await settle();
+      blurTo(bare("first"), result.container.querySelector("#outside")!);
+      await settle();
+
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(document.body.querySelector(".popover")).toBeNull();
+
+      result.unmount();
+    });
+
+    it("stays open when focus moves within it", async () => {
+      const result = render(LEAVABLE);
+
+      await settle();
+      blurTo(bare("first"), bare("second"));
+      await settle();
+
+      expect(document.body.querySelector(".popover")).toBeTruthy();
+
+      result.unmount();
+    });
+
+    // Focus lost to nothing is the window going away or a tab switch, not the user leaving the
+    // popover. React Aria returns on a null `relatedTarget` for the same reason: a press that
+    // lands on the page is the outside-interaction path's business.
+    it("stays open when focus is lost to nothing at all", async () => {
+      const result = render(LEAVABLE);
+
+      await settle();
+      blurTo(bare("first"), null);
+      await settle();
+
+      expect(document.body.querySelector(".popover")).toBeTruthy();
+
+      result.unmount();
+    });
+
+    it("supports filtering where focus may go without dismissing it", async () => {
+      const result = render({...LEAVABLE, keepOpenFor: "outside"});
+
+      await settle();
+      blurTo(bare("first"), result.container.querySelector("#outside")!);
+      await settle();
+
+      expect(document.body.querySelector(".popover")).toBeTruthy();
 
       result.unmount();
     });
