@@ -222,6 +222,20 @@ const keyboard = useListKeyboard({
   shouldUseVirtualFocus,
 });
 
+/**
+ * A press on the listbox itself — its padding, or its scrollbar — must not move focus.
+ *
+ * The browser's default for a mousedown is to focus what was pressed, and the gap between two
+ * options is the listbox. Where the caret belongs to a control outside the collection that takes it
+ * away: the field's ring drops, and it reads the blur as the user leaving, so the popover flickers
+ * or closes on a press that hit nothing. Ported from React Aria's `useSelectableCollection`, which
+ * guards the same way and for the same reason, and only when the press landed on this element
+ * rather than travelling up from an option that wants the focus.
+ */
+const onMousedown = (event: MouseEvent) => {
+  if (event.target === element.value) event.preventDefault();
+};
+
 // Reported straight away rather than through a watcher: the object is built once and stays the
 // same, and an owner driving the collection from outside needs it before the first keystroke.
 if (owner?.registerKeyboard) {
@@ -381,6 +395,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
     @focusout="keyboard.onFocusout"
     @keydown="onKeydown"
     @keydown.capture="typeahead.onKeydownCapture"
+    @mousedown="onMousedown"
   >
     <div v-if="hasEmptySlot && isEmpty" role="presentation">
       <slot name="empty" />
