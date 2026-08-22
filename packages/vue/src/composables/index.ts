@@ -104,6 +104,7 @@ export * from "./use-slider";
 export * from "./use-slider-state";
 export * from "./use-slider-thumb";
 export * from "./use-spin-button";
+export * from "./use-tab-list-state";
 export * from "./use-table-collection";
 export * from "./use-table-column-layout";
 export * from "./use-text-field";
