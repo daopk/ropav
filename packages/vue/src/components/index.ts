@@ -28,6 +28,7 @@ export * from "./date-field";
 export * from "./date-picker";
 export * from "./date-range-picker";
 export * from "./description";
+export * from "./disclosure";
 export * from "./disclosure-group";
 export * from "./dnd";
 export * from "./drawer";
