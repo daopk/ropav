@@ -188,6 +188,44 @@ describe("ToastQueue", () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    it("does not make one queue's transitions hold up another's", async () => {
+      // A transition that starts and never finishes, which is what a real one looks like for the
+      // few hundred milliseconds it is animating.
+      const started: (() => void)[] = [];
+
+      vi.stubGlobal("document", {
+        ...document,
+        startViewTransition: (callback: () => unknown) => {
+          started.push(() => void callback());
+
+          return {finished: new Promise<void>(() => {}), ready: new Promise<void>(() => {})};
+        },
+      });
+
+      try {
+        const first = new ToastQueue();
+        const second = new ToastQueue();
+        const onSecond = vi.fn();
+
+        second.subscribe(onSecond);
+
+        // A burst in the first queue: the first transition is in flight, the rest are behind it.
+        first.add({title: "A1"});
+        first.add({title: "A2"});
+        first.add({title: "A3"});
+
+        second.add({title: "B1"});
+        await Promise.resolve();
+        started.forEach((run) => run());
+
+        // One chain for the whole document would put this behind the entire burst, so a second
+        // region's toast would not appear for as long as the burst takes to animate.
+        expect(onSecond).toHaveBeenCalledTimes(1);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
     it("wraps every update in the supplied wrapUpdate, reporting why", () => {
       const actions: string[] = [];
       const queue = new ToastQueue({

@@ -87,8 +87,15 @@ export class ToastQueue<T = ToastContentValue> {
 
   constructor(options: ToastQueueOptions = {}) {
     this.maxVisibleToasts = options.maxVisibleToasts;
-    this.wrapUpdate = options.wrapUpdate ?? viewTransitionUpdate;
+
+    const transitions = createViewTransitionUpdate();
+
+    this.resetTransitions = transitions.reset;
+    this.wrapUpdate = options.wrapUpdate ?? transitions.wrapUpdate;
   }
+
+  /** Forgets any transitions still queued. For a test, since a chain outlives a mount. */
+  readonly resetTransitions: () => void;
 
   /** Adds a toast and returns its key. */
   add(content: T, options: ToastOptions = {}): string {
@@ -167,53 +174,69 @@ interface ViewTransition {
 }
 
 /**
- * Successive transitions run one after another rather than on top of each other.
+ * A queue's own chain of view transitions, so its updates animate one after another.
  *
- * The View Transitions API allows one active transition: starting a second while the first is
- * still animating aborts the first, which surfaces as a rejection on `ready`. Each new transition
- * is appended to the *end* of the chain rather than attached to whichever is currently active, so
- * three mutations inside one microtask stay in order — which is what `toast.promise` does while
- * the loading toast's own entry is still in flight.
+ * The View Transitions API allows one active transition per document: starting a second while the
+ * first is still animating aborts the first, which surfaces as a rejection on `ready`. Each new
+ * transition is appended to the *end* of the chain rather than attached to whichever is currently
+ * active, so three mutations inside one microtask stay in order — which is what `toast.promise`
+ * does while the loading toast's own entry is still in flight.
+ *
+ * **One chain per queue, not one per document.** Sharing a single chain across every queue looks
+ * more faithful to an API that only runs one transition at a time, and it is wrong: with several
+ * regions on a page, a burst of toasts in one of them puts every other region's toast behind the
+ * whole burst, so a toast added elsewhere does not appear until seconds later. Independent chains
+ * let a second region interrupt instead — the superseded transition is skipped, which the catch
+ * below already handles. `@heroui/react` scopes it the same way, inside the constructor.
  */
-let transitionChain: Promise<unknown> = Promise.resolve();
+const createViewTransitionUpdate = (): {
+  reset: () => void;
+  wrapUpdate: (fn: () => void) => void;
+} => {
+  let chain: Promise<unknown> = Promise.resolve();
 
-/** For a test that needs the chain empty before it starts measuring. */
-export const resetToastTransitions = (): void => {
-  transitionChain = Promise.resolve();
-};
+  return {
+    reset: () => {
+      chain = Promise.resolve();
+    },
+    wrapUpdate: (fn: () => void): void => {
+      const startViewTransition =
+        typeof document === "undefined"
+          ? undefined
+          : (
+              document as Document & {
+                startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition;
+              }
+            ).startViewTransition;
 
-const viewTransitionUpdate = (fn: () => void): void => {
-  const startViewTransition = (
-    document as Document & {
-      startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition;
-    }
-  ).startViewTransition;
+      if (typeof startViewTransition !== "function") {
+        fn();
 
-  if (typeof document === "undefined" || typeof startViewTransition !== "function") {
-    fn();
+        return;
+      }
 
-    return;
-  }
+      const runNext = (): Promise<unknown> => {
+        const transition = startViewTransition.call(document, () => {
+          fn();
 
-  const runNext = (): Promise<unknown> => {
-    const transition = startViewTransition.call(document, () => {
-      fn();
+          // `flushSync` is what `@heroui/react` uses here, and Vue has no equivalent. It does not
+          // need one: the callback may return a promise and the transition waits for it, so
+          // awaiting the scheduler's flush leaves the DOM already updated when the snapshot is
+          // taken.
+          return nextTick();
+        });
 
-      // `flushSync` is what `@heroui/react` uses here, and Vue has no equivalent. It does not
-      // need one: the callback may return a promise and the transition waits for it, so awaiting
-      // the scheduler's flush leaves the DOM already updated when the snapshot is taken.
-      return nextTick();
-    });
+        // A superseded or aborted transition rejects `ready` while `finished` still fulfills. Both
+        // are caught so neither surfaces as an unhandled rejection, and so a step queued behind a
+        // superseded transition still runs.
+        transition.ready.catch(() => {});
 
-    // A superseded or aborted transition rejects `ready` while `finished` still fulfills. Both
-    // are caught so neither surfaces as an unhandled rejection, and so a step queued behind a
-    // superseded transition still runs.
-    transition.ready.catch(() => {});
+        return transition.finished.catch(() => {});
+      };
 
-    return transition.finished.catch(() => {});
+      chain = chain.then(runNext, runNext);
+    },
   };
-
-  transitionChain = transitionChain.then(runNext, runNext);
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -382,5 +405,5 @@ export const getQueuedToastCount = (): number => toastQueue.visibleToasts.length
 /** Empties the default queue and the transition chain. For a test, since both outlive a mount. */
 export const resetToastQueue = (): void => {
   toastQueue.clear();
-  resetToastTransitions();
+  toastQueue.resetTransitions();
 };
