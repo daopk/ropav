@@ -68,10 +68,16 @@ describe("Alert under a vdom host", () => {
     unmount();
   });
 
-  it("renders the fallback icon for an explicitly empty host slot", () => {
+  // React reads `children ?? getDefaultIcon()`, so an empty array is still children and it
+  // renders nothing. The indicator answers the same way, from the presence of the slot rather
+  // than from what running it produces.
+  it("renders nothing for an explicitly empty host slot", () => {
     const {container, unmount} = render(() => []);
+    const indicator = container.querySelector('[data-slot="alert-indicator"]');
 
-    expect(container.querySelector('[data-slot="alert-default-icon"]')).not.toBeNull();
+    expect(indicator).not.toBeNull();
+    expect(container.querySelector('[data-slot="alert-default-icon"]')).toBeNull();
+    expect(indicator?.querySelector("svg")).toBeNull();
 
     unmount();
   });

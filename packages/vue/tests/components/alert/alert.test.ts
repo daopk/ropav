@@ -95,6 +95,21 @@ describe("Alert", () => {
 
       unmount();
     });
+
+    // React answers this shape with nothing: it reads `children ?? getDefaultIcon()`, so a
+    // condition that is false is still children. A `<slot>` fallback would run here instead,
+    // which is why the branch is taken on whether the slot was handed over at all.
+    it("renders nothing when the caller declares the slot but it yields no content", () => {
+      const {container, unmount} = renderVapor(Fixture, {props: {emptyIndicator: true}});
+      const indicator = slot(container, "alert-indicator");
+
+      expect(indicator).not.toBeNull();
+      expect(slot(container, "alert-default-icon")).toBeNull();
+      expect(indicator?.querySelector("svg")).toBeNull();
+      expect(indicator?.textContent?.trim()).toBe("");
+
+      unmount();
+    });
   });
 
   describe("styling", () => {

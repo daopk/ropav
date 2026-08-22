@@ -8,6 +8,7 @@ defineProps<
     contentClass?: string;
     customIndicator?: boolean;
     descriptionClass?: string;
+    emptyIndicator?: boolean;
     indicatorClass?: string;
     titleClass?: string;
   }
@@ -22,6 +23,14 @@ defineProps<
       data-testid="indicator"
     >
       <span data-testid="custom-indicator">!</span>
+    </Alert.Indicator>
+    <!-- A declared slot that renders nothing, which is the shape React answers with empty. -->
+    <Alert.Indicator
+      v-else-if="$props.emptyIndicator"
+      :class="$props.indicatorClass"
+      data-testid="indicator"
+    >
+      <span v-if="false" data-testid="never-rendered" />
     </Alert.Indicator>
     <Alert.Indicator v-else :class="$props.indicatorClass" data-testid="indicator" />
     <Alert.Content :class="$props.contentClass" data-testid="content">
