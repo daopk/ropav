@@ -35,6 +35,8 @@ const slots = computed(() => disclosureVariants());
 const groupContext = useDisclosureGroupContext();
 const group = groupContext?.group;
 
+// The id names the disclosure to its group and prefixes the ids of its parts; it deliberately
+// does not reach the DOM, so it cannot collide with an element the consumer ids for itself.
 const disclosureId = useId(() => props.id);
 const disclosureKey = computed<DisclosureKey>(() => disclosureId.value);
 const triggerId = computed(() => `${disclosureId.value}-trigger`);
@@ -131,7 +133,6 @@ provideDisclosureContext({
 
 <template>
   <div
-    :id="props.id"
     :class="slots.base({class: props.class})"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-expanded="dataAttr(resolvedIsExpanded)"
