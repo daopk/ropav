@@ -78,6 +78,7 @@ export * from "./use-list-keyboard";
 export * from "./use-locale";
 export * from "./use-localized-string-formatter";
 export * from "./use-long-press";
+export * from "./use-media-query";
 export * from "./use-menu";
 export * from "./use-modal-overlay";
 export * from "./use-modal-transition";
