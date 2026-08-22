@@ -43,6 +43,10 @@ const options = (matches: Array<{id: string; name: string}>) =>
     ),
   );
 
+/** The matches the root handed its slot, which the host renders its options from. */
+const matchesOf = (slotProps?: Record<string, unknown>) =>
+  (slotProps?.["items"] ?? []) as Array<{id: string; name: string}>;
+
 const render = (props: Record<string, unknown> = {}, extra: Array<unknown> = []) =>
   renderInterop(ComboBox, {
     props: {
@@ -53,14 +57,14 @@ const render = (props: Record<string, unknown> = {}, extra: Array<unknown> = [])
     slots: {
       // The root hands the matches back through its own slot, which is how the host knows what to
       // render — so the slot props are part of the contract this file checks.
-      default: ({items: matches}: {items: Array<{id: string; name: string}>}) => [
+      default: (slotProps?: Record<string, unknown>) => [
         h(LabelRoot, null, {default: () => "Favorite Animal"}),
         h(ComboBox.InputGroup, null, {
           default: () => [h(InputRoot, {placeholder: "Search animals..."}), h(ComboBox.Trigger)],
         }),
         ...(extra as never[]),
         h(ComboBox.Popover, null, {
-          default: () => h(ListBoxRoot, null, {default: () => options(matches)}),
+          default: () => h(ListBoxRoot, null, {default: () => options(matchesOf(slotProps))}),
         }),
       ],
     },
@@ -272,7 +276,7 @@ describe("ComboBox (interop)", () => {
         selectionMode: "multiple",
       },
       slots: {
-        default: ({items: matches}: {items: Array<{id: string; name: string}>}) => [
+        default: (slotProps?: Record<string, unknown>) => [
           h(ComboBox.InputGroup, null, {
             default: () => [h(InputRoot), h(ComboBox.Trigger)],
           }),
@@ -289,7 +293,7 @@ describe("ComboBox (interop)", () => {
               ),
           }),
           h(ComboBox.Popover, null, {
-            default: () => h(ListBoxRoot, null, {default: () => options(matches)}),
+            default: () => h(ListBoxRoot, null, {default: () => options(matchesOf(slotProps))}),
           }),
         ],
       },
