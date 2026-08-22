@@ -2,6 +2,15 @@ packages:
   - "apps/**/**"
   - "packages/**/**"
 
+# The vue toolchain moves in lockstep: `@vue/compiler-vapor` must match `vue` exactly, and
+# `vue` itself is pinned to an RC (dist-tag `rc`; `latest` is still 3.5.x and carries no vapor).
+# `peerDependencies` deliberately stay literal ranges — see ROADMAP §2.
+catalog:
+  "@vitejs/plugin-vue": 6.0.8
+  "@vue/compiler-vapor": 3.6.0-rc.4
+  vue: 3.6.0-rc.4
+  vue-tsc: 3.3.10
+
 overrides:
   shiki: 3.20.0
   ts-morph: 27.0.2

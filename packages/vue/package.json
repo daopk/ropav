@@ -75,7 +75,7 @@
     "@tailwindcss/vite": "4.3.0",
     "@tanstack/vue-table": "8.21.3",
     "@types/fs-extra": "11.0.4",
-    "@vitejs/plugin-vue": "6.0.8",
+    "@vitejs/plugin-vue": "catalog:",
     "clean-package": "2.2.0",
     "fs-extra": "11.3.3",
     "tailwindcss": "4.3.0",
@@ -83,8 +83,8 @@
     "unplugin-icons": "23.0.1",
     "vite": "7.3.5",
     "vitest": "4.1.10",
-    "vue": "3.6.0-rc.4",
-    "vue-tsc": "3.3.10"
+    "vue": "catalog:",
+    "vue-tsc": "catalog:"
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0",

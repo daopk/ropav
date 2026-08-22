@@ -14,7 +14,7 @@
     "@heroui/styles": "workspace:*",
     "@heroui/vue": "workspace:*",
     "tailwind-variants": "3.3.1",
-    "vue": "3.6.0-rc.4"
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@heroui/standard": "workspace:*",
@@ -30,8 +30,8 @@
     "@storybook/vue3-vite": "10.2.10",
     "@tailwindcss/postcss": "4.3.0",
     "@tailwindcss/vite": "4.3.0",
-    "@vitejs/plugin-vue": "6.0.8",
-    "@vue/compiler-vapor": "3.6.0-rc.4",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vue/compiler-vapor": "catalog:",
     "glob": "13.0.0",
     "postcss": "8.5.23",
     "storybook": "10.2.10",
@@ -39,6 +39,6 @@
     "typescript": "5.9.3",
     "unplugin-icons": "23.0.1",
     "vite": "7.3.5",
-    "vue-tsc": "3.3.10"
+    "vue-tsc": "catalog:"
   }
 }
