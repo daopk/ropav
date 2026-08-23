@@ -35,7 +35,7 @@ const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
 /**
  * The rows' data goes **up** to the grid, which is what owns the collection, the scroll box and
- * the keyboard. `items` sits here to match `@heroui/react`, so this is where it is handed over.
+ * the keyboard. `items` is declared on the body, so this is where it is handed over.
  */
 if (virtualizer) {
   watch(

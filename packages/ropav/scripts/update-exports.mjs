@@ -12,8 +12,8 @@ const PACKAGE_JSON_PATH = path.join(rootDir, "package.json");
 const COMPONENTS_DIR = path.join(rootDir, "src/components");
 
 /** Directories to skip when scanning components */
-// `overlay` is the shared layer positioned overlays are built on, not a component of its own:
-// `@heroui/react` publishes no equivalent, so it gets no subpath and no entry.
+// `overlay` is the shared layer positioned overlays are built on, not a component of its own,
+// so it gets no subpath and no entry.
 const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd", "date-input-group"]);
 
 /**

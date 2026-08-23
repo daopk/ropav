@@ -11,8 +11,8 @@ const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 const COMPONENTS_DIR = "src/components";
 
 /** Directories under `src/components` that are not components. Kept in step with `scripts/`. */
-// `overlay` is the shared layer positioned overlays are built on, not a component of its own:
-// `@heroui/react` publishes no equivalent, so it gets no subpath and no entry.
+// `overlay` is the shared layer positioned overlays are built on, not a component of its own,
+// so it gets no subpath and no entry.
 const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd", "date-input-group"]);
 
 /**

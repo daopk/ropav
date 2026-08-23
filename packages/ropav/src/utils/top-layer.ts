@@ -4,8 +4,8 @@
  * A toast region is rendered outside every overlay, yet it is not *outside* them in the sense
  * either of them cares about: it must stay readable to assistive technology when a modal opens,
  * and pressing something in it must not dismiss the overlay it happens to be drawn over. Marking
- * the element is what lets both those rules be written once. `@heroui/react` inherits the same
- * marker from React Aria, spelled `data-react-aria-top-layer`.
+ * the element is what lets both those rules be written once. React Aria spells the same marker
+ * `data-react-aria-top-layer`.
  */
 export const TOP_LAYER_ATTRIBUTE = "data-ropav-top-layer";
 

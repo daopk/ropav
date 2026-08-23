@@ -150,10 +150,8 @@ export interface TableBodyProps<T = unknown> {
   /**
    * Text a row is matched on by typeahead.
    *
-   * A prop that `@heroui/react` does not have: it reads the text of a row's row header cells, and
-   * can do so for a row nobody scrolled to because its collection is built by a hidden render
-   * pass. Rendering is what creates cells here, so a row outside the window has to be named from
-   * the data.
+   * Rendering is what creates cells here, so typeahead cannot read a row that is outside the
+   * window — it has no cells yet. Such a row has to be named from the data instead.
    */
   itemTextValue?: (item: T) => string | undefined;
 }

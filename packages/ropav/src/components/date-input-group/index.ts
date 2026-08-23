@@ -10,8 +10,7 @@ import DateInputGroupSuffix from "./date-input-group-suffix.vue";
  * -----------------------------------------------------------------------------------------------*/
 /*
  * Not a compound component and not a package entry point: `DateField` and `TimeField` re-export
- * these parts under their own names, exactly as `@heroui/react` does. Nothing imports this
- * directory from outside the package.
+ * these parts under their own names. Nothing imports this directory from outside the package.
  */
 export {
   DateInputGroupInput,

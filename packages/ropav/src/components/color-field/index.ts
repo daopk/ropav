@@ -10,16 +10,13 @@ import ColorFieldRoot from "./color-field-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a colour field, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const ColorField = Object.assign(ColorFieldRoot, {
-  Root: ColorFieldRoot,
   Group: ColorInputGroupRoot,
   Input: ColorInputGroupInput,
   Prefix: ColorInputGroupPrefix,
+  Root: ColorFieldRoot,
   Suffix: ColorInputGroupSuffix,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

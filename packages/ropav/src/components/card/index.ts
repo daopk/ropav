@@ -8,17 +8,14 @@ import CardTitle from "./card-title.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a card, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Card = Object.assign(CardRoot, {
-  Root: CardRoot,
-  Header: CardHeader,
-  Title: CardTitle,
-  Description: CardDescription,
   Content: CardContent,
+  Description: CardDescription,
   Footer: CardFooter,
+  Header: CardHeader,
+  Root: CardRoot,
+  Title: CardTitle,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

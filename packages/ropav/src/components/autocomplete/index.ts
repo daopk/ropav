@@ -9,19 +9,15 @@ import AutocompleteValue from "./autocomplete-value.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
-// Ordered the way the parts appear in the DOM, which is easier to read against the markup than
-// alphabetical order would be.
 export const Autocomplete = Object.assign(AutocompleteRoot, {
+  ClearButton: AutocompleteClearButton,
+  Filter: AutocompleteFilter,
+  Indicator: AutocompleteIndicator,
+  Popover: AutocompletePopover,
   Root: AutocompleteRoot,
   Trigger: AutocompleteTrigger,
   Value: AutocompleteValue,
-  ClearButton: AutocompleteClearButton,
-  Indicator: AutocompleteIndicator,
-  Popover: AutocompletePopover,
-  Filter: AutocompleteFilter,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

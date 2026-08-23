@@ -8,17 +8,14 @@ import SliderTrack from "./slider-track.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a slider, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Slider = Object.assign(SliderRoot, {
-  Root: SliderRoot,
-  Output: SliderOutput,
-  Track: SliderTrack,
   Fill: SliderFill,
-  Thumb: SliderThumb,
   Marks: SliderMarks,
+  Output: SliderOutput,
+  Root: SliderRoot,
+  Thumb: SliderThumb,
+  Track: SliderTrack,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

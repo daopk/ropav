@@ -6,20 +6,16 @@ import FieldsetRoot from "./fieldset-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a fieldset, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Fieldset = Object.assign(FieldsetRoot, {
-  Root: FieldsetRoot,
-  Legend: FieldsetLegend,
-  Group: FieldGroup,
   Actions: FieldsetActions,
+  Group: FieldGroup,
+  Legend: FieldsetLegend,
+  Root: FieldsetRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-// `FieldGroup`, not `FieldsetGroup` — the name `@heroui/react` gives it.
 export {FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot};
 
 export type {

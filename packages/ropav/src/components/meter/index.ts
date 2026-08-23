@@ -3,14 +3,12 @@ import MeterOutput from "./meter-output.vue";
 import MeterRoot from "./meter-root.vue";
 import MeterTrack from "./meter-track.vue";
 
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Meter = Object.assign(MeterRoot, {
-  Root: MeterRoot,
-  Output: MeterOutput,
-  Track: MeterTrack,
   Fill: MeterFill,
+  Output: MeterOutput,
+  Root: MeterRoot,
+  Track: MeterTrack,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 export {MeterFill, MeterOutput, MeterRoot, MeterTrack};
 

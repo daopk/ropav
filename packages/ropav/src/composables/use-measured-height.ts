@@ -8,15 +8,15 @@ export interface UseMeasuredHeightReturn {
 }
 
 /**
- * An element's rendered height, ported from `@heroui/react`'s `useMeasuredHeight`.
+ * An element's rendered height.
  *
  * `scrollHeight` rather than a `ResizeObserver` entry's box, because the caller needs the height
  * the content *wants*: a toast that is not frontmost is clipped to the front one's height, so its
  * own border box has already been overwritten by the very number this feeds.
  *
- * Two narrowings against `@heroui/react`, both measured rather than assumed:
+ * Two narrowings against the usual shape, both measured rather than assumed:
  *
- * 1. It measures directly on attach and then lets the observer take over, where React relies on
+ * 1. It measures directly on attach and then lets the observer take over, rather than relying on
  *    the observer's first notification alone. jsdom *has* a `ResizeObserver` constructor but it
  *    never notifies anything, so an observer-only reading is permanently absent there — and this
  *    value drives an inline custom property that decides layout, which is exactly the kind of

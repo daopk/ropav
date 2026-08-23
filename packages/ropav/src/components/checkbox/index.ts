@@ -6,14 +6,12 @@ import CheckboxRoot from "./checkbox-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Checkbox = Object.assign(CheckboxRoot, {
-  Root: CheckboxRoot,
   Content: CheckboxContent,
   Control: CheckboxControl,
   Indicator: CheckboxIndicator,
+  Root: CheckboxRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

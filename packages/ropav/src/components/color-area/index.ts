@@ -4,7 +4,6 @@ import ColorAreaThumb from "./color-area-thumb.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a colour area, and `@heroui/react` — not alphabetical.
 
 export const ColorArea = Object.assign(ColorAreaRoot, {
   Root: ColorAreaRoot,

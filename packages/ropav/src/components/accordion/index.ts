@@ -9,18 +9,15 @@ import AccordionTrigger from "./accordion-trigger.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of an accordion, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Accordion = Object.assign(AccordionRoot, {
-  Root: AccordionRoot,
-  Item: AccordionItem,
-  Heading: AccordionHeading,
-  Trigger: AccordionTrigger,
-  Panel: AccordionPanel,
-  Indicator: AccordionIndicator,
   Body: AccordionBody,
+  Heading: AccordionHeading,
+  Indicator: AccordionIndicator,
+  Item: AccordionItem,
+  Panel: AccordionPanel,
+  Root: AccordionRoot,
+  Trigger: AccordionTrigger,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

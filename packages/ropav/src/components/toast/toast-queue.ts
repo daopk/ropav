@@ -65,11 +65,11 @@ export class Timer {
 /**
  * The order toasts are shown in, and the clocks that close them.
  *
- * Ported from `react-stately`'s `ToastQueue`, merged with the wrapper `@heroui/react` puts around
- * it. Two classes exist there because the wrapper had a primitive to wrap; writing both means
- * keeping them apart would be two paths doing one job. What the merge keeps from the wrapper: the
- * default timeout, the serialized view transition, and `maxVisibleToasts` as a hint the region
- * reads rather than a truncation.
+ * Ported from `react-stately`'s `ToastQueue`, merged with the wrapper that normally sits around
+ * it. Upstream those are two classes because the wrapper had a primitive to wrap; writing both
+ * here means keeping them apart would be two paths doing one job. What the merge keeps from the
+ * wrapper: the default timeout, the serialized view transition, and `maxVisibleToasts` as a hint
+ * the region reads rather than a truncation.
  *
  * Deliberately free of Vue: reactivity lives in `useToastQueue`, so the module-level singleton
  * holds no reactive state and the queue is testable without mounting anything.
@@ -187,7 +187,7 @@ interface ViewTransition {
  * regions on a page, a burst of toasts in one of them puts every other region's toast behind the
  * whole burst, so a toast added elsewhere does not appear until seconds later. Independent chains
  * let a second region interrupt instead — the superseded transition is skipped, which the catch
- * below already handles. `@heroui/react` scopes it the same way, inside the constructor.
+ * below already handles, which is why the chain is scoped per queue inside the constructor.
  */
 const createViewTransitionUpdate = (): {
   reset: () => void;
@@ -219,10 +219,9 @@ const createViewTransitionUpdate = (): {
         const transition = startViewTransition.call(document, () => {
           fn();
 
-          // `flushSync` is what `@heroui/react` uses here, and Vue has no equivalent. It does not
-          // need one: the callback may return a promise and the transition waits for it, so
-          // awaiting the scheduler's flush leaves the DOM already updated when the snapshot is
-          // taken.
+          // The DOM has to be updated before the transition takes its snapshot. The callback may
+          // return a promise and the transition waits for it, so awaiting the scheduler's flush is
+          // enough — no synchronous flush primitive is needed.
           return nextTick();
         });
 
@@ -248,8 +247,7 @@ export interface UseToastQueueReturn<T = ToastContentValue> {
 }
 
 /**
- * Follows a queue's visible toasts, the Vue counterpart of the `useSyncExternalStore` subscription
- * `@heroui/react` makes here.
+ * Follows a queue's visible toasts: an external-store subscription rather than reactive state.
  *
  * The subscription rather than reactive state inside the queue is what lets the singleton be a
  * plain object created at import time — module-level reactive state would tie it to an app.
@@ -292,7 +290,7 @@ export interface ToastFunction {
   close: (key: string) => void;
   /** The queue behind this function, for a region that wants to render it. */
   getQueue: () => ToastQueue<ToastContentValue>;
-  /** `variant: "accent"` — the name matches `@heroui/react`, the variant is the accent one. */
+  /** Named `info`, but the variant it raises is `accent`. */
   info: (message: ToastRenderable, options?: Omit<ToastAddOptions, "variant">) => string;
   danger: (message: ToastRenderable, options?: Omit<ToastAddOptions, "variant">) => string;
   pauseAll: () => void;

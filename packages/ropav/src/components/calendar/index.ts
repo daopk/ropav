@@ -21,27 +21,24 @@ import CalendarRoot from "./calendar-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a calendar, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Calendar = Object.assign(CalendarRoot, {
-  Root: CalendarRoot,
-  Header: CalendarHeader,
-  Heading: CalendarHeading,
-  NavButton: CalendarNavButton,
-  Grid: CalendarGrid,
-  GridHeader: CalendarGridHeader,
-  GridBody: CalendarGridBody,
-  HeaderCell: CalendarHeaderCell,
   Cell: CalendarCell,
   CellIndicator: CalendarCellIndicator,
+  Grid: CalendarGrid,
+  GridBody: CalendarGridBody,
+  GridHeader: CalendarGridHeader,
+  Header: CalendarHeader,
+  HeaderCell: CalendarHeaderCell,
+  Heading: CalendarHeading,
+  NavButton: CalendarNavButton,
+  Root: CalendarRoot,
+  YearPickerCell: CalendarYearPickerCell,
+  YearPickerGrid: CalendarYearPickerGrid,
+  YearPickerGridBody: CalendarYearPickerGridBody,
   YearPickerTrigger: CalendarYearPickerTrigger,
   YearPickerTriggerHeading: CalendarYearPickerTriggerHeading,
   YearPickerTriggerIndicator: CalendarYearPickerTriggerIndicator,
-  YearPickerGrid: CalendarYearPickerGrid,
-  YearPickerGridBody: CalendarYearPickerGridBody,
-  YearPickerCell: CalendarYearPickerCell,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

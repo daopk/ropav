@@ -1,7 +1,6 @@
 /*
- * Copied from `@heroui/react`, key order and all. These are lookup maps, so the order has no
- * runtime meaning — it follows the physical keyboard (modifiers, then navigation) so the two
- * copies stay diffable against each other.
+ * These are lookup maps, so key order has no runtime meaning — it follows the physical keyboard
+ * (modifiers, then navigation) rather than the alphabet, which is why the sort rules are off below.
  */
 /* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 

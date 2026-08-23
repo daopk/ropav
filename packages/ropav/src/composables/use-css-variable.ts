@@ -6,7 +6,7 @@ import {computed, toValue} from "vue";
  * Values already read off the document, so a page full of tooltips asks once.
  *
  * Kept at module scope on purpose: a custom property on the root is a theme constant, and a
- * `getComputedStyle` call is a layout read. Ported from `@heroui/react`, which caches the same way.
+ * `getComputedStyle` call is a layout read.
  */
 const cache = new Map<string, string | undefined>();
 
@@ -18,8 +18,7 @@ export interface UseCssVariableOptions {
 }
 
 /**
- * Read a CSS custom property off the document root, ported from `@heroui/react`'s
- * `useCSSVariable`.
+ * Read a CSS custom property off the document root.
  *
  * Read where it is declared rather than passed down as a default in code, so a theme can move a
  * timing without the component knowing. Absent on the server, where there is nothing to read from

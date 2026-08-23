@@ -6,14 +6,12 @@ import RadioRoot from "./radio-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Radio = Object.assign(RadioRoot, {
-  Root: RadioRoot,
   Content: RadioContent,
   Control: RadioControl,
   Indicator: RadioIndicator,
+  Root: RadioRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

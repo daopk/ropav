@@ -7,16 +7,13 @@ import SwitchThumb from "./switch-thumb.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a switch, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Switch = Object.assign(SwitchRoot, {
-  Root: SwitchRoot,
   Content: SwitchContent,
   Control: SwitchControl,
-  Thumb: SwitchThumb,
   Icon: SwitchIcon,
+  Root: SwitchRoot,
+  Thumb: SwitchThumb,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

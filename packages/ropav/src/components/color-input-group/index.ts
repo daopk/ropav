@@ -6,15 +6,12 @@ import ColorInputGroupSuffix from "./color-input-group-suffix.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of an input group, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const ColorInputGroup = Object.assign(ColorInputGroupRoot, {
-  Root: ColorInputGroupRoot,
   Input: ColorInputGroupInput,
   Prefix: ColorInputGroupPrefix,
+  Root: ColorInputGroupRoot,
   Suffix: ColorInputGroupSuffix,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

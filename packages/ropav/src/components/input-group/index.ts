@@ -7,16 +7,13 @@ import InputGroupTextArea from "./input-group-textarea.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of an input group, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const InputGroup = Object.assign(InputGroupRoot, {
-  Root: InputGroupRoot,
   Input: InputGroupInput,
-  TextArea: InputGroupTextArea,
   Prefix: InputGroupPrefix,
+  Root: InputGroupRoot,
   Suffix: InputGroupSuffix,
+  TextArea: InputGroupTextArea,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

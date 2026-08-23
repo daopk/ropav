@@ -5,14 +5,11 @@ import ColorPickerTrigger from "./color-picker-trigger.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a picker, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const ColorPicker = Object.assign(ColorPickerRoot, {
+  Popover: ColorPickerPopover,
   Root: ColorPickerRoot,
   Trigger: ColorPickerTrigger,
-  Popover: ColorPickerPopover,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

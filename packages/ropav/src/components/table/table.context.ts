@@ -185,7 +185,7 @@ export interface TableVirtualizerContext {
   /**
    * The rows' data, handed **up** from the body.
    *
-   * `items` sits on `Table.Body` to match `@heroui/react`, but the collection belongs to the grid:
+   * `items` is declared on `Table.Body`, but the collection belongs to the grid:
    * it is the grid that scrolls, that the keyboard walks, and that the selection runs over. So the
    * body registers what it was given rather than owning it.
    */

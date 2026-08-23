@@ -25,9 +25,8 @@ interface MessageFormatter {
  *
  * Upstream also defines a `close` message for the toast's close button, and it is deliberately
  * absent here because nothing can reach it: `CloseButton` writes `aria-label="Close"` itself, and
- * in `@heroui/react` that hardcoded label wins over the message the toast offers through context
- * — so the button is English there in every locale too. Adding the key would ship data no code
- * reads.
+ * that hardcoded label wins over the message the toast offers through context — so the button is
+ * English in every locale, upstream included. Adding the key would ship data no code reads.
  *
  * Messages arrive already compiled: a value is a plain string when it has no variables, and a
  * function of its arguments when it does. Generated — edit the source strings upstream, not here.

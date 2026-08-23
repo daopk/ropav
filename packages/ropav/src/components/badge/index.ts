@@ -5,7 +5,6 @@ import BadgeRoot from "./badge-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors `@heroui/react`.
 export const Badge = Object.assign(BadgeRoot, {
   Anchor: BadgeAnchor,
   Label: BadgeLabel,

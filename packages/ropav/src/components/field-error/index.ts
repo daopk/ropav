@@ -4,12 +4,10 @@ import FieldErrorRoot from "./field-error-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const FieldError = Object.assign(FieldErrorRoot, {
-  Root: FieldErrorRoot,
   Content: FieldErrorContent,
+  Root: FieldErrorRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

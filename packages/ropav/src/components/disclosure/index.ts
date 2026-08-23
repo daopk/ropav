@@ -8,17 +8,14 @@ import DisclosureTrigger from "./disclosure-trigger.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a disclosure, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Disclosure = Object.assign(DisclosureRoot, {
-  Root: DisclosureRoot,
-  Heading: DisclosureHeading,
-  Trigger: DisclosureTrigger,
-  Content: DisclosureContent,
   Body: DisclosureBody,
+  Content: DisclosureContent,
+  Heading: DisclosureHeading,
   Indicator: DisclosureIndicator,
+  Root: DisclosureRoot,
+  Trigger: DisclosureTrigger,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

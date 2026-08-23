@@ -16,5 +16,5 @@ export const DEFAULT_SCALE_FACTOR = 0.05;
 /** Pixels wide, written out as `--toast-width` for the stylesheet to read. */
 export const DEFAULT_TOAST_WIDTH = 460;
 
-/** Milliseconds a toast lives for. Matches sonner's default, which `@heroui/react` took it from. */
+/** Milliseconds a toast lives for. Matches sonner's default. */
 export const DEFAULT_TOAST_TIMEOUT = 4000;

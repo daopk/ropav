@@ -7,9 +7,9 @@ import ChipLabel from "./chip-label.vue";
 /**
  * Renders the chip's children, wrapping them in `Chip.Label` when they are only text.
  *
- * `@heroui/react` does this by reading `children` and wrapping a bare string, so
- * `<Chip>Label</Chip>` and `<Chip><Chip.Label>Label</Chip.Label></Chip>` produce the same
- * DOM. A template cannot ask that question, but a slot function can be answered: it returns
+ * The point is that `<Chip>Label</Chip>` and `<Chip><Chip.Label>Label</Chip.Label></Chip>`
+ * produce the same DOM. A template cannot ask whether its children are bare text, but a slot
+ * function can be answered: it returns
  * the block it just rendered, and a lone text child resolves to a single text node while
  * markup resolves to elements or component instances.
  *

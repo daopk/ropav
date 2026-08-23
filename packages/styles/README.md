@@ -13,8 +13,7 @@ buys: this repo no longer gets upstream patches for free, and in exchange a real
 fixed here instead of only filed upstream and waited on.
 
 > **The CSS and `src/**` are deliberately byte-for-byte identical to upstream `v3.2.4`.** That is what keeps a
-> `diff` against upstream readable, which in turn is what keeps the visual-parity check against `@heroui/react`
-> meaningful. Anything that changes from here on is a **deliberate divergence**, and the reason it is worth
+> `diff` against upstream readable. Anything that changes from here on is a **deliberate divergence**, and the reason it is worth
 > losing parity for belongs in the commit message.
 >
 > One exception from the vendoring pass: `color-picker.css`, `list-box-item.css`, and `select.css` each had one
@@ -118,8 +117,7 @@ empty rule with a comment saying why. A component with no size modifier never lo
 **State keys on `data-*`, with a pseudo-class fallback.** Interactive rules are written as
 `&:hover, &[data-hovered="true"]`, `&:active, &[data-pressed="true"]`, `&:focus-visible,
 &[data-focus-visible="true"]` — so the same CSS works whether state comes from the browser or from a
-component that publishes it as an attribute. The `data-*` contract is shared with `@heroui/react`, which is
-what makes the two libraries look identical.
+component that publishes it as an attribute.
 
 `components/button.css` is the densest example of both — read it before writing a new component file.
 

@@ -20,29 +20,26 @@ import TableSortableColumnHeader from "./table-sortable-column-header.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a table, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Table = Object.assign(TableRoot, {
-  Root: TableRoot,
-  ScrollContainer: TableScrollContainer,
-  ResizableContainer: TableResizableContainer,
-  Content: TableContent,
-  Header: TableHeader,
+  Body: TableBody,
+  Cell: TableCell,
   Column: TableColumn,
   ColumnResizer: TableColumnResizer,
-  Body: TableBody,
-  Row: TableRow,
-  Cell: TableCell,
-  ExpandTrigger: TableExpandTrigger,
+  Content: TableContent,
   DragHandle: TableDragHandle,
   DropIndicator: TableDropIndicator,
+  ExpandTrigger: TableExpandTrigger,
   Footer: TableFooter,
+  Header: TableHeader,
   LoadMore: TableLoadMore,
   LoadMoreContent: TableLoadMoreContent,
+  ResizableContainer: TableResizableContainer,
+  Root: TableRoot,
+  Row: TableRow,
+  ScrollContainer: TableScrollContainer,
   SelectionCheckbox: TableSelectionCheckbox,
   SortableColumnHeader: TableSortableColumnHeader,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

@@ -7,16 +7,13 @@ import AlertTitle from "./alert-title.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors `@heroui/react`.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Alert = Object.assign(AlertRoot, {
-  Root: AlertRoot,
-  Indicator: AlertIndicator,
   Content: AlertContent,
-  Title: AlertTitle,
   Description: AlertDescription,
+  Indicator: AlertIndicator,
+  Root: AlertRoot,
+  Title: AlertTitle,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

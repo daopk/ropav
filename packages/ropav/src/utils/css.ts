@@ -1,8 +1,8 @@
 /**
  * Read a CSS time value as a number of milliseconds.
  *
- * Ported from `@heroui/react`'s `parseCSSTime`. A bare number is taken as milliseconds, which is
- * what a custom property holding `0` rather than `0ms` means in practice.
+ * A bare number is taken as milliseconds, which is what a custom property holding `0` rather than
+ * `0ms` means in practice.
  *
  * @example
  * ```ts

@@ -21,27 +21,24 @@ import RangeCalendarRoot from "./range-calendar-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a calendar, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const RangeCalendar = Object.assign(RangeCalendarRoot, {
-  Root: RangeCalendarRoot,
-  Header: RangeCalendarHeader,
-  Heading: RangeCalendarHeading,
-  NavButton: RangeCalendarNavButton,
-  Grid: RangeCalendarGrid,
-  GridHeader: RangeCalendarGridHeader,
-  GridBody: RangeCalendarGridBody,
-  HeaderCell: RangeCalendarHeaderCell,
   Cell: RangeCalendarCell,
   CellIndicator: RangeCalendarCellIndicator,
+  Grid: RangeCalendarGrid,
+  GridBody: RangeCalendarGridBody,
+  GridHeader: RangeCalendarGridHeader,
+  Header: RangeCalendarHeader,
+  HeaderCell: RangeCalendarHeaderCell,
+  Heading: RangeCalendarHeading,
+  NavButton: RangeCalendarNavButton,
+  Root: RangeCalendarRoot,
+  YearPickerCell: CalendarYearPickerCell,
+  YearPickerGrid: CalendarYearPickerGrid,
+  YearPickerGridBody: CalendarYearPickerGridBody,
   YearPickerTrigger: CalendarYearPickerTrigger,
   YearPickerTriggerHeading: CalendarYearPickerTriggerHeading,
   YearPickerTriggerIndicator: CalendarYearPickerTriggerIndicator,
-  YearPickerGrid: CalendarYearPickerGrid,
-  YearPickerGridBody: CalendarYearPickerGridBody,
-  YearPickerCell: CalendarYearPickerCell,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

@@ -9,7 +9,7 @@ import type {Component} from "vue";
 /**
  * Anything the imperative API can be handed to render.
  *
- * `@heroui/react` types the same slots as `ReactNode`, which has no equivalent a queue can hold
+ * React types the same slots as `ReactNode`, which has no equivalent a queue can hold
  * and a template can insert — Vapor has no detached-node value at all. A component covers the
  * same ground: primitives render as text, a component renders through `<component :is>`, and
  * anything richer is a component the caller writes.
@@ -76,7 +76,7 @@ export interface ToastAddOptions extends ToastOptions {
  * `success` and `error` may be a function of the resolved value. That form is *undecidable* from a
  * functional component at runtime — both are plain functions — so a function here is always read
  * as a message factory. A component that happens to be a function has to be wrapped
- * (`defineComponent`/`defineVaporComponent`) to be passed. `@heroui/react` never meets this
+ * (`defineComponent`/`defineVaporComponent`) to be passed. React never meets this
  * because a `ReactNode` is never callable.
  */
 export interface ToastPromiseOptions<T = unknown> {

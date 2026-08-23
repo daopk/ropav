@@ -5,14 +5,11 @@ import AvatarRoot from "./avatar-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of an avatar, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Avatar = Object.assign(AvatarRoot, {
-  Root: AvatarRoot,
-  Image: AvatarImage,
   Fallback: AvatarFallback,
+  Image: AvatarImage,
+  Root: AvatarRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

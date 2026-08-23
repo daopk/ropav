@@ -3,14 +3,12 @@ import ProgressCircleRoot from "./progress-circle-root.vue";
 import ProgressCircleTrackCircle from "./progress-circle-track-circle.vue";
 import ProgressCircleTrack from "./progress-circle-track.vue";
 
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const ProgressCircle = Object.assign(ProgressCircleRoot, {
+  FillCircle: ProgressCircleFillCircle,
   Root: ProgressCircleRoot,
   Track: ProgressCircleTrack,
   TrackCircle: ProgressCircleTrackCircle,
-  FillCircle: ProgressCircleFillCircle,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 export {
   ProgressCircleFillCircle,

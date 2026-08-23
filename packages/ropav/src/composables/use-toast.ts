@@ -51,8 +51,8 @@ export interface UseToastReturn {
  * rather than dropping it, so a toast that comes back has the time it had left.
  *
  * One narrowing against upstream: it also returns a localized `aria-label` for the close button,
- * which nothing can use — `CloseButton` writes its own `aria-label="Close"`, and in
- * `@heroui/react` that hardcoded label wins over the one offered through context.
+ * which nothing can use — `CloseButton` writes its own `aria-label="Close"`, and that hardcoded
+ * label wins over the one offered through context.
  */
 export const useToast = (options: UseToastOptions): UseToastReturn => {
   const titleId = useId();

@@ -9,18 +9,15 @@ import TabsTab from "./tabs-tab.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a set of tabs, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Tabs = Object.assign(TabsRoot, {
-  Root: TabsRoot,
-  ListContainer: TabsListContainer,
-  List: TabsList,
-  Tab: TabsTab,
   Indicator: TabsIndicator,
-  Separator: TabsSeparator,
+  List: TabsList,
+  ListContainer: TabsListContainer,
   Panel: TabsPanel,
+  Root: TabsRoot,
+  Separator: TabsSeparator,
+  Tab: TabsTab,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

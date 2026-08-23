@@ -12,7 +12,7 @@ import IconCircleFill from "~icons/gravity-ui/circle-fill";
  * Runtime-compiled story templates cannot resolve `Chip.Label` — dot notation is an SFC
  * compiler feature. The parts are registered individually instead.
  *
- * They also write the label out where `@heroui/react` passes bare text. A story template is
+ * They also write `Chip.Label` out explicitly rather than passing bare text. A story template is
  * compiled to virtual DOM, and a virtual-DOM slot only fills its nodes in once it is inserted,
  * so the chip has nothing to look at when it decides whether to wrap. In an SFC — which is
  * what application code is — `<Chip>Label</Chip>` wraps on its own.

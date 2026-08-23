@@ -11,21 +11,18 @@ import ToastTitle from "./toast-title.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors `@heroui/react`.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Toast = Object.assign(ToastRoot, {
-  Root: ToastRoot,
-  Provider: ToastProvider,
-  Content: ToastContent,
-  Indicator: ToastIndicator,
-  Title: ToastTitle,
-  Description: ToastDescription,
   ActionButton: ToastActionButton,
   CloseButton: ToastCloseButton,
+  Content: ToastContent,
+  Description: ToastDescription,
+  Indicator: ToastIndicator,
+  Provider: ToastProvider,
   Queue: ToastQueue,
+  Root: ToastRoot,
+  Title: ToastTitle,
   toast,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

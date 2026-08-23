@@ -309,8 +309,8 @@ describe("toast", () => {
     scoped.success("a");
     scoped.warning("b");
     scoped.danger("c");
-    // `info` is the outlier and it is deliberate: `@heroui/react` names the helper `info` and
-    // gives it the accent variant, because there is no `info` variant to give it.
+    // `info` is the outlier and it is deliberate: the helper is named `info` but raises the accent
+    // variant, because there is no `info` variant to give it.
     scoped.info("d");
 
     expect(queue.visibleToasts.map((entry) => entry.content.variant)).toEqual([
@@ -348,7 +348,7 @@ describe("toast", () => {
     scoped.close(key);
 
     // Deferred so the callback runs after the removal it reports has been painted, not in the
-    // middle of it — the same frame `@heroui/react` waits.
+    // middle of it.
     expect(onClose).not.toHaveBeenCalled();
 
     await vi.waitFor(() => {

@@ -107,9 +107,8 @@ export const Default: Story = {
   }),
 };
 
-// Not a story `@heroui/react` has. The disabled cascade is the whole reason the component hands
-// its state down through a context, and no story exercised it — the same gap the `ButtonGroup`
-// orientation story filled.
+// The disabled cascade is the whole reason the component hands its state down through a context,
+// and nothing else exercises it.
 export const Disabled: Story = {
   render: () => ({
     components,

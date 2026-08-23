@@ -1,7 +1,7 @@
 /**
  * The overlay layer every positioned overlay is built on: a popover, a tooltip's content, a
- * select's listbox. Internal on purpose — `@heroui/react` publishes no equivalent, so this
- * directory is listed in the build's skipped set and never becomes a subpath of its own.
+ * select's listbox. Internal on purpose: this directory is listed in the build's skipped set and
+ * never becomes a subpath of its own.
  */
 export {default as OverlayArrow} from "./overlay-arrow.vue";
 export {default as OverlayDismissButton} from "./overlay-dismiss-button.vue";

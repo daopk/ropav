@@ -12,21 +12,18 @@ import PaginationSummary from "./pagination-summary.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a pagination bar, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const Pagination = Object.assign(PaginationRoot, {
-  Root: PaginationRoot,
-  Summary: PaginationSummary,
   Content: PaginationContent,
+  Ellipsis: PaginationEllipsis,
   Item: PaginationItem,
   Link: PaginationLink,
-  Previous: PaginationPrevious,
-  PreviousIcon: PaginationPreviousIcon,
   Next: PaginationNext,
   NextIcon: PaginationNextIcon,
-  Ellipsis: PaginationEllipsis,
+  Previous: PaginationPrevious,
+  PreviousIcon: PaginationPreviousIcon,
+  Root: PaginationRoot,
+  Summary: PaginationSummary,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

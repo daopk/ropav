@@ -6,15 +6,12 @@ import ColorSwatchPickerSwatch from "./color-swatch-picker-swatch.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a swatch picker, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const ColorSwatchPicker = Object.assign(ColorSwatchPickerRoot, {
-  Root: ColorSwatchPickerRoot,
-  Item: ColorSwatchPickerItem,
-  Swatch: ColorSwatchPickerSwatch,
   Indicator: ColorSwatchPickerIndicator,
+  Item: ColorSwatchPickerItem,
+  Root: ColorSwatchPickerRoot,
+  Swatch: ColorSwatchPickerSwatch,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

@@ -16,16 +16,13 @@ import DateRangePickerTrigger from "./date-range-picker-trigger.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a date range picker, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const DateRangePicker = Object.assign(DateRangePickerRoot, {
+  Popover: DateRangePickerPopover,
+  RangeSeparator: DateRangePickerRangeSeparator,
   Root: DateRangePickerRoot,
   Trigger: DateRangePickerTrigger,
   TriggerIndicator: DateRangePickerTriggerIndicator,
-  RangeSeparator: DateRangePickerRangeSeparator,
-  Popover: DateRangePickerPopover,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

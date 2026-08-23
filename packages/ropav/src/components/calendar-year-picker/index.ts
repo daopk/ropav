@@ -10,19 +10,16 @@ import CalendarYearPickerTrigger from "./calendar-year-picker-trigger.vue";
  * -----------------------------------------------------------------------------------------------*/
 /*
  * A plain object rather than `Object.assign`, because the year picker has no root of its own — it is
- * a set of parts a calendar hosts, mirroring `@heroui/react`.
+ * a set of parts a calendar hosts.
  */
-// Part order mirrors the DOM order of a year picker, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const CalendarYearPicker = {
+  Cell: CalendarYearPickerCell,
+  Grid: CalendarYearPickerGrid,
+  GridBody: CalendarYearPickerGridBody,
   Trigger: CalendarYearPickerTrigger,
   TriggerHeading: CalendarYearPickerTriggerHeading,
   TriggerIndicator: CalendarYearPickerTriggerIndicator,
-  Grid: CalendarYearPickerGrid,
-  GridBody: CalendarYearPickerGridBody,
-  Cell: CalendarYearPickerCell,
 };
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

@@ -7,16 +7,13 @@ import NumberFieldRoot from "./number-field-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a number field, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const NumberField = Object.assign(NumberFieldRoot, {
-  Root: NumberFieldRoot,
-  Group: NumberFieldGroup,
   DecrementButton: NumberFieldDecrementButton,
-  Input: NumberFieldInput,
+  Group: NumberFieldGroup,
   IncrementButton: NumberFieldIncrementButton,
+  Input: NumberFieldInput,
+  Root: NumberFieldRoot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

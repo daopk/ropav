@@ -15,15 +15,12 @@ import DatePickerTrigger from "./date-picker-trigger.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a date picker, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const DatePicker = Object.assign(DatePickerRoot, {
+  Popover: DatePickerPopover,
   Root: DatePickerRoot,
   Trigger: DatePickerTrigger,
   TriggerIndicator: DatePickerTriggerIndicator,
-  Popover: DatePickerPopover,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components

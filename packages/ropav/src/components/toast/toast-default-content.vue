@@ -21,7 +21,7 @@ const content = computed(() => props.toast.content ?? {});
 
 /**
  * Below this the action button moves *inside* the content column instead of sitting beside it,
- * because there is no room for a row. The breakpoint matches `@heroui/react`.
+ * because there is no room for a row.
  */
 const isMobile = useMediaQuery("(max-width: 768px)");
 

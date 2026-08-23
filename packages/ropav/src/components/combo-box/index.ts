@@ -7,17 +7,13 @@ import ComboBoxValue from "./combo-box-value.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
-// Ordered the way the parts appear in the DOM, which is easier to read against the markup than
-// alphabetical order would be.
 export const ComboBox = Object.assign(ComboBoxRoot, {
-  Root: ComboBoxRoot,
   InputGroup: ComboBoxInputGroup,
+  Popover: ComboBoxPopover,
+  Root: ComboBoxRoot,
   Trigger: ComboBoxTrigger,
   Value: ComboBoxValue,
-  Popover: ComboBoxPopover,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Component

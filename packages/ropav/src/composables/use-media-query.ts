@@ -13,7 +13,7 @@ export interface UseMediaQueryOptions {
 }
 
 /**
- * Whether a media query currently matches, ported from `@heroui/react`'s `useMediaQuery`.
+ * Whether a media query currently matches.
  *
  * Reactive on two axes: the query itself may change, and so may the answer. Both go through the
  * same subscribe step, so switching queries tears the old listener down rather than accumulating
@@ -50,8 +50,8 @@ export const useMediaQuery = (
 
     onChange();
 
-    // `addListener` is deprecated, but a media query list in Safari below 14 has nothing else —
-    // the same fallback `@heroui/react` keeps, and the reason it is written this way round.
+    // `addListener` is deprecated, but a media query list in Safari below 14 has nothing else,
+    // which is why the modern path is tried first and this is the fallback.
     if (typeof list.addEventListener === "function") {
       list.addEventListener("change", onChange);
       detach = () => list.removeEventListener("change", onChange);

@@ -6,15 +6,12 @@ import InputOTPSlot from "./input-otp-slot.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-// Part order mirrors the DOM order of a one-time code field, and `@heroui/react` — not alphabetical.
-/* eslint-disable sort-keys, sort-keys-fix/sort-keys-fix */
 export const InputOTP = Object.assign(InputOTPRoot, {
-  Root: InputOTPRoot,
   Group: InputOTPGroup,
-  Slot: InputOTPSlot,
+  Root: InputOTPRoot,
   Separator: InputOTPSeparator,
+  Slot: InputOTPSlot,
 });
-/* eslint-enable sort-keys, sort-keys-fix/sort-keys-fix */
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
