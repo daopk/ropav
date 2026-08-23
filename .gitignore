@@ -1,6 +1,5 @@
 # cache
 .cache
-.rollup.cache
 .swc
 
 # dependencies

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  // Emit-only variant of `tsconfig.json`: `scripts/build.mjs` runs it for the `.d.ts`, so it
+  // narrows back to `src` and drops the build tooling the checking config carries.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    // `scripts/build.mjs` wipes `dist` on every run, so a build info file from the previous
+    // run would convince `tsc` there is nothing left to emit.
+    "incremental": false,
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -144,7 +144,6 @@
     "**/dist",
     "**/build",
     "**/storybook-static",
-    "**/.rollup.cache",
     "**/node_modules",
     "**/coverage",
     "**/__snapshots__"

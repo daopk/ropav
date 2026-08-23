@@ -145,7 +145,7 @@ stale the moment a token moves. `themes/shared/theme.css` holds what is derived 
 pnpm --filter @ropav/styles build
 ```
 
-Rollup emits `dist/` as ES modules with `preserveModules` and one entry per component, `tsc` emits the `.d.ts`
+Rolldown emits `dist/` as ES modules with `preserveModules` and one entry per component, `tsc` emits the `.d.ts`
 files, the CSS is copied across untouched, and `@tailwindcss/cli` produces the minified `dist/ropav.min.css`.
 
 `pnpm --filter @ropav/styles measure-size` prints a size report and writes `bundle-size.json`.

@@ -16,13 +16,16 @@ async function clean() {
 }
 
 async function build() {
-  console.log("📦 Building with Rollup...");
-  execSync("rollup -c rollup.config.mjs", { cwd: rootDir, stdio: "inherit" });
+  console.log("📦 Building with Rolldown...");
+  execSync("rolldown -c rolldown.config.ts", { cwd: rootDir, stdio: "inherit" });
 }
 
 async function generateTypes() {
   console.log("📝 Generating TypeScript declarations...");
-  execSync("tsc --emitDeclarationOnly", { cwd: rootDir, stdio: "inherit" });
+  execSync("tsc --emitDeclarationOnly --project tsconfig.build.json", {
+    cwd: rootDir,
+    stdio: "inherit",
+  });
   console.log("✅ TypeScript declarations generated");
 }
 

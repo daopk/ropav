@@ -2,17 +2,17 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "noEmit": false,
+    // `scripts/*.mjs` are build glue, not shipped code, and were never type-checked. They sit in
+    // `include` only so the editor resolves their imports against this project instead of an
+    // inferred one - checking them would mean annotating 30-odd implicit `any`s first.
+    "checkJs": false,
     // The package is framework-agnostic and never touches the DOM: it is `tv()` calls and
     // CSS. `lib`/`types` override rather than merge, so both are narrowed from the base -
-    // no `vite/client`, which this package has no reason to depend on.
+    // no `vite/client`, which this package has no reason to depend on. `node` earns its
+    // place for `rolldown.config.ts` and the scripts, which read directories off disk.
     "lib": ["ESNext"],
-    "types": []
+    "types": ["node"]
   },
-  "include": ["src"],
+  "include": ["src", "scripts", "rolldown.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
