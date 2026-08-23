@@ -1,5 +1,5 @@
-import type {CalendarState} from "@/composables/use-calendar-state";
-import type {CalendarDate as CalendarDateType, DateValue} from "@internationalized/date";
+import type { CalendarState } from "@/composables/use-calendar-state";
+import type { CalendarDate as CalendarDateType, DateValue } from "@internationalized/date";
 
 import {
   CalendarDate,
@@ -8,9 +8,9 @@ import {
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/calendar-state-host.vue";
 
@@ -28,7 +28,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: CalendarState) => (state = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -61,7 +61,7 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
 describe("useCalendarState", () => {
   describe("what is visible", () => {
     it("centres a single month on the focused date", () => {
-      expect(setup({defaultFocusedValue: jun(15)}).range()).toBe("2026-06-01..2026-06-30");
+      expect(setup({ defaultFocusedValue: jun(15) }).range()).toBe("2026-06-01..2026-06-30");
     });
 
     it("focuses today when nothing says otherwise", () => {
@@ -71,17 +71,17 @@ describe("useCalendarState", () => {
     });
 
     it("prefers the selected date over today", () => {
-      expect(String(setup({value: jun(9)}).state().focusedDate.value)).toBe("2026-06-09");
+      expect(String(setup({ value: jun(9) }).state().focusedDate.value)).toBe("2026-06-09");
     });
 
     it("prefers an explicit focused date over the selection", () => {
       expect(
-        String(setup({defaultFocusedValue: jun(23), value: jun(9)}).state().focusedDate.value),
+        String(setup({ defaultFocusedValue: jun(23), value: jun(9) }).state().focusedDate.value),
       ).toBe("2026-06-23");
     });
 
     it("spans several months when asked to", () => {
-      expect(setup({defaultFocusedValue: jun(15), visibleDuration: {months: 3}}).range()).toBe(
+      expect(setup({ defaultFocusedValue: jun(15), visibleDuration: { months: 3 } }).range()).toBe(
         "2026-05-01..2026-07-31",
       );
     });
@@ -91,7 +91,7 @@ describe("useCalendarState", () => {
         setup({
           defaultFocusedValue: jun(15),
           selectionAlignment: "start",
-          visibleDuration: {months: 3},
+          visibleDuration: { months: 3 },
         }).range(),
       ).toBe("2026-06-01..2026-08-31");
     });
@@ -101,23 +101,27 @@ describe("useCalendarState", () => {
         setup({
           defaultFocusedValue: jun(15),
           selectionAlignment: "end",
-          visibleDuration: {months: 3},
+          visibleDuration: { months: 3 },
         }).range(),
       ).toBe("2026-04-01..2026-06-30");
     });
 
     it("shows exactly the days a day view asks for, centred on the focused one", () => {
-      expect(setup({defaultFocusedValue: jun(15), visibleDuration: {days: 3}}).range()).toBe(
+      expect(setup({ defaultFocusedValue: jun(15), visibleDuration: { days: 3 } }).range()).toBe(
         "2026-06-14..2026-06-16",
       );
     });
 
     it("aligns a week view to the locale's week", () => {
-      expect(setup({defaultFocusedValue: jun(15), visibleDuration: {weeks: 1}}).range()).toBe(
+      expect(setup({ defaultFocusedValue: jun(15), visibleDuration: { weeks: 1 } }).range()).toBe(
         "2026-06-14..2026-06-20",
       );
       expect(
-        setup({defaultFocusedValue: jun(15), locale: "de-DE", visibleDuration: {weeks: 1}}).range(),
+        setup({
+          defaultFocusedValue: jun(15),
+          locale: "de-DE",
+          visibleDuration: { weeks: 1 },
+        }).range(),
       ).toBe("2026-06-15..2026-06-21");
     });
 
@@ -128,7 +132,7 @@ describe("useCalendarState", () => {
           defaultFocusedValue: jun(15),
           maxValue: jun(18),
           minValue: jun(8),
-          visibleDuration: {months: 3},
+          visibleDuration: { months: 3 },
         }).range(),
       ).toBe("2026-04-01..2026-06-30");
     });
@@ -137,40 +141,40 @@ describe("useCalendarState", () => {
   describe("the grid it produces", () => {
     it("pads the first row back to the start of the week", () => {
       // June 2026 starts on a Monday, so the Sunday before it fills the first cell.
-      const [first] = setup({defaultFocusedValue: jun(15)}).grid();
+      const [first] = setup({ defaultFocusedValue: jun(15) }).grid();
 
       expect(first?.[0]).toBe("2026-05-31");
       expect(first?.[1]).toBe("2026-06-01");
     });
 
     it("follows the locale's first day of the week", () => {
-      const [first] = setup({defaultFocusedValue: jun(15), locale: "de-DE"}).grid();
+      const [first] = setup({ defaultFocusedValue: jun(15), locale: "de-DE" }).grid();
 
       expect(first?.[0]).toBe("2026-06-01");
     });
 
     it("follows an explicit first day of the week over the locale's", () => {
-      const [first] = setup({defaultFocusedValue: jun(15), firstDayOfWeek: "wed"}).grid();
+      const [first] = setup({ defaultFocusedValue: jun(15), firstDayOfWeek: "wed" }).grid();
 
       expect(first?.[0]).toBe("2026-05-27");
     });
 
     it("gives a short day view one row of exactly that many days", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), visibleDuration: {days: 3}});
+      const calendar = setup({ defaultFocusedValue: jun(15), visibleDuration: { days: 3 } });
 
       expect(calendar.grid()).toEqual([["2026-06-14", "2026-06-15", "2026-06-16"]]);
     });
 
     it("holds the row count still when told how many weeks to show", () => {
       // A month grid that changes height as the user pages is what `weeksInMonth` is for.
-      expect(setup({defaultFocusedValue: jun(15), weeksInMonth: 6}).grid()).toHaveLength(6);
-      expect(setup({defaultFocusedValue: jun(15)}).grid()).toHaveLength(5);
+      expect(setup({ defaultFocusedValue: jun(15), weeksInMonth: 6 }).grid()).toHaveLength(6);
+      expect(setup({ defaultFocusedValue: jun(15) }).grid()).toHaveLength(5);
     });
   });
 
   describe("moving focus", () => {
     it("steps a day at a time", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().focusNextDay();
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-16");
@@ -180,7 +184,7 @@ describe("useCalendarState", () => {
     });
 
     it("steps a week at a time between rows", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().focusNextRow();
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-22");
@@ -190,14 +194,14 @@ describe("useCalendarState", () => {
 
     it("pages instead of changing row in a day view", () => {
       // A day view has no row below the one on screen, so the whole page has to move.
-      const calendar = setup({defaultFocusedValue: jun(15), visibleDuration: {days: 3}});
+      const calendar = setup({ defaultFocusedValue: jun(15), visibleDuration: { days: 3 } });
 
       calendar.state().focusNextRow();
       expect(calendar.range()).toBe("2026-06-17..2026-06-19");
     });
 
     it("moves the visible range with the focused date when it steps off the page", () => {
-      const calendar = setup({defaultFocusedValue: new CalendarDate(2026, 6, 30)});
+      const calendar = setup({ defaultFocusedValue: new CalendarDate(2026, 6, 30) });
 
       calendar.state().focusNextDay();
       expect(String(calendar.state().focusedDate.value)).toBe("2026-07-01");
@@ -205,7 +209,7 @@ describe("useCalendarState", () => {
     });
 
     it("pages forwards and back by the whole visible range", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), visibleDuration: {months: 2}});
+      const calendar = setup({ defaultFocusedValue: jun(15), visibleDuration: { months: 2 } });
 
       expect(calendar.range()).toBe("2026-06-01..2026-07-31");
       calendar.state().focusNextPage();
@@ -218,7 +222,7 @@ describe("useCalendarState", () => {
       const calendar = setup({
         defaultFocusedValue: jun(15),
         pageBehavior: "single",
-        visibleDuration: {months: 2},
+        visibleDuration: { months: 2 },
       });
 
       calendar.state().focusNextPage();
@@ -226,7 +230,7 @@ describe("useCalendarState", () => {
     });
 
     it("jumps to the ends of the current section", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().focusSectionEnd();
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-30");
@@ -235,7 +239,7 @@ describe("useCalendarState", () => {
     });
 
     it("moves a month at a time between sections, and a year at a time when larger", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().focusNextSection();
       expect(String(calendar.state().focusedDate.value)).toBe("2026-07-15");
@@ -247,7 +251,7 @@ describe("useCalendarState", () => {
     });
 
     it("never lets focus rest outside the bounds", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), maxValue: jun(18), minValue: jun(8)});
+      const calendar = setup({ defaultFocusedValue: jun(15), maxValue: jun(18), minValue: jun(8) });
 
       calendar.state().setFocusedDate(new CalendarDate(2030, 1, 1));
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-18");
@@ -257,7 +261,7 @@ describe("useCalendarState", () => {
 
     it("reports every move to onFocusChange", () => {
       const onFocusChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(15), onFocusChange});
+      const calendar = setup({ defaultFocusedValue: jun(15), onFocusChange });
 
       calendar.state().focusNextDay();
       calendar.state().focusNextRow();
@@ -270,7 +274,7 @@ describe("useCalendarState", () => {
 
     it("leaves a controlled focused date to its owner", async () => {
       const onFocusChange = vi.fn();
-      const props = reactive({focusedValue: jun(15), onFocusChange});
+      const props = reactive({ focusedValue: jun(15), onFocusChange });
       const calendar = setup(props);
 
       calendar.state().focusNextDay();
@@ -286,7 +290,7 @@ describe("useCalendarState", () => {
   describe("selecting", () => {
     it("selects a date and reports it", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(15), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(15), onChange });
 
       calendar.state().selectDate(jun(20));
 
@@ -295,7 +299,7 @@ describe("useCalendarState", () => {
     });
 
     it("selects whatever is focused", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectFocusedDate();
 
@@ -337,8 +341,8 @@ describe("useCalendarState", () => {
     });
 
     it("does nothing while disabled or read only", () => {
-      for (const props of [{isDisabled: true}, {isReadOnly: true}]) {
-        const calendar = setup({...props, defaultFocusedValue: jun(15)});
+      for (const props of [{ isDisabled: true }, { isReadOnly: true }]) {
+        const calendar = setup({ ...props, defaultFocusedValue: jun(15) });
 
         calendar.state().selectDate(jun(20));
         expect(calendar.state().value.value).toBeNull();
@@ -346,7 +350,7 @@ describe("useCalendarState", () => {
     });
 
     it("toggles dates in and out in multiple mode", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), selectionMode: "multiple"});
+      const calendar = setup({ defaultFocusedValue: jun(15), selectionMode: "multiple" });
 
       calendar.state().selectDate(jun(3));
       calendar.state().selectDate(jun(9));
@@ -388,21 +392,21 @@ describe("useCalendarState", () => {
 
   describe("what each cell reports", () => {
     it("marks the selected date as selected", () => {
-      const calendar = setup({value: jun(10)});
+      const calendar = setup({ value: jun(10) });
 
       expect(calendar.state().isSelected(jun(10))).toBe(true);
       expect(calendar.state().isSelected(jun(11))).toBe(false);
     });
 
     it("disables dates outside the visible range", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       expect(calendar.state().isCellDisabled(new CalendarDate(2026, 5, 31))).toBe(true);
       expect(calendar.state().isCellDisabled(jun(1))).toBe(false);
     });
 
     it("disables every cell when the calendar is disabled", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), isDisabled: true});
+      const calendar = setup({ defaultFocusedValue: jun(15), isDisabled: true });
 
       expect(calendar.state().isCellDisabled(jun(15))).toBe(true);
     });
@@ -428,7 +432,7 @@ describe("useCalendarState", () => {
     });
 
     it("only reports a focused cell while focus is actually inside", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       expect(calendar.state().isCellFocused(jun(15))).toBe(false);
       calendar.state().setFocused(true);
@@ -437,7 +441,7 @@ describe("useCalendarState", () => {
     });
 
     it("takes focus on mount when asked to", () => {
-      expect(setup({autoFocus: true, defaultFocusedValue: jun(15)}).state().isFocused.value).toBe(
+      expect(setup({ autoFocus: true, defaultFocusedValue: jun(15) }).state().isFocused.value).toBe(
         true,
       );
     });
@@ -446,26 +450,26 @@ describe("useCalendarState", () => {
   describe("validity", () => {
     it("stays valid for a date inside the bounds", () => {
       expect(
-        setup({maxValue: jun(18), minValue: jun(8), value: jun(10)}).state().isValueInvalid.value,
+        setup({ maxValue: jun(18), minValue: jun(8), value: jun(10) }).state().isValueInvalid.value,
       ).toBe(false);
     });
 
     it("goes invalid for a selection outside the bounds", () => {
       expect(
-        setup({maxValue: jun(18), value: new CalendarDate(2026, 7, 1)}).state().isValueInvalid
+        setup({ maxValue: jun(18), value: new CalendarDate(2026, 7, 1) }).state().isValueInvalid
           .value,
       ).toBe(true);
     });
 
     it("goes invalid for an unavailable selection", () => {
       expect(
-        setup({isDateUnavailable: (date: DateValue) => date.day === 10, value: jun(10)}).state()
+        setup({ isDateUnavailable: (date: DateValue) => date.day === 10, value: jun(10) }).state()
           .isValueInvalid.value,
       ).toBe(true);
     });
 
     it("honours an explicitly invalid calendar", () => {
-      expect(setup({isInvalid: true, value: jun(10)}).state().isValueInvalid.value).toBe(true);
+      expect(setup({ isInvalid: true, value: jun(10) }).state().isValueInvalid.value).toBe(true);
     });
 
     it("goes invalid when any date in a multiple selection is", () => {
@@ -481,7 +485,7 @@ describe("useCalendarState", () => {
 
   describe("whether paging is possible", () => {
     it("reports both directions open with no bounds", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       expect(calendar.state().isPreviousVisibleRangeInvalid()).toBe(false);
       expect(calendar.state().isNextVisibleRangeInvalid()).toBe(false);
@@ -503,13 +507,13 @@ describe("useCalendarState", () => {
     it("realigns the visible range when the duration changes", async () => {
       const props: Record<string, unknown> = reactive({
         defaultFocusedValue: jun(15),
-        visibleDuration: {months: 1},
+        visibleDuration: { months: 1 },
       });
       const calendar = setup(props);
 
       expect(calendar.range()).toBe("2026-06-01..2026-06-30");
 
-      props["visibleDuration"] = {months: 3};
+      props["visibleDuration"] = { months: 3 };
       await nextTick();
 
       expect(calendar.range()).toBe("2026-05-01..2026-07-31");

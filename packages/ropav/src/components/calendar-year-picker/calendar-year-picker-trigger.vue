@@ -4,13 +4,13 @@ import type {
   CalendarYearPickerTriggerSlotProps,
 } from "./calendar-year-picker.types";
 
-import {calendarYearPickerVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { calendarYearPickerVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useCalendarHeading} from "../../composables/use-calendar-heading";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {useCalendarStateContext} from "../calendar/calendar.context";
+import { useCalendarHeading } from "../../composables/use-calendar-heading";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { useCalendarStateContext } from "../calendar/calendar.context";
 
 import {
   provideYearPickerTriggerContext,
@@ -19,14 +19,14 @@ import {
 
 const props = defineProps<CalendarYearPickerTriggerProps>();
 
-defineSlots<{default?: (props: CalendarYearPickerTriggerSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarYearPickerTriggerSlotProps) => unknown }>();
 
-const {isYearPickerOpen, setIsYearPickerOpen} = useYearPickerContext();
-const {state} = useCalendarStateContext();
+const { isYearPickerOpen, setIsYearPickerOpen } = useYearPickerContext();
+const { state } = useCalendarStateContext();
 
 const monthYear = useCalendarHeading({}, state);
 const slots = computed(() => calendarYearPickerVariants());
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const toggle = () => setIsYearPickerOpen(!isYearPickerOpen.value);
 
@@ -47,7 +47,7 @@ const slotProps = computed<CalendarYearPickerTriggerSlotProps>(() => ({
   toggle,
 }));
 
-provideYearPickerTriggerContext({isOpen: isYearPickerOpen, monthYear, slots, toggle});
+provideYearPickerTriggerContext({ isOpen: isYearPickerOpen, monthYear, slots, toggle });
 </script>
 
 <template>

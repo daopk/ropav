@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldHostProps} from "./number-field.types";
+import type { NumberFieldHostProps } from "./number-field.types";
 
-import {useNumberFieldState} from "@/composables/use-number-field-state";
+import { useNumberFieldState } from "@/composables/use-number-field-state";
 
 // The composable has to run inside a component: `useFormValidationState` injects the form
 // context, and `inject` outside a component instance returns `undefined` rather than the default.
-const props = withDefaults(defineProps<NumberFieldHostProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<NumberFieldHostProps>(), { isInvalid: undefined });
 
 const state = useNumberFieldState({
   commitBehavior: () => props.commitBehavior,

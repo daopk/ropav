@@ -1,10 +1,10 @@
-import type {ComboBoxFixtureItem, ComboBoxHostProps} from "../fixtures/combo-box.types";
-import type {UseComboBoxReturn} from "@/composables/use-combo-box";
-import type {UseComboBoxStateReturn} from "@/composables/use-combo-box-state";
+import type { ComboBoxFixtureItem, ComboBoxHostProps } from "../fixtures/combo-box.types";
+import type { UseComboBoxReturn } from "@/composables/use-combo-box";
+import type { UseComboBoxStateReturn } from "@/composables/use-combo-box-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/combo-box-host.vue";
 
@@ -69,22 +69,24 @@ const settle = async () => {
  * follows the text — so a bare `input` would exercise a path no keystroke ever takes.
  */
 const type = async (input: HTMLInputElement, value: string, inputType = "insertText") => {
-  input.dispatchEvent(new InputEvent("beforeinput", {bubbles: true, cancelable: true, inputType}));
+  input.dispatchEvent(
+    new InputEvent("beforeinput", { bubbles: true, cancelable: true, inputType }),
+  );
   input.value = value;
-  input.dispatchEvent(new InputEvent("input", {bubbles: true, inputType}));
+  input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType }));
   await settle();
 };
 
 /** A press, which is what opens a picker — a bare pointerdown is not one. */
 const press = async (element: Element) => {
-  element.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
-  element.dispatchEvent(new PointerEvent("pointerup", {bubbles: true, button: 0}));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+  element.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
+  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0 }));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await settle();
 };
 
 const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
   element.dispatchEvent(event);
 
@@ -93,19 +95,21 @@ const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) =>
 
 const focus = async (element: HTMLElement) => {
   element.focus();
-  element.dispatchEvent(new FocusEvent("focus", {bubbles: false}));
+  element.dispatchEvent(new FocusEvent("focus", { bubbles: false }));
   await settle();
 };
 
 const blur = async (element: HTMLElement, relatedTarget: EventTarget | null = null) => {
-  element.dispatchEvent(new FocusEvent("blur", {bubbles: false, relatedTarget} as FocusEventInit));
+  element.dispatchEvent(
+    new FocusEvent("blur", { bubbles: false, relatedTarget } as FocusEventInit),
+  );
   await settle();
 };
 
 describe("useComboBox", () => {
   describe("the field's wiring", () => {
     it("makes the input the combobox itself", () => {
-      const {input} = mount();
+      const { input } = mount();
 
       // The input *is* the widget, which is the whole difference from a select: there the trigger
       // is a button standing in for a hidden native control.
@@ -116,7 +120,7 @@ describe("useComboBox", () => {
     });
 
     it("points aria-controls at the listbox only while it is open", async () => {
-      const {comboBox, input, state} = mount();
+      const { comboBox, input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -126,7 +130,7 @@ describe("useComboBox", () => {
     });
 
     it("turns the browser's own suggestions and corrections off", () => {
-      const {input} = mount();
+      const { input } = mount();
 
       // The list is the suggestion list. Safari correcting the text underneath it, and the
       // browser offering a history dropdown over it, both fight the filter.
@@ -136,20 +140,20 @@ describe("useComboBox", () => {
     });
 
     it("names the input from the label", () => {
-      const {input, label} = mount();
+      const { input, label } = mount();
 
       expect(label.id).toBeTruthy();
       expect(input).toHaveAttribute("aria-labelledby", label.id);
     });
 
     it("takes a name of the caller's own instead", () => {
-      const {input} = mount({ariaLabel: "Animal"});
+      const { input } = mount({ ariaLabel: "Animal" });
 
       expect(input).toHaveAttribute("aria-label", "Animal");
     });
 
     it("shows the chosen option's text", () => {
-      const {input} = mount({defaultValue: "cat"});
+      const { input } = mount({ defaultValue: "cat" });
 
       expect(input.value).toBe("Cat");
     });
@@ -157,14 +161,14 @@ describe("useComboBox", () => {
 
   describe("the chevron", () => {
     it("announces that it opens a listbox", () => {
-      const {trigger} = mount();
+      const { trigger } = mount();
 
       expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
       expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
 
     it("stays out of the tab order", () => {
-      const {trigger} = mount();
+      const { trigger } = mount();
 
       // The field is the tab stop, and the arrows in it do everything the button does — so a
       // second stop would only make a keyboard user pass through a control they never need.
@@ -172,19 +176,19 @@ describe("useComboBox", () => {
     });
 
     it("carries a localized name of its own", () => {
-      const {trigger} = mount();
+      const { trigger } = mount();
 
       expect(trigger).toHaveAttribute("aria-label", "Show suggestions");
     });
 
     it("is disabled along with the field", () => {
-      expect(mount({isDisabled: true}).trigger).toBeDisabled();
-      expect(mount({isReadOnly: true}).trigger).toBeDisabled();
+      expect(mount({ isDisabled: true }).trigger).toBeDisabled();
+      expect(mount({ isReadOnly: true }).trigger).toBeDisabled();
       expect(mount().trigger).not.toBeDisabled();
     });
 
     it("opens the popover and leaves the caret in the field", async () => {
-      const {input, state, trigger} = mount();
+      const { input, state, trigger } = mount();
 
       await press(trigger);
 
@@ -193,7 +197,7 @@ describe("useComboBox", () => {
     });
 
     it("opens a field that opens on focus, rather than closing it again", async () => {
-      const {state, trigger} = mount({menuTrigger: "focus"});
+      const { state, trigger } = mount({ menuTrigger: "focus" });
 
       await press(trigger);
 
@@ -206,7 +210,7 @@ describe("useComboBox", () => {
     });
 
     it("shows every option, whatever the field says", async () => {
-      const {input, state, trigger} = mount();
+      const { input, state, trigger } = mount();
 
       await focus(input);
       await type(input, "pa");
@@ -222,13 +226,13 @@ describe("useComboBox", () => {
 
   describe("the listbox", () => {
     it("carries a localized name of its own when there is no label to borrow", async () => {
-      const {comboBox} = mount({ariaLabel: "Animal"});
+      const { comboBox } = mount({ ariaLabel: "Animal" });
 
       expect(comboBox.listLabel.value["aria-label"]).toBe("Suggestions");
     });
 
     it("borrows the field's label when there is one", () => {
-      const {comboBox, label} = mount();
+      const { comboBox, label } = mount();
 
       // Its own id comes first, which is what keeps its `aria-label` part of the name: assistive
       // technology drops an `aria-label` outright when `aria-labelledby` is also present.
@@ -241,7 +245,7 @@ describe("useComboBox", () => {
 
   describe("virtual focus", () => {
     it("names the option the arrows landed on without moving the caret", async () => {
-      const {comboBox, input, state} = mount();
+      const { comboBox, input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -256,7 +260,7 @@ describe("useComboBox", () => {
     });
 
     it("steps through the options with the arrows", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -270,7 +274,7 @@ describe("useComboBox", () => {
     });
 
     it("names nothing once the text moves on", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -287,7 +291,7 @@ describe("useComboBox", () => {
     });
 
     it("opens the popover on ArrowDown when it is shut", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       await focus(input);
       const event = keydown(input, "ArrowDown");
@@ -301,7 +305,7 @@ describe("useComboBox", () => {
     });
 
     it("opens it at the far end on ArrowUp", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       await focus(input);
       keydown(input, "ArrowUp");
@@ -312,7 +316,7 @@ describe("useComboBox", () => {
     });
 
     it("hands the paging keys to the list rather than the caret", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -327,7 +331,7 @@ describe("useComboBox", () => {
     });
 
     it("leaves a space to the text being typed", async () => {
-      const {input, state} = mount();
+      const { input, state } = mount();
 
       state.toggle(null, "manual");
       await settle();
@@ -344,7 +348,7 @@ describe("useComboBox", () => {
   describe("choosing", () => {
     it("takes the option the arrows landed on with Enter", async () => {
       const onChange = vi.fn();
-      const {input, state} = mount({onChange});
+      const { input, state } = mount({ onChange });
 
       state.toggle(null, "manual");
       await settle();
@@ -363,7 +367,7 @@ describe("useComboBox", () => {
     });
 
     it("lets Enter submit a form when nothing is showing", async () => {
-      const {input} = mount();
+      const { input } = mount();
 
       const event = keydown(input, "Enter");
 
@@ -373,7 +377,7 @@ describe("useComboBox", () => {
     });
 
     it("settles the field and closes on Tab, without claiming the key", async () => {
-      const {input, state} = mount({defaultValue: "cat"});
+      const { input, state } = mount({ defaultValue: "cat" });
 
       await focus(input);
       await type(input, "Ca");
@@ -387,7 +391,7 @@ describe("useComboBox", () => {
     });
 
     it("puts the field back on Escape", async () => {
-      const {input, state} = mount({defaultValue: "dog"});
+      const { input, state } = mount({ defaultValue: "dog" });
 
       await focus(input);
       await type(input, "Do something");
@@ -403,7 +407,7 @@ describe("useComboBox", () => {
   describe("focus", () => {
     it("reports focus arriving and leaving", async () => {
       const onFocusChange = vi.fn();
-      const {input} = mount({onFocusChange});
+      const { input } = mount({ onFocusChange });
 
       await focus(input);
       expect(onFocusChange).toHaveBeenLastCalledWith(true);
@@ -414,7 +418,7 @@ describe("useComboBox", () => {
 
     it("does not treat a blur into the chevron as leaving", async () => {
       const onFocusChange = vi.fn();
-      const {input, state, trigger} = mount({onFocusChange});
+      const { input, state, trigger } = mount({ onFocusChange });
 
       await focus(input);
       state.toggle(null, "manual");
@@ -429,7 +433,7 @@ describe("useComboBox", () => {
     });
 
     it("does not treat a blur into the popover as leaving", async () => {
-      const {input, popover, state} = mount();
+      const { input, popover, state } = mount();
 
       await focus(input);
       state.toggle(null, "manual");
@@ -446,7 +450,7 @@ describe("useComboBox", () => {
       document.body.append(outside);
       cleanups.push(() => outside.remove());
 
-      const {input, state} = mount({defaultValue: "cat"});
+      const { input, state } = mount({ defaultValue: "cat" });
 
       await focus(input);
       await type(input, "Ca");
@@ -461,7 +465,7 @@ describe("useComboBox", () => {
 
   describe("read-only", () => {
     it("does not open on the arrow keys", async () => {
-      const {input, state} = mount({isReadOnly: true});
+      const { input, state } = mount({ isReadOnly: true });
 
       await focus(input);
       keydown(input, "ArrowDown");
@@ -471,7 +475,7 @@ describe("useComboBox", () => {
     });
 
     it("does not open on focus even when asked to", async () => {
-      const {input, state} = mount({isReadOnly: true, menuTrigger: "focus"});
+      const { input, state } = mount({ isReadOnly: true, menuTrigger: "focus" });
 
       await focus(input);
 
@@ -480,7 +484,7 @@ describe("useComboBox", () => {
 
     it("still lets the caller's own keydown through", () => {
       const onKeydown = vi.fn();
-      const {input} = mount({isReadOnly: true, onKeydown});
+      const { input } = mount({ isReadOnly: true, onKeydown });
 
       keydown(input, "ArrowDown");
 
@@ -490,7 +494,7 @@ describe("useComboBox", () => {
 
   describe("with no listbox beside it", () => {
     it("still opens on the arrow keys", async () => {
-      const {input, state} = mount({withListBox: false});
+      const { input, state } = mount({ withListBox: false });
 
       await focus(input);
       keydown(input, "ArrowDown");
@@ -502,7 +506,7 @@ describe("useComboBox", () => {
     });
 
     it("names no option", async () => {
-      const {input, state} = mount({withListBox: false});
+      const { input, state } = mount({ withListBox: false });
 
       state.toggle(null, "manual");
       await settle();
@@ -515,9 +519,10 @@ describe("useComboBox", () => {
 
   describe("validation", () => {
     it("reports through the combo box's own state, not a second one over the text", async () => {
-      const {comboBox, input} = mount({
+      const { comboBox, input } = mount({
         defaultValue: "cat",
-        validate: ({inputValue, value}) => (value === "cat" ? `${inputValue} is wrong` : undefined),
+        validate: ({ inputValue, value }) =>
+          value === "cat" ? `${inputValue} is wrong` : undefined,
         validationBehavior: "aria",
       });
 

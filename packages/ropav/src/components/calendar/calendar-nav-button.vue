@@ -1,31 +1,31 @@
 <script setup lang="ts" vapor>
-import type {CalendarNavButtonProps} from "./calendar.types";
+import type { CalendarNavButtonProps } from "./calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {IconChevronLeft, IconChevronRight} from "../icons";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { IconChevronLeft, IconChevronRight } from "../icons";
 
-import {useCalendarContext, useCalendarStateContext} from "./calendar.context";
+import { useCalendarContext, useCalendarStateContext } from "./calendar.context";
 
-const props = withDefaults(defineProps<CalendarNavButtonProps>(), {slot: "next"});
+const props = withDefaults(defineProps<CalendarNavButtonProps>(), { slot: "next" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useCalendarContext();
-const {calendar} = useCalendarStateContext();
+const { slots } = useCalendarContext();
+const { calendar } = useCalendarStateContext();
 
 const button = computed(() =>
   props.slot === "previous" ? calendar.prevButton : calendar.nextButton,
 );
 
-const styles = computed(() => slots.value.navButton({class: props.class}));
+const styles = computed(() => slots.value.navButton({ class: props.class }));
 const iconStyles = computed(() => slots.value.navButtonIcon());
 
 // The stylesheet keys hover and press on data attributes as well as on the pseudo-classes, so the
 // states have to be reported from here too.
-const interaction = useInteractionStates({isDisabled: () => button.value.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => button.value.isDisabled.value });
 
 /*
  * The calendar takes focus back when the button under it goes disabled, which is what this reports.

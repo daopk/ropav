@@ -1,26 +1,26 @@
-import type {SelectedValue} from "../../composables/use-select-state";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { SelectedValue } from "../../composables/use-select-state";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {ButtonRoot} from "../button";
-import {ChipLabel, ChipRoot} from "../chip";
-import {DescriptionRoot} from "../description";
-import {EmptyStateRoot} from "../empty-state";
-import {FieldErrorRoot} from "../field-error";
-import {FormRoot} from "../form";
-import {HeaderRoot} from "../header";
-import {InputRoot} from "../input";
-import {LabelRoot} from "../label";
-import {ListBoxLoadMoreItem, ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {ListBoxSectionRoot} from "../list-box-section";
-import {SeparatorRoot} from "../separator";
-import {SpinnerRoot} from "../spinner";
+import { avatarSrc } from "../../utils/story-assets";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { ButtonRoot } from "../button";
+import { ChipLabel, ChipRoot } from "../chip";
+import { DescriptionRoot } from "../description";
+import { EmptyStateRoot } from "../empty-state";
+import { FieldErrorRoot } from "../field-error";
+import { FormRoot } from "../form";
+import { HeaderRoot } from "../header";
+import { InputRoot } from "../input";
+import { LabelRoot } from "../label";
+import { ListBoxLoadMoreItem, ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { ListBoxSectionRoot } from "../list-box-section";
+import { SeparatorRoot } from "../separator";
+import { SpinnerRoot } from "../spinner";
 
 import ComboBoxInputGroup from "./combo-box-input-group.vue";
 import ComboBoxPopover from "./combo-box-popover.vue";
@@ -80,50 +80,50 @@ type Story = StoryObj<typeof meta>;
  * slot for the listbox to iterate.
  */
 const ANIMALS = [
-  {id: "aardvark", name: "Aardvark"},
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
-  {id: "kangaroo", name: "Kangaroo"},
-  {id: "panda", name: "Panda"},
-  {id: "snake", name: "Snake"},
+  { id: "aardvark", name: "Aardvark" },
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
+  { id: "kangaroo", name: "Kangaroo" },
+  { id: "panda", name: "Panda" },
+  { id: "snake", name: "Snake" },
 ];
 
 const SHORT_ANIMALS = [
-  {id: "aardvark", name: "Aardvark"},
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
+  { id: "aardvark", name: "Aardvark" },
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
 ];
 
 const PET_ANIMALS = [
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
-  {id: "bird", name: "Bird"},
-  {id: "fish", name: "Fish"},
-  {id: "hamster", name: "Hamster"},
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
+  { id: "bird", name: "Bird" },
+  { id: "fish", name: "Fish" },
+  { id: "hamster", name: "Hamster" },
 ];
 
 const ZOO_ANIMALS = [
-  {id: "dog", name: "Dog"},
-  {id: "cat", name: "Cat"},
-  {id: "bird", name: "Bird"},
-  {id: "kangaroo", name: "Kangaroo"},
-  {id: "elephant", name: "Elephant"},
-  {id: "tiger", name: "Tiger"},
+  { id: "dog", name: "Dog" },
+  { id: "cat", name: "Cat" },
+  { id: "bird", name: "Bird" },
+  { id: "kangaroo", name: "Kangaroo" },
+  { id: "elephant", name: "Elephant" },
+  { id: "tiger", name: "Tiger" },
 ];
 
 const COUNTRIES = [
-  {id: "usa", name: "United States", region: "North America"},
-  {id: "canada", name: "Canada", region: "North America"},
-  {id: "mexico", name: "Mexico", region: "North America"},
-  {id: "uk", name: "United Kingdom", region: "Europe"},
-  {id: "france", name: "France", region: "Europe"},
-  {id: "germany", name: "Germany", region: "Europe"},
-  {id: "spain", name: "Spain", region: "Europe"},
-  {id: "italy", name: "Italy", region: "Europe"},
-  {id: "japan", name: "Japan", region: "Asia"},
-  {id: "china", name: "China", region: "Asia"},
-  {id: "india", name: "India", region: "Asia"},
-  {id: "south-korea", name: "South Korea", region: "Asia"},
+  { id: "usa", name: "United States", region: "North America" },
+  { id: "canada", name: "Canada", region: "North America" },
+  { id: "mexico", name: "Mexico", region: "North America" },
+  { id: "uk", name: "United Kingdom", region: "Europe" },
+  { id: "france", name: "France", region: "Europe" },
+  { id: "germany", name: "Germany", region: "Europe" },
+  { id: "spain", name: "Spain", region: "Europe" },
+  { id: "italy", name: "Italy", region: "Europe" },
+  { id: "japan", name: "Japan", region: "Asia" },
+  { id: "china", name: "China", region: "Asia" },
+  { id: "india", name: "India", region: "Asia" },
+  { id: "south-korea", name: "South Korea", region: "Asia" },
 ];
 
 const REGIONS = ["North America", "Europe", "Asia"];
@@ -166,7 +166,7 @@ const USERS = [
   },
 ];
 
-const byName = (item: {name: string}) => item.name;
+const byName = (item: { name: string }) => item.name;
 
 /** The field every story writes: a label above, and the input with the chevron beside it. */
 const fieldTemplate = (label: string, placeholder = "Search animals...") => `
@@ -196,7 +196,7 @@ const popoverTemplate = `
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -214,7 +214,7 @@ export const Default: Story = {
 export const FullWidth: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, pair: SHORT_ANIMALS.slice(0, 2), short: SHORT_ANIMALS}),
+    setup: () => ({ byName, pair: SHORT_ANIMALS.slice(0, 2), short: SHORT_ANIMALS }),
     template: `
       <div class="w-[400px] space-y-4">
         <ComboBox
@@ -245,7 +245,7 @@ export const FullWidth: Story = {
 export const DefaultValue: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -264,7 +264,7 @@ export const DefaultValue: Story = {
 export const WithDescription: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -283,7 +283,7 @@ export const WithDescription: Story = {
 export const WithSections: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: COUNTRIES, regions: REGIONS}),
+    setup: () => ({ byName, items: COUNTRIES, regions: REGIONS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -324,7 +324,7 @@ export const WithSections: Story = {
 export const WithDisabledOptions: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, disabled: ["cat", "kangaroo"], items: ZOO_ANIMALS}),
+    setup: () => ({ byName, disabled: ["cat", "kangaroo"], items: ZOO_ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -343,7 +343,7 @@ export const WithDisabledOptions: Story = {
 export const CustomIndicator: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -398,7 +398,7 @@ export const Required: Story = {
 export const CustomValue: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, users: USERS}),
+    setup: () => ({ byName, users: USERS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -502,7 +502,7 @@ export const ControlledInputValue: Story = {
 
 export const AsynchronousLoading: Story = {
   render: () => {
-    const items = shallowRef<Array<{id: string; name: string}>>([]);
+    const items = shallowRef<Array<{ id: string; name: string }>>([]);
     const inputValue = shallowRef("");
     const isLoading = shallowRef(false);
     const nextPage = shallowRef<string | null>(null);
@@ -521,12 +521,12 @@ export const AsynchronousLoading: Story = {
         const url =
           cursor?.replace(/^http:\/\//i, "https://") ??
           `https://swapi.py4e.com/api/people/?search=${encodeURIComponent(search)}`;
-        const response = await fetch(url, {signal: controller.signal});
+        const response = await fetch(url, { signal: controller.signal });
         const page = (await response.json()) as {
           next: string | null;
-          results: Array<{name: string}>;
+          results: Array<{ name: string }>;
         };
-        const loaded = page.results.map((result) => ({id: result.name, name: result.name}));
+        const loaded = page.results.map((result) => ({ id: result.name, name: result.name }));
 
         items.value = cursor ? [...items.value, ...loaded] : loaded;
         nextPage.value = page.next;
@@ -617,7 +617,7 @@ export const CustomFiltering: Story = {
 export const AllowsCustomValue: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -637,7 +637,7 @@ export const AllowsCustomValue: Story = {
 export const Disabled: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -657,7 +657,7 @@ export const Disabled: Story = {
 export const MenuTrigger: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-2">
@@ -712,7 +712,7 @@ export const MenuTrigger: Story = {
 export const MultipleSelection: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: ANIMALS}),
+    setup: () => ({ byName, items: ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"
@@ -780,7 +780,7 @@ export const MultipleSelectionControlled: Story = {
 export const MultipleSelectionWithTags: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, initial: ["cat", "dog"], items: PET_ANIMALS}),
+    setup: () => ({ byName, initial: ["cat", "dog"], items: PET_ANIMALS }),
     template: `
       <ComboBox
         v-slot="{items: matches}"

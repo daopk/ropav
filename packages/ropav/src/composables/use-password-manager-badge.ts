@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, shallowRef, toValue, watchEffect} from "vue";
+import { computed, shallowRef, toValue, watchEffect } from "vue";
 
 /**
  * How far in from the container's right edge a badge is expected to sit, and how much room the
@@ -62,7 +62,7 @@ export interface UsePasswordManagerBadgeReturn {
 export const usePasswordManagerBadge = (
   options: UsePasswordManagerBadgeOptions,
 ): UsePasswordManagerBadgeReturn => {
-  const {container, input} = options;
+  const { container, input } = options;
 
   const hasPWMBadge = shallowRef(false);
   const hasPWMBadgeSpace = shallowRef(false);
@@ -119,7 +119,7 @@ export const usePasswordManagerBadge = (
 
       onCleanup(() => clearInterval(interval));
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   /**
@@ -143,7 +143,7 @@ export const usePasswordManagerBadge = (
 
       onCleanup(() => timers.forEach(clearTimeout));
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   return {

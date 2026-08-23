@@ -1,9 +1,9 @@
-import type {Timer} from "../components/toast/toast-queue";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Timer } from "../components/toast/toast-queue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onMounted, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {useId} from "./use-id";
+import { useId } from "./use-id";
 
 export interface UseToastOptions {
   /** Called when the toast should close, whether from its own clock or the close button. */
@@ -31,10 +31,10 @@ export interface UseToastReturn {
   /** Closes this toast. */
   close: () => void;
   contentAttrs: ComputedRef<ToastContentAttrs>;
-  descriptionAttrs: ComputedRef<{id: string}>;
+  descriptionAttrs: ComputedRef<{ id: string }>;
   /** Called by a rendered description so the toast knows to point at it. Returns the release. */
   registerDescription: () => () => void;
-  titleAttrs: ComputedRef<{id: string}>;
+  titleAttrs: ComputedRef<{ id: string }>;
   toastAttrs: ComputedRef<ToastAttrs>;
 }
 
@@ -96,7 +96,7 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
 
   onMounted(() => {
     watch(
-      () => ({timeout: toValue(options.timeout), timer: toValue(options.timer)}),
+      () => ({ timeout: toValue(options.timeout), timer: toValue(options.timer) }),
       (next, previous) => {
         previous?.timer?.pause();
 
@@ -104,7 +104,7 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
 
         next.timer.reset(next.timeout);
       },
-      {immediate: true},
+      { immediate: true },
     );
   });
 
@@ -117,9 +117,9 @@ export const useToast = (options: UseToastOptions): UseToastReturn => {
       "aria-hidden": isVisible.value ? undefined : ("true" as const),
       role: "alert" as const,
     })),
-    descriptionAttrs: computed(() => ({id: descriptionId.value})),
+    descriptionAttrs: computed(() => ({ id: descriptionId.value })),
     registerDescription,
-    titleAttrs: computed(() => ({id: titleId.value})),
+    titleAttrs: computed(() => ({ id: titleId.value })),
     toastAttrs: computed(() => ({
       // Left pointing at the id whether or not a title is rendered, matching
       // `react-aria-components`: it does not withdraw the reference for a toast without one.

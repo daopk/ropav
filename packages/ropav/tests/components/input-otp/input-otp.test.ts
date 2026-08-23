@@ -1,15 +1,15 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {expectResetSource} from "../../harness/form-reset";
+import { expectResetSource } from "../../harness/form-reset";
 
 import Fixture from "./fixtures.vue";
 
 // The props object is handed over as it arrives rather than spread, so a reactive object passed in
 // stays reactive and a test can move a prop after mounting.
 const renderInputOTP = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const root = result.container.querySelector<HTMLElement>("[data-input-otp-container]");
 
   if (!root) throw new Error("field not rendered");
@@ -37,9 +37,9 @@ const type = (control: HTMLInputElement, value: string) => {
  * covered in the browser suite; this exercises the branch that decides who handles the paste.
  */
 const pasteEvent = (text: string) => {
-  const event = new Event("paste", {bubbles: true, cancelable: true});
+  const event = new Event("paste", { bubbles: true, cancelable: true });
 
-  Object.defineProperty(event, "clipboardData", {value: {getData: () => text}});
+  Object.defineProperty(event, "clipboardData", { value: { getData: () => text } });
 
   return event;
 };
@@ -51,7 +51,7 @@ afterEach(() => {
 describe("InputOTP", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, control, groups, slots, unmount} = renderInputOTP({defaultValue: "1"});
+      const { container, control, groups, slots, unmount } = renderInputOTP({ defaultValue: "1" });
 
       expect(groups).toHaveLength(2);
       expect(slots).toHaveLength(6);
@@ -68,7 +68,7 @@ describe("InputOTP", () => {
      * on the hidden control rather than on the box around it.
      */
     it("marks the container with the engine's own attribute", () => {
-      const {control, root, unmount} = renderInputOTP();
+      const { control, root, unmount } = renderInputOTP();
 
       expect(root).toHaveAttribute("data-input-otp-container", "true");
       expect(root).not.toHaveAttribute("data-slot");
@@ -78,7 +78,7 @@ describe("InputOTP", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, control, groups, root, slotAt, unmount} = renderInputOTP({
+      const { container, control, groups, root, slotAt, unmount } = renderInputOTP({
         defaultValue: "1",
       });
 
@@ -97,7 +97,7 @@ describe("InputOTP", () => {
     });
 
     it("renders the secondary variant on the field itself", () => {
-      const {root, unmount} = renderInputOTP({variant: "secondary"});
+      const { root, unmount } = renderInputOTP({ variant: "secondary" });
 
       expect(root).toHaveClass("input-otp", "input-otp--secondary");
 
@@ -105,7 +105,7 @@ describe("InputOTP", () => {
     });
 
     it("merges a caller class into the field and into the control", () => {
-      const {control, root, unmount} = renderInputOTP({class: "w-80", inputClass: "sr-only"});
+      const { control, root, unmount } = renderInputOTP({ class: "w-80", inputClass: "sr-only" });
 
       expect(root).toHaveClass("input-otp", "w-80");
       expect(control).toHaveClass("input-otp__input", "sr-only");
@@ -114,7 +114,7 @@ describe("InputOTP", () => {
     });
 
     it("puts the control under the boxes rather than among them", () => {
-      const {control, root, unmount} = renderInputOTP();
+      const { control, root, unmount } = renderInputOTP();
 
       // Last child, so the boxes come first in reading order and the control sits over them.
       expect(root.lastElementChild!.contains(control)).toBe(true);
@@ -126,7 +126,7 @@ describe("InputOTP", () => {
 
   describe("boxes", () => {
     it("fills a box with the character typed into it", async () => {
-      const {control, slotAt, unmount} = renderInputOTP();
+      const { control, slotAt, unmount } = renderInputOTP();
 
       type(control, "12");
       await nextTick();
@@ -139,7 +139,7 @@ describe("InputOTP", () => {
     });
 
     it("marks a filled box, and only a filled one", async () => {
-      const {control, slotAt, unmount} = renderInputOTP();
+      const { control, slotAt, unmount } = renderInputOTP();
 
       type(control, "12");
       await nextTick();
@@ -151,7 +151,7 @@ describe("InputOTP", () => {
     });
 
     it("marks the box the caret is on", async () => {
-      const {control, slotAt, unmount} = renderInputOTP({defaultValue: "1"});
+      const { control, slotAt, unmount } = renderInputOTP({ defaultValue: "1" });
 
       control.focus();
       control.dispatchEvent(new FocusEvent("focus"));
@@ -164,7 +164,7 @@ describe("InputOTP", () => {
     });
 
     it("draws a caret in the active box while it is empty", async () => {
-      const {container, control, slotAt, unmount} = renderInputOTP({defaultValue: "1"});
+      const { container, control, slotAt, unmount } = renderInputOTP({ defaultValue: "1" });
 
       control.focus();
       control.dispatchEvent(new FocusEvent("focus"));
@@ -180,7 +180,7 @@ describe("InputOTP", () => {
     });
 
     it("draws no caret in a box that already holds a character", async () => {
-      const {container, control, unmount} = renderInputOTP({defaultValue: "123456"});
+      const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
       control.focus();
       control.dispatchEvent(new FocusEvent("focus"));
@@ -192,7 +192,7 @@ describe("InputOTP", () => {
     });
 
     it("leaves a box past the end of the code empty", async () => {
-      const {slotAt, unmount} = renderInputOTP({
+      const { slotAt, unmount } = renderInputOTP({
         defaultValue: "123456",
         withExtraSlot: true,
       });
@@ -208,7 +208,7 @@ describe("InputOTP", () => {
 
   describe("state", () => {
     it("takes the disabled state down to every box and to the control", () => {
-      const {control, slotAt, unmount} = renderInputOTP({isDisabled: true});
+      const { control, slotAt, unmount } = renderInputOTP({ isDisabled: true });
 
       expect(control).toBeDisabled();
       expect(control).toHaveAttribute("data-disabled", "true");
@@ -219,7 +219,7 @@ describe("InputOTP", () => {
     });
 
     it("takes the invalid state down to every box and to the control", () => {
-      const {control, slotAt, unmount} = renderInputOTP({isInvalid: true});
+      const { control, slotAt, unmount } = renderInputOTP({ isInvalid: true });
 
       expect(control).toHaveAttribute("data-invalid", "true");
       expect(slotAt(0)).toHaveAttribute("data-invalid", "true");
@@ -228,7 +228,7 @@ describe("InputOTP", () => {
     });
 
     it("renders neither state by default", () => {
-      const {control, slotAt, unmount} = renderInputOTP();
+      const { control, slotAt, unmount } = renderInputOTP();
 
       expect(control).not.toHaveAttribute("data-disabled");
       expect(control).not.toHaveAttribute("data-invalid");
@@ -239,7 +239,7 @@ describe("InputOTP", () => {
     });
 
     it("shows a disabled field is not for typing in", () => {
-      const {root, unmount} = renderInputOTP({isDisabled: true});
+      const { root, unmount } = renderInputOTP({ isDisabled: true });
 
       expect(root.style.cursor).toBe("default");
 
@@ -249,7 +249,7 @@ describe("InputOTP", () => {
 
   describe("validation", () => {
     it("hands its verdict to a nested field error", async () => {
-      const {container, unmount} = renderInputOTP({
+      const { container, unmount } = renderInputOTP({
         isInvalid: true,
         validationErrors: ["That code has expired"],
         withFieldError: true,
@@ -265,7 +265,7 @@ describe("InputOTP", () => {
     });
 
     it("renders no error while the code is acceptable", async () => {
-      const {container, unmount} = renderInputOTP({withFieldError: true});
+      const { container, unmount } = renderInputOTP({ withFieldError: true });
 
       await nextTick();
 
@@ -278,7 +278,7 @@ describe("InputOTP", () => {
   describe("value", () => {
     it("reports what was typed", () => {
       const onChange = vi.fn();
-      const {control, unmount} = renderInputOTP({onChange});
+      const { control, unmount } = renderInputOTP({ onChange });
 
       type(control, "123");
 
@@ -289,7 +289,7 @@ describe("InputOTP", () => {
 
     it("reports a full code once", async () => {
       const onComplete = vi.fn();
-      const {control, unmount} = renderInputOTP({maxLength: 6, onComplete});
+      const { control, unmount } = renderInputOTP({ maxLength: 6, onComplete });
 
       type(control, "123456");
       await nextTick();
@@ -300,13 +300,13 @@ describe("InputOTP", () => {
     });
 
     it("follows a value the caller owns", async () => {
-      const props = reactive<Record<string, unknown>>({value: "1"});
+      const props = reactive<Record<string, unknown>>({ value: "1" });
 
       props["onChange"] = (next: string) => {
         props["value"] = next;
       };
 
-      const {control, slotAt, unmount} = renderInputOTP(props);
+      const { control, slotAt, unmount } = renderInputOTP(props);
 
       type(control, "12");
       await nextTick();
@@ -318,7 +318,7 @@ describe("InputOTP", () => {
     });
 
     it("puts the text back when the caller declines the change", async () => {
-      const {control, slotAt, unmount} = renderInputOTP({value: "1"});
+      const { control, slotAt, unmount } = renderInputOTP({ value: "1" });
 
       type(control, "12");
       await nextTick();
@@ -338,7 +338,7 @@ describe("InputOTP", () => {
      * read as a getter also returns nothing, so the transformer would never run either way.
      */
     it("rewrites pasted text through the transformer it was given", () => {
-      const {control, unmount} = renderInputOTP({
+      const { control, unmount } = renderInputOTP({
         pasteTransformer: (pasted: string) => pasted.replace(/\D/g, ""),
       });
 
@@ -350,7 +350,7 @@ describe("InputOTP", () => {
     });
 
     it("leaves the paste to the browser when nothing needs rewriting", () => {
-      const {control, unmount} = renderInputOTP();
+      const { control, unmount } = renderInputOTP();
       const event = pasteEvent("123");
 
       control.dispatchEvent(event);
@@ -364,7 +364,7 @@ describe("InputOTP", () => {
 
   describe("the control", () => {
     it("submits under the name it was given", () => {
-      const {control, unmount} = renderInputOTP({name: "code"});
+      const { control, unmount } = renderInputOTP({ name: "code" });
 
       expect(control).toHaveAttribute("name", "code");
 
@@ -372,7 +372,7 @@ describe("InputOTP", () => {
     });
 
     it("carries the id and the description, since it is the field for assistive technology", () => {
-      const {control, unmount} = renderInputOTP({
+      const { control, unmount } = renderInputOTP({
         ariaDescribedby: "hint",
         ariaLabel: "Verification code",
         id: "otp",
@@ -386,7 +386,7 @@ describe("InputOTP", () => {
     });
 
     it("takes only as many characters as the code is long", () => {
-      const {control, unmount} = renderInputOTP({maxLength: 4});
+      const { control, unmount } = renderInputOTP({ maxLength: 4 });
 
       expect(control).toHaveAttribute("maxlength", "4");
 
@@ -394,7 +394,7 @@ describe("InputOTP", () => {
     });
 
     it("hands the pattern to the browser as well as to the engine", () => {
-      const {control, unmount} = renderInputOTP({pattern: "^[a-zA-Z]+$"});
+      const { control, unmount } = renderInputOTP({ pattern: "^[a-zA-Z]+$" });
 
       expect(control).toHaveAttribute("pattern", "^[a-zA-Z]+$");
 
@@ -402,7 +402,7 @@ describe("InputOTP", () => {
     });
 
     it("asks the platform for the keyboard the caller wants", () => {
-      const {control, unmount} = renderInputOTP({inputMode: "text"});
+      const { control, unmount } = renderInputOTP({ inputMode: "text" });
 
       expect(control).toHaveAttribute("inputmode", "text");
 
@@ -412,7 +412,7 @@ describe("InputOTP", () => {
 
   describe("a form", () => {
     it("carries the value a reset restores from", async () => {
-      const {control, unmount} = renderInputOTP({
+      const { control, unmount } = renderInputOTP({
         defaultValue: "123",
         name: "code",
         withForm: true,
@@ -434,7 +434,7 @@ describe("InputOTP", () => {
       // Nothing did this before the reset source was written: the field had no `useFormReset` at
       // all, so a reset blanked the input while the state kept the code the boxes were showing,
       // and the form went on submitting an empty string for a field the user could see was filled.
-      const {container, control, slotAt, unmount} = renderInputOTP({
+      const { container, control, slotAt, unmount } = renderInputOTP({
         defaultValue: "123",
         name: "code",
         withForm: true,

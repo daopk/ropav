@@ -1,10 +1,10 @@
-import type {NumberFormatOptions} from "@internationalized/number";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { NumberFormatOptions } from "@internationalized/number";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {NumberFormatter} from "@internationalized/number";
-import {computed, toValue} from "vue";
+import { NumberFormatter } from "@internationalized/number";
+import { computed, toValue } from "vue";
 
-import {useLocale} from "./use-locale";
+import { useLocale } from "./use-locale";
 
 /**
  * An `Intl.NumberFormat` for the locale that applies here, ported from React Aria's

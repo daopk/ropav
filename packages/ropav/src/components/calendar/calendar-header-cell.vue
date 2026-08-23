@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {CalendarHeaderCellProps} from "./calendar.types";
+import type { CalendarHeaderCellProps } from "./calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useCalendarContext} from "./calendar.context";
+import { useCalendarContext } from "./calendar.context";
 
 const props = defineProps<CalendarHeaderCellProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useCalendarContext();
+const { slots } = useCalendarContext();
 
-const styles = computed(() => slots.value.headerCell({class: props.class}));
+const styles = computed(() => slots.value.headerCell({ class: props.class }));
 </script>
 
 <template>

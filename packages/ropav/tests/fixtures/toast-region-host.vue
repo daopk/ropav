@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {ToastRegionHostProps} from "./toast.types";
+import type { ToastRegionHostProps } from "./toast.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useToastQueue} from "@/components/toast/toast-queue";
-import {useToastRegion} from "@/composables/use-toast-region";
+import { useToastQueue } from "@/components/toast/toast-queue";
+import { useToastRegion } from "@/composables/use-toast-region";
 
-const props = withDefaults(defineProps<ToastRegionHostProps>(), {ariaLabel: undefined});
+const props = withDefaults(defineProps<ToastRegionHostProps>(), { ariaLabel: undefined });
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -14,7 +14,7 @@ const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
 };
 
-const {visibleToasts} = useToastQueue(() => props.queue);
+const { visibleToasts } = useToastQueue(() => props.queue);
 
 const api = useToastRegion({
   ariaLabel: () => props.ariaLabel,

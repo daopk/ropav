@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {AvatarRootProps, ImageLoadingStatus} from "@/components/avatar";
+import type { AvatarRootProps, ImageLoadingStatus } from "@/components/avatar";
 
-import {Avatar} from "@/components/avatar";
+import { Avatar } from "@/components/avatar";
 
 defineProps<
   AvatarRootProps & {

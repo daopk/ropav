@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {FixtureItem} from "./fixtures.types";
+import type { FixtureItem } from "./fixtures.types";
 
-import {ListBoxLoadMoreItem, ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemRoot} from "@/components/list-box-item";
+import { ListBoxLoadMoreItem, ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemRoot } from "@/components/list-box-item";
 
 const props = withDefaults(
   defineProps<{
@@ -15,18 +15,18 @@ const props = withDefaults(
   {
     isLoading: undefined,
     items: (): FixtureItem[] => [
-      {id: "1", name: "Bob"},
-      {id: "2", name: "Fred"},
-      {id: "3", name: "Martha"},
+      { id: "1", name: "Bob" },
+      { id: "2", name: "Fred" },
+      { id: "3", name: "Martha" },
     ],
     scrollOffset: undefined,
     withScrollBox: undefined,
   },
 );
 
-const emit = defineEmits<{loadMore: []}>();
+const emit = defineEmits<{ loadMore: [] }>();
 
-const boxStyle = {height: "60px", overflow: "auto"} as const;
+const boxStyle = { height: "60px", overflow: "auto" } as const;
 </script>
 
 <template>

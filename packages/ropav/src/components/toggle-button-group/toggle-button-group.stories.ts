@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconBold from "~icons/gravity-ui/bold";
 import IconItalic from "~icons/gravity-ui/italic";
 import IconLayoutCellsLarge from "~icons/gravity-ui/layout-cells-large";
@@ -13,9 +13,9 @@ import IconTextAlignLeft from "~icons/gravity-ui/text-align-left";
 import IconTextAlignRight from "~icons/gravity-ui/text-align-right";
 import IconUnderline from "~icons/gravity-ui/underline";
 
-import {ToggleButton} from "../toggle-button";
+import { ToggleButton } from "../toggle-button";
 
-import {ToggleButtonGroup, ToggleButtonGroupSeparator} from "./index";
+import { ToggleButtonGroup, ToggleButtonGroupSeparator } from "./index";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.
@@ -32,24 +32,24 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     fullWidth: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     isDetached: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["horizontal", "vertical"],
     },
     selectionMode: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["single", "multiple"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
   },
@@ -71,7 +71,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ToggleButtonGroup v-bind="args" selection-mode="multiple">
         <ToggleButton aria-label="Bold" id="bold" is-icon-only>
@@ -99,9 +99,9 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
-        {label: "Small", size: "sm"},
-        {label: "Medium (default)", size: "md"},
-        {label: "Large", size: "lg"},
+        { label: "Small", size: "sm" },
+        { label: "Medium (default)", size: "md" },
+        { label: "Large", size: "lg" },
       ],
     }),
     template: `
@@ -130,7 +130,7 @@ export const Sizes: Story = {
 export const Orientation: Story = {
   render: () => ({
     components,
-    setup: () => ({orientations: ["horizontal", "vertical"]}),
+    setup: () => ({ orientations: ["horizontal", "vertical"] }),
     template: `
       <div class="flex items-start gap-8">
         <div v-for="orientation in orientations" :key="orientation" class="flex flex-col gap-2">
@@ -226,7 +226,7 @@ export const FullWidth: Story = {
 
 export const SelectionMode: Story = {
   render: () => ({
-    components: {...components, IconTextAlignCenter, IconTextAlignLeft, IconTextAlignRight},
+    components: { ...components, IconTextAlignCenter, IconTextAlignLeft, IconTextAlignRight },
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
@@ -282,7 +282,7 @@ export const Controlled: Story = {
     setup: () => {
       const selectedKeys = shallowRef(new Set(["bold"]));
 
-      return {selectedKeys};
+      return { selectedKeys };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -423,7 +423,7 @@ export const Examples: Story = {
       const alignment = shallowRef(new Set(["left"]));
       const formatting = shallowRef(new Set(["bold", "underline"]));
 
-      return {alignment, formatting};
+      return { alignment, formatting };
     },
     template: `
       <div class="flex flex-col items-start gap-8">

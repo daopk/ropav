@@ -1,6 +1,6 @@
-import type {DropTarget, ItemDropTarget} from "./dnd-types";
-import type {Rect, Size} from "./virtualizer-geometry";
-import type {LayoutInfo, VirtualizerKey} from "./virtualizer-layout-info";
+import type { DropTarget, ItemDropTarget } from "./dnd-types";
+import type { Rect, Size } from "./virtualizer-geometry";
+import type { LayoutInfo, VirtualizerKey } from "./virtualizer-layout-info";
 
 /**
  * The contract between a virtualizer and its layout, ported from React Aria's `Layout`.

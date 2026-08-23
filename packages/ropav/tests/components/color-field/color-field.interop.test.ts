@@ -1,15 +1,15 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ColorFieldRoot} from "@/components/color-field";
+import { ColorFieldRoot } from "@/components/color-field";
 import {
   ColorInputGroupInput,
   ColorInputGroupPrefix,
   ColorInputGroupRoot,
 } from "@/components/color-input-group";
-import {Description} from "@/components/description";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { Label } from "@/components/label";
 
 /**
  * The field mounted the way a consumer mounts it: from a VDOM host, with the parts written in the
@@ -26,14 +26,14 @@ const render = (props: Record<string, unknown> = {}) => {
     props,
     slots: {
       default: () => [
-        h(Label, null, {default: () => "Color"}),
+        h(Label, null, { default: () => "Color" }),
         h(ColorInputGroupRoot, null, {
           default: () => [
-            h(ColorInputGroupPrefix, null, {default: () => "P"}),
+            h(ColorInputGroupPrefix, null, { default: () => "P" }),
             h(ColorInputGroupInput),
           ],
         }),
-        h(Description, null, {default: () => "Pick one"}),
+        h(Description, null, { default: () => "Pick one" }),
       ],
     },
   });
@@ -50,7 +50,7 @@ const render = (props: Record<string, unknown> = {}) => {
 
 describe("ColorField (interop)", () => {
   it("reaches parts written in a VDOM host", () => {
-    const {find, unmount} = render({defaultValue: "#0485F7"});
+    const { find, unmount } = render({ defaultValue: "#0485F7" });
 
     expect(find("color-field")).not.toBeNull();
     expect(find("color-input-group")).not.toBeNull();
@@ -59,14 +59,14 @@ describe("ColorField (interop)", () => {
   });
 
   it("hands the group's styling to a control written in the host", () => {
-    const {input, unmount} = render({defaultValue: "#0485F7"});
+    const { input, unmount } = render({ defaultValue: "#0485F7" });
 
     expect(input()).toHaveClass("color-input-group__input");
     unmount();
   });
 
   it("hands the field's value and wiring to that control", () => {
-    const {find, input, unmount} = render({defaultValue: "#0485F7"});
+    const { find, input, unmount } = render({ defaultValue: "#0485F7" });
 
     expect(input().value).toBe("#0485F7");
     expect(input()).toHaveAttribute("role", "textbox");
@@ -78,10 +78,10 @@ describe("ColorField (interop)", () => {
     // The listeners are the half a `provide` cannot carry by itself: they are wired with `@event`
     // on the part, so a part written in the host has to still find the field to wire them to.
     const onChange = vi.fn();
-    const {input, unmount} = render({defaultValue: "#0485F7", onChange});
+    const { input, unmount } = render({ defaultValue: "#0485F7", onChange });
 
     input().value = "abc";
-    input().dispatchEvent(new Event("input", {bubbles: true}));
+    input().dispatchEvent(new Event("input", { bubbles: true }));
     input().dispatchEvent(new FocusEvent("blur"));
 
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe("ColorField (interop)", () => {
   it("registers the element the field's own wiring hangs off", async () => {
     // `title=""` only appears once `useFormValidation` has an element to work on, so it is proof
     // that the registration made it back across the host boundary.
-    const {input, unmount} = render({defaultValue: "#0485F7"});
+    const { input, unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
 
@@ -101,7 +101,7 @@ describe("ColorField (interop)", () => {
   });
 
   it("carries the description a host wrote into the field's own describedby", async () => {
-    const {find, input, unmount} = render({defaultValue: "#0485F7"});
+    const { find, input, unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
 
@@ -110,7 +110,7 @@ describe("ColorField (interop)", () => {
   });
 
   it("does the same on the channel branch", () => {
-    const {find, input, unmount} = render({
+    const { find, input, unmount } = render({
       channel: "hue",
       colorSpace: "hsl",
       defaultValue: "#7F007F",

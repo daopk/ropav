@@ -1,32 +1,32 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarNavButtonProps} from "./range-calendar.types";
+import type { RangeCalendarNavButtonProps } from "./range-calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {useCalendarStateContext} from "../calendar/calendar.context";
-import {IconChevronLeft, IconChevronRight} from "../icons";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { useCalendarStateContext } from "../calendar/calendar.context";
+import { IconChevronLeft, IconChevronRight } from "../icons";
 
-import {useRangeCalendarContext} from "./range-calendar.context";
+import { useRangeCalendarContext } from "./range-calendar.context";
 
-const props = withDefaults(defineProps<RangeCalendarNavButtonProps>(), {slot: "next"});
+const props = withDefaults(defineProps<RangeCalendarNavButtonProps>(), { slot: "next" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useRangeCalendarContext();
-const {calendar} = useCalendarStateContext();
+const { slots } = useRangeCalendarContext();
+const { calendar } = useCalendarStateContext();
 
 const button = computed(() =>
   props.slot === "previous" ? calendar.prevButton : calendar.nextButton,
 );
 
-const styles = computed(() => slots.value.navButton({class: props.class}));
+const styles = computed(() => slots.value.navButton({ class: props.class }));
 const iconStyles = computed(() => slots.value.navButtonIcon());
 
 // The stylesheet keys hover and press on data attributes as well as on the pseudo-classes, so the
 // states have to be reported from here too.
-const interaction = useInteractionStates({isDisabled: () => button.value.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => button.value.isDisabled.value });
 
 /*
  * The calendar takes focus back when the button under it goes disabled, which is what this reports.

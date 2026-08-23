@@ -1,7 +1,7 @@
-import {CalendarDate, CalendarDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, CalendarDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -19,7 +19,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** The popover is teleported a flush after it decides to render, and settles a flush after that. */
@@ -30,7 +30,7 @@ const settle = async () => {
 };
 
 const renderPicker = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props: {locale: "en-US", ...props}});
+  const result = renderVapor(Fixture, { props: { locale: "en-US", ...props } });
 
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -81,7 +81,7 @@ const inPopover = (name: string) =>
 describe("DateRangePicker", () => {
   describe("structure", () => {
     it("renders two rows of segments with a separator between them", () => {
-      const picker = renderPicker({value: {end: jun(20), start: jun(10)}});
+      const picker = renderPicker({ value: { end: jun(20), start: jun(10) } });
 
       expect(picker.rows()).toHaveLength(2);
       expect(picker.slot("date-range-picker-range-separator")).toBeTruthy();
@@ -100,7 +100,7 @@ describe("DateRangePicker", () => {
     });
 
     it("takes content for the separator instead", () => {
-      const picker = renderPicker({customSeparator: true});
+      const picker = renderPicker({ customSeparator: true });
 
       expect(picker.slot("custom-separator").textContent).toBe("to");
       picker.unmount();
@@ -122,7 +122,7 @@ describe("DateRangePicker", () => {
       const picker = renderPicker({
         endName: "checkOut",
         startName: "checkIn",
-        value: {end: jun(20), start: jun(10)},
+        value: { end: jun(20), start: jun(10) },
       });
 
       expect(picker.container.querySelector<HTMLInputElement>("input[name='checkIn']")?.value).toBe(
@@ -139,7 +139,7 @@ describe("DateRangePicker", () => {
        * The form a caller actually writes. An imported indexed-access prop type compiles to a prop
        * with no runtime type, and Vue then hands `<DateRangePicker is-disabled>` the empty string.
        */
-      const picker = renderPicker({attributeForm: true});
+      const picker = renderPicker({ attributeForm: true });
 
       expect(picker.root().getAttribute("data-disabled")).toBe("true");
       expect(picker.root().getAttribute("data-required")).toBe("true");
@@ -151,13 +151,13 @@ describe("DateRangePicker", () => {
        * A range picker owns two fields and renders neither, so the markup has to say which one a
        * row of segments belongs to. Guessing would silently edit the wrong end.
        */
-      expect(() => renderPicker({missingSlot: true})).toThrow(/slot="start"/);
+      expect(() => renderPicker({ missingSlot: true })).toThrow(/slot="start"/);
     });
   });
 
   describe("the group it owns", () => {
     it("carries the picker's own name and role rather than either field's", () => {
-      const picker = renderPicker({label: "Trip dates"});
+      const picker = renderPicker({ label: "Trip dates" });
 
       expect(picker.group().getAttribute("role")).toBe("group");
       expect(picker.group().getAttribute("aria-labelledby")).toBe(picker.slot("label").id);
@@ -167,7 +167,7 @@ describe("DateRangePicker", () => {
     });
 
     it("describes the whole range in words", () => {
-      const picker = renderPicker({value: {end: jun(20), start: jun(10)}});
+      const picker = renderPicker({ value: { end: jun(20), start: jun(10) } });
       const describedBy = picker.group().getAttribute("aria-describedby");
 
       expect(describedBy).toBeTruthy();
@@ -176,7 +176,7 @@ describe("DateRangePicker", () => {
     });
 
     it("reports the picker disabled without being told", () => {
-      const picker = renderPicker({isDisabled: true});
+      const picker = renderPicker({ isDisabled: true });
 
       expect(picker.group().getAttribute("aria-disabled")).toBe("true");
       expect(picker.group().getAttribute("data-disabled")).toBe("true");
@@ -184,7 +184,7 @@ describe("DateRangePicker", () => {
     });
 
     it("shows the picker's verdict about the range", async () => {
-      const picker = renderPicker({isInvalid: true});
+      const picker = renderPicker({ isInvalid: true });
 
       await settle();
 
@@ -213,7 +213,7 @@ describe("DateRangePicker", () => {
 
   describe("the two ends", () => {
     it("shows the range the picker holds, one end per row", () => {
-      const picker = renderPicker({value: {end: jun(20), start: jun(10)}});
+      const picker = renderPicker({ value: { end: jun(20), start: jun(10) } });
 
       expect(picker.segment("start", "day").textContent?.trim()).toBe("10");
       expect(picker.segment("end", "day").textContent?.trim()).toBe("20");
@@ -221,7 +221,7 @@ describe("DateRangePicker", () => {
     });
 
     it("names each end, so a bare number says which one it belongs to", () => {
-      const picker = renderPicker({label: "Trip dates"});
+      const picker = renderPicker({ label: "Trip dates" });
 
       expect(picker.segment("start", "month").getAttribute("aria-label")).toBe(
         "month, Start Date, ",
@@ -233,7 +233,7 @@ describe("DateRangePicker", () => {
     it("edits only its own end", async () => {
       const onValueChange = vi.fn();
       const picker = renderPicker({
-        defaultValue: {end: jun(20), start: jun(10)},
+        defaultValue: { end: jun(20), start: jun(10) },
         onValueChange,
       });
 
@@ -270,7 +270,7 @@ describe("DateRangePicker", () => {
 
     it("never reaches a verdict of its own about the range", async () => {
       // The picker holds the bounds, so an end judging them too could disagree with it.
-      const picker = renderPicker({minValue: jun(12), value: {end: jun(20), start: jun(10)}});
+      const picker = renderPicker({ minValue: jun(12), value: { end: jun(20), start: jun(10) } });
 
       await settle();
 
@@ -285,12 +285,12 @@ describe("DateRangePicker", () => {
        * The row spans both fields with the button between them in the DOM, which is why the focus
        * manager belongs to the picker and excludes the button.
        */
-      const picker = renderPicker({value: {end: jun(20), start: jun(10)}});
+      const picker = renderPicker({ value: { end: jun(20), start: jun(10) } });
       const last = picker.segment("start", "year");
 
       last.focus();
       last.dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
       );
       await nextTick();
 
@@ -301,7 +301,7 @@ describe("DateRangePicker", () => {
 
   describe("the popover", () => {
     it("drives the range calendar inside it from the picker's own value", async () => {
-      const picker = renderPicker({defaultOpen: true, value: {end: jun(12), start: jun(10)}});
+      const picker = renderPicker({ defaultOpen: true, value: { end: jun(12), start: jun(10) } });
 
       await settle();
 
@@ -315,7 +315,7 @@ describe("DateRangePicker", () => {
 
     it("lets the calendar's own markup win over what the picker says", async () => {
       // The story labels the calendar itself while leaving everything else to the picker.
-      const picker = renderPicker({defaultOpen: true});
+      const picker = renderPicker({ defaultOpen: true });
 
       await settle();
 
@@ -329,7 +329,7 @@ describe("DateRangePicker", () => {
       const picker = renderPicker({
         defaultOpen: true,
         minValue: jun(10),
-        value: {end: jun(20), start: jun(15)},
+        value: { end: jun(20), start: jun(15) },
       });
 
       await settle();
@@ -345,7 +345,7 @@ describe("DateRangePicker", () => {
     it("takes a range built in the calendar, and closes", async () => {
       const onValueChange = vi.fn();
       // A placeholder so the calendar opens on a known month rather than on whatever today is in.
-      const picker = renderPicker({defaultOpen: true, onValueChange, placeholderValue: jun(15)});
+      const picker = renderPicker({ defaultOpen: true, onValueChange, placeholderValue: jun(15) });
 
       await settle();
 
@@ -393,7 +393,7 @@ describe("DateRangePicker", () => {
 
   describe("the trigger", () => {
     it("names itself and what it opens", () => {
-      const picker = renderPicker({label: "Trip dates"});
+      const picker = renderPicker({ label: "Trip dates" });
       const trigger = picker.trigger();
 
       expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
@@ -406,7 +406,7 @@ describe("DateRangePicker", () => {
     });
 
     it("reads as expanded while the popover is open", () => {
-      const picker = renderPicker({defaultOpen: true});
+      const picker = renderPicker({ defaultOpen: true });
 
       expect(picker.trigger().getAttribute("aria-expanded")).toBe("true");
       // Held pressed for as long as it is, so it looks like what the popover belongs to.
@@ -415,19 +415,19 @@ describe("DateRangePicker", () => {
     });
 
     it("goes out of action when there is nothing to pick", () => {
-      const readOnly = renderPicker({isReadOnly: true});
+      const readOnly = renderPicker({ isReadOnly: true });
 
       expect(readOnly.trigger().hasAttribute("disabled")).toBe(true);
       readOnly.unmount();
 
-      const disabled = renderPicker({isDisabled: true});
+      const disabled = renderPicker({ isDisabled: true });
 
       expect(disabled.trigger().hasAttribute("disabled")).toBe(true);
       disabled.unmount();
     });
 
     it("takes content of its own instead of the default indicator", () => {
-      const picker = renderPicker({customIndicator: true});
+      const picker = renderPicker({ customIndicator: true });
 
       expect(picker.slot("custom-indicator").textContent).toBe("pick");
       picker.unmount();
@@ -437,7 +437,7 @@ describe("DateRangePicker", () => {
   describe("focus", () => {
     it("reports focus entering and leaving the picker as a whole", async () => {
       const onFocusChange = vi.fn();
-      const picker = renderPicker({onFocusChange});
+      const picker = renderPicker({ onFocusChange });
 
       picker.segment("start", "month").focus();
       await nextTick();
@@ -459,7 +459,7 @@ describe("DateRangePicker", () => {
       const picker = renderPicker({
         errorMessage: "Start on or after today",
         minValue: jun(12),
-        value: {end: jun(20), start: jun(10)},
+        value: { end: jun(20), start: jun(10) },
       });
 
       await settle();
@@ -475,7 +475,7 @@ describe("DateRangePicker", () => {
       // Read at once rather than held back until a commit, which is what `aria` behaviour means.
       const picker = renderPicker({
         validationBehavior: "aria",
-        value: {end: jun(10), start: jun(20)},
+        value: { end: jun(10), start: jun(20) },
       });
 
       await settle();

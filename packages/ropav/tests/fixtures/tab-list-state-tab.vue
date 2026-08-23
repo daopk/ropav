@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {TabListStateTabProps} from "./tab-list-state.types";
+import type { TabListStateTabProps } from "./tab-list-state.types";
 
-import {shallowRef, watch} from "vue";
+import { shallowRef, watch } from "vue";
 
-const props = withDefaults(defineProps<TabListStateTabProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<TabListStateTabProps>(), { isDisabled: undefined });
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -25,7 +25,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

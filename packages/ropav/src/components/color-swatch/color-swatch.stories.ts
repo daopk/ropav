@@ -1,15 +1,15 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {ColorSwatchRoot} from "./index";
+import { ColorSwatchRoot } from "./index";
 
 // Registered under a flat name: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "ColorSwatch.Root".
-const components = {ColorSwatch: ColorSwatchRoot};
+const components = { ColorSwatch: ColorSwatchRoot };
 
 const meta: StoryMeta = {
   argTypes: {
-    color: {control: "color"},
+    color: { control: "color" },
     shape: {
       control: "select",
       options: ["circle", "square"],
@@ -30,13 +30,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {color: "#0485F7"};
+const defaultArgs = { color: "#0485F7" };
 
 export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <ColorSwatch class="h-5 w-5" v-bind="args" />
@@ -49,7 +49,7 @@ export const Shapes: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <ColorSwatch v-bind="args" shape="circle" />
@@ -79,7 +79,7 @@ export const Sizes: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <ColorSwatch v-bind="args" color="#0485F7" size="xs" />
@@ -133,7 +133,7 @@ export const CustomStyle: Story = {
   args: defaultArgs,
   render: () => ({
     components,
-    setup: () => ({colors: ["#0485F7", "#EF4444", "#F59E0B", "#10B981", "#D946EF"]}),
+    setup: () => ({ colors: ["#0485F7", "#EF4444", "#F59E0B", "#10B981", "#D946EF"] }),
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">

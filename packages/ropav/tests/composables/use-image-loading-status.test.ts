@@ -1,7 +1,7 @@
-import {beforeEach, describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { beforeEach, describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useImageLoadingStatus} from "@/composables/use-image-loading-status";
+import { useImageLoadingStatus } from "@/composables/use-image-loading-status";
 
 /** Stand-in for `window.Image`, which jsdom never actually loads. */
 class FakeImage {
@@ -124,7 +124,7 @@ describe("useImageLoadingStatus", () => {
 
   it("applies crossOrigin before it starts the request", () => {
     const [, dispose] = withScope(() =>
-      useImageLoadingStatus("/avatar.png", {crossOrigin: "anonymous"}),
+      useImageLoadingStatus("/avatar.png", { crossOrigin: "anonymous" }),
     );
 
     // Set afterwards, the attribute would apply to a request already in flight.

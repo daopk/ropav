@@ -1,14 +1,14 @@
-import type {Color} from "../utils/color-types";
-import type {ComputedRef, MaybeRefOrGetter, StyleValue} from "vue";
+import type { Color } from "../utils/color-types";
+import type { ComputedRef, MaybeRefOrGetter, StyleValue } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {colorStrings} from "../i18n/color";
-import {normalizeColor} from "../utils/color";
+import { colorStrings } from "../i18n/color";
+import { normalizeColor } from "../utils/color";
 
-import {useId} from "./use-id";
-import {useLocale} from "./use-locale";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useId } from "./use-id";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export interface UseColorSwatchOptions {
   /** A labelling id supplied by the caller, prepended to the swatch's own. */
@@ -87,5 +87,5 @@ export const useColorSwatch = (options: UseColorSwatchOptions = {}): UseColorSwa
     };
   });
 
-  return {attrs, color, style};
+  return { attrs, color, style };
 };

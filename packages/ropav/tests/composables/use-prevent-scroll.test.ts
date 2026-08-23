@@ -1,7 +1,7 @@
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {usePreventScroll} from "@/composables/use-prevent-scroll";
+import { usePreventScroll } from "@/composables/use-prevent-scroll";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -30,7 +30,7 @@ describe("usePreventScroll", () => {
   });
 
   it("does nothing while disabled", () => {
-    const [, dispose] = withScope(() => usePreventScroll({isDisabled: true}));
+    const [, dispose] = withScope(() => usePreventScroll({ isDisabled: true }));
 
     expect(document.documentElement.style.overflow).toBe("");
 
@@ -39,7 +39,7 @@ describe("usePreventScroll", () => {
 
   it("follows the disabled flag as it changes", async () => {
     const isDisabled = shallowRef(true);
-    const [, dispose] = withScope(() => usePreventScroll({isDisabled}));
+    const [, dispose] = withScope(() => usePreventScroll({ isDisabled }));
 
     expect(document.documentElement.style.overflow).toBe("");
 

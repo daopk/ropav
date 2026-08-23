@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ListBoxDropIndicatorProps} from "./list-box.types";
+import type { ListBoxDropIndicatorProps } from "./list-box.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {VirtualizerItem} from "../virtualizer";
-import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
+import { dataAttr } from "../../utils/assertion";
+import { VirtualizerItem } from "../virtualizer";
+import { useVirtualizerStateContext } from "../virtualizer/virtualizer.context";
 
-import {useListBoxContext} from "./list-box.context";
+import { useListBoxContext } from "./list-box.context";
 
 /**
  * The position a drop would land in, as an element a screen reader can reach.
@@ -22,13 +22,13 @@ import {useListBoxContext} from "./list-box.context";
  */
 const props = defineProps<ListBoxDropIndicatorProps>();
 
-const {dragAndDropHooks, dropState} = useListBoxContext();
+const { dragAndDropHooks, dropState } = useListBoxContext();
 const virtualizer = useVirtualizerStateContext();
 const element = shallowRef<HTMLElement | null>(null);
 
 const indicator =
   dropState && dragAndDropHooks?.useDropIndicator
-    ? dragAndDropHooks.useDropIndicator({target: props.target}, dropState, element)
+    ? dragAndDropHooks.useDropIndicator({ target: props.target }, dropState, element)
     : null;
 
 const isHidden = computed(() => indicator?.isHidden.value ?? true);

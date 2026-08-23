@@ -1,10 +1,10 @@
-import type {AnyCalendarState} from "./use-calendar";
-import type {DateDuration} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { AnyCalendarState } from "./use-calendar";
+import type { DateDuration } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useDateFormatter} from "./use-date-formatter";
+import { useDateFormatter } from "./use-date-formatter";
 
 export interface CalendarHeadingFormatOptions {
   day?: "numeric" | "2-digit";

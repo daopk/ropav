@@ -1,13 +1,13 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {expectRadioGroupResetSource} from "../../harness/form-reset";
+import { expectRadioGroupResetSource } from "../../harness/form-reset";
 
 import RadioGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(RadioGroupFixture, {props});
+  const rendered = renderVapor(RadioGroupFixture, { props });
   const group = () => rendered.container.querySelector<HTMLElement>("[data-slot='radio-group']")!;
   const items = () =>
     Array.from(rendered.container.querySelectorAll<HTMLElement>("[data-slot='radio']"));
@@ -17,7 +17,7 @@ const renderGroup = (props: Record<string, unknown> = {}) => {
   const errors = () =>
     Array.from(rendered.container.querySelectorAll<HTMLElement>("[data-slot='field-error']"));
 
-  return {...rendered, contents, errors, group, inputs, items};
+  return { ...rendered, contents, errors, group, inputs, items };
 };
 
 const clickAndSettle = async (element: HTMLElement) => {
@@ -42,7 +42,7 @@ const restoreLanguage = () => {
 };
 
 const pressKey = async (element: HTMLElement, key: string) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key });
 
   element.dispatchEvent(event);
   await nextTick();
@@ -53,7 +53,7 @@ const pressKey = async (element: HTMLElement, key: string) => {
 describe("RadioGroup", () => {
   describe("structure", () => {
     it("renders a radiogroup carrying its data-slot and BEM class", () => {
-      const {group, unmount} = renderGroup();
+      const { group, unmount } = renderGroup();
 
       expect(group().getAttribute("role")).toBe("radiogroup");
       expect(group().classList.contains("radio-group")).toBe(true);
@@ -62,7 +62,7 @@ describe("RadioGroup", () => {
     });
 
     it("renders one radio per value", () => {
-      const {inputs, items, unmount} = renderGroup();
+      const { inputs, items, unmount } = renderGroup();
 
       expect(items()).toHaveLength(3);
       expect(inputs().every((input) => input.type === "radio")).toBe(true);
@@ -71,7 +71,7 @@ describe("RadioGroup", () => {
     });
 
     it("renders every part with its data-slot", () => {
-      const {container, unmount} = renderGroup();
+      const { container, unmount } = renderGroup();
 
       expect(container.querySelector("[data-slot='radio-content']")).not.toBeNull();
       expect(container.querySelector("[data-slot='radio-control']")).not.toBeNull();
@@ -81,7 +81,7 @@ describe("RadioGroup", () => {
     });
 
     it("leaves the indicator empty, since the stylesheet draws the dot", () => {
-      const {container, unmount} = renderGroup();
+      const { container, unmount } = renderGroup();
 
       // `.radio__indicator:empty::before` is what paints it, so anything inside would hide it.
       expect(container.querySelector("[data-slot='radio-indicator']")!.childElementCount).toBe(0);
@@ -90,7 +90,7 @@ describe("RadioGroup", () => {
     });
 
     it("steps aside for a mark the caller provides", () => {
-      const {container, unmount} = renderGroup({withCustomIndicator: true});
+      const { container, unmount } = renderGroup({ withCustomIndicator: true });
 
       expect(container.querySelector("[data-testid='custom-indicator']")).not.toBeNull();
 
@@ -98,7 +98,7 @@ describe("RadioGroup", () => {
     });
 
     it("renders the variant class", () => {
-      const {group, unmount} = renderGroup({variant: "secondary"});
+      const { group, unmount } = renderGroup({ variant: "secondary" });
 
       expect(group().classList.contains("radio-group--secondary")).toBe(true);
 
@@ -106,7 +106,7 @@ describe("RadioGroup", () => {
     });
 
     it("defaults to a vertical orientation the stylesheet can select on", () => {
-      const {group, unmount} = renderGroup();
+      const { group, unmount } = renderGroup();
 
       expect(group().getAttribute("data-orientation")).toBe("vertical");
       expect(group().getAttribute("aria-orientation")).toBe("vertical");
@@ -115,7 +115,7 @@ describe("RadioGroup", () => {
     });
 
     it("lays out horizontally when asked", () => {
-      const {group, unmount} = renderGroup({orientation: "horizontal"});
+      const { group, unmount } = renderGroup({ orientation: "horizontal" });
 
       expect(group().getAttribute("data-orientation")).toBe("horizontal");
       expect(group().getAttribute("aria-orientation")).toBe("horizontal");
@@ -126,7 +126,7 @@ describe("RadioGroup", () => {
 
   describe("labelling", () => {
     it("names itself after a label rendered as a span", async () => {
-      const {container, group, unmount} = renderGroup({withLabel: true});
+      const { container, group, unmount } = renderGroup({ withLabel: true });
 
       await nextTick();
 
@@ -139,7 +139,7 @@ describe("RadioGroup", () => {
     });
 
     it("claims aria-invalid, which role=radiogroup does support", async () => {
-      const {group, unmount} = renderGroup({isInvalid: true});
+      const { group, unmount } = renderGroup({ isInvalid: true });
 
       await nextTick();
 
@@ -150,7 +150,7 @@ describe("RadioGroup", () => {
     });
 
     it("announces requiredness on the group", () => {
-      const {group, unmount} = renderGroup({isRequired: true});
+      const { group, unmount } = renderGroup({ isRequired: true });
 
       expect(group().getAttribute("aria-required")).toBe("true");
       expect(group().getAttribute("data-required")).toBe("true");
@@ -159,7 +159,7 @@ describe("RadioGroup", () => {
     });
 
     it("points each radio at the group's help text", async () => {
-      const {container, inputs, unmount} = renderGroup({withDescription: true});
+      const { container, inputs, unmount } = renderGroup({ withDescription: true });
 
       await nextTick();
 
@@ -173,7 +173,7 @@ describe("RadioGroup", () => {
     });
 
     it("keeps a radio's own help text to itself", async () => {
-      const {container, inputs, unmount} = renderGroup({withItemDescription: true});
+      const { container, inputs, unmount } = renderGroup({ withItemDescription: true });
 
       await nextTick();
 
@@ -188,7 +188,7 @@ describe("RadioGroup", () => {
 
   describe("selection", () => {
     it("starts with nothing chosen", () => {
-      const {inputs, unmount} = renderGroup();
+      const { inputs, unmount } = renderGroup();
 
       expect(inputs().some((input) => input.checked)).toBe(false);
 
@@ -196,7 +196,7 @@ describe("RadioGroup", () => {
     });
 
     it("checks the radio named in the default value", () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "premium"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "premium" });
 
       expect(inputs().map((input) => input.checked)).toEqual([false, true, false]);
 
@@ -205,7 +205,7 @@ describe("RadioGroup", () => {
 
     it("chooses a radio when its label is clicked", async () => {
       const onChange = vi.fn();
-      const {contents, inputs, unmount} = renderGroup({onChange});
+      const { contents, inputs, unmount } = renderGroup({ onChange });
 
       await clickAndSettle(contents()[1]!);
 
@@ -216,7 +216,7 @@ describe("RadioGroup", () => {
     });
 
     it("replaces the selection rather than adding to it", async () => {
-      const {contents, inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { contents, inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       await clickAndSettle(contents()[2]!);
 
@@ -226,8 +226,8 @@ describe("RadioGroup", () => {
     });
 
     it("follows a controlled value rather than its own", async () => {
-      const props = reactive({onChange: vi.fn(), value: "basic"});
-      const {contents, inputs, unmount} = renderGroup(props);
+      const props = reactive({ onChange: vi.fn(), value: "basic" });
+      const { contents, inputs, unmount } = renderGroup(props);
 
       await clickAndSettle(contents()[1]!);
 
@@ -243,7 +243,10 @@ describe("RadioGroup", () => {
     });
 
     it("refuses to change while read-only", async () => {
-      const {contents, inputs, unmount} = renderGroup({defaultValue: "basic", isReadOnly: true});
+      const { contents, inputs, unmount } = renderGroup({
+        defaultValue: "basic",
+        isReadOnly: true,
+      });
 
       await clickAndSettle(contents()[1]!);
 
@@ -254,7 +257,7 @@ describe("RadioGroup", () => {
     });
 
     it("disables every radio", () => {
-      const {inputs, items, unmount} = renderGroup({isDisabled: true});
+      const { inputs, items, unmount } = renderGroup({ isDisabled: true });
 
       for (const input of inputs()) expect(input.disabled).toBe(true);
       for (const item of items()) expect(item.getAttribute("data-disabled")).toBe("true");
@@ -263,7 +266,7 @@ describe("RadioGroup", () => {
     });
 
     it("lets one radio disable itself while the rest stay usable", () => {
-      const {inputs, unmount} = renderGroup({disabledItems: ["premium"]});
+      const { inputs, unmount } = renderGroup({ disabledItems: ["premium"] });
 
       expect(inputs()[0]!.disabled).toBe(false);
       expect(inputs()[1]!.disabled).toBe(true);
@@ -274,7 +277,7 @@ describe("RadioGroup", () => {
 
   describe("tab stop", () => {
     it("offers every radio while nothing is chosen and focus has been nowhere", () => {
-      const {inputs, unmount} = renderGroup();
+      const { inputs, unmount } = renderGroup();
 
       for (const input of inputs()) expect(input.tabIndex).toBe(0);
 
@@ -282,7 +285,7 @@ describe("RadioGroup", () => {
     });
 
     it("hands the tab stop to the chosen radio", () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "premium"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "premium" });
 
       expect(inputs().map((input) => input.tabIndex)).toEqual([-1, 0, -1]);
 
@@ -290,7 +293,7 @@ describe("RadioGroup", () => {
     });
 
     it("keeps it on the radio focus last rested on while nothing is chosen", async () => {
-      const {inputs, unmount} = renderGroup({isReadOnly: true});
+      const { inputs, unmount } = renderGroup({ isReadOnly: true });
 
       inputs()[1]!.dispatchEvent(new FocusEvent("focus"));
       await nextTick();
@@ -301,7 +304,7 @@ describe("RadioGroup", () => {
     });
 
     it("leaves a disabled radio out of the tab order entirely", () => {
-      const {inputs, unmount} = renderGroup({disabledItems: ["basic"]});
+      const { inputs, unmount } = renderGroup({ disabledItems: ["basic"] });
 
       // React drops the attribute rather than setting `-1`, so a disabled radio carries none.
       expect(inputs()[0]!.hasAttribute("tabindex")).toBe(false);
@@ -312,7 +315,7 @@ describe("RadioGroup", () => {
 
   describe("arrow keys", () => {
     it("moves the selection to the next radio", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowDown");
@@ -324,7 +327,7 @@ describe("RadioGroup", () => {
     });
 
     it("moves back with the opposite arrow", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "premium"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "premium" });
 
       inputs()[1]!.focus();
       await pressKey(inputs()[1]!, "ArrowUp");
@@ -335,7 +338,7 @@ describe("RadioGroup", () => {
     });
 
     it("treats right and left the same as down and up", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowRight");
@@ -350,7 +353,7 @@ describe("RadioGroup", () => {
     it("follows the reading direction for left and right", async () => {
       // No provider above the fixture, so the browser's own locale is what answers here.
       stubLanguage("ar-AE");
-      const {inputs, unmount} = renderGroup({defaultValue: "basic", orientation: "horizontal"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic", orientation: "horizontal" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowLeft");
@@ -366,7 +369,7 @@ describe("RadioGroup", () => {
     it("keeps down and up pointing the same way when reading right to left", async () => {
       // Only left and right turn around; the vertical arrows still mean previous and next.
       stubLanguage("ar-AE");
-      const {inputs, unmount} = renderGroup({defaultValue: "basic", orientation: "horizontal"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic", orientation: "horizontal" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowDown");
@@ -382,7 +385,7 @@ describe("RadioGroup", () => {
     it("leaves left and right alone in a vertical group read right to left", async () => {
       // The arrows no longer point along the run of radios, so React Aria does not flip them.
       stubLanguage("ar-AE");
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowRight");
@@ -393,7 +396,7 @@ describe("RadioGroup", () => {
     });
 
     it("wraps around at the end", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "team"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "team" });
 
       inputs()[2]!.focus();
       await pressKey(inputs()[2]!, "ArrowDown");
@@ -404,7 +407,7 @@ describe("RadioGroup", () => {
     });
 
     it("wraps around at the start", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowUp");
@@ -415,7 +418,10 @@ describe("RadioGroup", () => {
     });
 
     it("steps over a disabled radio", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic", disabledItems: ["premium"]});
+      const { inputs, unmount } = renderGroup({
+        defaultValue: "basic",
+        disabledItems: ["premium"],
+      });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowDown");
@@ -426,7 +432,7 @@ describe("RadioGroup", () => {
     });
 
     it("suppresses the browser's own radio navigation, so nothing moves twice", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
 
@@ -438,7 +444,7 @@ describe("RadioGroup", () => {
     });
 
     it("stays put while the group is read-only", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic", isReadOnly: true});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic", isReadOnly: true });
 
       inputs()[0]!.focus();
       await pressKey(inputs()[0]!, "ArrowDown");
@@ -451,7 +457,7 @@ describe("RadioGroup", () => {
     });
 
     it("ignores any other key", async () => {
-      const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+      const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
       inputs()[0]!.focus();
       const event = await pressKey(inputs()[0]!, "a");
@@ -465,7 +471,7 @@ describe("RadioGroup", () => {
 
   describe("validation", () => {
     it("answers for a FieldError nested in one of its radios", async () => {
-      const {errors, unmount} = renderGroup({
+      const { errors, unmount } = renderGroup({
         isInvalid: true,
         withFieldError: true,
         withItemFieldError: true,
@@ -481,7 +487,7 @@ describe("RadioGroup", () => {
     });
 
     it("marks every radio required, which the browser scopes by name", () => {
-      const {inputs, unmount} = renderGroup({isRequired: true});
+      const { inputs, unmount } = renderGroup({ isRequired: true });
 
       for (const input of inputs()) expect(input.required).toBe(true);
       expect(inputs()[0]!.validity.valueMissing).toBe(true);
@@ -490,7 +496,7 @@ describe("RadioGroup", () => {
     });
 
     it("satisfies the whole group once one radio is chosen", async () => {
-      const {contents, inputs, unmount} = renderGroup({isRequired: true});
+      const { contents, inputs, unmount } = renderGroup({ isRequired: true });
 
       await clickAndSettle(contents()[0]!);
 
@@ -502,7 +508,7 @@ describe("RadioGroup", () => {
     });
 
     it("announces requiredness instead under aria behaviour", () => {
-      const {group, inputs, unmount} = renderGroup({
+      const { group, inputs, unmount } = renderGroup({
         isRequired: true,
         validationBehavior: "aria",
       });
@@ -515,7 +521,7 @@ describe("RadioGroup", () => {
 
     it("blocks the submit until one radio is chosen", async () => {
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
-      const {container, contents, unmount} = renderGroup({isRequired: true, withForm: true});
+      const { container, contents, unmount } = renderGroup({ isRequired: true, withForm: true });
       const press = () =>
         container.querySelector<HTMLButtonElement>("[data-testid='submit']")!.click();
 
@@ -534,7 +540,7 @@ describe("RadioGroup", () => {
     });
 
     it("reveals the message on a failed submit", async () => {
-      const {container, errors, unmount} = renderGroup({
+      const { container, errors, unmount } = renderGroup({
         isRequired: true,
         withFieldError: true,
         withForm: true,
@@ -558,7 +564,7 @@ describe("RadioGroup", () => {
     });
 
     it("shows the message at once when a choice fails its own rule", async () => {
-      const {contents, errors, unmount} = renderGroup({
+      const { contents, errors, unmount } = renderGroup({
         validate: (value: string | null) => (value === "team" ? "not available" : true),
         validationBehavior: "aria",
         withFieldError: true,
@@ -574,8 +580,8 @@ describe("RadioGroup", () => {
     });
 
     it("shows a server error registered under its name", async () => {
-      const {errors, unmount} = renderGroup({
-        formValidationErrors: {plan: "rejected upstream"},
+      const { errors, unmount } = renderGroup({
+        formValidationErrors: { plan: "rejected upstream" },
         name: "plan",
         withFieldError: true,
         withForm: true,
@@ -596,7 +602,7 @@ describe("RadioGroup", () => {
       form.id = "radio-group-form";
       document.body.append(form);
 
-      const {unmount} = renderGroup({defaultValue: "premium", form: form.id, name: "plan"});
+      const { unmount } = renderGroup({ defaultValue: "premium", form: form.id, name: "plan" });
 
       expect(new FormData(form).get("plan")).toBe("premium");
 
@@ -609,7 +615,7 @@ describe("RadioGroup", () => {
       // independently from its own default, so two of them carrying it would leave a reset group
       // with two selections, and none of them would leave it empty. Every radio settling its own
       // default in the same flush is what makes that come out right without any group-wide walk.
-      const {contents, inputs, unmount} = renderGroup({defaultValue: "basic", withForm: true});
+      const { contents, inputs, unmount } = renderGroup({ defaultValue: "basic", withForm: true });
 
       await nextTick();
       expectRadioGroupResetSource(inputs(), "basic");
@@ -622,7 +628,7 @@ describe("RadioGroup", () => {
     });
 
     it("goes back to the group's starting choice when the form is reset", async () => {
-      const {container, contents, inputs, unmount} = renderGroup({
+      const { container, contents, inputs, unmount } = renderGroup({
         defaultValue: "basic",
         withForm: true,
       });

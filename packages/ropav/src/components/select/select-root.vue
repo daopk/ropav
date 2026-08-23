@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor generic="T">
-import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
-import type {SelectRootProps, SelectRootSlotProps} from "./select.types";
+import type { SelectedValue, UseSelectStateReturn } from "../../composables/use-select-state";
+import type { SelectRootProps, SelectRootSlotProps } from "./select.types";
 
-import {selectVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { selectVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useLocale} from "../../composables/use-locale";
-import {useLocalizedStringFormatter} from "../../composables/use-localized-string-formatter";
-import {useSelect} from "../../composables/use-select";
-import {useSelectState} from "../../composables/use-select-state";
-import {selectStrings} from "../../i18n";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
-import {provideListBoxStateContext} from "../list-box";
-import {provideOverlayTargetContext} from "../overlay";
+import { providePressResponder } from "../../composables/press-responder";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useLocale } from "../../composables/use-locale";
+import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { useSelect } from "../../composables/use-select";
+import { useSelectState } from "../../composables/use-select-state";
+import { selectStrings } from "../../i18n";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
+import { provideListBoxStateContext } from "../list-box";
+import { provideOverlayTargetContext } from "../overlay";
 
 import SelectHiddenSelect from "./select-hidden-select.vue";
-import {provideSelectContext} from "./select.context";
+import { provideSelectContext } from "./select.context";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -44,7 +44,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: SelectRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SelectRootSlotProps) => unknown }>();
 
 const state = useSelectState<T>({
   allowsEmptyCollection: () => props.allowsEmptyCollection,
@@ -105,10 +105,12 @@ const selectedText = computed(() => {
   return new Intl.ListFormat(locale.value.locale).format(texts);
 });
 
-const styles = computed(() => selectVariants({fullWidth: props.fullWidth, variant: props.variant}));
+const styles = computed(() =>
+  selectVariants({ fullWidth: props.fullWidth, variant: props.variant }),
+);
 
 provideFieldIdsContext(select.fieldIds.context);
-provideFieldErrorContext({validation: state.displayValidation});
+provideFieldErrorContext({ validation: state.displayValidation });
 
 provideSelectContext({
   placeholder,
@@ -154,7 +156,7 @@ providePressResponder(select.responder);
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(props.isDisabled)"
     :data-focused="dataAttr(state.isFocused.value)"
     :data-invalid="dataAttr(select.isInvalid.value)"

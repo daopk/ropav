@@ -1,9 +1,9 @@
-import type {ToastContentAttrs} from "../../composables/use-toast";
-import type {QueuedToast} from "./toast.types";
-import type {ToastVariants, toastVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { ToastContentAttrs } from "../../composables/use-toast";
+import type { QueuedToast } from "./toast.types";
+import type { ToastVariants, toastVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 /**
  * What the region offers every toast inside it.
@@ -32,15 +32,15 @@ export interface ToastItemContext {
   /** Closes this toast. */
   close: () => void;
   contentAttrs: ComputedRef<ToastContentAttrs>;
-  descriptionAttrs: ComputedRef<{id: string}>;
+  descriptionAttrs: ComputedRef<{ id: string }>;
   /** Called by a rendered description so the toast points `aria-describedby` at it. */
   registerDescription: () => () => void;
-  titleAttrs: ComputedRef<{id: string}>;
+  titleAttrs: ComputedRef<{ id: string }>;
   variant: ComputedRef<ToastVariants["variant"]>;
 }
 
 export const [useToastRegionContext, provideToastRegionContext] = createContext<ToastRegionContext>(
-  {name: "ToastRegionContext"},
+  { name: "ToastRegionContext" },
 );
 
 export const [useToastItemContext, provideToastItemContext] = createContext<ToastItemContext>({

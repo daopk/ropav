@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {EmptyStateRootProps} from "./empty-state.types";
+import type { EmptyStateRootProps } from "./empty-state.types";
 
-import {emptyStateVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { emptyStateVariants } from "@ropav/styles";
+import { computed } from "vue";
 
 const props = defineProps<EmptyStateRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const styles = computed(() => emptyStateVariants({class: props.class}));
+const styles = computed(() => emptyStateVariants({ class: props.class }));
 </script>
 
 <template>

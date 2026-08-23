@@ -1,11 +1,11 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {beforeEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { beforeEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
-const users = Array.from({length: 1000}, (_, index) => ({
+const users = Array.from({ length: 1000 }, (_, index) => ({
   email: `user${index}@ropav.com`,
   id: `user-${index}`,
   name: `User ${index}`,
@@ -18,7 +18,7 @@ const settle = async () => {
 };
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(VirtualizedFixture, {props: {items: users, ...props}});
+  const result = renderVapor(VirtualizedFixture, { props: { items: users, ...props } });
 
   await settle();
 
@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 const press = (element: HTMLElement, key: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key }));
 };
 
 /**
@@ -60,7 +60,7 @@ const press = (element: HTMLElement, key: string) => {
  */
 describe("ListBox virtualization (browser)", () => {
   it("measures the container itself and renders a window", async () => {
-    const {keys, listbox, unmount} = await render();
+    const { keys, listbox, unmount } = await render();
 
     // No mocked geometry here: 400px of real container over 50px rows, plus the overscan.
     expect(getComputedStyle(listbox).overflowY).toBe("auto");
@@ -72,7 +72,7 @@ describe("ListBox virtualization (browser)", () => {
   });
 
   it("moves the window on a real scroll", async () => {
-    const {keys, scrollTo, unmount} = await render();
+    const { keys, scrollTo, unmount } = await render();
 
     await scrollTo(1_000);
 
@@ -83,7 +83,7 @@ describe("ListBox virtualization (browser)", () => {
   });
 
   it("pages by a viewport of the collection, most of which is not rendered", async () => {
-    const {listbox, unmount} = await render();
+    const { listbox, unmount } = await render();
 
     press(listbox, "ArrowDown");
     await settle();
@@ -106,7 +106,7 @@ describe("ListBox virtualization (browser)", () => {
   });
 
   it("paints the focus ring on a row inside a contained wrapper", async () => {
-    const {listbox, unmount} = await render();
+    const { listbox, unmount } = await render();
 
     press(listbox, "ArrowDown");
     await settle();
@@ -124,7 +124,7 @@ describe("ListBox virtualization (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = await render({selectionMode: "multiple"});
+    const { container, unmount } = await render({ selectionMode: "multiple" });
 
     /**
      * Contrast is scoped out of this one assertion, and only this one.
@@ -137,7 +137,7 @@ describe("ListBox virtualization (browser)", () => {
      * passes with contrast on. Everything else axe checks stays on, which is where the risk of
      * this feature actually is: the roles and the `aria-posinset`/`aria-setsize` pair.
      */
-    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
     unmount();
   });

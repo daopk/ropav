@@ -1,23 +1,23 @@
 <script setup lang="ts" vapor>
-import type {TableHeaderProps, TableHeaderSlotProps} from "./table.types";
+import type { TableHeaderProps, TableHeaderSlotProps } from "./table.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
+import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = defineProps<TableHeaderProps>();
 
-defineSlots<{default?: (props: TableHeaderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TableHeaderSlotProps) => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 
 // React Aria's `useTableOptions().allowsDragging`, handed to the slot rather than to a hook:
 // the header renders an extra leading column for the drag handles, and repeating the condition
 // the caller already gave `useDragAndDrop` would be a second place to get it wrong.
-const {dragState} = useTableGridContext();
+const { dragState } = useTableGridContext();
 const allowsDragging = computed(() => dragState != null);
 
 /**

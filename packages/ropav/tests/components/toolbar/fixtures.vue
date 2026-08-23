@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {ToolbarRootProps} from "@/components/toolbar";
+import type { ToolbarRootProps } from "@/components/toolbar";
 
-import {Button} from "@/components/button";
-import {ButtonGroup} from "@/components/button-group";
-import {SeparatorRoot} from "@/components/separator";
-import {ToggleButton} from "@/components/toggle-button";
-import {ToggleButtonGroup} from "@/components/toggle-button-group";
-import {Toolbar} from "@/components/toolbar";
+import { Button } from "@/components/button";
+import { ButtonGroup } from "@/components/button-group";
+import { SeparatorRoot } from "@/components/separator";
+import { ToggleButton } from "@/components/toggle-button";
+import { ToggleButtonGroup } from "@/components/toggle-button-group";
+import { Toolbar } from "@/components/toolbar";
 
 const props = withDefaults(
   defineProps<

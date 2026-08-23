@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ModalContainerProps} from "./modal.types";
+import type { ModalContainerProps } from "./modal.types";
 
-import {modalVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { modalVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {OverlayDismissButton} from "../overlay";
+import { dataAttr } from "../../utils/assertion";
+import { OverlayDismissButton } from "../overlay";
 
-import {provideModalContext, useModalContext, useModalOverlayContext} from "./modal.context";
+import { provideModalContext, useModalContext, useModalOverlayContext } from "./modal.context";
 
-const props = withDefaults(defineProps<ModalContainerProps>(), {placement: "auto"});
+const props = withDefaults(defineProps<ModalContainerProps>(), { placement: "auto" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useModalContext();
 const overlay = useModalOverlayContext();
@@ -22,7 +22,7 @@ const slots = computed(() => ({
   ...context.slots.value,
   // Deliberately without `variant`, matching React: this overwrites the backdrop slot with a
   // default-variant one, which nothing below reads.
-  ...modalVariants({scroll: props.scroll, size: props.size}),
+  ...modalVariants({ scroll: props.scroll, size: props.size }),
 }));
 
 provideModalContext({
@@ -31,7 +31,7 @@ provideModalContext({
   slots,
 });
 
-const styles = computed(() => slots.value.container({class: props.class}));
+const styles = computed(() => slots.value.container({ class: props.class }));
 
 /**
  * Reported upward rather than measured from above.

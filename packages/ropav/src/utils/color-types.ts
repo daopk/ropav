@@ -79,7 +79,10 @@ export interface Color {
   /** Returns the color space, `rgb`, `hsb` or `hsl`, for the current color. */
   getColorSpace: () => ColorSpace;
   /** Returns the color space axes, `xChannel`, `yChannel`, `zChannel`. */
-  getColorSpaceAxes: (xyChannels: {xChannel?: ColorChannel; yChannel?: ColorChannel}) => ColorAxes;
+  getColorSpaceAxes: (xyChannels: {
+    xChannel?: ColorChannel;
+    yChannel?: ColorChannel;
+  }) => ColorAxes;
   /** Returns an array of the color channels within the current color space. */
   getColorChannels: () => [ColorChannel, ColorChannel, ColorChannel];
   /** Returns a localized name for the color, for use in visual or accessibility labels. */

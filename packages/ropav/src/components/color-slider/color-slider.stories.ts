@@ -1,14 +1,14 @@
-import type {Color} from "../../utils/color-types";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Color } from "../../utils/color-types";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {parseColor} from "../../utils/color";
-import {ColorSwatchRoot} from "../color-swatch";
-import {Label} from "../label";
+import { parseColor } from "../../utils/color";
+import { ColorSwatchRoot } from "../color-swatch";
+import { Label } from "../label";
 
-import {ColorSliderOutput, ColorSliderRoot, ColorSliderThumb, ColorSliderTrack} from "./index";
+import { ColorSliderOutput, ColorSliderRoot, ColorSliderThumb, ColorSliderTrack } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `ColorSlider.Track` through, so dot notation cannot be used here.
@@ -24,23 +24,23 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     channel: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["hue", "saturation", "brightness", "lightness", "alpha", "red", "green", "blue"],
     },
     colorSpace: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["hsl", "hsb", "rgb"],
     },
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["horizontal", "vertical"],
     },
   },
   component: ColorSliderRoot,
-  decorators: [() => ({template: '<div class="w-64 p-8"><story /></div>'})],
+  decorators: [() => ({ template: '<div class="w-64 p-8"><story /></div>' })],
   parameters: {
     layout: "centered",
   },
@@ -61,7 +61,7 @@ export const Default: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div :class="args.orientation === 'vertical' ? 'h-64' : undefined">
         <ColorSlider v-bind="args">
@@ -84,7 +84,7 @@ export const SaturationChannel: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ColorSlider v-bind="args">
         <Label>Saturation</Label>
@@ -105,7 +105,7 @@ export const LightnessChannel: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ColorSlider v-bind="args">
         <Label>Lightness</Label>
@@ -126,7 +126,7 @@ export const AlphaChannel: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ColorSlider v-bind="args">
         <Label>Alpha</Label>
@@ -145,7 +145,7 @@ export const RGBChannels: Story = {
     setup: () => {
       const color = shallowRef<Color>(parseColor("rgb(255, 0, 0)"));
 
-      return {color, onChange: (value: Color) => (color.value = value)};
+      return { color, onChange: (value: Color) => (color.value = value) };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -176,7 +176,7 @@ export const RGBChannels: Story = {
 };
 
 export const Vertical: Story = {
-  decorators: [() => ({template: '<div class="flex h-64 gap-8 p-8"><story /></div>'})],
+  decorators: [() => ({ template: '<div class="flex h-64 gap-8 p-8"><story /></div>' })],
   render: () => ({
     components,
     template: `
@@ -207,7 +207,7 @@ export const Disabled: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ColorSlider v-bind="args">
         <Label>Hue</Label>
@@ -226,7 +226,7 @@ export const Controlled: Story = {
     setup: () => {
       const color = shallowRef<Color>(parseColor("hsl(0, 100%, 50%)"));
 
-      return {color, onChange: (value: Color) => (color.value = value)};
+      return { color, onChange: (value: Color) => (color.value = value) };
     },
     template: `
       <div class="flex w-full flex-col gap-4">
@@ -272,7 +272,7 @@ export const WithoutLabel: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ColorSlider v-bind="args">
         <ColorSliderTrack>

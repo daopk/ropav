@@ -1,8 +1,8 @@
-import type {ColorChannelFieldState} from "@/composables/use-color-channel-field-state";
+import type { ColorChannelFieldState } from "@/composables/use-color-channel-field-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/color-channel-field-state-host.vue";
 
@@ -15,17 +15,17 @@ import Host from "../fixtures/color-channel-field-state-host.vue";
 const mount = (props: Record<string, unknown> = {}) => {
   let state!: ColorChannelFieldState;
 
-  Object.assign(props, {onReady: (next: ColorChannelFieldState) => (state = next)});
+  Object.assign(props, { onReady: (next: ColorChannelFieldState) => (state = next) });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
-  return {...result, state: () => state};
+  return { ...result, state: () => state };
 };
 
 describe("useColorChannelFieldState", () => {
   describe("the number it shows", () => {
     it("reads one channel of the colour", () => {
-      const {state, unmount} = mount({channel: "red", defaultValue: "#3B82F6"});
+      const { state, unmount } = mount({ channel: "red", defaultValue: "#3B82F6" });
 
       expect(state().numberValue.value).toBe(0x3b);
       expect(state().inputValue.value).toBe("59");
@@ -35,7 +35,7 @@ describe("useColorChannelFieldState", () => {
 
     it("converts into the colour space the field works in", () => {
       // The value arrives as hex; the field edits hue, which only exists in hsl.
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         channel: "hue",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -47,7 +47,7 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("writes a percent channel as a percent", () => {
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         channel: "saturation",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -59,7 +59,7 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("shows nothing when there is no colour", () => {
-      const {state, unmount} = mount({channel: "red", value: null});
+      const { state, unmount } = mount({ channel: "red", value: null });
 
       expect(state().inputValue.value).toBe("");
       expect(Number.isNaN(state().numberValue.value)).toBe(true);
@@ -70,7 +70,7 @@ describe("useColorChannelFieldState", () => {
     it("still reports a channel range with no colour to read it from", () => {
       // Black stands in: it is the colour whose every channel sits at its minimum, so an empty
       // field still knows how far its number may go.
-      const {state, unmount} = mount({channel: "red", value: null});
+      const { state, unmount } = mount({ channel: "red", value: null });
 
       expect(state().minValue.value).toBe(0);
       expect(state().maxValue.value).toBe(255);
@@ -82,7 +82,7 @@ describe("useColorChannelFieldState", () => {
   describe("the percent multiplier", () => {
     it("edits a 0-100 percent channel as 0-1 so Intl can scale it back", () => {
       // Without this a saturation of 100 would be formatted as 10,000%.
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         channel: "saturation",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -97,7 +97,7 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("leaves alpha alone, which already runs 0-1", () => {
-      const {state, unmount} = mount({channel: "alpha", defaultValue: "#3B82F680"});
+      const { state, unmount } = mount({ channel: "alpha", defaultValue: "#3B82F680" });
 
       // Parsed back out of the text rather than read off the colour, which is what the number
       // field means by its value: `50%` parses to exactly 0.5, not to the 0.50196 that `#80`
@@ -111,7 +111,7 @@ describe("useColorChannelFieldState", () => {
 
     it("scales an edit back up into the colour", () => {
       const onChange = vi.fn();
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         channel: "saturation",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -130,7 +130,7 @@ describe("useColorChannelFieldState", () => {
   describe("editing", () => {
     it("turns a number back into a colour", () => {
       const onChange = vi.fn();
-      const {state, unmount} = mount({channel: "red", defaultValue: "#3B82F6", onChange});
+      const { state, unmount } = mount({ channel: "red", defaultValue: "#3B82F6", onChange });
 
       state().setNumberValue(255);
 
@@ -141,7 +141,7 @@ describe("useColorChannelFieldState", () => {
 
     it("clears the colour when the number is cleared", () => {
       const onChange = vi.fn();
-      const {state, unmount} = mount({channel: "red", defaultValue: "#3B82F6", onChange});
+      const { state, unmount } = mount({ channel: "red", defaultValue: "#3B82F6", onChange });
 
       state().commit("");
 
@@ -152,7 +152,7 @@ describe("useColorChannelFieldState", () => {
 
     it("steps by the channel's own step", () => {
       const onChange = vi.fn();
-      const {state, unmount} = mount({channel: "red", defaultValue: "#3B82F6", onChange});
+      const { state, unmount } = mount({ channel: "red", defaultValue: "#3B82F6", onChange });
 
       state().increment();
 
@@ -162,7 +162,7 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("stops at the end of the channel's range", () => {
-      const {state, unmount} = mount({channel: "red", defaultValue: "#FF82F6"});
+      const { state, unmount } = mount({ channel: "red", defaultValue: "#FF82F6" });
 
       state().increment();
 
@@ -177,8 +177,8 @@ describe("useColorChannelFieldState", () => {
       // The state is permanently controlled by the colour: nothing is stored but the colour, so a
       // declined edit leaves the number exactly where it was.
       const onChange = vi.fn();
-      const props = reactive({channel: "red", onChange, value: "#3B82F6"});
-      const {state, unmount} = mount(props);
+      const props = reactive({ channel: "red", onChange, value: "#3B82F6" });
+      const { state, unmount } = mount(props);
 
       state().setNumberValue(255);
 
@@ -189,8 +189,8 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("follows the owner's colour", async () => {
-      const props = reactive({channel: "red", value: "#3B82F6"});
-      const {state, unmount} = mount(props);
+      const props = reactive({ channel: "red", value: "#3B82F6" });
+      const { state, unmount } = mount(props);
 
       props.value = "#FF82F6";
       await nextTick();
@@ -203,7 +203,7 @@ describe("useColorChannelFieldState", () => {
 
   describe("what a form reset goes back to", () => {
     it("reports the default colour in the field's own space", () => {
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         channel: "hue",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -218,7 +218,7 @@ describe("useColorChannelFieldState", () => {
     });
 
     it("reports nothing for a field that started empty", () => {
-      const {state, unmount} = mount({channel: "red", value: null});
+      const { state, unmount } = mount({ channel: "red", value: null });
 
       expect(state().defaultColorValue.value).toBeNull();
       expect(Number.isNaN(state().defaultNumberValue.value)).toBe(true);

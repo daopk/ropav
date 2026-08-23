@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {InputOTPHostProps} from "./input-otp.types";
+import type { InputOTPHostProps } from "./input-otp.types";
 
-import {useInputOTP} from "@/composables/use-input-otp";
+import { useInputOTP } from "@/composables/use-input-otp";
 
 // The composable has to run inside a component: it hangs its document listeners and its style
 // injection off `onMounted`, which never fires outside a mounted instance.
-const props = withDefaults(defineProps<InputOTPHostProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<InputOTPHostProps>(), { isDisabled: undefined });
 
 const otp = useInputOTP({
   autoComplete: () => props.autoComplete,

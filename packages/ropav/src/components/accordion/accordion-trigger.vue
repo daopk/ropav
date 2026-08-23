@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {AccordionTriggerProps} from "./accordion.types";
+import type { AccordionTriggerProps } from "./accordion.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAccordionContext, useAccordionItemContext} from "./accordion.context";
+import { useAccordionContext, useAccordionItemContext } from "./accordion.context";
 
 const props = defineProps<AccordionTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAccordionContext();
-const {isDisabled, isExpanded, onTriggerKeydown, panelId, registerTrigger, toggle, triggerId} =
+const { slots } = useAccordionContext();
+const { isDisabled, isExpanded, onTriggerKeydown, panelId, registerTrigger, toggle, triggerId } =
   useAccordionItemContext();
 
 const triggerEl = shallowRef<HTMLElement | null>(null);
@@ -43,7 +43,7 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled});
+} = useInteractionStates({ isDisabled });
 
 // Registered with the group so Arrow/Home/End can move focus between triggers.
 watch(
@@ -51,7 +51,7 @@ watch(
   (element, _previous, onCleanup) => {
     if (element) onCleanup(registerTrigger(element));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

@@ -1,19 +1,19 @@
-import type {Color} from "@/utils/color-types";
+import type { Color } from "@/utils/color-types";
 
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ColorAreaRoot, ColorAreaThumb} from "@/components/color-area";
-import {ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger} from "@/components/color-picker";
-import {ColorSliderRoot, ColorSliderThumb, ColorSliderTrack} from "@/components/color-slider";
-import {ColorSwatchRoot} from "@/components/color-swatch";
+import { ColorAreaRoot, ColorAreaThumb } from "@/components/color-area";
+import { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger } from "@/components/color-picker";
+import { ColorSliderRoot, ColorSliderThumb, ColorSliderTrack } from "@/components/color-slider";
+import { ColorSwatchRoot } from "@/components/color-swatch";
 import {
   ColorSwatchPickerItem,
   ColorSwatchPickerRoot,
   ColorSwatchPickerSwatch,
 } from "@/components/color-swatch-picker";
-import {Label} from "@/components/label";
+import { Label } from "@/components/label";
 
 /**
  * The picker mounted the way a consumer mounts it: from a VDOM host, with every colour component
@@ -32,8 +32,8 @@ const render = (props: Record<string, unknown> = {}) =>
       default: () => [
         h(ColorPickerTrigger, null, {
           default: () => [
-            h(ColorSwatchRoot, {size: "lg"}),
-            h(Label, null, {default: () => "Pick a color"}),
+            h(ColorSwatchRoot, { size: "lg" }),
+            h(Label, null, { default: () => "Pick a color" }),
           ],
         }),
         h(ColorPickerPopover, null, {
@@ -46,22 +46,22 @@ const render = (props: Record<string, unknown> = {}) =>
                 xChannel: "saturation",
                 yChannel: "brightness",
               },
-              {default: () => h(ColorAreaThumb)},
+              { default: () => h(ColorAreaThumb) },
             ),
             h(
               ColorSliderRoot,
-              {channel: "hue", colorSpace: "hsb"},
-              {default: () => h(ColorSliderTrack, null, {default: () => h(ColorSliderThumb)})},
+              { channel: "hue", colorSpace: "hsb" },
+              { default: () => h(ColorSliderTrack, null, { default: () => h(ColorSliderThumb) }) },
             ),
             h(
               ColorSwatchPickerRoot,
-              {size: "xs"},
+              { size: "xs" },
               {
                 default: () =>
                   ["#EF4444", "#22C55E"].map((color) =>
                     h(
                       ColorSwatchPickerItem,
-                      {color, key: color},
+                      { color, key: color },
                       {
                         default: () => h(ColorSwatchPickerSwatch),
                       },
@@ -91,7 +91,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const open = async () => {
@@ -109,7 +109,7 @@ afterEach(() => {
 
 describe("ColorPicker under a vdom host", () => {
   it("renders the trigger and opens the popover", async () => {
-    const {unmount} = render({defaultValue: "#0485F7"});
+    const { unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
 
@@ -123,7 +123,7 @@ describe("ColorPicker under a vdom host", () => {
   });
 
   it("reaches a swatch written in the host", async () => {
-    const {unmount} = render({defaultValue: "#0485F7"});
+    const { unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
 
@@ -134,7 +134,7 @@ describe("ColorPicker under a vdom host", () => {
 
   it("reaches a slider written in the host and forwarded through the teleport", async () => {
     // Two boundaries at once: the picker's slot, then the popover's.
-    const {unmount} = render({defaultValue: "#0485F7"});
+    const { unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
     await open();
@@ -145,7 +145,7 @@ describe("ColorPicker under a vdom host", () => {
   });
 
   it("reaches a colour area written in the host", async () => {
-    const {unmount} = render({defaultValue: "#0485F7"});
+    const { unmount } = render({ defaultValue: "#0485F7" });
 
     await nextTick();
     await open();
@@ -156,7 +156,7 @@ describe("ColorPicker under a vdom host", () => {
   });
 
   it("reaches a swatch picker written in the host", async () => {
-    const {unmount} = render({defaultValue: "#EF4444"});
+    const { unmount } = render({ defaultValue: "#EF4444" });
 
     await nextTick();
     await open();
@@ -168,7 +168,7 @@ describe("ColorPicker under a vdom host", () => {
 
   it("carries a change back out of the teleport", async () => {
     const onChange = vi.fn();
-    const {unmount} = render({defaultValue: "#EF4444", onChange});
+    const { unmount } = render({ defaultValue: "#EF4444", onChange });
 
     await nextTick();
     await open();
@@ -184,7 +184,7 @@ describe("ColorPicker under a vdom host", () => {
 
   it("shows the new colour on the trigger written in the host", async () => {
     // The full round trip: a press inside the teleport updates a swatch outside it.
-    const {unmount} = render({defaultValue: "#EF4444"});
+    const { unmount } = render({ defaultValue: "#EF4444" });
 
     await nextTick();
     await open();

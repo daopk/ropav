@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {TimeFieldFixtureProps} from "./fixtures.types";
+import type { TimeFieldFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { Label } from "@/components/label";
 import {
   TimeFieldGroup,
   TimeFieldInput,
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<TimeFieldFixtureProps>(), {
   <TimeFieldRoot v-if="props.attributeForm" aria-label="Time" full-width :locale="props.locale">
     <TimeFieldGroup full-width>
       <TimeFieldInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <TimeFieldSegment :segment="segment" />
         </template>
       </TimeFieldInput>
@@ -60,7 +60,7 @@ const props = withDefaults(defineProps<TimeFieldFixtureProps>(), {
     <TimeFieldGroup :variant="props.variant">
       <TimeFieldPrefix v-if="props.withPrefix">before</TimeFieldPrefix>
       <TimeFieldInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <TimeFieldSegment :segment="segment" />
         </template>
       </TimeFieldInput>

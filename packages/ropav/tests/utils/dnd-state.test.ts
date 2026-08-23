@@ -1,7 +1,7 @@
-import {afterEach, describe, expect, it} from "vitest";
-import {shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { shallowRef } from "vue";
 
-import {DROP_OPERATION} from "@/utils/dnd-constants";
+import { DROP_OPERATION } from "@/utils/dnd-constants";
 import {
   clearGlobalDnDState,
   globalAllowedDropOperations,

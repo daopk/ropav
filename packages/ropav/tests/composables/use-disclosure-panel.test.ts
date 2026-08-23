@@ -1,10 +1,10 @@
-import type {UseDisclosurePanelOptions} from "@/composables/use-disclosure-panel";
-import type {MaybeRefOrGetter} from "vue";
+import type { UseDisclosurePanelOptions } from "@/composables/use-disclosure-panel";
+import type { MaybeRefOrGetter } from "vue";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useDisclosurePanel} from "@/composables/use-disclosure-panel";
+import { useDisclosurePanel } from "@/composables/use-disclosure-panel";
 
 const scopes: (() => void)[] = [];
 
@@ -18,13 +18,13 @@ const createPanel = async (isExpanded: MaybeRefOrGetter<boolean>) => {
 
   scopes.push(() => scope.stop());
 
-  const options: UseDisclosurePanelOptions = {isExpanded};
-  const {setPanelElement} = scope.run(() => useDisclosurePanel(options))!;
+  const options: UseDisclosurePanelOptions = { isExpanded };
+  const { setPanelElement } = scope.run(() => useDisclosurePanel(options))!;
 
   setPanelElement(panel);
   await nextTick();
 
-  return {panel, setPanelElement};
+  return { panel, setPanelElement };
 };
 
 const heightOf = (panel: HTMLElement) => panel.style.getPropertyValue("--disclosure-panel-height");
@@ -38,14 +38,14 @@ afterEach(() => {
 describe("useDisclosurePanel", () => {
   describe("collapsed", () => {
     it("keeps the panel out of the tab order and the a11y tree", async () => {
-      const {panel} = await createPanel(false);
+      const { panel } = await createPanel(false);
 
       // `until-found` rather than plain hidden, so find-in-page can still reveal it.
       expect(panel.getAttribute("hidden")).toBe("until-found");
     });
 
     it("writes both size variables as zero", async () => {
-      const {panel} = await createPanel(false);
+      const { panel } = await createPanel(false);
 
       expect(heightOf(panel)).toBe("0px");
       expect(widthOf(panel)).toBe("0px");
@@ -54,7 +54,7 @@ describe("useDisclosurePanel", () => {
 
   describe("expanded", () => {
     it("starts revealed without animating in", async () => {
-      const {panel} = await createPanel(true);
+      const { panel } = await createPanel(true);
 
       expect(panel.hasAttribute("hidden")).toBe(false);
       // `auto` straight away, never a pixel value: the first pass settles, it does not animate.
@@ -66,7 +66,7 @@ describe("useDisclosurePanel", () => {
   describe("state changes", () => {
     it("reveals the panel and releases its height when expanded", async () => {
       const isExpanded = shallowRef(false);
-      const {panel} = await createPanel(isExpanded);
+      const { panel } = await createPanel(isExpanded);
 
       isExpanded.value = true;
       await nextTick();
@@ -77,7 +77,7 @@ describe("useDisclosurePanel", () => {
 
     it("hides the panel again when collapsed", async () => {
       const isExpanded = shallowRef(true);
-      const {panel} = await createPanel(isExpanded);
+      const { panel } = await createPanel(isExpanded);
 
       isExpanded.value = false;
       await nextTick();
@@ -88,7 +88,7 @@ describe("useDisclosurePanel", () => {
 
     it("settles at once where the Web Animations API is missing", async () => {
       const isExpanded = shallowRef(false);
-      const {panel} = await createPanel(isExpanded);
+      const { panel } = await createPanel(isExpanded);
 
       // jsdom has no `getAnimations`, and it is deliberately not polyfilled: the state lands
       // directly instead of waiting on animations that would never finish.
@@ -102,7 +102,7 @@ describe("useDisclosurePanel", () => {
 
     it("reads the expanded state through a getter", async () => {
       const isExpanded = shallowRef(false);
-      const {panel} = await createPanel(() => isExpanded.value);
+      const { panel } = await createPanel(() => isExpanded.value);
 
       isExpanded.value = true;
       await nextTick();
@@ -113,7 +113,7 @@ describe("useDisclosurePanel", () => {
 
   describe("element reporting", () => {
     it("ignores a reported value that is not an element", async () => {
-      const {panel, setPanelElement} = await createPanel(false);
+      const { panel, setPanelElement } = await createPanel(false);
 
       setPanelElement(null);
       await nextTick();
@@ -127,7 +127,7 @@ describe("useDisclosurePanel", () => {
 
       scopes.push(() => scope.stop());
 
-      const {setPanelElement} = scope.run(() => useDisclosurePanel({isExpanded: true}))!;
+      const { setPanelElement } = scope.run(() => useDisclosurePanel({ isExpanded: true }))!;
 
       await nextTick();
 

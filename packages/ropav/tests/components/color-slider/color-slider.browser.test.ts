@@ -1,14 +1,14 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderSlider = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, {
-    props: {channel: "hue", defaultValue: "hsl(0, 100%, 50%)", ...props},
+    props: { channel: "hue", defaultValue: "hsl(0, 100%, 50%)", ...props },
   });
 
 const slot = (container: HTMLElement, name: string) =>
@@ -21,10 +21,10 @@ const drag = async (element: HTMLElement, deltaX: number, deltaY = 0) => {
   const box = element.getBoundingClientRect();
   const startX = box.left + box.width / 2;
   const startY = box.top + box.height / 2;
-  const options = {bubbles: true, button: 0, pointerId: 1, pointerType: "mouse"};
+  const options = { bubbles: true, button: 0, pointerId: 1, pointerType: "mouse" };
 
   element.dispatchEvent(
-    new PointerEvent("pointerdown", {...options, clientX: startX, clientY: startY}),
+    new PointerEvent("pointerdown", { ...options, clientX: startX, clientY: startY }),
   );
   await nextTick();
 
@@ -50,11 +50,11 @@ const drag = async (element: HTMLElement, deltaX: number, deltaY = 0) => {
 describe("ColorSlider (browser)", () => {
   describe("the gradient", () => {
     it("resolves the generated gradient and the checkerboard under it", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
 
-      const {backgroundImage} = getComputedStyle(slot(container, "color-slider-track"));
+      const { backgroundImage } = getComputedStyle(slot(container, "color-slider-track"));
 
       // Seven stops around the wheel, generated rather than styled.
       expect(backgroundImage).toContain("linear-gradient(to right, rgb(255, 0, 0)");
@@ -66,7 +66,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("paints the end caps from the custom properties the track hands them", async () => {
-      const {container, unmount} = renderSlider({channel: "saturation"});
+      const { container, unmount } = renderSlider({ channel: "saturation" });
 
       await nextTick();
 
@@ -83,7 +83,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("turns the gradient upright on a vertical slider", async () => {
-      const {container, unmount} = renderSlider({orientation: "vertical"});
+      const { container, unmount } = renderSlider({ orientation: "vertical" });
 
       container.style.height = "300px";
       await nextTick();
@@ -106,7 +106,7 @@ describe("ColorSlider (browser)", () => {
       ).toContain("label output");
       withBoth.unmount();
 
-      const bare = renderSlider({withoutLabel: true, withoutOutput: true});
+      const bare = renderSlider({ withoutLabel: true, withoutOutput: true });
 
       await nextTick();
       // `:has()` on the parts' own `data-slot`, which is why those attributes are a contract.
@@ -119,7 +119,7 @@ describe("ColorSlider (browser)", () => {
 
   describe("pointer", () => {
     it("moves the thumb along the track under the pointer", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
 
@@ -137,7 +137,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("repaints the thumb with the colour it lands on", async () => {
-      const {container, unmount} = renderSlider({channel: "saturation"});
+      const { container, unmount } = renderSlider({ channel: "saturation" });
 
       await nextTick();
 
@@ -155,7 +155,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("shows the drag on the cursor", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
 
@@ -179,7 +179,7 @@ describe("ColorSlider (browser)", () => {
       expect(thumb.getAttribute("data-dragging")).toBe("true");
       expect(getComputedStyle(thumb).cursor).toBe("grabbing");
 
-      window.dispatchEvent(new PointerEvent("pointerup", {pointerId: 1}));
+      window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
       await nextTick();
 
       expect(thumb.hasAttribute("data-dragging")).toBe(false);
@@ -188,7 +188,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("drags upwards on a vertical slider", async () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: "hsl(180, 100%, 50%)",
         orientation: "vertical",
       });
@@ -211,7 +211,7 @@ describe("ColorSlider (browser)", () => {
      * re-attached by each of those renders, so only a real pointer exercises the path a user takes.
      */
     it("jumps the thumb to a real press on the track and keeps dragging it", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
 
@@ -220,8 +220,8 @@ describe("ColorSlider (browser)", () => {
       const middle = box.height / 2;
 
       await userEvent.dragAndDrop(track, track, {
-        sourcePosition: {x: box.width / 4, y: middle},
-        targetPosition: {x: (box.width * 3) / 4, y: middle},
+        sourcePosition: { x: box.width / 4, y: middle },
+        targetPosition: { x: (box.width * 3) / 4, y: middle },
       });
       await nextTick();
 
@@ -236,7 +236,7 @@ describe("ColorSlider (browser)", () => {
 
   describe("keyboard", () => {
     it("paints a focus ring on the thumb when it is reached by keyboard", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
 
@@ -254,7 +254,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("reaches exactly one focusable control", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
       await userEvent.keyboard("{Tab}");
@@ -270,7 +270,7 @@ describe("ColorSlider (browser)", () => {
     });
 
     it("pages by the channel's own step once the thumb holds focus", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       await nextTick();
       await userEvent.keyboard("{Tab}");
@@ -285,7 +285,7 @@ describe("ColorSlider (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderSlider();
+    const { container, unmount } = renderSlider();
 
     await nextTick();
     await expectNoA11yViolations(container);
@@ -294,7 +294,7 @@ describe("ColorSlider (browser)", () => {
   });
 
   it("has no accessibility violations without a visible label", async () => {
-    const {container, unmount} = renderSlider({withoutLabel: true, withoutOutput: true});
+    const { container, unmount } = renderSlider({ withoutLabel: true, withoutOutput: true });
 
     await nextTick();
     await expectNoA11yViolations(container);

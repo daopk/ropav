@@ -1,5 +1,5 @@
-import type {Color} from "../../utils/color-types";
-import type {ColorSwatchVariants} from "@ropav/styles";
+import type { Color } from "../../utils/color-types";
+import type { ColorSwatchVariants } from "@ropav/styles";
 
 export interface ColorSwatchRootProps {
   /** Labels the swatch in addition to the colour's own name, which is kept. */

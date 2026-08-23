@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {MenuItemRootProps, MenuItemSlotProps} from "./menu-item.types";
+import type { MenuItemRootProps, MenuItemSlotProps } from "./menu-item.types";
 
-import {menuItemVariants} from "@ropav/styles";
-import {computed, shallowRef, watch} from "vue";
+import { menuItemVariants } from "@ropav/styles";
+import { computed, shallowRef, watch } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {getCollectionTextValue} from "../../utils/text-value";
-import {useMenuContext, useMenuSectionContext} from "../menu/menu.context";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { getCollectionTextValue } from "../../utils/text-value";
+import { useMenuContext, useMenuSectionContext } from "../menu/menu.context";
 
-import {provideMenuItemContext, useMenuItemPopupContext} from "./menu-item.context";
+import { provideMenuItemContext, useMenuItemPopupContext } from "./menu-item.context";
 
 const props = defineProps<MenuItemRootProps>();
 
-defineSlots<{default?: (props: MenuItemSlotProps) => unknown}>();
+defineSlots<{ default?: (props: MenuItemSlotProps) => unknown }>();
 
 const menu = useMenuContext();
 const section = useMenuSectionContext();
@@ -28,7 +28,7 @@ const shouldCloseOnSelect = computed(
   () => section?.shouldCloseOnSelect.value ?? menu.shouldCloseOnSelect.value,
 );
 
-const slots = computed(() => menuItemVariants({variant: props.variant}));
+const slots = computed(() => menuItemVariants({ variant: props.variant }));
 
 const generatedKey = useId();
 const itemKey = computed(() => props.id ?? generatedKey.value);
@@ -50,7 +50,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const itemId = computed(() => `${menu.menuId.value}-item-${itemKey.value}`);
@@ -62,9 +62,9 @@ watch(
   ([current, key, id], _previous, onCleanup) => {
     if (!current || !popup) return;
 
-    onCleanup(popup.registerTrigger({element: () => element.value, id, key}));
+    onCleanup(popup.registerTrigger({ element: () => element.value, id, key }));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const hasSubmenu = computed(() => Boolean(popup));
@@ -85,10 +85,10 @@ const role = computed(() => {
 
 // Only the description slot is wired: the item names itself from its content, exactly as the
 // React build does, so handing out a label id would add an attribute nothing points at.
-const fieldIds = useFieldIds({slots: ["description"]});
+const fieldIds = useFieldIds({ slots: ["description"] });
 
 provideFieldIdsContext(fieldIds.context);
-provideMenuItemContext({hasSubmenu, isSelected, slots});
+provideMenuItemContext({ hasSubmenu, isSelected, slots });
 
 const {
   isFocusVisible,
@@ -100,7 +100,7 @@ const {
   onPointerdown,
   onPointerenter: onPointerenterState,
   onPointerleave: onPointerleaveState,
-} = useInteractionStates({isDisabled: () => isDisabled.value});
+} = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 /**
  * Whether choosing the item also closes the menu.
@@ -118,7 +118,7 @@ const closesOnActivate = (source: "pointer" | "enter" | "space") => {
 
 const activate = (
   source: "pointer" | "enter" | "space",
-  modifiers: {ctrl?: boolean; shift?: boolean} = {},
+  modifiers: { ctrl?: boolean; shift?: boolean } = {},
 ) => {
   if (isDisabled.value) return;
 
@@ -162,7 +162,7 @@ const onFocus = (event: FocusEvent) => {
 };
 
 const onClick = (event: MouseEvent) => {
-  activate("pointer", {ctrl: event.ctrlKey || event.metaKey, shift: event.shiftKey});
+  activate("pointer", { ctrl: event.ctrlKey || event.metaKey, shift: event.shiftKey });
 };
 
 const onKeydown = (event: KeyboardEvent) => {
@@ -175,7 +175,7 @@ const onKeydown = (event: KeyboardEvent) => {
   // a section has to act on the section's instead.
   event.preventDefault();
   event.stopPropagation();
-  activate(event.key === "Enter" ? "enter" : "space", {shift: event.shiftKey});
+  activate(event.key === "Enter" ? "enter" : "space", { shift: event.shiftKey });
 };
 
 const onPointerenter = (event: PointerEvent) => {
@@ -222,7 +222,7 @@ const ariaExpanded = computed<"true" | "false" | undefined>(() => {
     :aria-disabled="isDisabled || undefined"
     :aria-expanded="ariaExpanded"
     :aria-haspopup="hasSubmenu ? 'menu' : undefined"
-    :class="slots.item({class: props.class})"
+    :class="slots.item({ class: props.class })"
     :data-collection="menu.collectionId.value"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"

@@ -1,5 +1,5 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {ListBoxItemVariants} from "@ropav/styles";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { ListBoxItemVariants } from "@ropav/styles";
 
 export interface ListBoxItemRootProps {
   class?: string;

@@ -1,25 +1,25 @@
-import type {DayOfWeek} from "../utils/calendar";
-import type {FocusManager} from "../utils/focus";
-import type {PageBehavior} from "./use-calendar-state";
-import type {DatePickerState} from "./use-date-picker-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {FormValidationState} from "./use-form-validation-state";
-import type {UsePressHandlers} from "./use-press";
-import type {DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DayOfWeek } from "../utils/calendar";
+import type { FocusManager } from "../utils/focus";
+import type { PageBehavior } from "./use-calendar-state";
+import type { DatePickerState } from "./use-date-picker-state";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { FormValidationState } from "./use-form-validation-state";
+import type { UsePressHandlers } from "./use-press";
+import type { DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {toCalendarDate} from "@internationalized/date";
-import {computed, toValue} from "vue";
+import { toCalendarDate } from "@internationalized/date";
+import { computed, toValue } from "vue";
 
-import {datepickerStrings} from "../i18n/datepicker";
-import {createFocusManager} from "../utils/focus";
+import { datepickerStrings } from "../i18n/datepicker";
+import { createFocusManager } from "../utils/focus";
 
-import {useDatePickerGroup} from "./use-date-picker-group";
-import {useDescription} from "./use-description";
-import {useFieldIds} from "./use-field-ids";
-import {useId} from "./use-id";
-import {useLocale} from "./use-locale";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDatePickerGroup } from "./use-date-picker-group";
+import { useDescription } from "./use-description";
+import { useFieldIds } from "./use-field-ids";
+import { useId } from "./use-id";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export interface UseDatePickerOptions {
   id?: MaybeRefOrGetter<string | undefined>;
@@ -169,12 +169,12 @@ export const useDatePicker = (
    * The segments read as bare numbers, so the month spelled out is what makes them a date.
    */
   const valueDescription = computed(() => {
-    const date = state.formatValue(locale.value.locale, {month: "long"});
+    const date = state.formatValue(locale.value.locale, { month: "long" });
 
-    return date ? strings.value.format("selectedDateDescription", {date}) : "";
+    return date ? strings.value.format("selectedDateDescription", { date }) : "";
   });
 
-  const {describedBy: valueDescribedBy} = useDescription(valueDescription);
+  const { describedBy: valueDescribedBy } = useDescription(valueDescription);
 
   const describedBy = computed(
     () =>
@@ -286,7 +286,7 @@ export const useDatePicker = (
       id: groupId.value,
       role: "group",
     })),
-    groupHandlers: {...group.handlers, onFocusin, onFocusout, onKeydown: group.onKeydown},
+    groupHandlers: { ...group.handlers, onFocusin, onFocusout, onKeydown: group.onKeydown },
     isTriggerDisabled: computed(
       () => Boolean(toValue(options.isDisabled)) || Boolean(toValue(options.isReadOnly)),
     ),

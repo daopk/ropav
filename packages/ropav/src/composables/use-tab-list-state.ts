@@ -1,13 +1,13 @@
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue, watch} from "vue";
+import { computed, toValue, watch } from "vue";
 
-import {useCollection} from "./use-collection";
-import {useControllableState} from "./use-controllable-state";
-import {useId} from "./use-id";
-import {useSelectionManager} from "./use-selection-manager";
+import { useCollection } from "./use-collection";
+import { useControllableState } from "./use-controllable-state";
+import { useId } from "./use-id";
+import { useSelectionManager } from "./use-selection-manager";
 
 export interface UseTabListStateOptions {
   /** The selected tab, when the caller drives it. */
@@ -161,7 +161,7 @@ export const useTabListState = (options: UseTabListStateOptions = {}): UseTabLis
 
       lastSelectedKey = key;
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   const tabsId = useId(() => toValue(options.id));

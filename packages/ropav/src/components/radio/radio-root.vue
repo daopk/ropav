@@ -1,27 +1,27 @@
 <script setup lang="ts" vapor>
-import type {RadioRootProps, RadioSlotProps} from "./radio.types";
+import type { RadioRootProps, RadioSlotProps } from "./radio.types";
 
-import {radioVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { radioVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {dataAttr} from "../../utils/assertion";
-import {useRadioGroupContext} from "../radio-group/radio-group.context";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { dataAttr } from "../../utils/assertion";
+import { useRadioGroupContext } from "../radio-group/radio-group.context";
 
-import {provideRadioContext} from "./radio.context";
+import { provideRadioContext } from "./radio.context";
 
 const props = defineProps<RadioRootProps>();
 
-defineSlots<{default?: (props: RadioSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RadioSlotProps) => unknown }>();
 
-const {describedBy: groupDescribedBy, form, state} = useRadioGroupContext();
+const { describedBy: groupDescribedBy, form, state } = useRadioGroupContext();
 
 const styles = computed(() => radioVariants());
 
 const isSelected = computed(() => state.selectedValue.value === props.value);
 const isDisabled = computed(() => Boolean(props.isDisabled) || state.isDisabled.value);
 
-const {context: fieldIds, describedBy} = useFieldIds({slots: ["description"]});
+const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description"] });
 
 provideFieldIdsContext(fieldIds);
 
@@ -67,7 +67,7 @@ provideRadioContext({
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(isDisabled)"
     :data-invalid="dataAttr(state.isInvalid.value)"
     :data-readonly="dataAttr(state.isReadOnly.value)"

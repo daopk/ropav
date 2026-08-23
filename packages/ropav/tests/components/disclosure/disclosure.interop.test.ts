@@ -1,8 +1,8 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
+import { ButtonRoot } from "@/components/button";
 import {
   DisclosureBody,
   DisclosureContent,
@@ -31,7 +31,7 @@ const renderDisclosure = (props: Record<string, unknown> = {}, bareTrigger = fal
             bareTrigger
               ? h(
                   ButtonRoot,
-                  {"data-testid": "bare-trigger"},
+                  { "data-testid": "bare-trigger" },
                   {
                     default: () => ["Toggle content", h(DisclosureIndicator)],
                   },
@@ -45,7 +45,7 @@ const renderDisclosure = (props: Record<string, unknown> = {}, bareTrigger = fal
             h(DisclosureBody, null, {
               default: () => [
                 "Hidden content revealed on expand.",
-                h(ButtonRoot, {"data-testid": "body-button"}, {default: () => "Body action"}),
+                h(ButtonRoot, { "data-testid": "body-button" }, { default: () => "Body action" }),
               ],
             }),
         }),
@@ -58,7 +58,7 @@ const slot = (container: HTMLElement, name: string) =>
 
 describe("Disclosure (interop)", () => {
   it("reaches every part written in the host with the shared styles and ids", async () => {
-    const {container, unmount} = renderDisclosure();
+    const { container, unmount } = renderDisclosure();
 
     await nextTick();
 
@@ -76,7 +76,7 @@ describe("Disclosure (interop)", () => {
   });
 
   it("toggles from a trigger written in the host", async () => {
-    const {container, unmount} = renderDisclosure();
+    const { container, unmount } = renderDisclosure();
 
     await nextTick();
 
@@ -94,7 +94,7 @@ describe("Disclosure (interop)", () => {
   });
 
   it("hands the press down to a bare button written in the host", async () => {
-    const {container, unmount} = renderDisclosure({}, true);
+    const { container, unmount } = renderDisclosure({}, true);
 
     await nextTick();
 
@@ -112,7 +112,7 @@ describe("Disclosure (interop)", () => {
   });
 
   it("leaves a button written in the host inside the panel an ordinary button", async () => {
-    const {container, unmount} = renderDisclosure({defaultExpanded: true}, true);
+    const { container, unmount } = renderDisclosure({ defaultExpanded: true }, true);
 
     await nextTick();
 
@@ -130,7 +130,7 @@ describe("Disclosure (interop)", () => {
   });
 
   it("carries the disabled state to a trigger written in the host", async () => {
-    const {container, unmount} = renderDisclosure({isDisabled: true});
+    const { container, unmount } = renderDisclosure({ isDisabled: true });
 
     await nextTick();
 
@@ -148,7 +148,7 @@ describe("Disclosure (interop)", () => {
 
   it("reports the change to the host", async () => {
     const onExpandedChange = vi.fn();
-    const {container, unmount} = renderDisclosure({onExpandedChange});
+    const { container, unmount } = renderDisclosure({ onExpandedChange });
 
     await nextTick();
 

@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {PopoverDialogProps} from "./popover.types";
+import type { PopoverDialogProps } from "./popover.types";
 
-import {computed, onScopeDispose, shallowRef, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useOverlayScopeContext, useOverlayTargetContext} from "../overlay";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useOverlayScopeContext, useOverlayTargetContext } from "../overlay";
 
-import {usePopoverContext} from "./popover.context";
+import { usePopoverContext } from "./popover.context";
 
 const props = defineProps<PopoverDialogProps>();
 
-defineSlots<{default?: (props: {close: () => void}) => unknown}>();
+defineSlots<{ default?: (props: { close: () => void }) => unknown }>();
 
-const {slots} = usePopoverContext();
+const { slots } = usePopoverContext();
 const target = useOverlayTargetContext();
 const scope = useOverlayScopeContext();
 
@@ -36,7 +36,7 @@ if (scope) {
 }
 
 // Only the heading is referenced, so nothing else hands out an id it would never be pointed at.
-const {context, headingId} = useFieldIds({slots: ["heading"]});
+const { context, headingId } = useFieldIds({ slots: ["heading"] });
 
 provideFieldIdsContext(context);
 
@@ -48,7 +48,7 @@ provideFieldIdsContext(context);
  */
 const labelledBy = computed(() => headingId.value ?? target.labelledBy.value);
 
-const styles = computed(() => slots.value.dialog({class: props.class}));
+const styles = computed(() => slots.value.dialog({ class: props.class }));
 
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
@@ -67,9 +67,9 @@ watch(
     if (!dialog) return;
     if (dialog.contains(document.activeElement)) return;
 
-    dialog.focus({preventScroll: true});
+    dialog.focus({ preventScroll: true });
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

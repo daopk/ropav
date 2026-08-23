@@ -1,7 +1,7 @@
-import {readFileSync, readdirSync, statSync} from "node:fs";
-import {join} from "node:path";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
 /**
  * The `update:*` emit contract, checked against the source rather than by driving components.
@@ -130,7 +130,7 @@ for (const name of readdirSync(COMPONENTS_DIR)) {
       const emitted = matchAll(source, EMIT_CALL);
 
       if (declared.size > 0 || emitted.size > 0) {
-        parts.push({declared, emitted, path: `${name}/${file}`});
+        parts.push({ declared, emitted, path: `${name}/${file}` });
       }
     } else if (file.endsWith(".types.ts")) {
       for (const match of source.matchAll(/interface\s+(\w*)Emits\s*\{/g)) {
@@ -163,7 +163,7 @@ describe("update:* emit contract", () => {
   });
 
   it("raises every update:* the same file declares", () => {
-    const unraised = parts.flatMap(({declared, emitted, path}) =>
+    const unraised = parts.flatMap(({ declared, emitted, path }) =>
       [...declared].filter((key) => !emitted.has(key)).map((key) => `${path}: ${key}`),
     );
 
@@ -172,7 +172,7 @@ describe("update:* emit contract", () => {
 
   it("keeps a published *Emits interface in step with the SFC it describes", () => {
     const byPath = new Map(parts.map((part) => [part.path, part]));
-    const drifted = published.flatMap(({interfaceName, keys, sfc}) => {
+    const drifted = published.flatMap(({ interfaceName, keys, sfc }) => {
       const part = byPath.get(sfc);
 
       // An interface naming an SFC that declares no emits at all is a rename waiting to rot.

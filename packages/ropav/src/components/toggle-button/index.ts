@@ -10,7 +10,7 @@ export const ToggleButton = Object.assign(ToggleButtonRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ToggleButtonRoot};
+export { ToggleButtonRoot };
 
 export type {
   ToggleButtonRootProps,
@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toggleButtonVariants} from "@ropav/styles";
+export { toggleButtonVariants } from "@ropav/styles";
 
-export type {ToggleButtonVariants} from "@ropav/styles";
+export type { ToggleButtonVariants } from "@ropav/styles";

@@ -1,4 +1,4 @@
-import type {TypographyType} from "./typography.types";
+import type { TypographyType } from "./typography.types";
 
 /** The semantic element each visual type renders, shared by every Typography instance. */
 export const DEFAULT_ELEMENT_BY_TYPE: Readonly<Record<TypographyType, string>> = {

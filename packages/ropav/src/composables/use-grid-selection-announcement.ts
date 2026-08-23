@@ -1,9 +1,9 @@
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
-import type {CollectionSelection, UseSelectionManagerReturn} from "./use-selection-manager";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { CollectionSelection, UseSelectionManagerReturn } from "./use-selection-manager";
 
-import {watch} from "vue";
+import { watch } from "vue";
 
-import {announce} from "../utils/live-announcer";
+import { announce } from "../utils/live-announcer";
 
 export interface UseGridSelectionAnnouncementOptions {
   collection: UseCollectionReturn;
@@ -37,7 +37,7 @@ const countMessage = (count: number) => {
 export const useGridSelectionAnnouncement = (
   options: UseGridSelectionAnnouncementOptions,
 ): void => {
-  const {collection, selection} = options;
+  const { collection, selection } = options;
 
   let previous: CollectionSelection = selection.rawSelection.value;
 

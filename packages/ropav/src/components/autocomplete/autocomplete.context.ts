@@ -1,10 +1,10 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {UseSelectReturn} from "../../composables/use-select";
-import type {SelectedItem, UseSelectStateReturn} from "../../composables/use-select-state";
-import type {autocompleteVariants} from "@ropav/styles";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { UseSelectReturn } from "../../composables/use-select";
+import type { SelectedItem, UseSelectStateReturn } from "../../composables/use-select-state";
+import type { autocompleteVariants } from "@ropav/styles";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface AutocompleteContext {
   slots: ComputedRef<ReturnType<typeof autocompleteVariants>>;

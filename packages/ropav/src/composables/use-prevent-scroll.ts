@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {toValue, watch} from "vue";
+import { toValue, watch } from "vue";
 
 /** How many live callers want scrolling blocked; the page is restored when it reaches zero. */
 let count = 0;
@@ -82,6 +82,6 @@ export const usePreventScroll = (options: UsePreventScrollOptions = {}): void =>
         if (count === 0) restore();
       });
     },
-    {immediate: true},
+    { immediate: true },
   );
 };

@@ -1,9 +1,9 @@
-import type {ShallowRef} from "vue";
+import type { ShallowRef } from "vue";
 
-import {onScopeDispose, watch} from "vue";
+import { onScopeDispose, watch } from "vue";
 
-import {getScrollParent, isScrollable} from "../utils/focus";
-import {isIOS, isWebKit} from "../utils/platform";
+import { getScrollParent, isScrollable } from "../utils/focus";
+import { isIOS, isWebKit } from "../utils/platform";
 
 /** How close to an edge the pointer must come before the container starts scrolling. */
 const AUTOSCROLL_AREA_SIZE = 20;
@@ -48,7 +48,7 @@ export const useAutoScroll = (element: ShallowRef<HTMLElement | null>): UseAutoS
       scrollableX = /(auto|scroll)/.test(style.overflowX);
       scrollableY = /(auto|scroll)/.test(style.overflowY);
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   const stop = () => {

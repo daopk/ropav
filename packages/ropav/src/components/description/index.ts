@@ -10,7 +10,7 @@ export const Description = Object.assign(DescriptionRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {DescriptionRoot};
+export { DescriptionRoot };
 
 export type {
   DescriptionRootProps,
@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {descriptionVariants} from "@ropav/styles";
+export { descriptionVariants } from "@ropav/styles";
 
-export type {DescriptionVariants} from "@ropav/styles";
+export type { DescriptionVariants } from "@ropav/styles";

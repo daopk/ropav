@@ -1,10 +1,10 @@
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
+import type { ValidationBehavior } from "@/composables/use-form-validation-state";
 import type {
   TimeFieldState,
   TimeGranularity,
   UseTimeFieldStateOptions,
 } from "@/composables/use-time-field-state";
-import type {TimeValue} from "@/utils/date-format";
+import type { TimeValue } from "@/utils/date-format";
 
 /**
  * Plain values, not `MaybeRefOrGetter` — a component's props are always resolved values, and

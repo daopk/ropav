@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onMounted, shallowRef, toValue} from "vue";
+import { computed, onMounted, shallowRef, toValue } from "vue";
 
-import {focusableIn} from "../utils/focus";
+import { focusableIn } from "../utils/focus";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
@@ -145,5 +145,5 @@ export const useToolbar = (options: UseToolbarOptions): UseToolbarReturn => {
     lastFocused = null;
   };
 
-  return {isOutermost, onFocusin, onFocusout, onKeydown, role};
+  return { isOutermost, onFocusin, onFocusout, onKeydown, role };
 };

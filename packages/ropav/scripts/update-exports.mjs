@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 import path from "node:path";
-import {fileURLToPath} from "node:url";
+import { fileURLToPath } from "node:url";
 
 import fs from "fs-extra";
 
@@ -81,7 +81,7 @@ async function generateExports() {
 
   packageJson.exports = exports;
 
-  await fs.writeJson(PACKAGE_JSON_PATH, packageJson, {spaces: 2});
+  await fs.writeJson(PACKAGE_JSON_PATH, packageJson, { spaces: 2 });
   console.log(`✅ Updated package.json exports (${components.length} components)`);
 }
 

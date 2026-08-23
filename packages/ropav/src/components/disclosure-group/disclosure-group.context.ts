@@ -1,6 +1,6 @@
-import type {UseDisclosureGroupReturn} from "../../composables/use-disclosure-group";
+import type { UseDisclosureGroupReturn } from "../../composables/use-disclosure-group";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface DisclosureGroupContext {
   /**

@@ -1,6 +1,6 @@
-import type {VariantProps} from "tailwind-variants";
+import type { VariantProps } from "tailwind-variants";
 
-import {tv} from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 const separatorVariants = tv({
   base: "separator",
@@ -21,5 +21,5 @@ const separatorVariants = tv({
   },
 });
 
-export {separatorVariants};
+export { separatorVariants };
 export type SeparatorVariants = VariantProps<typeof separatorVariants>;

@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {SwitchFixtureProps} from "./fixtures.types";
+import type { SwitchFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Switch} from "@/components/switch";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Switch } from "@/components/switch";
 
 // Both booleans have to declare an explicit `undefined` default here too, for the same
 // reason the component does: forwarding a `false` that Vue cast from an absent prop would
 // hand the switch a controlled value — a pinned-off switch, or a field permanently claiming
 // to be valid — that the test never asked for.
-withDefaults(defineProps<SwitchFixtureProps>(), {isInvalid: undefined, isSelected: undefined});
+withDefaults(defineProps<SwitchFixtureProps>(), { isInvalid: undefined, isSelected: undefined });
 
-defineEmits<{change: [isSelected: boolean]}>();
+defineEmits<{ change: [isSelected: boolean] }>();
 </script>
 
 <template>
@@ -44,7 +44,7 @@ defineEmits<{change: [isSelected: boolean]}>();
     </Switch.Content>
     <Description v-if="$props.withDescription">Allow others to see your profile</Description>
     <FieldError v-if="$props.withCustomError">
-      <template #default="{validationErrors}">
+      <template #default="{ validationErrors }">
         <span data-testid="custom-error">{{ validationErrors.length }} problem(s)</span>
       </template>
     </FieldError>

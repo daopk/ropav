@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ColorFieldHostProps} from "./color-field.types";
+import type { ColorFieldHostProps } from "./color-field.types";
 
-import {useColorField} from "@/composables/use-color-field";
+import { useColorField } from "@/composables/use-color-field";
 
 const props = withDefaults(defineProps<ColorFieldHostProps>(), {
   isDisabled: undefined,

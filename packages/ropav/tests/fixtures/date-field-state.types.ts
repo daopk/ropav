@@ -1,10 +1,10 @@
-import type {DateFieldState, UseDateFieldStateOptions} from "@/composables/use-date-field-state";
+import type { DateFieldState, UseDateFieldStateOptions } from "@/composables/use-date-field-state";
 import type {
   FormValidationState,
   ValidationBehavior,
 } from "@/composables/use-form-validation-state";
-import type {Granularity, MaxGranularity} from "@/utils/date-format";
-import type {DateValue} from "@internationalized/date";
+import type { Granularity, MaxGranularity } from "@/utils/date-format";
+import type { DateValue } from "@internationalized/date";
 
 /**
  * Plain values, not `MaybeRefOrGetter` — a component's props are always resolved values, and

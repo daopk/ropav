@@ -1,22 +1,22 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import RadioGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(RadioGroupFixture, {props});
+  const rendered = renderVapor(RadioGroupFixture, { props });
   const inputs = () => Array.from(rendered.container.querySelectorAll("input"));
   const contents = () =>
     Array.from(rendered.container.querySelectorAll<HTMLElement>("[data-slot='radio-content']"));
   const controls = () =>
     Array.from(rendered.container.querySelectorAll<HTMLElement>("[data-slot='radio-control']"));
 
-  return {...rendered, contents, controls, inputs};
+  return { ...rendered, contents, controls, inputs };
 };
 
 /** The indicator dot and its colours are transitioned, so a computed value has to settle. */
@@ -29,7 +29,7 @@ const waitForTransition = () => new Promise((resolve) => setTimeout(resolve, 300
  */
 describe("RadioGroup (browser)", () => {
   it("fills the control of the chosen radio, leaving the dot as its centre", async () => {
-    const {controls, unmount} = renderGroup({defaultValue: "premium"});
+    const { controls, unmount } = renderGroup({ defaultValue: "premium" });
 
     await nextTick();
     await waitForTransition();
@@ -53,7 +53,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("chooses a radio under a real pointer, which synthetic events cannot prove", async () => {
-    const {contents, inputs, unmount} = renderGroup();
+    const { contents, inputs, unmount } = renderGroup();
 
     await userEvent.click(contents()[1]!);
     await nextTick();
@@ -64,7 +64,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("paints a focus ring on the control when a radio is reached by keyboard", async () => {
-    const {controls, unmount} = renderGroup();
+    const { controls, unmount } = renderGroup();
     const shadowWhenIdle = getComputedStyle(controls()[0]!).boxShadow;
 
     await userEvent.keyboard("{Tab}");
@@ -78,7 +78,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("moves exactly one radio per arrow press", async () => {
-    const {inputs, unmount} = renderGroup({defaultValue: "basic"});
+    const { inputs, unmount } = renderGroup({ defaultValue: "basic" });
 
     inputs()[0]!.focus();
     await userEvent.keyboard("{ArrowDown}");
@@ -97,7 +97,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("wraps around the ends with real key presses", async () => {
-    const {inputs, unmount} = renderGroup({defaultValue: "team"});
+    const { inputs, unmount } = renderGroup({ defaultValue: "team" });
 
     inputs()[2]!.focus();
     await userEvent.keyboard("{ArrowDown}");
@@ -110,7 +110,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("keeps the group to a single tab stop", async () => {
-    const {inputs, unmount} = renderGroup({defaultValue: "premium"});
+    const { inputs, unmount } = renderGroup({ defaultValue: "premium" });
 
     await userEvent.keyboard("{Tab}");
     await nextTick();
@@ -127,8 +127,8 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("rings the control in danger when the group is invalid", async () => {
-    const {controls: valid, unmount: unmountValid} = renderGroup();
-    const {controls, unmount} = renderGroup({isInvalid: true});
+    const { controls: valid, unmount: unmountValid } = renderGroup();
+    const { controls, unmount } = renderGroup({ isInvalid: true });
 
     await nextTick();
 
@@ -140,7 +140,7 @@ describe("RadioGroup (browser)", () => {
   });
 
   it("lays the group out along the axis it was given", async () => {
-    const {container, unmount} = renderGroup({orientation: "horizontal"});
+    const { container, unmount } = renderGroup({ orientation: "horizontal" });
 
     await nextTick();
 
@@ -153,7 +153,7 @@ describe("RadioGroup (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations in its default state", async () => {
-      const {container, unmount} = renderGroup({withLabel: true});
+      const { container, unmount } = renderGroup({ withLabel: true });
 
       await nextTick();
       await expectNoA11yViolations(container);
@@ -162,7 +162,7 @@ describe("RadioGroup (browser)", () => {
     });
 
     it("has no violations while invalid with a message", async () => {
-      const {container, unmount} = renderGroup({
+      const { container, unmount } = renderGroup({
         isInvalid: true,
         isRequired: true,
         withFieldError: true,
@@ -174,7 +174,7 @@ describe("RadioGroup (browser)", () => {
       // label in `--danger`, which falls short of 4.5:1. Verified byte-identical on React at
       // 6006 (`oklch(0.6532 0.2328 25.74)`), so it is a `@ropav/styles` shortfall both
       // frameworks share rather than anything this port introduced.
-      await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
       unmount();
     });
@@ -188,7 +188,7 @@ describe("RadioGroup (browser)", () => {
        * would leave it empty — and neither outcome is reachable from a jsdom test, which restores
        * inside the dispatch and lets the post-flush state mirror cover the gap.
        */
-      const {container, contents, inputs, unmount} = renderGroup({
+      const { container, contents, inputs, unmount } = renderGroup({
         defaultValue: "basic",
         name: "plan",
         withForm: true,

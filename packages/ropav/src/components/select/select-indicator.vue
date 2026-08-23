@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {SelectIndicatorProps} from "./select.types";
+import type { SelectIndicatorProps } from "./select.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronDown} from "../icons";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronDown } from "../icons";
 
-import {useSelectContext} from "./select.context";
+import { useSelectContext } from "./select.context";
 
 const props = defineProps<SelectIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots, state} = useSelectContext();
+const { slots, state } = useSelectContext();
 
 const callerSlots = useSlots();
 

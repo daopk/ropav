@@ -1,4 +1,4 @@
-import type {Placement} from "../../utils/position";
+import type { Placement } from "../../utils/position";
 
 export interface TooltipRootProps {
   isOpen?: boolean;

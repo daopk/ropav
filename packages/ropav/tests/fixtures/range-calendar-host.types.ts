@@ -1,10 +1,10 @@
-import type {DateRange} from "@/composables/use-calendar";
+import type { DateRange } from "@/composables/use-calendar";
 import type {
   RangeCalendarCommitBehavior,
   UseRangeCalendarReturn,
 } from "@/composables/use-range-calendar";
-import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
-import type {DateDuration, DateValue} from "@internationalized/date";
+import type { RangeCalendarState } from "@/composables/use-range-calendar-state";
+import type { DateDuration, DateValue } from "@internationalized/date";
 
 export interface RangeCalendarHostProps {
   id?: string;
@@ -26,5 +26,5 @@ export interface RangeCalendarHostProps {
   isInvalid?: boolean;
   locale?: string;
   /** Hands the live hooks back to the test. */
-  onReady?: (value: {calendar: UseRangeCalendarReturn; state: RangeCalendarState}) => void;
+  onReady?: (value: { calendar: UseRangeCalendarReturn; state: RangeCalendarState }) => void;
 }

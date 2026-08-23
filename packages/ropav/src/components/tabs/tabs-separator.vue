@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {TabsSeparatorProps} from "./tabs.types";
+import type { TabsSeparatorProps } from "./tabs.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useTabsContext} from "./tabs.context";
+import { useTabsContext } from "./tabs.context";
 
 const props = defineProps<TabsSeparatorProps>();
 
-const {slots} = useTabsContext();
+const { slots } = useTabsContext();
 </script>
 
 <template>

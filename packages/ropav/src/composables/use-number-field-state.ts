@@ -3,16 +3,16 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {NumberFormatter, NumberParser} from "@internationalized/number";
-import {computed, shallowRef, toValue, watch} from "vue";
+import { NumberFormatter, NumberParser } from "@internationalized/number";
+import { computed, shallowRef, toValue, watch } from "vue";
 
-import {clamp, snapValueToStep} from "../utils/number";
+import { clamp, snapValueToStep } from "../utils/number";
 
-import {useControllableState} from "./use-controllable-state";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useLocale} from "./use-locale";
+import { useControllableState } from "./use-controllable-state";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useLocale } from "./use-locale";
 
 /**
  * What happens to the value once the user is done editing.
@@ -162,7 +162,7 @@ export const useNumberFieldState = (options: UseNumberFieldStateOptions = {}): N
     return commitBehavior.value === "snap" ? snap(raw) : raw;
   });
 
-  const {setState: setNumberValue, state: numberValueState} = useControllableState<number>({
+  const { setState: setNumberValue, state: numberValueState } = useControllableState<number>({
     defaultValue: defaultValue.value,
     onValueChange: options.onChange,
     value: () => controlledValue.value,
@@ -228,7 +228,7 @@ export const useNumberFieldState = (options: UseNumberFieldStateOptions = {}): N
     () => {
       inputValue.value = format(numberValueState.value);
     },
-    {flush: "sync"},
+    { flush: "sync" },
   );
 
   const parsedValue = computed(() => parser.value.parse(inputValue.value));

@@ -1,17 +1,17 @@
-import type {PressResponder} from "./press-responder";
-import type {CollectionKey} from "./use-collection";
-import type {UseFieldIdsReturn} from "./use-field-ids";
-import type {ValidationResult} from "./use-form-validation-state";
-import type {UseSelectStateReturn} from "./use-select-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PressResponder } from "./press-responder";
+import type { CollectionKey } from "./use-collection";
+import type { UseFieldIdsReturn } from "./use-field-ids";
+import type { ValidationResult } from "./use-form-validation-state";
+import type { UseSelectStateReturn } from "./use-select-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useCollator} from "./use-collator";
-import {useFieldIds} from "./use-field-ids";
-import {useId} from "./use-id";
-import {useMenuTrigger} from "./use-menu-trigger";
-import {useTypeahead} from "./use-typeahead";
+import { useCollator } from "./use-collator";
+import { useFieldIds } from "./use-field-ids";
+import { useId } from "./use-id";
+import { useMenuTrigger } from "./use-menu-trigger";
+import { useTypeahead } from "./use-typeahead";
 
 export interface UseSelectOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
@@ -69,7 +69,7 @@ export const useSelect = <T>(
 ): UseSelectReturn => {
   const valueId = useId();
 
-  const trigger = useMenuTrigger({isDisabled: options.isDisabled, type: "listbox"}, state);
+  const trigger = useMenuTrigger({ isDisabled: options.isDisabled, type: "listbox" }, state);
 
   const isSingle = computed(() => state.selectionMode.value === "single");
 
@@ -93,7 +93,7 @@ export const useSelect = <T>(
 
   // Matched to the collator React Aria uses for type-to-select: case- and accent-insensitive,
   // and tuned for prefix searching rather than sorting.
-  const collator = useCollator({sensitivity: "base", usage: "search"});
+  const collator = useCollator({ sensitivity: "base", usage: "search" });
 
   const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
     // Starts *at* `fromKey` rather than after it, matching React Aria: a longer search has to be

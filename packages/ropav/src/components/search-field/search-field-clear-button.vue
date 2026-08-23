@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {SearchFieldClearButtonProps} from "./search-field.types";
+import type { SearchFieldClearButtonProps } from "./search-field.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {CloseButton} from "../close-button";
+import { CloseButton } from "../close-button";
 
-import {useSearchFieldContext} from "./search-field.context";
+import { useSearchFieldContext } from "./search-field.context";
 
 const props = defineProps<SearchFieldClearButtonProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useSearchFieldContext();
+const { slots } = useSearchFieldContext();
 
-const styles = computed(() => slots.value.clearButton({class: props.class}));
+const styles = computed(() => slots.value.clearButton({ class: props.class }));
 
 /**
  * `slot="clear"` is a live CSS contract, not a leftover of React Aria's slot system: the
@@ -25,7 +25,7 @@ const styles = computed(() => slots.value.clearButton({class: props.class}));
  * passes both straight through to the button — measured in the DOM — so this is only about
  * keeping the contract stated in one place, next to the reason for it.
  */
-const clearSlot = {slot: "clear"};
+const clearSlot = { slot: "clear" };
 </script>
 
 <template>

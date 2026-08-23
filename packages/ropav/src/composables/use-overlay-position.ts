@@ -1,9 +1,9 @@
-import type {Placement, PlacementAxis, PositionResult} from "../utils/position";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Placement, PlacementAxis, PositionResult } from "../utils/position";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {calculatePosition, getRect, translateRTL} from "../utils/position";
+import { calculatePosition, getRect, translateRTL } from "../utils/position";
 
 export interface UseOverlayPositionOptions {
   /** The element the overlay is positioned against. */
@@ -142,17 +142,17 @@ export const useOverlayPosition = (
     // back afterwards. Without this, a menu that grows or shrinks while open appears to jump
     // under the user's cursor.
     const scrollElement = getScrollElement();
-    let anchor: {type: "top" | "bottom"; offset: number} | null = null;
+    let anchor: { type: "top" | "bottom"; offset: number } | null = null;
 
     if (scrollElement && isFocusWithin(scrollElement)) {
       const anchorRect = document.activeElement?.getBoundingClientRect();
       const scrollRect = scrollElement.getBoundingClientRect();
 
-      anchor = {offset: (anchorRect?.top ?? 0) - scrollRect.top, type: "top"};
+      anchor = { offset: (anchorRect?.top ?? 0) - scrollRect.top, type: "top" };
 
       // Anchored to whichever edge it is nearer, so the far edge is free to move.
       if (anchor.offset > scrollRect.height / 2) {
-        anchor = {offset: (anchorRect?.bottom ?? 0) - scrollRect.bottom, type: "bottom"};
+        anchor = { offset: (anchorRect?.bottom ?? 0) - scrollRect.bottom, type: "bottom" };
       }
     }
 
@@ -253,13 +253,13 @@ export const useOverlayPosition = (
       observe(target);
       observe(getArrow());
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   watch(
     [placement, containerPadding, offset, crossOffset, shouldFlip, maxHeight, arrowBoundaryOffset],
     () => updatePosition(),
-    {flush: "post"},
+    { flush: "post" },
   );
 
   const onWindowResize = () => updatePosition();
@@ -312,7 +312,7 @@ export const useOverlayPosition = (
       detachCloseOnScroll();
       attachCloseOnScroll();
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

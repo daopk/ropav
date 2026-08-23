@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {ChipLabelProps} from "./chip.types";
+import type { ChipLabelProps } from "./chip.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useChipContext} from "./chip.context";
+import { useChipContext } from "./chip.context";
 
 const props = defineProps<ChipLabelProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useChipContext();
+const { slots } = useChipContext();
 </script>
 
 <template>

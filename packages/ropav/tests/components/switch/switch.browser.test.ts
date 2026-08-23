@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import SwitchFixture from "./fixtures.vue";
 
-const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, {props});
+const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -17,7 +17,7 @@ const slot = (container: HTMLElement, name: string) =>
  */
 describe("Switch (browser)", () => {
   it("paints a focus ring on the control when the input is focused by keyboard", async () => {
-    const {container, unmount} = renderSwitch();
+    const { container, unmount } = renderSwitch();
     const control = slot(container, "switch-control");
 
     const shadowWhenIdle = getComputedStyle(control).boxShadow;
@@ -34,7 +34,7 @@ describe("Switch (browser)", () => {
   });
 
   it("leaves the ring off when focus follows a pointer", async () => {
-    const {container, unmount} = renderSwitch();
+    const { container, unmount } = renderSwitch();
     const control = slot(container, "switch-control");
     const shadowWhenIdle = getComputedStyle(control).boxShadow;
 
@@ -48,7 +48,7 @@ describe("Switch (browser)", () => {
   });
 
   it("darkens the control on hover and fills it when on", async () => {
-    const {container, unmount} = renderSwitch();
+    const { container, unmount } = renderSwitch();
     const content = slot(container, "switch-content");
     const control = slot(container, "switch-control");
 
@@ -74,13 +74,13 @@ describe("Switch (browser)", () => {
 
   it("travels the thumb the full width of the control at every size", async () => {
     for (const size of ["sm", "md", "lg"] as const) {
-      const off = renderSwitch({size});
+      const off = renderSwitch({ size });
       const offControl = slot(off.container, "switch-control").getBoundingClientRect();
       const offThumb = slot(off.container, "switch-thumb").getBoundingClientRect();
 
       off.unmount();
 
-      const on = renderSwitch({defaultSelected: true, size});
+      const on = renderSwitch({ defaultSelected: true, size });
       const onControl = slot(on.container, "switch-control").getBoundingClientRect();
       const onThumb = slot(on.container, "switch-thumb").getBoundingClientRect();
 
@@ -94,7 +94,7 @@ describe("Switch (browser)", () => {
   });
 
   it("does not travel the thumb of a disabled switch that is off", () => {
-    const off = renderSwitch({isDisabled: true});
+    const off = renderSwitch({ isDisabled: true });
     const offThumb = slot(off.container, "switch-thumb").getBoundingClientRect();
     const offControl = slot(off.container, "switch-control").getBoundingClientRect();
 
@@ -106,7 +106,7 @@ describe("Switch (browser)", () => {
   });
 
   it("toggles on Space and leaves the page still", async () => {
-    const {container, unmount} = renderSwitch();
+    const { container, unmount } = renderSwitch();
     const content = slot(container, "switch-content");
 
     await userEvent.keyboard("{Tab}");
@@ -121,7 +121,7 @@ describe("Switch (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderSwitch({withDescription: true});
+    const { container, unmount } = renderSwitch({ withDescription: true });
 
     await nextTick();
     await expectNoA11yViolations(container);
@@ -130,7 +130,7 @@ describe("Switch (browser)", () => {
   });
 
   it("has no accessibility violations without a visible label", async () => {
-    const {container, unmount} = renderSwitch({ariaLabel: "Enable notifications"});
+    const { container, unmount } = renderSwitch({ ariaLabel: "Enable notifications" });
 
     await nextTick();
     await expectNoA11yViolations(container);

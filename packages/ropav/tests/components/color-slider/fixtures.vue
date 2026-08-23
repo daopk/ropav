@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderRootProps} from "@/components/color-slider";
-import type {Color} from "@/utils/color-types";
+import type { ColorSliderRootProps } from "@/components/color-slider";
+import type { Color } from "@/utils/color-types";
 
-import {ColorSlider} from "@/components/color-slider";
-import {Label} from "@/components/label";
+import { ColorSlider } from "@/components/color-slider";
+import { Label } from "@/components/label";
 
 defineProps<
   ColorSliderRootProps & {

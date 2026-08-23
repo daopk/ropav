@@ -18,11 +18,11 @@
  * Adobe and comply with the Apache License 2.0 requirements.
  */
 
-import type {CollectionKey} from "./use-collection";
-import type {CollectionSelection} from "./use-selection-manager";
-import type {ComputedRef} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { CollectionSelection } from "./use-selection-manager";
+import type { ComputedRef } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
 export interface UseListDataOptions<T> {
   /** Initial items in the list. */
@@ -83,7 +83,7 @@ const moveItems = <T>(state: ListState<T>, indices: number[], toIndex: number): 
   // Shift the target down by the number of items being moved from before the target.
   let target = toIndex - indices.filter((index) => index < toIndex).length;
 
-  const moves = indices.map((from) => ({from, to: target++}));
+  const moves = indices.map((from) => ({ from, to: target++ }));
 
   // Shift later `from` indices down if they have a larger index.
   for (let i = 0; i < moves.length; i += 1) {
@@ -116,7 +116,7 @@ const moveItems = <T>(state: ListState<T>, indices: number[], toIndex: number): 
     if (moved !== undefined) copy.splice(item.to, 0, moved);
   }
 
-  return {...state, items: copy};
+  return { ...state, items: copy };
 };
 
 /**
@@ -172,9 +172,9 @@ export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T>
     addKeysToSelection: (keys) => {
       dispatch((current) => {
         if (current.selectedKeys === "all") return current;
-        if (keys === "all") return {...current, selectedKeys: "all"};
+        if (keys === "all") return { ...current, selectedKeys: "all" };
 
-        return {...current, selectedKeys: new Set([...current.selectedKeys, ...keys])};
+        return { ...current, selectedKeys: new Set([...current.selectedKeys, ...keys]) };
       });
     },
     append: (...values) =>
@@ -185,7 +185,7 @@ export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T>
     insertAfter: (key, ...values) => insertAtKey(key, 1, values),
     insertBefore: (key, ...values) => insertAtKey(key, 0, values),
     items: computed(() => {
-      const {filterText, items} = state.value;
+      const { filterText, items } = state.value;
 
       return filter ? items.filter((item) => filter(item, filterText)) : items;
     }),
@@ -200,7 +200,7 @@ export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T>
 
         if (item !== undefined) copy.splice(toIndex, 0, item);
 
-        return {...current, items: copy};
+        return { ...current, items: copy };
       });
     },
     moveAfter: (key, keys) => {
@@ -240,12 +240,12 @@ export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T>
         // otherwise keep claiming everything about nothing.
         if (items.length === 0) selectedKeys = new Set();
 
-        return {...current, items, selectedKeys};
+        return { ...current, items, selectedKeys };
       });
     },
     removeKeysFromSelection: (keys) => {
       dispatch((current) => {
-        if (keys === "all") return {...current, selectedKeys: new Set()};
+        if (keys === "all") return { ...current, selectedKeys: new Set() };
 
         const selectedKeys =
           current.selectedKeys === "all"
@@ -254,24 +254,24 @@ export const useListData = <T>(options: UseListDataOptions<T> = {}): ListData<T>
 
         for (const key of keys) selectedKeys.delete(key);
 
-        return {...current, selectedKeys};
+        return { ...current, selectedKeys };
       });
     },
     removeSelectedItems: () => {
       dispatch((current) => {
         if (current.selectedKeys === "all") {
-          return {...current, items: [], selectedKeys: new Set()};
+          return { ...current, items: [], selectedKeys: new Set() };
         }
 
-        const {selectedKeys} = current;
+        const { selectedKeys } = current;
         const items = current.items.filter((item) => !selectedKeys.has(getKey(item)));
 
-        return {...current, items, selectedKeys: new Set()};
+        return { ...current, items, selectedKeys: new Set() };
       });
     },
     selectedKeys: computed(() => state.value.selectedKeys),
-    setFilterText: (filterText) => dispatch((current) => ({...current, filterText})),
-    setSelectedKeys: (selectedKeys) => dispatch((current) => ({...current, selectedKeys})),
+    setFilterText: (filterText) => dispatch((current) => ({ ...current, filterText })),
+    setSelectedKeys: (selectedKeys) => dispatch((current) => ({ ...current, selectedKeys })),
     update: (key, newValue) => {
       dispatch((current) => {
         const index = indexOf(key);

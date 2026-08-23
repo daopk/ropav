@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {CloseButtonRootProps, CloseButtonSlotProps} from "./close-button.types";
+import type { CloseButtonRootProps, CloseButtonSlotProps } from "./close-button.types";
 
-import {closeButtonVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { closeButtonVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {IconClose} from "../icons";
+import { composeFocusResponder, useFocusResponder } from "../../composables/focus-responder";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { IconClose } from "../icons";
 
-const props = withDefaults(defineProps<CloseButtonRootProps>(), {type: "button"});
+const props = withDefaults(defineProps<CloseButtonRootProps>(), { type: "button" });
 
-const emit = defineEmits<{click: [event: MouseEvent]}>();
+const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
-defineSlots<{default?: (props: CloseButtonSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CloseButtonSlotProps) => unknown }>();
 
 // Something above may be driving this button — a search field owns its clear button, a
 // dropdown makes its first child the trigger — in which case the press behaviour and the
@@ -41,7 +41,7 @@ const setElement = (element: unknown) => {
   focusResponder?.registerElement(next);
 };
 
-const styles = computed(() => closeButtonVariants({class: props.class, variant: props.variant}));
+const styles = computed(() => closeButtonVariants({ class: props.class, variant: props.variant }));
 
 // The stylesheet keys hover, press and focus on these attributes, so they have to be
 // rendered here rather than left to the native pseudo-classes.
@@ -81,7 +81,7 @@ const onClick = (event: MouseEvent) => {
   emit("click", event);
 };
 
-const focus = composeFocusResponder(focusResponder, {onBlur, onFocus});
+const focus = composeFocusResponder(focusResponder, { onBlur, onFocus });
 
 const attrs = computed(() => ({
   ...focusResponder?.attrs.value,

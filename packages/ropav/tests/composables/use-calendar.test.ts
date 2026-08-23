@@ -1,22 +1,22 @@
-import type {UseCalendarReturn} from "@/composables/use-calendar";
-import type {CalendarState} from "@/composables/use-calendar-state";
+import type { UseCalendarReturn } from "@/composables/use-calendar";
+import type { CalendarState } from "@/composables/use-calendar-state";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/calendar-host.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
-  let ready!: {calendar: UseCalendarReturn; state: CalendarState};
+  let ready!: { calendar: UseCalendarReturn; state: CalendarState };
 
   Object.assign(props, {
     locale: props["locale"] ?? "en-US",
-    onReady: (value: {calendar: UseCalendarReturn; state: CalendarState}) => (ready = value),
+    onReady: (value: { calendar: UseCalendarReturn; state: CalendarState }) => (ready = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -60,7 +60,7 @@ describe("useCalendar", () => {
 
     it("names the calendar after what is on screen", () => {
       expect(
-        setup({defaultFocusedValue: jun(15)})
+        setup({ defaultFocusedValue: jun(15) })
           .root()
           .getAttribute("aria-label"),
       ).toBe("June 2026");
@@ -68,7 +68,7 @@ describe("useCalendar", () => {
 
     it("puts an explicit label in front of the visible range", () => {
       expect(
-        setup({ariaLabel: "Event date", defaultFocusedValue: jun(15)})
+        setup({ ariaLabel: "Event date", defaultFocusedValue: jun(15) })
           .root()
           .getAttribute("aria-label"),
       ).toBe("Event date, June 2026");
@@ -88,19 +88,19 @@ describe("useCalendar", () => {
     });
 
     it("passes a description and details through untouched", () => {
-      const root = setup({ariaDescribedby: "hint", ariaDetails: "more"}).root();
+      const root = setup({ ariaDescribedby: "hint", ariaDetails: "more" }).root();
 
       expect(root.getAttribute("aria-describedby")).toBe("hint");
       expect(root.getAttribute("aria-details")).toBe("more");
     });
 
     it("honours an explicit id", () => {
-      expect(setup({id: "my-calendar"}).root().id).toBe("my-calendar");
+      expect(setup({ id: "my-calendar" }).root().id).toBe("my-calendar");
     });
 
     it("names a multi-month range as a span of months", () => {
       expect(
-        setup({defaultFocusedValue: jun(15), visibleDuration: {months: 2}})
+        setup({ defaultFocusedValue: jun(15), visibleDuration: { months: 2 } })
           .root()
           .getAttribute("aria-label"),
       ).toBe("June to July 2026");
@@ -108,7 +108,7 @@ describe("useCalendar", () => {
 
     it("names a range that is not whole months by its two dates", () => {
       expect(
-        setup({defaultFocusedValue: jun(15), visibleDuration: {weeks: 1}})
+        setup({ defaultFocusedValue: jun(15), visibleDuration: { weeks: 1 } })
           .root()
           .getAttribute("aria-label"),
       ).toBe("June 14 to 20, 2026");
@@ -116,7 +116,7 @@ describe("useCalendar", () => {
 
     it("spells the era out for a Gregorian date before AD 1", () => {
       expect(
-        setup({defaultFocusedValue: new CalendarDate("BC", 44, 3, 15)})
+        setup({ defaultFocusedValue: new CalendarDate("BC", 44, 3, 15) })
           .root()
           .getAttribute("aria-label"),
       ).toBe("March 44 BC");
@@ -124,7 +124,7 @@ describe("useCalendar", () => {
 
     it("follows the locale", () => {
       expect(
-        setup({defaultFocusedValue: jun(15), locale: "de-DE"})
+        setup({ defaultFocusedValue: jun(15), locale: "de-DE" })
           .root()
           .getAttribute("aria-label"),
       ).toBe("Juni 2026");
@@ -134,14 +134,14 @@ describe("useCalendar", () => {
   describe("the visible title", () => {
     it("reads the range with the browser's own separator rather than a word", () => {
       // The title is seen, not heard, so it keeps the en dash the accessible name spells out.
-      const calendar = setup({defaultFocusedValue: jun(15), visibleDuration: {months: 2}});
+      const calendar = setup({ defaultFocusedValue: jun(15), visibleDuration: { months: 2 } });
 
       expect(normalizeSpaces(calendar.calendar().title.value)).toBe("June – July 2026");
       expect(calendar.root().getAttribute("aria-label")).toBe("June to July 2026");
     });
 
     it("follows the visible range as it moves", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       expect(calendar.calendar().title.value).toBe("June 2026");
       calendar.state().focusNextPage();
@@ -156,13 +156,13 @@ describe("useCalendar", () => {
       expect(calendar.calendar().prevButton.attrs.value["aria-label"]).toBe("Previous");
       expect(calendar.calendar().nextButton.attrs.value["aria-label"]).toBe("Next");
 
-      const german = setup({locale: "de-DE"});
+      const german = setup({ locale: "de-DE" });
 
       expect(german.calendar().prevButton.attrs.value["aria-label"]).toBe("Zurück");
     });
 
     it("pages the calendar when pressed", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
       const button = (slot: string) =>
         calendar.container.querySelector<HTMLElement>(`[data-slot='calendar-${slot}']`)!;
 
@@ -185,7 +185,7 @@ describe("useCalendar", () => {
     });
 
     it("disables both while the calendar is disabled", () => {
-      const calendar = setup({isDisabled: true});
+      const calendar = setup({ isDisabled: true });
 
       expect(calendar.calendar().prevButton.isDisabled.value).toBe(true);
       expect(calendar.calendar().nextButton.isDisabled.value).toBe(true);
@@ -215,7 +215,7 @@ describe("useCalendar", () => {
   describe("announcing", () => {
     it("announces the new range when it moves with focus outside", async () => {
       clearRegions();
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().focusNextPage();
       await nextTick();
@@ -225,7 +225,7 @@ describe("useCalendar", () => {
 
     it("stays quiet when focus is inside, because the focused cell already says where it is", async () => {
       clearRegions();
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().setFocused(true);
       calendar.state().focusNextPage();
@@ -236,7 +236,7 @@ describe("useCalendar", () => {
 
     it("announces a new selection politely, so it waits its turn", async () => {
       clearRegions();
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(20));
       await nextTick();
@@ -245,7 +245,7 @@ describe("useCalendar", () => {
     });
 
     it("lists every date of a multiple selection", async () => {
-      const props = reactive({selectionMode: "multiple", value: [jun(3)] as unknown});
+      const props = reactive({ selectionMode: "multiple", value: [jun(3)] as unknown });
       const calendar = setup(props);
 
       props.value = [jun(3), jun(9), jun(21)];
@@ -259,7 +259,7 @@ describe("useCalendar", () => {
 
   describe("what it hands its grids and cells", () => {
     it("passes the calendar's own labelling down", () => {
-      const calendar = setup({ariaLabel: "Event date", ariaLabelledby: "outside"});
+      const calendar = setup({ ariaLabel: "Event date", ariaLabelledby: "outside" });
 
       expect(calendar.calendar().shared.ariaLabel.value).toBe("Event date");
       expect(calendar.calendar().shared.ariaLabelledBy.value).toBe("outside");
@@ -268,14 +268,14 @@ describe("useCalendar", () => {
     it("withholds the error message id while nothing renders it", async () => {
       // A dangling `aria-describedby` reads as a broken control, so the id only exists once an
       // element actually claims it.
-      const calendar = setup({isInvalid: true, value: jun(10)});
+      const calendar = setup({ isInvalid: true, value: jun(10) });
 
       await nextTick();
       expect(calendar.calendar().shared.errorMessageId.value).toBeUndefined();
     });
 
     it("hands out the error message id once an element claims it", async () => {
-      const calendar = setup({hasErrorMessage: true, isInvalid: true, value: jun(10)});
+      const calendar = setup({ hasErrorMessage: true, isInvalid: true, value: jun(10) });
 
       await nextTick();
 

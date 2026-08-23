@@ -1,13 +1,13 @@
-import type {PlacementAxis} from "../../utils/position";
-import type {OverlayArrowContext, OverlayScopeContext} from "./overlay.context";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { PlacementAxis } from "../../utils/position";
+import type { OverlayArrowContext, OverlayScopeContext } from "./overlay.context";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {provideFocusResponder} from "../../composables/focus-responder";
-import {providePressResponder} from "../../composables/press-responder";
+import { provideFocusResponder } from "../../composables/focus-responder";
+import { providePressResponder } from "../../composables/press-responder";
 
-import {provideOverlayArrowContext, provideOverlayScopeContext} from "./overlay.context";
+import { provideOverlayArrowContext, provideOverlayScopeContext } from "./overlay.context";
 
 /**
  * What an overlay offers the content inside it, owned separately from the overlay itself.

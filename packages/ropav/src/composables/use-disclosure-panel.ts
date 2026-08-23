@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {shallowRef, toValue, watch} from "vue";
+import { shallowRef, toValue, watch } from "vue";
 
 export interface UseDisclosurePanelOptions {
   /** Whether the panel is currently expanded. */
@@ -91,8 +91,8 @@ export const useDisclosurePanel = (
     ([panel, expanded]) => {
       if (panel) applyPanelState(panel, expanded);
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
-  return {setPanelElement};
+  return { setPanelElement };
 };

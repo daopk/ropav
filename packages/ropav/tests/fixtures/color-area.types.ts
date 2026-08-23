@@ -1,5 +1,5 @@
-import type {ColorAreaState, UseColorAreaReturn} from "@/composables";
-import type {Color, ColorChannel, ColorSpace} from "@/utils/color-types";
+import type { ColorAreaState, UseColorAreaReturn } from "@/composables";
+import type { Color, ColorChannel, ColorSpace } from "@/utils/color-types";
 
 export interface ColorAreaHostProps {
   value?: Color | string;
@@ -18,7 +18,7 @@ export interface ColorAreaHostProps {
   onChange?: (value: Color) => void;
   onChangeEnd?: (value: Color) => void;
   /** Handed the composable's return and the state behind it. */
-  onReady?: (ready: {area: UseColorAreaReturn; state: ColorAreaState}) => void;
+  onReady?: (ready: { area: UseColorAreaReturn; state: ColorAreaState }) => void;
 }
 
 export interface ColorAreaHarnessProps extends ColorAreaHostProps {

@@ -1,8 +1,8 @@
-import type {DateRange} from "@/composables/use-calendar";
-import type {PageBehavior, SelectionAlignment} from "@/composables/use-calendar-state";
-import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
-import type {DayOfWeek} from "@/utils/calendar";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { DateRange } from "@/composables/use-calendar";
+import type { PageBehavior, SelectionAlignment } from "@/composables/use-calendar-state";
+import type { RangeCalendarState } from "@/composables/use-range-calendar-state";
+import type { DayOfWeek } from "@/utils/calendar";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 export interface RangeCalendarStateHostProps {
   value?: DateRange | null;

@@ -4,25 +4,25 @@ import type {
   TableRegistry,
   UseTableCollectionReturn,
 } from "../../composables";
-import type {CollectionKey} from "../../composables/use-collection";
-import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
-import type {UseDraggableCollectionStateReturn} from "../../composables/use-draggable-collection-state";
-import type {UseDraggableItemReturn} from "../../composables/use-draggable-item";
-import type {UseDroppableCollectionStateReturn} from "../../composables/use-droppable-collection-state";
-import type {UseGridKeyboardReturn} from "../../composables/use-grid-keyboard";
-import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { DragAndDropHooks } from "../../composables/use-drag-and-drop";
+import type { UseDraggableCollectionStateReturn } from "../../composables/use-draggable-collection-state";
+import type { UseDraggableItemReturn } from "../../composables/use-draggable-item";
+import type { UseDroppableCollectionStateReturn } from "../../composables/use-droppable-collection-state";
+import type { UseGridKeyboardReturn } from "../../composables/use-grid-keyboard";
+import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
 import type {
   TableColumnSize,
   UseTableColumnLayoutReturn,
 } from "../../composables/use-table-column-layout";
-import type {VirtualizerView} from "../../composables/use-virtualizer";
-import type {VirtualizerTableCollection} from "../../utils/virtualizer-collection";
-import type {LayoutInfo, VirtualizerKey} from "../../utils/virtualizer-layout-info";
-import type {TableSortDescriptor, TableSortDirection} from "./table.types";
-import type {tableVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { VirtualizerView } from "../../composables/use-virtualizer";
+import type { VirtualizerTableCollection } from "../../utils/virtualizer-collection";
+import type { LayoutInfo, VirtualizerKey } from "../../utils/virtualizer-layout-info";
+import type { TableSortDescriptor, TableSortDirection } from "./table.types";
+import type { tableVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface TableContext {
   slots: ComputedRef<ReturnType<typeof tableVariants>>;
@@ -168,7 +168,7 @@ export interface TableColumnContext {
 
 /** Strict: a resizer outside a column header has no column to resize. */
 export const [useTableColumnContext, provideTableColumnContext] = createContext<TableColumnContext>(
-  {name: "TableColumnContext"},
+  { name: "TableColumnContext" },
 );
 
 export interface TableVirtualizerContext {

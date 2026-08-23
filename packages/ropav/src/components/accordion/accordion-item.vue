@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
-import type {AccordionItemProps} from "./accordion.types";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
+import type { AccordionItemProps } from "./accordion.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useId } from "../../composables/use-id";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {provideAccordionItemContext, useAccordionContext} from "./accordion.context";
+import { provideAccordionItemContext, useAccordionContext } from "./accordion.context";
 
 const props = defineProps<AccordionItemProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {group, hideSeparator, slots} = useAccordionContext();
+const { group, hideSeparator, slots } = useAccordionContext();
 
 const itemId = useId(() => props.id);
 const itemKey = computed<DisclosureKey>(() => itemId.value);

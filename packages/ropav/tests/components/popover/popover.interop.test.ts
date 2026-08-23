@@ -1,9 +1,9 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {Popover} from "@/components/popover";
+import { ButtonRoot } from "@/components/button";
+import { Popover } from "@/components/popover";
 
 /**
  * The popover mounted the way a consumer mounts it: from a VDOM host, with the content written in
@@ -23,22 +23,22 @@ const settle = async () => {
 
 const render = () =>
   renderInterop(Popover, {
-    props: {defaultOpen: true},
+    props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, {default: () => "Open popover"}),
+        h(ButtonRoot, null, { default: () => "Open popover" }),
         // Never flipped: a jsdom measurement is all zeroes, so a placement free to flip would
         // report whichever side the fallback lands on rather than the one asked for.
         h(
           Popover.Content,
-          {shouldFlip: false},
+          { shouldFlip: false },
           {
             default: () =>
               h(Popover.Dialog, null, {
                 default: () => [
                   h(Popover.Arrow),
-                  h(Popover.Heading, null, {default: () => "Popover heading"}),
-                  h(ButtonRoot, null, {default: () => "Inside action"}),
+                  h(Popover.Heading, null, { default: () => "Popover heading" }),
+                  h(ButtonRoot, null, { default: () => "Inside action" }),
                 ],
               }),
           },

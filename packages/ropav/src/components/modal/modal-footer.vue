@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ModalFooterProps} from "./modal.types";
+import type { ModalFooterProps } from "./modal.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useModalContext} from "./modal.context";
+import { useModalContext } from "./modal.context";
 
 const props = defineProps<ModalFooterProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useModalContext();
+const { slots } = useModalContext();
 
-const styles = computed(() => slots.value.footer({class: props.class}));
+const styles = computed(() => slots.value.footer({ class: props.class }));
 </script>
 
 <template>

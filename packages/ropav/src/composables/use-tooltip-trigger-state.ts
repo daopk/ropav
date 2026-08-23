@@ -1,9 +1,9 @@
-import type {UseOverlayTriggerStateOptions} from "./use-overlay-trigger-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { UseOverlayTriggerStateOptions } from "./use-overlay-trigger-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import {useOverlayTriggerState} from "./use-overlay-trigger-state";
+import { useOverlayTriggerState } from "./use-overlay-trigger-state";
 
 export interface UseTooltipTriggerStateOptions extends UseOverlayTriggerStateOptions {
   /** How long the pointer has to rest on the trigger before the tooltip opens. @default 1500 */

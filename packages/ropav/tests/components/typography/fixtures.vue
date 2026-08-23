@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {HeadingProps, ParagraphProps, TypographyRootProps} from "@/components/typography";
+import type { HeadingProps, ParagraphProps, TypographyRootProps } from "@/components/typography";
 
-import {Code, Heading, Paragraph, Prose, TypographyRoot} from "@/components/typography";
+import { Code, Heading, Paragraph, Prose, TypographyRoot } from "@/components/typography";
 
 const props = defineProps<
   TypographyRootProps &
@@ -16,7 +16,7 @@ const nativeAttributes = {
   "aria-label": "Typography target",
   id: "typography-target",
   slot: "description",
-  style: {maxWidth: "42px"},
+  style: { maxWidth: "42px" },
   title: "Native title",
 };
 </script>

@@ -1,23 +1,23 @@
-import type {CollectionKey} from "@/composables/use-collection";
-import type {UseTypeaheadOptions, UseTypeaheadReturn} from "@/composables/use-typeahead";
+import type { CollectionKey } from "@/composables/use-collection";
+import type { UseTypeaheadOptions, UseTypeaheadReturn } from "@/composables/use-typeahead";
 
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useTypeahead} from "@/composables/use-typeahead";
+import { useTypeahead } from "@/composables/use-typeahead";
 
 const scopes: (() => void)[] = [];
 
-const ITEMS: {key: CollectionKey; text: string}[] = [
-  {key: "bob", text: "Bob"},
-  {key: "brenda", text: "Brenda"},
-  {key: "fred", text: "Fred"},
-  {key: "martha", text: "Martha"},
-  {key: "ecole", text: "École"},
+const ITEMS: { key: CollectionKey; text: string }[] = [
+  { key: "bob", text: "Bob" },
+  { key: "brenda", text: "Brenda" },
+  { key: "fred", text: "Fred" },
+  { key: "martha", text: "Martha" },
+  { key: "ecole", text: "École" },
 ];
 
 /** Prefix match, preferring keys strictly after `fromKey`, the way the real delegate does. */
-const collator = new Intl.Collator(undefined, {sensitivity: "base", usage: "search"});
+const collator = new Intl.Collator(undefined, { sensitivity: "base", usage: "search" });
 
 const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
   const start = fromKey ? ITEMS.findIndex((item) => item.key === fromKey) + 1 : 0;
@@ -33,7 +33,7 @@ const getKeyForSearch = (search: string, fromKey?: CollectionKey | null) => {
 
 const createTypeahead = (
   props: Partial<UseTypeaheadOptions> = {},
-): UseTypeaheadReturn & {matches: CollectionKey[]; focused: ReturnType<typeof shallowRef>} => {
+): UseTypeaheadReturn & { matches: CollectionKey[]; focused: ReturnType<typeof shallowRef> } => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());
@@ -53,7 +53,7 @@ const createTypeahead = (
     }),
   ) as UseTypeaheadReturn;
 
-  return {...typeahead, focused, matches};
+  return { ...typeahead, focused, matches };
 };
 
 /** A keydown on a container, so the "is the target inside" guard is exercised for real. */
@@ -68,10 +68,10 @@ const press = (
   container.appendChild(child);
   document.body.appendChild(container);
 
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
-  Object.defineProperty(event, "currentTarget", {value: container});
-  Object.defineProperty(event, "target", {value: child});
+  Object.defineProperty(event, "currentTarget", { value: container });
+  Object.defineProperty(event, "target", { value: child });
 
   handler(event);
   container.remove();
@@ -143,9 +143,9 @@ describe("useTypeahead", () => {
     });
 
     it.each([
-      ["ctrlKey", {ctrlKey: true}],
-      ["metaKey", {metaKey: true}],
-      ["altKey", {altKey: true}],
+      ["ctrlKey", { ctrlKey: true }],
+      ["metaKey", { metaKey: true }],
+      ["altKey", { altKey: true }],
     ] as const)("ignores a character held with %s", (_name, init) => {
       const typeahead = createTypeahead();
 
@@ -158,11 +158,11 @@ describe("useTypeahead", () => {
       const typeahead = createTypeahead();
       const outside = document.createElement("div");
       const container = document.createElement("div");
-      const event = new KeyboardEvent("keydown", {cancelable: true, key: "m"});
+      const event = new KeyboardEvent("keydown", { cancelable: true, key: "m" });
 
       document.body.append(container, outside);
-      Object.defineProperty(event, "currentTarget", {value: container});
-      Object.defineProperty(event, "target", {value: outside});
+      Object.defineProperty(event, "currentTarget", { value: container });
+      Object.defineProperty(event, "target", { value: outside });
 
       typeahead.onKeydown(event);
       container.remove();
@@ -191,7 +191,7 @@ describe("useTypeahead", () => {
 
     it("extends a running search, and is claimed so the item never sees it", () => {
       // Without this, typing a two-word label would toggle selection halfway through.
-      const items = [{key: "new-file", text: "New file"}];
+      const items = [{ key: "new-file", text: "New file" }];
       const typeahead = createTypeahead({
         getKeyForSearch: (search) =>
           items.find((item) => item.text.toLowerCase().startsWith(search.toLowerCase()))?.key ??
@@ -264,7 +264,7 @@ describe("useTypeahead", () => {
 
   describe("disabled", () => {
     it("does nothing on either handler", () => {
-      const typeahead = createTypeahead({isDisabled: true});
+      const typeahead = createTypeahead({ isDisabled: true });
 
       press(typeahead.onKeydown, "m");
       press(typeahead.onKeydownCapture, " ");

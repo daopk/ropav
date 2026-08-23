@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 export interface UseEnterExitOptions {
   /** The animated element. */
@@ -71,7 +71,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
    * at the first frame of its entry animation — scaled down and fully transparent, so an overlay
    * closed and reopened quickly became invisible until it was destroyed.
    */
-  const generations = {entering: 0, exiting: 0};
+  const generations = { entering: 0, exiting: 0 };
 
   /**
    * Resolve once every animation running on the element has settled.
@@ -132,7 +132,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
         entering.value = false;
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   // Synchronous, because this is derived state rather than a side effect: the element has to
@@ -151,7 +151,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
 
       if (exitState.value === "open") exitState.value = "exiting";
     },
-    {flush: "sync"},
+    { flush: "sync" },
   );
 
   watch(
@@ -163,7 +163,7 @@ export const useEnterExit = (options: UseEnterExitOptions): UseEnterExitReturn =
         if (exitState.value === "exiting") exitState.value = "closed";
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

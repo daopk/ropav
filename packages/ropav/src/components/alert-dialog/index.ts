@@ -69,13 +69,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useAlertDialogContext, useAlertDialogOverlayContext} from "./alert-dialog.context";
+export { useAlertDialogContext, useAlertDialogOverlayContext } from "./alert-dialog.context";
 
-export type {AlertDialogContext, AlertDialogOverlayContext} from "./alert-dialog.context";
+export type { AlertDialogContext, AlertDialogOverlayContext } from "./alert-dialog.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {alertDialogVariants} from "@ropav/styles";
+export { alertDialogVariants } from "@ropav/styles";
 
-export type {AlertDialogVariants} from "@ropav/styles";
+export type { AlertDialogVariants } from "@ropav/styles";

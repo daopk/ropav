@@ -1,11 +1,11 @@
-import {CalendarDate} from "@internationalized/date";
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
 
@@ -18,10 +18,10 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * It lives in `@ropav/styles` rather than in this port, so it is excluded here and recorded as debt
  * instead of being absorbed into a green gate.
  */
-const SHARED_WITH_REACT = {rules: {"color-contrast": {enabled: false}}};
+const SHARED_WITH_REACT = { rules: { "color-contrast": { enabled: false } } };
 
 const render = (props: Record<string, unknown> = {}) =>
-  renderVapor(Fixture, {props: {locale: "en-US", withLabel: true, ...props}});
+  renderVapor(Fixture, { props: { locale: "en-US", withLabel: true, ...props } });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -57,20 +57,20 @@ afterEach(() => {
 describe("DateField (browser)", () => {
   describe("axe", () => {
     it("finds nothing to complain about", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about while invalid", async () => {
-      const result = mount({isInvalid: true, value: jun(10), withFieldError: true});
+      const result = mount({ isInvalid: true, value: jun(10), withFieldError: true });
 
       await nextTick();
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about while disabled", async () => {
-      const result = mount({isDisabled: true, value: jun(10)});
+      const result = mount({ isDisabled: true, value: jun(10) });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
@@ -82,7 +82,7 @@ describe("DateField (browser)", () => {
        * The whole reason a segment is `contenteditable`: what a user types arrives as `beforeinput`,
        * and the field decides both the value and where focus goes next.
        */
-      const result = mount({defaultValue: jun(10)});
+      const result = mount({ defaultValue: jun(10) });
 
       segmentOf(result, "month").focus();
       await userEvent.keyboard("12");
@@ -119,7 +119,7 @@ describe("DateField (browser)", () => {
 
     it("takes a digit off at a time with Backspace", async () => {
       // A segment is deleted digit by digit, and only goes back to a placeholder once it is empty.
-      const result = mount({defaultValue: jun(10)});
+      const result = mount({ defaultValue: jun(10) });
 
       segmentOf(result, "day").focus();
       await userEvent.keyboard("{Backspace}");
@@ -134,7 +134,7 @@ describe("DateField (browser)", () => {
     });
 
     it("steps a segment with the arrow keys", async () => {
-      const result = mount({defaultValue: jun(10)});
+      const result = mount({ defaultValue: jun(10) });
 
       segmentOf(result, "day").focus();
       await userEvent.keyboard("{ArrowUp}");
@@ -153,7 +153,7 @@ describe("DateField (browser)", () => {
        * A `contenteditable` shows a caret, and a spin button must not: the value is replaced whole
        * rather than edited character by character.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       expect(getComputedStyle(segmentOf(result, "day")).caretColor).toBe("rgba(0, 0, 0, 0)");
     });
@@ -161,7 +161,7 @@ describe("DateField (browser)", () => {
 
   describe("a real keyboard", () => {
     it("moves between segments with the arrow keys", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       segmentOf(result, "month").focus();
       await userEvent.keyboard("{ArrowRight}");
@@ -177,7 +177,7 @@ describe("DateField (browser)", () => {
 
     it("reaches every segment by Tab alone", async () => {
       // Every editable segment is its own tab stop, which is what makes the field reachable.
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       segmentOf(result, "month").focus();
       await userEvent.keyboard("{Tab}");
@@ -194,7 +194,7 @@ describe("DateField (browser)", () => {
        * `status-focused` draws with a box shadow and sets `outline-style: none`, so the outline is
        * the wrong thing to read — and reading it is how a missing ring passes unnoticed.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       segmentOf(result, "month").focus();
       await nextTick();
@@ -205,7 +205,7 @@ describe("DateField (browser)", () => {
 
   describe("a real pointer", () => {
     it("puts the caret on the segment that was pressed", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await userEvent.click(segmentOf(result, "year"));
       await nextTick();
@@ -223,16 +223,16 @@ describe("DateField (browser)", () => {
       segmentOf(result, "month").focus();
       await userEvent.keyboard("06");
       await nextTick();
-      await userEvent.click(groupOf(result), {position: {x: 4, y: 4}});
+      await userEvent.click(groupOf(result), { position: { x: 4, y: 4 } });
       await nextTick();
 
       expect(document.activeElement?.getAttribute("data-type")).toBe("day");
     });
 
     it("takes no focus at all while disabled", async () => {
-      const result = mount({isDisabled: true, value: jun(10)});
+      const result = mount({ isDisabled: true, value: jun(10) });
 
-      await userEvent.click(groupOf(result), {force: true});
+      await userEvent.click(groupOf(result), { force: true });
       await nextTick();
 
       expect(groupOf(result).contains(document.activeElement)).toBe(false);

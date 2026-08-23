@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {UseColorChannelFieldReturn} from "../../composables/use-color-channel-field";
-import type {UseColorFieldReturn} from "../../composables/use-color-field";
-import type {Color} from "../../utils/color-types";
-import type {ColorInputGroupControlHandlers} from "../color-input-group";
-import type {ColorFieldRootProps, ColorFieldRootSlotProps} from "./color-field.types";
+import type { UseColorChannelFieldReturn } from "../../composables/use-color-channel-field";
+import type { UseColorFieldReturn } from "../../composables/use-color-field";
+import type { Color } from "../../utils/color-types";
+import type { ColorInputGroupControlHandlers } from "../color-input-group";
+import type { ColorFieldRootProps, ColorFieldRootSlotProps } from "./color-field.types";
 
-import {colorFieldVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { colorFieldVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useColorChannelField} from "../../composables/use-color-channel-field";
-import {useColorField} from "../../composables/use-color-field";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {dataAttr} from "../../utils/assertion";
-import {provideColorInputGroupControlContext} from "../color-input-group";
-import {useColorValueContext} from "../color-picker/color-picker.context";
-import {provideFieldErrorContext} from "../field-error";
+import { useColorChannelField } from "../../composables/use-color-channel-field";
+import { useColorField } from "../../composables/use-color-field";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { dataAttr } from "../../utils/assertion";
+import { provideColorInputGroupControlContext } from "../color-input-group";
+import { useColorValueContext } from "../color-picker/color-picker.context";
+import { provideFieldErrorContext } from "../field-error";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
 // `false`, and a `false` here reads as the caller claiming that state: for `isInvalid` in
@@ -35,7 +35,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: ColorFieldRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorFieldRootSlotProps) => unknown }>();
 
 /**
  * Which of the two fields this is, settled once.
@@ -85,7 +85,7 @@ const shared = {
 // validation state is the number field's, built without either — and mirroring that keeps the DOM
 // identical rather than growing a `data-invalid` React never has.
 const branch:
-  | {field: UseColorChannelFieldReturn; kind: "channel"}
+  | { field: UseColorChannelFieldReturn; kind: "channel" }
   | {
       field: UseColorFieldReturn;
       kind: "hex";
@@ -133,9 +133,11 @@ provideColorInputGroupControlContext({
   isInvalid: field.isInvalid,
   registerElement: field.registerElement,
 });
-provideFieldErrorContext({validation: field.state.displayValidation});
+provideFieldErrorContext({ validation: field.state.displayValidation });
 
-const styles = computed(() => colorFieldVariants({class: props.class, fullWidth: props.fullWidth}));
+const styles = computed(() =>
+  colorFieldVariants({ class: props.class, fullWidth: props.fullWidth }),
+);
 
 // `data-required` has to sit on the field rather than on the control: the stylesheet reads the
 // field for the label's asterisk, not the input.

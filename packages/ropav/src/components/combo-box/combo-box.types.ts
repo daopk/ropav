@@ -1,4 +1,4 @@
-import type {CollectionKey} from "../../composables/use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 import type {
   ComboBoxFilter,
   ComboBoxMenuTrigger,
@@ -13,8 +13,8 @@ import type {
   SelectedItem,
   SelectedValue,
 } from "../../composables/use-select-state";
-import type {DisabledBehavior} from "../../composables/use-selection-manager";
-import type {Placement} from "../../utils/position";
+import type { DisabledBehavior } from "../../composables/use-selection-manager";
+import type { Placement } from "../../utils/position";
 
 /**
  * A combo box is a text field that filters a list of options, and the text is part of the value.

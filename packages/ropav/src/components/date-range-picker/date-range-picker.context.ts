@@ -1,7 +1,7 @@
-import type {dateRangePickerVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { dateRangePickerVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface DateRangePickerContext {
   /** Slot classes the parts pull their own class from. */
@@ -29,4 +29,4 @@ export interface DateRangePickerContext {
 
 /** Strict: every part of a range picker needs the wiring the root holds. */
 export const [useDateRangePickerContext, provideDateRangePickerContext] =
-  createContext<DateRangePickerContext>({name: "DateRangePickerContext"});
+  createContext<DateRangePickerContext>({ name: "DateRangePickerContext" });

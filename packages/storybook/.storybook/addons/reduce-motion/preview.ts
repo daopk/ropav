@@ -1,4 +1,4 @@
-import type {Preview} from "@storybook/vue3-vite";
+import type { Preview } from "@storybook/vue3-vite";
 
 import {
   DEFAULT_REDUCE_MOTION,
@@ -6,7 +6,7 @@ import {
   REDUCE_MOTION_OPTIONS,
 } from "./constants";
 
-export {REDUCE_MOTION_GLOBAL_TYPE_ID};
+export { REDUCE_MOTION_GLOBAL_TYPE_ID };
 
 export const reduceMotionGlobalType = {
   [REDUCE_MOTION_GLOBAL_TYPE_ID]: {

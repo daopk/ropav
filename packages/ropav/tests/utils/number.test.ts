@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {clamp, roundToStepPrecision, snapValueToStep, toFixedNumber} from "@/utils/number";
+import { clamp, roundToStepPrecision, snapValueToStep, toFixedNumber } from "@/utils/number";
 
 describe("clamp", () => {
   it("keeps a value inside the range", () => {

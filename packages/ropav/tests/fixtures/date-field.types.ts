@@ -1,9 +1,9 @@
-import type {UseDateFieldReturn} from "@/composables/use-date-field";
-import type {DateFieldState} from "@/composables/use-date-field-state";
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
-import type {TimeFieldState} from "@/composables/use-time-field-state";
-import type {Granularity, TimeValue} from "@/utils/date-format";
-import type {DateValue} from "@internationalized/date";
+import type { UseDateFieldReturn } from "@/composables/use-date-field";
+import type { DateFieldState } from "@/composables/use-date-field-state";
+import type { ValidationBehavior } from "@/composables/use-form-validation-state";
+import type { TimeFieldState } from "@/composables/use-time-field-state";
+import type { Granularity, TimeValue } from "@/utils/date-format";
+import type { DateValue } from "@internationalized/date";
 
 /** The pieces a test reads once the field is mounted. */
 export interface DateFieldReady {

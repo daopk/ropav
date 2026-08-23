@@ -1,12 +1,12 @@
-import type {DatepickerStringKey} from "../i18n/datepicker";
-import type {ComputedRef} from "vue";
+import type { DatepickerStringKey } from "../i18n/datepicker";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {datepickerStrings} from "../i18n/datepicker";
+import { datepickerStrings } from "../i18n/datepicker";
 
-import {useLocale} from "./use-locale";
-import {useLocalizedStringDictionary} from "./use-localized-string-formatter";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringDictionary } from "./use-localized-string-formatter";
 
 export interface DisplayNames {
   /**
@@ -50,7 +50,7 @@ export const useDisplayNames = (): ComputedRef<DisplayNames> => {
 
   return computed(() => {
     try {
-      return new Intl.DisplayNames(locale.value.locale, {type: "dateTimeField"});
+      return new Intl.DisplayNames(locale.value.locale, { type: "dateTimeField" });
     } catch {
       /*
        * An object rather than React's class — one method is the whole of it. Anything the shipped

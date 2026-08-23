@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {VirtualizerItemProps} from "./virtualizer.types";
+import type { VirtualizerItemProps } from "./virtualizer.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {Size} from "../../utils/virtualizer-geometry";
-import {layoutInfoToStyle} from "../../utils/virtualizer-layout-info";
+import { Size } from "../../utils/virtualizer-geometry";
+import { layoutInfoToStyle } from "../../utils/virtualizer-layout-info";
 
-import {useVirtualizerStateContext} from "./virtualizer.context";
+import { useVirtualizerStateContext } from "./virtualizer.context";
 
 const props = defineProps<VirtualizerItemProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const virtualizer = useVirtualizerStateContext();
 
@@ -50,7 +50,7 @@ watch(
   ([current, layoutInfo]) => {
     if (current && layoutInfo?.estimatedSize) measure();
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 /**
@@ -68,7 +68,7 @@ watch(
 
     onCleanup(() => observer.disconnect());
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

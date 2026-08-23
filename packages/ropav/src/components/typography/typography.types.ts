@@ -1,5 +1,5 @@
-import type {TypographyVariants} from "@ropav/styles";
-import type {HTMLAttributes} from "vue";
+import type { TypographyVariants } from "@ropav/styles";
+import type { HTMLAttributes } from "vue";
 
 export type TypographyType = NonNullable<TypographyVariants["type"]>;
 export type TypographyAlign = NonNullable<TypographyVariants["align"]>;

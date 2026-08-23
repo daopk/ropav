@@ -1,8 +1,8 @@
-import type {FormValidationState} from "../../composables/use-form-validation-state";
-import type {switchVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { FormValidationState } from "../../composables/use-form-validation-state";
+import type { switchVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface SwitchContext {
   slots: ComputedRef<ReturnType<typeof switchVariants>>;

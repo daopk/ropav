@@ -67,11 +67,11 @@ export {
   useDateRangePickerContext,
 } from "./date-range-picker.context";
 
-export type {DateRangePickerContext} from "./date-range-picker.context";
+export type { DateRangePickerContext } from "./date-range-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateRangePickerVariants} from "@ropav/styles";
+export { dateRangePickerVariants } from "@ropav/styles";
 
-export type {DateRangePickerVariants} from "@ropav/styles";
+export type { DateRangePickerVariants } from "@ropav/styles";

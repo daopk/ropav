@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {getDatePlaceholder} from "@/utils/date-placeholder";
+import { getDatePlaceholder } from "@/utils/date-placeholder";
 
 describe("getDatePlaceholder", () => {
   describe("date fields", () => {

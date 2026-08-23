@@ -1,5 +1,5 @@
-import type {Color} from "../../utils/color-types";
-import type {Placement} from "../../utils/position";
+import type { Color } from "../../utils/color-types";
+import type { Placement } from "../../utils/position";
 
 export interface ColorPickerRootProps {
   class?: string;

@@ -1,8 +1,8 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
+import { ButtonRoot } from "@/components/button";
 import {
   DisclosureBody,
   DisclosureContent,
@@ -11,7 +11,7 @@ import {
   DisclosureRoot,
   DisclosureTrigger,
 } from "@/components/disclosure";
-import {DisclosureGroupRoot} from "@/components/disclosure-group";
+import { DisclosureGroupRoot } from "@/components/disclosure-group";
 
 /**
  * The group mounted the way a consumer mounts it: from a VDOM host, with the disclosures written
@@ -33,7 +33,7 @@ const renderGroup = (props: Record<string, unknown> = {}, bareTriggers = false) 
         ITEMS.map((item) =>
           h(
             DisclosureRoot,
-            {id: item, key: item},
+            { id: item, key: item },
             {
               default: () => [
                 h(DisclosureHeading, null, {
@@ -41,7 +41,7 @@ const renderGroup = (props: Record<string, unknown> = {}, bareTriggers = false) 
                     bareTriggers
                       ? h(
                           ButtonRoot,
-                          {"data-testid": `bare-${item}`},
+                          { "data-testid": `bare-${item}` },
                           {
                             default: () => [`Trigger ${item}`, h(DisclosureIndicator)],
                           },
@@ -51,7 +51,7 @@ const renderGroup = (props: Record<string, unknown> = {}, bareTriggers = false) 
                         }),
                 }),
                 h(DisclosureContent, null, {
-                  default: () => h(DisclosureBody, null, {default: () => `Panel ${item}`}),
+                  default: () => h(DisclosureBody, null, { default: () => `Panel ${item}` }),
                 }),
               ],
             },
@@ -69,7 +69,7 @@ const bareTriggersIn = (container: HTMLElement) => [
 
 describe("DisclosureGroup (interop)", () => {
   it("reaches every disclosure written in the host", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
 
     await nextTick();
 
@@ -82,7 +82,7 @@ describe("DisclosureGroup (interop)", () => {
   });
 
   it("collapses the open disclosure when only one may be expanded", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
 
     await nextTick();
 
@@ -102,7 +102,7 @@ describe("DisclosureGroup (interop)", () => {
 
   it("reports the expanded key set to the host", async () => {
     const onExpandedChange = vi.fn();
-    const {container, unmount} = renderGroup({onExpandedChange});
+    const { container, unmount } = renderGroup({ onExpandedChange });
 
     await nextTick();
 
@@ -115,7 +115,7 @@ describe("DisclosureGroup (interop)", () => {
   });
 
   it("carries the group's disabled state to every disclosure", async () => {
-    const {container, unmount} = renderGroup({isDisabled: true});
+    const { container, unmount } = renderGroup({ isDisabled: true });
 
     await nextTick();
 
@@ -125,7 +125,7 @@ describe("DisclosureGroup (interop)", () => {
   });
 
   it("moves focus between triggers written in the host", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
 
     await nextTick();
 
@@ -133,7 +133,7 @@ describe("DisclosureGroup (interop)", () => {
 
     triggers[0]?.focus();
     triggers[0]?.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowDown"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown" }),
     );
 
     expect(document.activeElement).toBe(triggers[1]);
@@ -142,7 +142,7 @@ describe("DisclosureGroup (interop)", () => {
   });
 
   it("registers bare button triggers written in the host for keyboard navigation", async () => {
-    const {container, unmount} = renderGroup({}, true);
+    const { container, unmount } = renderGroup({}, true);
 
     await nextTick();
 
@@ -152,7 +152,7 @@ describe("DisclosureGroup (interop)", () => {
 
     triggers[0]?.focus();
     triggers[0]?.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "End"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "End" }),
     );
 
     expect(document.activeElement).toBe(triggers[2]);

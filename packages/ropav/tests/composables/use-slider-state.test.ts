@@ -1,9 +1,9 @@
-import type {UseSliderStateOptions} from "@/composables/use-slider-state";
+import type { UseSliderStateOptions } from "@/composables/use-slider-state";
 
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useSliderState} from "@/composables/use-slider-state";
+import { useSliderState } from "@/composables/use-slider-state";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -34,7 +34,7 @@ describe("useSliderState", () => {
     });
 
     it("takes a single default value", () => {
-      const [state, dispose] = setup({defaultValue: 30});
+      const [state, dispose] = setup({ defaultValue: 30 });
 
       expect(state.values.value).toEqual([30]);
       expect(state.getThumbValue(0)).toBe(30);
@@ -43,7 +43,7 @@ describe("useSliderState", () => {
     });
 
     it("snaps a value that does not sit on a step", () => {
-      const [state, dispose] = setup({defaultValue: 33, step: 10});
+      const [state, dispose] = setup({ defaultValue: 33, step: 10 });
 
       expect(state.values.value).toEqual([30]);
 
@@ -52,7 +52,7 @@ describe("useSliderState", () => {
 
     it("follows a controlled value", () => {
       const value = shallowRef(20);
-      const [state, dispose] = setup({value: () => value.value});
+      const [state, dispose] = setup({ value: () => value.value });
 
       expect(state.values.value).toEqual([20]);
 
@@ -65,7 +65,7 @@ describe("useSliderState", () => {
 
     it("leaves a controlled value to its owner", () => {
       const onChange = vi.fn();
-      const [state, dispose] = setup({onChange, value: 20});
+      const [state, dispose] = setup({ onChange, value: 20 });
 
       state.setThumbValue(0, 50);
 
@@ -77,7 +77,7 @@ describe("useSliderState", () => {
 
     it("hands the value back in the shape it came in", () => {
       const onChange = vi.fn();
-      const [single, disposeSingle] = setup({defaultValue: 10, onChange});
+      const [single, disposeSingle] = setup({ defaultValue: 10, onChange });
 
       single.setThumbValue(0, 20);
       expect(onChange).toHaveBeenLastCalledWith(20);
@@ -97,7 +97,7 @@ describe("useSliderState", () => {
 
   describe("thumb bounds", () => {
     it("pens each thumb in between its neighbours", () => {
-      const [state, dispose] = setup({defaultValue: [20, 60]});
+      const [state, dispose] = setup({ defaultValue: [20, 60] });
 
       expect(state.getThumbMinValue(0)).toBe(0);
       expect(state.getThumbMaxValue(0)).toBe(60);
@@ -112,7 +112,7 @@ describe("useSliderState", () => {
     });
 
     it("restricts a default range that overlaps", () => {
-      const [state, dispose] = setup({defaultValue: [80, 20]});
+      const [state, dispose] = setup({ defaultValue: [80, 20] });
 
       // Each value is snapped against the one before it, so the pair comes out ordered.
       expect(state.values.value[0]).toBeLessThanOrEqual(state.values.value[1]!);
@@ -123,7 +123,7 @@ describe("useSliderState", () => {
 
   describe("percentages", () => {
     it("maps values onto the track", () => {
-      const [state, dispose] = setup({defaultValue: 25, maxValue: 200, minValue: 0});
+      const [state, dispose] = setup({ defaultValue: 25, maxValue: 200, minValue: 0 });
 
       expect(state.getValuePercent(50)).toBe(0.25);
       expect(state.getThumbPercent(0)).toBe(0.125);
@@ -132,7 +132,7 @@ describe("useSliderState", () => {
     });
 
     it("maps a position on the track back onto a step", () => {
-      const [state, dispose] = setup({maxValue: 100, minValue: 0, step: 25});
+      const [state, dispose] = setup({ maxValue: 100, minValue: 0, step: 25 });
 
       expect(state.getPercentValue(0.3)).toBe(25);
       expect(state.getPercentValue(0.4)).toBe(50);
@@ -144,7 +144,7 @@ describe("useSliderState", () => {
     });
 
     it("sets a thumb from a position on the track", () => {
-      const [state, dispose] = setup({defaultValue: 0, step: 10});
+      const [state, dispose] = setup({ defaultValue: 0, step: 10 });
 
       state.setThumbPercent(0, 0.44);
 
@@ -156,7 +156,7 @@ describe("useSliderState", () => {
 
   describe("stepping", () => {
     it("steps by the step size", () => {
-      const [state, dispose] = setup({defaultValue: 50, step: 5});
+      const [state, dispose] = setup({ defaultValue: 50, step: 5 });
 
       state.incrementThumb(0);
       expect(state.values.value).toEqual([55]);
@@ -168,7 +168,7 @@ describe("useSliderState", () => {
     });
 
     it("steps by a page when asked", () => {
-      const [state, dispose] = setup({defaultValue: 50});
+      const [state, dispose] = setup({ defaultValue: 50 });
 
       // A page is a tenth of the range, so ten pages cross the whole slider.
       expect(state.pageSize.value).toBe(10);
@@ -180,20 +180,20 @@ describe("useSliderState", () => {
     });
 
     it("keeps the page size a whole number of steps, never below one step", () => {
-      const [coarse, disposeCoarse] = setup({maxValue: 10, minValue: 0, step: 3});
+      const [coarse, disposeCoarse] = setup({ maxValue: 10, minValue: 0, step: 3 });
 
       // A tenth of the range is smaller than one step here.
       expect(coarse.pageSize.value).toBe(3);
       disposeCoarse();
 
-      const [wide, disposeWide] = setup({maxValue: 1000, minValue: 0, step: 50});
+      const [wide, disposeWide] = setup({ maxValue: 1000, minValue: 0, step: 50 });
 
       expect(wide.pageSize.value).toBe(100);
       disposeWide();
     });
 
     it("stops at either end", () => {
-      const [state, dispose] = setup({defaultValue: 100});
+      const [state, dispose] = setup({ defaultValue: 100 });
 
       state.incrementThumb(0, 50);
       expect(state.values.value).toEqual([100]);
@@ -209,7 +209,7 @@ describe("useSliderState", () => {
   describe("dragging", () => {
     it("reports the end of an interaction once", () => {
       const onChangeEnd = vi.fn();
-      const [state, dispose] = setup({defaultValue: [10, 90], onChangeEnd});
+      const [state, dispose] = setup({ defaultValue: [10, 90], onChangeEnd });
 
       state.setThumbDragging(0, true);
       state.setThumbDragging(1, true);
@@ -228,7 +228,7 @@ describe("useSliderState", () => {
 
     it("says nothing when a thumb that was not dragging is released", () => {
       const onChangeEnd = vi.fn();
-      const [state, dispose] = setup({defaultValue: 10, onChangeEnd});
+      const [state, dispose] = setup({ defaultValue: 10, onChangeEnd });
 
       state.setThumbDragging(0, false);
 
@@ -240,7 +240,7 @@ describe("useSliderState", () => {
 
   describe("editability", () => {
     it("ignores writes to a thumb that is not editable", () => {
-      const [state, dispose] = setup({defaultValue: 10});
+      const [state, dispose] = setup({ defaultValue: 10 });
 
       state.setThumbEditable(0, false);
       state.setThumbValue(0, 50);
@@ -252,7 +252,7 @@ describe("useSliderState", () => {
     });
 
     it("ignores every write while disabled", () => {
-      const [state, dispose] = setup({defaultValue: 10, isDisabled: true});
+      const [state, dispose] = setup({ defaultValue: 10, isDisabled: true });
 
       state.setThumbValue(0, 50);
       state.incrementThumb(0);
@@ -268,7 +268,7 @@ describe("useSliderState", () => {
     it("formats a single value", () => {
       const [state, dispose] = setup({
         defaultValue: 30,
-        numberFormatter: new Intl.NumberFormat("en-US", {currency: "USD", style: "currency"}),
+        numberFormatter: new Intl.NumberFormat("en-US", { currency: "USD", style: "currency" }),
       });
 
       expect(state.getThumbValueLabel(0)).toBe("$30.00");
@@ -277,7 +277,7 @@ describe("useSliderState", () => {
     });
 
     it("formats two values as a range", () => {
-      const [state, dispose] = setup({defaultValue: [100, 500], maxValue: 1000});
+      const [state, dispose] = setup({ defaultValue: [100, 500], maxValue: 1000 });
 
       expect(state.getFormattedValue()).toBe("100–500");
 
@@ -285,7 +285,7 @@ describe("useSliderState", () => {
     });
 
     it("formats three or more values as a list", () => {
-      const [state, dispose] = setup({defaultValue: [10, 20, 30]});
+      const [state, dispose] = setup({ defaultValue: [10, 20, 30] });
 
       expect(state.getFormattedValue()).toBe("10, 20, 30");
 
@@ -293,7 +293,7 @@ describe("useSliderState", () => {
     });
 
     it("formats an explicit value", () => {
-      const [state, dispose] = setup({defaultValue: 30});
+      const [state, dispose] = setup({ defaultValue: 30 });
 
       expect(state.getFormattedValue(1000)).toBe("1,000");
 
@@ -303,7 +303,7 @@ describe("useSliderState", () => {
 
   describe("focus", () => {
     it("tracks the thumb that holds focus", () => {
-      const [state, dispose] = setup({defaultValue: [10, 90]});
+      const [state, dispose] = setup({ defaultValue: [10, 90] });
 
       expect(state.focusedThumb.value).toBeUndefined();
 
@@ -319,7 +319,7 @@ describe("useSliderState", () => {
 
   describe("form reset", () => {
     it("remembers the caller default", () => {
-      const [state, dispose] = setup({defaultValue: [10, 90]});
+      const [state, dispose] = setup({ defaultValue: [10, 90] });
 
       state.setThumbValue(0, 50);
 
@@ -329,7 +329,7 @@ describe("useSliderState", () => {
     });
 
     it("falls back to where the slider started", () => {
-      const [state, dispose] = setup({minValue: 5});
+      const [state, dispose] = setup({ minValue: 5 });
 
       state.setThumbValue(0, 50);
 

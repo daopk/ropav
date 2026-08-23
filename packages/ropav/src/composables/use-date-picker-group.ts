@@ -1,13 +1,13 @@
-import type {FocusManager} from "../utils/focus";
-import type {UsePressHandlers} from "./use-press";
-import type {MaybeRefOrGetter} from "vue";
+import type { FocusManager } from "../utils/focus";
+import type { UsePressHandlers } from "./use-press";
+import type { MaybeRefOrGetter } from "vue";
 
-import {toValue} from "vue";
+import { toValue } from "vue";
 
-import {createFocusManager, tabbableIn} from "../utils/focus";
+import { createFocusManager, tabbableIn } from "../utils/focus";
 
-import {useLocale} from "./use-locale";
-import {usePress} from "./use-press";
+import { useLocale } from "./use-locale";
+import { usePress } from "./use-press";
 
 export interface UseDatePickerGroupOptions {
   /** The element focus moves around inside. A getter, because it does not exist yet at setup. */
@@ -124,7 +124,7 @@ export const useDatePickerGroup = (
    */
   let pressTarget: Element | null = null;
 
-  const {handlers: pressHandlers} = usePress({
+  const { handlers: pressHandlers } = usePress({
     onPress: (event) => {
       if (event.pointerType === "touch" || event.pointerType === "pen") focusLast(pressTarget);
     },
@@ -184,5 +184,5 @@ export const useDatePickerGroup = (
     }
   };
 
-  return {focusManager, handlers, onKeydown};
+  return { focusManager, handlers, onKeydown };
 };

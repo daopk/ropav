@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Label} from "../label";
+import { Label } from "../label";
 
-import {Meter, MeterFill, MeterOutput, MeterTrack} from "./index";
+import { Meter, MeterFill, MeterOutput, MeterTrack } from "./index";
 
-const components = {Label, Meter, MeterFill, MeterOutput, MeterTrack};
+const components = { Label, Meter, MeterFill, MeterOutput, MeterTrack };
 
 const meta: StoryMeta = {
   argTypes: {
-    color: {control: "select", options: ["default", "accent", "success", "warning", "danger"]},
-    size: {control: "select", options: ["sm", "md", "lg"]},
+    color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
+    size: { control: "select", options: ["sm", "md", "lg"] },
   },
   component: Meter,
-  decorators: [() => ({template: '<div class="w-96 p-8"><story /></div>'})],
-  parameters: {layout: "centered"},
+  decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
+  parameters: { layout: "centered" },
   title: "Components/Feedback/Meter",
 };
 
@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Meter v-bind="args" :value="60">
         <Label>Storage</Label>
@@ -39,7 +39,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
         <Meter v-bind="args" size="sm" :value="40">
@@ -59,7 +59,7 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
         <Meter v-bind="args" color="default" :value="50">
@@ -87,7 +87,7 @@ export const CustomValue: Story = {
     components,
     setup: () => ({
       args,
-      formatOptions: {currency: "USD", style: "currency"} as Intl.NumberFormatOptions,
+      formatOptions: { currency: "USD", style: "currency" } as Intl.NumberFormatOptions,
     }),
     template: `
       <Meter
@@ -106,7 +106,7 @@ export const CustomValue: Story = {
 export const WithoutLabel: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Meter v-bind="args" aria-label="Storage usage" :value="45">
         <MeterTrack><MeterFill /></MeterTrack>

@@ -10,10 +10,10 @@ import type {
   DraggableCollectionStartEvent,
   DropOperation,
 } from "../utils/dnd-types";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
 export interface UseDraggableCollectionStateOptions<T = unknown> {
   collection: DragCollection<T>;
@@ -55,7 +55,7 @@ export interface UseDraggableCollectionStateReturn<T = unknown> {
 export const useDraggableCollectionState = <T = unknown>(
   options: UseDraggableCollectionStateOptions<T>,
 ): UseDraggableCollectionStateReturn<T> => {
-  const {collection, selectionManager} = options;
+  const { collection, selectionManager } = options;
   const draggingKeys = shallowRef<Set<DragKey>>(new Set());
   const draggedKey = shallowRef<DragKey | null>(null);
 
@@ -108,7 +108,7 @@ export const useDraggableCollectionState = <T = unknown>(
     draggedKey: computed(() => draggedKey.value),
     draggingKeys: computed(() => draggingKeys.value),
     endDrag(event) {
-      options.onDragEnd?.({...event, isInternal: event.isInternal, keys: draggingKeys.value});
+      options.onDragEnd?.({ ...event, isInternal: event.isInternal, keys: draggingKeys.value });
 
       draggingKeys.value = new Set();
       draggedKey.value = null;
@@ -130,7 +130,7 @@ export const useDraggableCollectionState = <T = unknown>(
     isDisabled: computed(() => Boolean(toValue(options.isDisabled))),
     isDragging: (key) => draggingKeys.value.has(key),
     moveDrag(event) {
-      options.onDragMove?.({...event, keys: draggingKeys.value});
+      options.onDragMove?.({ ...event, keys: draggingKeys.value });
     },
     preview: options.preview,
     selectionManager,
@@ -142,7 +142,7 @@ export const useDraggableCollectionState = <T = unknown>(
       // Focus belongs to the drag session from here on; leaving the collection focused would
       // paint a focus ring on an item the user is no longer navigating.
       selectionManager.setFocused(false);
-      options.onDragStart?.({...event, keys});
+      options.onDragStart?.({ ...event, keys });
     },
   };
 };

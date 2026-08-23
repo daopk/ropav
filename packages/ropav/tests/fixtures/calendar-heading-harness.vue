@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {CalendarHeadingHostProps} from "./calendar-heading-host.types";
+import type { CalendarHeadingHostProps } from "./calendar-heading-host.types";
 
-import {createCalendar} from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 
-import {useCalendarHeading} from "@/composables/use-calendar-heading";
-import {useCalendarState} from "@/composables/use-calendar-state";
-import {useCalendarYearPicker} from "@/composables/use-calendar-year-picker";
+import { useCalendarHeading } from "@/composables/use-calendar-heading";
+import { useCalendarState } from "@/composables/use-calendar-state";
+import { useCalendarYearPicker } from "@/composables/use-calendar-year-picker";
 
 const props = defineProps<CalendarHeadingHostProps>();
 
@@ -17,14 +17,17 @@ const state = useCalendarState({
   visibleDuration: () => props.visibleDuration,
 });
 
-const heading = useCalendarHeading({format: () => props.format, offset: () => props.offset}, state);
-
-const years = useCalendarYearPicker(
-  {format: () => props.yearFormat, visibleYears: () => props.visibleYears},
+const heading = useCalendarHeading(
+  { format: () => props.format, offset: () => props.offset },
   state,
 );
 
-props.onReady?.({heading, state, years});
+const years = useCalendarYearPicker(
+  { format: () => props.yearFormat, visibleYears: () => props.visibleYears },
+  state,
+);
+
+props.onReady?.({ heading, state, years });
 </script>
 
 <template>

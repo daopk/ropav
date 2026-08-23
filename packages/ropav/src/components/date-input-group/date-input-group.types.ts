@@ -1,5 +1,5 @@
-import type {DateSegment} from "../../composables/use-date-field-state";
-import type {DateInputGroupVariants} from "@ropav/styles";
+import type { DateSegment } from "../../composables/use-date-field-state";
+import type { DateInputGroupVariants } from "@ropav/styles";
 
 /*
  * Boolean props are declared as plain `boolean` rather than through the variants type. The SFC

@@ -1,9 +1,9 @@
-import type {AnyCalendarState, DateRange} from "../../composables/use-calendar";
-import type {CalendarHeadingFormatOptions} from "../../composables/use-calendar-heading";
-import type {PageBehavior, SelectionAlignment} from "../../composables/use-calendar-state";
-import type {RangeCalendarCommitBehavior} from "../../composables/use-range-calendar";
-import type {DayOfWeek, WeekdayStyle} from "../../utils/calendar";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { AnyCalendarState, DateRange } from "../../composables/use-calendar";
+import type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
+import type { PageBehavior, SelectionAlignment } from "../../composables/use-calendar-state";
+import type { RangeCalendarCommitBehavior } from "../../composables/use-range-calendar";
+import type { DayOfWeek, WeekdayStyle } from "../../utils/calendar";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 /*
  * Boolean props are declared as plain `boolean` rather than through the variants type. The SFC

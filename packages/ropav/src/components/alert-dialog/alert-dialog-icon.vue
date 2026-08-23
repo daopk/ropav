@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogIconProps} from "./alert-dialog.types";
+import type { AlertDialogIconProps } from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { alertDialogVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {DangerIcon, InfoIcon, SuccessIcon, WarningIcon} from "../icons";
+import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "../icons";
 
 const props = defineProps<AlertDialogIconProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 /**
  * Styled from its own status, not from the dialog's accumulated slots.
@@ -17,7 +17,7 @@ defineSlots<{default?: () => unknown}>();
  * each keeping its own colours.
  */
 const styles = computed(() =>
-  alertDialogVariants({status: props.status}).icon({class: props.class}),
+  alertDialogVariants({ status: props.status }).icon({ class: props.class }),
 );
 
 /**

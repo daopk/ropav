@@ -18,7 +18,7 @@ export const Alert = Object.assign(AlertRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {AlertContent, AlertDescription, AlertIndicator, AlertRoot, AlertTitle};
+export { AlertContent, AlertDescription, AlertIndicator, AlertRoot, AlertTitle };
 
 export type {
   AlertContentProps,
@@ -32,6 +32,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {alertVariants} from "@ropav/styles";
+export { alertVariants } from "@ropav/styles";
 
-export type {AlertVariants} from "@ropav/styles";
+export type { AlertVariants } from "@ropav/styles";

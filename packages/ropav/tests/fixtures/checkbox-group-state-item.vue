@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useValidationInput} from "@/composables/use-form-validation";
+import { useValidationInput } from "@/composables/use-form-validation";
 
 const props = defineProps<{
   value: string;

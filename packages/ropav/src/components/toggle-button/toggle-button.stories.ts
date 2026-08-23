@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconBookmark from "~icons/gravity-ui/bookmark";
 import IconBookmarkFill from "~icons/gravity-ui/bookmark-fill";
 import IconHeart from "~icons/gravity-ui/heart";
@@ -9,21 +9,21 @@ import IconHeartFill from "~icons/gravity-ui/heart-fill";
 import IconPin from "~icons/gravity-ui/pin";
 import IconPinFill from "~icons/gravity-ui/pin-fill";
 
-import {ToggleButton} from "./index";
+import { ToggleButton } from "./index";
 
-const components = {IconBookmark, IconBookmarkFill, IconHeart, IconHeartFill, ToggleButton};
+const components = { IconBookmark, IconBookmarkFill, IconHeart, IconHeartFill, ToggleButton };
 
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["default", "ghost"],
     },
   },
@@ -38,13 +38,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {size: "md"};
+const defaultArgs = { size: "md" };
 
 export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <ToggleButton :is-disabled="args.isDisabled" :size="args.size" :variant="args.variant">
@@ -68,7 +68,7 @@ export const Variants: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
@@ -110,7 +110,7 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({sizes: ["sm", "md", "lg"]}),
+    setup: () => ({ sizes: ["sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex items-center gap-3">
@@ -139,7 +139,7 @@ export const IconOnly: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <ToggleButton
@@ -175,7 +175,7 @@ export const Controlled: Story = {
     setup: () => {
       const isSelected = shallowRef(false);
 
-      return {isSelected};
+      return { isSelected };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -216,13 +216,13 @@ export const Disabled: Story = {
 
 export const RealWorld: Story = {
   render: () => ({
-    components: {...components, IconPin, IconPinFill},
+    components: { ...components, IconPin, IconPinFill },
     setup: () => {
       const bookmarked = shallowRef(false);
       const liked = shallowRef(false);
       const pinned = shallowRef(true);
 
-      return {bookmarked, liked, pinned};
+      return { bookmarked, liked, pinned };
     },
     template: `
       <div class="flex items-center gap-2">

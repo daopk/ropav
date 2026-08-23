@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconCircleXmark from "~icons/gravity-ui/circle-xmark";
 
-import {CloseButton} from "./index";
+import { CloseButton } from "./index";
 
-const components = {CloseButton};
+const components = { CloseButton };
 
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["default"],
     },
   },
@@ -29,13 +29,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {isDisabled: false, variant: "default"};
+const defaultArgs = { isDisabled: false, variant: "default" };
 
 export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <CloseButton v-bind="args" />
@@ -47,8 +47,8 @@ export const Default: Story = {
 export const WithCustomIcon: Story = {
   args: defaultArgs,
   render: (args) => ({
-    components: {...components, IconCircleXmark},
-    setup: () => ({args}),
+    components: { ...components, IconCircleXmark },
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <CloseButton v-bind="args">
@@ -66,7 +66,7 @@ export const Interactive: Story = {
     setup: () => {
       const count = shallowRef(0);
 
-      return {args, count};
+      return { args, count };
     },
     template: `
       <div class="flex flex-col items-center justify-center gap-4">

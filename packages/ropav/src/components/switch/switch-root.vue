@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {SwitchRootProps, SwitchSlotProps} from "./switch.types";
+import type { SwitchRootProps, SwitchSlotProps } from "./switch.types";
 
-import {switchVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { switchVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useControllableState} from "../../composables/use-controllable-state";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useFormValidationState} from "../../composables/use-form-validation-state";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useFormValidationState } from "../../composables/use-form-validation-state";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideSwitchContext} from "./switch.context";
+import { provideSwitchContext } from "./switch.context";
 
 // Both declare an explicit `undefined` default, because for both of them `undefined` means
 // something a cast `false` would destroy. Vue turns an absent boolean prop into `false`,
@@ -30,9 +30,9 @@ const emit = defineEmits<{
   "update:isSelected": [isSelected: boolean];
 }>();
 
-defineSlots<{default?: (props: SwitchSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SwitchSlotProps) => unknown }>();
 
-const {setState, state} = useControllableState<boolean>({
+const { setState, state } = useControllableState<boolean>({
   defaultValue: props.defaultSelected ?? false,
   onValueChange: (isSelected) => {
     emit("change", isSelected);
@@ -41,7 +41,7 @@ const {setState, state} = useControllableState<boolean>({
   value: () => props.isSelected,
 });
 
-const styles = computed(() => switchVariants({size: props.size}));
+const styles = computed(() => switchVariants({ size: props.size }));
 
 const validation = useFormValidationState<boolean>({
   isInvalid: () => props.isInvalid,
@@ -52,11 +52,11 @@ const validation = useFormValidationState<boolean>({
 });
 
 // A `FieldError` nested in the switch reads its message from here.
-provideFieldErrorContext({validation: validation.displayValidation});
+provideFieldErrorContext({ validation: validation.displayValidation });
 
 // Help text nested in the field claims its own id, and the hidden input points
 // `aria-describedby` at whichever ids were actually claimed.
-const {context: fieldIds, describedBy} = useFieldIds({slots: ["description", "errorMessage"]});
+const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description", "errorMessage"] });
 
 provideFieldIdsContext(fieldIds);
 
@@ -102,7 +102,7 @@ provideSwitchContext({
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-invalid="dataAttr(resolvedIsInvalid)"
     :data-readonly="dataAttr(resolvedIsReadOnly)"

@@ -1,14 +1,14 @@
-import type {UseDatePickerReturn} from "@/composables/use-date-picker";
-import type {DatePickerState} from "@/composables/use-date-picker-state";
+import type { UseDatePickerReturn } from "@/composables/use-date-picker";
+import type { DatePickerState } from "@/composables/use-date-picker-state";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/date-picker-host.vue";
 
-type Ready = {picker: UseDatePickerReturn; state: DatePickerState};
+type Ready = { picker: UseDatePickerReturn; state: DatePickerState };
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: Ready;
@@ -18,7 +18,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: Ready) => (ready = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`);
 
@@ -42,11 +42,11 @@ describe("useDatePicker", () => {
     });
 
     it("takes the id it was given", () => {
-      expect(setup({id: "appointment"}).group().getAttribute("id")).toBe("appointment");
+      expect(setup({ id: "appointment" }).group().getAttribute("id")).toBe("appointment");
     });
 
     it("is named by its own label when there is one", () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       expect(picker.group().getAttribute("aria-labelledby")).toBe(picker.label()!.id);
     });
@@ -60,19 +60,19 @@ describe("useDatePicker", () => {
     });
 
     it("prefers an explicit reference over its own label", () => {
-      const picker = setup({ariaLabelledby: "outside", withLabel: true});
+      const picker = setup({ ariaLabelledby: "outside", withLabel: true });
 
       expect(picker.group().getAttribute("aria-labelledby")).toBe("outside");
     });
 
     it("states aria-disabled only while disabled", () => {
-      expect(setup({isDisabled: true}).group().getAttribute("aria-disabled")).toBe("true");
+      expect(setup({ isDisabled: true }).group().getAttribute("aria-disabled")).toBe("true");
       expect(setup().group().getAttribute("aria-disabled")).toBeNull();
     });
 
     it("describes the selected value in words", () => {
       // The segments read as bare numbers, so the month spelled out is what makes them a date.
-      const picker = setup({value: jun(10)});
+      const picker = setup({ value: jun(10) });
       const describedBy = picker.group().getAttribute("aria-describedby")!;
       const described = document.getElementById(describedBy.split(" ")[0]!);
 
@@ -84,7 +84,7 @@ describe("useDatePicker", () => {
     });
 
     it("keeps a caller's own description alongside its value", () => {
-      const describedBy = setup({ariaDescribedby: "hint", value: jun(10)})
+      const describedBy = setup({ ariaDescribedby: "hint", value: jun(10) })
         .group()
         .getAttribute("aria-describedby")!;
 
@@ -99,7 +99,7 @@ describe("useDatePicker", () => {
     });
 
     it("is named for the calendar it opens, then for the field", () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       expect(picker.trigger().getAttribute("aria-label")).toBe("Calendar");
       expect(picker.trigger().getAttribute("aria-labelledby")).toBe(
@@ -122,7 +122,7 @@ describe("useDatePicker", () => {
 
   describe("the dialog", () => {
     it("is named by the trigger and the field together", async () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       picker.trigger().click();
       await nextTick();
@@ -141,7 +141,7 @@ describe("useDatePicker", () => {
     });
 
     it("gives the field an id of its own, not the group's", () => {
-      const picker = setup({id: "appointment"});
+      const picker = setup({ id: "appointment" });
 
       expect(picker.picker().field.id.value).not.toBe("appointment");
     });
@@ -161,7 +161,7 @@ describe("useDatePicker", () => {
     });
 
     it("hands on the same description the group carries", () => {
-      const picker = setup({value: jun(10)});
+      const picker = setup({ value: jun(10) });
 
       expect(picker.picker().field.ariaDescribedBy.value).toBe(
         picker.group().getAttribute("aria-describedby"),
@@ -185,7 +185,7 @@ describe("useDatePicker", () => {
     });
 
     it("passes its own invalid state on once it is revealed", async () => {
-      const picker = setup({minValue: jun(12), value: jun(10)});
+      const picker = setup({ minValue: jun(12), value: jun(10) });
 
       // Held back until a commit, which is what `native` behaviour means.
       expect(picker.picker().calendarProps.value["isInvalid"]).toBe(false);
@@ -197,7 +197,7 @@ describe("useDatePicker", () => {
     });
 
     it("passes disabled and read only straight through", () => {
-      const picker = setup({isDisabled: true, isReadOnly: true});
+      const picker = setup({ isDisabled: true, isReadOnly: true });
 
       expect(picker.picker().calendarProps.value["isDisabled"]).toBe(true);
       expect(picker.picker().calendarProps.value["isReadOnly"]).toBe(true);

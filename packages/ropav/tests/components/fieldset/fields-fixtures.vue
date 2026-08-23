@@ -1,17 +1,22 @@
 <script setup lang="ts" vapor>
-import type {FieldsetFieldsFixtureProps} from "./fixtures.types";
+import type { FieldsetFieldsFixtureProps } from "./fixtures.types";
 
-import {Button} from "@/components/button";
-import {ButtonGroup} from "@/components/button-group";
-import {Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator} from "@/components/checkbox";
-import {CheckboxGroup} from "@/components/checkbox-group";
-import {FieldsetRoot} from "@/components/fieldset";
-import {LinkRoot} from "@/components/link";
-import {Radio, RadioContent, RadioControl, RadioIndicator} from "@/components/radio";
-import {RadioGroup} from "@/components/radio-group";
-import {Slider, SliderThumb, SliderTrack} from "@/components/slider";
-import {ToggleButton} from "@/components/toggle-button";
-import {ToggleButtonGroup} from "@/components/toggle-button-group";
+import { Button } from "@/components/button";
+import { ButtonGroup } from "@/components/button-group";
+import {
+  Checkbox,
+  CheckboxContent,
+  CheckboxControl,
+  CheckboxIndicator,
+} from "@/components/checkbox";
+import { CheckboxGroup } from "@/components/checkbox-group";
+import { FieldsetRoot } from "@/components/fieldset";
+import { LinkRoot } from "@/components/link";
+import { Radio, RadioContent, RadioControl, RadioIndicator } from "@/components/radio";
+import { RadioGroup } from "@/components/radio-group";
+import { Slider, SliderThumb, SliderTrack } from "@/components/slider";
+import { ToggleButton } from "@/components/toggle-button";
+import { ToggleButtonGroup } from "@/components/toggle-button-group";
 
 // Every field forwards `undefined` unless the test asks otherwise, so an absent prop can still
 // fall through to the fieldset.

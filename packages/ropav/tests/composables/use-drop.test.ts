@@ -1,16 +1,16 @@
-import type {DropHarnessOptions, DropHarnessReady} from "../fixtures/dnd-harness.types";
-import type {DndStringFormatter} from "@/composables/drag-manager";
+import type { DropHarnessOptions, DropHarnessReady } from "../fixtures/dnd-harness.types";
+import type { DndStringFormatter } from "@/composables/drag-manager";
 
-import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {computed, shallowRef} from "vue";
+import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { computed, shallowRef } from "vue";
 
-import {beginDragging, getDragSession} from "@/composables/drag-manager";
-import {setInteractionModality} from "@/composables/use-interaction-states";
-import {dndStrings} from "@/i18n/dnd";
-import {DROP_OPERATION} from "@/utils/dnd-constants";
-import {writeToDataTransfer} from "@/utils/dnd-data-transfer";
+import { beginDragging, getDragSession } from "@/composables/drag-manager";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+import { dndStrings } from "@/i18n/dnd";
+import { DROP_OPERATION } from "@/utils/dnd-constants";
+import { writeToDataTransfer } from "@/utils/dnd-data-transfer";
 import {
   clearGlobalDnDState,
   globalDropEffect,
@@ -30,15 +30,15 @@ import Harness from "../fixtures/drop-harness.vue";
  */
 const unmounts: (() => void)[] = [];
 
-const mount = (options: DropHarnessOptions = {}): DropHarnessReady & {node: HTMLElement} => {
+const mount = (options: DropHarnessOptions = {}): DropHarnessReady & { node: HTMLElement } => {
   let ready!: DropHarnessReady;
   const rendered = renderVapor(Harness, {
-    props: {onReady: (value: DropHarnessReady) => (ready = value), options},
+    props: { onReady: (value: DropHarnessReady) => (ready = value), options },
   });
 
   unmounts.push(rendered.unmount);
 
-  return {...ready, node: ready.element};
+  return { ...ready, node: ready.element };
 };
 
 /** A bare element, for the cases that only need something to point a drag source at. */
@@ -67,7 +67,7 @@ const dragEvent = (
 ) => {
   const dataTransfer = new DataTransfer();
 
-  writeToDataTransfer(dataTransfer, [{"text/plain": "payload"}]);
+  writeToDataTransfer(dataTransfer, [{ "text/plain": "payload" }]);
   dataTransfer.effectAllowed = init.effectAllowed ?? "all";
 
   const event = new DragEvent(type, {
@@ -79,7 +79,7 @@ const dragEvent = (
     ...init,
   });
 
-  Object.defineProperty(event, "currentTarget", {configurable: true, value: target});
+  Object.defineProperty(event, "currentTarget", { configurable: true, value: target });
   Object.defineProperty(event, "target", {
     configurable: true,
     value: init.eventTarget ?? target,
@@ -114,7 +114,7 @@ afterEach(() => {
 describe("useDrop", () => {
   describe("entering and leaving", () => {
     it("becomes a drop target on dragenter", () => {
-      const {handlers, isDropTarget, node} = mount();
+      const { handlers, isDropTarget, node } = mount();
 
       handlers.onDragenter(dragEvent("dragenter", node));
 
@@ -123,16 +123,16 @@ describe("useDrop", () => {
 
     it("reports the enter position relative to the target", () => {
       const onDropEnter = vi.fn();
-      const {handlers, node} = mount({onDropEnter});
+      const { handlers, node } = mount({ onDropEnter });
 
-      vi.spyOn(node, "getBoundingClientRect").mockReturnValue({x: 2, y: 3} as DOMRect);
-      handlers.onDragenter(dragEvent("dragenter", node, {clientX: 12, clientY: 13}));
+      vi.spyOn(node, "getBoundingClientRect").mockReturnValue({ x: 2, y: 3 } as DOMRect);
+      handlers.onDragenter(dragEvent("dragenter", node, { clientX: 12, clientY: 13 }));
 
-      expect(onDropEnter).toHaveBeenCalledWith({type: "dropenter", x: 10, y: 10});
+      expect(onDropEnter).toHaveBeenCalledWith({ type: "dropenter", x: 10, y: 10 });
     });
 
     it("stops being a drop target on dragleave", () => {
-      const {handlers, isDropTarget, node} = mount();
+      const { handlers, isDropTarget, node } = mount();
 
       handlers.onDragenter(dragEvent("dragenter", node));
       handlers.onDragleave(dragEvent("dragleave", node));
@@ -148,11 +148,11 @@ describe("useDrop", () => {
      * off and on.
      */
     it("stays a drop target while the pointer moves onto a child", () => {
-      const {handlers, isDropTarget, node} = mount();
+      const { handlers, isDropTarget, node } = mount();
       const child = node.querySelector<HTMLElement>('[data-testid="child"]')!;
 
       handlers.onDragenter(dragEvent("dragenter", node));
-      handlers.onDragenter(dragEvent("dragenter", node, {eventTarget: child}));
+      handlers.onDragenter(dragEvent("dragenter", node, { eventTarget: child }));
       handlers.onDragleave(dragEvent("dragleave", node));
 
       expect(isDropTarget.value).toBe(true);
@@ -162,7 +162,7 @@ describe("useDrop", () => {
   describe("drop operations", () => {
     it("asks the caller which operation applies and writes it to the transfer", () => {
       const getDropOperation = vi.fn(() => "copy" as const);
-      const {handlers, node} = mount({getDropOperation});
+      const { handlers, node } = mount({ getDropOperation });
       const event = dragEvent("dragenter", node);
 
       handlers.onDragenter(event);
@@ -173,20 +173,22 @@ describe("useDrop", () => {
 
     // An operation the drag never advertised cannot be performed, whatever the target says.
     it("refuses an operation the drag does not allow", () => {
-      const {handlers, isDropTarget, node} = mount({getDropOperation: () => "link"});
+      const { handlers, isDropTarget, node } = mount({ getDropOperation: () => "link" });
 
-      handlers.onDragenter(dragEvent("dragenter", node, {effectAllowed: "move"}));
+      handlers.onDragenter(dragEvent("dragenter", node, { effectAllowed: "move" }));
 
       expect(isDropTarget.value).toBe(false);
     });
 
     it("hands the caller the types the drag carries", () => {
       const getDropOperation = vi.fn(() => "move" as const);
-      const {handlers, node} = mount({getDropOperation});
+      const { handlers, node } = mount({ getDropOperation });
 
       handlers.onDragenter(dragEvent("dragenter", node));
 
-      const [types] = getDropOperation.mock.calls[0] as unknown as [{has: (t: string) => boolean}];
+      const [types] = getDropOperation.mock.calls[0] as unknown as [
+        { has: (t: string) => boolean },
+      ];
 
       expect(types.has("text/plain")).toBe(true);
       expect(types.has("image/png")).toBe(false);
@@ -194,10 +196,10 @@ describe("useDrop", () => {
 
     it("resolves the operation from the pointer position when asked to", () => {
       const getDropOperationForPoint = vi.fn(() => "move" as const);
-      const {handlers, node} = mount({getDropOperationForPoint});
+      const { handlers, node } = mount({ getDropOperationForPoint });
 
-      vi.spyOn(node, "getBoundingClientRect").mockReturnValue({x: 1, y: 1} as DOMRect);
-      handlers.onDragenter(dragEvent("dragenter", node, {clientX: 11, clientY: 21}));
+      vi.spyOn(node, "getBoundingClientRect").mockReturnValue({ x: 1, y: 1 } as DOMRect);
+      handlers.onDragenter(dragEvent("dragenter", node, { clientX: 11, clientY: 21 }));
 
       expect(getDropOperationForPoint.mock.calls[0]?.slice(2)).toEqual([10, 20]);
     });
@@ -206,14 +208,14 @@ describe("useDrop", () => {
   describe("dropping", () => {
     it("reads the dropped items back out", async () => {
       const onDrop = vi.fn();
-      const {handlers, node} = mount({getDropOperation: () => "move", onDrop});
+      const { handlers, node } = mount({ getDropOperation: () => "move", onDrop });
 
       handlers.onDragenter(dragEvent("dragenter", node));
       handlers.onDrop(dragEvent("drop", node));
 
       const event = onDrop.mock.calls[0]?.[0] as {
         dropOperation: string;
-        items: {kind: string; getText: (t: string) => Promise<string>}[];
+        items: { kind: string; getText: (t: string) => Promise<string> }[];
       };
 
       expect(event.dropOperation).toBe("move");
@@ -221,7 +223,7 @@ describe("useDrop", () => {
     });
 
     it("stops being a drop target once the drop lands", () => {
-      const {handlers, isDropTarget, node} = mount({getDropOperation: () => "move"});
+      const { handlers, isDropTarget, node } = mount({ getDropOperation: () => "move" });
 
       handlers.onDragenter(dragEvent("dragenter", node));
       handlers.onDrop(dragEvent("drop", node));
@@ -236,7 +238,7 @@ describe("useDrop", () => {
      * of being left dirty for the next drag.
      */
     it("clears the recorded drop effect when the drag came from outside", () => {
-      const {handlers, node} = mount({getDropOperation: () => "copy"});
+      const { handlers, node } = mount({ getDropOperation: () => "copy" });
 
       handlers.onDragenter(dragEvent("dragenter", node));
       handlers.onDrop(dragEvent("drop", node));
@@ -245,7 +247,7 @@ describe("useDrop", () => {
     });
 
     it("keeps the recorded drop effect when the drag came from a collection", () => {
-      const {handlers, node} = mount({getDropOperation: () => "copy"});
+      const { handlers, node } = mount({ getDropOperation: () => "copy" });
 
       setDraggingCollectionRef(shallowRef(element()));
       handlers.onDragenter(dragEvent("dragenter", node));
@@ -258,13 +260,13 @@ describe("useDrop", () => {
   describe("keyboard drag session", () => {
     it("registers itself as a target the keyboard drag can reach", async () => {
       const source = element();
-      const {node} = mount({getDropOperation: () => "move"});
+      const { node } = mount({ getDropOperation: () => "move" });
 
       beginDragging(
         {
           allowedDropOperations: ["move"],
           element: source,
-          items: [{"text/plain": "a"}],
+          items: [{ "text/plain": "a" }],
         },
         stringFormatter,
       );
@@ -275,13 +277,13 @@ describe("useDrop", () => {
 
     it("does not register while disabled", async () => {
       const source = element();
-      const {node} = mount({isDisabled: true});
+      const { node } = mount({ isDisabled: true });
 
       beginDragging(
         {
           allowedDropOperations: ["move"],
           element: source,
-          items: [{"text/plain": "a"}],
+          items: [{ "text/plain": "a" }],
         },
         stringFormatter,
       );
@@ -301,18 +303,20 @@ describe("useDrop", () => {
       const source = element();
       const getDropOperation = vi.fn(() => "move" as const);
 
-      mount({getDropOperation});
+      mount({ getDropOperation });
       beginDragging(
         {
           allowedDropOperations: ["move"],
           element: source,
-          items: [{"text/plain": "a"}],
+          items: [{ "text/plain": "a" }],
         },
         stringFormatter,
       );
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
-      const [types] = getDropOperation.mock.calls[0] as unknown as [{has: (t: string) => boolean}];
+      const [types] = getDropOperation.mock.calls[0] as unknown as [
+        { has: (t: string) => boolean },
+      ];
 
       expect(types.has("text/*")).toBe(true);
       expect(types.has("image/*")).toBe(false);
@@ -322,7 +326,7 @@ describe("useDrop", () => {
   describe("disabled", () => {
     it("ignores every drag event", () => {
       const onDropEnter = vi.fn();
-      const {handlers, isDropTarget, node} = mount({isDisabled: true, onDropEnter});
+      const { handlers, isDropTarget, node } = mount({ isDisabled: true, onDropEnter });
 
       handlers.onDragenter(dragEvent("dragenter", node));
 

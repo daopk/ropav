@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ToggleGroupKey} from "../../composables/use-toggle-group-state";
-import type {ToggleButtonGroupRootProps} from "./toggle-button-group.types";
+import type { ToggleGroupKey } from "../../composables/use-toggle-group-state";
+import type { ToggleButtonGroupRootProps } from "./toggle-button-group.types";
 
-import {toggleButtonGroupVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { toggleButtonGroupVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useToggleGroupState} from "../../composables/use-toggle-group-state";
-import {useToolbar} from "../../composables/use-toolbar";
-import {dataAttr} from "../../utils/assertion";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
-import {useToolbarContext} from "../toolbar/toolbar.context";
+import { useToggleGroupState } from "../../composables/use-toggle-group-state";
+import { useToolbar } from "../../composables/use-toolbar";
+import { dataAttr } from "../../utils/assertion";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
+import { useToolbarContext } from "../toolbar/toolbar.context";
 
-import {provideToggleButtonGroupContext} from "./toggle-button-group.context";
+import { provideToggleButtonGroupContext } from "./toggle-button-group.context";
 
 // `orientation` declares an explicit `undefined` default so an absent prop stays absent and
 // can fall through to the toolbar's axis. Vue would otherwise read "no prop" as an explicit
@@ -23,9 +23,9 @@ const props = withDefaults(defineProps<ToggleButtonGroupRootProps>(), {
   selectionMode: "single",
 });
 
-const emit = defineEmits<{selectionChange: [keys: Set<ToggleGroupKey>]}>();
+const emit = defineEmits<{ selectionChange: [keys: Set<ToggleGroupKey>] }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -55,7 +55,7 @@ const state = useToggleGroupState({
   selectionMode: () => props.selectionMode,
 });
 
-const toolbar = useToolbar({element, orientation: resolvedOrientation});
+const toolbar = useToolbar({ element, orientation: resolvedOrientation });
 
 /**
  * Single selection makes the group a set of mutually exclusive choices rather than a row
@@ -79,7 +79,7 @@ provideToggleButtonGroupContext({
     ref="element"
     :aria-disabled="resolvedIsDisabled || undefined"
     :aria-orientation="resolvedOrientation"
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-orientation="resolvedOrientation"
     data-slot="toggle-button-group"

@@ -1,27 +1,27 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Input} from "../input";
-import {Label} from "../label";
-import {TextArea} from "../textarea";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Input } from "../input";
+import { Label } from "../label";
+import { TextArea } from "../textarea";
 
-import {TextField} from "./index";
+import { TextField } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve dot notation through.
-const components = {Description, FieldError, Input, Label, TextArea, TextField};
+const components = { Description, FieldError, Input, Label, TextArea, TextField };
 
 const meta: StoryMeta = {
   argTypes: {
-    isDisabled: {control: {type: "boolean"}},
-    variant: {control: {type: "select"}, options: ["primary", "secondary"]},
+    isDisabled: { control: { type: "boolean" } },
+    variant: { control: { type: "select" }, options: ["primary", "secondary"] },
   },
   component: TextField,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Forms/TextField",
 };
 
@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <TextField name="name" :is-disabled="args.isDisabled" :variant="args.variant">
         <Label>Your name</Label>
@@ -204,7 +204,7 @@ export const Controlled: Story = {
       const inputValue = shallowRef("");
       const textAreaValue = shallowRef("");
 
-      return {inputValue, textAreaValue};
+      return { inputValue, textAreaValue };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -234,7 +234,7 @@ export const WithValidation: Story = {
       );
       const isBioInvalid = computed(() => bio.value.length > 0 && bio.value.length < 20);
 
-      return {bio, isBioInvalid, isUsernameInvalid, username};
+      return { bio, isBioInvalid, isUsernameInvalid, username };
     },
     template: `
       <div class="flex flex-col gap-4">

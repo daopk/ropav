@@ -1,11 +1,11 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {Tooltip} from "@/components/tooltip";
-import {setInteractionModality} from "@/composables/use-interaction-states";
-import {resetTooltipWarmup} from "@/composables/use-tooltip-trigger-state";
+import { ButtonRoot } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 /**
  * The tooltip mounted the way a consumer mounts it: from a VDOM host, with the trigger and the
@@ -25,13 +25,13 @@ const settle = async () => {
 
 const render = () =>
   renderInterop(Tooltip, {
-    props: {defaultOpen: true},
+    props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, {default: () => "Open tooltip"}),
+        h(ButtonRoot, null, { default: () => "Open tooltip" }),
         // Never flipped: a jsdom measurement is all zeroes, so a placement free to flip would
         // report whichever side the fallback lands on rather than the one asked for.
-        h(Tooltip.Content, {shouldFlip: false}, {default: () => [h(Tooltip.Arrow)]}),
+        h(Tooltip.Content, { shouldFlip: false }, { default: () => [h(Tooltip.Arrow)] }),
       ],
     },
   });

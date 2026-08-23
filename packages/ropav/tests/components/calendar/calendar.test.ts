@@ -1,9 +1,9 @@
-import type {DateValue} from "@internationalized/date";
+import type { DateValue } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -44,7 +44,7 @@ const renderCalendar = (props: Record<string, unknown> = {}) => {
 describe("Calendar", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const calendar = renderCalendar({withCellIndicator: true, withYearPicker: true});
+      const calendar = renderCalendar({ withCellIndicator: true, withYearPicker: true });
 
       for (const name of [
         "calendar",
@@ -88,7 +88,7 @@ describe("Calendar", () => {
     });
 
     it("writes the weekday names at the requested width", () => {
-      const calendar = renderCalendar({weekdayStyle: "long"});
+      const calendar = renderCalendar({ weekdayStyle: "long" });
 
       expect(calendar.all("calendar-header-cell")[0]?.textContent?.trim()).toBe("Sunday");
       calendar.unmount();
@@ -105,7 +105,7 @@ describe("Calendar", () => {
 
     it("gives a second grid its own month", () => {
       const calendar = renderCalendar({
-        visibleDuration: {months: 2},
+        visibleDuration: { months: 2 },
         withSecondMonth: true,
       });
       const grids = calendar.all("calendar-grid");
@@ -119,7 +119,7 @@ describe("Calendar", () => {
     it("takes a bare boolean attribute", () => {
       // `:is-disabled="true"` stays green while the prop is declared through an imported indexed
       // type, so the attribute form is the one that has to be asserted.
-      const calendar = renderCalendar({attributeForm: true});
+      const calendar = renderCalendar({ attributeForm: true });
 
       expect(calendar.root().getAttribute("data-disabled")).toBe("true");
       calendar.unmount();
@@ -128,7 +128,7 @@ describe("Calendar", () => {
 
   describe("classes", () => {
     it("puts every part's BEM class on it", () => {
-      const calendar = renderCalendar({withCellIndicator: true});
+      const calendar = renderCalendar({ withCellIndicator: true });
 
       expect(calendar.root().className).toContain("calendar");
       expect(calendar.slot("calendar-header").className).toContain("calendar__header");
@@ -142,19 +142,19 @@ describe("Calendar", () => {
 
     it("marks a week view and a day view on the root", () => {
       // The stylesheet lays a single row out differently from a month grid, keyed on these.
-      const week = renderCalendar({visibleDuration: {weeks: 1}});
+      const week = renderCalendar({ visibleDuration: { weeks: 1 } });
 
       expect(week.root().className).toContain("calendar--week-view");
       week.unmount();
 
-      const day = renderCalendar({visibleDuration: {days: 3}});
+      const day = renderCalendar({ visibleDuration: { days: 3 } });
 
       expect(day.root().className).toContain("calendar--day-view");
       day.unmount();
     });
 
     it("keeps a caller's class alongside its own", () => {
-      const calendar = renderCalendar({class: "mine"});
+      const calendar = renderCalendar({ class: "mine" });
 
       expect(calendar.root().className).toContain("mine");
       expect(calendar.root().className).toContain("calendar");
@@ -164,7 +164,7 @@ describe("Calendar", () => {
 
   describe("state attributes", () => {
     it("marks the selected date", () => {
-      const calendar = renderCalendar({value: new CalendarDate(2026, 6, 10)});
+      const calendar = renderCalendar({ value: new CalendarDate(2026, 6, 10) });
 
       expect(calendar.cell(10).getAttribute("data-selected")).toBe("true");
       expect(calendar.cell(11).getAttribute("data-selected")).toBeNull();
@@ -207,13 +207,13 @@ describe("Calendar", () => {
 
       calendar
         .cell(15)
-        .dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+        .dispatchEvent(new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }));
       await nextTick();
       expect(calendar.cell(15).getAttribute("data-hovered")).toBe("true");
 
       calendar
         .cell(15)
-        .dispatchEvent(new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"}));
+        .dispatchEvent(new PointerEvent("pointerleave", { bubbles: true, pointerType: "mouse" }));
       await nextTick();
       expect(calendar.cell(15).getAttribute("data-hovered")).toBeNull();
       calendar.unmount();
@@ -246,7 +246,7 @@ describe("Calendar", () => {
     });
 
     it("moves focus with the arrow keys", async () => {
-      const calendar = renderCalendar({autoFocus: true});
+      const calendar = renderCalendar({ autoFocus: true });
 
       await nextTick();
       expect(document.activeElement).toBe(calendar.cell(15));
@@ -254,7 +254,7 @@ describe("Calendar", () => {
       calendar
         .slot("calendar-grid")
         .dispatchEvent(
-          new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+          new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
         );
       await nextTick();
 
@@ -264,13 +264,13 @@ describe("Calendar", () => {
 
     it("emits update:focusedValue when the arrow keys move focus", async () => {
       const onUpdate = vi.fn();
-      const calendar = renderCalendar({"onUpdate:focusedValue": onUpdate});
+      const calendar = renderCalendar({ "onUpdate:focusedValue": onUpdate });
 
       calendar.cell(15).focus();
       calendar
         .slot("calendar-grid")
         .dispatchEvent(
-          new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+          new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
         );
       await nextTick();
 
@@ -280,7 +280,7 @@ describe("Calendar", () => {
 
     it("selects a date when a cell is pressed", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderCalendar({"onUpdate:value": onValueChange});
+      const calendar = renderCalendar({ "onUpdate:value": onValueChange });
 
       calendar.cell(20).click();
       await nextTick();
@@ -292,12 +292,12 @@ describe("Calendar", () => {
 
     it("selects with Enter on the focused cell", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderCalendar({"onUpdate:value": onValueChange});
+      const calendar = renderCalendar({ "onUpdate:value": onValueChange });
 
       calendar
         .slot("calendar-grid")
         .dispatchEvent(
-          new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "Enter"}),
+          new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "Enter" }),
         );
       await nextTick();
 
@@ -307,7 +307,7 @@ describe("Calendar", () => {
 
     it("selects nothing while read only", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderCalendar({isReadOnly: true, "onUpdate:value": onValueChange});
+      const calendar = renderCalendar({ isReadOnly: true, "onUpdate:value": onValueChange });
 
       calendar.cell(20).click();
       await nextTick();
@@ -352,7 +352,7 @@ describe("Calendar", () => {
 
   describe("the year picker", () => {
     it("stays closed until its trigger is pressed", async () => {
-      const calendar = renderCalendar({withYearPicker: true});
+      const calendar = renderCalendar({ withYearPicker: true });
       const trigger = calendar.slot("calendar-year-picker-trigger");
       const grid = calendar.slot("calendar-year-picker-grid");
 
@@ -371,7 +371,7 @@ describe("Calendar", () => {
     });
 
     it("names the trigger after the month it shows", () => {
-      const calendar = renderCalendar({withYearPicker: true});
+      const calendar = renderCalendar({ withYearPicker: true });
 
       expect(calendar.slot("calendar-year-picker-trigger").getAttribute("aria-label")).toBe(
         "June 2026, year selector",
@@ -454,11 +454,11 @@ describe("Calendar", () => {
     });
 
     it("closes on Escape", async () => {
-      const calendar = renderCalendar({defaultYearPickerOpen: true, withYearPicker: true});
+      const calendar = renderCalendar({ defaultYearPickerOpen: true, withYearPicker: true });
       const grid = calendar.slot("calendar-year-picker-grid");
 
       grid.dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "Escape"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "Escape" }),
       );
       await nextTick();
 
@@ -475,7 +475,7 @@ describe("Calendar", () => {
       });
       const grid = calendar.slot("calendar-year-picker-grid");
       const press = (key: string) =>
-        grid.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+        grid.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
       const active = () =>
         calendar.years().find((cell) => cell.getAttribute("tabindex") !== "-1")?.dataset["year"];
 

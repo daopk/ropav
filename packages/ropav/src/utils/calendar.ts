@@ -1,4 +1,4 @@
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 import {
   isSameDay,
@@ -91,7 +91,7 @@ export const alignEnd = (
   minValue?: DateValue | null,
   maxValue?: DateValue | null,
 ): CalendarDate => {
-  const rest: DateDuration = {...duration};
+  const rest: DateDuration = { ...duration };
 
   // Subtract one from the smallest unit, so the range ends on the unit holding `date`.
   if (rest.days) {
@@ -173,7 +173,7 @@ export const previousAvailableDate = (
   let result = date;
 
   while (result.compare(minValue) >= 0 && isDateUnavailable(result)) {
-    result = result.subtract({days: 1});
+    result = result.subtract({ days: 1 });
   }
 
   return result.compare(minValue) >= 0 ? result : null;
@@ -234,7 +234,7 @@ export const getYearRange = (start?: DateValue | null, end?: DateValue | null): 
 
   while (current.compare(end) <= 0) {
     years.push(current);
-    current = startOfYear(current.add({years: 1}));
+    current = startOfYear(current.add({ years: 1 }));
   }
 
   return years;
@@ -248,13 +248,13 @@ export const getDayViewWeekDayLabels = (
   weekdayStyle: WeekdayStyle = "short",
   timeZone = "UTC",
 ): string[] => {
-  const formatter = new Intl.DateTimeFormat(locale, {timeZone, weekday: weekdayStyle});
+  const formatter = new Intl.DateTimeFormat(locale, { timeZone, weekday: weekdayStyle });
   const labels: string[] = [];
   let date = startOfWeek(start, locale, firstDayOfWeek);
 
   for (let index = 0; index < 7; index++) {
     labels.push(formatter.format(date.toDate(timeZone)));
-    const next = date.add({days: 1});
+    const next = date.add({ days: 1 });
 
     // The calendar system has no day after this one, so the week is short.
     if (isSameDay(date, next)) break;
@@ -274,7 +274,7 @@ const buildDayViewWeekRow = (rowStart: DateValue, end: DateValue): (DateValue | 
   for (let index = 0; index < 7; index++) {
     row.push(date.compare(end) > 0 ? null : date);
 
-    const next = date.add({days: 1});
+    const next = date.add({ days: 1 });
 
     if (isSameDay(date, next)) {
       while (row.length < 7) row.push(null);
@@ -305,11 +305,11 @@ export const getDayViewGridRows = (
 
   rows.push(buildDayViewWeekRow(rowStart, end));
 
-  rowStart = rowStart.add({weeks: 1});
+  rowStart = rowStart.add({ weeks: 1 });
 
   while (rowStart.compare(end) <= 0) {
     rows.push(buildDayViewWeekRow(rowStart, end));
-    const nextWeek = rowStart.add({weeks: 1});
+    const nextWeek = rowStart.add({ weeks: 1 });
 
     if (isSameDay(rowStart, nextWeek)) break;
 

@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {onScopeDispose, toValue, watch} from "vue";
+import { onScopeDispose, toValue, watch } from "vue";
 
 /** How many consecutive moves away from the submenu it takes to give up on the journey. */
 const ALLOWED_INVALID_MOVEMENTS = 2;
@@ -43,7 +43,7 @@ export interface UseSafelyMouseToSubmenuOptions {
  * ```
  */
 export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions): void => {
-  let previousPointer: {x: number; y: number} | undefined;
+  let previousPointer: { x: number; y: number } | undefined;
   let submenuSide: "left" | "right" | undefined;
   let lastProcessedAt = 0;
   let stillTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -108,10 +108,10 @@ export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions)
 
         clearTimers();
 
-        const {clientX: x, clientY: y} = event;
+        const { clientX: x, clientY: y } = event;
 
         if (!previousPointer) {
-          previousPointer = {x, y};
+          previousPointer = { x, y };
 
           return;
         }
@@ -137,7 +137,7 @@ export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions)
           return;
         }
 
-        const {x: previousX, y: previousY} = previousPointer;
+        const { x: previousX, y: previousY } = previousPointer;
         const toSubmenuX =
           submenuSide === "right" ? submenuRect.left - previousX : previousX - submenuRect.right;
         const angleTop = Math.atan2(previousY - submenuRect.top, toSubmenuX) + ANGLE_PADDING;
@@ -155,7 +155,7 @@ export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions)
         setPreventPointerEvents(movementsTowardsSubmenu >= ALLOWED_INVALID_MOVEMENTS);
 
         lastProcessedAt = now;
-        previousPointer = {x, y};
+        previousPointer = { x, y };
 
         if (!isMovingTowardsSubmenu) return;
 
@@ -168,7 +168,7 @@ export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions)
 
             if (under && menu.contains(under)) {
               under.dispatchEvent(
-                new PointerEvent("pointerover", {bubbles: true, cancelable: true}),
+                new PointerEvent("pointerover", { bubbles: true, cancelable: true }),
               );
             }
           }, 100);
@@ -189,7 +189,7 @@ export const useSafelyMouseToSubmenu = (options: UseSafelyMouseToSubmenuOptions)
         window.removeEventListener("pointerdown", onPointerdown, true);
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => detach(), true);

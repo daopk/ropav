@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {CalendarGridHostProps} from "./calendar-grid-host.types";
+import type { CalendarGridHostProps } from "./calendar-grid-host.types";
 
-import {createCalendar} from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 
-import {useCalendar} from "@/composables/use-calendar";
-import {useCalendarGrid} from "@/composables/use-calendar-grid";
-import {useCalendarState} from "@/composables/use-calendar-state";
+import { useCalendar } from "@/composables/use-calendar";
+import { useCalendarGrid } from "@/composables/use-calendar-grid";
+import { useCalendarState } from "@/composables/use-calendar-state";
 
 /*
  * Every three-state boolean declares `default: undefined`: Vue casts an absent Boolean prop to
@@ -28,17 +28,17 @@ const state = useCalendarState({
 });
 
 const calendar = useCalendar(
-  {ariaLabel: () => props.ariaLabel, ariaLabelledby: () => props.ariaLabelledby},
+  { ariaLabel: () => props.ariaLabel, ariaLabelledby: () => props.ariaLabelledby },
   state,
 );
 
 const grid = useCalendarGrid(
-  {firstDayOfWeek: () => props.firstDayOfWeek, weekdayStyle: () => props.weekdayStyle},
+  { firstDayOfWeek: () => props.firstDayOfWeek, weekdayStyle: () => props.weekdayStyle },
   state,
   calendar.shared,
 );
 
-props.onReady?.({grid, state});
+props.onReady?.({ grid, state });
 </script>
 
 <template>

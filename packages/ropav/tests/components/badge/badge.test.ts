@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {BadgeLabel} from "@/components/badge";
+import { BadgeLabel } from "@/components/badge";
 
 import Fixture from "./fixtures.vue";
 
@@ -12,7 +12,7 @@ const slot = (container: HTMLElement, name: string) =>
 describe("Badge", () => {
   describe("structure", () => {
     it("renders the anchor, badge, and automatic label as spans", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
 
       expect(slot(container, "badge-anchor")?.tagName).toBe("SPAN");
       expect(slot(container, "badge")?.tagName).toBe("SPAN");
@@ -22,7 +22,7 @@ describe("Badge", () => {
     });
 
     it("keeps the badge beside the anchor content", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
       const anchor = slot(container, "badge-anchor");
 
       expect(anchor?.children).toHaveLength(2);
@@ -33,7 +33,7 @@ describe("Badge", () => {
     });
 
     it("forwards arbitrary attributes to each rendered part", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {content: "explicit"}});
+      const { container, unmount } = renderVapor(Fixture, { props: { content: "explicit" } });
 
       expect(slot(container, "badge-anchor")).toHaveAttribute("data-testid", "anchor");
       expect(slot(container, "badge")).toHaveAttribute("data-testid", "badge");
@@ -45,7 +45,7 @@ describe("Badge", () => {
 
   describe("label", () => {
     it("wraps a text-only child in Badge.Label", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
       const label = slot(container, "badge-label");
 
       expect(label).toHaveTextContent("5");
@@ -55,7 +55,7 @@ describe("Badge", () => {
     });
 
     it("wraps a number, which reaches the DOM as text", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {content: "number"}});
+      const { container, unmount } = renderVapor(Fixture, { props: { content: "number" } });
 
       expect(slot(container, "badge-label")).toHaveTextContent("24");
 
@@ -63,7 +63,7 @@ describe("Badge", () => {
     });
 
     it("leaves an explicit Badge.Label alone", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {content: "explicit"}});
+      const { container, unmount } = renderVapor(Fixture, { props: { content: "explicit" } });
 
       expect(container.querySelectorAll("[data-slot='badge-label']")).toHaveLength(1);
       expect(slot(container, "badge-label")).toHaveTextContent("Explicit label");
@@ -72,7 +72,7 @@ describe("Badge", () => {
     });
 
     it("leaves markup unwrapped", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {content: "icon"}});
+      const { container, unmount } = renderVapor(Fixture, { props: { content: "icon" } });
 
       expect(slot(container, "badge")?.querySelector("[data-testid='icon']")).not.toBeNull();
       expect(container.querySelectorAll("[data-slot='badge-label']")).toHaveLength(0);
@@ -81,7 +81,7 @@ describe("Badge", () => {
     });
 
     it("renders no label for a dot badge", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {content: "none"}});
+      const { container, unmount } = renderVapor(Fixture, { props: { content: "none" } });
 
       expect(slot(container, "badge")?.textContent).toBe("");
       expect(container.querySelectorAll("[data-slot='badge-label']")).toHaveLength(0);
@@ -90,8 +90,8 @@ describe("Badge", () => {
     });
 
     it("keeps an automatically wrapped label reactive", async () => {
-      const props = reactive({label: "5"});
-      const {container, unmount} = renderVapor(Fixture, {props});
+      const props = reactive({ label: "5" });
+      const { container, unmount } = renderVapor(Fixture, { props });
 
       props.label = "99+";
       await nextTick();
@@ -104,7 +104,7 @@ describe("Badge", () => {
 
   describe("styling", () => {
     it("applies all default modifier classes", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
       const badge = slot(container, "badge");
 
       expect(badge).toHaveClass(
@@ -124,7 +124,7 @@ describe("Badge", () => {
       ["size", "lg", "badge--lg"],
       ["variant", "soft", "badge--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {
-      const {container, unmount} = renderVapor(Fixture, {props: {[prop]: value}});
+      const { container, unmount } = renderVapor(Fixture, { props: { [prop]: value } });
 
       expect(slot(container, "badge")).toHaveClass(expected);
 
@@ -132,7 +132,7 @@ describe("Badge", () => {
     });
 
     it("merges caller classes onto every public part", () => {
-      const {container, unmount} = renderVapor(Fixture, {
+      const { container, unmount } = renderVapor(Fixture, {
         props: {
           anchorClass: "isolate",
           class: "uppercase",
@@ -149,12 +149,12 @@ describe("Badge", () => {
     });
 
     it("updates variant classes reactively", async () => {
-      const props = reactive({color: "accent" as const, placement: "top-left" as const});
-      const {container, unmount} = renderVapor(Fixture, {props});
+      const props = reactive({ color: "accent" as const, placement: "top-left" as const });
+      const { container, unmount } = renderVapor(Fixture, { props });
 
       expect(slot(container, "badge")).toHaveClass("badge--accent", "badge--top-left");
 
-      Object.assign(props, {color: "success", placement: "bottom-right"});
+      Object.assign(props, { color: "success", placement: "bottom-right" });
       await nextTick();
 
       expect(slot(container, "badge")).toHaveClass("badge--success", "badge--bottom-right");

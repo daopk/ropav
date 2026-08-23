@@ -1,4 +1,4 @@
-import type {LocalizedString, LocalizedStrings, Variables} from "@internationalized/string";
+import type { LocalizedString, LocalizedStrings, Variables } from "@internationalized/string";
 
 /** Every message key the toast strings define. */
 export type ToastStringKey = "notifications";

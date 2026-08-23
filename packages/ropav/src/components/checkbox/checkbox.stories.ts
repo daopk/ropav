@@ -1,17 +1,17 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconBell from "~icons/gravity-ui/bell";
 import IconComment from "~icons/gravity-ui/comment";
 import IconEnvelope from "~icons/gravity-ui/envelope";
 
-import {CheckboxGroup} from "../checkbox-group";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Label} from "../label";
+import { CheckboxGroup } from "../checkbox-group";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Label } from "../label";
 
-import {Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator} from "./index";
+import { Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Checkbox.Content` through, so dot notation cannot be used here.
@@ -32,10 +32,10 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary"],
     },
   },
@@ -53,7 +53,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Checkbox name="terms" :is-disabled="args.isDisabled" :variant="args.variant">
         <CheckboxContent>
@@ -227,7 +227,7 @@ export const Controlled: Story = {
     setup: () => {
       const isSelected = shallowRef(true);
 
-      return {isSelected};
+      return { isSelected };
     },
     template: `
       <div class="flex flex-col gap-3 px-4">

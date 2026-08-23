@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {CheckboxFixtureProps} from "./fixtures.types";
-import type {FormRootProps} from "@/components/form";
+import type { CheckboxFixtureProps } from "./fixtures.types";
+import type { FormRootProps } from "@/components/form";
 
-import {Form} from "@/components/form";
+import { Form } from "@/components/form";
 
 import CheckboxFixture from "./fixtures.vue";
 

@@ -20,7 +20,7 @@ export const Card = Object.assign(CardRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {CardRoot, CardHeader, CardTitle, CardDescription, CardContent, CardFooter};
+export { CardRoot, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
 
 export type {
   CardRootProps,
@@ -35,6 +35,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {cardVariants} from "@ropav/styles";
+export { cardVariants } from "@ropav/styles";
 
-export type {CardVariants} from "@ropav/styles";
+export type { CardVariants } from "@ropav/styles";

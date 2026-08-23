@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {AnyCalendarState, CalendarShared} from "@/composables/use-calendar";
-import type {UseCalendarCellReturn} from "@/composables/use-calendar-cell";
-import type {CalendarDate} from "@internationalized/date";
+import type { AnyCalendarState, CalendarShared } from "@/composables/use-calendar";
+import type { UseCalendarCellReturn } from "@/composables/use-calendar-cell";
+import type { CalendarDate } from "@internationalized/date";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useCalendarCell} from "@/composables/use-calendar-cell";
+import { useCalendarCell } from "@/composables/use-calendar-cell";
 
 const props = defineProps<{
   date: CalendarDate;
@@ -18,7 +18,7 @@ const props = defineProps<{
 const element = shallowRef<HTMLElement | null>(null);
 
 const cell = useCalendarCell(
-  {date: () => props.date, element, isOutsideMonth: () => props.isOutsideMonth},
+  { date: () => props.date, element, isOutsideMonth: () => props.isOutsideMonth },
   props.state,
   props.shared,
 );

@@ -1,22 +1,22 @@
 <script setup lang="ts" vapor>
-import type {DateFieldControl} from "../date-input-group";
-import type {DateFieldRootProps, DateFieldRootSlotProps} from "./date-field.types";
-import type {DateValue} from "@internationalized/date";
+import type { DateFieldControl } from "../date-input-group";
+import type { DateFieldRootProps, DateFieldRootSlotProps } from "./date-field.types";
+import type { DateValue } from "@internationalized/date";
 
-import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
-import {dateFieldVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { createCalendar as defaultCreateCalendar } from "@internationalized/date";
+import { dateFieldVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useDateField} from "../../composables/use-date-field";
-import {useDateFieldState} from "../../composables/use-date-field-state";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {dataAttr} from "../../utils/assertion";
+import { useDateField } from "../../composables/use-date-field";
+import { useDateFieldState } from "../../composables/use-date-field-state";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { dataAttr } from "../../utils/assertion";
 import {
   provideDateFieldControlContext,
   provideDateInputGroupOwnerContext,
 } from "../date-input-group";
 import DateInputGroupHiddenInput from "../date-input-group/date-input-group-hidden-input.vue";
-import {provideFieldErrorContext} from "../field-error";
+import { provideFieldErrorContext } from "../field-error";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -40,7 +40,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: DateFieldRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: DateFieldRootSlotProps) => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
 const inputElement = shallowRef<HTMLInputElement | null>(null);
@@ -105,7 +105,7 @@ const control: DateFieldControl = {
   state,
 };
 
-provideDateFieldControlContext({resolve: () => control});
+provideDateFieldControlContext({ resolve: () => control });
 
 /*
  * The group around the segments is the field's, so it shows the field's state without being told.
@@ -114,7 +114,7 @@ provideDateFieldControlContext({resolve: () => control});
  * name is announced twice for two nested groups. Here only the inner one carries them.
  */
 provideDateInputGroupOwnerContext({
-  attrs: computed(() => ({"aria-disabled": state.isDisabled.value || undefined})),
+  attrs: computed(() => ({ "aria-disabled": state.isDisabled.value || undefined })),
   handlers: {
     ...field.handlers,
     onFocusin: field.onFocusin,
@@ -126,9 +126,11 @@ provideDateInputGroupOwnerContext({
   // Nothing above needs it: the field's own element is the row of segments, which reports itself.
   setElement: () => {},
 });
-provideFieldErrorContext({validation: state.displayValidation});
+provideFieldErrorContext({ validation: state.displayValidation });
 
-const styles = computed(() => dateFieldVariants({class: props.class, fullWidth: props.fullWidth}));
+const styles = computed(() =>
+  dateFieldVariants({ class: props.class, fullWidth: props.fullWidth }),
+);
 </script>
 
 <template>

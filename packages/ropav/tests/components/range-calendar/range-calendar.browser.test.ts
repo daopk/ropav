@@ -1,9 +1,9 @@
-import {CalendarDate} from "@internationalized/date";
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -25,15 +25,15 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  */
 const SHARED_WITH_REACT = {
   rules: {
-    "aria-required-children": {enabled: false},
-    "color-contrast": {enabled: false},
-    "landmark-banner-is-top-level": {enabled: false},
+    "aria-required-children": { enabled: false },
+    "color-contrast": { enabled: false },
+    "landmark-banner-is-top-level": { enabled: false },
   },
 };
 
 const render = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, {
-    props: {ariaLabel: "Stay", defaultFocusedValue: jun(15), locale: "en-US", ...props},
+    props: { ariaLabel: "Stay", defaultFocusedValue: jun(15), locale: "en-US", ...props },
   });
 
 type RenderResult = ReturnType<typeof render>;
@@ -74,7 +74,7 @@ afterEach(() => {
 describe("RangeCalendar (browser)", () => {
   describe("axe", () => {
     it("finds nothing to complain about", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
@@ -94,7 +94,7 @@ describe("RangeCalendar (browser)", () => {
   describe("a real pointer", () => {
     it("builds a range from two presses", async () => {
       const onValueChange = vi.fn();
-      const result = mount({onValueChange});
+      const result = mount({ onValueChange });
 
       await userEvent.click(cellOf(result, 10));
       await nextTick();
@@ -130,7 +130,7 @@ describe("RangeCalendar (browser)", () => {
     });
 
     it("marks the two ends of the range apart from the middle", async () => {
-      const result = mount({value: {end: jun(14), start: jun(10)}});
+      const result = mount({ value: { end: jun(14), start: jun(10) } });
 
       expect(daysWith(result, "data-selection-start")).toEqual(["10"]);
       expect(daysWith(result, "data-selection-end")).toEqual(["14"]);
@@ -141,7 +141,7 @@ describe("RangeCalendar (browser)", () => {
        * The one behaviour that exists only here: a range the user walked away from has to be
        * finished, and the decision is taken on a `pointerup` anywhere outside.
        */
-      const result = mount({value: {end: jun(14), start: jun(10)}});
+      const result = mount({ value: { end: jun(14), start: jun(10) } });
 
       await userEvent.click(cellOf(result, 20));
       await nextTick();
@@ -163,7 +163,7 @@ describe("RangeCalendar (browser)", () => {
        * Asserted against wherever focus ended up rather than against a counted day: what matters is
        * that the highlight runs from the anchor to the focused cell, not how many keys it took.
        */
-      const result = mount({defaultFocusedValue: jun(10)});
+      const result = mount({ defaultFocusedValue: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{Enter}");
@@ -185,7 +185,10 @@ describe("RangeCalendar (browser)", () => {
     });
 
     it("abandons a half-built range on Escape", async () => {
-      const result = mount({defaultFocusedValue: jun(10), value: {end: jun(20), start: jun(18)}});
+      const result = mount({
+        defaultFocusedValue: jun(10),
+        value: { end: jun(20), start: jun(18) },
+      });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{Enter}");
@@ -209,7 +212,7 @@ describe("RangeCalendar (browser)", () => {
        * how a missing ring would pass unnoticed. `status-focused` draws with a box shadow and sets
        * `outline-style: none`, so the outline is the wrong thing to read either way.
        */
-      const result = mount({defaultFocusedValue: jun(10)});
+      const result = mount({ defaultFocusedValue: jun(10) });
       const cell = cellOf(result, 10);
 
       cell.focus();
@@ -221,7 +224,7 @@ describe("RangeCalendar (browser)", () => {
     });
 
     it("keeps the grid to a single tab stop", async () => {
-      const result = mount({defaultFocusedValue: jun(10)});
+      const result = mount({ defaultFocusedValue: jun(10) });
       const tabbable = cellsOf(result).filter((cell) => cell.getAttribute("tabindex") === "0");
 
       expect(tabbable).toHaveLength(1);

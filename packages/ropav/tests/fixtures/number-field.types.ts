@@ -1,5 +1,8 @@
-import type {ValidationBehavior, ValidationFunction} from "@/composables/use-form-validation-state";
-import type {UseNumberFieldReturn} from "@/composables/use-number-field";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
+import type { UseNumberFieldReturn } from "@/composables/use-number-field";
 import type {
   NumberFieldCommitBehavior,
   NumberFieldState,

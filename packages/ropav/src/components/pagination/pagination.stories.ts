@@ -1,11 +1,11 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconArrowLeft from "~icons/gravity-ui/arrow-left";
 import IconArrowRight from "~icons/gravity-ui/arrow-right";
 
-import {SeparatorRoot} from "../separator";
+import { SeparatorRoot } from "../separator";
 
 import {
   Pagination,
@@ -41,7 +41,7 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
   },
@@ -59,7 +59,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Pagination :size="args.size">
         <PaginationContent>
@@ -93,7 +93,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({sizes: ["sm", "md", "lg"] as const}),
+    setup: () => ({ sizes: ["sm", "md", "lg"] as const }),
     template: `
       <div class="flex flex-col gap-8">
         <template v-for="(size, index) of sizes" :key="size">
@@ -135,7 +135,7 @@ export const Sizes: Story = {
 export const WithEllipsis: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Pagination :size="args.size">
         <PaginationContent>
@@ -181,7 +181,7 @@ export const WithEllipsis: Story = {
 export const SimplePrevNext: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Pagination :size="args.size">
         <PaginationSummary>1 to 5 of 10 invoices</PaginationSummary>
@@ -207,7 +207,7 @@ export const SimplePrevNext: Story = {
 export const WithSummary: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="w-full min-w-[640px]">
         <Pagination :size="args.size">
@@ -256,7 +256,7 @@ export const WithSummary: Story = {
 export const CustomIcons: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Pagination :size="args.size">
         <PaginationContent>
@@ -298,7 +298,7 @@ const TOTAL_ITEMS = 120;
 /** The window of page numbers around the current one, with gaps collapsed to an ellipsis. */
 const pageWindow = (page: number) => {
   if (TOTAL_PAGES <= 7) {
-    return Array.from({length: TOTAL_PAGES}, (_, index) => index + 1);
+    return Array.from({ length: TOTAL_PAGES }, (_, index) => index + 1);
   }
 
   const pages: (number | "start-ellipsis" | "end-ellipsis")[] = [1];
@@ -367,7 +367,7 @@ export const Controlled: Story = {
 export const Disabled: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Pagination :size="args.size">
         <PaginationContent>

@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {PopoverFixtureProps} from "./fixtures.types";
+import type { PopoverFixtureProps } from "./fixtures.types";
 
-import {ButtonRoot} from "@/components/button";
-import {Popover} from "@/components/popover";
+import { ButtonRoot } from "@/components/button";
+import { Popover } from "@/components/popover";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that
 // Vue had cast would turn the popover controlled, or read as a deliberate dismiss opt-out.
@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<PopoverFixtureProps>(), {
   withoutHeading: undefined,
 });
 
-const emit = defineEmits<{openChange: [isOpen: boolean]}>();
+const emit = defineEmits<{ openChange: [isOpen: boolean] }>();
 
 const shouldCloseOnInteractOutside = (element: Element) =>
   !props.keepOpenFor || !element.closest(`#${props.keepOpenFor}`);
@@ -57,7 +57,7 @@ const shouldCloseOnInteractOutside = (element: Element) =>
           <button data-testid="bare-first" type="button">Bare one</button>
           <button data-testid="bare-second" type="button">Bare two</button>
         </template>
-        <Popover.Dialog v-else v-slot="{close}">
+        <Popover.Dialog v-else v-slot="{ close }">
           <Popover.Arrow v-if="props.withArrow">
             <svg v-if="props.withCustomArrow" data-testid="custom-arrow" />
           </Popover.Arrow>

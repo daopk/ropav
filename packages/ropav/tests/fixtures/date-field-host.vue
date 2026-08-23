@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {DateFieldHostProps} from "./date-field.types";
+import type { DateFieldHostProps } from "./date-field.types";
 
-import {createCalendar} from "@internationalized/date";
-import {shallowRef} from "vue";
+import { createCalendar } from "@internationalized/date";
+import { shallowRef } from "vue";
 
-import {Description} from "@/components/description";
-import {Label} from "@/components/label";
-import {useDateField} from "@/composables/use-date-field";
-import {useDateFieldState} from "@/composables/use-date-field-state";
-import {provideFieldIdsContext} from "@/composables/use-field-ids";
+import { Description } from "@/components/description";
+import { Label } from "@/components/label";
+import { useDateField } from "@/composables/use-date-field";
+import { useDateFieldState } from "@/composables/use-date-field-state";
+import { provideFieldIdsContext } from "@/composables/use-field-ids";
 
 import DateSegmentPart from "./date-segment-part.vue";
 
@@ -52,7 +52,7 @@ const field = useDateField({
 
 provideFieldIdsContext(field.fieldIds);
 
-props.onReady?.({field, state});
+props.onReady?.({ field, state });
 </script>
 
 <template>

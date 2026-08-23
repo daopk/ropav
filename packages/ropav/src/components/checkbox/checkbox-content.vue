@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {CheckboxContentProps, CheckboxContentSlotProps} from "./checkbox.types";
+import type { CheckboxContentProps, CheckboxContentSlotProps } from "./checkbox.types";
 
-import {computed, shallowRef, watch, watchEffect} from "vue";
+import { computed, shallowRef, watch, watchEffect } from "vue";
 
-import {useFormReset} from "../../composables/use-form-reset";
-import {useFormValidation, useValidationInput} from "../../composables/use-form-validation";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {setFormChecked} from "../../utils/form-value";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { useFormReset } from "../../composables/use-form-reset";
+import { useFormValidation, useValidationInput } from "../../composables/use-form-validation";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { setFormChecked } from "../../utils/form-value";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useCheckboxContext} from "./checkbox.context";
+import { useCheckboxContext } from "./checkbox.context";
 
 const props = defineProps<CheckboxContentProps>();
 
-defineSlots<{default?: (props: CheckboxContentSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CheckboxContentSlotProps) => unknown }>();
 
 const {
   ariaLabel,
@@ -75,7 +75,7 @@ watchEffect(
   () => {
     if (inputEl.value) inputEl.value.indeterminate = isIndeterminate.value;
   },
-  {flush: "post"},
+  { flush: "post" },
 );
 
 // The stylesheet keys hover, press and focus on these attributes, so they have to be

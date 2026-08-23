@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DatePickerFixtureProps} from "./fixtures.types";
+import type { DatePickerFixtureProps } from "./fixtures.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import DatePickerFixtureBody from "./fixtures-body.vue";
 

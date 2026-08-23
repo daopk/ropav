@@ -1,8 +1,11 @@
-import type {FocusStrategy, OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {Placement, PlacementAxis} from "../../utils/position";
-import type {ComputedRef, ShallowRef} from "vue";
+import type {
+  FocusStrategy,
+  OverlayTriggerState,
+} from "../../composables/use-overlay-trigger-state";
+import type { Placement, PlacementAxis } from "../../utils/position";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 /**
  * What one positioned overlay is for: which trigger opened it, where it goes, and what it names.
@@ -60,7 +63,7 @@ export interface OverlayTargetContext {
 
 /** Strict: a positioned overlay is meaningless without a trigger to position against. */
 export const [useOverlayTargetContext, provideOverlayTargetContext] =
-  createContext<OverlayTargetContext>({name: "OverlayTargetContext"});
+  createContext<OverlayTargetContext>({ name: "OverlayTargetContext" });
 
 /**
  * The portal target shared by a group of nested overlays.

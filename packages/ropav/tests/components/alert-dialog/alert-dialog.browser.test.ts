@@ -1,15 +1,15 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import AlertDialogFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(AlertDialogFixture, {props});
+  const result = renderVapor(AlertDialogFixture, { props });
 
   mounted.push(result);
 
@@ -27,7 +27,7 @@ const settled = async (element: HTMLElement) => {
 const slot = (name: string) => document.body.querySelector<HTMLElement>(`[data-slot="${name}"]`);
 
 const triggerOf = (result: RenderResult, name = "Delete account") =>
-  result.getByRole("button", {name}) as HTMLElement;
+  result.getByRole("button", { name }) as HTMLElement;
 
 const open = async (result: RenderResult, name?: string) => {
   await userEvent.click(triggerOf(result, name));
@@ -154,7 +154,9 @@ describe("AlertDialog (browser)", () => {
       const dialog = slot("alert-dialog-dialog")!;
       const box = dialog.getBoundingClientRect();
 
-      await userEvent.click(backdrop, {position: {x: Math.round(box.left + box.width / 2), y: 4}});
+      await userEvent.click(backdrop, {
+        position: { x: Math.round(box.left + box.width / 2), y: 4 },
+      });
       await nextTick();
       await nextTick();
 
@@ -165,14 +167,16 @@ describe("AlertDialog (browser)", () => {
     });
 
     it("closes on a real press beside the dialog once asked for", async () => {
-      const result = render({isDismissable: true});
+      const result = render({ isDismissable: true });
       const backdrop = await open(result);
       const dialog = slot("alert-dialog-dialog")!;
       const box = dialog.getBoundingClientRect();
 
       // Just above the dialog, inside the backdrop. Synthetic events cannot prove this: the
       // dismissal is decided by where the pointer really landed.
-      await userEvent.click(backdrop, {position: {x: Math.round(box.left + box.width / 2), y: 4}});
+      await userEvent.click(backdrop, {
+        position: { x: Math.round(box.left + box.width / 2), y: 4 },
+      });
       await nextTick();
       await nextTick();
 
@@ -246,7 +250,7 @@ describe("AlertDialog (browser)", () => {
     });
 
     it("leaves a button inside the dialog as an ordinary button", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const inside = document.body.querySelector<HTMLElement>(
         "[data-slot='alert-dialog-dialog'] [data-slot='button']",
@@ -301,7 +305,7 @@ describe("AlertDialog (browser)", () => {
 
   describe("focus", () => {
     it("keeps Tab inside the dialog", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const dialog = slot("alert-dialog-dialog")!;
 
@@ -319,11 +323,11 @@ describe("AlertDialog (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while open", async () => {
-      const result = render({withCloseTrigger: true, withIcon: true});
+      const result = render({ withCloseTrigger: true, withIcon: true });
       const backdrop = await open(result);
 
       await expectNoA11yViolations(slot("alert-dialog-dialog")!, {
-        rules: {"color-contrast": {enabled: false}},
+        rules: { "color-contrast": { enabled: false } },
       });
 
       await close(result, backdrop);

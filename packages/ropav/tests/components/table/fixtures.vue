@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {TableFixtureUser} from "./fixtures.types";
-import type {TableRootProps, TableSortDescriptor} from "@/components/table";
-import type {CollectionKey} from "@/composables/use-collection";
+import type { TableFixtureUser } from "./fixtures.types";
+import type { TableRootProps, TableSortDescriptor } from "@/components/table";
+import type { CollectionKey } from "@/composables/use-collection";
 import type {
   CollectionSelection,
   DisabledBehavior,
@@ -83,14 +83,14 @@ const props = withDefaults(
 );
 
 const columns = [
-  {id: "name", name: "Name"},
-  {id: "role", name: "Role"},
-  {id: "email", name: "Email"},
+  { id: "name", name: "Name" },
+  { id: "role", name: "Role" },
+  { id: "email", name: "Email" },
 ];
 
 const defaultUsers: TableFixtureUser[] = [
-  {email: "kate@acme.com", id: 4586932, name: "Kate Moore", role: "CEO"},
-  {email: "john@acme.com", id: 5273849, name: "John Smith", role: "CTO"},
+  { email: "kate@acme.com", id: 4586932, name: "Kate Moore", role: "CEO" },
+  { email: "john@acme.com", id: 5273849, name: "John Smith", role: "CTO" },
 ];
 </script>
 
@@ -118,7 +118,7 @@ const defaultUsers: TableFixtureUser[] = [
             v-for="column of columns"
             :id="column.id"
             :key="column.id"
-            v-slot="{sortDirection}"
+            v-slot="{ sortDirection }"
             :allows-sorting="(props.sortableColumns ?? []).includes(column.id)"
             :class="props.columnClass"
             :is-row-header="(props.rowHeaders ?? ['name']).includes(column.id)"

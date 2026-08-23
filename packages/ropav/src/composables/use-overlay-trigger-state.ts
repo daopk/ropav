@@ -1,9 +1,9 @@
-import type {CollectionKey} from "./use-collection";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 /** Which end of a collection receives focus when an overlay opens. */
 export type FocusStrategy = "first" | "last";
@@ -36,7 +36,7 @@ export interface OverlayTriggerState {
 export const useOverlayTriggerState = (
   options: UseOverlayTriggerStateOptions = {},
 ): OverlayTriggerState => {
-  const {setState, state} = useControllableState<boolean>({
+  const { setState, state } = useControllableState<boolean>({
     defaultValue: options.defaultOpen ?? false,
     onValueChange: options.onOpenChange,
     value: options.isOpen,

@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import DisclosureFixture from "./fixtures.vue";
 
@@ -31,7 +31,7 @@ const settle = async (panel: HTMLElement) => {
 
 describe("Disclosure (browser)", () => {
   it("releases the panel height to auto after the expand animation", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
     const content = contentIn(container);
 
@@ -49,7 +49,9 @@ describe("Disclosure (browser)", () => {
   });
 
   it("re-applies hidden only after the collapse animation finishes", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture, {props: {defaultExpanded: true}});
+    const { container, unmount } = renderVapor(DisclosureFixture, {
+      props: { defaultExpanded: true },
+    });
     const content = contentIn(container);
 
     triggerIn(container).click();
@@ -62,7 +64,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("animates the height through a pixel value on the way open", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const content = contentIn(container);
 
     triggerIn(container).click();
@@ -78,7 +80,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("gives the expanded panel real height and the collapsed one none", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const content = contentIn(container);
 
     expect(content.getBoundingClientRect().height).toBe(0);
@@ -92,7 +94,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("keeps a collapsed panel out of the tab order", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
 
     trigger.focus();
@@ -105,7 +107,9 @@ describe("Disclosure (browser)", () => {
   });
 
   it("lets tab reach the panel content once expanded", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture, {props: {defaultExpanded: true}});
+    const { container, unmount } = renderVapor(DisclosureFixture, {
+      props: { defaultExpanded: true },
+    });
     const trigger = triggerIn(container);
 
     trigger.focus();
@@ -117,7 +121,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("toggles on Enter and on Space", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
 
     trigger.focus();
@@ -131,7 +135,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("paints a focus ring on the trigger when focused by keyboard", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
     const shadowBefore = getComputedStyle(trigger).boxShadow;
 
@@ -149,7 +153,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("paints no focus ring when focused by pointer", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
 
     await userEvent.click(trigger);
@@ -163,7 +167,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("reports hover from a real pointer", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
     const trigger = triggerIn(container);
 
     await userEvent.hover(trigger);
@@ -175,7 +179,7 @@ describe("Disclosure (browser)", () => {
   });
 
   it("has no axe violations while collapsed", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture);
+    const { container, unmount } = renderVapor(DisclosureFixture);
 
     await expectNoA11yViolations(container);
 
@@ -183,7 +187,9 @@ describe("Disclosure (browser)", () => {
   });
 
   it("has no axe violations while expanded", async () => {
-    const {container, unmount} = renderVapor(DisclosureFixture, {props: {defaultExpanded: true}});
+    const { container, unmount } = renderVapor(DisclosureFixture, {
+      props: { defaultExpanded: true },
+    });
 
     await expectNoA11yViolations(container);
 

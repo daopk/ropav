@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DatePickerGroupHostProps} from "./date-picker-group.types";
+import type { DatePickerGroupHostProps } from "./date-picker-group.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useDatePickerGroup} from "@/composables/use-date-picker-group";
+import { useDatePickerGroup } from "@/composables/use-date-picker-group";
 
 const props = withDefaults(defineProps<DatePickerGroupHostProps>(), {
   disableArrowNavigation: undefined,

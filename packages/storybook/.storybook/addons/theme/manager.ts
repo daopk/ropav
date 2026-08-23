@@ -4,11 +4,11 @@ import {
   SET_GLOBALS,
   STORY_RENDERED,
 } from "storybook/internal/core-events";
-import {addons} from "storybook/manager-api";
+import { addons } from "storybook/manager-api";
 
-import {themes} from "../../styles/theme";
+import { themes } from "../../styles/theme";
 
-import {DEFAULT_THEME, THEME_GLOBAL_TYPE_ID, ensureThemeKey} from "./constants";
+import { DEFAULT_THEME, THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "./constants";
 
 /**
  * Theme the Storybook UI along with the preview: the decorator only reaches inside the
@@ -27,7 +27,7 @@ addons.register("ropav-theme-manager", (api) => {
     if (next === applied) return;
 
     applied = next;
-    addons.setConfig({theme: themes[next]});
+    addons.setConfig({ theme: themes[next] });
   };
 
   const applyGlobals = (globals: Record<string, unknown> | undefined) =>
@@ -38,10 +38,10 @@ addons.register("ropav-theme-manager", (api) => {
 
   // `setGlobals` carries what the preview booted with, `globalsUpdated` every toolbar
   // change, and a render covers a preview that announced its globals before this ran.
-  channel.on(SET_GLOBALS, (payload: {globals?: Record<string, unknown>}) =>
+  channel.on(SET_GLOBALS, (payload: { globals?: Record<string, unknown> }) =>
     applyGlobals(payload?.globals),
   );
-  channel.on(GLOBALS_UPDATED, (payload: {globals?: Record<string, unknown>}) =>
+  channel.on(GLOBALS_UPDATED, (payload: { globals?: Record<string, unknown> }) =>
     applyGlobals(payload?.globals),
   );
 

@@ -40,13 +40,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideSearchFieldContext, useSearchFieldContext} from "./search-field.context";
+export { provideSearchFieldContext, useSearchFieldContext } from "./search-field.context";
 
-export type {SearchFieldContext} from "./search-field.context";
+export type { SearchFieldContext } from "./search-field.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {searchFieldVariants} from "@ropav/styles";
+export { searchFieldVariants } from "@ropav/styles";
 
-export type {SearchFieldVariants} from "@ropav/styles";
+export type { SearchFieldVariants } from "@ropav/styles";

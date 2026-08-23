@@ -1,20 +1,20 @@
-import type {AnyCalendarState, CalendarShared} from "./use-calendar";
-import type {PressEvent, UsePressHandlers} from "./use-press";
-import type {CalendarDate} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { AnyCalendarState, CalendarShared } from "./use-calendar";
+import type { PressEvent, UsePressHandlers } from "./use-press";
+import type { CalendarDate } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {isSameDay, isToday} from "@internationalized/date";
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { isSameDay, isToday } from "@internationalized/date";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
-import {calendarStrings} from "../i18n/calendar";
-import {getScrollParent} from "../utils/focus";
+import { calendarStrings } from "../i18n/calendar";
+import { getScrollParent } from "../utils/focus";
 
-import {isRangeCalendarState} from "./use-calendar";
-import {useDateFormatter} from "./use-date-formatter";
-import {useDescription} from "./use-description";
-import {getInteractionModality} from "./use-interaction-states";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
-import {usePress} from "./use-press";
+import { isRangeCalendarState } from "./use-calendar";
+import { useDateFormatter } from "./use-date-formatter";
+import { useDescription } from "./use-description";
+import { getInteractionModality } from "./use-interaction-states";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
+import { usePress } from "./use-press";
 
 /** How long a finger has to stay down before it counts as dragging a range rather than scrolling. */
 const TOUCH_DRAG_DELAY = 200;
@@ -161,7 +161,7 @@ export const useCalendarCell = (
         date: text,
       });
     } else if (isSelected.value) {
-      text = stringFormatter.value.format("dateSelected", {date: text});
+      text = stringFormatter.value.format("dateSelected", { date: text });
     }
 
     // The bounds are named, so a user arriving at one knows why the arrows stopped moving.
@@ -189,7 +189,7 @@ export const useCalendarCell = (
     );
   });
 
-  const {describedBy} = useDescription(rangeSelectionPrompt);
+  const { describedBy } = useDescription(rangeSelectionPrompt);
 
   let isAnchorPressed = false;
   let isRangeBoundaryPressed = false;
@@ -202,7 +202,7 @@ export const useCalendarCell = (
 
   onScopeDispose(clearTouchDragTimer);
 
-  const {handlers: pressHandlers, isPressed} = usePress({
+  const { handlers: pressHandlers, isPressed } = usePress({
     isDisabled: () => !isSelectable.value || state.isReadOnly.value,
     onPress: () => {
       // A single-date calendar always selects on the way up.
@@ -315,7 +315,7 @@ export const useCalendarCell = (
     ([focused, element]) => {
       if (!focused || !element) return;
 
-      element.focus({preventScroll: true});
+      element.focus({ preventScroll: true });
 
       /*
        * Only bring it into view for a keyboard user: scrolling under a mouse or finger moves the
@@ -329,11 +329,11 @@ export const useCalendarCell = (
          * when there is something to scroll, and only where the method exists — jsdom has neither.
          */
         if (getScrollParent(element) && typeof element.scrollIntoView === "function") {
-          element.scrollIntoView({block: "nearest", inline: "nearest"});
+          element.scrollIntoView({ block: "nearest", inline: "nearest" });
         }
       }
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   const tabIndex = computed(() => {

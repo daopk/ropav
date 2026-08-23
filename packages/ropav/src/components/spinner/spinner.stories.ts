@@ -1,18 +1,18 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Spinner} from "./index";
+import { Spinner } from "./index";
 
-const components = {Spinner};
+const components = { Spinner };
 
 const meta: StoryMeta = {
   argTypes: {
     color: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["accent", "current", "danger", "success", "warning"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg", "xl"],
     },
   },
@@ -30,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `<Spinner v-bind="args" />`,
   }),
 };
@@ -38,7 +38,7 @@ export const Default: Story = {
 export const Colors: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: ["accent", "danger", "success", "warning"]}),
+    setup: () => ({ colors: ["accent", "danger", "success", "warning"] }),
     template: `
       <div class="flex items-center gap-3">
         <Spinner v-for="color in colors" :key="color" :color="color" />
@@ -50,7 +50,7 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({sizes: ["sm", "md", "lg", "xl"]}),
+    setup: () => ({ sizes: ["sm", "md", "lg", "xl"] }),
     template: `
       <div class="flex items-center gap-3">
         <Spinner v-for="size in sizes" :key="size" :size="size" />

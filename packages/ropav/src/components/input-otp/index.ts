@@ -16,7 +16,7 @@ export const InputOTP = Object.assign(InputOTPRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {InputOTPGroup, InputOTPRoot, InputOTPSeparator, InputOTPSlot};
+export { InputOTPGroup, InputOTPRoot, InputOTPSeparator, InputOTPSlot };
 
 export type {
   InputOTPRootProps,
@@ -38,13 +38,13 @@ export {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideInputOTPContext, useInputOTPContext} from "./input-otp.context";
+export { provideInputOTPContext, useInputOTPContext } from "./input-otp.context";
 
-export type {InputOTPContext} from "./input-otp.context";
+export type { InputOTPContext } from "./input-otp.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputOTPVariants} from "@ropav/styles";
+export { inputOTPVariants } from "@ropav/styles";
 
-export type {InputOTPVariants} from "@ropav/styles";
+export type { InputOTPVariants } from "@ropav/styles";

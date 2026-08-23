@@ -1,10 +1,10 @@
-import type {SliderState} from "@/composables/use-slider-state";
+import type { SliderState } from "@/composables/use-slider-state";
 
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useSliderState} from "@/composables/use-slider-state";
-import {useSliderThumb} from "@/composables/use-slider-thumb";
+import { useSliderState } from "@/composables/use-slider-state";
+import { useSliderThumb } from "@/composables/use-slider-thumb";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -15,7 +15,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
 };
 
 /** jsdom lays nothing out, so the track is given a size by hand. */
-const TRACK = {height: 20, left: 0, top: 0, width: 200};
+const TRACK = { height: 20, left: 0, top: 0, width: 200 };
 
 const setup = (
   options: {
@@ -132,14 +132,15 @@ const pressThumb = (thumb: HTMLElement, pointerId = 1) =>
   );
 
 const dragTo = (x: number, y: number, pointerId = 1) =>
-  window.dispatchEvent(new PointerEvent("pointermove", {clientX: x, clientY: y, pointerId}));
+  window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerId }));
 
-const release = (pointerId = 1) => window.dispatchEvent(new PointerEvent("pointerup", {pointerId}));
+const release = (pointerId = 1) =>
+  window.dispatchEvent(new PointerEvent("pointerup", { pointerId }));
 
 describe("useSliderThumb", () => {
   describe("input", () => {
     it("describes the value as a range input", () => {
-      const {dispose, thumbState} = setup({defaultValue: 30, step: 5});
+      const { dispose, thumbState } = setup({ defaultValue: 30, step: 5 });
       const props = thumbState.inputProps.value;
 
       expect(props.type).toBe("range");
@@ -156,7 +157,7 @@ describe("useSliderThumb", () => {
     });
 
     it("bounds a range thumb by its neighbour", () => {
-      const {dispose, thumbState} = setup({defaultValue: [20, 80], index: 1});
+      const { dispose, thumbState } = setup({ defaultValue: [20, 80], index: 1 });
 
       expect(thumbState.inputProps.value.min).toBe(20);
       expect(thumbState.inputProps.value.max).toBe(100);
@@ -165,7 +166,7 @@ describe("useSliderThumb", () => {
     });
 
     it("takes the value the input reports", () => {
-      const {dispose, input, state} = setup({defaultValue: 30, step: 10});
+      const { dispose, input, state } = setup({ defaultValue: 30, step: 10 });
 
       input.value = "70";
       input.dispatchEvent(new Event("change"));
@@ -176,7 +177,7 @@ describe("useSliderThumb", () => {
     });
 
     it("puts the input back when the value it reported was clamped away", () => {
-      const {dispose, input, state} = setup({defaultValue: [20, 40], index: 0, step: 10});
+      const { dispose, input, state } = setup({ defaultValue: [20, 40], index: 0, step: 10 });
 
       input.value = "90";
       input.dispatchEvent(new Event("change"));
@@ -189,7 +190,7 @@ describe("useSliderThumb", () => {
     });
 
     it("drops out of the tab order and reports itself disabled", () => {
-      const {dispose, thumbState} = setup({isDisabled: true});
+      const { dispose, thumbState } = setup({ isDisabled: true });
 
       expect(thumbState.inputProps.value.disabled).toBe(true);
       expect(thumbState.inputProps.value.tabindex).toBeUndefined();
@@ -201,7 +202,7 @@ describe("useSliderThumb", () => {
 
   describe("position", () => {
     it("places the thumb along the track", () => {
-      const {dispose, thumbState} = setup({defaultValue: 25});
+      const { dispose, thumbState } = setup({ defaultValue: 25 });
 
       expect(thumbState.thumbStyle.value.left).toBe("25%");
       expect(thumbState.thumbStyle.value.top).toBeUndefined();
@@ -211,7 +212,7 @@ describe("useSliderThumb", () => {
     });
 
     it("turns the position around on a vertical slider", () => {
-      const {dispose, thumbState} = setup({defaultValue: 25, orientation: "vertical"});
+      const { dispose, thumbState } = setup({ defaultValue: 25, orientation: "vertical" });
 
       // A quarter of the way up is three quarters of the way down.
       expect(thumbState.thumbStyle.value.top).toBe("75%");
@@ -223,7 +224,7 @@ describe("useSliderThumb", () => {
 
   describe("keyboard", () => {
     it("steps with the arrows", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50, step: 5});
+      const { dispose, state, thumb } = setup({ defaultValue: 50, step: 5 });
 
       key(thumb, "ArrowRight");
       expect(state.values.value).toEqual([55]);
@@ -241,9 +242,9 @@ describe("useSliderThumb", () => {
     });
 
     it("takes a page when shift is held", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50});
+      const { dispose, state, thumb } = setup({ defaultValue: 50 });
 
-      key(thumb, "ArrowRight", {shiftKey: true});
+      key(thumb, "ArrowRight", { shiftKey: true });
 
       expect(state.values.value).toEqual([60]);
 
@@ -251,7 +252,7 @@ describe("useSliderThumb", () => {
     });
 
     it("pages and jumps to the ends", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50});
+      const { dispose, state, thumb } = setup({ defaultValue: 50 });
 
       key(thumb, "PageUp");
       expect(state.values.value).toEqual([60]);
@@ -269,7 +270,7 @@ describe("useSliderThumb", () => {
     });
 
     it("jumps only as far as its neighbour", () => {
-      const {dispose, state, thumb} = setup({defaultValue: [20, 80], index: 0});
+      const { dispose, state, thumb } = setup({ defaultValue: [20, 80], index: 0 });
 
       key(thumb, "End");
 
@@ -279,7 +280,7 @@ describe("useSliderThumb", () => {
     });
 
     it("consumes the keys it acts on, so the input does not step twice", () => {
-      const {dispose, thumb} = setup();
+      const { dispose, thumb } = setup();
 
       expect(key(thumb, "PageUp").defaultPrevented).toBe(true);
       expect(key(thumb, "Home").defaultPrevented).toBe(true);
@@ -289,7 +290,7 @@ describe("useSliderThumb", () => {
     });
 
     it("leaves other keys alone", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50});
+      const { dispose, state, thumb } = setup({ defaultValue: 50 });
 
       expect(key(thumb, "Enter").defaultPrevented).toBe(false);
       expect(state.values.value).toEqual([50]);
@@ -299,7 +300,7 @@ describe("useSliderThumb", () => {
 
     it("reports the end of the interaction for each key press", () => {
       const onChangeEnd = vi.fn();
-      const {dispose, thumb} = setup({defaultValue: 50, onChangeEnd});
+      const { dispose, thumb } = setup({ defaultValue: 50, onChangeEnd });
 
       key(thumb, "ArrowRight");
       key(thumb, "PageUp");
@@ -312,7 +313,7 @@ describe("useSliderThumb", () => {
     });
 
     it("ignores keys while disabled", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50, isThumbDisabled: true});
+      const { dispose, state, thumb } = setup({ defaultValue: 50, isThumbDisabled: true });
 
       key(thumb, "ArrowRight");
       key(thumb, "End");
@@ -325,7 +326,7 @@ describe("useSliderThumb", () => {
 
   describe("dragging", () => {
     it("follows the pointer and gives focus to the input", () => {
-      const {dispose, input, state, thumb, thumbState} = setup({defaultValue: 0, step: 10});
+      const { dispose, input, state, thumb, thumbState } = setup({ defaultValue: 0, step: 10 });
 
       pressThumb(thumb);
 
@@ -345,7 +346,7 @@ describe("useSliderThumb", () => {
     });
 
     it("stops at either end of the track", () => {
-      const {dispose, state, thumb} = setup({defaultValue: 50, step: 10});
+      const { dispose, state, thumb } = setup({ defaultValue: 50, step: 10 });
 
       pressThumb(thumb);
       dragTo(1000, 0);
@@ -358,7 +359,7 @@ describe("useSliderThumb", () => {
     });
 
     it("drags the other way round on a vertical slider", () => {
-      const {dispose, state, thumb} = setup({
+      const { dispose, state, thumb } = setup({
         defaultValue: 50,
         orientation: "vertical",
         step: 10,
@@ -374,7 +375,7 @@ describe("useSliderThumb", () => {
     });
 
     it("ignores a press while disabled", () => {
-      const {dispose, thumb, thumbState} = setup({isDisabled: true});
+      const { dispose, thumb, thumbState } = setup({ isDisabled: true });
 
       pressThumb(thumb);
 
@@ -386,7 +387,7 @@ describe("useSliderThumb", () => {
 
   describe("focus", () => {
     it("tracks which thumb the state says is focused", async () => {
-      const {dispose, input, state, thumbState} = setup({defaultValue: [20, 80], index: 1});
+      const { dispose, input, state, thumbState } = setup({ defaultValue: [20, 80], index: 1 });
 
       expect(thumbState.isFocused.value).toBe(false);
 
@@ -401,7 +402,7 @@ describe("useSliderThumb", () => {
     });
 
     it("hands focus back to the state when the input takes it", () => {
-      const {dispose, input, state} = setup({defaultValue: [20, 80], index: 1});
+      const { dispose, input, state } = setup({ defaultValue: [20, 80], index: 1 });
 
       input.dispatchEvent(new FocusEvent("focus"));
       expect(state.focusedThumb.value).toBe(1);
@@ -415,7 +416,7 @@ describe("useSliderThumb", () => {
 
   describe("form reset", () => {
     it("goes back to the value it started at", async () => {
-      const {dispose, form, state} = setup({defaultValue: 30, step: 10, withForm: true});
+      const { dispose, form, state } = setup({ defaultValue: 30, step: 10, withForm: true });
 
       // The listener is attached once the element has been through a flush.
       await nextTick();
@@ -431,7 +432,7 @@ describe("useSliderThumb", () => {
     });
 
     it("puts the input itself back, not only the state", async () => {
-      const {dispose, form, input} = setup({defaultValue: 30, step: 10, withForm: true});
+      const { dispose, form, input } = setup({ defaultValue: 30, step: 10, withForm: true });
 
       await nextTick();
 

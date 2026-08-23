@@ -3,26 +3,26 @@ import type {
   RangeCalendarGridBodyProps,
   RangeCalendarGridBodySlotProps,
 } from "./range-calendar.types";
-import type {CalendarDate} from "@internationalized/date";
+import type { CalendarDate } from "@internationalized/date";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {getDayViewGridRows} from "../../utils/calendar";
-import {useCalendarGridContext, useCalendarStateContext} from "../calendar/calendar.context";
+import { useLocale } from "../../composables/use-locale";
+import { getDayViewGridRows } from "../../utils/calendar";
+import { useCalendarGridContext, useCalendarStateContext } from "../calendar/calendar.context";
 
-import {useRangeCalendarContext} from "./range-calendar.context";
+import { useRangeCalendarContext } from "./range-calendar.context";
 
 const props = defineProps<RangeCalendarGridBodyProps>();
 
-defineSlots<{default?: (props: RangeCalendarGridBodySlotProps) => unknown}>();
+defineSlots<{ default?: (props: RangeCalendarGridBodySlotProps) => unknown }>();
 
-const {dayView, slots} = useRangeCalendarContext();
-const {startDate, weeksInMonth} = useCalendarGridContext();
-const {state} = useCalendarStateContext();
+const { dayView, slots } = useRangeCalendarContext();
+const { startDate, weeksInMonth } = useCalendarGridContext();
+const { state } = useCalendarStateContext();
 const locale = useLocale();
 
-const styles = computed(() => slots.value.gridBody({class: props.class}));
+const styles = computed(() => slots.value.gridBody({ class: props.class }));
 
 /**
  * A day view spanning a week or more lays its own rows out.
@@ -48,7 +48,7 @@ const rows = computed<(CalendarDate | null)[][]>(() => {
     ) as (CalendarDate | null)[][];
   }
 
-  return Array.from({length: weeksInMonth.value}, (_, week) =>
+  return Array.from({ length: weeksInMonth.value }, (_, week) =>
     state.getDatesInWeek(week, startDate.value),
   );
 });

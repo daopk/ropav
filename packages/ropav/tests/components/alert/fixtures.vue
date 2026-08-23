@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {AlertRootProps} from "@/components/alert";
+import type { AlertRootProps } from "@/components/alert";
 
-import {Alert} from "@/components/alert";
+import { Alert } from "@/components/alert";
 
 defineProps<
   AlertRootProps & {

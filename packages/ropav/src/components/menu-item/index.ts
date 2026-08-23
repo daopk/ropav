@@ -14,7 +14,7 @@ export const MenuItem = Object.assign(MenuItemRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator};
+export { MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator };
 
 export type {
   MenuItemIndicatorProps,
@@ -28,13 +28,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideMenuItemPopupContext, useMenuItemContext} from "./menu-item.context";
+export { provideMenuItemPopupContext, useMenuItemContext } from "./menu-item.context";
 
-export type {MenuItemContext, MenuItemPopupContext} from "./menu-item.context";
+export type { MenuItemContext, MenuItemPopupContext } from "./menu-item.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {menuItemVariants} from "@ropav/styles";
+export { menuItemVariants } from "@ropav/styles";
 
-export type {MenuItemVariants} from "@ropav/styles";
+export type { MenuItemVariants } from "@ropav/styles";

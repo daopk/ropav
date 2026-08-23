@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogBackdropProps} from "./alert-dialog.types";
+import type { AlertDialogBackdropProps } from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { alertDialogVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {provideFocusResponder} from "../../composables/focus-responder";
-import {providePressResponder} from "../../composables/press-responder";
-import {useModalOverlay} from "../../composables/use-modal-overlay";
-import {useModalTransition} from "../../composables/use-modal-transition";
-import {dataAttr} from "../../utils/assertion";
+import { provideFocusResponder } from "../../composables/focus-responder";
+import { providePressResponder } from "../../composables/press-responder";
+import { useModalOverlay } from "../../composables/use-modal-overlay";
+import { useModalTransition } from "../../composables/use-modal-transition";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   provideAlertDialogContext,
@@ -25,10 +25,10 @@ const props = withDefaults(defineProps<AlertDialogBackdropProps>(), {
   isKeyboardDismissDisabled: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useAlertDialogContext();
-const {state} = context;
+const { state } = context;
 
 const backdropElement = shallowRef<HTMLElement | null>(null);
 const contentElement = shallowRef<HTMLElement | null>(null);
@@ -83,10 +83,10 @@ provideFocusResponder(null);
 
 const slots = computed(() => ({
   ...context.slots.value,
-  ...alertDialogVariants({variant: props.variant}),
+  ...alertDialogVariants({ variant: props.variant }),
 }));
 
-provideAlertDialogContext({...context, slots});
+provideAlertDialogContext({ ...context, slots });
 
 provideAlertDialogOverlayContext({
   close: state.close,
@@ -99,7 +99,7 @@ provideAlertDialogOverlayContext({
   },
 });
 
-const styles = computed(() => slots.value.backdrop({class: props.class}));
+const styles = computed(() => slots.value.backdrop({ class: props.class }));
 
 const target = computed(() => props.portalContainer ?? "body");
 

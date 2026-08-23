@@ -95,6 +95,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tableVariants} from "@ropav/styles";
+export { tableVariants } from "@ropav/styles";
 
-export type {TableVariants} from "@ropav/styles";
+export type { TableVariants } from "@ropav/styles";

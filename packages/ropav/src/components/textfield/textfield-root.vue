@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TextFieldRootProps, TextFieldSlotProps} from "./textfield.types";
+import type { TextFieldRootProps, TextFieldSlotProps } from "./textfield.types";
 
-import {textFieldVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { textFieldVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {provideTextFieldControlContext, useTextField} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { provideTextFieldControlContext, useTextField } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideTextFieldContext} from "./textfield.context";
+import { provideTextFieldContext } from "./textfield.context";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent
 // boolean to `false`, and a `false` here reads as the caller claiming that state: for
@@ -36,7 +36,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: TextFieldSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TextFieldSlotProps) => unknown }>();
 
 const field = useTextField({
   ariaDescribedby: () => props.ariaDescribedby,
@@ -74,10 +74,12 @@ const field = useTextField({
 
 provideFieldIdsContext(field.fieldIds);
 provideTextFieldControlContext(field);
-provideTextFieldContext({variant: computed(() => props.variant)});
-provideFieldErrorContext({validation: field.validation.displayValidation});
+provideTextFieldContext({ variant: computed(() => props.variant) });
+provideFieldErrorContext({ validation: field.validation.displayValidation });
 
-const styles = computed(() => textFieldVariants({class: props.class, fullWidth: props.fullWidth}));
+const styles = computed(() =>
+  textFieldVariants({ class: props.class, fullWidth: props.fullWidth }),
+);
 
 // `data-required` has to sit here rather than on the control: the stylesheet draws the
 // asterisk through `[data-required="true"] > .label`, so it reads the field, not the input.

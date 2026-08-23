@@ -2,7 +2,7 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {CheckboxGroupVariants, CheckboxVariants} from "@ropav/styles";
+import type { CheckboxGroupVariants, CheckboxVariants } from "@ropav/styles";
 
 export interface CheckboxGroupRootProps {
   class?: string;

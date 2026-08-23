@@ -1,25 +1,25 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {SelectedValue} from "../../composables/use-select-state";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { SelectedValue } from "../../composables/use-select-state";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {ButtonRoot} from "../button";
-import {ChipLabel, ChipRoot} from "../chip";
-import {DescriptionRoot} from "../description";
-import {FieldErrorRoot} from "../field-error";
-import {FormRoot} from "../form";
-import {HeaderRoot} from "../header";
-import {LabelRoot} from "../label";
-import {ListBoxLoadMoreItem, ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {ListBoxSectionRoot} from "../list-box-section";
-import {SeparatorRoot} from "../separator";
-import {SpinnerRoot} from "../spinner";
+import { avatarSrc } from "../../utils/story-assets";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { ButtonRoot } from "../button";
+import { ChipLabel, ChipRoot } from "../chip";
+import { DescriptionRoot } from "../description";
+import { FieldErrorRoot } from "../field-error";
+import { FormRoot } from "../form";
+import { HeaderRoot } from "../header";
+import { LabelRoot } from "../label";
+import { ListBoxLoadMoreItem, ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { ListBoxSectionRoot } from "../list-box-section";
+import { SeparatorRoot } from "../separator";
+import { SpinnerRoot } from "../spinner";
 
 import SelectIndicator from "./select-indicator.vue";
 import SelectPopover from "./select-popover.vue";
@@ -76,56 +76,56 @@ type Story = StoryObj<typeof meta>;
  * a closed select answers from.
  */
 const STATES = [
-  {id: "florida", name: "Florida"},
-  {id: "delaware", name: "Delaware"},
-  {id: "california", name: "California"},
-  {id: "texas", name: "Texas"},
-  {id: "new-york", name: "New York"},
-  {id: "washington", name: "Washington"},
+  { id: "florida", name: "Florida" },
+  { id: "delaware", name: "Delaware" },
+  { id: "california", name: "California" },
+  { id: "texas", name: "Texas" },
+  { id: "new-york", name: "New York" },
+  { id: "washington", name: "Washington" },
 ];
 
 const SHORT_STATES = STATES.slice(0, 3);
 
 const VISIT_COUNTRIES = [
-  {id: "argentina", name: "Argentina"},
-  {id: "venezuela", name: "Venezuela"},
-  {id: "japan", name: "Japan"},
-  {id: "france", name: "France"},
-  {id: "italy", name: "Italy"},
-  {id: "spain", name: "Spain"},
-  {id: "thailand", name: "Thailand"},
-  {id: "new-zealand", name: "New Zealand"},
-  {id: "iceland", name: "Iceland"},
+  { id: "argentina", name: "Argentina" },
+  { id: "venezuela", name: "Venezuela" },
+  { id: "japan", name: "Japan" },
+  { id: "france", name: "France" },
+  { id: "italy", name: "Italy" },
+  { id: "spain", name: "Spain" },
+  { id: "thailand", name: "Thailand" },
+  { id: "new-zealand", name: "New Zealand" },
+  { id: "iceland", name: "Iceland" },
 ];
 
 const COUNTRY_SECTIONS = [
   {
     id: "north-america",
     items: [
-      {id: "usa", name: "United States"},
-      {id: "canada", name: "Canada"},
-      {id: "mexico", name: "Mexico"},
+      { id: "usa", name: "United States" },
+      { id: "canada", name: "Canada" },
+      { id: "mexico", name: "Mexico" },
     ],
     title: "North America",
   },
   {
     id: "europe",
     items: [
-      {id: "uk", name: "United Kingdom"},
-      {id: "france", name: "France"},
-      {id: "germany", name: "Germany"},
-      {id: "spain", name: "Spain"},
-      {id: "italy", name: "Italy"},
+      { id: "uk", name: "United Kingdom" },
+      { id: "france", name: "France" },
+      { id: "germany", name: "Germany" },
+      { id: "spain", name: "Spain" },
+      { id: "italy", name: "Italy" },
     ],
     title: "Europe",
   },
   {
     id: "asia",
     items: [
-      {id: "japan", name: "Japan"},
-      {id: "china", name: "China"},
-      {id: "india", name: "India"},
-      {id: "south-korea", name: "South Korea"},
+      { id: "japan", name: "Japan" },
+      { id: "china", name: "China" },
+      { id: "india", name: "India" },
+      { id: "south-korea", name: "South Korea" },
     ],
     title: "Asia",
   },
@@ -134,25 +134,25 @@ const COUNTRY_SECTIONS = [
 const SECTIONED_COUNTRIES = COUNTRY_SECTIONS.flatMap((section) => section.items);
 
 const ANIMALS = [
-  {id: "dog", name: "Dog"},
-  {id: "cat", name: "Cat"},
-  {id: "bird", name: "Bird"},
-  {id: "kangaroo", name: "Kangaroo"},
-  {id: "elephant", name: "Elephant"},
-  {id: "tiger", name: "Tiger"},
+  { id: "dog", name: "Dog" },
+  { id: "cat", name: "Cat" },
+  { id: "bird", name: "Bird" },
+  { id: "kangaroo", name: "Kangaroo" },
+  { id: "elephant", name: "Elephant" },
+  { id: "tiger", name: "Tiger" },
 ];
 
 const FORM_COUNTRIES = [
-  {id: "usa", name: "United States"},
-  {id: "canada", name: "Canada"},
-  {id: "mexico", name: "Mexico"},
-  {id: "uk", name: "United Kingdom"},
-  {id: "france", name: "France"},
-  {id: "germany", name: "Germany"},
+  { id: "usa", name: "United States" },
+  { id: "canada", name: "Canada" },
+  { id: "mexico", name: "Mexico" },
+  { id: "uk", name: "United Kingdom" },
+  { id: "france", name: "France" },
+  { id: "germany", name: "Germany" },
 ];
 
 const USERS = [
-  {avatarUrl: avatarSrc("blue"), email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob"},
+  { avatarUrl: avatarSrc("blue"), email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob" },
   {
     avatarUrl: avatarSrc("green"),
     email: "fred@ropav.com",
@@ -167,7 +167,7 @@ const USERS = [
     id: "3",
     name: "Martha",
   },
-  {avatarUrl: avatarSrc("red"), email: "john@ropav.com", fallback: "J", id: "4", name: "John"},
+  { avatarUrl: avatarSrc("red"), email: "john@ropav.com", fallback: "J", id: "4", name: "John" },
   {
     avatarUrl: avatarSrc("orange"),
     email: "jane@ropav.com",
@@ -178,12 +178,12 @@ const USERS = [
 ];
 
 const CONTROLLED_STATES = [
-  {id: "california", name: "California"},
-  {id: "texas", name: "Texas"},
-  {id: "florida", name: "Florida"},
-  {id: "new-york", name: "New York"},
-  {id: "illinois", name: "Illinois"},
-  {id: "pennsylvania", name: "Pennsylvania"},
+  { id: "california", name: "California" },
+  { id: "texas", name: "Texas" },
+  { id: "florida", name: "Florida" },
+  { id: "new-york", name: "New York" },
+  { id: "illinois", name: "Illinois" },
+  { id: "pennsylvania", name: "Pennsylvania" },
 ];
 
 /** The one shape every plain story renders, so the markup is written once. */
@@ -194,12 +194,12 @@ const optionsTemplate = `
   </ListBoxItem>
 `;
 
-const byName = (item: {name: string}) => item.name;
+const byName = (item: { name: string }) => item.name;
 
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: STATES}),
+    setup: () => ({ byName, items: STATES }),
     template: `
       <Select
         class="w-[256px]"
@@ -223,7 +223,7 @@ export const Default: Story = {
 export const Variants: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: STATES}),
+    setup: () => ({ byName, items: STATES }),
     template: `
       <div class="flex flex-col gap-4">
         <Select
@@ -266,7 +266,7 @@ export const Variants: Story = {
 export const FullWidth: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: SHORT_STATES}),
+    setup: () => ({ byName, items: SHORT_STATES }),
     template: `
       <div class="w-[400px] space-y-4">
         <Select
@@ -292,7 +292,7 @@ export const FullWidth: Story = {
 export const WithDescription: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: STATES}),
+    setup: () => ({ byName, items: STATES }),
     template: `
       <Select
         class="w-[256px]"
@@ -317,7 +317,7 @@ export const WithDescription: Story = {
 export const MultipleSelect: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: VISIT_COUNTRIES}),
+    setup: () => ({ byName, items: VISIT_COUNTRIES }),
     template: `
       <Select
         class="w-[256px]"
@@ -342,7 +342,7 @@ export const MultipleSelect: Story = {
 export const WithSections: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: SECTIONED_COUNTRIES, sections: COUNTRY_SECTIONS}),
+    setup: () => ({ byName, items: SECTIONED_COUNTRIES, sections: COUNTRY_SECTIONS }),
     template: `
       <Select
         class="w-[256px]"
@@ -382,7 +382,7 @@ export const WithSections: Story = {
 export const WithDisabledOptions: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, disabledKeys: ["cat", "kangaroo"], items: ANIMALS}),
+    setup: () => ({ byName, disabledKeys: ["cat", "kangaroo"], items: ANIMALS }),
     template: `
       <Select
         class="w-[256px]"
@@ -407,7 +407,7 @@ export const WithDisabledOptions: Story = {
 export const CustomIndicator: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, items: STATES}),
+    setup: () => ({ byName, items: STATES }),
     template: `
       <Select
         class="w-[256px]"
@@ -440,7 +440,7 @@ export const Required: Story = {
         alert("Form submitted successfully!");
       };
 
-      return {byName, countries: FORM_COUNTRIES, onSubmit, states: STATES};
+      return { byName, countries: FORM_COUNTRIES, onSubmit, states: STATES };
     },
     template: `
       <Form class="flex w-[256px] flex-col gap-4" @submit="onSubmit">
@@ -509,7 +509,7 @@ export const Required: Story = {
 export const CustomValue: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, users: USERS}),
+    setup: () => ({ byName, users: USERS }),
     template: `
       <Select
         class="w-[256px]"
@@ -559,7 +559,7 @@ export const CustomValue: Story = {
 export const CustomValueMultiple: Story = {
   render: () => ({
     components,
-    setup: () => ({byName, defaultValue: ["1", "2"], users: USERS}),
+    setup: () => ({ byName, defaultValue: ["1", "2"], users: USERS }),
     template: `
       <Select
         class="w-[256px]"
@@ -728,7 +728,7 @@ export const ControlledOpenState: Story = {
 
 export const AsynchronousLoading: Story = {
   render: () => {
-    const items = shallowRef<Array<{id: string; name: string}>>([]);
+    const items = shallowRef<Array<{ id: string; name: string }>>([]);
     const isLoading = shallowRef(false);
     let cursor: string | null = "https://pokeapi.co/api/v2/pokemon";
 
@@ -741,12 +741,12 @@ export const AsynchronousLoading: Story = {
         const response = await fetch(cursor);
         const page = (await response.json()) as {
           next: string | null;
-          results: Array<{name: string}>;
+          results: Array<{ name: string }>;
         };
 
         items.value = [
           ...items.value,
-          ...page.results.map((result) => ({id: result.name, name: result.name})),
+          ...page.results.map((result) => ({ id: result.name, name: result.name })),
         ];
         cursor = page.next;
       } finally {
@@ -760,7 +760,7 @@ export const AsynchronousLoading: Story = {
 
     return {
       components,
-      setup: () => ({byName, isLoading, items, loadMore}),
+      setup: () => ({ byName, isLoading, items, loadMore }),
       template: `
         <Select
           allows-empty-collection

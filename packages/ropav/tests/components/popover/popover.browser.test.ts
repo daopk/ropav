@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import PopoverFixture from "./fixtures.vue";
 
-const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -29,7 +29,7 @@ const place = (result: RenderResult, top = "40%") => {
 };
 
 const triggerOf = (result: RenderResult, name = "Open popover") =>
-  result.getByRole("button", {name}) as HTMLElement;
+  result.getByRole("button", { name }) as HTMLElement;
 
 const open = async (result: RenderResult, name?: string) => {
   await userEvent.click(triggerOf(result, name));
@@ -101,7 +101,7 @@ describe("Popover (browser)", () => {
     });
 
     it("opens from markup made pressable", async () => {
-      const result = render({withCustomTrigger: true});
+      const result = render({ withCustomTrigger: true });
 
       place(result);
 
@@ -156,7 +156,7 @@ describe("Popover (browser)", () => {
     });
 
     it("stays open on a press outside a popover that leaves the page live", async () => {
-      const result = render({isNonModal: true});
+      const result = render({ isNonModal: true });
 
       place(result);
 
@@ -186,7 +186,7 @@ describe("Popover (browser)", () => {
      * Without a dialog inside, since `Popover.Dialog` asks the popover to contain focus and a
      * contained popover is one focus never leaves.
      */
-    const LEAVABLE = {isNonModal: true, withoutDialog: true} as const;
+    const LEAVABLE = { isNonModal: true, withoutDialog: true } as const;
 
     const bare = (popover: HTMLElement, name: "first" | "second") =>
       popover.querySelector<HTMLElement>(`[data-testid="bare-${name}"]`)!;
@@ -266,7 +266,7 @@ describe("Popover (browser)", () => {
     });
 
     it("honours a placement above the trigger", async () => {
-      const result = render({placement: "top"});
+      const result = render({ placement: "top" });
 
       place(result, "70%");
 
@@ -284,7 +284,7 @@ describe("Popover (browser)", () => {
     });
 
     it("flips to the other side when there is no room", async () => {
-      const result = render({placement: "top"});
+      const result = render({ placement: "top" });
 
       // Hard against the top of the window, so nothing fits above the trigger.
       place(result, "0px");
@@ -318,7 +318,7 @@ describe("Popover (browser)", () => {
 
   describe("the arrow", () => {
     it("centres the arrow on the trigger", async () => {
-      const result = render({withArrow: true});
+      const result = render({ withArrow: true });
 
       place(result);
 
@@ -341,7 +341,7 @@ describe("Popover (browser)", () => {
     });
 
     it("takes its fill and rotation from the stylesheet", async () => {
-      const result = render({withArrow: true});
+      const result = render({ withArrow: true });
 
       place(result);
 
@@ -359,7 +359,7 @@ describe("Popover (browser)", () => {
     });
 
     it("leaves the arrow unturned when the popover sits above its trigger", async () => {
-      const result = render({placement: "top", withArrow: true});
+      const result = render({ placement: "top", withArrow: true });
 
       place(result, "70%");
 
@@ -424,7 +424,7 @@ describe("Popover (browser)", () => {
     });
 
     it("takes focus itself when there is no dialog inside", async () => {
-      const result = render({withoutDialog: true});
+      const result = render({ withoutDialog: true });
 
       place(result);
 
@@ -501,20 +501,20 @@ describe("Popover (browser)", () => {
       // one, pairing `--accent` (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1, under
       // the 4.5:1 WCAG AA floor. Both come from `@ropav/styles`, so the finding belongs to the
       // palette — it is not something the popover decides.
-      await expectNoA11yViolations(popover, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(popover, { rules: { "color-contrast": { enabled: false } } });
 
       await close(popover);
       result.unmount();
     });
 
     it("has no axe violations with an arrow", async () => {
-      const result = render({withArrow: true});
+      const result = render({ withArrow: true });
 
       place(result);
 
       const popover = await open(result);
 
-      await expectNoA11yViolations(popover, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(popover, { rules: { "color-contrast": { enabled: false } } });
 
       await close(popover);
       result.unmount();

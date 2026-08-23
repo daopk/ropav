@@ -1,16 +1,16 @@
-import type {ProseProps, Typography, TypographyRootProps} from "@/components/typography";
+import type { ProseProps, Typography, TypographyRootProps } from "@/components/typography";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderTypography = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const element = result.container.firstElementChild as HTMLElement;
 
-  return {...result, element};
+  return { ...result, element };
 };
 
 describe("Typography", () => {
@@ -19,7 +19,7 @@ describe("Typography", () => {
       "aria-label": "Typed label",
       id: "typed-id",
       onClick: (_event: MouseEvent) => undefined,
-      style: {maxWidth: "42px"},
+      style: { maxWidth: "42px" },
     } satisfies TypographyRootProps;
     const compoundProps: Typography["Props"] = props;
     const proseProps: ProseProps = props;
@@ -29,7 +29,7 @@ describe("Typography", () => {
   });
 
   it("renders body text as a paragraph by default", () => {
-    const {element, unmount} = renderTypography();
+    const { element, unmount } = renderTypography();
 
     expect(element.tagName).toBe("P");
     expect(element).toHaveTextContent("Ropav Typography");
@@ -52,7 +52,7 @@ describe("Typography", () => {
     ["body-xs", "P"],
     ["code", "CODE"],
   ] as const)("maps %s to the semantic %s element", (type, tagName) => {
-    const {element, unmount} = renderTypography({type});
+    const { element, unmount } = renderTypography({ type });
 
     expect(element.tagName).toBe(tagName);
     expect(element).toHaveClass(`typography--${type}`);
@@ -61,7 +61,7 @@ describe("Typography", () => {
   });
 
   it("applies alignment, colour, weight, and truncation variants", () => {
-    const {element, unmount} = renderTypography({
+    const { element, unmount } = renderTypography({
       align: "center",
       color: "muted",
       truncate: true,
@@ -79,7 +79,7 @@ describe("Typography", () => {
   });
 
   it("merges a caller class and forwards attributes", () => {
-    const {element, unmount} = renderTypography({class: "max-w-prose"});
+    const { element, unmount } = renderTypography({ class: "max-w-prose" });
 
     expect(element).toHaveClass("typography", "max-w-prose");
     expect(element).toHaveAttribute("data-foo", "bar");
@@ -95,7 +95,7 @@ describe("Typography", () => {
     ["prose", "DIV"],
   ] as const)("forwards native attributes and events through %s", (mode, tagName) => {
     const onNativeClick = vi.fn();
-    const {element, unmount} = renderTypography({mode, onNativeClick});
+    const { element, unmount } = renderTypography({ mode, onNativeClick });
 
     expect(element.tagName).toBe(tagName);
     expect(element).toHaveAttribute("aria-label", "Typography target");
@@ -111,8 +111,8 @@ describe("Typography", () => {
   });
 
   it("updates its semantic element and variants reactively", async () => {
-    const props = reactive({align: "start" as const, type: "body" as const});
-    const {container, unmount} = renderTypography(props);
+    const props = reactive({ align: "start" as const, type: "body" as const });
+    const { container, unmount } = renderTypography(props);
 
     props.type = "h2" as typeof props.type;
     props.align = "end" as typeof props.align;
@@ -128,7 +128,7 @@ describe("Typography", () => {
 
   describe("Heading", () => {
     it("renders the requested semantic level and forwards root variants", () => {
-      const {element, unmount} = renderTypography({
+      const { element, unmount } = renderTypography({
         align: "center",
         color: "muted",
         level: 3,
@@ -155,7 +155,7 @@ describe("Typography", () => {
       ["sm", "typography--body-sm"],
       ["xs", "typography--body-xs"],
     ] as const)("maps size %s to %s", (size, expected) => {
-      const {element, unmount} = renderTypography({mode: "paragraph", size});
+      const { element, unmount } = renderTypography({ mode: "paragraph", size });
 
       expect(element.tagName).toBe("P");
       expect(element).toHaveClass(expected);
@@ -166,7 +166,7 @@ describe("Typography", () => {
 
   describe("Code", () => {
     it("renders a code element with the code variant", () => {
-      const {element, unmount} = renderTypography({mode: "code"});
+      const { element, unmount } = renderTypography({ mode: "code" });
 
       expect(element.tagName).toBe("CODE");
       expect(element).toHaveClass("typography--code");
@@ -178,7 +178,7 @@ describe("Typography", () => {
 
   describe("Prose", () => {
     it("renders an unopinionated div that scopes prose styles", () => {
-      const {element, unmount} = renderTypography({class: "max-w-2xl", mode: "prose"});
+      const { element, unmount } = renderTypography({ class: "max-w-2xl", mode: "prose" });
 
       expect(element.tagName).toBe("DIV");
       expect(element).toHaveAttribute("data-slot", "prose");

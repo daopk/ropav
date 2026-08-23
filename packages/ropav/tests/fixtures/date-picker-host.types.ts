@@ -1,6 +1,6 @@
-import type {UseDatePickerReturn} from "@/composables/use-date-picker";
-import type {DatePickerState} from "@/composables/use-date-picker-state";
-import type {DateValue} from "@internationalized/date";
+import type { UseDatePickerReturn } from "@/composables/use-date-picker";
+import type { DatePickerState } from "@/composables/use-date-picker-state";
+import type { DateValue } from "@internationalized/date";
 
 export interface DatePickerHostProps {
   id?: string;
@@ -17,5 +17,5 @@ export interface DatePickerHostProps {
   withLabel?: boolean;
   locale?: string;
   /** Hands the live hooks back to the test. */
-  onReady?: (value: {picker: UseDatePickerReturn; state: DatePickerState}) => void;
+  onReady?: (value: { picker: UseDatePickerReturn; state: DatePickerState }) => void;
 }

@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {ColorPickerTriggerProps} from "./color-picker.types";
+import type { ColorPickerTriggerProps } from "./color-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useColorPickerContext} from "./color-picker.context";
+import { useColorPickerContext } from "./color-picker.context";
 
-const props = withDefaults(defineProps<ColorPickerTriggerProps>(), {type: "button"});
+const props = withDefaults(defineProps<ColorPickerTriggerProps>(), { type: "button" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useColorPickerContext();
+const { slots } = useColorPickerContext();
 
 // Supplied by the picker root, which is what makes this a dialog trigger rather than a button.
 const responder = usePressResponder();
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -26,7 +26,7 @@ const setElement = (element: unknown) => {
 
 // The stylesheet keys the focus ring on the attribute as well as on `:focus-visible`, so the
 // state is tracked rather than left to the pseudo-class alone.
-const {isFocusVisible, onBlur, onFocus} = useInteractionStates();
+const { isFocusVisible, onBlur, onFocus } = useInteractionStates();
 
 /**
  * A tab index is written even though a native button is already tabbable: Safari does not focus

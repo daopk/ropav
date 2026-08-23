@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DateSegmentPartProps} from "./date-segment.types";
+import type { DateSegmentPartProps } from "./date-segment.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useDateSegment} from "@/composables/use-date-segment";
+import { useDateSegment } from "@/composables/use-date-segment";
 
 const props = defineProps<DateSegmentPartProps>();
 

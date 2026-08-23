@@ -1,7 +1,7 @@
-import {describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useFocusScope} from "@/composables/use-focus-scope";
+import { useFocusScope } from "@/composables/use-focus-scope";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -28,10 +28,10 @@ const buildScope = () => {
   root.append(first, last);
   document.body.appendChild(root);
 
-  return {first, last, root};
+  return { first, last, root };
 };
 
-const tab = (options: {shift?: boolean} = {}) => {
+const tab = (options: { shift?: boolean } = {}) => {
   const event = new KeyboardEvent("keydown", {
     bubbles: true,
     cancelable: true,
@@ -47,8 +47,8 @@ const tab = (options: {shift?: boolean} = {}) => {
 describe("useFocusScope", () => {
   describe("containment", () => {
     it("wraps from the last focusable back to the first", async () => {
-      const {first, last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({contain: true, scopeRef: root}));
+      const { first, last, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, scopeRef: root }));
 
       await nextTick();
       last.focus();
@@ -63,12 +63,12 @@ describe("useFocusScope", () => {
     });
 
     it("wraps backwards from the first focusable to the last", async () => {
-      const {first, last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({contain: true, scopeRef: root}));
+      const { first, last, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, scopeRef: root }));
 
       await nextTick();
       first.focus();
-      tab({shift: true});
+      tab({ shift: true });
 
       expect(document.activeElement).toBe(last);
 
@@ -77,8 +77,8 @@ describe("useFocusScope", () => {
     });
 
     it("blocks the browser's own tab handling so focus cannot leave", async () => {
-      const {last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({contain: true, scopeRef: root}));
+      const { last, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, scopeRef: root }));
 
       await nextTick();
       last.focus();
@@ -90,12 +90,12 @@ describe("useFocusScope", () => {
     });
 
     it("pulls focus back when it escapes the scope", async () => {
-      const {root} = buildScope();
+      const { root } = buildScope();
       const outside = document.createElement("button");
 
       document.body.appendChild(outside);
 
-      const [, dispose] = withScope(() => useFocusScope({contain: true, scopeRef: root}));
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, scopeRef: root }));
 
       await nextTick();
       outside.focus();
@@ -113,7 +113,7 @@ describe("useFocusScope", () => {
       root.tabIndex = -1;
       document.body.appendChild(root);
 
-      const [, dispose] = withScope(() => useFocusScope({contain: true, scopeRef: root}));
+      const [, dispose] = withScope(() => useFocusScope({ contain: true, scopeRef: root }));
 
       await nextTick();
       root.focus();
@@ -126,8 +126,8 @@ describe("useFocusScope", () => {
     });
 
     it("leaves tab alone when it was not asked to contain", async () => {
-      const {last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({scopeRef: root}));
+      const { last, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ scopeRef: root }));
 
       await nextTick();
       last.focus();
@@ -140,8 +140,10 @@ describe("useFocusScope", () => {
 
     it("stops containing once it is no longer active", async () => {
       const isActive = shallowRef(true);
-      const {last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({contain: true, isActive, scopeRef: root}));
+      const { last, root } = buildScope();
+      const [, dispose] = withScope(() =>
+        useFocusScope({ contain: true, isActive, scopeRef: root }),
+      );
 
       await nextTick();
       isActive.value = false;
@@ -161,13 +163,13 @@ describe("useFocusScope", () => {
       const inner = buildScope();
 
       const [, disposeOuter] = withScope(() =>
-        useFocusScope({contain: true, scopeRef: outer.root}),
+        useFocusScope({ contain: true, scopeRef: outer.root }),
       );
 
       await nextTick();
 
       const [, disposeInner] = withScope(() =>
-        useFocusScope({contain: true, scopeRef: inner.root}),
+        useFocusScope({ contain: true, scopeRef: inner.root }),
       );
 
       await nextTick();
@@ -189,12 +191,12 @@ describe("useFocusScope", () => {
       const inner = buildScope();
 
       const [, disposeOuter] = withScope(() =>
-        useFocusScope({contain: true, scopeRef: outer.root}),
+        useFocusScope({ contain: true, scopeRef: outer.root }),
       );
 
       await nextTick();
 
-      const [, disposeInner] = withScope(() => useFocusScope({scopeRef: inner.root}));
+      const [, disposeInner] = withScope(() => useFocusScope({ scopeRef: inner.root }));
 
       await nextTick();
       inner.first.focus();
@@ -213,13 +215,13 @@ describe("useFocusScope", () => {
       const inner = buildScope();
 
       const [, disposeOuter] = withScope(() =>
-        useFocusScope({contain: true, scopeRef: outer.root}),
+        useFocusScope({ contain: true, scopeRef: outer.root }),
       );
 
       await nextTick();
 
       const [, disposeInner] = withScope(() =>
-        useFocusScope({contain: true, scopeRef: inner.root}),
+        useFocusScope({ contain: true, scopeRef: inner.root }),
       );
 
       await nextTick();
@@ -238,8 +240,8 @@ describe("useFocusScope", () => {
 
   describe("auto focus", () => {
     it("focuses the scope itself", async () => {
-      const {root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({autoFocus: true, scopeRef: root}));
+      const { root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ autoFocus: true, scopeRef: root }));
 
       await nextTick();
 
@@ -250,8 +252,8 @@ describe("useFocusScope", () => {
     });
 
     it("focuses the first focusable element", async () => {
-      const {first, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({autoFocus: "first", scopeRef: root}));
+      const { first, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ autoFocus: "first", scopeRef: root }));
 
       await nextTick();
 
@@ -262,8 +264,8 @@ describe("useFocusScope", () => {
     });
 
     it("focuses the last focusable element", async () => {
-      const {last, root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({autoFocus: "last", scopeRef: root}));
+      const { last, root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ autoFocus: "last", scopeRef: root }));
 
       await nextTick();
 
@@ -274,11 +276,11 @@ describe("useFocusScope", () => {
     });
 
     it("focuses nothing when it was not asked to", async () => {
-      const {root} = buildScope();
+      const { root } = buildScope();
 
       document.body.focus();
 
-      const [, dispose] = withScope(() => useFocusScope({scopeRef: root}));
+      const [, dispose] = withScope(() => useFocusScope({ scopeRef: root }));
 
       await nextTick();
 
@@ -296,9 +298,9 @@ describe("useFocusScope", () => {
       document.body.appendChild(trigger);
       trigger.focus();
 
-      const {root} = buildScope();
+      const { root } = buildScope();
       const [, dispose] = withScope(() =>
-        useFocusScope({autoFocus: true, restoreFocus: true, scopeRef: root}),
+        useFocusScope({ autoFocus: true, restoreFocus: true, scopeRef: root }),
       );
 
       await nextTick();
@@ -321,9 +323,9 @@ describe("useFocusScope", () => {
       document.body.append(trigger, elsewhere);
       trigger.focus();
 
-      const {root} = buildScope();
+      const { root } = buildScope();
       const [, dispose] = withScope(() =>
-        useFocusScope({autoFocus: true, restoreFocus: true, scopeRef: root}),
+        useFocusScope({ autoFocus: true, restoreFocus: true, scopeRef: root }),
       );
 
       await nextTick();
@@ -343,9 +345,9 @@ describe("useFocusScope", () => {
       document.body.appendChild(trigger);
       trigger.focus();
 
-      const {root} = buildScope();
+      const { root } = buildScope();
       const [, dispose] = withScope(() =>
-        useFocusScope({autoFocus: true, restoreFocus: true, scopeRef: root}),
+        useFocusScope({ autoFocus: true, restoreFocus: true, scopeRef: root }),
       );
 
       await nextTick();
@@ -362,8 +364,8 @@ describe("useFocusScope", () => {
       document.body.appendChild(trigger);
       trigger.focus();
 
-      const {root} = buildScope();
-      const [, dispose] = withScope(() => useFocusScope({autoFocus: true, scopeRef: root}));
+      const { root } = buildScope();
+      const [, dispose] = withScope(() => useFocusScope({ autoFocus: true, scopeRef: root }));
 
       await nextTick();
       dispose();

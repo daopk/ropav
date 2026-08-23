@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconArrowUp from "~icons/gravity-ui/arrow-up";
 import IconAt from "~icons/gravity-ui/at";
 import IconCopy from "~icons/gravity-ui/copy";
@@ -13,15 +13,15 @@ import IconMicrophone from "~icons/gravity-ui/microphone";
 import IconPlugConnection from "~icons/gravity-ui/plug-connection";
 import IconPlus from "~icons/gravity-ui/plus";
 
-import {Button} from "../button";
-import {Chip, ChipLabel} from "../chip";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Kbd, KbdAbbr, KbdContent} from "../kbd";
-import {Label} from "../label";
-import {Spinner} from "../spinner";
-import {TextField} from "../textfield";
-import {TooltipContent, TooltipRoot} from "../tooltip";
+import { Button } from "../button";
+import { Chip, ChipLabel } from "../chip";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Kbd, KbdAbbr, KbdContent } from "../kbd";
+import { Label } from "../label";
+import { Spinner } from "../spinner";
+import { TextField } from "../textfield";
+import { TooltipContent, TooltipRoot } from "../tooltip";
 
 import {
   InputGroup,
@@ -298,7 +298,7 @@ export const PasswordWithToggle: Story = {
     setup: () => {
       const isVisible = shallowRef(false);
 
-      return {isVisible};
+      return { isVisible };
     },
     template: `
       <TextField class="w-[280px]" name="password">
@@ -480,7 +480,7 @@ export const WithTextArea: Story = {
         }, 1000);
       };
 
-      return {isSubmitting, onSubmit, value};
+      return { isSubmitting, onSubmit, value };
     },
     template: `
       <TextField full-width aria-label="Prompt input" class="flex w-sm flex-col sm:w-lg" name="prompt">

@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 export type ToggleGroupKey = string | number;
 
@@ -64,7 +64,7 @@ export const useToggleGroupState = (
   const disallowEmptySelection = computed(() => toValue(options.disallowEmptySelection) ?? false);
   const isDisabled = computed(() => toValue(options.isDisabled) ?? false);
 
-  const {setState, state} = useControllableState<Set<ToggleGroupKey>>({
+  const { setState, state } = useControllableState<Set<ToggleGroupKey>>({
     defaultValue: new Set(options.defaultSelectedKeys ?? []),
     onValueChange: options.onSelectionChange,
     value: () => {

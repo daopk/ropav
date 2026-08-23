@@ -1,7 +1,7 @@
-import type {popoverVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { popoverVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface PopoverContext {
   slots: ComputedRef<ReturnType<typeof popoverVariants>>;

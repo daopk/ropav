@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {CalendarCellProps, CalendarCellSlotProps} from "./calendar.types";
+import type { CalendarCellProps, CalendarCellSlotProps } from "./calendar.types";
 
-import {isSameMonth} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { isSameMonth } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 
-import {useCalendarCell} from "../../composables/use-calendar-cell";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useCalendarCell } from "../../composables/use-calendar-cell";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   useCalendarContext,
@@ -16,11 +16,11 @@ import {
 
 const props = defineProps<CalendarCellProps>();
 
-defineSlots<{default?: (props: CalendarCellSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarCellSlotProps) => unknown }>();
 
-const {slots} = useCalendarContext();
-const {calendar, state} = useCalendarStateContext();
-const {startDate} = useCalendarGridContext();
+const { slots } = useCalendarContext();
+const { calendar, state } = useCalendarStateContext();
+const { startDate } = useCalendarGridContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -39,7 +39,7 @@ const isOutsideMonth = computed(() => {
 });
 
 const cell = useCalendarCell(
-  {date: () => props.date, element, isOutsideMonth},
+  { date: () => props.date, element, isOutsideMonth },
   state,
   calendar.shared,
 );
@@ -53,7 +53,7 @@ const interaction = useInteractionStates({
 // A ring only when the cell is the focused one: the browser's own focus can lag a page change.
 const isFocusVisible = computed(() => interaction.isFocusVisible.value && cell.isFocused.value);
 
-const styles = computed(() => slots.value.cell({class: props.class}));
+const styles = computed(() => slots.value.cell({ class: props.class }));
 
 const slotProps = computed<CalendarCellSlotProps>(() => ({
   date: props.date,

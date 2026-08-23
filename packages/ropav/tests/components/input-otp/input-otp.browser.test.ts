@@ -1,15 +1,15 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
 
 const renderInputOTP = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   return {
     ...result,
@@ -35,7 +35,7 @@ const paste = async (control: HTMLInputElement, text: string) => {
 
   data.setData("text/plain", text);
   control.dispatchEvent(
-    new ClipboardEvent("paste", {bubbles: true, cancelable: true, clipboardData: data}),
+    new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData: data }),
   );
 
   await nextTick();
@@ -60,7 +60,7 @@ describe("InputOTP (browser)", () => {
    * the page has taken out of hit testing, which is exactly the property being asserted.
    */
   it("stretches the control over the boxes and takes them out of the pointer's way", async () => {
-    const {container, control, root, unmount} = renderInputOTP();
+    const { container, control, root, unmount } = renderInputOTP();
 
     expect(getComputedStyle(root).pointerEvents).toBe("none");
     expect(getComputedStyle(control).pointerEvents).toBe("all");
@@ -85,7 +85,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("puts the caret on the first empty box when focus arrives", async () => {
-    const {container, control, unmount} = renderInputOTP({defaultValue: "12"});
+    const { container, control, unmount } = renderInputOTP({ defaultValue: "12" });
 
     await userEvent.click(control);
     await nextTick();
@@ -96,7 +96,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("keeps the caret on the last box once the code is full", async () => {
-    const {container, control, unmount} = renderInputOTP({defaultValue: "123456"});
+    const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
     await nextTick();
@@ -107,7 +107,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("fills the boxes left to right as the keys are pressed", async () => {
-    const {container, control, slotAt, unmount} = renderInputOTP();
+    const { container, control, slotAt, unmount } = renderInputOTP();
 
     await userEvent.click(control);
     await userEvent.keyboard("12");
@@ -121,7 +121,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("walks the caret back as Backspace empties the boxes", async () => {
-    const {container, control, slotAt, unmount} = renderInputOTP({defaultValue: "123"});
+    const { container, control, slotAt, unmount } = renderInputOTP({ defaultValue: "123" });
 
     await userEvent.click(control);
     await userEvent.keyboard("{Backspace}");
@@ -140,7 +140,7 @@ describe("InputOTP (browser)", () => {
    * without the snap the highlight would sit between two boxes rather than on one.
    */
   it("snaps a caret dropped inside the code onto a single box", async () => {
-    const {container, control, unmount} = renderInputOTP({defaultValue: "123456"});
+    const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
     control.setSelectionRange(2, 2);
@@ -155,7 +155,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("marks every box as active when the whole code is selected", async () => {
-    const {container, control, unmount} = renderInputOTP({defaultValue: "123456"});
+    const { container, control, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
     control.setSelectionRange(0, 6);
@@ -172,7 +172,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("replaces the whole code when a full selection is typed over", async () => {
-    const {control, slotAt, unmount} = renderInputOTP({defaultValue: "123456"});
+    const { control, slotAt, unmount } = renderInputOTP({ defaultValue: "123456" });
 
     await userEvent.click(control);
     control.setSelectionRange(0, 6);
@@ -188,7 +188,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("lays a pasted code into the boxes", async () => {
-    const {control, slotAt, unmount} = renderInputOTP({withPasteTransformer: true});
+    const { control, slotAt, unmount } = renderInputOTP({ withPasteTransformer: true });
 
     await userEvent.click(control);
     await paste(control, "135790");
@@ -205,7 +205,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("keeps a pasted code within the length of the field", async () => {
-    const {control, unmount} = renderInputOTP({maxLength: 4, withPasteTransformer: true});
+    const { control, unmount } = renderInputOTP({ maxLength: 4, withPasteTransformer: true });
 
     await userEvent.click(control);
     await paste(control, "13579");
@@ -217,7 +217,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("refuses a pasted code the pattern does not allow", async () => {
-    const {control, unmount} = renderInputOTP({
+    const { control, unmount } = renderInputOTP({
       pattern: "^[a-zA-Z]+$",
       withPasteTransformer: true,
     });
@@ -232,7 +232,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("inserts a pasted code at the caret rather than replacing what is there", async () => {
-    const {control, unmount} = renderInputOTP({defaultValue: "12", withPasteTransformer: true});
+    const { control, unmount } = renderInputOTP({ defaultValue: "12", withPasteTransformer: true });
 
     await userEvent.click(control);
     await paste(control, "34");
@@ -244,7 +244,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("refuses a typed character the pattern does not allow", async () => {
-    const {control, slotAt, unmount} = renderInputOTP({pattern: "^[a-zA-Z]+$"});
+    const { control, slotAt, unmount } = renderInputOTP({ pattern: "^[a-zA-Z]+$" });
 
     await userEvent.click(control);
     await userEvent.keyboard("a1");
@@ -257,7 +257,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("hides the text of the control so only the boxes are readable", async () => {
-    const {control, unmount} = renderInputOTP({defaultValue: "123"});
+    const { control, unmount } = renderInputOTP({ defaultValue: "123" });
 
     const styles = getComputedStyle(control);
 
@@ -271,7 +271,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("sizes the control's text from the height the boxes came out", async () => {
-    const {control, root, unmount} = renderInputOTP();
+    const { control, root, unmount } = renderInputOTP();
 
     // Set from a `ResizeObserver`, so it only exists once something has actually been laid out.
     expect(root.style.getPropertyValue("--root-height")).toBe(
@@ -283,7 +283,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("draws its own caret in the active box, since the real one is invisible", async () => {
-    const {container, control, unmount} = renderInputOTP();
+    const { container, control, unmount } = renderInputOTP();
 
     await userEvent.click(control);
     await nextTick();
@@ -297,9 +297,9 @@ describe("InputOTP (browser)", () => {
   });
 
   it("cannot be typed into while disabled", async () => {
-    const {control, slotAt, unmount} = renderInputOTP({isDisabled: true});
+    const { control, slotAt, unmount } = renderInputOTP({ isDisabled: true });
 
-    await userEvent.click(control, {force: true});
+    await userEvent.click(control, { force: true });
     await userEvent.keyboard("1");
     await nextTick();
 
@@ -310,7 +310,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderInputOTP({ariaLabel: "Verification code"});
+    const { container, unmount } = renderInputOTP({ ariaLabel: "Verification code" });
 
     await nextTick();
 
@@ -320,7 +320,7 @@ describe("InputOTP (browser)", () => {
   });
 
   it("has no accessibility violations while disabled", async () => {
-    const {container, unmount} = renderInputOTP({
+    const { container, unmount } = renderInputOTP({
       ariaLabel: "Verification code",
       isDisabled: true,
     });
@@ -329,7 +329,7 @@ describe("InputOTP (browser)", () => {
 
     // `color-contrast` is scoped off: the disabled field is deliberately faded, which is what the
     // rule reports, and the same exemption is already taken for the other disabled fields.
-    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
     unmount();
   });
@@ -342,7 +342,7 @@ describe("InputOTP (browser)", () => {
        * the input while the boxes kept showing the typed code, and the form submitted an empty
        * string for a field the user could see was filled in.
        */
-      const {container, control, slotAt, unmount} = renderInputOTP({
+      const { container, control, slotAt, unmount } = renderInputOTP({
         defaultValue: "123",
         name: "code",
         withForm: true,

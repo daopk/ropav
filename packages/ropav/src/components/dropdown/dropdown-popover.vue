@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {DropdownPopoverProps} from "./dropdown.types";
+import type { DropdownPopoverProps } from "./dropdown.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts} from "../overlay";
+import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 
-import {useDropdownContext} from "./dropdown.context";
+import { useDropdownContext } from "./dropdown.context";
 
 // `isKeyboardDismissDisabled` and `shouldFlip` declare an explicit `undefined` default so an absent
 // prop stays absent rather than reading as an explicit `false`.
@@ -14,9 +14,9 @@ const props = withDefaults(defineProps<DropdownPopoverProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useDropdownContext();
+const { slots } = useDropdownContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -30,7 +30,7 @@ const contexts = createOverlaySlotContexts();
 
 provideOverlaySlotContexts(contexts);
 
-const styles = computed(() => slots.value.popover({class: props.class}));
+const styles = computed(() => slots.value.popover({ class: props.class }));
 </script>
 
 <template>

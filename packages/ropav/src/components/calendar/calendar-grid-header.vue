@@ -1,22 +1,22 @@
 <script setup lang="ts" vapor>
-import type {CalendarGridHeaderProps, CalendarGridHeaderSlotProps} from "./calendar.types";
+import type { CalendarGridHeaderProps, CalendarGridHeaderSlotProps } from "./calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {getDayViewWeekDayLabels} from "../../utils/calendar";
+import { useLocale } from "../../composables/use-locale";
+import { getDayViewWeekDayLabels } from "../../utils/calendar";
 
-import {useCalendarContext, useCalendarGridContext} from "./calendar.context";
+import { useCalendarContext, useCalendarGridContext } from "./calendar.context";
 
 const props = defineProps<CalendarGridHeaderProps>();
 
-defineSlots<{default?: (props: CalendarGridHeaderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarGridHeaderSlotProps) => unknown }>();
 
-const {dayView, slots} = useCalendarContext();
-const {headerAttrs, weekDays} = useCalendarGridContext();
+const { dayView, slots } = useCalendarContext();
+const { headerAttrs, weekDays } = useCalendarGridContext();
 const locale = useLocale();
 
-const styles = computed(() => slots.value.gridHeader({class: props.class}));
+const styles = computed(() => slots.value.gridHeader({ class: props.class }));
 
 /**
  * A day view spanning a week or more labels its own columns.

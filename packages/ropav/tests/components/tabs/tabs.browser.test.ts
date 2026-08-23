@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import TabsFixture from "./fixtures.vue";
 
@@ -16,7 +16,7 @@ const OVERFLOW_ITEMS = [
   "Acquisition",
   "Retention",
   "Settings",
-].map((label) => ({id: label.toLowerCase(), label}));
+].map((label) => ({ id: label.toLowerCase(), label }));
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
@@ -57,14 +57,14 @@ const chevronIn = (container: HTMLElement, edge: "prev" | "next") =>
  * from the shared stylesheet, so the React build reports the same thing — scoped off here rather
  * than papered over.
  */
-const SHARED_WITH_REACT = {rules: {"color-contrast": {enabled: false}}};
+const SHARED_WITH_REACT = { rules: { "color-contrast": { enabled: false } } };
 
 describe("Tabs (browser)", () => {
   describe("the indicator", () => {
     it("clears the entering state once the arrival has settled", async () => {
       // jsdom implements no animations, so the entering state resolves there without a frame
       // ever passing and this could not go red.
-      const {container, unmount} = renderVapor(TabsFixture);
+      const { container, unmount } = renderVapor(TabsFixture);
 
       await ready();
 
@@ -77,7 +77,7 @@ describe("Tabs (browser)", () => {
     });
 
     it("slides from the tab it was handed over from", async () => {
-      const {container, unmount} = renderVapor(TabsFixture);
+      const { container, unmount } = renderVapor(TabsFixture);
 
       await ready();
 
@@ -109,7 +109,7 @@ describe("Tabs (browser)", () => {
     });
 
     it("leaves exactly one indicator behind after a handover", async () => {
-      const {container, unmount} = renderVapor(TabsFixture);
+      const { container, unmount } = renderVapor(TabsFixture);
 
       await ready();
 
@@ -128,8 +128,8 @@ describe("Tabs (browser)", () => {
 
   describe("overflow", () => {
     it("reports the scrollable edges and reveals only the reachable chevron", async () => {
-      const {container, unmount} = renderVapor(TabsFixture, {
-        props: {class: "w-[400px]", items: OVERFLOW_ITEMS},
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[400px]", items: OVERFLOW_ITEMS },
       });
 
       await ready();
@@ -147,8 +147,8 @@ describe("Tabs (browser)", () => {
     });
 
     it("scrolls towards the edge the chevron names", async () => {
-      const {container, unmount} = renderVapor(TabsFixture, {
-        props: {class: "w-[400px]", items: OVERFLOW_ITEMS},
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[400px]", items: OVERFLOW_ITEMS },
       });
 
       await ready();
@@ -173,8 +173,8 @@ describe("Tabs (browser)", () => {
     it("scrolls towards the named edge in a right-to-left strip", async () => {
       // The horizontal scroll range runs into the negatives there, so the delta's sign has to
       // flip — a branch no jsdom test can reach, having no layout to scroll.
-      const {container, unmount} = renderVapor(TabsFixture, {
-        props: {class: "w-[400px]", items: OVERFLOW_ITEMS},
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[400px]", items: OVERFLOW_ITEMS },
       });
 
       container.setAttribute("dir", "rtl");
@@ -193,8 +193,8 @@ describe("Tabs (browser)", () => {
     });
 
     it("keeps a visible chevron out of the tab order", async () => {
-      const {container, unmount} = renderVapor(TabsFixture, {
-        props: {class: "w-[400px]", items: OVERFLOW_ITEMS},
+      const { container, unmount } = renderVapor(TabsFixture, {
+        props: { class: "w-[400px]", items: OVERFLOW_ITEMS },
       });
 
       await ready();
@@ -226,7 +226,7 @@ describe("Tabs (browser)", () => {
        * The ring is drawn with a box shadow, so asserting an outline would pass while proving
        * nothing at all.
        */
-      const {container, unmount} = renderVapor(TabsFixture);
+      const { container, unmount } = renderVapor(TabsFixture);
 
       await ready();
 
@@ -251,7 +251,7 @@ describe("Tabs (browser)", () => {
 
   describe("the keyboard", () => {
     it("walks the tabs and takes the selection along", async () => {
-      const {container, unmount} = renderVapor(TabsFixture);
+      const { container, unmount } = renderVapor(TabsFixture);
 
       await ready();
 
@@ -274,7 +274,7 @@ describe("Tabs (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderVapor(TabsFixture);
+    const { container, unmount } = renderVapor(TabsFixture);
 
     await ready();
 

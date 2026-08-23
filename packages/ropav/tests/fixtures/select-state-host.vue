@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {SelectFixtureItem, SelectStateHostProps} from "./select.types";
+import type { SelectFixtureItem, SelectStateHostProps } from "./select.types";
 
-import {useSelectState} from "@/composables/use-select-state";
+import { useSelectState } from "@/composables/use-select-state";
 
 /**
  * Every three-state boolean declares an explicit `undefined`: a cast `false` would read as the
@@ -18,9 +18,9 @@ const props = withDefaults(defineProps<SelectStateHostProps>(), {
   isInvalid: undefined,
   isOpen: undefined,
   items: (): SelectFixtureItem[] => [
-    {id: "florida", name: "Florida"},
-    {id: "california", name: "California"},
-    {id: "texas", name: "Texas"},
+    { id: "florida", name: "Florida" },
+    { id: "california", name: "California" },
+    { id: "texas", name: "Texas" },
   ],
   name: undefined,
   shouldCloseOnSelect: undefined,

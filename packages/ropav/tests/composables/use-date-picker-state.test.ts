@@ -1,10 +1,10 @@
-import type {DatePickerState} from "@/composables/use-date-picker-state";
-import type {DateValue} from "@internationalized/date";
+import type { DatePickerState } from "@/composables/use-date-picker-state";
+import type { DateValue } from "@internationalized/date";
 
-import {CalendarDate, CalendarDateTime, Time, ZonedDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, CalendarDateTime, Time, ZonedDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/date-picker-state-host.vue";
 
@@ -16,7 +16,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     validationBehavior: props["validationBehavior"] ?? "native",
   });
 
-  return {...renderVapor(Host, {props}), state: () => state};
+  return { ...renderVapor(Host, { props }), state: () => state };
 };
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
@@ -36,7 +36,7 @@ describe("useDatePickerState", () => {
 
     it("opens when asked to", () => {
       const onOpenChange = vi.fn();
-      const picker = setup({onOpenChange});
+      const picker = setup({ onOpenChange });
 
       picker.state().setOpen(true);
 
@@ -45,12 +45,12 @@ describe("useDatePickerState", () => {
     });
 
     it("takes a default open state", () => {
-      expect(setup({defaultOpen: true}).state().isOpen.value).toBe(true);
+      expect(setup({ defaultOpen: true }).state().isOpen.value).toBe(true);
     });
 
     it("only reports a controlled open state", () => {
       const onOpenChange = vi.fn();
-      const picker = setup({isOpen: false, onOpenChange});
+      const picker = setup({ isOpen: false, onOpenChange });
 
       picker.state().setOpen(true);
 
@@ -61,26 +61,26 @@ describe("useDatePickerState", () => {
 
   describe("how precise the picker is", () => {
     it("takes the day from a plain value", () => {
-      const picker = setup({value: jun(10)});
+      const picker = setup({ value: jun(10) });
 
       expect(picker.state().granularity.value).toBe("day");
       expect(picker.state().hasTime.value).toBe(false);
     });
 
     it("takes the minute from a value that carries a time", () => {
-      const picker = setup({value: junAt(10, 13, 45)});
+      const picker = setup({ value: junAt(10, 13, 45) });
 
       expect(picker.state().granularity.value).toBe("minute");
       expect(picker.state().hasTime.value).toBe(true);
     });
 
     it("learns its shape from a placeholder before anything is chosen", () => {
-      expect(setup({placeholderValue: junAt(15, 8)}).state().hasTime.value).toBe(true);
+      expect(setup({ placeholderValue: junAt(15, 8) }).state().hasTime.value).toBe(true);
     });
 
     it("takes what the caller asked for", () => {
       expect(
-        setup({granularity: "second", placeholderValue: junAt(15, 8)}).state().granularity.value,
+        setup({ granularity: "second", placeholderValue: junAt(15, 8) }).state().granularity.value,
       ).toBe("second");
     });
   });
@@ -88,7 +88,7 @@ describe("useDatePickerState", () => {
   describe("picking a date on a date-only picker", () => {
     it("commits it and closes", () => {
       const onChange = vi.fn();
-      const picker = setup({onChange});
+      const picker = setup({ onChange });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -99,7 +99,7 @@ describe("useDatePickerState", () => {
     });
 
     it("stays open when told not to close", () => {
-      const picker = setup({shouldCloseOnSelect: false});
+      const picker = setup({ shouldCloseOnSelect: false });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -110,7 +110,7 @@ describe("useDatePickerState", () => {
 
     it("asks a callback whether to close, each time", () => {
       let shouldClose = false;
-      const picker = setup({shouldCloseOnSelect: () => shouldClose});
+      const picker = setup({ shouldCloseOnSelect: () => shouldClose });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -125,11 +125,11 @@ describe("useDatePickerState", () => {
   });
 
   describe("assembling a date and a time", () => {
-    const withTime = {granularity: "minute" as const, placeholderValue: junAt(15, 8)};
+    const withTime = { granularity: "minute" as const, placeholderValue: junAt(15, 8) };
 
     it("commits with a placeholder time when the popover closes on the press", () => {
       // Closing immediately leaves no chance to pick a time, so the placeholder's stands in.
-      const picker = setup({...withTime, placeholderValue: junAt(15, 8)});
+      const picker = setup({ ...withTime, placeholderValue: junAt(15, 8) });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -139,7 +139,7 @@ describe("useDatePickerState", () => {
 
     it("holds the date on its own while the popover stays open", () => {
       const onChange = vi.fn();
-      const picker = setup({...withTime, onChange, shouldCloseOnSelect: false});
+      const picker = setup({ ...withTime, onChange, shouldCloseOnSelect: false });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -150,7 +150,7 @@ describe("useDatePickerState", () => {
     });
 
     it("commits once the time arrives too", () => {
-      const picker = setup({...withTime, shouldCloseOnSelect: false});
+      const picker = setup({ ...withTime, shouldCloseOnSelect: false });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -160,7 +160,7 @@ describe("useDatePickerState", () => {
     });
 
     it("takes the two halves in the other order as well", () => {
-      const picker = setup({...withTime, shouldCloseOnSelect: false});
+      const picker = setup({ ...withTime, shouldCloseOnSelect: false });
 
       picker.state().setTimeValue(new Time(13, 45));
 
@@ -173,7 +173,7 @@ describe("useDatePickerState", () => {
     });
 
     it("commits a date left without a time when the popover closes", () => {
-      const picker = setup({...withTime, shouldCloseOnSelect: false});
+      const picker = setup({ ...withTime, shouldCloseOnSelect: false });
 
       picker.state().setOpen(true);
       picker.state().setDateValue(jun(10));
@@ -185,7 +185,7 @@ describe("useDatePickerState", () => {
     it("keeps a time left without a date instead of committing it", () => {
       // There is no day to put the time on, so the half is held until the user comes back to it.
       const onChange = vi.fn();
-      const picker = setup({...withTime, onChange, shouldCloseOnSelect: false});
+      const picker = setup({ ...withTime, onChange, shouldCloseOnSelect: false });
 
       picker.state().setOpen(true);
       picker.state().setTimeValue(new Time(13, 45));
@@ -237,37 +237,37 @@ describe("useDatePickerState", () => {
 
   describe("the value written out", () => {
     it("is empty with nothing selected", () => {
-      expect(setup().state().formatValue("en-US", {month: "long"})).toBe("");
+      expect(setup().state().formatValue("en-US", { month: "long" })).toBe("");
     });
 
     it("spells the month out when asked", () => {
       expect(
-        setup({value: jun(10)})
+        setup({ value: jun(10) })
           .state()
-          .formatValue("en-US", {month: "long"}),
+          .formatValue("en-US", { month: "long" }),
       ).toBe("June 10, 2026");
     });
 
     it("includes the time when the value has one", () => {
       expect(
-        setup({value: junAt(10, 13, 45)})
+        setup({ value: junAt(10, 13, 45) })
           .state()
-          .formatValue("en-US", {month: "long"}),
+          .formatValue("en-US", { month: "long" }),
       ).toBe("June 10, 2026 at 1:45 PM");
     });
 
     it("follows the locale it is handed", () => {
       expect(
-        setup({value: jun(10)})
+        setup({ value: jun(10) })
           .state()
-          .formatValue("de-DE", {month: "long"}),
+          .formatValue("de-DE", { month: "long" }),
       ).toBe("10. Juni 2026");
     });
 
     it("hands out a formatter built from its own options", () => {
-      const formatter = setup({value: junAt(10, 13, 45)})
+      const formatter = setup({ value: junAt(10, 13, 45) })
         .state()
-        .getDateFormatter("en-US", {granularity: "minute"});
+        .getDateFormatter("en-US", { granularity: "minute" });
 
       expect(formatter.format(new Date(Date.UTC(2026, 5, 10, 13, 45)))).toContain("1:45");
     });
@@ -275,7 +275,7 @@ describe("useDatePickerState", () => {
 
   describe("validity", () => {
     it("reports a value below the minimum once it is revealed", async () => {
-      const picker = setup({minValue: jun(12), validationBehavior: "aria", value: jun(10)});
+      const picker = setup({ minValue: jun(12), validationBehavior: "aria", value: jun(10) });
 
       expect(picker.state().isInvalid.value).toBe(true);
       expect(picker.state().displayValidation.value.validationErrors).toEqual([
@@ -285,7 +285,7 @@ describe("useDatePickerState", () => {
     });
 
     it("holds a native verdict back until something commits it", async () => {
-      const picker = setup({minValue: jun(12), value: jun(10)});
+      const picker = setup({ minValue: jun(12), value: jun(10) });
 
       expect(picker.state().realtimeValidation.value.isInvalid).toBe(true);
       expect(picker.state().isInvalid.value).toBe(false);
@@ -297,7 +297,7 @@ describe("useDatePickerState", () => {
     });
 
     it("reveals it as soon as a date is picked", async () => {
-      const picker = setup({minValue: jun(12)});
+      const picker = setup({ minValue: jun(12) });
 
       picker.state().setDateValue(jun(10));
       await nextTick();
@@ -317,12 +317,12 @@ describe("useDatePickerState", () => {
     });
 
     it("takes the caller's word for it", () => {
-      expect(setup({isInvalid: true}).state().isInvalid.value).toBe(true);
+      expect(setup({ isInvalid: true }).state().isInvalid.value).toBe(true);
     });
 
     it("lets a claim of validity shadow its own bounds", () => {
       expect(
-        setup({isInvalid: false, minValue: jun(12), value: jun(10)}).state().isInvalid.value,
+        setup({ isInvalid: false, minValue: jun(12), value: jun(10) }).state().isInvalid.value,
       ).toBe(false);
     });
 
@@ -340,7 +340,7 @@ describe("useDatePickerState", () => {
   describe("the value the caller controls", () => {
     it("only reports a controlled value, leaving the owner to write it", () => {
       const onChange = vi.fn();
-      const picker = setup({onChange, value: jun(10)});
+      const picker = setup({ onChange, value: jun(10) });
 
       picker.state().setDateValue(jun(20));
 
@@ -349,7 +349,7 @@ describe("useDatePickerState", () => {
     });
 
     it("remembers what it started with, for a form reset", () => {
-      const picker = setup({defaultValue: jun(10)});
+      const picker = setup({ defaultValue: jun(10) });
 
       picker.state().setValue(jun(20));
 

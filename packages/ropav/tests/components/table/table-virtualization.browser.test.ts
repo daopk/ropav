@@ -1,11 +1,11 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {beforeEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { beforeEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
-const users = Array.from({length: 1000}, (_, index) => ({
+const users = Array.from({ length: 1000 }, (_, index) => ({
   email: `user${index}@acme.com`,
   id: index + 1,
   name: `User ${index}`,
@@ -19,7 +19,7 @@ const settle = async () => {
 };
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(VirtualizedFixture, {props: {items: users, ...props}});
+  const result = renderVapor(VirtualizedFixture, { props: { items: users, ...props } });
 
   await settle();
 
@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 const press = (element: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
 };
 
 /**
@@ -60,7 +60,7 @@ const press = (element: HTMLElement, key: string, init: KeyboardEventInit = {}) 
  */
 describe("Table virtualization (browser)", () => {
   it("measures the box itself and renders a window", async () => {
-    const {grid, keys, unmount} = await render();
+    const { grid, keys, unmount } = await render();
 
     // No mocked geometry: 500px of real box over 42px rows, plus the overscan.
     expect(getComputedStyle(grid).overflow).toBe("auto");
@@ -72,7 +72,7 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("keeps the header above the rows that scroll under it", async () => {
-    const {grid, keys, scrollTo, unmount} = await render();
+    const { grid, keys, scrollTo, unmount } = await render();
     const header = grid.querySelector<HTMLElement>('[data-slot="table-header"]')!.parentElement!;
     const before = header.getBoundingClientRect().top;
 
@@ -87,7 +87,7 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("lays the columns out over the real width of the box", async () => {
-    const {grid, unmount} = await render();
+    const { grid, unmount } = await render();
     const columns = [...grid.querySelectorAll<HTMLElement>('[data-slot="table-column"]')];
     const cells = [
       ...grid.querySelectorAll<HTMLElement>('[data-slot="table-row"]:first-of-type'),
@@ -110,7 +110,7 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("pages by a viewport of the collection, most of which is not rendered", async () => {
-    const {grid, unmount} = await render();
+    const { grid, unmount } = await render();
 
     press(grid, "ArrowDown");
     await settle();
@@ -122,7 +122,7 @@ describe("Table virtualization (browser)", () => {
     // measuring elements, which could only ever answer for the window.
     expect(document.activeElement?.getAttribute("data-key")).toBe("12");
 
-    press(grid, "End", {ctrlKey: true});
+    press(grid, "End", { ctrlKey: true });
     await settle();
 
     expect(document.activeElement?.getAttribute("data-key")).toBe("1000");
@@ -133,7 +133,7 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("paints the row's focus ring across cells inside contained wrappers", async () => {
-    const {grid, unmount} = await render();
+    const { grid, unmount } = await render();
 
     press(grid, "ArrowDown");
     await settle();
@@ -154,7 +154,7 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("drops the separator only after the last column, through its wrapper", async () => {
-    const {grid, unmount} = await render();
+    const { grid, unmount } = await render();
     const columns = [...grid.querySelectorAll<HTMLElement>('[data-slot="table-column"]')];
 
     // `table.css` reaches the last column through `[role="row"] > [role="presentation"]`, so one
@@ -167,14 +167,14 @@ describe("Table virtualization (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = await render({selectionMode: "multiple"});
+    const { container, unmount } = await render({ selectionMode: "multiple" });
 
     // The same palette shortfall the other grids scope out, and provably not this feature's: the
     // non-virtualized fixture reports it on all three column headers — `.table__column` paints its
     // label in `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
     // 4.5:1 WCAG AA floor. Every other rule still runs, which is where the risk of virtualizing
     // actually is: the roles, the counts and the `aria-rowindex`/`aria-colindex` pairs.
-    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
     unmount();
   });

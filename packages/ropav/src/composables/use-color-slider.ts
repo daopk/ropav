@@ -1,16 +1,16 @@
-import type {Color, ColorChannel} from "../utils/color-types";
-import type {ColorSliderState} from "./use-color-slider-state";
-import type {SliderGroupAttrs, SliderOutputAttrs} from "./use-slider";
-import type {SliderThumbInputAttrs, UseSliderThumbReturn} from "./use-slider-thumb";
-import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type { Color, ColorChannel } from "../utils/color-types";
+import type { ColorSliderState } from "./use-color-slider-state";
+import type { SliderGroupAttrs, SliderOutputAttrs } from "./use-slider";
+import type { SliderThumbInputAttrs, UseSliderThumbReturn } from "./use-slider-thumb";
+import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {visuallyHiddenStyle} from "../utils/visually-hidden";
+import { visuallyHiddenStyle } from "../utils/visually-hidden";
 
-import {useLocale} from "./use-locale";
-import {useSlider} from "./use-slider";
-import {useSliderThumb} from "./use-slider-thumb";
+import { useLocale } from "./use-locale";
+import { useSlider } from "./use-slider";
+import { useSliderThumb } from "./use-slider-thumb";
 
 /** Stops of the hue wheel the gradient is drawn through, in degrees. */
 const HUE_STOPS = [0, 60, 120, 180, 240, 300, 360];
@@ -49,7 +49,7 @@ export interface UseColorSliderReturn {
    * Attach with `@pointerdown`, never through `v-bind`: a vapor render re-attaches every `on*`
    * key that arrived that way, which drops the listener when the press itself re-rendered it.
    */
-  trackHandlers: {onPointerdown: (event: PointerEvent) => void};
+  trackHandlers: { onPointerdown: (event: PointerEvent) => void };
   outputProps: ComputedRef<SliderOutputAttrs>;
   /** For the visually hidden range input, with the colour's name folded into its value text. */
   inputProps: ComputedRef<SliderThumbInputAttrs>;
@@ -91,7 +91,7 @@ export interface UseColorSliderReturn {
  * ```
  */
 export const useColorSlider = (options: UseColorSliderOptions): UseColorSliderReturn => {
-  const {inputEl, state, trackEl} = options;
+  const { inputEl, state, trackEl } = options;
 
   const locale = useLocale();
   const channel = computed(() => toValue(options.channel));
@@ -185,7 +185,7 @@ export const useColorSlider = (options: UseColorSliderOptions): UseColorSliderRe
     displayColor,
     focusThumb: slider.focusFirstThumb,
     inputHandlers: thumb.inputHandlers,
-    inputProps: computed(() => ({...thumb.inputProps.value, "aria-valuetext": valueText.value})),
+    inputProps: computed(() => ({ ...thumb.inputProps.value, "aria-valuetext": valueText.value })),
     inputStyle: {
       ...visuallyHiddenStyle,
       // Filling the track rather than sitting in a 1px box: the input is what a pointer would

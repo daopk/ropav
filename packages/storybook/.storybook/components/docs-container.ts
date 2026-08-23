@@ -1,7 +1,7 @@
-import {DocsContainer as StorybookDocsContainer} from "@storybook/addon-docs/blocks";
+import { DocsContainer as StorybookDocsContainer } from "@storybook/addon-docs/blocks";
 
-import {THEME_GLOBAL_TYPE_ID, ensureThemeKey} from "../addons/theme/constants";
-import {themes} from "../styles/theme";
+import { THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "../addons/theme/constants";
+import { themes } from "../styles/theme";
 
 type DocsContext = Parameters<typeof StorybookDocsContainer>[0]["context"];
 
@@ -11,7 +11,7 @@ type DocsContext = Parameters<typeof StorybookDocsContainer>[0]["context"];
  */
 const readTheme = (context: DocsContext) => {
   try {
-    const {globals} = context.getStoryContext(context.storyById());
+    const { globals } = context.getStoryContext(context.storyById());
 
     return ensureThemeKey(globals[THEME_GLOBAL_TYPE_ID] as string | undefined);
   } catch {
@@ -34,5 +34,5 @@ const readTheme = (context: DocsContext) => {
  * Storybook re-runs the docs render whenever a global changes, so reading the theme at
  * call time is all the reactivity this needs.
  */
-export const DocsContainer: typeof StorybookDocsContainer = ({children, context}) =>
-  StorybookDocsContainer({children, context, theme: themes[readTheme(context)]});
+export const DocsContainer: typeof StorybookDocsContainer = ({ children, context }) =>
+  StorybookDocsContainer({ children, context, theme: themes[readTheme(context)] });

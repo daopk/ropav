@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {ColorSwatchPickerSwatchProps} from "./color-swatch-picker.types";
+import type { ColorSwatchPickerSwatchProps } from "./color-swatch-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useColorSwatch} from "../../composables/use-color-swatch";
+import { useColorSwatch } from "../../composables/use-color-swatch";
 
 import {
   useColorSwatchPickerContext,
@@ -12,7 +12,7 @@ import {
 
 const props = defineProps<ColorSwatchPickerSwatchProps>();
 
-const {slots} = useColorSwatchPickerContext();
+const { slots } = useColorSwatchPickerContext();
 const item = useColorSwatchPickerItemContext();
 
 const swatch = useColorSwatch({
@@ -40,7 +40,7 @@ const style = computed(() => swatch.style.value);
 <template>
   <div
     v-bind="swatch.attrs.value"
-    :class="slots.swatch({class: props.class})"
+    :class="slots.swatch({ class: props.class })"
     data-slot="color-swatch-picker-swatch"
     :style="style"
   />

@@ -1,14 +1,14 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import DrawerFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(DrawerFixture, {props});
+  const result = renderVapor(DrawerFixture, { props });
 
   mounted.push(result);
 
@@ -26,9 +26,9 @@ const slot = (name: string) => document.body.querySelector<HTMLElement>(`[data-s
 
 const open = async (props: Record<string, unknown> = {}) => {
   const changes: boolean[] = [];
-  const result = render({...props, onOpenChange: (isOpen: boolean) => changes.push(isOpen)});
+  const result = render({ ...props, onOpenChange: (isOpen: boolean) => changes.push(isOpen) });
 
-  await userEvent.click(result.getByRole("button", {name: "Open drawer"}) as HTMLElement);
+  await userEvent.click(result.getByRole("button", { name: "Open drawer" }) as HTMLElement);
   await nextTick();
   await nextTick();
   await nextTick();
@@ -39,7 +39,7 @@ const open = async (props: Record<string, unknown> = {}) => {
   await settled(slot("drawer-content")!);
   await settled(slot("drawer-dialog")!);
 
-  return {backdrop, changes, result};
+  return { backdrop, changes, result };
 };
 
 const close = async (result: RenderResult, backdrop: HTMLElement) => {
@@ -60,8 +60,8 @@ const close = async (result: RenderResult, backdrop: HTMLElement) => {
  * flick. The velocity branch is checked by hand.
  */
 const dragPanel = async (
-  from: {x: number; y: number},
-  to: {x: number; y: number},
+  from: { x: number; y: number },
+  to: { x: number; y: number },
   target: HTMLElement = slot("drawer-dialog")!,
 ) => {
   await userEvent.dragAndDrop(slot("drawer-dialog")!, target, {
@@ -113,14 +113,17 @@ afterEach(() => {
 
 describe("Drawer drag (browser)", () => {
   it("ignores a movement shorter than the threshold", async () => {
-    const {backdrop, changes, result} = await open();
+    const { backdrop, changes, result } = await open();
     const panel = slot("drawer-dialog")!;
     const box = panel.getBoundingClientRect();
     const claimed = watchCapture(panel);
 
     // Four pixels, under the eight the gesture arms at. The move really is delivered — this is not
     // a drag the tooling swallowed — so the guard is what stops it.
-    await dragPanel({x: Math.round(box.width / 2), y: 8}, {x: Math.round(box.width / 2), y: 12});
+    await dragPanel(
+      { x: Math.round(box.width / 2), y: 8 },
+      { x: Math.round(box.width / 2), y: 12 },
+    );
 
     expect(claimed).toEqual([]);
     expect(inlineTransform()).toBe("");
@@ -132,15 +135,15 @@ describe("Drawer drag (browser)", () => {
   });
 
   it("dismisses when dragged past a third of its height", async () => {
-    const {changes, result} = await open();
+    const { changes, result } = await open();
     const panel = slot("drawer-dialog")!;
     const height = panel.offsetHeight;
     const box = panel.getBoundingClientRect();
     const start = 8;
 
     await dragPanel(
-      {x: Math.round(box.width / 2), y: start},
-      {x: Math.round(box.width / 2), y: start + Math.round(height * 0.6)},
+      { x: Math.round(box.width / 2), y: start },
+      { x: Math.round(box.width / 2), y: start + Math.round(height * 0.6) },
     );
 
     expect(changes).toEqual([true, false]);
@@ -172,7 +175,7 @@ describe("Drawer drag (browser)", () => {
    * direction. Clamped, the only two possible endings are a cleared transform or a zeroed one.
    */
   it("never moves the panel away from its own edge", async () => {
-    const {result} = await open();
+    const { result } = await open();
     const panel = slot("drawer-dialog")!;
     const box = panel.getBoundingClientRect();
     const claimed = watchCapture(panel);
@@ -181,8 +184,8 @@ describe("Drawer drag (browser)", () => {
 
     // A bottom drawer dragged *up* has nowhere to go.
     await dragPanel(
-      {x: Math.round(box.width / 2), y: start},
-      {x: Math.round(box.width / 2), y: start - travel},
+      { x: Math.round(box.width / 2), y: start },
+      { x: Math.round(box.width / 2), y: start - travel },
     );
 
     expect(claimed).toHaveLength(1);
@@ -193,7 +196,7 @@ describe("Drawer drag (browser)", () => {
   });
 
   it("never moves a side panel further on screen", async () => {
-    const {result} = await open({placement: "right"});
+    const { result } = await open({ placement: "right" });
     const panel = slot("drawer-dialog")!;
     const box = panel.getBoundingClientRect();
     const claimed = watchCapture(panel);
@@ -201,7 +204,7 @@ describe("Drawer drag (browser)", () => {
     const start = Math.round(box.width - 4);
 
     // A right-hand drawer dragged left is being pushed further on screen.
-    await dragPanel({x: start, y: 8}, {x: start - travel, y: 8});
+    await dragPanel({ x: start, y: 8 }, { x: start - travel, y: 8 });
 
     expect(claimed).toHaveLength(1);
     expect(inlineTransform()).toMatch(/^(|translateX\(0px\))$/);
@@ -210,7 +213,7 @@ describe("Drawer drag (browser)", () => {
   });
 
   it("leaves the body's own scroll alone", async () => {
-    const {backdrop, changes, result} = await open();
+    const { backdrop, changes, result } = await open();
     const body = slot("drawer-body")!;
     const box = body.getBoundingClientRect();
     const panelBox = slot("drawer-dialog")!.getBoundingClientRect();
@@ -227,8 +230,8 @@ describe("Drawer drag (browser)", () => {
     expect(endY - startY).toBeGreaterThan(Math.round(panelBox.height * 0.3));
 
     await dragPanel(
-      {x: Math.round(box.width / 2), y: startY},
-      {x: Math.round(box.width / 2), y: endY},
+      { x: Math.round(box.width / 2), y: startY },
+      { x: Math.round(box.width / 2), y: endY },
     );
 
     expect(claimed).toEqual([]);
@@ -241,7 +244,7 @@ describe("Drawer drag (browser)", () => {
   });
 
   it("leaves a button inside the panel alone", async () => {
-    const {backdrop, changes, result} = await open();
+    const { backdrop, changes, result } = await open();
     const button = document.body.querySelector<HTMLElement>("[data-testid='body-button']")!;
     const panelBox = slot("drawer-dialog")!.getBoundingClientRect();
     const box = button.getBoundingClientRect();
@@ -254,7 +257,7 @@ describe("Drawer drag (browser)", () => {
     // actually delivered there.
     expect(endY - startY).toBeGreaterThan(Math.round(panelBox.height * 0.3));
 
-    await dragPanel({x, y: startY}, {x, y: endY});
+    await dragPanel({ x, y: startY }, { x, y: endY });
 
     // A control keeps its own gesture, so a slip of the finger on a button never moves the drawer.
     expect(claimed).toEqual([]);
@@ -277,7 +280,7 @@ describe("Drawer drag (browser)", () => {
    * element, with the gesture's own pointer id.
    */
   it("claims the pointer once the drag is armed", async () => {
-    const {changes, result} = await open();
+    const { changes, result } = await open();
     const panel = slot("drawer-dialog")!;
     const height = panel.offsetHeight;
     const box = panel.getBoundingClientRect();
@@ -290,8 +293,8 @@ describe("Drawer drag (browser)", () => {
     };
 
     await dragPanel(
-      {x: Math.round(box.width / 2), y: 8},
-      {x: Math.round(box.width / 2), y: 8 + Math.round(height * 0.6)},
+      { x: Math.round(box.width / 2), y: 8 },
+      { x: Math.round(box.width / 2), y: 8 + Math.round(height * 0.6) },
     );
 
     expect(captured).toHaveLength(1);
@@ -302,15 +305,15 @@ describe("Drawer drag (browser)", () => {
   });
 
   it("never moves a drawer that cannot be dismissed", async () => {
-    const {changes, result} = await open({isDismissable: false});
+    const { changes, result } = await open({ isDismissable: false });
     const panel = slot("drawer-dialog")!;
     const height = panel.offsetHeight;
     const box = panel.getBoundingClientRect();
     const claimed = watchCapture(panel);
 
     await dragPanel(
-      {x: Math.round(box.width / 2), y: 8},
-      {x: Math.round(box.width / 2), y: Math.round(height * 0.6)},
+      { x: Math.round(box.width / 2), y: 8 },
+      { x: Math.round(box.width / 2), y: Math.round(height * 0.6) },
     );
 
     // Nothing to drag away, so the page keeps its own gestures and the panel never moves.

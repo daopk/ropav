@@ -1,8 +1,8 @@
-import type {DateRange} from "@/composables/use-calendar";
-import type {PageBehavior, SelectionAlignment} from "@/composables/use-calendar-state";
-import type {RangeCalendarCommitBehavior} from "@/composables/use-range-calendar";
-import type {DayOfWeek, WeekdayStyle} from "@/utils/calendar";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { DateRange } from "@/composables/use-calendar";
+import type { PageBehavior, SelectionAlignment } from "@/composables/use-calendar-state";
+import type { RangeCalendarCommitBehavior } from "@/composables/use-range-calendar";
+import type { DayOfWeek, WeekdayStyle } from "@/utils/calendar";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 export interface RangeCalendarFixtureProps {
   class?: string;

@@ -1,10 +1,10 @@
-import type {DateSegment} from "@/composables/use-date-field-state";
-import type {CalendarDate as CalendarDateType} from "@internationalized/date";
+import type { DateSegment } from "@/composables/use-date-field-state";
+import type { CalendarDate as CalendarDateType } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   DateRangePickerGroup,
@@ -17,7 +17,7 @@ import {
   DateRangePickerTrigger,
   DateRangePickerTriggerIndicator,
 } from "@/components/date-range-picker";
-import {Label} from "@/components/label";
+import { Label } from "@/components/label";
 import {
   RangeCalendarCell,
   RangeCalendarGrid,
@@ -40,17 +40,17 @@ const render = (props: Record<string, unknown> = {}) => {
   const row = (slot: "start" | "end") =>
     h(
       DateRangePickerInput,
-      {slot},
+      { slot },
       {
-        default: ({segment}: {segment: DateSegment}) => h(DateRangePickerSegment, {segment}),
+        default: ({ segment }: { segment: DateSegment }) => h(DateRangePickerSegment, { segment }),
       },
     );
 
   const result = renderInterop(DateRangePickerRoot, {
-    props: {defaultOpen: true, ...props},
+    props: { defaultOpen: true, ...props },
     slots: {
       default: () => [
-        h(Label, null, {default: () => "Trip dates"}),
+        h(Label, null, { default: () => "Trip dates" }),
         h(DateRangePickerGroup, null, {
           default: () => [
             row("start"),
@@ -68,17 +68,18 @@ const render = (props: Record<string, unknown> = {}) => {
           default: () =>
             h(
               RangeCalendarRoot,
-              {"aria-label": "Selected range"},
+              { "aria-label": "Selected range" },
               {
                 default: () =>
                   h(RangeCalendarGrid, null, {
                     default: () => [
                       h(RangeCalendarGridHeader, null, {
-                        default: ({day}: {day: string}) =>
-                          h(RangeCalendarHeaderCell, null, {default: () => day}),
+                        default: ({ day }: { day: string }) =>
+                          h(RangeCalendarHeaderCell, null, { default: () => day }),
                       }),
                       h(RangeCalendarGridBody, null, {
-                        default: ({date}: {date: CalendarDateType}) => h(RangeCalendarCell, {date}),
+                        default: ({ date }: { date: CalendarDateType }) =>
+                          h(RangeCalendarCell, { date }),
                       }),
                     ],
                   }),
@@ -106,7 +107,7 @@ const render = (props: Record<string, unknown> = {}) => {
 
   const rows = () => all("date-input-group-input");
 
-  return {...result, all, inPopover, rows, slot};
+  return { ...result, all, inPopover, rows, slot };
 };
 
 const settle = async () => {
@@ -138,7 +139,7 @@ describe("DateRangePicker interop", () => {
   });
 
   it("resolves each row of segments to the end its markup names", () => {
-    const picker = render({value: {end: jun(20), start: jun(10)}});
+    const picker = render({ value: { end: jun(20), start: jun(10) } });
     const day = (index: number) =>
       [...picker.rows()[index]!.querySelectorAll<HTMLElement>("[data-type='day']")][0]?.textContent;
 
@@ -148,7 +149,7 @@ describe("DateRangePicker interop", () => {
   });
 
   it("reaches the picker's group wiring from a group in the host", () => {
-    const picker = render({id: "trip"});
+    const picker = render({ id: "trip" });
     const group = picker.slot("date-input-group")!;
 
     expect(group.getAttribute("id")).toBe("trip");
@@ -164,7 +165,7 @@ describe("DateRangePicker interop", () => {
   });
 
   it("drives a range calendar written in the host from the picker's value", async () => {
-    const picker = render({value: {end: jun(12), start: jun(10)}});
+    const picker = render({ value: { end: jun(12), start: jun(10) } });
 
     await settle();
 

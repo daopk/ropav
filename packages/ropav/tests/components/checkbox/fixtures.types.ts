@@ -1,4 +1,4 @@
-import type {CheckboxRootProps} from "@/components/checkbox";
+import type { CheckboxRootProps } from "@/components/checkbox";
 
 export interface CheckboxFixtureProps extends CheckboxRootProps {
   /** Renders help text as a sibling of the clickable content. */

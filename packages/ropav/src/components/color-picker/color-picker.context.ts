@@ -1,8 +1,8 @@
-import type {Color} from "../../utils/color-types";
-import type {colorPickerVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { Color } from "../../utils/color-types";
+import type { colorPickerVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ColorPickerContext {
   /** Slot classes the parts pull their own class from. */
@@ -14,7 +14,7 @@ export interface ColorPickerContext {
  * open nothing.
  */
 export const [useColorPickerContext, provideColorPickerContext] = createContext<ColorPickerContext>(
-  {name: "ColorPickerContext"},
+  { name: "ColorPickerContext" },
 );
 
 export interface ColorValueContext {

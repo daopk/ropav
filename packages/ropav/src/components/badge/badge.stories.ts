@@ -1,13 +1,13 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import IconBell from "~icons/gravity-ui/bell";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {Avatar, AvatarImage} from "../avatar";
-import {SeparatorRoot} from "../separator";
+import { avatarSrc } from "../../utils/story-assets";
+import { Avatar, AvatarImage } from "../avatar";
+import { SeparatorRoot } from "../separator";
 
-import {Badge, BadgeAnchor, BadgeLabel} from "./index";
+import { Badge, BadgeAnchor, BadgeLabel } from "./index";
 
 /** Runtime-compiled stories register compound parts individually instead of using dot notation. */
 const components = {
@@ -25,19 +25,19 @@ const AVATAR_URL = avatarSrc("green");
 const meta: StoryMeta = {
   argTypes: {
     color: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["default", "accent", "success", "warning", "danger"],
     },
     placement: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["top-right", "top-left", "bottom-right", "bottom-left"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary", "soft"],
     },
   },
@@ -63,7 +63,7 @@ export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args, avatarUrl: AVATAR_URL}),
+    setup: () => ({ args, avatarUrl: AVATAR_URL }),
     template: `
       <BadgeAnchor>
         <Avatar><AvatarImage :src="avatarUrl" /></Avatar>
@@ -81,9 +81,9 @@ export const Sizes: Story = {
       args,
       avatarUrl: AVATAR_URL,
       sizes: [
-        {label: "Large", value: "lg"},
-        {label: "Medium", value: "md"},
-        {label: "Small", value: "sm"},
+        { label: "Large", value: "lg" },
+        { label: "Medium", value: "md" },
+        { label: "Small", value: "sm" },
       ],
     }),
     template: `
@@ -131,9 +131,9 @@ export const WithContent: Story = {
       args,
       avatarUrl: AVATAR_URL,
       items: [
-        {color: "danger", content: "5", label: "Number"},
-        {color: "danger", content: "New", label: "Text"},
-        {color: "danger", content: "99+", label: "Overflow"},
+        { color: "danger", content: "5", label: "Number" },
+        { color: "danger", content: "New", label: "Text" },
+        { color: "danger", content: "99+", label: "Overflow" },
       ],
     }),
     template: `
@@ -221,9 +221,9 @@ export const DotBadge: Story = {
       avatarUrl: AVATAR_URL,
       colors: ["accent", "success", "warning", "danger"],
       sizes: [
-        {label: "Large", value: "lg"},
-        {label: "Medium", value: "md"},
-        {label: "Small", value: "sm"},
+        { label: "Large", value: "lg" },
+        { label: "Medium", value: "md" },
+        { label: "Small", value: "sm" },
       ],
     }),
     template: `

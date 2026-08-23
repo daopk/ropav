@@ -1,32 +1,32 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
-import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {TableCollectionItems} from "../../composables/use-table-collection";
-import type {DropTargetDelegate} from "../../utils/dnd-types";
-import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { UseDroppableCollectionReturn } from "../../composables/use-droppable-collection";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { TableCollectionItems } from "../../composables/use-table-collection";
+import type { DropTargetDelegate } from "../../utils/dnd-types";
+import type { TableContentProps, TableSortDescriptor, TableSortDirection } from "./table.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {toTableDragCollection} from "../../composables/table-drag-collection";
-import {useControllableState} from "../../composables/use-controllable-state";
-import {useDescription} from "../../composables/use-description";
-import {useDndPersistedKeys} from "../../composables/use-dnd-persisted-keys";
-import {useGridKeyboard} from "../../composables/use-grid-keyboard";
-import {useGridSelectionAnnouncement} from "../../composables/use-grid-selection-announcement";
-import {useId} from "../../composables/use-id";
-import {useLocale} from "../../composables/use-locale";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {useTableCollection} from "../../composables/use-table-collection";
-import {buildColumnWidths, useTableColumnLayout} from "../../composables/use-table-column-layout";
-import {useTypeahead} from "../../composables/use-typeahead";
-import {useVirtualizer} from "../../composables/use-virtualizer";
-import {useVirtualizerScroll} from "../../composables/use-virtualizer-scroll";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {TreeDropTargetDelegate} from "../../utils/dnd-tree-drop-target-delegate";
-import {announce} from "../../utils/live-announcer";
-import {Size} from "../../utils/virtualizer-geometry";
+import { toTableDragCollection } from "../../composables/table-drag-collection";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { useDescription } from "../../composables/use-description";
+import { useDndPersistedKeys } from "../../composables/use-dnd-persisted-keys";
+import { useGridKeyboard } from "../../composables/use-grid-keyboard";
+import { useGridSelectionAnnouncement } from "../../composables/use-grid-selection-announcement";
+import { useId } from "../../composables/use-id";
+import { useLocale } from "../../composables/use-locale";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { useTableCollection } from "../../composables/use-table-collection";
+import { buildColumnWidths, useTableColumnLayout } from "../../composables/use-table-column-layout";
+import { useTypeahead } from "../../composables/use-typeahead";
+import { useVirtualizer } from "../../composables/use-virtualizer";
+import { useVirtualizerScroll } from "../../composables/use-virtualizer-scroll";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { TreeDropTargetDelegate } from "../../utils/dnd-tree-drop-target-delegate";
+import { announce } from "../../utils/live-announcer";
+import { Size } from "../../utils/virtualizer-geometry";
 import {
   provideVirtualizerStateContext,
   useVirtualizerConfigContext,
@@ -55,9 +55,9 @@ const emit = defineEmits<{
   "update:sortDescriptor": [descriptor: TableSortDescriptor];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 
 const tableId = useId();
 const collectionId = useId();
@@ -134,7 +134,7 @@ const layout = resizableContainer
     })
   : null;
 
-provideTableColumnLayoutContext(layout ? {...resizableContainer!, layout} : null);
+provideTableColumnLayoutContext(layout ? { ...resizableContainer!, layout } : null);
 
 /**
  * How wide each column is, for the layout to place cells at.
@@ -308,7 +308,7 @@ const keyboard = useGridKeyboard({
   selection,
 });
 
-useGridSelectionAnnouncement({collection: collection.rows, selection});
+useGridSelectionAnnouncement({ collection: collection.rows, selection });
 
 /* -------------------------------------------------------------------------------------------------
  * Drag and drop — wiring
@@ -327,7 +327,7 @@ const dropKeyboardDelegate = {
   // Landing focus goes through the grid's own `focusCell`, which knows to wait a render for a
   // windowed row that is not in the DOM yet.
   focusKey: (key: CollectionKey) =>
-    keyboard.focusCell({columnKey: null, rowKey: key}, {scroll: true}),
+    keyboard.focusCell({ columnKey: null, rowKey: key }, { scroll: true }),
   getFirstKey: () => collection.rows.getFirstKey(),
   getKeyAbove: (key: CollectionKey) => collection.rows.getKeyBefore(key),
   getKeyBelow: (key: CollectionKey) => collection.rows.getKeyAfter(key),
@@ -412,12 +412,12 @@ if (dnd && dropState) {
 }
 
 /** Whether the table as a whole is the current drop target. */
-const isRootDropTarget = computed(() => dropState?.isDropTarget({type: "root"}) ?? false);
+const isRootDropTarget = computed(() => dropState?.isDropTarget({ type: "root" }) ?? false);
 
 const typeahead = useTypeahead({
   focusedKey: () => keyboard.focusedCell.value.rowKey,
   getKeyForSearch: keyboard.getKeyForSearch,
-  onSearchMatch: (rowKey) => keyboard.focusCell({columnKey: null, rowKey}, {scroll: true}),
+  onSearchMatch: (rowKey) => keyboard.focusCell({ columnKey: null, rowKey }, { scroll: true }),
 });
 
 // Typeahead runs first on both phases: it has to claim a Space that is extending a search before
@@ -510,7 +510,7 @@ const sortDescription = computed(() => {
   return `sorted by column ${columnName} in ${descriptor.direction} order`;
 });
 
-const {describedBy} = useDescription(sortDescription);
+const { describedBy } = useDescription(sortDescription);
 
 // Only after the first render: landing on the table reads the description above, so announcing
 // it then would say the same thing twice.
@@ -524,7 +524,7 @@ watch(sortDescription, (description) => {
  * divs, every cell is placed absolutely, and `min-content` on a div would collapse it.
  */
 const tableStyle = computed(() =>
-  layout && !isVirtualized ? {tableLayout: "fixed", width: "min-content"} : undefined,
+  layout && !isVirtualized ? { tableLayout: "fixed", width: "min-content" } : undefined,
 );
 </script>
 

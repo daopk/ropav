@@ -1,4 +1,4 @@
-import type {Meta} from "@storybook/vue3";
+import type { Meta } from "@storybook/vue3";
 
 /**
  * A story's `meta`, with `component` loosened.
@@ -10,4 +10,4 @@ import type {Meta} from "@storybook/vue3";
  *
  * Story-only, so it is deliberately not re-exported from `utils/index.ts`.
  */
-export type StoryMeta = Omit<Meta, "component"> & {component?: unknown};
+export type StoryMeta = Omit<Meta, "component"> & { component?: unknown };

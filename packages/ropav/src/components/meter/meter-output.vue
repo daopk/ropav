@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {MeterOutputProps} from "./meter.types";
+import type { MeterOutputProps } from "./meter.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useMeterContext} from "./meter.context";
+import { useMeterContext } from "./meter.context";
 
 const props = defineProps<MeterOutputProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots, state} = useMeterContext();
+const { slots, state } = useMeterContext();
 </script>
 
 <template>

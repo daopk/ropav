@@ -1,22 +1,22 @@
-import type {FieldIdsContext} from "./use-field-ids";
+import type { FieldIdsContext } from "./use-field-ids";
 import type {
   FormValidationState,
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
-import {createContext} from "../utils/create-context";
-import {setFormValue} from "../utils/form-value";
+import { createContext } from "../utils/create-context";
+import { setFormValue } from "../utils/form-value";
 
-import {useControllableState} from "./use-controllable-state";
-import {useFieldIds} from "./use-field-ids";
-import {useFormReset} from "./use-form-reset";
-import {useFormValidation} from "./use-form-validation";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useId} from "./use-id";
+import { useControllableState } from "./use-controllable-state";
+import { useFieldIds } from "./use-field-ids";
+import { useFormReset } from "./use-form-reset";
+import { useFormValidation } from "./use-form-validation";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useId } from "./use-id";
 
 /** The two elements a text field can render its control as. */
 export type TextFieldElement = HTMLInputElement | HTMLTextAreaElement;
@@ -188,7 +188,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
   // which means `type` and `pattern` only settle once the control has registered.
   const isTextArea = computed(() => element.value instanceof HTMLTextAreaElement);
 
-  const {setState, state: value} = useControllableState<string>({
+  const { setState, state: value } = useControllableState<string>({
     defaultValue: toValue(options.defaultValue) ?? "",
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -249,7 +249,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
    * early and is overwritten. `immediate`, and with the element in the dependencies, because a
    * field nobody has typed into yet is exactly the one a reset is most likely to find.
    */
-  watch([element, value, isValueOwned], reassert, {flush: "post", immediate: true});
+  watch([element, value, isValueOwned], reassert, { flush: "post", immediate: true });
 
   const setValue = (next: string) => {
     setState(next);
@@ -265,7 +265,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     useFormReset(element, () => toValue(options.defaultValue) ?? initialValue, setState);
   }
 
-  useFormValidation(element, validation, {commitOnBlur: () => toValue(options.commitOnBlur)});
+  useFormValidation(element, validation, { commitOnBlur: () => toValue(options.commitOnBlur) });
 
   // Setting `autofocus` after the element is in the document does nothing, so the focus is
   // taken once, when the control first reports itself.
@@ -274,7 +274,7 @@ export const useTextField = (options: UseTextFieldOptions = {}): UseTextFieldRet
     (control, previous) => {
       if (control && !previous && toValue(options.autoFocus)) control.focus();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   const isNativeBehavior = computed(() => validation.validationBehavior.value === "native");

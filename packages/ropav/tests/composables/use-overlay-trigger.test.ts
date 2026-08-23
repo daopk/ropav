@@ -1,7 +1,7 @@
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useOverlayTrigger} from "@/composables/use-overlay-trigger";
+import { useOverlayTrigger } from "@/composables/use-overlay-trigger";
 import {
   useMenuTriggerState,
   useOverlayTriggerState,
@@ -26,7 +26,7 @@ describe("useOverlayTriggerState", () => {
   });
 
   it("honours an uncontrolled default", () => {
-    const [state, dispose] = withScope(() => useOverlayTriggerState({defaultOpen: true}));
+    const [state, dispose] = withScope(() => useOverlayTriggerState({ defaultOpen: true }));
 
     expect(state.isOpen.value).toBe(true);
 
@@ -54,7 +54,7 @@ describe("useOverlayTriggerState", () => {
   it("reports changes without holding its own state while controlled", () => {
     const isOpen = shallowRef(false);
     const onOpenChange = vi.fn();
-    const [state, dispose] = withScope(() => useOverlayTriggerState({isOpen, onOpenChange}));
+    const [state, dispose] = withScope(() => useOverlayTriggerState({ isOpen, onOpenChange }));
 
     state.open();
 
@@ -149,12 +149,12 @@ describe("useMenuTriggerState", () => {
 
 describe("useSubmenuTriggerState", () => {
   it("derives its open state from the root", () => {
-    const [{root, submenu}, dispose] = withScope(() => {
+    const [{ root, submenu }, dispose] = withScope(() => {
       const root = useMenuTriggerState();
 
       root.open();
 
-      return {root, submenu: useSubmenuTriggerState({triggerKey: "share"}, root)};
+      return { root, submenu: useSubmenuTriggerState({ triggerKey: "share" }, root) };
     });
 
     expect(submenu.submenuLevel).toBe(0);
@@ -174,14 +174,14 @@ describe("useSubmenuTriggerState", () => {
   });
 
   it("closes when a sibling submenu opens", () => {
-    const [{other, share}, dispose] = withScope(() => {
+    const [{ other, share }, dispose] = withScope(() => {
       const root = useMenuTriggerState();
 
       root.open();
 
       return {
-        other: useSubmenuTriggerState({triggerKey: "other"}, root),
-        share: useSubmenuTriggerState({triggerKey: "share"}, root),
+        other: useSubmenuTriggerState({ triggerKey: "other" }, root),
+        share: useSubmenuTriggerState({ triggerKey: "share" }, root),
       };
     });
 
@@ -199,12 +199,12 @@ describe("useSubmenuTriggerState", () => {
   });
 
   it("closes every menu in the tree when asked to close all", () => {
-    const [{root, submenu}, dispose] = withScope(() => {
+    const [{ root, submenu }, dispose] = withScope(() => {
       const root = useMenuTriggerState();
 
       root.open();
 
-      return {root, submenu: useSubmenuTriggerState({triggerKey: "share"}, root)};
+      return { root, submenu: useSubmenuTriggerState({ triggerKey: "share" }, root) };
     });
 
     submenu.open();
@@ -220,10 +220,10 @@ describe("useSubmenuTriggerState", () => {
 
 describe("useOverlayTrigger", () => {
   it("announces a menu trigger as having a popup", () => {
-    const [{state, trigger}, dispose] = withScope(() => {
+    const [{ state, trigger }, dispose] = withScope(() => {
       const state = useOverlayTriggerState();
 
-      return {state, trigger: useOverlayTrigger({type: "menu"}, state)};
+      return { state, trigger: useOverlayTrigger({ type: "menu" }, state) };
     });
 
     expect(trigger.triggerAttributes.value["aria-haspopup"]).toBe(true);
@@ -241,7 +241,7 @@ describe("useOverlayTrigger", () => {
 
   it("names the popup type for a listbox", () => {
     const [trigger, dispose] = withScope(() =>
-      useOverlayTrigger({type: "listbox"}, useOverlayTriggerState()),
+      useOverlayTrigger({ type: "listbox" }, useOverlayTriggerState()),
     );
 
     expect(trigger.triggerAttributes.value["aria-haspopup"]).toBe("listbox");
@@ -251,7 +251,7 @@ describe("useOverlayTrigger", () => {
 
   it("says nothing about a popup for a dialog", () => {
     const [trigger, dispose] = withScope(() =>
-      useOverlayTrigger({type: "dialog"}, useOverlayTriggerState()),
+      useOverlayTrigger({ type: "dialog" }, useOverlayTriggerState()),
     );
 
     // Screen readers announce most other `aria-haspopup` values as "menu", which would be

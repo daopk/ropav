@@ -1,16 +1,16 @@
-import type {UseDatePickerGroupReturn} from "@/composables/use-date-picker-group";
+import type { UseDatePickerGroupReturn } from "@/composables/use-date-picker-group";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
 
 import Harness from "../fixtures/date-picker-group-harness.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let group!: UseDatePickerGroupReturn;
 
-  Object.assign(props, {onReady: (value: UseDatePickerGroupReturn) => (group = value)});
+  Object.assign(props, { onReady: (value: UseDatePickerGroupReturn) => (group = value) });
 
-  const result = renderVapor(Harness, {props});
+  const result = renderVapor(Harness, { props });
   const container = result.container;
   const root = container.querySelector<HTMLElement>("[data-slot='group']")!;
   const segments = [...root.querySelectorAll<HTMLElement>("[data-slot='segment']")];
@@ -30,7 +30,7 @@ const setup = (props: Record<string, unknown> = {}) => {
 };
 
 const keydown = (target: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
   target.dispatchEvent(event);
 
@@ -59,14 +59,14 @@ const pointerdown = (target: HTMLElement) =>
  */
 const layOut = (segments: HTMLElement[], lefts: number[]) => {
   segments.forEach((segment, index) => {
-    segment.getBoundingClientRect = () => ({left: lefts[index]!}) as DOMRect;
+    segment.getBoundingClientRect = () => ({ left: lefts[index]! }) as DOMRect;
   });
 };
 
 describe("useDatePickerGroup", () => {
   describe("moving between segments", () => {
     it("steps forward and back with the arrow keys", () => {
-      const {focused, segments, unmount} = setup({locale: "en-US"});
+      const { focused, segments, unmount } = setup({ locale: "en-US" });
 
       segments[0]!.focus();
 
@@ -83,7 +83,7 @@ describe("useDatePickerGroup", () => {
 
     it("stops at the ends rather than wrapping", () => {
       // A field is a row, not a loop: running off the end has to leave focus where it was.
-      const {focused, segments, unmount} = setup({locale: "en-US"});
+      const { focused, segments, unmount } = setup({ locale: "en-US" });
 
       segments[2]!.focus();
       keydown(segments[2]!, "ArrowRight");
@@ -96,7 +96,7 @@ describe("useDatePickerGroup", () => {
     });
 
     it("claims the key it acted on", () => {
-      const {segments, unmount} = setup({locale: "en-US"});
+      const { segments, unmount } = setup({ locale: "en-US" });
 
       segments[0]!.focus();
 
@@ -106,7 +106,7 @@ describe("useDatePickerGroup", () => {
     });
 
     it("leaves other keys alone", () => {
-      const {segments, unmount} = setup({locale: "en-US"});
+      const { segments, unmount } = setup({ locale: "en-US" });
 
       segments[0]!.focus();
 
@@ -117,7 +117,7 @@ describe("useDatePickerGroup", () => {
 
     it("leaves the arrows alone when asked to", () => {
       // A field nested in a picker steers its own arrows, across both of its fields.
-      const {focused, segments, unmount} = setup({
+      const { focused, segments, unmount } = setup({
         disableArrowNavigation: true,
         locale: "en-US",
       });
@@ -136,7 +136,7 @@ describe("useDatePickerGroup", () => {
        * The segments stay in date order in the DOM while being laid out right to left, so the
        * segment to the left of the first one is the second one.
        */
-      const {focused, segments, unmount} = setup({locale: "he-IL"});
+      const { focused, segments, unmount } = setup({ locale: "he-IL" });
 
       layOut(segments, [200, 100, 0]);
       segments[0]!.focus();
@@ -150,7 +150,7 @@ describe("useDatePickerGroup", () => {
     });
 
     it("stops at the edge of the row", () => {
-      const {focused, segments, unmount} = setup({locale: "he-IL"});
+      const { focused, segments, unmount } = setup({ locale: "he-IL" });
 
       layOut(segments, [200, 100, 0]);
       segments[2]!.focus();
@@ -164,30 +164,30 @@ describe("useDatePickerGroup", () => {
   describe("opening an overlay", () => {
     it("opens on Alt with an arrow", () => {
       const setOpen = vi.fn();
-      const {segments, unmount} = setup({locale: "en-US", setOpen});
+      const { segments, unmount } = setup({ locale: "en-US", setOpen });
 
-      const down = keydown(segments[0]!, "ArrowDown", {altKey: true});
+      const down = keydown(segments[0]!, "ArrowDown", { altKey: true });
 
       expect(setOpen).toHaveBeenCalledWith(true);
       expect(down.defaultPrevented).toBe(true);
 
-      keydown(segments[0]!, "ArrowUp", {altKey: true});
+      keydown(segments[0]!, "ArrowUp", { altKey: true });
       expect(setOpen).toHaveBeenCalledTimes(2);
       unmount();
     });
 
     it("leaves the key alone when there is no overlay to open", () => {
       // A plain date field owns no popover, so Alt with an arrow is not its key to take.
-      const {segments, unmount} = setup({locale: "en-US"});
+      const { segments, unmount } = setup({ locale: "en-US" });
 
-      expect(keydown(segments[0]!, "ArrowDown", {altKey: true}).defaultPrevented).toBe(false);
+      expect(keydown(segments[0]!, "ArrowDown", { altKey: true }).defaultPrevented).toBe(false);
       unmount();
     });
   });
 
   describe("pressing the field itself", () => {
     it("focuses the last segment when the press lands past them all", () => {
-      const {focused, root, unmount} = setup({
+      const { focused, root, unmount } = setup({
         locale: "en-US",
         placeholders: [false, false, false],
       });
@@ -199,7 +199,7 @@ describe("useDatePickerGroup", () => {
     });
 
     it("focuses the segment before where the press landed", () => {
-      const {focused, root, unmount} = setup({
+      const { focused, root, unmount } = setup({
         locale: "en-US",
         placeholders: [false, false, false],
       });
@@ -216,7 +216,10 @@ describe("useDatePickerGroup", () => {
        * This is the point of the whole gesture: clicking a half-filled field carries on where the
        * typing stopped instead of jumping to the end.
        */
-      const {focused, root, unmount} = setup({locale: "en-US", placeholders: [false, true, true]});
+      const { focused, root, unmount } = setup({
+        locale: "en-US",
+        placeholders: [false, true, true],
+      });
 
       pointerdown(root);
 
@@ -225,7 +228,10 @@ describe("useDatePickerGroup", () => {
     });
 
     it("keeps a filled segment when the run before it is filled too", () => {
-      const {focused, root, unmount} = setup({locale: "en-US", placeholders: [true, false, false]});
+      const { focused, root, unmount } = setup({
+        locale: "en-US",
+        placeholders: [true, false, false],
+      });
 
       pointerdown(root);
 

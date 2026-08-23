@@ -1,10 +1,10 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import SliderFixture from "./fixtures.vue";
 
-const renderSlider = (props: Record<string, unknown> = {}) => renderVapor(SliderFixture, {props});
+const renderSlider = (props: Record<string, unknown> = {}) => renderVapor(SliderFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -16,7 +16,7 @@ const inputIn = (container: HTMLElement) => container.querySelector("input")!;
 
 const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}) => {
   element.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: keyName, ...init}),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: keyName, ...init }),
   );
 
   return nextTick();
@@ -25,7 +25,7 @@ const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}
 describe("Slider", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       await nextTick();
 
@@ -39,7 +39,7 @@ describe("Slider", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       expect(slot(container, "slider").classList.contains("slider")).toBe(true);
       expect(slot(container, "slider-output").classList.contains("slider__output")).toBe(true);
@@ -51,7 +51,7 @@ describe("Slider", () => {
     });
 
     it("groups the thumbs and names the group by its label", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       await nextTick();
 
@@ -68,7 +68,7 @@ describe("Slider", () => {
     });
 
     it("names the group itself when there is no visible label", () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         ariaLabel: "Volume",
         defaultValue: 30,
         withoutLabel: true,
@@ -85,7 +85,7 @@ describe("Slider", () => {
     });
 
     it("renders the thumb value as a range input", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30, maxValue: 200, step: 5});
+      const { container, unmount } = renderSlider({ defaultValue: 30, maxValue: 200, step: 5 });
       const input = inputIn(container);
 
       expect(input.type).toBe("range");
@@ -100,7 +100,7 @@ describe("Slider", () => {
     });
 
     it("points the output at every thumb", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [100, 500], maxValue: 1000});
+      const { container, unmount } = renderSlider({ defaultValue: [100, 500], maxValue: 1000 });
 
       await nextTick();
 
@@ -114,7 +114,7 @@ describe("Slider", () => {
     });
 
     it("merges a caller class into the root", () => {
-      const {container, unmount} = renderSlider({class: "custom-class", defaultValue: 30});
+      const { container, unmount } = renderSlider({ class: "custom-class", defaultValue: 30 });
 
       expect(slot(container, "slider").classList.contains("custom-class")).toBe(true);
       expect(slot(container, "slider").classList.contains("slider")).toBe(true);
@@ -125,7 +125,7 @@ describe("Slider", () => {
 
   describe("value", () => {
     it("shows the value in the output", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       expect(slot(container, "slider-output").textContent).toContain("30");
 
@@ -133,7 +133,7 @@ describe("Slider", () => {
     });
 
     it("shows both ends of a range in the output", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [100, 500], maxValue: 1000});
+      const { container, unmount } = renderSlider({ defaultValue: [100, 500], maxValue: 1000 });
 
       await nextTick();
 
@@ -143,9 +143,9 @@ describe("Slider", () => {
     });
 
     it("formats the value the way the caller asked", () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: 30,
-        formatOptions: {currency: "USD", style: "currency"},
+        formatOptions: { currency: "USD", style: "currency" },
       });
 
       expect(slot(container, "slider-output").textContent).toContain("$30.00");
@@ -155,7 +155,7 @@ describe("Slider", () => {
     });
 
     it("renders one thumb per value", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [100, 500], maxValue: 1000});
+      const { container, unmount } = renderSlider({ defaultValue: [100, 500], maxValue: 1000 });
 
       await nextTick();
 
@@ -165,8 +165,8 @@ describe("Slider", () => {
     });
 
     it("follows a controlled value", async () => {
-      const props = reactive({value: 20});
-      const {container, unmount} = renderVapor(SliderFixture, {props});
+      const props = reactive({ value: 20 });
+      const { container, unmount } = renderVapor(SliderFixture, { props });
 
       expect(inputIn(container).value).toBe("20");
 
@@ -182,7 +182,7 @@ describe("Slider", () => {
     it("calls change while moving and changeEnd once the interaction is over", async () => {
       const onChange = vi.fn();
       const onChangeEnd = vi.fn();
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: 30,
         onChange,
         onChangeEnd,
@@ -201,7 +201,7 @@ describe("Slider", () => {
 
   describe("geometry", () => {
     it("fills the track up to the thumb", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
       const fill = slot(container, "slider-fill");
 
       expect(fill.style.left).toBe("0%");
@@ -212,7 +212,7 @@ describe("Slider", () => {
     });
 
     it("fills between the thumbs of a range", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [200, 600], maxValue: 1000});
+      const { container, unmount } = renderSlider({ defaultValue: [200, 600], maxValue: 1000 });
 
       await nextTick();
 
@@ -225,7 +225,7 @@ describe("Slider", () => {
     });
 
     it("fills upwards on a vertical slider", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30, orientation: "vertical"});
+      const { container, unmount } = renderSlider({ defaultValue: 30, orientation: "vertical" });
       const fill = slot(container, "slider-fill");
 
       expect(fill.style.bottom).toBe("0%");
@@ -237,7 +237,7 @@ describe("Slider", () => {
     });
 
     it("keeps the track able to take a drag", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
       const track = slot(container, "slider-track");
 
       expect(track.style.position).toBe("relative");
@@ -249,7 +249,7 @@ describe("Slider", () => {
 
   describe("track ends", () => {
     it("marks the start as filled once the thumb has left it", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
       const track = slot(container, "slider-track");
 
       expect(track.getAttribute("data-fill-start")).toBe("true");
@@ -259,7 +259,7 @@ describe("Slider", () => {
     });
 
     it("marks neither end when a single thumb sits at the minimum", () => {
-      const {container, unmount} = renderSlider({defaultValue: 0});
+      const { container, unmount } = renderSlider({ defaultValue: 0 });
       const track = slot(container, "slider-track");
 
       expect(track.hasAttribute("data-fill-start")).toBe(false);
@@ -269,7 +269,7 @@ describe("Slider", () => {
     });
 
     it("marks both ends when a single thumb sits at the maximum", () => {
-      const {container, unmount} = renderSlider({defaultValue: 100});
+      const { container, unmount } = renderSlider({ defaultValue: 100 });
       const track = slot(container, "slider-track");
 
       expect(track.getAttribute("data-fill-start")).toBe("true");
@@ -279,7 +279,7 @@ describe("Slider", () => {
     });
 
     it("marks an end of a range only when a thumb is parked on it", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [0, 50]});
+      const { container, unmount } = renderSlider({ defaultValue: [0, 50] });
 
       await nextTick();
 
@@ -292,7 +292,7 @@ describe("Slider", () => {
     });
 
     it("marks no end of a range that touches neither", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [20, 80]});
+      const { container, unmount } = renderSlider({ defaultValue: [20, 80] });
 
       await nextTick();
 
@@ -307,7 +307,7 @@ describe("Slider", () => {
 
   describe("keyboard", () => {
     it("steps with the arrows and pages with shift", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 50, step: 5});
+      const { container, unmount } = renderSlider({ defaultValue: 50, step: 5 });
       const thumb = slot(container, "slider-thumb");
 
       await key(thumb, "ArrowRight");
@@ -316,14 +316,14 @@ describe("Slider", () => {
       await key(thumb, "ArrowLeft");
       expect(inputIn(container).value).toBe("50");
 
-      await key(thumb, "ArrowRight", {shiftKey: true});
+      await key(thumb, "ArrowRight", { shiftKey: true });
       expect(inputIn(container).value).toBe("60");
 
       unmount();
     });
 
     it("pages and jumps to the ends", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 50});
+      const { container, unmount } = renderSlider({ defaultValue: 50 });
       const thumb = slot(container, "slider-thumb");
 
       await key(thumb, "PageUp");
@@ -342,7 +342,7 @@ describe("Slider", () => {
     });
 
     it("stops a range thumb at its neighbour", async () => {
-      const {container, unmount} = renderSlider({defaultValue: [20, 80]});
+      const { container, unmount } = renderSlider({ defaultValue: [20, 80] });
 
       await nextTick();
 
@@ -358,7 +358,7 @@ describe("Slider", () => {
 
   describe("disabled", () => {
     it("marks every part and takes the thumb out of the tab order", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30, isDisabled: true});
+      const { container, unmount } = renderSlider({ defaultValue: 30, isDisabled: true });
 
       expect(slot(container, "slider").getAttribute("data-disabled")).toBe("true");
       expect(slot(container, "slider-output").getAttribute("data-disabled")).toBe("true");
@@ -373,7 +373,7 @@ describe("Slider", () => {
 
     it("ignores the keyboard", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: 30,
         isDisabled: true,
         onChange,
@@ -391,7 +391,7 @@ describe("Slider", () => {
 
   describe("orientation", () => {
     it("reports the orientation on every part that is styled by it", () => {
-      const {container, unmount} = renderSlider({defaultValue: 30, orientation: "vertical"});
+      const { container, unmount } = renderSlider({ defaultValue: 30, orientation: "vertical" });
 
       expect(slot(container, "slider").getAttribute("data-orientation")).toBe("vertical");
       expect(slot(container, "slider-output").getAttribute("data-orientation")).toBe("vertical");
@@ -404,15 +404,15 @@ describe("Slider", () => {
 
   describe("interaction states", () => {
     it("renders data-hovered while the pointer is over the track", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
       const track = slot(container, "slider-track");
 
-      track.dispatchEvent(new PointerEvent("pointerenter", {pointerType: "mouse"}));
+      track.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" }));
       await nextTick();
 
       expect(track.getAttribute("data-hovered")).toBe("true");
 
-      track.dispatchEvent(new PointerEvent("pointerleave", {pointerType: "mouse"}));
+      track.dispatchEvent(new PointerEvent("pointerleave", { pointerType: "mouse" }));
       await nextTick();
 
       expect(track.hasAttribute("data-hovered")).toBe(false);
@@ -421,7 +421,7 @@ describe("Slider", () => {
     });
 
     it("renders data-focused on the thumb while its input holds focus", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
       const thumb = slot(container, "slider-thumb");
 
       inputIn(container).focus();
@@ -445,7 +445,7 @@ describe("Slider", () => {
       form.id = "slider-form";
       document.body.append(form);
 
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: 30,
         form: form.id,
         name: "volume",
@@ -464,7 +464,7 @@ describe("Slider", () => {
       form.id = "slider-reset-form";
       document.body.append(form);
 
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: 30,
         form: form.id,
         name: "volume",
@@ -494,7 +494,7 @@ describe("Slider", () => {
        * orders those two the other way around, which is why the test above passes with or without
        * the attribute and this one does not.
        */
-      const {container, unmount} = renderSlider({defaultValue: 30, name: "volume", step: 10});
+      const { container, unmount } = renderSlider({ defaultValue: 30, name: "volume", step: 10 });
 
       await nextTick();
 
@@ -510,7 +510,7 @@ describe("Slider", () => {
 
   describe("label", () => {
     it("hands focus to the first thumb when the label is clicked", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       await nextTick();
       slot(container, "label").click();
@@ -521,7 +521,7 @@ describe("Slider", () => {
     });
 
     it("leaves the label without a for, so the thumb keeps its own name", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 30});
+      const { container, unmount } = renderSlider({ defaultValue: 30 });
 
       await nextTick();
 

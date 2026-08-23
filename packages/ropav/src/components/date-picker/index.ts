@@ -25,7 +25,7 @@ export const DatePicker = Object.assign(DatePickerRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {DatePickerPopover, DatePickerRoot, DatePickerTrigger, DatePickerTriggerIndicator};
+export { DatePickerPopover, DatePickerRoot, DatePickerTrigger, DatePickerTriggerIndicator };
 
 /*
  * The segment parts live in `date-input-group`, which is internal, so they are re-exported here
@@ -53,13 +53,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideDatePickerContext, useDatePickerContext} from "./date-picker.context";
+export { provideDatePickerContext, useDatePickerContext } from "./date-picker.context";
 
-export type {DatePickerContext} from "./date-picker.context";
+export type { DatePickerContext } from "./date-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {datePickerVariants} from "@ropav/styles";
+export { datePickerVariants } from "@ropav/styles";
 
-export type {DatePickerVariants} from "@ropav/styles";
+export type { DatePickerVariants } from "@ropav/styles";

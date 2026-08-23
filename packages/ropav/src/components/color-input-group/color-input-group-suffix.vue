@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {ColorInputGroupSuffixProps} from "./color-input-group.types";
+import type { ColorInputGroupSuffixProps } from "./color-input-group.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useColorInputGroupContext} from "./color-input-group.context";
+import { useColorInputGroupContext } from "./color-input-group.context";
 
 const props = defineProps<ColorInputGroupSuffixProps>();
 
-const {slots} = useColorInputGroupContext();
+const { slots } = useColorInputGroupContext();
 
-const styles = computed(() => slots.value.suffix({class: props.class}));
+const styles = computed(() => slots.value.suffix({ class: props.class }));
 </script>
 
 <template>

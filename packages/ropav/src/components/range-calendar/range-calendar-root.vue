@@ -1,24 +1,27 @@
 <script setup lang="ts" vapor>
-import type {DateRange} from "../../composables/use-calendar";
-import type {CalendarDayViewContext} from "../calendar/calendar.context";
-import type {RangeCalendarRootProps, RangeCalendarRootSlotProps} from "./range-calendar.types";
-import type {CalendarDate as CalendarDateValue, DateValue} from "@internationalized/date";
+import type { DateRange } from "../../composables/use-calendar";
+import type { CalendarDayViewContext } from "../calendar/calendar.context";
+import type { RangeCalendarRootProps, RangeCalendarRootSlotProps } from "./range-calendar.types";
+import type { CalendarDate as CalendarDateValue, DateValue } from "@internationalized/date";
 
-import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
-import {rangeCalendarVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { CalendarDate, DateFormatter, createCalendar } from "@internationalized/date";
+import { rangeCalendarVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useControllableState} from "../../composables/use-controllable-state";
-import {useLocale} from "../../composables/use-locale";
-import {useRangeCalendar} from "../../composables/use-range-calendar";
-import {useRangeCalendarState} from "../../composables/use-range-calendar-state";
-import {dataAttr} from "../../utils/assertion";
-import {getGregorianYearOffset} from "../../utils/calendar";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
-import {provideYearPickerContext} from "../calendar-year-picker/calendar-year-picker.context";
-import {provideCalendarStateContext} from "../calendar/calendar.context";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { useLocale } from "../../composables/use-locale";
+import { useRangeCalendar } from "../../composables/use-range-calendar";
+import { useRangeCalendarState } from "../../composables/use-range-calendar-state";
+import { dataAttr } from "../../utils/assertion";
+import { getGregorianYearOffset } from "../../utils/calendar";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
+import { provideYearPickerContext } from "../calendar-year-picker/calendar-year-picker.context";
+import { provideCalendarStateContext } from "../calendar/calendar.context";
 
-import {provideRangeCalendarContext, useRangeCalendarOwnerContext} from "./range-calendar.context";
+import {
+  provideRangeCalendarContext,
+  useRangeCalendarOwnerContext,
+} from "./range-calendar.context";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to
@@ -41,7 +44,7 @@ const emit = defineEmits<{
   "update:yearPickerOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: (props: RangeCalendarRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RangeCalendarRootSlotProps) => unknown }>();
 
 const slots = computed(() => rangeCalendarVariants());
 const element = shallowRef<HTMLElement | null>(null);
@@ -139,7 +142,7 @@ const calendar = useRangeCalendar(
   state,
 );
 
-const {setState: setIsYearPickerOpen, state: isYearPickerOpen} = useControllableState<boolean>({
+const { setState: setIsYearPickerOpen, state: isYearPickerOpen } = useControllableState<boolean>({
   defaultValue: props.defaultYearPickerOpen,
   onValueChange: (isOpen) => emit("update:yearPickerOpen", isOpen),
   value: () => props.isYearPickerOpen,
@@ -198,8 +201,8 @@ const slotProps = computed<RangeCalendarRootSlotProps>(() => ({
  * picker are written against whichever calendar is above them, which is what lets them be written
  * once. react-aria keeps two contexts and every consumer reads both, taking whichever is not null.
  */
-provideCalendarStateContext({calendar, state});
-provideRangeCalendarContext({dayView, slots});
+provideCalendarStateContext({ calendar, state });
+provideRangeCalendarContext({ dayView, slots });
 provideYearPickerContext({
   calendarElement: element,
   calendarGridSlot: "range-calendar-grid",

@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {RadioGroupRootProps, RadioGroupSlotProps} from "./radio-group.types";
+import type { RadioGroupRootProps, RadioGroupSlotProps } from "./radio-group.types";
 
-import {radioGroupVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { radioGroupVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useLocale} from "../../composables/use-locale";
-import {useRadioGroupState} from "../../composables/use-radio-group-state";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useLocale } from "../../composables/use-locale";
+import { useRadioGroupState } from "../../composables/use-radio-group-state";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
 
-import {provideRadioGroupContext} from "./radio-group.context";
+import { provideRadioGroupContext } from "./radio-group.context";
 
 // `isInvalid` declares an explicit `undefined` default because it is a three-state prop:
 // absent means "no claim", while `false` is a standing claim that the group is valid, which
@@ -32,7 +32,7 @@ const emit = defineEmits<{
   "update:value": [value: string | null];
 }>();
 
-defineSlots<{default?: (props: RadioGroupSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RadioGroupSlotProps) => unknown }>();
 
 const state = useRadioGroupState({
   defaultValue: () => props.defaultValue,
@@ -50,7 +50,7 @@ const state = useRadioGroupState({
   value: () => props.value,
 });
 
-const styles = computed(() => radioGroupVariants({class: props.class, variant: props.variant}));
+const styles = computed(() => radioGroupVariants({ class: props.class, variant: props.variant }));
 
 const resolvedOrientation = computed(() => props.orientation ?? "vertical");
 const locale = useLocale();
@@ -72,7 +72,7 @@ provideFieldIdsContext(fieldIds);
 
 // A radio has no validity of its own, so the group's `FieldError` is the only one that
 // speaks — including one a caller nests inside a radio.
-provideFieldErrorContext({validation: state.validation.displayValidation});
+provideFieldErrorContext({ validation: state.validation.displayValidation });
 
 const resolvedAriaLabelledby = computed(() => {
   const ids = [labelId.value, props.ariaLabelledby].filter(Boolean);

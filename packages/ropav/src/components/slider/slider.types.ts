@@ -1,4 +1,4 @@
-import type {SliderOrientation} from "../../composables/use-slider-state";
+import type { SliderOrientation } from "../../composables/use-slider-state";
 
 export interface SliderRootProps {
   class?: string;

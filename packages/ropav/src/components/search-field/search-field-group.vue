@@ -1,22 +1,22 @@
 <script setup lang="ts" vapor>
-import type {SearchFieldGroupProps, SearchFieldGroupSlotProps} from "./search-field.types";
+import type { SearchFieldGroupProps, SearchFieldGroupSlotProps } from "./search-field.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
-import {useTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
+import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
+import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
 
-import {useSearchFieldContext} from "./search-field.context";
+import { useSearchFieldContext } from "./search-field.context";
 
 const props = defineProps<SearchFieldGroupProps>();
 
-defineSlots<{default?: (props: SearchFieldGroupSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SearchFieldGroupSlotProps) => unknown }>();
 
-const {slots} = useSearchFieldContext();
+const { slots } = useSearchFieldContext();
 const control = useTextFieldControlContext();
 
-const styles = computed(() => slots.value.group({class: props.class}));
+const styles = computed(() => slots.value.group({ class: props.class }));
 
 const isDisabled = computed(() => control?.isDisabled.value ?? false);
 const isInvalid = computed(() => control?.isInvalid.value ?? false);
@@ -24,7 +24,7 @@ const isInvalid = computed(() => control?.isInvalid.value ?? false);
 // Hover is read off this one only; press has no meaning for a shell around a control. The
 // stylesheet suppresses the hover fill while focus is inside, so the two have to be reported
 // together or a group that is both hovered and focused keeps the hover fill.
-const interaction = useInteractionStates({isDisabled});
+const interaction = useInteractionStates({ isDisabled });
 const focusWithin = useFocusWithin();
 
 // A real group, unlike the one inside a text field: the field hands this one no role, so it

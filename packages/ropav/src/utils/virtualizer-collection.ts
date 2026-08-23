@@ -3,7 +3,7 @@ import type {
   VirtualizerNode,
   VirtualizerNodeType,
 } from "./virtualizer-layout";
-import type {VirtualizerKey} from "./virtualizer-layout-info";
+import type { VirtualizerKey } from "./virtualizer-layout-info";
 
 /**
  * Building a collection out of data rather than out of the DOM.
@@ -29,7 +29,8 @@ export interface CreateListCollectionOptions<T> {
 /** The key an item carries itself, matching what a caller would pass as `id`. */
 export const defaultItemKey = (item: unknown, index: number): VirtualizerKey => {
   if (item && typeof item === "object") {
-    const candidate = (item as {id?: unknown; key?: unknown}).id ?? (item as {key?: unknown}).key;
+    const candidate =
+      (item as { id?: unknown; key?: unknown }).id ?? (item as { key?: unknown }).key;
 
     if (typeof candidate === "string" || typeof candidate === "number") return candidate;
   }
@@ -41,7 +42,7 @@ export const defaultItemKey = (item: unknown, index: number): VirtualizerKey => 
 export const createListCollection = <T>(
   options: CreateListCollectionOptions<T>,
 ): VirtualizerCollection => {
-  const {getKey = defaultItemKey, getTextValue, isDisabled, items, type = "item"} = options;
+  const { getKey = defaultItemKey, getTextValue, isDisabled, items, type = "item" } = options;
 
   const nodes = new Map<VirtualizerKey, VirtualizerNode>();
   const keys: VirtualizerKey[] = [];
@@ -155,7 +156,7 @@ export const createTableCollection = <T>(
     keys.push(node.key);
   };
 
-  add({childKeys: [headerRowKey], index: 0, key: headerKey, parentKey: null, type: "header"});
+  add({ childKeys: [headerRowKey], index: 0, key: headerKey, parentKey: null, type: "header" });
   add({
     childKeys: columnKeys,
     index: 0,
@@ -165,12 +166,12 @@ export const createTableCollection = <T>(
   });
 
   columnKeys.forEach((key, index) => {
-    add({childKeys: [], index, key, parentKey: headerRowKey, type: "column"});
+    add({ childKeys: [], index, key, parentKey: headerRowKey, type: "column" });
   });
 
   // Added before its children so the keys read in document order; `bodyChildKeys` is filled below
   // and the node holds the same array.
-  add({childKeys: bodyChildKeys, index: 1, key: bodyKey, parentKey: null, type: "rowgroup"});
+  add({ childKeys: bodyChildKeys, index: 1, key: bodyKey, parentKey: null, type: "rowgroup" });
 
   items.forEach((item, index) => {
     const rowKey = getKey(item, index);
@@ -193,13 +194,13 @@ export const createTableCollection = <T>(
     // than on demand: the layout asks for a row's children whenever it places that row, so a lazy
     // pass would only move the same work behind a cache.
     cellKeys.forEach((key, columnIndex) => {
-      add({childKeys: [], index: columnIndex, key, parentKey: rowKey, type: "cell"});
+      add({ childKeys: [], index: columnIndex, key, parentKey: rowKey, type: "cell" });
     });
   });
 
   if (loaderKey != null) {
     bodyChildKeys.push(loaderKey);
-    add({childKeys: [], index: items.length, key: loaderKey, parentKey: bodyKey, type: "loader"});
+    add({ childKeys: [], index: items.length, key: loaderKey, parentKey: bodyKey, type: "loader" });
   }
 
   const getNode = (key: VirtualizerKey) => nodes.get(key);

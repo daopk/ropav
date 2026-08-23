@@ -1,7 +1,7 @@
-import type {DisclosureKey} from "./use-disclosure-group";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DisclosureKey } from "./use-disclosure-group";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
 export interface UseDisclosureGroupNavigationOptions {
   /** Whether more than one item can be expanded at a time. */
@@ -90,5 +90,5 @@ export const useDisclosureGroupNavigation = (
     if (next !== undefined) expand(next);
   };
 
-  return {currentIndex, isNextDisabled, isPrevDisabled, onNext, onPrevious};
+  return { currentIndex, isNextDisabled, isPrevDisabled, onNext, onPrevious };
 };

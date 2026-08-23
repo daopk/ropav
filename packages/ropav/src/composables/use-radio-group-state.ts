@@ -3,13 +3,13 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useId} from "./use-id";
+import { useControllableState } from "./use-controllable-state";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useId } from "./use-id";
 
 export interface UseRadioGroupStateOptions {
   /** Selected value. Makes the group controlled. */
@@ -73,7 +73,7 @@ export interface RadioGroupState {
 export const useRadioGroupState = (options: UseRadioGroupStateOptions = {}): RadioGroupState => {
   const name = useId(() => toValue(options.name));
 
-  const {setState, state} = useControllableState<string | null>({
+  const { setState, state } = useControllableState<string | null>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onValueChange,
     value: () => toValue(options.value),

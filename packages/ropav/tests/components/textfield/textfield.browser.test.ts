@@ -1,15 +1,15 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
 import FormFixture from "./form-fixtures.vue";
 
-const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -21,7 +21,7 @@ const slot = (container: HTMLElement, name: string) =>
  */
 describe("TextField (browser)", () => {
   it("paints a focus ring on the control when it takes focus", async () => {
-    const {container, unmount} = renderField();
+    const { container, unmount } = renderField();
     const input = slot(container, "input");
 
     const shadowWhenIdle = getComputedStyle(input).boxShadow;
@@ -39,7 +39,7 @@ describe("TextField (browser)", () => {
 
   it("moves focus into the control when the label is clicked", async () => {
     // The only thing that does this is `for` on the label pointing at the control's id.
-    const {container, unmount} = renderField();
+    const { container, unmount } = renderField();
     const label = slot(container, "label");
     const input = slot(container, "input");
 
@@ -55,7 +55,7 @@ describe("TextField (browser)", () => {
 
   it("darkens the control on hover and drops the hover once focused", async () => {
     // The stylesheet gates hover on `:not(:focus)`, so a focused field must not keep it.
-    const {container, unmount} = renderField();
+    const { container, unmount } = renderField();
     const input = slot(container, "input");
 
     const idle = getComputedStyle(input).backgroundColor;
@@ -79,14 +79,14 @@ describe("TextField (browser)", () => {
   it("turns the label danger and hides the description while invalid", async () => {
     // Both come from ancestor selectors on the field's own `data-invalid`, so they only prove
     // anything with the real stylesheet applied.
-    const valid = renderField({withDescription: true});
+    const valid = renderField({ withDescription: true });
     const labelWhenValid = getComputedStyle(slot(valid.container, "label")).color;
 
     expect(getComputedStyle(slot(valid.container, "description")).display).not.toBe("none");
 
     valid.unmount();
 
-    const invalid = renderField({isInvalid: true, withDescription: true});
+    const invalid = renderField({ isInvalid: true, withDescription: true });
 
     await nextTick();
 
@@ -99,7 +99,7 @@ describe("TextField (browser)", () => {
   it("draws the required marker on the label", async () => {
     // The asterisk is an `::after` on `[data-required="true"] > .label`, which needs the label
     // to be a direct child of the field.
-    const {container, unmount} = renderField({isRequired: true});
+    const { container, unmount } = renderField({ isRequired: true });
     const label = slot(container, "label");
 
     expect(getComputedStyle(label, "::after").content).toContain("*");
@@ -113,7 +113,7 @@ describe("TextField (browser)", () => {
 
     enabled.unmount();
 
-    const {container, unmount} = renderField({isDisabled: true});
+    const { container, unmount } = renderField({ isDisabled: true });
     const input = slot(container, "input");
 
     expect(input).toBeDisabled();
@@ -123,7 +123,7 @@ describe("TextField (browser)", () => {
   });
 
   it("really updates the value as the user types", async () => {
-    const {container, unmount} = renderField();
+    const { container, unmount } = renderField();
     const input = slot(container, "input") as HTMLInputElement;
 
     await userEvent.click(input);
@@ -138,7 +138,7 @@ describe("TextField (browser)", () => {
   it("keeps a controlled field at the value its owner allows", async () => {
     // A real keyboard is the only way to prove the re-assert: the browser moves the text
     // first, and a binding whose value did not change is skipped.
-    const {container, unmount} = renderField({value: "fixed"});
+    const { container, unmount } = renderField({ value: "fixed" });
     const input = slot(container, "input") as HTMLInputElement;
 
     await userEvent.click(input);
@@ -151,7 +151,7 @@ describe("TextField (browser)", () => {
   });
 
   it("stretches the control to the field when full width", async () => {
-    const {container, unmount} = renderField({attributeForm: true});
+    const { container, unmount } = renderField({ attributeForm: true });
     const root = slot(container, "textfield");
     const input = slot(container, "input");
 
@@ -161,7 +161,7 @@ describe("TextField (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderField({withDescription: true});
+    const { container, unmount } = renderField({ withDescription: true });
 
     await expectNoA11yViolations(container);
 
@@ -169,7 +169,7 @@ describe("TextField (browser)", () => {
   });
 
   it("has no accessibility violations for a textarea field", async () => {
-    const {container, unmount} = renderField({withTextArea: true});
+    const { container, unmount } = renderField({ withTextArea: true });
 
     await expectNoA11yViolations(container);
 
@@ -186,8 +186,8 @@ describe("TextField (browser)", () => {
        * microtasks between dispatching `reset` and restoring, so the restore goes first and reads
        * whatever the element actually carries.
        */
-      const {container, unmount} = renderVapor(FormFixture, {
-        props: {defaultValue: "hello", name: "bio", withTextArea: true},
+      const { container, unmount } = renderVapor(FormFixture, {
+        props: { defaultValue: "hello", name: "bio", withTextArea: true },
       });
       const control = slot(container, "textarea") as HTMLTextAreaElement;
 
@@ -213,8 +213,8 @@ describe("TextField (browser)", () => {
     });
 
     it("puts an input back to its default, and submits it", async () => {
-      const {container, unmount} = renderVapor(FormFixture, {
-        props: {defaultValue: "hello", name: "q"},
+      const { container, unmount } = renderVapor(FormFixture, {
+        props: { defaultValue: "hello", name: "q" },
       });
       const control = slot(container, "input") as HTMLInputElement;
 

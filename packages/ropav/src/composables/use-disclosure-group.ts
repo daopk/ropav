@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 export type DisclosureKey = string | number;
 
@@ -65,7 +65,7 @@ export const useDisclosureGroup = (
   const allowsMultipleExpanded = computed(() => toValue(options.allowsMultipleExpanded) ?? false);
   const isDisabled = computed(() => toValue(options.isDisabled) ?? false);
 
-  const {setState, state} = useControllableState<Set<DisclosureKey>>({
+  const { setState, state } = useControllableState<Set<DisclosureKey>>({
     defaultValue: new Set(options.defaultExpandedKeys ?? []),
     onValueChange: options.onExpandedChange,
     value: () => {

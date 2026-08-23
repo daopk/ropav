@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Label} from "../label";
+import { Label } from "../label";
 
 import {
   ProgressCircle,
@@ -20,11 +20,11 @@ const components = {
 
 const meta: StoryMeta = {
   argTypes: {
-    color: {control: "select", options: ["default", "accent", "success", "warning", "danger"]},
-    size: {control: "select", options: ["sm", "md", "lg"]},
+    color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
+    size: { control: "select", options: ["sm", "md", "lg"] },
   },
   component: ProgressCircle,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Feedback/ProgressCircle",
 };
 
@@ -42,13 +42,13 @@ const template = (rootProps: string) => `
 `;
 
 export const Default: Story = {
-  render: (args) => ({components, setup: () => ({args}), template: template(':value="60"')}),
+  render: (args) => ({ components, setup: () => ({ args }), template: template(':value="60"') }),
 };
 
 export const Sizes: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-6">
         ${template('size="sm" :value="40"')}
@@ -62,7 +62,7 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-6">
         ${template('color="default" :value="60"')}
@@ -78,7 +78,7 @@ export const Colors: Story = {
 export const Indeterminate: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: template("is-indeterminate"),
   }),
 };
@@ -86,7 +86,7 @@ export const Indeterminate: Story = {
 export const WithLabel: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         ${template(':value="75"')}

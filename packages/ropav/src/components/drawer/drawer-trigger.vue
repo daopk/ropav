@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {DrawerTriggerProps} from "./drawer.types";
+import type { DrawerTriggerProps } from "./drawer.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { composeFocusResponder, useFocusResponder } from "../../composables/focus-responder";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useDrawerContext} from "./drawer.context";
+import { useDrawerContext } from "./drawer.context";
 
 const props = defineProps<DrawerTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useDrawerContext();
+const { slots } = useDrawerContext();
 
 // Supplied by the root, which is what makes this a trigger rather than a plain button.
 const responder = usePressResponder();
@@ -23,7 +23,7 @@ const responder = usePressResponder();
 // without the button having to know.
 const focusResponder = useFocusResponder();
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   const next = (element as HTMLElement | null) ?? null;
@@ -44,13 +44,13 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => props.isDisabled});
+} = useInteractionStates({ isDisabled: () => props.isDisabled });
 
 // Written even though a native button is already tabbable: Safari does not focus one unless an
 // explicit tab index says so. A disabled button should not be reachable at all, so it gets none.
 const tabindex = computed(() => (props.isDisabled ? undefined : 0));
 
-const focus = composeFocusResponder(focusResponder, {onBlur, onFocus});
+const focus = composeFocusResponder(focusResponder, { onBlur, onFocus });
 
 const attrs = computed(() => ({
   ...focusResponder?.attrs.value,

@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {TooltipArrowProps} from "./tooltip.types";
+import type { TooltipArrowProps } from "./tooltip.types";
 
-import {IconOverlayArrow} from "../icons";
-import {OverlayArrow} from "../overlay";
+import { IconOverlayArrow } from "../icons";
+import { OverlayArrow } from "../overlay";
 
 const props = defineProps<TooltipArrowProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 // The default shape carries the slot the stylesheet keys `fill`, `stroke` and the placement
 // rotation on. An arrow supplied through the slot has to carry it itself: vapor renders a slot as

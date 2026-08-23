@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {SliderSlotProps, SliderTrackProps} from "./slider.types";
+import type { SliderSlotProps, SliderTrackProps } from "./slider.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useSliderContext} from "./slider.context";
+import { useSliderContext } from "./slider.context";
 
 const props = defineProps<SliderTrackProps>();
 
-defineSlots<{default?: (props: SliderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SliderSlotProps) => unknown }>();
 
-const {setTrackEl, slider, slots, state} = useSliderContext();
+const { setTrackEl, slider, slots, state } = useSliderContext();
 
-const {isHovered, onPointerenter, onPointerleave} = useInteractionStates({
+const { isHovered, onPointerenter, onPointerleave } = useInteractionStates({
   isDisabled: () => state.isDisabled.value,
 });
 
@@ -27,7 +27,7 @@ const offsets = computed(() => {
     state.getThumbPercent(values.length - 1),
   ].sort();
 
-  return {end: end ?? 0, start: start ?? 0};
+  return { end: end ?? 0, start: start ?? 0 };
 });
 
 /**
@@ -36,12 +36,12 @@ const offsets = computed(() => {
  * range only touches an end when a thumb is parked on it.
  */
 const fill = computed(() => {
-  const {end, start} = offsets.value;
+  const { end, start } = offsets.value;
   const width = (end - start) * 100;
 
-  if (state.values.value.length === 1) return {end: width === 100, start: width > 0};
+  if (state.values.value.length === 1) return { end: width === 100, start: width > 0 };
 
-  return {end: start * 100 + width === 100, start: start === 0};
+  return { end: start * 100 + width === 100, start: start === 0 };
 });
 </script>
 

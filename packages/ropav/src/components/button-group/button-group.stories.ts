@@ -1,5 +1,5 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconChevronLeft from "~icons/gravity-ui/chevron-left";
@@ -21,37 +21,37 @@ import IconThumbsUp from "~icons/gravity-ui/thumbs-up";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconVideo from "~icons/gravity-ui/video";
 
-import {Button} from "../button";
-import {Chip, ChipLabel} from "../chip";
-import {DescriptionRoot} from "../description";
-import {DropdownMenu, DropdownPopover, DropdownRoot} from "../dropdown";
-import {LabelRoot} from "../label";
-import {MenuItemRoot} from "../menu-item";
+import { Button } from "../button";
+import { Chip, ChipLabel } from "../chip";
+import { DescriptionRoot } from "../description";
+import { DropdownMenu, DropdownPopover, DropdownRoot } from "../dropdown";
+import { LabelRoot } from "../label";
+import { MenuItemRoot } from "../menu-item";
 
-import {ButtonGroup, ButtonGroupSeparator} from "./index";
+import { ButtonGroup, ButtonGroupSeparator } from "./index";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.
-const components = {Button, ButtonGroup, ButtonGroupSeparator};
+const components = { Button, ButtonGroup, ButtonGroupSeparator };
 
 const meta: StoryMeta = {
   argTypes: {
     fullWidth: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["horizontal", "vertical"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary", "tertiary", "outline", "ghost", "danger", "danger-soft"],
     },
   },
@@ -73,7 +73,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ButtonGroup v-bind="args">
         <Button>First</Button>
@@ -95,9 +95,9 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
-        {label: "Small", size: "sm"},
-        {label: "Medium (default)", size: "md"},
-        {label: "Large", size: "lg"},
+        { label: "Small", size: "sm" },
+        { label: "Medium (default)", size: "md" },
+        { label: "Large", size: "lg" },
       ],
     }),
     template: `
@@ -165,12 +165,12 @@ export const Variants: Story = {
     components,
     setup: () => ({
       variants: [
-        {label: "Primary", variant: "primary"},
-        {label: "Secondary", variant: "secondary"},
-        {label: "Tertiary", variant: "tertiary"},
-        {label: "Outline", variant: "outline"},
-        {label: "Ghost", variant: "ghost"},
-        {label: "Danger", variant: "danger"},
+        { label: "Primary", variant: "primary" },
+        { label: "Secondary", variant: "secondary" },
+        { label: "Tertiary", variant: "tertiary" },
+        { label: "Outline", variant: "outline" },
+        { label: "Ghost", variant: "ghost" },
+        { label: "Danger", variant: "danger" },
       ],
     }),
     template: `
@@ -266,7 +266,7 @@ export const Disabled: Story = {
 
 export const WithIcons: Story = {
   render: () => ({
-    components: {...components, IconGlobe, IconPlus, IconTrashBin},
+    components: { ...components, IconGlobe, IconPlus, IconTrashBin },
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">

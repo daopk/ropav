@@ -1,9 +1,9 @@
-import type {ComboBoxFixtureItem, ComboBoxStateHostProps} from "../fixtures/combo-box.types";
-import type {UseComboBoxStateReturn} from "@/composables/use-combo-box-state";
+import type { ComboBoxFixtureItem, ComboBoxStateHostProps } from "../fixtures/combo-box.types";
+import type { UseComboBoxStateReturn } from "@/composables/use-combo-box-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/combo-box-state-host.vue";
 
@@ -16,7 +16,7 @@ afterEach(() => {
 const mount = (props: ComboBoxStateHostProps = {}) => {
   let state!: UseComboBoxStateReturn<ComboBoxFixtureItem>;
 
-  const {unmount} = renderVapor(Host, {
+  const { unmount } = renderVapor(Host, {
     props: {
       ...props,
       onReady: (next: UseComboBoxStateReturn<ComboBoxFixtureItem>) => (state = next),
@@ -61,8 +61,8 @@ describe("useComboBoxState", () => {
     it("matches without regard to case or accent", async () => {
       const state = mount({
         items: [
-          {id: "cafe", name: "Café"},
-          {id: "dog", name: "Dog"},
+          { id: "cafe", name: "Café" },
+          { id: "dog", name: "Dog" },
         ],
       });
 
@@ -74,7 +74,7 @@ describe("useComboBoxState", () => {
     it("leaves the options alone when the caller narrows them", async () => {
       // `null` is the seam an asynchronous search needs: the caller has already filtered, so
       // filtering again over stale text would hide the results it just fetched.
-      const state = mount({defaultFilter: null});
+      const state = mount({ defaultFilter: null });
 
       await type(state, "nothing matches this");
 
@@ -82,7 +82,7 @@ describe("useComboBoxState", () => {
     });
 
     it("takes a filter of the caller's own", async () => {
-      const state = mount({defaultFilter: (text, input) => text.endsWith(input)});
+      const state = mount({ defaultFilter: (text, input) => text.endsWith(input) });
 
       await type(state, "og");
 
@@ -93,7 +93,7 @@ describe("useComboBoxState", () => {
   describe("opening", () => {
     it("opens on the first keystroke", async () => {
       const onOpenChange = vi.fn();
-      const state = mount({onOpenChange});
+      const state = mount({ onOpenChange });
 
       state.setFocused(true);
       await type(state, "d");
@@ -103,7 +103,7 @@ describe("useComboBoxState", () => {
     });
 
     it("stays shut while typing when the caller asked for manual only", async () => {
-      const state = mount({menuTrigger: "manual"});
+      const state = mount({ menuTrigger: "manual" });
 
       state.setFocused(true);
       await type(state, "d");
@@ -113,7 +113,7 @@ describe("useComboBoxState", () => {
 
     it("opens on focus when the caller asked it to", () => {
       const onOpenChange = vi.fn();
-      const state = mount({menuTrigger: "focus", onOpenChange});
+      const state = mount({ menuTrigger: "focus", onOpenChange });
 
       state.setFocused(true);
 
@@ -122,7 +122,7 @@ describe("useComboBoxState", () => {
     });
 
     it("does not open on focus for a read-only field", () => {
-      const state = mount({isReadOnly: true, menuTrigger: "focus"});
+      const state = mount({ isReadOnly: true, menuTrigger: "focus" });
 
       state.setFocused(true);
 
@@ -140,7 +140,7 @@ describe("useComboBoxState", () => {
     });
 
     it("does not open on focus with no options at all", () => {
-      const state = mount({items: [], menuTrigger: "focus"});
+      const state = mount({ items: [], menuTrigger: "focus" });
 
       state.setFocused(true);
 
@@ -148,7 +148,7 @@ describe("useComboBoxState", () => {
     });
 
     it("does not open by hand with no options at all", async () => {
-      const state = mount({items: []});
+      const state = mount({ items: [] });
 
       state.toggle(null, "manual");
       await settle();
@@ -158,7 +158,7 @@ describe("useComboBoxState", () => {
     });
 
     it("opens on nothing when the caller allows an empty collection", async () => {
-      const state = mount({allowsEmptyCollection: true});
+      const state = mount({ allowsEmptyCollection: true });
 
       state.setFocused(true);
       await type(state, "zzz");
@@ -199,7 +199,7 @@ describe("useComboBoxState", () => {
 
     it("keeps the reason and the focus strategy of whatever opened it", async () => {
       const onOpenChange = vi.fn();
-      const state = mount({menuTrigger: "focus", onOpenChange});
+      const state = mount({ menuTrigger: "focus", onOpenChange });
 
       state.toggle("first", "manual");
       await settle();
@@ -230,7 +230,7 @@ describe("useComboBoxState", () => {
     });
 
     it("freezes the options while it closes", async () => {
-      const state = mount({defaultValue: "cat"});
+      const state = mount({ defaultValue: "cat" });
 
       state.setFocused(true);
       await type(state, "pa");
@@ -252,14 +252,14 @@ describe("useComboBoxState", () => {
 
   describe("the text and the value together", () => {
     it("starts with the chosen option's own text", () => {
-      const state = mount({defaultValue: "cat"});
+      const state = mount({ defaultValue: "cat" });
 
       expect(state.inputValue.value).toBe("Cat");
       expect(state.defaultInputValue.value).toBe("Cat");
     });
 
     it("prefers text the caller gave over the chosen option's", () => {
-      const state = mount({defaultInputValue: "typed", defaultValue: "cat"});
+      const state = mount({ defaultInputValue: "typed", defaultValue: "cat" });
 
       expect(state.inputValue.value).toBe("typed");
     });
@@ -278,7 +278,7 @@ describe("useComboBoxState", () => {
 
     it("lets go of the value when the field is emptied", async () => {
       const onChange = vi.fn();
-      const state = mount({defaultValue: "cat", onChange});
+      const state = mount({ defaultValue: "cat", onChange });
 
       await type(state, "");
 
@@ -287,7 +287,7 @@ describe("useComboBoxState", () => {
     });
 
     it("keeps the value while the text is narrowed past the option it names", async () => {
-      const state = mount({defaultValue: "cat"});
+      const state = mount({ defaultValue: "cat" });
 
       await type(state, "Ca");
 
@@ -295,11 +295,11 @@ describe("useComboBoxState", () => {
     });
 
     it("picks up the chosen option's text once the options arrive", async () => {
-      const state = mount({defaultValue: "cat", items: []});
+      const state = mount({ defaultValue: "cat", items: [] });
 
       expect(state.inputValue.value).toBe("");
 
-      const late = mount({defaultValue: "cat", items: [{id: "cat", name: "Cat"}]});
+      const late = mount({ defaultValue: "cat", items: [{ id: "cat", name: "Cat" }] });
 
       await settle();
 
@@ -313,7 +313,7 @@ describe("useComboBoxState", () => {
   describe("committing and reverting", () => {
     it("chooses whatever the arrows have landed on", async () => {
       const onChange = vi.fn();
-      const state = mount({onChange});
+      const state = mount({ onChange });
 
       state.toggle(null, "manual");
       await settle();
@@ -329,7 +329,7 @@ describe("useComboBoxState", () => {
     });
 
     it("settles the text back when the arrows have landed nowhere", async () => {
-      const state = mount({defaultValue: "cat"});
+      const state = mount({ defaultValue: "cat" });
 
       state.toggle(null, "manual");
       await settle();
@@ -343,7 +343,7 @@ describe("useComboBoxState", () => {
     });
 
     it("keeps text matching no option when custom values are allowed", async () => {
-      const state = mount({allowsCustomValue: true});
+      const state = mount({ allowsCustomValue: true });
 
       state.setFocused(true);
       await type(state, "Aardvark");
@@ -369,7 +369,7 @@ describe("useComboBoxState", () => {
     });
 
     it("puts the text back to the chosen option on revert", async () => {
-      const state = mount({defaultValue: "dog"});
+      const state = mount({ defaultValue: "dog" });
 
       state.setFocused(true);
       await type(state, "Do something else");
@@ -383,7 +383,7 @@ describe("useComboBoxState", () => {
     });
 
     it("settles the field when focus leaves", async () => {
-      const state = mount({defaultValue: "cat"});
+      const state = mount({ defaultValue: "cat" });
 
       state.setFocused(true);
       await type(state, "Ca");
@@ -395,7 +395,7 @@ describe("useComboBoxState", () => {
     });
 
     it("leaves the field alone on blur when the caller turned that off", async () => {
-      const state = mount({defaultValue: "cat", shouldCloseOnBlur: false});
+      const state = mount({ defaultValue: "cat", shouldCloseOnBlur: false });
 
       state.setFocused(true);
       await type(state, "Ca");
@@ -407,7 +407,7 @@ describe("useComboBoxState", () => {
 
     it("closes and settles when the option already chosen is pressed again", async () => {
       const onChange = vi.fn();
-      const state = mount({defaultValue: "cat", onChange});
+      const state = mount({ defaultValue: "cat", onChange });
 
       state.toggle(null, "manual");
       await settle();
@@ -424,7 +424,7 @@ describe("useComboBoxState", () => {
 
   describe("several options at once", () => {
     it("adds to the selection rather than replacing it", async () => {
-      const state = mount({defaultValue: ["cat"], selectionMode: "multiple"});
+      const state = mount({ defaultValue: ["cat"], selectionMode: "multiple" });
 
       state.toggle(null, "manual");
       await settle();
@@ -435,7 +435,7 @@ describe("useComboBoxState", () => {
     });
 
     it("keeps the popover open while more are chosen", async () => {
-      const state = mount({selectionMode: "multiple"});
+      const state = mount({ selectionMode: "multiple" });
 
       state.toggle(null, "manual");
       await settle();
@@ -446,7 +446,7 @@ describe("useComboBoxState", () => {
     });
 
     it("empties the search once an option is taken from it", async () => {
-      const state = mount({selectionMode: "multiple"});
+      const state = mount({ selectionMode: "multiple" });
 
       state.setFocused(true);
       await type(state, "do");
@@ -461,7 +461,7 @@ describe("useComboBoxState", () => {
     });
 
     it("keeps what is chosen when the field is closed with a search still in it", async () => {
-      const state = mount({allowsCustomValue: true, selectionMode: "multiple"});
+      const state = mount({ allowsCustomValue: true, selectionMode: "multiple" });
 
       state.toggle(null, "manual");
       await settle();
@@ -482,12 +482,12 @@ describe("useComboBoxState", () => {
   describe("validation", () => {
     it("hands the text and the value to a custom rule together", async () => {
       const validate = vi.fn(() => undefined);
-      const state = mount({defaultValue: "cat", validate, validationBehavior: "aria"});
+      const state = mount({ defaultValue: "cat", validate, validationBehavior: "aria" });
 
       await settle();
 
       expect(state.displayValidation.value.isInvalid).toBe(false);
-      expect(validate).toHaveBeenCalledWith({inputValue: "Cat", value: "cat"});
+      expect(validate).toHaveBeenCalledWith({ inputValue: "Cat", value: "cat" });
     });
 
     it("reports what a custom rule rejects", async () => {
@@ -505,7 +505,7 @@ describe("useComboBoxState", () => {
 
     it("skips a custom rule when nothing is chosen at all", async () => {
       const validate = vi.fn(() => "never");
-      const state = mount({selectionMode: "multiple", validate, validationBehavior: "aria"});
+      const state = mount({ selectionMode: "multiple", validate, validationBehavior: "aria" });
 
       await settle();
 
@@ -514,7 +514,7 @@ describe("useComboBoxState", () => {
     });
 
     it("reveals validation when focus leaves after a change", async () => {
-      const state = mount({validate: () => "Required", validationBehavior: "native"});
+      const state = mount({ validate: () => "Required", validationBehavior: "native" });
 
       state.setFocused(true);
       await type(state, "Ca");
@@ -525,7 +525,7 @@ describe("useComboBoxState", () => {
     });
 
     it("says nothing when focus leaves and nothing changed", async () => {
-      const state = mount({validate: () => "Required", validationBehavior: "native"});
+      const state = mount({ validate: () => "Required", validationBehavior: "native" });
 
       state.setFocused(true);
       state.setFocused(false);
@@ -538,7 +538,7 @@ describe("useComboBoxState", () => {
   describe("a controlled combo box", () => {
     it("never writes its own value", async () => {
       const onChange = vi.fn();
-      const state = mount({onChange, value: "cat"});
+      const state = mount({ onChange, value: "cat" });
 
       state.toggle(null, "manual");
       await settle();
@@ -551,7 +551,7 @@ describe("useComboBoxState", () => {
 
     it("never writes its own text", async () => {
       const onInputChange = vi.fn();
-      const state = mount({inputValue: "held", onInputChange});
+      const state = mount({ inputValue: "held", onInputChange });
 
       await type(state, "typed");
 
@@ -561,7 +561,7 @@ describe("useComboBoxState", () => {
 
     it("leaves both halves to the caller when both are controlled", async () => {
       const onChange = vi.fn();
-      const state = mount({inputValue: "Ca", onChange, value: "cat"});
+      const state = mount({ inputValue: "Ca", onChange, value: "cat" });
 
       state.setFocused(true);
       state.setFocused(false);

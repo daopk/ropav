@@ -1,24 +1,24 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {ToastQueue} from "@/components/toast/toast-queue";
-import {DEFAULT_TOAST_TIMEOUT} from "@/components/toast/toast.constants";
-import {setInteractionModality} from "@/composables/use-interaction-states";
+import { ToastQueue } from "@/components/toast/toast-queue";
+import { DEFAULT_TOAST_TIMEOUT } from "@/components/toast/toast.constants";
+import { setInteractionModality } from "@/composables/use-interaction-states";
 
 import ToastRegionHost from "../fixtures/toast-region-host.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown>) => {
-  const result = renderVapor(ToastRegionHost, {props});
+  const result = renderVapor(ToastRegionHost, { props });
 
   mounted.push(result);
 
   return result;
 };
 
-const POINTER = {bubbles: true, pointerType: "mouse"} as const;
+const POINTER = { bubbles: true, pointerType: "mouse" } as const;
 
 const hoverIn = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerenter", POINTER));
@@ -32,7 +32,7 @@ const hoverOut = (element: Element) => {
 const queueWith = (titles: string[]) => {
   const queue = new ToastQueue();
 
-  for (const title of titles) queue.add({title});
+  for (const title of titles) queue.add({ title });
   for (const entry of queue.visibleToasts) entry.timer!.reset(DEFAULT_TOAST_TIMEOUT);
 
   return queue;
@@ -61,7 +61,7 @@ describe("useToastRegion", () => {
 
   describe("landmark", () => {
     it("exposes a region marked as a top layer and out of the tab order", () => {
-      const {getByTestId} = render({queue: queueWith(["First"])});
+      const { getByTestId } = render({ queue: queueWith(["First"]) });
       const region = getByTestId("region");
 
       expect(region).toHaveAttribute("role", "region");
@@ -72,18 +72,18 @@ describe("useToastRegion", () => {
 
     it("names the region with how many notifications it holds", async () => {
       const queue = queueWith(["First"]);
-      const {getByTestId} = render({queue});
+      const { getByTestId } = render({ queue });
 
       expect(getByTestId("region")).toHaveAttribute("aria-label", "1 notification.");
 
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await nextTick();
 
       expect(getByTestId("region")).toHaveAttribute("aria-label", "2 notifications.");
     });
 
     it("supports an explicit label instead of the count", () => {
-      const {getByTestId} = render({ariaLabel: "Alerts", queue: queueWith(["First"])});
+      const { getByTestId } = render({ ariaLabel: "Alerts", queue: queueWith(["First"]) });
 
       expect(getByTestId("region")).toHaveAttribute("aria-label", "Alerts");
     });
@@ -101,7 +101,7 @@ describe("useToastRegion", () => {
 
     it("pauses every visible clock while the pointer is inside", () => {
       const queue = queueWith(["First"]);
-      const {getByTestId} = render({queue});
+      const { getByTestId } = render({ queue });
 
       hoverIn(getByTestId("region"));
 
@@ -116,14 +116,14 @@ describe("useToastRegion", () => {
 
     it("pauses every visible clock while focus is inside", () => {
       const queue = queueWith(["First"]);
-      const {container, getByTestId} = render({queue});
+      const { container, getByTestId } = render({ queue });
 
       toastFor(container, "First").focus();
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT * 2);
       expect(queue.visibleToasts).toHaveLength(1);
 
-      getByTestId("region").dispatchEvent(new FocusEvent("focusout", {bubbles: true}));
+      getByTestId("region").dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT);
       expect(queue.visibleToasts).toHaveLength(0);
@@ -131,7 +131,7 @@ describe("useToastRegion", () => {
 
     it("stays paused when the pointer leaves but focus is still inside", () => {
       const queue = queueWith(["First"]);
-      const {container, getByTestId} = render({queue});
+      const { container, getByTestId } = render({ queue });
 
       hoverIn(getByTestId("region"));
       toastFor(container, "First").focus();
@@ -147,7 +147,7 @@ describe("useToastRegion", () => {
   describe("focus recovery", () => {
     it("hands focus to the toast that took the removed one's place", async () => {
       const queue = queueWith(["First", "Second"]);
-      const {container} = render({queue});
+      const { container } = render({ queue });
 
       const frontmost = toastFor(container, "Second");
 
@@ -168,7 +168,7 @@ describe("useToastRegion", () => {
 
       document.body.append(outside);
 
-      const {container} = render({queue});
+      const { container } = render({ queue });
 
       outside.focus();
       setInteractionModality("pointer");
@@ -188,7 +188,7 @@ describe("useToastRegion", () => {
       const outside = document.createElement("button");
 
       document.body.append(outside);
-      render({queue});
+      render({ queue });
       outside.focus();
 
       queue.close(queue.visibleToasts[0]!.key);
@@ -203,7 +203,7 @@ describe("useToastRegion", () => {
 
       document.body.append(outside);
 
-      const {container} = render({queue});
+      const { container } = render({ queue });
 
       outside.focus();
       toastFor(container, "First").focus();

@@ -1,14 +1,14 @@
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useMediaQuery} from "@/composables/use-media-query";
+import { useMediaQuery } from "@/composables/use-media-query";
 
 /** Read outside a component: nothing here depends on an instance. */
-const read = <T>(body: () => T): {stop: () => void; value: T} => {
+const read = <T>(body: () => T): { stop: () => void; value: T } => {
   const scope = effectScope();
   const value = scope.run(body)!;
 
-  return {stop: () => scope.stop(), value};
+  return { stop: () => scope.stop(), value };
 };
 
 interface StubList {
@@ -66,7 +66,7 @@ const stubLegacyMatchMedia = (initial: Record<string, boolean> = {}) => {
     removeListener: (listener: () => void) => removed.push(listener),
   }));
 
-  return {added, removed};
+  return { added, removed };
 };
 
 describe("useMediaQuery", () => {
@@ -76,9 +76,9 @@ describe("useMediaQuery", () => {
   });
 
   it("reports whether the query matches on the first read", () => {
-    stubMatchMedia({"(max-width: 768px)": true});
+    stubMatchMedia({ "(max-width: 768px)": true });
 
-    const {stop, value} = read(() => useMediaQuery("(max-width: 768px)"));
+    const { stop, value } = read(() => useMediaQuery("(max-width: 768px)"));
 
     expect(value.value).toBe(true);
 
@@ -86,9 +86,9 @@ describe("useMediaQuery", () => {
   });
 
   it("reports a change emitted by the media query list", () => {
-    const stubs = stubMatchMedia({"(max-width: 768px)": false});
+    const stubs = stubMatchMedia({ "(max-width: 768px)": false });
 
-    const {stop, value} = read(() => useMediaQuery("(max-width: 768px)"));
+    const { stop, value } = read(() => useMediaQuery("(max-width: 768px)"));
 
     expect(value.value).toBe(false);
 
@@ -103,10 +103,10 @@ describe("useMediaQuery", () => {
   });
 
   it("supports a reactive query, tearing the previous listener down", async () => {
-    const stubs = stubMatchMedia({"(max-width: 768px)": true, "(min-width: 1024px)": false});
+    const stubs = stubMatchMedia({ "(max-width: 768px)": true, "(min-width: 1024px)": false });
     const query = shallowRef("(max-width: 768px)");
 
-    const {stop, value} = read(() => useMediaQuery(query));
+    const { stop, value } = read(() => useMediaQuery(query));
 
     expect(value.value).toBe(true);
 
@@ -127,9 +127,9 @@ describe("useMediaQuery", () => {
   });
 
   it("stops listening when the scope is disposed", () => {
-    const stubs = stubMatchMedia({"(max-width: 768px)": false});
+    const stubs = stubMatchMedia({ "(max-width: 768px)": false });
 
-    const {stop, value} = read(() => useMediaQuery("(max-width: 768px)"));
+    const { stop, value } = read(() => useMediaQuery("(max-width: 768px)"));
 
     stop();
 
@@ -142,9 +142,9 @@ describe("useMediaQuery", () => {
   });
 
   it("supports the deprecated addListener pair", () => {
-    const {added, removed} = stubLegacyMatchMedia({"(max-width: 768px)": true});
+    const { added, removed } = stubLegacyMatchMedia({ "(max-width: 768px)": true });
 
-    const {stop, value} = read(() => useMediaQuery("(max-width: 768px)"));
+    const { stop, value } = read(() => useMediaQuery("(max-width: 768px)"));
 
     expect(value.value).toBe(true);
     expect(added).toHaveLength(1);
@@ -157,7 +157,7 @@ describe("useMediaQuery", () => {
   it("reports the default value where there is no matchMedia to ask", () => {
     vi.stubGlobal("matchMedia", undefined);
 
-    const {stop, value} = read(() => useMediaQuery("(max-width: 768px)", {defaultValue: true}));
+    const { stop, value } = read(() => useMediaQuery("(max-width: 768px)", { defaultValue: true }));
 
     expect(value.value).toBe(true);
 

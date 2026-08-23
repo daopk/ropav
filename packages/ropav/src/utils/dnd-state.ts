@@ -1,8 +1,8 @@
-import type {DropOperationMask} from "./dnd-constants";
-import type {DragKey, DropEffect} from "./dnd-types";
-import type {ShallowRef} from "vue";
+import type { DropOperationMask } from "./dnd-constants";
+import type { DragKey, DropEffect } from "./dnd-types";
+import type { ShallowRef } from "vue";
 
-import {DROP_OPERATION} from "./dnd-constants";
+import { DROP_OPERATION } from "./dnd-constants";
 
 /**
  * State shared by every collection taking part in the drag currently in flight.
@@ -27,7 +27,7 @@ export interface DnDState {
   dropCollectionRef?: ShallowRef<HTMLElement | null>;
 }
 
-export let globalDndState: DnDState = {draggingKeys: new Set()};
+export let globalDndState: DnDState = { draggingKeys: new Set() };
 
 export const setDraggingCollectionRef = (ref: ShallowRef<HTMLElement | null>): void => {
   globalDndState.draggingCollectionRef = ref;
@@ -42,7 +42,7 @@ export const setDropCollectionRef = (ref?: ShallowRef<HTMLElement | null>): void
 };
 
 export const clearGlobalDnDState = (): void => {
-  globalDndState = {draggingKeys: new Set()};
+  globalDndState = { draggingKeys: new Set() };
 };
 
 export const setGlobalDnDState = (state: DnDState): void => {
@@ -58,7 +58,7 @@ export const setGlobalDnDState = (state: DnDState): void => {
  * itself globally yet, which happens on the very first `dragenter`.
  */
 export const isInternalDropOperation = (ref?: ShallowRef<HTMLElement | null>): boolean => {
-  const {draggingCollectionRef, dropCollectionRef} = globalDndState;
+  const { draggingCollectionRef, dropCollectionRef } = globalDndState;
 
   return (
     draggingCollectionRef?.value != null &&

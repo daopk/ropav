@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {SliderMarksProps} from "./slider.types";
+import type { SliderMarksProps } from "./slider.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useSliderContext} from "./slider.context";
+import { useSliderContext } from "./slider.context";
 
 const props = defineProps<SliderMarksProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useSliderContext();
+const { slots } = useSliderContext();
 </script>
 
 <template>

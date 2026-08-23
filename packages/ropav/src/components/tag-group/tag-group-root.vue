@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {TagGroupRootProps} from "./tag-group.types";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { TagGroupRootProps } from "./tag-group.types";
 
-import {tagGroupVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { tagGroupVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useCollection} from "../../composables/use-collection";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
-import {useListKeyboard} from "../../composables/use-list-keyboard";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {useTypeahead} from "../../composables/use-typeahead";
+import { useCollection } from "../../composables/use-collection";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useId } from "../../composables/use-id";
+import { useListKeyboard } from "../../composables/use-list-keyboard";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { useTypeahead } from "../../composables/use-typeahead";
 
-import {provideTagGroupContext} from "./tag-group.context";
+import { provideTagGroupContext } from "./tag-group.context";
 
 const props = defineProps<TagGroupRootProps>();
 
@@ -21,7 +21,7 @@ const emit = defineEmits<{
   "update:selectedKeys": [keys: CollectionSelection];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() => tagGroupVariants());
 
@@ -59,11 +59,11 @@ const keyboard = useListKeyboard({
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
   getKeyForSearch: keyboard.getKeyForSearch,
-  onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
+  onSearchMatch: (key) => keyboard.focusKey(key, { scroll: true }),
 });
 
 // The group's label names a composite rather than a form control, so it renders as a span.
-const fieldIds = useFieldIds({labelElementType: "span"});
+const fieldIds = useFieldIds({ labelElementType: "span" });
 
 // Removal is offered exactly when the caller supplies a handler for it, which is what React
 // infers too. A declared emit could not answer this: Vue strips declared listeners from
@@ -89,7 +89,7 @@ provideTagGroupContext({
 </script>
 
 <template>
-  <div :class="slots.base({class: props.class})" data-slot="tag-group">
+  <div :class="slots.base({ class: props.class })" data-slot="tag-group">
     <slot />
   </div>
 </template>

@@ -1,14 +1,14 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {Autocomplete} from "@/components/autocomplete";
-import {ChipRoot} from "@/components/chip";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
-import {SearchField} from "@/components/search-field";
+import { Autocomplete } from "@/components/autocomplete";
+import { ChipRoot } from "@/components/chip";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { SearchField } from "@/components/search-field";
 
 /**
  * The autocomplete mounted the way a consumer mounts it: from a VDOM host, with every part written
@@ -23,9 +23,9 @@ import {SearchField} from "@/components/search-field";
  * in every real host.
  */
 const ITEMS = [
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
-  {id: "elephant", name: "Elephant"},
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
+  { id: "elephant", name: "Elephant" },
 ];
 
 const contains = (textValue: string, inputValue: string) =>
@@ -41,13 +41,13 @@ const settle = async () => {
 const searchField = () =>
   h(
     SearchField,
-    {ariaLabel: "Search animals", autoFocus: true},
+    { ariaLabel: "Search animals", autoFocus: true },
     {
       default: () =>
         h(SearchField.Group, null, {
           default: () => [
             h(SearchField.SearchIcon),
-            h(SearchField.Input, {placeholder: "Search animals..."}),
+            h(SearchField.Input, { placeholder: "Search animals..." }),
             h(SearchField.ClearButton),
           ],
         }),
@@ -57,14 +57,14 @@ const searchField = () =>
 const render = (props: Record<string, unknown> = {}) =>
   renderInterop(Autocomplete, {
     props: {
-      itemTextValue: (item: {name: string}) => item.name,
+      itemTextValue: (item: { name: string }) => item.name,
       items: ITEMS,
       placeholder: "Select an animal",
       ...props,
     },
     slots: {
       default: () => [
-        h(LabelRoot, null, {default: () => "Favorite Animal"}),
+        h(LabelRoot, null, { default: () => "Favorite Animal" }),
         h(Autocomplete.Trigger, null, {
           default: () => [
             h(Autocomplete.Value),
@@ -76,20 +76,20 @@ const render = (props: Record<string, unknown> = {}) =>
           default: () =>
             h(
               Autocomplete.Filter,
-              {filter: contains},
+              { filter: contains },
               {
-                default: ({items}: {items: Array<{id: string; name: string}>}) => [
+                default: ({ items }: { items: Array<{ id: string; name: string }> }) => [
                   searchField(),
                   h(ListBoxRoot, null, {
                     default: () =>
                       items.map((item) =>
                         h(
                           ListBoxItemRoot,
-                          {id: item.id, key: item.id, textValue: item.name},
-                          {default: () => [item.name, h(ListBoxItemIndicator)]},
+                          { id: item.id, key: item.id, textValue: item.name },
+                          { default: () => [item.name, h(ListBoxItemIndicator)] },
                         ),
                       ),
-                    empty: () => h(EmptyStateRoot, null, {default: () => "No results found"}),
+                    empty: () => h(EmptyStateRoot, null, { default: () => "No results found" }),
                   }),
                 ],
               },
@@ -113,13 +113,13 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const type = async (input: HTMLInputElement, value: string) => {
-  input.dispatchEvent(new InputEvent("beforeinput", {bubbles: true, inputType: "insertText"}));
+  input.dispatchEvent(new InputEvent("beforeinput", { bubbles: true, inputType: "insertText" }));
   input.value = value;
-  input.dispatchEvent(new InputEvent("input", {bubbles: true, inputType: "insertText"}));
+  input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText" }));
   await settle();
 };
 
@@ -249,7 +249,7 @@ describe("Autocomplete under a vdom host", () => {
     const input = result.screen.getByRole<HTMLInputElement>("searchbox");
 
     input.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowDown"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown" }),
     );
     await settle();
 
@@ -263,7 +263,7 @@ describe("Autocomplete under a vdom host", () => {
   });
 
   it("shows the empty slot the host wrote when nothing matches", async () => {
-    const result = render({allowsEmptyCollection: true});
+    const result = render({ allowsEmptyCollection: true });
 
     cleanups.push(result.unmount);
     await settle();
@@ -297,7 +297,7 @@ describe("Autocomplete under a vdom host", () => {
   });
 
   it("clears the selection from a clear button the host wrote", async () => {
-    const result = render({defaultValue: ["cat"], selectionMode: "multiple"});
+    const result = render({ defaultValue: ["cat"], selectionMode: "multiple" });
 
     cleanups.push(result.unmount);
     await settle();
@@ -321,7 +321,7 @@ describe("Autocomplete under a vdom host", () => {
     const result = renderInterop(Autocomplete, {
       props: {
         defaultValue: ["cat", "dog"],
-        itemTextValue: (item: {name: string}) => item.name,
+        itemTextValue: (item: { name: string }) => item.name,
         items: ITEMS,
         selectionMode: "multiple",
       },
@@ -336,10 +336,10 @@ describe("Autocomplete under a vdom host", () => {
                 default: ({
                   selectedItems,
                 }: {
-                  selectedItems: Array<{key: string; value: {name: string}}>;
+                  selectedItems: Array<{ key: string; value: { name: string } }>;
                 }) =>
                   selectedItems.map((item) =>
-                    h(ChipRoot, {key: item.key}, {default: () => item.value.name}),
+                    h(ChipRoot, { key: item.key }, { default: () => item.value.name }),
                   ),
               }),
             ],

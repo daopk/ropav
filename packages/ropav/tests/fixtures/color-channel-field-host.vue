@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ColorChannelFieldHostProps} from "./color-field.types";
+import type { ColorChannelFieldHostProps } from "./color-field.types";
 
-import {useColorChannelField} from "@/composables/use-color-channel-field";
+import { useColorChannelField } from "@/composables/use-color-channel-field";
 
 const props = withDefaults(defineProps<ColorChannelFieldHostProps>(), {
   isDisabled: undefined,

@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {ColorAreaHostProps} from "./color-area.types";
+import type { ColorAreaHostProps } from "./color-area.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useColorArea} from "@/composables/use-color-area";
-import {useColorAreaState} from "@/composables/use-color-area-state";
+import { useColorArea } from "@/composables/use-color-area";
+import { useColorAreaState } from "@/composables/use-color-area-state";
 
 // `isDisabled` declares `default: undefined`: Vue casts an absent Boolean prop to `false`, and a
 // forwarded `false` is not the same as absent.
-const props = withDefaults(defineProps<ColorAreaHostProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorAreaHostProps>(), { isDisabled: undefined });
 
 const containerEl = shallowRef<HTMLElement | null>(null);
 const inputXEl = shallowRef<HTMLInputElement | null>(null);
@@ -51,7 +51,7 @@ const area = useColorArea({
   yName: () => props.yName,
 });
 
-props.onReady?.({area, state});
+props.onReady?.({ area, state });
 </script>
 
 <template>

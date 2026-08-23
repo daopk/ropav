@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -27,7 +27,7 @@ const render = async (props: Record<string, unknown> = {}) => {
  */
 describe("TagGroup (browser)", () => {
   it("keeps the row's cell out of the layout", async () => {
-    const {tags, unmount} = await render();
+    const { tags, unmount } = await render();
     const tag = tags()[0]!;
     const cell = tag.querySelector<HTMLElement>('[role="gridcell"]')!;
 
@@ -42,7 +42,7 @@ describe("TagGroup (browser)", () => {
 
   it("lets the content lay out directly against the tag", async () => {
     const onRemove = vi.fn();
-    const {tags, unmount} = await render({onRemove});
+    const { tags, unmount } = await render({ onRemove });
     const tag = tags()[0]!;
     const button = tag.querySelector<HTMLElement>('[data-slot="tag-remove-button"]')!;
 
@@ -56,7 +56,7 @@ describe("TagGroup (browser)", () => {
   });
 
   it("wraps its tags rather than overflowing", async () => {
-    const {list, unmount} = await render({tags: ["News", "Travel", "Gaming", "Shopping"]});
+    const { list, unmount } = await render({ tags: ["News", "Travel", "Gaming", "Shopping"] });
 
     expect(getComputedStyle(list).flexWrap).toBe("wrap");
     expect(getComputedStyle(list).gap).toBe("6px");
@@ -65,7 +65,7 @@ describe("TagGroup (browser)", () => {
   });
 
   it("paints the focus ring with a shadow rather than an outline", async () => {
-    const {tags, unmount} = await render();
+    const { tags, unmount } = await render();
     const tag = tags()[0]!;
 
     tag.setAttribute("data-focus-visible", "true");
@@ -79,7 +79,7 @@ describe("TagGroup (browser)", () => {
     // A grid with rows and cells is exactly the structure axe checks hardest, so this is where the
     // role nesting earns its keep.
     const onRemove = vi.fn();
-    const {container, unmount} = await render({
+    const { container, unmount } = await render({
       onRemove,
       selectionMode: "multiple",
       withLabel: true,

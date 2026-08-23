@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ButtonGroupRootProps} from "./button-group.types";
+import type { ButtonGroupRootProps } from "./button-group.types";
 
-import {buttonGroupVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { buttonGroupVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {useToolbarContext} from "../toolbar/toolbar.context";
+import { dataAttr } from "../../utils/assertion";
+import { useToolbarContext } from "../toolbar/toolbar.context";
 
-import {provideButtonGroupContext} from "./button-group.context";
+import { provideButtonGroupContext } from "./button-group.context";
 
 // `orientation` declares an explicit `undefined` default so an absent prop stays absent and
 // can fall through to the toolbar's axis. Vue would otherwise read "no prop" as an explicit
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<ButtonGroupRootProps>(), {
   orientation: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const toolbarContext = useToolbarContext();
 
@@ -46,7 +46,7 @@ provideButtonGroupContext({
 
 <template>
   <div
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(props.isDisabled)"
     data-slot="button-group"
     role="group"

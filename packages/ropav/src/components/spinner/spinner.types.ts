@@ -1,4 +1,4 @@
-import type {SpinnerVariants} from "@ropav/styles";
+import type { SpinnerVariants } from "@ropav/styles";
 
 export interface SpinnerRootProps {
   class?: string;

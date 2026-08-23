@@ -1,5 +1,5 @@
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
-import type {AccordionVariants} from "@ropav/styles";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
+import type { AccordionVariants } from "@ropav/styles";
 
 export interface AccordionRootProps {
   class?: string;

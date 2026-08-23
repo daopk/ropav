@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ModalHeadingProps} from "./modal.types";
+import type { ModalHeadingProps } from "./modal.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
-import {useModalContext} from "./modal.context";
+import { useModalContext } from "./modal.context";
 
 const props = defineProps<ModalHeadingProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useModalContext();
+const { slots } = useModalContext();
 
 // The heading takes the id the dialog points `aria-labelledby` at, which is how a modal is named
 // by what it says rather than by the button that opened it.
@@ -26,7 +26,7 @@ const id = fieldIds?.claimHeadingId();
  */
 const tag = computed(() => `h${props.level ?? 2}`);
 
-const styles = computed(() => slots.value.heading({class: props.class}));
+const styles = computed(() => slots.value.heading({ class: props.class }));
 </script>
 
 <template>

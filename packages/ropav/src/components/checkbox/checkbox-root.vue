@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {CheckboxRootProps, CheckboxSlotProps} from "./checkbox.types";
+import type { CheckboxRootProps, CheckboxSlotProps } from "./checkbox.types";
 
-import {checkboxVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { checkboxVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useControllableState} from "../../composables/use-controllable-state";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useFormValidationState} from "../../composables/use-form-validation-state";
-import {dataAttr} from "../../utils/assertion";
-import {useCheckboxGroupContext} from "../checkbox-group/checkbox-group.context";
-import {provideFieldErrorContext} from "../field-error";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useFormValidationState } from "../../composables/use-form-validation-state";
+import { dataAttr } from "../../utils/assertion";
+import { useCheckboxGroupContext } from "../checkbox-group/checkbox-group.context";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideCheckboxContext} from "./checkbox.context";
+import { provideCheckboxContext } from "./checkbox.context";
 
 // Every prop that merges with a surrounding group declares an explicit `undefined` default.
 // Vue casts an absent boolean prop to `false`, which reads as "the caller set false" — so
@@ -34,7 +34,7 @@ const emit = defineEmits<{
   "update:isSelected": [isSelected: boolean];
 }>();
 
-defineSlots<{default?: (props: CheckboxSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CheckboxSlotProps) => unknown }>();
 
 // Vue has no rules-of-hooks, so this reads as a plain branch: inside a group the checkbox
 // contributes a value to the group's selection, on its own it owns a boolean.
@@ -82,7 +82,7 @@ const resolvedIsIndeterminate = computed(() => Boolean(props.isIndeterminate));
 
 const resolvedVariant = computed(() => props.variant ?? group?.variant.value);
 
-const styles = computed(() => checkboxVariants({variant: resolvedVariant.value}));
+const styles = computed(() => checkboxVariants({ variant: resolvedVariant.value }));
 
 // Inside a group, validation is the group's business: its state is what the items report to
 // and what the group's own `FieldError` shows.
@@ -98,9 +98,9 @@ const validation = group ? group.state.itemValidation : ownValidation;
 
 // A `FieldError` nested inside a checkbox that belongs to a group would repeat the group's
 // message under every option, so the group keeps it and the item hands out nothing.
-provideFieldErrorContext(group ? null : {validation: validation.displayValidation});
+provideFieldErrorContext(group ? null : { validation: validation.displayValidation });
 
-const {context: fieldIds, describedBy} = useFieldIds({slots: ["description", "errorMessage"]});
+const { context: fieldIds, describedBy } = useFieldIds({ slots: ["description", "errorMessage"] });
 
 provideFieldIdsContext(fieldIds);
 
@@ -143,7 +143,7 @@ provideCheckboxContext({
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-indeterminate="dataAttr(resolvedIsIndeterminate)"
     :data-invalid="dataAttr(resolvedIsInvalid)"

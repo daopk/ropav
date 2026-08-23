@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ToggleButtonGroupRootProps} from "@/components/toggle-button-group";
+import type { ToggleButtonGroupRootProps } from "@/components/toggle-button-group";
 
-import {ToggleButton} from "@/components/toggle-button";
-import {ToggleButtonGroup} from "@/components/toggle-button-group";
+import { ToggleButton } from "@/components/toggle-button";
+import { ToggleButtonGroup } from "@/components/toggle-button-group";
 
 const props = withDefaults(
   defineProps<
@@ -24,7 +24,7 @@ const props = withDefaults(
   },
 );
 
-defineEmits<{selectionChange: [keys: Set<string | number>]}>();
+defineEmits<{ selectionChange: [keys: Set<string | number>] }>();
 </script>
 
 <template>

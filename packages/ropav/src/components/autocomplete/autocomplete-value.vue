@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {AutocompleteValueProps, AutocompleteValueSlotProps} from "./autocomplete.types";
+import type { AutocompleteValueProps, AutocompleteValueSlotProps } from "./autocomplete.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 const props = defineProps<AutocompleteValueProps>();
 
@@ -17,9 +17,9 @@ const props = defineProps<AutocompleteValueProps>();
  * shows the option's text by default, and anything more is written here, with the same values
  * React hands its render function.
  */
-defineSlots<{default?: (props: AutocompleteValueSlotProps) => unknown}>();
+defineSlots<{ default?: (props: AutocompleteValueSlotProps) => unknown }>();
 
-const {placeholder, select, selectedItems, selectedText, slots} = useAutocompleteContext();
+const { placeholder, select, selectedItems, selectedText, slots } = useAutocompleteContext();
 
 const callerSlots = useSlots();
 
@@ -34,7 +34,7 @@ const hasSlot = computed(() => Boolean(callerSlots["default"]));
 
 const isPlaceholder = computed(() => selectedItems.value.length === 0);
 
-const styles = computed(() => slots.value.value({class: props.class}));
+const styles = computed(() => slots.value.value({ class: props.class }));
 </script>
 
 <template>

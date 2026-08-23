@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {DateInputGroupSuffixProps} from "./date-input-group.types";
+import type { DateInputGroupSuffixProps } from "./date-input-group.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useDateInputGroupContext} from "./date-input-group.context";
+import { useDateInputGroupContext } from "./date-input-group.context";
 
 const props = defineProps<DateInputGroupSuffixProps>();
 
 const group = useDateInputGroupContext();
 
-const styles = computed(() => group?.slots.value.suffix({class: props.class}) ?? props.class);
+const styles = computed(() => group?.slots.value.suffix({ class: props.class }) ?? props.class);
 </script>
 
 <template>

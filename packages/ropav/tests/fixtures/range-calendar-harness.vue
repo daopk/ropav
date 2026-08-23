@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarHostProps} from "./range-calendar-host.types";
+import type { RangeCalendarHostProps } from "./range-calendar-host.types";
 
-import {createCalendar} from "@internationalized/date";
-import {shallowRef} from "vue";
+import { createCalendar } from "@internationalized/date";
+import { shallowRef } from "vue";
 
-import {useRangeCalendar} from "@/composables/use-range-calendar";
-import {useRangeCalendarState} from "@/composables/use-range-calendar-state";
+import { useRangeCalendar } from "@/composables/use-range-calendar";
+import { useRangeCalendarState } from "@/composables/use-range-calendar-state";
 
 /*
  * Every three-state boolean declares `default: undefined`: Vue casts an absent Boolean prop to
@@ -50,7 +50,7 @@ const calendar = useRangeCalendar(
   state,
 );
 
-props.onReady?.({calendar, state});
+props.onReady?.({ calendar, state });
 </script>
 
 <template>

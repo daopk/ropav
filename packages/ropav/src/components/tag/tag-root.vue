@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {TagRootProps, TagSlotProps} from "./tag.types";
+import type { TagRootProps, TagSlotProps } from "./tag.types";
 
-import {tagVariants} from "@ropav/styles";
-import {computed, shallowRef, watch} from "vue";
+import { tagVariants } from "@ropav/styles";
+import { computed, shallowRef, watch } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {getCollectionTextValue} from "../../utils/text-value";
-import {useTagGroupContext} from "../tag-group/tag-group.context";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { getCollectionTextValue } from "../../utils/text-value";
+import { useTagGroupContext } from "../tag-group/tag-group.context";
 
 import TagRemoveButton from "./tag-remove-button.vue";
-import {provideTagContext} from "./tag.context";
+import { provideTagContext } from "./tag.context";
 
 const props = defineProps<TagRootProps>();
 
-defineSlots<{default?: (props: TagSlotProps) => unknown; remove?: () => unknown}>();
+defineSlots<{ default?: (props: TagSlotProps) => unknown; remove?: () => unknown }>();
 
 const {
   allowsRemoving,
@@ -29,7 +29,7 @@ const {
   variant,
 } = useTagGroupContext();
 
-const slots = computed(() => tagVariants({size: size.value, variant: variant.value}));
+const slots = computed(() => tagVariants({ size: size.value, variant: variant.value }));
 
 const generatedKey = useId();
 const tagKey = computed(() => props.id ?? generatedKey.value);
@@ -49,7 +49,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const isSelected = computed(() => selection.isSelected(tagKey.value));
@@ -83,7 +83,7 @@ const remove = () => {
   removeKeys([tagKey.value]);
 };
 
-provideTagContext({remove, slots, tagKey});
+provideTagContext({ remove, slots, tagKey });
 
 const {
   isFocusVisible,
@@ -95,7 +95,7 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => isDisabled.value});
+} = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 /*
  * A row needs a cell to hold its content, and `display: contents` keeps that cell out of the
@@ -129,7 +129,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-disabled="isDisabled || undefined"
     :aria-label="label"
     :aria-selected="selection.canSelectItem(tagKey) ? isSelected : undefined"
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-allows-removing="dataAttr(allowsRemoving)"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"

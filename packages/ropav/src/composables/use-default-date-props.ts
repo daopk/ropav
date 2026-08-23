@@ -1,8 +1,8 @@
-import type {Granularity} from "../utils/date-format";
-import type {DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Granularity } from "../utils/date-format";
+import type { DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 export interface DefaultDateProps {
   /** How precise the field is: down to the day, the hour, the minute or the second. */
@@ -46,7 +46,7 @@ export const useDefaultDateProps = (
         "timeZone" in current ? current.timeZone : undefined,
       ];
     },
-    {flush: "sync", immediate: true},
+    { flush: "sync", immediate: true },
   );
 
   return {

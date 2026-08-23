@@ -1,5 +1,5 @@
-import type {Color} from "../../utils/color-types";
-import type {ColorSwatchPickerVariants} from "@ropav/styles";
+import type { Color } from "../../utils/color-types";
+import type { ColorSwatchPickerVariants } from "@ropav/styles";
 
 export interface ColorSwatchPickerRootProps {
   /** Labels the picker. Without one — and without `ariaLabelledby` — it names itself. */

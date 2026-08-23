@@ -12,13 +12,13 @@ export const Chip = Object.assign(ChipRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ChipRoot, ChipLabel};
+export { ChipRoot, ChipLabel };
 
-export type {ChipRootProps, ChipRootProps as ChipProps, ChipLabelProps} from "./chip.types";
+export type { ChipRootProps, ChipRootProps as ChipProps, ChipLabelProps } from "./chip.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {chipVariants} from "@ropav/styles";
+export { chipVariants } from "@ropav/styles";
 
-export type {ChipVariants} from "@ropav/styles";
+export type { ChipVariants } from "@ropav/styles";

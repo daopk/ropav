@@ -1,10 +1,10 @@
-import type {FocusResponder} from "./focus-responder";
-import type {TooltipTriggerState} from "./use-tooltip-trigger-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { FocusResponder } from "./focus-responder";
+import type { TooltipTriggerState } from "./use-tooltip-trigger-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {useId} from "./use-id";
+import { useId } from "./use-id";
 import {
   getInteractionModality,
   isFocusVisible,
@@ -109,7 +109,7 @@ export const useTooltipTrigger = (
     },
     // Post-flush, so the listener exists exactly when the tooltip is on screen rather than a
     // render before it — matching where React Aria puts the same effect.
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   const onPointerenter = (event: PointerEvent) => {
@@ -173,5 +173,5 @@ export const useTooltipTrigger = (
     },
   };
 
-  return {responder, tooltipId, triggerElement: computed(() => element.value)};
+  return { responder, tooltipId, triggerElement: computed(() => element.value) };
 };

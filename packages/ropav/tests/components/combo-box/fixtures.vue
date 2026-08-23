@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxFixtureItem, ComboBoxFixtureProps} from "./fixtures.types";
-import type {ComboBoxMenuTrigger} from "@/composables/use-combo-box-state";
-import type {SelectedValue} from "@/composables/use-select-state";
+import type { ComboBoxFixtureItem, ComboBoxFixtureProps } from "./fixtures.types";
+import type { ComboBoxMenuTrigger } from "@/composables/use-combo-box-state";
+import type { SelectedValue } from "@/composables/use-select-state";
 
 import {
   ComboBoxInputGroup,
@@ -10,14 +10,14 @@ import {
   ComboBoxTrigger,
   ComboBoxValue,
 } from "@/components/combo-box";
-import {DescriptionRoot} from "@/components/description";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {FieldErrorRoot} from "@/components/field-error";
-import {IconChevronDown} from "@/components/icons";
-import {InputRoot} from "@/components/input";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
+import { DescriptionRoot } from "@/components/description";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { FieldErrorRoot } from "@/components/field-error";
+import { IconChevronDown } from "@/components/icons";
+import { InputRoot } from "@/components/input";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
 
 /**
  * Every three-state boolean declares an explicit `undefined`: a cast `false` reads as the caller
@@ -45,9 +45,9 @@ const props = withDefaults(defineProps<ComboBoxFixtureProps>(), {
   isReadOnly: undefined,
   isRequired: undefined,
   items: (): ComboBoxFixtureItem[] => [
-    {id: "cat", name: "Cat"},
-    {id: "dog", name: "Dog"},
-    {id: "panda", name: "Panda"},
+    { id: "cat", name: "Cat" },
+    { id: "dog", name: "Dog" },
+    { id: "panda", name: "Panda" },
   ],
   menuTrigger: undefined,
   name: undefined,
@@ -75,7 +75,7 @@ const emit = defineEmits<{
 <template>
   <component :is="props.withForm ? 'form' : 'div'">
     <ComboBoxRoot
-      v-slot="{items: matches}"
+      v-slot="{ items: matches }"
       :allows-custom-value="props.allowsCustomValue"
       :allows-empty-collection="props.allowsEmptyCollection"
       :class="props.rootClass"
@@ -112,7 +112,7 @@ const emit = defineEmits<{
         <ComboBoxTrigger v-else :class="props.triggerClass" />
       </ComboBoxInputGroup>
       <ComboBoxValue v-if="props.withValue" :class="props.valueClass" placeholder="Nothing chosen">
-        <template v-if="props.withCustomValue" #default="{isPlaceholder, selectedItems}">
+        <template v-if="props.withCustomValue" #default="{ isPlaceholder, selectedItems }">
           <span data-testid="custom-value">
             {{ isPlaceholder ? "nothing" : selectedItems.map((item) => item.key).join("+") }}
           </span>

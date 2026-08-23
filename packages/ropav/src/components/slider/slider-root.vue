@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {SliderRootProps, SliderSlotProps} from "./slider.types";
+import type { SliderRootProps, SliderSlotProps } from "./slider.types";
 
-import {sliderVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { sliderVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
-import {useNumberFormatter} from "../../composables/use-number-formatter";
-import {useSlider} from "../../composables/use-slider";
-import {useSliderState} from "../../composables/use-slider-state";
-import {dataAttr} from "../../utils/assertion";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useId } from "../../composables/use-id";
+import { useNumberFormatter } from "../../composables/use-number-formatter";
+import { useSlider } from "../../composables/use-slider";
+import { useSliderState } from "../../composables/use-slider-state";
+import { dataAttr } from "../../utils/assertion";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
 
-import {provideSliderContext} from "./slider.context";
+import { provideSliderContext } from "./slider.context";
 
-const props = withDefaults(defineProps<SliderRootProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<SliderRootProps>(), { isDisabled: undefined });
 
 const fieldset = useFieldsetContext();
 
@@ -28,7 +28,7 @@ const emit = defineEmits<{
   "update:value": [value: number | number[]];
 }>();
 
-defineSlots<{default?: (props: SliderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SliderSlotProps) => unknown }>();
 
 const sliderId = useId(() => props.id);
 
@@ -61,7 +61,7 @@ const setTrackEl = (element: unknown) => {
 
 // A visible label names the group, and each thumb points at it too so it is announced with
 // the thumb's own value.
-const {context: fieldIds, labelId} = useFieldIds({slots: ["label"]});
+const { context: fieldIds, labelId } = useFieldIds({ slots: ["label"] });
 
 provideFieldIdsContext(fieldIds);
 
@@ -77,7 +77,7 @@ const slider = useSlider({
 
 const styles = computed(() => sliderVariants());
 
-provideSliderContext({setTrackEl, slider, slots: styles, state, trackEl});
+provideSliderContext({ setTrackEl, slider, slots: styles, state, trackEl });
 
 /**
  * The label carries no `for`: pointing it at the first thumb makes VoiceOver announce that
@@ -95,7 +95,7 @@ const onClick = (event: MouseEvent) => {
 <template>
   <div
     v-bind="slider.groupProps.value"
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(state.isDisabled.value)"
     :data-orientation="state.orientation.value"
     data-slot="slider"

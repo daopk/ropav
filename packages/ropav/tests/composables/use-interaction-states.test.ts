@@ -1,5 +1,5 @@
-import {describe, expect, it} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
 import {
   getInteractionModality,
@@ -19,7 +19,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
 };
 
 const pointerEvent = (type: string, init: PointerEventInit = {}) =>
-  new PointerEvent(type, {button: 0, pointerType: "mouse", ...init});
+  new PointerEvent(type, { button: 0, pointerType: "mouse", ...init });
 
 /** Reset the page-wide modality, which starts out as keyboard. */
 const setPointerModality = () => {
@@ -27,7 +27,7 @@ const setPointerModality = () => {
 };
 
 const setKeyboardModality = () => {
-  document.dispatchEvent(new KeyboardEvent("keydown", {key: "Tab"}));
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
 };
 
 /**
@@ -66,7 +66,7 @@ const focusOutTo = (
   const listener = handler as EventListener;
 
   group.addEventListener("focusout", listener);
-  group.dispatchEvent(new FocusEvent("focusout", {relatedTarget}));
+  group.dispatchEvent(new FocusEvent("focusout", { relatedTarget }));
   group.removeEventListener("focusout", listener);
 };
 
@@ -89,7 +89,7 @@ describe("useInteractionStates", () => {
     it("ignores touch, which has no hover state to report", () => {
       const [states, dispose] = withScope(() => useInteractionStates());
 
-      states.onPointerenter(pointerEvent("pointerenter", {pointerType: "touch"}));
+      states.onPointerenter(pointerEvent("pointerenter", { pointerType: "touch" }));
 
       expect(states.isHovered.value).toBe(false);
 
@@ -98,7 +98,7 @@ describe("useInteractionStates", () => {
 
     it("reports no hover while disabled", () => {
       const isDisabled = shallowRef(true);
-      const [states, dispose] = withScope(() => useInteractionStates({isDisabled}));
+      const [states, dispose] = withScope(() => useInteractionStates({ isDisabled }));
 
       states.onPointerenter(pointerEvent("pointerenter"));
 
@@ -109,7 +109,7 @@ describe("useInteractionStates", () => {
 
     it("drops a hover that was already reported when the element becomes disabled", () => {
       const isDisabled = shallowRef(false);
-      const [states, dispose] = withScope(() => useInteractionStates({isDisabled}));
+      const [states, dispose] = withScope(() => useInteractionStates({ isDisabled }));
 
       states.onPointerenter(pointerEvent("pointerenter"));
       isDisabled.value = true;
@@ -140,7 +140,7 @@ describe("useInteractionStates", () => {
 
       states.onPointerdown(pointerEvent("pointerdown"));
       // Released over the document rather than the element, the drag-out case.
-      document.body.dispatchEvent(pointerEvent("pointerup", {bubbles: true}));
+      document.body.dispatchEvent(pointerEvent("pointerup", { bubbles: true }));
 
       expect(states.isPressed.value).toBe(false);
 
@@ -161,7 +161,7 @@ describe("useInteractionStates", () => {
     it("ignores a secondary button", () => {
       const [states, dispose] = withScope(() => useInteractionStates());
 
-      states.onPointerdown(pointerEvent("pointerdown", {button: 2}));
+      states.onPointerdown(pointerEvent("pointerdown", { button: 2 }));
 
       expect(states.isPressed.value).toBe(false);
 
@@ -169,7 +169,7 @@ describe("useInteractionStates", () => {
     });
 
     it("reports no press while pending", () => {
-      const [states, dispose] = withScope(() => useInteractionStates({isPending: () => true}));
+      const [states, dispose] = withScope(() => useInteractionStates({ isPending: () => true }));
 
       states.onPointerdown(pointerEvent("pointerdown"));
 
@@ -241,7 +241,7 @@ describe("useInteractionStates", () => {
       const [states, dispose] = withScope(() => useInteractionStates());
 
       setPointerModality();
-      document.dispatchEvent(new KeyboardEvent("keydown", {key: "k", metaKey: true}));
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
       states.onFocus();
 
       expect(states.isFocusVisible.value).toBe(false);
@@ -250,7 +250,7 @@ describe("useInteractionStates", () => {
     });
 
     it("keeps focus reportable while pending, which stays focusable", () => {
-      const [states, dispose] = withScope(() => useInteractionStates({isPending: () => true}));
+      const [states, dispose] = withScope(() => useInteractionStates({ isPending: () => true }));
 
       setKeyboardModality();
       states.onFocus();
@@ -262,7 +262,7 @@ describe("useInteractionStates", () => {
     });
 
     it("reports no focus while disabled", () => {
-      const [states, dispose] = withScope(() => useInteractionStates({isDisabled: () => true}));
+      const [states, dispose] = withScope(() => useInteractionStates({ isDisabled: () => true }));
 
       states.onFocus();
 
@@ -405,7 +405,7 @@ describe("interaction modality", () => {
 
 describe("useFocusWithin", () => {
   it("reports focus anywhere inside the element", () => {
-    const {cleanup, group} = createGroup();
+    const { cleanup, group } = createGroup();
     const [focus, dispose] = withScope(() => useFocusWithin());
 
     expect(focus.isFocusWithin.value).toBe(false);
@@ -425,7 +425,7 @@ describe("useFocusWithin", () => {
   it("stays focused while focus moves between two children", () => {
     // The browser reports a focusout on the way even though the group never lost focus, so
     // acting on it would flicker the ring off and on for a group with several controls.
-    const {cleanup, group} = createGroup();
+    const { cleanup, group } = createGroup();
     const second = document.createElement("button");
 
     group.appendChild(second);
@@ -442,7 +442,7 @@ describe("useFocusWithin", () => {
   });
 
   it("gives up focus when it leaves for an element outside", () => {
-    const {cleanup, group, sibling} = createGroup();
+    const { cleanup, group, sibling } = createGroup();
     const [focus, dispose] = withScope(() => useFocusWithin());
 
     focus.onFocusin();
@@ -455,7 +455,7 @@ describe("useFocusWithin", () => {
   });
 
   it("reports focus as visible only after a keyboard interaction", () => {
-    const {cleanup, group} = createGroup();
+    const { cleanup, group } = createGroup();
     const [focus, dispose] = withScope(() => useFocusWithin());
 
     setPointerModality();
@@ -476,7 +476,9 @@ describe("useFocusWithin", () => {
 
   it("suppresses both states while disabled", () => {
     const isDisabled = shallowRef(false);
-    const [focus, dispose] = withScope(() => useFocusWithin({isDisabled: () => isDisabled.value}));
+    const [focus, dispose] = withScope(() =>
+      useFocusWithin({ isDisabled: () => isDisabled.value }),
+    );
 
     setKeyboardModality();
     focus.onFocusin();

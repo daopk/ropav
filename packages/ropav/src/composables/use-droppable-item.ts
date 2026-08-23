@@ -1,15 +1,15 @@
-import type {DropTarget} from "../utils/dnd-types";
-import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { DropTarget } from "../utils/dnd-types";
+import type { UseDroppableCollectionStateReturn } from "./use-droppable-collection-state";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {computed, watch} from "vue";
+import { computed, watch } from "vue";
 
-import {getTypes} from "../utils/dnd-data-transfer";
-import {globalDndState, isInternalDropOperation} from "../utils/dnd-state";
+import { getTypes } from "../utils/dnd-data-transfer";
+import { globalDndState, isInternalDropOperation } from "../utils/dnd-state";
 
-import {registerDropItem, useDragSession} from "./drag-manager";
-import {getDroppableCollectionElement} from "./droppable-collection-registry";
-import {useVirtualDrop} from "./use-virtual-drop";
+import { registerDropItem, useDragSession } from "./drag-manager";
+import { getDroppableCollectionElement } from "./droppable-collection-registry";
+import { useVirtualDrop } from "./use-virtual-drop";
 
 export interface UseDroppableItemOptions {
   /** The position within the collection this element stands for. */
@@ -19,8 +19,8 @@ export interface UseDroppableItemOptions {
 }
 
 export interface UseDroppableItemReturn {
-  attrs: ComputedRef<{"aria-describedby"?: string; "aria-hidden"?: "true"}>;
-  handlers: {onClick: () => void};
+  attrs: ComputedRef<{ "aria-describedby"?: string; "aria-hidden"?: "true" }>;
+  handlers: { onClick: () => void };
   isDropTarget: ComputedRef<boolean>;
 }
 
@@ -55,13 +55,13 @@ export const useDroppableItem = (
               draggingKeys: globalDndState.draggingKeys,
               isInternal: isInternalDropOperation(collectionElement),
               target: options.target,
-              types: {has: (type) => types.has(type as string)},
+              types: { has: (type) => types.has(type as string) },
             }),
           target: options.target,
         }),
       );
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   /** Whether the drag in flight could actually land here. */
@@ -94,7 +94,7 @@ export const useDroppableItem = (
     attrs: computed(() => ({
       ...virtual.attrs.value,
       // Only hidden during a drag it would refuse — outside a drag it is an ordinary item.
-      ...(session.value && !isValidDropTarget.value ? {"aria-hidden": "true" as const} : {}),
+      ...(session.value && !isValidDropTarget.value ? { "aria-hidden": "true" as const } : {}),
     })),
     handlers: virtual.handlers,
     isDropTarget,

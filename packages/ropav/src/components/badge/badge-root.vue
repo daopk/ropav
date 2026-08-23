@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {BadgeRootProps} from "./badge.types";
+import type { BadgeRootProps } from "./badge.types";
 
-import {badgeVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { badgeVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
 import BadgeAutoLabel from "./badge-auto-label";
-import {provideBadgeContext} from "./badge.context";
+import { provideBadgeContext } from "./badge.context";
 
 const props = defineProps<BadgeRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() =>
   badgeVariants({
@@ -22,7 +22,7 @@ const slots = computed(() =>
   }),
 );
 
-provideBadgeContext({slots});
+provideBadgeContext({ slots });
 </script>
 
 <template>

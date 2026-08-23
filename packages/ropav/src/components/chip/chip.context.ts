@@ -1,7 +1,7 @@
-import type {chipVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { chipVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ChipContext {
   slots: ComputedRef<ReturnType<typeof chipVariants>>;

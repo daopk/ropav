@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {SeparatorRootProps} from "./separator.types";
+import type { SeparatorRootProps } from "./separator.types";
 
-import {separatorVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { separatorVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useSeparatorContext} from "./separator.context";
+import { useSeparatorContext } from "./separator.context";
 
 // `orientation` declares an explicit `undefined` default so an absent prop stays absent and
 // can fall through to the container's axis. Vue would otherwise read "no prop" as an
 // explicit `"horizontal"`, and a rule inside a toolbar could never inherit its axis.
-const props = withDefaults(defineProps<SeparatorRootProps>(), {orientation: undefined});
+const props = withDefaults(defineProps<SeparatorRootProps>(), { orientation: undefined });
 
 const context = useSeparatorContext();
 

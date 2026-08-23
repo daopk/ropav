@@ -3,10 +3,10 @@ import type {
   UseDisclosureGroupNavigationReturn,
 } from "@/composables/use-disclosure-group-navigation";
 
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useDisclosureGroupNavigation} from "@/composables/use-disclosure-group-navigation";
+import { useDisclosureGroupNavigation } from "@/composables/use-disclosure-group-navigation";
 
 const scopes: (() => void)[] = [];
 
@@ -228,7 +228,7 @@ describe("useDisclosureGroupNavigation", () => {
       const onExpandedChange = vi.fn((keys: Set<string | number>) => {
         expandedKeys.value = [...keys] as string[];
       });
-      const nav = createNavigation({expandedKeys, itemIds: ITEMS, onExpandedChange});
+      const nav = createNavigation({ expandedKeys, itemIds: ITEMS, onExpandedChange });
 
       nav.onNext();
       nav.onNext();

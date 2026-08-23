@@ -1,4 +1,4 @@
-import type {CheckboxGroupRootProps} from "@/components/checkbox-group";
+import type { CheckboxGroupRootProps } from "@/components/checkbox-group";
 
 export interface CheckboxGroupFixtureProps extends CheckboxGroupRootProps {
   /** Item values to render a checkbox for. @default ["email", "sms", "push"] */

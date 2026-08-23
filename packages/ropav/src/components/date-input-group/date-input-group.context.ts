@@ -1,10 +1,10 @@
-import type {UseDateFieldReturn} from "../../composables/use-date-field";
-import type {DateFieldState} from "../../composables/use-date-field-state";
-import type {UsePressHandlers} from "../../composables/use-press";
-import type {dateInputGroupVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseDateFieldReturn } from "../../composables/use-date-field";
+import type { DateFieldState } from "../../composables/use-date-field-state";
+import type { UsePressHandlers } from "../../composables/use-press";
+import type { dateInputGroupVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface DateInputGroupContext {
   /** Slot classes the parts pull their own class from. */
@@ -62,7 +62,7 @@ export interface DateFieldControlContext {
  * Strict: an input with no value to edit is not a degraded input, it is a bug.
  */
 export const [useDateFieldControlContext, provideDateFieldControlContext] =
-  createContext<DateFieldControlContext>({name: "DateFieldControlContext"});
+  createContext<DateFieldControlContext>({ name: "DateFieldControlContext" });
 
 export interface DateInputGroupOwnerContext {
   /** Attributes for the group element. Spread with `v-bind`. Never carries an `on*` key. */

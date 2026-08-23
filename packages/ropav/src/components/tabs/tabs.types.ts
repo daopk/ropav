@@ -1,5 +1,5 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {TabsVariants} from "@ropav/styles";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { TabsVariants } from "@ropav/styles";
 
 export type TabsOrientation = "horizontal" | "vertical";
 

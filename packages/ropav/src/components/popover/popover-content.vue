@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {PopoverContentProps} from "./popover.types";
+import type { PopoverContentProps } from "./popover.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts} from "../overlay";
+import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 
-import {usePopoverContext} from "./popover.context";
+import { usePopoverContext } from "./popover.context";
 
 // The three-state booleans declare an explicit `undefined` default so an absent prop stays absent
 // rather than reading as an explicit `false`.
@@ -18,9 +18,9 @@ const props = withDefaults(defineProps<PopoverContentProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = usePopoverContext();
+const { slots } = usePopoverContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -34,7 +34,7 @@ const contexts = createOverlaySlotContexts();
 
 provideOverlaySlotContexts(contexts);
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 </script>
 
 <template>

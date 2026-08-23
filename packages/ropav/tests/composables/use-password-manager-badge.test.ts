@@ -1,8 +1,8 @@
-import type {UsePasswordManagerBadgeReturn} from "@/composables/use-password-manager-badge";
+import type { UsePasswordManagerBadgeReturn } from "@/composables/use-password-manager-badge";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/password-manager-badge-host.vue";
 
@@ -13,7 +13,7 @@ const mount = (props: Record<string, unknown> = {}) => {
 
   props["onReady"] = (next: UsePasswordManagerBadgeReturn) => (badge = next);
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -61,7 +61,7 @@ describe("usePasswordManagerBadge", () => {
   // "nothing on top of the field", so a pass can only come from the marker being found.
   it("finds a badge by the marker its password manager left behind", () => {
     const removeMarker = plantBadgeMarker();
-    const {badge, host, unmount} = mount({isFocused: true});
+    const { badge, host, unmount } = mount({ isFocused: true });
     const spy = pretendNoBadge(host());
 
     expect(badge().hasPWMBadge.value).toBe(false);
@@ -78,7 +78,7 @@ describe("usePasswordManagerBadge", () => {
 
   it("looks for nothing while the field is untouched", () => {
     const removeMarker = plantBadgeMarker();
-    const {badge, unmount} = mount();
+    const { badge, unmount } = mount();
 
     vi.advanceTimersByTime(6000);
 
@@ -89,7 +89,7 @@ describe("usePasswordManagerBadge", () => {
   });
 
   it("keeps the control at its own width until a badge is actually found", () => {
-    const {badge, host, unmount} = mount({isFocused: true});
+    const { badge, host, unmount } = mount({ isFocused: true });
     const spy = pretendNoBadge(host());
 
     vi.advanceTimersByTime(1);
@@ -102,7 +102,7 @@ describe("usePasswordManagerBadge", () => {
 
   it("stays out of the way entirely when told to", () => {
     const removeMarker = plantBadgeMarker();
-    const {badge, unmount} = mount({isFocused: true, pushPasswordManagerStrategy: "none"});
+    const { badge, unmount } = mount({ isFocused: true, pushPasswordManagerStrategy: "none" });
 
     vi.advanceTimersByTime(6000);
 
@@ -117,7 +117,7 @@ describe("usePasswordManagerBadge", () => {
   // someone who is already typing into it.
   it("keeps its answer once it has one", () => {
     const removeMarker = plantBadgeMarker();
-    const {badge, host, unmount} = mount({isFocused: true});
+    const { badge, host, unmount } = mount({ isFocused: true });
     const spy = pretendNoBadge(host());
 
     vi.advanceTimersByTime(1);
@@ -133,7 +133,7 @@ describe("usePasswordManagerBadge", () => {
   });
 
   it("reads the container answering the hit test as no badge at all", () => {
-    const {badge, host, unmount} = mount({isFocused: true});
+    const { badge, host, unmount } = mount({ isFocused: true });
     const spy = pretendNoBadge(host());
 
     vi.advanceTimersByTime(5000);
@@ -151,8 +151,8 @@ describe("usePasswordManagerBadge", () => {
    * the hit test, because that is the expensive half — it forces layout on every call.
    */
   it("stops searching once it has given up", async () => {
-    const props = reactive<Record<string, unknown>>({isFocused: true});
-    const {host, unmount} = mount(props);
+    const props = reactive<Record<string, unknown>>({ isFocused: true });
+    const { host, unmount } = mount(props);
     const spy = pretendNoBadge(host());
 
     vi.advanceTimersByTime(6000);
@@ -174,7 +174,7 @@ describe("usePasswordManagerBadge", () => {
   });
 
   it("hands out the room a badge needs as a CSS length", () => {
-    const {badge, unmount} = mount();
+    const { badge, unmount } = mount();
 
     expect(badge().PWM_BADGE_SPACE_WIDTH).toBe("40px");
 

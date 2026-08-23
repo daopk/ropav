@@ -1,4 +1,4 @@
-import type {ButtonVariants} from "@ropav/styles";
+import type { ButtonVariants } from "@ropav/styles";
 
 /** State handed to the default slot, so content can follow the button's own state. */
 export interface ButtonSlotProps {

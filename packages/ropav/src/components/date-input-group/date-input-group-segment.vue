@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {DateInputGroupSegmentProps} from "./date-input-group.types";
+import type { DateInputGroupSegmentProps } from "./date-input-group.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useDateSegment} from "../../composables/use-date-segment";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useDateSegment } from "../../composables/use-date-segment";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useDateFieldControlContext, useDateInputGroupContext} from "./date-input-group.context";
+import { useDateFieldControlContext, useDateInputGroupContext } from "./date-input-group.context";
 
 const props = defineProps<DateInputGroupSegmentProps>();
 
 const group = useDateInputGroupContext();
-const {field, state} = useDateFieldControlContext().resolve();
+const { field, state } = useDateFieldControlContext().resolve();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -26,7 +26,7 @@ const segment = useDateSegment({
   state,
 });
 
-const styles = computed(() => group?.slots.value.segment({class: props.class}) ?? props.class);
+const styles = computed(() => group?.slots.value.segment({ class: props.class }) ?? props.class);
 
 /*
  * Punctuation between segments is not interactive, so it reports no hover — matching React, which

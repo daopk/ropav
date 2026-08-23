@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DateRangePickerStateHostProps} from "./date-range-picker-state.types";
+import type { DateRangePickerStateHostProps } from "./date-range-picker-state.types";
 
-import {useDateRangePickerState} from "@/composables/use-date-range-picker-state";
+import { useDateRangePickerState } from "@/composables/use-date-range-picker-state";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to

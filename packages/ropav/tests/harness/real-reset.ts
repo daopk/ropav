@@ -1,4 +1,4 @@
-import {userEvent} from "vitest/browser";
+import { userEvent } from "vitest/browser";
 
 /**
  * Click a real `<button type="reset">` and let the restore settle.

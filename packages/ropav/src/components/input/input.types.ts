@@ -1,4 +1,4 @@
-import type {InputVariants} from "@ropav/styles";
+import type { InputVariants } from "@ropav/styles";
 
 // Boolean props are declared as plain `boolean` rather than through the variants type. The
 // SFC compiler cannot resolve an imported indexed-access type into a runtime prop type, and

@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {CalendarCellIndicatorProps} from "./calendar.types";
+import type { CalendarCellIndicatorProps } from "./calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useCalendarContext} from "./calendar.context";
+import { useCalendarContext } from "./calendar.context";
 
 const props = defineProps<CalendarCellIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useCalendarContext();
+const { slots } = useCalendarContext();
 
-const styles = computed(() => slots.value.cellIndicator({class: props.class}));
+const styles = computed(() => slots.value.cellIndicator({ class: props.class }));
 </script>
 
 <template>

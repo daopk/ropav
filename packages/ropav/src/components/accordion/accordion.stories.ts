@@ -1,5 +1,5 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import {
   Accordion,
@@ -47,11 +47,11 @@ const ITEMS = [
 
 const meta: StoryMeta = {
   argTypes: {
-    allowsMultipleExpanded: {control: {type: "boolean"}},
-    hideSeparator: {control: {type: "boolean"}},
-    isDisabled: {control: {type: "boolean"}},
+    allowsMultipleExpanded: { control: { type: "boolean" } },
+    hideSeparator: { control: { type: "boolean" } },
+    isDisabled: { control: { type: "boolean" } },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["default", "surface"],
     },
   },
@@ -90,43 +90,43 @@ const template = `
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: ITEMS}),
+    setup: () => ({ args, items: ITEMS }),
     template,
   }),
 };
 
 export const SurfaceVariant: Story = {
-  args: {variant: "surface"},
+  args: { variant: "surface" },
   render: (args) => ({
     components,
-    setup: () => ({args, items: ITEMS}),
+    setup: () => ({ args, items: ITEMS }),
     template,
   }),
 };
 
 export const WithoutSeparator: Story = {
-  args: {hideSeparator: true},
+  args: { hideSeparator: true },
   render: (args) => ({
     components,
-    setup: () => ({args, items: ITEMS}),
+    setup: () => ({ args, items: ITEMS }),
     template,
   }),
 };
 
 export const SingleExpanded: Story = {
-  args: {allowsMultipleExpanded: false},
+  args: { allowsMultipleExpanded: false },
   render: (args) => ({
     components,
-    setup: () => ({args, items: ITEMS}),
+    setup: () => ({ args, items: ITEMS }),
     template,
   }),
 };
 
 export const Disabled: Story = {
-  args: {isDisabled: true},
+  args: { isDisabled: true },
   render: (args) => ({
     components,
-    setup: () => ({args, items: ITEMS}),
+    setup: () => ({ args, items: ITEMS }),
     template,
   }),
 };

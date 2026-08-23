@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -15,7 +15,7 @@ import Fixture from "./fixtures.vue";
  * finishing, the popover leaving the DOM after its exit, and where it actually lands next to the
  * trigger. The jsdom clock is frozen and its layout is all zeroes, so none of it is provable there.
  */
-const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -33,7 +33,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** Wait for the entry animation to finish, so the popover is measured at its settled size. */
@@ -103,7 +103,7 @@ describe("Select (browser)", () => {
 
     it("greys the placeholder and not a real value", async () => {
       const empty = mount();
-      const chosen = mount({defaultValue: "texas"});
+      const chosen = mount({ defaultValue: "texas" });
 
       await nextTick();
 
@@ -215,7 +215,7 @@ describe("Select (browser)", () => {
     });
 
     it("starts on the chosen option when the popover opens", async () => {
-      const result = mount({defaultValue: "california"});
+      const result = mount({ defaultValue: "california" });
 
       await nextTick();
 
@@ -242,7 +242,7 @@ describe("Select (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while closed", async () => {
-      const result = mount({withLabel: true});
+      const result = mount({ withLabel: true });
 
       await nextTick();
 
@@ -250,7 +250,7 @@ describe("Select (browser)", () => {
     });
 
     it("has no violations while open", async () => {
-      const result = mount({withLabel: true});
+      const result = mount({ withLabel: true });
 
       await nextTick();
       await open(result);

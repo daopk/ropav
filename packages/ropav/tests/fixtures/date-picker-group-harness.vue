@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DatePickerGroupHarnessProps} from "./date-picker-group.types";
+import type { DatePickerGroupHarnessProps } from "./date-picker-group.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import DatePickerGroupHost from "./date-picker-group-host.vue";
 

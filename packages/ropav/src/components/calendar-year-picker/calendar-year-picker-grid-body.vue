@@ -4,16 +4,16 @@ import type {
   CalendarYearPickerGridBodyProps,
 } from "./calendar-year-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
 import CalendarYearPickerCell from "./calendar-year-picker-cell.vue";
-import {useYearPickerGridContext} from "./calendar-year-picker.context";
+import { useYearPickerGridContext } from "./calendar-year-picker.context";
 
 defineProps<CalendarYearPickerGridBodyProps>();
 
-defineSlots<{default?: (props: CalendarYearPickerCellSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarYearPickerCellSlotProps) => unknown }>();
 
-const {focusedYear, getFormattedYear, isYearPickerOpen, selectYear, years} =
+const { focusedYear, getFormattedYear, isYearPickerOpen, selectYear, years } =
   useYearPickerGridContext();
 
 /** The current Gregorian year, for marking "this year" whatever calendar is on screen. */

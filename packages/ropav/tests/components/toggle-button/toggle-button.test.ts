@@ -1,26 +1,26 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {ToggleButton} from "@/components/toggle-button";
+import { ToggleButton } from "@/components/toggle-button";
 
 const renderToggleButton = (props: Record<string, unknown> = {}) =>
   renderVapor(ToggleButton, {
     props,
-    slots: {default: () => document.createTextNode("Like")},
+    slots: { default: () => document.createTextNode("Like") },
   });
 
 const buttonIn = (container: HTMLElement) => container.querySelector("button")!;
 
 const clickAndSettle = async (button: HTMLElement) => {
-  button.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+  button.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await nextTick();
 };
 
 describe("ToggleButton", () => {
   describe("structure", () => {
     it("renders a native button with its data-slot", () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
       const button = buttonIn(container);
 
       expect(button.getAttribute("data-slot")).toBe("toggle-button");
@@ -30,9 +30,9 @@ describe("ToggleButton", () => {
     });
 
     it("renders slot content as its accessible name", () => {
-      const {getByRole, unmount} = renderToggleButton();
+      const { getByRole, unmount } = renderToggleButton();
 
-      expect(getByRole("button", {name: "Like"})).toBeInTheDocument();
+      expect(getByRole("button", { name: "Like" })).toBeInTheDocument();
 
       unmount();
     });
@@ -41,7 +41,7 @@ describe("ToggleButton", () => {
     // `:type` on a <button> to a DOM property write, and skips it when the value already
     // equals `el.type` — which reads "submit" by default even with no attribute set.
     it("defaults to type button so it never submits a form by accident", () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
 
       expect(buttonIn(container).type).toBe("button");
 
@@ -49,7 +49,7 @@ describe("ToggleButton", () => {
     });
 
     it("exposes the size, variant and icon-only BEM modifiers", () => {
-      const {container, unmount} = renderToggleButton({
+      const { container, unmount } = renderToggleButton({
         isIconOnly: true,
         size: "lg",
         variant: "ghost",
@@ -70,7 +70,7 @@ describe("ToggleButton", () => {
    */
   describe("selection", () => {
     it("reports itself as an unpressed button by default", () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
       const button = buttonIn(container);
 
       expect(button.getAttribute("aria-pressed")).toBe("false");
@@ -81,7 +81,7 @@ describe("ToggleButton", () => {
     });
 
     it("starts selected from defaultSelected", () => {
-      const {container, unmount} = renderToggleButton({defaultSelected: true});
+      const { container, unmount } = renderToggleButton({ defaultSelected: true });
       const button = buttonIn(container);
 
       expect(button.getAttribute("aria-pressed")).toBe("true");
@@ -91,7 +91,7 @@ describe("ToggleButton", () => {
     });
 
     it("flips on click", async () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
       const button = buttonIn(container);
 
       await clickAndSettle(button);
@@ -105,7 +105,7 @@ describe("ToggleButton", () => {
 
     it("emits change with the next state", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderVapor(ToggleButton, {props: {onChange}});
+      const { container, unmount } = renderVapor(ToggleButton, { props: { onChange } });
 
       await clickAndSettle(buttonIn(container));
 
@@ -116,8 +116,8 @@ describe("ToggleButton", () => {
 
     it("defers to isSelected when controlled", async () => {
       const onChange = vi.fn();
-      const props = reactive<Record<string, unknown>>({isSelected: false, onChange});
-      const {container, unmount} = renderVapor(ToggleButton, {props});
+      const props = reactive<Record<string, unknown>>({ isSelected: false, onChange });
+      const { container, unmount } = renderVapor(ToggleButton, { props });
       const button = buttonIn(container);
 
       await clickAndSettle(button);
@@ -135,8 +135,8 @@ describe("ToggleButton", () => {
     });
 
     it("exposes the selected state to its slot", () => {
-      const {container, unmount} = renderVapor(ToggleButton, {
-        props: {defaultSelected: true},
+      const { container, unmount } = renderVapor(ToggleButton, {
+        props: { defaultSelected: true },
         slots: {
           default: (slotProps = {}) =>
             document.createTextNode(slotProps["isSelected"] ? "Liked" : "Like"),
@@ -151,10 +151,12 @@ describe("ToggleButton", () => {
 
   describe("interaction states", () => {
     it("exposes hover as a data attribute the stylesheet can key on", async () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
       const button = buttonIn(container);
 
-      button.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+      button.dispatchEvent(
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
 
       expect(button.getAttribute("data-hovered")).toBe("true");
@@ -163,11 +165,11 @@ describe("ToggleButton", () => {
     });
 
     it("exposes press as a data attribute the stylesheet can key on", async () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
       const button = buttonIn(container);
 
       button.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "mouse"}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
       );
       await nextTick();
 
@@ -183,7 +185,7 @@ describe("ToggleButton", () => {
 
     it("calls click when activated", async () => {
       const onClick = vi.fn();
-      const {container, unmount} = renderVapor(ToggleButton, {props: {onClick}});
+      const { container, unmount } = renderVapor(ToggleButton, { props: { onClick } });
 
       await clickAndSettle(buttonIn(container));
 
@@ -197,7 +199,7 @@ describe("ToggleButton", () => {
     // Written even though a native button is already tabbable: Safari does not focus one
     // unless an explicit tab index says so, which is why react-aria always sets it.
     it("renders an explicit tab index", () => {
-      const {container, unmount} = renderToggleButton();
+      const { container, unmount } = renderToggleButton();
 
       expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -205,7 +207,7 @@ describe("ToggleButton", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {container, unmount} = renderToggleButton({isDisabled: true});
+      const { container, unmount } = renderToggleButton({ isDisabled: true });
 
       expect(buttonIn(container).hasAttribute("tabindex")).toBe(false);
 
@@ -215,7 +217,7 @@ describe("ToggleButton", () => {
 
   describe("disabled", () => {
     it("disables the underlying button", () => {
-      const {container, unmount} = renderToggleButton({isDisabled: true});
+      const { container, unmount } = renderToggleButton({ isDisabled: true });
       const button = buttonIn(container);
 
       expect(button.disabled).toBe(true);
@@ -225,7 +227,7 @@ describe("ToggleButton", () => {
     });
 
     it("does not flip while disabled", async () => {
-      const {container, unmount} = renderToggleButton({isDisabled: true});
+      const { container, unmount } = renderToggleButton({ isDisabled: true });
       const button = buttonIn(container);
 
       await clickAndSettle(button);

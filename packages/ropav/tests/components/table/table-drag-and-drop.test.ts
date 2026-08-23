@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {getDragSession} from "@/composables/drag-manager";
-import {setInteractionModality} from "@/composables/use-interaction-states";
+import { getDragSession } from "@/composables/drag-manager";
+import { setInteractionModality } from "@/composables/use-interaction-states";
 
 import Fixture from "./drag-and-drop-fixtures.vue";
 
@@ -18,7 +18,7 @@ import Fixture from "./drag-and-drop-fixtures.vue";
 const unmounts: (() => void)[] = [];
 
 const renderTable = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   unmounts.push(result.unmount);
   await nextTick();
@@ -31,7 +31,7 @@ const renderTable = async (props: Record<string, unknown> = {}) => {
   const handles = () => [...table.querySelectorAll<HTMLButtonElement>("button")];
   const names = () => rows().map((row) => row.querySelectorAll("td")[1]?.textContent?.trim());
 
-  return {...result, handles, indicators, names, rows, table};
+  return { ...result, handles, indicators, names, rows, table };
 };
 
 /**
@@ -44,15 +44,15 @@ const renderTable = async (props: Record<string, unknown> = {}) => {
 const press = (key: string, init: KeyboardEventInit = {}) => {
   const target = document.activeElement ?? document;
 
-  target.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
-  target.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key, ...init}));
+  target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
+  target.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key, ...init }));
 };
 
 /** Enter on a button produces a click of its own, which is what the handle actually listens to. */
 const activateHandle = (handle: HTMLElement) => {
   handle.focus();
-  handle.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
-  handle.dispatchEvent(new MouseEvent("click", {bubbles: true, detail: 0}));
+  handle.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
+  handle.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 0 }));
 };
 
 const flushFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -85,7 +85,7 @@ describe("Table drag and drop", () => {
      * symmetric, and measuring 6006 against 6007 is what caught this build marking both.
      */
     it("marks the table as draggable and leaves the rows to say they drag", async () => {
-      const {rows, table} = await renderTable();
+      const { rows, table } = await renderTable();
 
       expect(table).toHaveAttribute("data-allows-dragging", "true");
       for (const row of rows()) {
@@ -97,7 +97,7 @@ describe("Table drag and drop", () => {
     // The header renders the extra leading column from this, so a caller never repeats the
     // condition it already gave `useDragAndDrop`.
     it("tells the header that the rows can be dragged", async () => {
-      const {table} = await renderTable();
+      const { table } = await renderTable();
       const columns = [...table.querySelectorAll('[data-slot="table-column"]')];
 
       expect(columns).toHaveLength(3);
@@ -110,13 +110,13 @@ describe("Table drag and drop", () => {
      * Keyboard activation and a screen reader's click both bypass hit testing and still land.
      */
     it("does not take the pointer, so a mouse drag reaches the row", async () => {
-      const {handles} = await renderTable();
+      const { handles } = await renderTable();
 
       expect(handles()[0]!.style.pointerEvents).toBe("none");
     });
 
     it("names itself after the row it drags", async () => {
-      const {handles} = await renderTable();
+      const { handles } = await renderTable();
 
       expect(handles()[0]!.getAttribute("aria-label")).toContain("Ada");
     });
@@ -124,7 +124,7 @@ describe("Table drag and drop", () => {
     // Regression: the description lives on whichever control starts the drag, and with a drag
     // button that is the handle rather than the row.
     it("carries the instructions for starting a drag", async () => {
-      const {handles} = await renderTable();
+      const { handles } = await renderTable();
       const describedBy = handles()[0]!.getAttribute("aria-describedby");
 
       expect(document.getElementById(describedBy!)?.textContent).toContain("Enter");
@@ -132,7 +132,7 @@ describe("Table drag and drop", () => {
 
     // Plain Enter on a row belongs to the grid, and must not also start a drag.
     it("is the only way in — Enter on the row does nothing", async () => {
-      const {rows} = await renderTable();
+      const { rows } = await renderTable();
 
       rows()[0]!.focus();
       press("Enter");
@@ -142,7 +142,7 @@ describe("Table drag and drop", () => {
     });
 
     it("starts a drag when activated", async () => {
-      const {handles} = await renderTable();
+      const { handles } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -159,13 +159,13 @@ describe("Table drag and drop", () => {
      * row for a screen reader to step through and would disturb the row count.
      */
     it("renders none while nothing is being dragged", async () => {
-      const {indicators} = await renderTable();
+      const { indicators } = await renderTable();
 
       expect(indicators()).toHaveLength(0);
     });
 
     it("spans every column, so the gap is not confined to one cell", async () => {
-      const {handles, indicators} = await renderTable();
+      const { handles, indicators } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -175,7 +175,7 @@ describe("Table drag and drop", () => {
     });
 
     it("names each gap by the rows around it", async () => {
-      const {handles, indicators} = await renderTable();
+      const { handles, indicators } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -192,7 +192,7 @@ describe("Table drag and drop", () => {
   describe("reordering with the keyboard", () => {
     it("moves the row and reports the move", async () => {
       const onReorder = vi.fn();
-      const {handles, names} = await renderTable({onReorder});
+      const { handles, names } = await renderTable({ onReorder });
 
       expect(names()).toEqual(["Ada", "Grace", "Alan"]);
 
@@ -210,7 +210,7 @@ describe("Table drag and drop", () => {
 
       expect(onReorder).toHaveBeenCalledTimes(1);
       expect(onReorder.mock.calls[0]?.[0]).toMatchObject({
-        target: {dropPosition: "after", key: "Alan", type: "item"},
+        target: { dropPosition: "after", key: "Alan", type: "item" },
       });
       expect(names()).toEqual(["Grace", "Alan", "Ada"]);
     });
@@ -218,7 +218,7 @@ describe("Table drag and drop", () => {
     // The session's own listeners are on the document in the capture phase, so the grid's
     // two-dimensional navigation never sees the arrows that are moving the drop target.
     it("keeps the grid's own navigation out of the way", async () => {
-      const {handles, rows} = await renderTable();
+      const { handles, rows } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -230,7 +230,7 @@ describe("Table drag and drop", () => {
 
     it("leaves the table alone when the drag is cancelled", async () => {
       const onReorder = vi.fn();
-      const {handles, names} = await renderTable({onReorder});
+      const { handles, names } = await renderTable({ onReorder });
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -252,7 +252,7 @@ describe("Table drag and drop", () => {
    */
   describe("focus after the drag", () => {
     it("leaves focus on a row once the drop has landed", async () => {
-      const {handles, rows, table} = await renderTable();
+      const { handles, rows, table } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -267,7 +267,7 @@ describe("Table drag and drop", () => {
 
     // Nothing moved, so the control the drag started from is where the user still is.
     it("returns focus to the handle when the drag is cancelled", async () => {
-      const {handles} = await renderTable();
+      const { handles } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();
@@ -281,7 +281,7 @@ describe("Table drag and drop", () => {
 
   describe("the dragged row", () => {
     it("reports itself as dragging while the drag is in flight", async () => {
-      const {handles, rows} = await renderTable();
+      const { handles, rows } = await renderTable();
 
       activateHandle(handles()[0]!);
       await flushFrame();

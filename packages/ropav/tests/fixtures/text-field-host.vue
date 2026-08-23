@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {TextFieldHostProps} from "./text-field.types";
+import type { TextFieldHostProps } from "./text-field.types";
 
-import {useTextField} from "@/composables/use-text-field";
+import { useTextField } from "@/composables/use-text-field";
 
 // Every three-state boolean declares an explicit `undefined`: a cast `false` would read as a
 // caller claiming the field valid, which silences the whole validation layer.

@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter, Ref} from "vue";
+import type { MaybeRefOrGetter, Ref } from "vue";
 
-import {onScopeDispose, toValue, watch} from "vue";
+import { onScopeDispose, toValue, watch } from "vue";
 
 /** Form controls that take part in a form reset. */
 type ResettableElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -52,7 +52,7 @@ export const useFormReset = <T>(
       form?.addEventListener("reset", onFormReset);
       attachedForm = form;
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(detach, true);

@@ -1,4 +1,4 @@
-import type {RadioGroupRootProps} from "@/components/radio-group";
+import type { RadioGroupRootProps } from "@/components/radio-group";
 
 export interface RadioGroupFixtureProps extends RadioGroupRootProps {
   /** Item values to render a radio for. @default ["basic", "premium", "team"] */

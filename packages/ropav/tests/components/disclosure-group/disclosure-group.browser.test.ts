@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import DisclosureGroupFixture from "./fixtures.vue";
 
@@ -26,8 +26,8 @@ const settle = async (panels: HTMLElement[]) => {
 
 describe("DisclosureGroup (browser)", () => {
   it("swaps which panel is open, animation and hidden attribute included", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-      props: {defaultExpandedKeys: ["one"]},
+    const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+      props: { defaultExpandedKeys: ["one"] },
     });
     const panels = contentsIn(container);
 
@@ -44,8 +44,8 @@ describe("DisclosureGroup (browser)", () => {
   });
 
   it("keeps both panels open and measurable when several may be expanded", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-      props: {allowsMultipleExpanded: true, defaultExpandedKeys: ["one"]},
+    const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+      props: { allowsMultipleExpanded: true, defaultExpandedKeys: ["one"] },
     });
     const panels = contentsIn(container);
 
@@ -59,7 +59,7 @@ describe("DisclosureGroup (browser)", () => {
   });
 
   it("moves focus between triggers with a real keyboard", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture);
+    const { container, unmount } = renderVapor(DisclosureGroupFixture);
     const triggers = triggersIn(container);
 
     triggers[0]?.focus();
@@ -77,7 +77,7 @@ describe("DisclosureGroup (browser)", () => {
   });
 
   it("tabs through every trigger, skipping the collapsed panels", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture);
+    const { container, unmount } = renderVapor(DisclosureGroupFixture);
     const triggers = triggersIn(container);
 
     triggers[0]?.focus();
@@ -91,7 +91,7 @@ describe("DisclosureGroup (browser)", () => {
   });
 
   it("has no axe violations while collapsed", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture);
+    const { container, unmount } = renderVapor(DisclosureGroupFixture);
 
     await expectNoA11yViolations(container);
 
@@ -99,8 +99,8 @@ describe("DisclosureGroup (browser)", () => {
   });
 
   it("has no axe violations with a panel open", async () => {
-    const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-      props: {allowsMultipleExpanded: true, defaultExpandedKeys: ["one", "two"]},
+    const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+      props: { allowsMultipleExpanded: true, defaultExpandedKeys: ["one", "two"] },
     });
 
     await expectNoA11yViolations(container);

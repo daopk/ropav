@@ -1,11 +1,11 @@
-import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
-import type {VirtualizerCollection} from "@/utils/virtualizer-layout";
+import type { CollectionKey, UseCollectionReturn } from "@/composables/use-collection";
+import type { VirtualizerCollection } from "@/utils/virtualizer-layout";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope } from "vue";
 
-import {useCollection} from "@/composables/use-collection";
-import {createListCollection} from "@/utils/virtualizer-collection";
+import { useCollection } from "@/composables/use-collection";
+import { createListCollection } from "@/utils/virtualizer-collection";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];
@@ -25,7 +25,7 @@ const createSourcedCollection = (
 
   scopes.push(() => scope.stop());
 
-  return scope.run(() => useCollection({source})) as UseCollectionReturn;
+  return scope.run(() => useCollection({ source })) as UseCollectionReturn;
 };
 
 /**
@@ -35,7 +35,7 @@ const createSourcedCollection = (
 const populate = (
   collection: UseCollectionReturn,
   keys: CollectionKey[],
-  options: {registerOrder?: CollectionKey[]; disabled?: CollectionKey[]} = {},
+  options: { registerOrder?: CollectionKey[]; disabled?: CollectionKey[] } = {},
 ) => {
   const container = document.createElement("div");
 
@@ -65,7 +65,7 @@ const populate = (
     );
   }
 
-  return {cleanups, container, elements};
+  return { cleanups, container, elements };
 };
 
 afterEach(() => {
@@ -94,7 +94,7 @@ describe("useCollection", () => {
 
     it("stops counting an item once it unregisters", () => {
       const collection = createCollection();
-      const {cleanups} = populate(collection, ["a", "b"]);
+      const { cleanups } = populate(collection, ["a", "b"]);
 
       cleanups.get("a")!();
 
@@ -125,10 +125,10 @@ describe("useCollection", () => {
       // so a cleanup that deletes blindly would drop a live item.
       const collection = createCollection();
       const element = document.createElement("div");
-      const meta = {element: () => element, isDisabled: () => false, textValue: () => "a"};
+      const meta = { element: () => element, isDisabled: () => false, textValue: () => "a" };
       const stale = collection.register("a", meta);
 
-      collection.register("a", {...meta});
+      collection.register("a", { ...meta });
       stale();
 
       expect(collection.size.value).toBe(1);
@@ -141,14 +141,14 @@ describe("useCollection", () => {
       // children in an order that need not match where they end up.
       const collection = createCollection();
 
-      populate(collection, ["a", "b", "c"], {registerOrder: ["c", "a", "b"]});
+      populate(collection, ["a", "b", "c"], { registerOrder: ["c", "a", "b"] });
 
       expect(collection.orderedKeys()).toEqual(["a", "b", "c"]);
     });
 
     it("follows items that move in the DOM without re-registering", () => {
       const collection = createCollection();
-      const {container, elements} = populate(collection, ["a", "b", "c"]);
+      const { container, elements } = populate(collection, ["a", "b", "c"]);
 
       container.insertBefore(elements.get("c")!, elements.get("a")!);
 
@@ -157,7 +157,7 @@ describe("useCollection", () => {
 
     it("excludes an item whose element has left the document", () => {
       const collection = createCollection();
-      const {elements} = populate(collection, ["a", "b"]);
+      const { elements } = populate(collection, ["a", "b"]);
 
       elements.get("a")!.remove();
 
@@ -239,7 +239,7 @@ describe("useCollection", () => {
       // finds one it can land on; doing it here would hide disabled items from selection too.
       const collection = createCollection();
 
-      populate(collection, ["a", "b", "c"], {disabled: ["b"]});
+      populate(collection, ["a", "b", "c"], { disabled: ["b"] });
 
       expect(collection.getKeyAfter("a")).toBe("b");
     });
@@ -272,7 +272,7 @@ describe("useCollection", () => {
 
     it("resolves an item's element", () => {
       const collection = createCollection();
-      const {elements} = populate(collection, ["a"]);
+      const { elements } = populate(collection, ["a"]);
 
       expect(collection.getElement("a")).toBe(elements.get("a"));
       expect(collection.getElement("nope")).toBeNull();
@@ -281,7 +281,7 @@ describe("useCollection", () => {
 });
 
 describe("useCollection with a data source", () => {
-  const users = Array.from({length: 1000}, (_, index) => ({
+  const users = Array.from({ length: 1000 }, (_, index) => ({
     id: `user-${index}`,
     name: `User ${index}`,
   }));
@@ -316,7 +316,7 @@ describe("useCollection with a data source", () => {
 
   it("has no element for an item outside the rendered window", () => {
     const collection = createSourcedCollection(listSource);
-    const {elements} = populate(collection, ["user-3"]);
+    const { elements } = populate(collection, ["user-3"]);
 
     // Registered: the element is the one thing the data cannot answer, so focus needs it.
     expect(collection.getElement("user-3")).toBe(elements.get("user-3"));

@@ -20,7 +20,7 @@ export const Slider = Object.assign(SliderRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {SliderRoot, SliderOutput, SliderTrack, SliderFill, SliderThumb, SliderMarks};
+export { SliderRoot, SliderOutput, SliderTrack, SliderFill, SliderThumb, SliderMarks };
 
 export type {
   SliderRootProps,
@@ -37,6 +37,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {sliderVariants} from "@ropav/styles";
+export { sliderVariants } from "@ropav/styles";
 
-export type {SliderVariants} from "@ropav/styles";
+export type { SliderVariants } from "@ropav/styles";

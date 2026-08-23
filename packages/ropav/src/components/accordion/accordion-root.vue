@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
-import type {AccordionRootProps} from "./accordion.types";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
+import type { AccordionRootProps } from "./accordion.types";
 
-import {accordionVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { accordionVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useDisclosureGroup} from "../../composables/use-disclosure-group";
-import {provideSurfaceContext, useSurfaceContext} from "../surface";
+import { useDisclosureGroup } from "../../composables/use-disclosure-group";
+import { provideSurfaceContext, useSurfaceContext } from "../surface";
 
-import {provideAccordionContext} from "./accordion.context";
+import { provideAccordionContext } from "./accordion.context";
 
 const props = defineProps<AccordionRootProps>();
 
@@ -17,9 +17,9 @@ const emit = defineEmits<{
   "update:expandedKeys": [keys: Set<DisclosureKey>];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const slots = computed(() => accordionVariants({variant: props.variant}));
+const slots = computed(() => accordionVariants({ variant: props.variant }));
 
 const group = useDisclosureGroup({
   allowsMultipleExpanded: () => props.allowsMultipleExpanded,
@@ -58,7 +58,7 @@ provideSurfaceContext({
 </script>
 
 <template>
-  <div :class="slots.base({class: props.class})" data-slot="accordion">
+  <div :class="slots.base({ class: props.class })" data-slot="accordion">
     <slot />
   </div>
 </template>

@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ColorAreaHarnessProps} from "./color-area.types";
+import type { ColorAreaHarnessProps } from "./color-area.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import ColorAreaHost from "./color-area-host.vue";
 
 // The locale has to come from an ancestor: `inject` reads the parent's provides, so a component
 // cannot see one it provided itself.
-const props = withDefaults(defineProps<ColorAreaHarnessProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorAreaHarnessProps>(), { isDisabled: undefined });
 
 provideLocale(() => props.locale);
 </script>

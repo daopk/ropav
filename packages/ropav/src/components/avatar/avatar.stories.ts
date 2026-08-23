@@ -1,13 +1,13 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import IconPerson from "~icons/gravity-ui/person";
 import IconPersonGear from "~icons/gravity-ui/person-gear";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {SeparatorRoot} from "../separator";
+import { avatarSrc } from "../../utils/story-assets";
+import { SeparatorRoot } from "../separator";
 
-import {Avatar, AvatarFallback, AvatarImage} from "./index";
+import { Avatar, AvatarFallback, AvatarImage } from "./index";
 
 /**
  * Runtime-compiled story templates cannot resolve `Avatar.Image` — dot notation is an SFC
@@ -23,29 +23,29 @@ const components = {
 };
 
 const users = [
-  {id: 1, imageUrl: avatarSrc(3), name: "John"},
-  {id: 2, imageUrl: avatarSrc(5), name: "Kate"},
-  {id: 3, imageUrl: avatarSrc(20), name: "Emily"},
-  {id: 4, imageUrl: avatarSrc(23), name: "Michael"},
-  {id: 5, imageUrl: avatarSrc(16), name: "Olivia"},
+  { id: 1, imageUrl: avatarSrc(3), name: "John" },
+  { id: 2, imageUrl: avatarSrc(5), name: "Kate" },
+  { id: 3, imageUrl: avatarSrc(20), name: "Emily" },
+  { id: 4, imageUrl: avatarSrc(23), name: "Michael" },
+  { id: 5, imageUrl: avatarSrc(16), name: "Olivia" },
 ];
 
 const circles = [
-  {id: 1, imageUrl: avatarSrc("red"), name: "R"},
-  {id: 2, imageUrl: avatarSrc("orange"), name: "O"},
-  {id: 3, imageUrl: avatarSrc("green"), name: "G"},
-  {id: 4, imageUrl: avatarSrc("white"), name: "W"},
-  {id: 5, imageUrl: avatarSrc("black"), name: "B"},
+  { id: 1, imageUrl: avatarSrc("red"), name: "R" },
+  { id: 2, imageUrl: avatarSrc("orange"), name: "O" },
+  { id: 3, imageUrl: avatarSrc("green"), name: "G" },
+  { id: 4, imageUrl: avatarSrc("white"), name: "W" },
+  { id: 5, imageUrl: avatarSrc("black"), name: "B" },
 ];
 
 const meta: StoryMeta = {
   argTypes: {
     color: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["accent", "default", "success", "warning", "danger"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
   },
@@ -70,17 +70,17 @@ export const Default: Story = {
     setup: () => ({
       args,
       delayed: [
-        {alt: "John Doe", label: "JD", src: avatarSrc(3)},
-        {alt: "Junior Garcia", label: "JG", src: avatarSrc(4)},
-        {alt: "Junior Garcia", label: "JG", src: avatarSrc(5)},
-        {alt: "Paul", label: "PG", src: avatarSrc(8)},
+        { alt: "John Doe", label: "JD", src: avatarSrc(3) },
+        { alt: "Junior Garcia", label: "JG", src: avatarSrc(4) },
+        { alt: "Junior Garcia", label: "JG", src: avatarSrc(5) },
+        { alt: "Paul", label: "PG", src: avatarSrc(8) },
       ],
       solid: [
-        {alt: "Red", label: "R", src: avatarSrc("red")},
-        {alt: "Orange", label: "O", src: avatarSrc("orange")},
-        {alt: "Green", label: "G", src: avatarSrc("green")},
-        {alt: "White", label: "W", src: avatarSrc("white")},
-        {alt: "Black", label: "B", src: avatarSrc("black")},
+        { alt: "Red", label: "R", src: avatarSrc("red") },
+        { alt: "Orange", label: "O", src: avatarSrc("orange") },
+        { alt: "Green", label: "G", src: avatarSrc("green") },
+        { alt: "White", label: "W", src: avatarSrc("white") },
+        { alt: "Black", label: "B", src: avatarSrc("black") },
       ],
     }),
     template: `
@@ -122,7 +122,7 @@ export const Default: Story = {
 export const WithDelay: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, src: `https://app.requestly.io/delay/300/${avatarSrc(3)}`}),
+    setup: () => ({ args, src: `https://app.requestly.io/delay/300/${avatarSrc(3)}` }),
     template: `
       <div class="flex flex-col gap-4">
         <Avatar v-bind="args">
@@ -138,11 +138,11 @@ export const WithColors: Story = {
     components,
     setup: () => ({
       swatches: [
-        {color: "default", label: "DF"},
-        {color: "accent", label: "AC"},
-        {color: "success", label: "SC"},
-        {color: "warning", label: "WR"},
-        {color: "danger", label: "DG"},
+        { color: "default", label: "DF" },
+        { color: "accent", label: "AC" },
+        { color: "success", label: "SC" },
+        { color: "warning", label: "WR" },
+        { color: "danger", label: "DG" },
       ],
     }),
     template: `
@@ -158,7 +158,7 @@ export const WithColors: Story = {
 export const Fallback: Story = {
   render: () => ({
     components,
-    setup: () => ({invalidSrc: "https://invalid-url-to-show-fallback.com/image.jpg"}),
+    setup: () => ({ invalidSrc: "https://invalid-url-to-show-fallback.com/image.jpg" }),
     template: `
       <div class="flex items-center gap-4">
         <Avatar>
@@ -187,7 +187,7 @@ export const Fallback: Story = {
 export const Group: Story = {
   render: () => ({
     components,
-    setup: () => ({circles, users}),
+    setup: () => ({ circles, users }),
     template: `
       <div class="flex flex-col gap-4">
         <div class="flex items-center justify-center -space-x-2">
@@ -218,9 +218,9 @@ export const Sizes: Story = {
     components,
     setup: () => ({
       sizes: [
-        {alt: "Small", label: "SM", size: "sm", src: avatarSrc(3)},
-        {alt: "Medium", label: "MD", size: "md", src: avatarSrc(4)},
-        {alt: "Large", label: "LG", size: "lg", src: avatarSrc(5)},
+        { alt: "Small", label: "SM", size: "sm", src: avatarSrc(3) },
+        { alt: "Medium", label: "MD", size: "md", src: avatarSrc(4) },
+        { alt: "Large", label: "LG", size: "lg", src: avatarSrc(5) },
       ],
     }),
     template: `
@@ -249,11 +249,11 @@ export const Variants: Story = {
         avatarSrc("red"),
       ],
       rows: [
-        {label: "letter", type: "letter"},
-        {label: "letter soft", type: "letter-soft"},
-        {label: "icon", type: "icon"},
-        {label: "icon soft", type: "icon-soft"},
-        {label: "img", type: "img"},
+        { label: "letter", type: "letter" },
+        { label: "letter soft", type: "letter-soft" },
+        { label: "icon", type: "icon" },
+        { label: "icon soft", type: "icon-soft" },
+        { label: "img", type: "img" },
       ],
     }),
     template: `

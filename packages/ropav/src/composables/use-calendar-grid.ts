@@ -1,15 +1,15 @@
-import type {DayOfWeek, WeekdayStyle} from "../utils/calendar";
-import type {AnyCalendarState, CalendarShared} from "./use-calendar";
-import type {CalendarDate} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DayOfWeek, WeekdayStyle } from "../utils/calendar";
+import type { AnyCalendarState, CalendarShared } from "./use-calendar";
+import type { CalendarDate } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {startOfWeek, today} from "@internationalized/date";
-import {computed, toValue} from "vue";
+import { startOfWeek, today } from "@internationalized/date";
+import { computed, toValue } from "vue";
 
-import {isRangeCalendarState, useVisibleRangeDescription} from "./use-calendar";
-import {useDateFormatter} from "./use-date-formatter";
-import {useLabels} from "./use-labels";
-import {useLocale} from "./use-locale";
+import { isRangeCalendarState, useVisibleRangeDescription } from "./use-calendar";
+import { useDateFormatter } from "./use-date-formatter";
+import { useLabels } from "./use-labels";
+import { useLocale } from "./use-locale";
 
 export interface UseCalendarGridOptions {
   /** The first date this grid shows. Defaults to the first visible date of the calendar. */
@@ -162,8 +162,8 @@ export const useCalendarGrid = (
       : startOfWeek(today(state.timeZone.value), locale.value.locale, firstDayOfWeek);
     const days = isDayView ? duration.days! : 7;
 
-    return Array.from({length: days}, (_, index) =>
-      dayFormatter.value.format(weekStart.add({days: index}).toDate(state.timeZone.value)),
+    return Array.from({ length: days }, (_, index) =>
+      dayFormatter.value.format(weekStart.add({ days: index }).toDate(state.timeZone.value)),
     );
   });
 

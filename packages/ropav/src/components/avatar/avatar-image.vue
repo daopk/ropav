@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
-import type {AvatarImageProps} from "./avatar.types";
+import type { ImageLoadingStatus } from "../../composables/use-image-loading-status";
+import type { AvatarImageProps } from "./avatar.types";
 
-import {watch} from "vue";
+import { watch } from "vue";
 
-import {useImageLoadingStatus} from "../../composables/use-image-loading-status";
-import {composeSlotClassName} from "../../utils/compose";
+import { useImageLoadingStatus } from "../../composables/use-image-loading-status";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAvatarContext} from "./avatar.context";
+import { useAvatarContext } from "./avatar.context";
 
 const props = defineProps<AvatarImageProps>();
 
@@ -23,7 +23,7 @@ const emit = defineEmits<{
   loadingStatusChange: [status: ImageLoadingStatus];
 }>();
 
-const {setImageStatus, slots} = useAvatarContext();
+const { setImageStatus, slots } = useAvatarContext();
 
 const status = useImageLoadingStatus(() => props.src, {
   crossOrigin: () => props.crossOrigin,
@@ -43,7 +43,7 @@ watch(
   },
   // A cached image resolves synchronously, so without this the one status that matters most
   // would be the one nobody is told about.
-  {immediate: true},
+  { immediate: true },
 );
 </script>
 

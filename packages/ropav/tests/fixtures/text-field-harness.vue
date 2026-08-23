@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {TextFieldHarnessProps} from "./text-field.types";
+import type { TextFieldHarnessProps } from "./text-field.types";
 
 import TextFieldHost from "./text-field-host.vue";
 

@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {AlertRootProps} from "./alert.types";
+import type { AlertRootProps } from "./alert.types";
 
-import {alertVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { alertVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
-import {provideSurfaceContext} from "../surface";
+import { composeSlotClassName } from "../../utils/compose";
+import { provideSurfaceContext } from "../surface";
 
-import {provideAlertContext} from "./alert.context";
+import { provideAlertContext } from "./alert.context";
 
 const props = defineProps<AlertRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const slots = computed(() => alertVariants({status: props.status}));
+const slots = computed(() => alertVariants({ status: props.status }));
 
-provideAlertContext({slots, status: computed(() => props.status)});
+provideAlertContext({ slots, status: computed(() => props.status) });
 
 // An alert is a surface in its own right, so descendants use their default on-surface colours
 // rather than inheriting the surface behind the alert.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 </script>
 
 <template>

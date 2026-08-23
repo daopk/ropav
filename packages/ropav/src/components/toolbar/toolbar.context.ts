@@ -1,7 +1,7 @@
-import type {ToolbarOrientation} from "../../composables/use-toolbar";
-import type {ComputedRef} from "vue";
+import type { ToolbarOrientation } from "../../composables/use-toolbar";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ToolbarContext {
   /**

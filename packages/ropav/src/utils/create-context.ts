@@ -1,6 +1,6 @@
-import type {InjectionKey} from "vue";
+import type { InjectionKey } from "vue";
 
-import {inject, provide} from "vue";
+import { inject, provide } from "vue";
 
 interface CreateContextBaseOptions {
   /** Human readable name, used for the injection key and in the error message. */
@@ -45,7 +45,7 @@ export type CreateContextReturn<T> = [useContext: () => T, provideContext: (valu
  * ```
  */
 export const createContext = <T>(options: CreateContextOptions<T>): CreateContextReturn<T> => {
-  const {errorMessage, name} = options;
+  const { errorMessage, name } = options;
   const key: InjectionKey<T> = Symbol(name);
 
   const provideContext = (value: T): T => {

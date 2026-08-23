@@ -1,4 +1,4 @@
-import {installDataTransfer} from "./data-transfer";
+import { installDataTransfer } from "./data-transfer";
 
 import "@testing-library/jest-dom/vitest";
 

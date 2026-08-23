@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {SurfaceRootProps} from "@/components/surface";
+import type { SurfaceRootProps } from "@/components/surface";
 
-import {SurfaceRoot} from "@/components/surface";
+import { SurfaceRoot } from "@/components/surface";
 
 import SurfaceConsumer from "../../fixtures/surface-consumer.vue";
 
-const props = defineProps<SurfaceRootProps & {nestedVariant?: SurfaceRootProps["variant"]}>();
+const props = defineProps<SurfaceRootProps & { nestedVariant?: SurfaceRootProps["variant"] }>();
 </script>
 
 <template>

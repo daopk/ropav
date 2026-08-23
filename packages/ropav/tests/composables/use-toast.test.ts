@@ -1,16 +1,16 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {ToastQueue} from "@/components/toast/toast-queue";
-import {DEFAULT_TOAST_TIMEOUT} from "@/components/toast/toast.constants";
+import { ToastQueue } from "@/components/toast/toast-queue";
+import { DEFAULT_TOAST_TIMEOUT } from "@/components/toast/toast.constants";
 
 import ToastHost from "../fixtures/toast-host.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown>) => {
-  const result = renderVapor(ToastHost, {props});
+  const result = renderVapor(ToastHost, { props });
 
   mounted.push(result);
 
@@ -18,12 +18,12 @@ const render = (props: Record<string, unknown>) => {
 };
 
 /** One queued toast, taken from a real queue so its clock is the real one. */
-const queueOne = (options: {onClose?: () => void; timeout?: number} = {}) => {
+const queueOne = (options: { onClose?: () => void; timeout?: number } = {}) => {
   const queue = new ToastQueue();
 
-  queue.add({title: "Saved"}, options);
+  queue.add({ title: "Saved" }, options);
 
-  return {queue, toast: queue.visibleToasts[0]!};
+  return { queue, toast: queue.visibleToasts[0]! };
 };
 
 describe("useToast", () => {
@@ -39,8 +39,8 @@ describe("useToast", () => {
 
   describe("accessibility", () => {
     it("exposes the toast as a non-modal alert dialog", () => {
-      const {toast} = queueOne();
-      const {getByTestId} = render({toast});
+      const { toast } = queueOne();
+      const { getByTestId } = render({ toast });
       const element = getByTestId("toast");
 
       // A toast holds controls, so it has to be a dialog for a screen reader to let the user in,
@@ -50,8 +50,8 @@ describe("useToast", () => {
     });
 
     it("labels the toast with its title", () => {
-      const {toast} = queueOne();
-      const {getByTestId} = render({toast});
+      const { toast } = queueOne();
+      const { getByTestId } = render({ toast });
 
       expect(getByTestId("toast").getAttribute("aria-labelledby")).toBe(
         getByTestId("title").getAttribute("id"),
@@ -59,13 +59,13 @@ describe("useToast", () => {
     });
 
     it("describes the toast only once a description claims the id", async () => {
-      const {toast} = queueOne();
-      const without = render({toast});
+      const { toast } = queueOne();
+      const without = render({ toast });
 
       await nextTick();
       expect(without.getByTestId("toast")).not.toHaveAttribute("aria-describedby");
 
-      const withDescription = render({showDescription: true, toast});
+      const withDescription = render({ showDescription: true, toast });
 
       await nextTick();
       expect(withDescription.getByTestId("toast").getAttribute("aria-describedby")).toBe(
@@ -74,8 +74,8 @@ describe("useToast", () => {
     });
 
     it("announces through the content rather than the dialog", () => {
-      const {toast} = queueOne();
-      const {getByTestId} = render({toast});
+      const { toast } = queueOne();
+      const { getByTestId } = render({ toast });
       const content = getByTestId("content");
 
       expect(content).toHaveAttribute("role", "alert");
@@ -83,8 +83,8 @@ describe("useToast", () => {
     });
 
     it("withholds the content from the accessibility tree for the first tick only", async () => {
-      const {toast} = queueOne();
-      const {getByTestId} = render({toast});
+      const { toast } = queueOne();
+      const { getByTestId } = render({ toast });
 
       // Both halves are asserted on purpose: "no aria-hidden afterwards" alone stays green if the
       // flag is deleted outright, and the flag exists because NVDA announces nothing unless the
@@ -107,13 +107,13 @@ describe("useToast", () => {
     });
 
     it("starts the clock when the toast mounts, not when it was queued", () => {
-      const {queue, toast} = queueOne();
+      const { queue, toast } = queueOne();
 
       // Nothing is rendered yet, so nothing should be counting down.
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT * 2);
       expect(queue.visibleToasts).toHaveLength(1);
 
-      render({toast});
+      render({ toast });
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT - 1);
       expect(queue.visibleToasts).toHaveLength(1);
@@ -123,8 +123,8 @@ describe("useToast", () => {
     });
 
     it("pauses the clock when the toast unmounts", () => {
-      const {queue, toast} = queueOne();
-      const result = render({toast});
+      const { queue, toast } = queueOne();
+      const result = render({ toast });
 
       vi.advanceTimersByTime(1000);
       result.unmount();
@@ -135,9 +135,9 @@ describe("useToast", () => {
     });
 
     it("starts no clock for a toast that never expires", () => {
-      const {queue, toast} = queueOne({timeout: 0});
+      const { queue, toast } = queueOne({ timeout: 0 });
 
-      render({toast});
+      render({ toast });
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT * 10);
       expect(queue.visibleToasts).toHaveLength(1);
@@ -147,10 +147,10 @@ describe("useToast", () => {
   describe("closing", () => {
     it("closes through the callback it was handed", () => {
       const onClose = vi.fn();
-      const {toast} = queueOne({onClose});
-      const api: {close: () => void}[] = [];
+      const { toast } = queueOne({ onClose });
+      const api: { close: () => void }[] = [];
 
-      render({onReady: (next: {close: () => void}) => api.push(next), toast});
+      render({ onReady: (next: { close: () => void }) => api.push(next), toast });
 
       api[0]!.close();
 

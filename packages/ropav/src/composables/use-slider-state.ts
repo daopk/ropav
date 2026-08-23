@@ -1,10 +1,10 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {clamp, snapValueToStep} from "../utils/number";
+import { clamp, snapValueToStep } from "../utils/number";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 export type SliderOrientation = "horizontal" | "vertical";
 
@@ -142,7 +142,7 @@ export const useSliderState = (options: UseSliderStateOptions): SliderState => {
     return isScalar ? values[0]! : values;
   };
 
-  const {setState, state: values} = useControllableState<number[]>({
+  const { setState, state: values } = useControllableState<number[]>({
     defaultValue: defaultValue.value,
     onValueChange: (next) => options.onChange?.(toCallerShape(next)),
     value: () => controlledValue.value,
@@ -215,7 +215,7 @@ export const useSliderState = (options: UseSliderStateOptions): SliderState => {
     if (parts.length === 1) return formatter.format(parts[0]!);
     if (parts.length === 2) return formatter.formatRange(parts[0]!, parts[1]!);
 
-    return new Intl.ListFormat(formatter.resolvedOptions().locale, {type: "unit"}).format(
+    return new Intl.ListFormat(formatter.resolvedOptions().locale, { type: "unit" }).format(
       parts.map((part) => formatter.format(part)),
     );
   };

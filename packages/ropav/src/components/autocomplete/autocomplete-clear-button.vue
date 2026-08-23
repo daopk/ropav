@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {AutocompleteClearButtonProps} from "./autocomplete.types";
+import type { AutocompleteClearButtonProps } from "./autocomplete.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {IconClose} from "../icons";
+import { dataAttr } from "../../utils/assertion";
+import { IconClose } from "../icons";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 const props = defineProps<AutocompleteClearButtonProps>();
 
-const {isDisabled, onClear, setClearButtonElement, slots, state} = useAutocompleteContext();
+const { isDisabled, onClear, setClearButtonElement, slots, state } = useAutocompleteContext();
 
-const styles = computed(() => slots.value.clearButton({class: props.class}));
+const styles = computed(() => slots.value.clearButton({ class: props.class }));
 
 /**
  * Whether there is nothing to clear, which is what the stylesheet fades the button out on.

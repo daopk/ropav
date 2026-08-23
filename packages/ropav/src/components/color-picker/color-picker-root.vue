@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {Color} from "../../utils/color-types";
-import type {ColorPickerRootProps, ColorPickerRootSlotProps} from "./color-picker.types";
+import type { Color } from "../../utils/color-types";
+import type { ColorPickerRootProps, ColorPickerRootSlotProps } from "./color-picker.types";
 
-import {colorPickerVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { colorPickerVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useColorPickerState} from "../../composables/use-color-picker-state";
-import {useDialogTrigger} from "../../composables/use-dialog-trigger";
-import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import {provideOverlayTargetContext} from "../overlay";
+import { providePressResponder } from "../../composables/press-responder";
+import { useColorPickerState } from "../../composables/use-color-picker-state";
+import { useDialogTrigger } from "../../composables/use-dialog-trigger";
+import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import { provideOverlayTargetContext } from "../overlay";
 
-import {provideColorPickerContext, provideColorValueContext} from "./color-picker.context";
+import { provideColorPickerContext, provideColorValueContext } from "./color-picker.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // picker from one a caller is holding closed.
-const props = withDefaults(defineProps<ColorPickerRootProps>(), {isOpen: undefined});
+const props = withDefaults(defineProps<ColorPickerRootProps>(), { isOpen: undefined });
 
 const emit = defineEmits<{
   change: [value: Color];
@@ -24,7 +24,7 @@ const emit = defineEmits<{
   "update:isOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: (props: ColorPickerRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorPickerRootSlotProps) => unknown }>();
 
 const state = useColorPickerState({
   defaultValue: () => props.defaultValue,
@@ -50,7 +50,7 @@ const trigger = useDialogTrigger({}, overlay);
 // picker's contents in a `DialogTrigger`, which hands the press down the same way.
 providePressResponder(trigger.responder);
 
-provideColorPickerContext({slots: computed(() => colorPickerVariants())});
+provideColorPickerContext({ slots: computed(() => colorPickerVariants()) });
 
 /**
  * The one context every colour component under here reads.
@@ -78,7 +78,7 @@ provideOverlayTargetContext({
   triggerElement: trigger.triggerElement,
 });
 
-const styles = computed(() => colorPickerVariants().base({class: props.class}));
+const styles = computed(() => colorPickerVariants().base({ class: props.class }));
 </script>
 
 <template>

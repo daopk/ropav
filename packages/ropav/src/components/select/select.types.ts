@@ -1,4 +1,4 @@
-import type {CollectionKey} from "../../composables/use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 import type {
   ValidationBehavior,
   ValidationFunction,
@@ -8,9 +8,9 @@ import type {
   SelectedItem,
   SelectedValue,
 } from "../../composables/use-select-state";
-import type {DisabledBehavior} from "../../composables/use-selection-manager";
-import type {Placement} from "../../utils/position";
-import type {SelectVariants} from "@ropav/styles";
+import type { DisabledBehavior } from "../../composables/use-selection-manager";
+import type { Placement } from "../../utils/position";
+import type { SelectVariants } from "@ropav/styles";
 
 export interface SelectRootProps<T = unknown> {
   class?: string;

@@ -1,5 +1,5 @@
-import type {MeterVariants} from "@ropav/styles";
-import type {CSSProperties} from "vue";
+import type { MeterVariants } from "@ropav/styles";
+import type { CSSProperties } from "vue";
 
 export interface MeterRootProps {
   class?: string;

@@ -1,7 +1,7 @@
-import type {ValidationResult} from "../../composables/use-form-validation-state";
-import type {ComputedRef} from "vue";
+import type { ValidationResult } from "../../composables/use-form-validation-state";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface FieldErrorContext {
   /**

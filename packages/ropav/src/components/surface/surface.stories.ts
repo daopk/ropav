@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Input} from "../input";
-import {Label} from "../label";
-import {TextField} from "../textfield";
+import { Input } from "../input";
+import { Label } from "../label";
+import { TextField } from "../textfield";
 
-import {Surface} from "./index";
+import { Surface } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve dot notation through.
-const components = {Input, Label, Surface, TextField};
+const components = { Input, Label, Surface, TextField };
 
 const meta: StoryMeta = {
   argTypes: {},
   component: Surface,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Layout/Surface",
 };
 

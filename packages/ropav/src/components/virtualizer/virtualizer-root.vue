@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {Layout} from "../../utils/virtualizer-layout";
-import type {VirtualizerLayoutProp, VirtualizerRootProps} from "./virtualizer.types";
+import type { Layout } from "../../utils/virtualizer-layout";
+import type { VirtualizerLayoutProp, VirtualizerRootProps } from "./virtualizer.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {provideVirtualizerConfigContext} from "./virtualizer.context";
+import { provideVirtualizerConfigContext } from "./virtualizer.context";
 
 const props = defineProps<VirtualizerRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 /** A class is instantiated once; an instance is taken as it is, as React Aria has it. */
 const resolveLayout = (layout: VirtualizerLayoutProp): Layout<object> =>

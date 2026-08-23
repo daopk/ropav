@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {CUSTOM_DRAG_TYPE, DIRECTORY_DRAG_TYPE, GENERIC_TYPE} from "@/utils/dnd-constants";
+import { CUSTOM_DRAG_TYPE, DIRECTORY_DRAG_TYPE, GENERIC_TYPE } from "@/utils/dnd-constants";
 import {
   DataTransferDragTypes,
   getTypes,
@@ -18,7 +18,7 @@ const transfer = (): DataTransfer => new DataTransfer();
 
 describe("getTypes", () => {
   it("collects every type across every item", () => {
-    const types = getTypes([{"text/plain": "a"}, {"text/html": "<b>b</b>", "text/plain": "b"}]);
+    const types = getTypes([{ "text/plain": "a" }, { "text/html": "<b>b</b>", "text/plain": "b" }]);
 
     expect([...types].sort()).toEqual(["text/html", "text/plain"]);
   });
@@ -33,7 +33,7 @@ describe("writeToDataTransfer", () => {
   it("writes a single simple item natively and adds no custom payload", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/plain": "hello"}]);
+    writeToDataTransfer(data, [{ "text/plain": "hello" }]);
 
     expect(data.getData("text/plain")).toBe("hello");
     expect([...data.types]).not.toContain(CUSTOM_DRAG_TYPE);
@@ -43,7 +43,7 @@ describe("writeToDataTransfer", () => {
   it("adds a custom payload when two items share a type", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/plain": "first"}, {"text/plain": "second"}]);
+    writeToDataTransfer(data, [{ "text/plain": "first" }, { "text/plain": "second" }]);
 
     expect([...data.types]).toContain(CUSTOM_DRAG_TYPE);
   });
@@ -51,7 +51,7 @@ describe("writeToDataTransfer", () => {
   it("adds a custom payload when one item has several representations", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/html": "<b>a</b>", "text/plain": "a"}]);
+    writeToDataTransfer(data, [{ "text/html": "<b>a</b>", "text/plain": "a" }]);
 
     expect([...data.types]).toContain(CUSTOM_DRAG_TYPE);
   });
@@ -61,7 +61,7 @@ describe("writeToDataTransfer", () => {
   it("joins repeated native types with newlines so a foreign target sees all of them", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/plain": "first"}, {"text/plain": "second"}]);
+    writeToDataTransfer(data, [{ "text/plain": "first" }, { "text/plain": "second" }]);
 
     expect(data.getData("text/plain")).toBe("first\nsecond");
   });
@@ -71,7 +71,7 @@ describe("writeToDataTransfer", () => {
   it("keeps only the first value for a repeated app-private type", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"app/thing": "first"}, {"app/thing": "second"}]);
+    writeToDataTransfer(data, [{ "app/thing": "first" }, { "app/thing": "second" }]);
 
     expect(data.getData("app/thing")).toBe("first");
   });
@@ -81,7 +81,7 @@ describe("round trip", () => {
   it("restores several items of one type through the custom payload", () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/plain": "first"}, {"text/plain": "second"}]);
+    writeToDataTransfer(data, [{ "text/plain": "first" }, { "text/plain": "second" }]);
 
     const items = readFromDataTransfer(data);
 
@@ -92,7 +92,7 @@ describe("round trip", () => {
   it("restores every representation of a single item", async () => {
     const data = transfer();
 
-    writeToDataTransfer(data, [{"text/html": "<b>a</b>", "text/plain": "a"}]);
+    writeToDataTransfer(data, [{ "text/html": "<b>a</b>", "text/plain": "a" }]);
 
     const [item] = readFromDataTransfer(data);
 

@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ProgressCircleRootProps} from "@/components/progress-circle";
+import type { ProgressCircleRootProps } from "@/components/progress-circle";
 
-import {Label} from "@/components/label";
-import {ProgressCircle} from "@/components/progress-circle";
+import { Label } from "@/components/label";
+import { ProgressCircle } from "@/components/progress-circle";
 
 withDefaults(
   defineProps<

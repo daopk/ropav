@@ -8,11 +8,11 @@ import type {
   ToastQueueOptions,
   ToastRenderable,
 } from "./toast.types";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {DEFAULT_TOAST_TIMEOUT} from "./toast.constants";
+import { DEFAULT_TOAST_TIMEOUT } from "./toast.constants";
 
 /* -------------------------------------------------------------------------------------------------
  * Timer
@@ -268,7 +268,7 @@ export const useToastQueue = <T = ToastContentValue>(
         visibleToasts.value = next.visibleToasts;
       });
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   onScopeDispose(() => {
@@ -276,7 +276,7 @@ export const useToastQueue = <T = ToastContentValue>(
     detach = undefined;
   }, true);
 
-  return {visibleToasts: computed(() => visibleToasts.value)};
+  return { visibleToasts: computed(() => visibleToasts.value) };
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -340,7 +340,7 @@ export const createToastFunction = (queue: ToastQueue<ToastContentValue>): Toast
   const withVariant =
     (variant: NonNullable<ToastContentValue["variant"]>) =>
     (message: ToastRenderable, options: Omit<ToastAddOptions, "variant"> = {}): string =>
-      add(message, {...options, variant});
+      add(message, { ...options, variant });
 
   const toastFn = add as ToastFunction;
 
@@ -362,8 +362,8 @@ export const createToastFunction = (queue: ToastQueue<ToastContentValue>): Toast
 
     // Never expires: it is the promise that decides when this one goes.
     const loadingKey = queue.add(
-      {isLoading: true, title: options.loading, variant: "default"},
-      {timeout: 0},
+      { isLoading: true, title: options.loading, variant: "default" },
+      { timeout: 0 },
     );
 
     void pending.then(

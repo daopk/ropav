@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -41,11 +41,11 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
   element.dispatchEvent(event);
 
@@ -86,9 +86,9 @@ const open = async (result: RenderResult) => {
 
 /** Type into the search field the way a browser does: an edit, then the value. */
 const type = async (input: HTMLInputElement, value: string, inputType = "insertText") => {
-  input.dispatchEvent(new InputEvent("beforeinput", {bubbles: true, inputType}));
+  input.dispatchEvent(new InputEvent("beforeinput", { bubbles: true, inputType }));
   input.value = value;
-  input.dispatchEvent(new InputEvent("input", {bubbles: true, inputType}));
+  input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType }));
   await settle();
 };
 
@@ -196,7 +196,7 @@ describe("Autocomplete", () => {
     });
 
     it("refuses to open with nothing to show", async () => {
-      const result = render({items: []});
+      const result = render({ items: [] });
 
       press(buttonOf(result));
       await settle();
@@ -205,7 +205,7 @@ describe("Autocomplete", () => {
     });
 
     it("opens with nothing to show when asked to", async () => {
-      const result = render({allowsEmptyCollection: true, items: []});
+      const result = render({ allowsEmptyCollection: true, items: [] });
 
       press(buttonOf(result));
       await settle();
@@ -253,7 +253,7 @@ describe("Autocomplete", () => {
 
     it("reports what was typed", async () => {
       const onInputChange = vi.fn();
-      const result = render({onInputChange});
+      const result = render({ onInputChange });
 
       await open(result);
       await type(inputOf(result), "do");
@@ -262,7 +262,7 @@ describe("Autocomplete", () => {
     });
 
     it("shows the empty state when nothing matches", async () => {
-      const result = render({allowsEmptyCollection: true, withEmptyState: true});
+      const result = render({ allowsEmptyCollection: true, withEmptyState: true });
       const listbox = await open(result);
 
       await type(inputOf(result), "zzz");
@@ -274,7 +274,7 @@ describe("Autocomplete", () => {
     });
 
     it("filters nothing without a predicate", async () => {
-      const result = render({withFilter: false});
+      const result = render({ withFilter: false });
 
       await open(result);
       await type(inputOf(result), "zzz");
@@ -283,7 +283,7 @@ describe("Autocomplete", () => {
     });
 
     it("leaves the filtering alone when the options are handed over directly", async () => {
-      const result = render({filterItems: [{id: "dog", name: "Dog"}]});
+      const result = render({ filterItems: [{ id: "dog", name: "Dog" }] });
 
       await open(result);
       await type(inputOf(result), "cat");
@@ -293,7 +293,7 @@ describe("Autocomplete", () => {
     });
 
     it("keeps the chosen value in the trigger while the options are narrowed past it", async () => {
-      const result = render({defaultValue: "cat"});
+      const result = render({ defaultValue: "cat" });
 
       await open(result);
       await type(inputOf(result), "dog");
@@ -347,7 +347,7 @@ describe("Autocomplete", () => {
 
     it("chooses the focused option on Enter", async () => {
       const onChange = vi.fn();
-      const result = render({onChange});
+      const result = render({ onChange });
 
       await open(result);
       keydown(inputOf(result), "ArrowDown");
@@ -362,7 +362,7 @@ describe("Autocomplete", () => {
   describe("selecting", () => {
     it("chooses an option, shows it and closes", async () => {
       const onChange = vi.fn();
-      const result = render({onChange});
+      const result = render({ onChange });
 
       await open(result);
       optionsOf(result)[1]!.click();
@@ -377,7 +377,7 @@ describe("Autocomplete", () => {
 
     it("stays open and adds up when several may be chosen", async () => {
       const onChange = vi.fn();
-      const result = render({onChange, selectionMode: "multiple"});
+      const result = render({ onChange, selectionMode: "multiple" });
 
       await open(result);
       optionsOf(result)[0]!.click();
@@ -390,7 +390,7 @@ describe("Autocomplete", () => {
     });
 
     it("shows several chosen options joined the way the locale joins a list", async () => {
-      const result = render({defaultValue: ["cat", "dog"], selectionMode: "multiple"});
+      const result = render({ defaultValue: ["cat", "dog"], selectionMode: "multiple" });
 
       expect(result.container.querySelector('[data-slot="autocomplete-value"]')).toHaveTextContent(
         "Cat and Dog",
@@ -398,7 +398,7 @@ describe("Autocomplete", () => {
     });
 
     it("renders the value through its slot when one was handed over", () => {
-      const result = render({defaultValue: "cat", withCustomValue: true});
+      const result = render({ defaultValue: "cat", withCustomValue: true });
 
       expect(result.getByTestId("custom-value")).toHaveTextContent("cat");
     });
@@ -406,7 +406,7 @@ describe("Autocomplete", () => {
 
   describe("the clear button", () => {
     it("is out of the tab order and hidden while there is nothing to clear", () => {
-      const result = render({withClearButton: true});
+      const result = render({ withClearButton: true });
       const button = result.container.querySelector('[data-slot="autocomplete-clear-button"]')!;
 
       expect(button).toHaveAttribute("data-empty", "true");
@@ -451,7 +451,7 @@ describe("Autocomplete", () => {
   describe("disabled", () => {
     it("disables the button and refuses to open", async () => {
       const onChange = vi.fn();
-      const result = render({isDisabled: true, onChange});
+      const result = render({ isDisabled: true, onChange });
 
       expect(buttonOf(result)).toBeDisabled();
 
@@ -463,7 +463,7 @@ describe("Autocomplete", () => {
     });
 
     it("says so on the root and on the trigger", () => {
-      const result = render({isDisabled: true});
+      const result = render({ isDisabled: true });
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')).toHaveAttribute(
         "data-disabled",
@@ -474,7 +474,7 @@ describe("Autocomplete", () => {
 
     it("leaves a disabled option unchoosable", async () => {
       const onChange = vi.fn();
-      const result = render({disabledKeys: ["dog"], onChange});
+      const result = render({ disabledKeys: ["dog"], onChange });
 
       await open(result);
 
@@ -489,7 +489,7 @@ describe("Autocomplete", () => {
 
   describe("validation", () => {
     it("says it is invalid and shows the error", () => {
-      const result = render({isInvalid: true, withFieldError: true});
+      const result = render({ isInvalid: true, withFieldError: true });
 
       expect(result.container.querySelector('[data-slot="autocomplete"]')).toHaveAttribute(
         "data-invalid",
@@ -501,7 +501,7 @@ describe("Autocomplete", () => {
     });
 
     it("names the field by its label and its value", () => {
-      const result = render({withLabel: true});
+      const result = render({ withLabel: true });
       const label = result.container.querySelector('[data-slot="label"]')!;
       const value = result.container.querySelector('[data-slot="autocomplete-value"]')!;
 
@@ -513,7 +513,7 @@ describe("Autocomplete", () => {
 
   describe("a form", () => {
     it("submits the chosen key under its name", () => {
-      const result = render({defaultValue: "dog", name: "animal"});
+      const result = render({ defaultValue: "dog", name: "animal" });
       const control = result.container.querySelector<HTMLSelectElement>("select")!;
 
       expect(control.name).toBe("animal");
@@ -521,7 +521,7 @@ describe("Autocomplete", () => {
     });
 
     it("marks the starting option as the one a reset goes back to", () => {
-      const result = render({defaultValue: "dog", name: "animal"});
+      const result = render({ defaultValue: "dog", name: "animal" });
       const control = result.container.querySelector<HTMLSelectElement>("select")!;
 
       // The reset *source*, not the value after a reset: jsdom restores controls synchronously

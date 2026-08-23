@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
-import type {TableColumnSize} from "../../composables/use-table-column-layout";
-import type {TableResizableContainerProps} from "./table.types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { TableColumnSize } from "../../composables/use-table-column-layout";
+import type { TableResizableContainerProps } from "./table.types";
 
-import {computed, onMounted, onUnmounted, shallowRef} from "vue";
+import { computed, onMounted, onUnmounted, shallowRef } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {provideTableResizableContainerContext, useTableContext} from "./table.context";
+import { provideTableResizableContainerContext, useTableContext } from "./table.context";
 
 const props = defineProps<TableResizableContainerProps>();
 
@@ -17,9 +17,9 @@ const emit = defineEmits<{
   resizeEnd: [widths: Map<CollectionKey, TableColumnSize>];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 const width = shallowRef(0);
@@ -43,7 +43,7 @@ onMounted(() => {
   if (typeof ResizeObserver === "undefined" || !element.value) return;
 
   observer = new ResizeObserver(measure);
-  observer.observe(element.value, {box: "border-box"});
+  observer.observe(element.value, { box: "border-box" });
 });
 
 onUnmounted(() => observer?.disconnect());

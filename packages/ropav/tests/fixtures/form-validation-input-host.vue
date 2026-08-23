@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {FormValidationInputProps} from "./form-validation-input.types";
+import type { FormValidationInputProps } from "./form-validation-input.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useFormValidation} from "@/composables/use-form-validation";
-import {useFormValidationState} from "@/composables/use-form-validation-state";
+import { useFormValidation } from "@/composables/use-form-validation";
+import { useFormValidationState } from "@/composables/use-form-validation-state";
 
-const props = withDefaults(defineProps<FormValidationInputProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<FormValidationInputProps>(), { isInvalid: undefined });
 
 const inputEl = shallowRef<HTMLInputElement | null>(null);
 

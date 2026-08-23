@@ -1,10 +1,10 @@
-import type {UseComboBoxReturn} from "../../composables/use-combo-box";
-import type {UseComboBoxStateReturn} from "../../composables/use-combo-box-state";
-import type {SelectedItem} from "../../composables/use-select-state";
-import type {comboBoxVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseComboBoxReturn } from "../../composables/use-combo-box";
+import type { UseComboBoxStateReturn } from "../../composables/use-combo-box-state";
+import type { SelectedItem } from "../../composables/use-select-state";
+import type { comboBoxVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ComboBoxContext {
   /** The class for each part, from the shared variants. */

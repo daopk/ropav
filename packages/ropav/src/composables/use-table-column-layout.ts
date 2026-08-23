@@ -1,7 +1,7 @@
-import type {CollectionKey} from "./use-collection";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 /** A column width: pixels as a number, a percentage of the table, or a fraction of what is left. */
 export type TableColumnSize = number | string;
@@ -143,7 +143,7 @@ export const calculateColumnSizes = (
 
     if (!frozen) hasNonFrozenItems = true;
 
-    return {baseSize, flex, frozen, hypotheticalMainSize, max, min, targetMainSize, violation: 0};
+    return { baseSize, flex, frozen, hypotheticalMainSize, max, min, targetMainSize, violation: 0 };
   });
 
   while (hasNonFrozenItems) {
@@ -344,7 +344,7 @@ export const useTableColumnLayout = (
       maxWidths.set(column.key, getMaxWidth(column.maxWidth, tableWidth));
     }
 
-    return {maxWidths, minWidths, widths};
+    return { maxWidths, minWidths, widths };
   });
 
   const getColumnWidth = (key: CollectionKey) => layout.value.widths.get(key) ?? 0;

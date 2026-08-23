@@ -1,27 +1,27 @@
-import type {PressResponder} from "./press-responder";
-import type {UseComboBoxStateReturn} from "./use-combo-box-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {ValidationResult} from "./use-form-validation-state";
-import type {UseListKeyboardReturn} from "./use-list-keyboard";
-import type {TriggerAriaAttributes} from "./use-overlay-trigger";
-import type {TextFieldControlContext} from "./use-text-field";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PressResponder } from "./press-responder";
+import type { UseComboBoxStateReturn } from "./use-combo-box-state";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { ValidationResult } from "./use-form-validation-state";
+import type { UseListKeyboardReturn } from "./use-list-keyboard";
+import type { TriggerAriaAttributes } from "./use-overlay-trigger";
+import type { TextFieldControlContext } from "./use-text-field";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
-import {comboBoxStrings} from "../i18n/combobox";
-import {ariaHideOutside} from "../utils/aria-hide-outside";
-import {announce} from "../utils/live-announcer";
-import {isAppleDevice} from "../utils/platform";
+import { comboBoxStrings } from "../i18n/combobox";
+import { ariaHideOutside } from "../utils/aria-hide-outside";
+import { announce } from "../utils/live-announcer";
+import { isAppleDevice } from "../utils/platform";
 
-import {useAutocomplete} from "./use-autocomplete";
-import {useFormReset} from "./use-form-reset";
-import {useId} from "./use-id";
-import {useLabels} from "./use-labels";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
-import {useOverlayTrigger} from "./use-overlay-trigger";
-import {usePress} from "./use-press";
-import {useTextField} from "./use-text-field";
+import { useAutocomplete } from "./use-autocomplete";
+import { useFormReset } from "./use-form-reset";
+import { useId } from "./use-id";
+import { useLabels } from "./use-labels";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
+import { useOverlayTrigger } from "./use-overlay-trigger";
+import { usePress } from "./use-press";
+import { useTextField } from "./use-text-field";
 
 /** How long two touchend events have to be apart to count as two taps rather than one. */
 const DOUBLE_TOUCH_MS = 500;
@@ -83,7 +83,10 @@ export interface UseComboBoxReturn {
   /** The listbox's id, which both the field and the button point `aria-controls` at. */
   listId: ComputedRef<string>;
   /** What names the listbox inside the popover. */
-  listLabel: ComputedRef<{"aria-label": string | undefined; "aria-labelledby": string | undefined}>;
+  listLabel: ComputedRef<{
+    "aria-label": string | undefined;
+    "aria-labelledby": string | undefined;
+  }>;
   /** Attributes the chevron renders, beside its own class and `data-slot`. */
   triggerAttributes: ComputedRef<ComboBoxTriggerAttributes>;
   /** The chevron, once it has registered. A blur into it is not a blur out of the field. */
@@ -142,8 +145,8 @@ export const useComboBox = <T>(
   const isDisabled = computed(() => Boolean(toValue(options.isDisabled)));
   const isReadOnly = computed(() => Boolean(toValue(options.isReadOnly)));
 
-  const {overlayId: listId, triggerAttributes: overlayAttributes} = useOverlayTrigger(
-    {type: "listbox"},
+  const { overlayId: listId, triggerAttributes: overlayAttributes } = useOverlayTrigger(
+    { type: "listbox" },
     state,
   );
 
@@ -443,7 +446,7 @@ export const useComboBox = <T>(
 
       onCleanup(() => element.removeEventListener("touchend", onTouchend));
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   /**
@@ -461,7 +464,7 @@ export const useComboBox = <T>(
 
       onCleanup(ariaHideOutside([input, popover].filter((element) => element != null)));
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   /** The option the arrows have landed on, announced by hand where the platform needs it. */
@@ -495,7 +498,7 @@ export const useComboBox = <T>(
         }),
       );
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   /** How many options were on offer last time, so only a change is worth saying. */
@@ -511,13 +514,13 @@ export const useComboBox = <T>(
         isOpen !== wasOpen && (state.selection.focusedKey.value == null || isAppleDevice());
 
       if (isOpen && (openedWithoutFocus || count !== lastCount)) {
-        announce(strings.value.format("countAnnouncement", {optionCount: count}));
+        announce(strings.value.format("countAnnouncement", { optionCount: count }));
       }
 
       lastCount = count;
       wasOpen = isOpen;
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   /** What was chosen last time, so only a change is worth saying. */
@@ -536,9 +539,9 @@ export const useComboBox = <T>(
 
       if (!item) return;
 
-      announce(strings.value.format("selectedAnnouncement", {optionText: item.textValue()}));
+      announce(strings.value.format("selectedAnnouncement", { optionText: item.textValue() }));
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   const triggerAttributes = computed<ComboBoxTriggerAttributes>(() => ({

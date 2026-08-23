@@ -1,11 +1,11 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 let nextId = 0;
 
 /** One node per distinct description, shared by every consumer that asks for that text. */
-const nodes = new Map<string, {refCount: number; element: HTMLElement}>();
+const nodes = new Map<string, { refCount: number; element: HTMLElement }>();
 
 export interface UseDescriptionReturn {
   /** The id of the description node, or `undefined` when there is no description. */
@@ -61,7 +61,7 @@ export const useDescription = (
         element.style.display = "none";
         element.textContent = text;
         document.body.appendChild(element);
-        node = {element, refCount: 0};
+        node = { element, refCount: 0 };
         nodes.set(text, node);
       }
 
@@ -72,8 +72,8 @@ export const useDescription = (
       // component using it goes away.
       onCleanup(() => release(text));
     },
-    {immediate: true},
+    { immediate: true },
   );
 
-  return {describedBy: computed(() => id.value)};
+  return { describedBy: computed(() => id.value) };
 };

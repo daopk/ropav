@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {ProgressCircleRootProps, ProgressCircleSlotProps} from "./progress-circle.types";
+import type { ProgressCircleRootProps, ProgressCircleSlotProps } from "./progress-circle.types";
 
-import {progressCircleVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { progressCircleVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useProgressLabeling} from "../../composables/use-progress-labeling";
-import {useProgressValue} from "../../composables/use-progress-value";
-import {composeSlotClassName} from "../../utils/compose";
+import { useProgressLabeling } from "../../composables/use-progress-labeling";
+import { useProgressValue } from "../../composables/use-progress-value";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {provideProgressCircleContext} from "./progress-circle.context";
+import { provideProgressCircleContext } from "./progress-circle.context";
 
-const props = withDefaults(defineProps<ProgressCircleRootProps>(), {isIndeterminate: undefined});
+const props = withDefaults(defineProps<ProgressCircleRootProps>(), { isIndeterminate: undefined });
 
-defineSlots<{default?: (props: ProgressCircleSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ProgressCircleSlotProps) => unknown }>();
 
-const {ariaLabelledby, id} = useProgressLabeling({
+const { ariaLabelledby, id } = useProgressLabeling({
   ariaLabel: () => props.ariaLabel,
   ariaLabelledby: () => props.ariaLabelledby,
   id: () => props.id,
@@ -28,9 +28,9 @@ const state = useProgressValue({
   value: () => props.value,
   valueLabel: () => props.valueLabel,
 });
-const slots = computed(() => progressCircleVariants({color: props.color, size: props.size}));
+const slots = computed(() => progressCircleVariants({ color: props.color, size: props.size }));
 
-provideProgressCircleContext({slots, state});
+provideProgressCircleContext({ slots, state });
 </script>
 
 <template>

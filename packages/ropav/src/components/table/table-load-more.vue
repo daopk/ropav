@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {TableLoadMoreProps} from "./table.types";
+import type { TableLoadMoreProps } from "./table.types";
 
-import {computed, onUnmounted, shallowRef, watch} from "vue";
+import { computed, onUnmounted, shallowRef, watch } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
-import {getScrollParent} from "../../utils/focus";
+import { composeSlotClassName } from "../../utils/compose";
+import { getScrollParent } from "../../utils/focus";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
+import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = withDefaults(defineProps<TableLoadMoreProps>(), {
   isLoading: undefined,
   scrollOffset: 1,
 });
 
-const emit = defineEmits<{loadMore: []}>();
+const emit = defineEmits<{ loadMore: [] }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useTableContext();
-const {collection} = useTableGridContext();
+const { slots } = useTableContext();
+const { collection } = useTableGridContext();
 
 const sentinel = shallowRef<HTMLElement | null>(null);
 
@@ -52,7 +52,7 @@ const parentLayoutInfo = computed(() =>
 
 // The indicator is not a cell that can span columns once the elements are divs, so it says so
 // with `aria-colspan` and takes itself out of the layout the wrapper already positioned.
-const indicatorStyle = computed(() => (virtualizer ? {display: "contents"} : undefined));
+const indicatorStyle = computed(() => (virtualizer ? { display: "contents" } : undefined));
 
 let observer: IntersectionObserver | undefined;
 
@@ -104,9 +104,9 @@ onUnmounted(disconnect);
 
 <template>
   <TableVirtualizerItem :layout-info="layoutInfo" :parent-layout-info="parentLayoutInfo">
-    <component :is="virtualizer ? 'div' : 'tr'" inert :style="{height: '0px'}">
-      <component :is="virtualizer ? 'div' : 'td'" :style="{border: 0, padding: 0}">
-        <div ref="sentinel" :style="{height: '1px', position: 'relative', width: '1px'}" />
+    <component :is="virtualizer ? 'div' : 'tr'" inert :style="{ height: '0px' }">
+      <component :is="virtualizer ? 'div' : 'td'" :style="{ border: 0, padding: 0 }">
+        <div ref="sentinel" :style="{ height: '1px', position: 'relative', width: '1px' }" />
       </component>
     </component>
     <component

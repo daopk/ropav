@@ -1,13 +1,13 @@
-import type {DragCollection, DropTarget} from "@/utils/dnd-types";
-import type {VirtualizerLayoutHost} from "@/utils/virtualizer-layout";
+import type { DragCollection, DropTarget } from "@/utils/dnd-types";
+import type { VirtualizerLayoutHost } from "@/utils/virtualizer-layout";
 
-import {describe, expect, it} from "vitest";
-import {shallowRef} from "vue";
+import { describe, expect, it } from "vitest";
+import { shallowRef } from "vue";
 
-import {ListDropTargetDelegate} from "@/utils/dnd-list-drop-target-delegate";
-import {createListCollection} from "@/utils/virtualizer-collection";
-import {Rect, Size} from "@/utils/virtualizer-geometry";
-import {ListLayout} from "@/utils/virtualizer-list-layout";
+import { ListDropTargetDelegate } from "@/utils/dnd-list-drop-target-delegate";
+import { createListCollection } from "@/utils/virtualizer-collection";
+import { Rect, Size } from "@/utils/virtualizer-geometry";
+import { ListLayout } from "@/utils/virtualizer-list-layout";
 
 /**
  * Why a windowed collection needs its layout to resolve a drop, and not the DOM.
@@ -26,10 +26,10 @@ const FIRST_RENDERED = 490;
 const RENDERED = 10;
 const SCROLL_TOP = FIRST_RENDERED * ROW_SIZE;
 
-const items = Array.from({length: COUNT}, (_, index) => ({id: `item-${index}`}));
+const items = Array.from({ length: COUNT }, (_, index) => ({ id: `item-${index}` }));
 
 const collection: DragCollection = {
-  getItem: (key) => ({key, type: "item"}),
+  getItem: (key) => ({ key, type: "item" }),
   getKeyAfter: (key) => {
     const index = items.findIndex((item) => item.id === key);
 
@@ -69,10 +69,10 @@ const renderWindow = () => {
 };
 
 const buildLayout = () => {
-  const layout = new ListLayout({rowSize: ROW_SIZE});
+  const layout = new ListLayout({ rowSize: ROW_SIZE });
 
   layout.host = {
-    collection: createListCollection({items}),
+    collection: createListCollection({ items }),
     isPersistedKey: () => false,
     persistedKeys: new Set(),
     size: new Size(300, 500),

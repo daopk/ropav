@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import DropdownFixture from "./fixtures.vue";
 
-const render = (props: Record<string, unknown> = {}) => renderVapor(DropdownFixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(DropdownFixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -24,7 +24,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** Wait for the entry animation to finish, so the popover is measured at its settled size. */
@@ -68,7 +68,7 @@ const dismiss = async (result: RenderResult) => {
 };
 
 const open = async (result: RenderResult) => {
-  press(result.getByRole("button", {name: "Menu"}));
+  press(result.getByRole("button", { name: "Menu" }));
   await nextTick();
   await nextTick();
   await nextTick();
@@ -98,7 +98,7 @@ describe("Dropdown (browser)", () => {
 
       place(result);
 
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
       const triggerRect = measure(trigger);
       const popover = await open(result);
       const popoverRect = popover.getBoundingClientRect();
@@ -132,7 +132,7 @@ describe("Dropdown (browser)", () => {
 
       place(result);
 
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
       const triggerWidth = measure(trigger).width;
       const popover = await open(result);
       const published = Number.parseFloat(popover.style.getPropertyValue("--trigger-width"));
@@ -147,7 +147,7 @@ describe("Dropdown (browser)", () => {
 
       place(result);
 
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
       const triggerBottom = measure(trigger).bottom;
       const popover = await open(result);
       const maxHeight = Number.parseFloat(popover.style.maxHeight);
@@ -162,7 +162,7 @@ describe("Dropdown (browser)", () => {
 
     it("flips above the trigger when there is no room below", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       // Pushed to the bottom of the window, where the menu cannot fit underneath.
       result.container.style.position = "fixed";
@@ -199,7 +199,7 @@ describe("Dropdown (browser)", () => {
     it("animates in from its anchor point and then stops reporting entry", async () => {
       const result = render();
 
-      press(result.getByRole("button", {name: "Menu"}));
+      press(result.getByRole("button", { name: "Menu" }));
       await nextTick();
       await nextTick();
       await nextTick();
@@ -276,7 +276,7 @@ describe("Dropdown (browser)", () => {
   describe("real pointer input", () => {
     it("opens on a press from the pointer itself", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       await userEvent.click(trigger);
       await nextTick();
@@ -289,8 +289,8 @@ describe("Dropdown (browser)", () => {
     });
 
     it("opens a custom trigger on a press from the pointer itself", async () => {
-      const result = render({withCustomTrigger: true});
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const result = render({ withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       await userEvent.click(trigger);
       await nextTick();
@@ -304,7 +304,7 @@ describe("Dropdown (browser)", () => {
 
     it("keeps the button's own hover state alongside the responder's press", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       await userEvent.hover(trigger);
       await nextTick();
@@ -363,7 +363,7 @@ describe("Dropdown (browser)", () => {
 
     it("gives focus back to the trigger when it closes", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
       const popover = await open(result);
 
       await userEvent.keyboard("{Escape}");
@@ -418,8 +418,8 @@ describe("Dropdown (browser)", () => {
     it("draws the checkmark on rather than revealing it", async () => {
       const result = render({
         items: [
-          {id: "apple", label: "Apple"},
-          {id: "banana", label: "Banana"},
+          { id: "apple", label: "Apple" },
+          { id: "banana", label: "Banana" },
         ],
         selectedKeys: ["apple"],
         selectionMode: "single",
@@ -450,7 +450,7 @@ describe("Dropdown (browser)", () => {
 
       plain.unmount();
 
-      const marked = render({selectionMode: "single", withIndicator: true});
+      const marked = render({ selectionMode: "single", withIndicator: true });
 
       await open(marked);
 
@@ -467,10 +467,10 @@ describe("Dropdown (browser)", () => {
 
   describe("submenus", () => {
     const openSubmenu = async (result: RenderResult) => {
-      const trigger = result.screen.getByRole("menuitem", {name: "Share"});
+      const trigger = result.screen.getByRole("menuitem", { name: "Share" });
 
       trigger.focus();
-      trigger.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
       await nextTick();
       await nextTick();
       await nextTick();
@@ -481,16 +481,16 @@ describe("Dropdown (browser)", () => {
 
       await settled(popovers[1]!);
 
-      return {popover: popovers[1]!, trigger};
+      return { popover: popovers[1]!, trigger };
     };
 
     it("opens beside the item that owns it", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       place(result);
       await open(result);
 
-      const {popover, trigger} = await openSubmenu(result);
+      const { popover, trigger } = await openSubmenu(result);
       const triggerRect = trigger.getBoundingClientRect();
       const popoverRect = popover.getBoundingClientRect();
 
@@ -506,13 +506,13 @@ describe("Dropdown (browser)", () => {
     });
 
     it("is not clipped by the menu it was opened from", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       place(result);
 
       const menuPopover = await open(result);
 
-      const {popover} = await openSubmenu(result);
+      const { popover } = await openSubmenu(result);
 
       // The menu scrolls its own content, so a submenu rendered inside it would be cut off at the
       // edge. Rendered as a sibling instead, it can overhang.
@@ -525,7 +525,7 @@ describe("Dropdown (browser)", () => {
     });
 
     it("leaves the page behind the submenu interactive", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -539,12 +539,12 @@ describe("Dropdown (browser)", () => {
     });
 
     it("clears a path across the menu for a pointer aimed at the submenu", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       place(result);
       await open(result);
 
-      const {trigger} = await openSubmenu(result);
+      const { trigger } = await openSubmenu(result);
       const menu = result.screen.getAllByRole("menu")[0]!;
       const triggerRect = trigger.getBoundingClientRect();
       const menuRect = menu.getBoundingClientRect();
@@ -552,8 +552,8 @@ describe("Dropdown (browser)", () => {
       // A diagonal aimed at the submenu, which opens level with the trigger and hangs below it.
       // Kept inside the menu, because that is the stretch where the items would otherwise take the
       // pointer; a pointer already past the menu's edge has nothing left to cross.
-      const from = {x: triggerRect.left + 8, y: triggerRect.top + 2};
-      const to = {x: menuRect.right - 2, y: menuRect.bottom - 2};
+      const from = { x: triggerRect.left + 8, y: triggerRect.top + 2 };
+      const to = { x: menuRect.right - 2, y: menuRect.bottom - 2 };
 
       for (let step = 0; step <= 3; step++) {
         window.dispatchEvent(
@@ -578,7 +578,7 @@ describe("Dropdown (browser)", () => {
 
   describe("accessibility", () => {
     it("has no axe violations", async () => {
-      const result = render({withHeader: true, withSection: true});
+      const result = render({ withHeader: true, withSection: true });
       const popover = await open(result);
 
       await expectNoA11yViolations(popover);
@@ -600,14 +600,14 @@ describe("Dropdown (browser)", () => {
     });
 
     it("has no axe violations with a submenu open", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
 
-      const trigger = result.screen.getByRole("menuitem", {name: "Share"});
+      const trigger = result.screen.getByRole("menuitem", { name: "Share" });
 
       trigger.focus();
-      trigger.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
       await nextTick();
       await nextTick();
       await nextTick();

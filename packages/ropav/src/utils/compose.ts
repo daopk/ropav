@@ -14,8 +14,8 @@
  * ```
  */
 export const composeSlotClassName = (
-  slotFn: ((args?: {class?: string; [key: string]: any}) => string) | undefined,
+  slotFn: ((args?: { class?: string; [key: string]: any }) => string) | undefined,
   className?: string,
   variants?: Record<string, any>,
 ): string | undefined =>
-  typeof slotFn === "function" ? slotFn({...(variants ?? {}), class: className}) : className;
+  typeof slotFn === "function" ? slotFn({ ...(variants ?? {}), class: className }) : className;

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {TextFieldFormFixtureProps} from "./fixtures.types";
+import type { TextFieldFormFixtureProps } from "./fixtures.types";
 
-import {Form} from "@/components/form";
+import { Form } from "@/components/form";
 
 import TextFieldFixture from "./fixtures.vue";
 

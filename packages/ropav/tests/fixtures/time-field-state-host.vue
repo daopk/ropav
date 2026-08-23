@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {TimeFieldStateHostProps} from "./time-field-state.types";
+import type { TimeFieldStateHostProps } from "./time-field-state.types";
 
-import {useTimeFieldState} from "@/composables/use-time-field-state";
+import { useTimeFieldState } from "@/composables/use-time-field-state";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to

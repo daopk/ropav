@@ -1,7 +1,7 @@
-import {CalendarDate, CalendarDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, CalendarDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -19,7 +19,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** The popover is teleported a flush after it decides to render, and settles a flush after that. */
@@ -30,7 +30,7 @@ const settle = async () => {
 };
 
 const renderPicker = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props: {locale: "en-US", ...props}});
+  const result = renderVapor(Fixture, { props: { locale: "en-US", ...props } });
 
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -77,7 +77,7 @@ const inPopover = (name: string) =>
 describe("DatePicker", () => {
   describe("structure", () => {
     it("renders the group, the segments and the trigger", () => {
-      const picker = renderPicker({value: jun(10)});
+      const picker = renderPicker({ value: jun(10) });
 
       expect(picker.root()).toBeTruthy();
       expect(picker.group().getAttribute("role")).toBe("group");
@@ -104,14 +104,14 @@ describe("DatePicker", () => {
       expect(plain.slot("date-picker-trigger-indicator")).toBeTruthy();
       plain.unmount();
 
-      const custom = renderPicker({customIndicator: true});
+      const custom = renderPicker({ customIndicator: true });
 
       expect(custom.slot("custom-indicator").textContent).toBe("pick");
       custom.unmount();
     });
 
     it("submits the value under its name", () => {
-      const picker = renderPicker({name: "appointment", value: jun(10)});
+      const picker = renderPicker({ name: "appointment", value: jun(10) });
       const hidden = document.body.querySelector<HTMLInputElement>("input[name='appointment']")!;
 
       expect(hidden.value).toBe("2026-06-10");
@@ -123,7 +123,7 @@ describe("DatePicker", () => {
        * The form a caller actually writes. An imported indexed-access prop type compiles to a prop
        * with no runtime type, and Vue then hands `<DatePicker is-disabled>` the empty string.
        */
-      const picker = renderPicker({attributeForm: true});
+      const picker = renderPicker({ attributeForm: true });
 
       expect(picker.root().getAttribute("data-disabled")).toBe("true");
       expect(picker.root().getAttribute("data-required")).toBe("true");
@@ -133,7 +133,7 @@ describe("DatePicker", () => {
 
   describe("the group it owns", () => {
     it("carries the picker's own name and role rather than the field's", () => {
-      const picker = renderPicker({label: "Appointment"});
+      const picker = renderPicker({ label: "Appointment" });
       const label = picker.slot("label");
 
       expect(picker.group().getAttribute("aria-labelledby")).toBe(label.id);
@@ -147,7 +147,7 @@ describe("DatePicker", () => {
        * A segment reads as a bare number, so it repeats what names the picker: "month, Appointment".
        * The trailing separator on its own label is what runs the two together.
        */
-      const picker = renderPicker({label: "Appointment"});
+      const picker = renderPicker({ label: "Appointment" });
       const month = picker.segment("month");
 
       expect(month.getAttribute("aria-labelledby")).toBe(`${month.id} ${picker.slot("label").id}`);
@@ -164,21 +164,21 @@ describe("DatePicker", () => {
     });
 
     it("carries the picker's id, which is what a label points at", () => {
-      const picker = renderPicker({id: "appointment"});
+      const picker = renderPicker({ id: "appointment" });
 
       expect(picker.group().getAttribute("id")).toBe("appointment");
       picker.unmount();
     });
 
     it("reports the picker disabled without being told", () => {
-      const picker = renderPicker({isDisabled: true});
+      const picker = renderPicker({ isDisabled: true });
 
       expect(picker.group().getAttribute("aria-disabled")).toBe("true");
       picker.unmount();
     });
 
     it("shows the picker's verdict about the value", async () => {
-      const picker = renderPicker({isInvalid: true});
+      const picker = renderPicker({ isInvalid: true });
 
       await settle();
 
@@ -188,7 +188,7 @@ describe("DatePicker", () => {
     });
 
     it("describes the value in words, for a screen reader", () => {
-      const picker = renderPicker({value: jun(10)});
+      const picker = renderPicker({ value: jun(10) });
       const describedBy = picker.group().getAttribute("aria-describedby");
 
       expect(describedBy).toBeTruthy();
@@ -217,7 +217,7 @@ describe("DatePicker", () => {
   describe("the field inside it", () => {
     it("edits the picker's value rather than one of its own", async () => {
       const onValueChange = vi.fn();
-      const picker = renderPicker({onValueChange, value: jun(10)});
+      const picker = renderPicker({ onValueChange, value: jun(10) });
 
       picker.segment("day").dispatchEvent(
         new InputEvent("beforeinput", {
@@ -235,7 +235,7 @@ describe("DatePicker", () => {
     });
 
     it("shows the value the picker holds", () => {
-      const picker = renderPicker({value: jun(10)});
+      const picker = renderPicker({ value: jun(10) });
 
       expect(picker.segment("day").textContent?.trim()).toBe("10");
       picker.unmount();
@@ -254,7 +254,7 @@ describe("DatePicker", () => {
 
     it("never reaches a verdict of its own about the date", async () => {
       // The picker holds the bounds, so a field judging them too could disagree with it.
-      const picker = renderPicker({minValue: jun(12), value: jun(10)});
+      const picker = renderPicker({ minValue: jun(12), value: jun(10) });
 
       await settle();
 
@@ -265,7 +265,7 @@ describe("DatePicker", () => {
 
   describe("the popover", () => {
     it("drives the calendar inside it from the picker's own value", async () => {
-      const picker = renderPicker({defaultOpen: true, value: jun(10)});
+      const picker = renderPicker({ defaultOpen: true, value: jun(10) });
 
       await settle();
 
@@ -279,7 +279,7 @@ describe("DatePicker", () => {
 
     it("lets the calendar's own markup win over what the picker says", async () => {
       // The story labels the calendar itself while leaving everything else to the picker.
-      const picker = renderPicker({defaultOpen: true});
+      const picker = renderPicker({ defaultOpen: true });
 
       await settle();
 
@@ -289,7 +289,7 @@ describe("DatePicker", () => {
     });
 
     it("passes the picker's bounds on, so an out-of-range day cannot be picked", async () => {
-      const picker = renderPicker({defaultOpen: true, minValue: jun(10), value: jun(15)});
+      const picker = renderPicker({ defaultOpen: true, minValue: jun(10), value: jun(15) });
 
       await settle();
 
@@ -303,7 +303,7 @@ describe("DatePicker", () => {
 
     it("takes the day a calendar cell was pressed for, and closes", async () => {
       const onValueChange = vi.fn();
-      const picker = renderPicker({defaultOpen: true, onValueChange, value: jun(15)});
+      const picker = renderPicker({ defaultOpen: true, onValueChange, value: jun(15) });
 
       await settle();
 
@@ -341,7 +341,7 @@ describe("DatePicker", () => {
 
     it("reports every change of the open state", async () => {
       const onOpenChange = vi.fn();
-      const picker = renderPicker({onOpenChange});
+      const picker = renderPicker({ onOpenChange });
 
       press(picker.trigger());
       await settle();
@@ -353,7 +353,7 @@ describe("DatePicker", () => {
 
   describe("the trigger", () => {
     it("names itself and what it opens", () => {
-      const picker = renderPicker({label: "Appointment"});
+      const picker = renderPicker({ label: "Appointment" });
       const trigger = picker.trigger();
 
       expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
@@ -367,7 +367,7 @@ describe("DatePicker", () => {
     });
 
     it("reads as expanded while the popover is open", async () => {
-      const picker = renderPicker({defaultOpen: true});
+      const picker = renderPicker({ defaultOpen: true });
 
       await settle();
 
@@ -379,14 +379,14 @@ describe("DatePicker", () => {
 
     it("goes out of action when the picker is read only", () => {
       // There is nothing to pick, so the calendar is not worth opening.
-      const picker = renderPicker({isReadOnly: true});
+      const picker = renderPicker({ isReadOnly: true });
 
       expect(picker.trigger().hasAttribute("disabled")).toBe(true);
       picker.unmount();
     });
 
     it("goes out of action when the picker is disabled", () => {
-      const picker = renderPicker({isDisabled: true});
+      const picker = renderPicker({ isDisabled: true });
 
       expect(picker.trigger().hasAttribute("disabled")).toBe(true);
       picker.unmount();
@@ -396,7 +396,7 @@ describe("DatePicker", () => {
   describe("focus", () => {
     it("reports focus entering and leaving the picker as a whole", async () => {
       const onFocusChange = vi.fn();
-      const picker = renderPicker({onFocusChange});
+      const picker = renderPicker({ onFocusChange });
 
       picker.segment("month").focus();
       await nextTick();

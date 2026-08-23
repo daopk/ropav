@@ -1,11 +1,11 @@
-import type {CalendarHeadingFormatOptions} from "@/composables/use-calendar-heading";
-import type {CalendarState} from "@/composables/use-calendar-state";
+import type { CalendarHeadingFormatOptions } from "@/composables/use-calendar-heading";
+import type { CalendarState } from "@/composables/use-calendar-state";
 import type {
   CalendarYearPickerFormatOptions,
   UseCalendarYearPickerReturn,
 } from "@/composables/use-calendar-year-picker";
-import type {DateDuration, DateValue} from "@internationalized/date";
-import type {ComputedRef} from "vue";
+import type { DateDuration, DateValue } from "@internationalized/date";
+import type { ComputedRef } from "vue";
 
 export interface CalendarHeadingHostProps {
   defaultFocusedValue?: DateValue | null;

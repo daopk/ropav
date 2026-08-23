@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TabsListProps} from "./tabs.types";
+import type { TabsListProps } from "./tabs.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useTabsContext} from "./tabs.context";
+import { useTabsContext } from "./tabs.context";
 
 const props = defineProps<TabsListProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {keyboard, listElement, orientation, slots, state} = useTabsContext();
+const { keyboard, listElement, orientation, slots, state } = useTabsContext();
 
 const isVertical = computed(() => orientation.value === "vertical");
 
@@ -40,7 +40,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :ref="setListElement"
     :aria-label="props.ariaLabel"
     :aria-orientation="orientation"
-    :class="slots.tabList({class: props.class})"
+    :class="slots.tabList({ class: props.class })"
     :data-orientation="orientation"
     data-slot="tabs-list"
     role="tablist"

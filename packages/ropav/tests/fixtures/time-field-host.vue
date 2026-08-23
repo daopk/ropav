@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {TimeFieldHostProps} from "./date-field.types";
+import type { TimeFieldHostProps } from "./date-field.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useTimeField} from "@/composables/use-date-field";
-import {useTimeFieldState} from "@/composables/use-time-field-state";
+import { useTimeField } from "@/composables/use-date-field";
+import { useTimeFieldState } from "@/composables/use-time-field-state";
 
 import DateSegmentPart from "./date-segment-part.vue";
 
@@ -40,7 +40,7 @@ const field = useTimeField({
   state,
 });
 
-props.onReady?.({field, state});
+props.onReady?.({ field, state });
 </script>
 
 <template>

@@ -1,7 +1,7 @@
-import type {SurfaceVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { SurfaceVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface SurfaceContext {
   /** The surface a descendant is sitting on, so it can pick an "on-surface" colour. */

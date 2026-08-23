@@ -1,13 +1,13 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
-import type {Component} from "vue";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
+import type { Component } from "vue";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconHardDrive from "~icons/gravity-ui/hard-drive";
 import IconPersons from "~icons/gravity-ui/persons";
 import IconStar from "~icons/gravity-ui/star";
 
-import {Button} from "../button";
+import { Button } from "../button";
 
 import {
   Toast,
@@ -37,8 +37,8 @@ const PLACEMENTS = ["top start", "top", "top end", "bottom start", "bottom", "bo
 
 const meta: StoryMeta = {
   argTypes: {
-    placement: {control: "radio", options: [...PLACEMENTS]},
-    timeout: {control: "number"},
+    placement: { control: "radio", options: [...PLACEMENTS] },
+    timeout: { control: "number" },
   },
   args: {
     placement: "bottom",
@@ -63,19 +63,19 @@ export const Default: Story = {
     setup: () => ({
       showAccent: () =>
         toast.info("You have 2 credits left", {
-          actionProps: {label: "Upgrade", onPress: noop},
+          actionProps: { label: "Upgrade", onPress: noop },
           description: "Get a paid plan for more credits",
         }),
       showDanger: () =>
         toast.danger("Storage is full", {
-          actionProps: {label: "Remove", onPress: noop, variant: "danger"},
+          actionProps: { label: "Remove", onPress: noop, variant: "danger" },
           description:
             "Remove files to release space. Adding more text to demonstrate longer content display",
           indicator: IconHardDrive as Component,
         }),
       showDefault: () =>
         toast("You have been invited to join a team", {
-          actionProps: {label: "Dismiss", onPress: () => toast.clear(), variant: "tertiary"},
+          actionProps: { label: "Dismiss", onPress: () => toast.clear(), variant: "tertiary" },
           description: "Bob sent you an invitation to join Ropav team",
           indicator: IconPersons as Component,
           variant: "default",
@@ -122,7 +122,7 @@ export const Default: Story = {
 
 /** One queue per placement, so each stack is independent. */
 const placementQueues = Object.fromEntries(
-  PLACEMENTS.map((placement) => [placement, new ToastQueue({maxVisibleToasts: 3})]),
+  PLACEMENTS.map((placement) => [placement, new ToastQueue({ maxVisibleToasts: 3 })]),
 ) as Record<(typeof PLACEMENTS)[number], ToastQueue>;
 
 export const Placements: Story = {
@@ -210,30 +210,30 @@ export const PromiseToast: Story = {
             success: "Event created",
           }),
         fetchUser: () =>
-          toast.promise(after({email: "john@example.com", name: "John Doe"}), {
+          toast.promise(after({ email: "john@example.com", name: "John Doe" }), {
             error: "Failed to fetch user",
             loading: "Loading user...",
-            success: (data: {name: string}) => `Welcome back, ${data.name}!`,
+            success: (data: { name: string }) => `Welcome back, ${data.name}!`,
           }),
         saveData: () =>
           toast.promise(
-            new Promise<{count: number}>((resolve, reject) => {
+            new Promise<{ count: number }>((resolve, reject) => {
               setTimeout(() => {
-                if (Math.random() > 0.5) resolve({count: 42});
+                if (Math.random() > 0.5) resolve({ count: 42 });
                 else reject(new Error("Failed to save data"));
               }, 2000);
             }),
             {
               error: (error: Error) => error.message,
               loading: "Saving changes...",
-              success: (data: {count: number}) => `Saved ${data.count} items`,
+              success: (data: { count: number }) => `Saved ${data.count} items`,
             },
           ),
         uploadFile: () =>
-          toast.promise(after({filename: "document.pdf", size: 1024}), {
+          toast.promise(after({ filename: "document.pdf", size: 1024 }), {
             error: "Failed to upload file",
             loading: "Uploading file...",
-            success: (data: {filename: string; size: number}) =>
+            success: (data: { filename: string; size: number }) =>
               `File ${data.filename} uploaded (${data.size}KB)`,
           }),
       };
@@ -256,7 +256,7 @@ export const CustomIndicator: Story = {
   render: () => ({
     components,
     setup: () => ({
-      show: () => toast("Custom icon indicator", {indicator: IconStar as Component}),
+      show: () => toast("Custom icon indicator", { indicator: IconStar as Component }),
     }),
     template: `
       <div class="flex h-full max-w-xl flex-col items-center justify-center">
@@ -272,15 +272,15 @@ export const LoadingState: Story = {
     components,
     setup: () => ({
       loadingToError: () => {
-        const key = toast("Saving changes...", {isLoading: true, timeout: 0});
+        const key = toast("Saving changes...", { isLoading: true, timeout: 0 });
 
         setTimeout(() => {
           toast.close(key);
-          toast.danger("Failed to save", {description: "Please try again"});
+          toast.danger("Failed to save", { description: "Please try again" });
         }, 2000);
       },
       processPayment: () => {
-        const key = toast("Processing payment...", {isLoading: true, timeout: 0});
+        const key = toast("Processing payment...", { isLoading: true, timeout: 0 });
 
         setTimeout(() => {
           toast.close(key);
@@ -323,11 +323,11 @@ export const WithCallbacks: Story = {
   render: () => ({
     components,
     setup: () => {
-      const closedHistory = shallowRef<{message: string; time: string}[]>([]);
+      const closedHistory = shallowRef<{ message: string; time: string }[]>([]);
 
       const addToHistory = (message: string) => {
         closedHistory.value = [
-          {message, time: new Date().toLocaleTimeString()},
+          { message, time: new Date().toLocaleTimeString() },
           ...closedHistory.value,
         ].slice(0, 5);
       };
@@ -466,9 +466,9 @@ export const CustomQueue: Story = {
   render: () => ({
     components,
     setup: () => {
-      const notificationQueue = new ToastQueue({maxVisibleToasts: 2});
-      const errorQueue = new ToastQueue({maxVisibleToasts: 3});
-      const successQueue = new ToastQueue({maxVisibleToasts: 1});
+      const notificationQueue = new ToastQueue({ maxVisibleToasts: 2 });
+      const errorQueue = new ToastQueue({ maxVisibleToasts: 3 });
+      const successQueue = new ToastQueue({ maxVisibleToasts: 1 });
 
       let successCount = 0;
 

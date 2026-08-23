@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {InputOTPGroupProps} from "./input-otp.types";
+import type { InputOTPGroupProps } from "./input-otp.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInputOTPContext} from "./input-otp.context";
+import { useInputOTPContext } from "./input-otp.context";
 
 const props = defineProps<InputOTPGroupProps>();
 
-const {slots} = useInputOTPContext();
+const { slots } = useInputOTPContext();
 
-const styles = computed(() => slots.value.group({class: props.class}));
+const styles = computed(() => slots.value.group({ class: props.class }));
 </script>
 
 <template>

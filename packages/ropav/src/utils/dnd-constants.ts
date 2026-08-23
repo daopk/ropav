@@ -1,4 +1,4 @@
-import type {DropEffect, DropOperation} from "./dnd-types";
+import type { DropEffect, DropOperation } from "./dnd-types";
 
 /**
  * Constants of the HTML drag and drop API, ported from React Aria's `dnd/constants.ts`.

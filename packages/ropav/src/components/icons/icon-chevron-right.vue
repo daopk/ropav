@@ -4,7 +4,7 @@
  * follow the surrounding text — which is what the year-picker indicator needs. React's icons take it
  * the same way, by spreading props over their own defaults.
  */
-withDefaults(defineProps<{class?: string; height?: string | number; width?: string | number}>(), {
+withDefaults(defineProps<{ class?: string; height?: string | number; width?: string | number }>(), {
   class: undefined,
   height: 16,
   width: 16,

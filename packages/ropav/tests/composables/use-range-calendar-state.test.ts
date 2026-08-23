@@ -1,6 +1,6 @@
-import type {DateRange} from "@/composables/use-calendar";
-import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
-import type {DateValue} from "@internationalized/date";
+import type { DateRange } from "@/composables/use-calendar";
+import type { RangeCalendarState } from "@/composables/use-range-calendar-state";
+import type { DateValue } from "@internationalized/date";
 
 import {
   BuddhistCalendar,
@@ -8,8 +8,8 @@ import {
   CalendarDateTime,
   ZonedDateTime,
 } from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
 
 import Host from "../fixtures/range-calendar-state-host.vue";
 
@@ -22,7 +22,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: RangeCalendarState) => (state = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -58,15 +58,15 @@ describe("useRangeCalendarState", () => {
   describe("what is visible", () => {
     it("centres the visible range on a selection that fits inside it", () => {
       expect(
-        setup({value: {end: jun(14), start: jun(10)}, visibleDuration: {months: 3}}).range(),
+        setup({ value: { end: jun(14), start: jun(10) }, visibleDuration: { months: 3 } }).range(),
       ).toBe("2026-05-01..2026-07-31");
     });
 
     it("starts the visible range on a selection that would spill past it", () => {
       expect(
         setup({
-          value: {end: new CalendarDate(2026, 10, 4), start: jun(10)},
-          visibleDuration: {months: 3},
+          value: { end: new CalendarDate(2026, 10, 4), start: jun(10) },
+          visibleDuration: { months: 3 },
         }).range(),
       ).toBe("2026-06-01..2026-08-31");
     });
@@ -75,23 +75,23 @@ describe("useRangeCalendarState", () => {
       expect(
         setup({
           selectionAlignment: "center",
-          value: {end: new CalendarDate(2026, 10, 4), start: jun(10)},
-          visibleDuration: {months: 3},
+          value: { end: new CalendarDate(2026, 10, 4), start: jun(10) },
+          visibleDuration: { months: 3 },
         }).range(),
       ).toBe("2026-05-01..2026-07-31");
     });
 
     it("opens on the start of the selected range", () => {
-      expect(String(setup({value: {end: jun(14), start: jun(10)}}).state().focusedDate.value)).toBe(
-        "2026-06-10",
-      );
+      expect(
+        String(setup({ value: { end: jun(14), start: jun(10) } }).state().focusedDate.value),
+      ).toBe("2026-06-10");
     });
   });
 
   describe("building a range", () => {
     it("pins one end on the first selection without emitting a value", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(10), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(10), onChange });
 
       calendar.state().selectDate(jun(10));
 
@@ -101,7 +101,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("highlights the pinned end alone until the other one is chosen", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(10));
 
@@ -110,7 +110,7 @@ describe("useRangeCalendarState", () => {
 
     it("emits the range and drops the anchor on the second selection", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(10), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(10), onChange });
 
       calendar.state().selectDate(jun(10));
       calendar.state().selectDate(jun(14));
@@ -121,7 +121,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("orders a range selected backwards", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(20));
       calendar.state().selectDate(jun(16));
@@ -130,7 +130,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("selects the focused date", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectFocusedDate();
 
@@ -138,7 +138,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("refuses to select while read only", () => {
-      const calendar = setup({defaultFocusedValue: jun(10), isReadOnly: true});
+      const calendar = setup({ defaultFocusedValue: jun(10), isReadOnly: true });
 
       calendar.state().selectDate(jun(10));
 
@@ -170,7 +170,7 @@ describe("useRangeCalendarState", () => {
 
   describe("highlighting", () => {
     it("follows the pointer while a range is being built", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -180,7 +180,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("ignores a hover when no end is pinned", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().highlightDate(jun(20));
 
@@ -188,7 +188,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("reports every date between the two ends as selected", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -203,7 +203,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("highlights the selected range when nothing is pending", () => {
-      expect(setup({value: {end: jun(14), start: jun(10)}}).highlighted()).toBe(
+      expect(setup({ value: { end: jun(14), start: jun(10) } }).highlighted()).toBe(
         "2026-06-10..2026-06-14",
       );
     });
@@ -211,7 +211,7 @@ describe("useRangeCalendarState", () => {
 
   describe("committing and clearing", () => {
     it("ends a pending range on the focused date", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().setFocusedDate(jun(13));
@@ -223,7 +223,7 @@ describe("useRangeCalendarState", () => {
 
     it("drops both the anchor and the value", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(10), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(10), onChange });
 
       calendar.state().selectDate(jun(10));
       calendar.state().selectDate(jun(13));
@@ -235,7 +235,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("takes an anchor set from outside", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().setAnchorDate(jun(20));
 
@@ -251,7 +251,7 @@ describe("useRangeCalendarState", () => {
     const isDateUnavailable = (date: DateValue) => date.day === 12 || date.day === 18;
 
     it("stops a range at the nearest unavailable date on either side", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), isDateUnavailable});
+      const calendar = setup({ defaultFocusedValue: jun(15), isDateUnavailable });
 
       calendar.state().selectDate(jun(15));
 
@@ -313,7 +313,7 @@ describe("useRangeCalendarState", () => {
     });
 
     it("leaves the visible range alone while the bounds tighten", () => {
-      const calendar = setup({defaultFocusedValue: jun(15), isDateUnavailable});
+      const calendar = setup({ defaultFocusedValue: jun(15), isDateUnavailable });
 
       calendar.state().selectDate(jun(15));
 
@@ -323,7 +323,7 @@ describe("useRangeCalendarState", () => {
 
   describe("moving focus off a pinned end", () => {
     it("steps forward by a day", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
       calendar.state().selectDate(jun(15));
       calendar.state().focusNearestAvailableDate(jun(15));
@@ -407,7 +407,7 @@ describe("useRangeCalendarState", () => {
 
     it("emits a Gregorian range when there was nothing to inherit from", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(10), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(10), onChange });
 
       calendar.state().selectDate(jun(20));
       calendar.state().selectDate(jun(22));
@@ -423,20 +423,20 @@ describe("useRangeCalendarState", () => {
       expect(
         setup({
           isDateUnavailable: (date: DateValue) => date.day === 10,
-          value: {end: jun(14), start: jun(10)},
+          value: { end: jun(14), start: jun(10) },
         }).state().isValueInvalid.value,
       ).toBe(true);
     });
 
     it("calls a range reaching outside the bounds invalid", () => {
       expect(
-        setup({minValue: jun(12), value: {end: jun(14), start: jun(10)}}).state().isValueInvalid
+        setup({ minValue: jun(12), value: { end: jun(14), start: jun(10) } }).state().isValueInvalid
           .value,
       ).toBe(true);
     });
 
     it("says nothing about validity while an end is still being pinned", () => {
-      const calendar = setup({minValue: jun(12), value: {end: jun(14), start: jun(10)}});
+      const calendar = setup({ minValue: jun(12), value: { end: jun(14), start: jun(10) } });
 
       calendar.state().setAnchorDate(jun(20));
 
@@ -444,13 +444,16 @@ describe("useRangeCalendarState", () => {
     });
 
     it("takes the caller's word for it", () => {
-      expect(setup({isInvalid: true}).state().isValueInvalid.value).toBe(true);
+      expect(setup({ isInvalid: true }).state().isValueInvalid.value).toBe(true);
     });
 
     it("calls a range inside the bounds valid", () => {
       expect(
-        setup({maxValue: jun(20), minValue: jun(8), value: {end: jun(14), start: jun(10)}}).state()
-          .isValueInvalid.value,
+        setup({
+          maxValue: jun(20),
+          minValue: jun(8),
+          value: { end: jun(14), start: jun(10) },
+        }).state().isValueInvalid.value,
       ).toBe(false);
     });
   });
@@ -469,16 +472,16 @@ describe("useRangeCalendarState", () => {
 
   describe("the value the caller controls", () => {
     it("takes a range written from outside", () => {
-      const calendar = setup({defaultFocusedValue: jun(10)});
+      const calendar = setup({ defaultFocusedValue: jun(10) });
 
-      calendar.state().setValue({end: jun(9), start: jun(5)});
+      calendar.state().setValue({ end: jun(9), start: jun(5) });
 
       expect(calendar.value()).toBe("2026-06-05..2026-06-09");
     });
 
     it("only reports a controlled range, leaving the owner to write it", () => {
       const onChange = vi.fn();
-      const calendar = setup({onChange, value: {end: jun(14), start: jun(10)}});
+      const calendar = setup({ onChange, value: { end: jun(14), start: jun(10) } });
 
       calendar.state().selectDate(jun(20));
       calendar.state().selectDate(jun(22));

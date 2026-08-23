@@ -3,12 +3,12 @@ import ScrollShadowRoot from "./scroll-shadow-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-export const ScrollShadow = Object.assign(ScrollShadowRoot, {Root: ScrollShadowRoot});
+export const ScrollShadow = Object.assign(ScrollShadowRoot, { Root: ScrollShadowRoot });
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ScrollShadowRoot};
+export { ScrollShadowRoot };
 
 export type {
   ScrollShadowRootProps,
@@ -19,13 +19,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {scrollShadowVariants} from "@ropav/styles";
+export { scrollShadowVariants } from "@ropav/styles";
 
-export type {ScrollShadowVariants} from "@ropav/styles";
+export type { ScrollShadowVariants } from "@ropav/styles";
 
 /* -------------------------------------------------------------------------------------------------
  * Composable
  * -----------------------------------------------------------------------------------------------*/
-export {useScrollShadow} from "./use-scroll-shadow";
+export { useScrollShadow } from "./use-scroll-shadow";
 
-export type {UseScrollShadowProps, UseScrollShadowReturn} from "./use-scroll-shadow";
+export type { UseScrollShadowProps, UseScrollShadowReturn } from "./use-scroll-shadow";

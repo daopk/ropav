@@ -1,9 +1,9 @@
-import type {PressEvent} from "@/composables/use-press";
+import type { PressEvent } from "@/composables/use-press";
 
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {usePress} from "@/composables/use-press";
+import { usePress } from "@/composables/use-press";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -81,12 +81,12 @@ const pointer = (type: string, init: PointerEventInit = {}) =>
   });
 
 /** A click with pointer data behind it, as a real mouse release produces. */
-const realClick = () => new MouseEvent("click", {bubbles: true, button: 0, detail: 1});
+const realClick = () => new MouseEvent("click", { bubbles: true, button: 0, detail: 1 });
 
 describe("usePress", () => {
   describe("mouse", () => {
     it("reports the press only once the click lands", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
       element.dispatchEvent(pointer("pointerdown"));
 
@@ -103,7 +103,7 @@ describe("usePress", () => {
     });
 
     it("exposes the pressed state between down and click", () => {
-      const {dispose, element, press} = setup();
+      const { dispose, element, press } = setup();
 
       expect(press.isPressed.value).toBe(false);
 
@@ -120,7 +120,7 @@ describe("usePress", () => {
     });
 
     it("ends the press without activating it when the pointer leaves the element", () => {
-      const {dispose, element, events, press} = setup();
+      const { dispose, element, events, press } = setup();
 
       element.dispatchEvent(pointer("pointerdown"));
       press.handlers.onPointerleave(pointer("pointerleave"));
@@ -134,7 +134,7 @@ describe("usePress", () => {
     });
 
     it("restarts the press when the pointer comes back", () => {
-      const {dispose, element, events, press} = setup();
+      const { dispose, element, events, press } = setup();
 
       element.dispatchEvent(pointer("pointerdown"));
       press.handlers.onPointerleave(pointer("pointerleave"));
@@ -147,10 +147,10 @@ describe("usePress", () => {
     });
 
     it("abandons the press when it is released outside the element", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
       element.dispatchEvent(pointer("pointerdown"));
-      document.dispatchEvent(pointer("pointerup", {bubbles: false}));
+      document.dispatchEvent(pointer("pointerup", { bubbles: false }));
 
       expect(events).toEqual(["pressstart", "pressend"]);
 
@@ -158,9 +158,9 @@ describe("usePress", () => {
     });
 
     it("ignores a secondary button", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
-      element.dispatchEvent(pointer("pointerdown", {button: 2}));
+      element.dispatchEvent(pointer("pointerdown", { button: 2 }));
 
       expect(events).toEqual([]);
 
@@ -168,9 +168,9 @@ describe("usePress", () => {
     });
 
     it("reports the pointer type that started the press", () => {
-      const {dispose, element, received} = setup();
+      const { dispose, element, received } = setup();
 
-      element.dispatchEvent(pointer("pointerdown", {pointerType: "touch"}));
+      element.dispatchEvent(pointer("pointerdown", { pointerType: "touch" }));
 
       expect(received[0]!.pointerType).toBe("touch");
 
@@ -180,14 +180,14 @@ describe("usePress", () => {
 
   describe("keyboard", () => {
     it("presses on Enter and completes on release", () => {
-      const {dispose, element, events, received} = setup();
+      const { dispose, element, events, received } = setup();
 
       element.focus();
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
 
       expect(events).toEqual(["pressstart"]);
 
-      element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "Enter"}));
+      element.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "Enter" }));
 
       expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
       expect(received.map((event) => event.pointerType)).toEqual(Array(4).fill("keyboard"));
@@ -196,8 +196,8 @@ describe("usePress", () => {
     });
 
     it("blocks the default action so Space does not scroll the page", () => {
-      const {dispose, element} = setup();
-      const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: " "});
+      const { dispose, element } = setup();
+      const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: " " });
 
       element.dispatchEvent(event);
 
@@ -211,7 +211,7 @@ describe("usePress", () => {
 
       element.href = "#target";
 
-      const {dispose, events, received} = setup({}, element);
+      const { dispose, events, received } = setup({}, element);
       const keydown = new KeyboardEvent("keydown", {
         bubbles: true,
         cancelable: true,
@@ -239,7 +239,7 @@ describe("usePress", () => {
     it("keeps the macOS Enter context-menu shortcut available", () => {
       const platform = vi.spyOn(navigator, "platform", "get").mockReturnValue("MacIntel");
       const element = document.createElement("div");
-      const {dispose} = setup({}, element);
+      const { dispose } = setup({}, element);
       const keydown = new KeyboardEvent("keydown", {
         bubbles: true,
         cancelable: true,
@@ -264,7 +264,7 @@ describe("usePress", () => {
     it("prevents Enter defaults on a custom pressable outside macOS", () => {
       const platform = vi.spyOn(navigator, "platform", "get").mockReturnValue("Linux x86_64");
       const element = document.createElement("div");
-      const {dispose} = setup({}, element);
+      const { dispose } = setup({}, element);
       const keydown = new KeyboardEvent("keydown", {
         bubbles: true,
         cancelable: true,
@@ -287,11 +287,11 @@ describe("usePress", () => {
     });
 
     it("ignores a repeated key so a held key presses once", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
       element.dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, key: "Enter", repeat: true}),
+        new KeyboardEvent("keydown", { bubbles: true, key: "Enter", repeat: true }),
       );
 
       expect(events).toEqual(["pressstart"]);
@@ -300,16 +300,16 @@ describe("usePress", () => {
     });
 
     it("listens for the release on the document, so focus may move first", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
       const elsewhere = document.createElement("input");
 
       document.body.appendChild(elsewhere);
 
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
       // A menu trigger hands focus to its menu on the way down, so the release never reaches
       // the element the press started on.
       elsewhere.focus();
-      elsewhere.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "Enter"}));
+      elsewhere.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "Enter" }));
 
       // Released away from the element: the press ends without activating.
       expect(events).toEqual(["pressstart", "pressend"]);
@@ -319,9 +319,9 @@ describe("usePress", () => {
     });
 
     it("leaves other keys alone", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowDown"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowDown" }));
 
       expect(events).toEqual([]);
 
@@ -331,10 +331,10 @@ describe("usePress", () => {
 
   describe("assistive technology", () => {
     it("plays out the whole press on a click with no pointer behind it", () => {
-      const {dispose, element, events, received} = setup();
+      const { dispose, element, events, received } = setup();
 
       // What a screen reader activation and `element.click()` both produce.
-      element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 0}));
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 0 }));
 
       expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
       expect(received.map((event) => event.pointerType)).toEqual(Array(4).fill("virtual"));
@@ -343,15 +343,15 @@ describe("usePress", () => {
     });
 
     it("treats a zero-sized pointer as virtual and leaves it to the click", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
       // Safari on iOS reports screen-reader activations this way, with coordinates and a
       // target that cannot be trusted.
-      element.dispatchEvent(pointer("pointerdown", {height: 0, width: 0}));
+      element.dispatchEvent(pointer("pointerdown", { height: 0, width: 0 }));
 
       expect(events).toEqual([]);
 
-      element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 0}));
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 0 }));
 
       expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);
 
@@ -361,7 +361,7 @@ describe("usePress", () => {
 
   describe("propagation", () => {
     it("stops the event so an enclosing pressable does not also press", () => {
-      const {dispose, element} = setup();
+      const { dispose, element } = setup();
       const outer = document.createElement("div");
 
       element.parentElement!.appendChild(outer);
@@ -379,7 +379,7 @@ describe("usePress", () => {
     });
 
     it("keeps the event bubbling when the handler asks it to", () => {
-      const {dispose, element} = setup({
+      const { dispose, element } = setup({
         onPressStart: (event) => event.continuePropagation(),
       });
       const outer = document.createElement("div");
@@ -402,7 +402,7 @@ describe("usePress", () => {
 
   describe("disabled", () => {
     it("reports nothing while disabled", () => {
-      const {dispose, element, events} = setup({isDisabled: true});
+      const { dispose, element, events } = setup({ isDisabled: true });
 
       element.dispatchEvent(pointer("pointerdown"));
       element.dispatchEvent(realClick());
@@ -414,7 +414,7 @@ describe("usePress", () => {
 
     it("releases a press that was in flight when it became disabled", async () => {
       const isDisabled = shallowRef(false);
-      const {dispose, element, events, press} = setup({isDisabled});
+      const { dispose, element, events, press } = setup({ isDisabled });
 
       element.dispatchEvent(pointer("pointerdown"));
       isDisabled.value = true;
@@ -432,7 +432,7 @@ describe("usePress", () => {
   describe("forced pressed state", () => {
     it("stays pressed for as long as the caller says so", () => {
       const isPressed = shallowRef(true);
-      const {dispose, press} = setup({isPressed});
+      const { dispose, press } = setup({ isPressed });
 
       // A menu trigger looks pressed for as long as its menu is open, with no pointer down.
       expect(press.isPressed.value).toBe(true);
@@ -447,8 +447,8 @@ describe("usePress", () => {
 
   describe("focus", () => {
     it("blocks the default focus on press when asked", () => {
-      const {dispose, element} = setup({preventFocusOnPress: true});
-      const event = new MouseEvent("mousedown", {bubbles: true, button: 0, cancelable: true});
+      const { dispose, element } = setup({ preventFocusOnPress: true });
+      const event = new MouseEvent("mousedown", { bubbles: true, button: 0, cancelable: true });
 
       element.dispatchEvent(event);
 
@@ -460,8 +460,8 @@ describe("usePress", () => {
     });
 
     it("leaves the default focus alone otherwise", () => {
-      const {dispose, element} = setup();
-      const event = new MouseEvent("mousedown", {bubbles: true, button: 0, cancelable: true});
+      const { dispose, element } = setup();
+      const event = new MouseEvent("mousedown", { bubbles: true, button: 0, cancelable: true });
 
       element.dispatchEvent(event);
 
@@ -481,10 +481,10 @@ describe("usePress", () => {
     });
 
     it("synthesises the click that iOS withholds after a long press", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
-      element.dispatchEvent(pointer("pointerdown", {pointerType: "touch"}));
-      element.dispatchEvent(pointer("pointerup", {pointerType: "touch"}));
+      element.dispatchEvent(pointer("pointerdown", { pointerType: "touch" }));
+      element.dispatchEvent(pointer("pointerup", { pointerType: "touch" }));
 
       expect(events).toEqual(["pressstart"]);
 
@@ -498,10 +498,10 @@ describe("usePress", () => {
     });
 
     it("does not synthesise a second click when the real one arrives", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
-      element.dispatchEvent(pointer("pointerdown", {pointerType: "touch"}));
-      element.dispatchEvent(pointer("pointerup", {pointerType: "touch"}));
+      element.dispatchEvent(pointer("pointerdown", { pointerType: "touch" }));
+      element.dispatchEvent(pointer("pointerup", { pointerType: "touch" }));
       element.dispatchEvent(realClick());
 
       expect(events).toEqual(["pressstart", "pressup", "pressend", "press"]);

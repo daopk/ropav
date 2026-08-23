@@ -4,11 +4,11 @@ import type {
   DroppableCollectionHarnessReady,
 } from "./dnd-harness.types";
 
-import {onMounted, shallowRef, useTemplateRef} from "vue";
+import { onMounted, shallowRef, useTemplateRef } from "vue";
 
-import {useDropIndicator} from "@/composables/use-drop-indicator";
-import {useDroppableCollection} from "@/composables/use-droppable-collection";
-import {useDroppableCollectionState} from "@/composables/use-droppable-collection-state";
+import { useDropIndicator } from "@/composables/use-drop-indicator";
+import { useDroppableCollection } from "@/composables/use-droppable-collection";
+import { useDroppableCollectionState } from "@/composables/use-droppable-collection-state";
 
 /**
  * A droppable collection with one drop indicator, mounted.
@@ -43,12 +43,16 @@ const collection = useDroppableCollection(
   target,
 );
 
-const indicator = useDropIndicator({target: props.options.indicatorTarget}, state, indicatorTarget);
+const indicator = useDropIndicator(
+  { target: props.options.indicatorTarget },
+  state,
+  indicatorTarget,
+);
 
 onMounted(() => {
   target.value = element.value;
   indicatorTarget.value = indicatorElement.value;
-  props.onReady({collection, indicator, element: element.value!, state});
+  props.onReady({ collection, indicator, element: element.value!, state });
 });
 </script>
 

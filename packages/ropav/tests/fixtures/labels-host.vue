@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {LabelsHostProps} from "./labels.types";
+import type { LabelsHostProps } from "./labels.types";
 
-import {useLabels} from "@/composables/use-labels";
+import { useLabels } from "@/composables/use-labels";
 
 const props = defineProps<LabelsHostProps>();
 

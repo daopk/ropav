@@ -1,10 +1,10 @@
-import type {Color} from "@/utils/color-types";
+import type { Color } from "@/utils/color-types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {parseColor} from "@/utils/color";
+import { parseColor } from "@/utils/color";
 
 import Fixture from "./fixtures.vue";
 
@@ -13,7 +13,7 @@ const CHECKERBOARD =
 
 const renderSlider = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, {
-    props: {channel: "hue", defaultValue: "hsl(0, 100%, 50%)", ...props},
+    props: { channel: "hue", defaultValue: "hsl(0, 100%, 50%)", ...props },
   });
 
 const slot = (container: HTMLElement, name: string) =>
@@ -23,7 +23,7 @@ const inputIn = (container: HTMLElement) => container.querySelector("input")!;
 
 const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}) => {
   element.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: keyName, ...init}),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: keyName, ...init }),
   );
 
   return nextTick();
@@ -32,7 +32,7 @@ const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}
 describe("ColorSlider", () => {
   describe("structure", () => {
     it("renders every part with its data-slot and BEM class", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       expect(slot(container, "color-slider")).toHaveClass("color-slider");
       expect(slot(container, "color-slider-output")).toHaveClass("color-slider__output");
@@ -43,7 +43,7 @@ describe("ColorSlider", () => {
     });
 
     it("lets a caller's class through to tailwind-merge", () => {
-      const {container, unmount} = renderSlider({class: "w-64"});
+      const { container, unmount } = renderSlider({ class: "w-64" });
 
       expect(slot(container, "color-slider")).toHaveClass("color-slider", "w-64");
 
@@ -51,7 +51,7 @@ describe("ColorSlider", () => {
     });
 
     it("marks the orientation and the disabled state on every part the stylesheet reads", () => {
-      const {container, unmount} = renderSlider({isDisabled: true, orientation: "vertical"});
+      const { container, unmount } = renderSlider({ isDisabled: true, orientation: "vertical" });
 
       for (const name of ["color-slider", "color-slider-output", "color-slider-track"]) {
         expect(slot(container, name)).toHaveAttribute("data-orientation", "vertical");
@@ -63,7 +63,7 @@ describe("ColorSlider", () => {
     });
 
     it("leaves the disabled attributes off while enabled", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       expect(slot(container, "color-slider")).not.toHaveAttribute("data-disabled");
       expect(slot(container, "color-slider-thumb")).not.toHaveAttribute("data-disabled");
@@ -74,7 +74,7 @@ describe("ColorSlider", () => {
 
   describe("labelling", () => {
     it("puts the group on the track rather than on the root", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       expect(slot(container, "color-slider")).not.toHaveAttribute("role");
       expect(slot(container, "color-slider-track")).toHaveAttribute("role", "group");
@@ -83,7 +83,7 @@ describe("ColorSlider", () => {
     });
 
     it("points the track and the thumb at a rendered label", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const labelId = slot(container, "label").id;
 
       expect(labelId).not.toBe("");
@@ -94,7 +94,7 @@ describe("ColorSlider", () => {
     });
 
     it("names an unlabelled slider after its channel, and names the thumb after the group", () => {
-      const {container, unmount} = renderSlider({withoutLabel: true});
+      const { container, unmount } = renderSlider({ withoutLabel: true });
       const track = slot(container, "color-slider-track");
 
       expect(track).toHaveAttribute("aria-label", "Hue");
@@ -105,7 +105,7 @@ describe("ColorSlider", () => {
     });
 
     it("prefers the caller's own label", () => {
-      const {container, unmount} = renderSlider({ariaLabel: "Pick a hue", withoutLabel: true});
+      const { container, unmount } = renderSlider({ ariaLabel: "Pick a hue", withoutLabel: true });
 
       expect(slot(container, "color-slider-track")).toHaveAttribute("aria-label", "Pick a hue");
 
@@ -113,7 +113,7 @@ describe("ColorSlider", () => {
     });
 
     it("exposes the thumb as a slider named by the label", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       // The hidden range input is the control, so this is what assistive technology reaches.
       expect(inputIn(container)).toHaveAttribute("aria-orientation", "horizontal");
@@ -123,7 +123,7 @@ describe("ColorSlider", () => {
     });
 
     it("moves focus into the thumb when the label is clicked", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       slot(container, "label").click();
 
@@ -135,7 +135,7 @@ describe("ColorSlider", () => {
 
   describe("the output", () => {
     it("reads the channel's own formatting and points at the thumb", () => {
-      const {container, unmount} = renderSlider({defaultValue: "hsl(200, 100%, 50%)"});
+      const { container, unmount } = renderSlider({ defaultValue: "hsl(200, 100%, 50%)" });
       const output = slot(container, "color-slider-output");
 
       expect(output).toHaveTextContent("200°");
@@ -147,7 +147,7 @@ describe("ColorSlider", () => {
     });
 
     it("formats a percentage channel as a percentage and an rgb channel as a number", () => {
-      const alpha = renderSlider({channel: "alpha", defaultValue: "hsla(0, 100%, 50%, 0.5)"});
+      const alpha = renderSlider({ channel: "alpha", defaultValue: "hsla(0, 100%, 50%, 0.5)" });
 
       expect(slot(alpha.container, "color-slider-output")).toHaveTextContent("50%");
       alpha.unmount();
@@ -165,7 +165,7 @@ describe("ColorSlider", () => {
 
   describe("the hidden input", () => {
     it("carries the channel's range rather than a generic one", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const input = inputIn(container);
 
       expect(input).toHaveAttribute("min", "0");
@@ -178,7 +178,7 @@ describe("ColorSlider", () => {
     });
 
     it("names the colour in its value text", () => {
-      const {container, unmount} = renderSlider({defaultValue: "hsl(200, 100%, 50%)"});
+      const { container, unmount } = renderSlider({ defaultValue: "hsl(200, 100%, 50%)" });
 
       expect(inputIn(container)).toHaveAttribute("aria-valuetext", "200°, cyan blue");
 
@@ -186,7 +186,7 @@ describe("ColorSlider", () => {
     });
 
     it("submits under the name it was given", () => {
-      const {container, unmount} = renderSlider({form: "the-form", name: "hue"});
+      const { container, unmount } = renderSlider({ form: "the-form", name: "hue" });
       const input = inputIn(container);
 
       expect(input).toHaveAttribute("name", "hue");
@@ -196,7 +196,7 @@ describe("ColorSlider", () => {
     });
 
     it("is disabled and out of the tab order when the slider is", () => {
-      const {container, unmount} = renderSlider({isDisabled: true});
+      const { container, unmount } = renderSlider({ isDisabled: true });
       const input = inputIn(container);
 
       expect(input).toBeDisabled();
@@ -206,7 +206,7 @@ describe("ColorSlider", () => {
     });
 
     it("stays in the accessibility tree while out of sight", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       // Filling the track rather than hiding in a 1px box, with the pointer passing through it.
       expect(inputIn(container).style.width).toBe("100%");
@@ -220,7 +220,7 @@ describe("ColorSlider", () => {
 
   describe("painting", () => {
     it("lays the generated gradient over a transparency checkerboard", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const background = slot(container, "color-slider-track").style.background;
 
       expect(background).toContain("linear-gradient(to right, rgb(255, 0, 0)");
@@ -230,7 +230,7 @@ describe("ColorSlider", () => {
     });
 
     it("hands the channel's two ends to the stylesheet for the track's end caps", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const track = slot(container, "color-slider-track");
 
       // A pseudo-element cannot take an inline style, so the caps read these instead.
@@ -241,7 +241,7 @@ describe("ColorSlider", () => {
     });
 
     it("keeps the track's own layout under the gradient", () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const track = slot(container, "color-slider-track");
 
       expect(track.style.position).toBe("relative");
@@ -252,7 +252,7 @@ describe("ColorSlider", () => {
     });
 
     it("positions the thumb along the track and paints it with the value", () => {
-      const {container, unmount} = renderSlider({defaultValue: "hsl(180, 100%, 50%)"});
+      const { container, unmount } = renderSlider({ defaultValue: "hsl(180, 100%, 50%)" });
       const thumb = slot(container, "color-slider-thumb");
 
       expect(thumb.style.left).toBe("50%");
@@ -264,7 +264,7 @@ describe("ColorSlider", () => {
     });
 
     it("positions a vertical thumb from the top, counting the value from the bottom", () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         defaultValue: "hsl(90, 100%, 50%)",
         orientation: "vertical",
       });
@@ -277,7 +277,7 @@ describe("ColorSlider", () => {
     });
 
     it("drops the colour from a disabled thumb", () => {
-      const {container, unmount} = renderSlider({isDisabled: true});
+      const { container, unmount } = renderSlider({ isDisabled: true });
 
       expect(slot(container, "color-slider-thumb").style.backgroundColor).toBe("");
 
@@ -285,7 +285,7 @@ describe("ColorSlider", () => {
     });
 
     it("paints an alpha track from transparent to opaque", () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         channel: "alpha",
         defaultValue: "hsla(0, 100%, 50%, 0.5)",
       });
@@ -302,7 +302,7 @@ describe("ColorSlider", () => {
 
   describe("keyboard", () => {
     it("steps with the arrows", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const thumb = slot(container, "color-slider-thumb");
 
       await key(thumb, "ArrowRight");
@@ -315,14 +315,14 @@ describe("ColorSlider", () => {
     });
 
     it("pages by the channel's own step, not by a tenth of the range", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
       const thumb = slot(container, "color-slider-thumb");
 
       // 15 for hue; a tenth of 0–360 would be 36.
       await key(thumb, "PageUp");
       expect(inputIn(container).value).toBe("15");
 
-      await key(thumb, "ArrowRight", {shiftKey: true});
+      await key(thumb, "ArrowRight", { shiftKey: true });
       expect(inputIn(container).value).toBe("30");
 
       await key(thumb, "PageDown");
@@ -332,7 +332,7 @@ describe("ColorSlider", () => {
     });
 
     it("jumps to the ends of the channel", async () => {
-      const {container, unmount} = renderSlider({defaultValue: "hsl(200, 100%, 50%)"});
+      const { container, unmount } = renderSlider({ defaultValue: "hsl(200, 100%, 50%)" });
       const thumb = slot(container, "color-slider-thumb");
 
       await key(thumb, "End");
@@ -345,7 +345,7 @@ describe("ColorSlider", () => {
     });
 
     it("stays put while disabled", async () => {
-      const {container, unmount} = renderSlider({isDisabled: true});
+      const { container, unmount } = renderSlider({ isDisabled: true });
 
       await key(slot(container, "color-slider-thumb"), "ArrowRight");
 
@@ -355,7 +355,7 @@ describe("ColorSlider", () => {
     });
 
     it("marks the thumb focused while the hidden input behind it holds focus", async () => {
-      const {container, unmount} = renderSlider();
+      const { container, unmount } = renderSlider();
 
       inputIn(container).focus();
       await nextTick();
@@ -374,7 +374,7 @@ describe("ColorSlider", () => {
     it("reports a colour rather than a channel number", async () => {
       const onChange = vi.fn();
       const onChangeEnd = vi.fn();
-      const {container, unmount} = renderSlider({onChange, onChangeEnd});
+      const { container, unmount } = renderSlider({ onChange, onChangeEnd });
 
       await key(slot(container, "color-slider-thumb"), "PageUp");
 
@@ -392,7 +392,7 @@ describe("ColorSlider", () => {
         defaultValue: undefined,
         value: parseColor("hsl(0, 100%, 50%)") as Color,
       });
-      const {container, unmount} = renderVapor(Fixture, {props});
+      const { container, unmount } = renderVapor(Fixture, { props });
 
       expect(inputIn(container).value).toBe("0");
 
@@ -406,7 +406,7 @@ describe("ColorSlider", () => {
     });
 
     it("repaints the track as the colour moves", async () => {
-      const {container, unmount} = renderSlider({channel: "saturation"});
+      const { container, unmount } = renderSlider({ channel: "saturation" });
 
       await key(slot(container, "color-slider-thumb"), "Home");
 
@@ -421,7 +421,7 @@ describe("ColorSlider", () => {
   describe("channel and colour space", () => {
     it("corrects a channel that only exists in another space, and says so", () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         channel: "red",
         colorSpace: "hsl",
         defaultValue: "rgb(255, 0, 0)",
@@ -438,7 +438,7 @@ describe("ColorSlider", () => {
 
     it("corrects a channel that rgb does not have, and says so", () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         channel: "saturation",
         colorSpace: "rgb",
         defaultValue: "hsl(0, 100%, 50%)",
@@ -454,7 +454,7 @@ describe("ColorSlider", () => {
 
     it("says nothing about a combination that works", () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-      const {unmount} = renderSlider({channel: "hue", colorSpace: "hsb"});
+      const { unmount } = renderSlider({ channel: "hue", colorSpace: "hsb" });
 
       expect(warn).not.toHaveBeenCalled();
 
@@ -463,7 +463,7 @@ describe("ColorSlider", () => {
     });
 
     it("works the value in the space it was told to", () => {
-      const {container, unmount} = renderSlider({
+      const { container, unmount } = renderSlider({
         channel: "brightness",
         colorSpace: "hsb",
         defaultValue: "hsl(0, 100%, 50%)",

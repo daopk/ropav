@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldFullHostProps} from "./number-field.types";
+import type { NumberFieldFullHostProps } from "./number-field.types";
 
-import {useNumberField} from "@/composables/use-number-field";
+import { useNumberField } from "@/composables/use-number-field";
 
 // The composable has to run inside a component: it injects the form context and provides field
 // ids, and `inject` outside a component instance returns `undefined` rather than the default.
-const props = withDefaults(defineProps<NumberFieldFullHostProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<NumberFieldFullHostProps>(), { isInvalid: undefined });
 
 const field = useNumberField({
   ariaLabel: () => props.ariaLabel,
@@ -33,8 +33,8 @@ const field = useNumberField({
 // slot system: `.number-field__group:has([slot="decrement"])` is what decides the grid columns.
 // Bound from script because Vue 2 read a literal `slot` attribute as slot syntax and the linter
 // still flags either spelling.
-const incrementSlot = {slot: "increment"};
-const decrementSlot = {slot: "decrement"};
+const incrementSlot = { slot: "increment" };
+const decrementSlot = { slot: "decrement" };
 
 const setElement = (element: unknown) => {
   field.registerElement(element instanceof HTMLInputElement ? element : null);
@@ -69,7 +69,7 @@ props.onReady(field);
       data-testid="decrement"
       :disabled="field.decrement.isDisabled.value || undefined"
       type="button"
-      v-bind="{...decrementSlot, ...field.decrement.attrs.value}"
+      v-bind="{ ...decrementSlot, ...field.decrement.attrs.value }"
       @pointerdown="field.decrement.handlers.onPressStart('mouse')"
       @pointerleave="field.decrement.handlers.onPressEnd('mouse')"
       @pointerup="field.decrement.handlers.onPressUp('mouse')"
@@ -91,7 +91,7 @@ props.onReady(field);
       data-testid="increment"
       :disabled="field.increment.isDisabled.value || undefined"
       type="button"
-      v-bind="{...incrementSlot, ...field.increment.attrs.value}"
+      v-bind="{ ...incrementSlot, ...field.increment.attrs.value }"
       @pointerdown="field.increment.handlers.onPressStart('mouse')"
       @pointerleave="field.increment.handlers.onPressEnd('mouse')"
       @pointerup="field.increment.handlers.onPressUp('mouse')"

@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {setFormChecked, setFormValue} from "@/utils/form-value";
+import { setFormChecked, setFormValue } from "@/utils/form-value";
 
 const build = (markup: string) => {
   const form = document.createElement("form");

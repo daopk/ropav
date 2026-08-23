@@ -1,7 +1,7 @@
-import type {DateRange} from "../../composables/use-calendar";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {CalendarDate, DateValue} from "@internationalized/date";
-import type {StoryObj} from "@storybook/vue3";
+import type { DateRange } from "../../composables/use-calendar";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { CalendarDate, DateValue } from "@internationalized/date";
+import type { StoryObj } from "@storybook/vue3";
 
 import {
   getLocalTimeZone,
@@ -12,11 +12,11 @@ import {
   startOfWeek,
   today,
 } from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {Button} from "../button";
-import {ButtonGroup} from "../button-group";
+import { useLocale } from "../../composables/use-locale";
+import { Button } from "../button";
+import { ButtonGroup } from "../button-group";
 import {
   CalendarYearPickerCell,
   CalendarYearPickerGrid,
@@ -25,12 +25,12 @@ import {
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
 } from "../calendar-year-picker";
-import {Description} from "../description";
-import {I18nProvider} from "../i18n-provider";
-import {Label} from "../label";
-import {ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
+import { Description } from "../description";
+import { I18nProvider } from "../i18n-provider";
+import { Label } from "../label";
+import { ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
 
 import {
   RangeCalendarCell,
@@ -84,8 +84,8 @@ const components = {
  * because the linter reads a literal `slot` attribute as Vue 2 slot syntax. It is an ordinary prop
  * here, and the same shape the component itself uses to put it back in the DOM.
  */
-const PREVIOUS = {slot: "previous"} as const;
-const NEXT = {slot: "next"} as const;
+const PREVIOUS = { slot: "previous" } as const;
+const NEXT = { slot: "next" } as const;
 
 /** The grid and its cells, which nearly every story below repeats. */
 const grid = `
@@ -146,10 +146,10 @@ const yearPickerGrid = `
 
 const meta: StoryMeta = {
   argTypes: {
-    allowsNonContiguousRanges: {control: "boolean"},
-    isDisabled: {control: "boolean"},
-    isReadOnly: {control: "boolean"},
-    weeksInMonth: {control: {max: 6, min: 4, step: 1, type: "number"}},
+    allowsNonContiguousRanges: { control: "boolean" },
+    isDisabled: { control: "boolean" },
+    isReadOnly: { control: "boolean" },
+    weeksInMonth: { control: { max: 6, min: 4, step: 1, type: "number" } },
   },
   component: RangeCalendarRoot,
   parameters: {
@@ -165,7 +165,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <RangeCalendarRoot v-bind="args" aria-label="Trip dates">
         ${header}
@@ -178,7 +178,7 @@ export const Default: Story = {
 export const WithYearPicker: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <RangeCalendarRoot v-bind="args" aria-label="Trip dates">
         ${yearPickerHeader}
@@ -196,7 +196,7 @@ export const DefaultValue: Story = {
       NEXT,
       PREVIOUS,
       args,
-      defaultValue: {end: parseDate("2025-02-12"), start: parseDate("2025-02-03")},
+      defaultValue: { end: parseDate("2025-02-12"), start: parseDate("2025-02-03") },
     }),
     template: `
       <RangeCalendarRoot v-bind="args" aria-label="Trip dates" :default-value="defaultValue">
@@ -216,7 +216,7 @@ export const Controlled: Story = {
       const locale = useLocale();
 
       const goTo = (start: DateValue, end: DateValue) => {
-        value.value = {end, start};
+        value.value = { end, start };
         focusedValue.value = start;
       };
 
@@ -230,19 +230,22 @@ export const Controlled: Story = {
         ),
         setHolidays: () => goTo(parseDate("2025-12-20"), parseDate("2025-12-31")),
         setNextMonth: () => {
-          const start = startOfMonth(today(getLocalTimeZone()).add({months: 1}));
+          const start = startOfMonth(today(getLocalTimeZone()).add({ months: 1 }));
 
-          goTo(start, start.add({days: 9}));
+          goTo(start, start.add({ days: 9 }));
         },
         setNextWeek: () => {
-          const start = startOfWeek(today(getLocalTimeZone()).add({weeks: 1}), locale.value.locale);
+          const start = startOfWeek(
+            today(getLocalTimeZone()).add({ weeks: 1 }),
+            locale.value.locale,
+          );
 
-          goTo(start, start.add({days: 6}));
+          goTo(start, start.add({ days: 6 }));
         },
         setThisWeek: () => {
           const start = today(getLocalTimeZone());
 
-          goTo(start, start.add({days: 6}));
+          goTo(start, start.add({ days: 6 }));
         },
         value,
       };
@@ -286,8 +289,8 @@ export const MinMaxDates: Story = {
         NEXT,
         PREVIOUS,
         args,
-        defaultValue: {end: now.add({days: 5}), start: now.add({days: 2})},
-        maxValue: now.add({months: 3}),
+        defaultValue: { end: now.add({ days: 5 }), start: now.add({ days: 2 }) },
+        maxValue: now.add({ months: 3 }),
         minValue: now,
       };
     },
@@ -324,8 +327,8 @@ const blockedRanges = () => {
   const now = today(getLocalTimeZone());
 
   return [
-    [now.add({days: 2}), now.add({days: 5})],
-    [now.add({days: 12}), now.add({days: 13})],
+    [now.add({ days: 2 }), now.add({ days: 5 })],
+    [now.add({ days: 12 }), now.add({ days: 13 })],
   ] as const;
 };
 
@@ -342,7 +345,7 @@ export const UnavailableDates: Story = {
         NEXT,
         PREVIOUS,
         args,
-        defaultValue: {end: now.add({days: 9}), start: now.add({days: 6})},
+        defaultValue: { end: now.add({ days: 9 }), start: now.add({ days: 6 }) },
         isDateUnavailable: isBlocked,
       };
     },
@@ -366,7 +369,7 @@ export const UnavailableDates: Story = {
 export const WeeksInMonth: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <div class="flex flex-col items-center gap-4">
         <RangeCalendarRoot v-bind="args" aria-label="Trip dates" :weeks-in-month="6">
@@ -423,7 +426,7 @@ export const AllowsNonContiguousRanges: Story = {
         NEXT,
         PREVIOUS,
         args,
-        defaultValue: {end: now.add({days: 9}), start: now.add({days: 1})},
+        defaultValue: { end: now.add({ days: 9 }), start: now.add({ days: 1 }) },
         isDateUnavailable: isBlocked,
       };
     },
@@ -453,7 +456,7 @@ export const Disabled: Story = {
     setup: () => {
       const now = today(getLocalTimeZone());
 
-      return {NEXT, PREVIOUS, args, defaultValue: {end: now.add({days: 4}), start: now}};
+      return { NEXT, PREVIOUS, args, defaultValue: { end: now.add({ days: 4 }), start: now } };
     },
     template: `
       <div class="flex flex-col items-center gap-4">
@@ -478,7 +481,7 @@ export const ReadOnly: Story = {
     setup: () => {
       const now = today(getLocalTimeZone());
 
-      return {NEXT, PREVIOUS, args, defaultValue: {end: now.add({days: 4}), start: now}};
+      return { NEXT, PREVIOUS, args, defaultValue: { end: now.add({ days: 4 }), start: now } };
     },
     template: `
       <div class="flex flex-col items-center gap-4">
@@ -502,7 +505,10 @@ export const Invalid: Story = {
     components,
     setup: () => {
       const now = today(getLocalTimeZone());
-      const value = shallowRef<DateRange>({end: now.add({days: 14}), start: now.add({days: 6})});
+      const value = shallowRef<DateRange>({
+        end: now.add({ days: 14 }),
+        start: now.add({ days: 6 }),
+      });
 
       return {
         NEXT,
@@ -610,7 +616,7 @@ export const WithIndicators: Story = {
 export const MultipleMonths: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, secondMonth: {months: 1}}),
+    setup: () => ({ NEXT, PREVIOUS, args, secondMonth: { months: 1 } }),
     template: `
       <RangeCalendarRoot
         v-bind="args"
@@ -655,7 +661,7 @@ export const MultipleMonths: Story = {
 export const ThreeMonths: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, secondMonth: {months: 1}, thirdMonth: {months: 2}}),
+    setup: () => ({ NEXT, PREVIOUS, args, secondMonth: { months: 1 }, thirdMonth: { months: 2 } }),
     template: `
       <RangeCalendarRoot
         v-bind="args"
@@ -717,26 +723,26 @@ export const ThreeMonths: Story = {
 };
 
 /** A picker reads an option's label off the item rather than the key. */
-const byName = (option: {name: string}) => option.name;
+const byName = (option: { name: string }) => option.name;
 
 const DAY_VIEW_OPTIONS = [
-  {id: "1", name: "1 day"},
-  {id: "5", name: "5 days"},
-  {id: "7", name: "7 days"},
-  {id: "8", name: "8 days"},
-  {id: "10", name: "10 days"},
-  {id: "14", name: "14 days"},
-  {id: "21", name: "21 days"},
+  { id: "1", name: "1 day" },
+  { id: "5", name: "5 days" },
+  { id: "7", name: "7 days" },
+  { id: "8", name: "8 days" },
+  { id: "10", name: "10 days" },
+  { id: "14", name: "14 days" },
+  { id: "21", name: "21 days" },
 ];
 
 const WEEK_VIEW_OPTIONS = [
-  {id: "1", name: "1 week"},
-  {id: "2", name: "2 weeks"},
-  {id: "3", name: "3 weeks"},
-  {id: "4", name: "4 weeks"},
-  {id: "5", name: "5 weeks"},
-  {id: "6", name: "6 weeks"},
-  {id: "8", name: "8 weeks"},
+  { id: "1", name: "1 week" },
+  { id: "2", name: "2 weeks" },
+  { id: "3", name: "3 weeks" },
+  { id: "4", name: "4 weeks" },
+  { id: "5", name: "5 weeks" },
+  { id: "6", name: "6 weeks" },
+  { id: "8", name: "8 weeks" },
 ];
 
 export const DayView: Story = {
@@ -752,7 +758,7 @@ export const DayView: Story = {
         byName,
         days,
         options: DAY_VIEW_OPTIONS,
-        visibleDuration: computed(() => ({days: Number(days.value)})),
+        visibleDuration: computed(() => ({ days: Number(days.value) })),
       };
     },
     template: `
@@ -798,7 +804,7 @@ export const WeekView: Story = {
         args,
         byName,
         options: WEEK_VIEW_OPTIONS,
-        visibleDuration: computed(() => ({weeks: Number(weeks.value)})),
+        visibleDuration: computed(() => ({ weeks: Number(weeks.value) })),
         weeks,
       };
     },
@@ -839,7 +845,7 @@ export const InternationalCalendar: Story = {
     setup: () => {
       const now = today(getLocalTimeZone());
 
-      return {NEXT, PREVIOUS, args, defaultValue: {end: now.add({days: 7}), start: now}};
+      return { NEXT, PREVIOUS, args, defaultValue: { end: now.add({ days: 7 }), start: now } };
     },
     template: `
       <I18nProvider locale="hi-IN-u-ca-indian">

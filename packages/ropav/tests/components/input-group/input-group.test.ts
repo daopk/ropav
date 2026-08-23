@@ -1,11 +1,11 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const group = result.container.querySelector('[data-slot="input-group"]');
 
   if (!group) throw new Error("group not rendered");
@@ -27,7 +27,7 @@ const type = (control: HTMLInputElement | HTMLTextAreaElement, value: string) =>
 describe("InputGroup", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, group, unmount} = renderGroup({withPrefix: true, withSuffix: true});
+      const { container, group, unmount } = renderGroup({ withPrefix: true, withSuffix: true });
 
       expect(group).toHaveAttribute("data-slot", "input-group");
       expect(container.querySelector('[data-slot="input-group-prefix"]')).not.toBeNull();
@@ -38,7 +38,7 @@ describe("InputGroup", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, group, unmount} = renderGroup({withPrefix: true, withSuffix: true});
+      const { container, group, unmount } = renderGroup({ withPrefix: true, withSuffix: true });
 
       expect(group).toHaveClass("input-group", "input-group--primary");
       expect(container.querySelector('[data-slot="input-group-prefix"]')).toHaveClass(
@@ -57,7 +57,7 @@ describe("InputGroup", () => {
     it("renders a textarea on the same class as an input", () => {
       // The stylesheet reaches the textarea through `.input-group__input[data-slot=…textarea]`,
       // so the class has to be the shared one and the slot the specific one.
-      const {container, unmount} = renderGroup({withTextArea: true});
+      const { container, unmount } = renderGroup({ withTextArea: true });
       const control = container.querySelector("textarea");
 
       expect(control).toHaveClass("input-group__input");
@@ -68,7 +68,7 @@ describe("InputGroup", () => {
     });
 
     it("supports a class on every part", () => {
-      const {group, unmount} = renderGroup({class: "custom-group"});
+      const { group, unmount } = renderGroup({ class: "custom-group" });
 
       expect(group).toHaveClass("input-group", "custom-group");
 
@@ -78,7 +78,7 @@ describe("InputGroup", () => {
 
   describe("role", () => {
     it("reads as a group when it stands on its own", () => {
-      const {group, unmount} = renderGroup();
+      const { group, unmount } = renderGroup();
 
       expect(group).toHaveAttribute("role", "group");
 
@@ -88,7 +88,7 @@ describe("InputGroup", () => {
     it("reads as presentational inside a field", () => {
       // The field is what assistive technology reports, so a second grouping around the
       // control would only add noise.
-      const {group, unmount} = renderGroup({withField: true});
+      const { group, unmount } = renderGroup({ withField: true });
 
       expect(group).toHaveAttribute("role", "presentation");
 
@@ -98,7 +98,7 @@ describe("InputGroup", () => {
 
   describe("variant", () => {
     it("supports the secondary variant", () => {
-      const {container, group, unmount} = renderGroup({variant: "secondary"});
+      const { container, group, unmount } = renderGroup({ variant: "secondary" });
 
       expect(group).toHaveClass("input-group--secondary");
       expect(group).not.toHaveClass("input-group--primary");
@@ -111,7 +111,7 @@ describe("InputGroup", () => {
     });
 
     it("takes the variant from the field it sits in", () => {
-      const {group, unmount} = renderGroup({fieldVariant: "secondary", withField: true});
+      const { group, unmount } = renderGroup({ fieldVariant: "secondary", withField: true });
 
       expect(group).toHaveClass("input-group--secondary");
 
@@ -119,7 +119,7 @@ describe("InputGroup", () => {
     });
 
     it("prefers its own variant over the field's", () => {
-      const {group, unmount} = renderGroup({
+      const { group, unmount } = renderGroup({
         fieldVariant: "secondary",
         variant: "primary",
         withField: true,
@@ -134,7 +134,7 @@ describe("InputGroup", () => {
 
   describe("fullWidth", () => {
     it("supports fullWidth", () => {
-      const {group, unmount} = renderGroup({fullWidth: true});
+      const { group, unmount } = renderGroup({ fullWidth: true });
 
       expect(group).toHaveClass("input-group--full-width");
 
@@ -145,7 +145,7 @@ describe("InputGroup", () => {
       // A boolean prop declared through an imported indexed-access type compiles without a
       // runtime type, and Vue then leaves a valueless attribute as `""` — falsy, so the
       // modifier never lands. The bound form above stays green while that is broken.
-      const {group, unmount} = renderGroup({attributeForm: true, withField: true});
+      const { group, unmount } = renderGroup({ attributeForm: true, withField: true });
 
       expect(group).toHaveClass("input-group--full-width");
 
@@ -153,7 +153,7 @@ describe("InputGroup", () => {
     });
 
     it("leaves fullWidth off by default", () => {
-      const {group, unmount} = renderGroup();
+      const { group, unmount } = renderGroup();
 
       expect(group).not.toHaveClass("input-group--full-width");
 
@@ -163,7 +163,7 @@ describe("InputGroup", () => {
 
   describe("state from the field", () => {
     it("reports the field's disabled state", () => {
-      const {control, group, unmount} = renderGroup({fieldIsDisabled: true, withField: true});
+      const { control, group, unmount } = renderGroup({ fieldIsDisabled: true, withField: true });
 
       expect(group).toHaveAttribute("data-disabled", "true");
       expect(control).toBeDisabled();
@@ -172,7 +172,7 @@ describe("InputGroup", () => {
     });
 
     it("reports the field's invalid state", () => {
-      const {group, unmount} = renderGroup({fieldIsInvalid: true, withField: true});
+      const { group, unmount } = renderGroup({ fieldIsInvalid: true, withField: true });
 
       expect(group).toHaveAttribute("data-invalid", "true");
 
@@ -180,7 +180,7 @@ describe("InputGroup", () => {
     });
 
     it("prefers its own disabled state over the field's", () => {
-      const {group, unmount} = renderGroup({
+      const { group, unmount } = renderGroup({
         fieldIsDisabled: true,
         isDisabled: false,
         withField: true,
@@ -192,7 +192,7 @@ describe("InputGroup", () => {
     });
 
     it("supports its own disabled and invalid state with no field around it", () => {
-      const {group, unmount} = renderGroup({isDisabled: true, isInvalid: true});
+      const { group, unmount } = renderGroup({ isDisabled: true, isInvalid: true });
 
       expect(group).toHaveAttribute("data-disabled", "true");
       expect(group).toHaveAttribute("data-invalid", "true");
@@ -203,7 +203,7 @@ describe("InputGroup", () => {
     it("never takes readonly from the field", () => {
       // React's field hands the group only a role, an invalid and a disabled flag, so a
       // read-only field leaves no mark on the shell around the control.
-      const {group, unmount} = renderGroup({withField: true});
+      const { group, unmount } = renderGroup({ withField: true });
 
       expect(group).not.toHaveAttribute("data-readonly");
 
@@ -211,7 +211,7 @@ describe("InputGroup", () => {
     });
 
     it("supports its own readonly state", () => {
-      const {group, unmount} = renderGroup({isReadOnly: true});
+      const { group, unmount } = renderGroup({ isReadOnly: true });
 
       expect(group).toHaveAttribute("data-readonly", "true");
 
@@ -219,7 +219,7 @@ describe("InputGroup", () => {
     });
 
     it("exposes the resolved state to its slot", () => {
-      const {container, unmount} = renderGroup({fieldIsInvalid: true, withField: true});
+      const { container, unmount } = renderGroup({ fieldIsInvalid: true, withField: true });
 
       // The slot renders the control, so the control being there at all is the proof the slot
       // ran; the flags it receives are asserted through the attributes above.
@@ -234,7 +234,7 @@ describe("InputGroup", () => {
     // focus one unless an explicit tab index says so, which is why react-aria always sets it —
     // `useTextField` picks it up from `useFocusable`.
     it("renders an explicit tab index on the input", () => {
-      const {control, unmount} = renderGroup({withField: true});
+      const { control, unmount } = renderGroup({ withField: true });
 
       expect(control).toHaveAttribute("tabindex", "0");
 
@@ -242,7 +242,7 @@ describe("InputGroup", () => {
     });
 
     it("renders an explicit tab index on a textarea", () => {
-      const {control, unmount} = renderGroup({withField: true, withTextArea: true});
+      const { control, unmount } = renderGroup({ withField: true, withTextArea: true });
 
       expect(control).toHaveAttribute("tabindex", "0");
 
@@ -250,7 +250,7 @@ describe("InputGroup", () => {
     });
 
     it("drops the tab index when the field is disabled", () => {
-      const {control, unmount} = renderGroup({fieldIsDisabled: true, withField: true});
+      const { control, unmount } = renderGroup({ fieldIsDisabled: true, withField: true });
 
       expect(control.hasAttribute("tabindex")).toBe(false);
 
@@ -260,7 +260,7 @@ describe("InputGroup", () => {
     // The tab index rides along with the field, so a group standing on its own carries none —
     // which is what React does too, where a bare `Input` never reaches `useTextField`.
     it("writes no tab index without a field around it", () => {
-      const {control, unmount} = renderGroup();
+      const { control, unmount } = renderGroup();
 
       expect(control.hasAttribute("tabindex")).toBe(false);
 
@@ -270,13 +270,17 @@ describe("InputGroup", () => {
 
   describe("hover and focus", () => {
     it("reports hover on the group", async () => {
-      const {group, unmount} = renderGroup();
+      const { group, unmount } = renderGroup();
 
-      group.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+      group.dispatchEvent(
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
       expect(group).toHaveAttribute("data-hovered", "true");
 
-      group.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"}));
+      group.dispatchEvent(
+        new PointerEvent("pointerleave", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
       expect(group).not.toHaveAttribute("data-hovered");
 
@@ -284,9 +288,11 @@ describe("InputGroup", () => {
     });
 
     it("stops reporting hover once disabled", async () => {
-      const {group, unmount} = renderGroup({isDisabled: true});
+      const { group, unmount } = renderGroup({ isDisabled: true });
 
-      group.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+      group.dispatchEvent(
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
       expect(group).not.toHaveAttribute("data-hovered");
 
@@ -296,7 +302,7 @@ describe("InputGroup", () => {
     it("reports focus reaching anything inside", async () => {
       // Load-bearing, not decoration: the stylesheet suppresses the hover fill while focus is
       // inside, keying on this attribute alongside `:focus-within`.
-      const {control, group, unmount} = renderGroup();
+      const { control, group, unmount } = renderGroup();
 
       control.focus();
       await nextTick();
@@ -310,7 +316,10 @@ describe("InputGroup", () => {
     });
 
     it("keeps reporting focus while it moves between two children", async () => {
-      const {container, group, unmount} = renderGroup({withField: true, withSuffixButton: true});
+      const { container, group, unmount } = renderGroup({
+        withField: true,
+        withSuffixButton: true,
+      });
       const control = container.querySelector("input")!;
       const button = container.querySelector<HTMLButtonElement>("[data-testid='suffix-button']")!;
 
@@ -328,7 +337,7 @@ describe("InputGroup", () => {
 
   describe("click to focus", () => {
     it("moves focus into the control when the shell is clicked", () => {
-      const {control, group, unmount} = renderGroup({withPrefix: true});
+      const { control, group, unmount } = renderGroup({ withPrefix: true });
 
       (group as HTMLElement).click();
       expect(control).toHaveFocus();
@@ -337,7 +346,7 @@ describe("InputGroup", () => {
     });
 
     it("moves focus into the control when a prefix is clicked", () => {
-      const {container, control, unmount} = renderGroup({withPrefix: true});
+      const { container, control, unmount } = renderGroup({ withPrefix: true });
 
       container.querySelector<HTMLElement>('[data-slot="input-group-prefix"]')!.click();
       expect(control).toHaveFocus();
@@ -346,7 +355,7 @@ describe("InputGroup", () => {
     });
 
     it("leaves focus alone when the control itself is clicked", () => {
-      const {control, unmount} = renderGroup();
+      const { control, unmount } = renderGroup();
       const focus = vi.spyOn(control, "focus");
 
       control.click();
@@ -359,7 +368,7 @@ describe("InputGroup", () => {
     it("never pulls focus into a textarea", () => {
       // React queries `input` alone, so a group holding a textarea does not react to a click
       // beside it. Pinned here so it does not drift into being fixed by accident.
-      const {control, group, unmount} = renderGroup({withPrefix: true, withTextArea: true});
+      const { control, group, unmount } = renderGroup({ withPrefix: true, withTextArea: true });
 
       (group as HTMLElement).click();
       expect(control).not.toHaveFocus();
@@ -382,7 +391,7 @@ describe("InputGroup", () => {
 
   describe("value", () => {
     it("shows the value the field holds", () => {
-      const {control, unmount} = renderGroup({fieldDefaultValue: "ropav.com", withField: true});
+      const { control, unmount } = renderGroup({ fieldDefaultValue: "ropav.com", withField: true });
 
       expect(control).toHaveValue("ropav.com");
 
@@ -391,7 +400,7 @@ describe("InputGroup", () => {
 
     it("reports typing to the field", () => {
       const onChange = vi.fn();
-      const {control, unmount} = renderGroup({
+      const { control, unmount } = renderGroup({
         onControlChange: onChange,
         withField: true,
       });
@@ -403,7 +412,7 @@ describe("InputGroup", () => {
     });
 
     it("prefers a placeholder set on the control over the field's", () => {
-      const {control, unmount} = renderGroup({
+      const { control, unmount } = renderGroup({
         controlPlaceholder: "your site",
         withField: true,
       });
@@ -414,7 +423,7 @@ describe("InputGroup", () => {
     });
 
     it("lets the control own the value even inside a field", () => {
-      const {control, unmount} = renderGroup({
+      const { control, unmount } = renderGroup({
         controlValue: "pinned",
         fieldDefaultValue: "from the field",
         withField: true,
@@ -429,7 +438,7 @@ describe("InputGroup", () => {
       // The browser has already moved the text by the time the listener runs, and Vapor skips
       // writing `value` when the bound value has not changed — so without an outright write
       // the rejected text would stay on screen.
-      const {control, unmount} = renderGroup({controlValue: "pinned"});
+      const { control, unmount } = renderGroup({ controlValue: "pinned" });
 
       type(control, "typed over it");
       await nextTick();
@@ -440,13 +449,13 @@ describe("InputGroup", () => {
     });
 
     it("follows an owner that accepts the change", async () => {
-      const props = reactive<Record<string, unknown>>({controlValue: "a"});
+      const props = reactive<Record<string, unknown>>({ controlValue: "a" });
 
       props["onControlChange"] = (next: string) => {
         props["controlValue"] = next;
       };
 
-      const result = renderVapor(Fixture, {props});
+      const result = renderVapor(Fixture, { props });
       const control = result.container.querySelector("input")!;
 
       type(control, "ab");
@@ -458,7 +467,7 @@ describe("InputGroup", () => {
     });
 
     it("supports a textarea owning its own value", async () => {
-      const {control, unmount} = renderGroup({controlValue: "pinned", withTextArea: true});
+      const { control, unmount } = renderGroup({ controlValue: "pinned", withTextArea: true });
 
       expect(control).toHaveValue("pinned");
 
@@ -472,10 +481,10 @@ describe("InputGroup", () => {
 
   describe("control state", () => {
     it("reports hover and focus on the control", async () => {
-      const {control, unmount} = renderGroup();
+      const { control, unmount } = renderGroup();
 
       control.dispatchEvent(
-        new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}),
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
       );
       await nextTick();
       expect(control).toHaveAttribute("data-hovered", "true");
@@ -488,7 +497,7 @@ describe("InputGroup", () => {
     });
 
     it("reports the field's state on the control", () => {
-      const {control, unmount} = renderGroup({
+      const { control, unmount } = renderGroup({
         fieldIsDisabled: true,
         withField: true,
       });

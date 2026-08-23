@@ -10,11 +10,11 @@ export const Header = Object.assign(HeaderRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {HeaderRoot};
+export { HeaderRoot };
 
-export type {HeaderRootProps, HeaderRootProps as HeaderProps} from "./header.types";
+export type { HeaderRootProps, HeaderRootProps as HeaderProps } from "./header.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {headerVariants} from "@ropav/styles";
+export { headerVariants } from "@ropav/styles";

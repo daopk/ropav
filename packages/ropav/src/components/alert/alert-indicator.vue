@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {AlertIndicatorProps} from "./alert.types";
+import type { AlertIndicatorProps } from "./alert.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
-import {DangerIcon, InfoIcon, SuccessIcon, WarningIcon} from "../icons";
+import { composeSlotClassName } from "../../utils/compose";
+import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "../icons";
 
-import {useAlertContext} from "./alert.context";
+import { useAlertContext } from "./alert.context";
 
 const props = defineProps<AlertIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots, status} = useAlertContext();
+const { slots, status } = useAlertContext();
 
 const callerSlots = useSlots();
 

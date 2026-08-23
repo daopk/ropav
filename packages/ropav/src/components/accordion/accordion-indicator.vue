@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {AccordionIndicatorProps} from "./accordion.types";
+import type { AccordionIndicatorProps } from "./accordion.types";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronDown} from "../icons";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronDown } from "../icons";
 
-import {useAccordionContext, useAccordionItemContext} from "./accordion.context";
+import { useAccordionContext, useAccordionItemContext } from "./accordion.context";
 
 const props = defineProps<AccordionIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAccordionContext();
-const {isExpanded} = useAccordionItemContext();
+const { slots } = useAccordionContext();
+const { isExpanded } = useAccordionItemContext();
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import type {DropOperationMask} from "../utils/dnd-constants";
+import type { DropOperationMask } from "../utils/dnd-constants";
 import type {
   DragEndEvent,
   DragItem,
@@ -7,30 +7,30 @@ import type {
   DragStartEvent,
   DropOperation,
 } from "../utils/dnd-types";
-import type {PressEvent} from "./use-press";
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { PressEvent } from "./use-press";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import {dndStrings} from "../i18n/dnd";
+import { dndStrings } from "../i18n/dnd";
 import {
   DROP_EFFECT_TO_DROP_OPERATION,
   DROP_OPERATION,
   EFFECT_ALLOWED,
 } from "../utils/dnd-constants";
-import {writeToDataTransfer} from "../utils/dnd-data-transfer";
+import { writeToDataTransfer } from "../utils/dnd-data-transfer";
 import {
   globalDropEffect,
   setGlobalAllowedDropOperations,
   setGlobalDropEffect,
 } from "../utils/dnd-state";
-import {isIOS, isWebKit} from "../utils/platform";
+import { isIOS, isWebKit } from "../utils/platform";
 
-import {beginDragging} from "./drag-manager";
-import {useDragModality} from "./drag-modality";
-import {useDescription} from "./use-description";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
-import {isVirtualClick, isVirtualPointerEvent} from "./use-press";
+import { beginDragging } from "./drag-manager";
+import { useDragModality } from "./drag-modality";
+import { useDescription } from "./use-description";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
+import { isVirtualClick, isVirtualPointerEvent } from "./use-press";
 
 export interface UseDragOptions {
   /** The items being dragged, read when the drag starts. */
@@ -66,10 +66,10 @@ export interface UseDragHandlers {
 
 export interface UseDragReturn {
   /** Attributes for the draggable element. Attributes only, never listeners. */
-  attrs: ComputedRef<{draggable: "true" | "false"; "aria-describedby"?: string}>;
+  attrs: ComputedRef<{ draggable: "true" | "false"; "aria-describedby"?: string }>;
   handlers: UseDragHandlers;
   /** Attributes for the explicit drag control, when there is one. */
-  dragButtonAttrs: ComputedRef<{"aria-describedby": string | undefined}>;
+  dragButtonAttrs: ComputedRef<{ "aria-describedby": string | undefined }>;
   /** Hand this to a `PressResponder`, so the control stays an ordinary `Button`. */
   onDragButtonPress: (event: PressEvent) => void;
   isDragging: ComputedRef<boolean>;
@@ -109,15 +109,15 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
   /** How to start the drag, or — once it is running — how to cancel it. */
   const description = computed(() => {
     const keys = {
-      keyboard: {end: "endDragKeyboard", start: "dragDescriptionKeyboard"},
-      touch: {end: "endDragTouch", start: "dragDescriptionTouch"},
-      virtual: {end: "endDragVirtual", start: "dragDescriptionVirtual"},
+      keyboard: { end: "endDragKeyboard", start: "dragDescriptionKeyboard" },
+      touch: { end: "endDragTouch", start: "dragDescriptionTouch" },
+      virtual: { end: "endDragVirtual", start: "dragDescriptionVirtual" },
     } as const;
     const key = keys[modality.value];
 
     return stringFormatter.value.format(isDragging.value ? key.end : key.start);
   });
-  const {describedBy} = useDescription(description);
+  const { describedBy } = useDescription(description);
 
   const allowedOperations = (): DropOperation[] =>
     options.getAllowedDropOperations?.() ?? ["move", "copy", "link"];
@@ -163,7 +163,7 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
       return;
     }
 
-    options.onDragStart?.({type: "dragstart", x: event.clientX, y: event.clientY});
+    options.onDragStart?.({ type: "dragstart", x: event.clientX, y: event.clientY });
 
     const items = options.getItems();
 
@@ -199,7 +199,7 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
       );
     };
 
-    window.addEventListener("drop", onStrayDrop, {once: true});
+    window.addEventListener("drop", onStrayDrop, { once: true });
     releaseDropGuard = () => window.removeEventListener("drop", onStrayDrop);
 
     lastX = event.clientX;
@@ -260,7 +260,7 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
     // The browser fires `drag` continuously, including while the pointer is still.
     if (event.clientX === lastX && event.clientY === lastY) return;
 
-    options.onDragMove?.({type: "dragmove", x: event.clientX, y: event.clientY});
+    options.onDragMove?.({ type: "dragmove", x: event.clientX, y: event.clientY });
 
     lastX = event.clientX;
     lastY = event.clientY;
@@ -382,15 +382,15 @@ export const useDrag = (options: UseDragOptions): UseDragReturn => {
 
   return {
     attrs: computed(() => {
-      if (isDisabled()) return {draggable: "false" as const};
+      if (isDisabled()) return { draggable: "false" as const };
 
       return {
         draggable: "true" as const,
         // With a drag button the description belongs on it, not here.
-        ...(hasDragButton() ? {} : {"aria-describedby": describedBy.value}),
+        ...(hasDragButton() ? {} : { "aria-describedby": describedBy.value }),
       };
     }),
-    dragButtonAttrs: computed(() => ({"aria-describedby": describedBy.value})),
+    dragButtonAttrs: computed(() => ({ "aria-describedby": describedBy.value })),
     handlers: {
       // Present unconditionally so the listener set never changes shape mid-drag; each one
       // returns early when a drag button owns the accessible path.

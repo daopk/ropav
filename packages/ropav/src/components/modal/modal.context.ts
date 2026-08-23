@@ -1,9 +1,9 @@
-import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {ModalPlacement} from "./modal.types";
-import type {modalVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { OverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import type { ModalPlacement } from "./modal.types";
+import type { modalVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ModalContext {
   /**

@@ -10,7 +10,7 @@ export const TextField = Object.assign(TextFieldRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TextFieldRoot};
+export { TextFieldRoot };
 
 export type {
   TextFieldRootProps,
@@ -18,13 +18,13 @@ export type {
   TextFieldSlotProps,
 } from "./textfield.types";
 
-export {useTextFieldContext, provideTextFieldContext} from "./textfield.context";
+export { useTextFieldContext, provideTextFieldContext } from "./textfield.context";
 
-export type {TextFieldContext} from "./textfield.context";
+export type { TextFieldContext } from "./textfield.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {textFieldVariants} from "@ropav/styles";
+export { textFieldVariants } from "@ropav/styles";
 
-export type {TextFieldVariants} from "@ropav/styles";
+export type { TextFieldVariants } from "@ropav/styles";

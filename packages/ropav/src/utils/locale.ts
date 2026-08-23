@@ -111,5 +111,5 @@ export const getDefaultLocale = (): Locale => {
     locale = "en-US";
   }
 
-  return {direction: isRTL(locale) ? "rtl" : "ltr", locale};
+  return { direction: isRTL(locale) ? "rtl" : "ltr", locale };
 };

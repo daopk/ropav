@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import DisclosureGroupFixture from "./fixtures.vue";
 
@@ -15,12 +15,12 @@ const bareTriggersIn = (container: HTMLElement) => [
 ];
 
 const pressKey = (element: HTMLElement, key: string) =>
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
 
 describe("DisclosureGroup", () => {
   describe("structure", () => {
     it("exposes its data-slot and BEM block", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const group = container.querySelector("[data-slot='disclosure-group']");
 
       expect(group).not.toBeNull();
@@ -30,7 +30,7 @@ describe("DisclosureGroup", () => {
     });
 
     it("renders a trigger for every disclosure", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
 
       expect(triggersIn(container)).toHaveLength(3);
       expect(triggersIn(container).map((trigger) => trigger.textContent?.trim())).toEqual([
@@ -43,7 +43,7 @@ describe("DisclosureGroup", () => {
     });
 
     it("gives every disclosure a distinct trigger and panel id", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const ids = [
         ...triggersIn(container).map((trigger) => trigger.id),
         ...contentsIn(container).map((content) => content.id),
@@ -57,7 +57,7 @@ describe("DisclosureGroup", () => {
 
   describe("expansion", () => {
     it("collapses the open disclosure when only one may be expanded", async () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const [one, two] = triggersIn(container);
 
       one?.click();
@@ -73,8 +73,8 @@ describe("DisclosureGroup", () => {
     });
 
     it("keeps disclosures open when several may be expanded", async () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {allowsMultipleExpanded: true},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { allowsMultipleExpanded: true },
       });
       const [one, two] = triggersIn(container);
 
@@ -90,8 +90,8 @@ describe("DisclosureGroup", () => {
     });
 
     it("starts from defaultExpandedKeys", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {defaultExpandedKeys: ["two"]},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { defaultExpandedKeys: ["two"] },
       });
 
       expect(triggersIn(container).map((trigger) => trigger.getAttribute("aria-expanded"))).toEqual(
@@ -103,7 +103,9 @@ describe("DisclosureGroup", () => {
 
     it("emits expandedChange with the disclosure ids", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {props: {onExpandedChange}});
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { onExpandedChange },
+      });
 
       triggersIn(container)[2]?.click();
       await nextTick();
@@ -115,8 +117,8 @@ describe("DisclosureGroup", () => {
 
     it("honours controlled expandedKeys", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {expandedKeys: ["one"], onExpandedChange},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { expandedKeys: ["one"], onExpandedChange },
       });
 
       expect(triggersIn(container)[0]?.getAttribute("aria-expanded")).toBe("true");
@@ -135,8 +137,8 @@ describe("DisclosureGroup", () => {
 
     it("reports the change on the disclosure that was pressed too", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {items: ["one"], onExpandedChange},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { items: ["one"], onExpandedChange },
       });
 
       triggersIn(container)[0]?.click();
@@ -150,8 +152,8 @@ describe("DisclosureGroup", () => {
 
   describe("collapsed panels", () => {
     it("keeps every collapsed panel out of the tab order", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {defaultExpandedKeys: ["one"]},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { defaultExpandedKeys: ["one"] },
       });
 
       expect(contentsIn(container).map((content) => content.getAttribute("hidden"))).toEqual([
@@ -166,7 +168,7 @@ describe("DisclosureGroup", () => {
 
   describe("keyboard navigation", () => {
     it("moves focus to the next and previous trigger", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const triggers = triggersIn(container);
 
       triggers[0]?.focus();
@@ -180,7 +182,7 @@ describe("DisclosureGroup", () => {
     });
 
     it("moves focus to the first and last trigger", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const triggers = triggersIn(container);
 
       triggers[0]?.focus();
@@ -194,7 +196,7 @@ describe("DisclosureGroup", () => {
     });
 
     it("stays put at the ends of the list", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
       const triggers = triggersIn(container);
 
       triggers[0]?.focus();
@@ -209,7 +211,7 @@ describe("DisclosureGroup", () => {
     });
 
     it("keeps every trigger tabbable rather than using a roving tab index", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture);
+      const { container, unmount } = renderVapor(DisclosureGroupFixture);
 
       expect(triggersIn(container).map((trigger) => trigger.getAttribute("tabindex"))).toEqual([
         "0",
@@ -221,8 +223,8 @@ describe("DisclosureGroup", () => {
     });
 
     it("moves focus between bare button triggers too", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {bareTriggers: true},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { bareTriggers: true },
       });
       const triggers = bareTriggersIn(container);
 
@@ -239,7 +241,9 @@ describe("DisclosureGroup", () => {
 
   describe("disabled", () => {
     it("disables every trigger when the group is disabled", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { isDisabled: true },
+      });
 
       expect(triggersIn(container).map((trigger) => trigger.disabled)).toEqual([true, true, true]);
 
@@ -247,7 +251,9 @@ describe("DisclosureGroup", () => {
     });
 
     it("marks the group with data-disabled", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { isDisabled: true },
+      });
 
       expect(container.querySelector("[data-slot='disclosure-group']")).toHaveAttribute(
         "data-disabled",
@@ -258,7 +264,9 @@ describe("DisclosureGroup", () => {
     });
 
     it("does not expand while the group is disabled", async () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { isDisabled: true },
+      });
 
       triggersIn(container)[0]?.click();
       await nextTick();
@@ -269,8 +277,8 @@ describe("DisclosureGroup", () => {
     });
 
     it("disables a single disclosure without touching the others", async () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {disabledItem: "two"},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { disabledItem: "two" },
       });
       const triggers = triggersIn(container);
 
@@ -288,8 +296,8 @@ describe("DisclosureGroup", () => {
     });
 
     it("skips a disabled trigger when moving focus", () => {
-      const {container, unmount} = renderVapor(DisclosureGroupFixture, {
-        props: {disabledItem: "two"},
+      const { container, unmount } = renderVapor(DisclosureGroupFixture, {
+        props: { disabledItem: "two" },
       });
       const triggers = triggersIn(container);
 

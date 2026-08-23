@@ -1,5 +1,5 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
 import {
   Timer,
@@ -11,14 +11,14 @@ import {
   toastQueue,
   useToastQueue,
 } from "@/components/toast/toast-queue";
-import {DEFAULT_TOAST_TIMEOUT} from "@/components/toast/toast.constants";
+import { DEFAULT_TOAST_TIMEOUT } from "@/components/toast/toast.constants";
 
 /** Read outside a component: nothing here depends on an instance. */
-const read = <T>(body: () => T): {stop: () => void; value: T} => {
+const read = <T>(body: () => T): { stop: () => void; value: T } => {
   const scope = effectScope();
   const value = scope.run(body)!;
 
-  return {stop: () => scope.stop(), value};
+  return { stop: () => scope.stop(), value };
 };
 
 const titles = (queue: ToastQueue) => queue.visibleToasts.map((entry) => entry.content.title);
@@ -38,18 +38,18 @@ describe("ToastQueue", () => {
     it("exposes the newest toast first", () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "First"});
-      queue.add({title: "Second"});
+      queue.add({ title: "First" });
+      queue.add({ title: "Second" });
 
       // Index 0 is the frontmost toast, which is what the stack offsets and z-index are built on.
       expect(titles(queue)).toEqual(["Second", "First"]);
     });
 
     it("keeps every toast regardless of maxVisibleToasts", () => {
-      const queue = new ToastQueue({maxVisibleToasts: 1});
+      const queue = new ToastQueue({ maxVisibleToasts: 1 });
 
-      queue.add({title: "First"});
-      queue.add({title: "Second"});
+      queue.add({ title: "First" });
+      queue.add({ title: "Second" });
 
       // The cap is a hint the region reads: a toast past it is faded out, not dropped, so it can
       // come back when the ones in front close.
@@ -59,7 +59,7 @@ describe("ToastQueue", () => {
 
     it("returns the key it assigned", () => {
       const queue = new ToastQueue();
-      const key = queue.add({title: "First"});
+      const key = queue.add({ title: "First" });
 
       expect(queue.visibleToasts[0]?.key).toBe(key);
     });
@@ -69,7 +69,7 @@ describe("ToastQueue", () => {
     it("closes a toast after the default timeout", () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "First"});
+      queue.add({ title: "First" });
       queue.visibleToasts[0]!.timer!.reset(DEFAULT_TOAST_TIMEOUT);
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT - 1);
@@ -84,7 +84,7 @@ describe("ToastQueue", () => {
     it("creates no timer for a timeout of zero", () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "First"}, {timeout: 0});
+      queue.add({ title: "First" }, { timeout: 0 });
 
       expect(queue.visibleToasts[0]?.timer).toBeUndefined();
 
@@ -95,7 +95,7 @@ describe("ToastQueue", () => {
     it("does not start the clock until the toast asks it to", () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "First"});
+      queue.add({ title: "First" });
 
       // The toast starts its own clock when it mounts, so one queued while nothing is rendered has
       // not already spent its life waiting.
@@ -106,7 +106,7 @@ describe("ToastQueue", () => {
     it("resumes a paused toast with only the time it had left", () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "First"});
+      queue.add({ title: "First" });
       queue.visibleToasts[0]!.timer!.reset(1000);
 
       vi.advanceTimersByTime(400);
@@ -128,7 +128,7 @@ describe("ToastQueue", () => {
     it("calls onClose for a toast it closes", () => {
       const queue = new ToastQueue();
       const onClose = vi.fn();
-      const key = queue.add({title: "First"}, {onClose});
+      const key = queue.add({ title: "First" }, { onClose });
 
       queue.close(key);
 
@@ -140,7 +140,7 @@ describe("ToastQueue", () => {
       const queue = new ToastQueue();
       const onClose = vi.fn();
 
-      queue.add({title: "First"}, {onClose});
+      queue.add({ title: "First" }, { onClose });
       queue.clear();
 
       // Nothing closed it, so nothing is reported — the same split `react-stately` draws.
@@ -166,7 +166,7 @@ describe("ToastQueue", () => {
 
       queue.subscribe(onChange);
 
-      const key = queue.add({title: "First"});
+      const key = queue.add({ title: "First" });
 
       expect(onChange).toHaveBeenCalledTimes(1);
 
@@ -183,7 +183,7 @@ describe("ToastQueue", () => {
       const unsubscribe = queue.subscribe(onChange);
 
       unsubscribe();
-      queue.add({title: "First"});
+      queue.add({ title: "First" });
 
       expect(onChange).not.toHaveBeenCalled();
     });
@@ -198,7 +198,7 @@ describe("ToastQueue", () => {
         startViewTransition: (callback: () => unknown) => {
           started.push(() => void callback());
 
-          return {finished: new Promise<void>(() => {}), ready: new Promise<void>(() => {})};
+          return { finished: new Promise<void>(() => {}), ready: new Promise<void>(() => {}) };
         },
       });
 
@@ -210,11 +210,11 @@ describe("ToastQueue", () => {
         second.subscribe(onSecond);
 
         // A burst in the first queue: the first transition is in flight, the rest are behind it.
-        first.add({title: "A1"});
-        first.add({title: "A2"});
-        first.add({title: "A3"});
+        first.add({ title: "A1" });
+        first.add({ title: "A2" });
+        first.add({ title: "A3" });
 
-        second.add({title: "B1"});
+        second.add({ title: "B1" });
         await Promise.resolve();
         started.forEach((run) => run());
 
@@ -235,7 +235,7 @@ describe("ToastQueue", () => {
         },
       });
 
-      const key = queue.add({title: "First"});
+      const key = queue.add({ title: "First" });
 
       queue.close(key);
       queue.clear();
@@ -248,11 +248,11 @@ describe("ToastQueue", () => {
 describe("useToastQueue", () => {
   it("follows the queue it is given", () => {
     const queue = new ToastQueue();
-    const {stop, value} = read(() => useToastQueue(queue));
+    const { stop, value } = read(() => useToastQueue(queue));
 
     expect(value.visibleToasts.value).toEqual([]);
 
-    queue.add({title: "First"});
+    queue.add({ title: "First" });
     expect(value.visibleToasts.value.map((entry) => entry.content.title)).toEqual(["First"]);
 
     stop();
@@ -262,16 +262,16 @@ describe("useToastQueue", () => {
     const first = new ToastQueue();
     const second = new ToastQueue();
     const queue = shallowRef(first);
-    const {stop, value} = read(() => useToastQueue(queue));
+    const { stop, value } = read(() => useToastQueue(queue));
 
-    first.add({title: "First"});
+    first.add({ title: "First" });
     expect(value.visibleToasts.value).toHaveLength(1);
 
     queue.value = second;
     await nextTick();
     expect(value.visibleToasts.value).toHaveLength(0);
 
-    first.add({title: "Ignored"});
+    first.add({ title: "Ignored" });
     expect(value.visibleToasts.value).toHaveLength(0);
 
     stop();
@@ -279,10 +279,10 @@ describe("useToastQueue", () => {
 
   it("stops following when the scope is disposed", () => {
     const queue = new ToastQueue();
-    const {stop, value} = read(() => useToastQueue(queue));
+    const { stop, value } = read(() => useToastQueue(queue));
 
     stop();
-    queue.add({title: "First"});
+    queue.add({ title: "First" });
 
     expect(value.visibleToasts.value).toHaveLength(0);
   });
@@ -298,7 +298,7 @@ describe("toast", () => {
 
     const [entry] = toastQueue.visibleToasts;
 
-    expect(entry?.content).toMatchObject({title: "Saved", variant: "default"});
+    expect(entry?.content).toMatchObject({ title: "Saved", variant: "default" });
     expect(getQueuedToastCount()).toBe(1);
   });
 
@@ -327,13 +327,13 @@ describe("toast", () => {
     const onPress = vi.fn();
 
     scoped("Saved", {
-      actionProps: {label: "Undo", onPress},
+      actionProps: { label: "Undo", onPress },
       description: "All done",
       indicator: null,
     });
 
     expect(queue.visibleToasts[0]?.content).toMatchObject({
-      actionProps: {label: "Undo", onPress},
+      actionProps: { label: "Undo", onPress },
       description: "All done",
       indicator: null,
     });
@@ -343,7 +343,7 @@ describe("toast", () => {
     const queue = new ToastQueue();
     const scoped = createToastFunction(queue);
     const onClose = vi.fn();
-    const key = scoped("Saved", {onClose});
+    const key = scoped("Saved", { onClose });
 
     scoped.close(key);
 
@@ -385,7 +385,7 @@ describe("toast", () => {
       const [entry] = queue.visibleToasts;
 
       expect(entry?.key).toBe(key);
-      expect(entry?.content).toMatchObject({isLoading: true, title: "Saving"});
+      expect(entry?.content).toMatchObject({ isLoading: true, title: "Saving" });
       expect(entry?.timer).toBeUndefined();
     });
 
@@ -432,7 +432,7 @@ describe("toast", () => {
       const scoped = createToastFunction(queue);
       const start = vi.fn(() => Promise.resolve("ok"));
 
-      scoped.promise(start, {error: "Failed", loading: "Saving", success: "Saved"});
+      scoped.promise(start, { error: "Failed", loading: "Saving", success: "Saved" });
 
       expect(start).toHaveBeenCalledTimes(1);
     });

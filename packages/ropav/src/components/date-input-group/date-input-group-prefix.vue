@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {DateInputGroupPrefixProps} from "./date-input-group.types";
+import type { DateInputGroupPrefixProps } from "./date-input-group.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useDateInputGroupContext} from "./date-input-group.context";
+import { useDateInputGroupContext } from "./date-input-group.context";
 
 const props = defineProps<DateInputGroupPrefixProps>();
 
 const group = useDateInputGroupContext();
 
-const styles = computed(() => group?.slots.value.prefix({class: props.class}) ?? props.class);
+const styles = computed(() => group?.slots.value.prefix({ class: props.class }) ?? props.class);
 </script>
 
 <template>

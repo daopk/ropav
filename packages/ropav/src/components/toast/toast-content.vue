@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {ToastContentProps} from "./toast.types";
+import type { ToastContentProps } from "./toast.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useToastItemContext, useToastRegionContext} from "./toast.context";
+import { useToastItemContext, useToastRegionContext } from "./toast.context";
 
 const props = defineProps<ToastContentProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useToastRegionContext();
+const { slots } = useToastRegionContext();
 
 // The announcement lives here rather than on the toast: the toast is a dialog, and it is the
 // content inside that a screen reader reads out when it appears.
-const {contentAttrs} = useToastItemContext();
+const { contentAttrs } = useToastItemContext();
 </script>
 
 <template>

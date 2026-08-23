@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {DropdownFixtureItem} from "./fixtures.types";
-import type {CollectionKey} from "@/composables/use-collection";
-import type {MenuTriggerType} from "@/composables/use-menu-trigger";
-import type {CollectionSelection, SelectionMode} from "@/composables/use-selection-manager";
+import type { DropdownFixtureItem } from "./fixtures.types";
+import type { CollectionKey } from "@/composables/use-collection";
+import type { MenuTriggerType } from "@/composables/use-menu-trigger";
+import type { CollectionSelection, SelectionMode } from "@/composables/use-selection-manager";
 
-import {ButtonRoot} from "@/components/button";
-import {DescriptionRoot} from "@/components/description";
-import {Dropdown} from "@/components/dropdown";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {HeaderRoot} from "@/components/header";
-import {LabelRoot} from "@/components/label";
-import {SeparatorRoot} from "@/components/separator";
+import { ButtonRoot } from "@/components/button";
+import { DescriptionRoot } from "@/components/description";
+import { Dropdown } from "@/components/dropdown";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { HeaderRoot } from "@/components/header";
+import { LabelRoot } from "@/components/label";
+import { SeparatorRoot } from "@/components/separator";
 
 const props = withDefaults(
   defineProps<{
@@ -37,9 +37,9 @@ const props = withDefaults(
     trigger: undefined,
     withEmptyState: undefined,
     items: (): DropdownFixtureItem[] => [
-      {id: "new-file", label: "New file"},
-      {id: "copy-link", label: "Copy link"},
-      {id: "delete-file", label: "Delete file"},
+      { id: "new-file", label: "New file" },
+      { id: "copy-link", label: "Copy link" },
+      { id: "delete-file", label: "Delete file" },
     ],
   },
 );

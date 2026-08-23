@@ -1,10 +1,10 @@
-import type {UseCalendarOptions, UseCalendarReturn} from "./use-calendar";
-import type {RangeCalendarState} from "./use-range-calendar-state";
-import type {MaybeRefOrGetter} from "vue";
+import type { UseCalendarOptions, UseCalendarReturn } from "./use-calendar";
+import type { RangeCalendarState } from "./use-range-calendar-state";
+import type { MaybeRefOrGetter } from "vue";
 
-import {onScopeDispose, toValue, watch} from "vue";
+import { onScopeDispose, toValue, watch } from "vue";
 
-import {useCalendar} from "./use-calendar";
+import { useCalendar } from "./use-calendar";
 
 /**
  * What to do with a half-built range when the pointer comes up somewhere else, or focus leaves.
@@ -122,7 +122,7 @@ export const useRangeCalendar = (
   let touchmoveElement: HTMLElement | null = null;
 
   const detachTouchmove = () => {
-    touchmoveElement?.removeEventListener("touchmove", onTouchmove, {capture: true});
+    touchmoveElement?.removeEventListener("touchmove", onTouchmove, { capture: true });
     touchmoveElement = null;
   };
 
@@ -133,10 +133,10 @@ export const useRangeCalendar = (
 
       if (!element) return;
 
-      element.addEventListener("touchmove", onTouchmove, {capture: true, passive: false});
+      element.addEventListener("touchmove", onTouchmove, { capture: true, passive: false });
       touchmoveElement = element;
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

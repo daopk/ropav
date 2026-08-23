@@ -6,9 +6,9 @@ import type {
   DropTargetDelegate,
 } from "@/utils/dnd-types";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {TreeDropTargetDelegate} from "@/utils/dnd-tree-drop-target-delegate";
+import { TreeDropTargetDelegate } from "@/utils/dnd-tree-drop-target-delegate";
 
 /**
  * A fixed tree, in document order:
@@ -27,11 +27,11 @@ import {TreeDropTargetDelegate} from "@/utils/dnd-tree-drop-target-delegate";
  * delegate exists.
  */
 const ROWS: DragCollectionNode[] = [
-  {firstChildKey: "a1", hasChildItems: true, key: "a", lastChildKey: "a2", level: 0},
-  {key: "a1", level: 1, parentKey: "a"},
-  {key: "a2", level: 1, parentKey: "a"},
-  {firstChildKey: "b1", hasChildItems: true, key: "b", lastChildKey: "b1", level: 0},
-  {key: "b1", level: 1, parentKey: "b"},
+  { firstChildKey: "a1", hasChildItems: true, key: "a", lastChildKey: "a2", level: 0 },
+  { key: "a1", level: 1, parentKey: "a" },
+  { key: "a2", level: 1, parentKey: "a" },
+  { firstChildKey: "b1", hasChildItems: true, key: "b", lastChildKey: "b1", level: 0 },
+  { key: "b1", level: 1, parentKey: "b" },
 ];
 
 const order = ROWS.map((row) => row.key);
@@ -52,7 +52,7 @@ const collection: DragCollection = {
 
     if (!row) return null;
 
-    return {...row, nextKey: siblingAt(key, 1), prevKey: siblingAt(key, -1), type: "item"};
+    return { ...row, nextKey: siblingAt(key, 1), prevKey: siblingAt(key, -1), type: "item" };
   },
   getKeyAfter: (key) => order[order.indexOf(key) + 1] ?? null,
   getKeyBefore: (key) => order[order.indexOf(key) - 1] ?? null,
@@ -66,7 +66,7 @@ const stubDelegate = (target: DropTarget | null): DropTargetDelegate => ({
 
 const build = (
   target: DropTarget | null,
-  options: {expandedKeys?: DragKey[]; direction?: "ltr" | "rtl"} = {},
+  options: { expandedKeys?: DragKey[]; direction?: "ltr" | "rtl" } = {},
 ) =>
   new TreeDropTargetDelegate(stubDelegate(target), {
     collection: () => collection,
@@ -80,9 +80,9 @@ describe("TreeDropTargetDelegate", () => {
   describe("passing through", () => {
     // Only the meaning of a gap differs in a tree; which row the pointer is over does not.
     it("hands back the root untouched", () => {
-      const delegate = build({type: "root"});
+      const delegate = build({ type: "root" });
 
-      expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({type: "root"});
+      expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({ type: "root" });
     });
 
     it("hands back nothing when the wrapped delegate found nothing", () => {
@@ -93,7 +93,7 @@ describe("TreeDropTargetDelegate", () => {
 
     // A gap with a sibling after it can only mean one thing, so it survives unchanged.
     it("leaves an unambiguous gap alone", () => {
-      const delegate = build({dropPosition: "after", key: "a2", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "a2", type: "item" });
 
       expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
         dropPosition: "after",
@@ -109,7 +109,7 @@ describe("TreeDropTargetDelegate", () => {
      * not below the whole subtree, which is where "after the parent" would put it.
      */
     it("means before the first child, not after the subtree", () => {
-      const delegate = build({dropPosition: "after", key: "a", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "a", type: "item" });
 
       expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
         dropPosition: "before",
@@ -120,7 +120,10 @@ describe("TreeDropTargetDelegate", () => {
 
     // Closed, its children are not in the collection at all, so there is nothing to drop above.
     it("stays after the parent while it is closed", () => {
-      const delegate = build({dropPosition: "after", key: "a", type: "item"}, {expandedKeys: []});
+      const delegate = build(
+        { dropPosition: "after", key: "a", type: "item" },
+        { expandedKeys: [] },
+      );
 
       expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
         dropPosition: "after",
@@ -131,18 +134,18 @@ describe("TreeDropTargetDelegate", () => {
 
     // Nowhere is left to drop, and offering the wrong place is worse than offering none.
     it("refuses when the only candidate is rejected", () => {
-      const delegate = build({dropPosition: "after", key: "a", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "a", type: "item" });
       const rejectFirstChild = (target: DropTarget) =>
         !(target.type === "item" && target.key === "a1");
 
-      expect(delegate.getDropTargetFromPoint(0, 0, rejectFirstChild)).toEqual({type: "root"});
+      expect(delegate.getDropTargetFromPoint(0, 0, rejectFirstChild)).toEqual({ type: "root" });
     });
   });
 
   describe("the ambiguous gap at the end of a subtree", () => {
     // Arriving from above starts at the innermost level, which is where the eye is.
     it("starts innermost", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "b1", type: "item" });
 
       expect(delegate.getDropTargetFromPoint(100, 100, anything)).toEqual({
         dropPosition: "after",
@@ -156,7 +159,7 @@ describe("TreeDropTargetDelegate", () => {
      * Left is outwards in a left-to-right table.
      */
     it("steps outwards as the pointer moves left", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "b1", type: "item" });
 
       delegate.getDropTargetFromPoint(100, 100, anything);
 
@@ -168,7 +171,7 @@ describe("TreeDropTargetDelegate", () => {
     });
 
     it("steps back in as the pointer moves right", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "b1", type: "item" });
 
       delegate.getDropTargetFromPoint(100, 100, anything);
       delegate.getDropTargetFromPoint(50, 100, anything);
@@ -182,7 +185,10 @@ describe("TreeDropTargetDelegate", () => {
 
     // Outwards is towards the start of the line, which flips with the writing direction.
     it("reads left as inwards in a right-to-left table", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"}, {direction: "rtl"});
+      const delegate = build(
+        { dropPosition: "after", key: "b1", type: "item" },
+        { direction: "rtl" },
+      );
 
       delegate.getDropTargetFromPoint(50, 100, anything);
 
@@ -195,7 +201,7 @@ describe("TreeDropTargetDelegate", () => {
 
     // A hand that is not quite still would otherwise flicker between levels every frame.
     it("ignores a nudge smaller than the threshold", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "b1", type: "item" });
 
       delegate.getDropTargetFromPoint(100, 100, anything);
 
@@ -208,7 +214,7 @@ describe("TreeDropTargetDelegate", () => {
 
     // A level nothing will accept is not a level the pointer can reach.
     it("skips a level the drag would be refused at", () => {
-      const delegate = build({dropPosition: "after", key: "b1", type: "item"});
+      const delegate = build({ dropPosition: "after", key: "b1", type: "item" });
       const rejectAfterB = (target: DropTarget) => !(target.type === "item" && target.key === "b");
 
       delegate.getDropTargetFromPoint(100, 100, rejectAfterB);
@@ -227,7 +233,7 @@ describe("TreeDropTargetDelegate", () => {
      * ambiguity is resolved once rather than in two places.
      */
     it("reads a before as an after on the row above", () => {
-      const delegate = build({dropPosition: "before", key: "b", type: "item"});
+      const delegate = build({ dropPosition: "before", key: "b", type: "item" });
 
       expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
         dropPosition: "after",
@@ -238,7 +244,7 @@ describe("TreeDropTargetDelegate", () => {
 
     // With nothing above it there is no "after" to rewrite to.
     it("leaves the very first gap as a before", () => {
-      const delegate = build({dropPosition: "before", key: "a", type: "item"});
+      const delegate = build({ dropPosition: "before", key: "a", type: "item" });
 
       expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
         dropPosition: "before",
@@ -250,7 +256,7 @@ describe("TreeDropTargetDelegate", () => {
 
   // Dropping onto a row names one place and one place only, whatever the tree looks like.
   it("never rewrites a drop onto a row", () => {
-    const delegate = build({dropPosition: "on", key: "b", type: "item"});
+    const delegate = build({ dropPosition: "on", key: "b", type: "item" });
 
     expect(delegate.getDropTargetFromPoint(0, 0, anything)).toEqual({
       dropPosition: "on",

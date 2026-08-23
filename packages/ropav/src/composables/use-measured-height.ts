@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 export interface UseMeasuredHeightReturn {
   /** The element's `scrollHeight`, or `undefined` until there is an element to measure. */
@@ -60,10 +60,10 @@ export const useMeasuredHeight = (
       observer = new ResizeObserver(measure);
       observer.observe(element);
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(detach, true);
 
-  return {height: computed(() => height.value)};
+  return { height: computed(() => height.value) };
 };

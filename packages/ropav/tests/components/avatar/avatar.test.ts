@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {AvatarFallback} from "@/components/avatar";
+import { AvatarFallback } from "@/components/avatar";
 
 import AvatarFixture from "./fixtures.vue";
 
@@ -57,7 +57,7 @@ const imageIn = (container: HTMLElement) => container.querySelector("img");
 describe("Avatar", () => {
   describe("fallback rendering", () => {
     it("renders the fallback while the image is loading", () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
 
       expect(fallbackIn(container)?.textContent).toBe("JD");
       expect(imageIn(container)).toBeNull();
@@ -66,7 +66,7 @@ describe("Avatar", () => {
     });
 
     it("renders the fallback when there is no src at all", () => {
-      const {container, unmount} = renderVapor(AvatarFixture);
+      const { container, unmount } = renderVapor(AvatarFixture);
 
       expect(fallbackIn(container)).not.toBeNull();
       expect(imageIn(container)).toBeNull();
@@ -75,7 +75,7 @@ describe("Avatar", () => {
     });
 
     it("swaps the fallback for the image once it loads", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
 
       FakeImage.last?.onload?.();
       await nextTick();
@@ -87,7 +87,7 @@ describe("Avatar", () => {
     });
 
     it("keeps the fallback when the image fails", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/broken.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/broken.png" } });
 
       FakeImage.last?.onerror?.();
       await nextTick();
@@ -101,7 +101,7 @@ describe("Avatar", () => {
 
   describe("image", () => {
     it("renders src and alt on the loaded image", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
 
       FakeImage.last?.onload?.();
       await nextTick();
@@ -117,8 +117,8 @@ describe("Avatar", () => {
     // The prop is `srcSet` for consistency with `crossOrigin` beside it; the attribute it
     // renders is still the `srcset` the DOM knows.
     it("renders srcSet and sizes on the loaded image", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {
-        props: {sizes: "64px", src: "/jane.png", srcSet: "/jane-2x.png 2x"},
+      const { container, unmount } = renderVapor(AvatarFixture, {
+        props: { sizes: "64px", src: "/jane.png", srcSet: "/jane-2x.png 2x" },
       });
 
       FakeImage.last?.onload?.();
@@ -133,7 +133,7 @@ describe("Avatar", () => {
     });
 
     it("renders the image element class", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
 
       FakeImage.last?.onload?.();
       await nextTick();
@@ -152,8 +152,8 @@ describe("Avatar", () => {
   describe("loading status", () => {
     it("calls loadingStatusChange as the image resolves", async () => {
       const onLoadingStatusChange = vi.fn();
-      const {unmount} = renderVapor(AvatarFixture, {
-        props: {onLoadingStatusChange, src: "/jane.png"},
+      const { unmount } = renderVapor(AvatarFixture, {
+        props: { onLoadingStatusChange, src: "/jane.png" },
       });
 
       FakeImage.last?.onload?.();
@@ -169,7 +169,7 @@ describe("Avatar", () => {
 
     it("calls loadingStatusChange with error when there is no src", () => {
       const onLoadingStatusChange = vi.fn();
-      const {unmount} = renderVapor(AvatarFixture, {props: {onLoadingStatusChange}});
+      const { unmount } = renderVapor(AvatarFixture, { props: { onLoadingStatusChange } });
 
       expect(onLoadingStatusChange).toHaveBeenCalledWith("error");
 
@@ -178,7 +178,7 @@ describe("Avatar", () => {
 
     it("does not call error when there is no src", () => {
       const onError = vi.fn();
-      const {unmount} = renderVapor(AvatarFixture, {props: {onError}});
+      const { unmount } = renderVapor(AvatarFixture, { props: { onError } });
 
       // There is no `<img>` to fail, so nothing failed.
       expect(onError).not.toHaveBeenCalled();
@@ -188,8 +188,8 @@ describe("Avatar", () => {
 
     it("never reports idle", async () => {
       const onLoadingStatusChange = vi.fn();
-      const {unmount} = renderVapor(AvatarFixture, {
-        props: {onLoadingStatusChange, src: "/jane.png"},
+      const { unmount } = renderVapor(AvatarFixture, {
+        props: { onLoadingStatusChange, src: "/jane.png" },
       });
 
       FakeImage.last?.onload?.();
@@ -202,8 +202,8 @@ describe("Avatar", () => {
 
     it("calls load from the rendered image", async () => {
       const onLoad = vi.fn();
-      const {container, unmount} = renderVapor(AvatarFixture, {
-        props: {onLoad, src: "/jane.png"},
+      const { container, unmount } = renderVapor(AvatarFixture, {
+        props: { onLoad, src: "/jane.png" },
       });
 
       FakeImage.last?.onload?.();
@@ -224,7 +224,7 @@ describe("Avatar", () => {
     it("renders a cached image without showing the fallback first", () => {
       FakeImage.cached.add("/jane.png");
 
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {src: "/jane.png"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { src: "/jane.png" } });
 
       expect(imageIn(container)).not.toBeNull();
       expect(fallbackIn(container)).toBeNull();
@@ -247,7 +247,7 @@ describe("Avatar", () => {
     });
 
     it("holds the fallback back until the delay elapses", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {delayMs: 600}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { delayMs: 600 } });
 
       expect(fallbackIn(container)).toBeNull();
 
@@ -260,7 +260,7 @@ describe("Avatar", () => {
     });
 
     it("renders the fallback right away without a delay", () => {
-      const {container, unmount} = renderVapor(AvatarFixture);
+      const { container, unmount } = renderVapor(AvatarFixture);
 
       expect(fallbackIn(container)).not.toBeNull();
 
@@ -268,8 +268,8 @@ describe("Avatar", () => {
     });
 
     it("never shows the fallback when the image loads inside the delay", async () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {
-        props: {delayMs: 600, src: "/jane.png"},
+      const { container, unmount } = renderVapor(AvatarFixture, {
+        props: { delayMs: 600, src: "/jane.png" },
       });
 
       FakeImage.last?.onload?.();
@@ -285,7 +285,7 @@ describe("Avatar", () => {
     });
 
     it("clears a pending delay when the avatar unmounts", () => {
-      const {unmount} = renderVapor(AvatarFixture, {props: {delayMs: 600}});
+      const { unmount } = renderVapor(AvatarFixture, { props: { delayMs: 600 } });
 
       // Asserted first, or a zero after unmount would also pass with no timer ever armed.
       expect(vi.getTimerCount()).toBe(1);
@@ -296,8 +296,8 @@ describe("Avatar", () => {
     });
 
     it("re-arms the delay when it changes", async () => {
-      const props = reactive<Record<string, unknown>>({delayMs: 1000});
-      const {container, unmount} = renderVapor(AvatarFixture, {props});
+      const props = reactive<Record<string, unknown>>({ delayMs: 1000 });
+      const { container, unmount } = renderVapor(AvatarFixture, { props });
 
       props["delayMs"] = 100;
       await nextTick();
@@ -313,7 +313,7 @@ describe("Avatar", () => {
 
   describe("styling", () => {
     it("renders the BEM block class on the root", () => {
-      const {container, unmount} = renderVapor(AvatarFixture);
+      const { container, unmount } = renderVapor(AvatarFixture);
 
       expect(container.firstElementChild?.classList.contains("avatar")).toBe(true);
 
@@ -324,7 +324,7 @@ describe("Avatar", () => {
       ["size", "lg", "avatar--lg"],
       ["variant", "soft", "avatar--soft"],
     ])("applies the %s modifier class", (prop, value, expected) => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {[prop]: value}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { [prop]: value } });
 
       expect(container.firstElementChild?.classList.contains(expected)).toBe(true);
 
@@ -332,7 +332,7 @@ describe("Avatar", () => {
     });
 
     it("applies the root color to the fallback", () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {props: {color: "danger"}});
+      const { container, unmount } = renderVapor(AvatarFixture, { props: { color: "danger" } });
 
       expect(fallbackIn(container)?.classList.contains("avatar__fallback--danger")).toBe(true);
 
@@ -340,8 +340,8 @@ describe("Avatar", () => {
     });
 
     it("lets the fallback override the root color", () => {
-      const {container, unmount} = renderVapor(AvatarFixture, {
-        props: {color: "danger", fallbackColor: "success"},
+      const { container, unmount } = renderVapor(AvatarFixture, {
+        props: { color: "danger", fallbackColor: "success" },
       });
       const fallback = fallbackIn(container);
 

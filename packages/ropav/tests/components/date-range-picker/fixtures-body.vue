@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {DateRangePickerFixtureProps} from "./fixtures.types";
+import type { DateRangePickerFixtureProps } from "./fixtures.types";
 
 import {
   DateRangePickerGroup,
@@ -12,9 +12,9 @@ import {
   DateRangePickerTrigger,
   DateRangePickerTriggerIndicator,
 } from "@/components/date-range-picker";
-import {Description} from "@/components/description";
-import {ErrorMessage} from "@/components/error-message";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { ErrorMessage } from "@/components/error-message";
+import { Label } from "@/components/label";
 import {
   RangeCalendarCell,
   RangeCalendarGrid,
@@ -28,8 +28,8 @@ import {
  * `slot` is bound through an object rather than written as `slot="start"`, because the linter reads
  * a literal `slot` attribute as Vue 2 slot syntax and rewrites it. It is an ordinary prop here.
  */
-const START = {slot: "start"} as const;
-const END = {slot: "end"} as const;
+const START = { slot: "start" } as const;
+const END = { slot: "end" } as const;
 
 /*
  * The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would turn
@@ -51,13 +51,13 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
   <DateRangePickerRoot v-if="props.attributeForm" aria-label="Trip" is-disabled is-required>
     <DateRangePickerGroup>
       <DateRangePickerInput v-bind="START">
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateRangePickerSegment :segment="segment" />
         </template>
       </DateRangePickerInput>
       <DateRangePickerRangeSeparator />
       <DateRangePickerInput v-bind="END">
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateRangePickerSegment :segment="segment" />
         </template>
       </DateRangePickerInput>
@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
   <DateRangePickerRoot v-else-if="props.missingSlot">
     <DateRangePickerGroup>
       <DateRangePickerInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateRangePickerSegment :segment="segment" />
         </template>
       </DateRangePickerInput>
@@ -107,7 +107,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
     <Label v-if="props.label">{{ props.label }}</Label>
     <DateRangePickerGroup full-width>
       <DateRangePickerInput v-bind="START">
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateRangePickerSegment :segment="segment" />
         </template>
       </DateRangePickerInput>
@@ -116,7 +116,7 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
         <span data-slot="custom-separator">to</span>
       </DateRangePickerRangeSeparator>
       <DateRangePickerInput v-bind="END">
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateRangePickerSegment :segment="segment" />
         </template>
       </DateRangePickerInput>
@@ -135,12 +135,12 @@ const props = withDefaults(defineProps<DateRangePickerFixtureProps>(), {
       <RangeCalendarRoot aria-label="Selected range">
         <RangeCalendarGrid>
           <RangeCalendarGridHeader>
-            <template #default="{day}">
+            <template #default="{ day }">
               <RangeCalendarHeaderCell>{{ day }}</RangeCalendarHeaderCell>
             </template>
           </RangeCalendarGridHeader>
           <RangeCalendarGridBody>
-            <template #default="{date}">
+            <template #default="{ date }">
               <RangeCalendarCell :date="date" />
             </template>
           </RangeCalendarGridBody>

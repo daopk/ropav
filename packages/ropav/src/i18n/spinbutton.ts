@@ -1,4 +1,4 @@
-import type {LocalizedString, LocalizedStrings} from "@internationalized/string";
+import type { LocalizedString, LocalizedStrings } from "@internationalized/string";
 
 /** Every message key the spinbutton strings define. */
 export type SpinbuttonStringKey = "Empty";

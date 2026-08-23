@@ -1,5 +1,5 @@
-import type {ValidationDetails} from "@/composables/use-form-validation-state";
-import type {InputOTPTextAlign} from "@/composables/use-input-otp";
+import type { ValidationDetails } from "@/composables/use-form-validation-state";
+import type { InputOTPTextAlign } from "@/composables/use-input-otp";
 
 export interface InputOTPFixtureProps {
   class?: string;

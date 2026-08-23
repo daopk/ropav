@@ -1,8 +1,8 @@
-import type {FormValidationState} from "@/composables/use-form-validation-state";
+import type { FormValidationState } from "@/composables/use-form-validation-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Harness from "../fixtures/form-validation-input-harness.vue";
 
@@ -19,11 +19,11 @@ const renderField = (props: Record<string, unknown> = {}) => {
     onReady: (ready: FormValidationState) => (state = ready),
   });
 
-  const rendered = renderVapor(Harness, {props});
+  const rendered = renderVapor(Harness, { props });
   const at = (testId: string) =>
     rendered.container.querySelector<HTMLElement>(`[data-testid='${testId}']`)!;
 
-  return {...rendered, at, input, state};
+  return { ...rendered, at, input, state };
 };
 
 /** Submit without letting jsdom reach its unimplemented navigation path. */
@@ -37,7 +37,7 @@ const submit = (form: HTMLFormElement, onSubmit = (event: Event) => event.preven
 describe("useFormValidation", () => {
   describe("custom validity", () => {
     it("mirrors the field's own errors onto the input", async () => {
-      const {input, unmount} = renderField({validate: () => "not acceptable"});
+      const { input, unmount } = renderField({ validate: () => "not acceptable" });
 
       await nextTick();
 
@@ -49,7 +49,7 @@ describe("useFormValidation", () => {
     });
 
     it("clears the custom error once the field is acceptable", async () => {
-      const {input, unmount} = renderField({validate: () => true});
+      const { input, unmount } = renderField({ validate: () => true });
 
       await nextTick();
 
@@ -60,7 +60,7 @@ describe("useFormValidation", () => {
     });
 
     it("falls back to a generic message when the field is invalid by prop alone", async () => {
-      const {input, unmount} = renderField({isInvalid: true});
+      const { input, unmount } = renderField({ isInvalid: true });
 
       await nextTick();
 
@@ -70,7 +70,7 @@ describe("useFormValidation", () => {
     });
 
     it("gives the element an empty title, so Firefox does not repeat the message", async () => {
-      const {input, unmount} = renderField({validate: () => "nope"});
+      const { input, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
 
@@ -80,7 +80,7 @@ describe("useFormValidation", () => {
     });
 
     it("leaves a title the caller already set alone", async () => {
-      const {input, unmount} = renderField({title: "mine", validate: () => "nope"});
+      const { input, unmount } = renderField({ title: "mine", validate: () => "nope" });
 
       await nextTick();
 
@@ -90,7 +90,7 @@ describe("useFormValidation", () => {
     });
 
     it("does not touch the input under aria behaviour", async () => {
-      const {input, unmount} = renderField({
+      const { input, unmount } = renderField({
         validate: () => "nope",
         validationBehavior: "aria",
       });
@@ -103,7 +103,7 @@ describe("useFormValidation", () => {
     });
 
     it("skips a disabled input, which the browser excludes from validation anyway", async () => {
-      const {input, unmount} = renderField({isDisabled: true, validate: () => "nope"});
+      const { input, unmount } = renderField({ isDisabled: true, validate: () => "nope" });
 
       await nextTick();
 
@@ -114,7 +114,7 @@ describe("useFormValidation", () => {
     });
 
     it("reads the browser's verdict back while the field itself is happy", async () => {
-      const {state, unmount} = renderField({isRequired: true});
+      const { state, unmount } = renderField({ isRequired: true });
 
       await nextTick();
       state.commitValidation();
@@ -128,7 +128,7 @@ describe("useFormValidation", () => {
 
   describe("invalid event", () => {
     it("reveals the error when the form refuses to submit", async () => {
-      const {at, state, unmount} = renderField({validate: () => "nope"});
+      const { at, state, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       expect(state.displayValidation.value.isInvalid).toBe(false);
@@ -149,7 +149,7 @@ describe("useFormValidation", () => {
 
     it("blocks the submit rather than letting the form go through", async () => {
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
-      const {at, unmount} = renderField({validate: () => "nope"});
+      const { at, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       const release = submit(at("form") as HTMLFormElement, onSubmit);
@@ -161,11 +161,11 @@ describe("useFormValidation", () => {
     });
 
     it("suppresses the browser's own error bubble", async () => {
-      const {input, unmount} = renderField({validate: () => "nope"});
+      const { input, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
 
-      const event = new Event("invalid", {cancelable: true});
+      const event = new Event("invalid", { cancelable: true });
 
       input.dispatchEvent(event);
 
@@ -175,7 +175,7 @@ describe("useFormValidation", () => {
     });
 
     it("focuses the field when it is the first invalid one", async () => {
-      const {at, input, unmount} = renderField({validate: () => "nope"});
+      const { at, input, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       const release = submit(at("form") as HTMLFormElement);
@@ -187,7 +187,7 @@ describe("useFormValidation", () => {
     });
 
     it("leaves focus alone when an earlier field is the invalid one", async () => {
-      const {at, input, unmount} = renderField({
+      const { at, input, unmount } = renderField({
         validate: () => "nope",
         withLeadingInput: true,
       });
@@ -205,7 +205,7 @@ describe("useFormValidation", () => {
 
     it("prefers a caller-supplied focus handler over focusing the input", async () => {
       const onFocusField = vi.fn();
-      const {at, input, unmount} = renderField({onFocusField, validate: () => "nope"});
+      const { at, input, unmount } = renderField({ onFocusField, validate: () => "nope" });
 
       await nextTick();
       const release = submit(at("form") as HTMLFormElement);
@@ -218,17 +218,17 @@ describe("useFormValidation", () => {
     });
 
     it("keeps a server error the user has not fixed on screen", async () => {
-      const {input, state, unmount} = renderField({
+      const { input, state, unmount } = renderField({
         isRequired: true,
         name: "terms",
-        validationErrors: {terms: "rejected upstream"},
+        validationErrors: { terms: "rejected upstream" },
         withForm: true,
       });
 
       await nextTick();
       expect(state.displayValidation.value.validationErrors).toEqual(["rejected upstream"]);
 
-      input.dispatchEvent(new Event("invalid", {cancelable: true}));
+      input.dispatchEvent(new Event("invalid", { cancelable: true }));
       await nextTick();
 
       expect(state.displayValidation.value.validationErrors).toEqual(["rejected upstream"]);
@@ -239,7 +239,7 @@ describe("useFormValidation", () => {
 
   describe("commit triggers", () => {
     it("commits on change", async () => {
-      const {input, state, unmount} = renderField({
+      const { input, state, unmount } = renderField({
         validate: (isSelected: boolean) => (isSelected ? "cannot be on" : true),
       });
 
@@ -254,7 +254,7 @@ describe("useFormValidation", () => {
     });
 
     it("leaves an untouched field alone on blur", async () => {
-      const {input, state, unmount} = renderField({validate: () => "nope"});
+      const { input, state, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       input.dispatchEvent(new FocusEvent("blur"));
@@ -266,7 +266,7 @@ describe("useFormValidation", () => {
     });
 
     it("commits on blur when the field asks for it", async () => {
-      const {input, state, unmount} = renderField({commitOnBlur: true, validate: () => "nope"});
+      const { input, state, unmount } = renderField({ commitOnBlur: true, validate: () => "nope" });
 
       await nextTick();
       input.dispatchEvent(new FocusEvent("blur"));
@@ -280,7 +280,7 @@ describe("useFormValidation", () => {
 
   describe("form reset", () => {
     it("clears the displayed error", async () => {
-      const {at, state, unmount} = renderField({validate: () => "nope"});
+      const { at, state, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       const release = submit(at("form") as HTMLFormElement);
@@ -298,7 +298,7 @@ describe("useFormValidation", () => {
     });
 
     it("leaves the error alone when the reset was cancelled", async () => {
-      const {at, state, unmount} = renderField({preventReset: true, validate: () => "nope"});
+      const { at, state, unmount } = renderField({ preventReset: true, validate: () => "nope" });
       const form = at("form") as HTMLFormElement;
 
       await nextTick();
@@ -318,12 +318,12 @@ describe("useFormValidation", () => {
 
   describe("teardown", () => {
     it("stops listening once the field is gone", async () => {
-      const {input, state, unmount} = renderField({validate: () => "nope"});
+      const { input, state, unmount } = renderField({ validate: () => "nope" });
 
       await nextTick();
       unmount();
 
-      input.dispatchEvent(new Event("invalid", {cancelable: true}));
+      input.dispatchEvent(new Event("invalid", { cancelable: true }));
       await nextTick();
 
       expect(state.displayValidation.value.isInvalid).toBe(false);

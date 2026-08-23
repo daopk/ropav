@@ -1,13 +1,13 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { DragAndDropHooks } from "../../composables/use-drag-and-drop";
 import type {
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type {TableColumnSize} from "../../composables/use-table-column-layout";
-import type {DropTarget} from "../../utils/dnd-types";
-import type {CheckboxVariants, TableVariants} from "@ropav/styles";
+import type { TableColumnSize } from "../../composables/use-table-column-layout";
+import type { DropTarget } from "../../utils/dnd-types";
+import type { CheckboxVariants, TableVariants } from "@ropav/styles";
 
 export interface TableRootProps {
   class?: string;

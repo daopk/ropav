@@ -16,7 +16,7 @@ export const Checkbox = Object.assign(CheckboxRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {CheckboxRoot, CheckboxContent, CheckboxControl, CheckboxIndicator};
+export { CheckboxRoot, CheckboxContent, CheckboxControl, CheckboxIndicator };
 
 export type {
   CheckboxRootProps,
@@ -28,13 +28,13 @@ export type {
   CheckboxContentSlotProps,
 } from "./checkbox.types";
 
-export {useCheckboxContext, provideCheckboxContext} from "./checkbox.context";
+export { useCheckboxContext, provideCheckboxContext } from "./checkbox.context";
 
-export type {CheckboxContext} from "./checkbox.context";
+export type { CheckboxContext } from "./checkbox.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {checkboxVariants} from "@ropav/styles";
+export { checkboxVariants } from "@ropav/styles";
 
-export type {CheckboxVariants} from "@ropav/styles";
+export type { CheckboxVariants } from "@ropav/styles";

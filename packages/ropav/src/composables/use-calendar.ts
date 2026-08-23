@@ -1,19 +1,19 @@
-import type {CalendarSelectionMode, CalendarState} from "./use-calendar-state";
-import type {CalendarDate, DateFormatter, DateValue} from "@internationalized/date";
-import type {LocalizedStringFormatter} from "@internationalized/string";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CalendarSelectionMode, CalendarState } from "./use-calendar-state";
+import type { CalendarDate, DateFormatter, DateValue } from "@internationalized/date";
+import type { LocalizedStringFormatter } from "@internationalized/string";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {endOfMonth, isSameDay, startOfMonth} from "@internationalized/date";
-import {computed, shallowRef, toValue, watch, watchEffect} from "vue";
+import { endOfMonth, isSameDay, startOfMonth } from "@internationalized/date";
+import { computed, shallowRef, toValue, watch, watchEffect } from "vue";
 
-import {calendarStrings} from "../i18n/calendar";
-import {announce} from "../utils/live-announcer";
+import { calendarStrings } from "../i18n/calendar";
+import { announce } from "../utils/live-announcer";
 
-import {useDateFormatter} from "./use-date-formatter";
-import {useId} from "./use-id";
-import {useLabels} from "./use-labels";
-import {useLocale} from "./use-locale";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDateFormatter } from "./use-date-formatter";
+import { useId } from "./use-id";
+import { useLabels } from "./use-labels";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /**
  * The extra state a range calendar carries.
@@ -70,7 +70,7 @@ export type AnyCalendarState = Omit<CalendarState, "selectionMode" | "setValue" 
 
 /** A range calendar's state: the shared surface, plus the extras, with `value` narrowed to a range. */
 export type RangeCalendarLikeState = Omit<AnyCalendarState, "value"> &
-  RangeCalendarStateExtras & {value: ComputedRef<DateRange | null>};
+  RangeCalendarStateExtras & { value: ComputedRef<DateRange | null> };
 
 /** Whether a range calendar's own state is in play, which is how react-aria branches. */
 export const isRangeCalendarState = (state: AnyCalendarState): state is RangeCalendarLikeState =>
@@ -117,7 +117,7 @@ const formatRangeForAria = (
     else if (index > separatorIndex) endValue += parts[index]!.value;
   }
 
-  return stringFormatter.format("dateRange", {endDate: endValue, startDate: startValue});
+  return stringFormatter.format("dateRange", { endDate: endValue, startDate: startValue });
 };
 
 /**
@@ -129,16 +129,16 @@ export const useSelectedDateDescription = (state: AnyCalendarState): ComputedRef
   const stringFormatter = useLocalizedStringFormatter(calendarStrings);
   const locale = useLocale();
 
-  const ends = computed<{start?: CalendarDate; end?: CalendarDate}>(() => {
+  const ends = computed<{ start?: CalendarDate; end?: CalendarDate }>(() => {
     if (isRangeCalendarState(state)) return state.highlightedRange.value ?? {};
 
     const value = state.value.value;
 
-    if (Array.isArray(value)) return {end: value.at(-1), start: value[0]};
+    if (Array.isArray(value)) return { end: value.at(-1), start: value[0] };
 
     const date = value && "start" in value ? null : value;
 
-    return {end: date ?? undefined, start: date ?? undefined};
+    return { end: date ?? undefined, start: date ?? undefined };
   });
 
   const dateFormatter = useDateFormatter(() => ({
@@ -151,7 +151,7 @@ export const useSelectedDateDescription = (state: AnyCalendarState): ComputedRef
   }));
 
   return computed(() => {
-    const {end, start} = ends.value;
+    const { end, start } = ends.value;
     const anchorDate = state.anchorDate?.value ?? null;
 
     // Nothing to say while a range is still being pinned down, or when nothing is highlighted.
@@ -282,7 +282,7 @@ const useSlotId = (deps: MaybeRefOrGetter<unknown>): ComputedRef<string | undefi
       void toValue(deps);
       isUsed.value = Boolean(document.getElementById(id.value));
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   return computed(() => (isUsed.value ? id.value : undefined));
@@ -329,7 +329,7 @@ export interface UseCalendarReturn {
   attrs: ComputedRef<Record<string, unknown>>;
   prevButton: CalendarPageButton;
   nextButton: CalendarPageButton;
-  errorMessageProps: ComputedRef<{id: string | undefined}>;
+  errorMessageProps: ComputedRef<{ id: string | undefined }>;
   /** A description of the visible range, for the calendar's heading. */
   title: ComputedRef<string>;
   shared: CalendarShared;
@@ -424,9 +424,9 @@ export const useCalendar = (
       "aria-details": toValue(options.ariaDetails) || undefined,
       role: "application",
     })),
-    errorMessageProps: computed(() => ({id: errorMessageId.value})),
+    errorMessageProps: computed(() => ({ id: errorMessageId.value })),
     nextButton: {
-      attrs: computed(() => ({"aria-label": stringFormatter.value.format("next")})),
+      attrs: computed(() => ({ "aria-label": stringFormatter.value.format("next") })),
       isDisabled: isNextDisabled,
       onFocusChange: (isFocused) => {
         isNextFocused.value = isFocused;
@@ -434,7 +434,7 @@ export const useCalendar = (
       onPress: () => state.focusNextPage(),
     },
     prevButton: {
-      attrs: computed(() => ({"aria-label": stringFormatter.value.format("previous")})),
+      attrs: computed(() => ({ "aria-label": stringFormatter.value.format("previous") })),
       isDisabled: isPreviousDisabled,
       onFocusChange: (isFocused) => {
         isPreviousFocused.value = isFocused;

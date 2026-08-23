@@ -1,9 +1,9 @@
-import type {UseFieldIdsOptions, UseFieldIdsReturn} from "@/composables/use-field-ids";
+import type { UseFieldIdsOptions, UseFieldIdsReturn } from "@/composables/use-field-ids";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useFieldIds} from "@/composables/use-field-ids";
+import { useFieldIds } from "@/composables/use-field-ids";
 
 const scopes: (() => void)[] = [];
 
@@ -20,12 +20,12 @@ const createFieldIds = (options: UseFieldIdsOptions = {}): UseFieldIdsReturn => 
  * A consuming part gets its own scope, because that is what releases the claim — a
  * `Label` inside a `v-if` must stop being referenced when it goes away.
  */
-const createPart = <T>(claim: () => T): {result: T; unmount: () => void} => {
+const createPart = <T>(claim: () => T): { result: T; unmount: () => void } => {
   const scope = effectScope();
 
   scopes.push(() => scope.stop());
 
-  return {result: scope.run(claim) as T, unmount: () => scope.stop()};
+  return { result: scope.run(claim) as T, unmount: () => scope.stop() };
 };
 
 afterEach(() => {
@@ -48,7 +48,7 @@ describe("useFieldIds", () => {
   describe("claiming", () => {
     it("exposes the id a part claimed", () => {
       const field = createFieldIds();
-      const {result: labelId} = createPart(() => field.context.claimLabelId());
+      const { result: labelId } = createPart(() => field.context.claimLabelId());
 
       expect(labelId).toMatch(/-label$/);
       expect(field.labelId.value).toBe(labelId);
@@ -58,7 +58,7 @@ describe("useFieldIds", () => {
 
     it("gives every slot a distinct id", () => {
       const field = createFieldIds();
-      const {result: ids} = createPart(() => ({
+      const { result: ids } = createPart(() => ({
         description: field.context.claimDescriptionId(),
         errorMessage: field.context.claimErrorMessageId(),
         heading: field.context.claimHeadingId(),
@@ -82,15 +82,15 @@ describe("useFieldIds", () => {
       const field = createFieldIds();
       // Claimed error-message-first to prove the order comes from the container, not from
       // the order the parts happened to mount in.
-      const {result: errorMessageId} = createPart(() => field.context.claimErrorMessageId());
-      const {result: descriptionId} = createPart(() => field.context.claimDescriptionId());
+      const { result: errorMessageId } = createPart(() => field.context.claimErrorMessageId());
+      const { result: descriptionId } = createPart(() => field.context.claimDescriptionId());
 
       expect(field.describedBy.value).toBe(`${descriptionId} ${errorMessageId}`);
     });
 
     it("falls back to the single id present", () => {
       const field = createFieldIds();
-      const {result: descriptionId} = createPart(() => field.context.claimDescriptionId());
+      const { result: descriptionId } = createPart(() => field.context.claimDescriptionId());
 
       expect(field.describedBy.value).toBe(descriptionId);
     });
@@ -131,14 +131,14 @@ describe("useFieldIds", () => {
     });
 
     it("hands out the control id the container supplied", () => {
-      const field = createFieldIds({labelFor: "email-input"});
+      const field = createFieldIds({ labelFor: "email-input" });
 
       expect(field.context.labelFor.value).toBe("email-input");
     });
 
     it("follows a control id that changes", () => {
       const controlId = shallowRef<string | undefined>("first");
-      const field = createFieldIds({labelFor: controlId});
+      const field = createFieldIds({ labelFor: controlId });
 
       expect(field.context.labelFor.value).toBe("first");
 
@@ -150,7 +150,7 @@ describe("useFieldIds", () => {
     it("reads a getter rather than a snapshot", () => {
       // The id a field mints is usually derived, so the option has to accept a getter.
       let current = "before";
-      const field = createFieldIds({labelFor: () => current});
+      const field = createFieldIds({ labelFor: () => current });
 
       current = "after";
 
@@ -160,7 +160,7 @@ describe("useFieldIds", () => {
     it("is independent of whether a label claimed an id", () => {
       // The two directions are separate: `for` points at the control, the claimed id is what
       // the control points `aria-labelledby` back at.
-      const field = createFieldIds({labelFor: "email-input"});
+      const field = createFieldIds({ labelFor: "email-input" });
 
       expect(field.labelId.value).toBeUndefined();
       expect(field.context.labelFor.value).toBe("email-input");

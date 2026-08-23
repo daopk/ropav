@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {DisclosureRootProps} from "@/components/disclosure";
+import type { DisclosureRootProps } from "@/components/disclosure";
 
-import {Button} from "@/components/button";
-import {Disclosure} from "@/components/disclosure";
+import { Button } from "@/components/button";
+import { Disclosure } from "@/components/disclosure";
 
 /**
  * `bareTrigger` swaps `Disclosure.Trigger` for an ordinary `Button`, which is the form the
  * disclosure hands its press down to.
  */
 const props = withDefaults(
-  defineProps<DisclosureRootProps & {bareTrigger?: boolean; customIndicator?: boolean}>(),
-  {defaultExpanded: undefined, isDisabled: undefined, isExpanded: undefined},
+  defineProps<DisclosureRootProps & { bareTrigger?: boolean; customIndicator?: boolean }>(),
+  { defaultExpanded: undefined, isDisabled: undefined, isExpanded: undefined },
 );
 
-defineEmits<{expandedChange: [isExpanded: boolean]}>();
+defineEmits<{ expandedChange: [isExpanded: boolean] }>();
 </script>
 
 <template>

@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {TooltipRootProps} from "./tooltip.types";
+import type { TooltipRootProps } from "./tooltip.types";
 
-import {tooltipVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { tooltipVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideFocusResponder} from "../../composables/focus-responder";
-import {useCssVariable} from "../../composables/use-css-variable";
-import {useTooltipTrigger} from "../../composables/use-tooltip-trigger";
-import {useTooltipTriggerState} from "../../composables/use-tooltip-trigger-state";
-import {parseCssTime} from "../../utils/css";
+import { provideFocusResponder } from "../../composables/focus-responder";
+import { useCssVariable } from "../../composables/use-css-variable";
+import { useTooltipTrigger } from "../../composables/use-tooltip-trigger";
+import { useTooltipTriggerState } from "../../composables/use-tooltip-trigger-state";
+import { parseCssTime } from "../../utils/css";
 
-import {provideTooltipContext} from "./tooltip.context";
+import { provideTooltipContext } from "./tooltip.context";
 
 // The three-state booleans declare an explicit `undefined` default: a `false` Vue had cast would
 // turn the tooltip controlled, or read as a deliberate opt-out of closing on press.
@@ -25,7 +25,7 @@ const emit = defineEmits<{
   "update:isOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 /**
  * The timings come from the stylesheet, not from a number written here.

@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconEllipsis from "~icons/gravity-ui/ellipsis";
 import IconEnvelope from "~icons/gravity-ui/envelope";
 import IconGlobe from "~icons/gravity-ui/globe";
@@ -13,23 +13,23 @@ import IconPaperclip from "~icons/gravity-ui/paperclip";
 import IconPlus from "~icons/gravity-ui/plus";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 
-import {Spinner} from "../spinner";
+import { Spinner } from "../spinner";
 
-import {Button, buttonVariants} from "./index";
+import { Button, buttonVariants } from "./index";
 
-const components = {Button, Spinner};
+const components = { Button, Spinner };
 
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary", "tertiary", "outline", "ghost", "danger", "danger-soft"],
     },
   },
@@ -44,7 +44,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {size: "md"};
+const defaultArgs = { size: "md" };
 
 export const Default: Story = {
   args: defaultArgs,
@@ -53,13 +53,13 @@ export const Default: Story = {
     setup: () => ({
       args,
       variants: [
-        {label: "Primary", variant: "primary"},
-        {label: "Secondary", variant: "secondary"},
-        {label: "Tertiary", variant: "tertiary"},
-        {label: "Outline", variant: "outline"},
-        {label: "Ghost", variant: "ghost"},
-        {label: "Danger", variant: "danger"},
-        {label: "Danger Soft", variant: "danger-soft"},
+        { label: "Primary", variant: "primary" },
+        { label: "Secondary", variant: "secondary" },
+        { label: "Tertiary", variant: "tertiary" },
+        { label: "Outline", variant: "outline" },
+        { label: "Ghost", variant: "ghost" },
+        { label: "Danger", variant: "danger" },
+        { label: "Danger Soft", variant: "danger-soft" },
       ],
     }),
     template: `
@@ -80,8 +80,8 @@ export const Default: Story = {
 
 export const Sizes: Story = {
   render: () => ({
-    components: {...components, IconEllipsis, IconPlus},
-    setup: () => ({sizes: ["sm", "md", "lg"]}),
+    components: { ...components, IconEllipsis, IconPlus },
+    setup: () => ({ sizes: ["sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-6">
         <div class="flex items-center gap-3">
@@ -118,7 +118,7 @@ export const States: Story = {
 
 export const FullWidth: Story = {
   render: () => ({
-    components: {...components, IconPlus},
+    components: { ...components, IconPlus },
     template: `
       <div class="w-[400px] space-y-3">
         <Button full-width>Primary</Button>
@@ -138,8 +138,8 @@ export const FullWidth: Story = {
 export const WithIcon: Story = {
   args: defaultArgs,
   render: (args) => ({
-    components: {...components, IconEnvelope, IconGlobe, IconPlus, IconTrashBin},
-    setup: () => ({args}),
+    components: { ...components, IconEnvelope, IconGlobe, IconPlus, IconTrashBin },
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <Button :is-disabled="args.isDisabled" :size="args.size">
@@ -170,8 +170,8 @@ export const WithIcon: Story = {
 export const WithIconOnly: Story = {
   args: defaultArgs,
   render: (args) => ({
-    components: {...components, IconEllipsis},
-    setup: () => ({args}),
+    components: { ...components, IconEllipsis },
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <Button
@@ -191,7 +191,7 @@ export const WithSpinner: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex gap-3">
         <Button is-pending :size="args.size" :variant="args.variant">
@@ -206,7 +206,7 @@ export const WithSpinner: Story = {
 export const WithLoadingState: Story = {
   args: defaultArgs,
   render: (args) => ({
-    components: {...components, IconPaperclip},
+    components: { ...components, IconPaperclip },
     setup: () => {
       const isLoading = shallowRef(false);
 
@@ -218,7 +218,7 @@ export const WithLoadingState: Story = {
         }, 4500);
       };
 
-      return {args, isLoading, onClick};
+      return { args, isLoading, onClick };
     },
     template: `
       <Button
@@ -247,7 +247,7 @@ export const WithSocialButton: Story = {
       IconLogoTelegram,
       IconLogoYandex,
     },
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex w-full max-w-xs flex-col gap-3">
         <Button :size="args.size" :variant="args.variant ?? 'tertiary'">
@@ -274,7 +274,7 @@ export const WithSocialButton: Story = {
 export const WithLinkButton: Story = {
   args: defaultArgs,
   render: (args) => ({
-    setup: () => ({args, buttonVariants}),
+    setup: () => ({ args, buttonVariants }),
     // Anchors take the variant classes directly, which is how a link gets the button look
     // without the component pretending to be one.
     template: `

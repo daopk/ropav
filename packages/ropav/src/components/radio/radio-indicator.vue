@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {RadioIndicatorProps, RadioSlotProps} from "./radio.types";
+import type { RadioIndicatorProps, RadioSlotProps } from "./radio.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useRadioContext} from "./radio.context";
+import { useRadioContext } from "./radio.context";
 
 const props = defineProps<RadioIndicatorProps>();
 
 // The mark a caller draws usually depends on the state, so the slot is handed the field
 // state, standing in for React's render-prop children.
-defineSlots<{default?: (props: RadioSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RadioSlotProps) => unknown }>();
 
-const {isDisabled, isInvalid, isReadOnly, isRequired, isSelected, slots} = useRadioContext();
+const { isDisabled, isInvalid, isReadOnly, isRequired, isSelected, slots } = useRadioContext();
 </script>
 
 <template>

@@ -1,27 +1,27 @@
-import type {FieldIdsContext} from "./use-field-ids";
+import type { FieldIdsContext } from "./use-field-ids";
 import type {
   NumberFieldCommitBehavior,
   NumberFieldState,
   UseNumberFieldStateOptions,
 } from "./use-number-field-state";
-import type {SpinStepperHandlers} from "./use-spin-button";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { SpinStepperHandlers } from "./use-spin-button";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {NumberFormatter} from "@internationalized/number";
-import {computed, nextTick, shallowRef, toValue, watch} from "vue";
+import { NumberFormatter } from "@internationalized/number";
+import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import {setFormValue} from "../utils/form-value";
-import {announce} from "../utils/live-announcer";
-import {isAndroid, isIOS, isIPhone} from "../utils/platform";
+import { setFormValue } from "../utils/form-value";
+import { announce } from "../utils/live-announcer";
+import { isAndroid, isIOS, isIPhone } from "../utils/platform";
 
-import {useFieldIds} from "./use-field-ids";
-import {useFormReset} from "./use-form-reset";
-import {useFormattedTextField} from "./use-formatted-text-field";
-import {useId} from "./use-id";
-import {useLocale} from "./use-locale";
-import {useNumberFieldState} from "./use-number-field-state";
-import {useScrollWheel} from "./use-scroll-wheel";
-import {useSpinButton} from "./use-spin-button";
+import { useFieldIds } from "./use-field-ids";
+import { useFormReset } from "./use-form-reset";
+import { useFormattedTextField } from "./use-formatted-text-field";
+import { useId } from "./use-id";
+import { useLocale } from "./use-locale";
+import { useNumberFieldState } from "./use-number-field-state";
+import { useScrollWheel } from "./use-scroll-wheel";
+import { useSpinButton } from "./use-spin-button";
 
 /** What a stepper button gets from the field, kept apart from its listeners. */
 export interface NumberFieldStepper {
@@ -185,7 +185,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
   // The element is in the dependencies and the watcher is `immediate` for the reset half rather
   // than the typing half: without them the default is only written once the value first moves, so
   // a field nobody has touched yet has no reset source and a real reset blanks it.
-  watch([element, state.inputValue], reassert, {flush: "post", immediate: true});
+  watch([element, state.inputValue], reassert, { flush: "post", immediate: true });
 
   /**
    * Normalise the text and say what it became.
@@ -233,7 +233,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
       isDisabled.value ||
       isReadOnly.value ||
       !isFocusWithin.value,
-    onScroll: ({deltaX, deltaY}) => {
+    onScroll: ({ deltaX, deltaY }) => {
       if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
 
       if (deltaY > 0) state.increment();
@@ -330,7 +330,7 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
         input.setCustomValidity(rangeProbe.validationMessage);
       }
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   /**
@@ -582,4 +582,4 @@ export const useNumberField = (options: UseNumberFieldOptions = {}): UseNumberFi
   };
 };
 
-export type {NumberFieldCommitBehavior, NumberFieldState};
+export type { NumberFieldCommitBehavior, NumberFieldState };

@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DropHarnessOptions, DropHarnessReady} from "./dnd-harness.types";
+import type { DropHarnessOptions, DropHarnessReady } from "./dnd-harness.types";
 
-import {onMounted, shallowRef, useTemplateRef} from "vue";
+import { onMounted, shallowRef, useTemplateRef } from "vue";
 
-import {useDrop} from "@/composables/use-drop";
+import { useDrop } from "@/composables/use-drop";
 
 /**
  * Mounts `useDrop` so it has a component to inject a locale from.
@@ -19,11 +19,11 @@ const props = defineProps<{
 
 const element = useTemplateRef<HTMLElement>("element");
 const target = shallowRef<HTMLElement | null>(null);
-const drop = useDrop({...props.options, ref: target});
+const drop = useDrop({ ...props.options, ref: target });
 
 onMounted(() => {
   target.value = element.value;
-  props.onReady({...drop, element: element.value!});
+  props.onReady({ ...drop, element: element.value! });
 });
 </script>
 

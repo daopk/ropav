@@ -1,9 +1,9 @@
-import type {CollectionKey, UseCollectionReturn} from "../../composables/use-collection";
-import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
-import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { CollectionKey, UseCollectionReturn } from "../../composables/use-collection";
+import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
+import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface MenuContext {
   /** The element carrying `role="menu"`. A submenu guards the pointer's path across it. */

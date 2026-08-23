@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {FixtureItem} from "./fixtures.types";
+import type { FixtureItem } from "./fixtures.types";
 
-import {DescriptionRoot} from "@/components/description";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
-import {VirtualizerRoot} from "@/components/virtualizer";
-import {ListLayout} from "@/utils/virtualizer-list-layout";
+import { DescriptionRoot } from "@/components/description";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { VirtualizerRoot } from "@/components/virtualizer";
+import { ListLayout } from "@/utils/virtualizer-list-layout";
 
 const props = withDefaults(
   defineProps<{
@@ -28,7 +28,7 @@ const props = withDefaults(
   <VirtualizerRoot
     v-if="!props.withoutVirtualizer"
     :layout="ListLayout"
-    :layout-options="{rowHeight: props.rowHeight}"
+    :layout-options="{ rowHeight: props.rowHeight }"
   >
     <ListBoxRoot
       aria-label="Users"
@@ -37,7 +37,7 @@ const props = withDefaults(
       :items="props.items"
       :selection-mode="props.selectionMode"
     >
-      <template #default="{item}">
+      <template #default="{ item }">
         <ListBoxItemRoot :id="item!.id">
           <div class="flex flex-col">
             <LabelRoot>{{ item!.name }}</LabelRoot>

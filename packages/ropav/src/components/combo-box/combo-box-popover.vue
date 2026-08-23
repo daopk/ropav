@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxPopoverProps} from "./combo-box.types";
+import type { ComboBoxPopoverProps } from "./combo-box.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts} from "../overlay";
-import {provideSurfaceContext} from "../surface";
+import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
+import { provideSurfaceContext } from "../surface";
 
-import {useComboBoxContext} from "./combo-box.context";
+import { useComboBoxContext } from "./combo-box.context";
 
 // `isKeyboardDismissDisabled` and `shouldFlip` declare an explicit `undefined` default so an absent
 // prop stays absent rather than reading as an explicit `false`.
@@ -16,9 +16,9 @@ const props = withDefaults(defineProps<ComboBoxPopoverProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useComboBoxContext();
+const { slots } = useComboBoxContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -31,9 +31,9 @@ const contexts = createOverlaySlotContexts();
 provideOverlaySlotContexts(contexts);
 
 // Matches the React build, which wraps the popover in a default surface.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
-const styles = computed(() => slots.value.popover({class: props.class}));
+const styles = computed(() => slots.value.popover({ class: props.class }));
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DefaultDatePropsHostProps} from "./default-date-props.types";
+import type { DefaultDatePropsHostProps } from "./default-date-props.types";
 
-import {useDefaultDateProps} from "@/composables/use-default-date-props";
+import { useDefaultDateProps } from "@/composables/use-default-date-props";
 
 const props = defineProps<DefaultDatePropsHostProps>();
 

@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {DisclosureIndicatorProps} from "./disclosure.types";
+import type { DisclosureIndicatorProps } from "./disclosure.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronDown} from "../icons";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronDown } from "../icons";
 
-import {useDisclosureContext} from "./disclosure.context";
+import { useDisclosureContext } from "./disclosure.context";
 
 const props = defineProps<DisclosureIndicatorProps>();
 
-const iconSlots = defineSlots<{default?: () => unknown}>();
+const iconSlots = defineSlots<{ default?: () => unknown }>();
 
-const {isExpanded, slots} = useDisclosureContext();
+const { isExpanded, slots } = useDisclosureContext();
 
 /**
  * With no icon of its own to render, the built-in chevron carries the class and the state

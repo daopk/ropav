@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {FormRootProps} from "./form.types";
+import type { FormRootProps } from "./form.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {provideFormContext} from "../../composables/use-form-validation-state";
+import { provideFormContext } from "../../composables/use-form-validation-state";
 
 const props = defineProps<FormRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 // Held in computeds with a stable identity, so a field's watch on the errors fires once per
 // server response rather than on every render of the form.

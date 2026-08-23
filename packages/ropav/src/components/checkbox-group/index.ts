@@ -10,7 +10,7 @@ export const CheckboxGroup = Object.assign(CheckboxGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {CheckboxGroupRoot};
+export { CheckboxGroupRoot };
 
 export type {
   CheckboxGroupRootProps,
@@ -18,13 +18,13 @@ export type {
   CheckboxGroupSlotProps,
 } from "./checkbox-group.types";
 
-export {useCheckboxGroupContext, provideCheckboxGroupContext} from "./checkbox-group.context";
+export { useCheckboxGroupContext, provideCheckboxGroupContext } from "./checkbox-group.context";
 
-export type {CheckboxGroupContext} from "./checkbox-group.context";
+export type { CheckboxGroupContext } from "./checkbox-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {checkboxGroupVariants} from "@ropav/styles";
+export { checkboxGroupVariants } from "@ropav/styles";
 
-export type {CheckboxGroupVariants} from "@ropav/styles";
+export type { CheckboxGroupVariants } from "@ropav/styles";

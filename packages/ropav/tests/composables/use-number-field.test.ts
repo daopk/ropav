@@ -1,11 +1,11 @@
-import type {UseNumberFieldReturn} from "@/composables/use-number-field";
+import type { UseNumberFieldReturn } from "@/composables/use-number-field";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/number-field-full-host.vue";
-import {expectResetSource} from "../harness/form-reset";
+import { expectResetSource } from "../harness/form-reset";
 
 const mount = (props: Record<string, unknown> = {}) => {
   let field!: UseNumberFieldReturn;
@@ -38,7 +38,7 @@ const type = (input: HTMLInputElement, value: string) => {
 };
 
 const press = (element: Element, key: string) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key });
 
   element.dispatchEvent(event);
 
@@ -53,19 +53,19 @@ const press = (element: Element, key: string) => {
  * the paste replaces the whole field.
  */
 const pasteEvent = (text: string) => {
-  const event = new Event("paste", {bubbles: true, cancelable: true});
+  const event = new Event("paste", { bubbles: true, cancelable: true });
 
-  Object.defineProperty(event, "clipboardData", {value: {getData: () => text}});
+  Object.defineProperty(event, "clipboardData", { value: { getData: () => text } });
 
   return event;
 };
 
 const pointerPress = (button: HTMLElement) => {
   button.dispatchEvent(
-    new PointerEvent("pointerdown", {bubbles: true, cancelable: true, pointerType: "mouse"}),
+    new PointerEvent("pointerdown", { bubbles: true, cancelable: true, pointerType: "mouse" }),
   );
   button.dispatchEvent(
-    new PointerEvent("pointerup", {bubbles: true, cancelable: true, pointerType: "mouse"}),
+    new PointerEvent("pointerup", { bubbles: true, cancelable: true, pointerType: "mouse" }),
   );
 };
 
@@ -74,7 +74,7 @@ describe("useNumberField", () => {
     it("renders a text input rather than a number input", () => {
       // A number input rejects a currency symbol and a grouping separator, which are exactly the
       // strings this field exists to accept.
-      const {input, unmount} = mount({defaultValue: 5});
+      const { input, unmount } = mount({ defaultValue: 5 });
 
       expect(input().type).toBe("text");
 
@@ -82,7 +82,7 @@ describe("useNumberField", () => {
     });
 
     it("turns off the browser's own text assistance", () => {
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).toHaveAttribute("autocomplete", "off");
       expect(input()).toHaveAttribute("autocorrect", "off");
@@ -92,7 +92,7 @@ describe("useNumberField", () => {
     });
 
     it("describes itself as a number field", () => {
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).toHaveAttribute("aria-roledescription", "Number field");
 
@@ -102,7 +102,7 @@ describe("useNumberField", () => {
     it("carries no spin button role", () => {
       // The spin button semantics are there for the value announcements, but the role itself is
       // dropped: VoiceOver cannot put its cursor on a spin button.
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).not.toHaveAttribute("role");
       expect(input()).not.toHaveAttribute("aria-valuenow");
@@ -112,7 +112,7 @@ describe("useNumberField", () => {
     });
 
     it("asks for a numeric keyboard", () => {
-      const {input, unmount} = mount({minValue: 0});
+      const { input, unmount } = mount({ minValue: 0 });
 
       expect(input()).toHaveAttribute("inputmode", "numeric");
 
@@ -120,7 +120,7 @@ describe("useNumberField", () => {
     });
 
     it("groups the input with its steppers", () => {
-      const {at, unmount} = mount();
+      const { at, unmount } = mount();
 
       expect(at("group")).toHaveAttribute("role", "group");
 
@@ -132,7 +132,7 @@ describe("useNumberField", () => {
     it("renders slot=increment and slot=decrement on the buttons", () => {
       // A live CSS contract: `.number-field__group:has([slot="decrement"])` is what decides the
       // grid columns, so dropping either one silently collapses the layout.
-      const {decrement, increment, unmount} = mount();
+      const { decrement, increment, unmount } = mount();
 
       expect(increment()).toHaveAttribute("slot", "increment");
       expect(decrement()).toHaveAttribute("slot", "decrement");
@@ -142,7 +142,7 @@ describe("useNumberField", () => {
 
     it("keeps the slot attribute alongside the aria wiring", () => {
       // The attribute is merged with the composable's own bag, so neither can drop the other.
-      const {increment, unmount} = mount();
+      const { increment, unmount } = mount();
 
       expect(increment()).toHaveAttribute("slot", "increment");
       expect(increment()).toHaveAttribute("aria-controls");
@@ -153,7 +153,7 @@ describe("useNumberField", () => {
 
   describe("the stepper buttons", () => {
     it("names each button after the field", () => {
-      const {decrement, increment, unmount} = mount({ariaLabel: "Quantity"});
+      const { decrement, increment, unmount } = mount({ ariaLabel: "Quantity" });
 
       expect(increment()).toHaveAttribute("aria-label", "Increase Quantity");
       expect(decrement()).toHaveAttribute("aria-label", "Decrease Quantity");
@@ -162,7 +162,7 @@ describe("useNumberField", () => {
     });
 
     it("supports a name of its own on each button", () => {
-      const {decrement, increment, unmount} = mount({
+      const { decrement, increment, unmount } = mount({
         decrementAriaLabel: "Fewer",
         incrementAriaLabel: "More",
       });
@@ -176,7 +176,7 @@ describe("useNumberField", () => {
     });
 
     it("points each button at the input it drives", () => {
-      const {decrement, increment, input, unmount} = mount();
+      const { decrement, increment, input, unmount } = mount();
 
       expect(increment()).toHaveAttribute("aria-controls", input().id);
       expect(decrement()).toHaveAttribute("aria-controls", input().id);
@@ -187,7 +187,7 @@ describe("useNumberField", () => {
     it("keeps both buttons out of the tab order", () => {
       // The field takes the arrow keys, so a tab stop on each button would put two extra stops
       // in front of every number on a form.
-      const {decrement, increment, unmount} = mount();
+      const { decrement, increment, unmount } = mount();
 
       expect(increment()).toHaveAttribute("tabindex", "-1");
       expect(decrement()).toHaveAttribute("tabindex", "-1");
@@ -196,7 +196,7 @@ describe("useNumberField", () => {
     });
 
     it("steps the value on a pointer press", () => {
-      const {field, increment, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, increment, unmount } = mount({ defaultValue: 5, step: 1 });
 
       pointerPress(increment());
 
@@ -206,7 +206,7 @@ describe("useNumberField", () => {
     });
 
     it("steps down on a pointer press", () => {
-      const {decrement, field, unmount} = mount({defaultValue: 5, step: 1});
+      const { decrement, field, unmount } = mount({ defaultValue: 5, step: 1 });
 
       pointerPress(decrement());
 
@@ -216,7 +216,7 @@ describe("useNumberField", () => {
     });
 
     it("disables the button that has nowhere left to go", async () => {
-      const {decrement, increment, unmount} = mount({
+      const { decrement, increment, unmount } = mount({
         defaultValue: 10,
         maxValue: 10,
         minValue: 0,
@@ -232,7 +232,7 @@ describe("useNumberField", () => {
     });
 
     it("disables both buttons on a read-only field", async () => {
-      const {decrement, increment, unmount} = mount({defaultValue: 5, isReadOnly: true});
+      const { decrement, increment, unmount } = mount({ defaultValue: 5, isReadOnly: true });
 
       await nextTick();
 
@@ -245,7 +245,7 @@ describe("useNumberField", () => {
 
   describe("the keyboard", () => {
     it("steps with the arrow keys", () => {
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       press(input(), "ArrowUp");
       expect(field().state.numberValue.value).toBe(6);
@@ -257,7 +257,7 @@ describe("useNumberField", () => {
     });
 
     it("jumps to the ends of the range with Home and End", () => {
-      const {field, input, unmount} = mount({
+      const { field, input, unmount } = mount({
         defaultValue: 5,
         maxValue: 10,
         minValue: 2,
@@ -274,7 +274,7 @@ describe("useNumberField", () => {
     });
 
     it("steps with the page keys", () => {
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       press(input(), "PageUp");
       expect(field().state.numberValue.value).toBe(6);
@@ -283,7 +283,7 @@ describe("useNumberField", () => {
     });
 
     it("swallows the arrow keys so the caret does not move as well", () => {
-      const {input, unmount} = mount({defaultValue: 5, step: 1});
+      const { input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       expect(press(input(), "ArrowUp").defaultPrevented).toBe(true);
 
@@ -294,7 +294,7 @@ describe("useNumberField", () => {
       // Matching react-aria: the field always supplies both handlers, so the keys are always
       // taken and the value simply does not move. The consequence is that Home and End never
       // reach the caret in a number field, in either framework.
-      const {field, input, unmount} = mount({defaultValue: 5});
+      const { field, input, unmount } = mount({ defaultValue: 5 });
 
       expect(press(input(), "Home").defaultPrevented).toBe(true);
       expect(press(input(), "End").defaultPrevented).toBe(true);
@@ -306,7 +306,7 @@ describe("useNumberField", () => {
     it("commits on Enter without taking the key from the form", () => {
       // Enter both normalises the field and submits the form around it; preventing it would stop
       // the submit the user asked for.
-      const {field, input, unmount} = mount();
+      const { field, input, unmount } = mount();
 
       type(input(), "12.7");
       const event = press(input(), "Enter");
@@ -318,13 +318,13 @@ describe("useNumberField", () => {
     });
 
     it("does not step a disabled or read-only field from the keyboard", () => {
-      const disabled = mount({defaultValue: 5, isDisabled: true, step: 1});
+      const disabled = mount({ defaultValue: 5, isDisabled: true, step: 1 });
 
       press(disabled.input(), "ArrowUp");
       expect(disabled.field().state.numberValue.value).toBe(5);
       disabled.unmount();
 
-      const readOnly = mount({defaultValue: 5, isReadOnly: true, step: 1});
+      const readOnly = mount({ defaultValue: 5, isReadOnly: true, step: 1 });
 
       press(readOnly.input(), "ArrowUp");
       expect(readOnly.field().state.numberValue.value).toBe(5);
@@ -334,7 +334,7 @@ describe("useNumberField", () => {
 
   describe("typing and committing", () => {
     it("keeps text that could still become a number", () => {
-      const {field, input, unmount} = mount();
+      const { field, input, unmount } = mount();
 
       type(input(), "-");
 
@@ -345,7 +345,7 @@ describe("useNumberField", () => {
 
     it("refuses text that could never become a number", async () => {
       // The last line of defence behind `beforeinput`, which jsdom does not deliver.
-      const {field, input, unmount} = mount({defaultValue: 5});
+      const { field, input, unmount } = mount({ defaultValue: 5 });
 
       type(input(), "abc");
       await nextTick();
@@ -357,7 +357,7 @@ describe("useNumberField", () => {
     });
 
     it("normalises the text when focus leaves", async () => {
-      const {input, unmount} = mount({formatOptions: {currency: "USD", style: "currency"}});
+      const { input, unmount } = mount({ formatOptions: { currency: "USD", style: "currency" } });
 
       type(input(), "1234.5");
       input().dispatchEvent(new FocusEvent("blur"));
@@ -369,7 +369,7 @@ describe("useNumberField", () => {
     });
 
     it("commits a paste that replaces the whole field", async () => {
-      const {field, input, unmount} = mount();
+      const { field, input, unmount } = mount();
 
       input().value = "";
       input().setSelectionRange(0, 0);
@@ -388,7 +388,7 @@ describe("useNumberField", () => {
     it("leaves a partial paste to the input", () => {
       // Working out where the caret lands inside a partly replaced string is where this kind of
       // code goes wrong, so it is left to the event that can already refuse bad characters.
-      const {input, unmount} = mount({defaultValue: 5});
+      const { input, unmount } = mount({ defaultValue: 5 });
 
       input().setSelectionRange(0, 0);
 
@@ -404,23 +404,23 @@ describe("useNumberField", () => {
 
   describe("focus within", () => {
     it("reports focus reaching anything in the group", async () => {
-      const {at, field, input, unmount} = mount();
+      const { at, field, input, unmount } = mount();
 
       input().dispatchEvent(new FocusEvent("focus"));
       expect(field().isFocusWithin.value).toBe(true);
 
-      at("group").dispatchEvent(new FocusEvent("focusout", {relatedTarget: null}));
+      at("group").dispatchEvent(new FocusEvent("focusout", { relatedTarget: null }));
       expect(field().isFocusWithin.value).toBe(false);
 
       unmount();
     });
 
     it("stays focused while focus moves between the input and a button", () => {
-      const {at, field, increment, input, unmount} = mount();
+      const { at, field, increment, input, unmount } = mount();
 
       input().dispatchEvent(new FocusEvent("focus"));
 
-      const event = new FocusEvent("focusout", {relatedTarget: increment()});
+      const event = new FocusEvent("focusout", { relatedTarget: increment() });
 
       at("group").dispatchEvent(event);
 
@@ -430,7 +430,7 @@ describe("useNumberField", () => {
     });
 
     it("never reports focus on a disabled field", () => {
-      const {field, input, unmount} = mount({isDisabled: true});
+      const { field, input, unmount } = mount({ isDisabled: true });
 
       input().dispatchEvent(new FocusEvent("focus"));
 
@@ -442,7 +442,7 @@ describe("useNumberField", () => {
 
   describe("state and validation", () => {
     it("reports its own state on the input", () => {
-      const {input, unmount} = mount({isReadOnly: true});
+      const { input, unmount } = mount({ isReadOnly: true });
 
       expect(input()).toHaveAttribute("aria-readonly", "true");
 
@@ -450,13 +450,13 @@ describe("useNumberField", () => {
     });
 
     it("marks the input required under aria behaviour only", () => {
-      const aria = mount({isRequired: true, validationBehavior: "aria"});
+      const aria = mount({ isRequired: true, validationBehavior: "aria" });
 
       expect(aria.input()).toHaveAttribute("aria-required", "true");
       expect(aria.input()).not.toHaveAttribute("required");
       aria.unmount();
 
-      const native = mount({isRequired: true});
+      const native = mount({ isRequired: true });
 
       expect(native.input()).toHaveAttribute("required");
       expect(native.input()).not.toHaveAttribute("aria-required");
@@ -464,7 +464,7 @@ describe("useNumberField", () => {
     });
 
     it("reports invalid on the input and the group", async () => {
-      const {at, input, unmount} = mount({isInvalid: true});
+      const { at, input, unmount } = mount({ isInvalid: true });
 
       await nextTick();
 
@@ -479,7 +479,7 @@ describe("useNumberField", () => {
       // here has to ship a translation for "must be less than or equal to".
       // `aria` behaviour, because under `native` the borrowed verdict is held back until a
       // commit reveals it — that path needs a form, and is covered where one is involved.
-      const {field, input, unmount} = mount({
+      const { field, input, unmount } = mount({
         commitBehavior: "validate",
         maxValue: 10,
         minValue: 0,
@@ -499,7 +499,7 @@ describe("useNumberField", () => {
     });
 
     it("leaves the range alone under snap behaviour, having already corrected it", async () => {
-      const {field, input, unmount} = mount({maxValue: 10, minValue: 0});
+      const { field, input, unmount } = mount({ maxValue: 10, minValue: 0 });
 
       type(input(), "50");
       field().state.commit();
@@ -514,12 +514,12 @@ describe("useNumberField", () => {
 
   describe("the wheel", () => {
     it("steps the value while focus is inside", async () => {
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
 
-      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, deltaY: 10}));
+      input().dispatchEvent(new WheelEvent("wheel", { cancelable: true, deltaY: 10 }));
 
       expect(field().state.numberValue.value).toBe(6);
 
@@ -528,10 +528,10 @@ describe("useNumberField", () => {
 
     it("ignores the wheel while focus is elsewhere", async () => {
       // Otherwise scrolling a page past a number field would quietly rewrite it.
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       await nextTick();
-      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, deltaY: 10}));
+      input().dispatchEvent(new WheelEvent("wheel", { cancelable: true, deltaY: 10 }));
 
       expect(field().state.numberValue.value).toBe(5);
 
@@ -541,12 +541,12 @@ describe("useNumberField", () => {
     it("ignores a mostly sideways gesture", async () => {
       // A trackpad reports both axes at once; a sideways scroll past the field is not someone
       // asking to change the number.
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
 
-      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, deltaX: 20, deltaY: 5}));
+      input().dispatchEvent(new WheelEvent("wheel", { cancelable: true, deltaX: 20, deltaY: 5 }));
 
       expect(field().state.numberValue.value).toBe(5);
 
@@ -557,12 +557,14 @@ describe("useNumberField", () => {
       // A wheel gesture with the ctrl key held is a zoom, not a scroll. The browser reports it
       // with a vertical delta like any other, so without the check a pinch on a trackpad would
       // run the number up while the page zoomed.
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1 });
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
 
-      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, ctrlKey: true, deltaY: 10}));
+      input().dispatchEvent(
+        new WheelEvent("wheel", { cancelable: true, ctrlKey: true, deltaY: 10 }),
+      );
 
       expect(field().state.numberValue.value).toBe(5);
 
@@ -570,7 +572,7 @@ describe("useNumberField", () => {
     });
 
     it("ignores the wheel when it is turned off", async () => {
-      const {field, input, unmount} = mount({
+      const { field, input, unmount } = mount({
         defaultValue: 5,
         isWheelDisabled: true,
         step: 1,
@@ -578,7 +580,7 @@ describe("useNumberField", () => {
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
-      input().dispatchEvent(new WheelEvent("wheel", {cancelable: true, deltaY: 10}));
+      input().dispatchEvent(new WheelEvent("wheel", { cancelable: true, deltaY: 10 }));
 
       expect(field().state.numberValue.value).toBe(5);
 
@@ -593,7 +595,7 @@ describe("useNumberField", () => {
       // with the state already holding the default, nothing changes and no binding write follows,
       // so the field would be left empty. The write also has to be a tick out: the `reset` event
       // is dispatched before the browser puts the controls back.
-      const {input, unmount} = mount({defaultValue: 5, step: 1, withForm: true});
+      const { input, unmount } = mount({ defaultValue: 5, step: 1, withForm: true });
 
       await nextTick();
 
@@ -609,7 +611,7 @@ describe("useNumberField", () => {
     });
 
     it("puts the default back after the value was edited", async () => {
-      const {field, input, unmount} = mount({defaultValue: 5, step: 1, withForm: true});
+      const { field, input, unmount } = mount({ defaultValue: 5, step: 1, withForm: true });
 
       await nextTick();
       input().value = "9";
@@ -633,7 +635,7 @@ describe("useNumberField", () => {
   describe("reporting changes", () => {
     it("reports a step to its owner", () => {
       const onChange = vi.fn();
-      const {increment, unmount} = mount({defaultValue: 5, onChange, step: 1});
+      const { increment, unmount } = mount({ defaultValue: 5, onChange, step: 1 });
 
       pointerPress(increment());
 
@@ -643,7 +645,7 @@ describe("useNumberField", () => {
     });
 
     it("keeps a controlled field at the value its owner holds", async () => {
-      const {increment, input, unmount} = mount({step: 1, value: 5});
+      const { increment, input, unmount } = mount({ step: 1, value: 5 });
 
       pointerPress(increment());
       await nextTick();
@@ -661,7 +663,7 @@ describe("useNumberField", () => {
        * only written once the text first moved — and a field nobody had touched, which is the one
        * a reset is most likely to find, had no reset source at all and was blanked by it.
        */
-      const field = mount({defaultValue: 10});
+      const field = mount({ defaultValue: 10 });
 
       await nextTick();
       expectResetSource(field.input(), "10");
@@ -670,7 +672,7 @@ describe("useNumberField", () => {
     });
 
     it("follows the text as it is typed", async () => {
-      const field = mount({defaultValue: 10});
+      const field = mount({ defaultValue: 10 });
 
       await nextTick();
       type(field.input(), "25");

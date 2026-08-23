@@ -1,9 +1,9 @@
-import {CalendarDate} from "@internationalized/date";
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -22,11 +22,14 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * green gate.
  */
 const SHARED_WITH_REACT = {
-  rules: {"color-contrast": {enabled: false}, "landmark-banner-is-top-level": {enabled: false}},
+  rules: {
+    "color-contrast": { enabled: false },
+    "landmark-banner-is-top-level": { enabled: false },
+  },
 };
 
 const render = (props: Record<string, unknown> = {}) =>
-  renderVapor(Fixture, {props: {label: "Trip dates", locale: "en-US", ...props}});
+  renderVapor(Fixture, { props: { label: "Trip dates", locale: "en-US", ...props } });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -119,13 +122,13 @@ afterEach(async () => {
 describe("DateRangePicker (browser)", () => {
   describe("axe", () => {
     it("finds nothing to complain about while closed", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about with the calendar open", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
       const popover = await open(result);
 
       await expectNoA11yViolations(popover, SHARED_WITH_REACT);
@@ -146,7 +149,7 @@ describe("DateRangePicker (browser)", () => {
        * The trigger sits between the two rows in the DOM. Arrow keys measure geometry rather than
        * counting tab stops, and the manager excludes the button — otherwise this lands on it.
        */
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
 
       segmentOf(result, "start", "year").focus();
       await userEvent.keyboard("{ArrowRight}");
@@ -156,7 +159,7 @@ describe("DateRangePicker (browser)", () => {
     });
 
     it("crosses back the other way", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
 
       segmentOf(result, "end", "month").focus();
       await userEvent.keyboard("{ArrowLeft}");
@@ -166,7 +169,7 @@ describe("DateRangePicker (browser)", () => {
     });
 
     it("reaches both ends and the trigger by Tab alone", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
 
       segmentOf(result, "start", "year").focus();
       await userEvent.keyboard("{Tab}");
@@ -181,7 +184,7 @@ describe("DateRangePicker (browser)", () => {
 
   describe("a real pointer", () => {
     it("builds a range from two presses, and closes", async () => {
-      const result = mount({placeholderValue: jun(15)});
+      const result = mount({ placeholderValue: jun(15) });
       const popover = await open(result);
 
       await userEvent.click(cellOf(popover, 10));
@@ -206,7 +209,7 @@ describe("DateRangePicker (browser)", () => {
        * The highlight follows the pointer, not the value — and it does so through `pointerenter` on
        * each cell, which a synthetic click never sends.
        */
-      const result = mount({placeholderValue: jun(15)});
+      const result = mount({ placeholderValue: jun(15) });
       const popover = await open(result);
 
       await userEvent.click(cellOf(popover, 10));
@@ -244,7 +247,7 @@ describe("DateRangePicker (browser)", () => {
     });
 
     it("takes focus into the calendar as it appears", async () => {
-      const result = mount({value: {end: jun(20), start: jun(10)}});
+      const result = mount({ value: { end: jun(20), start: jun(10) } });
       const popover = await open(result);
 
       expect(popover.contains(document.activeElement)).toBe(true);

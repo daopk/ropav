@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {ToastIndicatorProps} from "./toast.types";
+import type { ToastIndicatorProps } from "./toast.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
-import {DangerIcon, InfoIcon, SuccessIcon, WarningIcon} from "../icons";
+import { composeSlotClassName } from "../../utils/compose";
+import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "../icons";
 
-import {useToastItemContext, useToastRegionContext} from "./toast.context";
+import { useToastItemContext, useToastRegionContext } from "./toast.context";
 
 const props = defineProps<ToastIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useToastRegionContext();
+const { slots } = useToastRegionContext();
 const item = useToastItemContext();
 
 const variant = computed(() => props.variant ?? item.variant.value);

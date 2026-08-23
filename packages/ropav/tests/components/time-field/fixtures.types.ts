@@ -1,6 +1,6 @@
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
-import type {TimeGranularity} from "@/composables/use-time-field-state";
-import type {TimeValue} from "@/utils/date-format";
+import type { ValidationBehavior } from "@/composables/use-form-validation-state";
+import type { TimeGranularity } from "@/composables/use-time-field-state";
+import type { TimeValue } from "@/utils/date-format";
 
 export interface TimeFieldFixtureProps {
   class?: string;

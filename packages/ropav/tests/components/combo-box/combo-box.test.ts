@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {expectResetSource} from "../../harness/form-reset";
+import { expectResetSource } from "../../harness/form-reset";
 
 import Fixture from "./fixtures.vue";
 
@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -43,11 +43,11 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
   element.dispatchEvent(event);
 
@@ -88,20 +88,24 @@ const popoverOf = (result: RenderResult) =>
  * ever takes.
  */
 const type = async (input: HTMLInputElement, value: string, inputType = "insertText") => {
-  input.dispatchEvent(new InputEvent("beforeinput", {bubbles: true, cancelable: true, inputType}));
+  input.dispatchEvent(
+    new InputEvent("beforeinput", { bubbles: true, cancelable: true, inputType }),
+  );
   input.value = value;
-  input.dispatchEvent(new InputEvent("input", {bubbles: true, inputType}));
+  input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType }));
   await settle();
 };
 
 const focus = async (element: HTMLElement) => {
   element.focus();
-  element.dispatchEvent(new FocusEvent("focus", {bubbles: false}));
+  element.dispatchEvent(new FocusEvent("focus", { bubbles: false }));
   await settle();
 };
 
 const blur = async (element: HTMLElement, relatedTarget: EventTarget | null = null) => {
-  element.dispatchEvent(new FocusEvent("blur", {bubbles: false, relatedTarget} as FocusEventInit));
+  element.dispatchEvent(
+    new FocusEvent("blur", { bubbles: false, relatedTarget } as FocusEventInit),
+  );
   await settle();
 };
 
@@ -113,7 +117,7 @@ const open = async (result: RenderResult) => {
 describe("ComboBox", () => {
   describe("structure", () => {
     it("exposes a data-slot and its BEM block on every part", async () => {
-      const result = render({withLabel: true});
+      const result = render({ withLabel: true });
 
       await open(result);
 
@@ -161,7 +165,7 @@ describe("ComboBox", () => {
     });
 
     it("carries the field's state on the root", async () => {
-      const result = render({isRequired: true});
+      const result = render({ isRequired: true });
       const root = result.container.querySelector('[data-slot="combo-box"]')!;
 
       expect(root).toHaveAttribute("data-required", "true");
@@ -173,7 +177,7 @@ describe("ComboBox", () => {
     });
 
     it("takes a glyph of the caller's own", () => {
-      const custom = render({withCustomIndicator: true});
+      const custom = render({ withCustomIndicator: true });
 
       expect(custom.container.querySelector('[data-testid="custom-icon"]')).not.toBeNull();
       // Only the built-in chevron carries the slot the stylesheet sizes and rotates.
@@ -207,7 +211,7 @@ describe("ComboBox", () => {
     });
 
     it("names the field from the label and the listbox from both", async () => {
-      const result = render({withLabel: true});
+      const result = render({ withLabel: true });
 
       await open(result);
 
@@ -220,7 +224,7 @@ describe("ComboBox", () => {
     });
 
     it("gives the chevron a name and keeps it out of the tab order", () => {
-      const trigger = triggerOf(render({withLabel: true}));
+      const trigger = triggerOf(render({ withLabel: true }));
 
       expect(trigger).toHaveAttribute("aria-label", "Show suggestions");
       expect(trigger).toHaveAttribute("tabindex", "-1");
@@ -239,7 +243,7 @@ describe("ComboBox", () => {
 
     it("chooses the option the arrows landed on and writes its text into the field", async () => {
       const onChange = vi.fn();
-      const result = render({onChange});
+      const result = render({ onChange });
       const input = inputOf(result);
 
       await open(result);
@@ -255,7 +259,7 @@ describe("ComboBox", () => {
 
     it("chooses the option that was pressed", async () => {
       const onChange = vi.fn();
-      const result = render({onChange});
+      const result = render({ onChange });
 
       await open(result);
       press(optionsOf(result)[1]!);
@@ -293,7 +297,7 @@ describe("ComboBox", () => {
     });
 
     it("opens on ArrowDown when it is shut", async () => {
-      const result = render({menuTrigger: "manual"});
+      const result = render({ menuTrigger: "manual" });
 
       await focus(inputOf(result));
       keydown(inputOf(result), "ArrowDown");
@@ -303,7 +307,7 @@ describe("ComboBox", () => {
     });
 
     it("puts the field back on Escape", async () => {
-      const result = render({defaultValue: "dog"});
+      const result = render({ defaultValue: "dog" });
       const input = inputOf(result);
 
       await focus(input);
@@ -317,11 +321,11 @@ describe("ComboBox", () => {
 
     it("shows the chosen option's text without anything rendered", () => {
       // Nothing has ever opened, so no option exists in the DOM — the data is what answers.
-      expect(inputOf(render({defaultValue: "cat"})).value).toBe("Cat");
+      expect(inputOf(render({ defaultValue: "cat" })).value).toBe("Cat");
     });
 
     it("says nothing matched when the caller asked it to", async () => {
-      const result = render({allowsEmptyCollection: true, withEmptyState: true});
+      const result = render({ allowsEmptyCollection: true, withEmptyState: true });
       const input = inputOf(result);
 
       await focus(input);
@@ -335,7 +339,7 @@ describe("ComboBox", () => {
   describe("disabled and read-only", () => {
     it("does not open at all when disabled", async () => {
       const onChange = vi.fn();
-      const result = render({isDisabled: true, onChange});
+      const result = render({ isDisabled: true, onChange });
 
       expect(inputOf(result)).toBeDisabled();
       expect(triggerOf(result)).toBeDisabled();
@@ -347,7 +351,7 @@ describe("ComboBox", () => {
     });
 
     it("does not open on the arrow keys when read-only", async () => {
-      const result = render({isReadOnly: true});
+      const result = render({ isReadOnly: true });
 
       await focus(inputOf(result));
       keydown(inputOf(result), "ArrowDown");
@@ -371,7 +375,7 @@ describe("ComboBox", () => {
     });
 
     it("shows a placeholder when nothing is chosen", () => {
-      const result = render({selectionMode: "multiple", withValue: true});
+      const result = render({ selectionMode: "multiple", withValue: true });
       const value = result.container.querySelector('[data-slot="combo-box-value"]')!;
 
       expect(value).toHaveAttribute("data-placeholder", "true");
@@ -392,7 +396,7 @@ describe("ComboBox", () => {
     });
 
     it("keeps the popover open while more are chosen", async () => {
-      const result = render({selectionMode: "multiple", withValue: true});
+      const result = render({ selectionMode: "multiple", withValue: true });
 
       await open(result);
       press(optionsOf(result)[0]!);
@@ -404,7 +408,7 @@ describe("ComboBox", () => {
 
   describe("validation", () => {
     it("renders a field error and marks the root invalid", () => {
-      const result = render({isInvalid: true, withFieldError: true});
+      const result = render({ isInvalid: true, withFieldError: true });
 
       expect(result.screen.getByText("Please choose an animal")).toBeTruthy();
       expect(result.container.querySelector('[data-slot="field-error"]')).not.toBeNull();
@@ -416,7 +420,7 @@ describe("ComboBox", () => {
     });
 
     it("describes the field from its description", async () => {
-      const result = render({withDescription: true, withLabel: true});
+      const result = render({ withDescription: true, withLabel: true });
 
       // The description claims its id as it renders, which is after the field — so the attribute
       // derived from it only settles at the next flush.
@@ -430,7 +434,7 @@ describe("ComboBox", () => {
 
   describe("a form", () => {
     it("submits the chosen key from a hidden control beside the field", async () => {
-      const result = render({name: "animal", withForm: true});
+      const result = render({ name: "animal", withForm: true });
 
       await open(result);
       press(optionsOf(result)[1]!);
@@ -459,14 +463,14 @@ describe("ComboBox", () => {
     it("submits the text whenever a value of the caller's own is allowed", () => {
       // There is no key behind text nobody chose, so sending an empty one would be worse than
       // sending what the user actually typed.
-      const result = render({allowsCustomValue: true, name: "animal", withForm: true});
+      const result = render({ allowsCustomValue: true, name: "animal", withForm: true });
 
       expect(result.container.querySelector('input[type="hidden"]')).toBeNull();
       expect(inputOf(result)).toHaveAttribute("name", "animal");
     });
 
     it("keeps the field's reset source in step with the chosen option's text", async () => {
-      const result = render({defaultValue: "cat", name: "animal", withForm: true});
+      const result = render({ defaultValue: "cat", name: "animal", withForm: true });
 
       await settle();
 
@@ -483,7 +487,7 @@ describe("ComboBox", () => {
     });
 
     it("puts the chosen key back when the form is reset", async () => {
-      const result = render({defaultValue: "cat", name: "animal", withForm: true});
+      const result = render({ defaultValue: "cat", name: "animal", withForm: true });
       const form = result.container.querySelector("form")!;
 
       await open(result);
@@ -491,7 +495,7 @@ describe("ComboBox", () => {
       await settle();
       expect(inputOf(result).value).toBe("Dog");
 
-      form.dispatchEvent(new Event("reset", {bubbles: true, cancelable: true}));
+      form.dispatchEvent(new Event("reset", { bubbles: true, cancelable: true }));
       await settle();
 
       /*
@@ -509,7 +513,7 @@ describe("ComboBox", () => {
 
   describe("focus", () => {
     it("does not close when focus moves to the chevron", async () => {
-      const result = render({menuTrigger: "focus"});
+      const result = render({ menuTrigger: "focus" });
 
       // Focus is what opens this one, so pressing the chevron afterwards would only close it.
       await focus(inputOf(result));
@@ -528,7 +532,7 @@ describe("ComboBox", () => {
       document.body.append(outside);
       cleanups.push(() => outside.remove());
 
-      const result = render({defaultValue: "cat"});
+      const result = render({ defaultValue: "cat" });
       const input = inputOf(result);
 
       await focus(input);

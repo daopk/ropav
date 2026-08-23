@@ -1,6 +1,6 @@
-import {afterEach, describe, expect, it, vi} from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import {getDefaultLocale, isRTL} from "@/utils/locale";
+import { getDefaultLocale, isRTL } from "@/utils/locale";
 
 /** Replace `navigator.language`, which is read-only, for the duration of one test. */
 const stubLanguage = (language: string | undefined) => {
@@ -65,13 +65,13 @@ describe("getDefaultLocale", () => {
   it("reports the browser's language and its direction", () => {
     stubLanguage("he-IL");
 
-    expect(getDefaultLocale()).toEqual({direction: "rtl", locale: "he-IL"});
+    expect(getDefaultLocale()).toEqual({ direction: "rtl", locale: "he-IL" });
   });
 
   it("reports a left-to-right language as such", () => {
     stubLanguage("en-GB");
 
-    expect(getDefaultLocale()).toEqual({direction: "ltr", locale: "en-GB"});
+    expect(getDefaultLocale()).toEqual({ direction: "ltr", locale: "en-GB" });
   });
 
   it("falls back to en-US for a tag Intl cannot use", () => {
@@ -79,12 +79,12 @@ describe("getDefaultLocale", () => {
     // is the only signal that the browser's own setting is unusable.
     stubLanguage("not a language tag");
 
-    expect(getDefaultLocale()).toEqual({direction: "ltr", locale: "en-US"});
+    expect(getDefaultLocale()).toEqual({ direction: "ltr", locale: "en-US" });
   });
 
   it("falls back to en-US when the browser names no language", () => {
     stubLanguage(undefined);
 
-    expect(getDefaultLocale()).toEqual({direction: "ltr", locale: "en-US"});
+    expect(getDefaultLocale()).toEqual({ direction: "ltr", locale: "en-US" });
   });
 });

@@ -1,25 +1,25 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {LabelRoot} from "@/components/label";
-import {MeterFill, MeterOutput, MeterRoot, MeterTrack} from "@/components/meter";
+import { LabelRoot } from "@/components/label";
+import { MeterFill, MeterOutput, MeterRoot, MeterTrack } from "@/components/meter";
 
 const render = (output?: () => unknown) =>
   renderInterop(MeterRoot, {
-    props: {color: "success", value: 60},
+    props: { color: "success", value: 60 },
     slots: {
       default: () => [
-        h(LabelRoot, null, {default: () => "Storage"}),
-        h(MeterOutput, null, output ? {default: output} : undefined),
-        h(MeterTrack, null, {default: () => h(MeterFill)}),
+        h(LabelRoot, null, { default: () => "Storage" }),
+        h(MeterOutput, null, output ? { default: output } : undefined),
+        h(MeterTrack, null, { default: () => h(MeterFill) }),
       ],
     },
   });
 
 describe("Meter under a vdom host", () => {
   it("forwards value state and classes into host-authored parts", async () => {
-    const {container, unmount} = render();
+    const { container, unmount } = render();
     const root = container.querySelector('[data-slot="meter"]');
     const label = container.querySelector('[data-slot="label"]');
 
@@ -37,7 +37,7 @@ describe("Meter under a vdom host", () => {
   });
 
   it("keeps a custom output from the host instead of the fallback", () => {
-    const {container, unmount} = render(() => h("strong", null, "Nearly full"));
+    const { container, unmount } = render(() => h("strong", null, "Nearly full"));
 
     expect(container.querySelector('[data-slot="meter-output"]')).toHaveTextContent("Nearly full");
     expect(container.querySelector('[data-slot="meter-output"]')).not.toHaveTextContent("60%");

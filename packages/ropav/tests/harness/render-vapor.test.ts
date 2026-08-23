@@ -1,5 +1,5 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
 
 import TeleportHost from "./teleport-host.vue";
 
@@ -10,7 +10,9 @@ import TeleportHost from "./teleport-host.vue";
  */
 describe("renderVapor", () => {
   it("does not reach teleported content through the container queries", () => {
-    const {container, queryByRole, unmount} = renderVapor(TeleportHost, {props: {isOpen: true}});
+    const { container, queryByRole, unmount } = renderVapor(TeleportHost, {
+      props: { isOpen: true },
+    });
 
     expect(container.querySelector('[data-slot="host"]')).not.toBeNull();
     expect(queryByRole("dialog")).toBeNull();
@@ -19,7 +21,7 @@ describe("renderVapor", () => {
   });
 
   it("reaches teleported content through the document-wide queries", () => {
-    const {screen, unmount} = renderVapor(TeleportHost, {props: {isOpen: true}});
+    const { screen, unmount } = renderVapor(TeleportHost, { props: { isOpen: true } });
 
     expect(screen.getByRole("dialog")).toHaveTextContent("Overlay content");
 
@@ -27,7 +29,7 @@ describe("renderVapor", () => {
   });
 
   it("removes teleported content on unmount", () => {
-    const {screen, unmount} = renderVapor(TeleportHost, {props: {isOpen: true}});
+    const { screen, unmount } = renderVapor(TeleportHost, { props: { isOpen: true } });
 
     expect(screen.queryByRole("dialog")).not.toBeNull();
 
@@ -39,7 +41,7 @@ describe("renderVapor", () => {
   });
 
   it("exposes the element the document-wide queries are scoped to", () => {
-    const {baseElement, unmount} = renderVapor(TeleportHost);
+    const { baseElement, unmount } = renderVapor(TeleportHost);
 
     expect(baseElement).toBe(document.body);
 

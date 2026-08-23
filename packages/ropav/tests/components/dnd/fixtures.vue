@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {DragItem, DragPreviewRenderer} from "@/utils/dnd-types";
+import type { DragItem, DragPreviewRenderer } from "@/utils/dnd-types";
 
-import {shallowRef, useTemplateRef} from "vue";
+import { shallowRef, useTemplateRef } from "vue";
 
-import {DragPreview} from "@/components/dnd";
-import {useDrag} from "@/composables/use-drag";
+import { DragPreview } from "@/components/dnd";
+import { useDrag } from "@/composables/use-drag";
 
 /**
  * A draggable element with a custom preview, for exercising the synchronous render path.
@@ -17,14 +17,14 @@ withDefaults(
     items?: DragItem[];
     withPreview?: boolean;
   }>(),
-  {items: () => [{"text/plain": "dragged"}], withPreview: true},
+  { items: () => [{ "text/plain": "dragged" }], withPreview: true },
 );
 
-const preview = useTemplateRef<{render: DragPreviewRenderer}>("preview");
+const preview = useTemplateRef<{ render: DragPreviewRenderer }>("preview");
 const previewRenderer = shallowRef<DragPreviewRenderer | null>(null);
 
-const {attrs, handlers, isDragging} = useDrag({
-  getItems: () => [{"text/plain": "dragged"}],
+const { attrs, handlers, isDragging } = useDrag({
+  getItems: () => [{ "text/plain": "dragged" }],
   preview: previewRenderer,
 });
 
@@ -55,7 +55,7 @@ const bindPreview = () => {
     </div>
 
     <DragPreview v-if="withPreview" ref="preview">
-      <template #default="{items: previewItems}">
+      <template #default="{ items: previewItems }">
         <span data-testid="preview-content">{{ previewItems.length }} item(s)</span>
       </template>
     </DragPreview>

@@ -1,7 +1,7 @@
-import type {AlertVariants, alertVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { AlertVariants, alertVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface AlertContext {
   slots: ComputedRef<ReturnType<typeof alertVariants>>;

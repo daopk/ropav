@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import {useGreetingContext} from "./context";
+import { useGreetingContext } from "./context";
 
-const {greeting} = useGreetingContext();
+const { greeting } = useGreetingContext();
 </script>
 
 <template>

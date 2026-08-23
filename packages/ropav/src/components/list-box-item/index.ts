@@ -12,7 +12,7 @@ export const ListBoxItem = Object.assign(ListBoxItemRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ListBoxItemIndicator, ListBoxItemRoot};
+export { ListBoxItemIndicator, ListBoxItemRoot };
 
 export type {
   ListBoxItemIndicatorProps,
@@ -25,13 +25,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useListBoxItemContext} from "./list-box-item.context";
+export { useListBoxItemContext } from "./list-box-item.context";
 
-export type {ListBoxItemContext} from "./list-box-item.context";
+export type { ListBoxItemContext } from "./list-box-item.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {listboxItemVariants} from "@ropav/styles";
+export { listboxItemVariants } from "@ropav/styles";
 
-export type {ListBoxItemVariants} from "@ropav/styles";
+export type { ListBoxItemVariants } from "@ropav/styles";

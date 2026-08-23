@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
 /** What an element leaves behind for whichever element claims its name next. */
 export interface SharedElementSnapshot {
@@ -22,7 +22,7 @@ export interface SharedElementScope {
   snapshots: Map<string, SharedElementSnapshot>;
 }
 
-export const createSharedElementScope = (): SharedElementScope => ({snapshots: new Map()});
+export const createSharedElementScope = (): SharedElementScope => ({ snapshots: new Map() });
 
 export const [useSharedElementScope, provideSharedElementScope] = createContext<SharedElementScope>(
   {
@@ -88,7 +88,7 @@ type SharedElementState = "hidden" | "entering" | "visible" | "exiting";
  * ```
  */
 export const useSharedElement = (options: UseSharedElementOptions): UseSharedElementReturn => {
-  const {scope} = options;
+  const { scope } = options;
 
   const isVisible = computed(() => toValue(options.isVisible) ?? true);
   const name = computed(() => toValue(options.name));
@@ -294,7 +294,7 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
 
       if (wasVisible) takeSnapshot();
     },
-    {flush: "sync"},
+    { flush: "sync" },
   );
 
   // Post-flush, so every patch of this tick has landed and the element can be measured.
@@ -318,7 +318,7 @@ export const useSharedElement = (options: UseSharedElementOptions): UseSharedEle
       if (previous) consume(element, previous);
       else enter();
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

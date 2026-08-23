@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
-import type {DisclosureGroupRootProps} from "./disclosure-group.types";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
+import type { DisclosureGroupRootProps } from "./disclosure-group.types";
 
-import {disclosureGroupVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { disclosureGroupVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useDisclosureGroup} from "../../composables/use-disclosure-group";
-import {dataAttr} from "../../utils/assertion";
+import { useDisclosureGroup } from "../../composables/use-disclosure-group";
+import { dataAttr } from "../../utils/assertion";
 
-import {provideDisclosureGroupContext} from "./disclosure-group.context";
+import { provideDisclosureGroupContext } from "./disclosure-group.context";
 
 // `isDisabled` declares an explicit `undefined` default so an absent prop stays absent. Vue
 // casts a missing Boolean prop to `false`, which a disclosure below would read as a caller
@@ -23,7 +23,7 @@ const emit = defineEmits<{
   "update:expandedKeys": [keys: Set<DisclosureKey>];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() => disclosureGroupVariants());
 
@@ -39,12 +39,12 @@ const group = useDisclosureGroup({
   },
 });
 
-provideDisclosureGroupContext({group});
+provideDisclosureGroupContext({ group });
 </script>
 
 <template>
   <div
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(group.isDisabled.value)"
     data-slot="disclosure-group"
   >

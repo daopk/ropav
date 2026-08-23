@@ -1,12 +1,12 @@
-import type {Rect, Size} from "../utils/virtualizer-geometry";
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Rect, Size } from "../utils/virtualizer-geometry";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, toValue, watch} from "vue";
+import { computed, nextTick, toValue, watch } from "vue";
 
-import {focusableIn, isScrollable} from "../utils/focus";
-import {isAppleDevice} from "../utils/platform";
+import { focusableIn, isScrollable } from "../utils/focus";
+import { isAppleDevice } from "../utils/platform";
 
 export type ListOrientation = "horizontal" | "vertical";
 
@@ -109,7 +109,7 @@ export interface UseListKeyboardReturn {
   getKeyPageBelow: (key: CollectionKey) => CollectionKey | null;
   getKeyForSearch: (search: string, fromKey?: CollectionKey | null) => CollectionKey | null;
   /** Move focus to a key. `scroll` is passed only from keyboard paths. */
-  focusKey: (key: CollectionKey | null, options?: {scroll?: boolean}) => void;
+  focusKey: (key: CollectionKey | null, options?: { scroll?: boolean }) => void;
 }
 
 /**
@@ -143,7 +143,7 @@ const isNonContiguousSelectionModifier = (event: KeyboardEvent): boolean =>
  * collection is focused or tabbable.
  */
 export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboardReturn => {
-  const {collection, selection} = options;
+  const { collection, selection } = options;
 
   const orientation = computed(() => toValue(options.orientation) ?? "vertical");
   const layout = computed(() => toValue(options.layout) ?? "stack");
@@ -158,7 +158,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
   // Matched to the collator React Aria uses, so a search behaves the same way: case- and
   // accent-insensitive, and tuned for prefix searching rather than sorting.
-  const collator = new Intl.Collator(undefined, {sensitivity: "base", usage: "search"});
+  const collator = new Intl.Collator(undefined, { sensitivity: "base", usage: "search" });
 
   /**
    * A vertical stack deliberately does not answer the inline arrows: React Aria deletes the
@@ -210,7 +210,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
    *
    * Only `x` and `y` are read, so a `DOMRect` and a layout's `Rect` are interchangeable here.
    */
-  const positionOf = (key: CollectionKey): {x: number; y: number} | null => {
+  const positionOf = (key: CollectionKey): { x: number; y: number } | null => {
     const delegate = toValue(options.layoutDelegate);
 
     return delegate ? delegate.getItemRect(key) : (rectOf(key) ?? null);
@@ -226,14 +226,14 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
   const findKey = (
     key: CollectionKey,
     nextKey: (key: CollectionKey) => CollectionKey | null,
-    shouldSkip: (from: {x: number; y: number}, item: {x: number; y: number}) => boolean,
+    shouldSkip: (from: { x: number; y: number }, item: { x: number; y: number }) => boolean,
   ): CollectionKey | null => {
     const from = positionOf(key);
 
     if (!from) return null;
 
     let candidate: CollectionKey | null = key;
-    let position: {x: number; y: number} | null = from;
+    let position: { x: number; y: number } | null = from;
 
     do {
       candidate = nextKey(candidate);
@@ -246,10 +246,10 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
   // Skip while the candidate shares a row with where we started, or sits in a different column:
   // what is left is the item directly across the row boundary in the same column.
-  const isSameRow = (from: {x: number; y: number}, item: {x: number; y: number}) =>
+  const isSameRow = (from: { x: number; y: number }, item: { x: number; y: number }) =>
     from.y === item.y || from.x !== item.x;
 
-  const isSameColumn = (from: {x: number; y: number}, item: {x: number; y: number}) =>
+  const isSameColumn = (from: { x: number; y: number }, item: { x: number; y: number }) =>
     from.x === item.x || from.y !== item.y;
 
   const isGridAcross = () => layout.value === "grid" && orientation.value === "vertical";
@@ -394,11 +394,11 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
     if (!isVirtual.value) element.focus();
     // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
     if (scroll && typeof element.scrollIntoView === "function") {
-      element.scrollIntoView({block: "nearest"});
+      element.scrollIntoView({ block: "nearest" });
     }
   };
 
-  const focusKey = (key: CollectionKey | null, focusOptions: {scroll?: boolean} = {}) => {
+  const focusKey = (key: CollectionKey | null, focusOptions: { scroll?: boolean } = {}) => {
     // Claimed before focus moves, so the focus event that follows knows the collection already
     // decided where it goes.
     selection.setFocused(true);
@@ -455,7 +455,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
       // Focus first, so the focus event that follows finds the key already claimed, then the
       // selection — the order React Aria's `navigateToKey` uses.
-      focusKey(key, {scroll: true});
+      focusKey(key, { scroll: true });
 
       if (selectOnFocus.value && !(respectsModifier && isNonContiguousSelectionModifier(event))) {
         selection.replaceSelection(key);
@@ -560,7 +560,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
         if (focused == null || toValue(options.disallowActivation)) return;
 
         if (selection.selectionMode.value === "none") options.onAction?.(focused);
-        else selection.select(focused, {isShiftPressed: event.shiftKey});
+        else selection.select(focused, { isShiftPressed: event.shiftKey });
 
         event.preventDefault();
 
@@ -636,7 +636,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
 
       collection.getElement(key)?.focus();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   return {

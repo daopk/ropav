@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {PopoverHeadingProps} from "./popover.types";
+import type { PopoverHeadingProps } from "./popover.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
-import {usePopoverContext} from "./popover.context";
+import { usePopoverContext } from "./popover.context";
 
 const props = defineProps<PopoverHeadingProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = usePopoverContext();
+const { slots } = usePopoverContext();
 
 // Inside a dialog the heading takes the id the dialog points `aria-labelledby` at.
 const fieldIds = useFieldIdsContext();
@@ -25,7 +25,7 @@ const id = fieldIds?.claimHeadingId();
  */
 const tag = computed(() => `h${props.level ?? (fieldIds ? 2 : 3)}`);
 
-const styles = computed(() => slots.value.heading({class: props.class}));
+const styles = computed(() => slots.value.heading({ class: props.class }));
 </script>
 
 <template>

@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useNumberFormatter} from "./use-number-formatter";
+import { useNumberFormatter } from "./use-number-formatter";
 
 export interface UseProgressValueOptions {
   formatOptions?: MaybeRefOrGetter<Intl.NumberFormatOptions | undefined>;
@@ -31,7 +31,7 @@ export const useProgressValue = (options: UseProgressValueOptions): ProgressValu
   // object without `style` intentionally falls back to Intl's decimal style and formats the raw
   // value rather than the percentage.
   const formatOptions = computed(
-    () => toValue(options.formatOptions) ?? ({style: "percent"} as Intl.NumberFormatOptions),
+    () => toValue(options.formatOptions) ?? ({ style: "percent" } as Intl.NumberFormatOptions),
   );
   const formatter = useNumberFormatter(formatOptions);
 
@@ -64,5 +64,5 @@ export const useProgressValue = (options: UseProgressValueOptions): ProgressValu
     return formatter.value.format(valueToFormat);
   });
 
-  return {isIndeterminate, maxValue, minValue, percentage, value, valueText};
+  return { isIndeterminate, maxValue, minValue, percentage, value, valueText };
 };

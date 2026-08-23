@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {RadioGroupFixtureProps} from "./fixtures.types";
+import type { RadioGroupFixtureProps } from "./fixtures.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Form} from "@/components/form";
-import {Label} from "@/components/label";
-import {Radio} from "@/components/radio";
-import {RadioGroup} from "@/components/radio-group";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Form } from "@/components/form";
+import { Label } from "@/components/label";
+import { Radio } from "@/components/radio";
+import { RadioGroup } from "@/components/radio-group";
 
-const props = withDefaults(defineProps<RadioGroupFixtureProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<RadioGroupFixtureProps>(), { isInvalid: undefined });
 
-defineEmits<{change: [value: string | null]}>();
+defineEmits<{ change: [value: string | null] }>();
 
 const items = computed(() => props.items ?? ["basic", "premium", "team"]);
 </script>

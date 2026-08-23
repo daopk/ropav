@@ -1,8 +1,8 @@
-import type {UseDisclosureGroupReturn} from "../../composables/use-disclosure-group";
-import type {accordionVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseDisclosureGroupReturn } from "../../composables/use-disclosure-group";
+import type { accordionVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface AccordionContext {
   slots: ComputedRef<ReturnType<typeof accordionVariants>>;
@@ -30,4 +30,4 @@ export interface AccordionItemContext {
 }
 
 export const [useAccordionItemContext, provideAccordionItemContext] =
-  createContext<AccordionItemContext>({name: "AccordionItemContext"});
+  createContext<AccordionItemContext>({ name: "AccordionItemContext" });

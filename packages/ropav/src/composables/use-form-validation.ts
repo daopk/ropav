@@ -1,10 +1,10 @@
-import type {FormValidationState, ValidatableElement} from "./use-form-validation-state";
-import type {MaybeRefOrGetter, Ref} from "vue";
+import type { FormValidationState, ValidatableElement } from "./use-form-validation-state";
+import type { MaybeRefOrGetter, Ref } from "vue";
 
-import {onScopeDispose, toValue, watch, watchEffect} from "vue";
+import { onScopeDispose, toValue, watch, watchEffect } from "vue";
 
-import {getNativeValidation} from "./use-form-validation-state";
-import {setInteractionModality} from "./use-interaction-states";
+import { getNativeValidation } from "./use-form-validation-state";
+import { setInteractionModality } from "./use-interaction-states";
 
 export interface UseFormValidationOptions {
   /** Called instead of focusing the element when a failed submit lands on this field. */
@@ -63,7 +63,7 @@ export const useFormValidation = (
 
       if (!input || input.disabled) return;
 
-      const {isInvalid, validationErrors} = state.realtimeValidation.value;
+      const { isInvalid, validationErrors } = state.realtimeValidation.value;
 
       input.setCustomValidity(isInvalid ? validationErrors.join(" ") || "Invalid value." : "");
 
@@ -75,7 +75,7 @@ export const useFormValidation = (
       // back the custom error just written and call it the browser's own verdict.
       if (!isInvalid) state.updateValidation(getNativeValidation(input));
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   const onInvalid = (event: Event) => {
@@ -139,7 +139,7 @@ export const useFormValidation = (
     if (!event.defaultPrevented) state.resetValidation();
   };
 
-  let attached: {form: HTMLFormElement | null; input: ValidatableElement} | null = null;
+  let attached: { form: HTMLFormElement | null; input: ValidatableElement } | null = null;
 
   const detach = () => {
     if (!attached) return;
@@ -166,9 +166,9 @@ export const useFormValidation = (
       input.addEventListener("change", onChange);
       input.addEventListener("blur", onBlur);
       form?.addEventListener("reset", onReset);
-      attached = {form, input};
+      attached = { form, input };
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(detach, true);
@@ -199,7 +199,7 @@ export const useValidationInput = (
       unregister?.();
       unregister = input ? register(input) : undefined;
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

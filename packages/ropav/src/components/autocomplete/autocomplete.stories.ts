@@ -1,26 +1,26 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {SelectedValue} from "../../composables/use-select-state";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { SelectedValue } from "../../composables/use-select-state";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 import IconMapPin from "~icons/gravity-ui/map-pin";
 
-import {useFilter} from "../../composables/use-filter";
-import {avatarSrc} from "../../utils/story-assets";
-import {ListLayout} from "../../utils/virtualizer-list-layout";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {ButtonRoot} from "../button";
-import {DescriptionRoot} from "../description";
-import {EmptyStateRoot} from "../empty-state";
-import {FieldErrorRoot} from "../field-error";
-import {FormRoot} from "../form";
-import {HeaderRoot} from "../header";
-import {LabelRoot} from "../label";
-import {ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {ListBoxSectionRoot} from "../list-box-section";
+import { useFilter } from "../../composables/use-filter";
+import { avatarSrc } from "../../utils/story-assets";
+import { ListLayout } from "../../utils/virtualizer-list-layout";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { ButtonRoot } from "../button";
+import { DescriptionRoot } from "../description";
+import { EmptyStateRoot } from "../empty-state";
+import { FieldErrorRoot } from "../field-error";
+import { FormRoot } from "../form";
+import { HeaderRoot } from "../header";
+import { LabelRoot } from "../label";
+import { ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { ListBoxSectionRoot } from "../list-box-section";
 import {
   SearchFieldClearButton,
   SearchFieldGroup,
@@ -28,12 +28,12 @@ import {
   SearchFieldRoot,
   SearchFieldSearchIcon,
 } from "../search-field";
-import {SeparatorRoot} from "../separator";
-import {SpinnerRoot} from "../spinner";
-import {SurfaceRoot} from "../surface";
-import {TagRoot} from "../tag";
-import {TagGroupList, TagGroupRoot} from "../tag-group";
-import {VirtualizerRoot} from "../virtualizer";
+import { SeparatorRoot } from "../separator";
+import { SpinnerRoot } from "../spinner";
+import { SurfaceRoot } from "../surface";
+import { TagRoot } from "../tag";
+import { TagGroupList, TagGroupRoot } from "../tag-group";
+import { VirtualizerRoot } from "../virtualizer";
 
 import AutocompleteClearButton from "./autocomplete-clear-button.vue";
 import AutocompleteFilter from "./autocomplete-filter.vue";
@@ -103,85 +103,85 @@ type Story = StoryObj<typeof meta>;
  * a closed autocomplete answers from, and what the filter narrows.
  */
 const ANIMALS = [
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
-  {id: "elephant", name: "Elephant"},
-  {id: "lion", name: "Lion"},
-  {id: "tiger", name: "Tiger"},
-  {id: "giraffe", name: "Giraffe"},
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
+  { id: "elephant", name: "Elephant" },
+  { id: "lion", name: "Lion" },
+  { id: "tiger", name: "Tiger" },
+  { id: "giraffe", name: "Giraffe" },
 ];
 
 const OPTIONS = [
-  {id: "option1", name: "Option 1"},
-  {id: "option2", name: "Option 2"},
-  {id: "option3", name: "Option 3"},
-  {id: "option4", name: "Option 4"},
+  { id: "option1", name: "Option 1" },
+  { id: "option2", name: "Option 2" },
+  { id: "option3", name: "Option 3" },
+  { id: "option4", name: "Option 4" },
 ];
 
 const STATES = [
-  {id: "florida", name: "Florida"},
-  {id: "delaware", name: "Delaware"},
-  {id: "california", name: "California"},
-  {id: "texas", name: "Texas"},
-  {id: "new-york", name: "New York"},
-  {id: "washington", name: "Washington"},
+  { id: "florida", name: "Florida" },
+  { id: "delaware", name: "Delaware" },
+  { id: "california", name: "California" },
+  { id: "texas", name: "Texas" },
+  { id: "new-york", name: "New York" },
+  { id: "washington", name: "Washington" },
 ];
 
 const CONTROLLED_STATES = [
-  {id: "california", name: "California"},
-  {id: "texas", name: "Texas"},
-  {id: "florida", name: "Florida"},
-  {id: "new-york", name: "New York"},
-  {id: "illinois", name: "Illinois"},
-  {id: "pennsylvania", name: "Pennsylvania"},
+  { id: "california", name: "California" },
+  { id: "texas", name: "Texas" },
+  { id: "florida", name: "Florida" },
+  { id: "new-york", name: "New York" },
+  { id: "illinois", name: "Illinois" },
+  { id: "pennsylvania", name: "Pennsylvania" },
 ];
 
 const COUNTRIES = [
-  {id: "usa", name: "United States"},
-  {id: "canada", name: "Canada"},
-  {id: "mexico", name: "Mexico"},
-  {id: "uk", name: "United Kingdom"},
-  {id: "france", name: "France"},
-  {id: "germany", name: "Germany"},
+  { id: "usa", name: "United States" },
+  { id: "canada", name: "Canada" },
+  { id: "mexico", name: "Mexico" },
+  { id: "uk", name: "United Kingdom" },
+  { id: "france", name: "France" },
+  { id: "germany", name: "Germany" },
 ];
 
 const VISIT_COUNTRIES = [
-  {id: "argentina", name: "Argentina"},
-  {id: "venezuela", name: "Venezuela"},
-  {id: "japan", name: "Japan"},
-  {id: "france", name: "France"},
-  {id: "italy", name: "Italy"},
-  {id: "spain", name: "Spain"},
+  { id: "argentina", name: "Argentina" },
+  { id: "venezuela", name: "Venezuela" },
+  { id: "japan", name: "Japan" },
+  { id: "france", name: "France" },
+  { id: "italy", name: "Italy" },
+  { id: "spain", name: "Spain" },
 ];
 
 const COUNTRY_SECTIONS = [
   {
     id: "north-america",
     items: [
-      {id: "usa", name: "United States"},
-      {id: "canada", name: "Canada"},
-      {id: "mexico", name: "Mexico"},
+      { id: "usa", name: "United States" },
+      { id: "canada", name: "Canada" },
+      { id: "mexico", name: "Mexico" },
     ],
     title: "North America",
   },
   {
     id: "europe",
     items: [
-      {id: "uk", name: "United Kingdom"},
-      {id: "france", name: "France"},
-      {id: "germany", name: "Germany"},
-      {id: "spain", name: "Spain"},
-      {id: "italy", name: "Italy"},
+      { id: "uk", name: "United Kingdom" },
+      { id: "france", name: "France" },
+      { id: "germany", name: "Germany" },
+      { id: "spain", name: "Spain" },
+      { id: "italy", name: "Italy" },
     ],
     title: "Europe",
   },
   {
     id: "asia",
     items: [
-      {id: "japan", name: "Japan"},
-      {id: "china", name: "China"},
-      {id: "india", name: "India"},
-      {id: "south-korea", name: "South Korea"},
+      { id: "japan", name: "Japan" },
+      { id: "china", name: "China" },
+      { id: "india", name: "India" },
+      { id: "south-korea", name: "South Korea" },
     ],
     title: "Asia",
   },
@@ -190,48 +190,48 @@ const COUNTRY_SECTIONS = [
 const SECTIONED_COUNTRIES = COUNTRY_SECTIONS.flatMap((section) => section.items);
 
 const DISABLED_ANIMALS = [
-  {id: "dog", name: "Dog"},
-  {id: "cat", name: "Cat"},
-  {id: "bird", name: "Bird"},
-  {id: "kangaroo", name: "Kangaroo"},
-  {id: "elephant", name: "Elephant"},
-  {id: "tiger", name: "Tiger"},
+  { id: "dog", name: "Dog" },
+  { id: "cat", name: "Cat" },
+  { id: "bird", name: "Bird" },
+  { id: "kangaroo", name: "Kangaroo" },
+  { id: "elephant", name: "Elephant" },
+  { id: "tiger", name: "Tiger" },
 ];
 
 const TAGS = [
-  {id: "react", name: "React"},
-  {id: "typescript", name: "TypeScript"},
-  {id: "javascript", name: "JavaScript"},
-  {id: "nodejs", name: "Node.js"},
-  {id: "python", name: "Python"},
-  {id: "vue", name: "Vue"},
-  {id: "angular", name: "Angular"},
-  {id: "nextjs", name: "Next.js"},
+  { id: "react", name: "React" },
+  { id: "typescript", name: "TypeScript" },
+  { id: "javascript", name: "JavaScript" },
+  { id: "nodejs", name: "Node.js" },
+  { id: "python", name: "Python" },
+  { id: "vue", name: "Vue" },
+  { id: "angular", name: "Angular" },
+  { id: "nextjs", name: "Next.js" },
 ];
 
 const EMAILS = [
-  {email: "alice@example.com", id: "alice@example.com", name: "Alice Johnson"},
-  {email: "bob@example.com", id: "bob@example.com", name: "Bob Smith"},
-  {email: "charlie@example.com", id: "charlie@example.com", name: "Charlie Brown"},
-  {email: "diana@example.com", id: "diana@example.com", name: "Diana Prince"},
-  {email: "eve@example.com", id: "eve@example.com", name: "Eve Wilson"},
+  { email: "alice@example.com", id: "alice@example.com", name: "Alice Johnson" },
+  { email: "bob@example.com", id: "bob@example.com", name: "Bob Smith" },
+  { email: "charlie@example.com", id: "charlie@example.com", name: "Charlie Brown" },
+  { email: "diana@example.com", id: "diana@example.com", name: "Diana Prince" },
+  { email: "eve@example.com", id: "eve@example.com", name: "Eve Wilson" },
 ];
 
 const CITIES = [
-  {country: "USA", id: "New York", name: "New York"},
-  {country: "USA", id: "Los Angeles", name: "Los Angeles"},
-  {country: "USA", id: "Chicago", name: "Chicago"},
-  {country: "UK", id: "London", name: "London"},
-  {country: "France", id: "Paris", name: "Paris"},
-  {country: "Japan", id: "Tokyo", name: "Tokyo"},
-  {country: "Australia", id: "Sydney", name: "Sydney"},
-  {country: "Canada", id: "Toronto", name: "Toronto"},
-  {country: "Germany", id: "Berlin", name: "Berlin"},
-  {country: "Spain", id: "Madrid", name: "Madrid"},
+  { country: "USA", id: "New York", name: "New York" },
+  { country: "USA", id: "Los Angeles", name: "Los Angeles" },
+  { country: "USA", id: "Chicago", name: "Chicago" },
+  { country: "UK", id: "London", name: "London" },
+  { country: "France", id: "Paris", name: "Paris" },
+  { country: "Japan", id: "Tokyo", name: "Tokyo" },
+  { country: "Australia", id: "Sydney", name: "Sydney" },
+  { country: "Canada", id: "Toronto", name: "Toronto" },
+  { country: "Germany", id: "Berlin", name: "Berlin" },
+  { country: "Spain", id: "Madrid", name: "Madrid" },
 ];
 
 const USERS = [
-  {avatarUrl: avatarSrc("blue"), email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob"},
+  { avatarUrl: avatarSrc("blue"), email: "bob@ropav.com", fallback: "B", id: "1", name: "Bob" },
   {
     avatarUrl: avatarSrc("green"),
     email: "fred@ropav.com",
@@ -246,7 +246,7 @@ const USERS = [
     id: "3",
     name: "Martha",
   },
-  {avatarUrl: avatarSrc("red"), email: "john@ropav.com", fallback: "J", id: "4", name: "John"},
+  { avatarUrl: avatarSrc("red"), email: "john@ropav.com", fallback: "J", id: "4", name: "John" },
   {
     avatarUrl: avatarSrc("orange"),
     email: "jane@ropav.com",
@@ -303,7 +303,7 @@ const LAST_NAMES = [
 ];
 
 const generateUsers = (count: number) =>
-  Array.from({length: count}, (_unused, index) => {
+  Array.from({ length: count }, (_unused, index) => {
     const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
     const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
 
@@ -314,7 +314,7 @@ const generateUsers = (count: number) =>
     };
   });
 
-const byName = (item: {name: string}) => item.name;
+const byName = (item: { name: string }) => item.name;
 
 /** The search field every story puts above its options, so the markup is written once. */
 const searchTemplate = (placeholder: string) => `
@@ -359,11 +359,11 @@ const popoverTemplate = (placeholder: string, empty = "No results found") => `
 
 export const Default: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: ANIMALS}),
+      setup: () => ({ byName, contains: filter.value.contains, items: ANIMALS }),
       template: `
         <Autocomplete
           class="w-[256px]"
@@ -386,11 +386,11 @@ export const Default: Story = {
 
 export const WithClearButton: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: ANIMALS}),
+      setup: () => ({ byName, contains: filter.value.contains, items: ANIMALS }),
       template: `
         <Autocomplete
           class="w-[256px]"
@@ -414,7 +414,7 @@ export const WithClearButton: Story = {
 
 export const WithOnClearCallback: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<SelectedValue>(null);
     const clearCount = shallowRef(0);
 
@@ -472,7 +472,7 @@ export const WithOnClearCallback: Story = {
 
 export const Variants: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const single = shallowRef<SelectedValue>(null);
     const singleSecondary = shallowRef<SelectedValue>(null);
     const multiple = shallowRef<SelectedValue>([]);
@@ -580,7 +580,7 @@ export const Variants: Story = {
  */
 export const MultipleSelect: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<CollectionKey[]>([]);
 
     return {
@@ -629,11 +629,11 @@ export const MultipleSelect: Story = {
 
 export const FullWidth: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: STATES}),
+      setup: () => ({ byName, contains: filter.value.contains, items: STATES }),
       // `full-width` is written as a bare attribute on purpose: the `:full-width="true"` form
       // stays green even when the prop is declared in a way that never casts an empty attribute.
       template: `
@@ -662,11 +662,11 @@ export const FullWidth: Story = {
 
 export const WithDescription: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: STATES}),
+      setup: () => ({ byName, contains: filter.value.contains, items: STATES }),
       template: `
         <Autocomplete
           class="w-[256px]"
@@ -697,14 +697,14 @@ export const WithDescription: Story = {
  */
 export const WithSections: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
       setup: () => ({
         byName,
         contains: filter.value.contains,
-        groupsOf: (items: Array<{id: string; name: string}>) => {
+        groupsOf: (items: Array<{ id: string; name: string }>) => {
           const keys = new Set(items.map((item) => item.id));
 
           return COUNTRY_SECTIONS.map((section) => ({
@@ -761,7 +761,7 @@ export const WithSections: Story = {
 
 export const WithDisabledOptions: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
@@ -795,11 +795,11 @@ export const WithDisabledOptions: Story = {
 
 export const CustomIndicator: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: STATES}),
+      setup: () => ({ byName, contains: filter.value.contains, items: STATES }),
       template: `
         <Autocomplete
           class="w-[256px]"
@@ -831,7 +831,7 @@ export const CustomIndicator: Story = {
  */
 export const Required: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
@@ -911,7 +911,7 @@ export const Required: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<SelectedValue>("california");
 
     const selectedName = computed(
@@ -954,7 +954,7 @@ export const Controlled: Story = {
 
 export const ControlledOpenState: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const isOpen = shallowRef(false);
 
     return {
@@ -1004,7 +1004,7 @@ export const ControlledOpenState: Story = {
  */
 export const AsynchronousFiltering: Story = {
   render: () => {
-    const items = shallowRef<Array<{id: string; name: string}>>([]);
+    const items = shallowRef<Array<{ id: string; name: string }>>([]);
     const isLoading = shallowRef(false);
     const inputValue = shallowRef("");
 
@@ -1021,11 +1021,11 @@ export const AsynchronousFiltering: Story = {
       try {
         const response = await fetch(
           `https://swapi.py4e.com/api/people/?search=${encodeURIComponent(search)}`,
-          {signal: controller.signal},
+          { signal: controller.signal },
         );
-        const page = (await response.json()) as {results: Array<{name: string}>};
+        const page = (await response.json()) as { results: Array<{ name: string }> };
 
-        items.value = page.results.map((result) => ({id: result.name, name: result.name}));
+        items.value = page.results.map((result) => ({ id: result.name, name: result.name }));
       } catch {
         // An aborted request is the ordinary case here — every keystroke replaces the one before.
       } finally {
@@ -1121,7 +1121,7 @@ export const AsynchronousFiltering: Story = {
  */
 export const Virtualization: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const allUsers = generateUsers(1000);
     const search = shallowRef("");
 
@@ -1130,7 +1130,7 @@ export const Virtualization: Story = {
 
       if (!query) return allUsers;
 
-      const {contains} = filter.value;
+      const { contains } = filter.value;
 
       return allUsers.filter((user) => contains(user.name, query) || contains(user.email, query));
     });
@@ -1211,7 +1211,7 @@ export const Virtualization: Story = {
 
 export const Disabled: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
@@ -1286,7 +1286,7 @@ export const Disabled: Story = {
 
 export const UserSelection: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
@@ -1355,7 +1355,7 @@ export const UserSelection: Story = {
 
 export const UserSelectionMultiple: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<CollectionKey[]>([]);
 
     return {
@@ -1429,11 +1429,11 @@ export const UserSelectionMultiple: Story = {
 
 export const LocationSearch: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
 
     return {
       components,
-      setup: () => ({byName, contains: filter.value.contains, items: CITIES}),
+      setup: () => ({ byName, contains: filter.value.contains, items: CITIES }),
       template: `
         <Autocomplete
           class="w-[256px]"
@@ -1479,7 +1479,7 @@ export const LocationSearch: Story = {
 
 export const TagGroupSelection: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<CollectionKey[]>([]);
 
     return {
@@ -1525,7 +1525,7 @@ export const TagGroupSelection: Story = {
 
 export const EmailRecipients: Story = {
   render: () => {
-    const filter = useFilter({sensitivity: "base"});
+    const filter = useFilter({ sensitivity: "base" });
     const value = shallowRef<CollectionKey[]>([]);
 
     return {
@@ -1533,7 +1533,7 @@ export const EmailRecipients: Story = {
       setup: () => ({
         // Matched on the address rather than the name, which is what somebody typing a recipient
         // reaches for first.
-        byEmail: (item: {email: string}) => item.email,
+        byEmail: (item: { email: string }) => item.email,
 
         contains: filter.value.contains,
 

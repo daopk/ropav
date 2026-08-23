@@ -1,9 +1,9 @@
-import type {CalendarDate as CalendarDateType} from "@internationalized/date";
+import type { CalendarDate as CalendarDateType } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   CalendarYearPickerCell,
@@ -44,29 +44,29 @@ const render = (props: Record<string, unknown> = {}) => {
       default: () => [
         h(RangeCalendarHeader, null, {
           default: () => [
-            h(RangeCalendarNavButton, {slot: "previous"}),
+            h(RangeCalendarNavButton, { slot: "previous" }),
             h(CalendarYearPickerTrigger, null, {
               default: () => h(CalendarYearPickerTriggerHeading),
             }),
             h(RangeCalendarHeading),
-            h(RangeCalendarNavButton, {slot: "next"}),
+            h(RangeCalendarNavButton, { slot: "next" }),
           ],
         }),
         h(RangeCalendarGrid, null, {
           default: () => [
             h(RangeCalendarGridHeader, null, {
-              default: ({day}: {day: string}) =>
-                h(RangeCalendarHeaderCell, null, {default: () => day}),
+              default: ({ day }: { day: string }) =>
+                h(RangeCalendarHeaderCell, null, { default: () => day }),
             }),
             h(RangeCalendarGridBody, null, {
-              default: ({date}: {date: CalendarDateType}) => h(RangeCalendarCell, {date}),
+              default: ({ date }: { date: CalendarDateType }) => h(RangeCalendarCell, { date }),
             }),
           ],
         }),
         h(CalendarYearPickerGrid, null, {
           default: () =>
             h(CalendarYearPickerGridBody, null, {
-              default: ({year}: {year: number}) => h(CalendarYearPickerCell, {year}),
+              default: ({ year }: { year: number }) => h(CalendarYearPickerCell, { year }),
             }),
         }),
       ],
@@ -81,7 +81,7 @@ const render = (props: Record<string, unknown> = {}) => {
     ...result.container.querySelectorAll<HTMLElement>(`[data-slot='${name}']`),
   ];
 
-  return {...result, all, slot};
+  return { ...result, all, slot };
 };
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
@@ -112,7 +112,7 @@ describe("RangeCalendar interop", () => {
   });
 
   it("reaches the calendar's state from a cell in the host", () => {
-    const calendar = render({value: {end: jun(12), start: jun(10)}});
+    const calendar = render({ value: { end: jun(12), start: jun(10) } });
     const selected = calendar.all("range-calendar-cell").filter((cell) => cell.dataset["selected"]);
 
     expect(selected.map((cell) => cell.textContent?.trim())).toEqual(["10", "11", "12"]);
@@ -121,7 +121,7 @@ describe("RangeCalendar interop", () => {
 
   it("tells the two ends apart from a cell in the host", () => {
     // Which end a cell is comes from the highlighted range on the state context.
-    const calendar = render({value: {end: jun(12), start: jun(10)}});
+    const calendar = render({ value: { end: jun(12), start: jun(10) } });
 
     expect(
       calendar

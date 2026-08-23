@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {ModalRootProps} from "./modal.types";
+import type { ModalRootProps } from "./modal.types";
 
-import {modalVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { modalVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useDialogTrigger} from "../../composables/use-dialog-trigger";
-import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
+import { providePressResponder } from "../../composables/press-responder";
+import { useDialogTrigger } from "../../composables/use-dialog-trigger";
+import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
 
-import {provideModalContext} from "./modal.context";
+import { provideModalContext } from "./modal.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // modal from one a caller is holding closed.
-const props = withDefaults(defineProps<ModalRootProps>(), {isOpen: undefined});
+const props = withDefaults(defineProps<ModalRootProps>(), { isOpen: undefined });
 
 const emit = defineEmits<{
   openChange: [isOpen: boolean];
   "update:isOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 /**
  * An externally held state wins over `isOpen`, matching React.
@@ -37,7 +37,7 @@ const state = useOverlayTriggerState({
   },
 });
 
-const trigger = useDialogTrigger({isDisabled: () => props.isDisabled}, state);
+const trigger = useDialogTrigger({ isDisabled: () => props.isDisabled }, state);
 
 // The trigger is whatever pressable sits inside, which is why the behaviour is handed down rather
 // than built into a trigger component: `<Modal><Button/></Modal>` is the common case, and

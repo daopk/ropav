@@ -1,10 +1,10 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "./use-field-ids";
-import {useId} from "./use-id";
-import {useLabels} from "./use-labels";
+import { provideFieldIdsContext, useFieldIds } from "./use-field-ids";
+import { useId } from "./use-id";
+import { useLabels } from "./use-labels";
 
 export interface UseProgressLabelingOptions {
   ariaLabel?: MaybeRefOrGetter<string | undefined>;
@@ -32,7 +32,7 @@ export const useProgressLabeling = (
   options: UseProgressLabelingOptions,
 ): UseProgressLabelingReturn => {
   const id = useId(options.id);
-  const {context, labelId} = useFieldIds({
+  const { context, labelId } = useFieldIds({
     labelElementType: "span",
     slots: ["label"],
   });

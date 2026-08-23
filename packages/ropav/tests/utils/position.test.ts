@@ -1,8 +1,8 @@
-import type {Placement} from "@/utils/position";
+import type { Placement } from "@/utils/position";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {calculatePositionInternal, translateRTL} from "@/utils/position";
+import { calculatePositionInternal, translateRTL } from "@/utils/position";
 
 /**
  * jsdom has no layout, so the measurements are supplied by hand and the arithmetic is what is
@@ -12,15 +12,15 @@ import {calculatePositionInternal, translateRTL} from "@/utils/position";
 const VIEWPORT = {
   height: 800,
   left: 0,
-  scroll: {left: 0, top: 0},
+  scroll: { left: 0, top: 0 },
   top: 0,
   totalHeight: 800,
   totalWidth: 1000,
   width: 1000,
 };
 
-const NO_MARGINS = {bottom: 0, left: 0, right: 0, top: 0};
-const NO_CONTAINER_OFFSET = {height: 0, left: 0, top: 0, width: 0};
+const NO_MARGINS = { bottom: 0, left: 0, right: 0, top: 0 };
+const NO_CONTAINER_OFFSET = { height: 0, left: 0, top: 0, width: 0 };
 
 interface Rect {
   top: number;
@@ -47,7 +47,7 @@ const position = (
     placement,
     trigger,
     // Copied, because the overlay size is capped in place by the height calculation.
-    {...overlay},
+    { ...overlay },
     NO_MARGINS,
     options.padding ?? 12,
     options.flip ?? true,
@@ -64,10 +64,10 @@ const position = (
     null,
   );
 
-const TRIGGER = {height: 40, left: 200, top: 100, width: 80};
+const TRIGGER = { height: 40, left: 200, top: 100, width: 80 };
 /** Far enough down the viewport that there is room for the overlay on either side of it. */
-const MID_TRIGGER = {height: 40, left: 200, top: 400, width: 80};
-const OVERLAY = {height: 160, left: 0, top: 0, width: 220};
+const MID_TRIGGER = { height: 40, left: 200, top: 400, width: 80 };
+const OVERLAY = { height: 160, left: 0, top: 0, width: 220 };
 
 describe("calculatePosition", () => {
   describe("placement", () => {
@@ -116,7 +116,7 @@ describe("calculatePosition", () => {
     });
 
     it("applies a cross-axis offset", () => {
-      const result = position("bottom left", TRIGGER, OVERLAY, {crossOffset: 16});
+      const result = position("bottom left", TRIGGER, OVERLAY, { crossOffset: 16 });
 
       expect(result.position.left).toBe(TRIGGER.left + 16);
     });
@@ -124,7 +124,7 @@ describe("calculatePosition", () => {
 
   describe("flipping", () => {
     it("flips below when there is not enough room above", () => {
-      const nearTop = {height: 40, left: 200, top: 30, width: 80};
+      const nearTop = { height: 40, left: 200, top: 30, width: 80 };
       const result = position("top left", nearTop, OVERLAY);
 
       expect(result.placement).toBe("bottom");
@@ -132,7 +132,7 @@ describe("calculatePosition", () => {
     });
 
     it("flips above when there is not enough room below", () => {
-      const nearBottom = {height: 40, left: 200, top: 700, width: 80};
+      const nearBottom = { height: 40, left: 200, top: 700, width: 80 };
       const result = position("bottom left", nearBottom, OVERLAY);
 
       expect(result.placement).toBe("top");
@@ -141,15 +141,15 @@ describe("calculatePosition", () => {
     it("stays put when flipping would not help", () => {
       // Cramped both ways: flipping would only move the problem, and a menu that jumps sides
       // for no gain is worse than one that stays where it was asked to be.
-      const tall = {height: 40, left: 200, top: 380, width: 80};
-      const result = position("bottom left", tall, {height: 700, left: 0, top: 0, width: 220});
+      const tall = { height: 40, left: 200, top: 380, width: 80 };
+      const result = position("bottom left", tall, { height: 700, left: 0, top: 0, width: 220 });
 
       expect(result.placement).toBe("bottom");
     });
 
     it("honours a caller that refuses to flip", () => {
-      const nearBottom = {height: 40, left: 200, top: 700, width: 80};
-      const result = position("bottom left", nearBottom, OVERLAY, {flip: false});
+      const nearBottom = { height: 40, left: 200, top: 700, width: 80 };
+      const result = position("bottom left", nearBottom, OVERLAY, { flip: false });
 
       expect(result.placement).toBe("bottom");
     });
@@ -157,7 +157,7 @@ describe("calculatePosition", () => {
 
   describe("staying inside the boundary", () => {
     it("shifts an overlay that would overflow the end edge", () => {
-      const nearRight = {height: 40, left: 940, top: 100, width: 80};
+      const nearRight = { height: 40, left: 940, top: 100, width: 80 };
       const result = position("bottom left", nearRight, OVERLAY);
 
       // Its end edge lands on the boundary's padded edge rather than off screen.
@@ -165,7 +165,7 @@ describe("calculatePosition", () => {
     });
 
     it("shifts an overlay that would overflow the start edge", () => {
-      const nearLeft = {height: 40, left: 0, top: 100, width: 80};
+      const nearLeft = { height: 40, left: 0, top: 100, width: 80 };
       const result = position("bottom right", nearLeft, OVERLAY);
 
       expect(result.position.left).toBe(12);
@@ -174,7 +174,7 @@ describe("calculatePosition", () => {
     it("keeps the overlay overlapping its trigger on the cross axis", () => {
       // A wide overlay aligned to a narrow trigger far to the right would otherwise be pushed
       // clear of the trigger, leaving an arrow pointing at nothing.
-      const result = position("bottom left", TRIGGER, {height: 160, left: 0, top: 0, width: 900});
+      const result = position("bottom left", TRIGGER, { height: 160, left: 0, top: 0, width: 900 });
 
       expect(result.position.left).toBeLessThanOrEqual(TRIGGER.left + TRIGGER.width);
     });
@@ -194,20 +194,20 @@ describe("calculatePosition", () => {
     });
 
     it("never reports a negative height", () => {
-      const offscreen = {height: 40, left: 200, top: -400, width: 80};
-      const result = position("top left", offscreen, OVERLAY, {flip: false});
+      const offscreen = { height: 40, left: 200, top: -400, width: 80 };
+      const result = position("top left", offscreen, OVERLAY, { flip: false });
 
       expect(result.maxHeight).toBeGreaterThanOrEqual(0);
     });
 
     it("honours a smaller cap from the caller", () => {
-      const result = position("bottom left", TRIGGER, OVERLAY, {maxHeight: 100});
+      const result = position("bottom left", TRIGGER, OVERLAY, { maxHeight: 100 });
 
       expect(result.maxHeight).toBe(100);
     });
 
     it("ignores a caller cap larger than the room available", () => {
-      const result = position("bottom left", TRIGGER, OVERLAY, {maxHeight: 5000});
+      const result = position("bottom left", TRIGGER, OVERLAY, { maxHeight: 5000 });
 
       expect(result.maxHeight).toBe(VIEWPORT.height - 148 - 12);
     });
@@ -219,7 +219,7 @@ describe("calculatePosition", () => {
 
       // The stylesheet uses this as the transform origin, so the overlay grows out of the
       // trigger rather than out of its own centre.
-      expect(result.triggerAnchorPoint).toEqual({x: 0, y: 0});
+      expect(result.triggerAnchorPoint).toEqual({ x: 0, y: 0 });
     });
 
     it("anchors a centred overlay to the middle of the trigger", () => {
@@ -248,7 +248,7 @@ describe("calculatePosition", () => {
     const ARROW = 12;
 
     it("centres the arrow on the trigger", () => {
-      const result = position("bottom left", TRIGGER, OVERLAY, {arrowSize: ARROW});
+      const result = position("bottom left", TRIGGER, OVERLAY, { arrowSize: ARROW });
 
       // The overlay starts at the trigger's left edge, so the trigger's centre is half its
       // width into the overlay.
@@ -257,14 +257,14 @@ describe("calculatePosition", () => {
     });
 
     it("centres the arrow on the trigger when the overlay is centred", () => {
-      const result = position("bottom", TRIGGER, OVERLAY, {arrowSize: ARROW});
+      const result = position("bottom", TRIGGER, OVERLAY, { arrowSize: ARROW });
 
       expect(result.position.left).toBe(130);
       expect(result.arrowOffsetLeft).toBe(OVERLAY.width / 2);
     });
 
     it("reports the offset along the cross axis only", () => {
-      const result = position("right top", TRIGGER, OVERLAY, {arrowSize: ARROW});
+      const result = position("right top", TRIGGER, OVERLAY, { arrowSize: ARROW });
 
       expect(result.arrowOffsetTop).toBe(TRIGGER.height / 2);
       expect(result.arrowOffsetLeft).toBeUndefined();
@@ -280,7 +280,7 @@ describe("calculatePosition", () => {
 
       expect(withArrow.position.left).toBe(TRIGGER.left + TRIGGER.width - ARROW);
 
-      const withoutArrow = position("bottom left", TRIGGER, OVERLAY, {crossOffset: 300});
+      const withoutArrow = position("bottom left", TRIGGER, OVERLAY, { crossOffset: 300 });
 
       expect(withoutArrow.position.left).toBe(TRIGGER.left + TRIGGER.width);
     });
@@ -288,15 +288,15 @@ describe("calculatePosition", () => {
     it("keeps the arrow inside the overlay's own edges", () => {
       // A trigger whose centre sits past the padded boundary: the overlay is pushed inwards to
       // stay on screen, so the trigger's centre lands outside it.
-      const trigger = {height: 40, left: 980, top: 400, width: 16};
-      const result = position("bottom left", trigger, OVERLAY, {arrowSize: ARROW});
+      const trigger = { height: 40, left: 980, top: 400, width: 16 };
+      const result = position("bottom left", trigger, OVERLAY, { arrowSize: ARROW });
 
       expect(result.position.left).toBe(768);
       expect(result.arrowOffsetLeft).toBe(OVERLAY.width - ARROW / 2);
     });
 
     it("keeps the arrow further from the corner when a boundary offset is given", () => {
-      const trigger = {height: 40, left: 980, top: 400, width: 16};
+      const trigger = { height: 40, left: 980, top: 400, width: 16 };
       const result = position("bottom left", trigger, OVERLAY, {
         arrowBoundaryOffset: 10,
         arrowSize: ARROW,
@@ -308,7 +308,7 @@ describe("calculatePosition", () => {
     it("anchors the overlay to the arrow rather than to the aligned edge", () => {
       // The stylesheet uses the anchor point as `transform-origin`, so an overlay with an arrow
       // has to grow out of the arrow instead of out of the corner it is aligned to.
-      const withArrow = position("bottom right", TRIGGER, OVERLAY, {arrowSize: ARROW});
+      const withArrow = position("bottom right", TRIGGER, OVERLAY, { arrowSize: ARROW });
 
       expect(withArrow.triggerAnchorPoint.x).toBe(withArrow.arrowOffsetLeft);
 

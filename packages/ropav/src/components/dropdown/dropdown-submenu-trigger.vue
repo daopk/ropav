@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 
-import {computed, onScopeDispose, shallowRef, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {useSubmenuTriggerState} from "../../composables/use-overlay-trigger-state";
-import {useSafelyMouseToSubmenu} from "../../composables/use-safely-mouse-to-submenu";
-import {provideMenuItemPopupContext} from "../menu-item/menu-item.context";
-import {useMenuContext} from "../menu/menu.context";
+import { useId } from "../../composables/use-id";
+import { useSubmenuTriggerState } from "../../composables/use-overlay-trigger-state";
+import { useSafelyMouseToSubmenu } from "../../composables/use-safely-mouse-to-submenu";
+import { provideMenuItemPopupContext } from "../menu-item/menu-item.context";
+import { useMenuContext } from "../menu/menu.context";
 
-import {provideDropdownPopoverTarget, useDropdownContext} from "./dropdown.context";
+import { provideDropdownPopoverTarget, useDropdownContext } from "./dropdown.context";
 
 /** How long the pointer has to rest on the trigger before the submenu opens. */
 const HOVER_DELAY_MS = 200;
 
-const props = withDefaults(defineProps<{delay?: number; isDisabled?: boolean}>(), {
+const props = withDefaults(defineProps<{ delay?: number; isDisabled?: boolean }>(), {
   delay: HOVER_DELAY_MS,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const parentMenu = useMenuContext();
 const dropdown = useDropdownContext();
@@ -43,7 +43,7 @@ const submenuElement = shallowRef<HTMLElement | null>(null);
  * The level is fixed when this trigger is created, which is what places it in the tree; the key
  * decides whether the submenu open at that level is this one.
  */
-const state = useSubmenuTriggerState({triggerKey}, dropdown.state);
+const state = useSubmenuTriggerState({ triggerKey }, dropdown.state);
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
@@ -67,7 +67,7 @@ const closeSubmenu = () => {
 };
 
 const focusTrigger = () => {
-  triggerElement.value?.focus({preventScroll: true});
+  triggerElement.value?.focus({ preventScroll: true });
 };
 
 /**
@@ -97,7 +97,7 @@ watch(
     menu.addEventListener("focusin", onFocusin);
     onCleanup(() => menu.removeEventListener("focusin", onFocusin));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 // Without this, the diagonal path from the trigger to the submenu crosses the items below it, each
@@ -126,7 +126,7 @@ const onTriggerKeydown = (event: KeyboardEvent) => {
 
     if (!state.isOpen.value) openSubmenu("first");
     // Already open: the key means "go in", so focus follows.
-    else submenuElement.value?.focus({preventScroll: true});
+    else submenuElement.value?.focus({ preventScroll: true });
 
     return;
   }
@@ -178,7 +178,7 @@ provideMenuItemPopupContext({
   },
   onPointerleave: () => cancelOpenTimeout(),
   popupId: computed(() => (state.isOpen.value ? overlayId.value : undefined)),
-  registerTrigger: ({element, id, key}) => {
+  registerTrigger: ({ element, id, key }) => {
     triggerKey.value = key;
     triggerId.value = id;
     triggerElement.value = element();

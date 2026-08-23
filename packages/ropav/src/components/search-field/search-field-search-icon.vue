@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {SearchFieldSearchIconProps} from "./search-field.types";
+import type { SearchFieldSearchIconProps } from "./search-field.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {IconSearch} from "../icons";
+import { IconSearch } from "../icons";
 
-import {useSearchFieldContext} from "./search-field.context";
+import { useSearchFieldContext } from "./search-field.context";
 
 const props = defineProps<SearchFieldSearchIconProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useSearchFieldContext();
+const { slots } = useSearchFieldContext();
 
-const styles = computed(() => slots.value.searchIcon({class: props.class}));
+const styles = computed(() => slots.value.searchIcon({ class: props.class }));
 </script>
 
 <template>

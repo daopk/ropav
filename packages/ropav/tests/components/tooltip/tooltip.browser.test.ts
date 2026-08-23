@@ -1,20 +1,20 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {resetTooltipWarmup} from "@/composables/use-tooltip-trigger-state";
+import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 import TooltipFixture from "./fixtures.vue";
 
 /** Opens and closes at once, so a case can assert what happened rather than wait for it. */
-const INSTANT = {closeDelay: 0, delay: 0} as const;
+const INSTANT = { closeDelay: 0, delay: 0 } as const;
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(TooltipFixture, {props: {...INSTANT, ...props}});
+  const result = renderVapor(TooltipFixture, { props: { ...INSTANT, ...props } });
 
   mounted.push(result);
 
@@ -42,7 +42,7 @@ const place = (result: RenderResult, top = "50%") => {
 };
 
 const triggerOf = (result: RenderResult, name = "Open tooltip") =>
-  result.getByRole("button", {name}) as HTMLElement;
+  result.getByRole("button", { name }) as HTMLElement;
 
 const tooltipElement = () => document.body.querySelector<HTMLElement>(".tooltip")!;
 
@@ -56,7 +56,7 @@ const tooltipElement = () => document.body.querySelector<HTMLElement>(".tooltip"
  * nothing. React Aria gates hover the same way for the same reason.
  */
 const arriveWithPointer = async (result: RenderResult) => {
-  await userEvent.hover(result.getByRole("button", {name: "Outside"}) as HTMLElement);
+  await userEvent.hover(result.getByRole("button", { name: "Outside" }) as HTMLElement);
   await nextTick();
 };
 
@@ -106,7 +106,7 @@ describe("Tooltip (browser)", () => {
       expect(tooltip).toBeTruthy();
       expect(tooltip.getAttribute("role")).toBe("tooltip");
 
-      await userEvent.hover(result.getByRole("button", {name: "Outside"}) as HTMLElement);
+      await userEvent.hover(result.getByRole("button", { name: "Outside" }) as HTMLElement);
       await settled(tooltip);
       await nextTick();
       await nextTick();
@@ -119,7 +119,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("stays open while the pointer is on the tooltip itself", async () => {
-      const result = render({closeDelay: 300, delay: 0});
+      const result = render({ closeDelay: 300, delay: 0 });
 
       place(result);
 
@@ -135,7 +135,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("waits out a real delay", async () => {
-      const result = render({closeDelay: 0, delay: 400});
+      const result = render({ closeDelay: 0, delay: 400 });
 
       place(result);
 
@@ -157,7 +157,7 @@ describe("Tooltip (browser)", () => {
 
   describe("keyboard", () => {
     it("opens at once on keyboard focus", async () => {
-      const result = render({delay: 3000});
+      const result = render({ delay: 3000 });
 
       place(result);
 
@@ -176,7 +176,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("closes on Escape", async () => {
-      const result = render({delay: 3000});
+      const result = render({ delay: 3000 });
 
       place(result);
 
@@ -201,7 +201,7 @@ describe("Tooltip (browser)", () => {
 
   describe("geometry", () => {
     it("sits above the trigger, three pixels clear of it", async () => {
-      const result = render({shouldFlip: false});
+      const result = render({ shouldFlip: false });
 
       place(result);
 
@@ -218,7 +218,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("leaves room for the arrow when one is asked for", async () => {
-      const result = render({shouldFlip: false, showArrow: true, withArrow: true});
+      const result = render({ shouldFlip: false, showArrow: true, withArrow: true });
 
       place(result);
 
@@ -234,7 +234,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("centres on the trigger and publishes the anchor point", async () => {
-      const result = render({shouldFlip: false});
+      const result = render({ shouldFlip: false });
 
       place(result);
 
@@ -269,7 +269,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("stays on the requested side when flipping is off", async () => {
-      const result = render({placement: "bottom", shouldFlip: false});
+      const result = render({ placement: "bottom", shouldFlip: false });
 
       place(result);
 
@@ -284,7 +284,7 @@ describe("Tooltip (browser)", () => {
 
   describe("arrow", () => {
     it("centres the arrow on the trigger", async () => {
-      const result = render({shouldFlip: false, showArrow: true, withArrow: true});
+      const result = render({ shouldFlip: false, showArrow: true, withArrow: true });
 
       place(result);
 
@@ -304,7 +304,7 @@ describe("Tooltip (browser)", () => {
     });
 
     it("takes its colour from the overlay", async () => {
-      const result = render({shouldFlip: false, showArrow: true, withArrow: true});
+      const result = render({ shouldFlip: false, showArrow: true, withArrow: true });
 
       place(result);
 
@@ -389,13 +389,13 @@ describe("Tooltip (browser)", () => {
     });
 
     it("stays in the document while it animates out", async () => {
-      const result = render({closeDelay: 0, delay: 0});
+      const result = render({ closeDelay: 0, delay: 0 });
 
       place(result);
 
       const tooltip = await open(result);
 
-      await userEvent.hover(result.getByRole("button", {name: "Outside"}) as HTMLElement);
+      await userEvent.hover(result.getByRole("button", { name: "Outside" }) as HTMLElement);
       await nextTick();
       await nextTick();
 
@@ -416,7 +416,7 @@ describe("Tooltip (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while open", async () => {
-      const result = render({showArrow: true, withArrow: true});
+      const result = render({ showArrow: true, withArrow: true });
 
       place(result);
 

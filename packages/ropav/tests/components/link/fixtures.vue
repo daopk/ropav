@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {LinkFixtureProps} from "./fixtures.types";
+import type { LinkFixtureProps } from "./fixtures.types";
 
-import {Fieldset} from "@/components/fieldset";
-import {LinkIcon, LinkRoot} from "@/components/link";
+import { Fieldset } from "@/components/fieldset";
+import { LinkIcon, LinkRoot } from "@/components/link";
 
-const props = withDefaults(defineProps<LinkFixtureProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<LinkFixtureProps>(), { isDisabled: undefined });
 </script>
 
 <template>

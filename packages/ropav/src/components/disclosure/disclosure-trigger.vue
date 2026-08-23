@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {DisclosureTriggerProps} from "./disclosure.types";
+import type { DisclosureTriggerProps } from "./disclosure.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useDisclosureContext} from "./disclosure.context";
+import { useDisclosureContext } from "./disclosure.context";
 
 const props = defineProps<DisclosureTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const {
   isDisabled,
@@ -47,7 +47,7 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled});
+} = useInteractionStates({ isDisabled });
 
 // Registered with the group, if there is one, so Arrow/Home/End can move focus between triggers.
 watch(
@@ -55,7 +55,7 @@ watch(
   (element, _previous, onCleanup) => {
     if (element) onCleanup(registerTrigger(element));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

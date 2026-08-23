@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useId} from "./use-id";
+import { useId } from "./use-id";
 
 export interface AriaLabelingProps {
   "aria-label"?: string | undefined;
@@ -36,7 +36,7 @@ export const useLabels = (
   const id = useId(() => resolved.value.id);
 
   return computed(() => {
-    const {"aria-label": ariaLabel, "aria-labelledby": ariaLabelledby} = resolved.value;
+    const { "aria-label": ariaLabel, "aria-labelledby": ariaLabelledby } = resolved.value;
 
     let label = ariaLabel;
     let labelledBy = ariaLabelledby;
@@ -49,6 +49,6 @@ export const useLabels = (
 
     if (!label && !labelledBy) label = toValue(defaultLabel);
 
-    return {"aria-label": label, "aria-labelledby": labelledBy, id: id.value};
+    return { "aria-label": label, "aria-labelledby": labelledBy, id: id.value };
   });
 };

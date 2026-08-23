@@ -1,9 +1,9 @@
-import type {DisplayNames} from "@/composables/use-display-names";
-import type {Filter} from "@/composables/use-filter";
-import type {CalendarStringKey} from "@/i18n/calendar";
-import type {DateFormatter} from "@internationalized/date";
-import type {LocalizedString, LocalizedStringFormatter} from "@internationalized/string";
-import type {ComputedRef} from "vue";
+import type { DisplayNames } from "@/composables/use-display-names";
+import type { Filter } from "@/composables/use-filter";
+import type { CalendarStringKey } from "@/i18n/calendar";
+import type { DateFormatter } from "@internationalized/date";
+import type { LocalizedString, LocalizedStringFormatter } from "@internationalized/string";
+import type { ComputedRef } from "vue";
 
 /** What one of the locale-aware formatters resolved to, for a test to read directly. */
 export interface I18nHostReady {

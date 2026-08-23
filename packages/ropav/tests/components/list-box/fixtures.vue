@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {FixtureItem} from "./fixtures.types";
-import type {ListBoxRootProps} from "@/components/list-box";
-import type {CollectionSelection} from "@/composables/use-selection-manager";
+import type { FixtureItem } from "./fixtures.types";
+import type { ListBoxRootProps } from "@/components/list-box";
+import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import {DescriptionRoot} from "@/components/description";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {HeaderRoot} from "@/components/header";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
-import {ListBoxSectionRoot} from "@/components/list-box-section";
+import { DescriptionRoot } from "@/components/description";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { HeaderRoot } from "@/components/header";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { ListBoxSectionRoot } from "@/components/list-box-section";
 
 /**
  * Booleans stay `default: undefined` so an absent prop reads as absent rather than as an
@@ -31,9 +31,9 @@ const props = withDefaults(
   {
     disallowEmptySelection: undefined,
     items: (): FixtureItem[] => [
-      {email: "bob@ropav.com", id: "1", name: "Bob"},
-      {email: "fred@ropav.com", id: "2", name: "Fred"},
-      {email: "martha@ropav.com", id: "3", name: "Martha"},
+      { email: "bob@ropav.com", id: "1", name: "Bob" },
+      { email: "fred@ropav.com", id: "2", name: "Fred" },
+      { email: "martha@ropav.com", id: "3", name: "Martha" },
     ],
     withEmptyState: undefined,
     withIndicator: undefined,

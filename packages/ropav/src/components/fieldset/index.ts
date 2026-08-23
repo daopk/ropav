@@ -16,7 +16,7 @@ export const Fieldset = Object.assign(FieldsetRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot};
+export { FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot };
 
 export type {
   FieldsetRootProps,
@@ -29,13 +29,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideFieldsetContext, useFieldsetContext} from "./fieldset.context";
+export { provideFieldsetContext, useFieldsetContext } from "./fieldset.context";
 
-export type {FieldsetContext} from "./fieldset.context";
+export type { FieldsetContext } from "./fieldset.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {fieldsetVariants} from "@ropav/styles";
+export { fieldsetVariants } from "@ropav/styles";
 
-export type {FieldsetVariants} from "@ropav/styles";
+export type { FieldsetVariants } from "@ropav/styles";

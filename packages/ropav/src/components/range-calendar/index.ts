@@ -93,6 +93,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {rangeCalendarVariants} from "@ropav/styles";
+export { rangeCalendarVariants } from "@ropav/styles";
 
-export type {RangeCalendarVariants} from "@ropav/styles";
+export type { RangeCalendarVariants } from "@ropav/styles";

@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {CalendarValue} from "../../composables/use-calendar-state";
-import type {CalendarDayViewContext} from "./calendar.context";
-import type {CalendarRootProps, CalendarRootSlotProps} from "./calendar.types";
-import type {DateValue} from "@internationalized/date";
+import type { CalendarValue } from "../../composables/use-calendar-state";
+import type { CalendarDayViewContext } from "./calendar.context";
+import type { CalendarRootProps, CalendarRootSlotProps } from "./calendar.types";
+import type { DateValue } from "@internationalized/date";
 
-import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
-import {calendarVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { CalendarDate, DateFormatter, createCalendar } from "@internationalized/date";
+import { calendarVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useCalendar} from "../../composables/use-calendar";
-import {useCalendarState} from "../../composables/use-calendar-state";
-import {useControllableState} from "../../composables/use-controllable-state";
-import {useLocale} from "../../composables/use-locale";
-import {dataAttr} from "../../utils/assertion";
-import {getGregorianYearOffset} from "../../utils/calendar";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
-import {provideYearPickerContext} from "../calendar-year-picker/calendar-year-picker.context";
+import { useCalendar } from "../../composables/use-calendar";
+import { useCalendarState } from "../../composables/use-calendar-state";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { useLocale } from "../../composables/use-locale";
+import { dataAttr } from "../../utils/assertion";
+import { getGregorianYearOffset } from "../../utils/calendar";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
+import { provideYearPickerContext } from "../calendar-year-picker/calendar-year-picker.context";
 
 import {
   provideCalendarContext,
@@ -43,7 +43,7 @@ const emit = defineEmits<{
   "update:yearPickerOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: (props: CalendarRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarRootSlotProps) => unknown }>();
 
 const slots = computed(() => calendarVariants());
 const element = shallowRef<HTMLElement | null>(null);
@@ -137,7 +137,7 @@ const calendar = useCalendar(
   state,
 );
 
-const {setState: setIsYearPickerOpen, state: isYearPickerOpen} = useControllableState<boolean>({
+const { setState: setIsYearPickerOpen, state: isYearPickerOpen } = useControllableState<boolean>({
   defaultValue: props.defaultYearPickerOpen,
   onValueChange: (isOpen) => emit("update:yearPickerOpen", isOpen),
   value: () => props.isYearPickerOpen,
@@ -192,8 +192,8 @@ const slotProps = computed<CalendarRootSlotProps>(() => ({
  * submits, so React's would submit any form the calendar sits inside — the one place this port
  * deliberately does not reproduce what React renders.
  */
-provideCalendarContext({dayView, slots});
-provideCalendarStateContext({calendar, state});
+provideCalendarContext({ dayView, slots });
+provideCalendarStateContext({ calendar, state });
 provideYearPickerContext({
   calendarElement: element,
   calendarGridSlot: "calendar-grid",

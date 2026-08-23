@@ -1,4 +1,4 @@
-import type {SelectedValue} from "@/composables/use-select-state";
+import type { SelectedValue } from "@/composables/use-select-state";
 
 /** The datum every select fixture builds its options from. */
 export interface SelectFixtureItem {

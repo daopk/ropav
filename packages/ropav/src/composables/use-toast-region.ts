@@ -1,12 +1,12 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
-import {toastStrings} from "../i18n/toast";
-import {TOP_LAYER_ATTRIBUTE} from "../utils/top-layer";
+import { toastStrings } from "../i18n/toast";
+import { TOP_LAYER_ATTRIBUTE } from "../utils/top-layer";
 
-import {getInteractionModality, useInteractionStates} from "./use-interaction-states";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { getInteractionModality, useInteractionStates } from "./use-interaction-states";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /** The only thing the region needs to know about a queued toast. */
 interface ToastIdentity {
@@ -44,7 +44,7 @@ const TOAST_SELECTOR = '[role="alertdialog"]';
 
 /** The package's spelling of react-aria's `focusWithoutScrolling`. */
 const focusQuietly = (element: HTMLElement) => {
-  element.focus({preventScroll: true});
+  element.focus({ preventScroll: true });
 };
 
 /**
@@ -130,7 +130,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
    * (the rest are `tabindex="-1"` and `pointer-events: none`), so in practice this always resolves
    * to the toast that moved into the front. Ported whole regardless, so no path here can drift.
    */
-  const recoverFocus = (removedIndex: number, previous: {isRemoved: boolean}[]) => {
+  const recoverFocus = (removedIndex: number, previous: { isRemoved: boolean }[]) => {
     let i = 0;
     let prevToast: number | undefined;
     let nextToast: number | undefined;
@@ -204,7 +204,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
 
       previousToasts = visibleToasts;
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   // The region stops existing once it is empty, and a focus scope only restores focus once, so the
@@ -214,7 +214,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
     (count) => {
       if (count === 0) restoreLastFocused();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   onScopeDispose(restoreLastFocused, true);
@@ -226,7 +226,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
       updateTimers();
     }
 
-    const {target} = event;
+    const { target } = event;
     const toast = target instanceof Element ? target.closest<HTMLElement>(TOAST_SELECTOR) : null;
     const element = toValue(options.elementRef);
 
@@ -241,7 +241,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
   };
 
   const onFocusout = (event: FocusEvent) => {
-    const {currentTarget, relatedTarget, target} = event;
+    const { currentTarget, relatedTarget, target } = event;
 
     // A toast being removed must not read as the user leaving. Chromium does not report a
     // `focusout` at all when the focused element is taken out of the document, which is what the
@@ -275,7 +275,7 @@ export const useToastRegion = (options: UseToastRegionOptions): UseToastRegionRe
 
       "aria-label":
         toValue(options.ariaLabel) ||
-        strings.value.format("notifications", {count: toValue(options.visibleToasts).length}),
+        strings.value.format("notifications", { count: toValue(options.visibleToasts).length }),
       role: "region" as const,
       tabindex: -1 as const,
     })),

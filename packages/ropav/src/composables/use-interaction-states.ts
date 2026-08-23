@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
 /** How the last interaction reached the page, which decides whether focus is visible. */
 export type InteractionModality = "keyboard" | "pointer";
@@ -295,7 +295,7 @@ export const useFocusWithin = (options: UseFocusWithinOptions = {}): UseFocusWit
     // Focus moving from one child to another leaves the group focused throughout, yet the
     // browser still reports a `focusout` on the way. What settles it is where focus is
     // going: a target still inside this element means the group never lost it.
-    const {currentTarget, relatedTarget} = event;
+    const { currentTarget, relatedTarget } = event;
 
     if (
       currentTarget instanceof Node &&

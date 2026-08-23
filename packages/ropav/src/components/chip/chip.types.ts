@@ -1,4 +1,4 @@
-import type {ChipVariants} from "@ropav/styles";
+import type { ChipVariants } from "@ropav/styles";
 
 export interface ChipRootProps {
   class?: string;

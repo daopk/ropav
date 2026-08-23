@@ -1,10 +1,10 @@
-import type {DateRange} from "@/composables/use-calendar";
-import type {DateValue} from "@internationalized/date";
+import type { DateRange } from "@/composables/use-calendar";
+import type { DateValue } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -53,7 +53,7 @@ const daysWith = (calendar: ReturnType<typeof renderRangeCalendar>, attribute: s
 describe("RangeCalendar", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const calendar = renderRangeCalendar({withCellIndicator: true, withYearPicker: true});
+      const calendar = renderRangeCalendar({ withCellIndicator: true, withYearPicker: true });
 
       for (const name of [
         "range-calendar",
@@ -107,7 +107,7 @@ describe("RangeCalendar", () => {
 
     it("casts a boolean written as a bare attribute", () => {
       // Without `type: Boolean` on the prop, `is-disabled` would arrive as `""` and read as falsy.
-      const calendar = renderRangeCalendar({attributeForm: true});
+      const calendar = renderRangeCalendar({ attributeForm: true });
 
       expect(calendar.root().getAttribute("data-disabled")).toBe("true");
       calendar.unmount();
@@ -116,7 +116,7 @@ describe("RangeCalendar", () => {
 
   describe("classes", () => {
     it("puts every part's BEM class on it", () => {
-      const calendar = renderRangeCalendar({withCellIndicator: true});
+      const calendar = renderRangeCalendar({ withCellIndicator: true });
 
       expect(calendar.root().className).toContain("range-calendar");
       expect(calendar.slot("range-calendar-header").className).toContain("range-calendar__header");
@@ -129,19 +129,19 @@ describe("RangeCalendar", () => {
     });
 
     it("marks a week view and a day view on the root", () => {
-      const week = renderRangeCalendar({visibleDuration: {weeks: 1}});
+      const week = renderRangeCalendar({ visibleDuration: { weeks: 1 } });
 
       expect(week.root().className).toContain("range-calendar--week-view");
       week.unmount();
 
-      const day = renderRangeCalendar({visibleDuration: {days: 3}});
+      const day = renderRangeCalendar({ visibleDuration: { days: 3 } });
 
       expect(day.root().className).toContain("range-calendar--day-view");
       day.unmount();
     });
 
     it("keeps a caller's class alongside its own", () => {
-      const calendar = renderRangeCalendar({class: "mine"});
+      const calendar = renderRangeCalendar({ class: "mine" });
 
       expect(calendar.root().className).toContain("mine");
       expect(calendar.root().className).toContain("range-calendar");
@@ -151,14 +151,14 @@ describe("RangeCalendar", () => {
 
   describe("state attributes", () => {
     it("marks every date in the selected range", () => {
-      const calendar = renderRangeCalendar({value: {end: jun(14), start: jun(10)}});
+      const calendar = renderRangeCalendar({ value: { end: jun(14), start: jun(10) } });
 
       expect(daysWith(calendar, "data-selected")).toEqual([10, 11, 12, 13, 14]);
       calendar.unmount();
     });
 
     it("marks the two ends apart from the middle", () => {
-      const calendar = renderRangeCalendar({value: {end: jun(14), start: jun(10)}});
+      const calendar = renderRangeCalendar({ value: { end: jun(14), start: jun(10) } });
 
       expect(daysWith(calendar, "data-selection-start")).toEqual([10]);
       expect(daysWith(calendar, "data-selection-end")).toEqual([14]);
@@ -166,7 +166,7 @@ describe("RangeCalendar", () => {
     });
 
     it("marks only the two ends on the wrapper the stylesheet rounds", () => {
-      const calendar = renderRangeCalendar({value: {end: jun(14), start: jun(10)}});
+      const calendar = renderRangeCalendar({ value: { end: jun(14), start: jun(10) } });
       const marked = calendar
         .all("range-calendar-cell-button")
         .filter((button) => button.getAttribute("data-selected") === "true")
@@ -209,7 +209,7 @@ describe("RangeCalendar", () => {
       // while it is being built, so a value that reached here cannot be one.
       const calendar = renderRangeCalendar({
         isDateUnavailable: (date: DateValue) => date.day === 10,
-        value: {end: jun(14), start: jun(10)},
+        value: { end: jun(14), start: jun(10) },
       });
 
       expect(calendar.root().getAttribute("data-invalid")).toBe("true");
@@ -220,7 +220,7 @@ describe("RangeCalendar", () => {
     it("stays valid when only a date in the middle of the range is unavailable", () => {
       const calendar = renderRangeCalendar({
         isDateUnavailable: (date: DateValue) => date.day === 12,
-        value: {end: jun(14), start: jun(10)},
+        value: { end: jun(14), start: jun(10) },
       });
 
       expect(calendar.root().getAttribute("data-invalid")).toBeNull();
@@ -232,7 +232,7 @@ describe("RangeCalendar", () => {
 
       calendar
         .cell(15)
-        .dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+        .dispatchEvent(new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }));
       await nextTick();
       expect(calendar.cell(15).getAttribute("data-hovered")).toBe("true");
       calendar.unmount();
@@ -242,7 +242,7 @@ describe("RangeCalendar", () => {
   describe("picking a range", () => {
     it("takes two presses, and only emits on the second", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderRangeCalendar({onValueChange});
+      const calendar = renderRangeCalendar({ onValueChange });
 
       calendar.cell(10).click();
       await nextTick();
@@ -266,7 +266,7 @@ describe("RangeCalendar", () => {
       calendar.cell(10).click();
       calendar
         .cell(14)
-        .dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+        .dispatchEvent(new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }));
       await nextTick();
 
       expect(daysWith(calendar, "data-selected")).toEqual([10, 11, 12, 13, 14]);
@@ -275,7 +275,7 @@ describe("RangeCalendar", () => {
 
     it("refuses to pick anything while read only", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderRangeCalendar({isReadOnly: true, onValueChange});
+      const calendar = renderRangeCalendar({ isReadOnly: true, onValueChange });
 
       calendar.cell(10).click();
       calendar.cell(14).click();
@@ -335,7 +335,7 @@ describe("RangeCalendar", () => {
       calendar.cell(15).focus();
       calendar
         .slot("range-calendar-grid")
-        .dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+        .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
       await nextTick();
 
       expect(calendar.cell(16).getAttribute("data-focused")).toBe("true");
@@ -360,12 +360,12 @@ describe("RangeCalendar", () => {
 
     it("emits update:focusedValue when the arrow keys move focus", async () => {
       const onUpdate = vi.fn();
-      const calendar = renderRangeCalendar({"onUpdate:focusedValue": onUpdate});
+      const calendar = renderRangeCalendar({ "onUpdate:focusedValue": onUpdate });
 
       calendar.cell(15).focus();
       calendar
         .slot("range-calendar-grid")
-        .dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+        .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
       await nextTick();
 
       expect(String(onUpdate.mock.lastCall![0])).toBe("2026-06-16");
@@ -374,15 +374,15 @@ describe("RangeCalendar", () => {
 
     it("takes a range from the keyboard", async () => {
       const onValueChange = vi.fn();
-      const calendar = renderRangeCalendar({onValueChange});
+      const calendar = renderRangeCalendar({ onValueChange });
       const grid = calendar.slot("range-calendar-grid");
 
       calendar.cell(15).focus();
-      grid.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      grid.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
       await nextTick();
-      grid.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+      grid.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
       await nextTick();
-      grid.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      grid.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
       await nextTick();
 
       const emitted = onValueChange.mock.lastCall![0] as DateRange;
@@ -399,7 +399,7 @@ describe("RangeCalendar", () => {
       await nextTick();
       expect(daysWith(calendar, "data-selected")).toEqual([10]);
 
-      grid.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      grid.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
       await nextTick();
 
       expect(daysWith(calendar, "data-selected")).toEqual([]);
@@ -408,7 +408,7 @@ describe("RangeCalendar", () => {
 
     it("shows two months side by side", () => {
       const calendar = renderRangeCalendar({
-        visibleDuration: {months: 2},
+        visibleDuration: { months: 2 },
         withSecondMonth: true,
       });
       const headings = calendar.all("range-calendar-grid");

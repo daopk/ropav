@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import AccordionFixture from "./fixtures.vue";
 
@@ -33,7 +33,7 @@ const settle = async (panel: HTMLElement) => {
 
 describe("Accordion (browser)", () => {
   it("releases the panel height to auto after the expand animation", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
     const panel = panelsIn(container)[0]!;
 
@@ -51,8 +51,8 @@ describe("Accordion (browser)", () => {
   });
 
   it("re-applies hidden only after the collapse animation finishes", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture, {
-      props: {defaultExpandedKeys: ["one"]},
+    const { container, unmount } = renderVapor(AccordionFixture, {
+      props: { defaultExpandedKeys: ["one"] },
     });
     const trigger = triggersIn(container)[0]!;
     const panel = panelsIn(container)[0]!;
@@ -67,7 +67,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("gives the expanded panel real height and the collapsed one none", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
     const panel = panelsIn(container)[0]!;
 
@@ -82,7 +82,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("keeps a collapsed panel out of the tab order", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const triggers = triggersIn(container);
 
     triggers[0]!.focus();
@@ -95,7 +95,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("moves focus between triggers with the arrow keys", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const triggers = triggersIn(container);
 
     triggers[0]!.focus();
@@ -112,7 +112,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("toggles on Enter and on Space", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
 
     trigger.focus();
@@ -126,7 +126,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("paints a focus ring on the trigger when focused by keyboard", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
     const shadowBefore = getComputedStyle(trigger).boxShadow;
 
@@ -145,7 +145,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("paints no focus ring when focused by pointer", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
 
     await userEvent.click(trigger);
@@ -159,7 +159,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("reports hover from a real pointer", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
     const trigger = triggersIn(container)[0]!;
 
     await userEvent.hover(trigger);
@@ -171,7 +171,7 @@ describe("Accordion (browser)", () => {
   });
 
   it("has no axe violations while collapsed", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture);
+    const { container, unmount } = renderVapor(AccordionFixture);
 
     await expectNoA11yViolations(container);
 
@@ -179,8 +179,8 @@ describe("Accordion (browser)", () => {
   });
 
   it("has no axe violations while expanded", async () => {
-    const {container, unmount} = renderVapor(AccordionFixture, {
-      props: {allowsMultipleExpanded: true, defaultExpandedKeys: ["one", "two"]},
+    const { container, unmount } = renderVapor(AccordionFixture, {
+      props: { allowsMultipleExpanded: true, defaultExpandedKeys: ["one", "two"] },
     });
 
     await expectNoA11yViolations(container);

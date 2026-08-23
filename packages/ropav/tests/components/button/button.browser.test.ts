@@ -1,15 +1,15 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {Button} from "@/components/button";
+import { Button } from "@/components/button";
 
 const renderButton = (props: Record<string, unknown> = {}) =>
   renderVapor(Button, {
     props,
-    slots: {default: () => document.createTextNode("Press me")},
+    slots: { default: () => document.createTextNode("Press me") },
   });
 
 const buttonIn = (container: HTMLElement) => container.querySelector("button")!;
@@ -21,7 +21,7 @@ const buttonIn = (container: HTMLElement) => container.querySelector("button")!;
  */
 describe("Button (browser)", () => {
   it("paints a focus ring on keyboard focus", async () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
     const button = buttonIn(container);
 
     const shadowWhenIdle = getComputedStyle(button).boxShadow;
@@ -40,7 +40,7 @@ describe("Button (browser)", () => {
   });
 
   it("paints no focus ring when focused by pointer", async () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
     const button = buttonIn(container);
 
     const shadowWhenIdle = getComputedStyle(button).boxShadow;
@@ -57,7 +57,7 @@ describe("Button (browser)", () => {
   });
 
   it("ends a press released away from the button", async () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
     const button = buttonIn(container);
 
     await userEvent.dragAndDrop(button, document.body);
@@ -70,7 +70,7 @@ describe("Button (browser)", () => {
   });
 
   it("reports hover in step with the pseudo-class", async () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
     const button = buttonIn(container);
 
     const transformWhenIdle = getComputedStyle(button).transform;
@@ -88,9 +88,9 @@ describe("Button (browser)", () => {
 
   it("activates on Enter and on Space", async () => {
     const clicks: MouseEvent[] = [];
-    const {container, unmount} = renderVapor(Button, {
-      props: {onClick: (event: MouseEvent) => clicks.push(event)},
-      slots: {default: () => document.createTextNode("Press me")},
+    const { container, unmount } = renderVapor(Button, {
+      props: { onClick: (event: MouseEvent) => clicks.push(event) },
+      slots: { default: () => document.createTextNode("Press me") },
     });
     const button = buttonIn(container);
 
@@ -108,7 +108,7 @@ describe("Button (browser)", () => {
   });
 
   it("renders the block class and resolves real styles from the stylesheet", () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
     const button = buttonIn(container);
 
     // Proves the compiled `@ropav/styles` CSS is actually loaded in this environment.
@@ -119,7 +119,7 @@ describe("Button (browser)", () => {
   });
 
   it("blocks pointer events while pending", () => {
-    const {container, unmount} = renderButton({isPending: true});
+    const { container, unmount } = renderButton({ isPending: true });
     const button = buttonIn(container);
 
     // `status-pending` is keyed on `data-pending`, which is the one state that needs JS.
@@ -130,7 +130,7 @@ describe("Button (browser)", () => {
   });
 
   it("dims and blocks a disabled button through :disabled", () => {
-    const {container, unmount} = renderButton({isDisabled: true});
+    const { container, unmount } = renderButton({ isDisabled: true });
     const button = buttonIn(container);
 
     const styles = getComputedStyle(button);
@@ -149,7 +149,7 @@ describe("Button (browser)", () => {
     document.body.appendChild(form);
     form.addEventListener("submit", onSubmit);
 
-    const {container, unmount} = renderButton({isPending: true, type: "submit"});
+    const { container, unmount } = renderButton({ isPending: true, type: "submit" });
 
     form.appendChild(container);
 
@@ -170,7 +170,7 @@ describe("Button (browser)", () => {
     document.body.appendChild(form);
     form.addEventListener("submit", onSubmit);
 
-    const {container, unmount} = renderButton({type: "submit"});
+    const { container, unmount } = renderButton({ type: "submit" });
 
     form.appendChild(container);
 
@@ -183,19 +183,19 @@ describe("Button (browser)", () => {
   });
 
   it("has no axe violations", async () => {
-    const {container, unmount} = renderButton();
+    const { container, unmount } = renderButton();
 
     // `color-contrast` is scoped out, not silenced: the primary button pairs
     // `--accent` (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1, under the
     // 4.5:1 WCAG AA floor for normal text. Both come from `@ropav/styles`, so the
     // finding belongs to the palette, not to this component.
-    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
     unmount();
   });
 
   it("has no axe violations on a variant that does not lean on the accent palette", async () => {
-    const {container, unmount} = renderButton({variant: "outline"});
+    const { container, unmount } = renderButton({ variant: "outline" });
 
     await expectNoA11yViolations(container);
 

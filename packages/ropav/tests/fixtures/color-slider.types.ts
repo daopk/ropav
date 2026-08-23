@@ -1,6 +1,6 @@
-import type {ColorSliderState, UseColorSliderReturn} from "@/composables";
-import type {SliderOrientation} from "@/composables/use-slider-state";
-import type {Color, ColorChannel, ColorSpace} from "@/utils/color-types";
+import type { ColorSliderState, UseColorSliderReturn } from "@/composables";
+import type { SliderOrientation } from "@/composables/use-slider-state";
+import type { Color, ColorChannel, ColorSpace } from "@/utils/color-types";
 
 export interface ColorSliderHostProps {
   channel?: ColorChannel;
@@ -18,7 +18,7 @@ export interface ColorSliderHostProps {
   form?: string;
   onChange?: (value: Color) => void;
   /** Handed the composable's return and the state behind it. */
-  onReady?: (ready: {slider: UseColorSliderReturn; state: ColorSliderState}) => void;
+  onReady?: (ready: { slider: UseColorSliderReturn; state: ColorSliderState }) => void;
 }
 
 export interface ColorSliderHarnessProps extends ColorSliderHostProps {

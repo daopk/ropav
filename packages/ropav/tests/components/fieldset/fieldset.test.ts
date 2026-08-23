@@ -1,21 +1,21 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import FieldsFixture from "./fields-fixtures.vue";
 import Fixture from "./fixtures.vue";
 
 const renderFieldset = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const root = result.container.querySelector('[data-slot="fieldset"]');
 
   if (!root) throw new Error("fieldset not rendered");
 
-  return {...result, root};
+  return { ...result, root };
 };
 
 const renderFields = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(FieldsFixture, {props});
+  const result = renderVapor(FieldsFixture, { props });
 
   return {
     ...result,
@@ -27,7 +27,7 @@ const renderFields = (props: Record<string, unknown> = {}) => {
 describe("Fieldset", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, root, unmount} = renderFieldset();
+      const { container, root, unmount } = renderFieldset();
 
       expect(root).toHaveAttribute("data-slot", "fieldset");
       expect(container.querySelector('[data-slot="fieldset-legend"]')).not.toBeNull();
@@ -40,7 +40,7 @@ describe("Fieldset", () => {
     it("renders real fieldset and legend elements", () => {
       // Not decoration: the browser only cascades `disabled` down from a real `<fieldset>`, and
       // only a `<legend>` names the group to assistive technology.
-      const {container, root, unmount} = renderFieldset();
+      const { container, root, unmount } = renderFieldset();
 
       expect(root.tagName).toBe("FIELDSET");
       expect(container.querySelector('[data-slot="fieldset-legend"]')!.tagName).toBe("LEGEND");
@@ -49,7 +49,7 @@ describe("Fieldset", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, root, unmount} = renderFieldset();
+      const { container, root, unmount } = renderFieldset();
 
       expect(root).toHaveClass("fieldset");
       expect(container.querySelector('[data-slot="fieldset-legend"]')).toHaveClass(
@@ -66,7 +66,7 @@ describe("Fieldset", () => {
     });
 
     it("supports a class on every part", () => {
-      const {container, root, unmount} = renderFieldset({
+      const { container, root, unmount } = renderFieldset({
         actionsClass: "justify-end",
         class: "w-96",
         groupClass: "space-y-2",
@@ -84,7 +84,7 @@ describe("Fieldset", () => {
     });
 
     it("names the group by its legend", () => {
-      const {root, unmount} = renderFieldset();
+      const { root, unmount } = renderFieldset();
 
       expect(root).toHaveAccessibleName("Profile");
 
@@ -94,7 +94,7 @@ describe("Fieldset", () => {
 
   describe("disabled", () => {
     it("carries no disabled marks by default", () => {
-      const {root, unmount} = renderFieldset();
+      const { root, unmount } = renderFieldset();
 
       expect(root).not.toHaveAttribute("disabled");
       expect(root).not.toHaveAttribute("data-disabled");
@@ -105,7 +105,7 @@ describe("Fieldset", () => {
     it("sets the native attribute and the data attribute together", () => {
       // The attribute is what the browser cascades from; the data attribute is what the
       // stylesheet reads to dim descendant labels.
-      const {root, unmount} = renderFieldset({disabled: true});
+      const { root, unmount } = renderFieldset({ disabled: true });
 
       expect(root).toBeDisabled();
       expect(root).toHaveAttribute("data-disabled", "true");
@@ -116,7 +116,7 @@ describe("Fieldset", () => {
 
   describe("disabling the fields inside", () => {
     it("disables a button", () => {
-      const {at, unmount} = renderFields({disabled: true});
+      const { at, unmount } = renderFields({ disabled: true });
 
       expect(at("button")).toBeDisabled();
       expect(at("button")).toHaveAttribute("data-disabled", "true");
@@ -127,7 +127,7 @@ describe("Fieldset", () => {
     it("disables a button nested in a button group", () => {
       // The group sits between the fieldset and the button, and a group that claims nothing has
       // to let the fieldset through rather than reporting its buttons as enabled.
-      const {at, unmount} = renderFields({disabled: true});
+      const { at, unmount } = renderFields({ disabled: true });
 
       expect(at("grouped-button")).toBeDisabled();
       expect(at("grouped-button")).toHaveAttribute("data-disabled", "true");
@@ -136,7 +136,7 @@ describe("Fieldset", () => {
     });
 
     it("disables a link", () => {
-      const {at, unmount} = renderFields({disabled: true});
+      const { at, unmount } = renderFields({ disabled: true });
 
       expect(at("link")).toHaveAttribute("aria-disabled", "true");
       expect(at("link").tagName).toBe("SPAN");
@@ -145,7 +145,7 @@ describe("Fieldset", () => {
     });
 
     it("disables a toggle button", () => {
-      const {at, unmount} = renderFields({disabled: true});
+      const { at, unmount } = renderFields({ disabled: true });
 
       expect(at("toggle-button")).toBeDisabled();
       expect(at("toggle-button")).toHaveAttribute("data-disabled", "true");
@@ -154,7 +154,7 @@ describe("Fieldset", () => {
     });
 
     it("disables a toggle button group", () => {
-      const {at, unmount} = renderFields({disabled: true});
+      const { at, unmount } = renderFields({ disabled: true });
 
       expect(at("toggle-button-group")).toHaveAttribute("data-disabled", "true");
       expect(at("grouped-toggle")).toBeDisabled();
@@ -165,7 +165,7 @@ describe("Fieldset", () => {
     it("disables a checkbox group", async () => {
       // The group renders as a `<div>`, which the browser's own cascade does not reach — so
       // without the context handed down it would stay live inside a disabled fieldset.
-      const {at, container, unmount} = renderFields({disabled: true});
+      const { at, container, unmount } = renderFields({ disabled: true });
 
       await nextTick();
 
@@ -176,7 +176,7 @@ describe("Fieldset", () => {
     });
 
     it("disables a radio group", async () => {
-      const {at, container, unmount} = renderFields({disabled: true});
+      const { at, container, unmount } = renderFields({ disabled: true });
 
       await nextTick();
 
@@ -187,7 +187,7 @@ describe("Fieldset", () => {
     });
 
     it("disables a slider", async () => {
-      const {at, container, unmount} = renderFields({disabled: true});
+      const { at, container, unmount } = renderFields({ disabled: true });
 
       await nextTick();
 
@@ -198,7 +198,7 @@ describe("Fieldset", () => {
     });
 
     it("leaves every field alone when the fieldset is not disabled", async () => {
-      const {at, container, unmount} = renderFields();
+      const { at, container, unmount } = renderFields();
 
       await nextTick();
 
@@ -218,7 +218,7 @@ describe("Fieldset", () => {
     it("lets a field's own prop win over what the fieldset hands down", async () => {
       // What the caller puts on the field beats the context, matching how React merges context
       // props — so the reported state and the styling both come back on.
-      const {at, unmount} = renderFields({disabled: true, fieldIsDisabled: false});
+      const { at, unmount } = renderFields({ disabled: true, fieldIsDisabled: false });
 
       await nextTick();
 
@@ -239,7 +239,7 @@ describe("Fieldset", () => {
       // reaches that — React is in the same position, which is why it hands the state down
       // through context as well: without it a button would be unclickable while still
       // reporting itself as enabled.
-      const {at, container, unmount} = renderFields({disabled: true, fieldIsDisabled: false});
+      const { at, container, unmount } = renderFields({ disabled: true, fieldIsDisabled: false });
 
       await nextTick();
 

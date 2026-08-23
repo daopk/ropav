@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
+import type { ButtonRootProps, ButtonSlotProps } from "./button.types";
 
-import {buttonVariants} from "@ropav/styles";
-import {computed, watch} from "vue";
+import { buttonVariants } from "@ropav/styles";
+import { computed, watch } from "vue";
 
-import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {announce} from "../../utils/live-announcer";
-import {useButtonGroupContext} from "../button-group/button-group.context";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
+import { composeFocusResponder, useFocusResponder } from "../../composables/focus-responder";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { announce } from "../../utils/live-announcer";
+import { useButtonGroupContext } from "../button-group/button-group.context";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
 
 // The boolean props declare an explicit `undefined` default so an absent prop stays
 // absent: Vue otherwise casts a missing boolean to `false`, which reads as "the caller
@@ -21,9 +21,9 @@ const props = withDefaults(defineProps<ButtonRootProps>(), {
   type: "button",
 });
 
-const emit = defineEmits<{click: [event: MouseEvent]}>();
+const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
-defineSlots<{default?: (props: ButtonSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ButtonSlotProps) => unknown }>();
 
 // A surrounding group supplies defaults for the whole row of buttons, which each button
 // can still override for itself. `isIconOnly` is deliberately left out: it describes the
@@ -123,7 +123,7 @@ const onClick = (event: MouseEvent) => {
   emit("click", event);
 };
 
-const focus = composeFocusResponder(focusResponder, {onBlur, onFocus});
+const focus = composeFocusResponder(focusResponder, { onBlur, onFocus });
 
 const attrs = computed(() => ({
   ...focusResponder?.attrs.value,

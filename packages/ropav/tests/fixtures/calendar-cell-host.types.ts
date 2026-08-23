@@ -1,10 +1,10 @@
-import type {UseCalendarCellReturn} from "@/composables/use-calendar-cell";
+import type { UseCalendarCellReturn } from "@/composables/use-calendar-cell";
 import type {
   CalendarSelectionMode,
   CalendarState,
   CalendarValue,
 } from "@/composables/use-calendar-state";
-import type {DateDuration, DateValue} from "@internationalized/date";
+import type { DateDuration, DateValue } from "@internationalized/date";
 
 export interface CalendarCellHostProps {
   value?: CalendarValue;
@@ -20,5 +20,5 @@ export interface CalendarCellHostProps {
   autoFocus?: boolean;
   locale?: string;
   /** Hands the live cells back to the test, keyed by ISO date. */
-  onReady?: (value: {cells: Map<string, UseCalendarCellReturn>; state: CalendarState}) => void;
+  onReady?: (value: { cells: Map<string, UseCalendarCellReturn>; state: CalendarState }) => void;
 }

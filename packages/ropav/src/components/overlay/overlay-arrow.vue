@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {OverlayArrowProps} from "./overlay.types";
+import type { OverlayArrowProps } from "./overlay.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useOverlayArrowContext} from "./overlay.context";
+import { useOverlayArrowContext } from "./overlay.context";
 
 const props = defineProps<OverlayArrowProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const arrow = useOverlayArrowContext();
 
@@ -32,7 +32,7 @@ const style = computed<Record<string, string>>(() => {
   return {
     position: "absolute",
     transform: isVertical ? "translateX(-50%)" : "translateY(-50%)",
-    ...(side ? {[side]: "100%"} : {}),
+    ...(side ? { [side]: "100%" } : {}),
     ...(arrow?.style.value ?? {}),
   };
 });

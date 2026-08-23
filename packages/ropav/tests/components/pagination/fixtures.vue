@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {PaginationRootProps} from "@/components/pagination";
+import type { PaginationRootProps } from "@/components/pagination";
 
 import {
   PaginationContent,

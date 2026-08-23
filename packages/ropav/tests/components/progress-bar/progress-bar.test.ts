@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {ProgressBarFill, ProgressBarOutput, ProgressBarTrack} from "@/components/progress-bar";
+import { ProgressBarFill, ProgressBarOutput, ProgressBarTrack } from "@/components/progress-bar";
 
 import Fixture from "./fixtures.vue";
 
@@ -11,7 +11,7 @@ const part = (container: HTMLElement, name: string) =>
 
 describe("ProgressBar", () => {
   it("exposes progress semantics and the default percentage", async () => {
-    const {container, unmount} = renderVapor(Fixture, {props: {value: 60}});
+    const { container, unmount } = renderVapor(Fixture, { props: { value: 60 } });
     const root = part(container, "progress-bar");
     const label = part(container, "label");
 
@@ -31,8 +31,8 @@ describe("ProgressBar", () => {
   });
 
   it("removes determinate aria and width in indeterminate mode", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {isIndeterminate: true, value: 60},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { isIndeterminate: true, value: 60 },
     });
     const root = part(container, "progress-bar");
 
@@ -49,9 +49,9 @@ describe("ProgressBar", () => {
   });
 
   it("clamps custom ranges and formats a raw currency value", () => {
-    const formatOptions = {currency: "USD", style: "currency"} as const;
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {formatOptions, maxValue: 1000, minValue: 500, value: 2000},
+    const formatOptions = { currency: "USD", style: "currency" } as const;
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { formatOptions, maxValue: 1000, minValue: 500, value: 2000 },
     });
     const expected = new Intl.NumberFormat("en-US", formatOptions).format(1000);
 
@@ -63,8 +63,8 @@ describe("ProgressBar", () => {
   });
 
   it("supports explicit and custom visible value labels", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {customOutput: true, value: 4, valueLabel: "4 of 10"},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { customOutput: true, value: 4, valueLabel: "4 of 10" },
     });
 
     expect(part(container, "progress-bar")).toHaveAttribute("aria-valuetext", "4 of 10");
@@ -74,8 +74,8 @@ describe("ProgressBar", () => {
   });
 
   it("combines an explicit aria-label with the visible label", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Transfer status", value: 40},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Transfer status", value: 40 },
     });
     const root = part(container, "progress-bar")!;
     const label = part(container, "label")!;
@@ -88,8 +88,8 @@ describe("ProgressBar", () => {
   });
 
   it("combines a visible label with external aria-labelledby ids", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabelledby: "ext", value: 40},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabelledby: "ext", value: 40 },
     });
     const root = part(container, "progress-bar")!;
     const label = part(container, "label")!;
@@ -105,7 +105,7 @@ describe("ProgressBar", () => {
   it.each(["default", "accent", "success", "warning", "danger"] as const)(
     "applies the %s color modifier",
     (color) => {
-      const {container, unmount} = renderVapor(Fixture, {props: {color}});
+      const { container, unmount } = renderVapor(Fixture, { props: { color } });
 
       expect(part(container, "progress-bar")).toHaveClass(`progress-bar--${color}`);
 
@@ -114,7 +114,7 @@ describe("ProgressBar", () => {
   );
 
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
-    const {container, unmount} = renderVapor(Fixture, {props: {size}});
+    const { container, unmount } = renderVapor(Fixture, { props: { size } });
 
     expect(part(container, "progress-bar")).toHaveClass(`progress-bar--${size}`);
 
@@ -122,7 +122,7 @@ describe("ProgressBar", () => {
   });
 
   it("merges caller classes onto every public part", () => {
-    const {container, unmount} = renderVapor(Fixture, {
+    const { container, unmount } = renderVapor(Fixture, {
       props: {
         class: "gap-2",
         fillClass: "rounded-none",
@@ -140,8 +140,8 @@ describe("ProgressBar", () => {
   });
 
   it("reacts when progress becomes indeterminate", async () => {
-    const props = reactive({isIndeterminate: false, value: 25});
-    const {container, unmount} = renderVapor(Fixture, {props});
+    const props = reactive({ isIndeterminate: false, value: 25 });
+    const { container, unmount } = renderVapor(Fixture, { props });
 
     expect(part(container, "progress-bar-fill")?.style.width).toBe("25%");
 

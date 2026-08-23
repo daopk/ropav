@@ -10,7 +10,7 @@ export const CloseButton = Object.assign(CloseButtonRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {CloseButtonRoot};
+export { CloseButtonRoot };
 
 export type {
   CloseButtonRootProps,
@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {closeButtonVariants} from "@ropav/styles";
+export { closeButtonVariants } from "@ropav/styles";
 
-export type {CloseButtonVariants} from "@ropav/styles";
+export type { CloseButtonVariants } from "@ropav/styles";

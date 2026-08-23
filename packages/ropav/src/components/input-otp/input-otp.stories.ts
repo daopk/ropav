@@ -1,14 +1,14 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {Form} from "../form";
-import {Label} from "../label";
-import {Link} from "../link";
-import {Spinner} from "../spinner";
+import { Button } from "../button";
+import { Description } from "../description";
+import { Form } from "../form";
+import { Label } from "../label";
+import { Link } from "../link";
+import { Spinner } from "../spinner";
 
 import {
   InputOTP,
@@ -36,9 +36,9 @@ const components = {
 
 const meta: StoryMeta = {
   argTypes: {
-    isDisabled: {control: "boolean"},
-    isInvalid: {control: "boolean"},
-    maxLength: {control: "number"},
+    isDisabled: { control: "boolean" },
+    isInvalid: { control: "boolean" },
+    maxLength: { control: "number" },
   },
   component: InputOTP,
   parameters: {
@@ -171,7 +171,7 @@ export const Disabled: Story = {
 export const WithPattern: Story = {
   render: () => ({
     components,
-    setup: () => ({pattern: REGEXP_ONLY_CHARS}),
+    setup: () => ({ pattern: REGEXP_ONLY_CHARS }),
     template: `
       <div class="flex w-[280px] flex-col gap-2">
         <Label>Enter code (letters only)</Label>
@@ -200,7 +200,7 @@ export const Controlled: Story = {
     setup: () => {
       const value = shallowRef("");
 
-      return {clear: () => (value.value = ""), value};
+      return { clear: () => (value.value = ""), value };
     },
     template: `
       <div class="flex w-[280px] flex-col gap-2">
@@ -259,7 +259,7 @@ export const WithValidation: Story = {
         isInvalid.value = false;
       };
 
-      return {isInvalid, onChange, onSubmit, value};
+      return { isInvalid, onChange, onSubmit, value };
     },
     template: `
       <div class="flex w-[280px] flex-col gap-2">
@@ -327,7 +327,7 @@ export const OnComplete: Story = {
         }, 2000);
       };
 
-      return {isComplete, isSubmitting, onChange, onComplete, onSubmit, value};
+      return { isComplete, isSubmitting, onChange, onComplete, onSubmit, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-2" @submit="onSubmit">
@@ -407,7 +407,7 @@ export const FormExample: Story = {
         }, 1500);
       };
 
-      return {error, isInvalid, isSubmitting, onChange, onSubmit, value};
+      return { error, isInvalid, isSubmitting, onChange, onSubmit, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">

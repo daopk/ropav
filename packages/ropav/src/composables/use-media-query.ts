@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 export interface UseMediaQueryOptions {
   /**
@@ -61,7 +61,7 @@ export const useMediaQuery = (
     }
   };
 
-  watch(() => toValue(query), subscribe, {immediate: true});
+  watch(() => toValue(query), subscribe, { immediate: true });
 
   onScopeDispose(() => {
     detach?.();

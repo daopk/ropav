@@ -1,29 +1,29 @@
 <script setup lang="ts" vapor>
-import type {DrawerDialogProps} from "./drawer.types";
+import type { DrawerDialogProps } from "./drawer.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useDrawerDrag} from "../../composables/use-drawer-drag";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {provideSurfaceContext} from "../surface";
+import { useDrawerDrag } from "../../composables/use-drawer-drag";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { provideSurfaceContext } from "../surface";
 
-import {useDrawerContext, useDrawerOverlayContext} from "./drawer.context";
+import { useDrawerContext, useDrawerOverlayContext } from "./drawer.context";
 
 const props = defineProps<DrawerDialogProps>();
 
-defineSlots<{default?: (props: {close: () => void}) => unknown}>();
+defineSlots<{ default?: (props: { close: () => void }) => unknown }>();
 
-const {dialogId, labelledBy, placement, slots, state} = useDrawerContext();
+const { dialogId, labelledBy, placement, slots, state } = useDrawerContext();
 const overlay = useDrawerOverlayContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
 // The panel is a surface in its own right, so anything inside it that picks its colours from the
 // surface it sits on — a field, a chip — reads the panel rather than the page behind it.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
 // Only the heading is referenced, so nothing else hands out an id it would never be pointed at.
-const {context, headingId} = useFieldIds({slots: ["heading"]});
+const { context, headingId } = useFieldIds({ slots: ["heading"] });
 
 provideFieldIdsContext(context);
 
@@ -35,7 +35,7 @@ provideFieldIdsContext(context);
  */
 const labelledByResolved = computed(() => headingId.value ?? labelledBy.value);
 
-const styles = computed(() => slots.value.dialog({class: props.class}));
+const styles = computed(() => slots.value.dialog({ class: props.class }));
 
 const isDismissable = computed(() => overlay?.isDismissable.value ?? true);
 
@@ -45,7 +45,7 @@ const isDismissable = computed(() => overlay?.isDismissable.value ?? true);
  * A drawer that can be dragged away has to stop the browser from scrolling the page under the same
  * gesture; `Drawer.Body` opts vertical scrolling back in for its own content.
  */
-const style = computed(() => (isDismissable.value ? {touchAction: "none"} : undefined));
+const style = computed(() => (isDismissable.value ? { touchAction: "none" } : undefined));
 
 /**
  * Dragging the panel towards its own edge dismisses the drawer.
@@ -80,9 +80,9 @@ watch(
     if (!dialog) return;
     if (dialog.contains(document.activeElement)) return;
 
-    dialog.focus({preventScroll: true});
+    dialog.focus({ preventScroll: true });
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

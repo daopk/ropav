@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldRootProps, NumberFieldRootSlotProps} from "./number-field.types";
+import type { NumberFieldRootProps, NumberFieldRootSlotProps } from "./number-field.types";
 
-import {numberFieldVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { numberFieldVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useNumberField} from "../../composables/use-number-field";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useNumberField } from "../../composables/use-number-field";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideNumberFieldContext} from "./number-field.context";
+import { provideNumberFieldContext } from "./number-field.context";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
 // `false`, and a `false` here reads as the caller claiming that state: for `isInvalid` in
@@ -30,7 +30,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: NumberFieldRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: NumberFieldRootSlotProps) => unknown }>();
 
 const field = useNumberField({
   ariaDescribedby: () => props.ariaDescribedby,
@@ -65,7 +65,7 @@ const field = useNumberField({
 });
 
 const slots = computed(() =>
-  numberFieldVariants({fullWidth: props.fullWidth, variant: props.variant}),
+  numberFieldVariants({ fullWidth: props.fullWidth, variant: props.variant }),
 );
 
 provideFieldIdsContext(field.fieldIds);
@@ -75,9 +75,9 @@ provideNumberFieldContext({
   increment: field.increment,
   slots,
 });
-provideFieldErrorContext({validation: field.state.displayValidation});
+provideFieldErrorContext({ validation: field.state.displayValidation });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 // `data-required` has to sit here rather than on the control: the stylesheet draws the asterisk
 // through `[data-required="true"] > .label`, so it reads the field, not the input.

@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ToastActionButtonProps} from "./toast.types";
+import type { ToastActionButtonProps } from "./toast.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
 import ButtonRoot from "../button/button-root.vue";
 
-import {useToastRegionContext} from "./toast.context";
+import { useToastRegionContext } from "./toast.context";
 
 const props = withDefaults(defineProps<ToastActionButtonProps>(), {
   fullWidth: undefined,
@@ -14,13 +14,13 @@ const props = withDefaults(defineProps<ToastActionButtonProps>(), {
   isPending: undefined,
 });
 
-const emit = defineEmits<{click: [event: MouseEvent]}>();
+const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useToastRegionContext();
+const { slots } = useToastRegionContext();
 
-const styles = computed(() => slots.value.action({class: props.class}));
+const styles = computed(() => slots.value.action({ class: props.class }));
 </script>
 
 <template>

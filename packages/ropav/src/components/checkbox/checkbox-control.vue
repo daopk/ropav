@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {CheckboxControlProps} from "./checkbox.types";
+import type { CheckboxControlProps } from "./checkbox.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useCheckboxContext} from "./checkbox.context";
+import { useCheckboxContext } from "./checkbox.context";
 
 const props = defineProps<CheckboxControlProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useCheckboxContext();
+const { slots } = useCheckboxContext();
 </script>
 
 <template>

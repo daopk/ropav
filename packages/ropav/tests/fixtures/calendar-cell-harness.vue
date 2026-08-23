@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {CalendarCellHostProps} from "./calendar-cell-host.types";
-import type {UseCalendarCellReturn} from "@/composables/use-calendar-cell";
-import type {CalendarDate} from "@internationalized/date";
+import type { CalendarCellHostProps } from "./calendar-cell-host.types";
+import type { UseCalendarCellReturn } from "@/composables/use-calendar-cell";
+import type { CalendarDate } from "@internationalized/date";
 
-import {createCalendar, isSameMonth} from "@internationalized/date";
-import {computed} from "vue";
+import { createCalendar, isSameMonth } from "@internationalized/date";
+import { computed } from "vue";
 
-import {useCalendar} from "@/composables/use-calendar";
-import {useCalendarState} from "@/composables/use-calendar-state";
+import { useCalendar } from "@/composables/use-calendar";
+import { useCalendarState } from "@/composables/use-calendar-state";
 
 import CalendarCellPart from "./calendar-cell-part.vue";
 
@@ -37,7 +37,7 @@ const state = useCalendarState({
   visibleDuration: () => props.visibleDuration,
 });
 
-const calendar = useCalendar({isDisabled: () => props.isDisabled}, state);
+const calendar = useCalendar({ isDisabled: () => props.isDisabled }, state);
 
 const cells = new Map<string, UseCalendarCellReturn>();
 
@@ -46,7 +46,7 @@ const register = (date: string, cell: UseCalendarCellReturn) => {
 };
 
 const rows = computed(() => {
-  const result: {date: CalendarDate; isOutsideMonth: boolean}[][] = [];
+  const result: { date: CalendarDate; isOutsideMonth: boolean }[][] = [];
   const duration = state.visibleDuration.value;
   const monthStart = state.visibleRange.value.start;
 
@@ -66,7 +66,7 @@ const rows = computed(() => {
   return result;
 });
 
-props.onReady?.({cells, state});
+props.onReady?.({ cells, state });
 </script>
 
 <template>

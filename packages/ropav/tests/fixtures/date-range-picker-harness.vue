@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {DateRangePickerHostProps} from "./date-range-picker-host.types";
+import type { DateRangePickerHostProps } from "./date-range-picker-host.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useDateRangePicker} from "@/composables/use-date-range-picker";
-import {useDateRangePickerState} from "@/composables/use-date-range-picker-state";
-import {provideFieldIdsContext} from "@/composables/use-field-ids";
+import { useDateRangePicker } from "@/composables/use-date-range-picker";
+import { useDateRangePickerState } from "@/composables/use-date-range-picker-state";
+import { provideFieldIdsContext } from "@/composables/use-field-ids";
 
 import DatePickerLabel from "./date-picker-label.vue";
 
@@ -42,7 +42,7 @@ const picker = useDateRangePicker(
 
 provideFieldIdsContext(picker.fieldIds);
 
-props.onReady?.({picker, state});
+props.onReady?.({ picker, state });
 </script>
 
 <template>

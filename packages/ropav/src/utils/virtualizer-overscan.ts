@@ -1,4 +1,4 @@
-import {Point, Rect} from "./virtualizer-geometry";
+import { Point, Rect } from "./virtualizer-geometry";
 
 /**
  * How much beyond the viewport the virtualizer renders, ported from React Aria's

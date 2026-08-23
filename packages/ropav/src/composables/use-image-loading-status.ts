@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter, ShallowRef} from "vue";
+import type { MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { onScopeDispose, shallowRef, toValue, watch } from "vue";
 
 export type ImageLoadingStatus = "idle" | "loading" | "loaded" | "error";
 

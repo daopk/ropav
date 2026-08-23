@@ -15,7 +15,7 @@ const testPlatform = (pattern: RegExp): boolean => {
 
   // `userAgentData` is the modern spelling and the only one Chrome keeps accurate; the legacy
   // `platform` is still the only thing Safari and Firefox report.
-  const data = (navigator as Navigator & {userAgentData?: {platform?: string}}).userAgentData;
+  const data = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData;
 
   return pattern.test(data?.platform ?? navigator.platform);
 };

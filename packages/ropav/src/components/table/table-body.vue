@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor generic="T">
-import type {VirtualizerNode} from "../../utils/virtualizer-layout";
-import type {TableBodyProps, TableBodySlotProps} from "./table.types";
+import type { VirtualizerNode } from "../../utils/virtualizer-layout";
+import type { TableBodyProps, TableBodySlotProps } from "./table.types";
 
-import {computed, onMounted, shallowRef, watch} from "vue";
+import { computed, onMounted, shallowRef, watch } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
 import TableDropIndicator from "./table-drop-indicator.vue";
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import {useTableContext, useTableGridContext, useTableVirtualizerContext} from "./table.context";
+import { useTableContext, useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 const props = defineProps<TableBodyProps<T>>();
 
@@ -19,8 +19,8 @@ defineSlots<{
   loader?: () => unknown;
 }>();
 
-const {slots} = useTableContext();
-const {collection, dropState} = useTableGridContext();
+const { slots } = useTableContext();
+const { collection, dropState } = useTableGridContext();
 
 const virtualizer = useTableVirtualizerContext();
 
@@ -51,7 +51,7 @@ if (virtualizer) {
           : null,
       );
     },
-    {immediate: true},
+    { immediate: true },
   );
 }
 
@@ -79,7 +79,7 @@ const layoutInfo = computed(() =>
  * A virtualized placeholder is not a table cell that can span columns, so it says so with
  * `aria-colspan` and takes itself out of the layout — the row it stands in for has no geometry.
  */
-const emptyStateStyle = computed(() => (virtualizer ? {display: "contents"} : undefined));
+const emptyStateStyle = computed(() => (virtualizer ? { display: "contents" } : undefined));
 
 /**
  * A windowed body renders its own drop indicators; a plain one leaves them to the caller.
@@ -108,7 +108,7 @@ const lastRowKey = computed(() => collection.rows.getLastKey());
         <template v-for="view in virtualizer.rowViews.value" :key="view.key">
           <TableDropIndicator
             v-if="rendersDropIndicators"
-            :target="{dropPosition: 'before', key: view.key, type: 'item'}"
+            :target="{ dropPosition: 'before', key: view.key, type: 'item' }"
           />
           <TableVirtualizerItem :layout-info="view.layoutInfo" :parent-layout-info="layoutInfo">
             <slot :index="view.node?.index" :item="itemOf(view.node)" />
@@ -116,7 +116,7 @@ const lastRowKey = computed(() => collection.rows.getLastKey());
         </template>
         <TableDropIndicator
           v-if="rendersDropIndicators && lastRowKey != null"
-          :target="{dropPosition: 'after', key: lastRowKey, type: 'item'}"
+          :target="{ dropPosition: 'after', key: lastRowKey, type: 'item' }"
         />
       </template>
       <slot v-else />

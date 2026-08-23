@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {AutocompleteIndicatorProps} from "./autocomplete.types";
+import type { AutocompleteIndicatorProps } from "./autocomplete.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronDown} from "../icons";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronDown } from "../icons";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 const props = defineProps<AutocompleteIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {select, slots, state} = useAutocompleteContext();
+const { select, slots, state } = useAutocompleteContext();
 
 const callerSlots = useSlots();
 
@@ -48,8 +48,8 @@ const styles = computed(() => composeSlotClassName(slots.value.indicator, props.
  */
 const responder = usePressResponder();
 
-const {isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave} =
-  useInteractionStates({isDisabled: () => Boolean(select.triggerAttributes.value["disabled"])});
+const { isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave } =
+  useInteractionStates({ isDisabled: () => Boolean(select.triggerAttributes.value["disabled"]) });
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);

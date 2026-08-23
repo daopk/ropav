@@ -1,8 +1,8 @@
-import {describe, expect, it} from "vitest";
-import {effectScope} from "vue";
+import { describe, expect, it } from "vitest";
+import { effectScope } from "vue";
 
-import {useDialogTrigger} from "@/composables/use-dialog-trigger";
-import {useOverlayTriggerState} from "@/composables/use-overlay-trigger-state";
+import { useDialogTrigger } from "@/composables/use-dialog-trigger";
+import { useOverlayTriggerState } from "@/composables/use-overlay-trigger-state";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -24,7 +24,7 @@ const pointer = (type: string) =>
   });
 
 /** A click with pointer data behind it, as a real mouse release produces. */
-const realClick = () => new MouseEvent("click", {bubbles: true, button: 0, detail: 1});
+const realClick = () => new MouseEvent("click", { bubbles: true, button: 0, detail: 1 });
 
 /**
  * A real element in the document, wired the way a template wires it: the press machine reads
@@ -35,10 +35,10 @@ const setup = (options: Parameters<typeof useDialogTrigger>[0] = {}) => {
 
   document.body.appendChild(element);
 
-  const [{state, trigger}, dispose] = withScope(() => {
+  const [{ state, trigger }, dispose] = withScope(() => {
     const state = useOverlayTriggerState();
 
-    return {state, trigger: useDialogTrigger(options, state)};
+    return { state, trigger: useDialogTrigger(options, state) };
   });
 
   trigger.responder.registerElement(element);
@@ -74,7 +74,7 @@ const setup = (options: Parameters<typeof useDialogTrigger>[0] = {}) => {
 
 describe("useDialogTrigger", () => {
   it("toggles the overlay on press", () => {
-    const {dispose, press, state} = setup();
+    const { dispose, press, state } = setup();
 
     press();
 
@@ -88,7 +88,7 @@ describe("useDialogTrigger", () => {
   });
 
   it("exposes the accessibility wiring as responder attributes", () => {
-    const {dispose, press, trigger} = setup();
+    const { dispose, press, trigger } = setup();
 
     expect(trigger.responder.attrs.value["id"]).toBe(trigger.triggerId.value);
     expect(trigger.responder.attrs.value["aria-expanded"]).toBe(false);
@@ -106,7 +106,7 @@ describe("useDialogTrigger", () => {
   });
 
   it("names the trigger and the overlay separately", () => {
-    const {dispose, trigger} = setup();
+    const { dispose, trigger } = setup();
 
     // The trigger's id is the dialog's labelling fallback, so it cannot be the dialog's own id.
     expect(trigger.triggerId.value).not.toBe(trigger.overlayId.value);
@@ -115,7 +115,7 @@ describe("useDialogTrigger", () => {
   });
 
   it("stays pressed for as long as the overlay is open", () => {
-    const {dispose, press, trigger} = setup();
+    const { dispose, press, trigger } = setup();
 
     expect(trigger.responder.isPressed.value).toBe(false);
 
@@ -132,7 +132,7 @@ describe("useDialogTrigger", () => {
   });
 
   it("supports being disabled", () => {
-    const {dispose, press, state} = setup({isDisabled: true});
+    const { dispose, press, state } = setup({ isDisabled: true });
 
     press();
 
@@ -142,7 +142,7 @@ describe("useDialogTrigger", () => {
   });
 
   it("reports the element the overlay is positioned against", () => {
-    const {dispose, element, trigger} = setup();
+    const { dispose, element, trigger } = setup();
 
     expect(trigger.triggerElement.value).toBe(element);
 

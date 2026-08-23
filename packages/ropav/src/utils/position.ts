@@ -102,16 +102,16 @@ export interface PositionResult {
    * `transform-origin` so the overlay grows out of its trigger rather than out of its own
    * centre.
    */
-  triggerAnchorPoint: {x: number; y: number};
+  triggerAnchorPoint: { x: number; y: number };
   maxHeight: number;
   placement: PlacementAxis;
 }
 
-const AXIS = {bottom: "top", left: "left", right: "left", top: "top"} as const;
-const FLIPPED_DIRECTION = {bottom: "top", left: "right", right: "left", top: "bottom"} as const;
-const CROSS_AXIS = {left: "top", top: "left"} as const;
-const AXIS_SIZE = {left: "width", top: "height"} as const;
-const TOTAL_SIZE = {height: "totalHeight", width: "totalWidth"} as const;
+const AXIS = { bottom: "top", left: "left", right: "left", top: "top" } as const;
+const FLIPPED_DIRECTION = { bottom: "top", left: "right", right: "left", top: "bottom" } as const;
+const CROSS_AXIS = { left: "top", top: "left" } as const;
+const AXIS_SIZE = { left: "width", top: "height" } as const;
+const TOTAL_SIZE = { height: "totalHeight", width: "totalWidth" } as const;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
@@ -128,8 +128,8 @@ const isWebKit = () =>
 
 /** The element's rectangle, ignoring any scale transform when asked. */
 export const getRect = (node: Element, ignoreScale: boolean): Offset => {
-  let {height, width} = node.getBoundingClientRect();
-  const {left, top} = node.getBoundingClientRect();
+  let { height, width } = node.getBoundingClientRect();
+  const { left, top } = node.getBoundingClientRect();
 
   // An entering overlay is mid-animation and usually scaled down, so measuring it through its
   // bounding rect would place it as if it were that smaller size.
@@ -138,14 +138,14 @@ export const getRect = (node: Element, ignoreScale: boolean): Offset => {
     height = node.offsetHeight;
   }
 
-  return {height, left, top, width};
+  return { height, left, top, width };
 };
 
 const getOffset = (node: Element, ignoreScale: boolean, overrideRect?: Offset | null): Offset => {
-  const {height, left, top, width} = overrideRect ?? getRect(node, ignoreScale);
-  const {clientLeft, clientTop, scrollLeft, scrollTop} = document.documentElement;
+  const { height, left, top, width } = overrideRect ?? getRect(node, ignoreScale);
+  const { clientLeft, clientTop, scrollLeft, scrollTop } = document.documentElement;
 
-  return {height, left: left + scrollLeft - clientLeft, top: top + scrollTop - clientTop, width};
+  return { height, left: left + scrollLeft - clientLeft, top: top + scrollTop - clientTop, width };
 };
 
 const getPosition = (
@@ -251,7 +251,7 @@ const getContainerDimensions = (
       left = visualViewport.offsetLeft;
     }
   } else {
-    ({height, left, top, width} = getOffset(containerNode, false));
+    ({ height, left, top, width } = getOffset(containerNode, false));
     scroll.top = containerNode.scrollTop;
     scroll.left = containerNode.scrollLeft;
     totalWidth = width;
@@ -271,7 +271,7 @@ const getContainerDimensions = (
     left = visualViewport?.pageLeft ?? 0;
   }
 
-  return {height, left, scroll, top, totalHeight, totalWidth, width};
+  return { height, left, scroll, top, totalHeight, totalWidth, width };
 };
 
 /** How far the overlay must shift along `axis` to stay inside the boundary. */
@@ -363,7 +363,7 @@ const computePosition = (
   arrowBoundaryOffset: number,
   containerDimensions: Dimensions,
 ) => {
-  const {axis, crossAxis, crossPlacement, crossSize, placement, size} = placementInfo;
+  const { axis, crossAxis, crossPlacement, crossSize, placement, size } = placementInfo;
   const position: Position = {};
 
   position[crossAxis] = childOffset[crossAxis] ?? 0;
@@ -462,7 +462,7 @@ const getAvailableSpace = (
   containerDimensions: Dimensions,
   isContainerDescendentOfBoundary: boolean,
 ) => {
-  const {axis, placement, size} = placementInfo;
+  const { axis, placement, size } = placementInfo;
   const containerOffset = isContainerDescendentOfBoundary ? containerOffsetWithBoundary[axis] : 0;
 
   if (placement === axis) {
@@ -512,8 +512,8 @@ export const calculatePositionInternal = (
   visualViewport: VisualViewport | null,
 ): PositionResult => {
   let placementInfo = parsePlacement(placementInput);
-  const {crossAxis, crossSize, size} = placementInfo;
-  let {crossPlacement, placement} = placementInfo;
+  const { crossAxis, crossSize, size } = placementInfo;
+  let { crossPlacement, placement } = placementInfo;
 
   let position = computePosition(
     childOffset,
@@ -661,7 +661,7 @@ export const calculatePositionInternal = (
     arrowMaxPosition,
   );
 
-  ({crossPlacement, placement} = placementInfo);
+  ({ crossPlacement, placement } = placementInfo);
 
   // The overlay should appear to grow out of wherever it is anchored: the arrow if there is
   // one, otherwise the edge of the trigger it is aligned to.
@@ -718,7 +718,7 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
     : getPosition(targetNode, container, false, targetRect);
 
   if (!isViewportContainer) {
-    const {marginLeft, marginTop} = window.getComputedStyle(targetNode);
+    const { marginLeft, marginTop } = window.getComputedStyle(targetNode);
 
     childOffset.top += parseInt(marginTop, 10) || 0;
     childOffset.left += parseInt(marginLeft, 10) || 0;
@@ -751,7 +751,7 @@ export const calculatePosition = (options: PositionOptions): PositionResult => {
       width: 0,
     };
   } else if (isBoundaryViewport && isViewportContainer) {
-    containerOffsetWithBoundary = {height: 0, left: 0, top: 0, width: 0};
+    containerOffsetWithBoundary = { height: 0, left: 0, top: 0, width: 0 };
   } else {
     containerOffsetWithBoundary = getPosition(boundaryElement, container, false);
   }

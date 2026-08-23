@@ -1,7 +1,7 @@
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useControllableState} from "@/composables/use-controllable-state";
+import { useControllableState } from "@/composables/use-controllable-state";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -14,8 +14,8 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
 describe("useControllableState", () => {
   describe("uncontrolled", () => {
     it("starts at the default value", () => {
-      const [{isControlled, state}, dispose] = withScope(() =>
-        useControllableState<string>({defaultValue: "a"}),
+      const [{ isControlled, state }, dispose] = withScope(() =>
+        useControllableState<string>({ defaultValue: "a" }),
       );
 
       expect(state.value).toBe("a");
@@ -26,8 +26,8 @@ describe("useControllableState", () => {
 
     it("updates its own state and calls onValueChange", () => {
       const onValueChange = vi.fn();
-      const [{setState, state}, dispose] = withScope(() =>
-        useControllableState<string>({defaultValue: "a", onValueChange}),
+      const [{ setState, state }, dispose] = withScope(() =>
+        useControllableState<string>({ defaultValue: "a", onValueChange }),
       );
 
       setState("b");
@@ -39,8 +39,8 @@ describe("useControllableState", () => {
     });
 
     it("supports an updater function", () => {
-      const [{setState, state}, dispose] = withScope(() =>
-        useControllableState<number>({defaultValue: 1}),
+      const [{ setState, state }, dispose] = withScope(() =>
+        useControllableState<number>({ defaultValue: 1 }),
       );
 
       setState((previous) => previous + 1);
@@ -51,7 +51,9 @@ describe("useControllableState", () => {
     });
 
     it("supports writing through the state ref", () => {
-      const [{state}, dispose] = withScope(() => useControllableState<string>({defaultValue: "a"}));
+      const [{ state }, dispose] = withScope(() =>
+        useControllableState<string>({ defaultValue: "a" }),
+      );
 
       state.value = "b";
 
@@ -64,8 +66,8 @@ describe("useControllableState", () => {
   describe("controlled", () => {
     it("reads the value from the controlling ref", () => {
       const value = shallowRef<string | undefined>("a");
-      const [{isControlled, state}, dispose] = withScope(() =>
-        useControllableState<string>({defaultValue: "z", value}),
+      const [{ isControlled, state }, dispose] = withScope(() =>
+        useControllableState<string>({ defaultValue: "z", value }),
       );
 
       expect(isControlled.value).toBe(true);
@@ -80,8 +82,8 @@ describe("useControllableState", () => {
     it("notifies onValueChange without mutating its own state", () => {
       const value = shallowRef<string | undefined>("a");
       const onValueChange = vi.fn();
-      const [{setState, state}, dispose] = withScope(() =>
-        useControllableState<string>({defaultValue: "z", onValueChange, value}),
+      const [{ setState, state }, dispose] = withScope(() =>
+        useControllableState<string>({ defaultValue: "z", onValueChange, value }),
       );
 
       setState("b");
@@ -96,8 +98,8 @@ describe("useControllableState", () => {
 
   it("calls onValueChange only when the value actually changes", () => {
     const onValueChange = vi.fn();
-    const [{setState}, dispose] = withScope(() =>
-      useControllableState<string>({defaultValue: "a", onValueChange}),
+    const [{ setState }, dispose] = withScope(() =>
+      useControllableState<string>({ defaultValue: "a", onValueChange }),
     );
 
     setState("a");

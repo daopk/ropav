@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogContainerProps} from "./alert-dialog.types";
+import type { AlertDialogContainerProps } from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { alertDialogVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {OverlayDismissButton} from "../overlay";
+import { dataAttr } from "../../utils/assertion";
+import { OverlayDismissButton } from "../overlay";
 
 import {
   provideAlertDialogContext,
@@ -13,9 +13,9 @@ import {
   useAlertDialogOverlayContext,
 } from "./alert-dialog.context";
 
-const props = withDefaults(defineProps<AlertDialogContainerProps>(), {placement: "auto"});
+const props = withDefaults(defineProps<AlertDialogContainerProps>(), { placement: "auto" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useAlertDialogContext();
 const overlay = useAlertDialogOverlayContext();
@@ -26,7 +26,7 @@ const slots = computed(() => ({
   ...context.slots.value,
   // Deliberately without `variant`: this overwrites the backdrop slot with a default-variant one,
   // which nothing below reads.
-  ...alertDialogVariants({size: props.size}),
+  ...alertDialogVariants({ size: props.size }),
 }));
 
 provideAlertDialogContext({
@@ -35,7 +35,7 @@ provideAlertDialogContext({
   slots,
 });
 
-const styles = computed(() => slots.value.container({class: props.class}));
+const styles = computed(() => slots.value.container({ class: props.class }));
 
 /**
  * Reported upward rather than measured from above.

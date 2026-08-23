@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TagGroupListProps} from "./tag-group.types";
+import type { TagGroupListProps } from "./tag-group.types";
 
-import {computed, onMounted, shallowRef} from "vue";
+import { computed, onMounted, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useTagGroupContext} from "./tag-group.context";
+import { useTagGroupContext } from "./tag-group.context";
 
 const props = defineProps<TagGroupListProps>();
 
-defineSlots<{default?: () => unknown; empty?: () => unknown}>();
+defineSlots<{ default?: () => unknown; empty?: () => unknown }>();
 
 const {
   collection,
@@ -65,7 +65,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-labelledby="fieldIds.labelId.value"
     :aria-live="ariaLive"
     aria-relevant="additions"
-    :class="slots.list({class: props.class})"
+    :class="slots.list({ class: props.class })"
     :data-collection="collectionId"
     :data-empty="dataAttr(isEmpty)"
     :data-focus-visible="dataAttr(selection.isFocused.value)"

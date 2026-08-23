@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TableFooterProps} from "./table.types";
+import type { TableFooterProps } from "./table.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useTableContext} from "./table.context";
+import { useTableContext } from "./table.context";
 
 const props = defineProps<TableFooterProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 </script>
 
 <template>

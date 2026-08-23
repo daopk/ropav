@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarHostProps} from "./range-calendar-host.types";
+import type { RangeCalendarHostProps } from "./range-calendar-host.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import RangeCalendarHarness from "./range-calendar-harness.vue";
 

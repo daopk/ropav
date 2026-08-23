@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxFixtureItem, ComboBoxHostProps} from "./combo-box.types";
-import type {UseListKeyboardReturn} from "@/composables/use-list-keyboard";
+import type { ComboBoxFixtureItem, ComboBoxHostProps } from "./combo-box.types";
+import type { UseListKeyboardReturn } from "@/composables/use-list-keyboard";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {composePressResponder} from "@/composables/press-responder";
-import {useComboBox} from "@/composables/use-combo-box";
-import {useComboBoxState} from "@/composables/use-combo-box-state";
-import {useListKeyboard} from "@/composables/use-list-keyboard";
+import { composePressResponder } from "@/composables/press-responder";
+import { useComboBox } from "@/composables/use-combo-box";
+import { useComboBoxState } from "@/composables/use-combo-box-state";
+import { useListKeyboard } from "@/composables/use-list-keyboard";
 
 // Every three-state boolean declares an explicit `undefined`, at this layer too: `v-bind` forwards
 // a cast `false` as a value that is present, and no inner default can undo that.
@@ -27,9 +27,9 @@ const props = withDefaults(defineProps<ComboBoxHostProps>(), {
   isReadOnly: undefined,
   isRequired: undefined,
   items: (): ComboBoxFixtureItem[] => [
-    {id: "cat", name: "Cat"},
-    {id: "dog", name: "Dog"},
-    {id: "panda", name: "Panda"},
+    { id: "cat", name: "Cat" },
+    { id: "dog", name: "Dog" },
+    { id: "panda", name: "Panda" },
   ],
   menuTrigger: undefined,
   name: undefined,

@@ -1,12 +1,12 @@
-import type {AnyCalendarState} from "./use-calendar";
-import type {CalendarDate} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { AnyCalendarState } from "./use-calendar";
+import type { CalendarDate } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {isSameYear, toCalendarDate} from "@internationalized/date";
-import {computed, toValue} from "vue";
+import { isSameYear, toCalendarDate } from "@internationalized/date";
+import { computed, toValue } from "vue";
 
-import {useDateFormatter} from "./use-date-formatter";
-import {useDisplayNames} from "./use-display-names";
+import { useDateFormatter } from "./use-date-formatter";
+import { useDisplayNames } from "./use-display-names";
 
 export interface CalendarYearPickerFormatOptions {
   year?: "numeric" | "2-digit";
@@ -75,8 +75,8 @@ export const useCalendarYearPicker = (
     const visibleYears = toValue(options.visibleYears) || 20;
 
     // An even count has no true middle year, so the focused one sits just past the halfway mark.
-    let minDate = focused.subtract({years: Math.floor(visibleYears / 2)});
-    let maxDate = focused.add({years: Math.ceil(visibleYears / 2) - 1});
+    let minDate = focused.subtract({ years: Math.floor(visibleYears / 2) });
+    let maxDate = focused.add({ years: Math.ceil(visibleYears / 2) - 1 });
 
     /*
      * A window that runs past a bound slides back rather than shrinking, so the picker always
@@ -85,23 +85,23 @@ export const useCalendarYearPicker = (
      */
     if (state.maxValue.value && maxDate.compare(state.maxValue.value) > 0) {
       maxDate = toCalendarDate(state.maxValue.value);
-      minDate = maxDate.subtract({years: visibleYears - 1});
+      minDate = maxDate.subtract({ years: visibleYears - 1 });
     }
 
     if (state.minValue.value && minDate.compare(state.minValue.value) < 0) {
       minDate = toCalendarDate(state.minValue.value);
-      maxDate = minDate.add({years: visibleYears - 1});
+      maxDate = minDate.add({ years: visibleYears - 1 });
 
       if (state.maxValue.value && maxDate.compare(state.maxValue.value) > 0) {
         maxDate = toCalendarDate(state.maxValue.value);
       }
     }
 
-    return {maxDate, minDate};
+    return { maxDate, minDate };
   });
 
   const items = computed<CalendarYearPickerItem[]>(() => {
-    const {maxDate, minDate} = bounds.value;
+    const { maxDate, minDate } = bounds.value;
     const timeZone = state.timeZone.value;
     const years: CalendarYearPickerItem[] = [];
     let date = minDate;
@@ -112,7 +112,7 @@ export const useCalendarYearPicker = (
         formatted: formatter.value.format(date.toDate(timeZone)),
         id: years.length,
       });
-      date = date.add({years: 1});
+      date = date.add({ years: 1 });
     }
 
     return years;

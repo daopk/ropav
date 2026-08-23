@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {ToastRootProps} from "./toast.types";
-import type {CSSProperties} from "vue";
+import type { ToastRootProps } from "./toast.types";
+import type { CSSProperties } from "vue";
 
-import {computed, onScopeDispose, shallowRef, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
-import {useMeasuredHeight} from "../../composables/use-measured-height";
-import {useToast} from "../../composables/use-toast";
-import {dataAttr} from "../../utils/assertion";
-import {provideSurfaceContext} from "../surface";
+import { useMeasuredHeight } from "../../composables/use-measured-height";
+import { useToast } from "../../composables/use-toast";
+import { dataAttr } from "../../utils/assertion";
+import { provideSurfaceContext } from "../surface";
 
-import {provideToastItemContext, useToastRegionContext} from "./toast.context";
+import { provideToastItemContext, useToastRegionContext } from "./toast.context";
 
 const props = defineProps<ToastRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const region = useToastRegionContext();
 
@@ -34,7 +34,7 @@ const index = computed(() =>
 const isFrontmost = computed(() => index.value <= 0);
 const isHidden = computed(() => index.value >= region.maxVisibleToasts.value);
 
-const {height} = useMeasuredHeight(element);
+const { height } = useMeasuredHeight(element);
 
 /**
  * Every toast reports its height up, because a toast that is *not* frontmost is clipped to the
@@ -46,7 +46,7 @@ watch(
   ([key, next]) => {
     if (typeof next === "number") region.onToastHeightChange(key, next);
   },
-  {immediate: true},
+  { immediate: true },
 );
 
 watch(
@@ -76,7 +76,7 @@ provideToastItemContext({
 });
 
 // A toast is a surface in its own right, so descendants use their default on-surface colours.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
 const styles = computed(() =>
   region.slots.value.toast({
@@ -105,7 +105,7 @@ const style = computed<CSSProperties>(() => {
     // custom-ident on its own.
     viewTransitionName: `toast-${props.toast.key.replace(/[^a-zA-Z0-9]/g, "-")}`,
     zIndex: visible.length - index.value,
-    ...(frontHeight ? {"--front-height": `${frontHeight}px`} : null),
+    ...(frontHeight ? { "--front-height": `${frontHeight}px` } : null),
   };
 });
 </script>

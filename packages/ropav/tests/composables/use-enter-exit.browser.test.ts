@@ -1,7 +1,7 @@
-import {afterEach, beforeAll, describe, expect, it} from "vitest";
-import {effectScope, shallowRef, watchEffect} from "vue";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
+import { effectScope, shallowRef, watchEffect } from "vue";
 
-import {useEnterExit} from "@/composables/use-enter-exit";
+import { useEnterExit } from "@/composables/use-enter-exit";
 
 /**
  * Real animations, which is the whole point of testing this in a browser.
@@ -63,7 +63,7 @@ const setup = () => {
         if (enterExit.isEntering.value) element.setAttribute("data-entering", "true");
         if (enterExit.isExiting.value) element.setAttribute("data-exiting", "true");
       },
-      {flush: "post"},
+      { flush: "post" },
     );
 
     return enterExit;
@@ -101,7 +101,7 @@ const setup = () => {
 
   hosts.push(dispose);
 
-  return {dispose, element: () => elementRef.value, isOpen, state};
+  return { dispose, element: () => elementRef.value, isOpen, state };
 };
 
 afterEach(() => {

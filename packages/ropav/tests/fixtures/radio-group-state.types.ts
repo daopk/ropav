@@ -1,4 +1,4 @@
-import type {RadioGroupState, ValidationBehavior, ValidationFunction} from "@/composables";
+import type { RadioGroupState, ValidationBehavior, ValidationFunction } from "@/composables";
 
 export interface RadioGroupStateHostProps {
   /** Item values to render a radio for. */

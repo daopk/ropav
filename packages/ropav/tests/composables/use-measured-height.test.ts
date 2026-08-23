@@ -1,14 +1,14 @@
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef, watch} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef, watch } from "vue";
 
-import {useMeasuredHeight} from "@/composables/use-measured-height";
+import { useMeasuredHeight } from "@/composables/use-measured-height";
 
 /** Read outside a component: nothing here depends on an instance. */
-const read = <T>(body: () => T): {stop: () => void; value: T} => {
+const read = <T>(body: () => T): { stop: () => void; value: T } => {
   const scope = effectScope();
   const value = scope.run(body)!;
 
-  return {stop: () => scope.stop(), value};
+  return { stop: () => scope.stop(), value };
 };
 
 const observers: StubObserver[] = [];
@@ -70,7 +70,7 @@ describe("useMeasuredHeight", () => {
   it("reports nothing while there is no element to measure", async () => {
     stubResizeObserver();
 
-    const {stop, value} = read(() => useMeasuredHeight(shallowRef(null)));
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(null)));
 
     await nextTick();
 
@@ -84,7 +84,7 @@ describe("useMeasuredHeight", () => {
     stubResizeObserver();
 
     const element = elementOfHeight(64);
-    const {stop, value} = read(() => useMeasuredHeight(shallowRef(element)));
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
 
     await nextTick();
 
@@ -98,7 +98,7 @@ describe("useMeasuredHeight", () => {
     stubResizeObserver();
 
     const element = elementOfHeight(64);
-    const {stop, value} = read(() => useMeasuredHeight(shallowRef(element)));
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
 
     await nextTick();
 
@@ -114,7 +114,7 @@ describe("useMeasuredHeight", () => {
     stubResizeObserver();
 
     const element = elementOfHeight(64);
-    const {stop, value} = read(() => useMeasuredHeight(shallowRef(element)));
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(element)));
 
     await nextTick();
 
@@ -139,7 +139,7 @@ describe("useMeasuredHeight", () => {
     const first = elementOfHeight(64);
     const second = elementOfHeight(120);
     const element = shallowRef<HTMLElement | null>(first);
-    const {stop, value} = read(() => useMeasuredHeight(element));
+    const { stop, value } = read(() => useMeasuredHeight(element));
 
     await nextTick();
     expect(value.height.value).toBe(64);
@@ -157,7 +157,7 @@ describe("useMeasuredHeight", () => {
   it("disconnects when the scope is disposed", async () => {
     stubResizeObserver();
 
-    const {stop} = read(() => useMeasuredHeight(shallowRef(elementOfHeight(64))));
+    const { stop } = read(() => useMeasuredHeight(shallowRef(elementOfHeight(64))));
 
     await nextTick();
     stop();
@@ -168,7 +168,7 @@ describe("useMeasuredHeight", () => {
   it("measures without waiting for the observer to notify", async () => {
     // jsdom has a `ResizeObserver` constructor that never notifies anything, so an
     // observer-only reading would be permanently absent here.
-    const {stop, value} = read(() => useMeasuredHeight(shallowRef(elementOfHeight(64))));
+    const { stop, value } = read(() => useMeasuredHeight(shallowRef(elementOfHeight(64))));
 
     await nextTick();
 

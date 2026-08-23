@@ -1,7 +1,7 @@
-import type {VirtualizerCollection} from "../utils/virtualizer-layout";
-import type {ComputedRef} from "vue";
+import type { VirtualizerCollection } from "../utils/virtualizer-layout";
+import type { ComputedRef } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
 export type CollectionKey = string | number;
 

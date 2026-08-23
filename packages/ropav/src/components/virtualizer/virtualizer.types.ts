@@ -1,5 +1,5 @@
-import type {Layout} from "../../utils/virtualizer-layout";
-import type {LayoutInfo} from "../../utils/virtualizer-layout-info";
+import type { Layout } from "../../utils/virtualizer-layout";
+import type { LayoutInfo } from "../../utils/virtualizer-layout-info";
 
 /** A layout class the caller hands over, or an instance they built themselves. */
 export type VirtualizerLayoutProp<Options extends object = object> =

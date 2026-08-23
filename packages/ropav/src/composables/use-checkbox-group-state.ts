@@ -4,11 +4,11 @@ import type {
   ValidationFunction,
   ValidationResult,
 } from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, toValue} from "vue";
+import { computed, nextTick, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 import {
   DEFAULT_VALIDATION_RESULT,
   getNativeValidation,
@@ -88,7 +88,7 @@ export const useCheckboxGroupState = (
 ): CheckboxGroupState => {
   const defaultValue = computed<string[]>(() => toValue(options.defaultValue) ?? []);
 
-  const {setState, state} = useControllableState<string[]>({
+  const { setState, state } = useControllableState<string[]>({
     defaultValue: defaultValue.value,
     onValueChange: options.onValueChange,
     value: () => toValue(options.value),

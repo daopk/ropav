@@ -1,7 +1,7 @@
-import type {UseSelectionManagerReturn} from "@/composables/use-selection-manager";
-import type {DragCollection, DragCollectionNode, DragKey} from "@/utils/dnd-types";
+import type { UseSelectionManagerReturn } from "@/composables/use-selection-manager";
+import type { DragCollection, DragCollectionNode, DragKey } from "@/utils/dnd-types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
 /**
  * Stand-ins for the two things the drag and drop layer reads.
@@ -60,7 +60,7 @@ export const createFixtureCollection = (items: FixtureItem[]): DragCollection<un
       prevKey: siblings[index - 1] ?? null,
       textValue: item.textValue ?? String(item.key),
       type: item.type ?? "item",
-      value: item.value ?? {id: item.key},
+      value: item.value ?? { id: item.key },
     });
   }
 
@@ -109,8 +109,8 @@ export const createFixtureKeyboardDelegate = (collection: DragCollection<unknown
  */
 export const createFixtureSelection = (
   selected: DragKey[] = [],
-  options: {focusedKey?: DragKey | null; selectionMode?: string} = {},
-): UseSelectionManagerReturn & {focusedCalls: boolean[]} => {
+  options: { focusedKey?: DragKey | null; selectionMode?: string } = {},
+): UseSelectionManagerReturn & { focusedCalls: boolean[] } => {
   const keys = shallowRef(new Set(selected));
   const focusedKey = shallowRef<DragKey | null>(options.focusedKey ?? null);
   const focusedCalls: boolean[] = [];
@@ -126,7 +126,7 @@ export const createFixtureSelection = (
     setFocused: (isFocused: boolean) => focusedCalls.push(isFocused),
     setFocusedKey: (key: DragKey | null) => (focusedKey.value = key),
     setSelectedKeys: (next: Iterable<DragKey>) => (keys.value = new Set(next)),
-  } as unknown as UseSelectionManagerReturn & {focusedCalls: boolean[]};
+  } as unknown as UseSelectionManagerReturn & { focusedCalls: boolean[] };
 };
 
 /** A `DragTypes` over a fixed set, matching the real wildcard rules closely enough for these. */

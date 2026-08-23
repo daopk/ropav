@@ -1,20 +1,20 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {CloseButton} from "@/components/close-button";
+import { CloseButton } from "@/components/close-button";
 
 import ResponderFixture from "./fixtures.vue";
 
 const renderCloseButton = (props: Record<string, unknown> = {}) =>
-  renderVapor(CloseButton, {props});
+  renderVapor(CloseButton, { props });
 
 const buttonIn = (container: HTMLElement) => container.querySelector("button");
 
 describe("CloseButton", () => {
   describe("structure", () => {
     it("renders a native button with its data-slot", () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
       const button = buttonIn(container);
 
       expect(button).not.toBeNull();
@@ -28,7 +28,7 @@ describe("CloseButton", () => {
     // `:type` on a <button> to a DOM property write, and skips it when the value already
     // equals `el.type` — which reads "submit" by default even with no attribute set.
     it("defaults to type button so it never submits a form by accident", () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
 
       expect((buttonIn(container) as HTMLButtonElement).type).toBe("button");
 
@@ -36,7 +36,7 @@ describe("CloseButton", () => {
     });
 
     it("renders the close icon when no content is passed", () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
       const icon = container.querySelector('[data-slot="close-button-icon"]');
 
       expect(icon).not.toBeNull();
@@ -46,8 +46,8 @@ describe("CloseButton", () => {
     });
 
     it("renders slot content in place of the default icon", () => {
-      const {container, unmount} = renderVapor(CloseButton, {
-        slots: {default: () => document.createTextNode("✕")},
+      const { container, unmount } = renderVapor(CloseButton, {
+        slots: { default: () => document.createTextNode("✕") },
       });
 
       expect(container.querySelector('[data-slot="close-button-icon"]')).toBeNull();
@@ -57,7 +57,7 @@ describe("CloseButton", () => {
     });
 
     it("exposes the variant BEM modifier", () => {
-      const {container, unmount} = renderCloseButton({variant: "default"});
+      const { container, unmount } = renderCloseButton({ variant: "default" });
 
       expect(buttonIn(container)?.classList.contains("close-button--default")).toBe(true);
 
@@ -67,9 +67,9 @@ describe("CloseButton", () => {
 
   describe("accessible name", () => {
     it("names itself Close so the icon alone is never the label", () => {
-      const {getByRole, unmount} = renderCloseButton();
+      const { getByRole, unmount } = renderCloseButton();
 
-      expect(getByRole("button", {name: "Close"})).toBeInTheDocument();
+      expect(getByRole("button", { name: "Close" })).toBeInTheDocument();
 
       unmount();
     });
@@ -77,11 +77,11 @@ describe("CloseButton", () => {
     // The default lives on the template rather than behind a prop, which only works
     // because Vue lets a fallthrough attribute win over the one declared there.
     it("lets the caller name what is being closed", () => {
-      const {getByRole, unmount} = renderVapor(CloseButton, {
-        props: {"aria-label": "Dismiss notification"},
+      const { getByRole, unmount } = renderVapor(CloseButton, {
+        props: { "aria-label": "Dismiss notification" },
       });
 
-      expect(getByRole("button", {name: "Dismiss notification"})).toBeInTheDocument();
+      expect(getByRole("button", { name: "Dismiss notification" })).toBeInTheDocument();
 
       unmount();
     });
@@ -90,9 +90,9 @@ describe("CloseButton", () => {
   describe("interaction states", () => {
     it("calls click when activated", async () => {
       const onClick = vi.fn();
-      const {getByRole, unmount} = renderVapor(CloseButton, {props: {onClick}});
+      const { getByRole, unmount } = renderVapor(CloseButton, { props: { onClick } });
 
-      getByRole("button").dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      getByRole("button").dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
       expect(onClick).toHaveBeenCalledTimes(1);
@@ -101,15 +101,19 @@ describe("CloseButton", () => {
     });
 
     it("exposes hover as a data attribute the stylesheet can key on", async () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
       const button = buttonIn(container)!;
 
-      button.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
+      button.dispatchEvent(
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
 
       expect(button.getAttribute("data-hovered")).toBe("true");
 
-      button.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true, pointerType: "mouse"}));
+      button.dispatchEvent(
+        new PointerEvent("pointerleave", { bubbles: true, pointerType: "mouse" }),
+      );
       await nextTick();
 
       expect(button.getAttribute("data-hovered")).toBeNull();
@@ -118,11 +122,11 @@ describe("CloseButton", () => {
     });
 
     it("exposes press as a data attribute the stylesheet can key on", async () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
       const button = buttonIn(container)!;
 
       button.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "mouse"}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
       );
       await nextTick();
 
@@ -139,7 +143,7 @@ describe("CloseButton", () => {
 
   describe("disabled", () => {
     it("disables the underlying button", () => {
-      const {container, unmount} = renderCloseButton({isDisabled: true});
+      const { container, unmount } = renderCloseButton({ isDisabled: true });
       const button = buttonIn(container) as HTMLButtonElement;
 
       expect(button.disabled).toBe(true);
@@ -149,12 +153,14 @@ describe("CloseButton", () => {
     });
 
     it("reports no interaction state while disabled", async () => {
-      const {container, unmount} = renderCloseButton({isDisabled: true});
+      const { container, unmount } = renderCloseButton({ isDisabled: true });
       const button = buttonIn(container)!;
 
-      button.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}));
       button.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "mouse"}),
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
+      );
+      button.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
       );
       await nextTick();
 
@@ -169,7 +175,7 @@ describe("CloseButton", () => {
     // Written even though a native button is already tabbable: Safari does not focus one
     // unless an explicit tab index says so, which is why react-aria always sets it.
     it("renders an explicit tab index", () => {
-      const {container, unmount} = renderCloseButton();
+      const { container, unmount } = renderCloseButton();
 
       expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -177,7 +183,7 @@ describe("CloseButton", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {container, unmount} = renderCloseButton({isDisabled: true});
+      const { container, unmount } = renderCloseButton({ isDisabled: true });
 
       expect(buttonIn(container)?.hasAttribute("tabindex")).toBe(false);
 
@@ -188,14 +194,16 @@ describe("CloseButton", () => {
   describe("pending", () => {
     it("stays focusable but stops activating", async () => {
       const onClick = vi.fn();
-      const {getByRole, unmount} = renderVapor(CloseButton, {props: {isPending: true, onClick}});
+      const { getByRole, unmount } = renderVapor(CloseButton, {
+        props: { isPending: true, onClick },
+      });
       const button = getByRole("button") as HTMLButtonElement;
 
       expect(button.disabled).toBe(false);
       expect(button.getAttribute("aria-disabled")).toBe("true");
       expect(button.getAttribute("data-pending")).toBe("true");
 
-      button.dispatchEvent(new MouseEvent("click", {bubbles: true, cancelable: true}));
+      button.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
       await nextTick();
 
       expect(onClick).not.toHaveBeenCalled();
@@ -206,8 +214,8 @@ describe("CloseButton", () => {
     // Blocking the click is not enough on its own: implicit submission reaches the form
     // through the button's own type, without a click ever landing on the button.
     it("drops a pending submit button to type button", async () => {
-      const props = reactive({isPending: true, type: "submit"});
-      const {container, unmount} = renderVapor(CloseButton, {props});
+      const props = reactive({ isPending: true, type: "submit" });
+      const { container, unmount } = renderVapor(CloseButton, { props });
 
       expect((buttonIn(container) as HTMLButtonElement).type).toBe("button");
 
@@ -223,12 +231,12 @@ describe("CloseButton", () => {
 
 describe("CloseButton driven from above", () => {
   const renderWithResponder = (props: Record<string, unknown> = {}) =>
-    renderVapor(ResponderFixture, {props});
+    renderVapor(ResponderFixture, { props });
 
   it("reports its element to whatever supplied the press", () => {
     // The responder acts on the element and positions against it, so it has to be handed one.
     const onRegister = vi.fn();
-    const {container, unmount} = renderWithResponder({onRegister});
+    const { container, unmount } = renderWithResponder({ onRegister });
 
     expect(onRegister).toHaveBeenCalledWith(buttonIn(container));
 
@@ -236,8 +244,8 @@ describe("CloseButton driven from above", () => {
   });
 
   it("renders the attributes the supplied press asks for", () => {
-    const {container, unmount} = renderWithResponder({
-      attrs: {"aria-controls": "menu-1", "aria-expanded": "true", "aria-haspopup": "true"},
+    const { container, unmount } = renderWithResponder({
+      attrs: { "aria-controls": "menu-1", "aria-expanded": "true", "aria-haspopup": "true" },
     });
     const button = buttonIn(container);
 
@@ -250,7 +258,7 @@ describe("CloseButton driven from above", () => {
 
   it("passes a click to the supplied press", async () => {
     const onResponderClick = vi.fn();
-    const {container, unmount} = renderWithResponder({onResponderClick});
+    const { container, unmount } = renderWithResponder({ onResponderClick });
 
     buttonIn(container)?.click();
     await nextTick();
@@ -264,7 +272,7 @@ describe("CloseButton driven from above", () => {
     // Order is the whole reason the listeners are chained rather than spread: what comes
     // from above decides first, and the element's own handler follows.
     const calls: string[] = [];
-    const {container, unmount} = renderWithResponder({
+    const { container, unmount } = renderWithResponder({
       onOwnClick: () => calls.push("own"),
       onResponderClick: () => calls.push("responder"),
       withOwnClick: true,
@@ -283,14 +291,14 @@ describe("CloseButton driven from above", () => {
     // more than the click.
     const onResponderKeydown = vi.fn();
     const onResponderPointerdown = vi.fn();
-    const {container, unmount} = renderWithResponder({
+    const { container, unmount } = renderWithResponder({
       onResponderKeydown,
       onResponderPointerdown,
     });
     const button = buttonIn(container);
 
-    button?.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
-    button?.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+    button?.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
+    button?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
     await nextTick();
 
     expect(onResponderKeydown).toHaveBeenCalledOnce();
@@ -300,8 +308,8 @@ describe("CloseButton driven from above", () => {
   });
 
   it("looks pressed while the supplied press says it is", async () => {
-    const props = reactive({isPressed: false});
-    const {container, unmount} = renderWithResponder(props);
+    const props = reactive({ isPressed: false });
+    const { container, unmount } = renderWithResponder(props);
 
     expect(buttonIn(container)).not.toHaveAttribute("data-pressed");
 
@@ -317,7 +325,7 @@ describe("CloseButton driven from above", () => {
     // Most close buttons have nobody above them, and the optional context must not change
     // how those behave.
     const onClick = vi.fn();
-    const {container, unmount} = renderCloseButton({onClick});
+    const { container, unmount } = renderCloseButton({ onClick });
 
     buttonIn(container)?.click();
     await nextTick();

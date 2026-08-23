@@ -10,7 +10,7 @@ export const ErrorMessage = Object.assign(ErrorMessageRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ErrorMessageRoot};
+export { ErrorMessageRoot };
 
 export type {
   ErrorMessageRootProps,
@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {errorMessageVariants} from "@ropav/styles";
+export { errorMessageVariants } from "@ropav/styles";
 
-export type {ErrorMessageVariants} from "@ropav/styles";
+export type { ErrorMessageVariants } from "@ropav/styles";

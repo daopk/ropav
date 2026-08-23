@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {QueuedToast} from "./toast.types";
+import type { QueuedToast } from "./toast.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useMediaQuery} from "../../composables/use-media-query";
+import { useMediaQuery } from "../../composables/use-media-query";
 import SpinnerRoot from "../spinner/spinner-root.vue";
 
 import ToastActionButton from "./toast-action-button.vue";
@@ -15,7 +15,7 @@ import ToastRenderable from "./toast-renderable.vue";
 import ToastRoot from "./toast-root.vue";
 import ToastTitle from "./toast-title.vue";
 
-const props = defineProps<{toast: QueuedToast}>();
+const props = defineProps<{ toast: QueuedToast }>();
 
 const content = computed(() => props.toast.content ?? {});
 
@@ -35,7 +35,7 @@ const action = computed(() => {
 const actionProps = computed(() => {
   if (!action.value) return undefined;
 
-  const {label: _label, onPress: _onPress, ...rest} = action.value;
+  const { label: _label, onPress: _onPress, ...rest } = action.value;
 
   return rest;
 });

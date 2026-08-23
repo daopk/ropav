@@ -1,15 +1,15 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import IconCaretRight from "~icons/gravity-ui/caret-right";
 
-import {Breadcrumbs, BreadcrumbsItem} from "./index";
+import { Breadcrumbs, BreadcrumbsItem } from "./index";
 
-const components = {Breadcrumbs, BreadcrumbsItem};
+const components = { Breadcrumbs, BreadcrumbsItem };
 
 const meta: StoryMeta = {
   component: Breadcrumbs,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Navigation/Breadcrumbs",
 };
 
@@ -21,7 +21,7 @@ const render =
   (items: string[], extra = "") =>
   () => ({
     components,
-    setup: () => ({items}),
+    setup: () => ({ items }),
     template: `
     <Breadcrumbs ${extra}>
       <BreadcrumbsItem
@@ -49,8 +49,8 @@ export const Level2: Story = {
 
 export const CustomSeparator: Story = {
   render: () => ({
-    components: {...components, IconCaretRight},
-    setup: () => ({IconCaretRight}),
+    components: { ...components, IconCaretRight },
+    setup: () => ({ IconCaretRight }),
     template: `
       <Breadcrumbs :separator="IconCaretRight">
         <BreadcrumbsItem href="#">Home</BreadcrumbsItem>

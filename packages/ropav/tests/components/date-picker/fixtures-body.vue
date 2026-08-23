@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {DatePickerFixtureProps} from "./fixtures.types";
+import type { DatePickerFixtureProps } from "./fixtures.types";
 
 import {
   CalendarCell,
@@ -19,9 +19,9 @@ import {
   DatePickerTrigger,
   DatePickerTriggerIndicator,
 } from "@/components/date-picker";
-import {Description} from "@/components/description";
-import {ErrorMessage} from "@/components/error-message";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { ErrorMessage } from "@/components/error-message";
+import { Label } from "@/components/label";
 
 /*
  * The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would turn
@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
   <DatePickerRoot v-if="props.attributeForm" aria-label="Appointment" is-disabled is-required>
     <DatePickerGroup>
       <DatePickerInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DatePickerSegment :segment="segment" />
         </template>
       </DatePickerInput>
@@ -86,7 +86,7 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
     <Label v-if="props.label">{{ props.label }}</Label>
     <DatePickerGroup full-width>
       <DatePickerInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DatePickerSegment :segment="segment" />
         </template>
       </DatePickerInput>
@@ -105,12 +105,12 @@ const props = withDefaults(defineProps<DatePickerFixtureProps>(), {
       <CalendarRoot aria-label="Selected date">
         <CalendarGrid>
           <CalendarGridHeader>
-            <template #default="{day}">
+            <template #default="{ day }">
               <CalendarHeaderCell>{{ day }}</CalendarHeaderCell>
             </template>
           </CalendarGridHeader>
           <CalendarGridBody>
-            <template #default="{date}">
+            <template #default="{ date }">
               <CalendarCell :date="date" />
             </template>
           </CalendarGridBody>

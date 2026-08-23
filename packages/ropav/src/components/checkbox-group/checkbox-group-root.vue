@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {CheckboxGroupRootProps, CheckboxGroupSlotProps} from "./checkbox-group.types";
+import type { CheckboxGroupRootProps, CheckboxGroupSlotProps } from "./checkbox-group.types";
 
-import {checkboxGroupVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { checkboxGroupVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useCheckboxGroupState} from "../../composables/use-checkbox-group-state";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
+import { useCheckboxGroupState } from "../../composables/use-checkbox-group-state";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
 
-import {provideCheckboxGroupContext} from "./checkbox-group.context";
+import { provideCheckboxGroupContext } from "./checkbox-group.context";
 
 // `isInvalid` declares an explicit `undefined` default because it is a three-state prop:
 // absent means "no claim", while `false` is a standing claim that the group is valid, which
@@ -31,7 +31,7 @@ const emit = defineEmits<{
   "update:value": [value: string[]];
 }>();
 
-defineSlots<{default?: (props: CheckboxGroupSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CheckboxGroupSlotProps) => unknown }>();
 
 const state = useCheckboxGroupState({
   defaultValue: () => props.defaultValue,
@@ -49,7 +49,9 @@ const state = useCheckboxGroupState({
   value: () => props.value,
 });
 
-const styles = computed(() => checkboxGroupVariants({class: props.class, variant: props.variant}));
+const styles = computed(() =>
+  checkboxGroupVariants({ class: props.class, variant: props.variant }),
+);
 
 // A `<label>` implies a labelable control to point at, and a group is not one, so its label
 // renders as a `span` the group names itself after.
@@ -67,7 +69,7 @@ const {
 provideFieldIdsContext(fieldIds);
 
 // Validation belongs to the group, so the group's own `FieldError` is the one that speaks.
-provideFieldErrorContext({validation: state.validation.displayValidation});
+provideFieldErrorContext({ validation: state.validation.displayValidation });
 
 const resolvedAriaLabelledby = computed(() => {
   const ids = [labelId.value, props.ariaLabelledby].filter(Boolean);

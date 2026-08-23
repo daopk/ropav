@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {DrawerBackdropProps} from "./drawer.types";
+import type { DrawerBackdropProps } from "./drawer.types";
 
-import {drawerVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { drawerVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {provideFocusResponder} from "../../composables/focus-responder";
-import {providePressResponder} from "../../composables/press-responder";
-import {useModalOverlay} from "../../composables/use-modal-overlay";
-import {useModalTransition} from "../../composables/use-modal-transition";
-import {dataAttr} from "../../utils/assertion";
+import { provideFocusResponder } from "../../composables/focus-responder";
+import { providePressResponder } from "../../composables/press-responder";
+import { useModalOverlay } from "../../composables/use-modal-overlay";
+import { useModalTransition } from "../../composables/use-modal-transition";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   provideDrawerContext,
@@ -25,10 +25,10 @@ const props = withDefaults(defineProps<DrawerBackdropProps>(), {
   isKeyboardDismissDisabled: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useDrawerContext();
-const {state} = context;
+const { state } = context;
 
 const backdropElement = shallowRef<HTMLElement | null>(null);
 const contentElement = shallowRef<HTMLElement | null>(null);
@@ -80,10 +80,10 @@ provideFocusResponder(null);
 
 const slots = computed(() => ({
   ...context.slots.value,
-  ...drawerVariants({variant: props.variant}),
+  ...drawerVariants({ variant: props.variant }),
 }));
 
-provideDrawerContext({...context, slots});
+provideDrawerContext({ ...context, slots });
 
 provideDrawerOverlayContext({
   close: state.close,
@@ -96,7 +96,7 @@ provideDrawerOverlayContext({
   },
 });
 
-const styles = computed(() => slots.value.backdrop({class: props.class}));
+const styles = computed(() => slots.value.backdrop({ class: props.class }));
 
 const target = computed(() => props.portalContainer ?? "body");
 

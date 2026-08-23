@@ -1,4 +1,4 @@
-import {compile} from "@vue/compiler-vapor";
+import { compile } from "@vue/compiler-vapor";
 
 /** Shape `unplugin-icons` expects from a custom compiler. */
 export interface VaporIconCompiler {
@@ -24,7 +24,7 @@ const SVG_ID_ATTRIBUTE = /\bid="(.+?)"/g;
  * twice, and both would paint from whichever the document resolves first.
  */
 const transformSvgIds = (svg: string): SvgTransform => {
-  if (!svg.includes('="url(#')) return {renderLocals: "", svg};
+  if (!svg.includes('="url(#')) return { renderLocals: "", svg };
 
   const referencedIds = new Set<string>();
 
@@ -37,7 +37,7 @@ const transformSvgIds = (svg: string): SvgTransform => {
     },
   );
 
-  if (referencedIds.size === 0) return {renderLocals: "", svg};
+  if (referencedIds.size === 0) return { renderLocals: "", svg };
 
   const svgWithBoundIds = svgWithBoundReferences.replace(
     SVG_ID_ATTRIBUTE,

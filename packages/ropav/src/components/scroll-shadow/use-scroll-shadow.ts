@@ -1,7 +1,7 @@
-import type {ScrollShadowVisibility} from "./scroll-shadow.types";
-import type {MaybeRefOrGetter} from "vue";
+import type { ScrollShadowVisibility } from "./scroll-shadow.types";
+import type { MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
 export interface UseScrollShadowProps {
   container: MaybeRefOrGetter<HTMLElement | null | undefined>;
@@ -24,7 +24,7 @@ export interface UseScrollShadowReturn {
  * controlled/automatic mode all remain reactive.
  */
 export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowReturn => {
-  let previous: {hasScrollAfter: boolean; hasScrollBefore: boolean} | null = null;
+  let previous: { hasScrollAfter: boolean; hasScrollBefore: boolean } | null = null;
   let frame: number | null = null;
 
   const cancelPendingFrame = () => {
@@ -55,7 +55,7 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
       return;
     }
 
-    previous = {hasScrollAfter, hasScrollBefore};
+    previous = { hasScrollAfter, hasScrollBefore };
     cancelPendingFrame();
 
     frame = requestAnimationFrame(() => {
@@ -110,7 +110,7 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
       if (!current || !enabled || mode !== "auto") return;
 
       checkOverflow();
-      current.addEventListener("scroll", checkOverflow, {passive: true});
+      current.addEventListener("scroll", checkOverflow, { passive: true });
 
       const observer =
         typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(checkOverflow);
@@ -124,7 +124,7 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
         previous = null;
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {
@@ -133,5 +133,5 @@ export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowR
     previous = null;
   });
 
-  return {checkOverflow};
+  return { checkOverflow };
 };

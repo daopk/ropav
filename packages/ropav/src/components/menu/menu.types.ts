@@ -1,5 +1,5 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {FocusStrategy} from "../../composables/use-overlay-trigger-state";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { FocusStrategy } from "../../composables/use-overlay-trigger-state";
 import type {
   CollectionSelection,
   DisabledBehavior,

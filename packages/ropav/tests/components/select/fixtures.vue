@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {SelectFixtureItem, SelectFixtureProps} from "./fixtures.types";
-import type {SelectedValue} from "@/composables/use-select-state";
+import type { SelectFixtureItem, SelectFixtureProps } from "./fixtures.types";
+import type { SelectedValue } from "@/composables/use-select-state";
 
-import {DescriptionRoot} from "@/components/description";
-import {FieldErrorRoot} from "@/components/field-error";
-import {IconChevronDown} from "@/components/icons";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
+import { DescriptionRoot } from "@/components/description";
+import { FieldErrorRoot } from "@/components/field-error";
+import { IconChevronDown } from "@/components/icons";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
 import {
   SelectIndicator,
   SelectPopover,
@@ -34,9 +34,9 @@ const props = withDefaults(defineProps<SelectFixtureProps>(), {
   isOpen: undefined,
   isRequired: undefined,
   items: (): SelectFixtureItem[] => [
-    {email: "fl@ropav.com", id: "florida", name: "Florida"},
-    {email: "ca@ropav.com", id: "california", name: "California"},
-    {email: "tx@ropav.com", id: "texas", name: "Texas"},
+    { email: "fl@ropav.com", id: "florida", name: "Florida" },
+    { email: "ca@ropav.com", id: "california", name: "California" },
+    { email: "tx@ropav.com", id: "texas", name: "Texas" },
   ],
   name: undefined,
   placeholder: "Select one",
@@ -75,12 +75,12 @@ const emit = defineEmits<{
     <LabelRoot v-if="props.withLabel">State</LabelRoot>
     <SelectTrigger :class="props.triggerClass">
       <SelectValue :class="props.valueClass">
-        <template v-if="props.withCustomValue" #default="{isPlaceholder, selectedItems}">
+        <template v-if="props.withCustomValue" #default="{ isPlaceholder, selectedItems }">
           <span data-testid="custom-value">
             {{ isPlaceholder ? "nothing" : selectedItems.map((item) => item.key).join("+") }}
           </span>
         </template>
-        <template v-else-if="props.withCustomValueList" #default="{selectedItems}">
+        <template v-else-if="props.withCustomValueList" #default="{ selectedItems }">
           <span v-for="item in selectedItems" :key="item.key" data-testid="value-item">
             {{ (item.value as SelectFixtureItem).name }}
           </span>

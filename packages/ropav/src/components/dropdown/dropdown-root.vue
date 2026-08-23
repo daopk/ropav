@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {DropdownRootProps} from "./dropdown.types";
+import type { DropdownRootProps } from "./dropdown.types";
 
-import {dropdownVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { dropdownVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useMenuTrigger} from "../../composables/use-menu-trigger";
-import {useMenuTriggerState} from "../../composables/use-overlay-trigger-state";
+import { providePressResponder } from "../../composables/press-responder";
+import { useMenuTrigger } from "../../composables/use-menu-trigger";
+import { useMenuTriggerState } from "../../composables/use-overlay-trigger-state";
 
-import {provideDropdownContext, provideDropdownPopoverTarget} from "./dropdown.context";
+import { provideDropdownContext, provideDropdownPopoverTarget } from "./dropdown.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // dropdown from one a caller is holding closed.
-const props = withDefaults(defineProps<DropdownRootProps>(), {isOpen: undefined});
+const props = withDefaults(defineProps<DropdownRootProps>(), { isOpen: undefined });
 
 const emit = defineEmits<{
   openChange: [isOpen: boolean];
   "update:isOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 /**
  * The whole menu tree's open state lives here, on the root.
@@ -38,7 +38,7 @@ const state = useMenuTriggerState({
 });
 
 const trigger = useMenuTrigger(
-  {isDisabled: () => props.isDisabled, trigger: () => props.trigger},
+  { isDisabled: () => props.isDisabled, trigger: () => props.trigger },
   state,
 );
 

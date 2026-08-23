@@ -1,5 +1,5 @@
 import DragPreview from "./drag-preview.vue";
 
-export {DragPreview};
+export { DragPreview };
 
-export type {DragPreviewRenderer} from "@/utils/dnd-types";
+export type { DragPreviewRenderer } from "@/utils/dnd-types";

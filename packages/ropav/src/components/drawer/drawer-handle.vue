@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {DrawerHandleProps} from "./drawer.types";
+import type { DrawerHandleProps } from "./drawer.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useDrawerContext} from "./drawer.context";
+import { useDrawerContext } from "./drawer.context";
 
 const props = defineProps<DrawerHandleProps>();
 
-const {slots} = useDrawerContext();
+const { slots } = useDrawerContext();
 
-const styles = computed(() => slots.value.handle({class: props.class}));
+const styles = computed(() => slots.value.handle({ class: props.class }));
 
 /**
  * No content slot, deliberately.

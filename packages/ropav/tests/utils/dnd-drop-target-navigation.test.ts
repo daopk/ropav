@@ -1,8 +1,8 @@
-import type {DropTarget} from "@/utils/dnd-types";
+import type { DropTarget } from "@/utils/dnd-types";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {navigateDropTarget} from "@/utils/dnd-drop-target-navigation";
+import { navigateDropTarget } from "@/utils/dnd-drop-target-navigation";
 
 import {
   createFixtureCollection,
@@ -18,14 +18,14 @@ import {
  * handling.
  */
 
-const flat = createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}]);
+const flat = createFixtureCollection([{ key: "a" }, { key: "b" }, { key: "c" }]);
 
 /** A folder holding two children, followed by a top-level sibling. */
 const tree = createFixtureCollection([
-  {key: "folder"},
-  {key: "child-1", parentKey: "folder"},
-  {key: "child-2", parentKey: "folder"},
-  {key: "after"},
+  { key: "folder" },
+  { key: "child-1", parentKey: "folder" },
+  { key: "child-2", parentKey: "folder" },
+  { key: "after" },
 ]);
 
 const item = (key: string, dropPosition: "after" | "before" | "on"): DropTarget => ({
@@ -57,11 +57,11 @@ const up = (collection: typeof flat, target: DropTarget | null, wrap = false) =>
 describe("navigateDropTarget", () => {
   describe("starting out", () => {
     it("starts at the root when there is no target yet", () => {
-      expect(down(flat, null)).toEqual({type: "root"});
+      expect(down(flat, null)).toEqual({ type: "root" });
     });
 
     it("moves from the root to before the first item", () => {
-      expect(down(flat, {type: "root"})).toEqual(item("a", "before"));
+      expect(down(flat, { type: "root" })).toEqual(item("a", "before"));
     });
 
     it("moves backwards from nothing to after the last item", () => {
@@ -94,7 +94,7 @@ describe("navigateDropTarget", () => {
     });
 
     it("wraps through the root when asked to", () => {
-      expect(down(flat, item("c", "after"), true)).toEqual({type: "root"});
+      expect(down(flat, item("c", "after"), true)).toEqual({ type: "root" });
     });
   });
 
@@ -109,7 +109,7 @@ describe("navigateDropTarget", () => {
     });
 
     it("reaches the root from the top", () => {
-      expect(up(flat, item("a", "before"))).toEqual({type: "root"});
+      expect(up(flat, item("a", "before"))).toEqual({ type: "root" });
     });
   });
 
@@ -159,9 +159,9 @@ describe("navigateDropTarget", () => {
     // A loader row is not somewhere a drop can land, so the walk steps over it.
     it("skips over a loader row", () => {
       const withLoader = createFixtureCollection([
-        {key: "a"},
-        {key: "loader", type: "loader"},
-        {key: "b"},
+        { key: "a" },
+        { key: "loader", type: "loader" },
+        { key: "b" },
       ]);
 
       expect(down(withLoader, item("a", "on"))).toEqual(item("b", "before"));
@@ -201,7 +201,12 @@ describe("navigateDropTarget", () => {
      * the current position rather than cycling through before/on/after where it stands.
      */
     it("jumps to the delegate's key keeping the same position", () => {
-      const grid = createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}, {key: "d"}]);
+      const grid = createFixtureCollection([
+        { key: "a" },
+        { key: "b" },
+        { key: "c" },
+        { key: "d" },
+      ]);
       const columnDelegate = {
         getFirstKey: () => "a",
         // Two columns: below "a" is "c".

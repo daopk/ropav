@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
-const renderGroup = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const renderGroup = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -28,7 +28,7 @@ describe("InputGroup (browser)", () => {
 
     bare.unmount();
 
-    const prefixed = renderGroup({withPrefix: true});
+    const prefixed = renderGroup({ withPrefix: true });
     const prefixedStyle = getComputedStyle(slot(prefixed.container, "input-group-input"));
 
     expect(prefixedStyle.paddingInlineStart).toBe("0px");
@@ -40,7 +40,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("strips the trailing radius and padding off the control beside a suffix", async () => {
-    const {container, unmount} = renderGroup({withSuffix: true});
+    const { container, unmount } = renderGroup({ withSuffix: true });
     const style = getComputedStyle(slot(container, "input-group-input"));
 
     expect(style.paddingInlineEnd).toBe("0px");
@@ -50,7 +50,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("keeps the control's own padding when it stands alone in the group", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const style = getComputedStyle(slot(container, "input-group-input"));
 
     expect(style.paddingInlineStart).not.toBe("0px");
@@ -62,7 +62,7 @@ describe("InputGroup (browser)", () => {
   it("lets the shell grow and aligns to the top around a textarea", async () => {
     // `:has([data-slot="input-group-textarea"])` swaps the group off `items-center`, which is
     // the only thing keeping a multi-line control from being vertically centred.
-    const {container, unmount} = renderGroup({withPrefix: true, withTextArea: true});
+    const { container, unmount } = renderGroup({ withPrefix: true, withTextArea: true });
     const group = slot(container, "input-group");
 
     expect(getComputedStyle(group).alignItems).toBe("flex-start");
@@ -75,7 +75,7 @@ describe("InputGroup (browser)", () => {
   it("paints the focus state on the shell rather than on the control", async () => {
     // The stylesheet reaches this through `:has([data-slot="input-group-input"]:focus)` on the
     // group, so the ring is on the shell and the control keeps `outline: none`.
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const group = slot(container, "input-group");
     const control = slot(container, "input-group-input");
 
@@ -93,7 +93,7 @@ describe("InputGroup (browser)", () => {
   it("fills the shell on hover and drops the fill once focus is inside", async () => {
     // `&[data-hovered="true"]:not([data-focus-within="true"])` is why both attributes have to be
     // reported: with only the first, a group that is hovered and focused keeps the hover fill.
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const group = slot(container, "input-group");
     const control = slot(container, "input-group-input");
 
@@ -118,7 +118,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("moves focus into the control when a real pointer clicks the prefix", async () => {
-    const {container, unmount} = renderGroup({withPrefix: true});
+    const { container, unmount } = renderGroup({ withPrefix: true });
     const control = slot(container, "input-group-input");
 
     await userEvent.click(slot(container, "input-group-prefix"));
@@ -130,7 +130,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("moves focus into the control when a real pointer clicks the suffix", async () => {
-    const {container, unmount} = renderGroup({withSuffix: true});
+    const { container, unmount } = renderGroup({ withSuffix: true });
     const control = slot(container, "input-group-input");
 
     await userEvent.click(slot(container, "input-group-suffix"));
@@ -145,7 +145,7 @@ describe("InputGroup (browser)", () => {
     // The click handler focuses the control on every click inside the group. On a control that
     // already holds focus that has to be a no-op, or clicking a prefix beside a caret placed
     // mid-word would drag the caret away with it.
-    const {container, unmount} = renderGroup({
+    const { container, unmount } = renderGroup({
       fieldDefaultValue: "ropav.com",
       withField: true,
       withPrefix: true,
@@ -168,7 +168,7 @@ describe("InputGroup (browser)", () => {
   it("keeps a control at the value its owner allows", async () => {
     // Vapor skips writing `value` when the bound value has not changed, and the keystroke has
     // already landed in the DOM by then, so nothing would put the rejected text back.
-    const {container, unmount} = renderGroup({controlValue: "pinned"});
+    const { container, unmount } = renderGroup({ controlValue: "pinned" });
     const control = container.querySelector<HTMLInputElement>("input")!;
 
     await userEvent.click(control);
@@ -186,7 +186,7 @@ describe("InputGroup (browser)", () => {
     // click-to-focus stops there, rather than at any check in the handler. Asserted as the
     // property rather than by clicking, because a click here is not one the browser delivers:
     // it falls through to the field behind and the driver reports it as intercepted.
-    const {container, unmount} = renderGroup({fieldIsDisabled: true, withField: true});
+    const { container, unmount } = renderGroup({ fieldIsDisabled: true, withField: true });
     const group = slot(container, "input-group");
     const control = container.querySelector<HTMLInputElement>("input")!;
 
@@ -199,7 +199,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderGroup({
+    const { container, unmount } = renderGroup({
       withField: true,
       withPrefix: true,
       withSuffix: true,
@@ -211,7 +211,7 @@ describe("InputGroup (browser)", () => {
   });
 
   it("has no accessibility violations standing on its own", async () => {
-    const {container, unmount} = renderGroup({withPrefix: true, withSuffix: true});
+    const { container, unmount } = renderGroup({ withPrefix: true, withSuffix: true });
 
     await expectNoA11yViolations(container);
 

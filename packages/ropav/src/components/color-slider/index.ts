@@ -16,7 +16,7 @@ export const ColorSlider = Object.assign(ColorSliderRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ColorSliderRoot, ColorSliderOutput, ColorSliderTrack, ColorSliderThumb};
+export { ColorSliderRoot, ColorSliderOutput, ColorSliderTrack, ColorSliderThumb };
 
 export type {
   ColorSliderRootProps,
@@ -31,6 +31,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorSliderVariants} from "@ropav/styles";
+export { colorSliderVariants } from "@ropav/styles";
 
-export type {ColorSliderVariants} from "@ropav/styles";
+export type { ColorSliderVariants } from "@ropav/styles";

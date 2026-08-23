@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
-import type {DisclosureRootProps} from "./disclosure.types";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
+import type { DisclosureRootProps } from "./disclosure.types";
 
-import {disclosureVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { disclosureVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useControllableState} from "../../composables/use-controllable-state";
-import {useId} from "../../composables/use-id";
-import {dataAttr} from "../../utils/assertion";
-import {useDisclosureGroupContext} from "../disclosure-group/disclosure-group.context";
+import { providePressResponder } from "../../composables/press-responder";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { useId } from "../../composables/use-id";
+import { dataAttr } from "../../utils/assertion";
+import { useDisclosureGroupContext } from "../disclosure-group/disclosure-group.context";
 
-import {provideDisclosureContext} from "./disclosure.context";
+import { provideDisclosureContext } from "./disclosure.context";
 
 // The three-state props declare an explicit `undefined` default, which is what distinguishes
 // "the caller said nothing" from "the caller said false". Vue casts an absent Boolean prop to
@@ -28,7 +28,7 @@ const emit = defineEmits<{
   "update:isExpanded": [isExpanded: boolean];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const slots = computed(() => disclosureVariants());
 
@@ -49,7 +49,7 @@ const emitExpanded = (isExpanded: boolean) => {
 };
 
 /** Only consulted while standing alone; inside a group the group owns which panels are open. */
-const {setState, state} = useControllableState<boolean>({
+const { setState, state } = useControllableState<boolean>({
   defaultValue: props.defaultExpanded ?? false,
   onValueChange: emitExpanded,
   value: () => props.isExpanded,
@@ -100,7 +100,7 @@ providePressResponder({
     id: triggerId.value,
     // Only written while disabled: an attribute bound as `undefined` would clear the value the
     // pressable set for itself.
-    ...(resolvedIsDisabled.value ? {disabled: true} : {}),
+    ...(resolvedIsDisabled.value ? { disabled: true } : {}),
   })),
   handlers: computed(() => ({
     onClick: () => toggle(),
@@ -133,7 +133,7 @@ provideDisclosureContext({
 
 <template>
   <div
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(resolvedIsDisabled)"
     :data-expanded="dataAttr(resolvedIsExpanded)"
     data-slot="disclosure"

@@ -10,7 +10,7 @@ export const Meter = Object.assign(MeterRoot, {
   Track: MeterTrack,
 });
 
-export {MeterFill, MeterOutput, MeterRoot, MeterTrack};
+export { MeterFill, MeterOutput, MeterRoot, MeterTrack };
 
 export type {
   MeterFillProps,
@@ -21,6 +21,6 @@ export type {
   MeterTrackProps,
 } from "./meter.types";
 
-export {meterVariants} from "@ropav/styles";
+export { meterVariants } from "@ropav/styles";
 
-export type {MeterVariants} from "@ropav/styles";
+export type { MeterVariants } from "@ropav/styles";

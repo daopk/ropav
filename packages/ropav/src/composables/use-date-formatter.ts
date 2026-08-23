@@ -1,9 +1,9 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {DateFormatter} from "@internationalized/date";
-import {computed, toValue} from "vue";
+import { DateFormatter } from "@internationalized/date";
+import { computed, toValue } from "vue";
 
-import {useLocale} from "./use-locale";
+import { useLocale } from "./use-locale";
 
 export interface DateFormatterOptions extends Intl.DateTimeFormatOptions {
   /** The calendar system to format in, when it should not follow the locale's own. */

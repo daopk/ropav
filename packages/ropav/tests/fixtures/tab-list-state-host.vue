@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {TabListStateHostProps} from "./tab-list-state.types";
+import type { TabListStateHostProps } from "./tab-list-state.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useTabListState} from "@/composables/use-tab-list-state";
+import { useTabListState } from "@/composables/use-tab-list-state";
 
 import TabListStateTab from "./tab-list-state-tab.vue";
 
-const props = withDefaults(defineProps<TabListStateHostProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<TabListStateHostProps>(), { isDisabled: undefined });
 
 const state = useTabListState({
   defaultSelectedKey: props.defaultSelectedKey,

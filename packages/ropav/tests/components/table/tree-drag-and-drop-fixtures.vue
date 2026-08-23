@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "@/composables/use-collection";
+import type { CollectionKey } from "@/composables/use-collection";
 import type {
   DragKey,
   DroppableCollectionOnItemDropEvent,
   DroppableCollectionReorderEvent,
 } from "@/utils/dnd-types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Button} from "@/components/button";
-import {Table} from "@/components/table";
-import {useDragAndDrop} from "@/composables/use-drag-and-drop";
+import { Button } from "@/components/button";
+import { Table } from "@/components/table";
+import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 interface TreeNode {
   id: string;
@@ -25,19 +25,19 @@ const props = withDefaults(
     onItemDrop?: (event: DroppableCollectionOnItemDropEvent) => void;
     onReorder?: (event: DroppableCollectionReorderEvent) => void;
   }>(),
-  {defaultExpandedKeys: () => [], onItemDrop: undefined, onReorder: undefined},
+  { defaultExpandedKeys: () => [], onItemDrop: undefined, onReorder: undefined },
 );
 
 const data: TreeNode[] = [
   {
     children: [
-      {children: [], id: "report", title: "Report"},
-      {children: [], id: "budget", title: "Budget"},
+      { children: [], id: "report", title: "Report" },
+      { children: [], id: "budget", title: "Budget" },
     ],
     id: "documents",
     title: "Documents",
   },
-  {children: [], id: "photos", title: "Photos"},
+  { children: [], id: "photos", title: "Photos" },
 ];
 
 const expanded = shallowRef(new Set<CollectionKey>(props.defaultExpandedKeys));
@@ -50,21 +50,21 @@ interface FlatRow {
 
 const flatten = (nodes: TreeNode[], level = 0, parentKey?: CollectionKey): FlatRow[] =>
   nodes.flatMap((node) => [
-    {level, node, parentKey},
+    { level, node, parentKey },
     ...(expanded.value.has(node.id) ? flatten(node.children, level + 1, node.id) : []),
   ]);
 
 const rows = computed(() => flatten(data));
 
-const {dragAndDropHooks} = useDragAndDrop({
-  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({"text/plain": String(key)})),
+const { dragAndDropHooks } = useDragAndDrop({
+  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({ "text/plain": String(key) })),
   // Dropping *onto* a row is only ever offered when there is something to do with it, so a
   // folder tree has to say so — without this the drag can only ever land between rows.
   onItemDrop: (event) => props.onItemDrop?.(event),
   onReorder: (event) => props.onReorder?.(event),
 });
 
-defineExpose({expanded});
+defineExpose({ expanded });
 </script>
 
 <template>
@@ -96,7 +96,7 @@ defineExpose({expanded});
               <Button is-icon-only size="sm" variant="ghost">grip</Button>
             </Table.DragHandle>
           </Table.Cell>
-          <Table.Cell v-slot="{hasChildRows, isTreeColumn}" :text-value="row.node.title">
+          <Table.Cell v-slot="{ hasChildRows, isTreeColumn }" :text-value="row.node.title">
             <Table.ExpandTrigger v-if="hasChildRows && isTreeColumn">
               <Button is-icon-only size="sm" variant="ghost">chevron</Button>
             </Table.ExpandTrigger>

@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogHeadingProps} from "./alert-dialog.types";
+import type { AlertDialogHeadingProps } from "./alert-dialog.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
-import {useAlertDialogContext} from "./alert-dialog.context";
+import { useAlertDialogContext } from "./alert-dialog.context";
 
 const props = defineProps<AlertDialogHeadingProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAlertDialogContext();
+const { slots } = useAlertDialogContext();
 
 // The heading takes the id the dialog points `aria-labelledby` at, which is how the dialog is named
 // by what it asks rather than by the button that opened it.
@@ -26,7 +26,7 @@ const id = fieldIds?.claimHeadingId();
  */
 const tag = computed(() => `h${props.level ?? 2}`);
 
-const styles = computed(() => slots.value.heading({class: props.class}));
+const styles = computed(() => slots.value.heading({ class: props.class }));
 </script>
 
 <template>

@@ -10,7 +10,7 @@ export const Button = Object.assign(ButtonRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ButtonRoot};
+export { ButtonRoot };
 
 export type {
   ButtonRootProps,
@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {buttonVariants} from "@ropav/styles";
+export { buttonVariants } from "@ropav/styles";
 
-export type {ButtonVariants} from "@ropav/styles";
+export type { ButtonVariants } from "@ropav/styles";

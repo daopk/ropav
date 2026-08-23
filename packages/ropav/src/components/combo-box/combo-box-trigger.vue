@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxTriggerProps} from "./combo-box.types";
+import type { ComboBoxTriggerProps } from "./combo-box.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {IconChevronDown} from "../icons";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { IconChevronDown } from "../icons";
 
-import {useComboBoxContext} from "./combo-box.context";
+import { useComboBoxContext } from "./combo-box.context";
 
 const props = defineProps<ComboBoxTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {comboBox, slots, state} = useComboBoxContext();
+const { comboBox, slots, state } = useComboBoxContext();
 
 const callerSlots = useSlots();
 
@@ -31,8 +31,8 @@ const responder = usePressResponder();
 
 const isDisabled = computed(() => Boolean(comboBox.triggerAttributes.value.disabled));
 
-const {isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave} =
-  useInteractionStates({isDisabled: () => isDisabled.value});
+const { isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave } =
+  useInteractionStates({ isDisabled: () => isDisabled.value });
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -42,7 +42,7 @@ const setElement = (element: unknown) => {
 // them on every render — a handler must never travel through `v-bind`.
 const press = composePressResponder(responder);
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 </script>
 
 <template>

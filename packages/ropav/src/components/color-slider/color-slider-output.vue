@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderOutputProps} from "./color-slider.types";
+import type { ColorSliderOutputProps } from "./color-slider.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useColorSliderContext} from "./color-slider.context";
+import { useColorSliderContext } from "./color-slider.context";
 
 const props = defineProps<ColorSliderOutputProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slider, slots, state} = useColorSliderContext();
+const { slider, slots, state } = useColorSliderContext();
 
 // The channel's own formatting, not the raw number: "200°" rather than "200".
 const label = computed(() => state.getThumbValueLabel(0));

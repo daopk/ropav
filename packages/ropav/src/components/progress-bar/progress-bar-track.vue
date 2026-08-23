@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {ProgressBarTrackProps} from "./progress-bar.types";
+import type { ProgressBarTrackProps } from "./progress-bar.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useProgressBarContext} from "./progress-bar.context";
+import { useProgressBarContext } from "./progress-bar.context";
 
 const props = defineProps<ProgressBarTrackProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useProgressBarContext();
+const { slots } = useProgressBarContext();
 </script>
 
 <template>

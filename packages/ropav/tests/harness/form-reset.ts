@@ -1,4 +1,4 @@
-import {expect} from "vitest";
+import { expect } from "vitest";
 
 /**
  * Assert that a control carries the half a form reset restores from.

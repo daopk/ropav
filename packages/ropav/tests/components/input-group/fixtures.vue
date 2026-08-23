@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {InputGroupFixtureProps} from "./fixtures.types";
+import type { InputGroupFixtureProps } from "./fixtures.types";
 
 import {
   InputGroupInput,
@@ -8,8 +8,8 @@ import {
   InputGroupSuffix,
   InputGroupTextArea,
 } from "@/components/input-group";
-import {Label} from "@/components/label";
-import {TextField} from "@/components/textfield";
+import { Label } from "@/components/label";
+import { TextField } from "@/components/textfield";
 
 // The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would
 // claim the state on the caller's behalf and stop the group falling back to the field.

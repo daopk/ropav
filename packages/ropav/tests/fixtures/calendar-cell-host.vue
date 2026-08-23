@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {CalendarCellHostProps} from "./calendar-cell-host.types";
+import type { CalendarCellHostProps } from "./calendar-cell-host.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import CalendarCellHarness from "./calendar-cell-harness.vue";
 

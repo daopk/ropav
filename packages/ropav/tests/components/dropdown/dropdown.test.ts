@@ -1,12 +1,12 @@
-import type {DropdownFixtureItem} from "./fixtures.types";
+import type { DropdownFixtureItem } from "./fixtures.types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import DropdownFixture from "./fixtures.vue";
 
-const render = (props: Record<string, unknown> = {}) => renderVapor(DropdownFixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(DropdownFixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -25,11 +25,11 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const keydown = (element: Element, key: string, init: KeyboardEventInit = {}) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
   element.dispatchEvent(event);
 
@@ -50,7 +50,7 @@ const settle = async () => {
 };
 
 const open = async (result: RenderResult) => {
-  press(result.getByRole("button", {name: "Menu"}));
+  press(result.getByRole("button", { name: "Menu" }));
   await settle();
 
   return result.screen.getByRole("menu");
@@ -63,9 +63,9 @@ const itemsOf = (result: RenderResult) => [
 const keyOf = (element: Element | null) => element?.getAttribute("data-key") ?? null;
 
 const FRUIT: DropdownFixtureItem[] = [
-  {id: "apple", label: "Apple"},
-  {id: "banana", label: "Banana"},
-  {id: "cherry", label: "Cherry"},
+  { id: "apple", label: "Apple" },
+  { id: "banana", label: "Banana" },
+  { id: "cherry", label: "Cherry" },
 ];
 
 describe("Dropdown", () => {
@@ -73,7 +73,7 @@ describe("Dropdown", () => {
     it("renders nothing but its trigger while closed", () => {
       const result = render();
 
-      expect(result.getByRole("button", {name: "Menu"})).toBeInTheDocument();
+      expect(result.getByRole("button", { name: "Menu" })).toBeInTheDocument();
       expect(result.screen.queryByRole("menu")).toBeNull();
       expect(result.baseElement.querySelector('[data-slot="dropdown-popover"]')).toBeNull();
 
@@ -115,7 +115,7 @@ describe("Dropdown", () => {
 
       await open(result);
 
-      const dismissers = result.screen.getAllByRole("button", {name: "Dismiss"});
+      const dismissers = result.screen.getAllByRole("button", { name: "Dismiss" });
 
       // There is no Escape key on a touch device, and a screen reader user swiping through the
       // menu has no other way to leave it.
@@ -146,7 +146,7 @@ describe("Dropdown", () => {
   describe("accessibility wiring", () => {
     it("wires the trigger to the menu it opens", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       expect(trigger).toHaveAttribute("aria-haspopup", "true");
       expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -165,7 +165,7 @@ describe("Dropdown", () => {
 
     it("names the popover after the trigger too", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       await open(result);
 
@@ -193,7 +193,7 @@ describe("Dropdown", () => {
 
     it("points an item at its own description", async () => {
       const result = render({
-        items: [{description: "Create a new file", id: "new-file", label: "New file"}],
+        items: [{ description: "Create a new file", id: "new-file", label: "New file" }],
       });
 
       await open(result);
@@ -239,7 +239,7 @@ describe("Dropdown", () => {
     });
 
     it("reads a single-select item as a radio", async () => {
-      const result = render({items: FRUIT, selectedKeys: ["apple"], selectionMode: "single"});
+      const result = render({ items: FRUIT, selectedKeys: ["apple"], selectionMode: "single" });
 
       await open(result);
 
@@ -257,7 +257,7 @@ describe("Dropdown", () => {
     });
 
     it("reads a multi-select item as a checkbox", async () => {
-      const result = render({items: FRUIT, selectedKeys: ["apple"], selectionMode: "multiple"});
+      const result = render({ items: FRUIT, selectedKeys: ["apple"], selectionMode: "multiple" });
 
       await open(result);
 
@@ -272,7 +272,7 @@ describe("Dropdown", () => {
 
     it("reports a selection change", async () => {
       const onSelectionChange = vi.fn();
-      const result = render({items: FRUIT, onSelectionChange, selectionMode: "single"});
+      const result = render({ items: FRUIT, onSelectionChange, selectionMode: "single" });
 
       await open(result);
       press(itemsOf(result)[1]!);
@@ -285,7 +285,7 @@ describe("Dropdown", () => {
     });
 
     it("closes after a single choice but stays open for several", async () => {
-      const single = render({items: FRUIT, selectionMode: "single"});
+      const single = render({ items: FRUIT, selectionMode: "single" });
 
       await open(single);
       press(itemsOf(single)[1]!);
@@ -295,7 +295,7 @@ describe("Dropdown", () => {
 
       single.unmount();
 
-      const multiple = render({items: FRUIT, selectionMode: "multiple"});
+      const multiple = render({ items: FRUIT, selectionMode: "multiple" });
 
       await open(multiple);
       press(itemsOf(multiple)[1]!);
@@ -354,7 +354,7 @@ describe("Dropdown", () => {
 
   describe("empty state", () => {
     it("shows the empty slot when there is nothing to show", async () => {
-      const result = render({items: [], withEmptyState: true});
+      const result = render({ items: [], withEmptyState: true });
       const menu = await open(result);
 
       expect(menu.querySelector('[data-slot="empty-state"]')).toHaveTextContent("Nothing here");
@@ -363,7 +363,7 @@ describe("Dropdown", () => {
     });
 
     it("hides the empty slot as soon as there is something", async () => {
-      const result = render({withEmptyState: true});
+      const result = render({ withEmptyState: true });
       const menu = await open(result);
 
       expect(menu.querySelector('[data-slot="empty-state"]')).toBeNull();
@@ -372,7 +372,7 @@ describe("Dropdown", () => {
     });
 
     it("wraps the empty state so it is not read as an item", async () => {
-      const result = render({items: [], withEmptyState: true});
+      const result = render({ items: [], withEmptyState: true });
       const menu = await open(result);
       const wrapper = menu.querySelector('[role="presentation"]')!;
 
@@ -383,7 +383,7 @@ describe("Dropdown", () => {
     });
 
     it("renders nothing extra when no empty slot was handed over", async () => {
-      const result = render({items: []});
+      const result = render({ items: [] });
       const menu = await open(result);
 
       expect(menu.querySelector('[role="presentation"]')).toBeNull();
@@ -395,7 +395,7 @@ describe("Dropdown", () => {
 
   describe("sections", () => {
     it("groups items and names the group after its header", async () => {
-      const result = render({withHeader: true, withSection: true});
+      const result = render({ withHeader: true, withSection: true });
 
       await open(result);
 
@@ -411,7 +411,7 @@ describe("Dropdown", () => {
     });
 
     it("leaves a section without a header unnamed", async () => {
-      const result = render({withSection: true});
+      const result = render({ withSection: true });
 
       await open(result);
 
@@ -427,7 +427,7 @@ describe("Dropdown", () => {
      * layout rather than being the block-level `hr` it is on its own.
      */
     it("renders a rule that takes part in the menu's own layout", async () => {
-      const result = render({withSeparator: true});
+      const result = render({ withSeparator: true });
 
       await open(result);
 
@@ -444,7 +444,7 @@ describe("Dropdown", () => {
 
   describe("disabled items", () => {
     it("marks a disabled item and takes it out of the tab order", async () => {
-      const result = render({disabledKeys: ["delete-file"]});
+      const result = render({ disabledKeys: ["delete-file"] });
 
       await open(result);
 
@@ -459,7 +459,7 @@ describe("Dropdown", () => {
 
     it("does nothing when a disabled item is pressed", async () => {
       const onAction = vi.fn();
-      const result = render({disabledKeys: ["delete-file"], onAction});
+      const result = render({ disabledKeys: ["delete-file"], onAction });
 
       await open(result);
       press(itemsOf(result).at(-1)!);
@@ -472,7 +472,7 @@ describe("Dropdown", () => {
     });
 
     it("skips a disabled item when arrowing", async () => {
-      const result = render({disabledKeys: ["copy-link"]});
+      const result = render({ disabledKeys: ["copy-link"] });
       const menu = await open(result);
 
       keydown(menu, "ArrowDown");
@@ -493,7 +493,7 @@ describe("Dropdown", () => {
     it("opens on Enter with the first item focused", async () => {
       const result = render();
 
-      keydown(result.getByRole("button", {name: "Menu"}), "Enter");
+      keydown(result.getByRole("button", { name: "Menu" }), "Enter");
       await settle();
 
       expect(result.screen.getByRole("menu")).toBeInTheDocument();
@@ -506,7 +506,7 @@ describe("Dropdown", () => {
       const result = render();
 
       // The key says which end to start from, so the menu opens where the user is heading.
-      keydown(result.getByRole("button", {name: "Menu"}), "ArrowUp");
+      keydown(result.getByRole("button", { name: "Menu" }), "ArrowUp");
       await settle();
 
       expect(keyOf(document.activeElement)).toBe("delete-file");
@@ -527,7 +527,7 @@ describe("Dropdown", () => {
     });
 
     it("opens on the choice already made", async () => {
-      const result = render({items: FRUIT, selectedKeys: ["banana"], selectionMode: "single"});
+      const result = render({ items: FRUIT, selectedKeys: ["banana"], selectionMode: "single" });
 
       await open(result);
 
@@ -590,7 +590,7 @@ describe("Dropdown", () => {
     });
 
     it("finds an item by typing", async () => {
-      const result = render({items: FRUIT});
+      const result = render({ items: FRUIT });
       const menu = await open(result);
 
       keydown(menu, "c");
@@ -603,7 +603,7 @@ describe("Dropdown", () => {
 
     it("acts on Enter and closes", async () => {
       const onAction = vi.fn();
-      const result = render({onAction});
+      const result = render({ onAction });
       const menu = await open(result);
 
       keydown(menu, "ArrowDown");
@@ -618,7 +618,7 @@ describe("Dropdown", () => {
     });
 
     it("ticks an item on Space without closing", async () => {
-      const result = render({items: FRUIT, selectionMode: "multiple"});
+      const result = render({ items: FRUIT, selectionMode: "multiple" });
       const menu = await open(result);
 
       keydown(menu, "ArrowDown");
@@ -635,7 +635,7 @@ describe("Dropdown", () => {
 
     it("gives focus back to the trigger when it closes", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       keydown(trigger, "Enter");
       await settle();
@@ -655,14 +655,14 @@ describe("Dropdown", () => {
     it("renders an explicit tab index", () => {
       const result = render();
 
-      expect(result.getByRole("button", {name: "Menu"})).toHaveAttribute("tabindex", "0");
+      expect(result.getByRole("button", { name: "Menu" })).toHaveAttribute("tabindex", "0");
 
       result.unmount();
     });
 
     it("looks pressed for as long as its menu is open", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       expect(trigger).not.toHaveAttribute("data-pressed");
 
@@ -677,7 +677,7 @@ describe("Dropdown", () => {
       const result = render();
 
       result
-        .getByRole("button", {name: "Menu"})
+        .getByRole("button", { name: "Menu" })
         .dispatchEvent(new PointerEvent("pointerdown", POINTER));
       await settle();
 
@@ -689,8 +689,8 @@ describe("Dropdown", () => {
 
     it("opens on release for touch", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Menu"});
-      const touch = {...POINTER, pointerType: "touch"} as const;
+      const trigger = result.getByRole("button", { name: "Menu" });
+      const touch = { ...POINTER, pointerType: "touch" } as const;
 
       trigger.dispatchEvent(new PointerEvent("pointerdown", touch));
       await nextTick();
@@ -700,7 +700,7 @@ describe("Dropdown", () => {
       expect(result.screen.queryByRole("menu")).toBeNull();
 
       trigger.dispatchEvent(new PointerEvent("pointerup", touch));
-      trigger.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+      trigger.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
       await settle();
 
       expect(result.screen.getByRole("menu")).toBeInTheDocument();
@@ -709,8 +709,8 @@ describe("Dropdown", () => {
     });
 
     it("renders its own button when asked to", async () => {
-      const result = renderVapor(DropdownFixture, {props: {withCustomTrigger: true}});
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const result = renderVapor(DropdownFixture, { props: { withCustomTrigger: true } });
+      const trigger = result.getByRole("button", { name: "Menu" });
 
       expect(trigger).toHaveAttribute("data-slot", "dropdown-trigger");
       expect(trigger).toHaveAttribute("aria-haspopup", "true");
@@ -734,8 +734,8 @@ describe("Dropdown", () => {
     });
 
     it("says the press has to be held", () => {
-      const result = render({trigger: "longPress"});
-      const trigger = result.getByRole("button", {name: "Menu"});
+      const result = render({ trigger: "longPress" });
+      const trigger = result.getByRole("button", { name: "Menu" });
       const describedBy = trigger.getAttribute("aria-describedby")!;
 
       // Nothing on screen conveys the gesture, so without this it is undiscoverable.
@@ -746,9 +746,9 @@ describe("Dropdown", () => {
     });
 
     it("does not open on an ordinary press", async () => {
-      const result = render({trigger: "longPress"});
+      const result = render({ trigger: "longPress" });
 
-      press(result.getByRole("button", {name: "Menu"}));
+      press(result.getByRole("button", { name: "Menu" }));
       await nextTick();
 
       expect(result.screen.queryByRole("menu")).toBeNull();
@@ -757,10 +757,10 @@ describe("Dropdown", () => {
     });
 
     it("opens once the press is held", async () => {
-      const result = render({trigger: "longPress"});
+      const result = render({ trigger: "longPress" });
 
       result
-        .getByRole("button", {name: "Menu"})
+        .getByRole("button", { name: "Menu" })
         .dispatchEvent(new PointerEvent("pointerdown", POINTER));
       vi.advanceTimersByTime(500);
       await nextTick();
@@ -773,9 +773,9 @@ describe("Dropdown", () => {
     });
 
     it("opens on Alt+ArrowDown, which is the only keyboard way in", async () => {
-      const result = render({trigger: "longPress"});
+      const result = render({ trigger: "longPress" });
 
-      keydown(result.getByRole("button", {name: "Menu"}), "ArrowDown", {altKey: true});
+      keydown(result.getByRole("button", { name: "Menu" }), "ArrowDown", { altKey: true });
       await nextTick();
       await nextTick();
       await nextTick();
@@ -788,7 +788,7 @@ describe("Dropdown", () => {
 
   describe("controlled open state", () => {
     it("renders open when told to", async () => {
-      const result = render({isOpen: true});
+      const result = render({ isOpen: true });
 
       await settle();
 
@@ -799,9 +799,9 @@ describe("Dropdown", () => {
 
     it("reports the change without opening itself", async () => {
       const onOpenChange = vi.fn();
-      const result = render({isOpen: false, onOpenChange});
+      const result = render({ isOpen: false, onOpenChange });
 
-      press(result.getByRole("button", {name: "Menu"}));
+      press(result.getByRole("button", { name: "Menu" }));
       await settle();
 
       expect(onOpenChange).toHaveBeenCalledWith(true);
@@ -814,7 +814,7 @@ describe("Dropdown", () => {
 
   describe("submenus", () => {
     const openSubmenu = async (result: RenderResult) => {
-      const trigger = result.screen.getByRole("menuitem", {name: "Share"});
+      const trigger = result.screen.getByRole("menuitem", { name: "Share" });
 
       trigger.focus();
       keydown(trigger, "ArrowRight");
@@ -824,11 +824,11 @@ describe("Dropdown", () => {
     };
 
     it("marks the item that opens a submenu", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
 
-      const trigger = result.screen.getByRole("menuitem", {name: "Share"});
+      const trigger = result.screen.getByRole("menuitem", { name: "Share" });
 
       expect(trigger).toHaveAttribute("data-has-submenu", "true");
       expect(trigger).toHaveAttribute("aria-haspopup", "menu");
@@ -841,7 +841,7 @@ describe("Dropdown", () => {
     });
 
     it("renders the submenu indicator only on the item that opens one", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
 
@@ -853,7 +853,7 @@ describe("Dropdown", () => {
     });
 
     it("opens the submenu on ArrowRight and names it after its trigger", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
 
@@ -870,12 +870,12 @@ describe("Dropdown", () => {
     });
 
     it("does not read a submenu's own items as opening one", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
 
-      const submenuItem = result.screen.getByRole("menuitem", {name: "WhatsApp"});
+      const submenuItem = result.screen.getByRole("menuitem", { name: "WhatsApp" });
 
       // The submenu trigger supplies its popup to the one item above it; a submenu's own items are
       // deeper in the same tree and must not inherit it.
@@ -886,7 +886,7 @@ describe("Dropdown", () => {
     });
 
     it("renders the submenu beside the menu that opened it, in one subtree", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -903,7 +903,7 @@ describe("Dropdown", () => {
     });
 
     it("focuses the first item of the submenu when opened by keyboard", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -914,7 +914,7 @@ describe("Dropdown", () => {
     });
 
     it("closes the submenu on ArrowLeft and leaves the menu open", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -929,7 +929,7 @@ describe("Dropdown", () => {
     });
 
     it("closes the submenu on Escape and leaves the menu open", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -944,7 +944,7 @@ describe("Dropdown", () => {
     });
 
     it("closes the submenu when focus moves to another item in the menu", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
@@ -959,11 +959,11 @@ describe("Dropdown", () => {
     });
 
     it("closes the whole tree when an item in the submenu is chosen", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);
-      press(result.screen.getByRole("menuitem", {name: "Telegram"}));
+      press(result.screen.getByRole("menuitem", { name: "Telegram" }));
       await settle();
 
       expect(result.screen.queryByRole("menu")).toBeNull();
@@ -972,7 +972,7 @@ describe("Dropdown", () => {
     });
 
     it("does not hide the submenu from assistive technology", async () => {
-      const result = render({withSubmenu: true});
+      const result = render({ withSubmenu: true });
 
       await open(result);
       await openSubmenu(result);

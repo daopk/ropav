@@ -1,14 +1,14 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 import ResizableFixture from "./resizable-fixtures.vue";
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -42,7 +42,7 @@ const focusName = () => {
 describe("Table (browser)", () => {
   describe("pointer", () => {
     it("selects a row from a real press", async () => {
-      const {rows, unmount} = await render({selectionMode: "multiple"});
+      const { rows, unmount } = await render({ selectionMode: "multiple" });
 
       await userEvent.click(rows[0]!);
 
@@ -54,7 +54,7 @@ describe("Table (browser)", () => {
     // The checkbox sits inside the row, so a press it did not claim would reach the row too and
     // the two toggles would cancel out.
     it("selects exactly once when the checkbox itself is pressed", async () => {
-      const {rows, unmount} = await render({
+      const { rows, unmount } = await render({
         selectionMode: "multiple",
         withSelectionColumn: true,
       });
@@ -72,7 +72,7 @@ describe("Table (browser)", () => {
     });
 
     it("leaves the row alone when a control inside a cell is pressed", async () => {
-      const {rows, unmount} = await render({selectionMode: "multiple"});
+      const { rows, unmount } = await render({ selectionMode: "multiple" });
       const button = document.createElement("button");
 
       button.textContent = "Edit";
@@ -86,7 +86,7 @@ describe("Table (browser)", () => {
     });
 
     it("reports hover on the row a real pointer is over", async () => {
-      const {rows, unmount} = await render();
+      const { rows, unmount } = await render();
 
       await userEvent.hover(rows[0]!);
 
@@ -98,7 +98,7 @@ describe("Table (browser)", () => {
 
   describe("keyboard", () => {
     it("walks the grid in both directions from a real keyboard", async () => {
-      const {table, unmount} = await render({selectionMode: "multiple"});
+      const { table, unmount } = await render({ selectionMode: "multiple" });
 
       table.focus();
       await nextTick();
@@ -118,7 +118,7 @@ describe("Table (browser)", () => {
     });
 
     it("selects the focused row from a real Space", async () => {
-      const {rows, table, unmount} = await render({selectionMode: "multiple"});
+      const { rows, table, unmount } = await render({ selectionMode: "multiple" });
 
       table.focus();
       await nextTick();
@@ -132,7 +132,7 @@ describe("Table (browser)", () => {
     // Entering the grid claims a row as the tab stop, and doing that by moving focus would make
     // every control inside a cell unreachable by keyboard.
     it("leaves focus on a control inside a cell", async () => {
-      const {rows, unmount} = await render({
+      const { rows, unmount } = await render({
         selectionMode: "multiple",
         withSelectionColumn: true,
       });
@@ -148,7 +148,7 @@ describe("Table (browser)", () => {
     });
 
     it("leaves a real Space to the checkbox it landed on", async () => {
-      const {rows, unmount} = await render({
+      const { rows, unmount } = await render({
         selectionMode: "multiple",
         withSelectionColumn: true,
       });
@@ -169,7 +169,7 @@ describe("Table (browser)", () => {
     // The stylesheet draws every table ring with an inset shadow, so asserting an outline width
     // would pass while nothing was painted at all.
     it("paints a row's ring with a shadow rather than an outline", async () => {
-      const {rows, unmount} = await render();
+      const { rows, unmount } = await render();
 
       rows[0]!.setAttribute("data-focus-visible", "true");
       await nextTick();
@@ -183,7 +183,7 @@ describe("Table (browser)", () => {
     });
 
     it("paints a cell's own ring with a shadow", async () => {
-      const {rows, unmount} = await render();
+      const { rows, unmount } = await render();
       const cell = rows[0]!.querySelector<HTMLElement>('[data-slot="table-cell"]')!;
 
       cell.setAttribute("data-focus-visible", "true");
@@ -195,7 +195,7 @@ describe("Table (browser)", () => {
     });
 
     it("paints a column header's ring with a shadow", async () => {
-      const {columns, unmount} = await render();
+      const { columns, unmount } = await render();
 
       columns[0]!.setAttribute("data-focus-visible", "true");
       await nextTick();
@@ -210,7 +210,7 @@ describe("Table (browser)", () => {
     // A grid with a header row, row header cells and a selection column is the shape axe checks
     // hardest: every role has to nest the way the table markup claims it does.
     it("has no violations as a selectable grid", async () => {
-      const {container, unmount} = await render({
+      const { container, unmount } = await render({
         selectionMode: "multiple",
         withSelectionColumn: true,
       });
@@ -219,29 +219,29 @@ describe("Table (browser)", () => {
       // `--muted` (#71717a) on `--surface-secondary` (#efeff0) at 12px for 4.2:1, under the
       // 4.5:1 WCAG AA floor. Both colours come out of `@ropav/styles` and measure identical on
       // React at 6006, so the shortfall belongs to the palette rather than to this port.
-      await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
       unmount();
     });
 
     it("has no violations while sorted", async () => {
-      const {container, unmount} = await render({
-        sortDescriptor: {column: "name", direction: "ascending"},
+      const { container, unmount } = await render({
+        sortDescriptor: { column: "name", direction: "ascending" },
         sortableColumns: ["name", "role"],
         withSortableHeader: true,
       });
 
       // Same palette shortfall as above; every other rule still runs.
-      await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
       unmount();
     });
 
     it("has no violations with the empty state showing", async () => {
-      const {container, unmount} = await render({users: []});
+      const { container, unmount } = await render({ users: [] });
 
       // Same palette shortfall as above; every other rule still runs.
-      await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
       unmount();
     });
@@ -253,7 +253,7 @@ describe("Table load more (browser)", () => {
   // against which box — can only be settled here.
   it("asks for more as soon as the end is within reach", async () => {
     const onLoadMore = vi.fn();
-    const {unmount} = await render({onLoadMore, withLoadMore: true});
+    const { unmount } = await render({ onLoadMore, withLoadMore: true });
 
     await vi.waitFor(() => expect(onLoadMore).toHaveBeenCalled());
 
@@ -262,11 +262,11 @@ describe("Table load more (browser)", () => {
 
   it("waits until the end is scrolled into view", async () => {
     const onLoadMore = vi.fn();
-    const {root, unmount} = await render({
+    const { root, unmount } = await render({
       onLoadMore,
-      scrollContainerStyle: {height: "60px", overflowY: "auto"},
+      scrollContainerStyle: { height: "60px", overflowY: "auto" },
       scrollOffset: 0,
-      users: Array.from({length: 40}, (_, index) => ({
+      users: Array.from({ length: 40 }, (_, index) => ({
         email: `user${index}@acme.com`,
         id: index + 1,
         name: `User ${index}`,
@@ -290,7 +290,7 @@ describe("Table load more (browser)", () => {
 
 describe("Table column resizing (browser)", () => {
   const renderResizable = async (props: Record<string, unknown> = {}) => {
-    const result = renderVapor(ResizableFixture, {props});
+    const result = renderVapor(ResizableFixture, { props });
 
     await nextTick();
 
@@ -307,7 +307,7 @@ describe("Table column resizing (browser)", () => {
   const widthOf = (column: HTMLElement) => parseFloat(column.style.width);
 
   it("divides a real container width between the columns", async () => {
-    const {columns, container, unmount} = await renderResizable();
+    const { columns, container, unmount } = await renderResizable();
     const box = container.querySelector<HTMLElement>('[data-slot="table-resizable-container"]')!;
     const total = columns.reduce((sum, column) => sum + widthOf(column), 0);
 
@@ -325,12 +325,12 @@ describe("Table column resizing (browser)", () => {
    * that belongs to this column — which is also the half a user can reach in React.
    */
   it("moves the edge under a real pointer drag", async () => {
-    const {columns, resizers, unmount} = await renderResizable();
+    const { columns, resizers, unmount } = await renderResizable();
     const before = widthOf(columns[0]!);
 
     await userEvent.dragAndDrop(resizers[0]!, resizers[1]!, {
-      sourcePosition: {x: 4, y: 8},
-      targetPosition: {x: 4, y: 8},
+      sourcePosition: { x: 4, y: 8 },
+      targetPosition: { x: 4, y: 8 },
     });
 
     expect(widthOf(columns[0]!)).toBeGreaterThan(before);
@@ -341,9 +341,9 @@ describe("Table column resizing (browser)", () => {
   });
 
   it("shows the handle under a real pointer", async () => {
-    const {resizers, unmount} = await renderResizable();
+    const { resizers, unmount } = await renderResizable();
 
-    await userEvent.hover(resizers[0]!, {position: {x: 4, y: 8}});
+    await userEvent.hover(resizers[0]!, { position: { x: 4, y: 8 } });
 
     expect(resizers[0]).toHaveAttribute("data-hovered", "true");
     // The hairline separator becomes a full-height accent bar, which is the only affordance
@@ -354,10 +354,10 @@ describe("Table column resizing (browser)", () => {
   });
 
   it("has no violations as a resizable grid", async () => {
-    const {container, unmount} = await renderResizable();
+    const { container, unmount } = await renderResizable();
 
     // Same palette shortfall as the other grids; every other rule still runs.
-    await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+    await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
     unmount();
   });

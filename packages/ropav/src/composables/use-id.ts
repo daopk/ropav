@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue, useId as useVueId} from "vue";
+import { computed, toValue, useId as useVueId } from "vue";
 
 /** Fallback counter for the case where no component instance is active. */
 let fallbackCounter = 0;

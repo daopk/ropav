@@ -1,10 +1,10 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
-const users = Array.from({length: 1000}, (_, index) => ({
+const users = Array.from({ length: 1000 }, (_, index) => ({
   email: `user${index}@acme.com`,
   id: index + 1,
   name: `User ${index}`,
@@ -16,9 +16,9 @@ const users = Array.from({length: 1000}, (_, index) => ({
  * `HTMLElement.prototype`, which would make every wrapper claim to be 500px tall and let the
  * window agree with a layout that is wrong.
  */
-const measure = async (grid: HTMLElement, size = {height: 500, width: 700}) => {
-  Object.defineProperty(grid, "clientWidth", {configurable: true, value: size.width});
-  Object.defineProperty(grid, "clientHeight", {configurable: true, value: size.height});
+const measure = async (grid: HTMLElement, size = { height: 500, width: 700 }) => {
+  Object.defineProperty(grid, "clientWidth", { configurable: true, value: size.width });
+  Object.defineProperty(grid, "clientHeight", { configurable: true, value: size.height });
   window.dispatchEvent(new Event("resize"));
   await nextTick();
   await nextTick();
@@ -31,12 +31,12 @@ const scrollTo = async (grid: HTMLElement, top: number) => {
 };
 
 const renderVirtualized = async (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(VirtualizedFixture, {props: {items: users, ...props}});
+  const rendered = renderVapor(VirtualizedFixture, { props: { items: users, ...props } });
   const grid = rendered.getByRole("grid");
 
   await measure(grid);
 
-  return {...rendered, grid};
+  return { ...rendered, grid };
 };
 
 const rowsOf = (grid: HTMLElement) => [
@@ -54,13 +54,13 @@ const cellsOf = (row: HTMLElement) => [
 ];
 
 const press = (element: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
 };
 
 describe("Table virtualization", () => {
   describe("the rendered set", () => {
     it("renders a window of the rows rather than all of them", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       // 500px of viewport plus a third overscanned, snapped up to 16 whole rows of 42.
       expect(rowsOf(grid)).toHaveLength(16);
@@ -71,7 +71,7 @@ describe("Table virtualization", () => {
     });
 
     it("gives the scroll box something the size of the whole collection", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const content = grid.firstElementChild as HTMLElement;
 
       expect(content.getAttribute("role")).toBe("presentation");
@@ -83,7 +83,7 @@ describe("Table virtualization", () => {
     });
 
     it("moves the window when the box scrolls", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       await scrollTo(grid, 5_000);
 
@@ -97,7 +97,7 @@ describe("Table virtualization", () => {
     });
 
     it("renders nothing until the box has been measured", () => {
-      const {getByRole, unmount} = renderVapor(VirtualizedFixture, {props: {items: users}});
+      const { getByRole, unmount } = renderVapor(VirtualizedFixture, { props: { items: users } });
       const grid = getByRole("grid");
 
       // A virtualizer that guessed here would put a thousand rows in the DOM.
@@ -109,7 +109,7 @@ describe("Table virtualization", () => {
 
   describe("the elements", () => {
     it("renders the whole table out of divs, keeping every role", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const row = rowsOf(grid)[0]!;
 
       expect(grid.tagName).toBe("DIV");
@@ -130,8 +130,8 @@ describe("Table virtualization", () => {
     });
 
     it("leaves a table without a virtualizer exactly as it was", async () => {
-      const {getByRole, unmount} = renderVapor(VirtualizedFixture, {
-        props: {items: users.slice(0, 3), withoutVirtualizer: true},
+      const { getByRole, unmount } = renderVapor(VirtualizedFixture, {
+        props: { items: users.slice(0, 3), withoutVirtualizer: true },
       });
 
       await nextTick();
@@ -151,7 +151,7 @@ describe("Table virtualization", () => {
 
   describe("the geometry", () => {
     it("sticks the header above the rows that scroll under it", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const header = wrapperOf(grid.querySelector('[data-slot="table-header"]')!);
 
       expect(header.style.position).toBe("sticky");
@@ -164,7 +164,7 @@ describe("Table virtualization", () => {
     });
 
     it("places each column at the width it was given, back to front", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const columns = [...grid.querySelectorAll('[data-slot="table-column"]')].map(wrapperOf);
 
       // 700px divided over three `1fr` columns, with `email`'s 240px minimum taking its share
@@ -177,7 +177,7 @@ describe("Table virtualization", () => {
     });
 
     it("stacks the rows at the offsets the layout worked out", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const [first, second] = rowsOf(grid).map(wrapperOf);
 
       expect(first!.style.position).toBe("absolute");
@@ -192,7 +192,7 @@ describe("Table virtualization", () => {
     });
 
     it("lines each cell up under its own column", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
       const cells = cellsOf(rowsOf(grid)[0]!).map(wrapperOf);
 
       expect(cells.map((cell) => cell.style.left)).toEqual(["0px", "230px", "460px"]);
@@ -206,7 +206,7 @@ describe("Table virtualization", () => {
 
   describe("what it reports", () => {
     it("counts the whole collection rather than the window", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       // A thousand rows plus the header row, which a grid counts as one of them.
       expect(grid.getAttribute("aria-rowcount")).toBe("1001");
@@ -216,7 +216,7 @@ describe("Table virtualization", () => {
     });
 
     it("numbers the header row first and the body rows after it", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       expect(
         grid
@@ -230,7 +230,7 @@ describe("Table virtualization", () => {
     });
 
     it("numbers each cell's column, since most of the table is absent", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       expect(cellsOf(rowsOf(grid)[0]!).map((cell) => cell.getAttribute("aria-colindex"))).toEqual([
         "1",
@@ -242,7 +242,7 @@ describe("Table virtualization", () => {
     });
 
     it("reports being empty with a placeholder that spans the columns", async () => {
-      const {grid, unmount} = await renderVirtualized({items: []});
+      const { grid, unmount } = await renderVirtualized({ items: [] });
       const body = grid.querySelector('[data-slot="table-body"]')!;
       const placeholder = body.querySelector('[role="rowheader"]') as HTMLElement;
 
@@ -260,7 +260,7 @@ describe("Table virtualization", () => {
 
   describe("loading more", () => {
     it("keeps the sentinel rendered at the top of a thousand rows", async () => {
-      const {grid, unmount} = await renderVirtualized({withLoadMore: true});
+      const { grid, unmount } = await renderVirtualized({ withLoadMore: true });
       const sentinel = grid.querySelector("[inert]") as HTMLElement;
 
       // A sentinel that is not in the DOM can never report that it came into view, so the next
@@ -273,7 +273,7 @@ describe("Table virtualization", () => {
     });
 
     it("spans the columns with the indicator row while loading", async () => {
-      const {grid, unmount} = await renderVirtualized({isLoading: true, withLoadMore: true});
+      const { grid, unmount } = await renderVirtualized({ isLoading: true, withLoadMore: true });
       const indicator = grid.querySelector('[data-slot="table-load-more"]')!;
       const cell = indicator.querySelector('[role="rowheader"]') as HTMLElement;
 
@@ -287,9 +287,9 @@ describe("Table virtualization", () => {
 
   describe("keyboard navigation", () => {
     it("reaches the last row, which was never rendered", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
-      press(grid, "End", {ctrlKey: true});
+      press(grid, "End", { ctrlKey: true });
       await nextTick();
       // One more tick: the key becomes persisted first, which is what puts it in the DOM.
       await nextTick();
@@ -301,7 +301,7 @@ describe("Table virtualization", () => {
     });
 
     it("keeps the focused row rendered after the window has scrolled past it", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       press(grid, "ArrowDown");
       await nextTick();
@@ -315,7 +315,7 @@ describe("Table virtualization", () => {
     });
 
     it("finds a row by typing, even one that never rendered", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       for (const key of [..."User 999"]) press(grid, key);
       await nextTick();
@@ -328,7 +328,7 @@ describe("Table virtualization", () => {
     });
 
     it("steps into a cell of a row that is only there because it is focused", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       press(grid, "ArrowDown");
       await nextTick();
@@ -344,9 +344,9 @@ describe("Table virtualization", () => {
     });
 
     it("selects the whole collection rather than the window", async () => {
-      const {grid, unmount} = await renderVirtualized({selectionMode: "multiple"});
+      const { grid, unmount } = await renderVirtualized({ selectionMode: "multiple" });
 
-      press(grid, "a", {ctrlKey: true});
+      press(grid, "a", { ctrlKey: true });
       await nextTick();
 
       const rows = rowsOf(grid);
@@ -358,7 +358,7 @@ describe("Table virtualization", () => {
     });
 
     it("pages to the end while nothing reports being scrollable", async () => {
-      const {grid, unmount} = await renderVirtualized();
+      const { grid, unmount } = await renderVirtualized();
 
       press(grid, "ArrowDown");
       await nextTick();

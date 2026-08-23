@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {CheckboxFixtureProps} from "./fixtures.types";
+import type { CheckboxFixtureProps } from "./fixtures.types";
 
-import {Checkbox} from "@/components/checkbox";
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
+import { Checkbox } from "@/components/checkbox";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
 
 // Every boolean that merges with a group, and both three-state props, have to declare an
 // explicit `undefined` default here too: forwarding a `false` that Vue cast from an absent
@@ -18,7 +18,7 @@ withDefaults(defineProps<CheckboxFixtureProps>(), {
   variant: undefined,
 });
 
-defineEmits<{change: [isSelected: boolean]}>();
+defineEmits<{ change: [isSelected: boolean] }>();
 </script>
 
 <template>
@@ -51,7 +51,7 @@ defineEmits<{change: [isSelected: boolean]}>();
     </Checkbox.Content>
     <Description v-if="$props.withDescription">You can change this later</Description>
     <FieldError v-if="$props.withCustomError">
-      <template #default="{validationErrors}">
+      <template #default="{ validationErrors }">
         <span data-testid="custom-error">{{ validationErrors.length }} problem(s)</span>
       </template>
     </FieldError>

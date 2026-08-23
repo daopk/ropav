@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {setInteractionModality} from "@/composables/use-interaction-states";
-import {resetTooltipWarmup} from "@/composables/use-tooltip-trigger-state";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 import TooltipFixture from "./fixtures.vue";
 
@@ -14,28 +14,28 @@ import TooltipFixture from "./fixtures.vue";
  * a second tooltip in the document — and every later case fails on "found multiple elements"
  * instead of on whatever it was testing. One failure should stay one failure.
  */
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(TooltipFixture, {props});
+  const result = renderVapor(TooltipFixture, { props });
 
   mounted.push(result);
 
   return result;
 };
 
-const POINTER = {bubbles: true, pointerId: 1, pointerType: "mouse"} as const;
+const POINTER = { bubbles: true, pointerId: 1, pointerType: "mouse" } as const;
 
 const hoverStart = (element: Element, pointerType = "mouse") => {
-  element.dispatchEvent(new PointerEvent("pointerenter", {...POINTER, pointerType}));
+  element.dispatchEvent(new PointerEvent("pointerenter", { ...POINTER, pointerType }));
 };
 
 const hoverEnd = (element: Element, pointerType = "mouse") => {
-  element.dispatchEvent(new PointerEvent("pointerleave", {...POINTER, pointerType}));
+  element.dispatchEvent(new PointerEvent("pointerleave", { ...POINTER, pointerType }));
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: name }));
 };
 
 /**
@@ -84,14 +84,14 @@ describe("Tooltip", () => {
     it("renders nothing but the trigger while closed", () => {
       const result = render();
 
-      expect(result.screen.getByRole("button", {name: "Open tooltip"})).toBeTruthy();
+      expect(result.screen.getByRole("button", { name: "Open tooltip" })).toBeTruthy();
       expect(result.screen.queryByRole("tooltip")).toBeNull();
 
       result.unmount();
     });
 
     it("renders the tooltip outside the app root", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -109,7 +109,7 @@ describe("Tooltip", () => {
     });
 
     it("carries the block class", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -120,7 +120,7 @@ describe("Tooltip", () => {
 
     it("takes the tooltip away when it closes", async () => {
       const trigger = render();
-      const button = trigger.screen.getByRole("button", {name: "Open tooltip"});
+      const button = trigger.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
       expect(trigger.screen.queryByRole("tooltip")).toBeTruthy();
@@ -138,7 +138,7 @@ describe("Tooltip", () => {
   describe("labelling", () => {
     it("describes the trigger with the tooltip only while it is open", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       expect(button.getAttribute("aria-describedby")).toBeNull();
 
@@ -162,7 +162,7 @@ describe("Tooltip", () => {
 
     it("describes rather than names, so the trigger keeps its own label", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
 
@@ -178,7 +178,7 @@ describe("Tooltip", () => {
   describe("hover", () => {
     it("waits out the delay", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       hoverStart(button);
       vi.advanceTimersByTime(1499);
@@ -195,8 +195,8 @@ describe("Tooltip", () => {
     });
 
     it("takes the delay from the prop", async () => {
-      const result = render({delay: 100});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ delay: 100 });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       hoverStart(button);
       vi.advanceTimersByTime(100);
@@ -209,7 +209,7 @@ describe("Tooltip", () => {
 
     it("ignores a touch", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       hoverStart(button, "touch");
       vi.advanceTimersByTime(3000);
@@ -221,8 +221,8 @@ describe("Tooltip", () => {
     });
 
     it("stays open while the pointer is on the tooltip itself", async () => {
-      const result = render({closeDelay: 500});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ closeDelay: 500 });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
 
@@ -241,8 +241,8 @@ describe("Tooltip", () => {
     });
 
     it("does nothing while disabled", async () => {
-      const result = render({isDisabled: true});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ isDisabled: true });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       hoverStart(button);
       vi.advanceTimersByTime(3000);
@@ -254,8 +254,8 @@ describe("Tooltip", () => {
     });
 
     it("does nothing when it only opens on focus", async () => {
-      const result = render({trigger: "focus"});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ trigger: "focus" });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       hoverStart(button);
       vi.advanceTimersByTime(3000);
@@ -272,7 +272,7 @@ describe("Tooltip", () => {
       setInteractionModality("keyboard");
 
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       button.dispatchEvent(new FocusEvent("focus"));
       await settle();
@@ -285,7 +285,7 @@ describe("Tooltip", () => {
 
     it("ignores focus that arrived from a press", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       button.dispatchEvent(new FocusEvent("focus"));
       vi.advanceTimersByTime(3000);
@@ -298,7 +298,7 @@ describe("Tooltip", () => {
 
     it("closes on Escape", async () => {
       const result = render();
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
 
@@ -311,8 +311,8 @@ describe("Tooltip", () => {
     });
 
     it("closes at once when the trigger is pressed", async () => {
-      const result = render({closeDelay: 500});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ closeDelay: 500 });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
 
@@ -327,8 +327,8 @@ describe("Tooltip", () => {
     });
 
     it("stays open through a press when asked to", async () => {
-      const result = render({shouldCloseOnPress: false});
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const result = render({ shouldCloseOnPress: false });
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       await open(button);
 
@@ -343,7 +343,7 @@ describe("Tooltip", () => {
 
   describe("trigger part", () => {
     it("exposes a focusable button role for markup that is not focusable", async () => {
-      const result = render({withCustomTrigger: true});
+      const result = render({ withCustomTrigger: true });
       const trigger = slot("tooltip-trigger")!;
 
       expect(trigger.getAttribute("role")).toBe("button");
@@ -359,7 +359,7 @@ describe("Tooltip", () => {
     it("reports its own hover and focus state", async () => {
       setInteractionModality("keyboard");
 
-      const result = render({withCustomTrigger: true});
+      const result = render({ withCustomTrigger: true });
       const trigger = slot("tooltip-trigger")!;
 
       trigger.dispatchEvent(new FocusEvent("focus"));
@@ -380,7 +380,7 @@ describe("Tooltip", () => {
 
   describe("arrow", () => {
     it("renders a default arrow carrying the slot the stylesheet keys", async () => {
-      const result = render({defaultOpen: true, withArrow: true});
+      const result = render({ defaultOpen: true, withArrow: true });
 
       await settle();
 
@@ -394,7 +394,7 @@ describe("Tooltip", () => {
     });
 
     it("renders a custom arrow untouched", async () => {
-      const result = render({defaultOpen: true, withArrow: true, withCustomArrow: true});
+      const result = render({ defaultOpen: true, withArrow: true, withCustomArrow: true });
 
       await settle();
 
@@ -407,7 +407,7 @@ describe("Tooltip", () => {
     });
 
     it("renders no arrow group without one asked for", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -419,7 +419,7 @@ describe("Tooltip", () => {
 
   describe("placement", () => {
     it("reports the side it was placed on", async () => {
-      const result = render({defaultOpen: true, shouldFlip: false});
+      const result = render({ defaultOpen: true, shouldFlip: false });
 
       await settle();
 
@@ -430,7 +430,7 @@ describe("Tooltip", () => {
     });
 
     it("takes the placement from the prop", async () => {
-      const result = render({defaultOpen: true, placement: "bottom", shouldFlip: false});
+      const result = render({ defaultOpen: true, placement: "bottom", shouldFlip: false });
 
       await settle();
 
@@ -442,7 +442,7 @@ describe("Tooltip", () => {
 
   describe("animation state", () => {
     it("reports entry as a string rather than an empty attribute", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -466,7 +466,7 @@ describe("Tooltip", () => {
 
       await settle();
 
-      const button = result.screen.getByRole("button", {name: "Open tooltip"});
+      const button = result.screen.getByRole("button", { name: "Open tooltip" });
 
       key(button, "Escape");
       await settle();

@@ -1,31 +1,31 @@
-import type {UseLabelsReturn} from "@/composables/use-labels";
-import type {ComputedRef} from "vue";
+import type { UseLabelsReturn } from "@/composables/use-labels";
+import type { ComputedRef } from "vue";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/labels-host.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let labels!: ComputedRef<UseLabelsReturn>;
 
-  Object.assign(props, {onReady: (value: ComputedRef<UseLabelsReturn>) => (labels = value)});
+  Object.assign(props, { onReady: (value: ComputedRef<UseLabelsReturn>) => (labels = value) });
 
-  return {...renderVapor(Host, {props}), labels: () => labels};
+  return { ...renderVapor(Host, { props }), labels: () => labels };
 };
 
 describe("useLabels", () => {
   describe("id", () => {
     it("keeps the caller's id", () => {
-      const {labels, unmount} = setup({id: "given"});
+      const { labels, unmount } = setup({ id: "given" });
 
       expect(labels().value.id).toBe("given");
       unmount();
     });
 
     it("mints one when the caller has none", () => {
-      const {labels, unmount} = setup({});
+      const { labels, unmount } = setup({});
 
       expect(labels().value.id).toBeTruthy();
       unmount();
@@ -34,7 +34,7 @@ describe("useLabels", () => {
 
   describe("a single way of naming", () => {
     it("passes a label through", () => {
-      const {labels, unmount} = setup({ariaLabel: "Event date"});
+      const { labels, unmount } = setup({ ariaLabel: "Event date" });
 
       expect(labels().value["aria-label"]).toBe("Event date");
       expect(labels().value["aria-labelledby"]).toBeUndefined();
@@ -42,7 +42,7 @@ describe("useLabels", () => {
     });
 
     it("passes labelling ids through", () => {
-      const {labels, unmount} = setup({ariaLabelledby: "heading"});
+      const { labels, unmount } = setup({ ariaLabelledby: "heading" });
 
       expect(labels().value["aria-labelledby"]).toBe("heading");
       expect(labels().value["aria-label"]).toBeUndefined();
@@ -50,7 +50,7 @@ describe("useLabels", () => {
     });
 
     it("collapses whitespace in a list of ids", () => {
-      const {labels, unmount} = setup({ariaLabelledby: "  one   two \n three "});
+      const { labels, unmount } = setup({ ariaLabelledby: "  one   two \n three " });
 
       expect(labels().value["aria-labelledby"]).toBe("one two three");
       unmount();
@@ -61,7 +61,7 @@ describe("useLabels", () => {
     it("puts the element's own id first so its label still counts", () => {
       // `aria-labelledby` wins outright in assistive technology, so without the element's own id
       // in the list the `aria-label` would simply be dropped.
-      const {labels, unmount} = setup({
+      const { labels, unmount } = setup({
         ariaLabel: "Event date",
         ariaLabelledby: "heading",
         id: "field",
@@ -73,7 +73,7 @@ describe("useLabels", () => {
     });
 
     it("does not repeat the element's own id when it is already listed", () => {
-      const {labels, unmount} = setup({
+      const { labels, unmount } = setup({
         ariaLabel: "Event date",
         ariaLabelledby: "field heading",
         id: "field",
@@ -86,21 +86,21 @@ describe("useLabels", () => {
 
   describe("default label", () => {
     it("names the element when the caller supplies no name", () => {
-      const {labels, unmount} = setup({defaultLabel: "Calendar"});
+      const { labels, unmount } = setup({ defaultLabel: "Calendar" });
 
       expect(labels().value["aria-label"]).toBe("Calendar");
       unmount();
     });
 
     it("gives way to a label the caller supplied", () => {
-      const {labels, unmount} = setup({ariaLabel: "Event date", defaultLabel: "Calendar"});
+      const { labels, unmount } = setup({ ariaLabel: "Event date", defaultLabel: "Calendar" });
 
       expect(labels().value["aria-label"]).toBe("Event date");
       unmount();
     });
 
     it("gives way to labelling ids the caller supplied", () => {
-      const {labels, unmount} = setup({ariaLabelledby: "heading", defaultLabel: "Calendar"});
+      const { labels, unmount } = setup({ ariaLabelledby: "heading", defaultLabel: "Calendar" });
 
       expect(labels().value["aria-label"]).toBeUndefined();
       expect(labels().value["aria-labelledby"]).toBe("heading");
@@ -110,8 +110,8 @@ describe("useLabels", () => {
 
   describe("reactivity", () => {
     it("follows the label changing", async () => {
-      const props = reactive({ariaLabel: "Start date"});
-      const {labels, unmount} = setup(props);
+      const props = reactive({ ariaLabel: "Start date" });
+      const { labels, unmount } = setup(props);
 
       expect(labels().value["aria-label"]).toBe("Start date");
 

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ToastRenderableProps} from "./toast.types";
+import type { ToastRenderableProps } from "./toast.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
 const props = defineProps<ToastRenderableProps>();
 

@@ -1,12 +1,12 @@
-import type {Color} from "../utils/color-types";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Color } from "../utils/color-types";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {parseColor} from "../utils/color";
+import { parseColor } from "../utils/color";
 
-import {parseColorValue} from "./use-color-field-state";
-import {useControllableState} from "./use-controllable-state";
+import { parseColorValue } from "./use-color-field-state";
+import { useControllableState } from "./use-controllable-state";
 
 /** Where a picker starts when nothing says otherwise. */
 const DEFAULT_COLOR = parseColor("#000000");
@@ -46,7 +46,7 @@ export const useColorPickerState = (options: UseColorPickerStateOptions = {}): C
     () => parseColorValue(toValue(options.defaultValue) || "#000000") ?? DEFAULT_COLOR,
   );
 
-  const {setState, state} = useControllableState<Color>({
+  const { setState, state } = useControllableState<Color>({
     defaultValue: defaultValue.value,
     onValueChange: (value) => options.onChange?.(value),
     value: () => controlledValue.value,

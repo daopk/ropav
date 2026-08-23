@@ -1,4 +1,4 @@
-import type {SwitchRootProps} from "@/components/switch";
+import type { SwitchRootProps } from "@/components/switch";
 
 export interface SwitchFixtureProps extends SwitchRootProps {
   /** Renders help text as a sibling of the clickable content. */

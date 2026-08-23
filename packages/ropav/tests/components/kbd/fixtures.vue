@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {KbdKey, KbdRootProps} from "@/components/kbd";
+import type { KbdKey, KbdRootProps } from "@/components/kbd";
 
-import {KbdAbbr, KbdContent, KbdRoot} from "@/components/kbd";
+import { KbdAbbr, KbdContent, KbdRoot } from "@/components/kbd";
 
-const props = defineProps<KbdRootProps & {keys?: KbdKey[]; text?: string}>();
+const props = defineProps<KbdRootProps & { keys?: KbdKey[]; text?: string }>();
 </script>
 
 <template>

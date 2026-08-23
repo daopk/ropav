@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
-import type {TabsRootProps, TabsRootSlotProps} from "./tabs.types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { TabsRootProps, TabsRootSlotProps } from "./tabs.types";
 
-import {tabsVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { tabsVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useFocusWithin} from "../../composables/use-interaction-states";
-import {useListKeyboard} from "../../composables/use-list-keyboard";
+import { useFocusWithin } from "../../composables/use-interaction-states";
+import { useListKeyboard } from "../../composables/use-list-keyboard";
 import {
   createSharedElementScope,
   provideSharedElementScope,
 } from "../../composables/use-shared-element";
-import {useTabListState} from "../../composables/use-tab-list-state";
-import {dataAttr} from "../../utils/assertion";
+import { useTabListState } from "../../composables/use-tab-list-state";
+import { dataAttr } from "../../utils/assertion";
 
-import {provideTabsContext} from "./tabs.context";
+import { provideTabsContext } from "./tabs.context";
 
 // The three-state props declare an explicit `undefined` default, so an absent prop stays absent
 // rather than being cast to `false` and read as a caller's decision.
@@ -30,13 +30,13 @@ const emit = defineEmits<{
   "update:selectedKey": [key: CollectionKey];
 }>();
 
-defineSlots<{default?: (props: TabsRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TabsRootSlotProps) => unknown }>();
 
 const orientation = computed(() => props.orientation ?? "horizontal");
 const keyboardActivation = computed(() => props.keyboardActivation ?? "automatic");
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
-const slots = computed(() => tabsVariants({variant: props.variant}));
+const slots = computed(() => tabsVariants({ variant: props.variant }));
 
 const state = useTabListState({
   defaultSelectedKey: props.defaultSelectedKey,
@@ -72,7 +72,7 @@ const keyboard = useListKeyboard({
   selection: state.selection,
 });
 
-const focus = useFocusWithin({isDisabled: () => isDisabled.value});
+const focus = useFocusWithin({ isDisabled: () => isDisabled.value });
 
 /*
  * One scope per tab list, which is the same thing as one per root: the indicator is handed from
@@ -94,7 +94,7 @@ provideTabsContext({
 
 <template>
   <div
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(focus.isFocusVisible.value)"
     :data-focused="dataAttr(focus.isFocusWithin.value)"

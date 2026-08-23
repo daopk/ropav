@@ -10,7 +10,7 @@ export const DisclosureGroup = Object.assign(DisclosureGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {DisclosureGroupRoot};
+export { DisclosureGroupRoot };
 
 export type {
   DisclosureGroupRootProps,
@@ -20,14 +20,14 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useDisclosureGroupContext} from "./disclosure-group.context";
+export { useDisclosureGroupContext } from "./disclosure-group.context";
 
-export type {DisclosureGroupContext} from "./disclosure-group.context";
+export type { DisclosureGroupContext } from "./disclosure-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Composables
  * -----------------------------------------------------------------------------------------------*/
-export {useDisclosureGroupNavigation} from "../../composables/use-disclosure-group-navigation";
+export { useDisclosureGroupNavigation } from "../../composables/use-disclosure-group-navigation";
 
 export type {
   UseDisclosureGroupNavigationOptions,
@@ -37,6 +37,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {disclosureGroupVariants} from "@ropav/styles";
+export { disclosureGroupVariants } from "@ropav/styles";
 
-export type {DisclosureGroupVariants} from "@ropav/styles";
+export type { DisclosureGroupVariants } from "@ropav/styles";

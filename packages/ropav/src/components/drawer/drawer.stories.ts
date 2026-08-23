@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconBars from "~icons/gravity-ui/bars";
 import IconBell from "~icons/gravity-ui/bell";
 import IconEnvelope from "~icons/gravity-ui/envelope";
@@ -9,10 +9,10 @@ import IconHouse from "~icons/gravity-ui/house";
 import IconMagnifier from "~icons/gravity-ui/magnifier";
 import IconPerson from "~icons/gravity-ui/person";
 
-import {ButtonRoot} from "../button";
-import {InputRoot} from "../input";
-import {LabelRoot} from "../label";
-import {TextField} from "../textfield";
+import { ButtonRoot } from "../button";
+import { InputRoot } from "../input";
+import { LabelRoot } from "../label";
+import { TextField } from "../textfield";
 
 import DrawerBackdrop from "./drawer-backdrop.vue";
 import DrawerBody from "./drawer-body.vue";
@@ -54,7 +54,7 @@ const components = {
 };
 
 const meta = {
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Overlays/Drawer",
 } satisfies Meta;
 
@@ -96,7 +96,7 @@ export const Default: Story = {
 export const Placements: Story = {
   render: () => ({
     components,
-    setup: () => ({placements: ["bottom", "top", "left", "right"] as const}),
+    setup: () => ({ placements: ["bottom", "top", "left", "right"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <Drawer v-for="placement in placements" :key="placement">
@@ -136,7 +136,7 @@ export const Placements: Story = {
 export const BackdropVariants: Story = {
   render: () => ({
     components,
-    setup: () => ({variants: ["opaque", "blur", "transparent"] as const}),
+    setup: () => ({ variants: ["opaque", "blur", "transparent"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <Drawer v-for="variant in variants" :key="variant">
@@ -214,7 +214,7 @@ export const WithForm: Story = {
 export const WithScrollableContent: Story = {
   render: () => ({
     components,
-    setup: () => ({paragraphs: Array.from({length: 20}, (_, index) => index + 1)}),
+    setup: () => ({ paragraphs: Array.from({ length: 20 }, (_, index) => index + 1) }),
     template: `
       <Drawer>
         <Button variant="secondary">Terms &amp; Conditions</Button>
@@ -250,12 +250,12 @@ export const NavigationDrawer: Story = {
     components,
     setup: () => ({
       navItems: [
-        {icon: "house", label: "Home"},
-        {icon: "magnifier", label: "Search"},
-        {icon: "bell", label: "Notifications"},
-        {icon: "envelope", label: "Messages"},
-        {icon: "person", label: "Profile"},
-        {icon: "gear", label: "Settings"},
+        { icon: "house", label: "Home" },
+        { icon: "magnifier", label: "Search" },
+        { icon: "bell", label: "Notifications" },
+        { icon: "envelope", label: "Messages" },
+        { icon: "person", label: "Profile" },
+        { icon: "gear", label: "Settings" },
       ] as const,
     }),
     template: `
@@ -336,7 +336,7 @@ export const Controlled: Story = {
      * The backdrop reads its slots, its state and the trigger's identity from the root, so it is a
      * part rather than a component of its own.
      */
-    setup: () => ({isOpen: shallowRef(false)}),
+    setup: () => ({ isOpen: shallowRef(false) }),
     template: `
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3">

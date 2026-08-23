@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {ColorSwatchRootProps, ColorSwatchSlotProps} from "./color-swatch.types";
+import type { ColorSwatchRootProps, ColorSwatchSlotProps } from "./color-swatch.types";
 
-import {colorSwatchVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { colorSwatchVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useColorSwatch} from "../../composables/use-color-swatch";
-import {useColorValueContext} from "../color-picker/color-picker.context";
+import { useColorSwatch } from "../../composables/use-color-swatch";
+import { useColorValueContext } from "../color-picker/color-picker.context";
 
 const props = defineProps<ColorSwatchRootProps>();
 
-defineSlots<{default?: (props: ColorSwatchSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSwatchSlotProps) => unknown }>();
 
 /**
  * The colour a `ColorPicker` above is holding, when there is one.
@@ -28,7 +28,7 @@ const swatch = useColorSwatch({
 });
 
 const styles = computed(() =>
-  colorSwatchVariants({class: props.class, shape: props.shape, size: props.size}),
+  colorSwatchVariants({ class: props.class, shape: props.shape, size: props.size }),
 );
 
 /**

@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {MeterRootProps, MeterSlotProps} from "./meter.types";
+import type { MeterRootProps, MeterSlotProps } from "./meter.types";
 
-import {meterVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { meterVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useProgressLabeling} from "../../composables/use-progress-labeling";
-import {useProgressValue} from "../../composables/use-progress-value";
-import {composeSlotClassName} from "../../utils/compose";
+import { useProgressLabeling } from "../../composables/use-progress-labeling";
+import { useProgressValue } from "../../composables/use-progress-value";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {provideMeterContext} from "./meter.context";
+import { provideMeterContext } from "./meter.context";
 
 const props = defineProps<MeterRootProps>();
 
-defineSlots<{default?: (props: MeterSlotProps) => unknown}>();
+defineSlots<{ default?: (props: MeterSlotProps) => unknown }>();
 
-const {ariaLabelledby, id} = useProgressLabeling({
+const { ariaLabelledby, id } = useProgressLabeling({
   ariaLabel: () => props.ariaLabel,
   ariaLabelledby: () => props.ariaLabelledby,
   id: () => props.id,
@@ -27,9 +27,9 @@ const state = useProgressValue({
   value: () => props.value,
   valueLabel: () => props.valueLabel,
 });
-const slots = computed(() => meterVariants({color: props.color, size: props.size}));
+const slots = computed(() => meterVariants({ color: props.color, size: props.size }));
 
-provideMeterContext({slots, state});
+provideMeterContext({ slots, state });
 </script>
 
 <template>

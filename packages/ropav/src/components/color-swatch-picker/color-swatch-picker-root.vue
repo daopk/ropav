@@ -1,27 +1,27 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {Color} from "../../utils/color-types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { Color } from "../../utils/color-types";
 import type {
   ColorSwatchPickerRootProps,
   ColorSwatchPickerRootSlotProps,
 } from "./color-swatch-picker.types";
 
-import {colorSwatchPickerVariants} from "@ropav/styles";
-import {computed, shallowRef, triggerRef} from "vue";
+import { colorSwatchPickerVariants } from "@ropav/styles";
+import { computed, shallowRef, triggerRef } from "vue";
 
-import {useCollection} from "../../composables/use-collection";
-import {useColorPickerState} from "../../composables/use-color-picker-state";
-import {useId} from "../../composables/use-id";
-import {useListKeyboard} from "../../composables/use-list-keyboard";
-import {useLocalizedStringFormatter} from "../../composables/use-localized-string-formatter";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {useTypeahead} from "../../composables/use-typeahead";
-import {colorStrings} from "../../i18n/color";
-import {dataAttr} from "../../utils/assertion";
-import {useColorValueContext} from "../color-picker/color-picker.context";
+import { useCollection } from "../../composables/use-collection";
+import { useColorPickerState } from "../../composables/use-color-picker-state";
+import { useId } from "../../composables/use-id";
+import { useListKeyboard } from "../../composables/use-list-keyboard";
+import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { useTypeahead } from "../../composables/use-typeahead";
+import { colorStrings } from "../../i18n/color";
+import { dataAttr } from "../../utils/assertion";
+import { useColorValueContext } from "../color-picker/color-picker.context";
 
-import {provideColorSwatchPickerContext} from "./color-swatch-picker.context";
+import { provideColorSwatchPickerContext } from "./color-swatch-picker.context";
 
 const props = defineProps<ColorSwatchPickerRootProps>();
 
@@ -30,7 +30,7 @@ const emit = defineEmits<{
   "update:value": [value: Color];
 }>();
 
-defineSlots<{default?: (props: ColorSwatchPickerRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSwatchPickerRootSlotProps) => unknown }>();
 
 const strings = useLocalizedStringFormatter(colorStrings);
 
@@ -114,7 +114,7 @@ const keyboard = useListKeyboard({
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
   getKeyForSearch: keyboard.getKeyForSearch,
-  onSearchMatch: (key: CollectionKey) => keyboard.focusKey(key, {scroll: true}),
+  onSearchMatch: (key: CollectionKey) => keyboard.focusKey(key, { scroll: true }),
 });
 
 /**
@@ -171,7 +171,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-label="ariaLabel"
     :aria-labelledby="props.ariaLabelledby"
     aria-orientation="vertical"
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     :data-collection="collectionId"
     :data-empty="dataAttr(collection.size.value === 0)"
     data-layout="grid"

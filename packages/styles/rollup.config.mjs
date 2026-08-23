@@ -3,7 +3,7 @@ import path from "path";
 
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import {defineConfig} from "rollup";
+import { defineConfig } from "rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));

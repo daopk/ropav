@@ -1,6 +1,6 @@
-import {afterEach, describe, expect, it} from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
-import {announce} from "@/utils/live-announcer";
+import { announce } from "@/utils/live-announcer";
 
 const regionFor = (politeness: string): HTMLElement | null =>
   document.querySelector(`[data-slot="live-announcer"][data-politeness="${politeness}"]`);

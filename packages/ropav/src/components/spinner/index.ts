@@ -10,13 +10,13 @@ export const Spinner = Object.assign(SpinnerRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {SpinnerRoot};
+export { SpinnerRoot };
 
-export type {SpinnerRootProps, SpinnerRootProps as SpinnerProps} from "./spinner.types";
+export type { SpinnerRootProps, SpinnerRootProps as SpinnerProps } from "./spinner.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {spinnerVariants} from "@ropav/styles";
+export { spinnerVariants } from "@ropav/styles";
 
-export type {SpinnerVariants} from "@ropav/styles";
+export type { SpinnerVariants } from "@ropav/styles";

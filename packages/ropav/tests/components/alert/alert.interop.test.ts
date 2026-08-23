@@ -1,6 +1,6 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {defineComponent, h} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { defineComponent, h } from "vue";
 
 import {
   AlertContent,
@@ -9,27 +9,27 @@ import {
   AlertRoot,
   AlertTitle,
 } from "@/components/alert";
-import {useSurfaceContext} from "@/components/surface";
+import { useSurfaceContext } from "@/components/surface";
 
 const SurfaceReader = defineComponent({
   name: "AlertSurfaceReader",
   setup: () => {
     const surface = useSurfaceContext();
 
-    return () => h("span", {"data-surface": surface?.variant.value, "data-testid": "surface"});
+    return () => h("span", { "data-surface": surface?.variant.value, "data-testid": "surface" });
   },
 });
 
 const render = (indicator?: () => unknown) =>
   renderInterop(AlertRoot, {
-    props: {status: "warning"},
+    props: { status: "warning" },
     slots: {
       default: () => [
-        h(AlertIndicator, null, indicator ? {default: indicator} : undefined),
+        h(AlertIndicator, null, indicator ? { default: indicator } : undefined),
         h(AlertContent, null, {
           default: () => [
-            h(AlertTitle, null, {default: () => "Storage almost full"}),
-            h(AlertDescription, null, {default: () => "Delete unused files."}),
+            h(AlertTitle, null, { default: () => "Storage almost full" }),
+            h(AlertDescription, null, { default: () => "Delete unused files." }),
             h(SurfaceReader),
           ],
         }),
@@ -39,7 +39,7 @@ const render = (indicator?: () => unknown) =>
 
 describe("Alert under a vdom host", () => {
   it("styles compound parts written in and forwarded from the host", () => {
-    const {container, unmount} = render();
+    const { container, unmount } = render();
 
     expect(container.querySelector('[data-slot="alert-root"]')).toHaveClass(
       "alert",
@@ -58,7 +58,7 @@ describe("Alert under a vdom host", () => {
   });
 
   it("publishes the alert's default surface to host content", () => {
-    const {container, unmount} = render();
+    const { container, unmount } = render();
 
     expect(container.querySelector('[data-testid="surface"]')).toHaveAttribute(
       "data-surface",
@@ -72,7 +72,7 @@ describe("Alert under a vdom host", () => {
   // renders nothing. The indicator answers the same way, from the presence of the slot rather
   // than from what running it produces.
   it("renders nothing for an explicitly empty host slot", () => {
-    const {container, unmount} = render(() => []);
+    const { container, unmount } = render(() => []);
     const indicator = container.querySelector('[data-slot="alert-indicator"]');
 
     expect(indicator).not.toBeNull();
@@ -83,7 +83,7 @@ describe("Alert under a vdom host", () => {
   });
 
   it("keeps a custom indicator from the host and suppresses the fallback icon", () => {
-    const {container, unmount} = render(() => h("span", {"data-testid": "custom"}, "!"));
+    const { container, unmount } = render(() => h("span", { "data-testid": "custom" }, "!"));
 
     expect(container.querySelector('[data-testid="custom"]')).toHaveTextContent("!");
     expect(container.querySelector('[data-slot="alert-default-icon"]')).toBeNull();

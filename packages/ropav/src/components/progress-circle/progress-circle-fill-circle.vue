@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {ProgressCircleFillCircleProps} from "./progress-circle.types";
+import type { ProgressCircleFillCircleProps } from "./progress-circle.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {CENTER, CIRCUMFERENCE, RADIUS, ROTATION, STROKE_WIDTH} from "./progress-circle.constants";
-import {useProgressCircleContext} from "./progress-circle.context";
+import { CENTER, CIRCUMFERENCE, RADIUS, ROTATION, STROKE_WIDTH } from "./progress-circle.constants";
+import { useProgressCircleContext } from "./progress-circle.context";
 
 const props = defineProps<ProgressCircleFillCircleProps>();
 
-const {slots, state} = useProgressCircleContext();
+const { slots, state } = useProgressCircleContext();
 const strokeDashoffset = computed(() =>
   state.isIndeterminate.value
     ? CIRCUMFERENCE * 0.75

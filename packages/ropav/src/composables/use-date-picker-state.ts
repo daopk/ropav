@@ -1,19 +1,19 @@
-import type {FieldOptions, FormatterOptions, Granularity, TimeValue} from "../utils/date-format";
-import type {FormValidationState, ValidationBehavior} from "./use-form-validation-state";
-import type {OverlayTriggerState} from "./use-overlay-trigger-state";
-import type {CalendarDate, DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { FieldOptions, FormatterOptions, Granularity, TimeValue } from "../utils/date-format";
+import type { FormValidationState, ValidationBehavior } from "./use-form-validation-state";
+import type { OverlayTriggerState } from "./use-overlay-trigger-state";
+import type { CalendarDate, DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {DateFormatter, toCalendarDate, toCalendarDateTime} from "@internationalized/date";
-import {computed, shallowRef, toValue} from "vue";
+import { DateFormatter, toCalendarDate, toCalendarDateTime } from "@internationalized/date";
+import { computed, shallowRef, toValue } from "vue";
 
-import {getFormatOptions, getPlaceholderTime} from "../utils/date-format";
-import {getDateValidationResult} from "../utils/date-validation";
+import { getFormatOptions, getPlaceholderTime } from "../utils/date-format";
+import { getDateValidationResult } from "../utils/date-validation";
 
-import {useControllableState} from "./use-controllable-state";
-import {useDefaultDateProps} from "./use-default-date-props";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useOverlayTriggerState} from "./use-overlay-trigger-state";
+import { useControllableState } from "./use-controllable-state";
+import { useDefaultDateProps } from "./use-default-date-props";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useOverlayTriggerState } from "./use-overlay-trigger-state";
 
 export interface UseDatePickerStateOptions {
   value?: MaybeRefOrGetter<DateValue | null | undefined>;
@@ -86,7 +86,7 @@ export const useDatePickerState = (options: UseDatePickerStateOptions): DatePick
     onOpenChange: options.onOpenChange,
   });
 
-  const {setState: setValue, state: value} = useControllableState<DateValue | null>({
+  const { setState: setValue, state: value } = useControllableState<DateValue | null>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -98,7 +98,7 @@ export const useDatePickerState = (options: UseDatePickerStateOptions): DatePick
 
   /** Whatever value the picker can learn its shape from, even before anything is chosen. */
   const shape = computed(() => value.value || toValue(options.placeholderValue) || null);
-  const {defaultTimeZone, granularity} = useDefaultDateProps(shape, () =>
+  const { defaultTimeZone, granularity } = useDefaultDateProps(shape, () =>
     toValue(options.granularity),
   );
 
@@ -228,7 +228,7 @@ export const useDatePickerState = (options: UseDatePickerStateOptions): DatePick
       return formatter.format(current.toDate(defaultTimeZone.value ?? "UTC"));
     },
     getDateFormatter: (locale, formatOptions) =>
-      new DateFormatter(locale, getFormatOptions({}, {...formatOpts.value, ...formatOptions})),
+      new DateFormatter(locale, getFormatOptions({}, { ...formatOpts.value, ...formatOptions })),
     granularity,
     hasTime,
     isInvalid: computed(() => validation.displayValidation.value.isInvalid),

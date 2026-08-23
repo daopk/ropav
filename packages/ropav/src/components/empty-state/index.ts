@@ -10,7 +10,7 @@ export const EmptyState = Object.assign(EmptyStateRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {EmptyStateRoot};
+export { EmptyStateRoot };
 
 export type {
   EmptyStateRootProps,
@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {emptyStateVariants} from "@ropav/styles";
+export { emptyStateVariants } from "@ropav/styles";
 
-export type {EmptyStateVariants} from "@ropav/styles";
+export type { EmptyStateVariants } from "@ropav/styles";

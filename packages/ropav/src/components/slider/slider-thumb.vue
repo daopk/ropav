@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {SliderThumbProps, SliderThumbSlotProps} from "./slider.types";
+import type { SliderThumbProps, SliderThumbSlotProps } from "./slider.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useSliderThumb} from "../../composables/use-slider-thumb";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useSliderThumb } from "../../composables/use-slider-thumb";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useSliderContext} from "./slider.context";
+import { useSliderContext } from "./slider.context";
 
 const props = defineProps<SliderThumbProps>();
 
-defineSlots<{default?: (props: SliderThumbSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SliderThumbSlotProps) => unknown }>();
 
-const {slider, slots, state, trackEl} = useSliderContext();
+const { slider, slots, state, trackEl } = useSliderContext();
 
 const inputEl = shallowRef<HTMLInputElement | null>(null);
 
@@ -38,8 +38,8 @@ const thumb = useSliderThumb({
 
 // Hover and the focus ring are keyed on attributes rather than pseudo-classes, and focus
 // lives on the hidden input while the ring is painted on the thumb.
-const {isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave} =
-  useInteractionStates({isDisabled: () => thumb.isDisabled.value});
+const { isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave } =
+  useInteractionStates({ isDisabled: () => thumb.isDisabled.value });
 
 const onInputBlur = () => {
   onBlur();

@@ -1,7 +1,7 @@
-import {CalendarDate} from "@internationalized/date";
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   DateFieldGroup,
@@ -9,7 +9,7 @@ import {
   DateFieldRoot,
   DateFieldSegment,
 } from "@/components/date-field";
-import {Label} from "@/components/label";
+import { Label } from "@/components/label";
 
 /**
  * The field mounted the way a consumer mounts it: from a VDOM host, with the parts written in the
@@ -23,14 +23,15 @@ import {Label} from "@/components/label";
  */
 const render = (props: Record<string, unknown> = {}, groupProps: Record<string, unknown> = {}) => {
   const result = renderInterop(DateFieldRoot, {
-    props: {locale: "en-US", ...props},
+    props: { locale: "en-US", ...props },
     slots: {
       default: () => [
-        h(Label, null, {default: () => "Date"}),
+        h(Label, null, { default: () => "Date" }),
         h(DateFieldGroup, groupProps, {
           default: () =>
             h(DateFieldInput, null, {
-              default: ({segment}: {segment: unknown}) => h(DateFieldSegment, {segment} as never),
+              default: ({ segment }: { segment: unknown }) =>
+                h(DateFieldSegment, { segment } as never),
             }),
         }),
       ],
@@ -48,7 +49,7 @@ const render = (props: Record<string, unknown> = {}, groupProps: Record<string, 
 
 describe("DateField (interop)", () => {
   it("reaches parts written in a VDOM host", () => {
-    const {find, segment, unmount} = render({defaultValue: new CalendarDate(2026, 6, 5)});
+    const { find, segment, unmount } = render({ defaultValue: new CalendarDate(2026, 6, 5) });
 
     expect(find("date-input-group")).not.toBeNull();
     expect(find("date-input-group-input")).not.toBeNull();
@@ -58,7 +59,7 @@ describe("DateField (interop)", () => {
   });
 
   it("hands the group's styling to those parts", () => {
-    const {find, segment, unmount} = render({}, {variant: "secondary"});
+    const { find, segment, unmount } = render({}, { variant: "secondary" });
 
     expect(find("date-input-group")).toHaveClass("date-input-group--secondary");
     expect(find("date-input-group-input")).toHaveClass("date-input-group__input");
@@ -67,7 +68,7 @@ describe("DateField (interop)", () => {
   });
 
   it("hands the labelling down to those parts", () => {
-    const {find, segment, unmount} = render();
+    const { find, segment, unmount } = render();
     const month = segment("month")!;
 
     expect(month).toHaveAttribute("aria-labelledby", `${month.id} ${find("label")!.id}`);
@@ -75,10 +76,10 @@ describe("DateField (interop)", () => {
   });
 
   it("hands the state down, so a segment steps the value", async () => {
-    const {segment, unmount} = render({defaultValue: new CalendarDate(2026, 6, 5)});
+    const { segment, unmount } = render({ defaultValue: new CalendarDate(2026, 6, 5) });
 
     segment("day")!.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowUp"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowUp" }),
     );
     await nextTick();
 
@@ -87,11 +88,11 @@ describe("DateField (interop)", () => {
   });
 
   it("hands the focus manager down, so an arrow crosses segments", () => {
-    const {segment, unmount} = render();
+    const { segment, unmount } = render();
 
     segment("month")!.focus();
     segment("month")!.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
     );
 
     expect(document.activeElement).toBe(segment("day"));

@@ -1,27 +1,27 @@
-import type {VirtualizerNode} from "../utils/virtualizer-layout";
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
+import type { VirtualizerNode } from "../utils/virtualizer-layout";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
 import type {
   FormValidationState,
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {FocusStrategy, MenuTriggerState} from "./use-overlay-trigger-state";
+import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
 import type {
   CollectionSelection,
   DisabledBehavior,
   UseSelectionManagerReturn,
 } from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {createListCollection} from "../utils/virtualizer-collection";
+import { createListCollection } from "../utils/virtualizer-collection";
 
-import {useCollection} from "./use-collection";
-import {useControllableState} from "./use-controllable-state";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useMenuTriggerState} from "./use-overlay-trigger-state";
-import {useSelectionManager} from "./use-selection-manager";
+import { useCollection } from "./use-collection";
+import { useControllableState } from "./use-controllable-state";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useMenuTriggerState } from "./use-overlay-trigger-state";
+import { useSelectionManager } from "./use-selection-manager";
 
 /** Whether one or several options can be chosen. */
 export type SelectSelectionMode = "single" | "multiple";
@@ -165,7 +165,7 @@ export const useSelectState = <T>(options: UseSelectStateOptions<T>): UseSelectS
     }),
   );
 
-  const collection = useCollection({source: () => source.value});
+  const collection = useCollection({ source: () => source.value });
 
   const defaultValue = computed<SelectedValue>(
     () => options.defaultValue ?? (selectionMode.value === "single" ? null : []),

@@ -1,6 +1,6 @@
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface TextFieldContext {
   /** Visual variant the control inside picks up when it declares none of its own. */

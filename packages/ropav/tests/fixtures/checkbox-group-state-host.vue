@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {CheckboxGroupStateHostProps} from "./checkbox-group-state.types";
+import type { CheckboxGroupStateHostProps } from "./checkbox-group-state.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useCheckboxGroupState} from "@/composables/use-checkbox-group-state";
+import { useCheckboxGroupState } from "@/composables/use-checkbox-group-state";
 
 import CheckboxGroupStateItem from "./checkbox-group-state-item.vue";
 
-const props = withDefaults(defineProps<CheckboxGroupStateHostProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<CheckboxGroupStateHostProps>(), { isInvalid: undefined });
 
 const state = useCheckboxGroupState({
   defaultValue: () => props.defaultValue,

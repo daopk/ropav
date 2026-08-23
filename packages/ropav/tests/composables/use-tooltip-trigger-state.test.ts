@@ -1,5 +1,5 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
 import {
   getRegisteredTooltipCount,
@@ -14,10 +14,10 @@ const setup = (options: Options = {}) => {
   const scope = effectScope();
   const changes: boolean[] = [];
   const state = scope.run(() =>
-    useTooltipTriggerState({onOpenChange: (isOpen) => changes.push(isOpen), ...options}),
+    useTooltipTriggerState({ onOpenChange: (isOpen) => changes.push(isOpen), ...options }),
   )!;
 
-  return {changes, dispose: () => scope.stop(), state};
+  return { changes, dispose: () => scope.stop(), state };
 };
 
 describe("useTooltipTriggerState", () => {
@@ -34,7 +34,7 @@ describe("useTooltipTriggerState", () => {
 
   describe("delay", () => {
     it("waits out the delay before opening", () => {
-      const {dispose, state} = setup({delay: 1500});
+      const { dispose, state } = setup({ delay: 1500 });
 
       state.open();
       expect(state.isOpen.value).toBe(false);
@@ -49,7 +49,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("opens at once when asked to", () => {
-      const {dispose, state} = setup({delay: 1500});
+      const { dispose, state } = setup({ delay: 1500 });
 
       // Keyboard focus takes this path: a tooltip earned by tabbing should not make the user wait.
       state.open(true);
@@ -60,7 +60,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("opens at once with no delay configured", () => {
-      const {dispose, state} = setup({delay: 0});
+      const { dispose, state } = setup({ delay: 0 });
 
       state.open();
 
@@ -70,7 +70,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("drops a pending open when the pointer leaves first", () => {
-      const {changes, dispose, state} = setup({closeDelay: 500, delay: 1500});
+      const { changes, dispose, state } = setup({ closeDelay: 500, delay: 1500 });
 
       state.open();
       vi.advanceTimersByTime(1000);
@@ -87,7 +87,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("restarts the wait rather than stacking two", () => {
-      const {dispose, state} = setup({delay: 1500});
+      const { dispose, state } = setup({ delay: 1500 });
 
       state.open();
       vi.advanceTimersByTime(1000);
@@ -104,7 +104,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("animates the first tooltip in", () => {
-      const {dispose, state} = setup({delay: 1500});
+      const { dispose, state } = setup({ delay: 1500 });
 
       state.open();
       vi.advanceTimersByTime(1500);
@@ -118,7 +118,7 @@ describe("useTooltipTriggerState", () => {
 
   describe("close delay", () => {
     it("waits out the close delay before closing", () => {
-      const {dispose, state} = setup({closeDelay: 500, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 500, delay: 0 });
 
       state.open();
       state.close();
@@ -135,7 +135,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("closes at once when asked to", () => {
-      const {dispose, state} = setup({closeDelay: 500, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 500, delay: 0 });
 
       state.open();
       state.close(true);
@@ -146,7 +146,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("closes at once with no close delay configured", () => {
-      const {dispose, state} = setup({closeDelay: 0, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 0, delay: 0 });
 
       state.open();
       state.close();
@@ -157,7 +157,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("keeps the pending close rather than restarting it", () => {
-      const {dispose, state} = setup({closeDelay: 500, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 500, delay: 0 });
 
       state.open();
       state.close();
@@ -173,7 +173,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("cancels a pending close when it reopens", () => {
-      const {dispose, state} = setup({closeDelay: 500, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 500, delay: 0 });
 
       state.open();
       state.close();
@@ -189,8 +189,8 @@ describe("useTooltipTriggerState", () => {
 
   describe("shared warmup", () => {
     it("opens the second tooltip at once while one is on screen", () => {
-      const first = setup({delay: 1500});
-      const second = setup({delay: 1500});
+      const first = setup({ delay: 1500 });
+      const second = setup({ delay: 1500 });
 
       first.state.open();
       vi.advanceTimersByTime(1500);
@@ -207,8 +207,8 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("closes the tooltip it replaces at once", () => {
-      const first = setup({closeDelay: 500, delay: 1500});
-      const second = setup({closeDelay: 500, delay: 1500});
+      const first = setup({ closeDelay: 500, delay: 1500 });
+      const second = setup({ closeDelay: 500, delay: 1500 });
 
       first.state.open();
       vi.advanceTimersByTime(1500);
@@ -224,8 +224,8 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("waits again once the cooldown has run out", () => {
-      const first = setup({closeDelay: 500, delay: 1500});
-      const second = setup({delay: 1500});
+      const first = setup({ closeDelay: 500, delay: 1500 });
+      const second = setup({ delay: 1500 });
 
       first.state.open();
       vi.advanceTimersByTime(1500);
@@ -245,8 +245,8 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("measures the cooldown against the floor, not the tooltip's own close delay", () => {
-      const first = setup({closeDelay: 10, delay: 1500});
-      const second = setup({delay: 1500});
+      const first = setup({ closeDelay: 10, delay: 1500 });
+      const second = setup({ delay: 1500 });
 
       first.state.open();
       vi.advanceTimersByTime(1500);
@@ -263,8 +263,8 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("cancels the pending warmup when another tooltip takes over", () => {
-      const first = setup({delay: 1500});
-      const second = setup({delay: 1500});
+      const first = setup({ delay: 1500 });
+      const second = setup({ delay: 1500 });
 
       first.state.open();
       vi.advanceTimersByTime(1000);
@@ -288,7 +288,7 @@ describe("useTooltipTriggerState", () => {
   describe("lifetime", () => {
     it("leaves nothing in the registry when it goes away", () => {
       const before = getRegisteredTooltipCount();
-      const {dispose, state} = setup({delay: 0});
+      const { dispose, state } = setup({ delay: 0 });
 
       state.open();
       expect(getRegisteredTooltipCount()).toBe(before + 1);
@@ -301,7 +301,7 @@ describe("useTooltipTriggerState", () => {
     });
 
     it("drops a pending close when it goes away", () => {
-      const {dispose, state} = setup({closeDelay: 500, delay: 0});
+      const { dispose, state } = setup({ closeDelay: 500, delay: 0 });
 
       state.open();
       state.close();
@@ -314,7 +314,7 @@ describe("useTooltipTriggerState", () => {
   describe("controlled", () => {
     it("reports the change rather than opening itself", () => {
       const isOpen = shallowRef(false);
-      const {changes, dispose, state} = setup({delay: 0, isOpen});
+      const { changes, dispose, state } = setup({ delay: 0, isOpen });
 
       state.open();
 

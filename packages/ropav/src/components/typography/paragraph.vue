@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ParagraphProps, TypographyType} from "./typography.types";
+import type { ParagraphProps, TypographyType } from "./typography.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
 import TypographyRoot from "./typography-root.vue";
 
-const props = withDefaults(defineProps<ParagraphProps>(), {size: "base"});
+const props = withDefaults(defineProps<ParagraphProps>(), { size: "base" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const type = computed<TypographyType>(() =>
   props.size === "base" ? "body" : `body-${props.size}`,
@@ -16,7 +16,7 @@ const type = computed<TypographyType>(() =>
 
 <template>
   <TypographyRoot
-    v-bind="{slot: props.slot}"
+    v-bind="{ slot: props.slot }"
     :align="props.align"
     :class="props.class"
     :color="props.color"

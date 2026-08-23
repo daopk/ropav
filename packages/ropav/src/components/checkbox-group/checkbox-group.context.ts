@@ -1,8 +1,8 @@
-import type {CheckboxGroupState} from "../../composables/use-checkbox-group-state";
-import type {CheckboxVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { CheckboxGroupState } from "../../composables/use-checkbox-group-state";
+import type { CheckboxVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface CheckboxGroupContext {
   /** Selection and validation shared by every checkbox in the group. */

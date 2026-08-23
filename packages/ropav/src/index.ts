@@ -13,5 +13,5 @@ export * from "./utils";
 //  ===================================
 //  Version
 //  ===================================
-export {ROPAV_VERSION} from "./version";
-export {tv, cn, type VariantProps} from "tailwind-variants";
+export { ROPAV_VERSION } from "./version";
+export { tv, cn, type VariantProps } from "tailwind-variants";

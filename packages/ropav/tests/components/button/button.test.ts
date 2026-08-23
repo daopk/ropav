@@ -1,13 +1,13 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {Button} from "@/components/button";
+import { Button } from "@/components/button";
 
 const renderButton = (props: Record<string, unknown> = {}) =>
   renderVapor(Button, {
     props,
-    slots: {default: () => document.createTextNode("Press me")},
+    slots: { default: () => document.createTextNode("Press me") },
   });
 
 const buttonIn = (container: HTMLElement) => container.querySelector("button");
@@ -15,7 +15,7 @@ const buttonIn = (container: HTMLElement) => container.querySelector("button");
 describe("Button", () => {
   describe("structure", () => {
     it("renders a native button with its data-slot", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
       const button = buttonIn(container);
 
       expect(button).not.toBeNull();
@@ -25,9 +25,9 @@ describe("Button", () => {
     });
 
     it("renders slot content as its accessible name", () => {
-      const {getByRole, unmount} = renderButton();
+      const { getByRole, unmount } = renderButton();
 
-      expect(getByRole("button", {name: "Press me"})).toBeInTheDocument();
+      expect(getByRole("button", { name: "Press me" })).toBeInTheDocument();
 
       unmount();
     });
@@ -36,7 +36,7 @@ describe("Button", () => {
     // `:type` on a <button> to a DOM property write, and skips it when the value already
     // equals `el.type` — which reads "submit" by default even with no attribute set.
     it("defaults to type button so it never submits a form by accident", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
 
       expect(buttonIn(container)?.type).toBe("button");
 
@@ -44,7 +44,7 @@ describe("Button", () => {
     });
 
     it("supports an explicit type", () => {
-      const {container, unmount} = renderButton({type: "submit"});
+      const { container, unmount } = renderButton({ type: "submit" });
 
       expect(buttonIn(container)?.type).toBe("submit");
 
@@ -52,7 +52,7 @@ describe("Button", () => {
     });
 
     it("forwards unknown attributes to the button", () => {
-      const {container, unmount} = renderButton({"aria-label": "Save", "data-testid": "save"});
+      const { container, unmount } = renderButton({ "aria-label": "Save", "data-testid": "save" });
       const button = buttonIn(container);
 
       expect(button?.getAttribute("data-testid")).toBe("save");
@@ -64,7 +64,7 @@ describe("Button", () => {
 
   describe("styling", () => {
     it("renders the BEM block class", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
 
       expect(buttonIn(container)?.classList.contains("button")).toBe(true);
 
@@ -72,7 +72,7 @@ describe("Button", () => {
     });
 
     it("applies the default size and variant modifiers", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
       const button = buttonIn(container);
 
       expect(button?.classList.contains("button--md")).toBe(true);
@@ -87,7 +87,7 @@ describe("Button", () => {
       ["isIconOnly", true, "button--icon-only"],
       ["fullWidth", true, "button--full-width"],
     ])("applies the %s modifier class", (prop, value, expected) => {
-      const {container, unmount} = renderButton({[prop]: value});
+      const { container, unmount } = renderButton({ [prop]: value });
 
       expect(buttonIn(container)?.classList.contains(expected)).toBe(true);
 
@@ -95,7 +95,7 @@ describe("Button", () => {
     });
 
     it("merges a caller class", () => {
-      const {container, unmount} = renderButton({class: "shadow-lg"});
+      const { container, unmount } = renderButton({ class: "shadow-lg" });
       const button = buttonIn(container);
 
       expect(button?.classList.contains("button")).toBe(true);
@@ -107,7 +107,7 @@ describe("Button", () => {
 
   describe("disabled", () => {
     it("sets the native disabled attribute", () => {
-      const {container, unmount} = renderButton({isDisabled: true});
+      const { container, unmount } = renderButton({ isDisabled: true });
 
       expect(buttonIn(container)?.disabled).toBe(true);
 
@@ -115,7 +115,7 @@ describe("Button", () => {
     });
 
     it("omits the attribute when enabled, so CSS never sees a false value", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
 
       expect(buttonIn(container)?.hasAttribute("disabled")).toBe(false);
 
@@ -127,7 +127,7 @@ describe("Button", () => {
     // Written even though a native button is already tabbable: Safari does not focus one
     // unless an explicit tab index says so, which is why react-aria always sets it.
     it("renders an explicit tab index", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
 
       expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -135,7 +135,7 @@ describe("Button", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {container, unmount} = renderButton({isDisabled: true});
+      const { container, unmount } = renderButton({ isDisabled: true });
 
       expect(buttonIn(container)?.hasAttribute("tabindex")).toBe(false);
 
@@ -144,7 +144,7 @@ describe("Button", () => {
 
     // A pending button stays focusable rather than `disabled`, so it keeps its stop.
     it("keeps the tab index while pending", () => {
-      const {container, unmount} = renderButton({isPending: true});
+      const { container, unmount } = renderButton({ isPending: true });
 
       expect(buttonIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -154,7 +154,7 @@ describe("Button", () => {
 
   describe("pending", () => {
     it("exposes data-pending, which is what the CSS keys on", () => {
-      const {container, unmount} = renderButton({isPending: true});
+      const { container, unmount } = renderButton({ isPending: true });
 
       expect(buttonIn(container)?.getAttribute("data-pending")).toBe("true");
 
@@ -162,7 +162,7 @@ describe("Button", () => {
     });
 
     it("omits data-pending when idle", () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
 
       expect(buttonIn(container)?.hasAttribute("data-pending")).toBe(false);
 
@@ -170,7 +170,7 @@ describe("Button", () => {
     });
 
     it("stops being a submit button so a pending form cannot be submitted", () => {
-      const {container, unmount} = renderButton({isPending: true, type: "submit"});
+      const { container, unmount } = renderButton({ isPending: true, type: "submit" });
 
       expect(buttonIn(container)?.type).toBe("button");
 
@@ -178,7 +178,7 @@ describe("Button", () => {
     });
 
     it("keeps a non-submit type as it is", () => {
-      const {container, unmount} = renderButton({isPending: true, type: "reset"});
+      const { container, unmount } = renderButton({ isPending: true, type: "reset" });
 
       expect(buttonIn(container)?.type).toBe("reset");
 
@@ -186,7 +186,7 @@ describe("Button", () => {
     });
 
     it("marks itself aria-disabled while staying focusable", () => {
-      const {container, unmount} = renderButton({isPending: true});
+      const { container, unmount } = renderButton({ isPending: true });
       const button = buttonIn(container);
 
       expect(button?.getAttribute("aria-disabled")).toBe("true");
@@ -199,10 +199,10 @@ describe("Button", () => {
 
   describe("interaction states", () => {
     const pointerEvent = (type: string, init: PointerEventInit = {}) =>
-      new PointerEvent(type, {bubbles: true, button: 0, pointerType: "mouse", ...init});
+      new PointerEvent(type, { bubbles: true, button: 0, pointerType: "mouse", ...init });
 
     it("reports hover, which is what the stylesheet keys on", async () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
       const button = buttonIn(container)!;
 
       button.dispatchEvent(pointerEvent("pointerenter"));
@@ -219,7 +219,7 @@ describe("Button", () => {
     });
 
     it("reports press, and ends it when the pointer is released anywhere", async () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
       const button = buttonIn(container)!;
 
       button.dispatchEvent(pointerEvent("pointerdown"));
@@ -237,7 +237,7 @@ describe("Button", () => {
     });
 
     it("reports focus, and marks it visible only after a keyboard interaction", async () => {
-      const {container, unmount} = renderButton();
+      const { container, unmount } = renderButton();
       const button = buttonIn(container)!;
 
       document.dispatchEvent(pointerEvent("pointerdown"));
@@ -248,7 +248,7 @@ describe("Button", () => {
       expect(button.hasAttribute("data-focus-visible")).toBe(false);
 
       button.dispatchEvent(new FocusEvent("blur"));
-      document.dispatchEvent(new KeyboardEvent("keydown", {key: "Tab"}));
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
       button.dispatchEvent(new FocusEvent("focus"));
       await nextTick();
 
@@ -259,7 +259,7 @@ describe("Button", () => {
     });
 
     it("reports no hover or press while disabled", async () => {
-      const {container, unmount} = renderButton({isDisabled: true});
+      const { container, unmount } = renderButton({ isDisabled: true });
       const button = buttonIn(container)!;
 
       button.dispatchEvent(pointerEvent("pointerenter"));
@@ -273,7 +273,7 @@ describe("Button", () => {
     });
 
     it("reports no press while pending, which stays focusable", async () => {
-      const {container, unmount} = renderButton({isPending: true});
+      const { container, unmount } = renderButton({ isPending: true });
       const button = buttonIn(container)!;
 
       button.dispatchEvent(pointerEvent("pointerdown"));
@@ -287,7 +287,7 @@ describe("Button", () => {
     });
 
     it("exposes data-disabled alongside the native attribute", () => {
-      const {container, unmount} = renderButton({isDisabled: true});
+      const { container, unmount } = renderButton({ isDisabled: true });
 
       expect(buttonIn(container)?.getAttribute("data-disabled")).toBe("true");
 
@@ -296,9 +296,9 @@ describe("Button", () => {
 
     it("still forwards a caller's own pointer listener", async () => {
       const onPointerenter = vi.fn();
-      const {container, unmount} = renderVapor(Button, {
-        props: {onPointerenter},
-        slots: {default: () => document.createTextNode("Press me")},
+      const { container, unmount } = renderVapor(Button, {
+        props: { onPointerenter },
+        slots: { default: () => document.createTextNode("Press me") },
       });
       const button = buttonIn(container)!;
 
@@ -318,10 +318,10 @@ describe("Button", () => {
       document.querySelector('[data-slot="live-announcer"]')?.textContent;
 
     it("announces the transition while focused", async () => {
-      const props = reactive({isPending: false});
-      const {container, unmount} = renderVapor(Button, {
+      const props = reactive({ isPending: false });
+      const { container, unmount } = renderVapor(Button, {
         props,
-        slots: {default: () => document.createTextNode("Press me")},
+        slots: { default: () => document.createTextNode("Press me") },
       });
 
       buttonIn(container)!.dispatchEvent(new FocusEvent("focus"));
@@ -340,10 +340,10 @@ describe("Button", () => {
     });
 
     it("stays quiet when the button is not focused", async () => {
-      const props = reactive({isPending: false});
-      const {unmount} = renderVapor(Button, {
+      const props = reactive({ isPending: false });
+      const { unmount } = renderVapor(Button, {
         props,
-        slots: {default: () => document.createTextNode("Press me")},
+        slots: { default: () => document.createTextNode("Press me") },
       });
 
       props.isPending = true;
@@ -358,8 +358,8 @@ describe("Button", () => {
   describe("slot props", () => {
     it("hands its state to the default slot", async () => {
       const seen: Record<string, unknown>[] = [];
-      const {container, unmount} = renderVapor(Button, {
-        props: {isPending: true},
+      const { container, unmount } = renderVapor(Button, {
+        props: { isPending: true },
         slots: {
           default: (slotProps = {}) => {
             seen.push(slotProps);
@@ -378,12 +378,12 @@ describe("Button", () => {
       });
 
       buttonIn(container)!.dispatchEvent(
-        new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}),
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
       );
       await nextTick();
 
       // Slot props are read live, so content can follow the state without a rerender.
-      expect(seen.at(-1)).toMatchObject({isPending: true});
+      expect(seen.at(-1)).toMatchObject({ isPending: true });
 
       unmount();
     });
@@ -392,9 +392,9 @@ describe("Button", () => {
   describe("events", () => {
     it("emits click when activated", async () => {
       const onClick = vi.fn();
-      const {getByRole, unmount} = renderVapor(Button, {
-        props: {onClick},
-        slots: {default: () => document.createTextNode("Press me")},
+      const { getByRole, unmount } = renderVapor(Button, {
+        props: { onClick },
+        slots: { default: () => document.createTextNode("Press me") },
       });
 
       getByRole("button").click();
@@ -406,9 +406,9 @@ describe("Button", () => {
 
     it("does not emit click while pending", () => {
       const onClick = vi.fn();
-      const {getByRole, unmount} = renderVapor(Button, {
-        props: {isPending: true, onClick},
-        slots: {default: () => document.createTextNode("Press me")},
+      const { getByRole, unmount } = renderVapor(Button, {
+        props: { isPending: true, onClick },
+        slots: { default: () => document.createTextNode("Press me") },
       });
 
       getByRole("button").click();
@@ -420,9 +420,9 @@ describe("Button", () => {
 
     it("does not emit click while disabled", () => {
       const onClick = vi.fn();
-      const {getByRole, unmount} = renderVapor(Button, {
-        props: {isDisabled: true, onClick},
-        slots: {default: () => document.createTextNode("Press me")},
+      const { getByRole, unmount } = renderVapor(Button, {
+        props: { isDisabled: true, onClick },
+        slots: { default: () => document.createTextNode("Press me") },
       });
 
       getByRole("button").click();

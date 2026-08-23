@@ -1,26 +1,26 @@
 <script setup lang="ts" vapor generic="T">
-import type {UseComboBoxStateReturn} from "../../composables/use-combo-box-state";
-import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
-import type {SelectedValue} from "../../composables/use-select-state";
-import type {ComboBoxRootProps, ComboBoxRootSlotProps} from "./combo-box.types";
+import type { UseComboBoxStateReturn } from "../../composables/use-combo-box-state";
+import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
+import type { SelectedValue } from "../../composables/use-select-state";
+import type { ComboBoxRootProps, ComboBoxRootSlotProps } from "./combo-box.types";
 
-import {comboBoxVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { comboBoxVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useComboBox} from "../../composables/use-combo-box";
-import {useComboBoxState} from "../../composables/use-combo-box-state";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useLocale} from "../../composables/use-locale";
-import {provideTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
-import {provideListBoxStateContext} from "../list-box";
-import {provideOverlayTargetContext} from "../overlay";
-import {provideTextFieldContext} from "../textfield/textfield.context";
+import { providePressResponder } from "../../composables/press-responder";
+import { useComboBox } from "../../composables/use-combo-box";
+import { useComboBoxState } from "../../composables/use-combo-box-state";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useLocale } from "../../composables/use-locale";
+import { provideTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
+import { provideListBoxStateContext } from "../list-box";
+import { provideOverlayTargetContext } from "../overlay";
+import { provideTextFieldContext } from "../textfield/textfield.context";
 
 import ComboBoxHiddenInput from "./combo-box-hidden-input.vue";
-import {provideComboBoxContext} from "./combo-box.context";
+import { provideComboBoxContext } from "./combo-box.context";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -57,7 +57,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: ComboBoxRootSlotProps<T>) => unknown}>();
+defineSlots<{ default?: (props: ComboBoxRootSlotProps<T>) => unknown }>();
 
 const state = useComboBoxState<T>({
   allowsCustomValue: () => props.allowsCustomValue,
@@ -157,7 +157,7 @@ const selectedText = computed(() => {
   return new Intl.ListFormat(locale.value.locale).format(texts);
 });
 
-const styles = computed(() => comboBoxVariants({fullWidth: props.fullWidth}));
+const styles = computed(() => comboBoxVariants({ fullWidth: props.fullWidth }));
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
 
@@ -171,7 +171,7 @@ const isDisabled = computed(() => Boolean(props.isDisabled));
 const matches = computed(() => state.displayedItems.value as readonly T[]);
 
 provideFieldIdsContext(comboBox.fieldIds);
-provideFieldErrorContext({validation: state.displayValidation});
+provideFieldErrorContext({ validation: state.displayValidation });
 
 /**
  * The plain `Input` is the combo box's field.
@@ -184,7 +184,7 @@ provideTextFieldControlContext(comboBox.control);
 
 // Carries the variant alone, which is the one thing the `Input` inside styles itself from. The
 // React build routes it through its own combo box context for the same purpose.
-provideTextFieldContext({variant: computed(() => props.variant)});
+provideTextFieldContext({ variant: computed(() => props.variant) });
 
 provideComboBoxContext({
   comboBox,
@@ -257,7 +257,7 @@ providePressResponder(comboBox.triggerResponder);
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(props.isDisabled)"
     :data-focused="dataAttr(state.isFocused.value)"
     :data-invalid="dataAttr(comboBox.isInvalid.value)"

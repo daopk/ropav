@@ -1,14 +1,14 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import AlertDialogOverridesFixture from "./fixtures-overrides.vue";
 import AlertDialogFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(AlertDialogFixture, {props});
+  const result = renderVapor(AlertDialogFixture, { props });
 
   mounted.push(result);
 
@@ -37,18 +37,18 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** An outside interaction is two events: a pointerdown marks it, and the click dismisses. */
 const pressOutside = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
-  element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: name}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: name }));
+  element.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: name }));
 };
 
 /**
@@ -92,7 +92,7 @@ describe("AlertDialog", () => {
     it("renders nothing but the trigger while closed", () => {
       const result = render();
 
-      expect(result.screen.getByRole("button", {name: "Delete account"})).toBeTruthy();
+      expect(result.screen.getByRole("button", { name: "Delete account" })).toBeTruthy();
       expect(result.screen.queryByRole("alertdialog")).toBeNull();
       expect(slot("alert-dialog-backdrop")).toBeNull();
 
@@ -100,7 +100,7 @@ describe("AlertDialog", () => {
     });
 
     it("renders the dialog outside the app root", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -115,7 +115,7 @@ describe("AlertDialog", () => {
     });
 
     it("announces itself as an alert rather than a plain dialog", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -130,7 +130,7 @@ describe("AlertDialog", () => {
     });
 
     it("nests backdrop, container and dialog in that order", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -146,7 +146,7 @@ describe("AlertDialog", () => {
     });
 
     it("carries the block classes", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -169,7 +169,7 @@ describe("AlertDialog", () => {
       portal.id = "portal";
       document.body.appendChild(portal);
 
-      const result = render({defaultOpen: true, portalContainer: portal});
+      const result = render({ defaultOpen: true, portalContainer: portal });
 
       await settle();
 
@@ -184,7 +184,7 @@ describe("AlertDialog", () => {
     it("opens on a press of the trigger", async () => {
       const result = render();
 
-      press(result.screen.getByRole("button", {name: "Delete account"}));
+      press(result.screen.getByRole("button", { name: "Delete account" }));
       await settle();
 
       expect(result.screen.queryByRole("alertdialog")).toBeTruthy();
@@ -211,7 +211,7 @@ describe("AlertDialog", () => {
     });
 
     it("exposes a focusable button role for markup that is not pressable", async () => {
-      const result = render({withCustomTrigger: true});
+      const result = render({ withCustomTrigger: true });
       const trigger = slot("alert-dialog-trigger")!;
 
       expect(trigger.getAttribute("role")).toBe("button");
@@ -229,7 +229,7 @@ describe("AlertDialog", () => {
 
   describe("dismissal", () => {
     it("ignores Escape", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -244,7 +244,7 @@ describe("AlertDialog", () => {
     });
 
     it("ignores a press outside the dialog", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -286,7 +286,7 @@ describe("AlertDialog", () => {
     });
 
     it("closes on a press outside once dismissing is asked for", async () => {
-      const result = render({defaultOpen: true, isDismissable: true});
+      const result = render({ defaultOpen: true, isDismissable: true });
 
       await settle();
 
@@ -299,7 +299,7 @@ describe("AlertDialog", () => {
     });
 
     it("ignores a press inside the dialog", async () => {
-      const result = render({defaultOpen: true, isDismissable: true});
+      const result = render({ defaultOpen: true, isDismissable: true });
 
       await settle();
 
@@ -312,7 +312,7 @@ describe("AlertDialog", () => {
     });
 
     it("needs the click as well as the pointerdown", async () => {
-      const result = render({defaultOpen: true, isDismissable: true});
+      const result = render({ defaultOpen: true, isDismissable: true });
 
       await settle();
 
@@ -326,7 +326,7 @@ describe("AlertDialog", () => {
     });
 
     it("leaves an element the caller exempted alone", async () => {
-      const result = render({defaultOpen: true, isDismissable: true, keepOpenFor: "outside"});
+      const result = render({ defaultOpen: true, isDismissable: true, keepOpenFor: "outside" });
 
       await settle();
 
@@ -339,7 +339,7 @@ describe("AlertDialog", () => {
     });
 
     it("renders no dismiss button for a screen reader by default", async () => {
-      const fixed = render({defaultOpen: true});
+      const fixed = render({ defaultOpen: true });
 
       await settle();
 
@@ -351,7 +351,7 @@ describe("AlertDialog", () => {
 
       fixed.unmount();
 
-      const dismissable = render({defaultOpen: true, isDismissable: true});
+      const dismissable = render({ defaultOpen: true, isDismissable: true });
 
       await settle();
 
@@ -364,7 +364,7 @@ describe("AlertDialog", () => {
     });
 
     it("closes from the dialog's own slot", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -379,7 +379,7 @@ describe("AlertDialog", () => {
 
   describe("focus", () => {
     it("focuses the dialog when it opens", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -412,7 +412,7 @@ describe("AlertDialog", () => {
 
   describe("the page behind", () => {
     it("hides everything outside the container from assistive technology", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -430,7 +430,7 @@ describe("AlertDialog", () => {
     });
 
     it("holds the page still while it is open", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -468,7 +468,7 @@ describe("AlertDialog", () => {
 
   describe("parts", () => {
     it("renders every part with its own slot and class", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true, withIcon: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true, withIcon: true });
 
       await settle();
 
@@ -492,7 +492,7 @@ describe("AlertDialog", () => {
     });
 
     it("renders the heading two levels down", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -503,7 +503,7 @@ describe("AlertDialog", () => {
 
     it("carries the size modifier the container decided", async () => {
       for (const size of ["xs", "sm", "md", "lg", "cover"] as const) {
-        const result = render({defaultOpen: true, size});
+        const result = render({ defaultOpen: true, size });
 
         await settle();
 
@@ -518,7 +518,7 @@ describe("AlertDialog", () => {
     });
 
     it("defaults to the medium size", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -531,7 +531,7 @@ describe("AlertDialog", () => {
 
     it("carries the backdrop variant the backdrop decided", async () => {
       for (const variant of ["opaque", "blur", "transparent"] as const) {
-        const result = render({defaultOpen: true, variant});
+        const result = render({ defaultOpen: true, variant });
 
         await settle();
 
@@ -546,7 +546,7 @@ describe("AlertDialog", () => {
     });
 
     it("defaults to an opaque backdrop", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -558,7 +558,7 @@ describe("AlertDialog", () => {
     });
 
     it("reports the placement on the container and the dialog", async () => {
-      const result = render({defaultOpen: true, placement: "top"});
+      const result = render({ defaultOpen: true, placement: "top" });
 
       await settle();
 
@@ -570,7 +570,7 @@ describe("AlertDialog", () => {
     });
 
     it("places automatically by default", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -583,7 +583,7 @@ describe("AlertDialog", () => {
 
   describe("the icon", () => {
     it("warns by default", async () => {
-      const result = render({defaultOpen: true, withIcon: true});
+      const result = render({ defaultOpen: true, withIcon: true });
 
       await settle();
 
@@ -597,7 +597,7 @@ describe("AlertDialog", () => {
 
     it("takes its colours from its own status", async () => {
       for (const status of ["default", "accent", "success", "warning", "danger"] as const) {
-        const result = render({defaultOpen: true, iconStatus: status, withIcon: true});
+        const result = render({ defaultOpen: true, iconStatus: status, withIcon: true });
 
         await settle();
 
@@ -637,7 +637,7 @@ describe("AlertDialog", () => {
       const seen = new Map<string, string>();
 
       for (const status of ["default", "accent", "success", "warning", "danger"] as const) {
-        const result = render({defaultOpen: true, iconStatus: status, withIcon: true});
+        const result = render({ defaultOpen: true, iconStatus: status, withIcon: true });
 
         await settle();
 
@@ -657,7 +657,7 @@ describe("AlertDialog", () => {
     });
 
     it("gives way to a caller's own icon", async () => {
-      const result = render({defaultOpen: true, withCustomIcon: true, withIcon: true});
+      const result = render({ defaultOpen: true, withCustomIcon: true, withIcon: true });
 
       await settle();
 
@@ -670,7 +670,7 @@ describe("AlertDialog", () => {
 
   describe("labelling", () => {
     it("names the dialog by its heading", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -685,7 +685,7 @@ describe("AlertDialog", () => {
     });
 
     it("names the dialog by its trigger when nothing inside does", async () => {
-      const result = render({defaultOpen: true, withoutHeading: true});
+      const result = render({ defaultOpen: true, withoutHeading: true });
 
       await settle();
 
@@ -699,7 +699,7 @@ describe("AlertDialog", () => {
     });
 
     it("describes the dialog with nothing", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -714,7 +714,7 @@ describe("AlertDialog", () => {
 
   describe("closing", () => {
     it("names the close trigger without being told to", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -740,7 +740,7 @@ describe("AlertDialog", () => {
     });
 
     it("closes from the close trigger", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -753,13 +753,13 @@ describe("AlertDialog", () => {
     });
 
     it("closes from a wrapped button and still runs its own handler", async () => {
-      const result = render({defaultOpen: true, withCloseWrapper: true});
+      const result = render({ defaultOpen: true, withCloseWrapper: true });
 
       await settle();
 
       expect(result.screen.getByTestId("removed").textContent).toBe("kept");
 
-      press(result.screen.getByRole("button", {name: "Delete"}));
+      press(result.screen.getByRole("button", { name: "Delete" }));
       await settle();
 
       // Both, in that order: the wrapper's close is chained ahead of the button's own handler, the
@@ -771,11 +771,11 @@ describe("AlertDialog", () => {
     });
 
     it("leaves an unmarked button inside alone", async () => {
-      const result = render({defaultOpen: true, withInsideButton: true});
+      const result = render({ defaultOpen: true, withInsideButton: true });
 
       await settle();
 
-      const inside = result.screen.getByRole("button", {name: "Learn more"});
+      const inside = result.screen.getByRole("button", { name: "Learn more" });
 
       // Opt-in, and it matters more here than for a modal: Cancel and Confirm sit side by side in
       // the footer, and only one of them is an answer.
@@ -793,7 +793,7 @@ describe("AlertDialog", () => {
 
   describe("animation state", () => {
     it("reports entry as a string rather than an empty attribute", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 

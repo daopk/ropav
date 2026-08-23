@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {CalendarGridBodyProps, CalendarGridBodySlotProps} from "./calendar.types";
-import type {CalendarDate} from "@internationalized/date";
+import type { CalendarGridBodyProps, CalendarGridBodySlotProps } from "./calendar.types";
+import type { CalendarDate } from "@internationalized/date";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {getDayViewGridRows} from "../../utils/calendar";
+import { useLocale } from "../../composables/use-locale";
+import { getDayViewGridRows } from "../../utils/calendar";
 
 import {
   useCalendarContext,
@@ -15,14 +15,14 @@ import {
 
 const props = defineProps<CalendarGridBodyProps>();
 
-defineSlots<{default?: (props: CalendarGridBodySlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarGridBodySlotProps) => unknown }>();
 
-const {dayView, slots} = useCalendarContext();
-const {startDate, weeksInMonth} = useCalendarGridContext();
-const {state} = useCalendarStateContext();
+const { dayView, slots } = useCalendarContext();
+const { startDate, weeksInMonth } = useCalendarGridContext();
+const { state } = useCalendarStateContext();
 const locale = useLocale();
 
-const styles = computed(() => slots.value.gridBody({class: props.class}));
+const styles = computed(() => slots.value.gridBody({ class: props.class }));
 
 /**
  * A day view spanning a week or more lays its own rows out.
@@ -48,7 +48,7 @@ const rows = computed<(CalendarDate | null)[][]>(() => {
     ) as (CalendarDate | null)[][];
   }
 
-  return Array.from({length: weeksInMonth.value}, (_, week) =>
+  return Array.from({ length: weeksInMonth.value }, (_, week) =>
     state.getDatesInWeek(week, startDate.value),
   );
 });

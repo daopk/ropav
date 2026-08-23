@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {ToggleButtonRootProps, ToggleButtonSlotProps} from "./toggle-button.types";
+import type { ToggleButtonRootProps, ToggleButtonSlotProps } from "./toggle-button.types";
 
-import {toggleButtonVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { toggleButtonVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useControllableState} from "../../composables/use-controllable-state";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
-import {useToggleButtonGroupContext} from "../toggle-button-group/toggle-button-group.context";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
+import { useToggleButtonGroupContext } from "../toggle-button-group/toggle-button-group.context";
 
 // These booleans declare an explicit `undefined` default so an absent prop stays absent:
 // Vue otherwise casts a missing boolean to `false`, which reads as "the caller set false".
@@ -26,7 +26,7 @@ const emit = defineEmits<{
   click: [event: MouseEvent];
 }>();
 
-defineSlots<{default?: (props: ToggleButtonSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ToggleButtonSlotProps) => unknown }>();
 
 const group = useToggleButtonGroupContext();
 const fieldset = useFieldsetContext();
@@ -74,7 +74,7 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => resolvedIsDisabled.value});
+} = useInteractionStates({ isDisabled: () => resolvedIsDisabled.value });
 
 /**
  * Single selection turns the group into a set of mutually exclusive choices, which is a

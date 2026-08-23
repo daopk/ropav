@@ -1,13 +1,13 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import ModalFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(ModalFixture, {props});
+  const result = renderVapor(ModalFixture, { props });
 
   mounted.push(result);
 
@@ -28,18 +28,18 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** An outside interaction is two events: a pointerdown marks it, and the click dismisses. */
 const pressOutside = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
-  element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: name}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: name }));
+  element.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: name }));
 };
 
 /**
@@ -81,7 +81,7 @@ describe("Modal", () => {
     it("renders nothing but the trigger while closed", () => {
       const result = render();
 
-      expect(result.screen.getByRole("button", {name: "Open modal"})).toBeTruthy();
+      expect(result.screen.getByRole("button", { name: "Open modal" })).toBeTruthy();
       expect(result.screen.queryByRole("dialog")).toBeNull();
       expect(slot("modal-backdrop")).toBeNull();
 
@@ -89,7 +89,7 @@ describe("Modal", () => {
     });
 
     it("renders the modal outside the app root", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -104,7 +104,7 @@ describe("Modal", () => {
     });
 
     it("nests backdrop, container and dialog in that order", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -120,7 +120,7 @@ describe("Modal", () => {
     });
 
     it("carries the block classes", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -137,7 +137,7 @@ describe("Modal", () => {
       portal.id = "portal";
       document.body.appendChild(portal);
 
-      const result = render({defaultOpen: true, portalContainer: portal});
+      const result = render({ defaultOpen: true, portalContainer: portal });
 
       await settle();
 
@@ -151,7 +151,7 @@ describe("Modal", () => {
   describe("opening", () => {
     it("opens on a press of the trigger", async () => {
       const result = render();
-      const trigger = result.screen.getByRole("button", {name: "Open modal"});
+      const trigger = result.screen.getByRole("button", { name: "Open modal" });
 
       press(trigger);
       await settle();
@@ -180,7 +180,7 @@ describe("Modal", () => {
     });
 
     it("names the dialog by its trigger when nothing inside does", async () => {
-      const result = render({withoutHeading: true});
+      const result = render({ withoutHeading: true });
       const trigger = result.container.querySelector("[data-slot='button']")!;
 
       press(trigger);
@@ -194,7 +194,7 @@ describe("Modal", () => {
     });
 
     it("exposes a focusable button role for markup that is not pressable", async () => {
-      const result = render({withCustomTrigger: true});
+      const result = render({ withCustomTrigger: true });
       const trigger = slot("modal-trigger")!;
 
       expect(trigger.getAttribute("role")).toBe("button");
@@ -212,7 +212,7 @@ describe("Modal", () => {
 
   describe("dismissal", () => {
     it("closes on Escape", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -225,7 +225,7 @@ describe("Modal", () => {
     });
 
     it("keeps Escape working when dismissing by press is off", async () => {
-      const result = render({defaultOpen: true, isDismissable: false});
+      const result = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -240,7 +240,7 @@ describe("Modal", () => {
     });
 
     it("ignores Escape when keyboard dismissal is off", async () => {
-      const result = render({defaultOpen: true, isKeyboardDismissDisabled: true});
+      const result = render({ defaultOpen: true, isKeyboardDismissDisabled: true });
 
       await settle();
 
@@ -253,7 +253,7 @@ describe("Modal", () => {
     });
 
     it("closes on a press outside the dialog", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -268,7 +268,7 @@ describe("Modal", () => {
     });
 
     it("ignores a press outside when dismissing is off", async () => {
-      const result = render({defaultOpen: true, isDismissable: false});
+      const result = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -281,7 +281,7 @@ describe("Modal", () => {
     });
 
     it("ignores a press inside the dialog", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -294,7 +294,7 @@ describe("Modal", () => {
     });
 
     it("needs the click as well as the pointerdown", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -308,7 +308,7 @@ describe("Modal", () => {
     });
 
     it("leaves an element the caller exempted alone", async () => {
-      const result = render({defaultOpen: true, keepOpenFor: "outside"});
+      const result = render({ defaultOpen: true, keepOpenFor: "outside" });
 
       await settle();
 
@@ -321,7 +321,7 @@ describe("Modal", () => {
     });
 
     it("renders a dismiss button for a screen reader only while dismissable", async () => {
-      const dismissable = render({defaultOpen: true});
+      const dismissable = render({ defaultOpen: true });
 
       await settle();
 
@@ -334,7 +334,7 @@ describe("Modal", () => {
 
       dismissable.unmount();
 
-      const fixed = render({defaultOpen: true, isDismissable: false});
+      const fixed = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -344,7 +344,7 @@ describe("Modal", () => {
     });
 
     it("closes from the dialog's own slot", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -359,7 +359,7 @@ describe("Modal", () => {
 
   describe("focus", () => {
     it("focuses the dialog when it opens", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -392,7 +392,7 @@ describe("Modal", () => {
 
   describe("the page behind", () => {
     it("hides everything outside the container from assistive technology", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -410,7 +410,7 @@ describe("Modal", () => {
     });
 
     it("holds the page still while it is open", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -448,7 +448,7 @@ describe("Modal", () => {
 
   describe("parts", () => {
     it("renders every part with its own slot and class", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true, withIcon: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true, withIcon: true });
 
       await settle();
 
@@ -472,7 +472,7 @@ describe("Modal", () => {
     });
 
     it("renders the heading two levels down", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -484,7 +484,7 @@ describe("Modal", () => {
     });
 
     it("carries the size and scroll modifiers the container decided", async () => {
-      const result = render({defaultOpen: true, scroll: "outside", size: "lg"});
+      const result = render({ defaultOpen: true, scroll: "outside", size: "lg" });
 
       await settle();
 
@@ -501,7 +501,7 @@ describe("Modal", () => {
     });
 
     it("defaults to the medium size scrolling inside", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -513,7 +513,7 @@ describe("Modal", () => {
     });
 
     it("carries the backdrop variant the backdrop decided", async () => {
-      const result = render({defaultOpen: true, variant: "blur"});
+      const result = render({ defaultOpen: true, variant: "blur" });
 
       await settle();
 
@@ -523,7 +523,7 @@ describe("Modal", () => {
     });
 
     it("defaults to an opaque backdrop", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -533,7 +533,7 @@ describe("Modal", () => {
     });
 
     it("reports the placement on the container and the dialog", async () => {
-      const result = render({defaultOpen: true, placement: "top"});
+      const result = render({ defaultOpen: true, placement: "top" });
 
       await settle();
 
@@ -545,7 +545,7 @@ describe("Modal", () => {
     });
 
     it("places automatically by default", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -558,7 +558,7 @@ describe("Modal", () => {
 
   describe("labelling", () => {
     it("names the dialog by its heading", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -572,7 +572,7 @@ describe("Modal", () => {
     });
 
     it("hands out no heading id when there is no heading", async () => {
-      const result = render({defaultOpen: true, withoutHeading: true});
+      const result = render({ defaultOpen: true, withoutHeading: true });
 
       await settle();
 
@@ -588,7 +588,7 @@ describe("Modal", () => {
 
   describe("closing", () => {
     it("names the close trigger without being told to", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -614,7 +614,7 @@ describe("Modal", () => {
     });
 
     it("closes from the close trigger", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -627,13 +627,13 @@ describe("Modal", () => {
     });
 
     it("closes from a wrapped button and still runs its own handler", async () => {
-      const result = render({defaultOpen: true, withCloseWrapper: true});
+      const result = render({ defaultOpen: true, withCloseWrapper: true });
 
       await settle();
 
       expect(result.screen.getByTestId("saved").textContent).toBe("not saved");
 
-      press(result.screen.getByRole("button", {name: "Confirm"}));
+      press(result.screen.getByRole("button", { name: "Confirm" }));
       await settle();
 
       // Both, in that order: the wrapper's close is chained ahead of the button's own handler, the
@@ -645,11 +645,11 @@ describe("Modal", () => {
     });
 
     it("leaves an unmarked button inside alone", async () => {
-      const result = render({defaultOpen: true, withInsideButton: true});
+      const result = render({ defaultOpen: true, withInsideButton: true });
 
       await settle();
 
-      const inside = result.screen.getByRole("button", {name: "Inside action"});
+      const inside = result.screen.getByRole("button", { name: "Inside action" });
 
       // Opt-in, matching React: the default slot carries nothing, so an ordinary button in a
       // footer does not close the dialog.
@@ -667,7 +667,7 @@ describe("Modal", () => {
 
   describe("animation state", () => {
     it("reports entry as a string rather than an empty attribute", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 

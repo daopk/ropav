@@ -1,10 +1,10 @@
-import {dirname, join} from "node:path";
-import {fileURLToPath} from "node:url";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import {defineConfig, mergeConfig} from "vitest/config";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-import {baseConfig} from "./base.mjs";
-import {createBrowserConfig} from "./browser.mjs";
+import { baseConfig } from "./base.mjs";
+import { createBrowserConfig } from "./browser.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const setupFile = join(__dirname, "../setup/vue.ts");
@@ -17,13 +17,13 @@ const browserSetupFile = join(__dirname, "../setup/browser-vue.ts");
  * imports nothing — aliasing the plain `esm-bundler` entry instead pulls in the whole
  * `@vue/*` family and loses named exports across the CJS interop boundary.
  */
-const vaporAlias = {vue: "vue/dist/vue.runtime-with-vapor.esm-browser.js"};
+const vaporAlias = { vue: "vue/dist/vue.runtime-with-vapor.esm-browser.js" };
 
 /** jsdom defaults for Vue Vapor UI packages. */
 export const vueConfig = mergeConfig(
   baseConfig,
   defineConfig({
-    resolve: {alias: vaporAlias},
+    resolve: { alias: vaporAlias },
     test: {
       environment: "jsdom",
       globals: true,
@@ -37,6 +37,6 @@ export const vueConfig = mergeConfig(
 export const vueBrowserConfig = mergeConfig(
   createBrowserConfig(browserSetupFile),
   defineConfig({
-    resolve: {alias: vaporAlias},
+    resolve: { alias: vaporAlias },
   }),
 );

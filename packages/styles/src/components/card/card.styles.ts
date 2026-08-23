@@ -1,6 +1,6 @@
-import type {VariantProps} from "tailwind-variants";
+import type { VariantProps } from "tailwind-variants";
 
-import {tv} from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 const cardVariants = tv({
   defaultVariants: {
@@ -32,5 +32,5 @@ const cardVariants = tv({
   },
 });
 
-export {cardVariants};
+export { cardVariants };
 export type CardVariants = VariantProps<typeof cardVariants>;

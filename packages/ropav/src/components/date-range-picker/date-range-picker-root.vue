@@ -1,32 +1,32 @@
 <script setup lang="ts" vapor>
-import type {DateRange} from "../../composables/use-calendar";
-import type {DateRangePickerFieldOptions} from "../../composables/use-date-range-picker";
-import type {DateFieldControl} from "../date-input-group";
+import type { DateRange } from "../../composables/use-calendar";
+import type { DateRangePickerFieldOptions } from "../../composables/use-date-range-picker";
+import type { DateFieldControl } from "../date-input-group";
 import type {
   DateRangePickerRootProps,
   DateRangePickerRootSlotProps,
 } from "./date-range-picker.types";
 
-import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
-import {dateRangePickerVariants} from "@ropav/styles";
-import {computed, onScopeDispose, shallowRef, watch} from "vue";
+import { createCalendar as defaultCreateCalendar } from "@internationalized/date";
+import { dateRangePickerVariants } from "@ropav/styles";
+import { computed, onScopeDispose, shallowRef, watch } from "vue";
 
-import {useDateField} from "../../composables/use-date-field";
-import {useDateFieldState} from "../../composables/use-date-field-state";
-import {useDateRangePicker} from "../../composables/use-date-range-picker";
-import {useDateRangePickerState} from "../../composables/use-date-range-picker-state";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useFocusWithin} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useDateField } from "../../composables/use-date-field";
+import { useDateFieldState } from "../../composables/use-date-field-state";
+import { useDateRangePicker } from "../../composables/use-date-range-picker";
+import { useDateRangePickerState } from "../../composables/use-date-range-picker-state";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useFocusWithin } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 import {
   provideDateFieldControlContext,
   provideDateInputGroupOwnerContext,
 } from "../date-input-group";
-import {provideFieldErrorContext} from "../field-error";
-import {provideOverlayTargetContext} from "../overlay";
-import {provideRangeCalendarOwnerContext} from "../range-calendar";
+import { provideFieldErrorContext } from "../field-error";
+import { provideOverlayTargetContext } from "../overlay";
+import { provideRangeCalendarOwnerContext } from "../range-calendar";
 
-import {provideDateRangePickerContext} from "./date-range-picker.context";
+import { provideDateRangePickerContext } from "./date-range-picker.context";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -54,7 +54,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: DateRangePickerRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: DateRangePickerRootSlotProps) => unknown }>();
 
 const state = useDateRangePickerState({
   defaultOpen: props.defaultOpen,
@@ -179,7 +179,7 @@ const start = buildField("start", picker.startField);
 const end = buildField("end", picker.endField);
 
 const slots = computed(() => dateRangePickerVariants());
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 const triggerElement = shallowRef<HTMLElement | null>(null);
 
@@ -265,8 +265,8 @@ provideDateInputGroupOwnerContext({
     groupElement.value = next;
   },
 });
-provideFieldErrorContext({validation: state.displayValidation});
-provideRangeCalendarOwnerContext({props: picker.calendarProps});
+provideFieldErrorContext({ validation: state.displayValidation });
+provideRangeCalendarOwnerContext({ props: picker.calendarProps });
 
 provideOverlayTargetContext({
   // A dialog has no direction to carry into it, and the calendar inside takes focus itself.

@@ -1,14 +1,14 @@
-import type {PressResponder} from "./press-responder";
-import type {OverlayType} from "./use-overlay-trigger";
-import type {FocusStrategy, MenuTriggerState} from "./use-overlay-trigger-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PressResponder } from "./press-responder";
+import type { OverlayType } from "./use-overlay-trigger";
+import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {useId} from "./use-id";
-import {useLongPress} from "./use-long-press";
-import {useOverlayTrigger} from "./use-overlay-trigger";
-import {usePress} from "./use-press";
+import { useId } from "./use-id";
+import { useLongPress } from "./use-long-press";
+import { useOverlayTrigger } from "./use-overlay-trigger";
+import { usePress } from "./use-press";
 
 /** How the menu is opened. */
 export type MenuTriggerType = "press" | "longPress";
@@ -81,11 +81,14 @@ export const useMenuTrigger = (
   const triggerType = computed(() => toValue(options.trigger) ?? "press");
   const isLongPress = computed(() => triggerType.value === "longPress");
 
-  const {overlayId, triggerAttributes} = useOverlayTrigger({type: options.type ?? "menu"}, state);
+  const { overlayId, triggerAttributes } = useOverlayTrigger(
+    { type: options.type ?? "menu" },
+    state,
+  );
 
   /** Focus the trigger before opening, so focus has somewhere to come back to on close. */
   const focusTrigger = () => {
-    element.value?.focus({preventScroll: true});
+    element.value?.focus({ preventScroll: true });
   };
 
   const press = usePress({

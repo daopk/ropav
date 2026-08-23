@@ -4,10 +4,10 @@ import type {
   Granularity,
   MaxGranularity,
 } from "../utils/date-format";
-import type {DateSegmentType, HourCycle, SegmentLimits} from "../utils/incomplete-date";
-import type {FormValidationState, ValidationBehavior} from "./use-form-validation-state";
-import type {Calendar, CalendarIdentifier, DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DateSegmentType, HourCycle, SegmentLimits } from "../utils/incomplete-date";
+import type { FormValidationState, ValidationBehavior } from "./use-form-validation-state";
+import type { Calendar, CalendarIdentifier, DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import {
   DateFormatter,
@@ -15,18 +15,18 @@ import {
   isEqualCalendar,
   toCalendar,
 } from "@internationalized/date";
-import {NumberFormatter} from "@internationalized/number";
-import {computed, shallowRef, toValue} from "vue";
+import { NumberFormatter } from "@internationalized/number";
+import { computed, shallowRef, toValue } from "vue";
 
-import {convertValue, createPlaceholderDate, getFormatOptions} from "../utils/date-format";
-import {getDatePlaceholder} from "../utils/date-placeholder";
-import {getDateValidationResult} from "../utils/date-validation";
-import {IncompleteDate} from "../utils/incomplete-date";
+import { convertValue, createPlaceholderDate, getFormatOptions } from "../utils/date-format";
+import { getDatePlaceholder } from "../utils/date-placeholder";
+import { getDateValidationResult } from "../utils/date-validation";
+import { IncompleteDate } from "../utils/incomplete-date";
 
-import {useControllableState} from "./use-controllable-state";
-import {useDefaultDateProps} from "./use-default-date-props";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useLocale} from "./use-locale";
+import { useControllableState } from "./use-controllable-state";
+import { useDefaultDateProps } from "./use-default-date-props";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useLocale } from "./use-locale";
 
 export interface DateSegment extends Partial<SegmentLimits> {
   /** Which part of the date this is. */
@@ -159,7 +159,7 @@ export interface DateFieldState extends FormValidationState {
  * up to a date that survives its own validation.
  */
 export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldState => {
-  const {createCalendar} = options;
+  const { createCalendar } = options;
   const resolvedLocale = useLocale();
   const locale = computed(() => toValue(options.locale) ?? resolvedLocale.value.locale);
 
@@ -179,7 +179,7 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
 
   // Shared with both pickers rather than worked out here: all three have to agree on how precise
   // the control is, or a picker would drop the time its own field is showing segments for.
-  const {defaultTimeZone, granularity} = useDefaultDateProps(shape, () =>
+  const { defaultTimeZone, granularity } = useDefaultDateProps(shape, () =>
     toValue(options.granularity),
   );
 
@@ -204,7 +204,7 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
   const calendar = computed(() => calendarAndHourCycle.value[0]);
   const hourCycle = computed(() => calendarAndHourCycle.value[1]);
 
-  const {setState: setDate, state: value} = useControllableState<DateValue | null>({
+  const { setState: setDate, state: value } = useControllableState<DateValue | null>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -447,7 +447,7 @@ export const useDateFieldState = (options: UseDateFieldStateOptions): DateFieldS
     getDateFormatter: (formatterLocale, formatOptions) =>
       new DateFormatter(
         formatterLocale,
-        getFormatOptions({}, {...formatOpts.value, ...formatOptions}),
+        getFormatOptions({}, { ...formatOpts.value, ...formatOptions }),
       ),
     granularity,
     increment: (type) => adjustSegment(type, 1),
@@ -490,7 +490,7 @@ const processSegments = (
   granularity: Granularity,
 ): DateSegment[] => {
   const parts = dateFormatter.formatToParts(dateValue);
-  const numberFormatter = new NumberFormatter(locale, {useGrouping: false});
+  const numberFormatter = new NumberFormatter(locale, { useGrouping: false });
   const twoDigitFormatter = new NumberFormatter(locale, {
     minimumIntegerDigits: 2,
     useGrouping: false,
@@ -507,7 +507,7 @@ const processSegments = (
       const formatter =
         resolvedOptions[part.type] === "2-digit" ? twoDigitFormatter : numberFormatter;
 
-      return {...part, value: formatter.format(raw)};
+      return { ...part, value: formatter.format(raw) };
     }
 
     return part;

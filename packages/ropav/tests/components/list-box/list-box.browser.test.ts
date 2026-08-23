@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -26,8 +26,8 @@ const render = async (props: Record<string, unknown> = {}) => {
  */
 describe("ListBox (browser)", () => {
   it("makes room for the indicator only when one is present", async () => {
-    const withIndicator = await render({selectionMode: "single", withIndicator: true});
-    const withoutIndicator = await render({selectionMode: "single"});
+    const withIndicator = await render({ selectionMode: "single", withIndicator: true });
+    const withoutIndicator = await render({ selectionMode: "single" });
 
     // `.list-box-item:has(.list-box-item__indicator)` is the rule under test; it cannot resolve
     // without the real stylesheet.
@@ -39,7 +39,7 @@ describe("ListBox (browser)", () => {
   });
 
   it("paints the focus ring with a shadow rather than an outline", async () => {
-    const {items, unmount} = await render({selectionMode: "single"});
+    const { items, unmount } = await render({ selectionMode: "single" });
     const item = items()[0]!;
 
     item.setAttribute("data-focus-visible", "true");
@@ -57,7 +57,7 @@ describe("ListBox (browser)", () => {
   it("spaces the items without a flex gap", async () => {
     // The listbox deliberately avoids flex so a virtualiser's explicit content height survives;
     // the spacing comes from an adjacent-sibling margin instead.
-    const {items, unmount} = await render();
+    const { items, unmount } = await render();
     const [first, second] = items();
 
     expect(getComputedStyle(first!).marginTop).toBe("0px");
@@ -68,7 +68,7 @@ describe("ListBox (browser)", () => {
   });
 
   it("transitions the checkmark rather than swapping it", async () => {
-    const {items, unmount} = await render({selectionMode: "single", withIndicator: true});
+    const { items, unmount } = await render({ selectionMode: "single", withIndicator: true });
     const item = items()[0]!;
 
     item.click();
@@ -88,7 +88,7 @@ describe("ListBox (browser)", () => {
   });
 
   it("has no accessibility violations, sections and all", async () => {
-    const {container, unmount} = await render({selectionMode: "multiple", withSections: true});
+    const { container, unmount } = await render({ selectionMode: "multiple", withSections: true });
 
     await expectNoA11yViolations(container);
 

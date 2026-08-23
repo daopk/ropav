@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {CardContentProps} from "./card.types";
+import type { CardContentProps } from "./card.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useCardContext} from "./card.context";
+import { useCardContext } from "./card.context";
 
 const props = defineProps<CardContentProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useCardContext();
+const { slots } = useCardContext();
 </script>
 
 <template>

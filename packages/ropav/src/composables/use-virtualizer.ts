@@ -5,13 +5,13 @@ import type {
   VirtualizerLayoutHost,
   VirtualizerNode,
 } from "../utils/virtualizer-layout";
-import type {LayoutInfo, VirtualizerKey} from "../utils/virtualizer-layout-info";
-import type {ComputedRef} from "vue";
+import type { LayoutInfo, VirtualizerKey } from "../utils/virtualizer-layout-info";
+import type { ComputedRef } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Rect, Size} from "../utils/virtualizer-geometry";
-import {OverscanManager} from "../utils/virtualizer-overscan";
+import { Rect, Size } from "../utils/virtualizer-geometry";
+import { OverscanManager } from "../utils/virtualizer-overscan";
 
 /**
  * The virtualizer, ported from React Aria's `Virtualizer` and `useVirtualizerState`.
@@ -217,7 +217,7 @@ export const useVirtualizer = <Options extends object = object>(
     const contentSize = layout.getContentSize();
     const layoutInfos = layout.getVisibleLayoutInfos(overscan.getOverscannedRect());
 
-    return {contentSize, layout, layoutInfos};
+    return { contentSize, layout, layoutInfos };
   });
 
   /**
@@ -226,7 +226,7 @@ export const useVirtualizer = <Options extends object = object>(
    * take a persisted key out of the DOM, which is the one thing persisting it was for.
    */
   const visibleViews = computed<VirtualizerView[]>(() => {
-    const {layoutInfos} = pass.value;
+    const { layoutInfos } = pass.value;
     const collection = options.collection();
     const views = new Map<VirtualizerKey, VirtualizerView>();
     const roots: VirtualizerView[] = [];

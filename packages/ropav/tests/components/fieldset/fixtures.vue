@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {FieldsetFixtureProps} from "./fixtures.types";
+import type { FieldsetFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot} from "@/components/fieldset";
+import { Description } from "@/components/description";
+import { FieldGroup, FieldsetActions, FieldsetLegend, FieldsetRoot } from "@/components/fieldset";
 
 const props = withDefaults(defineProps<FieldsetFixtureProps>(), {
   withActions: true,

@@ -10,13 +10,13 @@ export const Input = Object.assign(InputRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {InputRoot};
+export { InputRoot };
 
-export type {InputRootProps, InputRootProps as InputProps} from "./input.types";
+export type { InputRootProps, InputRootProps as InputProps } from "./input.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputVariants} from "@ropav/styles";
+export { inputVariants } from "@ropav/styles";
 
-export type {InputVariants} from "@ropav/styles";
+export type { InputVariants } from "@ropav/styles";

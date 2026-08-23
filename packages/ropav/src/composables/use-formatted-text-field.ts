@@ -1,6 +1,6 @@
-import type {ShallowRef} from "vue";
+import type { ShallowRef } from "vue";
 
-import {onScopeDispose, watch} from "vue";
+import { onScopeDispose, watch } from "vue";
 
 export interface UseFormattedTextFieldOptions {
   /** Whether a string could still become an acceptable value, half-typed or not. */
@@ -144,7 +144,7 @@ export const useFormattedTextField = (
 
       if (attached) attach(attached);
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

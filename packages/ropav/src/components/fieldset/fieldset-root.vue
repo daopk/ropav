@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {FieldsetRootProps} from "./fieldset.types";
+import type { FieldsetRootProps } from "./fieldset.types";
 
-import {fieldsetVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { fieldsetVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {provideFieldsetContext} from "./fieldset.context";
+import { provideFieldsetContext } from "./fieldset.context";
 
 const props = defineProps<FieldsetRootProps>();
 
@@ -14,9 +14,9 @@ const slots = computed(() => fieldsetVariants());
 
 const isDisabled = computed(() => props.disabled === true);
 
-provideFieldsetContext({isDisabled, slots});
+provideFieldsetContext({ isDisabled, slots });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 </script>
 
 <template>

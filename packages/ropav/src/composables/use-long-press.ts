@@ -1,10 +1,10 @@
-import type {PointerType, PressEvent, UsePressHandlers} from "./use-press";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PointerType, PressEvent, UsePressHandlers } from "./use-press";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {onScopeDispose, toValue} from "vue";
+import { onScopeDispose, toValue } from "vue";
 
-import {useDescription} from "./use-description";
-import {usePress} from "./use-press";
+import { useDescription } from "./use-description";
+import { usePress } from "./use-press";
 
 /** How long the press has to be held before it counts as a long press. */
 export const LONG_PRESS_THRESHOLD_MS = 500;
@@ -96,7 +96,7 @@ export const useLongPress = (options: UseLongPressOptions = {}): UseLongPressRet
     type,
   });
 
-  const {handlers} = usePress({
+  const { handlers } = usePress({
     isDisabled: () => toValue(options.isDisabled),
     onPressEnd: (event) => {
       clearThreshold();
@@ -118,11 +118,13 @@ export const useLongPress = (options: UseLongPressOptions = {}): UseLongPressRet
         () => {
           // Calls off the ordinary press on the same element, so releasing after a long press
           // does not also activate it.
-          event.target.dispatchEvent(new PointerEvent("pointercancel", {bubbles: true}));
+          event.target.dispatchEvent(new PointerEvent("pointercancel", { bubbles: true }));
 
           // A long press is not a click, and the browser would otherwise follow a link or
           // submit a form when the finger lifts.
-          addGlobalListener(event.target, "click", (click) => click.preventDefault(), {once: true});
+          addGlobalListener(event.target, "click", (click) => click.preventDefault(), {
+            once: true,
+          });
 
           // Touch devices move focus on release rather than on the way down, and the element is
           // about to hand focus to whatever it opened.
@@ -130,7 +132,7 @@ export const useLongPress = (options: UseLongPressOptions = {}): UseLongPressRet
             event.target instanceof HTMLElement &&
             event.target.ownerDocument.activeElement !== event.target
           ) {
-            event.target.focus({preventScroll: true});
+            event.target.focus({ preventScroll: true });
           }
 
           // The press-and-hold menu the platform offers would compete with the one being
@@ -155,16 +157,16 @@ export const useLongPress = (options: UseLongPressOptions = {}): UseLongPressRet
         () => {
           setTimeout(() => removeAllGlobalListeners(), 100);
         },
-        {once: true},
+        { once: true },
       );
     },
   });
 
-  const {describedBy} = useDescription(() =>
+  const { describedBy } = useDescription(() =>
     options.onLongPress && !toValue(options.isDisabled)
       ? toValue(options.accessibilityDescription)
       : undefined,
   );
 
-  return {describedBy, handlers};
+  return { describedBy, handlers };
 };

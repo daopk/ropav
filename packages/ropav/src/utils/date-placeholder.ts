@@ -1,6 +1,6 @@
-import {LocalizedStringDictionary} from "@internationalized/string";
+import { LocalizedStringDictionary } from "@internationalized/string";
 
-import {datePlaceholders} from "../i18n/date-placeholders";
+import { datePlaceholders } from "../i18n/date-placeholders";
 
 /** Built once: the table is fixed and the dictionary is read-only after construction. */
 const dictionary = new LocalizedStringDictionary(datePlaceholders, "en");

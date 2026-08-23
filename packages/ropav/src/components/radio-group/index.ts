@@ -10,7 +10,7 @@ export const RadioGroup = Object.assign(RadioGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {RadioGroupRoot};
+export { RadioGroupRoot };
 
 export type {
   RadioGroupRootProps,
@@ -18,13 +18,13 @@ export type {
   RadioGroupSlotProps,
 } from "./radio-group.types";
 
-export {useRadioGroupContext, provideRadioGroupContext} from "./radio-group.context";
+export { useRadioGroupContext, provideRadioGroupContext } from "./radio-group.context";
 
-export type {RadioGroupContext} from "./radio-group.context";
+export type { RadioGroupContext } from "./radio-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {radioGroupVariants} from "@ropav/styles";
+export { radioGroupVariants } from "@ropav/styles";
 
-export type {RadioGroupVariants} from "@ropav/styles";
+export type { RadioGroupVariants } from "@ropav/styles";

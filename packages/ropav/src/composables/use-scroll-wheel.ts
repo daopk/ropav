@@ -1,6 +1,6 @@
-import type {MaybeRefOrGetter, ShallowRef} from "vue";
+import type { MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {toValue, watch} from "vue";
+import { toValue, watch } from "vue";
 
 /** The two axes of a wheel gesture, as the caller sees them. */
 export interface ScrollWheelDelta {
@@ -41,7 +41,7 @@ export const useScrollWheel = (
     event.preventDefault();
     event.stopPropagation();
 
-    options.onScroll?.({deltaX: event.deltaX, deltaY: event.deltaY});
+    options.onScroll?.({ deltaX: event.deltaX, deltaY: event.deltaY });
   };
 
   watch(
@@ -49,9 +49,9 @@ export const useScrollWheel = (
     ([target, isDisabled], _previous, onCleanup) => {
       if (!target || isDisabled) return;
 
-      target.addEventListener("wheel", onWheel, {passive: false});
+      target.addEventListener("wheel", onWheel, { passive: false });
       onCleanup(() => target.removeEventListener("wheel", onWheel));
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 };

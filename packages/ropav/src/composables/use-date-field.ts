@@ -1,24 +1,24 @@
-import type {FocusManager} from "../utils/focus";
-import type {DateFieldState} from "./use-date-field-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {UsePressHandlers} from "./use-press";
-import type {TimeFieldState} from "./use-time-field-state";
-import type {ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type { FocusManager } from "../utils/focus";
+import type { DateFieldState } from "./use-date-field-state";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { UsePressHandlers } from "./use-press";
+import type { TimeFieldState } from "./use-time-field-state";
+import type { ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import {computed, toValue, watch, watchEffect} from "vue";
+import { computed, toValue, watch, watchEffect } from "vue";
 
-import {datepickerStrings} from "../i18n/datepicker";
-import {createFocusManager} from "../utils/focus";
-import {setFormValue} from "../utils/form-value";
+import { datepickerStrings } from "../i18n/datepicker";
+import { createFocusManager } from "../utils/focus";
+import { setFormValue } from "../utils/form-value";
 
-import {useDatePickerGroup} from "./use-date-picker-group";
-import {useDescription} from "./use-description";
-import {useFieldIds} from "./use-field-ids";
-import {useFormReset} from "./use-form-reset";
-import {useFormValidation} from "./use-form-validation";
-import {useId} from "./use-id";
-import {useFocusWithin} from "./use-interaction-states";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDatePickerGroup } from "./use-date-picker-group";
+import { useDescription } from "./use-description";
+import { useFieldIds } from "./use-field-ids";
+import { useFormReset } from "./use-form-reset";
+import { useFormValidation } from "./use-form-validation";
+import { useId } from "./use-id";
+import { useFocusWithin } from "./use-interaction-states";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /** What a segment needs from the field it belongs to. */
 export interface DateFieldSegmentInfo {
@@ -102,7 +102,7 @@ export interface UseDateFieldReturn {
  * picker's segments work with no field root of their own above them.
  */
 export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn => {
-  const {state} = options;
+  const { state } = options;
   const isPresentation = computed(() => toValue(options.role) === "presentation");
 
   const {
@@ -139,11 +139,11 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     const isTime = state.maxGranularity.value === "hour";
 
     return strings.value.format(isTime ? "selectedTimeDescription" : "selectedDateDescription", {
-      [isTime ? "time" : "date"]: state.formatValue({month: "long"}),
+      [isTime ? "time" : "date"]: state.formatValue({ month: "long" }),
     });
   });
 
-  const {describedBy: valueDescribedBy} = useDescription(valueDescription);
+  const { describedBy: valueDescribedBy } = useDescription(valueDescription);
 
   const ownDescribedBy = computed(() => {
     const ids = [fieldDescribedBy.value, toValue(options.ariaDescribedBy)].filter(Boolean);
@@ -231,7 +231,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     flush: "post",
     immediate: true,
   });
-  useFormValidation(options.inputElement, state, {focus: () => focusManager.focusFirst()});
+  useFormValidation(options.inputElement, state, { focus: () => focusManager.focusFirst() });
 
   /*
    * Once, on the way in. React keeps the flag in a ref and clears it after the first effect; a
@@ -246,7 +246,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
       pendingAutoFocus = false;
       if (toValue(options.autoFocus)) focusManager.focusFirst();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   const attrs = computed<Record<string, unknown>>(() => {
@@ -259,7 +259,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     if (isPresentation.value) {
       const ownId = toValue(options.id);
 
-      return ownId ? {id: ownId, role: "presentation"} : {role: "presentation"};
+      return ownId ? { id: ownId, role: "presentation" } : { role: "presentation" };
     }
 
     const all: Record<string, unknown> = {
@@ -322,7 +322,7 @@ export const useDateField = (options: UseDateFieldOptions): UseDateFieldReturn =
     },
     // A field of segments reads left to right even inside right-to-left text, so it is isolated
     // from whatever surrounds it.
-    style: computed(() => ({unicodeBidi: "isolate"})),
+    style: computed(() => ({ unicodeBidi: "isolate" })),
     validationDetails: computed(() => state.displayValidation.value.validationDetails),
     validationErrors: computed(() => state.displayValidation.value.validationErrors),
   };

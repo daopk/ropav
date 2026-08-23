@@ -1,10 +1,10 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
 import IconPaperclip from "~icons/gravity-ui/paperclip";
 
-import {ButtonRoot} from "../button";
-import {CardContent, CardRoot} from "../card";
+import { ButtonRoot } from "../button";
+import { CardContent, CardRoot } from "../card";
 
 import TooltipArrow from "./tooltip-arrow.vue";
 import TooltipContent from "./tooltip-content.vue";
@@ -27,7 +27,7 @@ const components = {
 
 const meta = {
   argTypes: {
-    offset: {control: "number"},
+    offset: { control: "number" },
     placement: {
       control: "select",
       options: [
@@ -56,7 +56,7 @@ const meta = {
       ],
     },
   },
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Overlays/Tooltip",
 } satisfies Meta;
 
@@ -64,17 +64,17 @@ export default meta;
 
 // Args are spelled out rather than inferred: `meta` names no component, so there is
 // nothing for `StoryObj` to read them from.
-type Story = StoryObj<{showArrow: boolean}>;
+type Story = StoryObj<{ showArrow: boolean }>;
 
 // The delay is what makes a tooltip readable in use and unusable in a story, so every story opens
 // at once. `showArrow` only reserves the offset; the arrow itself is a part.
-const args = {showArrow: true};
+const args = { showArrow: true };
 
 export const Default: Story = {
   args,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center justify-center gap-3">
         <Tooltip :delay="0">
@@ -95,7 +95,7 @@ export const WithTrigger: Story = {
   args,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Tooltip :delay="0">
@@ -118,7 +118,7 @@ export const CardWithTooltip: Story = {
   args,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Card class="w-[200px]">
         <CardContent class="flex items-center justify-center p-6">

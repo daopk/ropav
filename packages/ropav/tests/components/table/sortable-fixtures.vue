@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {TableSortableColumnHeaderProps} from "@/components/table";
+import type { TableSortableColumnHeaderProps } from "@/components/table";
 
 import {
   TableColumn,

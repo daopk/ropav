@@ -1,10 +1,10 @@
-import type {SliderState} from "@/composables/use-slider-state";
+import type { SliderState } from "@/composables/use-slider-state";
 
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useSlider} from "@/composables/use-slider";
-import {useSliderState} from "@/composables/use-slider-state";
+import { useSlider } from "@/composables/use-slider";
+import { useSliderState } from "@/composables/use-slider-state";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -18,7 +18,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
  * jsdom lays nothing out, so the track is given a size by hand — the composable reads it to
  * turn a position into a value, and everything it does depends on that number.
  */
-const TRACK = {height: 20, left: 100, top: 50, width: 200};
+const TRACK = { height: 20, left: 100, top: 50, width: 200 };
 
 const setup = (
   options: {
@@ -94,14 +94,15 @@ const pressTrack = (track: HTMLElement, x: number, y: number, pointerId = 1) =>
   );
 
 const dragTo = (x: number, y: number, pointerId = 1) =>
-  window.dispatchEvent(new PointerEvent("pointermove", {clientX: x, clientY: y, pointerId}));
+  window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerId }));
 
-const release = (pointerId = 1) => window.dispatchEvent(new PointerEvent("pointerup", {pointerId}));
+const release = (pointerId = 1) =>
+  window.dispatchEvent(new PointerEvent("pointerup", { pointerId }));
 
 describe("useSlider", () => {
   describe("labelling", () => {
     it("groups the thumbs and names them by the visible label", () => {
-      const {dispose, slider} = setup({labelId: "volume-label"});
+      const { dispose, slider } = setup({ labelId: "volume-label" });
 
       expect(slider.groupProps.value.role).toBe("group");
       expect(slider.groupProps.value["aria-labelledby"]).toBe("volume-label");
@@ -112,7 +113,7 @@ describe("useSlider", () => {
     });
 
     it("falls back to the group itself when there is no visible label", () => {
-      const {dispose, slider} = setup();
+      const { dispose, slider } = setup();
 
       expect(slider.groupProps.value["aria-labelledby"]).toBeUndefined();
       expect(slider.groupProps.value["aria-label"]).toBe("Volume");
@@ -123,7 +124,7 @@ describe("useSlider", () => {
     });
 
     it("points the output at every thumb", () => {
-      const {dispose, slider} = setup({defaultValue: [10, 90]});
+      const { dispose, slider } = setup({ defaultValue: [10, 90] });
 
       expect(slider.outputProps.value.for).toBe("slider-0 slider-1");
       expect(slider.outputProps.value["aria-live"]).toBe("off");
@@ -135,7 +136,7 @@ describe("useSlider", () => {
 
   describe("pressing the track", () => {
     it("moves the only thumb to where the track was pressed", () => {
-      const {dispose, state, track} = setup({step: 10});
+      const { dispose, state, track } = setup({ step: 10 });
 
       // Half way along a 200px track that starts at x=100.
       pressTrack(track, TRACK.left + 100, TRACK.top);
@@ -148,7 +149,7 @@ describe("useSlider", () => {
     });
 
     it("moves the nearest thumb of a range", () => {
-      const {dispose, state, track} = setup({defaultValue: [20, 80], step: 10});
+      const { dispose, state, track } = setup({ defaultValue: [20, 80], step: 10 });
 
       pressTrack(track, TRACK.left + 60, TRACK.top);
 
@@ -161,7 +162,7 @@ describe("useSlider", () => {
     });
 
     it("picks the higher thumb when the press is past both", () => {
-      const {dispose, state, track} = setup({defaultValue: [20, 40], step: 10});
+      const { dispose, state, track } = setup({ defaultValue: [20, 40], step: 10 });
 
       pressTrack(track, TRACK.left + 180, TRACK.top);
 
@@ -171,7 +172,7 @@ describe("useSlider", () => {
     });
 
     it("counts a vertical track from the bottom up", () => {
-      const {dispose, state, track} = setup({orientation: "vertical", step: 10});
+      const { dispose, state, track } = setup({ orientation: "vertical", step: 10 });
 
       // A quarter of the way down a 20px tall track is three quarters of the value.
       pressTrack(track, TRACK.left, TRACK.top + 5);
@@ -182,7 +183,7 @@ describe("useSlider", () => {
     });
 
     it("keeps focus where it is", () => {
-      const {dispose, track} = setup();
+      const { dispose, track } = setup();
       const event = new PointerEvent("pointerdown", {
         bubbles: true,
         button: 0,
@@ -201,7 +202,7 @@ describe("useSlider", () => {
     });
 
     it("ignores a press while disabled", () => {
-      const {dispose, state, track} = setup({defaultValue: 10, isDisabled: true});
+      const { dispose, state, track } = setup({ defaultValue: 10, isDisabled: true });
 
       pressTrack(track, TRACK.left + 100, TRACK.top);
 
@@ -212,7 +213,7 @@ describe("useSlider", () => {
     });
 
     it("ignores a right click and a modified click", () => {
-      const {dispose, state, track} = setup({defaultValue: 10});
+      const { dispose, state, track } = setup({ defaultValue: 10 });
 
       track.dispatchEvent(
         new PointerEvent("pointerdown", {
@@ -240,7 +241,7 @@ describe("useSlider", () => {
     });
 
     it("ignores a press on a thumb that cannot be edited", () => {
-      const {dispose, state, track} = setup({defaultValue: 10});
+      const { dispose, state, track } = setup({ defaultValue: 10 });
 
       state.setThumbEditable(0, false);
       pressTrack(track, TRACK.left + 100, TRACK.top);
@@ -253,7 +254,7 @@ describe("useSlider", () => {
 
   describe("dragging the track", () => {
     it("keeps moving the thumb the press picked", () => {
-      const {dispose, state, track} = setup({step: 10});
+      const { dispose, state, track } = setup({ step: 10 });
 
       pressTrack(track, TRACK.left, TRACK.top);
       expect(state.values.value).toEqual([0]);
@@ -269,7 +270,7 @@ describe("useSlider", () => {
     });
 
     it("stops at either end of the track", () => {
-      const {dispose, state, track} = setup({step: 10});
+      const { dispose, state, track } = setup({ step: 10 });
 
       pressTrack(track, TRACK.left + 100, TRACK.top);
       dragTo(TRACK.left + 1000, TRACK.top);
@@ -299,10 +300,10 @@ describe("useSlider", () => {
           step: 10,
         });
 
-        return useSlider({id: "slider", state, trackEl});
+        return useSlider({ id: "slider", state, trackEl });
       });
 
-      track.getBoundingClientRect = () => ({height: 20, left: 0, top: 0, width: 200}) as DOMRect;
+      track.getBoundingClientRect = () => ({ height: 20, left: 0, top: 0, width: 200 }) as DOMRect;
       track.addEventListener("pointerdown", (event) =>
         slider.trackHandlers.onPointerdown(event as PointerEvent),
       );
@@ -320,7 +321,7 @@ describe("useSlider", () => {
     });
 
     it("ends a press that never moved", () => {
-      const {dispose, state, track} = setup({step: 10});
+      const { dispose, state, track } = setup({ step: 10 });
 
       pressTrack(track, TRACK.left + 100, TRACK.top);
       release();

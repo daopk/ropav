@@ -1,9 +1,9 @@
-import type {OverlayTriggerState} from "./use-overlay-trigger-state";
-import type {ComputedRef} from "vue";
+import type { OverlayTriggerState } from "./use-overlay-trigger-state";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useId} from "./use-id";
+import { useId } from "./use-id";
 
 /** What the trigger opens, which decides how `aria-haspopup` is announced. */
 export type OverlayType = "dialog" | "menu" | "listbox" | "tree" | "grid";

@@ -1,4 +1,4 @@
-import type {ElementContext, Result, RunOptions} from "axe-core";
+import type { ElementContext, Result, RunOptions } from "axe-core";
 
 import axe from "axe-core";
 

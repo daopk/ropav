@@ -1,8 +1,8 @@
-import type {ProgressValueState} from "../../composables/use-progress-value";
-import type {meterVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { ProgressValueState } from "../../composables/use-progress-value";
+import type { meterVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface MeterContext {
   slots: ComputedRef<ReturnType<typeof meterVariants>>;

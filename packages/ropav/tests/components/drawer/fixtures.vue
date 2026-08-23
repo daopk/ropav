@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {DrawerFixtureProps} from "./fixtures.types";
+import type { DrawerFixtureProps } from "./fixtures.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {Drawer} from "@/components/drawer";
+import { ButtonRoot } from "@/components/button";
+import { Drawer } from "@/components/drawer";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that Vue
 // had cast would turn the drawer controlled, or read as a deliberate dismiss opt-out.
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<DrawerFixtureProps>(), {
   withoutHeading: undefined,
 });
 
-const emit = defineEmits<{openChange: [isOpen: boolean]}>();
+const emit = defineEmits<{ openChange: [isOpen: boolean] }>();
 
 const shouldCloseOnInteractOutside = (element: Element) =>
   !props.keepOpenFor || !element.closest(`#${props.keepOpenFor}`);
@@ -37,13 +37,13 @@ const shouldCloseOnInteractOutside = (element: Element) =>
  * static one — so binding `undefined` erases the default name instead of leaving it alone.
  */
 const closeTriggerAttrs = computed(() =>
-  props.closeTriggerLabel === undefined ? {} : {"aria-label": props.closeTriggerLabel},
+  props.closeTriggerLabel === undefined ? {} : { "aria-label": props.closeTriggerLabel },
 );
 
 /** Set by the button inside `Drawer.Close`, so a test can prove both handlers ran. */
 const saved = shallowRef(false);
 
-defineExpose({saved});
+defineExpose({ saved });
 </script>
 
 <template>
@@ -66,7 +66,7 @@ defineExpose({saved});
         :variant="props.variant"
       >
         <Drawer.Content :placement="props.placement">
-          <Drawer.Dialog v-slot="{close}">
+          <Drawer.Dialog v-slot="{ close }">
             <Drawer.Handle v-if="props.withHandle" />
             <Drawer.CloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
             <Drawer.Header>

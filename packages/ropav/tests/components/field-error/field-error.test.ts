@@ -1,23 +1,23 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {VALID_VALIDITY_STATE} from "@/composables/use-form-validation-state";
+import { VALID_VALIDITY_STATE } from "@/composables/use-form-validation-state";
 
 import FieldErrorFixture from "./fixtures.vue";
 
 const renderFieldError = (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(FieldErrorFixture, {props});
+  const rendered = renderVapor(FieldErrorFixture, { props });
   const error = () => rendered.container.querySelector<HTMLElement>("[data-slot='field-error']");
   const field = () => rendered.container.querySelector<HTMLElement>("[data-testid='field']")!;
 
-  return {...rendered, error, field};
+  return { ...rendered, error, field };
 };
 
 describe("FieldError", () => {
   describe("visibility", () => {
     it("renders nothing while the field is valid", () => {
-      const {error, unmount} = renderFieldError({validationErrors: ["never shown"]});
+      const { error, unmount } = renderFieldError({ validationErrors: ["never shown"] });
 
       expect(error()).toBeNull();
 
@@ -25,7 +25,7 @@ describe("FieldError", () => {
     });
 
     it("renders nothing outside a field at all", () => {
-      const {error, unmount} = renderFieldError({isInvalid: true, withoutField: true});
+      const { error, unmount } = renderFieldError({ isInvalid: true, withoutField: true });
 
       expect(error()).toBeNull();
 
@@ -33,8 +33,8 @@ describe("FieldError", () => {
     });
 
     it("appears once the field turns invalid", async () => {
-      const props = reactive({isInvalid: false, validationErrors: ["too short"]});
-      const {error, unmount} = renderFieldError(props);
+      const props = reactive({ isInvalid: false, validationErrors: ["too short"] });
+      const { error, unmount } = renderFieldError(props);
 
       expect(error()).toBeNull();
 
@@ -47,8 +47,8 @@ describe("FieldError", () => {
     });
 
     it("goes away again once the field recovers", async () => {
-      const props = reactive({isInvalid: true, validationErrors: ["too short"]});
-      const {error, unmount} = renderFieldError(props);
+      const props = reactive({ isInvalid: true, validationErrors: ["too short"] });
+      const { error, unmount } = renderFieldError(props);
 
       expect(error()).not.toBeNull();
 
@@ -63,7 +63,7 @@ describe("FieldError", () => {
 
   describe("structure", () => {
     it("renders the BEM class and its data-slot", () => {
-      const {error, unmount} = renderFieldError({isInvalid: true, validationErrors: ["boom"]});
+      const { error, unmount } = renderFieldError({ isInvalid: true, validationErrors: ["boom"] });
 
       expect(error()!.classList.contains("field-error")).toBe(true);
       expect(error()!.getAttribute("data-slot")).toBe("field-error");
@@ -72,7 +72,7 @@ describe("FieldError", () => {
     });
 
     it("marks itself visible, which is what the stylesheet expands it on", () => {
-      const {error, unmount} = renderFieldError({isInvalid: true, validationErrors: ["boom"]});
+      const { error, unmount } = renderFieldError({ isInvalid: true, validationErrors: ["boom"] });
 
       expect(error()!.getAttribute("data-visible")).toBe("true");
 
@@ -80,7 +80,7 @@ describe("FieldError", () => {
     });
 
     it("merges the caller's class", () => {
-      const {error, unmount} = renderFieldError({
+      const { error, unmount } = renderFieldError({
         class: "mt-2",
         isInvalid: true,
         validationErrors: ["boom"],
@@ -95,7 +95,7 @@ describe("FieldError", () => {
 
   describe("message", () => {
     it("shows the field's message by default", () => {
-      const {error, unmount} = renderFieldError({
+      const { error, unmount } = renderFieldError({
         isInvalid: true,
         validationErrors: ["must be accepted"],
       });
@@ -106,7 +106,7 @@ describe("FieldError", () => {
     });
 
     it("joins several messages into one description", () => {
-      const {error, unmount} = renderFieldError({
+      const { error, unmount } = renderFieldError({
         isInvalid: true,
         validationErrors: ["too short", "already taken"],
       });
@@ -117,8 +117,8 @@ describe("FieldError", () => {
     });
 
     it("follows the messages as they change", async () => {
-      const props = reactive({isInvalid: true, validationErrors: ["first"]});
-      const {error, unmount} = renderFieldError(props);
+      const props = reactive({ isInvalid: true, validationErrors: ["first"] });
+      const { error, unmount } = renderFieldError(props);
 
       expect(error()!.textContent).toContain("first");
 
@@ -131,7 +131,7 @@ describe("FieldError", () => {
     });
 
     it("lets the caller word the message instead", () => {
-      const {error, unmount} = renderFieldError({
+      const { error, unmount } = renderFieldError({
         isInvalid: true,
         validationErrors: ["a", "b"],
         withCustomMessage: true,
@@ -144,9 +144,9 @@ describe("FieldError", () => {
     });
 
     it("hands the caller the messages and the failing constraint", () => {
-      const {container, unmount} = renderFieldError({
+      const { container, unmount } = renderFieldError({
         isInvalid: true,
-        validationDetails: {...VALID_VALIDITY_STATE, valid: false, valueMissing: true},
+        validationDetails: { ...VALID_VALIDITY_STATE, valid: false, valueMissing: true },
         validationErrors: ["a", "b"],
         withCustomMessage: true,
       });
@@ -159,7 +159,7 @@ describe("FieldError", () => {
 
   describe("field description", () => {
     it("is pointed at by the field while it is on screen", async () => {
-      const {error, field, unmount} = renderFieldError({
+      const { error, field, unmount } = renderFieldError({
         isInvalid: true,
         validationErrors: ["boom"],
       });
@@ -177,7 +177,7 @@ describe("FieldError", () => {
     });
 
     it("leaves the field describing nothing while it is valid", () => {
-      const {field, unmount} = renderFieldError({validationErrors: ["boom"]});
+      const { field, unmount } = renderFieldError({ validationErrors: ["boom"] });
 
       expect(field().getAttribute("aria-describedby")).toBeNull();
 
@@ -185,8 +185,8 @@ describe("FieldError", () => {
     });
 
     it("releases the id when it stops rendering, so nothing dangles", async () => {
-      const props = reactive({isInvalid: true, validationErrors: ["boom"]});
-      const {field, unmount} = renderFieldError(props);
+      const props = reactive({ isInvalid: true, validationErrors: ["boom"] });
+      const { field, unmount } = renderFieldError(props);
 
       await nextTick();
       expect(field().getAttribute("aria-describedby")).toBeTruthy();

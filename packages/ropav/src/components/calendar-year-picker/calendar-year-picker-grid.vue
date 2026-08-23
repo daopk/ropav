@@ -1,30 +1,30 @@
 <script setup lang="ts" vapor>
-import type {CalendarYearPickerGridProps} from "./calendar-year-picker.types";
+import type { CalendarYearPickerGridProps } from "./calendar-year-picker.types";
 
-import {calendarYearPickerVariants} from "@ropav/styles";
-import {computed, onScopeDispose, shallowRef, watch, watchEffect} from "vue";
+import { calendarYearPickerVariants } from "@ropav/styles";
+import { computed, onScopeDispose, shallowRef, watch, watchEffect } from "vue";
 
-import {useCalendarYearPicker} from "../../composables/use-calendar-year-picker";
-import {dataAttr} from "../../utils/assertion";
-import {getYearRange} from "../../utils/calendar";
-import {useCalendarStateContext} from "../calendar/calendar.context";
+import { useCalendarYearPicker } from "../../composables/use-calendar-year-picker";
+import { dataAttr } from "../../utils/assertion";
+import { getYearRange } from "../../utils/calendar";
+import { useCalendarStateContext } from "../calendar/calendar.context";
 
-import {provideYearPickerGridContext, useYearPickerContext} from "./calendar-year-picker.context";
+import { provideYearPickerGridContext, useYearPickerContext } from "./calendar-year-picker.context";
 
 /** How many years a row holds, which is what the up and down arrows step by. */
 const COLUMNS = 3;
 
 const props = defineProps<CalendarYearPickerGridProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {calendarElement, calendarGridSlot, isYearPickerOpen, setIsYearPickerOpen} =
+const { calendarElement, calendarGridSlot, isYearPickerOpen, setIsYearPickerOpen } =
   useYearPickerContext();
-const {state} = useCalendarStateContext();
+const { state } = useCalendarStateContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 const slots = computed(() => calendarYearPickerVariants());
-const styles = computed(() => slots.value.yearGrid({class: props.class}));
+const styles = computed(() => slots.value.yearGrid({ class: props.class }));
 
 /**
  * How many years to offer.
@@ -40,7 +40,7 @@ const visibleYears = computed(() => {
   return getYearRange(state.minValue.value, state.maxValue.value).length;
 });
 
-const picker = useCalendarYearPicker({format: () => props.format, visibleYears}, state);
+const picker = useCalendarYearPicker({ format: () => props.format, visibleYears }, state);
 
 const years = computed(() => picker.items.value.map((item) => item.date.year));
 
@@ -76,7 +76,7 @@ watchEffect(
     grid.style.top = `${dayGrid.offsetTop}px`;
     grid.style.height = `${dayGrid.offsetHeight}px`;
   },
-  {flush: "post"},
+  { flush: "post" },
 );
 
 const focusYearCell = (year: number) => {

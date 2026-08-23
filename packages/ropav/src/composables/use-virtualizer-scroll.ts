@@ -1,9 +1,9 @@
-import type {Size} from "../utils/virtualizer-geometry";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Size } from "../utils/virtualizer-geometry";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
-import {Point, Rect, Size as SizeClass} from "../utils/virtualizer-geometry";
+import { Point, Rect, Size as SizeClass } from "../utils/virtualizer-geometry";
 
 /**
  * Measuring the scroll container a virtualizer lives in, ported from React Aria's `useScrollView`.
@@ -196,7 +196,7 @@ export const useVirtualizerScroll = (
             // scrollbar appears and takes width away from it.
             new ResizeObserver(() => measure());
 
-      observer?.observe(element, {box: "border-box"});
+      observer?.observe(element, { box: "border-box" });
       measure();
 
       onCleanup(() => {
@@ -205,7 +205,7 @@ export const useVirtualizerScroll = (
         observer?.disconnect();
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => {

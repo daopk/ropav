@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {InputRootProps} from "./input.types";
+import type { InputRootProps } from "./input.types";
 
-import {inputVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { inputVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {useTextFieldContext} from "../textfield/textfield.context";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { useTextFieldContext } from "../textfield/textfield.context";
 
 const props = withDefaults(defineProps<InputRootProps>(), {
   fullWidth: undefined,
@@ -39,7 +39,7 @@ const styles = computed(() =>
 // knows about, so an absent field placeholder arrives as `placeholder: undefined` and would
 // remove one set on the control itself.
 const attrs = computed(() => {
-  const merged: Record<string, unknown> = {...control?.attrs.value};
+  const merged: Record<string, unknown> = { ...control?.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
 
@@ -48,7 +48,7 @@ const attrs = computed(() => {
 
 // The stylesheet keys hover and focus on these attributes as well as on the native
 // pseudo-classes, so they are rendered here to match what React puts in the DOM.
-const interaction = useInteractionStates({isDisabled: () => control?.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled.value });
 
 const onFocus = (event: FocusEvent) => {
   interaction.onFocus();

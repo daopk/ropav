@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarCellProps, RangeCalendarCellSlotProps} from "./range-calendar.types";
+import type { RangeCalendarCellProps, RangeCalendarCellSlotProps } from "./range-calendar.types";
 
-import {isSameDay, isSameMonth} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { isSameDay, isSameMonth } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 
-import {isRangeCalendarState} from "../../composables/use-calendar";
-import {useCalendarCell} from "../../composables/use-calendar-cell";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {useCalendarGridContext, useCalendarStateContext} from "../calendar/calendar.context";
+import { isRangeCalendarState } from "../../composables/use-calendar";
+import { useCalendarCell } from "../../composables/use-calendar-cell";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { useCalendarGridContext, useCalendarStateContext } from "../calendar/calendar.context";
 
-import {useRangeCalendarContext} from "./range-calendar.context";
+import { useRangeCalendarContext } from "./range-calendar.context";
 
 const props = defineProps<RangeCalendarCellProps>();
 
-defineSlots<{default?: (props: RangeCalendarCellSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RangeCalendarCellSlotProps) => unknown }>();
 
-const {slots} = useRangeCalendarContext();
-const {calendar, state} = useCalendarStateContext();
-const {startDate} = useCalendarGridContext();
+const { slots } = useRangeCalendarContext();
+const { calendar, state } = useCalendarStateContext();
+const { startDate } = useCalendarGridContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -37,7 +37,7 @@ const isOutsideMonth = computed(() => {
 });
 
 const cell = useCalendarCell(
-  {date: () => props.date, element, isOutsideMonth},
+  { date: () => props.date, element, isOutsideMonth },
   state,
   calendar.shared,
 );
@@ -58,11 +58,11 @@ const isFocusVisible = computed(() => interaction.isFocusVisible.value && cell.i
  * continues — so the stylesheet needs to tell them apart from a date merely inside the range.
  */
 const ends = computed(() => {
-  if (!isRangeCalendarState(state)) return {isSelectionEnd: false, isSelectionStart: false};
+  if (!isRangeCalendarState(state)) return { isSelectionEnd: false, isSelectionStart: false };
 
   const range = state.highlightedRange.value;
 
-  if (!range) return {isSelectionEnd: false, isSelectionStart: false};
+  if (!range) return { isSelectionEnd: false, isSelectionStart: false };
 
   return {
     isSelectionEnd: isSameDay(props.date, range.end),
@@ -70,7 +70,7 @@ const ends = computed(() => {
   };
 });
 
-const styles = computed(() => slots.value.cell({class: props.class}));
+const styles = computed(() => slots.value.cell({ class: props.class }));
 
 const slotProps = computed<RangeCalendarCellSlotProps>(() => ({
   date: props.date,

@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {ColorPickerRootProps} from "@/components/color-picker";
-import type {Color} from "@/utils/color-types";
+import type { ColorPickerRootProps } from "@/components/color-picker";
+import type { Color } from "@/utils/color-types";
 
-import {ColorArea} from "@/components/color-area";
-import {ColorField} from "@/components/color-field";
-import {ColorPicker} from "@/components/color-picker";
-import {ColorSlider} from "@/components/color-slider";
-import {ColorSwatch} from "@/components/color-swatch";
-import {ColorSwatchPicker} from "@/components/color-swatch-picker";
-import {Label} from "@/components/label";
+import { ColorArea } from "@/components/color-area";
+import { ColorField } from "@/components/color-field";
+import { ColorPicker } from "@/components/color-picker";
+import { ColorSlider } from "@/components/color-slider";
+import { ColorSwatch } from "@/components/color-swatch";
+import { ColorSwatchPicker } from "@/components/color-swatch-picker";
+import { Label } from "@/components/label";
 
 /*
  * Every three-state boolean declares an explicit `undefined` default. Vue casts an absent boolean
@@ -30,7 +30,7 @@ withDefaults(
       withEmptyField?: boolean;
     }
   >(),
-  {defaultOpen: undefined, isOpen: undefined, sliderValue: undefined, swatchValue: undefined},
+  { defaultOpen: undefined, isOpen: undefined, sliderValue: undefined, swatchValue: undefined },
 );
 
 defineEmits<{

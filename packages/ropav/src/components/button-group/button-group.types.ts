@@ -1,4 +1,4 @@
-import type {ButtonVariants} from "@ropav/styles";
+import type { ButtonVariants } from "@ropav/styles";
 
 export interface ButtonGroupRootProps {
   class?: string;

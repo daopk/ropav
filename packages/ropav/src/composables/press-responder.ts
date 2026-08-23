@@ -1,7 +1,7 @@
-import type {UsePressHandlers} from "./use-press";
-import type {ComputedRef} from "vue";
+import type { UsePressHandlers } from "./use-press";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
 export interface PressResponder {
   /**

@@ -1,16 +1,16 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import CheckboxFixture from "./fixtures.vue";
 import CheckboxFormFixture from "./form-fixtures.vue";
 
 const renderCheckbox = (props: Record<string, unknown> = {}) =>
-  renderVapor(CheckboxFixture, {props});
+  renderVapor(CheckboxFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -25,7 +25,7 @@ const waitForTransition = () => new Promise((resolve) => setTimeout(resolve, 300
  */
 describe("Checkbox (browser)", () => {
   it("paints a focus ring on the control when the input is focused by keyboard", async () => {
-    const {container, unmount} = renderCheckbox();
+    const { container, unmount } = renderCheckbox();
     const control = slot(container, "checkbox-control");
     const shadowWhenIdle = getComputedStyle(control).boxShadow;
 
@@ -41,7 +41,7 @@ describe("Checkbox (browser)", () => {
   });
 
   it("leaves the ring off when focus follows a pointer", async () => {
-    const {container, unmount} = renderCheckbox();
+    const { container, unmount } = renderCheckbox();
     const control = slot(container, "checkbox-control");
     const shadowWhenIdle = getComputedStyle(control).boxShadow;
 
@@ -55,7 +55,7 @@ describe("Checkbox (browser)", () => {
   });
 
   it("ticks under a real pointer, which synthetic events cannot prove", async () => {
-    const {container, unmount} = renderCheckbox();
+    const { container, unmount } = renderCheckbox();
 
     await userEvent.click(slot(container, "checkbox-content"));
     await nextTick();
@@ -67,7 +67,7 @@ describe("Checkbox (browser)", () => {
   });
 
   it("fills the control once it is ticked", async () => {
-    const {container, unmount} = renderCheckbox();
+    const { container, unmount } = renderCheckbox();
     const control = slot(container, "checkbox-control");
 
     // The fill is a `::before` layer that scales and fades in, not the control's own
@@ -85,7 +85,7 @@ describe("Checkbox (browser)", () => {
   });
 
   it("darkens the fill on hover", async () => {
-    const {container, unmount} = renderCheckbox();
+    const { container, unmount } = renderCheckbox();
     const content = slot(container, "checkbox-content");
     const control = slot(container, "checkbox-control");
     const idle = getComputedStyle(control, "::before").backgroundColor;
@@ -101,8 +101,8 @@ describe("Checkbox (browser)", () => {
   });
 
   it("rings the control in danger when validation fails", async () => {
-    const {container: valid, unmount: unmountValid} = renderCheckbox();
-    const {container, unmount} = renderCheckbox({isInvalid: true});
+    const { container: valid, unmount: unmountValid } = renderCheckbox();
+    const { container, unmount } = renderCheckbox({ isInvalid: true });
 
     await nextTick();
 
@@ -120,7 +120,7 @@ describe("Checkbox (browser)", () => {
   });
 
   it("shows the tick at full stroke once selected", async () => {
-    const {container, unmount} = renderCheckbox({defaultSelected: true});
+    const { container, unmount } = renderCheckbox({ defaultSelected: true });
 
     await nextTick();
 
@@ -136,7 +136,7 @@ describe("Checkbox (browser)", () => {
 
   describe("field error", () => {
     it("lays the message out flat inside the checkbox, not collapsed", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         validate: () => "must be accepted",
         validationBehavior: "aria",
         withFieldError: true,
@@ -159,8 +159,8 @@ describe("Checkbox (browser)", () => {
     });
 
     it("moves focus to the field and paints the ring on a failed submit", async () => {
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
-        props: {validate: () => "must be accepted", withFieldError: true},
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
+        props: { validate: () => "must be accepted", withFieldError: true },
       });
       const form = container.querySelector("form")!;
 
@@ -184,7 +184,7 @@ describe("Checkbox (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations in its default state", async () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       await nextTick();
       await expectNoA11yViolations(container);
@@ -193,7 +193,7 @@ describe("Checkbox (browser)", () => {
     });
 
     it("has no violations while invalid with a message", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         isInvalid: true,
         isRequired: true,
         withFieldError: true,
@@ -206,7 +206,7 @@ describe("Checkbox (browser)", () => {
     });
 
     it("has no violations while indeterminate", async () => {
-      const {container, unmount} = renderCheckbox({isIndeterminate: true});
+      const { container, unmount } = renderCheckbox({ isIndeterminate: true });
 
       await nextTick();
       await expectNoA11yViolations(container);
@@ -224,8 +224,8 @@ describe("Checkbox (browser)", () => {
        * test clicks this very button. Here the browser drains microtasks in between, the restore
        * goes first, and an unticked box is what the form submits.
        */
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
-        props: {defaultSelected: true, name: "terms", value: "yes"},
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
+        props: { defaultSelected: true, name: "terms", value: "yes" },
       });
       const input = container.querySelector("input")!;
 

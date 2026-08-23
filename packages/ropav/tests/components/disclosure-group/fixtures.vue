@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DisclosureGroupRootProps} from "@/components/disclosure-group";
+import type { DisclosureGroupRootProps } from "@/components/disclosure-group";
 
-import {Button} from "@/components/button";
-import {Disclosure} from "@/components/disclosure";
-import {DisclosureGroup} from "@/components/disclosure-group";
+import { Button } from "@/components/button";
+import { Disclosure } from "@/components/disclosure";
+import { DisclosureGroup } from "@/components/disclosure-group";
 
 /**
  * `bareTriggers` swaps every `Disclosure.Trigger` for an ordinary `Button`, which is the form
@@ -11,7 +11,7 @@ import {DisclosureGroup} from "@/components/disclosure-group";
  */
 const props = withDefaults(
   defineProps<
-    DisclosureGroupRootProps & {bareTriggers?: boolean; disabledItem?: string; items?: string[]}
+    DisclosureGroupRootProps & { bareTriggers?: boolean; disabledItem?: string; items?: string[] }
   >(),
   {
     allowsMultipleExpanded: undefined,
@@ -21,7 +21,7 @@ const props = withDefaults(
   },
 );
 
-defineEmits<{expandedChange: [keys: Set<string | number>]}>();
+defineEmits<{ expandedChange: [keys: Set<string | number>] }>();
 </script>
 
 <template>

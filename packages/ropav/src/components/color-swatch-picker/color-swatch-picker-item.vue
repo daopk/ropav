@@ -4,12 +4,12 @@ import type {
   ColorSwatchPickerItemSlotProps,
 } from "./color-swatch-picker.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useLocale} from "../../composables/use-locale";
-import {dataAttr} from "../../utils/assertion";
-import {normalizeColor} from "../../utils/color";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useLocale } from "../../composables/use-locale";
+import { dataAttr } from "../../utils/assertion";
+import { normalizeColor } from "../../utils/color";
 
 import {
   provideColorSwatchPickerItemContext,
@@ -18,9 +18,9 @@ import {
 
 const props = defineProps<ColorSwatchPickerItemProps>();
 
-defineSlots<{default?: (props: ColorSwatchPickerItemSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSwatchPickerItemSlotProps) => unknown }>();
 
-const {collection, collectionId, keyboard, listId, registerColor, selection, slots} =
+const { collection, collectionId, keyboard, listId, registerColor, selection, slots } =
   useColorSwatchPickerContext();
 
 const locale = useLocale();
@@ -56,7 +56,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 // Kept apart from the collection registration: the picker needs the colour itself to answer a
@@ -66,7 +66,7 @@ watch(
   (key, _previous, onCleanup) => {
     onCleanup(registerColor(key, color.value));
   },
-  {immediate: true},
+  { immediate: true },
 );
 
 const isSelected = computed(() => selection.isSelected(itemKey.value));
@@ -82,7 +82,7 @@ const {
   onPointerdown,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => isDisabled.value});
+} = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 /**
  * Keep the collection's focused key on whatever actually holds focus.
@@ -125,7 +125,7 @@ provideColorSwatchPickerItemContext({
  * ends up with exactly this one declaration too — its own style function replaces the caller's
  * rather than merging, which is the one place in the colour group where it does.
  */
-const style = computed(() => ({"--color-swatch-current": color.value.toString("css")}));
+const style = computed(() => ({ "--color-swatch-current": color.value.toString("css") }));
 </script>
 
 <template>
@@ -134,7 +134,7 @@ const style = computed(() => ({"--color-swatch-current": color.value.toString("c
     ref="element"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="isSelected"
-    :class="slots.item({class: props.class})"
+    :class="slots.item({ class: props.class })"
     :data-collection="collectionId"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"

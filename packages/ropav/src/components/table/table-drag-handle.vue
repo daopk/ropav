@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {PointerType} from "../../composables/use-press";
-import type {TableDragHandleProps} from "./table.types";
+import type { PointerType } from "../../composables/use-press";
+import type { TableDragHandleProps } from "./table.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {isVirtualClick, isVirtualPointerEvent} from "../../composables/use-press";
+import { providePressResponder } from "../../composables/press-responder";
+import { isVirtualClick, isVirtualPointerEvent } from "../../composables/use-press";
 
-import {useTableRowContext} from "./table.context";
+import { useTableRowContext } from "./table.context";
 
 const props = defineProps<TableDragHandleProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {drag} = useTableRowContext();
+const { drag } = useTableRowContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -42,7 +42,7 @@ providePressResponder({
     disabled: drag?.dragButtonAttrs.value.isDisabled || undefined,
     // Visible, and deliberately not a hit target — see above. This is a style, not a listener,
     // so the rule against spreading `on*` keys through `v-bind` does not apply to it.
-    style: {pointerEvents: "none"},
+    style: { pointerEvents: "none" },
   })),
   handlers: computed(() => ({
     onClick: (event: MouseEvent) => {

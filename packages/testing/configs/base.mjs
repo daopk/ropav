@@ -1,4 +1,4 @@
-import {defineConfig} from "vitest/config";
+import { defineConfig } from "vitest/config";
 
 /** Shared Vitest defaults; coverage opt-in via `test:coverage`. */
 export const baseConfig = defineConfig({

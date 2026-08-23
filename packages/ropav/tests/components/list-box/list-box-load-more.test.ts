@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./load-more-fixtures.vue";
 
@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -29,7 +29,7 @@ const render = async (props: Record<string, unknown> = {}) => {
 };
 
 const press = (element: Element, key: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
 };
 
 describe("ListBox load more item", () => {
@@ -41,13 +41,13 @@ describe("ListBox load more item", () => {
       // page would never be asked for.
       expect(idle.sentinel()).not.toBeNull();
 
-      const loading = await render({isLoading: true});
+      const loading = await render({ isLoading: true });
 
       expect(loading.sentinel()).not.toBeNull();
     });
 
     it("takes no room and no focus", async () => {
-      const {sentinel} = await render();
+      const { sentinel } = await render();
 
       expect(sentinel()).toHaveAttribute("inert");
       expect(sentinel()!.style.width).toBe("0px");
@@ -61,13 +61,13 @@ describe("ListBox load more item", () => {
 
       expect(idle.screen.queryByTestId("loading")).toBeNull();
 
-      const loading = await render({isLoading: true});
+      const loading = await render({ isLoading: true });
 
       expect(loading.screen.queryAllByTestId("loading")).toHaveLength(1);
     });
 
     it("is an option that cannot be tabbed to", async () => {
-      const {listbox} = await render({isLoading: true});
+      const { listbox } = await render({ isLoading: true });
 
       const row = listbox.querySelector('[role="option"]:not([data-slot="list-box-item"])')!;
 
@@ -78,7 +78,7 @@ describe("ListBox load more item", () => {
 
   describe("the collection", () => {
     it("does not take the loading row as an option to navigate to", async () => {
-      const {items, options} = await render({isLoading: true});
+      const { items, options } = await render({ isLoading: true });
 
       // The row carries `role="option"` exactly as upstream does, so it is one more than the
       // collection holds.

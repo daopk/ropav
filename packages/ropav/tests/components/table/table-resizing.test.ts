@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./resizable-fixtures.vue";
 
@@ -29,7 +29,7 @@ beforeEach(() => {
 afterEach(() => restoreClientWidth?.());
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -46,7 +46,7 @@ const render = async (props: Record<string, unknown> = {}) => {
 };
 
 const press = (target: HTMLElement, key: string) => {
-  target.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key}));
+  target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key }));
 };
 
 const widthOf = (column: HTMLElement) => parseFloat(column.style.width);
@@ -54,7 +54,7 @@ const widthOf = (column: HTMLElement) => parseFloat(column.style.width);
 describe("Table column resizing", () => {
   describe("structure", () => {
     it("wraps the table in a container of its own", async () => {
-      const {container} = await render();
+      const { container } = await render();
       const wrapper = container.querySelector('[data-slot="table-resizable-container"]')!;
 
       expect(wrapper).toHaveClass("table__resizable-container");
@@ -63,23 +63,23 @@ describe("Table column resizing", () => {
 
     // The browser's own auto layout would ignore the widths the columns were given.
     it("takes the table off auto layout", async () => {
-      const {table} = await render();
+      const { table } = await render();
 
       expect(table.style.tableLayout).toBe("fixed");
       expect(table.style.width).toBe("min-content");
     });
 
     it("gives every column an explicit width", async () => {
-      const {columns} = await render();
+      const { columns } = await render();
 
       expect(columns.map(widthOf)).toEqual([200, 200, 200]);
     });
 
     it("weights the division by the widths the columns asked for", async () => {
-      const {columns} = await render({
+      const { columns } = await render({
         columns: [
-          {defaultWidth: "2fr", id: "name", name: "Name"},
-          {defaultWidth: "1fr", id: "role", name: "Role"},
+          { defaultWidth: "2fr", id: "name", name: "Name" },
+          { defaultWidth: "1fr", id: "role", name: "Role" },
         ],
       });
 
@@ -87,11 +87,11 @@ describe("Table column resizing", () => {
     });
 
     it("resolves a fixed width before dividing the rest", async () => {
-      const {columns} = await render({
+      const { columns } = await render({
         columns: [
-          {defaultWidth: 200, id: "name", name: "Name"},
-          {id: "role", name: "Role"},
-          {id: "email", name: "Email"},
+          { defaultWidth: 200, id: "name", name: "Name" },
+          { id: "role", name: "Role" },
+          { id: "email", name: "Email" },
         ],
       });
 
@@ -101,7 +101,7 @@ describe("Table column resizing", () => {
 
   describe("the resizer", () => {
     it("renders a slider the width can be read and set through", async () => {
-      const {columns, inputs, resizers} = await render();
+      const { columns, inputs, resizers } = await render();
 
       expect(resizers[0]).toHaveClass("table__column-resizer");
       expect(resizers[0]).toHaveAttribute("role", "presentation");
@@ -115,7 +115,7 @@ describe("Table column resizing", () => {
     });
 
     it("says how to start resizing until resizing has started", async () => {
-      const {inputs} = await render();
+      const { inputs } = await render();
       const describedBy = inputs[0]!.getAttribute("aria-describedby")!;
 
       expect(document.getElementById(describedBy)).toHaveTextContent(
@@ -124,16 +124,16 @@ describe("Table column resizing", () => {
     });
 
     it("only appears on the columns that asked for one", async () => {
-      const {resizers} = await render();
+      const { resizers } = await render();
 
       expect(resizers).toHaveLength(2);
     });
 
     it("reports which way the edge can still move", async () => {
-      const {resizers} = await render({
+      const { resizers } = await render({
         columns: [
-          {id: "name", minWidth: 300, name: "Name", withResizer: true},
-          {id: "role", name: "Role", withResizer: true},
+          { id: "name", minWidth: 300, name: "Name", withResizer: true },
+          { id: "role", name: "Role", withResizer: true },
         ],
       });
 
@@ -145,7 +145,7 @@ describe("Table column resizing", () => {
 
   describe("resizing by keyboard", () => {
     it("opens and closes a resize on Enter", async () => {
-      const {columns, resizers} = await render();
+      const { columns, resizers } = await render();
 
       press(resizers[0]!, "Enter");
       await nextTick();
@@ -160,7 +160,7 @@ describe("Table column resizing", () => {
     });
 
     it("takes focus to the slider while resizing", async () => {
-      const {inputs, resizers} = await render();
+      const { inputs, resizers } = await render();
 
       press(resizers[0]!, "Enter");
       await nextTick();
@@ -169,7 +169,7 @@ describe("Table column resizing", () => {
     });
 
     it("moves the edge by ten pixels an arrow press", async () => {
-      const {columns, resizers} = await render();
+      const { columns, resizers } = await render();
 
       press(resizers[0]!, "Enter");
       press(resizers[0]!, "ArrowRight");
@@ -185,10 +185,10 @@ describe("Table column resizing", () => {
     });
 
     it("stops at the column's minimum", async () => {
-      const {columns, resizers} = await render({
+      const { columns, resizers } = await render({
         columns: [
-          {id: "name", minWidth: 190, name: "Name", withResizer: true},
-          {id: "role", name: "Role", withResizer: true},
+          { id: "name", minWidth: 190, name: "Name", withResizer: true },
+          { id: "role", name: "Role", withResizer: true },
         ],
       });
 
@@ -200,10 +200,10 @@ describe("Table column resizing", () => {
     });
 
     it("stops at the column's maximum", async () => {
-      const {columns, resizers} = await render({
+      const { columns, resizers } = await render({
         columns: [
-          {id: "name", maxWidth: 320, name: "Name", withResizer: true},
-          {id: "role", name: "Role", withResizer: true},
+          { id: "name", maxWidth: 320, name: "Name", withResizer: true },
+          { id: "role", name: "Role", withResizer: true },
         ],
       });
 
@@ -215,7 +215,7 @@ describe("Table column resizing", () => {
     });
 
     it.each(["Escape", " "])("closes the resize on %s", async (key) => {
-      const {resizers} = await render();
+      const { resizers } = await render();
 
       press(resizers[0]!, "Enter");
       await nextTick();
@@ -228,7 +228,7 @@ describe("Table column resizing", () => {
     // Only the columns to the **left** of the dragged edge are pinned; the ones to the right stay
     // fractional and divide what is left again, so the table itself never grows.
     it("takes the width it gained from the columns after it", async () => {
-      const {columns, resizers} = await render();
+      const { columns, resizers } = await render();
 
       press(resizers[0]!, "Enter");
       press(resizers[0]!, "ArrowRight");
@@ -238,11 +238,11 @@ describe("Table column resizing", () => {
     });
 
     it("leaves a width the caller controls alone", async () => {
-      const {columns, resizers} = await render({
+      const { columns, resizers } = await render({
         columns: [
-          {id: "name", name: "Name", withResizer: true},
-          {id: "role", name: "Role", width: 150},
-          {id: "email", name: "Email"},
+          { id: "name", name: "Name", withResizer: true },
+          { id: "role", name: "Role", width: 150 },
+          { id: "email", name: "Email" },
         ],
       });
 
@@ -259,7 +259,7 @@ describe("Table column resizing", () => {
       const onResize = vi.fn();
       const onResizeEnd = vi.fn();
       const onResizeStart = vi.fn();
-      const {resizers} = await render({onResize, onResizeEnd, onResizeStart});
+      const { resizers } = await render({ onResize, onResizeEnd, onResizeStart });
 
       press(resizers[0]!, "Enter");
       await nextTick();
@@ -285,7 +285,7 @@ describe("Table column resizing", () => {
      * move focus with them — React Aria turns its own navigation off for the duration.
      */
     it("stops the grid navigating while a column is being resized", async () => {
-      const {resizers, table} = await render();
+      const { resizers, table } = await render();
 
       table.focus();
       await nextTick();

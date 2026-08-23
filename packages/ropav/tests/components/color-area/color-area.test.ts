@@ -1,11 +1,11 @@
-import type {Color} from "@/utils/color-types";
+import type { Color } from "@/utils/color-types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {ColorAreaRoot} from "@/components/color-area";
-import {parseColor} from "@/utils/color";
+import { ColorAreaRoot } from "@/components/color-area";
+import { parseColor } from "@/utils/color";
 
 import Fixture from "./fixtures.vue";
 
@@ -15,7 +15,7 @@ import Fixture from "./fixtures.vue";
  * `0 <= x <= 1` guard, making every press a silent no-op. A test that pressed here and asserted
  * "nothing happened" would be green for the wrong reason. Pointer coverage is in the browser suite.
  */
-const renderArea = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const renderArea = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -25,7 +25,7 @@ const inputs = (container: HTMLElement) =>
 
 const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}) => {
   element.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: keyName, ...init}),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: keyName, ...init }),
   );
 
   return nextTick();
@@ -34,7 +34,7 @@ const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}
 describe("ColorArea", () => {
   describe("structure", () => {
     it("renders both parts with their data-slot and BEM class", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       expect(slot(container, "color-area")).toHaveClass("color-area");
       expect(slot(container, "color-area-thumb")).toHaveClass("color-area__thumb");
@@ -48,7 +48,7 @@ describe("ColorArea", () => {
       expect(slot(plain.container, "color-area")).not.toHaveClass("color-area--show-dots");
       plain.unmount();
 
-      const dotted = renderArea({showDots: true});
+      const dotted = renderArea({ showDots: true });
 
       expect(slot(dotted.container, "color-area")).toHaveClass("color-area--show-dots");
       dotted.unmount();
@@ -59,13 +59,14 @@ describe("ColorArea", () => {
       // cannot see this. Written `<ColorArea show-dots>` in markup, the attribute arrives as `""`
       // unless the compiler knows the prop is Boolean — and `""` matches no variant, so the dots
       // silently never appear. Found by sweeping the stories, not by either suite.
-      const props = (ColorAreaRoot as unknown as {props: Record<string, {type: unknown}>}).props;
+      const props = (ColorAreaRoot as unknown as { props: Record<string, { type: unknown }> })
+        .props;
 
       expect(props["showDots"]?.type).toBe(Boolean);
     });
 
     it("lets a caller's class through to tailwind-merge", () => {
-      const {container, unmount} = renderArea({class: "w-72"});
+      const { container, unmount } = renderArea({ class: "w-72" });
 
       expect(slot(container, "color-area")).toHaveClass("color-area", "w-72");
 
@@ -73,7 +74,7 @@ describe("ColorArea", () => {
     });
 
     it("names the area a group and keeps the thumb out of the accessibility tree", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       expect(slot(container, "color-area")).toHaveAttribute("role", "group");
       // The two inputs inside it are the controls; the thumb is only what a pointer grabs.
@@ -83,7 +84,7 @@ describe("ColorArea", () => {
     });
 
     it("marks the disabled state on both parts", () => {
-      const {container, unmount} = renderArea({isDisabled: true});
+      const { container, unmount } = renderArea({ isDisabled: true });
 
       expect(slot(container, "color-area")).toHaveAttribute("data-disabled", "true");
       expect(slot(container, "color-area-thumb")).toHaveAttribute("data-disabled", "true");
@@ -94,7 +95,7 @@ describe("ColorArea", () => {
     });
 
     it("leaves the disabled attributes off while enabled", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       expect(slot(container, "color-area")).not.toHaveAttribute("data-disabled");
       expect(slot(container, "color-area-thumb")).not.toHaveAttribute("data-disabled");
@@ -105,7 +106,7 @@ describe("ColorArea", () => {
 
   describe("painting", () => {
     it("writes the gradient as a property and as a custom property", () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const area = slot(container, "color-area");
 
       // Both, and neither is redundant: `.color-area` composes the variable into its own
@@ -119,7 +120,7 @@ describe("ColorArea", () => {
     });
 
     it("keeps the blend mode the rgb gradient needs", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       // Writing only the custom property would drop this with it, and the three rgb layers would
       // stop combining — while still looking like a plausible colour square.
@@ -129,7 +130,7 @@ describe("ColorArea", () => {
     });
 
     it("writes the thumb colour as a property and as a custom property", () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
       // jsdom normalises a colour when reading `backgroundColor` back, so the exact string can
@@ -143,7 +144,7 @@ describe("ColorArea", () => {
     });
 
     it("keeps the colour on a disabled thumb, unlike a colour slider's", () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(200, 100%, 50%)",
         isDisabled: true,
       });
@@ -154,7 +155,7 @@ describe("ColorArea", () => {
     });
 
     it("positions the thumb on both axes at once", () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
       expect(thumb.style.left).toBe("8.333333333333332%");
@@ -167,7 +168,7 @@ describe("ColorArea", () => {
 
   describe("the two hidden inputs", () => {
     it("renders one per axis, each with its own channel range", () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
       const [x, y] = inputs(container);
 
       expect(x).toHaveAttribute("aria-orientation", "horizontal");
@@ -182,7 +183,7 @@ describe("ColorArea", () => {
     });
 
     it("exposes one two-dimensional control rather than two sliders", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
       const [x, y] = inputs(container);
 
       expect(x).toHaveAttribute("aria-roledescription", "2D slider");
@@ -196,7 +197,7 @@ describe("ColorArea", () => {
     });
 
     it("reveals both once the keyboard has moved the value", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await key(slot(container, "color-area-thumb"), "ArrowRight");
 
@@ -207,7 +208,7 @@ describe("ColorArea", () => {
     });
 
     it("submits each channel under its own name", () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         form: "the-form",
         xName: "hue",
         yName: "saturation",
@@ -222,7 +223,7 @@ describe("ColorArea", () => {
     });
 
     it("stays in the accessibility tree while out of sight", () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       // Filling the area, with the pointer passing through, so a press reaches the area itself.
       expect(inputs(container)[0]!.style.width).toBe("100%");
@@ -232,7 +233,7 @@ describe("ColorArea", () => {
     });
 
     it("names the whole control on both inputs, not each channel", () => {
-      const {container, unmount} = renderArea({ariaLabel: "Pick a colour"});
+      const { container, unmount } = renderArea({ ariaLabel: "Pick a colour" });
 
       expect(slot(container, "color-area")).toHaveAttribute(
         "aria-label",
@@ -246,7 +247,7 @@ describe("ColorArea", () => {
     });
 
     it("reads every channel, then narrows to the one that moved", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
 
       expect(inputs(container)[0]).toHaveAttribute(
         "aria-valuetext",
@@ -263,7 +264,7 @@ describe("ColorArea", () => {
 
   describe("keyboard", () => {
     it("steps both axes with the arrows", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
       await key(thumb, "ArrowRight");
@@ -276,7 +277,7 @@ describe("ColorArea", () => {
     });
 
     it("pages along x with Home and End, not to the ends of the axis", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
       // A slider would jump to 0 and 360 here; a colour area pages by the channel's page size.
@@ -290,7 +291,7 @@ describe("ColorArea", () => {
     });
 
     it("pages along y with PageUp and PageDown", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = slot(container, "color-area-thumb");
 
       await key(thumb, "PageUp");
@@ -303,7 +304,7 @@ describe("ColorArea", () => {
     });
 
     it("stays put while disabled", async () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 50%, 50%)",
         isDisabled: true,
       });
@@ -320,7 +321,7 @@ describe("ColorArea", () => {
     it("reports a colour, and closes the interaction once per keystroke", async () => {
       const onChange = vi.fn();
       const onChangeEnd = vi.fn();
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 50%, 50%)",
         onChange,
         onChangeEnd,
@@ -336,8 +337,8 @@ describe("ColorArea", () => {
     });
 
     it("follows a controlled value", async () => {
-      const props = reactive({value: parseColor("hsl(30, 100%, 50%)") as Color});
-      const {container, unmount} = renderVapor(Fixture, {props});
+      const props = reactive({ value: parseColor("hsl(30, 100%, 50%)") as Color });
+      const { container, unmount } = renderVapor(Fixture, { props });
 
       expect(inputs(container)[0]!.value).toBe("30");
 
@@ -351,7 +352,7 @@ describe("ColorArea", () => {
     });
 
     it("repaints the gradient as the held channel moves", async () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 100%, 50%)",
         xChannel: "saturation",
         yChannel: "lightness",
@@ -366,7 +367,7 @@ describe("ColorArea", () => {
     });
 
     it("puts the whole colour back when the form is reset", async () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 50%, 50%)",
         withForm: true,
       });

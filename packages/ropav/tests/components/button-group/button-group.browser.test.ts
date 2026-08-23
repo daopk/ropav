@@ -1,13 +1,13 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import ButtonGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) =>
-  renderVapor(ButtonGroupFixture, {props});
+  renderVapor(ButtonGroupFixture, { props });
 
 const buttonsIn = (container: HTMLElement) => {
   const [first, last] = Array.from(container.querySelectorAll("button"));
@@ -22,7 +22,7 @@ const buttonsIn = (container: HTMLElement) => {
  */
 describe("ButtonGroup (browser)", () => {
   it("rounds only the outer edges of a horizontal group", () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const [first, last] = buttonsIn(container);
 
     const firstStyles = getComputedStyle(first);
@@ -38,7 +38,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("rounds the top and bottom edges of a vertical group", () => {
-    const {container, unmount} = renderGroup({orientation: "vertical"});
+    const { container, unmount } = renderGroup({ orientation: "vertical" });
     const [first, last] = buttonsIn(container);
 
     expect(getComputedStyle(first).borderTopLeftRadius).not.toBe("0px");
@@ -50,11 +50,11 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("drops the press transform so a grouped button does not pull away from its neighbour", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const [first] = buttonsIn(container);
 
     first.dispatchEvent(
-      new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "mouse"}),
+      new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
     );
     await nextTick();
 
@@ -65,7 +65,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("raises the focused button above its neighbour", async () => {
-    const {container, unmount} = renderGroup();
+    const { container, unmount } = renderGroup();
     const [first] = buttonsIn(container);
 
     expect(getComputedStyle(first).zIndex).toBe("auto");
@@ -83,7 +83,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("positions the separator on the leading edge of the button it divides", () => {
-    const {container, unmount} = renderGroup({withSeparator: true});
+    const { container, unmount } = renderGroup({ withSeparator: true });
     const [, last] = buttonsIn(container);
     const separator = container.querySelector<HTMLElement>('[data-slot="button-group-separator"]')!;
 
@@ -109,7 +109,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("gives every button in a vertical group the same width", () => {
-    const {container, unmount} = renderGroup({orientation: "vertical"});
+    const { container, unmount } = renderGroup({ orientation: "vertical" });
     const [first, last] = buttonsIn(container);
 
     const firstRect = first.getBoundingClientRect();
@@ -124,7 +124,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("keeps an icon-only button square in a vertical group", () => {
-    const {container, unmount} = renderGroup({isIconOnly: true, orientation: "vertical"});
+    const { container, unmount } = renderGroup({ isIconOnly: true, orientation: "vertical" });
     const [first] = buttonsIn(container);
 
     const rect = first.getBoundingClientRect();
@@ -137,7 +137,7 @@ describe("ButtonGroup (browser)", () => {
   });
 
   it("has no axe violations", async () => {
-    const {container, unmount} = renderGroup({variant: "outline"});
+    const { container, unmount } = renderGroup({ variant: "outline" });
 
     await expectNoA11yViolations(container);
 

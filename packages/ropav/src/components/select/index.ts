@@ -18,7 +18,7 @@ export const Select = Object.assign(SelectRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue};
+export { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue };
 
 export type {
   SelectIndicatorProps,
@@ -34,13 +34,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useSelectContext} from "./select.context";
+export { useSelectContext } from "./select.context";
 
-export type {SelectContext} from "./select.context";
+export type { SelectContext } from "./select.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {selectVariants} from "@ropav/styles";
+export { selectVariants } from "@ropav/styles";
 
-export type {SelectVariants} from "@ropav/styles";
+export type { SelectVariants } from "@ropav/styles";

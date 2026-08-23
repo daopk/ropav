@@ -1,9 +1,12 @@
-import type {UseColorChannelFieldReturn} from "@/composables/use-color-channel-field";
-import type {ColorChannelFieldState} from "@/composables/use-color-channel-field-state";
-import type {UseColorFieldReturn} from "@/composables/use-color-field";
-import type {ColorFieldState} from "@/composables/use-color-field-state";
-import type {ValidationBehavior, ValidationFunction} from "@/composables/use-form-validation-state";
-import type {Color, ColorChannel, ColorSpace} from "@/utils/color-types";
+import type { UseColorChannelFieldReturn } from "@/composables/use-color-channel-field";
+import type { ColorChannelFieldState } from "@/composables/use-color-channel-field-state";
+import type { UseColorFieldReturn } from "@/composables/use-color-field";
+import type { ColorFieldState } from "@/composables/use-color-field-state";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
+import type { Color, ColorChannel, ColorSpace } from "@/utils/color-types";
 
 export interface ColorFieldStateHostProps {
   value?: Color | string | null;

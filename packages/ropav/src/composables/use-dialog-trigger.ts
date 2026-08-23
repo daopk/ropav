@@ -1,12 +1,12 @@
-import type {PressResponder} from "./press-responder";
-import type {OverlayTriggerState} from "./use-overlay-trigger-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PressResponder } from "./press-responder";
+import type { OverlayTriggerState } from "./use-overlay-trigger-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useId} from "./use-id";
-import {useOverlayTrigger} from "./use-overlay-trigger";
-import {usePress} from "./use-press";
+import { useId } from "./use-id";
+import { useOverlayTrigger } from "./use-overlay-trigger";
+import { usePress } from "./use-press";
 
 export interface UseDialogTriggerOptions {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
@@ -49,7 +49,7 @@ export const useDialogTrigger = (
   const triggerId = useId();
   const element = shallowRef<HTMLElement | null>(null);
 
-  const {overlayId, triggerAttributes} = useOverlayTrigger({type: "dialog"}, state);
+  const { overlayId, triggerAttributes } = useOverlayTrigger({ type: "dialog" }, state);
 
   const press = usePress({
     isDisabled: options.isDisabled,
@@ -60,7 +60,7 @@ export const useDialogTrigger = (
   });
 
   const responder: PressResponder = {
-    attrs: computed(() => ({...triggerAttributes.value, id: triggerId.value})),
+    attrs: computed(() => ({ ...triggerAttributes.value, id: triggerId.value })),
     handlers: computed(() => press.handlers),
     isPressed: press.isPressed,
     registerElement: (next) => {

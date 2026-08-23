@@ -1,8 +1,8 @@
-import type {SelectFixtureProps} from "./fixtures.types";
+import type { SelectFixtureProps } from "./fixtures.types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 const render = async (props: SelectFixtureProps & Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -50,11 +50,13 @@ const render = async (props: SelectFixtureProps & Record<string, unknown> = {}) 
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: name}));
+  element.dispatchEvent(
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: name }),
+  );
 };
 
 /** Items register a tick after the popover mounts, and focus moves a tick after that. */
@@ -67,7 +69,7 @@ const settle = async () => {
 describe("Select", () => {
   describe("structure", () => {
     it("exposes the block and every part's data-slot", async () => {
-      const {root, trigger, value} = await render();
+      const { root, trigger, value } = await render();
 
       expect(root).toHaveAttribute("data-slot", "select");
       expect(root).toHaveClass("select");
@@ -79,7 +81,7 @@ describe("Select", () => {
     });
 
     it("carries the variant and full-width modifiers", async () => {
-      const {root, trigger} = await render({fullWidth: true, variant: "secondary"});
+      const { root, trigger } = await render({ fullWidth: true, variant: "secondary" });
 
       expect(root).toHaveClass("select--secondary");
       expect(root).toHaveClass("select--full-width");
@@ -87,7 +89,7 @@ describe("Select", () => {
     });
 
     it("keeps a caller's class on every part, beside the BEM one", async () => {
-      const {root, trigger, value} = await render({
+      const { root, trigger, value } = await render({
         indicatorClass: "my-indicator",
         popoverClass: "my-popover",
         rootClass: "my-root",
@@ -115,7 +117,7 @@ describe("Select", () => {
     });
 
     it("renders no listbox until it is opened", async () => {
-      const {listbox} = await render();
+      const { listbox } = await render();
 
       expect(listbox()).toBeNull();
     });
@@ -123,14 +125,14 @@ describe("Select", () => {
 
   describe("the value", () => {
     it("shows the placeholder when nothing is chosen", async () => {
-      const {value} = await render();
+      const { value } = await render();
 
       expect(value).toHaveTextContent("Select one");
       expect(value).toHaveAttribute("data-placeholder", "true");
     });
 
     it("shows a value it starts with, without ever opening", async () => {
-      const {value} = await render({defaultValue: "texas"});
+      const { value } = await render({ defaultValue: "texas" });
 
       // Nothing rendered an option, so this can only come from the data.
       expect(value).toHaveTextContent("Texas");
@@ -138,7 +140,7 @@ describe("Select", () => {
     });
 
     it("joins several chosen options the way the locale joins a list", async () => {
-      const {value} = await render({
+      const { value } = await render({
         defaultValue: ["florida", "texas"],
         selectionMode: "multiple",
       });
@@ -147,7 +149,7 @@ describe("Select", () => {
     });
 
     it("hands every chosen datum to a slot that renders one node each", async () => {
-      const {screen} = await render({
+      const { screen } = await render({
         defaultValue: ["florida", "texas"],
         selectionMode: "multiple",
         withCustomValueList: true,
@@ -159,7 +161,7 @@ describe("Select", () => {
     });
 
     it("hands the chosen data to its slot", async () => {
-      const {screen} = await render({defaultValue: "california", withCustomValue: true});
+      const { screen } = await render({ defaultValue: "california", withCustomValue: true });
 
       expect(screen.getByTestId("custom-value")).toHaveTextContent("california");
     });
@@ -171,14 +173,14 @@ describe("Select", () => {
 
       expect(plain.root.querySelector('[data-slot="select-default-indicator"]')).not.toBeNull();
 
-      const custom = await render({withCustomIndicator: true});
+      const custom = await render({ withCustomIndicator: true });
 
       expect(custom.root.querySelector('[data-slot="select-indicator"]')).not.toBeNull();
       expect(custom.root.querySelector('[data-slot="select-default-indicator"]')).toBeNull();
     });
 
     it("turns over while the popover is open", async () => {
-      const {root, trigger} = await render();
+      const { root, trigger } = await render();
 
       const indicator = root.querySelector('[data-slot="select-default-indicator"]')!;
 
@@ -193,7 +195,7 @@ describe("Select", () => {
 
   describe("opening and choosing", () => {
     it("opens on a press and lists every option", async () => {
-      const {listbox, options, trigger} = await render();
+      const { listbox, options, trigger } = await render();
 
       press(trigger);
       await settle();
@@ -205,7 +207,7 @@ describe("Select", () => {
 
     it("writes the choice, closes, and shows it", async () => {
       const onChange = vi.fn();
-      const {listbox, options, trigger, value} = await render({onChange});
+      const { listbox, options, trigger, value } = await render({ onChange });
 
       press(trigger);
       await settle();
@@ -220,7 +222,7 @@ describe("Select", () => {
 
     it("stays open in multiple mode and gathers the choices", async () => {
       const onChange = vi.fn();
-      const {listbox, options, trigger} = await render({onChange, selectionMode: "multiple"});
+      const { listbox, options, trigger } = await render({ onChange, selectionMode: "multiple" });
 
       press(trigger);
       await settle();
@@ -238,7 +240,7 @@ describe("Select", () => {
     });
 
     it("opens on ArrowDown and starts on the chosen option", async () => {
-      const {options, trigger} = await render({defaultValue: "texas"});
+      const { options, trigger } = await render({ defaultValue: "texas" });
 
       key(trigger, "ArrowDown");
       await settle();
@@ -248,7 +250,7 @@ describe("Select", () => {
 
     it("reports the open state", async () => {
       const onOpenChange = vi.fn();
-      const {root, trigger} = await render({onOpenChange});
+      const { root, trigger } = await render({ onOpenChange });
 
       press(trigger);
       await settle();
@@ -260,8 +262,8 @@ describe("Select", () => {
 
   describe("a collection that arrives late", () => {
     it("opens on an empty collection when told it may, and fills as data lands", async () => {
-      const props = reactive<Record<string, unknown>>({allowsEmptyCollection: true, items: []});
-      const result = renderVapor(Fixture, {props});
+      const props = reactive<Record<string, unknown>>({ allowsEmptyCollection: true, items: [] });
+      const result = renderVapor(Fixture, { props });
 
       cleanups.push(result.unmount);
       await nextTick();
@@ -277,8 +279,8 @@ describe("Select", () => {
       expect(result.screen.queryAllByRole("option")).toHaveLength(0);
 
       props["items"] = [
-        {id: "bulbasaur", name: "Bulbasaur"},
-        {id: "ivysaur", name: "Ivysaur"},
+        { id: "bulbasaur", name: "Bulbasaur" },
+        { id: "ivysaur", name: "Ivysaur" },
       ];
       await settle();
 
@@ -288,7 +290,7 @@ describe("Select", () => {
     });
 
     it("refuses to open an empty collection otherwise", async () => {
-      const {listbox, trigger} = await render({items: []});
+      const { listbox, trigger } = await render({ items: [] });
 
       press(trigger);
       await settle();
@@ -299,14 +301,14 @@ describe("Select", () => {
 
   describe("accessibility wiring", () => {
     it("announces that the trigger opens a listbox", async () => {
-      const {trigger} = await render();
+      const { trigger } = await render();
 
       expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
       expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
 
     it("names the trigger by its value and then its label", async () => {
-      const {root, trigger, value} = await render({withLabel: true});
+      const { root, trigger, value } = await render({ withLabel: true });
 
       const label = root.querySelector('[data-slot="label"]')!;
 
@@ -314,13 +316,13 @@ describe("Select", () => {
     });
 
     it("renders the label as a span, since the trigger is a composite", async () => {
-      const {root} = await render({withLabel: true});
+      const { root } = await render({ withLabel: true });
 
       expect(root.querySelector('[data-slot="label"]')!.tagName).toBe("SPAN");
     });
 
     it("describes the trigger by its description", async () => {
-      const {root, trigger} = await render({withDescription: true});
+      const { root, trigger } = await render({ withDescription: true });
 
       const description = root.querySelector('[data-slot="description"]')!;
 
@@ -328,7 +330,7 @@ describe("Select", () => {
     });
 
     it("points aria-controls at the listbox it opened", async () => {
-      const {listbox, trigger} = await render();
+      const { listbox, trigger } = await render();
 
       press(trigger);
       await settle();
@@ -337,7 +339,7 @@ describe("Select", () => {
     });
 
     it("names the listbox by the same label as the trigger", async () => {
-      const {listbox, root, trigger} = await render({withLabel: true});
+      const { listbox, root, trigger } = await render({ withLabel: true });
 
       press(trigger);
       await settle();
@@ -349,7 +351,7 @@ describe("Select", () => {
     });
 
     it("leaves the listbox unnamed rather than pointing at nothing", async () => {
-      const {listbox, trigger} = await render();
+      const { listbox, trigger } = await render();
 
       press(trigger);
       await settle();
@@ -363,7 +365,7 @@ describe("Select", () => {
   describe("disabled", () => {
     it("disables the trigger and refuses to open", async () => {
       const onChange = vi.fn();
-      const {listbox, root, trigger} = await render({isDisabled: true, onChange});
+      const { listbox, root, trigger } = await render({ isDisabled: true, onChange });
 
       expect(trigger).toBeDisabled();
       expect(root).toHaveAttribute("data-disabled", "true");
@@ -377,10 +379,10 @@ describe("Select", () => {
 
     it("keeps a disabled option out of reach", async () => {
       const onChange = vi.fn();
-      const {options, trigger} = await render({
+      const { options, trigger } = await render({
         items: [
-          {id: "florida", name: "Florida"},
-          {id: "california", isDisabled: true, name: "California"},
+          { id: "florida", name: "Florida" },
+          { id: "california", isDisabled: true, name: "California" },
         ],
         onChange,
       });
@@ -397,7 +399,7 @@ describe("Select", () => {
 
   describe("validation", () => {
     it("marks itself invalid and shows the field error", async () => {
-      const {root, screen} = await render({isInvalid: true, withFieldError: true});
+      const { root, screen } = await render({ isInvalid: true, withFieldError: true });
 
       expect(root).toHaveAttribute("data-invalid", "true");
       expect(screen.getByText("Please choose a state")).toBeInTheDocument();
@@ -405,7 +407,7 @@ describe("Select", () => {
     });
 
     it("marks itself required", async () => {
-      const {root, trigger} = await render({isRequired: true});
+      const { root, trigger } = await render({ isRequired: true });
 
       expect(root).toHaveAttribute("data-required", "true");
       expect(trigger).toHaveAttribute("aria-required", "true");
@@ -414,7 +416,7 @@ describe("Select", () => {
 
   describe("the hidden native control", () => {
     it("renders an option per datum, with nothing opened", async () => {
-      const {root} = await render({name: "state"});
+      const { root } = await render({ name: "state" });
 
       const control = root.querySelector<HTMLSelectElement>("select")!;
 
@@ -431,13 +433,13 @@ describe("Select", () => {
     });
 
     it("holds the chosen value, so a form reads it", async () => {
-      const {root} = await render({defaultValue: "texas", name: "state"});
+      const { root } = await render({ defaultValue: "texas", name: "state" });
 
       expect(root.querySelector<HTMLSelectElement>("select")!.value).toBe("texas");
     });
 
     it("takes several values in multiple mode", async () => {
-      const {root} = await render({
+      const { root } = await render({
         defaultValue: ["florida", "texas"],
         name: "state",
         selectionMode: "multiple",
@@ -453,7 +455,7 @@ describe("Select", () => {
     });
 
     it("marks the starting options as the ones a reset goes back to", async () => {
-      const {root} = await render({defaultValue: "texas", name: "state"});
+      const { root } = await render({ defaultValue: "texas", name: "state" });
 
       const control = root.querySelector<HTMLSelectElement>("select")!;
       const defaults = [...control.options]
@@ -469,7 +471,7 @@ describe("Select", () => {
     });
 
     it("marks every starting option in multiple mode", async () => {
-      const {root} = await render({
+      const { root } = await render({
         defaultValue: ["florida", "texas"],
         name: "state",
         selectionMode: "multiple",
@@ -483,7 +485,7 @@ describe("Select", () => {
     });
 
     it("marks nothing when the select starts empty", async () => {
-      const {root} = await render({name: "state"});
+      const { root } = await render({ name: "state" });
 
       const control = root.querySelector<HTMLSelectElement>("select")!;
 
@@ -496,7 +498,7 @@ describe("Select", () => {
       form.id = "select-form";
       document.body.append(form);
 
-      const {root} = await render({defaultValue: "texas", form: "select-form", name: "state"});
+      const { root } = await render({ defaultValue: "texas", form: "select-form", name: "state" });
 
       // Joined by attribute, which is how a control reaches a form the harness did not wrap it in.
       expect(root.querySelector("select")!.form).toBe(form);
@@ -506,7 +508,7 @@ describe("Select", () => {
     });
 
     it("is hidden from assistive technology and out of the tab order", async () => {
-      const {root} = await render({name: "state"});
+      const { root } = await render({ name: "state" });
 
       const container = root.querySelector('[data-a11y-ignore="aria-hidden-focus"]')!;
 

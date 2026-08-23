@@ -1,6 +1,6 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {DateValue} from "@internationalized/date";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { DateValue } from "@internationalized/date";
+import type { StoryObj } from "@storybook/vue3";
 
 import {
   getLocalTimeZone,
@@ -11,11 +11,11 @@ import {
   startOfWeek,
   today,
 } from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {Button} from "../button";
-import {ButtonGroup} from "../button-group";
+import { useLocale } from "../../composables/use-locale";
+import { Button } from "../button";
+import { ButtonGroup } from "../button-group";
 import {
   CalendarYearPickerCell,
   CalendarYearPickerGrid,
@@ -24,12 +24,12 @@ import {
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
 } from "../calendar-year-picker";
-import {Description} from "../description";
-import {I18nProvider} from "../i18n-provider";
-import {Label} from "../label";
-import {ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
+import { Description } from "../description";
+import { I18nProvider } from "../i18n-provider";
+import { Label } from "../label";
+import { ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
 
 import {
   CalendarCell,
@@ -83,8 +83,8 @@ const components = {
  * because the linter reads a literal `slot` attribute as Vue 2 slot syntax. It is an ordinary prop
  * here, and the same shape the component itself uses to put it back in the DOM.
  */
-const PREVIOUS = {slot: "previous"} as const;
-const NEXT = {slot: "next"} as const;
+const PREVIOUS = { slot: "previous" } as const;
+const NEXT = { slot: "next" } as const;
 
 /** The grid and its cells, which nearly every story below repeats. */
 const grid = `
@@ -145,10 +145,10 @@ const yearPickerGrid = `
 
 const meta: StoryMeta = {
   argTypes: {
-    isDisabled: {control: "boolean"},
-    isReadOnly: {control: "boolean"},
-    selectionMode: {control: "select", options: ["single", "multiple"]},
-    weeksInMonth: {control: {max: 6, min: 4, step: 1, type: "number"}},
+    isDisabled: { control: "boolean" },
+    isReadOnly: { control: "boolean" },
+    selectionMode: { control: "select", options: ["single", "multiple"] },
+    weeksInMonth: { control: { max: 6, min: 4, step: 1, type: "number" } },
   },
   component: CalendarRoot,
   parameters: {
@@ -164,7 +164,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date">
         ${header}
@@ -177,7 +177,7 @@ export const Default: Story = {
 export const WithYearPicker: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date">
         ${yearPickerHeader}
@@ -191,7 +191,7 @@ export const WithYearPicker: Story = {
 export const DefaultValue: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, defaultValue: parseDate("2025-02-14")}),
+    setup: () => ({ NEXT, PREVIOUS, args, defaultValue: parseDate("2025-02-14") }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
         ${header}
@@ -221,9 +221,9 @@ export const Controlled: Story = {
         focusedValue,
         goTo,
         goToChristmas: () => goTo(parseDate("2025-12-25")),
-        goToNextMonth: () => goTo(startOfMonth(today(getLocalTimeZone()).add({months: 1}))),
+        goToNextMonth: () => goTo(startOfMonth(today(getLocalTimeZone()).add({ months: 1 }))),
         goToNextWeek: () =>
-          goTo(startOfWeek(today(getLocalTimeZone()).add({weeks: 1}), locale.value.locale)),
+          goTo(startOfWeek(today(getLocalTimeZone()).add({ weeks: 1 }), locale.value.locale)),
         goToToday: () => goTo(today(getLocalTimeZone())),
         selected: computed(() => value.value?.toString() ?? "(none)"),
         value,
@@ -264,7 +264,7 @@ export const MinMaxDates: Story = {
     setup: () => {
       const now = today(getLocalTimeZone());
 
-      return {NEXT, PREVIOUS, args, maxValue: now.add({months: 3}), minValue: now};
+      return { NEXT, PREVIOUS, args, maxValue: now.add({ months: 3 }), minValue: now };
     },
     template: `
       <div class="flex flex-col items-center gap-4">
@@ -325,7 +325,7 @@ export const UnavailableDates: Story = {
 export const WeeksInMonth: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <div class="flex flex-col items-center gap-4">
         <CalendarRoot v-bind="args" aria-label="Event date" :weeks-in-month="6">
@@ -415,7 +415,7 @@ export const CustomUnavailableDates: Story = {
 export const Disabled: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone())}),
+    setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col items-center gap-4">
         <CalendarRoot
@@ -436,7 +436,7 @@ export const Disabled: Story = {
 export const ReadOnly: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone())}),
+    setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col items-center gap-4">
         <CalendarRoot
@@ -602,7 +602,7 @@ export const TodayIndicator: Story = {
 export const MultipleMonths: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, secondMonth: {months: 1}, twoMonths: {months: 2}}),
+    setup: () => ({ NEXT, PREVIOUS, args, secondMonth: { months: 1 }, twoMonths: { months: 2 } }),
     template: `
       <CalendarRoot
         v-bind="args"
@@ -645,26 +645,26 @@ export const MultipleMonths: Story = {
 };
 
 /** A picker reads an option's label off the item rather than the key. */
-const byName = (option: {name: string}) => option.name;
+const byName = (option: { name: string }) => option.name;
 
 const DAY_VIEW_OPTIONS = [
-  {id: "1", name: "1 day"},
-  {id: "5", name: "5 days"},
-  {id: "7", name: "7 days"},
-  {id: "8", name: "8 days"},
-  {id: "10", name: "10 days"},
-  {id: "14", name: "14 days"},
-  {id: "21", name: "21 days"},
+  { id: "1", name: "1 day" },
+  { id: "5", name: "5 days" },
+  { id: "7", name: "7 days" },
+  { id: "8", name: "8 days" },
+  { id: "10", name: "10 days" },
+  { id: "14", name: "14 days" },
+  { id: "21", name: "21 days" },
 ];
 
 const WEEK_VIEW_OPTIONS = [
-  {id: "1", name: "1 week"},
-  {id: "2", name: "2 weeks"},
-  {id: "3", name: "3 weeks"},
-  {id: "4", name: "4 weeks"},
-  {id: "5", name: "5 weeks"},
-  {id: "6", name: "6 weeks"},
-  {id: "8", name: "8 weeks"},
+  { id: "1", name: "1 week" },
+  { id: "2", name: "2 weeks" },
+  { id: "3", name: "3 weeks" },
+  { id: "4", name: "4 weeks" },
+  { id: "5", name: "5 weeks" },
+  { id: "6", name: "6 weeks" },
+  { id: "8", name: "8 weeks" },
 ];
 
 export const DayView: Story = {
@@ -680,7 +680,7 @@ export const DayView: Story = {
         byName,
         days,
         options: DAY_VIEW_OPTIONS,
-        visibleDuration: computed(() => ({days: Number(days.value)})),
+        visibleDuration: computed(() => ({ days: Number(days.value) })),
       };
     },
     template: `
@@ -730,7 +730,7 @@ export const WeekView: Story = {
         args,
         byName,
         options: WEEK_VIEW_OPTIONS,
-        visibleDuration: computed(() => ({weeks: Number(weeks.value)})),
+        visibleDuration: computed(() => ({ weeks: Number(weeks.value) })),
         weeks,
       };
     },
@@ -772,7 +772,7 @@ export const WeekView: Story = {
 export const InternationalCalendar: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone())}),
+    setup: () => ({ NEXT, PREVIOUS, args, defaultValue: today(getLocalTimeZone()) }),
     template: `
       <I18nProvider locale="hi-IN-u-ca-indian">
         <CalendarRoot v-bind="args" aria-label="Event date" :default-value="defaultValue">
@@ -792,9 +792,9 @@ export const ThreeMonths: Story = {
       NEXT,
       PREVIOUS,
       args,
-      secondMonth: {months: 1},
-      thirdMonth: {months: 2},
-      threeMonths: {months: 3},
+      secondMonth: { months: 1 },
+      thirdMonth: { months: 2 },
+      threeMonths: { months: 3 },
     }),
     template: `
       <CalendarRoot
@@ -927,7 +927,7 @@ export const BookingCalendar: Story = {
 export const YearPicker: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date">
         ${yearPickerHeader}
@@ -941,7 +941,7 @@ export const YearPicker: Story = {
 export const YearPickerStyledCells: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date with styled year cells">
         ${yearPickerHeader}
@@ -968,7 +968,7 @@ export const YearPickerStyledCells: Story = {
 export const YearPickerCustomCells: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date with custom year cells">
         ${yearPickerHeader}
@@ -998,7 +998,7 @@ export const YearPickerCustomCells: Story = {
 export const CustomNavIcons: Story = {
   render: (args) => ({
     components,
-    setup: () => ({NEXT, PREVIOUS, args}),
+    setup: () => ({ NEXT, PREVIOUS, args }),
     template: `
       <CalendarRoot v-bind="args" aria-label="Event date">
         <CalendarHeader>
@@ -1025,19 +1025,19 @@ export const EventCalendar: Story = {
     components,
     setup: () => {
       // Sample events data.
-      const events: Record<number, {title: string; color: string}[]> = {
+      const events: Record<number, { title: string; color: string }[]> = {
         12: [
-          {color: "bg-green-500", title: "Lunch"},
-          {color: "bg-purple-500", title: "Review"},
+          { color: "bg-green-500", title: "Lunch" },
+          { color: "bg-purple-500", title: "Review" },
         ],
-        15: [{color: "bg-orange-500", title: "Conference"}],
-        21: [{color: "bg-pink-500", title: "Workshop"}],
-        28: [{color: "bg-cyan-500", title: "Demo Day"}],
-        3: [{color: "bg-blue-500", title: "Team Meeting"}],
-        7: [{color: "bg-red-500", title: "Project Deadline"}],
+        15: [{ color: "bg-orange-500", title: "Conference" }],
+        21: [{ color: "bg-pink-500", title: "Workshop" }],
+        28: [{ color: "bg-cyan-500", title: "Demo Day" }],
+        3: [{ color: "bg-blue-500", title: "Team Meeting" }],
+        7: [{ color: "bg-red-500", title: "Project Deadline" }],
       };
 
-      return {NEXT, PREVIOUS, args, hasEvent: (date: DateValue) => Boolean(events[date.day])};
+      return { NEXT, PREVIOUS, args, hasEvent: (date: DateValue) => Boolean(events[date.day]) };
     },
     template: `
       <div class="flex flex-col items-center gap-4">

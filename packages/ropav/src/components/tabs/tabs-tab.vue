@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {TabsTabProps, TabsTabSlotProps} from "./tabs.types";
+import type { TabsTabProps, TabsTabSlotProps } from "./tabs.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {getCollectionTextValue} from "../../utils/text-value";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { getCollectionTextValue } from "../../utils/text-value";
 
-import {provideTabsTabContext, useTabsContext} from "./tabs.context";
+import { provideTabsTabContext, useTabsContext } from "./tabs.context";
 
-const props = withDefaults(defineProps<TabsTabProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<TabsTabProps>(), { isDisabled: undefined });
 
-defineSlots<{default?: (props: TabsTabSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TabsTabSlotProps) => unknown }>();
 
-const {isDisabled: isListDisabled, keyboard, slots, state} = useTabsContext();
+const { isDisabled: isListDisabled, keyboard, slots, state } = useTabsContext();
 
 const tabKey = computed(() => props.id);
 
@@ -37,7 +37,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const isSelected = computed(() => state.selectedKey.value === tabKey.value);
@@ -53,9 +53,9 @@ const {
   onPointerdown: onPointerdownState,
   onPointerenter,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => isDisabled.value});
+} = useInteractionStates({ isDisabled: () => isDisabled.value });
 
-provideTabsTabContext({isSelected});
+provideTabsTabContext({ isSelected });
 
 /*
  * A tab is chosen as the press begins, not as it ends, which is what React Aria does for a tab
@@ -92,7 +92,7 @@ const onKeydown = (event: KeyboardEvent) => {
     :aria-controls="isSelected ? state.tabPanelId(tabKey) : undefined"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="isSelected"
-    :class="slots.tab({class: props.class})"
+    :class="slots.tab({ class: props.class })"
     :data-disabled="dataAttr(isDisabled)"
     :data-focus-visible="dataAttr(isFocusVisible)"
     :data-focused="dataAttr(isFocused)"

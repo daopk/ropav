@@ -1,17 +1,17 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {DEFAULT_TOAST_TIMEOUT, ToastContent, ToastQueue} from "@/components/toast";
+import { DEFAULT_TOAST_TIMEOUT, ToastContent, ToastQueue } from "@/components/toast";
 
 import ToastCustomFixture from "./fixtures-custom.vue";
 import ToastOrphanTitleFixture from "./fixtures-orphan-title.vue";
 import ToastFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown>) => {
-  const result = renderVapor(ToastFixture, {props});
+  const result = renderVapor(ToastFixture, { props });
 
   mounted.push(result);
 
@@ -30,13 +30,13 @@ const settle = async () => {
 
 const slot = (name: string) => document.body.querySelector(`[data-slot="${name}"]`);
 
-const POINTER = {bubbles: true, button: 0, composed: true, pointerId: 1} as const;
+const POINTER = { bubbles: true, button: 0, composed: true, pointerId: 1 } as const;
 
 /** A press as the browser delivers it: `usePress` listens to the pointer events, not the click. */
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const closeButton = () => document.body.querySelector<HTMLElement>('button[aria-label="Close"]');
@@ -61,14 +61,14 @@ describe("Toast", () => {
     it("renders nothing until a toast is queued", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
+      render({ queue });
       await settle();
 
       // The stack has no resting state: an empty region would still be a fixed, focusable landmark
       // sitting over the page.
       expect(region()).toBeNull();
 
-      queue.add({title: "Saved"});
+      queue.add({ title: "Saved" });
       await settle();
 
       expect(region()).not.toBeNull();
@@ -77,14 +77,14 @@ describe("Toast", () => {
     it("exposes the region with a data-slot and a notification count label", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       expect(slot("toast-region")).toBe(region());
       expect(region()).toHaveAttribute("aria-label", "1 notification.");
 
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       expect(region()).toHaveAttribute("aria-label", "2 notifications.");
@@ -93,8 +93,8 @@ describe("Toast", () => {
     it("writes the stack geometry out as custom properties", async () => {
       const queue = new ToastQueue();
 
-      render({gap: 20, queue, scaleFactor: 0.1, width: 320});
-      queue.add({title: "Saved"});
+      render({ gap: 20, queue, scaleFactor: 0.1, width: 320 });
+      queue.add({ title: "Saved" });
       await settle();
 
       const style = region()!.getAttribute("style");
@@ -107,8 +107,8 @@ describe("Toast", () => {
     it("supports a width given as a string", async () => {
       const queue = new ToastQueue();
 
-      render({queue, width: "50vw"});
-      queue.add({title: "Saved"});
+      render({ queue, width: "50vw" });
+      queue.add({ title: "Saved" });
       await settle();
 
       expect(region()!.getAttribute("style")).toContain("--toast-width: 50vw");
@@ -117,8 +117,8 @@ describe("Toast", () => {
     it("wraps the toasts in a list that takes no part in the layout", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       const list = region()!.querySelector("ol")!;
@@ -134,8 +134,8 @@ describe("Toast", () => {
     it("renders an alert dialog with a title, description and close button", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({description: "All done", title: "Saved", variant: "success"});
+      render({ queue });
+      queue.add({ description: "All done", title: "Saved", variant: "success" });
       await settle();
 
       const toast = toasts()[0]!;
@@ -153,8 +153,8 @@ describe("Toast", () => {
     it("renders no indicator when the indicator is null", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({indicator: null, title: "Saved"});
+      render({ queue });
+      queue.add({ indicator: null, title: "Saved" });
       await settle();
 
       expect(slot("toast-indicator")).toBeNull();
@@ -163,8 +163,8 @@ describe("Toast", () => {
     it("renders a custom indicator instead of the default icon", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({indicator: "★", title: "Saved"});
+      render({ queue });
+      queue.add({ indicator: "★", title: "Saved" });
       await settle();
 
       expect(slot("toast-indicator")).toHaveTextContent("★");
@@ -174,8 +174,8 @@ describe("Toast", () => {
     it("renders a spinner in place of the indicator while loading", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({isLoading: true, title: "Saving"});
+      render({ queue });
+      queue.add({ isLoading: true, title: "Saving" });
       await settle();
 
       expect(slot("toast-indicator")!.querySelector('[data-slot="spinner"]')).not.toBeNull();
@@ -186,8 +186,8 @@ describe("Toast", () => {
       const queue = new ToastQueue();
       const onPress = vi.fn();
 
-      render({queue});
-      queue.add({actionProps: {label: "Undo", onPress}, title: "Saved"});
+      render({ queue });
+      queue.add({ actionProps: { label: "Undo", onPress }, title: "Saved" });
       await settle();
 
       const action = slot("toast-action-button")!;
@@ -202,8 +202,8 @@ describe("Toast", () => {
     it("renders no action button without a label to put on it", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({actionProps: {onPress: vi.fn()}, title: "Saved"});
+      render({ queue });
+      queue.add({ actionProps: { onPress: vi.fn() }, title: "Saved" });
       await settle();
 
       expect(slot("toast-action-button")).toBeNull();
@@ -212,8 +212,8 @@ describe("Toast", () => {
     it("omits a title that was not given", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({description: "All done"});
+      render({ queue });
+      queue.add({ description: "All done" });
       await settle();
 
       expect(slot("toast-title")).toBeNull();
@@ -223,8 +223,8 @@ describe("Toast", () => {
     it("points at the description only when one is rendered", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({description: "All done", title: "Saved"});
+      render({ queue });
+      queue.add({ description: "All done", title: "Saved" });
       await settle();
 
       expect(toasts()[0]!.getAttribute("aria-describedby")).toBe(
@@ -235,8 +235,8 @@ describe("Toast", () => {
     it("points at no description when none is rendered", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       // The claim is what resolves this: an id nothing carries would be a dangling reference.
@@ -248,10 +248,10 @@ describe("Toast", () => {
     it("puts the newest toast at the front and indexes the rest behind it", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "First"});
+      render({ queue });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       const [front, behind] = toasts();
@@ -267,10 +267,10 @@ describe("Toast", () => {
     it("offsets and scales each toast by its place in the stack", async () => {
       const queue = new ToastQueue();
 
-      render({gap: 10, queue, scaleFactor: 0.1});
-      queue.add({title: "First"});
+      render({ gap: 10, queue, scaleFactor: 0.1 });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       const [front, behind] = toasts();
@@ -287,10 +287,10 @@ describe("Toast", () => {
     it("offsets a top-placed stack downwards instead", async () => {
       const queue = new ToastQueue();
 
-      render({gap: 10, placement: "top", queue});
-      queue.add({title: "First"});
+      render({ gap: 10, placement: "top", queue });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       expect(toasts()[1]!.style.translate).toBe("0 10px 0");
@@ -299,8 +299,8 @@ describe("Toast", () => {
     it("names each toast for the view transition that animates it", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      const key = queue.add({title: "Saved"});
+      render({ queue });
+      const key = queue.add({ title: "Saved" });
 
       await settle();
 
@@ -313,10 +313,10 @@ describe("Toast", () => {
     it("hides the toasts past the visible limit without dropping them", async () => {
       const queue = new ToastQueue();
 
-      render({maxVisibleToasts: 1, queue});
-      queue.add({title: "First"});
+      render({ maxVisibleToasts: 1, queue });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       const [front, behind] = toasts();
@@ -330,12 +330,12 @@ describe("Toast", () => {
     });
 
     it("takes the visible limit from the queue when the region does not say", async () => {
-      const queue = new ToastQueue({maxVisibleToasts: 1});
+      const queue = new ToastQueue({ maxVisibleToasts: 1 });
 
-      render({queue});
-      queue.add({title: "First"});
+      render({ queue });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       expect(toasts()[1]).toHaveAttribute("data-hidden", "true");
@@ -344,10 +344,10 @@ describe("Toast", () => {
     it("only lets the frontmost toast into the tab order", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "First"});
+      render({ queue });
+      queue.add({ title: "First" });
       await settle();
-      queue.add({title: "Second"});
+      queue.add({ title: "Second" });
       await settle();
 
       expect(toasts()[0]).toHaveAttribute("tabindex", "0");
@@ -359,8 +359,8 @@ describe("Toast", () => {
     it("exposes the placement modifier on both the region and the toast", async () => {
       const queue = new ToastQueue();
 
-      render({placement: "top end", queue});
-      queue.add({title: "Saved"});
+      render({ placement: "top end", queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       expect(region()!.className).toContain("toast-region--top-end");
@@ -373,8 +373,8 @@ describe("Toast", () => {
       const queue = new ToastQueue();
       const onClose = vi.fn();
 
-      render({queue});
-      queue.add({title: "Saved"}, {onClose});
+      render({ queue });
+      queue.add({ title: "Saved" }, { onClose });
       await settle();
 
       press(closeButton()!);
@@ -387,8 +387,8 @@ describe("Toast", () => {
     it("exposes a keyboard path to the close button", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       // What jsdom can answer: the frontmost toast is the entry point and the close button is
@@ -408,7 +408,7 @@ describe("Toast", () => {
 
   describe("auto dismiss", () => {
     beforeEach(() => {
-      vi.useFakeTimers({shouldAdvanceTime: true});
+      vi.useFakeTimers({ shouldAdvanceTime: true });
     });
 
     afterEach(() => {
@@ -419,8 +419,8 @@ describe("Toast", () => {
     it("dismisses a toast after the default timeout", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await settle();
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT - 1);
@@ -438,8 +438,8 @@ describe("Toast", () => {
     it("keeps a toast with no timeout until something closes it", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"}, {timeout: 0});
+      render({ queue });
+      queue.add({ title: "Saved" }, { timeout: 0 });
       await settle();
 
       vi.advanceTimersByTime(DEFAULT_TOAST_TIMEOUT * 10);
@@ -453,10 +453,10 @@ describe("Toast", () => {
     it("renders a caller's own tree instead of the default one", async () => {
       const queue = new ToastQueue();
 
-      const result = renderVapor(ToastCustomFixture, {props: {queue}});
+      const result = renderVapor(ToastCustomFixture, { props: { queue } });
 
       mounted.push(result);
-      queue.add({title: "Saved"});
+      queue.add({ title: "Saved" });
       await settle();
 
       expect(document.body.querySelector('[data-testid="custom"]')).toHaveTextContent("Saved");
@@ -473,11 +473,11 @@ describe("Toast", () => {
     it("refuses to render a part outside a toast", async () => {
       const queue = new ToastQueue();
 
-      queue.add({title: "Saved"});
+      queue.add({ title: "Saved" });
 
       // Thrown while the region renders its rows, so it surfaces on the flush rather than the call.
       await expect(async () => {
-        mounted.push(renderVapor(ToastOrphanTitleFixture, {props: {queue}}));
+        mounted.push(renderVapor(ToastOrphanTitleFixture, { props: { queue } }));
         await settle();
       }).rejects.toThrow(/`ToastItemContext` was consumed outside/);
     });

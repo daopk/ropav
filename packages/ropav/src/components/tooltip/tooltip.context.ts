@@ -1,8 +1,8 @@
-import type {TooltipTriggerState} from "../../composables/use-tooltip-trigger-state";
-import type {tooltipVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { TooltipTriggerState } from "../../composables/use-tooltip-trigger-state";
+import type { tooltipVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface TooltipContext {
   slots: ComputedRef<ReturnType<typeof tooltipVariants>>;

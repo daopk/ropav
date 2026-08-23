@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {DrawerContentProps} from "./drawer.types";
+import type { DrawerContentProps } from "./drawer.types";
 
-import {drawerVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { drawerVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {OverlayDismissButton} from "../overlay";
+import { dataAttr } from "../../utils/assertion";
+import { OverlayDismissButton } from "../overlay";
 
-import {provideDrawerContext, useDrawerContext, useDrawerOverlayContext} from "./drawer.context";
+import { provideDrawerContext, useDrawerContext, useDrawerOverlayContext } from "./drawer.context";
 
-const props = withDefaults(defineProps<DrawerContentProps>(), {placement: "bottom"});
+const props = withDefaults(defineProps<DrawerContentProps>(), { placement: "bottom" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useDrawerContext();
 const overlay = useDrawerOverlayContext();
@@ -20,7 +20,7 @@ const element = shallowRef<HTMLElement | null>(null);
 
 const slots = computed(() => ({
   ...context.slots.value,
-  ...drawerVariants({placement: props.placement}),
+  ...drawerVariants({ placement: props.placement }),
 }));
 
 provideDrawerContext({
@@ -29,7 +29,7 @@ provideDrawerContext({
   slots,
 });
 
-const styles = computed(() => slots.value.content({class: props.class}));
+const styles = computed(() => slots.value.content({ class: props.class }));
 
 /**
  * Reported upward rather than measured from above.

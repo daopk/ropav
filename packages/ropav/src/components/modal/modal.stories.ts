@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
 import IconCircleCheck from "~icons/gravity-ui/circle-check";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
@@ -9,14 +9,14 @@ import IconGear from "~icons/gravity-ui/gear";
 import IconRocket from "~icons/gravity-ui/rocket";
 import IconSparkles from "~icons/gravity-ui/sparkles";
 
-import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import {ButtonRoot} from "../button";
-import {InputRoot} from "../input";
-import {LabelRoot} from "../label";
-import {Radio} from "../radio";
-import {RadioGroup} from "../radio-group";
-import {SurfaceRoot} from "../surface";
-import {TextField} from "../textfield";
+import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import { ButtonRoot } from "../button";
+import { InputRoot } from "../input";
+import { LabelRoot } from "../label";
+import { Radio } from "../radio";
+import { RadioGroup } from "../radio-group";
+import { SurfaceRoot } from "../surface";
+import { TextField } from "../textfield";
 
 import ModalBackdrop from "./modal-backdrop.vue";
 import ModalBody from "./modal-body.vue";
@@ -66,7 +66,7 @@ const components = {
 };
 
 const meta = {
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Overlays/Modal",
 } satisfies Meta;
 
@@ -110,7 +110,7 @@ export const Default: Story = {
 export const Placements: Story = {
   render: () => ({
     components,
-    setup: () => ({placements: ["auto", "top", "center", "bottom"] as const}),
+    setup: () => ({ placements: ["auto", "top", "center", "bottom"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <Modal v-for="placement in placements" :key="placement">
@@ -148,7 +148,7 @@ export const Placements: Story = {
 export const BackdropVariants: Story = {
   render: () => ({
     components,
-    setup: () => ({variants: ["opaque", "blur", "transparent"] as const}),
+    setup: () => ({ variants: ["opaque", "blur", "transparent"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <Modal v-for="variant in variants" :key="variant">
@@ -187,7 +187,7 @@ export const BackdropVariants: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({sizes: ["xs", "sm", "md", "lg", "cover", "full"] as const}),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg", "cover", "full"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <Modal v-for="size in sizes" :key="size">
@@ -432,7 +432,7 @@ export const ScrollComparison: Story = {
     setup: () => {
       const scroll = shallowRef<"inside" | "outside">("inside");
 
-      return {paragraphs: Array.from({length: 30}, (_, index) => index + 1), scroll};
+      return { paragraphs: Array.from({ length: 30 }, (_, index) => index + 1), scroll };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -497,7 +497,7 @@ export const Controlled: Story = {
       // one object with `open`/`close`/`toggle` rather than a ref and a handler.
       const state = useOverlayTriggerState();
 
-      return {isOpen, state};
+      return { isOpen, state };
     },
     template: `
       <div class="flex max-w-md flex-col gap-8">
@@ -806,7 +806,7 @@ export const CustomPortal: Story = {
         portalContainer.value = (element as HTMLElement | null) ?? null;
       };
 
-      return {portalContainer, setPortal};
+      return { portalContainer, setPortal };
     },
     template: `
       <div class="flex flex-col gap-4">

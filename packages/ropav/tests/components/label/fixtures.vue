@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {LabelRootProps} from "@/components/label";
+import type { LabelRootProps } from "@/components/label";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {LabelRoot} from "@/components/label";
-import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
+import { LabelRoot } from "@/components/label";
+import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids";
 
 /**
  * `withFieldIds` stands in for a container that names itself after its label — a collection
@@ -36,7 +36,7 @@ if (props.withFieldIds) provideFieldIdsContext(fieldIds.context);
 // Bound as a whole object rather than as a plain `:for`, because a key present in `$attrs`
 // suppresses the component's own binding for that key — even when its value is `undefined`.
 // Passing `:for` unconditionally would therefore hide the container's control id in every case.
-const callerAttrs = computed(() => (props.labelFor ? {for: props.labelFor} : {}));
+const callerAttrs = computed(() => (props.labelFor ? { for: props.labelFor } : {}));
 </script>
 
 <template>

@@ -1,8 +1,8 @@
-import type {QueuedToast} from "@/components/toast";
+import type { QueuedToast } from "@/components/toast";
 
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   Toast,
@@ -14,7 +14,7 @@ import {
   ToastTitle,
 } from "@/components/toast";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const settle = async () => {
   await nextTick();
@@ -48,19 +48,19 @@ describe("Toast interop", () => {
 
     mounted.push(
       renderInterop(ToastProvider, {
-        props: {placement: "top end", queue},
+        props: { placement: "top end", queue },
         slots: {
           default: (slotProps) =>
             h(
               Toast,
-              {toast: (slotProps as {toast: QueuedToast}).toast},
+              { toast: (slotProps as { toast: QueuedToast }).toast },
               {
                 default: () => [
                   h(ToastIndicator),
                   h(ToastContent, null, {
                     default: () => [
-                      h(ToastTitle, null, {default: () => "Saved"}),
-                      h(ToastDescription, null, {default: () => "All done"}),
+                      h(ToastTitle, null, { default: () => "Saved" }),
+                      h(ToastDescription, null, { default: () => "All done" }),
                     ],
                   }),
                 ],
@@ -70,7 +70,7 @@ describe("Toast interop", () => {
       }),
     );
 
-    queue.add({title: "Saved", variant: "success"});
+    queue.add({ title: "Saved", variant: "success" });
     await settle();
 
     const toast = slot("toast")!;
@@ -89,18 +89,18 @@ describe("Toast interop", () => {
 
     mounted.push(
       renderInterop(ToastProvider, {
-        props: {queue},
+        props: { queue },
         slots: {
           default: (slotProps) =>
             h(
               Toast,
-              {toast: (slotProps as {toast: QueuedToast}).toast},
+              { toast: (slotProps as { toast: QueuedToast }).toast },
               {
                 default: () => [
                   h(ToastContent, null, {
                     default: () => [
-                      h(ToastTitle, null, {default: () => "Saved"}),
-                      h(ToastDescription, null, {default: () => "All done"}),
+                      h(ToastTitle, null, { default: () => "Saved" }),
+                      h(ToastDescription, null, { default: () => "All done" }),
                     ],
                   }),
                 ],
@@ -110,7 +110,7 @@ describe("Toast interop", () => {
       }),
     );
 
-    queue.add({title: "Saved"});
+    queue.add({ title: "Saved" });
     await settle();
 
     const toast = slot("toast")!;
@@ -125,39 +125,39 @@ describe("Toast interop", () => {
 
   it("hands the host the toast and its loading state", async () => {
     const queue = new ToastQueue();
-    const received: {isLoading: unknown; title: unknown}[] = [];
+    const received: { isLoading: unknown; title: unknown }[] = [];
 
     mounted.push(
       renderInterop(ToastProvider, {
-        props: {queue},
+        props: { queue },
         slots: {
           default: (slotProps) => {
-            const {isLoading, toast} = slotProps as {
+            const { isLoading, toast } = slotProps as {
               isLoading: boolean;
-              toast: {content: {title?: unknown}};
+              toast: { content: { title?: unknown } };
             };
 
-            received.push({isLoading, title: toast.content.title});
+            received.push({ isLoading, title: toast.content.title });
 
-            return h("div", {"data-testid": "custom"}, String(toast.content.title));
+            return h("div", { "data-testid": "custom" }, String(toast.content.title));
           },
         },
       }),
     );
 
-    queue.add({isLoading: true, title: "Saving"});
+    queue.add({ isLoading: true, title: "Saving" });
     await settle();
 
-    expect(received).toEqual([{isLoading: true, title: "Saving"}]);
+    expect(received).toEqual([{ isLoading: true, title: "Saving" }]);
     expect(document.body.querySelector('[data-testid="custom"]')).toHaveTextContent("Saving");
   });
 
   it("renders the default tree when the host forwards no slot", async () => {
     const queue = new ToastQueue();
 
-    mounted.push(renderInterop(ToastProvider, {props: {queue}}));
+    mounted.push(renderInterop(ToastProvider, { props: { queue } }));
 
-    queue.add({description: "All done", title: "Saved"});
+    queue.add({ description: "All done", title: "Saved" });
     await settle();
 
     expect(slot("toast-title")).toHaveTextContent("Saved");

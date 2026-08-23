@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ColorAreaRootProps} from "@/components/color-area";
-import type {Color} from "@/utils/color-types";
+import type { ColorAreaRootProps } from "@/components/color-area";
+import type { Color } from "@/utils/color-types";
 
-import {ColorArea} from "@/components/color-area";
+import { ColorArea } from "@/components/color-area";
 
 defineProps<
   ColorAreaRootProps & {

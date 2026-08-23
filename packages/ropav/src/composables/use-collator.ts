@@ -1,8 +1,8 @@
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useLocale} from "./use-locale";
+import { useLocale } from "./use-locale";
 
 /**
  * Collators built so far, keyed by locale and options.

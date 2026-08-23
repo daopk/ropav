@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ToolbarRootProps} from "./toolbar.types";
+import type { ToolbarRootProps } from "./toolbar.types";
 
-import {toolbarVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { toolbarVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useToolbar} from "../../composables/use-toolbar";
-import {provideSeparatorContext} from "../separator/separator.context";
+import { useToolbar } from "../../composables/use-toolbar";
+import { provideSeparatorContext } from "../separator/separator.context";
 
-import {provideToolbarContext} from "./toolbar.context";
+import { provideToolbarContext } from "./toolbar.context";
 
-const props = withDefaults(defineProps<ToolbarRootProps>(), {orientation: "horizontal"});
+const props = withDefaults(defineProps<ToolbarRootProps>(), { orientation: "horizontal" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -24,9 +24,9 @@ const styles = computed(() =>
 );
 
 const orientation = computed(() => props.orientation);
-const toolbar = useToolbar({element, orientation});
+const toolbar = useToolbar({ element, orientation });
 
-provideToolbarContext({orientation});
+provideToolbarContext({ orientation });
 
 // A rule inside a toolbar divides along the *cross* axis: a row of controls is broken up by
 // vertical rules. The caller should not have to say so, and the toolbar stylesheet sizes the

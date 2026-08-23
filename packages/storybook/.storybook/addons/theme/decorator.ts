@@ -1,6 +1,6 @@
-import type {Decorator} from "@storybook/vue3-vite";
+import type { Decorator } from "@storybook/vue3-vite";
 
-import {THEME_GLOBAL_TYPE_ID, ensureThemeKey} from "./constants";
+import { THEME_GLOBAL_TYPE_ID, ensureThemeKey } from "./constants";
 
 /**
  * The theme is selected by CSS, so all this has to do is put the selector on the root

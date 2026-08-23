@@ -1,8 +1,8 @@
-import type {CollectionKey} from "@/composables/use-collection";
+import type { CollectionKey } from "@/composables/use-collection";
 
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   TabsIndicator,
@@ -21,9 +21,9 @@ interface Item {
 }
 
 const ITEMS: Item[] = [
-  {id: "overview", label: "Overview"},
-  {id: "analytics", label: "Analytics"},
-  {id: "reports", label: "Reports"},
+  { id: "overview", label: "Overview" },
+  { id: "analytics", label: "Analytics" },
+  { id: "reports", label: "Reports" },
 ];
 
 /**
@@ -45,21 +45,21 @@ const renderTabs = (props: Record<string, unknown> = {}, items: Item[] = ITEMS) 
           default: () =>
             h(
               TabsList,
-              {ariaLabel: "Options"},
+              { ariaLabel: "Options" },
               {
                 default: () =>
                   items.map((item) =>
                     h(
                       TabsTab,
-                      {id: item.id, isDisabled: item.isDisabled, key: item.id},
-                      {default: () => [h(TabsSeparator), item.label, h(TabsIndicator)]},
+                      { id: item.id, isDisabled: item.isDisabled, key: item.id },
+                      { default: () => [h(TabsSeparator), item.label, h(TabsIndicator)] },
                     ),
                   ),
               },
             ),
         }),
         ...items.map((item) =>
-          h(TabsPanel, {id: item.id, key: item.id}, {default: () => `${item.label} panel`}),
+          h(TabsPanel, { id: item.id, key: item.id }, { default: () => `${item.label} panel` }),
         ),
       ],
     },
@@ -78,7 +78,7 @@ const settle = async (ticks = 4) => {
 
 describe("Tabs (interop)", () => {
   it("reaches every part written in the host with the shared styles", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
@@ -93,7 +93,7 @@ describe("Tabs (interop)", () => {
   });
 
   it("registers tabs written in the host into the collection", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
@@ -110,7 +110,7 @@ describe("Tabs (interop)", () => {
   });
 
   it("reaches the per-tab context from an indicator written in the host", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
@@ -126,7 +126,7 @@ describe("Tabs (interop)", () => {
   });
 
   it("ties a host-written tab to a host-written panel", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
@@ -141,12 +141,12 @@ describe("Tabs (interop)", () => {
 
   it("selects a host-written tab on press", async () => {
     const onSelectionChange = vi.fn();
-    const {container, unmount} = renderTabs({onSelectionChange});
+    const { container, unmount } = renderTabs({ onSelectionChange });
 
     await settle();
 
     slots(container, "tabs-tab")[1]!.dispatchEvent(
-      new PointerEvent("pointerdown", {bubbles: true, button: 0, cancelable: true}),
+      new PointerEvent("pointerdown", { bubbles: true, button: 0, cancelable: true }),
     );
     await settle();
 
@@ -158,12 +158,12 @@ describe("Tabs (interop)", () => {
   });
 
   it("moves the indicator to a host-written tab that takes the selection", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
     slots(container, "tabs-tab")[2]!.dispatchEvent(
-      new PointerEvent("pointerdown", {bubbles: true, button: 0, cancelable: true}),
+      new PointerEvent("pointerdown", { bubbles: true, button: 0, cancelable: true }),
     );
     await settle();
 
@@ -178,12 +178,12 @@ describe("Tabs (interop)", () => {
   });
 
   it("navigates between host-written tabs with the keyboard", async () => {
-    const {container, unmount} = renderTabs();
+    const { container, unmount } = renderTabs();
 
     await settle();
 
     slots(container, "tabs-tab")[0]!.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
     );
     await settle();
 
@@ -193,19 +193,19 @@ describe("Tabs (interop)", () => {
   });
 
   it("works without a list container written in the host", async () => {
-    const {container, unmount} = renderInterop(TabsRoot, {
+    const { container, unmount } = renderInterop(TabsRoot, {
       slots: {
         default: () => [
           h(
             TabsList,
-            {ariaLabel: "Options"},
+            { ariaLabel: "Options" },
             {
               default: () =>
                 ITEMS.map((item) =>
                   h(
                     TabsTab,
-                    {id: item.id, key: item.id},
-                    {default: () => [item.label, h(TabsIndicator)]},
+                    { id: item.id, key: item.id },
+                    { default: () => [item.label, h(TabsIndicator)] },
                   ),
                 ),
             },

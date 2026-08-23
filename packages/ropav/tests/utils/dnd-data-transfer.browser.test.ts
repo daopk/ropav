@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {CUSTOM_DRAG_TYPE, GENERIC_TYPE} from "@/utils/dnd-constants";
+import { CUSTOM_DRAG_TYPE, GENERIC_TYPE } from "@/utils/dnd-constants";
 import {
   DataTransferDragTypes,
   readFromDataTransfer,
@@ -24,7 +24,7 @@ describe("data transfer codec (browser)", () => {
     it("restores several items of one type", async () => {
       const data = transfer();
 
-      writeToDataTransfer(data, [{"text/plain": "first"}, {"text/plain": "second"}]);
+      writeToDataTransfer(data, [{ "text/plain": "first" }, { "text/plain": "second" }]);
 
       const items = readFromDataTransfer(data);
 
@@ -40,7 +40,7 @@ describe("data transfer codec (browser)", () => {
     it("restores every representation of a single item", async () => {
       const data = transfer();
 
-      writeToDataTransfer(data, [{"text/html": "<b>a</b>", "text/plain": "a"}]);
+      writeToDataTransfer(data, [{ "text/html": "<b>a</b>", "text/plain": "a" }]);
 
       const [item] = readFromDataTransfer(data);
 
@@ -55,7 +55,7 @@ describe("data transfer codec (browser)", () => {
     it("leaves the joined native value readable next to the custom payload", () => {
       const data = transfer();
 
-      writeToDataTransfer(data, [{"text/plain": "first"}, {"text/plain": "second"}]);
+      writeToDataTransfer(data, [{ "text/plain": "first" }, { "text/plain": "second" }]);
 
       expect([...data.types]).toContain(CUSTOM_DRAG_TYPE);
       expect(data.getData("text/plain")).toBe("first\nsecond");
@@ -78,7 +78,7 @@ describe("data transfer codec (browser)", () => {
     it("skips a file with no file system entry behind it", () => {
       const data = transfer();
 
-      data.items.add(new File(["hello"], "note.txt", {type: "text/plain"}));
+      data.items.add(new File(["hello"], "note.txt", { type: "text/plain" }));
 
       expect(data.items[0]?.getAsFile()?.name).toBe("note.txt");
       expect(data.items[0]?.webkitGetAsEntry()).toBeNull();
@@ -90,7 +90,7 @@ describe("data transfer codec (browser)", () => {
     it("still reports the types a file drag carries", () => {
       const data = transfer();
 
-      data.items.add(new File(["x"], "a.bin", {type: ""}));
+      data.items.add(new File(["x"], "a.bin", { type: "" }));
 
       const types = new DataTransferDragTypes(data);
 
@@ -103,7 +103,7 @@ describe("data transfer codec (browser)", () => {
     it("hides the custom drag type from the caller", () => {
       const data = transfer();
 
-      writeToDataTransfer(data, [{"text/html": "<b>a</b>", "text/plain": "a"}]);
+      writeToDataTransfer(data, [{ "text/html": "<b>a</b>", "text/plain": "a" }]);
 
       const types = new DataTransferDragTypes(data);
 
@@ -115,7 +115,7 @@ describe("data transfer codec (browser)", () => {
     it("matches a wildcard suffix against a real transfer", () => {
       const data = transfer();
 
-      data.items.add(new File(["x"], "a.png", {type: "image/png"}));
+      data.items.add(new File(["x"], "a.png", { type: "image/png" }));
 
       const types = new DataTransferDragTypes(data);
 

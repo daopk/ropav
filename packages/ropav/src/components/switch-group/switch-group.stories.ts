@@ -1,21 +1,21 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {Button} from "../button";
-import {Switch, SwitchContent, SwitchControl, SwitchThumb} from "../switch";
+import { Button } from "../button";
+import { Switch, SwitchContent, SwitchControl, SwitchThumb } from "../switch";
 
-import {SwitchGroup} from "./index";
+import { SwitchGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Switch.Content` through, so dot notation cannot be used here.
-const components = {Button, Switch, SwitchContent, SwitchControl, SwitchGroup, SwitchThumb};
+const components = { Button, Switch, SwitchContent, SwitchControl, SwitchGroup, SwitchThumb };
 
 const meta: StoryMeta = {
   argTypes: {
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["vertical", "horizontal"],
     },
   },
@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <SwitchGroup :orientation="args.orientation">
         <Switch name="notifications">
@@ -113,7 +113,7 @@ export const Form: Story = {
         submitted.value = Array.from(data.entries()).map(([key, value]) => `${key}: ${value}`);
       };
 
-      return {onSubmit, submitted};
+      return { onSubmit, submitted };
     },
     template: `
       <form class="flex flex-col gap-4" @submit="onSubmit">

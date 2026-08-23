@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {SliderRootProps} from "@/components/slider";
+import type { SliderRootProps } from "@/components/slider";
 
-import {Label} from "@/components/label";
-import {Slider} from "@/components/slider";
+import { Label } from "@/components/label";
+import { Slider } from "@/components/slider";
 
 defineProps<
   SliderRootProps & {
@@ -38,7 +38,7 @@ defineEmits<{
   >
     <Label v-if="!$props.withoutLabel">Volume</Label>
     <Slider.Output />
-    <Slider.Track v-slot="{values}">
+    <Slider.Track v-slot="{ values }">
       <Slider.Fill />
       <Slider.Thumb
         v-for="(_, index) in values"

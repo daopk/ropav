@@ -1,10 +1,10 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
-const users = Array.from({length: 1000}, (_, index) => ({
+const users = Array.from({ length: 1000 }, (_, index) => ({
   email: `user${index}@ropav.com`,
   id: `user-${index}`,
   name: `User ${index}`,
@@ -15,9 +15,9 @@ const users = Array.from({length: 1000}, (_, index) => ({
  * `HTMLElement.prototype`, which would make the content wrapper and every row claim to be 400px
  * tall and let the window agree with a layout that is wrong.
  */
-const measure = async (listbox: HTMLElement, size = {height: 400, width: 300}) => {
-  Object.defineProperty(listbox, "clientWidth", {configurable: true, value: size.width});
-  Object.defineProperty(listbox, "clientHeight", {configurable: true, value: size.height});
+const measure = async (listbox: HTMLElement, size = { height: 400, width: 300 }) => {
+  Object.defineProperty(listbox, "clientWidth", { configurable: true, value: size.width });
+  Object.defineProperty(listbox, "clientHeight", { configurable: true, value: size.height });
   window.dispatchEvent(new Event("resize"));
   await nextTick();
 };
@@ -29,12 +29,12 @@ const scrollTo = async (listbox: HTMLElement, top: number) => {
 };
 
 const renderVirtualized = async (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(VirtualizedFixture, {props: {items: users, ...props}});
+  const rendered = renderVapor(VirtualizedFixture, { props: { items: users, ...props } });
   const listbox = rendered.getByRole("listbox");
 
   await measure(listbox);
 
-  return {...rendered, listbox};
+  return { ...rendered, listbox };
 };
 
 const wrappersOf = (listbox: HTMLElement) => [
@@ -46,17 +46,19 @@ const renderedKeys = (listbox: HTMLElement) =>
 
 describe("ListBox virtualization", () => {
   it("renders a window of the collection rather than all of it", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     // 400px of viewport plus a third overscanned, grown to whole 50px rows: rows 0 to 11.
-    expect(renderedKeys(listbox)).toEqual(Array.from({length: 12}, (_, index) => `user-${index}`));
+    expect(renderedKeys(listbox)).toEqual(
+      Array.from({ length: 12 }, (_, index) => `user-${index}`),
+    );
     expect(wrappersOf(listbox)).toHaveLength(12);
 
     unmount();
   });
 
   it("gives the container something the size of the whole collection to scroll", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
     const content = listbox.firstElementChild as HTMLElement;
 
     expect(content.getAttribute("role")).toBe("presentation");
@@ -68,7 +70,7 @@ describe("ListBox virtualization", () => {
   });
 
   it("positions each row absolutely at the offset the layout gave it", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
     const [first, second] = wrappersOf(listbox) as HTMLElement[];
 
     expect(first!.style.position).toBe("absolute");
@@ -83,7 +85,7 @@ describe("ListBox virtualization", () => {
   });
 
   it("states each row's place in a set that is mostly absent", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
     const options = [...listbox.querySelectorAll('[role="option"]')];
 
     expect(options[0]?.getAttribute("aria-posinset")).toBe("1");
@@ -94,7 +96,7 @@ describe("ListBox virtualization", () => {
   });
 
   it("moves the window when the container scrolls", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     await scrollTo(listbox, 1_000);
 
@@ -113,7 +115,7 @@ describe("ListBox virtualization", () => {
   });
 
   it("renders nothing until the container has been measured", () => {
-    const {getByRole, unmount} = renderVapor(VirtualizedFixture, {props: {items: users}});
+    const { getByRole, unmount } = renderVapor(VirtualizedFixture, { props: { items: users } });
     const listbox = getByRole("listbox");
 
     // A virtualizer that guessed here would put a thousand rows in the DOM.
@@ -124,8 +126,8 @@ describe("ListBox virtualization", () => {
   });
 
   it("leaves a listbox without a virtualizer exactly as it was", async () => {
-    const {getByRole, unmount} = renderVapor(VirtualizedFixture, {
-      props: {items: users.slice(0, 3), withoutVirtualizer: true},
+    const { getByRole, unmount } = renderVapor(VirtualizedFixture, {
+      props: { items: users.slice(0, 3), withoutVirtualizer: true },
     });
 
     await nextTick();
@@ -143,7 +145,7 @@ describe("ListBox virtualization", () => {
   });
 
   it("reports being empty when there is no data", async () => {
-    const {listbox, unmount} = await renderVirtualized({items: []});
+    const { listbox, unmount } = await renderVirtualized({ items: [] });
 
     expect(listbox.getAttribute("data-empty")).toBe("true");
     expect(renderedKeys(listbox)).toEqual([]);
@@ -154,11 +156,11 @@ describe("ListBox virtualization", () => {
 
 describe("ListBox virtualization keyboard navigation", () => {
   const press = (element: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
-    element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
+    element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
   };
 
   it("reaches the last item, which was never rendered", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     press(listbox, "End");
     await nextTick();
@@ -174,7 +176,7 @@ describe("ListBox virtualization keyboard navigation", () => {
   });
 
   it("keeps the focused row rendered after the window has scrolled past it", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     press(listbox, "ArrowDown");
     await nextTick();
@@ -188,7 +190,7 @@ describe("ListBox virtualization keyboard navigation", () => {
   });
 
   it("pages to the end while nothing reports being scrollable", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     press(listbox, "ArrowDown");
     await nextTick();
@@ -205,11 +207,11 @@ describe("ListBox virtualization keyboard navigation", () => {
   });
 
   it("selects the whole collection, not the window", async () => {
-    const {listbox, unmount} = await renderVirtualized({selectionMode: "multiple"});
+    const { listbox, unmount } = await renderVirtualized({ selectionMode: "multiple" });
     const selectionChange: unknown[] = [];
 
     listbox.addEventListener("focusin", () => undefined);
-    press(listbox, "a", {ctrlKey: true});
+    press(listbox, "a", { ctrlKey: true });
     await nextTick();
 
     void selectionChange;
@@ -223,10 +225,10 @@ describe("ListBox virtualization keyboard navigation", () => {
   });
 
   it("finds an item by typing, including one that never rendered", async () => {
-    const {listbox, unmount} = await renderVirtualized();
+    const { listbox, unmount } = await renderVirtualized();
 
     for (const character of "User 300") {
-      listbox.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: character}));
+      listbox.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: character }));
     }
 
     await nextTick();

@@ -1,8 +1,8 @@
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {onScopeDispose, toValue, watch} from "vue";
+import { onScopeDispose, toValue, watch } from "vue";
 
-import {tabbableIn} from "../utils/focus";
+import { tabbableIn } from "../utils/focus";
 
 interface RegisteredScope {
   root: () => HTMLElement | null;
@@ -103,7 +103,7 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
   const focusElement = (element: HTMLElement | null) => {
     // Never scrolls: an overlay is positioned by measurement, and letting focus scroll the page
     // under it would leave it beside nothing.
-    element?.focus({preventScroll: true});
+    element?.focus({ preventScroll: true });
   };
 
   const focusEnd = (root: HTMLElement, end: "first" | "last") => {
@@ -211,7 +211,7 @@ export const useFocusScope = (options: UseFocusScopeOptions): void => {
         focusElement(previouslyFocused);
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => detach(), true);

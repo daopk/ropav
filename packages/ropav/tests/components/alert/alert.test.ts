@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {AlertContent, AlertDescription, AlertIndicator, AlertTitle} from "@/components/alert";
-import {DangerIcon, InfoIcon, SuccessIcon, WarningIcon} from "@/components/icons";
+import { AlertContent, AlertDescription, AlertIndicator, AlertTitle } from "@/components/alert";
+import { DangerIcon, InfoIcon, SuccessIcon, WarningIcon } from "@/components/icons";
 
 import Fixture from "./fixtures.vue";
 
@@ -22,7 +22,7 @@ const glyphPath = (component: Parameters<typeof renderVapor>[0]) => {
 describe("Alert", () => {
   describe("structure", () => {
     it("renders every compound part with the React element and data-slot", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
 
       expect(slot(container, "alert-root")?.tagName).toBe("DIV");
       expect(slot(container, "alert-indicator")?.tagName).toBe("DIV");
@@ -34,7 +34,7 @@ describe("Alert", () => {
     });
 
     it("keeps the indicator beside the content", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
       const root = slot(container, "alert-root");
 
       expect(root?.children).toHaveLength(2);
@@ -45,7 +45,7 @@ describe("Alert", () => {
     });
 
     it("forwards arbitrary attributes to every part", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
 
       expect(slot(container, "alert-root")).toHaveAttribute("data-testid", "root");
       expect(slot(container, "alert-indicator")).toHaveAttribute("data-testid", "indicator");
@@ -66,7 +66,7 @@ describe("Alert", () => {
       ["warning", WarningIcon],
       ["danger", DangerIcon],
     ] as const)("renders the matching default icon for status %s", (status, expectedIcon) => {
-      const {container, unmount} = renderVapor(Fixture, {props: {status}});
+      const { container, unmount } = renderVapor(Fixture, { props: { status } });
       const icon = slot(container, "alert-default-icon");
 
       expect(icon?.tagName).toBe("svg");
@@ -76,7 +76,7 @@ describe("Alert", () => {
     });
 
     it("makes the default icon decorative", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
       const icon = slot(container, "alert-default-icon");
 
       expect(icon).toHaveAttribute("aria-hidden", "true");
@@ -88,7 +88,7 @@ describe("Alert", () => {
     });
 
     it("renders caller content instead of the default icon", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {customIndicator: true}});
+      const { container, unmount } = renderVapor(Fixture, { props: { customIndicator: true } });
 
       expect(container.querySelector("[data-testid='custom-indicator']")).not.toBeNull();
       expect(slot(container, "alert-default-icon")).toBeNull();
@@ -100,7 +100,7 @@ describe("Alert", () => {
     // condition that is false is still children. A `<slot>` fallback would run here instead,
     // which is why the branch is taken on whether the slot was handed over at all.
     it("renders nothing when the caller declares the slot but it yields no content", () => {
-      const {container, unmount} = renderVapor(Fixture, {props: {emptyIndicator: true}});
+      const { container, unmount } = renderVapor(Fixture, { props: { emptyIndicator: true } });
       const indicator = slot(container, "alert-indicator");
 
       expect(indicator).not.toBeNull();
@@ -114,7 +114,7 @@ describe("Alert", () => {
 
   describe("styling", () => {
     it("applies the default status and every BEM element class", () => {
-      const {container, unmount} = renderVapor(Fixture);
+      const { container, unmount } = renderVapor(Fixture);
 
       expect(slot(container, "alert-root")).toHaveClass("alert", "alert--default");
       expect(slot(container, "alert-indicator")).toHaveClass("alert__indicator");
@@ -128,7 +128,7 @@ describe("Alert", () => {
     it.each(["default", "accent", "success", "warning", "danger"] as const)(
       "applies the %s status modifier",
       (status) => {
-        const {container, unmount} = renderVapor(Fixture, {props: {status}});
+        const { container, unmount } = renderVapor(Fixture, { props: { status } });
 
         expect(slot(container, "alert-root")).toHaveClass(`alert--${status}`);
 
@@ -137,7 +137,7 @@ describe("Alert", () => {
     );
 
     it("merges caller classes onto every public part", () => {
-      const {container, unmount} = renderVapor(Fixture, {
+      const { container, unmount } = renderVapor(Fixture, {
         props: {
           class: "p-2",
           contentClass: "gap-1",
@@ -157,15 +157,15 @@ describe("Alert", () => {
     });
 
     it("updates the status modifier and default icon reactively", async () => {
-      const props = reactive({status: "accent" as const});
-      const {container, unmount} = renderVapor(Fixture, {props});
+      const props = reactive({ status: "accent" as const });
+      const { container, unmount } = renderVapor(Fixture, { props });
 
       expect(slot(container, "alert-root")).toHaveClass("alert--accent");
       expect(slot(container, "alert-default-icon")?.querySelector("path")?.getAttribute("d")).toBe(
         glyphPath(InfoIcon),
       );
 
-      Object.assign(props, {status: "success"});
+      Object.assign(props, { status: "success" });
       await nextTick();
 
       expect(slot(container, "alert-root")).toHaveClass("alert--success");

@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {MeterFillProps} from "./meter.types";
+import type { MeterFillProps } from "./meter.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useMeterContext} from "./meter.context";
+import { useMeterContext } from "./meter.context";
 
 const props = defineProps<MeterFillProps>();
 
-const {slots, state} = useMeterContext();
-const widthStyle = computed(() => ({width: `${state.percentage.value ?? 0}%`}));
+const { slots, state } = useMeterContext();
+const widthStyle = computed(() => ({ width: `${state.percentage.value ?? 0}%` }));
 </script>
 
 <template>

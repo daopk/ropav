@@ -10,13 +10,13 @@ export const TextArea = Object.assign(TextAreaRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TextAreaRoot};
+export { TextAreaRoot };
 
-export type {TextAreaRootProps, TextAreaRootProps as TextAreaProps} from "./textarea.types";
+export type { TextAreaRootProps, TextAreaRootProps as TextAreaProps } from "./textarea.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {textAreaVariants} from "@ropav/styles";
+export { textAreaVariants } from "@ropav/styles";
 
-export type {TextAreaVariants} from "@ropav/styles";
+export type { TextAreaVariants } from "@ropav/styles";

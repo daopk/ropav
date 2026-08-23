@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {CalendarGridProps} from "./calendar.types";
+import type { CalendarGridProps } from "./calendar.types";
 
-import {endOfMonth} from "@internationalized/date";
-import {computed} from "vue";
+import { endOfMonth } from "@internationalized/date";
+import { computed } from "vue";
 
-import {useCalendarGrid} from "../../composables/use-calendar-grid";
+import { useCalendarGrid } from "../../composables/use-calendar-grid";
 
 import {
   provideCalendarContext,
@@ -13,12 +13,12 @@ import {
   useCalendarStateContext,
 } from "./calendar.context";
 
-const props = withDefaults(defineProps<CalendarGridProps>(), {weekdayStyle: "short"});
+const props = withDefaults(defineProps<CalendarGridProps>(), { weekdayStyle: "short" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {dayView, slots} = useCalendarContext();
-const {calendar, state} = useCalendarStateContext();
+const { dayView, slots } = useCalendarContext();
+const { calendar, state } = useCalendarStateContext();
 
 /** Where this grid starts, which is the calendar's own start plus whatever offset it was given. */
 const startDate = computed(() => {
@@ -38,7 +38,7 @@ const grid = useCalendarGrid(
   calendar.shared,
 );
 
-const styles = computed(() => slots.value.grid({class: props.class}));
+const styles = computed(() => slots.value.grid({ class: props.class }));
 
 /*
  * The weekday width is republished rather than only passed to the hook, because a day view builds
@@ -48,7 +48,7 @@ provideCalendarContext({
   dayView: computed(() => {
     const view = dayView.value;
 
-    return view ? {...view, weekdayStyle: props.weekdayStyle} : undefined;
+    return view ? { ...view, weekdayStyle: props.weekdayStyle } : undefined;
   }),
   slots,
 });

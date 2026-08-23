@@ -1,10 +1,10 @@
-import type {CollectionKey} from "./use-collection";
-import type {UseListKeyboardReturn} from "./use-list-keyboard";
-import type {FocusStrategy} from "./use-overlay-trigger-state";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {MaybeRefOrGetter, ShallowRef} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { UseListKeyboardReturn } from "./use-list-keyboard";
+import type { FocusStrategy } from "./use-overlay-trigger-state";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {nextTick, toValue, watch} from "vue";
+import { nextTick, toValue, watch } from "vue";
 
 export interface UseCollectionAutoFocusOptions {
   /** The element carrying the collection role, which takes focus when no item does. */
@@ -35,7 +35,7 @@ export interface UseCollectionAutoFocusOptions {
  * ```
  */
 export const useCollectionAutoFocus = (options: UseCollectionAutoFocusOptions): void => {
-  const {element, keyboard, selection} = options;
+  const { element, keyboard, selection } = options;
 
   let hasAutoFocused = false;
 
@@ -72,10 +72,10 @@ export const useCollectionAutoFocus = (options: UseCollectionAutoFocusOptions): 
 
         selection.setFocused(true);
 
-        if (focusedKey == null) current.focus({preventScroll: true});
+        if (focusedKey == null) current.focus({ preventScroll: true });
         else keyboard.focusKey(focusedKey);
       });
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 };

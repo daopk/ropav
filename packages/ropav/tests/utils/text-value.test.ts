@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {getCollectionTextValue} from "@/utils/text-value";
+import { getCollectionTextValue } from "@/utils/text-value";
 
 const build = (html: string) => {
   const element = document.createElement("div");

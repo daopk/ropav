@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {SwitchThumbProps} from "./switch.types";
+import type { SwitchThumbProps } from "./switch.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useSwitchContext} from "./switch.context";
+import { useSwitchContext } from "./switch.context";
 
 const props = defineProps<SwitchThumbProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useSwitchContext();
+const { slots } = useSwitchContext();
 </script>
 
 <template>

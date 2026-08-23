@@ -1,5 +1,5 @@
-import {MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator} from "../menu-item";
-import {MenuSectionRoot} from "../menu-section";
+import { MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator } from "../menu-item";
+import { MenuSectionRoot } from "../menu-section";
 
 import DropdownMenu from "./dropdown-menu.vue";
 import DropdownPopover from "./dropdown-popover.vue";
@@ -31,7 +31,7 @@ export const Dropdown = Object.assign(DropdownRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {DropdownMenu, DropdownPopover, DropdownRoot, DropdownSubmenuTrigger, DropdownTrigger};
+export { DropdownMenu, DropdownPopover, DropdownRoot, DropdownSubmenuTrigger, DropdownTrigger };
 
 export type {
   DropdownMenuProps,
@@ -45,13 +45,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useDropdownContext, useDropdownPopoverTarget} from "./dropdown.context";
+export { useDropdownContext, useDropdownPopoverTarget } from "./dropdown.context";
 
-export type {DropdownContext, DropdownPopoverTarget} from "./dropdown.context";
+export type { DropdownContext, DropdownPopoverTarget } from "./dropdown.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dropdownVariants} from "@ropav/styles";
+export { dropdownVariants } from "@ropav/styles";
 
-export type {DropdownVariants} from "@ropav/styles";
+export type { DropdownVariants } from "@ropav/styles";

@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {CheckboxGroupFixtureProps} from "./fixtures.types";
+import type { CheckboxGroupFixtureProps } from "./fixtures.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {Checkbox} from "@/components/checkbox";
-import {CheckboxGroup} from "@/components/checkbox-group";
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Form} from "@/components/form";
-import {Label} from "@/components/label";
+import { Checkbox } from "@/components/checkbox";
+import { CheckboxGroup } from "@/components/checkbox-group";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Form } from "@/components/form";
+import { Label } from "@/components/label";
 
-const props = withDefaults(defineProps<CheckboxGroupFixtureProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<CheckboxGroupFixtureProps>(), { isInvalid: undefined });
 
-defineEmits<{change: [value: string[]]}>();
+defineEmits<{ change: [value: string[]] }>();
 
 const items = computed(() => props.items ?? ["email", "sms", "push"]);
 </script>

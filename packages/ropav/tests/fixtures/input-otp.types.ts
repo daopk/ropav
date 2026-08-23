@@ -1,5 +1,5 @@
-import type {InputOTPTextAlign, UseInputOTPReturn} from "@/composables/use-input-otp";
-import type {PushPasswordManagerStrategy} from "@/composables/use-password-manager-badge";
+import type { InputOTPTextAlign, UseInputOTPReturn } from "@/composables/use-input-otp";
+import type { PushPasswordManagerStrategy } from "@/composables/use-password-manager-badge";
 
 export interface InputOTPHostProps {
   maxLength: number;

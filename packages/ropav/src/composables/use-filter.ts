@@ -1,8 +1,8 @@
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useCollator} from "./use-collator";
+import { useCollator } from "./use-collator";
 
 export interface Filter {
   /** Whether a string starts with a substring. */
@@ -24,7 +24,7 @@ export interface Filter {
  * As upstream, `ignorePunctuation` is not honoured by these three methods.
  */
 export const useFilter = (options?: Intl.CollatorOptions): ComputedRef<Filter> => {
-  const collator = useCollator({usage: "search", ...options});
+  const collator = useCollator({ usage: "search", ...options });
 
   return computed<Filter>(() => {
     const compare = collator.value;

@@ -1,6 +1,6 @@
-import type {CalendarHeadingFormatOptions} from "../../composables/use-calendar-heading";
-import type {CalendarYearPickerFormatOptions} from "../../composables/use-calendar-year-picker";
-import type {DateDuration} from "@internationalized/date";
+import type { CalendarHeadingFormatOptions } from "../../composables/use-calendar-heading";
+import type { CalendarYearPickerFormatOptions } from "../../composables/use-calendar-year-picker";
+import type { DateDuration } from "@internationalized/date";
 
 export interface CalendarYearPickerTriggerProps {
   class?: string;

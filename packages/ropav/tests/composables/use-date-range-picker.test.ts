@@ -1,14 +1,14 @@
-import type {UseDateRangePickerReturn} from "@/composables/use-date-range-picker";
-import type {DateRangePickerState} from "@/composables/use-date-range-picker-state";
+import type { UseDateRangePickerReturn } from "@/composables/use-date-range-picker";
+import type { DateRangePickerState } from "@/composables/use-date-range-picker-state";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/date-range-picker-host.vue";
 
-type Ready = {picker: UseDateRangePickerReturn; state: DateRangePickerState};
+type Ready = { picker: UseDateRangePickerReturn; state: DateRangePickerState };
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: Ready;
@@ -18,7 +18,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: Ready) => (ready = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`);
 
@@ -44,11 +44,11 @@ describe("useDateRangePicker", () => {
     });
 
     it("takes the id it was given", () => {
-      expect(setup({id: "trip"}).group().getAttribute("id")).toBe("trip");
+      expect(setup({ id: "trip" }).group().getAttribute("id")).toBe("trip");
     });
 
     it("is named by its own label when there is one", () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       expect(picker.group().getAttribute("aria-labelledby")).toBe(picker.label()!.id);
     });
@@ -62,12 +62,12 @@ describe("useDateRangePicker", () => {
     });
 
     it("reads as disabled without being made unfocusable", () => {
-      expect(setup({isDisabled: true}).group().getAttribute("aria-disabled")).toBe("true");
+      expect(setup({ isDisabled: true }).group().getAttribute("aria-disabled")).toBe("true");
       expect(setup().group().hasAttribute("aria-disabled")).toBe(false);
     });
 
     it("describes the whole range in words", () => {
-      const picker = setup({value: {end: jun(20), start: jun(10)}});
+      const picker = setup({ value: { end: jun(20), start: jun(10) } });
       const describedBy = picker.group().getAttribute("aria-describedby");
 
       expect(describedBy).toBeTruthy();
@@ -124,7 +124,7 @@ describe("useDateRangePicker", () => {
     });
 
     it("has both read the picker's name after their own", () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       expect(picker.picker().startField.ariaLabelledBy.value).toBe(picker.label()!.id);
       expect(picker.picker().endField.ariaLabelledBy.value).toBe(picker.label()!.id);
@@ -146,7 +146,7 @@ describe("useDateRangePicker", () => {
     });
 
     it("has both describe the picker's own value rather than half of it", () => {
-      const picker = setup({value: {end: jun(20), start: jun(10)}});
+      const picker = setup({ value: { end: jun(20), start: jun(10) } });
 
       expect(picker.picker().startField.ariaDescribedBy.value).toBe(
         picker.group().getAttribute("aria-describedby"),
@@ -157,7 +157,7 @@ describe("useDateRangePicker", () => {
   describe("the verdict the two fields report through", () => {
     it("merges what each end says into one", async () => {
       const picker = setup();
-      const {endField, startField} = picker.picker();
+      const { endField, startField } = picker.picker();
 
       startField.validationState.updateValidation({
         isInvalid: true,
@@ -209,7 +209,7 @@ describe("useDateRangePicker", () => {
        * said — otherwise a second report from one end would erase the first from the other.
        */
       const picker = setup();
-      const {endField, startField} = picker.picker();
+      const { endField, startField } = picker.picker();
       const failure = (message: string) => ({
         isInvalid: true,
         validationDetails: {
@@ -242,7 +242,7 @@ describe("useDateRangePicker", () => {
 
     it("shows both ends the same verdict", () => {
       const picker = setup();
-      const {endField, startField} = picker.picker();
+      const { endField, startField } = picker.picker();
 
       expect(startField.validationState.displayValidation).toBe(picker.state().displayValidation);
       expect(endField.validationState.displayValidation).toBe(picker.state().displayValidation);
@@ -251,7 +251,7 @@ describe("useDateRangePicker", () => {
 
   describe("the trigger", () => {
     it("names itself and what it opens", () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
       const trigger = picker.trigger();
 
       expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
@@ -281,15 +281,15 @@ describe("useDateRangePicker", () => {
     });
 
     it("goes out of action when there is nothing to pick", () => {
-      expect(setup({isReadOnly: true}).picker().isTriggerDisabled.value).toBe(true);
-      expect(setup({isDisabled: true}).picker().isTriggerDisabled.value).toBe(true);
+      expect(setup({ isReadOnly: true }).picker().isTriggerDisabled.value).toBe(true);
+      expect(setup({ isDisabled: true }).picker().isTriggerDisabled.value).toBe(true);
       expect(setup().picker().isTriggerDisabled.value).toBe(false);
     });
   });
 
   describe("the dialog", () => {
     it("is named by the trigger and the picker together", async () => {
-      const picker = setup({withLabel: true});
+      const picker = setup({ withLabel: true });
 
       picker.picker().onTriggerPress();
       await nextTick();
@@ -312,13 +312,13 @@ describe("useDateRangePicker", () => {
 
       expect(picker.picker().calendarProps.value.value).toBeNull();
 
-      picker.state().setValue({end: jun(20), start: jun(10)});
+      picker.state().setValue({ end: jun(20), start: jun(10) });
 
       expect(String(picker.picker().calendarProps.value.value?.start)).toBe("2026-06-10");
     });
 
     it("passes the picker's bounds on", () => {
-      const picker = setup({maxValue: jun(25), minValue: jun(5)});
+      const picker = setup({ maxValue: jun(25), minValue: jun(5) });
 
       expect(String(picker.picker().calendarProps.value.minValue)).toBe("2026-06-05");
       expect(String(picker.picker().calendarProps.value.maxValue)).toBe("2026-06-25");
@@ -327,13 +327,13 @@ describe("useDateRangePicker", () => {
     it("writes a range picked in the calendar back to the picker", () => {
       const picker = setup();
 
-      picker.picker().calendarProps.value.onChange({end: jun(20), start: jun(10)});
+      picker.picker().calendarProps.value.onChange({ end: jun(20), start: jun(10) });
 
       expect(String(picker.state().value.value.start)).toBe("2026-06-10");
     });
 
     it("hands the picker's verdict on once it is revealed", async () => {
-      const picker = setup({minValue: jun(12), value: {end: jun(20), start: jun(10)}});
+      const picker = setup({ minValue: jun(12), value: { end: jun(20), start: jun(10) } });
 
       // Held back until a commit, which is what `native` behaviour means.
       expect(picker.picker().calendarProps.value.isInvalid).toBe(false);
@@ -348,7 +348,7 @@ describe("useDateRangePicker", () => {
   describe("focus", () => {
     it("reports focus entering and leaving the picker as a whole", async () => {
       const onFocusChange = vi.fn();
-      const picker = setup({onFocusChange});
+      const picker = setup({ onFocusChange });
 
       picker.segmentStart().focus();
       await nextTick();

@@ -37,6 +37,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorSwatchPickerVariants} from "@ropav/styles";
+export { colorSwatchPickerVariants } from "@ropav/styles";
 
-export type {ColorSwatchPickerVariants} from "@ropav/styles";
+export type { ColorSwatchPickerVariants } from "@ropav/styles";

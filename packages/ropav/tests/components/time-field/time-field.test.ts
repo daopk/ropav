@@ -1,12 +1,12 @@
-import {CalendarDateTime, Time} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDateTime, Time } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderTimeField = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props: {locale: "en-US", ...props}});
+  const result = renderVapor(Fixture, { props: { locale: "en-US", ...props } });
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
 
@@ -34,7 +34,7 @@ const renderTimeField = (props: Record<string, unknown> = {}) => {
 describe("TimeField", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {slot, unmount} = renderTimeField({
+      const { slot, unmount } = renderTimeField({
         withDescription: true,
         withPrefix: true,
         withSuffix: true,
@@ -53,27 +53,30 @@ describe("TimeField", () => {
 
     it("shows only the parts of a time", () => {
       // The date the segments are edited through never appears; that is the whole point.
-      const {types, unmount} = renderTimeField();
+      const { types, unmount } = renderTimeField();
 
       expect(types()).toEqual(["hour", "minute", "dayPeriod"]);
       unmount();
     });
 
     it("follows the granularity and the hour cycle", () => {
-      expect(renderTimeField({granularity: "second"}).types()).toEqual([
+      expect(renderTimeField({ granularity: "second" }).types()).toEqual([
         "hour",
         "minute",
         "second",
         "dayPeriod",
       ]);
-      expect(renderTimeField({hourCycle: 24}).types()).toEqual(["hour", "minute"]);
-      expect(renderTimeField({locale: "de-DE"}).types()).toEqual(["hour", "minute"]);
+      expect(renderTimeField({ hourCycle: 24 }).types()).toEqual(["hour", "minute"]);
+      expect(renderTimeField({ locale: "de-DE" }).types()).toEqual(["hour", "minute"]);
     });
   });
 
   describe("the value it submits", () => {
     it("submits the time, not the date it travelled as", () => {
-      const {submitted, unmount} = renderTimeField({defaultValue: new Time(13, 45), name: "at"});
+      const { submitted, unmount } = renderTimeField({
+        defaultValue: new Time(13, 45),
+        name: "at",
+      });
 
       expect(submitted()).toHaveAttribute("name", "at");
       expect(submitted().value).toBe("13:45:00");
@@ -81,7 +84,7 @@ describe("TimeField", () => {
     });
 
     it("drops the date from a value that came with one", () => {
-      const {submitted, unmount} = renderTimeField({
+      const { submitted, unmount } = renderTimeField({
         defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45),
         name: "at",
       });
@@ -91,7 +94,7 @@ describe("TimeField", () => {
     });
 
     it("submits nothing while it is empty", () => {
-      const {submitted, unmount} = renderTimeField({name: "at"});
+      const { submitted, unmount } = renderTimeField({ name: "at" });
 
       expect(submitted().value).toBe("");
       unmount();
@@ -101,13 +104,13 @@ describe("TimeField", () => {
   describe("variants", () => {
     it("applies the group's visual variant", () => {
       expect(renderTimeField().group()).toHaveClass("date-input-group--primary");
-      expect(renderTimeField({variant: "secondary"}).group()).toHaveClass(
+      expect(renderTimeField({ variant: "secondary" }).group()).toHaveClass(
         "date-input-group--secondary",
       );
     });
 
     it("stretches when full width is set as a bare attribute", () => {
-      const {group, root, unmount} = renderTimeField({attributeForm: true});
+      const { group, root, unmount } = renderTimeField({ attributeForm: true });
 
       expect(root).toHaveClass("time-field--full-width");
       expect(group()).toHaveClass("date-input-group--full-width");
@@ -117,7 +120,7 @@ describe("TimeField", () => {
 
   describe("state", () => {
     it("reports being disabled", () => {
-      const {input, root, segment, submitted, unmount} = renderTimeField({isDisabled: true});
+      const { input, root, segment, submitted, unmount } = renderTimeField({ isDisabled: true });
 
       expect(root).toHaveAttribute("data-disabled", "true");
       expect(input()).toHaveAttribute("aria-disabled", "true");
@@ -127,13 +130,13 @@ describe("TimeField", () => {
     });
 
     it("reports being read only, required and invalid", () => {
-      expect(renderTimeField({isReadOnly: true}).root).toHaveAttribute("data-readonly", "true");
-      expect(renderTimeField({isRequired: true}).root).toHaveAttribute("data-required", "true");
-      expect(renderTimeField({isInvalid: true}).root).toHaveAttribute("data-invalid", "true");
+      expect(renderTimeField({ isReadOnly: true }).root).toHaveAttribute("data-readonly", "true");
+      expect(renderTimeField({ isRequired: true }).root).toHaveAttribute("data-required", "true");
+      expect(renderTimeField({ isInvalid: true }).root).toHaveAttribute("data-invalid", "true");
     });
 
     it("works out for itself that a time is out of range", () => {
-      const {root, unmount} = renderTimeField({
+      const { root, unmount } = renderTimeField({
         defaultValue: new Time(3),
         minValue: new Time(9),
         validationBehavior: "aria",
@@ -146,13 +149,13 @@ describe("TimeField", () => {
 
   describe("editing", () => {
     it("steps the hour with the arrow keys", async () => {
-      const {segment, submitted, unmount} = renderTimeField({
+      const { segment, submitted, unmount } = renderTimeField({
         defaultValue: new Time(13, 45),
         name: "at",
       });
 
       segment("hour").dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowUp"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowUp" }),
       );
       await nextTick();
 
@@ -161,7 +164,7 @@ describe("TimeField", () => {
     });
 
     it("types a whole time straight through", async () => {
-      const {segment, submitted, unmount} = renderTimeField({name: "at"});
+      const { segment, submitted, unmount } = renderTimeField({ name: "at" });
       const type = async (part: string, data: string) => {
         segment(part).dispatchEvent(
           new InputEvent("beforeinput", {
@@ -183,13 +186,13 @@ describe("TimeField", () => {
     });
 
     it("moves the time across noon by its period alone", async () => {
-      const {segment, submitted, unmount} = renderTimeField({
+      const { segment, submitted, unmount } = renderTimeField({
         defaultValue: new Time(9, 30),
         name: "at",
       });
 
       segment("dayPeriod").dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowUp"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowUp" }),
       );
       await nextTick();
 
@@ -200,7 +203,7 @@ describe("TimeField", () => {
 
   describe("labelling", () => {
     it("describes the time in words", async () => {
-      const {input, unmount} = renderTimeField({defaultValue: new Time(13, 45)});
+      const { input, unmount } = renderTimeField({ defaultValue: new Time(13, 45) });
 
       await nextTick();
 
@@ -211,7 +214,7 @@ describe("TimeField", () => {
     });
 
     it("moves focus into the field when the label is clicked", () => {
-      const {segment, slot, unmount} = renderTimeField();
+      const { segment, slot, unmount } = renderTimeField();
 
       slot("label").click();
 

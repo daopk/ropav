@@ -1,8 +1,8 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {LabelRoot} from "@/components/label";
+import { LabelRoot } from "@/components/label";
 import {
   ProgressBarFill,
   ProgressBarOutput,
@@ -12,19 +12,19 @@ import {
 
 const render = (isIndeterminate = false) =>
   renderInterop(ProgressBarRoot, {
-    props: {color: "warning", isIndeterminate, value: 40},
+    props: { color: "warning", isIndeterminate, value: 40 },
     slots: {
       default: () => [
-        h(LabelRoot, null, {default: () => "Loading"}),
+        h(LabelRoot, null, { default: () => "Loading" }),
         h(ProgressBarOutput),
-        h(ProgressBarTrack, null, {default: () => h(ProgressBarFill)}),
+        h(ProgressBarTrack, null, { default: () => h(ProgressBarFill) }),
       ],
     },
   });
 
 describe("ProgressBar under a vdom host", () => {
   it("forwards determinate state and classes into host-authored parts", async () => {
-    const {container, unmount} = render();
+    const { container, unmount } = render();
     const root = container.querySelector('[data-slot="progress-bar"]');
     const label = container.querySelector('[data-slot="label"]');
 
@@ -42,7 +42,7 @@ describe("ProgressBar under a vdom host", () => {
   });
 
   it("keeps host-authored parts indeterminate", () => {
-    const {container, unmount} = render(true);
+    const { container, unmount } = render(true);
 
     expect(container.querySelector('[data-slot="progress-bar"]')).not.toHaveAttribute(
       "aria-valuenow",

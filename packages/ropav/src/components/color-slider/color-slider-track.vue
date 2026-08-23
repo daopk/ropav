@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderSlotProps, ColorSliderTrackProps} from "./color-slider.types";
+import type { ColorSliderSlotProps, ColorSliderTrackProps } from "./color-slider.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useColorSliderContext} from "./color-slider.context";
+import { useColorSliderContext } from "./color-slider.context";
 
 const props = defineProps<ColorSliderTrackProps>();
 
-defineSlots<{default?: (props: ColorSliderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSliderSlotProps) => unknown }>();
 
-const {channel, setTrackEl, slider, slots, state} = useColorSliderContext();
+const { channel, setTrackEl, slider, slots, state } = useColorSliderContext();
 
 /**
  * The colours at the two ends of the channel. The track is inset by half a thumb at each end so

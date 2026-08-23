@@ -1,20 +1,20 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 
-import {useListData} from "../../composables/use-list-data";
-import {avatarSrc} from "../../utils/story-assets";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {DescriptionRoot} from "../description";
-import {EmptyStateRoot} from "../empty-state";
-import {ErrorMessageRoot} from "../error-message";
-import {LabelRoot} from "../label";
-import {TagRemoveButton, TagRoot} from "../tag";
+import { useListData } from "../../composables/use-list-data";
+import { avatarSrc } from "../../utils/story-assets";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { DescriptionRoot } from "../description";
+import { EmptyStateRoot } from "../empty-state";
+import { ErrorMessageRoot } from "../error-message";
+import { LabelRoot } from "../label";
+import { TagRemoveButton, TagRoot } from "../tag";
 
-import {TagGroupList, TagGroupRoot} from "./index";
+import { TagGroupList, TagGroupRoot } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "TagGroup.List".
@@ -50,7 +50,7 @@ const CATEGORIES = ["News", "Travel", "Gaming", "Shopping"];
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES}),
+    setup: () => ({ categories: CATEGORIES }),
     template: `
       <TagGroup selection-mode="single">
         <TagGroupList aria-label="Tags">
@@ -64,7 +64,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES.slice(0, 3), sizes: ["sm", "md", "lg"]}),
+    setup: () => ({ categories: CATEGORIES.slice(0, 3), sizes: ["sm", "md", "lg"] }),
     template: `
       <div class="flex flex-col gap-4">
         <TagGroup v-for="size in sizes" :key="size" :size="size" selection-mode="single">
@@ -80,7 +80,7 @@ export const Sizes: Story = {
 export const Variants: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES.slice(0, 3), variants: ["default", "surface"]}),
+    setup: () => ({ categories: CATEGORIES.slice(0, 3), variants: ["default", "surface"] }),
     template: `
       <div class="flex flex-col gap-4">
         <TagGroup
@@ -101,7 +101,7 @@ export const Variants: Story = {
 export const Disabled: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES}),
+    setup: () => ({ categories: CATEGORIES }),
     template: `
       <TagGroup :disabled-keys="['Travel', 'Gaming']" selection-mode="single">
         <TagGroupList aria-label="Tags">
@@ -115,7 +115,7 @@ export const Disabled: Story = {
 export const SelectionModes: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES, modes: ["none", "single", "multiple"]}),
+    setup: () => ({ categories: CATEGORIES, modes: ["none", "single", "multiple"] }),
     template: `
       <div class="flex flex-col gap-4">
         <TagGroup v-for="mode in modes" :key="mode" :selection-mode="mode">
@@ -132,7 +132,7 @@ export const SelectionModes: Story = {
 export const Controlled: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES, selected: ref(new Set(["Travel"]))}),
+    setup: () => ({ categories: CATEGORIES, selected: ref(new Set(["Travel"])) }),
     template: `
       <div class="flex flex-col gap-4">
         <TagGroup v-model:selected-keys="selected" selection-mode="multiple">
@@ -150,7 +150,7 @@ export const Controlled: Story = {
 export const WithErrorMessage: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES.slice(0, 3)}),
+    setup: () => ({ categories: CATEGORIES.slice(0, 3) }),
     template: `
       <TagGroup selection-mode="single">
         <Label>Categories</Label>
@@ -166,7 +166,7 @@ export const WithErrorMessage: Story = {
 export const WithPrefix: Story = {
   render: () => ({
     components,
-    setup: () => ({categories: CATEGORIES}),
+    setup: () => ({ categories: CATEGORIES }),
     template: `
       <TagGroup selection-mode="single">
         <Label>With Icons</Label>
@@ -186,7 +186,7 @@ export const WithRemoveButton: Story = {
   render: () => ({
     components,
     setup: () => {
-      const tags = ref(CATEGORIES.map((name) => ({id: name, name})));
+      const tags = ref(CATEGORIES.map((name) => ({ id: name, name })));
 
       return {
         onRemove: (keys: Set<string>) => {

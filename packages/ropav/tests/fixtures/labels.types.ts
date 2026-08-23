@@ -1,5 +1,5 @@
-import type {UseLabelsReturn} from "@/composables/use-labels";
-import type {ComputedRef} from "vue";
+import type { UseLabelsReturn } from "@/composables/use-labels";
+import type { ComputedRef } from "vue";
 
 export interface LabelsHostProps {
   /**

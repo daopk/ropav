@@ -1,11 +1,11 @@
-import type {DropTarget} from "@/utils/dnd-types";
+import type { DropTarget } from "@/utils/dnd-types";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { shallowRef } from "vue";
 
-import {ListDropTargetDelegate} from "@/utils/dnd-list-drop-target-delegate";
+import { ListDropTargetDelegate } from "@/utils/dnd-list-drop-target-delegate";
 
-import {createFixtureCollection} from "../composables/dnd-collection-state-fixtures";
+import { createFixtureCollection } from "../composables/dnd-collection-state-fixtures";
 
 /**
  * Resolving a pointer position to a drop target.
@@ -19,7 +19,7 @@ import {createFixtureCollection} from "../composables/dnd-collection-state-fixtu
 const ROW_HEIGHT = 20;
 
 /** A vertical stack of rows, each 20px tall, starting at y = 0. */
-const renderList = (keys: string[], options: {width?: number; rowHeight?: number} = {}) => {
+const renderList = (keys: string[], options: { width?: number; rowHeight?: number } = {}) => {
   const rowHeight = options.rowHeight ?? ROW_HEIGHT;
   const container = document.createElement("div");
 
@@ -68,18 +68,18 @@ afterEach(() => {
 describe("ListDropTargetDelegate", () => {
   const delegate = (keys: string[], container: HTMLElement) =>
     new ListDropTargetDelegate(
-      createFixtureCollection(keys.map((key) => ({key}))),
+      createFixtureCollection(keys.map((key) => ({ key }))),
       shallowRef(container),
     );
 
   describe("an empty or absent collection", () => {
     it("reports the root when there is no container", () => {
       const target = new ListDropTargetDelegate(
-        createFixtureCollection([{key: "a"}]),
+        createFixtureCollection([{ key: "a" }]),
         shallowRef(null),
       );
 
-      expect(target.getDropTargetFromPoint(0, 0, acceptAll)).toEqual({type: "root"});
+      expect(target.getDropTargetFromPoint(0, 0, acceptAll)).toEqual({ type: "root" });
     });
 
     it("reports the root when the collection is empty", () => {
@@ -93,10 +93,10 @@ describe("ListDropTargetDelegate", () => {
     // A load-more sentinel carries no key; treating it as an item would crash the search.
     it("ignores rows that are not items", () => {
       const container = renderList(["a"]);
-      const collection = createFixtureCollection([{key: "a"}, {key: "loader", type: "loader"}]);
+      const collection = createFixtureCollection([{ key: "a" }, { key: "loader", type: "loader" }]);
       const target = new ListDropTargetDelegate(collection, shallowRef(container));
 
-      expect(target.getDropTargetFromPoint(0, 10, acceptAll)).toMatchObject({key: "a"});
+      expect(target.getDropTargetFromPoint(0, 10, acceptAll)).toMatchObject({ key: "a" });
     });
   });
 
@@ -106,7 +106,7 @@ describe("ListDropTargetDelegate", () => {
       const container = renderList(["a", "b", "c"]);
 
       expect(delegate(["a", "b", "c"], container).getDropTargetFromPoint(0, 30, acceptAll)).toEqual(
-        {dropPosition: "on", key: "b", type: "item"},
+        { dropPosition: "on", key: "b", type: "item" },
       );
     });
 
@@ -114,7 +114,7 @@ describe("ListDropTargetDelegate", () => {
       const container = renderList(["a", "b", "c"]);
 
       expect(delegate(["a", "b", "c"], container).getDropTargetFromPoint(0, 22, acceptAll)).toEqual(
-        {dropPosition: "before", key: "b", type: "item"},
+        { dropPosition: "before", key: "b", type: "item" },
       );
     });
 
@@ -122,7 +122,7 @@ describe("ListDropTargetDelegate", () => {
       const container = renderList(["a", "b", "c"]);
 
       expect(delegate(["a", "b", "c"], container).getDropTargetFromPoint(0, 38, acceptAll)).toEqual(
-        {dropPosition: "after", key: "b", type: "item"},
+        { dropPosition: "after", key: "b", type: "item" },
       );
     });
   });
@@ -154,7 +154,7 @@ describe("ListDropTargetDelegate", () => {
   describe("outside any item", () => {
     it("attaches before the first item when above the list", () => {
       const container = renderList(["a", "b"]);
-      const collection = createFixtureCollection([{key: "a"}, {key: "b"}]);
+      const collection = createFixtureCollection([{ key: "a" }, { key: "b" }]);
       const target = new ListDropTargetDelegate(collection, shallowRef(container));
 
       expect(target.getDropTargetFromPoint(0, -10, acceptAll)).toEqual({
@@ -178,7 +178,7 @@ describe("ListDropTargetDelegate", () => {
   describe("finding the right row", () => {
     // The search bisects rather than scanning, so a long list is worth exercising end to end.
     it("resolves every row of a long list to itself", () => {
-      const keys = Array.from({length: 50}, (_, index) => `row-${index}`);
+      const keys = Array.from({ length: 50 }, (_, index) => `row-${index}`);
       const container = renderList(keys);
       const target = delegate(keys, container);
 
@@ -234,9 +234,9 @@ describe("ListDropTargetDelegate", () => {
     it("measures along the x axis", () => {
       const container = renderRow(["a", "b", "c"]);
       const target = new ListDropTargetDelegate(
-        createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}]),
+        createFixtureCollection([{ key: "a" }, { key: "b" }, { key: "c" }]),
         shallowRef(container),
-        {orientation: "horizontal"},
+        { orientation: "horizontal" },
       );
 
       expect(target.getDropTargetFromPoint(30, 10, acceptAll)).toEqual({
@@ -250,9 +250,9 @@ describe("ListDropTargetDelegate", () => {
     it("flips before and after when the direction is rtl", () => {
       const container = renderRow(["a", "b", "c"]);
       const target = new ListDropTargetDelegate(
-        createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}]),
+        createFixtureCollection([{ key: "a" }, { key: "b" }, { key: "c" }]),
         shallowRef(container),
-        {direction: "rtl", orientation: "horizontal"},
+        { direction: "rtl", orientation: "horizontal" },
       );
 
       expect(target.getDropTargetFromPoint(22, 10, acceptAll)).toEqual({

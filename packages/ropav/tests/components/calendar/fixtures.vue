@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {CalendarFixtureProps} from "./fixtures.types";
+import type { CalendarFixtureProps } from "./fixtures.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import CalendarFixtureBody from "./fixtures-body.vue";
 

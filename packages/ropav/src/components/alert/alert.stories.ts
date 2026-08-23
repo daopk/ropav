@@ -1,11 +1,11 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Button} from "../button";
-import {CloseButtonRoot} from "../close-button";
-import {SpinnerRoot} from "../spinner";
+import { Button } from "../button";
+import { CloseButtonRoot } from "../close-button";
+import { SpinnerRoot } from "../spinner";
 
-import {Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle} from "./index";
+import { Alert, AlertContent, AlertDescription, AlertIndicator, AlertTitle } from "./index";
 
 /** Runtime-compiled stories register compound parts individually instead of using dot notation. */
 const components = {

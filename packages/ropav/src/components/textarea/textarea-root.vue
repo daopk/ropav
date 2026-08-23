@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {TextAreaRootProps} from "./textarea.types";
+import type { TextAreaRootProps } from "./textarea.types";
 
-import {textAreaVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { textAreaVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {useTextFieldContext} from "../textfield/textfield.context";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { useTextFieldContext } from "../textfield/textfield.context";
 
 const props = withDefaults(defineProps<TextAreaRootProps>(), {
   fullWidth: undefined,
@@ -38,14 +38,14 @@ const styles = computed(() =>
 // props. Spreading the field's bag blindly would undo it, since an absent field placeholder
 // arrives as `placeholder: undefined`.
 const attrs = computed(() => {
-  const merged: Record<string, unknown> = {...control?.attrs.value};
+  const merged: Record<string, unknown> = { ...control?.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
 
   return merged;
 });
 
-const interaction = useInteractionStates({isDisabled: () => control?.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled.value });
 
 const onFocus = (event: FocusEvent) => {
   interaction.onFocus();

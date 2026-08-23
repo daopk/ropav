@@ -4,23 +4,23 @@ import type {
   RangeCalendarGridHeaderSlotProps,
 } from "./range-calendar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {getDayViewWeekDayLabels} from "../../utils/calendar";
-import {useCalendarGridContext} from "../calendar/calendar.context";
+import { useLocale } from "../../composables/use-locale";
+import { getDayViewWeekDayLabels } from "../../utils/calendar";
+import { useCalendarGridContext } from "../calendar/calendar.context";
 
-import {useRangeCalendarContext} from "./range-calendar.context";
+import { useRangeCalendarContext } from "./range-calendar.context";
 
 const props = defineProps<RangeCalendarGridHeaderProps>();
 
-defineSlots<{default?: (props: RangeCalendarGridHeaderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RangeCalendarGridHeaderSlotProps) => unknown }>();
 
-const {dayView, slots} = useRangeCalendarContext();
-const {headerAttrs, weekDays} = useCalendarGridContext();
+const { dayView, slots } = useRangeCalendarContext();
+const { headerAttrs, weekDays } = useCalendarGridContext();
 const locale = useLocale();
 
-const styles = computed(() => slots.value.gridHeader({class: props.class}));
+const styles = computed(() => slots.value.gridHeader({ class: props.class }));
 
 /**
  * A day view spanning a week or more labels its own columns.

@@ -1,18 +1,18 @@
-import type {DefaultDateProps} from "@/composables/use-default-date-props";
+import type { DefaultDateProps } from "@/composables/use-default-date-props";
 
-import {CalendarDate, CalendarDateTime, ZonedDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive} from "vue";
+import { CalendarDate, CalendarDateTime, ZonedDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/default-date-props-host.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: DefaultDateProps;
 
-  Object.assign(props, {onReady: (value: DefaultDateProps) => (ready = value)});
+  Object.assign(props, { onReady: (value: DefaultDateProps) => (ready = value) });
 
-  return {...renderVapor(Host, {props}), resolved: () => ready};
+  return { ...renderVapor(Host, { props }), resolved: () => ready };
 };
 
 describe("useDefaultDateProps", () => {
@@ -22,32 +22,32 @@ describe("useDefaultDateProps", () => {
     });
 
     it("reads the day off a plain date", () => {
-      expect(setup({value: new CalendarDate(2026, 6, 15)}).resolved().granularity.value).toBe(
+      expect(setup({ value: new CalendarDate(2026, 6, 15) }).resolved().granularity.value).toBe(
         "day",
       );
     });
 
     it("reads the minute off a value that carries a time", () => {
       expect(
-        setup({value: new CalendarDateTime(2026, 6, 15, 13, 45)}).resolved().granularity.value,
+        setup({ value: new CalendarDateTime(2026, 6, 15, 13, 45) }).resolved().granularity.value,
       ).toBe("minute");
     });
 
     it("takes what the caller asked for over what the value implies", () => {
       expect(
-        setup({granularity: "hour", value: new CalendarDateTime(2026, 6, 15, 13, 45)}).resolved()
+        setup({ granularity: "hour", value: new CalendarDateTime(2026, 6, 15, 13, 45) }).resolved()
           .granularity.value,
       ).toBe("hour");
     });
 
     it("takes what the caller asked for with no value at all", () => {
-      expect(setup({granularity: "second"}).resolved().granularity.value).toBe("second");
+      expect(setup({ granularity: "second" }).resolved().granularity.value).toBe("second");
     });
 
     it("refuses a granularity the value cannot carry", () => {
       // A caller asking for minutes from a plain date has made a mistake that would otherwise
       // surface much later, as a segment nothing can edit.
-      const {resolved} = setup({granularity: "minute", value: new CalendarDate(2026, 6, 15)});
+      const { resolved } = setup({ granularity: "minute", value: new CalendarDate(2026, 6, 15) });
 
       expect(() => resolved().granularity.value).toThrow(/Invalid granularity minute/);
     });
@@ -56,7 +56,8 @@ describe("useDefaultDateProps", () => {
   describe("the time zone", () => {
     it("is absent for a value that has none", () => {
       expect(
-        setup({value: new CalendarDateTime(2026, 6, 15, 13, 45)}).resolved().defaultTimeZone.value,
+        setup({ value: new CalendarDateTime(2026, 6, 15, 13, 45) }).resolved().defaultTimeZone
+          .value,
       ).toBeUndefined();
     });
 
@@ -75,10 +76,10 @@ describe("useDefaultDateProps", () => {
        * The point of remembering at all: a date-and-time control emptied by the user must keep its
        * time segments rather than collapse to the date-only default while it is being edited.
        */
-      const props = reactive<{value: CalendarDateTime | null}>({
+      const props = reactive<{ value: CalendarDateTime | null }>({
         value: new CalendarDateTime(2026, 6, 15, 13, 45),
       });
-      const {resolved} = setup(props);
+      const { resolved } = setup(props);
 
       expect(resolved().granularity.value).toBe("minute");
 
@@ -89,10 +90,10 @@ describe("useDefaultDateProps", () => {
     });
 
     it("keeps the time zone after the value is cleared", async () => {
-      const props = reactive<{value: ZonedDateTime | null}>({
+      const props = reactive<{ value: ZonedDateTime | null }>({
         value: new ZonedDateTime(2026, 6, 15, "America/New_York", -14400000, 13, 45),
       });
-      const {resolved} = setup(props);
+      const { resolved } = setup(props);
 
       props.value = null;
       await nextTick();
@@ -107,10 +108,10 @@ describe("useDefaultDateProps", () => {
        * date-only default and its time segments disappear. A picker reads `hasTime` in the same
        * turn its owner writes the value, so the answer cannot be a tick behind.
        */
-      const props = reactive<{value: CalendarDate | CalendarDateTime | null}>({
+      const props = reactive<{ value: CalendarDate | CalendarDateTime | null }>({
         value: new CalendarDate(2026, 6, 15),
       });
-      const {resolved} = setup(props);
+      const { resolved } = setup(props);
 
       props.value = new CalendarDateTime(2026, 6, 15, 13, 45);
       props.value = null;
@@ -119,10 +120,10 @@ describe("useDefaultDateProps", () => {
     });
 
     it("follows a value that changes shape", async () => {
-      const props = reactive<{value: CalendarDate | CalendarDateTime | null}>({
+      const props = reactive<{ value: CalendarDate | CalendarDateTime | null }>({
         value: new CalendarDate(2026, 6, 15),
       });
-      const {resolved} = setup(props);
+      const { resolved } = setup(props);
 
       expect(resolved().granularity.value).toBe("day");
 

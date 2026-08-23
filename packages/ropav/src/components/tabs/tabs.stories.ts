@@ -1,7 +1,7 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
 import {
   Tabs,
@@ -31,10 +31,10 @@ const components = {
 
 const meta: StoryMeta = {
   argTypes: {
-    isDisabled: {control: {type: "boolean"}},
-    keyboardActivation: {control: {type: "radio"}, options: ["automatic", "manual"]},
-    orientation: {control: {type: "radio"}, options: ["horizontal", "vertical"]},
-    variant: {control: {type: "radio"}, options: ["primary", "secondary"]},
+    isDisabled: { control: { type: "boolean" } },
+    keyboardActivation: { control: { type: "radio" }, options: ["automatic", "manual"] },
+    orientation: { control: { type: "radio" }, options: ["horizontal", "vertical"] },
+    variant: { control: { type: "radio" }, options: ["primary", "secondary"] },
   },
   args: {
     isDisabled: false,
@@ -50,12 +50,12 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const setupArgs = (args: Record<string, unknown>) => () => ({args});
+const setupArgs = (args: Record<string, unknown>) => () => ({ args });
 
 const OVERVIEW_ITEMS = [
-  {body: "View your project overview and recent activity.", id: "overview", label: "Overview"},
-  {body: "Track your metrics and analyze performance data.", id: "analytics", label: "Analytics"},
-  {body: "Generate and download detailed reports.", id: "reports", label: "Reports"},
+  { body: "View your project overview and recent activity.", id: "overview", label: "Overview" },
+  { body: "Track your metrics and analyze performance data.", id: "analytics", label: "Analytics" },
+  { body: "Generate and download detailed reports.", id: "reports", label: "Reports" },
 ];
 
 const overviewTemplate = (extraRootProps = "") => `
@@ -84,7 +84,7 @@ const overviewTemplate = (extraRootProps = "") => `
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: OVERVIEW_ITEMS}),
+    setup: () => ({ args, items: OVERVIEW_ITEMS }),
     template: overviewTemplate(),
   }),
 };
@@ -99,12 +99,12 @@ const OVERFLOW_ITEMS = [
   "Acquisition",
   "Retention",
   "Settings",
-].map((label) => ({id: label.toLowerCase(), label}));
+].map((label) => ({ id: label.toLowerCase(), label }));
 
 export const Overflow: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: OVERFLOW_ITEMS}),
+    setup: () => ({ args, items: OVERFLOW_ITEMS }),
     template: `
       <div class="w-[400px]">
         <Tabs
@@ -182,24 +182,24 @@ const settingsTemplate = `
 `;
 
 export const Vertical: Story = {
-  args: {orientation: "vertical"},
+  args: { orientation: "vertical" },
   render: (args) => ({
     components,
-    setup: () => ({args, items: SETTINGS_ITEMS}),
+    setup: () => ({ args, items: SETTINGS_ITEMS }),
     template: settingsTemplate,
   }),
 };
 
 const STATE_ITEMS = [
-  {body: "This tab is active and can be selected.", id: "active", label: "Active"},
-  {body: "This content cannot be accessed.", id: "disabled", label: "Disabled"},
-  {body: "This tab is also available for selection.", id: "available", label: "Available"},
+  { body: "This tab is active and can be selected.", id: "active", label: "Active" },
+  { body: "This content cannot be accessed.", id: "disabled", label: "Disabled" },
+  { body: "This tab is also available for selection.", id: "available", label: "Available" },
 ];
 
 export const WithDisabledTab: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: STATE_ITEMS}),
+    setup: () => ({ args, items: STATE_ITEMS }),
     template: `
       <div class="w-[600px]">
         <Tabs
@@ -231,15 +231,15 @@ export const WithDisabledTab: Story = {
 };
 
 const DEFAULT_SELECTED_ITEMS = [
-  {body: "This tab is active and can be selected.", id: "active", label: "Active"},
-  {body: "This tab is the default selection.", id: "default", label: "Default"},
-  {body: "This tab is available for selection as well.", id: "available", label: "Available"},
+  { body: "This tab is active and can be selected.", id: "active", label: "Active" },
+  { body: "This tab is the default selection.", id: "default", label: "Default" },
+  { body: "This tab is available for selection as well.", id: "available", label: "Available" },
 ];
 
 export const WithDefaultSelectedTab: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: DEFAULT_SELECTED_ITEMS}),
+    setup: () => ({ args, items: DEFAULT_SELECTED_ITEMS }),
     template: `
       <div class="w-[600px]">
         <Tabs
@@ -267,9 +267,9 @@ export const WithDefaultSelectedTab: Story = {
 };
 
 const CONTROLLED_ITEMS = [
-  {body: "This tab is active and can be selected.", id: "active", label: "Active"},
-  {body: "This tab is the controlled selection.", id: "controlled", label: "Controlled"},
-  {body: "This tab is available for selection as well.", id: "available", label: "Available"},
+  { body: "This tab is active and can be selected.", id: "active", label: "Active" },
+  { body: "This tab is the controlled selection.", id: "controlled", label: "Controlled" },
+  { body: "This tab is available for selection as well.", id: "available", label: "Available" },
 ];
 
 export const WithControlledSelectionTab: Story = {
@@ -316,7 +316,7 @@ const CADENCE_ITEMS = ["Daily", "Weekly", "Bi-Weekly", "Monthly"].map((label) =>
 export const WithCustomStyle: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: CADENCE_ITEMS}),
+    setup: () => ({ args, items: CADENCE_ITEMS }),
     template: `
       <div class="w-[380px]">
         <Tabs
@@ -345,7 +345,7 @@ export const WithCustomStyle: Story = {
 export const WithSeparator: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, items: OVERVIEW_ITEMS}),
+    setup: () => ({ args, items: OVERVIEW_ITEMS }),
     template: `
       <div class="w-[600px]">
         <Tabs
@@ -373,7 +373,7 @@ export const WithSeparator: Story = {
 };
 
 export const Secondary: Story = {
-  args: {variant: "secondary"},
+  args: { variant: "secondary" },
   render: (args) => ({
     components,
     setup: setupArgs(args),
@@ -408,10 +408,10 @@ export const Secondary: Story = {
 };
 
 export const SecondaryVertical: Story = {
-  args: {orientation: "vertical", variant: "secondary"},
+  args: { orientation: "vertical", variant: "secondary" },
   render: (args) => ({
     components,
-    setup: () => ({args, items: SETTINGS_ITEMS}),
+    setup: () => ({ args, items: SETTINGS_ITEMS }),
     template: `
       <div class="w-[600px]">
         <Tabs
@@ -439,14 +439,14 @@ export const SecondaryVertical: Story = {
 };
 
 const ZOOM_LEVELS = [
-  {factor: "8x", id: "200", label: "200 mm", slug: "200mm__c8kya18imsqe"},
-  {factor: "4x", id: "100", label: "100 mm", slug: "100mm__cykxcenbhvue"},
-  {factor: "2x", id: "48", label: "48 mm", slug: "48mm__bmrwps1q6w76"},
-  {factor: "1.5x", id: "35", label: "35 mm", slug: "35mm__k375wbkrjp2e"},
-  {factor: "1.2x", id: "28", label: "28 mm", slug: "28mm__fylmxo06jq6i"},
-  {factor: "1x", id: "24", label: "24 mm", slug: "24mm__e54cxtdkdrwy"},
-  {factor: "0.5x", id: "13", label: "13 mm", slug: "13mm__dzafu9h1kaye"},
-  {factor: "0.2x", id: "macro", label: "macro", slug: "macro__bb7oud7ri2o2"},
+  { factor: "8x", id: "200", label: "200 mm", slug: "200mm__c8kya18imsqe" },
+  { factor: "4x", id: "100", label: "100 mm", slug: "100mm__cykxcenbhvue" },
+  { factor: "2x", id: "48", label: "48 mm", slug: "48mm__bmrwps1q6w76" },
+  { factor: "1.5x", id: "35", label: "35 mm", slug: "35mm__k375wbkrjp2e" },
+  { factor: "1.2x", id: "28", label: "28 mm", slug: "28mm__fylmxo06jq6i" },
+  { factor: "1x", id: "24", label: "24 mm", slug: "24mm__e54cxtdkdrwy" },
+  { factor: "0.5x", id: "13", label: "13 mm", slug: "13mm__dzafu9h1kaye" },
+  { factor: "0.2x", id: "macro", label: "macro", slug: "macro__bb7oud7ri2o2" },
 ].map((level) => ({
   ...level,
   src: `https://www.apple.com/v/iphone-17-pro/a/images/overview/cameras/zoom/${level.slug}_large_2x.jpg`,
@@ -454,13 +454,13 @@ const ZOOM_LEVELS = [
 
 export const Showcase1: Story = {
   name: "Showcases/Apple iPhone 17 Pro cameras",
-  parameters: {layout: "fullscreen"},
+  parameters: { layout: "fullscreen" },
   render: (args) => ({
     components,
     setup: () => {
       const selectedZoom = shallowRef("200");
 
-      return {args, levels: ZOOM_LEVELS, selectedZoom};
+      return { args, levels: ZOOM_LEVELS, selectedZoom };
     },
     template: `
       <div class="w-full">

@@ -1,15 +1,15 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconChevronUp from "~icons/gravity-ui/chevron-up";
 import IconQrCode from "~icons/gravity-ui/qr-code";
 import IconExpo from "~icons/logos/expo-icon";
 import IconApple from "~icons/tabler/brand-apple-filled";
 
-import {qrCodeSrc} from "../../utils/story-assets";
-import {Button} from "../button";
+import { qrCodeSrc } from "../../utils/story-assets";
+import { Button } from "../button";
 import {
   Disclosure,
   DisclosureBody,
@@ -17,9 +17,9 @@ import {
   DisclosureHeading,
   DisclosureIndicator,
 } from "../disclosure";
-import {Separator} from "../separator";
+import { Separator } from "../separator";
 
-import {DisclosureGroup, useDisclosureGroupNavigation} from "./index";
+import { DisclosureGroup, useDisclosureGroupNavigation } from "./index";
 
 /**
  * The showcase trigger is an ordinary `Button` behind a wrapper of its own, which is all it
@@ -27,8 +27,8 @@ import {DisclosureGroup, useDisclosureGroupNavigation} from "./index";
  * becomes the trigger without having to forward anything.
  */
 const AppleShowcaseButton = {
-  components: {Button},
-  props: {isSelected: {default: false, type: Boolean}},
+  components: { Button },
+  props: { isSelected: { default: false, type: Boolean } },
   template: `
     <Button
       :class="[
@@ -128,8 +128,8 @@ const SHOWCASE_ITEMS = [
 
 const meta: StoryMeta = {
   argTypes: {
-    allowsMultipleExpanded: {control: {type: "boolean"}},
-    isDisabled: {control: {type: "boolean"}},
+    allowsMultipleExpanded: { control: { type: "boolean" } },
+    isDisabled: { control: { type: "boolean" } },
   },
   args: {
     allowsMultipleExpanded: false,
@@ -242,7 +242,7 @@ export const Controlled: Story = {
       const expandedKeys = shallowRef(new Set<string | number>(["preview"]));
       const onExpandedChange = (keys: Set<string | number>) => (expandedKeys.value = keys);
 
-      const {isNextDisabled, isPrevDisabled, onNext, onPrevious} = useDisclosureGroupNavigation({
+      const { isNextDisabled, isPrevDisabled, onNext, onPrevious } = useDisclosureGroupNavigation({
         expandedKeys,
         itemIds: NATIVE_ITEM_IDS,
         onExpandedChange,
@@ -307,7 +307,7 @@ export const Showcase1: Story = {
       const expandedKeys = shallowRef(new Set<string | number>(["colors"]));
       const onExpandedChange = (keys: Set<string | number>) => (expandedKeys.value = keys);
 
-      const {isNextDisabled, isPrevDisabled, onNext, onPrevious} = useDisclosureGroupNavigation({
+      const { isNextDisabled, isPrevDisabled, onNext, onPrevious } = useDisclosureGroupNavigation({
         expandedKeys,
         itemIds: SHOWCASE_ITEMS.map((item) => item.id),
         onExpandedChange,

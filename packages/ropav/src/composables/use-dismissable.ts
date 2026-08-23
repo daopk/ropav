@@ -1,10 +1,10 @@
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
-import {isInTopLayer} from "../utils/top-layer";
+import { isInTopLayer } from "../utils/top-layer";
 
-import {isElementInAnyFocusScope} from "./use-focus-scope";
+import { isElementInAnyFocusScope } from "./use-focus-scope";
 
 /**
  * Open overlays, innermost last.
@@ -103,7 +103,7 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
         if (index >= 0) visibleOverlays.splice(index, 1);
       });
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   /** Whether the event happened outside the overlay and is worth acting on. */
@@ -214,7 +214,7 @@ export const useDismissable = (options: UseDismissableOptions): UseDismissableRe
       detach();
       attach();
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   onScopeDispose(() => detach(), true);

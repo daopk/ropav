@@ -1,7 +1,7 @@
-import type {CollectionKey} from "./use-collection";
-import type {MaybeRefOrGetter} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { MaybeRefOrGetter } from "vue";
 
-import {onScopeDispose, toValue} from "vue";
+import { onScopeDispose, toValue } from "vue";
 
 /** How long a partial search stays live before it is forgotten. */
 const TYPEAHEAD_DEBOUNCE_MS = 1000;
@@ -134,5 +134,5 @@ export const useTypeahead = (options: UseTypeaheadOptions): UseTypeaheadReturn =
 
   onScopeDispose(() => clearTimeout(timeout));
 
-  return {onKeydown, onKeydownCapture, reset};
+  return { onKeydown, onKeydownCapture, reset };
 };

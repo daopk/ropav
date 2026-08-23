@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import {execSync} from "node:child_process";
+import { execSync } from "node:child_process";
 import path from "node:path";
-import {fileURLToPath} from "node:url";
+import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
 
 import fs from "fs-extra";
@@ -20,7 +20,7 @@ async function clean() {
 
 async function build() {
   console.log("📦 Building with Vite (library mode)...");
-  execSync("vite build", {cwd: rootDir, stdio: "inherit"});
+  execSync("vite build", { cwd: rootDir, stdio: "inherit" });
 }
 
 async function buildStyles() {
@@ -54,7 +54,7 @@ async function generateTypes() {
         module: "ESNext",
         moduleResolution: "bundler",
         outDir: "./dist",
-        paths: {"@/*": ["./src/*"]},
+        paths: { "@/*": ["./src/*"] },
         resolveJsonModule: true,
         rootDir: "./src",
         skipLibCheck: true,
@@ -67,11 +67,11 @@ async function generateTypes() {
       exclude: ["node_modules", "**/*.stories.*", "**/*.test.*", "src/utils/story-meta.ts", "dist"],
       include: ["src"],
     },
-    {spaces: 2},
+    { spaces: 2 },
   );
 
   try {
-    execSync("vue-tsc --project tsconfig.build.json", {cwd: rootDir, stdio: "inherit"});
+    execSync("vue-tsc --project tsconfig.build.json", { cwd: rootDir, stdio: "inherit" });
     console.log("✅ TypeScript declarations generated successfully");
   } finally {
     await fs.remove(tsconfigPath);
@@ -100,7 +100,7 @@ async function logComponentCount() {
 async function measureBundleSizes() {
   console.log("📊 Measuring bundle sizes...");
 
-  const sizes = {components: {}, css: {}, main: {}, total: {gzip: 0, min: 0}};
+  const sizes = { components: {}, css: {}, main: {}, total: { gzip: 0, min: 0 } };
 
   async function measureFile(filePath) {
     if (!(await fs.pathExists(filePath))) return null;
@@ -108,7 +108,7 @@ async function measureBundleSizes() {
     const content = await fs.readFile(filePath);
 
     return {
-      gzip: (zlib.gzipSync(content, {level: 9}).length / 1000).toFixed(2),
+      gzip: (zlib.gzipSync(content, { level: 9 }).length / 1000).toFixed(2),
       min: (Buffer.byteLength(content) / 1000).toFixed(2),
     };
   }
@@ -149,7 +149,7 @@ async function measureBundleSizes() {
 
   const sizesPath = path.join(rootDir, "bundle-sizes.json");
 
-  await fs.writeJson(sizesPath, sizes, {spaces: 2});
+  await fs.writeJson(sizesPath, sizes, { spaces: 2 });
 
   console.log("\n📦 Bundle Size Report");
   console.log("═".repeat(50));

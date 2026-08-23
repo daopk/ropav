@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import {useOptionalContext} from "./context";
+import { useOptionalContext } from "./context";
 
-const {greeting} = useOptionalContext();
+const { greeting } = useOptionalContext();
 </script>
 
 <template>

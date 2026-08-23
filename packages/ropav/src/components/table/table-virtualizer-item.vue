@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {LayoutInfo} from "../../utils/virtualizer-layout-info";
+import type { LayoutInfo } from "../../utils/virtualizer-layout-info";
 
-import {VirtualizerItem} from "../virtualizer";
+import { VirtualizerItem } from "../virtualizer";
 
-import {useTableVirtualizerContext} from "./table.context";
+import { useTableVirtualizerContext } from "./table.context";
 
 /**
  * A `VirtualizerItem` wrapper for a table part, or nothing at all.
@@ -25,7 +25,7 @@ const props = defineProps<{
   parentLayoutInfo?: LayoutInfo | null;
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const isVirtualized = useTableVirtualizerContext() != null;
 </script>

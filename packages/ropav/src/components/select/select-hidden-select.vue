@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useFormReset} from "../../composables/use-form-reset";
-import {useFormValidation} from "../../composables/use-form-validation";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { useFormReset } from "../../composables/use-form-reset";
+import { useFormValidation } from "../../composables/use-form-validation";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useSelectContext} from "./select.context";
+import { useSelectContext } from "./select.context";
 
 /**
  * A native `<select>`, out of sight, so a form can submit the value and the browser can autofill.
@@ -32,10 +32,10 @@ const props = withDefaults(
   },
 );
 
-const {select, state} = useSelectContext();
+const { select, state } = useSelectContext();
 
 /** Fixed rather than absolute, so the control cannot add scroll to the page. */
-const style = {...visuallyHiddenStyle, left: 0, position: "fixed", top: 0} as const;
+const style = { ...visuallyHiddenStyle, left: 0, position: "fixed", top: 0 } as const;
 
 const element = shallowRef<HTMLSelectElement | null>(null);
 
@@ -101,7 +101,7 @@ watch(
 
     if (!isMultiple.value) control.value = values.value[0] ?? "";
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const onChange = (event: Event) => {

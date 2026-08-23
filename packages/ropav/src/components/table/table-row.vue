@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {TableCellMeta} from "../../composables/use-table-collection";
-import type {TableRowProps, TableRowSlotProps} from "./table.types";
+import type { TableCellMeta } from "../../composables/use-table-collection";
+import type { TableRowProps, TableRowSlotProps } from "./table.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
 import {
   createTableRegistry,
   isTableCellControl,
   tableCellId,
 } from "../../composables/use-table-collection";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
 import {
   provideTableRowContext,
@@ -24,9 +24,9 @@ import {
 
 const props = defineProps<TableRowProps>();
 
-defineSlots<{default?: (props: TableRowSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TableRowSlotProps) => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 const {
   collection,
   collectionId,
@@ -101,7 +101,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 // A row is named by its row header cells, whose ids are derived rather than read back, so the
@@ -133,7 +133,7 @@ const position = computed(() => collection.tree.position(rowKey.value));
  */
 const draggable =
   dragState && dragAndDropHooks?.useDraggableItem
-    ? dragAndDropHooks.useDraggableItem({hasDragButton: true, key: rowKey.value}, dragState)
+    ? dragAndDropHooks.useDraggableItem({ hasDragButton: true, key: rowKey.value }, dragState)
     : null;
 
 /**
@@ -148,7 +148,7 @@ const dropIndicatorElement = shallowRef<HTMLElement | null>(null);
 const dropIndicator =
   dropState && dragAndDropHooks?.useDropIndicator
     ? dragAndDropHooks.useDropIndicator(
-        {target: {dropPosition: "on", key: rowKey.value, type: "item"}},
+        { target: { dropPosition: "on", key: rowKey.value, type: "item" } },
         dropState,
         dropIndicatorElement,
       )
@@ -175,7 +175,7 @@ provideTableRowContext({
   toggle: () => toggleExpanded(rowKey.value),
 });
 
-const states = useInteractionStates({isDisabled: () => isDisabled.value});
+const states = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 // Focus that arrived on its own still has to be recorded, or the roving tab stop and the focus
 // ring would disagree about where focus is.
@@ -184,7 +184,7 @@ const onFocus = (event: FocusEvent) => {
 
   if (event.target !== element.value) return;
 
-  keyboard.claimFocus({columnKey: null, rowKey: rowKey.value});
+  keyboard.claimFocus({ columnKey: null, rowKey: rowKey.value });
 };
 
 /**
@@ -218,13 +218,13 @@ const onClick = (event: MouseEvent) => {
     :is="virtualizer ? 'div' : 'tr'"
     v-if="dropIndicator && !dropIndicator.isHidden.value"
     role="row"
-    :style="{height: 0}"
+    :style="{ height: 0 }"
   >
     <component
       :is="virtualizer ? 'div' : 'td'"
       :colspan="virtualizer ? undefined : columnCount"
       role="gridcell"
-      :style="{padding: 0}"
+      :style="{ padding: 0 }"
     >
       <div
         ref="dropIndicatorElement"
@@ -264,7 +264,7 @@ const onClick = (event: MouseEvent) => {
     :data-selection-mode="selectionMode === 'none' ? undefined : selectionMode"
     data-slot="table-row"
     role="row"
-    :style="{'--table-row-level': level}"
+    :style="{ '--table-row-level': level }"
     :tabindex="keyboard.rowTabIndex(rowKey)"
     @blur="states.onBlur"
     @click="onClick"

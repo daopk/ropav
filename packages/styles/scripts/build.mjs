@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-import {execSync} from "child_process";
+import { execSync } from "child_process";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 
 import fs from "fs-extra";
 
@@ -17,18 +17,18 @@ async function clean() {
 
 async function build() {
   console.log("📦 Building with Rollup...");
-  execSync("rollup -c rollup.config.mjs", {cwd: rootDir, stdio: "inherit"});
+  execSync("rollup -c rollup.config.mjs", { cwd: rootDir, stdio: "inherit" });
 }
 
 async function generateTypes() {
   console.log("📝 Generating TypeScript declarations...");
-  execSync("tsc --emitDeclarationOnly", {cwd: rootDir, stdio: "inherit"});
+  execSync("tsc --emitDeclarationOnly", { cwd: rootDir, stdio: "inherit" });
   console.log("✅ TypeScript declarations generated");
 }
 
 async function copyCss() {
   console.log("🎨 Copying CSS files...");
-  execSync("node scripts/copy-css.mjs", {cwd: rootDir, stdio: "inherit"});
+  execSync("node scripts/copy-css.mjs", { cwd: rootDir, stdio: "inherit" });
 }
 
 async function minifyCss() {

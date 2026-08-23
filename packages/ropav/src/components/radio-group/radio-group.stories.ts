@@ -1,19 +1,19 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconPaypal from "~icons/ic/baseline-paypal";
 import IconVisa from "~icons/streamline-logos/visa-logo-solid";
 import IconMastercard from "~icons/uim/master-card";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
-import {Radio, RadioContent, RadioControl, RadioIndicator} from "../radio";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
+import { Radio, RadioContent, RadioControl, RadioIndicator } from "../radio";
 
-import {RadioGroup} from "./index";
+import { RadioGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Radio.Content` through, so dot notation cannot be used here.
@@ -36,14 +36,14 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["vertical", "horizontal"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary"],
     },
   },
@@ -122,7 +122,7 @@ const subscriptionPlans = `
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="px-4">
         <RadioGroup
@@ -309,7 +309,7 @@ export const Controlled: Story = {
     setup: () => {
       const value = shallowRef("pro");
 
-      return {value};
+      return { value };
     },
     template: `
       <div class="flex flex-col gap-3 px-4">
@@ -372,8 +372,8 @@ export const DeliveryAndPaymentExample: Story = {
     components,
     setup: () => ({
       deliveryOptions: [
-        {description: "4-10 business days", price: "$5.00", title: "Standard", value: "standard"},
-        {description: "2-5 business days", price: "$16.00", title: "Express", value: "express"},
+        { description: "4-10 business days", price: "$5.00", title: "Standard", value: "standard" },
+        { description: "2-5 business days", price: "$16.00", title: "Express", value: "express" },
         {
           description: "1 business day",
           price: "$25.00",
@@ -389,8 +389,8 @@ export const DeliveryAndPaymentExample: Story = {
           title: "**** 8304",
           value: "mastercard",
         },
-        {description: "Exp. on 01/2026", icon: "IconVisa", title: "**** 0123", value: "visa"},
-        {description: "Pay with PayPal", icon: "IconPaypal", title: "PayPal", value: "paypal"},
+        { description: "Exp. on 01/2026", icon: "IconVisa", title: "**** 0123", value: "visa" },
+        { description: "Pay with PayPal", icon: "IconPaypal", title: "PayPal", value: "paypal" },
       ],
     }),
     template: `

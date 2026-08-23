@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {CodeProps} from "./typography.types";
+import type { CodeProps } from "./typography.types";
 
 import TypographyRoot from "./typography-root.vue";
 
 const props = defineProps<CodeProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 </script>
 
 <template>
   <TypographyRoot
-    v-bind="{slot: props.slot}"
+    v-bind="{ slot: props.slot }"
     :align="props.align"
     :class="props.class"
     :color="props.color"

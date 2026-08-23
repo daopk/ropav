@@ -1,6 +1,6 @@
-import {createComponent, defineVaporComponent} from "vue";
+import { createComponent, defineVaporComponent } from "vue";
 
-import {flattenBlock, isTextOnlyBlock} from "../../utils/block";
+import { flattenBlock, isTextOnlyBlock } from "../../utils/block";
 
 import ChipLabel from "./chip-label.vue";
 
@@ -21,14 +21,14 @@ import ChipLabel from "./chip-label.vue";
  * to hold the block; an SFC's `<slot />` is inserted before there is anywhere to intervene.
  */
 const ChipAutoLabel = defineVaporComponent(
-  (_props, {slots}) => {
+  (_props, { slots }) => {
     const block = slots["default"]?.();
 
     if (block === undefined || !isTextOnlyBlock(flattenBlock(block))) return block ?? [];
 
-    return createComponent(ChipLabel, null, {default: () => block});
+    return createComponent(ChipLabel, null, { default: () => block });
   },
-  {name: "Ropav.Chip.AutoLabel"},
+  { name: "Ropav.Chip.AutoLabel" },
 );
 
 export default ChipAutoLabel;

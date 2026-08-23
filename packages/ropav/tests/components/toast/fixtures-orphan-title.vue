@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ToastFixtureProps} from "./fixtures.types";
+import type { ToastFixtureProps } from "./fixtures.types";
 
-import {ToastProvider, ToastTitle} from "@/components/toast";
+import { ToastProvider, ToastTitle } from "@/components/toast";
 
 const props = defineProps<Pick<ToastFixtureProps, "queue">>();
 </script>

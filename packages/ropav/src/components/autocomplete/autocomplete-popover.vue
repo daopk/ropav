@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {AutocompletePopoverProps} from "./autocomplete.types";
+import type { AutocompletePopoverProps } from "./autocomplete.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts} from "../overlay";
+import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 // `isKeyboardDismissDisabled` and `shouldFlip` declare an explicit `undefined` default so an
 // absent prop stays absent rather than reading as an explicit `false`.
@@ -15,9 +15,9 @@ const props = withDefaults(defineProps<AutocompletePopoverProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAutocompleteContext();
+const { slots } = useAutocompleteContext();
 
 /**
  * Owned here rather than by the overlay itself.
@@ -30,7 +30,7 @@ const contexts = createOverlaySlotContexts();
 
 provideOverlaySlotContexts(contexts);
 
-const styles = computed(() => slots.value.popover({class: props.class}));
+const styles = computed(() => slots.value.popover({ class: props.class }));
 </script>
 
 <template>

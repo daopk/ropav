@@ -1,4 +1,4 @@
-import type {CSSProperties} from "vue";
+import type { CSSProperties } from "vue";
 
 /**
  * Styles that take an element out of sight while leaving it in the accessibility tree

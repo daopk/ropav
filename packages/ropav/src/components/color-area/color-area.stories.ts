@@ -1,13 +1,13 @@
-import type {Color} from "../../utils/color-types";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Color } from "../../utils/color-types";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {parseColor} from "../../utils/color";
-import {ColorSwatchRoot} from "../color-swatch";
+import { parseColor } from "../../utils/color";
+import { ColorSwatchRoot } from "../color-swatch";
 
-import {ColorAreaRoot, ColorAreaThumb} from "./index";
+import { ColorAreaRoot, ColorAreaThumb } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `ColorArea.Thumb` through, so dot notation cannot be used here.
@@ -34,13 +34,13 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {showDots: false};
+const defaultArgs = { showDots: false };
 
 export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="w-[300px]">
         <ColorArea v-bind="args">
@@ -58,7 +58,7 @@ export const WithDots: Story = {
   // a static attribute — so the control's `false` would quietly beat the story's own intent.
   render: (args) => ({
     components,
-    setup: () => ({args: {...args, showDots: true}}),
+    setup: () => ({ args: { ...args, showDots: true } }),
     template: `
       <div class="w-[300px]">
         <ColorArea v-bind="args">
@@ -76,7 +76,7 @@ export const Controlled: Story = {
     setup: () => {
       const color = shallowRef<Color>(parseColor("hsl(50, 100%, 50%)"));
 
-      return {color, onChange: (value: Color) => (color.value = value)};
+      return { color, onChange: (value: Color) => (color.value = value) };
     },
     template: `
       <div class="flex w-full flex-col gap-4">
@@ -141,7 +141,7 @@ export const WithColorPreview: Story = {
     setup: () => {
       const color = shallowRef<Color>(parseColor("hsl(200, 100%, 50%)"));
 
-      return {color, onChange: (value: Color) => (color.value = value)};
+      return { color, onChange: (value: Color) => (color.value = value) };
     },
     template: `
       <div class="flex min-w-[300px] flex-col gap-4">

@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {CardRootProps} from "./card.types";
+import type { CardRootProps } from "./card.types";
 
-import {cardVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { cardVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideSurfaceContext, useSurfaceContext} from "../surface";
+import { provideSurfaceContext, useSurfaceContext } from "../surface";
 
-import {provideCardContext} from "./card.context";
+import { provideCardContext } from "./card.context";
 
-const props = withDefaults(defineProps<CardRootProps>(), {variant: "default"});
+const props = withDefaults(defineProps<CardRootProps>(), { variant: "default" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const slots = computed(() => cardVariants({variant: props.variant}));
+const slots = computed(() => cardVariants({ variant: props.variant }));
 
-provideCardContext({slots});
+provideCardContext({ slots });
 
 // Only resolves to an ancestor, since `inject` cannot see the component's own `provide`.
 const ancestorSurface = useSurfaceContext();
@@ -36,7 +36,7 @@ provideSurfaceContext({
 </script>
 
 <template>
-  <div :class="slots.base({class: props.class})" data-slot="card">
+  <div :class="slots.base({ class: props.class })" data-slot="card">
     <slot />
   </div>
 </template>

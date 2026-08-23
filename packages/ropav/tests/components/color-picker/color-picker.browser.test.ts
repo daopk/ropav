@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
-const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -77,7 +77,7 @@ afterEach(() => {
 describe("ColorPicker (browser)", () => {
   describe("opening", () => {
     it("opens on a real press and places the popover under the trigger", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       place(result);
       await nextTick();
@@ -96,7 +96,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("opens by keyboard as well as by pointer", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -120,7 +120,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("closes on Escape", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -134,7 +134,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("moves focus into the dialog and back to the trigger on close", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -152,7 +152,7 @@ describe("ColorPicker (browser)", () => {
 
   describe("the shared colour, painted", () => {
     it("paints the trigger's swatch with the picker's colour", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -164,12 +164,12 @@ describe("ColorPicker (browser)", () => {
     it("resolves the colour area's gradient from the picker's colour", async () => {
       // Only an engine resolves this: the area composes three layers, and the flat one underneath
       // is the picker's hue.
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
       const popover = await open();
-      const {backgroundImage} = getComputedStyle(slot("color-area"));
+      const { backgroundImage } = getComputedStyle(slot("color-area"));
 
       expect(backgroundImage).toContain("linear-gradient(to top, rgb(0, 0, 0)");
       expect(getComputedStyle(slot("color-area")).backgroundColor).toBe("rgb(0, 135, 255)");
@@ -179,7 +179,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("puts the slider's thumb where the picker's hue is", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -198,14 +198,14 @@ describe("ColorPicker (browser)", () => {
 
   describe("driving the colour from inside the popover", () => {
     it("follows a real drag in the colour area", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
       const popover = await open();
       const area = slot("color-area");
       const box = area.getBoundingClientRect();
-      const options = {bubbles: true, button: 0, pointerId: 1, pointerType: "mouse"};
+      const options = { bubbles: true, button: 0, pointerId: 1, pointerType: "mouse" };
 
       area.dispatchEvent(
         new PointerEvent("pointerdown", {
@@ -236,7 +236,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("follows the keyboard on the slider inside the popover", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -254,7 +254,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("updates the trigger from a swatch pressed inside the popover", async () => {
-      const result = render({defaultValue: "#EF4444", withEverything: true});
+      const result = render({ defaultValue: "#EF4444", withEverything: true });
 
       await nextTick();
 
@@ -271,7 +271,7 @@ describe("ColorPicker (browser)", () => {
 
     it("stays open while the colour is being changed", async () => {
       // A press inside the dialog must not read as an outside interaction.
-      const result = render({defaultValue: "#EF4444", withEverything: true});
+      const result = render({ defaultValue: "#EF4444", withEverything: true });
 
       await nextTick();
 
@@ -289,7 +289,7 @@ describe("ColorPicker (browser)", () => {
 
   describe("appearance", () => {
     it("shows a focus ring on the trigger reached by keyboard", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -305,7 +305,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("gives the popover the overlay background and its own shadow", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
 
@@ -323,7 +323,7 @@ describe("ColorPicker (browser)", () => {
 
   describe("accessibility", () => {
     it("has no axe violations while closed", async () => {
-      const result = render({defaultValue: "#0485F7"});
+      const result = render({ defaultValue: "#0485F7" });
 
       await nextTick();
       await expectNoA11yViolations(result.container);
@@ -332,7 +332,7 @@ describe("ColorPicker (browser)", () => {
     });
 
     it("has no axe violations while open", async () => {
-      const result = render({defaultValue: "#0485F7", withEverything: true});
+      const result = render({ defaultValue: "#0485F7", withEverything: true });
 
       await nextTick();
 

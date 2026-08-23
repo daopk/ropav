@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {AccordionRootProps} from "@/components/accordion";
+import type { AccordionRootProps } from "@/components/accordion";
 
-import {Accordion} from "@/components/accordion";
+import { Accordion } from "@/components/accordion";
 
-defineProps<AccordionRootProps & {customIndicator?: boolean; disabledItem?: string}>();
+defineProps<AccordionRootProps & { customIndicator?: boolean; disabledItem?: string }>();
 
-defineEmits<{expandedChange: [keys: Set<string | number>]}>();
+defineEmits<{ expandedChange: [keys: Set<string | number>] }>();
 
 const items = ["one", "two", "three"];
 </script>

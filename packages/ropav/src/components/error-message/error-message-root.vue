@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {ErrorMessageRootProps} from "./error-message.types";
+import type { ErrorMessageRootProps } from "./error-message.types";
 
-import {errorMessageVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { errorMessageVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
 const props = defineProps<ErrorMessageRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const styles = computed(() => errorMessageVariants({class: props.class}));
+const styles = computed(() => errorMessageVariants({ class: props.class }));
 
 // Inside a field that reports its validation state, the message takes the id the field
 // points `aria-describedby` at, alongside any description.

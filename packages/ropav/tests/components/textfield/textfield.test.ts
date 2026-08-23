@@ -1,12 +1,12 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Fixture from "./fixtures.vue";
 import FormFixture from "./form-fixtures.vue";
 
 const renderField = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const root = result.container.querySelector('[data-slot="textfield"]');
 
   if (!root) throw new Error("field not rendered");
@@ -21,7 +21,7 @@ const renderField = (props: Record<string, unknown> = {}) => {
 };
 
 const renderForm = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(FormFixture, {props});
+  const result = renderVapor(FormFixture, { props });
 
   return {
     ...result,
@@ -49,7 +49,7 @@ const type = (control: HTMLInputElement | HTMLTextAreaElement, value: string) =>
 describe("TextField", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, root, unmount} = renderField({
+      const { container, root, unmount } = renderField({
         withDescription: true,
       });
 
@@ -62,7 +62,7 @@ describe("TextField", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, root, unmount} = renderField();
+      const { container, root, unmount } = renderField();
 
       expect(root).toHaveClass("textfield");
       expect(container.querySelector('[data-slot="input"]')).toHaveClass("input", "input--primary");
@@ -71,7 +71,7 @@ describe("TextField", () => {
     });
 
     it("renders a textarea in place of the input when asked", () => {
-      const {container, unmount} = renderField({withTextArea: true});
+      const { container, unmount } = renderField({ withTextArea: true });
 
       expect(container.querySelector('[data-slot="textarea"]')).toHaveClass(
         "textarea",
@@ -83,7 +83,7 @@ describe("TextField", () => {
     });
 
     it("merges a caller class into the root", () => {
-      const {root, unmount} = renderField({class: "mt-2"});
+      const { root, unmount } = renderField({ class: "mt-2" });
 
       expect(root).toHaveClass("textfield", "mt-2");
 
@@ -93,7 +93,7 @@ describe("TextField", () => {
     it("stretches the control when full-width is written as a bare attribute", () => {
       // `full-width` hands the prop an empty string, which only becomes `true` when the prop
       // carries a runtime `Boolean` type — the form every story uses.
-      const {container, unmount} = renderField({attributeForm: true});
+      const { container, unmount } = renderField({ attributeForm: true });
 
       expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--full-width");
 
@@ -101,7 +101,7 @@ describe("TextField", () => {
     });
 
     it("stretches a textarea when full-width is written as a bare attribute", () => {
-      const {container, unmount} = renderField({attributeForm: true, withTextArea: true});
+      const { container, unmount } = renderField({ attributeForm: true, withTextArea: true });
 
       expect(container.querySelector('[data-slot="textarea"]')).toHaveClass("textarea--full-width");
 
@@ -109,7 +109,7 @@ describe("TextField", () => {
     });
 
     it("stretches the field and its control when full width", () => {
-      const {container, root, unmount} = renderField({fullWidth: true});
+      const { container, root, unmount } = renderField({ fullWidth: true });
 
       expect(root).toHaveClass("textfield--full-width");
       // The field's own modifier is what widens the control, through a descendant selector,
@@ -122,7 +122,7 @@ describe("TextField", () => {
 
   describe("variant", () => {
     it("hands the field's variant down to the control", () => {
-      const {container, unmount} = renderField({variant: "secondary"});
+      const { container, unmount } = renderField({ variant: "secondary" });
 
       expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--secondary");
 
@@ -130,7 +130,7 @@ describe("TextField", () => {
     });
 
     it("hands the field's variant down to a textarea too", () => {
-      const {container, unmount} = renderField({variant: "secondary", withTextArea: true});
+      const { container, unmount } = renderField({ variant: "secondary", withTextArea: true });
 
       expect(container.querySelector('[data-slot="textarea"]')).toHaveClass("textarea--secondary");
 
@@ -138,7 +138,10 @@ describe("TextField", () => {
     });
 
     it("lets the control override the field", () => {
-      const {container, unmount} = renderField({controlVariant: "secondary", variant: "primary"});
+      const { container, unmount } = renderField({
+        controlVariant: "secondary",
+        variant: "primary",
+      });
 
       expect(container.querySelector('[data-slot="input"]')).toHaveClass("input--secondary");
 
@@ -148,7 +151,7 @@ describe("TextField", () => {
 
   describe("label wiring", () => {
     it("points the label at the control and the control back at the label", async () => {
-      const {container, control, unmount} = renderField();
+      const { container, control, unmount } = renderField();
 
       await nextTick();
 
@@ -161,7 +164,7 @@ describe("TextField", () => {
     });
 
     it("exposes the label text as the accessible name", () => {
-      const {getByLabelText, unmount} = renderField();
+      const { getByLabelText, unmount } = renderField();
 
       expect(getByLabelText("Email")).toHaveAttribute("data-slot", "input");
 
@@ -169,7 +172,7 @@ describe("TextField", () => {
     });
 
     it("names the control from aria-label when there is no visible label", () => {
-      const {control, unmount} = renderField({ariaLabel: "Email address", withLabel: false});
+      const { control, unmount } = renderField({ ariaLabel: "Email address", withLabel: false });
 
       expect(control).toHaveAttribute("aria-label", "Email address");
       expect(control).not.toHaveAttribute("aria-labelledby");
@@ -178,7 +181,7 @@ describe("TextField", () => {
     });
 
     it("puts the caller id on the control, which is what the label points at", async () => {
-      const {container, control, unmount} = renderField({id: "email"});
+      const { container, control, unmount } = renderField({ id: "email" });
 
       await nextTick();
 
@@ -191,7 +194,7 @@ describe("TextField", () => {
     it("keeps the label a direct child of the root", () => {
       // The asterisk comes from `[data-required="true"] > .label`, so a label any deeper
       // would silently stop being marked.
-      const {root, unmount} = renderField({isRequired: true});
+      const { root, unmount } = renderField({ isRequired: true });
 
       expect(root.firstElementChild).toHaveAttribute("data-slot", "label");
       expect(root).toHaveAttribute("data-required", "true");
@@ -202,7 +205,7 @@ describe("TextField", () => {
 
   describe("help text", () => {
     it("points the control at a description that is rendered", async () => {
-      const {container, control, unmount} = renderField({withDescription: true});
+      const { container, control, unmount } = renderField({ withDescription: true });
 
       await nextTick();
 
@@ -214,7 +217,7 @@ describe("TextField", () => {
     });
 
     it("leaves aria-describedby off when there is no help text", () => {
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       expect(control).not.toHaveAttribute("aria-describedby");
 
@@ -224,7 +227,7 @@ describe("TextField", () => {
 
   describe("value", () => {
     it("starts empty", () => {
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       expect(control.value).toBe("");
 
@@ -232,7 +235,7 @@ describe("TextField", () => {
     });
 
     it("supports a default value", () => {
-      const {control, unmount} = renderField({defaultValue: "hi@example.com"});
+      const { control, unmount } = renderField({ defaultValue: "hi@example.com" });
 
       expect(control.value).toBe("hi@example.com");
 
@@ -241,7 +244,7 @@ describe("TextField", () => {
 
     it("calls change with what the user typed", async () => {
       const onChange = vi.fn();
-      const {control, unmount} = renderField({onChange});
+      const { control, unmount } = renderField({ onChange });
 
       type(control, "typed");
       await nextTick();
@@ -253,7 +256,7 @@ describe("TextField", () => {
 
     it("leaves a controlled field to its owner", async () => {
       const onChange = vi.fn();
-      const {control, unmount} = renderField({onChange, value: "fixed"});
+      const { control, unmount } = renderField({ onChange, value: "fixed" });
 
       type(control, "typed");
       await nextTick();
@@ -267,8 +270,8 @@ describe("TextField", () => {
     });
 
     it("follows a controlled value its owner accepts", async () => {
-      const props = reactive({value: "first"});
-      const {control, unmount} = renderField(props);
+      const props = reactive({ value: "first" });
+      const { control, unmount } = renderField(props);
 
       props.value = "second";
       await nextTick();
@@ -283,7 +286,7 @@ describe("TextField", () => {
     it("defaults the control to text without writing the attribute", () => {
       // Vue writes `type` as a DOM property and skips an unchanged value, and `el.type` is
       // already "text". No CSS keys on `[type]`, so this only matters when asserting.
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       expect((control as HTMLInputElement).type).toBe("text");
       expect(control).not.toHaveAttribute("type");
@@ -292,7 +295,7 @@ describe("TextField", () => {
     });
 
     it("writes a type that differs from the default", () => {
-      const {control, unmount} = renderField({type: "email"});
+      const { control, unmount } = renderField({ type: "email" });
 
       expect(control).toHaveAttribute("type", "email");
 
@@ -300,7 +303,7 @@ describe("TextField", () => {
     });
 
     it("passes the field placeholder to the control", () => {
-      const {control, unmount} = renderField({placeholder: "you@example.com"});
+      const { control, unmount } = renderField({ placeholder: "you@example.com" });
 
       expect(control).toHaveAttribute("placeholder", "you@example.com");
 
@@ -308,7 +311,7 @@ describe("TextField", () => {
     });
 
     it("lets a placeholder on the control win over the field's", () => {
-      const {control, unmount} = renderField({
+      const { control, unmount } = renderField({
         controlPlaceholder: "from the control",
         placeholder: "from the field",
       });
@@ -322,7 +325,7 @@ describe("TextField", () => {
       // Several of these are reflected DOM properties, so handing the control `undefined`
       // would set the property to its coerced default and render an attribute nobody asked
       // for — `spellcheck="false"` is the one that actually showed up.
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       expect(control).not.toHaveAttribute("spellcheck");
       expect(control).not.toHaveAttribute("autocomplete");
@@ -339,7 +342,7 @@ describe("TextField", () => {
     });
 
     it("puts the name on the control rather than on the wrapper", () => {
-      const {control, root, unmount} = renderField({name: "email"});
+      const { control, root, unmount } = renderField({ name: "email" });
 
       expect(control).toHaveAttribute("name", "email");
       expect(root).not.toHaveAttribute("name");
@@ -353,7 +356,7 @@ describe("TextField", () => {
     // focus one unless an explicit tab index says so, which is why react-aria always sets it —
     // `useTextField` picks it up from `useFocusable`.
     it("renders an explicit tab index on the input", () => {
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       expect(control).toHaveAttribute("tabindex", "0");
 
@@ -361,7 +364,7 @@ describe("TextField", () => {
     });
 
     it("renders an explicit tab index on a textarea", () => {
-      const {control, unmount} = renderField({withTextArea: true});
+      const { control, unmount } = renderField({ withTextArea: true });
 
       expect(control).toHaveAttribute("tabindex", "0");
 
@@ -369,7 +372,7 @@ describe("TextField", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {control, unmount} = renderField({isDisabled: true});
+      const { control, unmount } = renderField({ isDisabled: true });
 
       expect(control.hasAttribute("tabindex")).toBe(false);
 
@@ -378,7 +381,7 @@ describe("TextField", () => {
 
     // Read-only is not a factor: only a disabled control leaves the tab order.
     it("keeps the tab index when read only", () => {
-      const {control, unmount} = renderField({isReadOnly: true});
+      const { control, unmount } = renderField({ isReadOnly: true });
 
       expect(control).toHaveAttribute("tabindex", "0");
 
@@ -388,7 +391,7 @@ describe("TextField", () => {
 
   describe("states", () => {
     it("supports isDisabled", () => {
-      const {control, root, unmount} = renderField({isDisabled: true});
+      const { control, root, unmount } = renderField({ isDisabled: true });
 
       expect(root).toHaveAttribute("data-disabled", "true");
       expect(control).toBeDisabled();
@@ -398,7 +401,7 @@ describe("TextField", () => {
     });
 
     it("supports isReadOnly", () => {
-      const {control, root, unmount} = renderField({isReadOnly: true});
+      const { control, root, unmount } = renderField({ isReadOnly: true });
 
       expect(root).toHaveAttribute("data-readonly", "true");
       expect(control).toHaveAttribute("readonly");
@@ -407,7 +410,7 @@ describe("TextField", () => {
     });
 
     it("supports isRequired", () => {
-      const {control, root, unmount} = renderField({isRequired: true});
+      const { control, root, unmount } = renderField({ isRequired: true });
 
       expect(root).toHaveAttribute("data-required", "true");
       expect(control).toBeRequired();
@@ -416,7 +419,7 @@ describe("TextField", () => {
     });
 
     it("supports isInvalid", () => {
-      const {control, root, unmount} = renderField({isInvalid: true});
+      const { control, root, unmount } = renderField({ isInvalid: true });
 
       expect(root).toHaveAttribute("data-invalid", "true");
       expect(control).toHaveAttribute("aria-invalid", "true");
@@ -425,7 +428,7 @@ describe("TextField", () => {
     });
 
     it("renders none of the state attributes by default", () => {
-      const {control, root, unmount} = renderField();
+      const { control, root, unmount } = renderField();
 
       expect(root).not.toHaveAttribute("data-disabled");
       expect(root).not.toHaveAttribute("data-invalid");
@@ -439,16 +442,16 @@ describe("TextField", () => {
 
   describe("interaction states", () => {
     it("renders data-hovered while the pointer is over the control", async () => {
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       control.dispatchEvent(
-        new PointerEvent("pointerenter", {bubbles: true, pointerType: "mouse"}),
+        new PointerEvent("pointerenter", { bubbles: true, pointerType: "mouse" }),
       );
       await nextTick();
 
       expect(control).toHaveAttribute("data-hovered", "true");
 
-      control.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true}));
+      control.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true }));
       await nextTick();
 
       expect(control).not.toHaveAttribute("data-hovered");
@@ -457,7 +460,7 @@ describe("TextField", () => {
     });
 
     it("renders data-focused while the control holds focus", async () => {
-      const {control, unmount} = renderField();
+      const { control, unmount } = renderField();
 
       control.dispatchEvent(new FocusEvent("focus"));
       await nextTick();
@@ -475,7 +478,7 @@ describe("TextField", () => {
 
   describe("forms", () => {
     it("submits the value under its name", () => {
-      const {control, form, submitButton, unmount} = renderForm({
+      const { control, form, submitButton, unmount } = renderForm({
         defaultValue: "hi@example.com",
         name: "email",
       });
@@ -490,7 +493,7 @@ describe("TextField", () => {
     });
 
     it("goes back to its default when the form is reset", async () => {
-      const {control, form, unmount} = renderForm({defaultValue: "default", name: "email"});
+      const { control, form, unmount } = renderForm({ defaultValue: "default", name: "email" });
 
       await nextTick();
       type(control, "typed");
@@ -518,12 +521,12 @@ describe("TextField", () => {
        * correctly, and stayed red. React never sees this because its effect runs on every
        * render and a keystroke is always a render.
        */
-      const {control, root, unmount} = renderField({isRequired: true, name: "email"});
+      const { control, root, unmount } = renderField({ isRequired: true, name: "email" });
 
       await nextTick();
       control.value = "hello";
-      control.dispatchEvent(new Event("input", {bubbles: true}));
-      control.dispatchEvent(new Event("change", {bubbles: true}));
+      control.dispatchEvent(new Event("input", { bubbles: true }));
+      control.dispatchEvent(new Event("change", { bubbles: true }));
       await nextTick();
       await nextTick();
 
@@ -535,7 +538,7 @@ describe("TextField", () => {
 
     it("blocks the submit while the value is not acceptable", async () => {
       const onSubmit = vi.fn();
-      const {form, submitButton, unmount} = renderForm({
+      const { form, submitButton, unmount } = renderForm({
         name: "email",
         validate: () => "Too short",
         withFieldError: true,
@@ -552,7 +555,7 @@ describe("TextField", () => {
     });
 
     it("reveals the message on a failed submit", async () => {
-      const {container, form, submitButton, unmount} = renderForm({
+      const { container, form, submitButton, unmount } = renderForm({
         name: "email",
         validate: () => "Too short",
         withFieldError: true,
@@ -572,7 +575,7 @@ describe("TextField", () => {
     });
 
     it("reports the browser's own verdict for a required field", async () => {
-      const {control, unmount} = renderForm({isRequired: true, name: "email"});
+      const { control, unmount } = renderForm({ isRequired: true, name: "email" });
 
       await nextTick();
 
@@ -583,7 +586,7 @@ describe("TextField", () => {
     });
 
     it("reports a type mismatch the browser found", async () => {
-      const {control, unmount} = renderForm({name: "email", type: "email"});
+      const { control, unmount } = renderForm({ name: "email", type: "email" });
 
       await nextTick();
       type(control, "not-an-email");
@@ -597,7 +600,7 @@ describe("TextField", () => {
     it("does not block the submit under aria behaviour", async () => {
       // The browser is not enforcing anything then; the same fact is announced instead.
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
-      const {control, form, submitButton, unmount} = renderForm({
+      const { control, form, submitButton, unmount } = renderForm({
         isRequired: true,
         name: "email",
         validationBehavior: "aria",
@@ -617,9 +620,9 @@ describe("TextField", () => {
     });
 
     it("shows an error the server returned", async () => {
-      const {container, unmount} = renderForm({
+      const { container, unmount } = renderForm({
         name: "email",
-        validationErrors: {email: "Already taken"},
+        validationErrors: { email: "Already taken" },
         withFieldError: true,
       });
 

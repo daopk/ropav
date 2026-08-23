@@ -3,12 +3,12 @@ import MenuSectionRoot from "./menu-section-root.vue";
 /* -------------------------------------------------------------------------------------------------
  * Compound Component
  * -----------------------------------------------------------------------------------------------*/
-export const MenuSection = Object.assign(MenuSectionRoot, {Root: MenuSectionRoot});
+export const MenuSection = Object.assign(MenuSectionRoot, { Root: MenuSectionRoot });
 
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {MenuSectionRoot};
+export { MenuSectionRoot };
 
 export type {
   MenuSectionRootProps,
@@ -18,6 +18,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {menuSectionVariants} from "@ropav/styles";
+export { menuSectionVariants } from "@ropav/styles";
 
-export type {MenuSectionVariants} from "@ropav/styles";
+export type { MenuSectionVariants } from "@ropav/styles";

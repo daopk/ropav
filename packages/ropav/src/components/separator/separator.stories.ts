@@ -1,18 +1,18 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {iconSrc} from "../../utils/story-assets";
+import { iconSrc } from "../../utils/story-assets";
 
-import {SeparatorRoot} from "./index";
+import { SeparatorRoot } from "./index";
 
 // Registered under a flat name: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "Separator.Root".
-const components = {Separator: SeparatorRoot};
+const components = { Separator: SeparatorRoot };
 
 const meta: StoryMeta = {
   argTypes: {
     orientation: {
-      control: {type: "radio"},
+      control: { type: "radio" },
       options: ["horizontal", "vertical"],
     },
   },
@@ -85,7 +85,7 @@ const items = [
 export const WithContent: Story = {
   render: () => ({
     components,
-    setup: () => ({items}),
+    setup: () => ({ items }),
     template: `
       <div class="max-w-md space-y-4 rounded-3xl bg-surface p-4 shadow-surface">
         <div v-for="(item, index) in items" :key="item.title">

@@ -1,11 +1,11 @@
-import type {UseColorAreaStateOptions} from "@/composables/use-color-area-state";
-import type {Color} from "@/utils/color-types";
+import type { UseColorAreaStateOptions } from "@/composables/use-color-area-state";
+import type { Color } from "@/utils/color-types";
 
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useColorAreaState} from "@/composables/use-color-area-state";
-import {parseColor} from "@/utils/color";
+import { useColorAreaState } from "@/composables/use-color-area-state";
+import { parseColor } from "@/utils/color";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -36,7 +36,7 @@ describe("useColorAreaState", () => {
     });
 
     it("parses a string default value", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       expect(state.value.value.toString("hsl")).toBe("hsl(30, 100%, 50%)");
 
@@ -44,7 +44,7 @@ describe("useColorAreaState", () => {
     });
 
     it("converts the value into the colour space it was told to work in", () => {
-      const [state, dispose] = setup({colorSpace: "hsb", defaultValue: "#ff0000"});
+      const [state, dispose] = setup({ colorSpace: "hsb", defaultValue: "#ff0000" });
 
       expect(state.value.value.getColorSpace()).toBe("hsb");
       expect(state.channels.value.xChannel).toBe("hue");
@@ -70,7 +70,7 @@ describe("useColorAreaState", () => {
 
     it("replaces the whole colour", () => {
       const onChange = vi.fn();
-      const [state, dispose] = setup({defaultValue: "hsl(30, 100%, 50%)", onChange});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 100%, 50%)", onChange });
 
       state.setValue("hsl(120, 50%, 25%)");
 
@@ -82,7 +82,7 @@ describe("useColorAreaState", () => {
 
     it("resets a controlled area to where it came in, and an uncontrolled one to its default", () => {
       const value = shallowRef<Color>(parseColor("hsl(30, 100%, 50%)"));
-      const [controlled, disposeControlled] = setup({value: () => value.value});
+      const [controlled, disposeControlled] = setup({ value: () => value.value });
 
       value.value = parseColor("hsl(200, 100%, 50%)");
 
@@ -91,7 +91,7 @@ describe("useColorAreaState", () => {
       expect(controlled.defaultValue.value.toString("hsl")).toBe("hsl(30, 100%, 50%)");
       disposeControlled();
 
-      const [uncontrolled, disposeUncontrolled] = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const [uncontrolled, disposeUncontrolled] = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       uncontrolled.setValue("hsl(200, 100%, 50%)");
 
@@ -102,7 +102,7 @@ describe("useColorAreaState", () => {
 
   describe("channel steps", () => {
     it("reads the step and page size of each axis from its own channel", () => {
-      const [hsl, disposeHsl] = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const [hsl, disposeHsl] = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       // Hue pages by 15, saturation by 10 — the numbers belong to the channel, not to the area.
       expect(hsl.xChannelStep.value).toBe(1);
@@ -125,10 +125,10 @@ describe("useColorAreaState", () => {
 
   describe("the thumb's position", () => {
     it("measures each axis against its own channel range, counting y from the top", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       // x = 30/360; y = 1 - 100/100, because a colour area's y axis runs upwards.
-      expect(state.getThumbPosition()).toEqual({x: 30 / 360, y: 0});
+      expect(state.getThumbPosition()).toEqual({ x: 30 / 360, y: 0 });
 
       dispose();
     });
@@ -140,7 +140,7 @@ describe("useColorAreaState", () => {
         yChannel: "brightness",
       });
 
-      expect(state.getThumbPosition()).toEqual({x: 0.8, y: 1 - 0.6});
+      expect(state.getThumbPosition()).toEqual({ x: 0.8, y: 1 - 0.6 });
 
       dispose();
     });
@@ -148,7 +148,7 @@ describe("useColorAreaState", () => {
 
   describe("setting a colour from a point", () => {
     it("maps a fraction of the area onto both channels at once", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(0, 0%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(0, 0%, 50%)" });
 
       state.setColorFromPoint(0.5, 0.25);
 
@@ -159,7 +159,7 @@ describe("useColorAreaState", () => {
     });
 
     it("clamps a point outside the area to its edge", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 50%, 50%)" });
 
       state.setColorFromPoint(-2, 3);
 
@@ -170,7 +170,7 @@ describe("useColorAreaState", () => {
 
     it("reports one change even though it moves two channels", () => {
       const onChange = vi.fn();
-      const [state, dispose] = setup({defaultValue: "hsl(0, 0%, 50%)", onChange});
+      const [state, dispose] = setup({ defaultValue: "hsl(0, 0%, 50%)", onChange });
 
       state.setColorFromPoint(0.5, 0.5);
 
@@ -181,7 +181,7 @@ describe("useColorAreaState", () => {
 
     it("says nothing when the point lands where the colour already is", () => {
       const onChange = vi.fn();
-      const [state, dispose] = setup({defaultValue: "hsl(0, 100%, 50%)", onChange});
+      const [state, dispose] = setup({ defaultValue: "hsl(0, 100%, 50%)", onChange });
 
       state.setColorFromPoint(0, 0);
 
@@ -193,7 +193,7 @@ describe("useColorAreaState", () => {
 
   describe("stepping", () => {
     it("steps each axis by whatever it is handed", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 50%, 50%)" });
 
       state.incrementX(15);
       expect(state.xValue.value).toBe(45);
@@ -214,7 +214,7 @@ describe("useColorAreaState", () => {
       // Upstream is asymmetric here and this is the asymmetry: stepping *up* past the end lands on
       // the end, while stepping down is a plain snap. A page of 15 from hue 355 would otherwise
       // land back on 345.
-      const [state, dispose] = setup({defaultValue: "hsl(355, 100%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(355, 100%, 50%)" });
 
       state.incrementX(15);
 
@@ -224,7 +224,7 @@ describe("useColorAreaState", () => {
     });
 
     it("stops at the minimum", () => {
-      const [state, dispose] = setup({defaultValue: "hsl(5, 100%, 50%)"});
+      const [state, dispose] = setup({ defaultValue: "hsl(5, 100%, 50%)" });
 
       state.decrementX(15);
 
@@ -235,7 +235,7 @@ describe("useColorAreaState", () => {
 
     it("says nothing when a step cannot move the value", () => {
       const onChange = vi.fn();
-      const [state, dispose] = setup({defaultValue: "hsl(360, 100%, 50%)", onChange});
+      const [state, dispose] = setup({ defaultValue: "hsl(360, 100%, 50%)", onChange });
 
       state.incrementX(15);
 
@@ -248,7 +248,7 @@ describe("useColorAreaState", () => {
   describe("dragging", () => {
     it("reports the end of an interaction once, on the falling edge", () => {
       const onChangeEnd = vi.fn();
-      const [state, dispose] = setup({defaultValue: "hsl(30, 100%, 50%)", onChangeEnd});
+      const [state, dispose] = setup({ defaultValue: "hsl(30, 100%, 50%)", onChangeEnd });
 
       state.setDragging(true);
       state.setXValue(60);
@@ -277,7 +277,7 @@ describe("useColorAreaState", () => {
 
   describe("the colour the thumb shows", () => {
     it("paints the value opaque", () => {
-      const [state, dispose] = setup({defaultValue: "hsla(30, 100%, 50%, 0.3)"});
+      const [state, dispose] = setup({ defaultValue: "hsla(30, 100%, 50%, 0.3)" });
 
       expect(state.getDisplayColor().toString("css")).toBe("hsla(30, 100%, 50%, 1)");
 

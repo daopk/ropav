@@ -1,12 +1,12 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {ButtonRoot} from "../button";
-import {CardContent, CardDescription, CardHeader, CardRoot, CardTitle} from "../card";
+import { avatarSrc } from "../../utils/story-assets";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { ButtonRoot } from "../button";
+import { CardContent, CardDescription, CardHeader, CardRoot, CardTitle } from "../card";
 
 import PopoverArrow from "./popover-arrow.vue";
 import PopoverContent from "./popover-content.vue";
@@ -38,7 +38,7 @@ const components = {
 
 const meta = {
   argTypes: {
-    offset: {control: "number"},
+    offset: { control: "number" },
     placement: {
       control: "select",
       options: [
@@ -67,7 +67,7 @@ const meta = {
       ],
     },
   },
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Overlays/Popover",
 } satisfies Meta;
 
@@ -80,7 +80,7 @@ const AVATAR_SRC = avatarSrc(5);
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Popover>
@@ -102,7 +102,7 @@ export const Default: Story = {
 export const WithArrow: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Popover>
@@ -128,7 +128,7 @@ export const WithCustomContent: Story = {
     setup: () => {
       const isFollowing = shallowRef(false);
 
-      return {AVATAR_SRC, args, isFollowing};
+      return { AVATAR_SRC, args, isFollowing };
     },
     template: `
       <div class="flex items-center gap-3">
@@ -198,7 +198,7 @@ export const WithCustomContent: Story = {
 export const SpringAnimation: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex flex-col items-center gap-8 p-8">
         <h1 class="text-xl font-semibold">Popover with Spring Animation</h1>
@@ -240,7 +240,7 @@ export const SpringAnimation: Story = {
 export const CardWithHelptext: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Card class="w-[400px]">
         <CardHeader>

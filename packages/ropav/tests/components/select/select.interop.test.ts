@@ -1,12 +1,12 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ChipRoot} from "@/components/chip";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
-import {Select} from "@/components/select";
+import { ChipRoot } from "@/components/chip";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { Select } from "@/components/select";
 
 /**
  * The select mounted the way a consumer mounts it: from a VDOM host, with every part written in
@@ -20,9 +20,9 @@ import {Select} from "@/components/select";
  * them would pass the vapor suite while being broken in every real host.
  */
 const ITEMS = [
-  {id: "florida", name: "Florida"},
-  {id: "california", name: "California"},
-  {id: "texas", name: "Texas"},
+  { id: "florida", name: "Florida" },
+  { id: "california", name: "California" },
+  { id: "texas", name: "Texas" },
 ];
 
 const settle = async () => {
@@ -34,15 +34,15 @@ const settle = async () => {
 const render = (props: Record<string, unknown> = {}) =>
   renderInterop(Select, {
     props: {
-      itemTextValue: (item: {name: string}) => item.name,
+      itemTextValue: (item: { name: string }) => item.name,
       items: ITEMS,
       placeholder: "Select one",
       ...props,
     },
     slots: {
       default: () => [
-        h(LabelRoot, null, {default: () => "State"}),
-        h(Select.Trigger, null, {default: () => [h(Select.Value), h(Select.Indicator)]}),
+        h(LabelRoot, null, { default: () => "State" }),
+        h(Select.Trigger, null, { default: () => [h(Select.Value), h(Select.Indicator)] }),
         h(Select.Popover, null, {
           default: () =>
             h(ListBoxRoot, null, {
@@ -50,7 +50,7 @@ const render = (props: Record<string, unknown> = {}) =>
                 ITEMS.map((item) =>
                   h(
                     ListBoxItemRoot,
-                    {id: item.id, key: item.id, textValue: item.name},
+                    { id: item.id, key: item.id, textValue: item.name },
                     {
                       default: () => [item.name, h(ListBoxItemIndicator)],
                     },
@@ -76,7 +76,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const cleanups: Array<() => void> = [];
@@ -149,7 +149,7 @@ describe("Select (interop)", () => {
   });
 
   it("runs the host's listbox on the select's own collection", async () => {
-    const result = render({defaultValue: "texas"});
+    const result = render({ defaultValue: "texas" });
 
     await settle();
 
@@ -173,7 +173,7 @@ describe("Select (interop)", () => {
     const result = renderInterop(Select, {
       props: {
         defaultValue: ["florida", "california"],
-        itemTextValue: (item: {name: string}) => item.name,
+        itemTextValue: (item: { name: string }) => item.name,
         items: ITEMS,
         selectionMode: "multiple",
       },
@@ -188,10 +188,10 @@ describe("Select (interop)", () => {
                 default: ({
                   selectedItems,
                 }: {
-                  selectedItems: Array<{key: string; value: {name: string}}>;
+                  selectedItems: Array<{ key: string; value: { name: string } }>;
                 }) =>
                   selectedItems.map((item) =>
-                    h("span", {"data-testid": "value-item", key: item.key}, item.value.name),
+                    h("span", { "data-testid": "value-item", key: item.key }, item.value.name),
                   ),
               }),
             ],
@@ -213,7 +213,7 @@ describe("Select (interop)", () => {
     const result = renderInterop(Select, {
       props: {
         defaultValue: ["florida", "california"],
-        itemTextValue: (item: {name: string}) => item.name,
+        itemTextValue: (item: { name: string }) => item.name,
         items: ITEMS,
         selectionMode: "multiple",
       },
@@ -228,10 +228,10 @@ describe("Select (interop)", () => {
                 default: ({
                   selectedItems,
                 }: {
-                  selectedItems: Array<{key: string; value: {name: string}}>;
+                  selectedItems: Array<{ key: string; value: { name: string } }>;
                 }) =>
                   selectedItems.map((item) =>
-                    h(ChipRoot, {key: item.key}, {default: () => item.value.name}),
+                    h(ChipRoot, { key: item.key }, { default: () => item.value.name }),
                   ),
               }),
             ],

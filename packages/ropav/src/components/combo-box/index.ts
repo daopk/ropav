@@ -18,7 +18,7 @@ export const ComboBox = Object.assign(ComboBoxRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ComboBoxInputGroup, ComboBoxPopover, ComboBoxRoot, ComboBoxTrigger, ComboBoxValue};
+export { ComboBoxInputGroup, ComboBoxPopover, ComboBoxRoot, ComboBoxTrigger, ComboBoxValue };
 
 export type {
   ComboBoxInputGroupProps,
@@ -36,13 +36,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useComboBoxContext} from "./combo-box.context";
+export { useComboBoxContext } from "./combo-box.context";
 
-export type {ComboBoxContext} from "./combo-box.context";
+export type { ComboBoxContext } from "./combo-box.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {comboBoxVariants} from "@ropav/styles";
+export { comboBoxVariants } from "@ropav/styles";
 
-export type {ComboBoxVariants} from "@ropav/styles";
+export type { ComboBoxVariants } from "@ropav/styles";

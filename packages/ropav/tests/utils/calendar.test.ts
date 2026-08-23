@@ -4,7 +4,7 @@ import {
   JapaneseCalendar,
   createCalendar,
 } from "@internationalized/date";
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   alignCenter,
@@ -57,83 +57,83 @@ describe("isDateInvalid", () => {
 
 describe("alignStart", () => {
   it("puts a month range on the first of the month", () => {
-    expect(alignStart(date(2024, 6, 15), {months: 1}, "en-US").toString()).toBe("2024-06-01");
+    expect(alignStart(date(2024, 6, 15), { months: 1 }, "en-US").toString()).toBe("2024-06-01");
   });
 
   it("puts a year range on the first day of the year", () => {
-    expect(alignStart(date(2024, 6, 15), {years: 2}, "en-US").toString()).toBe("2024-01-01");
+    expect(alignStart(date(2024, 6, 15), { years: 2 }, "en-US").toString()).toBe("2024-01-01");
   });
 
   it("puts a week range on the locale's first day of the week", () => {
     // The same date lands on a different day in each locale, which is the whole reason the locale
     // reaches this function at all.
-    expect(alignStart(date(2024, 6, 15), {weeks: 1}, "en-US").toString()).toBe("2024-06-09");
-    expect(alignStart(date(2024, 6, 15), {weeks: 1}, "de-DE").toString()).toBe("2024-06-10");
+    expect(alignStart(date(2024, 6, 15), { weeks: 1 }, "en-US").toString()).toBe("2024-06-09");
+    expect(alignStart(date(2024, 6, 15), { weeks: 1 }, "de-DE").toString()).toBe("2024-06-10");
   });
 
   it("leaves a short day range where it is", () => {
     // Fewer than eight days is not week-shaped, so there is no boundary to snap to.
-    expect(alignStart(date(2024, 6, 15), {days: 7}, "en-US").toString()).toBe("2024-06-15");
+    expect(alignStart(date(2024, 6, 15), { days: 7 }, "en-US").toString()).toBe("2024-06-15");
   });
 
   it("snaps a day range longer than a week to the week boundary", () => {
-    expect(alignStart(date(2024, 6, 15), {days: 10}, "en-US").toString()).toBe("2024-06-09");
+    expect(alignStart(date(2024, 6, 15), { days: 10 }, "en-US").toString()).toBe("2024-06-09");
   });
 
   it("clamps forward to the minimum's own aligned start", () => {
     expect(
-      alignStart(date(2024, 6, 15), {months: 1}, "en-US", date(2024, 7, 1), null).toString(),
+      alignStart(date(2024, 6, 15), { months: 1 }, "en-US", date(2024, 7, 1), null).toString(),
     ).toBe("2024-06-01");
     expect(
-      alignStart(date(2024, 6, 15), {months: 1}, "en-US", date(2024, 3, 10), null).toString(),
+      alignStart(date(2024, 6, 15), { months: 1 }, "en-US", date(2024, 3, 10), null).toString(),
     ).toBe("2024-06-01");
   });
 
   it("clamps back so a multi-month range never runs past the maximum", () => {
     expect(
-      alignStart(date(2024, 6, 15), {months: 3}, "en-US", null, date(2024, 6, 20)).toString(),
+      alignStart(date(2024, 6, 15), { months: 3 }, "en-US", null, date(2024, 6, 20)).toString(),
     ).toBe("2024-04-01");
   });
 });
 
 describe("alignEnd", () => {
   it("ends a month range on the month holding the date", () => {
-    expect(alignEnd(date(2024, 6, 15), {months: 3}, "en-US").toString()).toBe("2024-04-01");
+    expect(alignEnd(date(2024, 6, 15), { months: 3 }, "en-US").toString()).toBe("2024-04-01");
   });
 
   it("ends a single month on that month", () => {
-    expect(alignEnd(date(2024, 6, 15), {months: 1}, "en-US").toString()).toBe("2024-06-01");
+    expect(alignEnd(date(2024, 6, 15), { months: 1 }, "en-US").toString()).toBe("2024-06-01");
   });
 
   it("ends a day range on the date itself", () => {
-    expect(alignEnd(date(2024, 6, 15), {days: 3}, "en-US").toString()).toBe("2024-06-13");
+    expect(alignEnd(date(2024, 6, 15), { days: 3 }, "en-US").toString()).toBe("2024-06-13");
   });
 
   it("ends a week range on the week holding the date", () => {
-    expect(alignEnd(date(2024, 6, 15), {weeks: 2}, "en-US").toString()).toBe("2024-06-02");
+    expect(alignEnd(date(2024, 6, 15), { weeks: 2 }, "en-US").toString()).toBe("2024-06-02");
   });
 });
 
 describe("alignCenter", () => {
   it("centres an odd span on the date", () => {
-    expect(alignCenter(date(2024, 6, 15), {months: 3}, "en-US").toString()).toBe("2024-05-01");
+    expect(alignCenter(date(2024, 6, 15), { months: 3 }, "en-US").toString()).toBe("2024-05-01");
   });
 
   it("biases an even span towards the earlier half", () => {
     // Two months put the focused one first, not second: `{months: 2}` halves to 1 and then the
     // even-span decrement takes it back to 0. Dropping that decrement is what makes a two-month
     // calendar open on the month *before* the one asked for.
-    expect(alignCenter(date(2024, 6, 15), {months: 2}, "en-US").toString()).toBe("2024-06-01");
-    expect(alignCenter(date(2024, 6, 15), {months: 4}, "en-US").toString()).toBe("2024-05-01");
+    expect(alignCenter(date(2024, 6, 15), { months: 2 }, "en-US").toString()).toBe("2024-06-01");
+    expect(alignCenter(date(2024, 6, 15), { months: 4 }, "en-US").toString()).toBe("2024-05-01");
   });
 
   it("leaves a single unit alone", () => {
-    expect(alignCenter(date(2024, 6, 15), {months: 1}, "en-US").toString()).toBe("2024-06-01");
+    expect(alignCenter(date(2024, 6, 15), { months: 1 }, "en-US").toString()).toBe("2024-06-01");
   });
 
   it("respects the bounds while centring", () => {
     expect(
-      alignCenter(date(2024, 6, 15), {months: 3}, "en-US", date(2024, 6, 1), null).toString(),
+      alignCenter(date(2024, 6, 15), { months: 3 }, "en-US", date(2024, 6, 1), null).toString(),
     ).toBe("2024-06-01");
   });
 });
@@ -143,7 +143,7 @@ describe("constrainStart", () => {
     const aligned = date(2024, 6, 1);
 
     expect(
-      constrainStart(date(2024, 6, 15), aligned, {months: 1}, "en-US", null, null).toString(),
+      constrainStart(date(2024, 6, 15), aligned, { months: 1 }, "en-US", null, null).toString(),
     ).toBe("2024-06-01");
   });
 
@@ -156,7 +156,7 @@ describe("constrainStart", () => {
       constrainStart(
         date(2024, 8, 15),
         aligned,
-        {months: 1},
+        { months: 1 },
         "en-US",
         null,
         date(2024, 6, 20),
@@ -225,21 +225,21 @@ describe("previousAvailableDate", () => {
 
 describe("isEqualDuration", () => {
   it("matches the same object", () => {
-    const duration = {months: 1};
+    const duration = { months: 1 };
 
     expect(isEqualDuration(duration, duration)).toBe(true);
   });
 
   it("matches equal-but-separate durations", () => {
-    expect(isEqualDuration({months: 1}, {months: 1})).toBe(true);
+    expect(isEqualDuration({ months: 1 }, { months: 1 })).toBe(true);
   });
 
   it("separates different units of the same size", () => {
-    expect(isEqualDuration({months: 1}, {weeks: 1})).toBe(false);
+    expect(isEqualDuration({ months: 1 }, { weeks: 1 })).toBe(false);
   });
 
   it("separates different sizes of the same unit", () => {
-    expect(isEqualDuration({months: 1}, {months: 2})).toBe(false);
+    expect(isEqualDuration({ months: 1 }, { months: 2 })).toBe(false);
   });
 });
 

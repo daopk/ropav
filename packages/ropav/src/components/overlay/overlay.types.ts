@@ -1,5 +1,5 @@
-import type {Placement} from "../../utils/position";
-import type {OverlaySlotContexts} from "./overlay-slots";
+import type { Placement } from "../../utils/position";
+import type { OverlaySlotContexts } from "./overlay-slots";
 
 export interface OverlayPopoverProps {
   class?: string;

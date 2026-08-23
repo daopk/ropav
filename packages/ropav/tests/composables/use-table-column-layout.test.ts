@@ -3,8 +3,8 @@ import type {
   UseTableColumnLayoutReturn,
 } from "@/composables/use-table-column-layout";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
 import {
   buildColumnWidths,
@@ -37,7 +37,7 @@ const sizes = (
     () => 75,
   );
 
-const column = (key: string, props: Partial<TableColumnDefinition> = {}) => ({key, ...props});
+const column = (key: string, props: Partial<TableColumnDefinition> = {}) => ({ key, ...props });
 
 /** A layout over a fixed set of columns, in an owning scope so the watchers can be stopped. */
 const setUp = (columns: TableColumnDefinition[], tableWidth = 1000) => {
@@ -47,10 +47,10 @@ const setUp = (columns: TableColumnDefinition[], tableWidth = 1000) => {
 
   const width = shallowRef(tableWidth);
   const layout = scope.run(() =>
-    useTableColumnLayout({columns: () => columns, tableWidth: width}),
+    useTableColumnLayout({ columns: () => columns, tableWidth: width }),
   ) as UseTableColumnLayoutReturn;
 
-  return {layout, width};
+  return { layout, width };
 };
 
 describe("useTableColumnLayout", () => {
@@ -95,28 +95,28 @@ describe("useTableColumnLayout", () => {
     });
 
     it("weights the split by each fraction", () => {
-      expect(sizes(900, [column("a", {defaultWidth: "2fr"}), column("b")])).toEqual([600, 300]);
+      expect(sizes(900, [column("a", { defaultWidth: "2fr" }), column("b")])).toEqual([600, 300]);
     });
 
     it("gives a static column its pixels and the rest to the fractions", () => {
-      expect(sizes(1000, [column("a", {defaultWidth: 200}), column("b"), column("c")])).toEqual([
+      expect(sizes(1000, [column("a", { defaultWidth: 200 }), column("b"), column("c")])).toEqual([
         200, 400, 400,
       ]);
     });
 
     it("resolves a percentage column before dividing what is left", () => {
-      expect(sizes(1000, [column("a", {defaultWidth: "20%"}), column("b")])).toEqual([200, 800]);
+      expect(sizes(1000, [column("a", { defaultWidth: "20%" }), column("b")])).toEqual([200, 800]);
     });
 
     // The minimum is honoured first, then whatever is left is shared out again.
     it("holds a column at its minimum and redistributes the rest", () => {
-      expect(sizes(400, [column("a", {minWidth: 300}), column("b"), column("c")])).toEqual([
+      expect(sizes(400, [column("a", { minWidth: 300 }), column("b"), column("c")])).toEqual([
         300, 75, 75,
       ]);
     });
 
     it("holds a column at its maximum and gives the surplus to the others", () => {
-      expect(sizes(900, [column("a", {maxWidth: 100}), column("b"), column("c")])).toEqual([
+      expect(sizes(900, [column("a", { maxWidth: 100 }), column("b"), column("c")])).toEqual([
         100, 400, 400,
       ]);
     });
@@ -142,7 +142,7 @@ describe("useTableColumnLayout", () => {
     it("prefers a width already changed by a resize over the declared one", () => {
       const result = sizes(
         900,
-        [column("a", {defaultWidth: "1fr"}), column("b")],
+        [column("a", { defaultWidth: "1fr" }), column("b")],
         new Map([["a", 600]]),
       );
 
@@ -155,9 +155,9 @@ describe("useTableColumnLayout", () => {
       // `b` declares nothing, so it takes the `1fr` default; `c` is pushed to the 75px floor even
       // though an even three-way split would give it a third of 300.
       const widths = buildColumnWidths(300, [
-        column("a", {width: 150}),
+        column("a", { width: 150 }),
         column("b"),
-        column("c", {maxWidth: 20}),
+        column("c", { maxWidth: 20 }),
       ]);
 
       expect([...widths]).toEqual([
@@ -184,17 +184,17 @@ describe("useTableColumnLayout", () => {
     });
 
     it("agrees with the resizable layout on the same columns", () => {
-      const columns = [column("a", {minWidth: 100}), column("b"), column("c", {width: "20%"})];
-      const {layout} = setUp(columns, 900);
+      const columns = [column("a", { minWidth: 100 }), column("b"), column("c", { width: "20%" })];
+      const { layout } = setUp(columns, 900);
       const widths = buildColumnWidths(900, columns);
 
-      for (const {key} of columns) expect(widths.get(key)).toBe(layout.getColumnWidth(key));
+      for (const { key } of columns) expect(widths.get(key)).toBe(layout.getColumnWidth(key));
     });
   });
 
   describe("reading the layout", () => {
     it("reports each column's width, minimum and maximum", () => {
-      const {layout} = setUp([column("a", {maxWidth: 400, minWidth: 100}), column("b")], 1000);
+      const { layout } = setUp([column("a", { maxWidth: 400, minWidth: 100 }), column("b")], 1000);
 
       expect(layout.getColumnWidth("a")).toBe(400);
       expect(layout.getColumnMinWidth("a")).toBe(100);
@@ -203,7 +203,7 @@ describe("useTableColumnLayout", () => {
     });
 
     it("lays out again when the table is resized", () => {
-      const {layout, width} = setUp([column("a"), column("b")], 1000);
+      const { layout, width } = setUp([column("a"), column("b")], 1000);
 
       expect(layout.getColumnWidth("a")).toBe(500);
 
@@ -213,13 +213,13 @@ describe("useTableColumnLayout", () => {
     });
 
     it("reports nothing for a column it does not have", () => {
-      const {layout} = setUp([column("a")]);
+      const { layout } = setUp([column("a")]);
 
       expect(layout.getColumnWidth("missing")).toBe(0);
     });
 
     it("tracks which column is being dragged", () => {
-      const {layout} = setUp([column("a")]);
+      const { layout } = setUp([column("a")]);
 
       expect(layout.resizingColumn.value).toBeNull();
 
@@ -233,7 +233,7 @@ describe("useTableColumnLayout", () => {
 
   describe("resizing a column", () => {
     it("applies the new width", () => {
-      const {layout} = setUp([column("a"), column("b")], 1000);
+      const { layout } = setUp([column("a"), column("b")], 1000);
 
       layout.updateResizedColumns("a", 300);
 
@@ -242,7 +242,7 @@ describe("useTableColumnLayout", () => {
     });
 
     it("clamps the new width between the column's minimum and maximum", () => {
-      const {layout} = setUp([column("a", {maxWidth: 400, minWidth: 200}), column("b")], 1000);
+      const { layout } = setUp([column("a", { maxWidth: 400, minWidth: 200 }), column("b")], 1000);
 
       layout.updateResizedColumns("a", 50);
       expect(layout.getColumnWidth("a")).toBe(200);
@@ -256,7 +256,7 @@ describe("useTableColumnLayout", () => {
      * whole table reflows under the pointer, because the columns to the left are still fractions.
      */
     it("freezes the columns to the left at their current pixel width", () => {
-      const {layout} = setUp([column("a"), column("b"), column("c")], 900);
+      const { layout } = setUp([column("a"), column("b"), column("c")], 900);
 
       const result = layout.updateResizedColumns("b", 200);
 
@@ -268,7 +268,7 @@ describe("useTableColumnLayout", () => {
     });
 
     it("leaves a width the caller controls alone", () => {
-      const {layout} = setUp([column("a"), column("b", {width: 300})], 1000);
+      const { layout } = setUp([column("a"), column("b", { width: 300 })], 1000);
 
       layout.updateResizedColumns("a", 500);
 
@@ -277,7 +277,7 @@ describe("useTableColumnLayout", () => {
     });
 
     it("keeps the resized width across a table resize", () => {
-      const {layout, width} = setUp([column("a"), column("b")], 1000);
+      const { layout, width } = setUp([column("a"), column("b")], 1000);
 
       layout.updateResizedColumns("a", 300);
       width.value = 800;

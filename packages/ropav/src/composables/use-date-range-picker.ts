@@ -1,25 +1,25 @@
-import type {DayOfWeek} from "../utils/calendar";
-import type {FocusManager} from "../utils/focus";
-import type {PageBehavior} from "./use-calendar-state";
-import type {DateRangePickerState} from "./use-date-range-picker-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {FormValidationState, ValidationResult} from "./use-form-validation-state";
-import type {UsePressHandlers} from "./use-press";
-import type {DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DayOfWeek } from "../utils/calendar";
+import type { FocusManager } from "../utils/focus";
+import type { PageBehavior } from "./use-calendar-state";
+import type { DateRangePickerState } from "./use-date-range-picker-state";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { FormValidationState, ValidationResult } from "./use-form-validation-state";
+import type { UsePressHandlers } from "./use-press";
+import type { DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {datepickerStrings} from "../i18n/datepicker";
-import {createFocusManager} from "../utils/focus";
+import { datepickerStrings } from "../i18n/datepicker";
+import { createFocusManager } from "../utils/focus";
 
-import {useDatePickerGroup} from "./use-date-picker-group";
-import {useDescription} from "./use-description";
-import {useFieldIds} from "./use-field-ids";
-import {DEFAULT_VALIDATION_RESULT, mergeValidation} from "./use-form-validation-state";
-import {useId} from "./use-id";
-import {useLocale} from "./use-locale";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDatePickerGroup } from "./use-date-picker-group";
+import { useDescription } from "./use-description";
+import { useFieldIds } from "./use-field-ids";
+import { DEFAULT_VALIDATION_RESULT, mergeValidation } from "./use-form-validation-state";
+import { useId } from "./use-id";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export interface UseDateRangePickerOptions {
   id?: MaybeRefOrGetter<string | undefined>;
@@ -77,8 +77,8 @@ export interface DateRangePickerFieldOptions {
 export interface DateRangePickerCalendarProps {
   ariaLabel: string;
   autoFocus: boolean;
-  value: {start: DateValue; end: DateValue} | null;
-  onChange: (value: {start: DateValue; end: DateValue} | null) => void;
+  value: { start: DateValue; end: DateValue } | null;
+  onChange: (value: { start: DateValue; end: DateValue } | null) => void;
   minValue?: DateValue | null;
   maxValue?: DateValue | null;
   isDateUnavailable?: (date: DateValue) => boolean;
@@ -166,7 +166,7 @@ export const useDateRangePicker = (
    * The segments read as bare numbers, so the months spelled out are what make them dates.
    */
   const valueDescription = computed(() => {
-    const range = state.formatValue(locale.value.locale, {month: "long"});
+    const range = state.formatValue(locale.value.locale, { month: "long" });
 
     return range
       ? strings.value.format("selectedRangeDescription", {
@@ -176,7 +176,7 @@ export const useDateRangePicker = (
       : "";
   });
 
-  const {describedBy: valueDescribedBy} = useDescription(valueDescription);
+  const { describedBy: valueDescribedBy } = useDescription(valueDescription);
 
   const describedBy = computed(
     () =>
@@ -294,10 +294,10 @@ export const useDateRangePicker = (
         isReadOnly: toValue(options.isReadOnly),
         maxValue: toValue(options.maxValue),
         minValue: toValue(options.minValue),
-        onChange: (value) => state.setDateRange(value ?? {end: null, start: null}),
+        onChange: (value) => state.setDateRange(value ?? { end: null, start: null }),
         pageBehavior: toValue(options.pageBehavior),
         // Only a complete range is worth drawing; a half-typed one is still being typed.
-        value: range?.start && range.end ? {end: range.end, start: range.start} : null,
+        value: range?.start && range.end ? { end: range.end, start: range.start } : null,
       };
     }),
     dialogAttrs: computed(() => ({
@@ -316,7 +316,7 @@ export const useDateRangePicker = (
       id: groupId.value,
       role: "group",
     })),
-    groupHandlers: {...group.handlers, onFocusin, onFocusout, onKeydown: group.onKeydown},
+    groupHandlers: { ...group.handlers, onFocusin, onFocusout, onKeydown: group.onKeydown },
     isTriggerDisabled: computed(
       () => Boolean(toValue(options.isDisabled)) || Boolean(toValue(options.isReadOnly)),
     ),

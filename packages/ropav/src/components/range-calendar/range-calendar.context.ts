@@ -1,10 +1,10 @@
-import type {DateRange} from "../../composables/use-calendar";
-import type {CalendarDayViewContext, CalendarOwnedProps} from "../calendar/calendar.context";
-import type {CalendarDate, DateValue} from "@internationalized/date";
-import type {rangeCalendarVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { DateRange } from "../../composables/use-calendar";
+import type { CalendarDayViewContext, CalendarOwnedProps } from "../calendar/calendar.context";
+import type { CalendarDate, DateValue } from "@internationalized/date";
+import type { rangeCalendarVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface RangeCalendarContext {
   /** Slot classes the parts pull their own class from. */
@@ -23,7 +23,7 @@ export interface RangeCalendarContext {
  * Strict: a header cell or a grid body outside a range calendar has nothing to describe.
  */
 export const [useRangeCalendarContext, provideRangeCalendarContext] =
-  createContext<RangeCalendarContext>({name: "RangeCalendarContext"});
+  createContext<RangeCalendarContext>({ name: "RangeCalendarContext" });
 
 /**
  * What a range calendar will take from something above it instead of from its own markup.

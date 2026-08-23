@@ -1,7 +1,10 @@
-import type {DatePickerState, UseDatePickerStateOptions} from "@/composables/use-date-picker-state";
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
-import type {Granularity} from "@/utils/date-format";
-import type {DateValue} from "@internationalized/date";
+import type {
+  DatePickerState,
+  UseDatePickerStateOptions,
+} from "@/composables/use-date-picker-state";
+import type { ValidationBehavior } from "@/composables/use-form-validation-state";
+import type { Granularity } from "@/utils/date-format";
+import type { DateValue } from "@internationalized/date";
 
 /**
  * Plain values, not `MaybeRefOrGetter` — a component's props are always resolved values, and

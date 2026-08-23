@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {TabsPanelProps, TabsPanelSlotProps} from "./tabs.types";
+import type { TabsPanelProps, TabsPanelSlotProps } from "./tabs.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useEnterExit} from "../../composables/use-enter-exit";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useEnterExit } from "../../composables/use-enter-exit";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useTabsContext} from "./tabs.context";
+import { useTabsContext } from "./tabs.context";
 
-const props = withDefaults(defineProps<TabsPanelProps>(), {shouldForceMount: undefined});
+const props = withDefaults(defineProps<TabsPanelProps>(), { shouldForceMount: undefined });
 
-defineSlots<{default?: (props: TabsPanelSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TabsPanelSlotProps) => unknown }>();
 
-const {slots, state} = useTabsContext();
+const { slots, state } = useTabsContext();
 
 const panelKey = computed(() => props.id);
 
@@ -21,7 +21,7 @@ const isSelected = computed(() => state.selectedKey.value === panelKey.value);
 
 const element = shallowRef<HTMLElement | null>(null);
 
-const {isEntering, isExiting, isPresent} = useEnterExit({
+const { isEntering, isExiting, isPresent } = useEnterExit({
   elementRef: element,
   isOpen: () => isSelected.value,
 });
@@ -30,7 +30,7 @@ const {isEntering, isExiting, isPresent} = useEnterExit({
 // inside it is reachable by tab or read out of order.
 const isRendered = computed(() => isPresent.value || Boolean(props.shouldForceMount));
 
-const {isFocusVisible, isFocused, onBlur, onFocus} = useInteractionStates();
+const { isFocusVisible, isFocused, onBlur, onFocus } = useInteractionStates();
 </script>
 
 <template>
@@ -39,7 +39,7 @@ const {isFocusVisible, isFocused, onBlur, onFocus} = useInteractionStates();
     :id="state.tabPanelId(panelKey)"
     ref="element"
     :aria-labelledby="state.tabId(panelKey)"
-    :class="slots.tabPanel({class: props.class})"
+    :class="slots.tabPanel({ class: props.class })"
     :data-entering="dataAttr(isEntering)"
     :data-exiting="dataAttr(isExiting)"
     :data-focus-visible="dataAttr(isFocusVisible)"

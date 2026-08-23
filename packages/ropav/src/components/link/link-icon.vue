@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {LinkIconProps} from "./link.types";
+import type { LinkIconProps } from "./link.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {ExternalLinkIcon} from "../icons";
+import { dataAttr } from "../../utils/assertion";
+import { ExternalLinkIcon } from "../icons";
 
-import {useLinkContext} from "./link.context";
+import { useLinkContext } from "./link.context";
 
 const props = defineProps<LinkIconProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useLinkContext();
+const { slots } = useLinkContext();
 
-const styles = computed(() => slots.value.icon({class: props.class}));
+const styles = computed(() => slots.value.icon({ class: props.class }));
 
 const callerSlots = useSlots();
 

@@ -1,24 +1,24 @@
-import type {CollectionKey} from "./use-collection";
-import type {FocusStrategy} from "./use-overlay-trigger-state";
+import type { CollectionKey } from "./use-collection";
+import type { FocusStrategy } from "./use-overlay-trigger-state";
 import type {
   CollectionSelection,
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {provideMenuItemPopupContext} from "../components/menu-item/menu-item.context";
-import {provideMenuContext} from "../components/menu/menu.context";
+import { provideMenuItemPopupContext } from "../components/menu-item/menu-item.context";
+import { provideMenuContext } from "../components/menu/menu.context";
 
-import {useCollection} from "./use-collection";
-import {useCollectionAutoFocus} from "./use-collection-auto-focus";
-import {useId} from "./use-id";
-import {useListKeyboard} from "./use-list-keyboard";
-import {useSelectionManager} from "./use-selection-manager";
-import {useTypeahead} from "./use-typeahead";
+import { useCollection } from "./use-collection";
+import { useCollectionAutoFocus } from "./use-collection-auto-focus";
+import { useId } from "./use-id";
+import { useListKeyboard } from "./use-list-keyboard";
+import { useSelectionManager } from "./use-selection-manager";
+import { useTypeahead } from "./use-typeahead";
 
 export interface UseMenuOptions {
   /** Overrides the menu's id, which a trigger's `aria-controls` points at. */
@@ -110,7 +110,7 @@ export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
   const typeahead = useTypeahead({
     focusedKey: () => selection.focusedKey.value,
     getKeyForSearch: keyboard.getKeyForSearch,
-    onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
+    onSearchMatch: (key) => keyboard.focusKey(key, { scroll: true }),
   });
 
   const shouldCloseOnSelect = computed(() => toValue(options.shouldCloseOnSelect) ?? true);
@@ -137,7 +137,7 @@ export const useMenu = (options: UseMenuOptions = {}): UseMenuReturn => {
     shouldCloseOnSelect,
   });
 
-  useCollectionAutoFocus({autoFocus: options.autoFocus, element, keyboard, selection});
+  useCollectionAutoFocus({ autoFocus: options.autoFocus, element, keyboard, selection });
 
   return {
     collectionId,

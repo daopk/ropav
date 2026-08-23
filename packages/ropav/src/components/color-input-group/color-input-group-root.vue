@@ -4,11 +4,11 @@ import type {
   ColorInputGroupRootSlotProps,
 } from "./color-input-group.types";
 
-import {colorInputGroupVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { colorInputGroupVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   provideColorInputGroupContext,
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<ColorInputGroupRootProps>(), {
   variant: undefined,
 });
 
-defineSlots<{default?: (props: ColorInputGroupRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorInputGroupRootSlotProps) => unknown }>();
 
 // Optional: a group outside any colour field is legal, exactly as it is in React.
 const control = useColorInputGroupControlContext();
@@ -44,17 +44,17 @@ const resolvedIsDisabled = computed(() => props.isDisabled ?? control?.isDisable
 const resolvedIsInvalid = computed(() => props.isInvalid ?? control?.isInvalid.value ?? false);
 
 const slots = computed(() =>
-  colorInputGroupVariants({fullWidth: props.fullWidth, variant: props.variant}),
+  colorInputGroupVariants({ fullWidth: props.fullWidth, variant: props.variant }),
 );
 
-provideColorInputGroupContext({slots});
+provideColorInputGroupContext({ slots });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 // Hover is read off this one only; press has no meaning for a shell around a control. The
 // stylesheet suppresses the hover fill while focus is inside, so the two have to be reported
 // together or a group that is both hovered and focused keeps the hover fill.
-const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
+const interaction = useInteractionStates({ isDisabled: resolvedIsDisabled });
 const focusWithin = useFocusWithin();
 
 // Clicking the padding beside the input pulls focus into it. The query is scoped to this group so

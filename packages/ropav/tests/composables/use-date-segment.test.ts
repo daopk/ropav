@@ -1,9 +1,9 @@
-import type {DateSegmentReady} from "../fixtures/date-segment.types";
+import type { DateSegmentReady } from "../fixtures/date-segment.types";
 
-import {CalendarDate, CalendarDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, CalendarDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Harness from "../fixtures/date-segment-harness.vue";
 
@@ -15,7 +15,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: DateSegmentReady) => (ready = value),
   });
 
-  const result = renderVapor(Harness, {props});
+  const result = renderVapor(Harness, { props });
   const root = result.container.querySelector<HTMLElement>("[data-slot='group']")!;
 
   /** The rendered segments, re-read each time because the field rebuilds them on every edit. */
@@ -49,7 +49,7 @@ const type = async (target: HTMLElement, data: string) => {
 
 const press = async (target: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
   target.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init}),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init }),
   );
   await nextTick();
 };
@@ -57,7 +57,7 @@ const press = async (target: HTMLElement, key: string, init: KeyboardEventInit =
 describe("useDateSegment", () => {
   describe("what a segment looks like", () => {
     it("is a spin button carrying its own range", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
       const month = part("month");
 
       expect(month.getAttribute("role")).toBe("spinbutton");
@@ -70,7 +70,7 @@ describe("useDateSegment", () => {
     });
 
     it("names the part of the date it is", () => {
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
 
       expect(part("month").getAttribute("aria-label")).toBe("month");
       expect(part("year").getAttribute("aria-label")).toBe("year");
@@ -79,21 +79,21 @@ describe("useDateSegment", () => {
 
     it("puts the field's own label after the part name", () => {
       // VoiceOver on iOS does not announce groups, so each segment has to carry the field's name.
-      const {part, unmount} = setup({ariaLabel: "Birth date"});
+      const { part, unmount } = setup({ ariaLabel: "Birth date" });
 
       expect(part("day").getAttribute("aria-label")).toBe("day, Birth date");
       unmount();
     });
 
     it("reads a month out by name as well as by number", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       expect(part("month").getAttribute("aria-valuetext")).toBe("6 – June");
       unmount();
     });
 
     it("reads an hour the way the clock does", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45)});
+      const { part, unmount } = setup({ defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45) });
 
       // The hour segment shows "1"; on its own that says nothing about which one.
       expect(part("hour").getAttribute("aria-valuetext")).toBe("1 PM");
@@ -101,7 +101,7 @@ describe("useDateSegment", () => {
     });
 
     it("says nothing for an empty segment beyond that it is empty", () => {
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
 
       expect(part("month").getAttribute("data-placeholder")).toBe("true");
       expect(part("month").getAttribute("aria-valuenow")).toBeNull();
@@ -110,7 +110,7 @@ describe("useDateSegment", () => {
     });
 
     it("hides the punctuation between segments", () => {
-      const {all, unmount} = setup({});
+      const { all, unmount } = setup({});
       const literal = all().find((segment) => segment.getAttribute("aria-hidden") === "true")!;
 
       // A slash is not a control and has nothing to announce.
@@ -121,7 +121,10 @@ describe("useDateSegment", () => {
     });
 
     it("marks itself read only rather than editable", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5), isReadOnly: true});
+      const { part, unmount } = setup({
+        defaultValue: new CalendarDate(2026, 6, 5),
+        isReadOnly: true,
+      });
 
       expect(part("month").getAttribute("aria-readonly")).toBe("true");
       expect(part("month").getAttribute("contenteditable")).toBeNull();
@@ -131,7 +134,10 @@ describe("useDateSegment", () => {
     });
 
     it("leaves the tab order when the field is disabled", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5), isDisabled: true});
+      const { part, unmount } = setup({
+        defaultValue: new CalendarDate(2026, 6, 5),
+        isDisabled: true,
+      });
 
       expect(part("month").getAttribute("tabindex")).toBeNull();
       expect(part("month").getAttribute("inputmode")).toBeNull();
@@ -139,7 +145,7 @@ describe("useDateSegment", () => {
     });
 
     it("asks for a number pad only where a number is wanted", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45)});
+      const { part, unmount } = setup({ defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45) });
 
       expect(part("month").getAttribute("inputmode")).toBe("numeric");
       // Neither of these is typed as a number, so a number pad would be the wrong keyboard.
@@ -152,7 +158,7 @@ describe("useDateSegment", () => {
        * Otherwise the field's description would be read again on every segment the user moves to.
        * An invalid field is the exception, because the reason has to reach whoever is fixing it.
        */
-      const valid = setup({ariaDescribedBy: "hint"});
+      const valid = setup({ ariaDescribedBy: "hint" });
 
       expect(valid.part("month").getAttribute("aria-describedby")).toBe("hint");
       expect(valid.part("year").getAttribute("aria-describedby")).toBeNull();
@@ -172,7 +178,7 @@ describe("useDateSegment", () => {
 
   describe("typing into a segment", () => {
     it("takes a digit at a time", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
 
       await type(part("year"), "2");
       expect(ready().state.segments.value.find((s) => s.type === "year")?.text).toBe("2");
@@ -183,7 +189,7 @@ describe("useDateSegment", () => {
     });
 
     it("moves on as soon as no further digit could fit", async () => {
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
       const month = part("month");
 
       month.focus();
@@ -197,7 +203,7 @@ describe("useDateSegment", () => {
     });
 
     it("moves on at once for a digit nothing could follow", async () => {
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
       const month = part("month");
 
       month.focus();
@@ -208,7 +214,7 @@ describe("useDateSegment", () => {
     });
 
     it("starts a new number when the typed one has overrun", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
       const day = part("day");
 
       day.focus();
@@ -221,7 +227,7 @@ describe("useDateSegment", () => {
     });
 
     it("refuses anything that is not a number", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
 
       await type(part("day"), "x");
 
@@ -230,7 +236,7 @@ describe("useDateSegment", () => {
     });
 
     it("picks a day period by its first letter", async () => {
-      const {part, ready, unmount} = setup({
+      const { part, ready, unmount } = setup({
         defaultValue: new CalendarDateTime(2026, 6, 5, 9, 30),
       });
       const period = () => ready().state.segments.value.find((s) => s.type === "dayPeriod")?.text;
@@ -244,7 +250,7 @@ describe("useDateSegment", () => {
     });
 
     it("picks an era by its first letter, and hands focus on", async () => {
-      const {part, ready, unmount} = setup({defaultValue: new CalendarDate("BC", 44, 3, 15)});
+      const { part, ready, unmount } = setup({ defaultValue: new CalendarDate("BC", 44, 3, 15) });
       const era = part("era");
 
       era.focus();
@@ -257,7 +263,7 @@ describe("useDateSegment", () => {
     });
 
     it("types nothing into a read-only field", async () => {
-      const {part, ready, unmount} = setup({isReadOnly: true});
+      const { part, ready, unmount } = setup({ isReadOnly: true });
 
       await type(part("day"), "5");
 
@@ -267,7 +273,7 @@ describe("useDateSegment", () => {
 
     it("never lets the browser write the text itself", () => {
       // The state owns what a segment shows; an uncancelled input would put the DOM out of step.
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
       const event = new InputEvent("beforeinput", {
         bubbles: true,
         cancelable: true,
@@ -284,7 +290,7 @@ describe("useDateSegment", () => {
 
   describe("clearing a segment", () => {
     it("drops the last digit typed", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
 
       await type(part("year"), "2");
       await type(part("year"), "0");
@@ -295,7 +301,7 @@ describe("useDateSegment", () => {
     });
 
     it("empties a segment down to its last digit", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
 
       await type(part("day"), "5");
       await press(part("day"), "Backspace");
@@ -305,7 +311,7 @@ describe("useDateSegment", () => {
     });
 
     it("empties a day period outright", async () => {
-      const {part, ready, unmount} = setup({
+      const { part, ready, unmount } = setup({
         defaultValue: new CalendarDateTime(2026, 6, 5, 9, 30),
       });
 
@@ -318,7 +324,7 @@ describe("useDateSegment", () => {
     });
 
     it("steps back off an empty segment", async () => {
-      const {part, unmount} = setup({});
+      const { part, unmount } = setup({});
       const day = part("day");
 
       day.focus();
@@ -331,7 +337,7 @@ describe("useDateSegment", () => {
 
   describe("stepping a segment", () => {
     it("moves by one on an arrow", async () => {
-      const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, ready, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       await press(part("day"), "ArrowUp");
       expect(ready().state.value.value?.day).toBe(6);
@@ -347,7 +353,7 @@ describe("useDateSegment", () => {
        * with one. Alt with an arrow has to fall through to whatever is listening above, which is how
        * a date picker's popover is opened from a segment.
        */
-      const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, ready, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       const event = new KeyboardEvent("keydown", {
         altKey: true,
@@ -365,7 +371,7 @@ describe("useDateSegment", () => {
     });
 
     it("pages the day by a week", async () => {
-      const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, ready, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       await press(part("day"), "PageUp");
       expect(ready().state.value.value?.day).toBe(12);
@@ -376,7 +382,7 @@ describe("useDateSegment", () => {
     });
 
     it("takes the day to the ends of what a month can hold", async () => {
-      const {part, ready, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, ready, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       await press(part("day"), "Home");
       expect(ready().state.value.value?.day).toBe(1);
@@ -394,7 +400,7 @@ describe("useDateSegment", () => {
     });
 
     it("forgets a half-typed number when it is stepped", async () => {
-      const {part, ready, unmount} = setup({});
+      const { part, ready, unmount } = setup({});
       const year = part("year");
 
       await type(year, "2");
@@ -413,7 +419,10 @@ describe("useDateSegment", () => {
        * A placeholder and a real value are laid out differently by the bidi algorithm, so without
        * this a segment would shift around as it is filled in and emptied again.
        */
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5), locale: "he-IL"});
+      const { part, unmount } = setup({
+        defaultValue: new CalendarDate(2026, 6, 5),
+        locale: "he-IL",
+      });
 
       expect(part("month").style.unicodeBidi).toBe("embed");
       expect(part("month").style.direction).toBe("ltr");
@@ -421,7 +430,7 @@ describe("useDateSegment", () => {
     });
 
     it("leaves a left-to-right locale alone", () => {
-      const {part, unmount} = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const { part, unmount } = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
 
       expect(part("month").style.unicodeBidi).toBe("");
       unmount();

@@ -1,6 +1,6 @@
-import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {AlertDialogVariants} from "@ropav/styles";
-import type {CSSProperties} from "vue";
+import type { OverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import type { AlertDialogVariants } from "@ropav/styles";
+import type { CSSProperties } from "vue";
 
 /** Where the dialog sits in the container. `auto` is bottom on a phone and centred above it. */
 export type AlertDialogPlacement = "auto" | "top" | "center" | "bottom";

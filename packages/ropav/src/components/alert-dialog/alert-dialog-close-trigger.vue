@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogCloseTriggerProps} from "./alert-dialog.types";
+import type { AlertDialogCloseTriggerProps } from "./alert-dialog.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {CloseButtonRoot} from "../close-button";
+import { CloseButtonRoot } from "../close-button";
 
-import {useAlertDialogContext} from "./alert-dialog.context";
+import { useAlertDialogContext } from "./alert-dialog.context";
 
 const props = defineProps<AlertDialogCloseTriggerProps>();
 
-const {slots, state} = useAlertDialogContext();
+const { slots, state } = useAlertDialogContext();
 
-const styles = computed(() => slots.value.closeTrigger({class: props.class}));
+const styles = computed(() => slots.value.closeTrigger({ class: props.class }));
 
 // A component's `click` is an emit rather than a DOM listener, so it is not subject to the rule that
 // keeps handlers off `v-bind`.

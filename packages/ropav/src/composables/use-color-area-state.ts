@@ -1,12 +1,12 @@
-import type {Color, ColorAxes, ColorChannel, ColorSpace} from "../utils/color-types";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Color, ColorAxes, ColorChannel, ColorSpace } from "../utils/color-types";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {normalizeColor, parseColor} from "../utils/color";
-import {clamp, snapValueToStep} from "../utils/number";
+import { normalizeColor, parseColor } from "../utils/color";
+import { clamp, snapValueToStep } from "../utils/number";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 /**
  * What a colour area with nothing to show starts from.
@@ -52,7 +52,7 @@ export interface ColorAreaState {
   /** Both channels at once, from a point given as fractions of the area's width and height. */
   setColorFromPoint: (x: number, y: number) => void;
   /** Where the thumb sits, as fractions from the area's top left corner. */
-  getThumbPosition: () => {x: number; y: number};
+  getThumbPosition: () => { x: number; y: number };
   incrementX: (stepSize?: number) => void;
   decrementX: (stepSize?: number) => void;
   incrementY: (stepSize?: number) => void;
@@ -107,7 +107,7 @@ export const useColorAreaState = (options: UseColorAreaStateOptions = {}): Color
     return toValue(options.value) ? undefined : DEFAULT_COLOR;
   });
 
-  const {setState: setColor, state: colorValue} = useControllableState<Color>({
+  const { setState: setColor, state: colorValue } = useControllableState<Color>({
     // Non-null: one of the two always resolves, because a missing default falls back to white.
     defaultValue: (givenDefault.value ?? controlledValue.value)!,
     onValueChange: (value) => options.onChange?.(value),
@@ -153,12 +153,12 @@ export const useColorAreaState = (options: UseColorAreaStateOptions = {}): Color
   return {
     channels,
     decrementX: (stepSize = 1) => {
-      const {maxValue, minValue, step} = xRange.value;
+      const { maxValue, minValue, step } = xRange.value;
 
       setXValue(snapValueToStep(xValue.value - stepSize, minValue, maxValue, step));
     },
     decrementY: (stepSize = 1) => {
-      const {maxValue, minValue, step} = yRange.value;
+      const { maxValue, minValue, step } = yRange.value;
 
       setYValue(snapValueToStep(yValue.value - stepSize, minValue, maxValue, step));
     },
@@ -175,26 +175,26 @@ export const useColorAreaState = (options: UseColorAreaStateOptions = {}): Color
         1 -
         (yValue.value - yRange.value.minValue) / (yRange.value.maxValue - yRange.value.minValue);
 
-      return {x, y};
+      return { x, y };
     },
     // Asymmetric on purpose, and upstream is the same: stepping *up* past the maximum parks the
     // thumb on the maximum rather than snapping back down to the last whole step.
     incrementX: (stepSize = 1) => {
-      const {maxValue, minValue, step} = xRange.value;
+      const { maxValue, minValue, step } = xRange.value;
       const next = xValue.value + stepSize;
 
       setXValue(next > maxValue ? maxValue : snapValueToStep(next, minValue, maxValue, step));
     },
     incrementY: (stepSize = 1) => {
-      const {maxValue, minValue, step} = yRange.value;
+      const { maxValue, minValue, step } = yRange.value;
       const next = yValue.value + stepSize;
 
       setYValue(next > maxValue ? maxValue : snapValueToStep(next, minValue, maxValue, step));
     },
     isDragging: computed(() => isDragging.value),
     setColorFromPoint: (x, y) => {
-      const {maxValue: maxX, minValue: minX, step: stepX} = xRange.value;
-      const {maxValue: maxY, minValue: minY, step: stepY} = yRange.value;
+      const { maxValue: maxX, minValue: minX, step: stepX } = xRange.value;
+      const { maxValue: maxY, minValue: minY, step: stepY } = yRange.value;
 
       let nextX = minX + clamp(x, 0, 1) * (maxX - minX);
       let nextY = minY + (1 - clamp(y, 0, 1)) * (maxY - minY);

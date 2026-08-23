@@ -1,7 +1,7 @@
-import {CalendarDate} from "@internationalized/date";
-import {describe, expect, it} from "vitest";
+import { CalendarDate } from "@internationalized/date";
+import { describe, expect, it } from "vitest";
 
-import {getDateValidationResult, getRangeValidationResult} from "@/utils/date-validation";
+import { getDateValidationResult, getRangeValidationResult } from "@/utils/date-validation";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
 
@@ -11,7 +11,7 @@ const OPTIONS = {};
 describe("getRangeValidationResult", () => {
   it("accepts a range with both ends inside the bounds", () => {
     const result = getRangeValidationResult(
-      {end: jun(20), start: jun(10)},
+      { end: jun(20), start: jun(10) },
       jun(1),
       jun(30),
       undefined,
@@ -31,7 +31,7 @@ describe("getRangeValidationResult", () => {
 
   it("reports a start before the minimum", () => {
     const result = getRangeValidationResult(
-      {end: jun(20), start: jun(5)},
+      { end: jun(20), start: jun(5) },
       jun(10),
       null,
       undefined,
@@ -45,7 +45,7 @@ describe("getRangeValidationResult", () => {
 
   it("reports an end past the maximum", () => {
     const result = getRangeValidationResult(
-      {end: jun(25), start: jun(10)},
+      { end: jun(25), start: jun(10) },
       null,
       jun(20),
       undefined,
@@ -60,7 +60,7 @@ describe("getRangeValidationResult", () => {
   it("says the same thing once when both ends are out of bounds the same way", () => {
     // Two ends past the same maximum is one complaint, not two identical ones.
     const result = getRangeValidationResult(
-      {end: jun(26), start: jun(25)},
+      { end: jun(26), start: jun(25) },
       null,
       jun(20),
       undefined,
@@ -72,7 +72,7 @@ describe("getRangeValidationResult", () => {
 
   it("collects one complaint per end when they fail differently", () => {
     const result = getRangeValidationResult(
-      {end: jun(25), start: jun(5)},
+      { end: jun(25), start: jun(5) },
       jun(10),
       jun(20),
       undefined,
@@ -90,7 +90,7 @@ describe("getRangeValidationResult", () => {
      * is what upstream does.
      */
     const result = getRangeValidationResult(
-      {end: jun(10), start: jun(20)},
+      { end: jun(10), start: jun(20) },
       null,
       null,
       undefined,
@@ -110,7 +110,7 @@ describe("getRangeValidationResult", () => {
      */
     const middle = jun(15);
     const result = getRangeValidationResult(
-      {end: jun(20), start: jun(10)},
+      { end: jun(20), start: jun(10) },
       null,
       null,
       (date) => date.compare(middle) === 0,
@@ -124,7 +124,7 @@ describe("getRangeValidationResult", () => {
     // The date is inside the range; the range simply has a hole in it.
     const start = jun(10);
     const result = getRangeValidationResult(
-      {end: jun(20), start},
+      { end: jun(20), start },
       null,
       null,
       (date) => date.compare(start) === 0,
@@ -139,7 +139,7 @@ describe("getRangeValidationResult", () => {
   it("judges one end exactly as a single date would be judged", () => {
     const single = getDateValidationResult(jun(5), jun(10), null, undefined, OPTIONS);
     const range = getRangeValidationResult(
-      {end: null, start: jun(5)},
+      { end: null, start: jun(5) },
       jun(10),
       null,
       undefined,

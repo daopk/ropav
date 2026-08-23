@@ -1,13 +1,13 @@
-import type {UseCollectionReturn} from "./use-collection";
-import type {UseListKeyboardReturn} from "./use-list-keyboard";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { UseCollectionReturn } from "./use-collection";
+import type { UseListKeyboardReturn } from "./use-list-keyboard";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, toValue, watch} from "vue";
+import { computed, toValue, watch } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 /** The `inputType` values that mean text was typed forwards rather than edited. */
 const TYPED_FORWARD = ["insertText", "insertCompositionText", "insertFromComposition"];
@@ -114,13 +114,13 @@ export const [useAutocompleteInputContext, provideAutocompleteInputContext] =
  * ```
  */
 export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocompleteReturn => {
-  const {collection, selection} = options;
+  const { collection, selection } = options;
 
   const keyboard = computed(() => toValue(options.keyboard) ?? null);
 
   const isVirtual = computed(() => !toValue(options.disableVirtualFocus));
 
-  const {setState, state} = useControllableState<string>({
+  const { setState, state } = useControllableState<string>({
     defaultValue: options.defaultInputValue ?? "",
     onValueChange: options.onInputChange,
     value: () => toValue(options.inputValue),
@@ -140,7 +140,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
     }
 
     selection.setFocused(true);
-    keyboard.value?.focusKey(first, {scroll: true});
+    keyboard.value?.focusKey(first, { scroll: true });
   };
 
   /** What the edit currently in flight is doing to the text. Only `beforeinput` carries it. */
@@ -221,7 +221,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
         element.removeEventListener("pointerdown", onPointerdown);
       });
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   /** The keys the collection answers, which the caret must not also act on. */
@@ -317,7 +317,7 @@ export const useAutocomplete = (options: UseAutocompleteOptions): UseAutocomplet
 
       if (focused != null && !collection.getItem(focused)) clearVirtualFocus();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   return {

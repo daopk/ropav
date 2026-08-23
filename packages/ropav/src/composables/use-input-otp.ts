@@ -1,14 +1,14 @@
-import type {PushPasswordManagerStrategy} from "./use-password-manager-badge";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PushPasswordManagerStrategy } from "./use-password-manager-badge";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onMounted, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {createContext} from "../utils/create-context";
-import {setFormValue} from "../utils/form-value";
+import { createContext } from "../utils/create-context";
+import { setFormValue } from "../utils/form-value";
 
-import {useControllableState} from "./use-controllable-state";
-import {useFormReset} from "./use-form-reset";
-import {usePasswordManagerBadge} from "./use-password-manager-badge";
+import { useControllableState } from "./use-controllable-state";
+import { useFormReset } from "./use-form-reset";
+import { usePasswordManagerBadge } from "./use-password-manager-badge";
 
 /** Ready-made patterns for the three code alphabets almost every one-time code uses. */
 export const REGEXP_ONLY_DIGITS = "^\\d+$";
@@ -247,7 +247,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
   const isDisabled = computed(() => Boolean(toValue(options.isDisabled)));
   const placeholder = computed(() => toValue(options.placeholder));
 
-  const {setState, state: value} = useControllableState<string>({
+  const { setState, state: value } = useControllableState<string>({
     defaultValue: toValue(options.defaultValue) ?? "",
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -295,7 +295,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
    * microtasks between dispatching `reset` and restoring the controls, so nothing written in
    * response to the event arrives in time.
    */
-  watch([inputEl, value], reassert, {flush: "post", immediate: true});
+  watch([inputEl, value], reassert, { flush: "post", immediate: true });
 
   /*
    * Nothing did this at all before. A reset blanked the input while the state kept the code the
@@ -412,7 +412,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
 
     previousSelection = [input.selectionStart, input.selectionEnd, input.selectionDirection];
 
-    document.addEventListener("selectionchange", onDocumentSelectionChange, {capture: true});
+    document.addEventListener("selectionchange", onDocumentSelectionChange, { capture: true });
 
     onDocumentSelectionChange();
     if (document.activeElement === input) isFocused.value = true;
@@ -435,7 +435,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
     resizeObserver?.observe(input);
 
     teardown = () => {
-      document.removeEventListener("selectionchange", onDocumentSelectionChange, {capture: true});
+      document.removeEventListener("selectionchange", onDocumentSelectionChange, { capture: true });
       resizeObserver?.disconnect();
     };
   });
@@ -475,7 +475,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
 
   onScopeDispose(() => syncTimers.forEach(clearTimeout));
 
-  watch([value, isFocused], scheduleSelectionSync, {flush: "post", immediate: true});
+  watch([value, isFocused], scheduleSelectionSync, { flush: "post", immediate: true });
 
   // Fires on the change that fills the last slot, and only on that one: a code that is already
   // full and gets retyped in place has nothing new to report.
@@ -626,7 +626,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
     const end = mirrorSelectionEnd.value;
     const placeholderText = placeholder.value;
 
-    return Array.from({length: maxLength.value}, (_, slotIdx) => {
+    return Array.from({ length: maxLength.value }, (_, slotIdx) => {
       const isActive =
         isFocused.value &&
         start !== null &&
@@ -669,7 +669,7 @@ export const useInputOTP = (options: UseInputOTPOptions): UseInputOTPReturn => {
 
   return {
     attrs,
-    handlers: {onBlur, onFocus, onInput, onMouseleave, onMouseover, onPaste},
+    handlers: { onBlur, onFocus, onInput, onMouseleave, onMouseover, onPaste },
     inputStyle,
     isFocused: computed(() => isFocused.value),
     isHovering: computed(() => !isDisabled.value && isHoveringInput.value),

@@ -1,8 +1,8 @@
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {TableRootProps, TableSortDescriptor} from "./table.types";
-import type {StoryObj} from "@storybook/vue3";
-import type {SortingState, Updater} from "@tanstack/vue-table";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { TableRootProps, TableSortDescriptor } from "./table.types";
+import type { StoryObj } from "@storybook/vue3";
+import type { SortingState, Updater } from "@tanstack/vue-table";
 
 import {
   getCoreRowModel,
@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconChevronRight from "~icons/gravity-ui/chevron-right";
 import IconCopy from "~icons/gravity-ui/copy";
 import IconEye from "~icons/gravity-ui/eye";
@@ -19,13 +19,13 @@ import IconPencil from "~icons/gravity-ui/pencil";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconTray from "~icons/gravity-ui/tray";
 
-import {useDragAndDrop} from "../../composables/use-drag-and-drop";
-import {avatarSrc} from "../../utils/story-assets";
-import {TableLayout} from "../../utils/virtualizer-table-layout";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {Button} from "../button";
-import {Chip, ChipLabel} from "../chip";
-import {EmptyState} from "../empty-state";
+import { useDragAndDrop } from "../../composables/use-drag-and-drop";
+import { avatarSrc } from "../../utils/story-assets";
+import { TableLayout } from "../../utils/virtualizer-table-layout";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { Button } from "../button";
+import { Chip, ChipLabel } from "../chip";
+import { EmptyState } from "../empty-state";
 import {
   Pagination,
   PaginationContent,
@@ -37,8 +37,8 @@ import {
   PaginationPreviousIcon,
   PaginationSummary,
 } from "../pagination";
-import {Spinner} from "../spinner";
-import {VirtualizerRoot} from "../virtualizer";
+import { Spinner } from "../spinner";
+import { VirtualizerRoot } from "../virtualizer";
 
 import {
   Table,
@@ -112,7 +112,7 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary"],
     },
   },
@@ -127,7 +127,7 @@ export default meta;
 
 // Args are spelled out rather than inferred: `StoryMeta` hides `component`, which is
 // where `StoryObj` would otherwise read them from.
-type Story = StoryObj<{variant: TableRootProps["variant"]}>;
+type Story = StoryObj<{ variant: TableRootProps["variant"] }>;
 
 /* -------------------------------------------------------------------------------------------------
  * Sample Data
@@ -241,10 +241,10 @@ const users: User[] = [
 ];
 
 const columns = [
-  {id: "name", isRowHeader: true, name: "Name"},
-  {id: "role", name: "Role"},
-  {id: "status", name: "Status"},
-  {id: "email", name: "Email"},
+  { id: "name", isRowHeader: true, name: "Name" },
+  { id: "role", name: "Role" },
+  { id: "status", name: "Status" },
+  { id: "email", name: "Email" },
 ];
 
 const ROWS_PER_PAGE = 4;
@@ -257,7 +257,7 @@ const usePagination = <T>(items: () => T[], rowsPerPage = ROWS_PER_PAGE) => {
   return {
     end: computed(() => Math.min(page.value * rowsPerPage, items().length)),
     page,
-    pages: computed(() => Array.from({length: totalPages.value}, (_, index) => index + 1)),
+    pages: computed(() => Array.from({ length: totalPages.value }, (_, index) => index + 1)),
     paginatedItems: computed(() =>
       items().slice((page.value - 1) * rowsPerPage, (page.value - 1) * rowsPerPage + rowsPerPage),
     ),
@@ -302,10 +302,13 @@ const STATUS_COLOR: Record<string, "success" | "danger" | "warning"> = {
 
 /** The shared state behind `Default` and `SecondaryVariant`: sorted, then paginated. */
 const useSortedUsers = () => {
-  const sortDescriptor = shallowRef<TableSortDescriptor>({column: "name", direction: "ascending"});
+  const sortDescriptor = shallowRef<TableSortDescriptor>({
+    column: "name",
+    direction: "ascending",
+  });
 
   const sortedUsers = computed(() => {
-    const {column, direction} = sortDescriptor.value;
+    const { column, direction } = sortDescriptor.value;
 
     return [...users].sort((a, b) => {
       const comparison = String(a[column as keyof User]).localeCompare(
@@ -316,7 +319,7 @@ const useSortedUsers = () => {
     });
   });
 
-  return {sortDescriptor, ...usePagination(() => sortedUsers.value)};
+  return { sortDescriptor, ...usePagination(() => sortedUsers.value) };
 };
 
 const DEFAULT_TEMPLATE = `
@@ -402,10 +405,10 @@ const DEFAULT_TEMPLATE = `
 `;
 
 const SORTABLE_COLUMNS = [
-  {class: "after:hidden", id: "id", isRowHeader: true, name: "Worker ID"},
-  {id: "name", name: "Member"},
-  {id: "role", name: "Role"},
-  {id: "status", name: "Status"},
+  { class: "after:hidden", id: "id", isRowHeader: true, name: "Worker ID" },
+  { id: "name", name: "Member" },
+  { id: "role", name: "Role" },
+  { id: "status", name: "Status" },
 ];
 
 const defaultSetup = (variant: "primary" | "secondary") => () => ({
@@ -449,7 +452,7 @@ export const SecondaryVariant: Story = {
 export const DynamicCollection: Story = {
   render: () => ({
     components,
-    setup: () => ({columns, ...usePagination(() => users)}),
+    setup: () => ({ columns, ...usePagination(() => users) }),
     template: `
       <div class="w-full max-w-4xl">
         <Table>
@@ -539,7 +542,7 @@ export const DynamicWithSelection: Story = {
 export const ColumnResizing: Story = {
   render: () => ({
     components,
-    setup: () => ({statusColor: STATUS_COLOR, users}),
+    setup: () => ({ statusColor: STATUS_COLOR, users }),
     template: `
       <div class="w-full max-w-4xl">
         <Table>
@@ -674,8 +677,8 @@ const files: FileNode[] = [
     children: [
       {
         children: [
-          {children: [], date: "7/10/2025", id: "3", title: "Weekly Report", type: "File"},
-          {children: [], date: "8/20/2025", id: "4", title: "Budget", type: "File"},
+          { children: [], date: "7/10/2025", id: "3", title: "Weekly Report", type: "File" },
+          { children: [], date: "8/20/2025", id: "4", title: "Budget", type: "File" },
         ],
         date: "8/2/2025",
         id: "2",
@@ -690,8 +693,8 @@ const files: FileNode[] = [
   },
   {
     children: [
-      {children: [], date: "1/23/2026", id: "6", title: "Image 1", type: "File"},
-      {children: [], date: "2/3/2026", id: "7", title: "Image 2", type: "File"},
+      { children: [], date: "1/23/2026", id: "6", title: "Image 1", type: "File" },
+      { children: [], date: "2/3/2026", id: "7", title: "Image 2", type: "File" },
     ],
     date: "2/3/2026",
     id: "5",
@@ -718,7 +721,7 @@ const flattenFiles = (
   parentKey?: string,
 ): FlatFileRow[] =>
   nodes.flatMap((node) => [
-    {level, node, parentKey},
+    { level, node, parentKey },
     ...(expanded.has(node.id) ? flattenFiles(node.children, expanded, level + 1, node.id) : []),
   ]);
 
@@ -791,10 +794,10 @@ export const ExpandableRows: Story = {
  * TanStack Table
  * -----------------------------------------------------------------------------------------------*/
 const TANSTACK_COLUMNS = [
-  {accessorKey: "name", header: "Name"},
-  {accessorKey: "role", header: "Role"},
-  {accessorKey: "status", header: "Status"},
-  {accessorKey: "email", header: "Email"},
+  { accessorKey: "name", header: "Name" },
+  { accessorKey: "role", header: "Role" },
+  { accessorKey: "status", header: "Status" },
+  { accessorKey: "email", header: "Email" },
 ];
 
 /** TanStack's sorting state, as the table's own descriptor. */
@@ -803,12 +806,12 @@ const toSortDescriptor = (sorting: SortingState): TableSortDescriptor | undefine
 
   if (!first) return undefined;
 
-  return {column: first.id, direction: first.desc ? "descending" : "ascending"};
+  return { column: first.id, direction: first.desc ? "descending" : "ascending" };
 };
 
 /** And back the other way, for what the header hands out when it is pressed. */
 const toSortingState = (descriptor: TableSortDescriptor): SortingState => [
-  {desc: descriptor.direction === "descending", id: String(descriptor.column)},
+  { desc: descriptor.direction === "descending", id: String(descriptor.column) },
 ];
 
 /**
@@ -835,7 +838,7 @@ export const TanStackTable: Story = {
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        initialState: {pagination: {pageSize: ROWS_PER_PAGE}},
+        initialState: { pagination: { pageSize: ROWS_PER_PAGE } },
         onSortingChange: (updater: Updater<SortingState>) => {
           sorting.value = typeof updater === "function" ? updater(sorting.value) : updater;
         },
@@ -855,7 +858,9 @@ export const TanStackTable: Story = {
           sorting.value = toSortingState(descriptor);
         },
         page: computed(() => pageIndex.value + 1),
-        pages: computed(() => Array.from({length: table.getPageCount()}, (_, index) => index + 1)),
+        pages: computed(() =>
+          Array.from({ length: table.getPageCount() }, (_, index) => index + 1),
+        ),
         rows: computed(() => table.getRowModel().rows),
         sortDescriptor: computed(() => toSortDescriptor(sorting.value)),
         start: computed(() => pageIndex.value * ROWS_PER_PAGE + 1),
@@ -948,7 +953,7 @@ export const EmptyStateDemo: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args, columns}),
+    setup: () => ({ args, columns }),
     template: `
       <div class="w-full max-w-4xl">
         <Table class="min-h-[200px] min-w-[600px]" :variant="args.variant">
@@ -1048,7 +1053,7 @@ const LAST_NAMES = [
 
 /** The same rows in the same order as the React story, so the two can be compared row by row. */
 const generateUsers = (count: number): User[] =>
-  Array.from({length: count}, (_, index) => {
+  Array.from({ length: count }, (_, index) => {
     const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
     const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
 
@@ -1072,7 +1077,7 @@ const generateUsers = (count: number): User[] =>
 export const Virtualization: Story = {
   render: () => ({
     components,
-    setup: () => ({layout: TableLayout, users: generateUsers(1000)}),
+    setup: () => ({ layout: TableLayout, users: generateUsers(1000) }),
     template: `
       <Virtualizer :layout="layout" :layout-options="{rowHeight: 42, headingHeight: 42}">
         <Table>
@@ -1127,9 +1132,9 @@ export const DragAndDrop: Story = {
       const order = shallowRef(users.map((user) => String(user.id)));
       const byId = new Map(users.map((user) => [String(user.id), user]));
 
-      const {dragAndDropHooks} = useDragAndDrop({
+      const { dragAndDropHooks } = useDragAndDrop({
         getItems: (keys) =>
-          [...keys].map((key) => ({"text/plain": byId.get(String(key))?.name ?? ""})),
+          [...keys].map((key) => ({ "text/plain": byId.get(String(key))?.name ?? "" })),
         onReorder(event) {
           const moving = [...event.keys].map(String);
           const rest = order.value.filter((key) => !moving.includes(key));
@@ -1215,8 +1220,8 @@ export const VirtualizedDragAndDrop: Story = {
       const order = shallowRef(all.map((user) => user.id));
       const byId = new Map(all.map((user) => [user.id, user]));
 
-      const {dragAndDropHooks} = useDragAndDrop({
-        getItems: (keys) => [...keys].map((key) => ({"text/plain": byId.get(Number(key))!.name})),
+      const { dragAndDropHooks } = useDragAndDrop({
+        getItems: (keys) => [...keys].map((key) => ({ "text/plain": byId.get(Number(key))!.name })),
         onReorder(event) {
           const moving = [...event.keys].map(Number);
           const rest = order.value.filter((key) => !moving.includes(key));

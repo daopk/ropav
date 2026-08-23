@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {BreadcrumbsRootProps} from "./breadcrumbs.types";
+import type { BreadcrumbsRootProps } from "./breadcrumbs.types";
 
-import {breadcrumbsVariants} from "@ropav/styles";
-import {computed, shallowRef, watch} from "vue";
+import { breadcrumbsVariants } from "@ropav/styles";
+import { computed, shallowRef, watch } from "vue";
 
-import {useCollection} from "../../composables/use-collection";
-import {useLocalizedStringFormatter} from "../../composables/use-localized-string-formatter";
-import {breadcrumbsStrings} from "../../i18n/breadcrumbs";
+import { useCollection } from "../../composables/use-collection";
+import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { breadcrumbsStrings } from "../../i18n/breadcrumbs";
 
-import {provideBreadcrumbsContext} from "./breadcrumbs.context";
+import { provideBreadcrumbsContext } from "./breadcrumbs.context";
 
-const props = withDefaults(defineProps<BreadcrumbsRootProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<BreadcrumbsRootProps>(), { isDisabled: undefined });
 
-const emit = defineEmits<{action: [key: string | number]}>();
+const emit = defineEmits<{ action: [key: string | number] }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const collection = useCollection();
 const formatter = useLocalizedStringFormatter(breadcrumbsStrings);
@@ -34,10 +34,10 @@ watch(
       orderVersion.value += 1;
     });
 
-    observer.observe(current, {childList: true});
+    observer.observe(current, { childList: true });
     onCleanup(() => observer.disconnect());
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const label = computed(() => props.ariaLabel || formatter.value.format("breadcrumbs"));
@@ -57,7 +57,7 @@ provideBreadcrumbsContext({
     ref="element"
     :aria-label="label"
     :aria-labelledby="props.ariaLabelledby"
-    :class="slots.base({class: props.class})"
+    :class="slots.base({ class: props.class })"
     data-slot="breadcrumbs"
   >
     <slot />

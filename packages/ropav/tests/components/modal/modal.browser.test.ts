@@ -1,14 +1,14 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import ModalFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(ModalFixture, {props});
+  const result = renderVapor(ModalFixture, { props });
 
   mounted.push(result);
 
@@ -26,7 +26,7 @@ const settled = async (element: HTMLElement) => {
 const slot = (name: string) => document.body.querySelector<HTMLElement>(`[data-slot="${name}"]`);
 
 const triggerOf = (result: RenderResult, name = "Open modal") =>
-  result.getByRole("button", {name}) as HTMLElement;
+  result.getByRole("button", { name }) as HTMLElement;
 
 const open = async (result: RenderResult, name?: string) => {
   await userEvent.click(triggerOf(result, name));
@@ -200,7 +200,9 @@ describe("Modal (browser)", () => {
 
       // Just above the dialog, inside the backdrop. Synthetic events cannot prove this: the
       // dismissal is decided by where the pointer really landed.
-      await userEvent.click(backdrop, {position: {x: Math.round(box.left + box.width / 2), y: 4}});
+      await userEvent.click(backdrop, {
+        position: { x: Math.round(box.left + box.width / 2), y: 4 },
+      });
       await nextTick();
       await nextTick();
 
@@ -211,7 +213,7 @@ describe("Modal (browser)", () => {
     });
 
     it("leaves a button inside the dialog as an ordinary button", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const inside = document.body.querySelector<HTMLElement>(
         "[data-slot='modal-dialog'] [data-slot='button']",
@@ -235,7 +237,7 @@ describe("Modal (browser)", () => {
 
   describe("focus", () => {
     it("keeps Tab inside the dialog", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const dialog = slot("modal-dialog")!;
 

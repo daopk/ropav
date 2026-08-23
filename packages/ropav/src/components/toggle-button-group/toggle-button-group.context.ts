@@ -1,8 +1,8 @@
-import type {UseToggleGroupStateReturn} from "../../composables/use-toggle-group-state";
-import type {ToggleButtonVariants, toggleButtonGroupVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseToggleGroupStateReturn } from "../../composables/use-toggle-group-state";
+import type { ToggleButtonVariants, toggleButtonGroupVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ToggleButtonGroupContext {
   slots: ComputedRef<ReturnType<typeof toggleButtonGroupVariants>>;

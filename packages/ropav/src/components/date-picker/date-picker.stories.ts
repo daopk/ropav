@@ -1,12 +1,12 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {DateValue} from "@internationalized/date";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { DateValue } from "@internationalized/date";
+import type { StoryObj } from "@storybook/vue3";
 
-import {getLocalTimeZone, today} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 
-import {Button} from "../button";
+import { Button } from "../button";
 import {
   CalendarCell,
   CalendarGrid,
@@ -25,10 +25,10 @@ import {
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
 } from "../calendar-year-picker";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
 
 import {
   DatePickerGroup,
@@ -78,8 +78,8 @@ const components = {
  * `slot` is bound rather than written literally because the linter reads a literal `slot` attribute
  * as Vue 2 slot syntax. Passed to the stories as data so the templates can bind it.
  */
-const PREVIOUS = {slot: "previous"} as const;
-const NEXT = {slot: "next"} as const;
+const PREVIOUS = { slot: "previous" } as const;
+const NEXT = { slot: "next" } as const;
 
 /** The calendar in the popover, which every story below repeats. */
 const calendar = `
@@ -147,7 +147,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({next: NEXT, previous: PREVIOUS}),
+    setup: () => ({ next: NEXT, previous: PREVIOUS }),
     template: `
       <DatePickerRoot class="w-[280px]" name="date">
         <Label>Date</Label>
@@ -164,7 +164,7 @@ export const Controlled: Story = {
     setup: () => {
       const value = shallowRef<DateValue | null>(today(getLocalTimeZone()));
 
-      return {next: NEXT, previous: PREVIOUS, value};
+      return { next: NEXT, previous: PREVIOUS, value };
     },
     template: `
       <div class="flex w-64 flex-col gap-2">
@@ -206,7 +206,7 @@ export const WithValidation: Story = {
       const value = shallowRef<DateValue | null>(null);
       const isInvalid = computed(() => value.value != null && value.value.compare(currentDate) < 0);
 
-      return {currentDate, isInvalid, next: NEXT, previous: PREVIOUS, value};
+      return { currentDate, isInvalid, next: NEXT, previous: PREVIOUS, value };
     },
     template: `
       <DatePickerRoot
@@ -230,7 +230,7 @@ export const WithValidation: Story = {
 export const WithCustomIndicator: Story = {
   render: () => ({
     components,
-    setup: () => ({next: NEXT, previous: PREVIOUS}),
+    setup: () => ({ next: NEXT, previous: PREVIOUS }),
     template: `
       <DatePickerRoot class="w-64" name="date">
         <Label>Date</Label>

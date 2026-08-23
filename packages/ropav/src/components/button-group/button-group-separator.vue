@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ButtonGroupSeparatorProps} from "./button-group.types";
+import type { ButtonGroupSeparatorProps } from "./button-group.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useButtonGroupContext} from "./button-group.context";
+import { useButtonGroupContext } from "./button-group.context";
 
 const props = defineProps<ButtonGroupSeparatorProps>();
 

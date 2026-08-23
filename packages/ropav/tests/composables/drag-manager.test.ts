@@ -4,9 +4,9 @@ import type {
   DragManagerDropTarget,
 } from "@/composables/drag-manager";
 
-import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {computed} from "vue";
+import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { computed } from "vue";
 
 import {
   beginDragging,
@@ -16,8 +16,8 @@ import {
   registerDropItem,
   registerDropTarget,
 } from "@/composables/drag-manager";
-import {setInteractionModality} from "@/composables/use-interaction-states";
-import {dndStrings} from "@/i18n/dnd";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+import { dndStrings } from "@/i18n/dnd";
 
 /**
  * The keyboard drag session.
@@ -33,8 +33,8 @@ const flushFrame = async () => {
 };
 
 const press = (key: string, init: KeyboardEventInit = {}) => {
-  document.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
-  document.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key, ...init}));
+  document.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
+  document.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key, ...init }));
 };
 
 const cleanups: (() => void)[] = [];
@@ -53,13 +53,13 @@ const addElement = (id: string): HTMLElement => {
 const addDropTarget = (
   id: string,
   overrides: Partial<DragManagerDropTarget> = {},
-): {element: HTMLElement; target: DragManagerDropTarget} => {
+): { element: HTMLElement; target: DragManagerDropTarget } => {
   const element = addElement(id);
-  const target: DragManagerDropTarget = {element, ...overrides};
+  const target: DragManagerDropTarget = { element, ...overrides };
 
   cleanups.push(registerDropTarget(target));
 
-  return {element, target};
+  return { element, target };
 };
 
 const dragTargetFor = (
@@ -68,7 +68,7 @@ const dragTargetFor = (
 ): DragManagerDragTarget => ({
   allowedDropOperations: ["move"],
   element,
-  items: [{"text/plain": "dragged"}],
+  items: [{ "text/plain": "dragged" }],
   ...overrides,
 });
 
@@ -135,7 +135,7 @@ describe("drag manager", () => {
 
   describe("valid drop targets", () => {
     it("reports an element inside a registered target as valid", () => {
-      const {element} = addDropTarget("target");
+      const { element } = addDropTarget("target");
       const child = document.createElement("span");
 
       element.appendChild(child);
@@ -149,7 +149,7 @@ describe("drag manager", () => {
       const source = addElement("source");
 
       addDropTarget("accepts");
-      addDropTarget("refuses", {getDropOperation: () => "cancel"});
+      addDropTarget("refuses", { getDropOperation: () => "cancel" });
 
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
@@ -163,9 +163,9 @@ describe("drag manager", () => {
       const source = addElement("source");
       const getDropOperation = vi.fn(() => "move" as const);
 
-      addDropTarget("target", {getDropOperation});
+      addDropTarget("target", { getDropOperation });
       beginDragging(
-        dragTargetFor(source, {items: [{"text/html": "<b>a</b>", "text/plain": "a"}]}),
+        dragTargetFor(source, { items: [{ "text/html": "<b>a</b>", "text/plain": "a" }] }),
         stringFormatter,
       );
       await flushFrame();
@@ -202,7 +202,7 @@ describe("drag manager", () => {
       press("Tab");
       expect(getDragSession()?.currentDropTarget?.element.id).toBe("second");
 
-      press("Tab", {shiftKey: true});
+      press("Tab", { shiftKey: true });
       expect(getDragSession()?.currentDropTarget?.element.id).toBe("first");
     });
 
@@ -229,7 +229,7 @@ describe("drag manager", () => {
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
-      press("Tab", {ctrlKey: true});
+      press("Tab", { ctrlKey: true });
 
       expect(getDragSession()?.currentDropTarget?.element.id).toBe("first");
     });
@@ -238,14 +238,14 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onKeyDown = vi.fn();
 
-      addDropTarget("target", {onKeyDown});
+      addDropTarget("target", { onKeyDown });
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
       press("ArrowDown");
 
       expect(onKeyDown).toHaveBeenCalled();
-      expect(onKeyDown.mock.calls[0]?.[0]).toMatchObject({key: "ArrowDown"});
+      expect(onKeyDown.mock.calls[0]?.[0]).toMatchObject({ key: "ArrowDown" });
     });
   });
 
@@ -254,7 +254,7 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onDrop = vi.fn();
 
-      addDropTarget("target", {onDrop});
+      addDropTarget("target", { onDrop });
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
@@ -268,13 +268,16 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onDrop = vi.fn();
 
-      addDropTarget("target", {onDrop});
-      beginDragging(dragTargetFor(source, {items: [{"text/plain": "payload"}]}), stringFormatter);
+      addDropTarget("target", { onDrop });
+      beginDragging(
+        dragTargetFor(source, { items: [{ "text/plain": "payload" }] }),
+        stringFormatter,
+      );
       await flushFrame();
       press("Enter");
 
       const event = onDrop.mock.calls[0]?.[0] as {
-        items: {kind: string; getText: (t: string) => Promise<string>}[];
+        items: { kind: string; getText: (t: string) => Promise<string> }[];
       };
       const [item] = event.items;
 
@@ -286,15 +289,15 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onDragEnd = vi.fn();
 
-      addDropTarget("target", {getDropOperation: () => "copy", onDrop: vi.fn()});
+      addDropTarget("target", { getDropOperation: () => "copy", onDrop: vi.fn() });
       beginDragging(
-        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        dragTargetFor(source, { allowedDropOperations: ["move", "copy"], onDragEnd }),
         stringFormatter,
       );
       await flushFrame();
       press("Enter");
 
-      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({dropOperation: "copy"});
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "copy" });
     });
 
     // Alt+Enter opens the target instead of dropping — how a collapsed tree row is expanded
@@ -304,11 +307,11 @@ describe("drag manager", () => {
       const onDrop = vi.fn();
       const onDropActivate = vi.fn();
 
-      addDropTarget("target", {onDrop, onDropActivate});
+      addDropTarget("target", { onDrop, onDropActivate });
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
 
       expect(onDropActivate).toHaveBeenCalledTimes(1);
       expect(onDrop).not.toHaveBeenCalled();
@@ -319,12 +322,12 @@ describe("drag manager", () => {
       const source = addElement("source");
       const onDragEnd = vi.fn();
 
-      beginDragging(dragTargetFor(source, {onDragEnd}), stringFormatter);
+      beginDragging(dragTargetFor(source, { onDragEnd }), stringFormatter);
       await flushFrame();
 
       press("Enter");
 
-      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({dropOperation: "cancel"});
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "cancel" });
       expect(isVirtualDragging()).toBe(false);
     });
   });
@@ -348,12 +351,12 @@ describe("drag manager", () => {
       const onDragEnd = vi.fn();
 
       addDropTarget("target");
-      beginDragging(dragTargetFor(source, {onDragEnd}), stringFormatter);
+      beginDragging(dragTargetFor(source, { onDragEnd }), stringFormatter);
       await flushFrame();
 
       press("Escape");
 
-      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({dropOperation: "cancel"});
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "cancel" });
     });
   });
 
@@ -370,7 +373,7 @@ describe("drag manager", () => {
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
-      bystander.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true}));
+      bystander.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
 
       expect(onPointerDown).not.toHaveBeenCalled();
     });
@@ -384,7 +387,7 @@ describe("drag manager", () => {
       beginDragging(dragTargetFor(source), stringFormatter);
       await flushFrame();
 
-      const pointerup = new PointerEvent("pointerup", {bubbles: true, cancelable: true});
+      const pointerup = new PointerEvent("pointerup", { bubbles: true, cancelable: true });
 
       document.body.dispatchEvent(pointerup);
 
@@ -402,7 +405,7 @@ describe("drag manager", () => {
       await flushFrame();
       press("Escape");
 
-      bystander.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true}));
+      bystander.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
 
       expect(onPointerDown).toHaveBeenCalledTimes(1);
     });
@@ -411,7 +414,7 @@ describe("drag manager", () => {
   describe("drop items", () => {
     /** A collection holding one registered item, both wired into the manager. */
     const addCollectionWithItem = (itemOperation: "copy" | "move") => {
-      const {element: collection} = addDropTarget("collection", {
+      const { element: collection } = addDropTarget("collection", {
         getDropOperation: () => "move",
         onDrop: vi.fn(),
       });
@@ -423,11 +426,11 @@ describe("drag manager", () => {
         registerDropItem({
           element,
           getDropOperation: () => itemOperation,
-          target: {dropPosition: "on", key: "a", type: "item"},
+          target: { dropPosition: "on", key: "a", type: "item" },
         }),
       );
 
-      return {collection, element};
+      return { collection, element };
     };
 
     /**
@@ -435,23 +438,23 @@ describe("drag manager", () => {
      * is the only thing separating it from a real one, and a plain `MouseEvent` has both.
      */
     const virtualClick = (element: HTMLElement) => {
-      element.dispatchEvent(new MouseEvent("click", {bubbles: true, cancelable: true}));
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
     };
 
     it("prefers an item's drop operation over its collection's on a virtual click", async () => {
       const source = addElement("source");
-      const {element} = addCollectionWithItem("copy");
+      const { element } = addCollectionWithItem("copy");
       const onDragEnd = vi.fn();
 
       beginDragging(
-        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        dragTargetFor(source, { allowedDropOperations: ["move", "copy"], onDragEnd }),
         stringFormatter,
       );
       await flushFrame();
 
       virtualClick(element);
 
-      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({dropOperation: "copy"});
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "copy" });
     });
 
     /**
@@ -469,14 +472,14 @@ describe("drag manager", () => {
       const onDragEnd = vi.fn();
 
       beginDragging(
-        dragTargetFor(source, {allowedDropOperations: ["move", "copy"], onDragEnd}),
+        dragTargetFor(source, { allowedDropOperations: ["move", "copy"], onDragEnd }),
         stringFormatter,
       );
       await flushFrame();
 
       press("Enter");
 
-      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({dropOperation: "move"});
+      expect(onDragEnd.mock.calls[0]?.[0]).toMatchObject({ dropOperation: "move" });
     });
   });
 });

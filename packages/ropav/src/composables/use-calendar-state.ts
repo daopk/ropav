@@ -1,4 +1,4 @@
-import type {DayOfWeek} from "../utils/calendar";
+import type { DayOfWeek } from "../utils/calendar";
 import type {
   Calendar,
   CalendarDate,
@@ -6,7 +6,7 @@ import type {
   DateDuration,
   DateValue,
 } from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import {
   DateFormatter,
@@ -23,7 +23,7 @@ import {
   toCalendarDate,
   today,
 } from "@internationalized/date";
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 import {
   alignCenter,
@@ -36,8 +36,8 @@ import {
   previousAvailableDate,
 } from "../utils/calendar";
 
-import {useControllableState} from "./use-controllable-state";
-import {useLocale} from "./use-locale";
+import { useControllableState } from "./use-controllable-state";
+import { useLocale } from "./use-locale";
 
 /** Whether the calendar takes one date or a set of them. */
 export type CalendarSelectionMode = "single" | "multiple";
@@ -98,7 +98,7 @@ export interface CalendarState {
   selectionMode: ComputedRef<CalendarSelectionMode>;
   visibleDuration: ComputedRef<DateDuration>;
   /** The first and last date on screen. */
-  visibleRange: ComputedRef<{start: CalendarDate; end: CalendarDate}>;
+  visibleRange: ComputedRef<{ start: CalendarDate; end: CalendarDate }>;
   minValue: ComputedRef<DateValue | null | undefined>;
   maxValue: ComputedRef<DateValue | null | undefined>;
   focusedDate: ComputedRef<CalendarDate>;
@@ -155,7 +155,7 @@ const unitDuration = (duration: DateDuration): DateDuration => {
  * loop, run synchronously so a caller never observes a half-corrected pair.
  */
 export const useCalendarState = (options: UseCalendarStateOptions): CalendarState => {
-  const {createCalendar, isDateUnavailable, onFocusChange} = options;
+  const { createCalendar, isDateUnavailable, onFocusChange } = options;
   const resolvedLocale = useLocale();
   const locale = computed(() => toValue(options.locale) ?? resolvedLocale.value.locale);
 
@@ -172,12 +172,12 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     () => toValue(options.selectionMode) ?? "single",
   );
   const visibleDuration = computed<DateDuration>(
-    () => toValue(options.visibleDuration) ?? {months: 1},
+    () => toValue(options.visibleDuration) ?? { months: 1 },
   );
   const pageBehavior = computed<PageBehavior>(() => toValue(options.pageBehavior) ?? "visible");
   const firstDayOfWeek = computed(() => toValue(options.firstDayOfWeek));
 
-  const {setState: setControlledValue, state: value} = useControllableState<CalendarValue>({
+  const { setState: setControlledValue, state: value } = useControllableState<CalendarValue>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -246,7 +246,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     );
   })();
 
-  const {setState: setFocusedDateState, state: focusedDate} = useControllableState<CalendarDate>({
+  const { setState: setFocusedDateState, state: focusedDate } = useControllableState<CalendarDate>({
     defaultValue: initialFocusedDate,
     onValueChange: onFocusChange,
     value: () => focusedCalendarDate.value,
@@ -270,7 +270,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
   const isFocusedState = shallowRef(Boolean(toValue(options.autoFocus)));
 
   const endDate = computed(() => {
-    const duration: DateDuration = {...visibleDuration.value};
+    const duration: DateDuration = { ...visibleDuration.value };
 
     // The range is inclusive, so the last visible date is one day short of the whole duration.
     if (duration.days) duration.days--;
@@ -347,7 +347,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
   watch(
     [focusedDate, startDate, calendar, visibleDuration, locale, minValue, maxValue],
     normalize,
-    {flush: "sync", immediate: true},
+    { flush: "sync", immediate: true },
   );
 
   const focusCell = (date: CalendarDate) => {
@@ -481,7 +481,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     // A day view has no row below the one on screen, so the whole page moves instead.
     if (duration.days) focusNextPage();
     else if (duration.weeks || duration.months || duration.years) {
-      focusCell(focusedDate.value.add({weeks: 1}));
+      focusCell(focusedDate.value.add({ weeks: 1 }));
     }
   };
 
@@ -490,7 +490,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
 
     if (duration.days) focusPreviousPage();
     else if (duration.weeks || duration.months || duration.years) {
-      focusCell(focusedDate.value.subtract({weeks: 1}));
+      focusCell(focusedDate.value.subtract({ weeks: 1 }));
     }
   };
 
@@ -527,9 +527,9 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
       if (direction === 1) focusNextPage();
       else focusPreviousPage();
     } else if (duration.weeks) {
-      step({months: 1});
+      step({ months: 1 });
     } else if (duration.months || duration.years) {
-      step({years: 1});
+      step({ years: 1 });
     }
   };
 
@@ -564,11 +564,11 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
 
   return {
     firstDayOfWeek,
-    focusNextDay: () => focusCell(focusedDate.value.add({days: 1})),
+    focusNextDay: () => focusCell(focusedDate.value.add({ days: 1 })),
     focusNextPage,
     focusNextRow,
     focusNextSection: (larger) => focusSection(1, larger),
-    focusPreviousDay: () => focusCell(focusedDate.value.subtract({days: 1})),
+    focusPreviousDay: () => focusCell(focusedDate.value.subtract({ days: 1 })),
     focusPreviousPage,
     focusPreviousRow,
     focusPreviousSection: (larger) => focusSection(-1, larger),
@@ -576,7 +576,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     focusSectionStart,
     focusedDate: computed(() => focusedDate.value),
     getDatesInWeek: (weekIndex, from = startDate.value) => {
-      let date = from.add({weeks: weekIndex});
+      let date = from.add({ weeks: weekIndex });
       const dates: (CalendarDate | null)[] = [];
       const duration = visibleDuration.value;
       const days = duration.days && duration.days < 7 ? duration.days : 7;
@@ -595,7 +595,7 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
 
       while (dates.length < days) {
         dates.push(date);
-        const nextDate = date.add({days: 1});
+        const nextDate = date.add({ days: 1 });
 
         // The calendar system ends here, so the rest of the row is empty.
         if (isSameDay(date, nextDate)) break;
@@ -627,12 +627,12 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     isInvalid,
     isNextVisibleRangeInvalid: () => {
       // Adding can return the same date at the end of the calendar system, e.g. 9999-12-31.
-      const next = endDate.value.add({days: 1});
+      const next = endDate.value.add({ days: 1 });
 
       return isSameDay(next, endDate.value) || isInvalid(next);
     },
     isPreviousVisibleRangeInvalid: () => {
-      const previous = startDate.value.subtract({days: 1});
+      const previous = startDate.value.subtract({ days: 1 });
 
       return isSameDay(previous, startDate.value) || isInvalid(previous);
     },
@@ -654,6 +654,6 @@ export const useCalendarState = (options: UseCalendarStateOptions): CalendarStat
     timeZone,
     value: computed(() => calendarDateValue.value),
     visibleDuration,
-    visibleRange: computed(() => ({end: endDate.value, start: startDate.value})),
+    visibleRange: computed(() => ({ end: endDate.value, start: startDate.value })),
   };
 };

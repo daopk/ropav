@@ -1,9 +1,9 @@
-import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {AlertDialogPlacement} from "./alert-dialog.types";
-import type {alertDialogVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { OverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import type { AlertDialogPlacement } from "./alert-dialog.types";
+import type { alertDialogVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface AlertDialogContext {
   /**

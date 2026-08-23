@@ -1,6 +1,6 @@
-import {afterEach, describe, expect, it} from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
-import {ariaHideOutside, keepVisible} from "@/utils/aria-hide-outside";
+import { ariaHideOutside, keepVisible } from "@/utils/aria-hide-outside";
 
 const build = () => {
   const page = document.createElement("main");
@@ -12,7 +12,7 @@ const build = () => {
   overlay.appendChild(inside);
   document.body.append(page, overlay);
 
-  return {inside, overlay, page, sibling};
+  return { inside, overlay, page, sibling };
 };
 
 afterEach(() => {
@@ -21,7 +21,7 @@ afterEach(() => {
 
 describe("ariaHideOutside", () => {
   it("hides everything beside the target", () => {
-    const {overlay, page} = build();
+    const { overlay, page } = build();
     const restore = ariaHideOutside([overlay]);
 
     // Without this a screen reader can wander out of the overlay and read the page behind it,
@@ -35,7 +35,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("leaves the target's own children alone", () => {
-    const {inside, overlay} = build();
+    const { inside, overlay } = build();
     const restore = ariaHideOutside([overlay]);
 
     expect(inside).not.toHaveAttribute("aria-hidden");
@@ -44,7 +44,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("does not hide children of an element it already hid", () => {
-    const {page, sibling} = build();
+    const { page, sibling } = build();
     const overlay = document.createElement("div");
 
     document.body.appendChild(overlay);
@@ -76,7 +76,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("hides content added to the page afterwards", async () => {
-    const {overlay} = build();
+    const { overlay } = build();
     const restore = ariaHideOutside([overlay]);
     const late = document.createElement("aside");
 
@@ -92,8 +92,8 @@ describe("ariaHideOutside", () => {
   });
 
   it("uses inert when asked, which also blocks pointers and focus", () => {
-    const {overlay, page} = build();
-    const restore = ariaHideOutside([overlay], {shouldUseInert: true});
+    const { overlay, page } = build();
+    const restore = ariaHideOutside([overlay], { shouldUseInert: true });
 
     // jsdom does not implement the `inert` property, so nothing is written there; a real browser
     // gets the property and, with it, the pointer and focus blocking.
@@ -106,7 +106,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("leaves an element the page had already hidden hidden", () => {
-    const {overlay, page} = build();
+    const { overlay, page } = build();
 
     page.setAttribute("aria-hidden", "true");
 
@@ -119,7 +119,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("keeps the page hidden until the last overlay is done with it", () => {
-    const {overlay, page} = build();
+    const { overlay, page } = build();
     const second = document.createElement("div");
 
     document.body.appendChild(second);
@@ -138,7 +138,7 @@ describe("ariaHideOutside", () => {
   });
 
   it("never hides the live announcer", async () => {
-    const {overlay} = build();
+    const { overlay } = build();
     const announcer = document.createElement("div");
 
     announcer.setAttribute("data-live-announcer", "true");
@@ -154,7 +154,7 @@ describe("ariaHideOutside", () => {
 
 describe("keepVisible", () => {
   it("exempts an element from an existing hide", async () => {
-    const {overlay} = build();
+    const { overlay } = build();
     const restore = ariaHideOutside([overlay]);
     const submenu = document.createElement("div");
     const stopKeeping = keepVisible(submenu);

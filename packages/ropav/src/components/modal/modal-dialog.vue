@@ -1,27 +1,27 @@
 <script setup lang="ts" vapor>
-import type {ModalDialogProps} from "./modal.types";
+import type { ModalDialogProps } from "./modal.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {provideSurfaceContext} from "../surface";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { provideSurfaceContext } from "../surface";
 
-import {useModalContext} from "./modal.context";
+import { useModalContext } from "./modal.context";
 
 const props = defineProps<ModalDialogProps>();
 
-defineSlots<{default?: (props: {close: () => void}) => unknown}>();
+defineSlots<{ default?: (props: { close: () => void }) => unknown }>();
 
-const {dialogId, labelledBy, placement, slots, state} = useModalContext();
+const { dialogId, labelledBy, placement, slots, state } = useModalContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
 // The dialog is a surface in its own right, so anything inside it that picks its colours from the
 // surface it sits on — a field, a chip — reads the dialog rather than the page behind it.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
 // Only the heading is referenced, so nothing else hands out an id it would never be pointed at.
-const {context, headingId} = useFieldIds({slots: ["heading"]});
+const { context, headingId } = useFieldIds({ slots: ["heading"] });
 
 provideFieldIdsContext(context);
 
@@ -33,7 +33,7 @@ provideFieldIdsContext(context);
  */
 const labelledByResolved = computed(() => headingId.value ?? labelledBy.value);
 
-const styles = computed(() => slots.value.dialog({class: props.class}));
+const styles = computed(() => slots.value.dialog({ class: props.class }));
 
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
@@ -51,9 +51,9 @@ watch(
     if (!dialog) return;
     if (dialog.contains(document.activeElement)) return;
 
-    dialog.focus({preventScroll: true});
+    dialog.focus({ preventScroll: true });
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

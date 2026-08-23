@@ -1,8 +1,8 @@
-import type {UseColorFieldReturn} from "@/composables/use-color-field";
+import type { UseColorFieldReturn } from "@/composables/use-color-field";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/color-field-host.vue";
 
@@ -15,9 +15,9 @@ import Host from "../fixtures/color-field-host.vue";
 const mount = (props: Record<string, unknown> = {}) => {
   let field!: UseColorFieldReturn;
 
-  Object.assign(props, {onReady: (next: UseColorFieldReturn) => (field = next)});
+  Object.assign(props, { onReady: (next: UseColorFieldReturn) => (field = next) });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   const at = (testId: string) =>
     result.container.querySelector<HTMLElement>(`[data-testid='${testId}']`)!;
@@ -36,7 +36,7 @@ const type = (input: HTMLInputElement, value: string) => {
 };
 
 const press = (element: Element, key: string) => {
-  const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key});
+  const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key });
 
   element.dispatchEvent(event);
 
@@ -46,7 +46,7 @@ const press = (element: Element, key: string) => {
 describe("useColorField", () => {
   describe("the control it renders", () => {
     it("renders a text input holding the hex value", () => {
-      const {input, unmount} = mount({defaultValue: "#0485F7"});
+      const { input, unmount } = mount({ defaultValue: "#0485F7" });
 
       expect(input().type).toBe("text");
       expect(input().value).toBe("#0485F7");
@@ -57,7 +57,7 @@ describe("useColorField", () => {
     it("calls itself a textbox rather than a spin button", () => {
       // The spin button is layered on for its keyboard only. Announcing the role would have a
       // screen reader read the hex out as the integer it is under the hood.
-      const {input, unmount} = mount({defaultValue: "#0485F7"});
+      const { input, unmount } = mount({ defaultValue: "#0485F7" });
 
       expect(input()).toHaveAttribute("role", "textbox");
       expect(input()).not.toHaveAttribute("aria-valuenow");
@@ -69,7 +69,7 @@ describe("useColorField", () => {
     });
 
     it("turns off the browser's own text assistance", () => {
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).toHaveAttribute("autocomplete", "off");
       expect(input()).toHaveAttribute("autocorrect", "off");
@@ -80,7 +80,7 @@ describe("useColorField", () => {
 
     it("asks for no software keyboard of its own", () => {
       // A hex value is letters as much as digits, so a numeric pad would be the wrong keyboard.
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).not.toHaveAttribute("inputmode");
 
@@ -89,7 +89,7 @@ describe("useColorField", () => {
 
     it("carries the name it submits under", () => {
       // Unlike the channel branch there is no hidden input: the visible text *is* the value.
-      const {input, unmount} = mount({defaultValue: "#0485F7", name: "brand"});
+      const { input, unmount } = mount({ defaultValue: "#0485F7", name: "brand" });
 
       expect(input()).toHaveAttribute("name", "brand");
 
@@ -97,12 +97,12 @@ describe("useColorField", () => {
     });
 
     it("stays tabbable, and stops being so once disabled", () => {
-      const {input, unmount} = mount();
+      const { input, unmount } = mount();
 
       expect(input()).toHaveAttribute("tabindex", "0");
       unmount();
 
-      const {input: off, unmount: unmountOff} = mount({isDisabled: true});
+      const { input: off, unmount: unmountOff } = mount({ isDisabled: true });
 
       expect(off()).not.toHaveAttribute("tabindex");
       unmountOff();
@@ -111,7 +111,7 @@ describe("useColorField", () => {
 
   describe("the state attributes", () => {
     it("reports disabled both ways", () => {
-      const {input, unmount} = mount({isDisabled: true});
+      const { input, unmount } = mount({ isDisabled: true });
 
       expect(input()).toBeDisabled();
       expect(input()).toHaveAttribute("aria-disabled", "true");
@@ -120,7 +120,7 @@ describe("useColorField", () => {
     });
 
     it("reports read-only both ways", () => {
-      const {input, unmount} = mount({isReadOnly: true});
+      const { input, unmount } = mount({ isReadOnly: true });
 
       expect(input()).toHaveAttribute("readonly");
       expect(input()).toHaveAttribute("aria-readonly", "true");
@@ -129,13 +129,13 @@ describe("useColorField", () => {
     });
 
     it("uses the required attribute under native behaviour and the aria one otherwise", () => {
-      const {input, unmount} = mount({isRequired: true});
+      const { input, unmount } = mount({ isRequired: true });
 
       expect(input()).toBeRequired();
       expect(input()).not.toHaveAttribute("aria-required");
       unmount();
 
-      const {input: aria, unmount: unmountAria} = mount({
+      const { input: aria, unmount: unmountAria } = mount({
         isRequired: true,
         validationBehavior: "aria",
       });
@@ -146,7 +146,7 @@ describe("useColorField", () => {
     });
 
     it("reports invalid to assistive technology", () => {
-      const {input, unmount} = mount({isInvalid: true});
+      const { input, unmount } = mount({ isInvalid: true });
 
       expect(input()).toHaveAttribute("aria-invalid", "true");
 
@@ -156,7 +156,7 @@ describe("useColorField", () => {
 
   describe("typing", () => {
     it("keeps the text as typed without committing it", () => {
-      const {field, input, unmount} = mount({defaultValue: "#0485F7"});
+      const { field, input, unmount } = mount({ defaultValue: "#0485F7" });
 
       type(input(), "#ff");
 
@@ -167,7 +167,7 @@ describe("useColorField", () => {
     });
 
     it("refuses a character that could never be part of a hex value", async () => {
-      const {field, input, unmount} = mount({defaultValue: "#0485F7"});
+      const { field, input, unmount } = mount({ defaultValue: "#0485F7" });
 
       type(input(), "#zz");
       await nextTick();
@@ -182,7 +182,7 @@ describe("useColorField", () => {
 
     it("commits on blur", () => {
       const onChange = vi.fn();
-      const {input, unmount} = mount({defaultValue: "#0485F7", onChange});
+      const { input, unmount } = mount({ defaultValue: "#0485F7", onChange });
 
       type(input(), "abc");
       input().dispatchEvent(new FocusEvent("blur"));
@@ -197,7 +197,7 @@ describe("useColorField", () => {
     it("normalises the text on blur even when the colour did not move", async () => {
       // The case Vapor cannot handle on its own: the bound value never changed, so nothing would
       // rewrite the element.
-      const {input, unmount} = mount({defaultValue: "#0485F7"});
+      const { input, unmount } = mount({ defaultValue: "#0485F7" });
 
       type(input(), "0485f7");
       input().dispatchEvent(new FocusEvent("blur"));
@@ -211,7 +211,7 @@ describe("useColorField", () => {
 
   describe("the keyboard", () => {
     it("steps the colour on the arrow keys", () => {
-      const {field, input, unmount} = mount({defaultValue: "#0000FF"});
+      const { field, input, unmount } = mount({ defaultValue: "#0000FF" });
 
       press(input(), "ArrowUp");
 
@@ -225,7 +225,7 @@ describe("useColorField", () => {
     });
 
     it("jumps to white on End and to black on Home", () => {
-      const {field, input, unmount} = mount({defaultValue: "#0485F7"});
+      const { field, input, unmount } = mount({ defaultValue: "#0485F7" });
 
       press(input(), "End");
 
@@ -239,7 +239,7 @@ describe("useColorField", () => {
     });
 
     it("leaves the arrows alone on a read-only field", () => {
-      const {field, input, unmount} = mount({defaultValue: "#0485F7", isReadOnly: true});
+      const { field, input, unmount } = mount({ defaultValue: "#0485F7", isReadOnly: true });
 
       press(input(), "ArrowUp");
 
@@ -249,7 +249,7 @@ describe("useColorField", () => {
     });
 
     it("writes the stepped colour onto the element", async () => {
-      const {input, unmount} = mount({defaultValue: "#0000FF"});
+      const { input, unmount } = mount({ defaultValue: "#0000FF" });
 
       press(input(), "ArrowUp");
       await nextTick();
@@ -262,14 +262,14 @@ describe("useColorField", () => {
 
   describe("the wheel", () => {
     const wheel = (input: HTMLInputElement, init: WheelEventInit) =>
-      input.dispatchEvent(new WheelEvent("wheel", {cancelable: true, ...init}));
+      input.dispatchEvent(new WheelEvent("wheel", { cancelable: true, ...init }));
 
     it("steps the colour while focus is inside", async () => {
-      const {field, input, unmount} = mount({defaultValue: "#0000FF"});
+      const { field, input, unmount } = mount({ defaultValue: "#0000FF" });
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
-      wheel(input(), {deltaY: 10});
+      wheel(input(), { deltaY: 10 });
 
       expect(field().state.colorValue.value?.toString("hex")).toBe("#000100");
 
@@ -278,10 +278,10 @@ describe("useColorField", () => {
 
     it("ignores the wheel while focus is elsewhere", async () => {
       // Otherwise scrolling a page past a colour field would quietly rewrite it.
-      const {field, input, unmount} = mount({defaultValue: "#0000FF"});
+      const { field, input, unmount } = mount({ defaultValue: "#0000FF" });
 
       await nextTick();
-      wheel(input(), {deltaY: 10});
+      wheel(input(), { deltaY: 10 });
 
       expect(field().state.colorValue.value?.toString("hex")).toBe("#0000FF");
 
@@ -289,11 +289,11 @@ describe("useColorField", () => {
     });
 
     it("ignores the wheel when it is turned off", async () => {
-      const {field, input, unmount} = mount({defaultValue: "#0000FF", isWheelDisabled: true});
+      const { field, input, unmount } = mount({ defaultValue: "#0000FF", isWheelDisabled: true });
 
       input().dispatchEvent(new FocusEvent("focus"));
       await nextTick();
-      wheel(input(), {deltaY: 10});
+      wheel(input(), { deltaY: 10 });
 
       expect(field().state.colorValue.value?.toString("hex")).toBe("#0000FF");
 
@@ -305,8 +305,8 @@ describe("useColorField", () => {
     it("lets the text be typed, then puts it back when the owner declines", async () => {
       // The *colour* is what the owner controls, not the text: refusing keystrokes would make a
       // controlled field impossible to type in. The text only goes back on commit.
-      const props = reactive<{value: string}>({value: "#0485F7"});
-      const {input, unmount} = mount(props);
+      const props = reactive<{ value: string }>({ value: "#0485F7" });
+      const { input, unmount } = mount(props);
 
       type(input(), "#000000");
       await nextTick();
@@ -322,8 +322,8 @@ describe("useColorField", () => {
     });
 
     it("follows the owner's colour", async () => {
-      const props = reactive<{value: string}>({value: "#0485F7"});
-      const {input, unmount} = mount(props);
+      const props = reactive<{ value: string }>({ value: "#0485F7" });
+      const { input, unmount } = mount(props);
 
       props.value = "#FFCC00";
       await nextTick();
@@ -342,7 +342,7 @@ describe("useColorField", () => {
       // holding the default, nothing changes and no binding write follows — so the field would
       // sit there empty. And the write has to be a tick out: the `reset` event is dispatched
       // before the browser puts the controls back, so a write from inside the listener is lost.
-      const {input, unmount} = mount({defaultValue: "#0485F7", withForm: true});
+      const { input, unmount } = mount({ defaultValue: "#0485F7", withForm: true });
 
       await nextTick();
 
@@ -362,7 +362,7 @@ describe("useColorField", () => {
       // `value` *attribute*, which a Vapor binding never writes, so an input with no attribute
       // comes back empty. The write has to happen a tick after the event, because the event is
       // dispatched before the browser puts the controls back.
-      const {field, form, input, unmount} = mount({defaultValue: "#0485F7", withForm: true});
+      const { field, form, input, unmount } = mount({ defaultValue: "#0485F7", withForm: true });
 
       await nextTick();
       type(input(), "#000000");

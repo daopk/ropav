@@ -1,25 +1,25 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Code, Heading, Paragraph, Prose, Typography} from "./index";
+import { Code, Heading, Paragraph, Prose, Typography } from "./index";
 
-const components = {Code, Heading, Paragraph, Prose, Typography};
+const components = { Code, Heading, Paragraph, Prose, Typography };
 
 const meta: StoryMeta = {
   argTypes: {
-    align: {control: {type: "select"}, options: ["start", "center", "end", "justify"]},
-    color: {control: {type: "select"}, options: ["default", "muted"]},
+    align: { control: { type: "select" }, options: ["start", "center", "end", "justify"] },
+    color: { control: { type: "select" }, options: ["default", "muted"] },
     type: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["h1", "h2", "h3", "h4", "h5", "h6", "body", "body-sm", "body-xs", "code"],
     },
     weight: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["normal", "medium", "semibold", "bold"],
     },
   },
   component: Typography,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
   title: "Components/Typography",
 };
@@ -29,10 +29,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {type: "body"},
+  args: { type: "body" },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `<Typography v-bind="args">Ropav Typography</Typography>`,
   }),
 };
@@ -104,7 +104,7 @@ export const InlineCode: Story = {
 export const Alignment: Story = {
   render: () => ({
     components,
-    setup: () => ({alignments: ["start", "center", "end", "justify"]}),
+    setup: () => ({ alignments: ["start", "center", "end", "justify"] }),
     template: `
       <div class="flex max-w-2xl flex-col gap-6">
         <div v-for="align in alignments" :key="align">

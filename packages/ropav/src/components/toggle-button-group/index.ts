@@ -12,7 +12,7 @@ export const ToggleButtonGroup = Object.assign(ToggleButtonGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ToggleButtonGroupRoot, ToggleButtonGroupSeparator};
+export { ToggleButtonGroupRoot, ToggleButtonGroupSeparator };
 
 export type {
   ToggleButtonGroupRootProps,
@@ -23,13 +23,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useToggleButtonGroupContext} from "./toggle-button-group.context";
+export { useToggleButtonGroupContext } from "./toggle-button-group.context";
 
-export type {ToggleButtonGroupContext} from "./toggle-button-group.context";
+export type { ToggleButtonGroupContext } from "./toggle-button-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toggleButtonGroupVariants} from "@ropav/styles";
+export { toggleButtonGroupVariants } from "@ropav/styles";
 
-export type {ToggleButtonGroupVariants} from "@ropav/styles";
+export type { ToggleButtonGroupVariants } from "@ropav/styles";

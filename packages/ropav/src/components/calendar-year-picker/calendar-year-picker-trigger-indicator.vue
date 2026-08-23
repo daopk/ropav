@@ -4,19 +4,19 @@ import type {
   CalendarYearPickerTriggerSlotProps,
 } from "./calendar-year-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {IconChevronRight} from "../icons";
+import { IconChevronRight } from "../icons";
 
-import {useYearPickerTriggerContext} from "./calendar-year-picker.context";
+import { useYearPickerTriggerContext } from "./calendar-year-picker.context";
 
 const props = defineProps<CalendarYearPickerTriggerIndicatorProps>();
 
-defineSlots<{default?: (props: CalendarYearPickerTriggerSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarYearPickerTriggerSlotProps) => unknown }>();
 
-const {isOpen, monthYear, slots, toggle} = useYearPickerTriggerContext();
+const { isOpen, monthYear, slots, toggle } = useYearPickerTriggerContext();
 
-const styles = computed(() => slots.value.triggerIndicator({class: props.class}));
+const styles = computed(() => slots.value.triggerIndicator({ class: props.class }));
 
 const slotProps = computed<CalendarYearPickerTriggerSlotProps>(() => ({
   isOpen: isOpen.value,

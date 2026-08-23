@@ -1,10 +1,10 @@
-import type {FocusResponder} from "@/composables/focus-responder";
+import type { FocusResponder } from "@/composables/focus-responder";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {computed, nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { computed, nextTick } from "vue";
 
-import {composeFocusResponder} from "@/composables/focus-responder";
+import { composeFocusResponder } from "@/composables/focus-responder";
 
 import ResponderHost from "../fixtures/responder-host.vue";
 
@@ -20,7 +20,7 @@ const POINTER = {
 } as const;
 
 const responderOf = (record: (name: string) => void): FocusResponder => ({
-  attrs: computed(() => ({"aria-describedby": "description"})),
+  attrs: computed(() => ({ "aria-describedby": "description" })),
   handlers: computed(() => ({
     onBlur: () => record("above:blur"),
     onFocus: () => record("above:focus"),
@@ -51,7 +51,7 @@ describe("composeFocusResponder", () => {
 
   it("runs the element's own listener when nothing is above it", () => {
     const events: string[] = [];
-    const focus = composeFocusResponder(null, {onBlur: () => events.push("own:blur")});
+    const focus = composeFocusResponder(null, { onBlur: () => events.push("own:blur") });
 
     focus.onBlur(new FocusEvent("blur"));
 
@@ -65,7 +65,7 @@ describe("composeFocusResponder", () => {
 
     focus.onBlur(new FocusEvent("blur"));
     focus.onFocus(new FocusEvent("focus"));
-    focus.onKeydown(new KeyboardEvent("keydown", {key: "Escape"}));
+    focus.onKeydown(new KeyboardEvent("keydown", { key: "Escape" }));
     focus.onPointerdown(new PointerEvent("pointerdown", POINTER));
     focus.onPointerenter(new PointerEvent("pointerenter", POINTER));
     focus.onPointerleave(new PointerEvent("pointerleave", POINTER));
@@ -87,18 +87,18 @@ describe("composeFocusResponder", () => {
 });
 
 describe("a button taking behaviour from above", () => {
-  const render = (props: Record<string, unknown>) => renderVapor(ResponderHost, {props});
+  const render = (props: Record<string, unknown>) => renderVapor(ResponderHost, { props });
 
   const setup = (props: Record<string, unknown>) => {
     const events: string[] = [];
-    const result = render({...props, record: (name: string) => events.push(name)});
-    const button = result.getByRole("button", {name: "Press me"});
+    const result = render({ ...props, record: (name: string) => events.push(name) });
+    const button = result.getByRole("button", { name: "Press me" });
 
-    return {button, events, result};
+    return { button, events, result };
   };
 
   it("takes hover and focus from above", () => {
-    const {button, events, result} = setup({withFocus: true});
+    const { button, events, result } = setup({ withFocus: true });
 
     button.dispatchEvent(new PointerEvent("pointerenter", POINTER));
     button.dispatchEvent(new FocusEvent("focus"));
@@ -117,7 +117,7 @@ describe("a button taking behaviour from above", () => {
   });
 
   it("keeps its own hover state while something above watches it", async () => {
-    const {button, result} = setup({withFocus: true});
+    const { button, result } = setup({ withFocus: true });
 
     button.dispatchEvent(new PointerEvent("pointerenter", POINTER));
     await nextTick();
@@ -129,11 +129,11 @@ describe("a button taking behaviour from above", () => {
   });
 
   it("takes a press and a hover from above at the same time", () => {
-    const {button, events, result} = setup({withFocus: true, withPress: true});
+    const { button, events, result } = setup({ withFocus: true, withPress: true });
 
     button.dispatchEvent(new PointerEvent("pointerenter", POINTER));
     button.dispatchEvent(new PointerEvent("pointerdown", POINTER));
-    button.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+    button.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
     // Two separate channels, so a tooltip wrapped around a dropdown's trigger watches the button
     // without taking the press that makes it a trigger.
@@ -150,7 +150,7 @@ describe("a button taking behaviour from above", () => {
   });
 
   it("renders the attributes from both channels", () => {
-    const {button, result} = setup({withFocus: true, withPress: true});
+    const { button, result } = setup({ withFocus: true, withPress: true });
 
     expect(button.getAttribute("aria-describedby")).toBe("focus-description");
     expect(button.getAttribute("id")).toBe("press-id");
@@ -160,7 +160,7 @@ describe("a button taking behaviour from above", () => {
   });
 
   it("leaves a button with nothing above it alone", async () => {
-    const {button, events, result} = setup({});
+    const { button, events, result } = setup({});
 
     button.dispatchEvent(new PointerEvent("pointerenter", POINTER));
     button.dispatchEvent(new FocusEvent("focus"));

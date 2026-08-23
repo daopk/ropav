@@ -1,11 +1,11 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderPagination = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
   const nav = result.container.querySelector("nav")!;
 
   return {
@@ -22,7 +22,7 @@ const renderPagination = (props: Record<string, unknown> = {}) => {
 describe("Pagination", () => {
   describe("root", () => {
     it("renders a labelled navigation landmark", () => {
-      const {nav, unmount} = renderPagination();
+      const { nav, unmount } = renderPagination();
 
       expect(nav.tagName).toBe("NAV");
       expect(nav).toHaveAttribute("role", "navigation");
@@ -34,7 +34,7 @@ describe("Pagination", () => {
     });
 
     it("merges a caller class", () => {
-      const {nav, unmount} = renderPagination({class: "mt-4"});
+      const { nav, unmount } = renderPagination({ class: "mt-4" });
 
       expect(nav).toHaveClass("pagination", "mt-4");
 
@@ -42,7 +42,7 @@ describe("Pagination", () => {
     });
 
     it.each(["sm", "md", "lg"] as const)("renders the %s size", (size) => {
-      const {nav, unmount} = renderPagination({size});
+      const { nav, unmount } = renderPagination({ size });
 
       expect(nav).toHaveClass(`pagination--${size}`);
 
@@ -53,7 +53,7 @@ describe("Pagination", () => {
   describe("summary", () => {
     // The summary mixes numbers and words, which an RTL ancestor would otherwise reorder.
     it("resolves its own base direction from its text", () => {
-      const {summary, unmount} = renderPagination();
+      const { summary, unmount } = renderPagination();
 
       expect(summary).toHaveAttribute("dir", "auto");
       expect(summary).toHaveClass("pagination__summary");
@@ -64,7 +64,7 @@ describe("Pagination", () => {
 
   describe("structure", () => {
     it("renders the list as a ul of li items", () => {
-      const {nav, unmount} = renderPagination();
+      const { nav, unmount } = renderPagination();
       const list = nav.querySelector('[data-slot="pagination-content"]')!;
 
       expect(list.tagName).toBe("UL");
@@ -82,7 +82,7 @@ describe("Pagination", () => {
 
   describe("link", () => {
     it("renders a button that never submits a form by accident", () => {
-      const {links, unmount} = renderPagination();
+      const { links, unmount } = renderPagination();
 
       expect(links).toHaveLength(3);
       expect(links[0]!.tagName).toBe("BUTTON");
@@ -93,7 +93,7 @@ describe("Pagination", () => {
     });
 
     it("marks the page being viewed as the current one", () => {
-      const {links, unmount} = renderPagination({activePage: 2});
+      const { links, unmount } = renderPagination({ activePage: 2 });
 
       expect(links[1]).toHaveAttribute("aria-current", "page");
       expect(links[1]).toHaveAttribute("data-active", "true");
@@ -107,9 +107,9 @@ describe("Pagination", () => {
 
     it("calls the click handler with the page it stands for", async () => {
       const onLinkClick = vi.fn();
-      const {links, unmount} = renderPagination({onLinkClick});
+      const { links, unmount } = renderPagination({ onLinkClick });
 
-      links[2]!.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      links[2]!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
       expect(onLinkClick).toHaveBeenCalledWith(3);
@@ -120,7 +120,7 @@ describe("Pagination", () => {
     // Written even though a native button is already tabbable: Safari does not focus one
     // unless an explicit tab index says so.
     it("exposes an explicit tab index", () => {
-      const {links, unmount} = renderPagination();
+      const { links, unmount } = renderPagination();
 
       expect(links[0]).toHaveAttribute("tabindex", "0");
 
@@ -128,14 +128,14 @@ describe("Pagination", () => {
     });
 
     it("publishes hover and press so the stylesheet can key on them", async () => {
-      const {links, unmount} = renderPagination();
+      const { links, unmount } = renderPagination();
       const link = links[0]!;
 
-      link.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
+      link.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
       await nextTick();
       expect(link).toHaveAttribute("data-hovered", "true");
 
-      link.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      link.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
       await nextTick();
       expect(link).toHaveAttribute("data-pressed", "true");
 
@@ -143,7 +143,7 @@ describe("Pagination", () => {
       await nextTick();
       expect(link).not.toHaveAttribute("data-pressed");
 
-      link.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true}));
+      link.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true }));
       await nextTick();
       expect(link).not.toHaveAttribute("data-hovered");
 
@@ -153,7 +153,7 @@ describe("Pagination", () => {
 
   describe("previous and next", () => {
     it("carry the nav modifier on top of the shared link class", () => {
-      const {next, previous, unmount} = renderPagination();
+      const { next, previous, unmount } = renderPagination();
 
       expect(previous).toHaveClass("pagination__link", "pagination__link--nav");
       expect(next).toHaveClass("pagination__link", "pagination__link--nav");
@@ -162,7 +162,7 @@ describe("Pagination", () => {
     });
 
     it("stops being reachable once disabled", () => {
-      const {previous, unmount} = renderPagination({isPreviousDisabled: true});
+      const { previous, unmount } = renderPagination({ isPreviousDisabled: true });
 
       expect(previous.disabled).toBe(true);
       expect(previous).not.toHaveAttribute("tabindex");
@@ -172,9 +172,9 @@ describe("Pagination", () => {
 
     it("calls its click handler", async () => {
       const onNextClick = vi.fn();
-      const {next, unmount} = renderPagination({onNextClick});
+      const { next, unmount } = renderPagination({ onNextClick });
 
-      next.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      next.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
       expect(onNextClick).toHaveBeenCalledTimes(1);
@@ -185,7 +185,7 @@ describe("Pagination", () => {
 
   describe("icons", () => {
     it("hides the default chevrons from assistive technology", () => {
-      const {nav, unmount} = renderPagination();
+      const { nav, unmount } = renderPagination();
       const previousIcon = nav.querySelector('[data-slot="pagination-previous-icon"]')!;
       const nextIcon = nav.querySelector('[data-slot="pagination-next-icon"]')!;
 
@@ -200,7 +200,7 @@ describe("Pagination", () => {
 
   describe("ellipsis", () => {
     it("renders a decorative gap marker", () => {
-      const {ellipsis, unmount} = renderPagination();
+      const { ellipsis, unmount } = renderPagination();
 
       expect(ellipsis).toHaveAttribute("aria-hidden", "true");
       expect(ellipsis).toHaveClass("pagination__ellipsis");

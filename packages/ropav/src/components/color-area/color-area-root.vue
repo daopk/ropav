@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {Color} from "../../utils/color-types";
-import type {ColorAreaRootProps, ColorAreaSlotProps} from "./color-area.types";
+import type { Color } from "../../utils/color-types";
+import type { ColorAreaRootProps, ColorAreaSlotProps } from "./color-area.types";
 
-import {colorAreaVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { colorAreaVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useColorArea} from "../../composables/use-color-area";
-import {useColorAreaState} from "../../composables/use-color-area-state";
-import {dataAttr} from "../../utils/assertion";
-import {useColorValueContext} from "../color-picker/color-picker.context";
+import { useColorArea } from "../../composables/use-color-area";
+import { useColorAreaState } from "../../composables/use-color-area-state";
+import { dataAttr } from "../../utils/assertion";
+import { useColorValueContext } from "../color-picker/color-picker.context";
 
-import {provideColorAreaContext} from "./color-area.context";
+import { provideColorAreaContext } from "./color-area.context";
 
-const props = withDefaults(defineProps<ColorAreaRootProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorAreaRootProps>(), { isDisabled: undefined });
 
 const emit = defineEmits<{
   change: [value: Color];
@@ -20,7 +20,7 @@ const emit = defineEmits<{
   "update:value": [value: Color];
 }>();
 
-defineSlots<{default?: (props: ColorAreaSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorAreaSlotProps) => unknown }>();
 
 const containerEl = shallowRef<HTMLElement | null>(null);
 const inputXEl = shallowRef<HTMLInputElement | null>(null);
@@ -76,9 +76,9 @@ const area = useColorArea({
   yName: () => props.yName,
 });
 
-const styles = computed(() => colorAreaVariants({showDots: props.showDots}));
+const styles = computed(() => colorAreaVariants({ showDots: props.showDots }));
 
-provideColorAreaContext({area, setInputXEl, setInputYEl, slots: styles, state});
+provideColorAreaContext({ area, setInputXEl, setInputYEl, slots: styles, state });
 
 /**
  * The gradient is written twice on purpose: as `background`, which is what actually paints, and as
@@ -98,7 +98,7 @@ const style = computed(() => ({
   <div
     :ref="setContainerEl"
     v-bind="area.areaAttrs.value"
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(area.isDisabled.value)"
     data-slot="color-area"
     :style="style"

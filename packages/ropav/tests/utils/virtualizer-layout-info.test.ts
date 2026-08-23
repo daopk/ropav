@@ -1,7 +1,7 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {Rect} from "@/utils/virtualizer-geometry";
-import {LayoutInfo, layoutInfoToStyle} from "@/utils/virtualizer-layout-info";
+import { Rect } from "@/utils/virtualizer-geometry";
+import { LayoutInfo, layoutInfoToStyle } from "@/utils/virtualizer-layout-info";
 
 const itemAt = (y: number, height = 50) => new LayoutInfo("item", "a", new Rect(0, y, 300, height));
 
@@ -32,7 +32,7 @@ describe("LayoutInfo", () => {
     layoutInfo.allowOverflow = true;
     layoutInfo.opacity = 0.5;
     layoutInfo.transform = "translateY(1px)";
-    layoutInfo.content = {id: "a"};
+    layoutInfo.content = { id: "a" };
 
     const copy = layoutInfo.copy();
 
@@ -41,7 +41,7 @@ describe("LayoutInfo", () => {
     expect(layoutInfo.rect.y).toBe(100);
     expect(copy).toMatchObject({
       allowOverflow: true,
-      content: {id: "a"},
+      content: { id: "a" },
       estimatedSize: true,
       isSticky: true,
       key: "a",
@@ -73,7 +73,7 @@ describe("layoutInfoToStyle", () => {
   it("offsets against a parent", () => {
     const parent = new LayoutInfo("rowgroup", "body", new Rect(10, 100, 300, 500));
 
-    expect(layoutInfoToStyle(itemAt(150), parent)).toMatchObject({left: "-10px", top: "50px"});
+    expect(layoutInfoToStyle(itemAt(150), parent)).toMatchObject({ left: "-10px", top: "50px" });
   });
 
   it("keeps a sticky element's offset absolute when its parent allows overflow", () => {

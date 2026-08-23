@@ -1,13 +1,13 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ComboBox} from "@/components/combo-box";
-import {DescriptionRoot} from "@/components/description";
-import {InputRoot} from "@/components/input";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
+import { ComboBox } from "@/components/combo-box";
+import { DescriptionRoot } from "@/components/description";
+import { InputRoot } from "@/components/input";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
 
 /**
  * The combo box mounted the way a consumer mounts it: from a VDOM host, with every part written in
@@ -23,9 +23,9 @@ import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item"
  * being broken in every real host.
  */
 const ITEMS = [
-  {id: "cat", name: "Cat"},
-  {id: "dog", name: "Dog"},
-  {id: "panda", name: "Panda"},
+  { id: "cat", name: "Cat" },
+  { id: "dog", name: "Dog" },
+  { id: "panda", name: "Panda" },
 ];
 
 const settle = async () => {
@@ -34,23 +34,23 @@ const settle = async () => {
   await nextTick();
 };
 
-const options = (matches: Array<{id: string; name: string}>) =>
+const options = (matches: Array<{ id: string; name: string }>) =>
   matches.map((item) =>
     h(
       ListBoxItemRoot,
-      {id: item.id, key: item.id, textValue: item.name},
-      {default: () => [item.name, h(ListBoxItemIndicator)]},
+      { id: item.id, key: item.id, textValue: item.name },
+      { default: () => [item.name, h(ListBoxItemIndicator)] },
     ),
   );
 
 /** The matches the root handed its slot, which the host renders its options from. */
 const matchesOf = (slotProps?: Record<string, unknown>) =>
-  (slotProps?.["items"] ?? []) as Array<{id: string; name: string}>;
+  (slotProps?.["items"] ?? []) as Array<{ id: string; name: string }>;
 
 const render = (props: Record<string, unknown> = {}, extra: Array<unknown> = []) =>
   renderInterop(ComboBox, {
     props: {
-      itemTextValue: (item: {name: string}) => item.name,
+      itemTextValue: (item: { name: string }) => item.name,
       items: ITEMS,
       ...props,
     },
@@ -58,13 +58,13 @@ const render = (props: Record<string, unknown> = {}, extra: Array<unknown> = [])
       // The root hands the matches back through its own slot, which is how the host knows what to
       // render — so the slot props are part of the contract this file checks.
       default: (slotProps?: Record<string, unknown>) => [
-        h(LabelRoot, null, {default: () => "Favorite Animal"}),
+        h(LabelRoot, null, { default: () => "Favorite Animal" }),
         h(ComboBox.InputGroup, null, {
-          default: () => [h(InputRoot, {placeholder: "Search animals..."}), h(ComboBox.Trigger)],
+          default: () => [h(InputRoot, { placeholder: "Search animals..." }), h(ComboBox.Trigger)],
         }),
         ...(extra as never[]),
         h(ComboBox.Popover, null, {
-          default: () => h(ListBoxRoot, null, {default: () => options(matchesOf(slotProps))}),
+          default: () => h(ListBoxRoot, null, { default: () => options(matchesOf(slotProps)) }),
         }),
       ],
     },
@@ -84,7 +84,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const cleanups: Array<() => void> = [];
@@ -137,7 +137,7 @@ describe("ComboBox (interop)", () => {
   });
 
   it("styles the host's Input from the combo box's variant", async () => {
-    const result = render({variant: "secondary"});
+    const result = render({ variant: "secondary" });
 
     await settle();
 
@@ -165,7 +165,7 @@ describe("ComboBox (interop)", () => {
   });
 
   it("describes the host's field with the host's description", async () => {
-    const result = render({}, [h(DescriptionRoot, null, {default: () => "Pick an animal"})]);
+    const result = render({}, [h(DescriptionRoot, null, { default: () => "Pick an animal" })]);
 
     await settle();
 
@@ -196,7 +196,7 @@ describe("ComboBox (interop)", () => {
   });
 
   it("runs the host's listbox on the combo box's own collection, under virtual focus", async () => {
-    const result = render({defaultValue: "panda"});
+    const result = render({ defaultValue: "panda" });
 
     await settle();
 
@@ -213,7 +213,7 @@ describe("ComboBox (interop)", () => {
 
     input.focus();
     input.dispatchEvent(
-      new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowDown"}),
+      new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowDown" }),
     );
     await settle();
 
@@ -235,10 +235,10 @@ describe("ComboBox (interop)", () => {
 
     input.focus();
     input.dispatchEvent(
-      new InputEvent("beforeinput", {bubbles: true, cancelable: true, inputType: "insertText"}),
+      new InputEvent("beforeinput", { bubbles: true, cancelable: true, inputType: "insertText" }),
     );
     input.value = "pa";
-    input.dispatchEvent(new InputEvent("input", {bubbles: true, inputType: "insertText"}));
+    input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText" }));
     await settle();
 
     // The matches travel out through the root's slot and back in as the host's markup, so this is
@@ -271,7 +271,7 @@ describe("ComboBox (interop)", () => {
     const result = renderInterop(ComboBox, {
       props: {
         defaultValue: ["cat", "dog"],
-        itemTextValue: (item: {name: string}) => item.name,
+        itemTextValue: (item: { name: string }) => item.name,
         items: ITEMS,
         selectionMode: "multiple",
       },
@@ -286,14 +286,14 @@ describe("ComboBox (interop)", () => {
             default: ({
               selectedItems,
             }: {
-              selectedItems: Array<{key: string; value: {name: string}}>;
+              selectedItems: Array<{ key: string; value: { name: string } }>;
             }) =>
               selectedItems.map((item) =>
-                h("span", {"data-testid": "value-item", key: item.key}, item.value.name),
+                h("span", { "data-testid": "value-item", key: item.key }, item.value.name),
               ),
           }),
           h(ComboBox.Popover, null, {
-            default: () => h(ListBoxRoot, null, {default: () => options(matchesOf(slotProps))}),
+            default: () => h(ListBoxRoot, null, { default: () => options(matchesOf(slotProps)) }),
           }),
         ],
       },

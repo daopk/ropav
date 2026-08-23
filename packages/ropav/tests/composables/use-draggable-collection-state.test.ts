@@ -1,17 +1,17 @@
-import {describe, expect, it, vi} from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import {useDraggableCollectionState} from "@/composables/use-draggable-collection-state";
+import { useDraggableCollectionState } from "@/composables/use-draggable-collection-state";
 
-import {createFixtureCollection, createFixtureSelection} from "./dnd-collection-state-fixtures";
+import { createFixtureCollection, createFixtureSelection } from "./dnd-collection-state-fixtures";
 
 /** A flat list of three, plus a folder holding two children. */
-const flat = () => createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}]);
+const flat = () => createFixtureCollection([{ key: "a" }, { key: "b" }, { key: "c" }]);
 const tree = () =>
   createFixtureCollection([
-    {key: "folder"},
-    {key: "child-1", parentKey: "folder"},
-    {key: "child-2", parentKey: "folder"},
-    {key: "sibling"},
+    { key: "folder" },
+    { key: "child-1", parentKey: "folder" },
+    { key: "child-2", parentKey: "folder" },
+    { key: "sibling" },
   ]);
 
 describe("useDraggableCollectionState", () => {
@@ -67,9 +67,9 @@ describe("useDraggableCollectionState", () => {
     // The walk has to climb the whole ancestry, not just check the immediate parent.
     it("drops a grandchild of a selected ancestor", () => {
       const collection = createFixtureCollection([
-        {key: "root"},
-        {key: "mid", parentKey: "root"},
-        {key: "leaf", parentKey: "mid"},
+        { key: "root" },
+        { key: "mid", parentKey: "root" },
+        { key: "leaf", parentKey: "mid" },
       ]);
       const state = useDraggableCollectionState({
         collection,
@@ -83,9 +83,9 @@ describe("useDraggableCollectionState", () => {
 
   describe("building drag items", () => {
     it("hands the caller the keys and their values", () => {
-      const getItems = vi.fn(() => [{"text/plain": "x"}]);
+      const getItems = vi.fn(() => [{ "text/plain": "x" }]);
       const state = useDraggableCollectionState({
-        collection: createFixtureCollection([{key: "a", value: {id: "a", name: "Ada"}}]),
+        collection: createFixtureCollection([{ key: "a", value: { id: "a", name: "Ada" } }]),
         getItems,
         selectionManager: createFixtureSelection(),
       });
@@ -95,7 +95,7 @@ describe("useDraggableCollectionState", () => {
       const [keys, values] = getItems.mock.calls[0] as unknown as [Set<string>, unknown[]];
 
       expect([...keys]).toEqual(["a"]);
-      expect(values).toEqual([{id: "a", name: "Ada"}]);
+      expect(values).toEqual([{ id: "a", name: "Ada" }]);
     });
 
     it("skips a key the collection does not know", () => {
@@ -122,7 +122,7 @@ describe("useDraggableCollectionState", () => {
         selectionManager: createFixtureSelection(["a", "b"]),
       });
 
-      state.startDrag("a", {type: "dragstart", x: 0, y: 0});
+      state.startDrag("a", { type: "dragstart", x: 0, y: 0 });
 
       expect(state.draggedKey.value).toBe("a");
       expect([...state.draggingKeys.value].sort()).toEqual(["a", "b"]);
@@ -140,7 +140,7 @@ describe("useDraggableCollectionState", () => {
         selectionManager,
       });
 
-      state.startDrag("a", {type: "dragstart", x: 0, y: 0});
+      state.startDrag("a", { type: "dragstart", x: 0, y: 0 });
 
       expect(selectionManager.focusedCalls).toEqual([false]);
     });
@@ -154,9 +154,9 @@ describe("useDraggableCollectionState", () => {
         selectionManager: createFixtureSelection(["a", "b"]),
       });
 
-      state.startDrag("a", {type: "dragstart", x: 1, y: 2});
+      state.startDrag("a", { type: "dragstart", x: 1, y: 2 });
 
-      expect(onDragStart.mock.calls[0]?.[0]).toMatchObject({type: "dragstart", x: 1, y: 2});
+      expect(onDragStart.mock.calls[0]?.[0]).toMatchObject({ type: "dragstart", x: 1, y: 2 });
       expect([...onDragStart.mock.calls[0]![0].keys].sort()).toEqual(["a", "b"]);
     });
 
@@ -169,8 +169,8 @@ describe("useDraggableCollectionState", () => {
         selectionManager: createFixtureSelection(["a"]),
       });
 
-      state.startDrag("a", {type: "dragstart", x: 0, y: 0});
-      state.moveDrag({type: "dragmove", x: 5, y: 5});
+      state.startDrag("a", { type: "dragstart", x: 0, y: 0 });
+      state.moveDrag({ type: "dragmove", x: 5, y: 5 });
 
       expect([...onDragMove.mock.calls[0]![0].keys]).toEqual(["a"]);
     });
@@ -184,7 +184,7 @@ describe("useDraggableCollectionState", () => {
         selectionManager: createFixtureSelection(["a"]),
       });
 
-      state.startDrag("a", {type: "dragstart", x: 0, y: 0});
+      state.startDrag("a", { type: "dragstart", x: 0, y: 0 });
       state.endDrag({
         dropOperation: "move",
         isInternal: true,

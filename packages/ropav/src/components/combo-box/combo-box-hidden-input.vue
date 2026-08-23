@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useComboBoxContext} from "./combo-box.context";
+import { useComboBoxContext } from "./combo-box.context";
 
 /**
  * The chosen key(s), out of sight, so a form can submit them.
@@ -17,9 +17,9 @@ import {useComboBoxContext} from "./combo-box.context";
  * and the attribute diverge from the first keystroke — which cannot happen to an input nobody can
  * reach. Removing the write left every test green, so it was not there.
  */
-const props = withDefaults(defineProps<{name: string; form?: string}>(), {form: undefined});
+const props = withDefaults(defineProps<{ name: string; form?: string }>(), { form: undefined });
 
-const {state} = useComboBoxContext();
+const { state } = useComboBoxContext();
 
 const values = computed(() => {
   const current = state.value.value;

@@ -14,7 +14,7 @@ export const Badge = Object.assign(BadgeRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {BadgeAnchor, BadgeLabel, BadgeRoot};
+export { BadgeAnchor, BadgeLabel, BadgeRoot };
 
 export type {
   BadgeAnchorProps,
@@ -26,6 +26,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {badgeVariants} from "@ropav/styles";
+export { badgeVariants } from "@ropav/styles";
 
-export type {BadgeVariants} from "@ropav/styles";
+export type { BadgeVariants } from "@ropav/styles";

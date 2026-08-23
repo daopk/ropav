@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ToastFixtureProps} from "./fixtures.types";
+import type { ToastFixtureProps } from "./fixtures.types";
 
-import {ToastProvider} from "@/components/toast";
+import { ToastProvider } from "@/components/toast";
 
 // Every optional prop declares an explicit `undefined` default: forwarding a `false` or a `0` that
 // Vue cast from an absent prop would set the provider up differently than the test asked for.

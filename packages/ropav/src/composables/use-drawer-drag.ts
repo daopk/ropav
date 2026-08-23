@@ -1,7 +1,7 @@
-import type {DrawerPlacement} from "../components/drawer/drawer.types";
-import type {MaybeRefOrGetter} from "vue";
+import type { DrawerPlacement } from "../components/drawer/drawer.types";
+import type { MaybeRefOrGetter } from "vue";
 
-import {toValue, watch} from "vue";
+import { toValue, watch } from "vue";
 
 /** How far the pointer has to travel before the panel starts following it, in pixels. */
 const DRAG_THRESHOLD = 8;
@@ -245,7 +245,7 @@ export const useDrawerDrag = (options: UseDrawerDragOptions): UseDrawerDragRetur
       () => {
         panel.style.transition = "";
       },
-      {once: true},
+      { once: true },
     );
 
     offset = 0;

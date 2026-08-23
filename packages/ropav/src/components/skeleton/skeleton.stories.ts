@@ -1,14 +1,14 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Skeleton} from "./index";
+import { Skeleton } from "./index";
 
-const components = {Skeleton};
+const components = { Skeleton };
 
 const meta: StoryMeta = {
   argTypes: {
     animationType: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["shimmer", "pulse", "none"],
     },
   },
@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="bg-surface-1 w-[200px] space-y-5 rounded-3xl p-4 shadow-surface">
         <Skeleton class="h-24 rounded-xl" v-bind="args" />
@@ -43,7 +43,7 @@ export const Default: Story = {
 export const Grid: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="grid w-[450px] grid-cols-3 gap-4">
         <Skeleton class="h-24 rounded-xl" v-bind="args" />
@@ -60,7 +60,7 @@ export const SingleShimmer: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div
         class="skeleton--shimmer relative grid w-[450px] grid-cols-3 gap-4 overflow-hidden rounded-xl"

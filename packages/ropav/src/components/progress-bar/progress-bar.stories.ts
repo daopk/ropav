@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Label} from "../label";
+import { Label } from "../label";
 
-import {ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrack} from "./index";
+import { ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrack } from "./index";
 
-const components = {Label, ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrack};
+const components = { Label, ProgressBar, ProgressBarFill, ProgressBarOutput, ProgressBarTrack };
 
 const meta: StoryMeta = {
   argTypes: {
-    color: {control: "select", options: ["default", "accent", "success", "warning", "danger"]},
-    size: {control: "select", options: ["sm", "md", "lg"]},
+    color: { control: "select", options: ["default", "accent", "success", "warning", "danger"] },
+    size: { control: "select", options: ["sm", "md", "lg"] },
   },
   component: ProgressBar,
-  decorators: [() => ({template: '<div class="w-96 p-8"><story /></div>'})],
-  parameters: {layout: "centered"},
+  decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
+  parameters: { layout: "centered" },
   title: "Components/Feedback/ProgressBar",
 };
 
@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ProgressBar v-bind="args" :value="60">
         <Label>Loading</Label><ProgressBarOutput />
@@ -38,7 +38,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
         <ProgressBar v-bind="args" size="sm" :value="40">
@@ -58,7 +58,7 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex w-full flex-col gap-6">
         <ProgressBar v-bind="args" color="default" :value="50">
@@ -84,7 +84,7 @@ export const Colors: Story = {
 export const Indeterminate: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ProgressBar v-bind="args" is-indeterminate>
         <Label>Loading...</Label><ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>
@@ -98,7 +98,7 @@ export const CustomValue: Story = {
     components,
     setup: () => ({
       args,
-      formatOptions: {currency: "USD", style: "currency"} as Intl.NumberFormatOptions,
+      formatOptions: { currency: "USD", style: "currency" } as Intl.NumberFormatOptions,
     }),
     template: `
       <ProgressBar
@@ -118,7 +118,7 @@ export const CustomValue: Story = {
 export const WithoutLabel: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <ProgressBar v-bind="args" aria-label="Loading progress" :value="45">
         <ProgressBarTrack><ProgressBarFill /></ProgressBarTrack>

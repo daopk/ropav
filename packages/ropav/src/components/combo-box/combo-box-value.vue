@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxValueProps, ComboBoxValueSlotProps} from "./combo-box.types";
+import type { ComboBoxValueProps, ComboBoxValueSlotProps } from "./combo-box.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useComboBoxContext} from "./combo-box.context";
+import { useComboBoxContext } from "./combo-box.context";
 
 const props = defineProps<ComboBoxValueProps>();
 
@@ -17,9 +17,9 @@ const props = defineProps<ComboBoxValueProps>();
  * shows the options' text by default, and anything more is written here with the same values React
  * hands its render function.
  */
-defineSlots<{default?: (props: ComboBoxValueSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ComboBoxValueSlotProps) => unknown }>();
 
-const {selectedItems, selectedText, slots} = useComboBoxContext();
+const { selectedItems, selectedText, slots } = useComboBoxContext();
 
 const callerSlots = useSlots();
 
@@ -34,7 +34,7 @@ const hasSlot = computed(() => Boolean(callerSlots["default"]));
 
 const isPlaceholder = computed(() => selectedItems.value.length === 0);
 
-const styles = computed(() => slots.value.value({class: props.class}));
+const styles = computed(() => slots.value.value({ class: props.class }));
 </script>
 
 <template>

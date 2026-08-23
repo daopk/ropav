@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldFixtureProps} from "./fixtures.types";
+import type { NumberFieldFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Label } from "@/components/label";
 import {
   NumberFieldDecrementButton,
   NumberFieldGroup,

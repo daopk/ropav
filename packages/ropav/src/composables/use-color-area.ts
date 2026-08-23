@@ -1,20 +1,20 @@
-import type {ColorChannel} from "../utils/color-types";
-import type {ColorAreaState} from "./use-color-area-state";
-import type {MoveMoveEvent} from "./use-move";
-import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type { ColorChannel } from "../utils/color-types";
+import type { ColorAreaState } from "./use-color-area-state";
+import type { MoveMoveEvent } from "./use-move";
+import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {colorStrings} from "../i18n/color";
-import {setFormValue} from "../utils/form-value";
-import {visuallyHiddenStyle} from "../utils/visually-hidden";
+import { colorStrings } from "../i18n/color";
+import { setFormValue } from "../utils/form-value";
+import { visuallyHiddenStyle } from "../utils/visually-hidden";
 
-import {useColorAreaGradient} from "./use-color-area-gradient";
-import {useFormReset} from "./use-form-reset";
-import {useLabels} from "./use-labels";
-import {useLocale} from "./use-locale";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
-import {useMove} from "./use-move";
+import { useColorAreaGradient } from "./use-color-area-gradient";
+import { useFormReset } from "./use-form-reset";
+import { useLabels } from "./use-labels";
+import { useLocale } from "./use-locale";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
+import { useMove } from "./use-move";
 
 /** Which of the two hidden inputs a change came through, or neither. */
 type FocusedInput = "x" | "y" | null;
@@ -76,8 +76,8 @@ export interface UseColorAreaReturn {
    * `@pointerdown`, never through `v-bind`: a vapor render re-attaches every `on*` key that
    * arrived that way, which drops the listener when the press itself re-rendered the element.
    */
-  areaHandlers: {onPointerdown: (event: PointerEvent) => void};
-  thumbAttrs: {role: "presentation"};
+  areaHandlers: { onPointerdown: (event: PointerEvent) => void };
+  thumbAttrs: { role: "presentation" };
   thumbStyle: ComputedRef<CSSProperties>;
   thumbHandlers: {
     onFocusout: (event: FocusEvent) => void;
@@ -88,8 +88,8 @@ export interface UseColorAreaReturn {
   yInputProps: ComputedRef<ColorAreaInputAttrs>;
   /** Takes an input out of sight while leaving it focusable, and lets a press through it. */
   inputStyle: CSSProperties;
-  xInputHandlers: {onChange: (event: Event) => void; onFocus: () => void};
-  yInputHandlers: {onChange: (event: Event) => void; onFocus: () => void};
+  xInputHandlers: { onChange: (event: Event) => void; onFocus: () => void };
+  yInputHandlers: { onChange: (event: Event) => void; onFocus: () => void };
   isDisabled: ComputedRef<boolean>;
 }
 
@@ -120,7 +120,7 @@ export interface UseColorAreaReturn {
  * ```
  */
 export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn => {
-  const {containerEl, inputXEl, inputYEl, state} = options;
+  const { containerEl, inputXEl, inputYEl, state } = options;
 
   const locale = useLocale();
   const strings = useLocalizedStringFormatter(colorStrings);
@@ -133,7 +133,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
   const focusInput = (element: Ref<HTMLInputElement | null> = inputXEl) => {
     // Without `preventScroll` an area near the edge of a scroll container drags the page as it
     // takes focus, which reads as the thumb jumping.
-    element.value?.focus({preventScroll: true});
+    element.value?.focus({ preventScroll: true });
   };
 
   /**
@@ -167,7 +167,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
   );
 
   /** Where the thumb is during a drag, in fractions of the area — not in pixels. */
-  let currentPosition: {x: number; y: number} | null = null;
+  let currentPosition: { x: number; y: number } | null = null;
   /** The pointer that owns the interaction in flight, if any. */
   let currentPointer: number | null | undefined;
   /** Whether the press that started this interaction landed on the area rather than the thumb. */
@@ -179,7 +179,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     state.setDragging(true);
   };
 
-  const onMove = ({deltaX, deltaY, pointerType, shiftKey}: MoveMoveEvent) => {
+  const onMove = ({ deltaX, deltaY, pointerType, shiftKey }: MoveMoveEvent) => {
     currentPosition ??= state.getThumbPosition();
 
     const rect = containerEl.value?.getBoundingClientRect();
@@ -223,11 +223,11 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     focusInput(focusedInput.value === "y" ? inputYEl : inputXEl);
   };
 
-  const {handlers: thumbMove} = useMove({onMove, onMoveEnd, onMoveStart});
+  const { handlers: thumbMove } = useMove({ onMove, onMoveEnd, onMoveStart });
 
   // A press that lands on the area keeps dragging from there, so the container needs a move
   // machine of its own — gated, or every pointer move over the area would move the colour.
-  const {handlers: containerMove} = useMove({
+  const { handlers: containerMove } = useMove({
     onMove: (event) => isOnColorArea && onMove(event),
     onMoveEnd: () => isOnColorArea && onMoveEnd(),
     onMoveStart: () => isOnColorArea && onMoveStart(),
@@ -394,7 +394,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
    */
   const valueTextFor = (channel: ColorChannel) => {
     const color = state.getDisplayColor();
-    const {xChannel, yChannel, zChannel} = state.channels.value;
+    const { xChannel, yChannel, zChannel } = state.channels.value;
     const tag = locale.value.locale;
     const nameAndValue = (of: ColorChannel) =>
       strings.value.format("colorNameAndValue", {
@@ -439,7 +439,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
     };
   });
 
-  const gradient = useColorAreaGradient({direction: () => locale.value.direction, state});
+  const gradient = useColorAreaGradient({ direction: () => locale.value.direction, state });
 
   const inputFor = (axis: "x" | "y"): ComputedRef<ColorAreaInputAttrs> =>
     computed(() => {
@@ -492,7 +492,7 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
       id: areaLabels.value.id,
       role: "group",
     })),
-    areaHandlers: {onPointerdown: onAreaPointerdown},
+    areaHandlers: { onPointerdown: onAreaPointerdown },
     areaStyle: gradient.areaStyle,
     inputStyle: {
       ...visuallyHiddenStyle,
@@ -505,10 +505,10 @@ export const useColorArea = (options: UseColorAreaOptions): UseColorAreaReturn =
       width: "100%",
     },
     isDisabled,
-    thumbAttrs: {role: "presentation"},
+    thumbAttrs: { role: "presentation" },
     thumbHandlers: {
       onFocusout: (event: FocusEvent) => {
-        const {currentTarget, relatedTarget} = event;
+        const { currentTarget, relatedTarget } = event;
 
         // Focus moving between the two inputs never leaves the thumb, and the flags have to
         // survive that — they only reset when the control as a whole is left.

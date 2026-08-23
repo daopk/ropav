@@ -1,6 +1,6 @@
-import type {ValidationBehavior} from "@/composables/use-form-validation-state";
-import type {Granularity} from "@/utils/date-format";
-import type {DateValue} from "@internationalized/date";
+import type { ValidationBehavior } from "@/composables/use-form-validation-state";
+import type { Granularity } from "@/utils/date-format";
+import type { DateValue } from "@internationalized/date";
 
 export interface DateFieldFixtureProps {
   class?: string;

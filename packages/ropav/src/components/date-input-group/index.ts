@@ -54,6 +54,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateInputGroupVariants} from "@ropav/styles";
+export { dateInputGroupVariants } from "@ropav/styles";
 
-export type {DateInputGroupVariants} from "@ropav/styles";
+export type { DateInputGroupVariants } from "@ropav/styles";

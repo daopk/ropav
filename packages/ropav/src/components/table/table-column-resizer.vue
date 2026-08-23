@@ -1,22 +1,26 @@
 <script setup lang="ts" vapor>
-import type {TableColumnResizerProps} from "./table.types";
+import type { TableColumnResizerProps } from "./table.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useDescription} from "../../composables/use-description";
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useMove} from "../../composables/use-move";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { useDescription } from "../../composables/use-description";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useMove } from "../../composables/use-move";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useTableColumnContext, useTableColumnLayoutContext, useTableContext} from "./table.context";
+import {
+  useTableColumnContext,
+  useTableColumnLayoutContext,
+  useTableContext,
+} from "./table.context";
 
 const props = defineProps<TableColumnResizerProps>();
 
-const {slots} = useTableContext();
-const {columnKey, headerId} = useTableColumnContext();
+const { slots } = useTableContext();
+const { columnKey, headerId } = useTableColumnContext();
 const resizable = useTableColumnLayoutContext();
 
 const inputId = useId();
@@ -70,8 +74,8 @@ const endResize = () => {
   );
 };
 
-const {handlers: moveHandlers} = useMove({
-  onMove: ({deltaX, deltaY, pointerType}) => {
+const { handlers: moveHandlers } = useMove({
+  onMove: ({ deltaX, deltaY, pointerType }) => {
     let delta = deltaX;
 
     // An arrow press arrives as one unit; up and down mean the same as right and left here, so a
@@ -86,7 +90,7 @@ const {handlers: moveHandlers} = useMove({
     draggedWidth += delta;
     resize(draggedWidth);
   },
-  onMoveEnd: ({pointerType}) => {
+  onMoveEnd: ({ pointerType }) => {
     draggedWidth = 0;
     // A keyboard resize stays open until Enter, Escape or Tab closes it, so only a pointer drag
     // ends the resize when it lets go.
@@ -117,7 +121,7 @@ const resizableDirection = computed(() => {
 
 // Says the resizer can be opened at all, and only while it is closed — once resizing has started
 // the arrow keys are the whole story. React Aria's own en-US string.
-const {describedBy} = useDescription(() =>
+const { describedBy } = useDescription(() =>
   isResizing.value ? undefined : "Press Enter to start resizing",
 );
 
@@ -182,7 +186,7 @@ const onChange = (event: Event) => {
     :data-resizing="dataAttr(isResizing)"
     data-slot="table-column-resizer"
     role="presentation"
-    :style="{touchAction: 'none'}"
+    :style="{ touchAction: 'none' }"
     @keydown="onKeydown"
     @pointerdown="onPointerdown"
     @pointerenter="states.onPointerenter"

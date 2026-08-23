@@ -16,7 +16,7 @@ export const ColorInputGroup = Object.assign(ColorInputGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ColorInputGroupInput, ColorInputGroupPrefix, ColorInputGroupRoot, ColorInputGroupSuffix};
+export { ColorInputGroupInput, ColorInputGroupPrefix, ColorInputGroupRoot, ColorInputGroupSuffix };
 
 export type {
   ColorInputGroupRootProps,
@@ -46,6 +46,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorInputGroupVariants} from "@ropav/styles";
+export { colorInputGroupVariants } from "@ropav/styles";
 
-export type {ColorInputGroupVariants} from "@ropav/styles";
+export type { ColorInputGroupVariants } from "@ropav/styles";

@@ -18,7 +18,7 @@ export const Switch = Object.assign(SwitchRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {SwitchRoot, SwitchContent, SwitchControl, SwitchThumb, SwitchIcon};
+export { SwitchRoot, SwitchContent, SwitchControl, SwitchThumb, SwitchIcon };
 
 export type {
   SwitchRootProps,
@@ -34,6 +34,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {switchVariants} from "@ropav/styles";
+export { switchVariants } from "@ropav/styles";
 
-export type {SwitchVariants} from "@ropav/styles";
+export type { SwitchVariants } from "@ropav/styles";

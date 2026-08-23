@@ -1,6 +1,6 @@
-import type {ComputedRef, MaybeRefOrGetter, WritableComputedRef} from "vue";
+import type { ComputedRef, MaybeRefOrGetter, WritableComputedRef } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
 export interface UseControllableStateOptions<T> {
   /**
@@ -43,7 +43,7 @@ export interface UseControllableStateReturn<T> {
 export const useControllableState = <T>(
   options: UseControllableStateOptions<T>,
 ): UseControllableStateReturn<T> => {
-  const {defaultValue, onValueChange, value} = options;
+  const { defaultValue, onValueChange, value } = options;
 
   // `shallowRef`, not `ref` — the value is always replaced wholesale, never mutated
   // in place, so deep reactivity would only add overhead and proxy identity surprises.
@@ -70,5 +70,5 @@ export const useControllableState = <T>(
     set: setState,
   });
 
-  return {isControlled, setState, state};
+  return { isControlled, setState, state };
 };

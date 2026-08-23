@@ -5,7 +5,7 @@ import {
   ZonedDateTime,
   createCalendar,
 } from "@internationalized/date";
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   convertValue,
@@ -25,19 +25,19 @@ describe("getFormatOptions", () => {
     it("spans from the coarsest segment to the granularity", () => {
       // This is the whole point of the function: the segment list is the slice between the two
       // granularities, so this is what decides a date field's shape.
-      expect(segments(getFormatOptions({}, {granularity: "day"}))).toEqual([
+      expect(segments(getFormatOptions({}, { granularity: "day" }))).toEqual([
         "year",
         "month",
         "day",
       ]);
-      expect(segments(getFormatOptions({}, {granularity: "minute"}))).toEqual([
+      expect(segments(getFormatOptions({}, { granularity: "minute" }))).toEqual([
         "year",
         "month",
         "day",
         "hour",
         "minute",
       ]);
-      expect(segments(getFormatOptions({}, {granularity: "second"}))).toEqual([
+      expect(segments(getFormatOptions({}, { granularity: "second" }))).toEqual([
         "year",
         "month",
         "day",
@@ -58,11 +58,11 @@ describe("getFormatOptions", () => {
     });
 
     it("starts where maxGranularity says", () => {
-      expect(segments(getFormatOptions({}, {granularity: "day", maxGranularity: "month"}))).toEqual(
-        ["month", "day"],
-      );
       expect(
-        segments(getFormatOptions({}, {granularity: "minute", maxGranularity: "hour"})),
+        segments(getFormatOptions({}, { granularity: "day", maxGranularity: "month" })),
+      ).toEqual(["month", "day"]);
+      expect(
+        segments(getFormatOptions({}, { granularity: "minute", maxGranularity: "hour" })),
       ).toEqual(["hour", "minute"]);
     });
 
@@ -70,12 +70,12 @@ describe("getFormatOptions", () => {
       // A time field is a date field whose window starts at the hour — there is no separate
       // machinery for it.
       expect(
-        segments(getFormatOptions({}, {granularity: "minute", maxGranularity: "hour"})),
+        segments(getFormatOptions({}, { granularity: "minute", maxGranularity: "hour" })),
       ).toEqual(["hour", "minute"]);
     });
 
     it("refuses a window that runs backwards", () => {
-      expect(() => getFormatOptions({}, {granularity: "day", maxGranularity: "minute"})).toThrow(
+      expect(() => getFormatOptions({}, { granularity: "day", maxGranularity: "minute" })).toThrow(
         "maxGranularity must be greater than granularity",
       );
     });
@@ -83,7 +83,7 @@ describe("getFormatOptions", () => {
     it("falls back to the day slot for a granularity it does not know", () => {
       // Upstream does not throw here, so neither does this: an unrecognised granularity still has
       // to produce a usable field.
-      expect(segments(getFormatOptions({}, {granularity: "fortnight" as never}))).toEqual([
+      expect(segments(getFormatOptions({}, { granularity: "fortnight" as never }))).toEqual([
         "year",
         "month",
         "day",
@@ -93,14 +93,14 @@ describe("getFormatOptions", () => {
 
   describe("how each segment is written", () => {
     it("uses single-digit defaults", () => {
-      const options = getFormatOptions({}, {granularity: "day"});
+      const options = getFormatOptions({}, { granularity: "day" });
 
       expect(options.month).toBe("numeric");
       expect(options.day).toBe("numeric");
     });
 
     it("pads month and day when leading zeros are forced", () => {
-      const options = getFormatOptions({}, {granularity: "day", shouldForceLeadingZeros: true});
+      const options = getFormatOptions({}, { granularity: "day", shouldForceLeadingZeros: true });
 
       expect(options.month).toBe("2-digit");
       expect(options.day).toBe("2-digit");
@@ -109,22 +109,22 @@ describe("getFormatOptions", () => {
     });
 
     it("lets the caller override one segment's style", () => {
-      expect(getFormatOptions({month: "long"}, {granularity: "day"}).month).toBe("long");
+      expect(getFormatOptions({ month: "long" }, { granularity: "day" }).month).toBe("long");
     });
   });
 
   describe("time zone and era", () => {
     it("defaults to UTC when no zone is given", () => {
-      expect(getFormatOptions({}, {granularity: "day"}).timeZone).toBe("UTC");
+      expect(getFormatOptions({}, { granularity: "day" }).timeZone).toBe("UTC");
     });
 
     it("names the zone only when the field shows a time", () => {
       expect(
-        getFormatOptions({}, {granularity: "minute", timeZone: "America/New_York"}).timeZoneName,
+        getFormatOptions({}, { granularity: "minute", timeZone: "America/New_York" }).timeZoneName,
       ).toBe("short");
       // A date-only field has no time for a zone to qualify.
       expect(
-        getFormatOptions({}, {granularity: "day", timeZone: "America/New_York"}).timeZoneName,
+        getFormatOptions({}, { granularity: "day", timeZone: "America/New_York" }).timeZoneName,
       ).toBeUndefined();
     });
 
@@ -132,23 +132,23 @@ describe("getFormatOptions", () => {
       expect(
         getFormatOptions(
           {},
-          {granularity: "minute", hideTimeZone: true, timeZone: "America/New_York"},
+          { granularity: "minute", hideTimeZone: true, timeZone: "America/New_York" },
         ).timeZoneName,
       ).toBeUndefined();
     });
 
     it("shows an era only for a field that starts at the year", () => {
-      expect(getFormatOptions({}, {granularity: "day", showEra: true}).era).toBe("short");
+      expect(getFormatOptions({}, { granularity: "day", showEra: true }).era).toBe("short");
       // An era belongs beside a year; a field starting at the month has nothing to qualify.
       expect(
-        getFormatOptions({}, {granularity: "day", maxGranularity: "month", showEra: true}).era,
+        getFormatOptions({}, { granularity: "day", maxGranularity: "month", showEra: true }).era,
       ).toBeUndefined();
     });
 
     it("turns the hour cycle into hour12", () => {
-      expect(getFormatOptions({}, {granularity: "hour", hourCycle: 12}).hour12).toBe(true);
-      expect(getFormatOptions({}, {granularity: "hour", hourCycle: 24}).hour12).toBe(false);
-      expect(getFormatOptions({}, {granularity: "hour"}).hour12).toBeUndefined();
+      expect(getFormatOptions({}, { granularity: "hour", hourCycle: 12 }).hour12).toBe(true);
+      expect(getFormatOptions({}, { granularity: "hour", hourCycle: 24 }).hour12).toBe(false);
+      expect(getFormatOptions({}, { granularity: "hour" }).hour12).toBeUndefined();
     });
   });
 });
@@ -216,7 +216,7 @@ describe("createPlaceholderDate", () => {
 
     expect(date).toBeInstanceOf(CalendarDateTime);
     // Midnight, so an untouched field does not start at whatever time the page loaded.
-    expect(date).toMatchObject({hour: 0, minute: 0, second: 0});
+    expect(date).toMatchObject({ hour: 0, minute: 0, second: 0 });
   });
 
   it("stays zoned when a time zone is given", () => {

@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {TableSelectionCheckboxProps} from "./table.types";
+import type { TableSelectionCheckboxProps } from "./table.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {CheckboxContent, CheckboxControl, CheckboxIndicator, CheckboxRoot} from "../checkbox";
+import { useId } from "../../composables/use-id";
+import { CheckboxContent, CheckboxControl, CheckboxIndicator, CheckboxRoot } from "../checkbox";
 
-import {useTableGridContext, useTableRowContextOptional} from "./table.context";
+import { useTableGridContext, useTableRowContextOptional } from "./table.context";
 
 const props = defineProps<TableSelectionCheckboxProps>();
 
-const {collection, selection} = useTableGridContext();
+const { collection, selection } = useTableGridContext();
 
 // Which of the two checkboxes this is comes from where it sits: inside a row it selects that
 // row, in the header it selects everything. React Aria makes the same distinction, through the

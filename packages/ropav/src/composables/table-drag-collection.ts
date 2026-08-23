@@ -1,6 +1,6 @@
-import type {DragCollection, DragCollectionNode, DragKey} from "../utils/dnd-types";
-import type {CollectionKey} from "./use-collection";
-import type {UseTableCollectionReturn} from "./use-table-collection";
+import type { DragCollection, DragCollectionNode, DragKey } from "../utils/dnd-types";
+import type { CollectionKey } from "./use-collection";
+import type { UseTableCollectionReturn } from "./use-table-collection";
 
 /**
  * A `DragCollection` over a table's rows.
@@ -20,7 +20,7 @@ import type {UseTableCollectionReturn} from "./use-table-collection";
 export const toTableDragCollection = (
   collection: UseTableCollectionReturn,
 ): DragCollection<unknown> => {
-  const {rows, tree} = collection;
+  const { rows, tree } = collection;
 
   const levelOf = (key: CollectionKey) => tree.getItem(key)?.level() ?? 0;
   const parentOf = (key: CollectionKey) => tree.getItem(key)?.parentKey() ?? null;

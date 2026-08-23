@@ -1,22 +1,22 @@
 <script setup lang="ts" vapor>
-import type {TableRootProps} from "./table.types";
+import type { TableRootProps } from "./table.types";
 
-import {tableVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { tableVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideTableContext} from "./table.context";
+import { provideTableContext } from "./table.context";
 
 const props = defineProps<TableRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const slots = computed(() => tableVariants({variant: props.variant}));
+const slots = computed(() => tableVariants({ variant: props.variant }));
 
-provideTableContext({slots});
+provideTableContext({ slots });
 </script>
 
 <template>
-  <div :class="slots.base({class: props.class})" data-slot="table">
+  <div :class="slots.base({ class: props.class })" data-slot="table">
     <slot />
   </div>
 </template>

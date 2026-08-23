@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {DragKey, DroppableCollectionReorderEvent} from "@/utils/dnd-types";
+import type { DragKey, DroppableCollectionReorderEvent } from "@/utils/dnd-types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {Button} from "@/components/button";
-import {Table} from "@/components/table";
-import {useDragAndDrop} from "@/composables/use-drag-and-drop";
+import { Button } from "@/components/button";
+import { Table } from "@/components/table";
+import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 /**
  * A reorderable table.
@@ -28,8 +28,8 @@ const props = withDefaults(
 
 const order = shallowRef<string[]>([...props.names]);
 
-const {dragAndDropHooks} = useDragAndDrop({
-  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({"text/plain": String(key)})),
+const { dragAndDropHooks } = useDragAndDrop({
+  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({ "text/plain": String(key) })),
   onReorder(event) {
     props.onReorder?.(event);
 
@@ -43,7 +43,7 @@ const {dragAndDropHooks} = useDragAndDrop({
   },
 });
 
-defineExpose({order});
+defineExpose({ order });
 </script>
 
 <template>
@@ -53,14 +53,14 @@ defineExpose({order});
       :drag-and-drop-hooks="dragAndDropHooks"
       :selection-mode="props.selectionMode"
     >
-      <Table.Header v-slot="{allowsDragging}">
+      <Table.Header v-slot="{ allowsDragging }">
         <Table.Column v-if="allowsDragging" id="drag" />
         <Table.Column id="name" is-row-header>Name</Table.Column>
         <Table.Column id="role">Role</Table.Column>
       </Table.Header>
       <Table.Body>
         <template v-for="name in order" :key="name">
-          <Table.DropIndicator :target="{dropPosition: 'before', key: name, type: 'item'}" />
+          <Table.DropIndicator :target="{ dropPosition: 'before', key: name, type: 'item' }" />
           <Table.Row :id="name" :text-value="name">
             <Table.Cell>
               <Table.DragHandle>
@@ -72,7 +72,7 @@ defineExpose({order});
           </Table.Row>
         </template>
         <Table.DropIndicator
-          :target="{dropPosition: 'after', key: order[order.length - 1]!, type: 'item'}"
+          :target="{ dropPosition: 'after', key: order[order.length - 1]!, type: 'item' }"
         />
       </Table.Body>
     </Table.Content>

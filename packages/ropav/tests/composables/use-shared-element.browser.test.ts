@@ -1,9 +1,9 @@
-import type {SharedElementScope, UseSharedElementReturn} from "@/composables/use-shared-element";
+import type { SharedElementScope, UseSharedElementReturn } from "@/composables/use-shared-element";
 
-import {afterAll, afterEach, beforeAll, describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef, watch} from "vue";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef, watch } from "vue";
 
-import {createSharedElementScope, useSharedElement} from "@/composables/use-shared-element";
+import { createSharedElementScope, useSharedElement } from "@/composables/use-shared-element";
 
 /**
  * Real layout and a real animation clock, which is the whole point of testing this in a browser.
@@ -61,7 +61,7 @@ interface Harness {
 
 const mount = (
   scope: SharedElementScope,
-  options: {modifier: "left" | "right"; isVisible?: boolean},
+  options: { modifier: "left" | "right"; isVisible?: boolean },
 ): Harness => {
   const host = document.createElement("div");
 
@@ -100,7 +100,7 @@ const mount = (
           elementRef.value = null;
         }
       },
-      {flush: "post", immediate: true},
+      { flush: "post", immediate: true },
     );
 
     /*
@@ -114,7 +114,7 @@ const mount = (
         if (isExiting) element.setAttribute("data-exiting", "true");
         else element.removeAttribute("data-exiting");
       },
-      {flush: "post", immediate: true},
+      { flush: "post", immediate: true },
     );
 
     return result;
@@ -131,18 +131,18 @@ const mount = (
 
 /** Hand a left-hand element's place over to a right-hand one, and return the newcomer. */
 const handOver = async (scope: SharedElementScope) => {
-  const outgoing = mount(scope, {modifier: "left"});
+  const outgoing = mount(scope, { modifier: "left" });
 
   await settle();
   await frame();
 
   outgoing.show(false);
 
-  const incoming = mount(scope, {modifier: "right"});
+  const incoming = mount(scope, { modifier: "right" });
 
   await settle();
 
-  return {incoming, outgoing};
+  return { incoming, outgoing };
 };
 
 afterEach(() => {
@@ -153,7 +153,7 @@ afterEach(() => {
 describe("useSharedElement (browser)", () => {
   it("slides from the previous element's position", async () => {
     const scope = createSharedElementScope();
-    const {incoming} = await handOver(scope);
+    const { incoming } = await handOver(scope);
 
     // The newcomer sits 200px to the right, so it starts 200px to the left of where it belongs.
     const translate = getComputedStyle(incoming.element).translate;
@@ -168,7 +168,7 @@ describe("useSharedElement (browser)", () => {
 
   it("animates the previous size to the new one", async () => {
     const scope = createSharedElementScope();
-    const {incoming} = await handOver(scope);
+    const { incoming } = await handOver(scope);
 
     // The transitions that carry the element only start once the real values are put back, which
     // is a frame after the overrides went on.
@@ -190,7 +190,7 @@ describe("useSharedElement (browser)", () => {
 
   it("cancels the transitions its own overrides triggered", async () => {
     const scope = createSharedElementScope();
-    const {incoming} = await handOver(scope);
+    const { incoming } = await handOver(scope);
 
     // Applying the previous values starts transitions towards where the element came from, and
     // those are cancelled on the spot — so nothing is running until the restore starts the ones
@@ -210,7 +210,7 @@ describe("useSharedElement (browser)", () => {
 
   it("holds the element until its exit animation has finished", async () => {
     const scope = createSharedElementScope();
-    const outgoing = mount(scope, {modifier: "left"});
+    const outgoing = mount(scope, { modifier: "left" });
 
     await settle();
     await frame();
@@ -228,7 +228,7 @@ describe("useSharedElement (browser)", () => {
 
   it("keeps its inline overrides for exactly one frame", async () => {
     const scope = createSharedElementScope();
-    const {incoming} = await handOver(scope);
+    const { incoming } = await handOver(scope);
 
     expect(incoming.element.style.getPropertyValue("width")).toBe("80px");
 

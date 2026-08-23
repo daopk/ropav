@@ -1,10 +1,10 @@
-import type {DateSegment} from "@/composables/use-date-field-state";
-import type {CalendarDate as CalendarDateType} from "@internationalized/date";
+import type { DateSegment } from "@/composables/use-date-field-state";
+import type { CalendarDate as CalendarDateType } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
 import {
   CalendarCell,
@@ -24,7 +24,7 @@ import {
   DatePickerTrigger,
   DatePickerTriggerIndicator,
 } from "@/components/date-picker";
-import {Label} from "@/components/label";
+import { Label } from "@/components/label";
 
 /**
  * The picker mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -37,18 +37,18 @@ import {Label} from "@/components/label";
  */
 const render = (props: Record<string, unknown> = {}) => {
   const result = renderInterop(DatePickerRoot, {
-    props: {defaultOpen: true, ...props},
+    props: { defaultOpen: true, ...props },
     slots: {
       default: () => [
-        h(Label, null, {default: () => "Appointment"}),
+        h(Label, null, { default: () => "Appointment" }),
         h(DatePickerGroup, null, {
           default: () => [
             h(DatePickerInput, null, {
-              default: ({segment}: {segment: DateSegment}) => h(DatePickerSegment, {segment}),
+              default: ({ segment }: { segment: DateSegment }) => h(DatePickerSegment, { segment }),
             }),
             h(DatePickerSuffix, null, {
               default: () =>
-                h(DatePickerTrigger, null, {default: () => h(DatePickerTriggerIndicator)}),
+                h(DatePickerTrigger, null, { default: () => h(DatePickerTriggerIndicator) }),
             }),
           ],
         }),
@@ -56,17 +56,18 @@ const render = (props: Record<string, unknown> = {}) => {
           default: () =>
             h(
               CalendarRoot,
-              {"aria-label": "Selected date"},
+              { "aria-label": "Selected date" },
               {
                 default: () =>
                   h(CalendarGrid, null, {
                     default: () => [
                       h(CalendarGridHeader, null, {
-                        default: ({day}: {day: string}) =>
-                          h(CalendarHeaderCell, null, {default: () => day}),
+                        default: ({ day }: { day: string }) =>
+                          h(CalendarHeaderCell, null, { default: () => day }),
                       }),
                       h(CalendarGridBody, null, {
-                        default: ({date}: {date: CalendarDateType}) => h(CalendarCell, {date}),
+                        default: ({ date }: { date: CalendarDateType }) =>
+                          h(CalendarCell, { date }),
                       }),
                     ],
                   }),
@@ -92,7 +93,7 @@ const render = (props: Record<string, unknown> = {}) => {
     ),
   ];
 
-  return {...result, all, inPopover, slot};
+  return { ...result, all, inPopover, slot };
 };
 
 const settle = async () => {
@@ -123,7 +124,7 @@ describe("DatePicker interop", () => {
   });
 
   it("reaches the picker's field from an input in the host", () => {
-    const picker = render({value: jun(10)});
+    const picker = render({ value: jun(10) });
     const day = picker
       .all("date-input-group-segment")
       .find((element) => element.dataset["type"] === "day");
@@ -133,7 +134,7 @@ describe("DatePicker interop", () => {
   });
 
   it("reaches the picker's group wiring from a group in the host", () => {
-    const picker = render({id: "appointment"});
+    const picker = render({ id: "appointment" });
     const group = picker.slot("date-input-group")!;
 
     expect(group.getAttribute("id")).toBe("appointment");
@@ -149,7 +150,7 @@ describe("DatePicker interop", () => {
   });
 
   it("drives a calendar written in the host from the picker's value", async () => {
-    const picker = render({value: jun(10)});
+    const picker = render({ value: jun(10) });
 
     await settle();
 

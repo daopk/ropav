@@ -1,15 +1,15 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, onMounted, onUnmounted, shallowRef, useTemplateRef} from "vue";
+import { computed, onMounted, onUnmounted, shallowRef, useTemplateRef } from "vue";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Kbd, KbdAbbr, KbdContent} from "../kbd";
-import {Label} from "../label";
-import {Spinner} from "../spinner";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Kbd, KbdAbbr, KbdContent } from "../kbd";
+import { Label } from "../label";
+import { Spinner } from "../spinner";
 
 import {
   SearchField,
@@ -228,7 +228,7 @@ export const Controlled: Story = {
     setup: () => {
       const value = shallowRef("");
 
-      return {value};
+      return { value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -257,7 +257,7 @@ export const WithValidation: Story = {
       const value = shallowRef("");
       const isInvalid = computed(() => value.value.length > 0 && value.value.length < 3);
 
-      return {isInvalid, value};
+      return { isInvalid, value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -357,7 +357,7 @@ export const FormExample: Story = {
         }, 1500);
       };
 
-      return {MIN_LENGTH, isInvalid, isSubmitting, onSubmit, submitted, value};
+      return { MIN_LENGTH, isInvalid, isSubmitting, onSubmit, submitted, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">
@@ -423,7 +423,7 @@ export const WithKeyboardShortcut: Story = {
       onMounted(() => window.addEventListener("keydown", onKeydown));
       onUnmounted(() => window.removeEventListener("keydown", onKeydown));
 
-      return {value};
+      return { value };
     },
     template: `
       <div ref="wrapper" class="flex flex-col gap-4">

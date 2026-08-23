@@ -1,9 +1,9 @@
-import type {SelectFixtureItem, SelectStateHostProps} from "../fixtures/select.types";
-import type {UseSelectStateReturn} from "@/composables/use-select-state";
+import type { SelectFixtureItem, SelectStateHostProps } from "../fixtures/select.types";
+import type { UseSelectStateReturn } from "@/composables/use-select-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/select-state-host.vue";
 
@@ -16,8 +16,8 @@ afterEach(() => {
 const mount = (props: SelectStateHostProps = {}) => {
   let state!: UseSelectStateReturn<SelectFixtureItem>;
 
-  const {unmount} = renderVapor(Host, {
-    props: {...props, onReady: (next: UseSelectStateReturn<SelectFixtureItem>) => (state = next)},
+  const { unmount } = renderVapor(Host, {
+    props: { ...props, onReady: (next: UseSelectStateReturn<SelectFixtureItem>) => (state = next) },
   });
 
   cleanups.push(unmount);
@@ -39,14 +39,14 @@ describe("useSelectState", () => {
     });
 
     it("follows the data when it changes", async () => {
-      const state = mount({items: [{id: "one", name: "One"}]});
+      const state = mount({ items: [{ id: "one", name: "One" }] });
 
       expect(state.collection.size.value).toBe(1);
 
       const state2 = mount({
         items: [
-          {id: "one", name: "One"},
-          {id: "two", name: "Two"},
+          { id: "one", name: "One" },
+          { id: "two", name: "Two" },
         ],
       });
 
@@ -58,8 +58,8 @@ describe("useSelectState", () => {
     it("marks an option the data calls disabled", () => {
       const state = mount({
         items: [
-          {id: "one", name: "One"},
-          {id: "two", isDisabled: true, name: "Two"},
+          { id: "one", name: "One" },
+          { id: "two", isDisabled: true, name: "Two" },
         ],
       });
 
@@ -70,24 +70,24 @@ describe("useSelectState", () => {
 
   describe("value", () => {
     it("starts on the default value", () => {
-      const state = mount({defaultValue: "texas"});
+      const state = mount({ defaultValue: "texas" });
 
       expect(state.value.value).toBe("texas");
       expect(state.selectedKey.value).toBe("texas");
       expect(state.selectedItems.value).toEqual([
-        {key: "texas", textValue: "Texas", value: {id: "texas", name: "Texas"}},
+        { key: "texas", textValue: "Texas", value: { id: "texas", name: "Texas" } },
       ]);
     });
 
     it("reports the datum behind the chosen key", () => {
-      const state = mount({defaultValue: "california"});
+      const state = mount({ defaultValue: "california" });
 
       expect(state.selectedItems.value[0]?.value.name).toBe("California");
     });
 
     it("reports a controlled value without owning it", () => {
       const onChange = vi.fn();
-      const state = mount({onChange, value: "florida"});
+      const state = mount({ onChange, value: "florida" });
 
       expect(state.value.value).toBe("florida");
 
@@ -99,13 +99,13 @@ describe("useSelectState", () => {
     });
 
     it("keeps only the first key when single mode is handed a list", () => {
-      const state = mount({value: ["texas", "florida"]});
+      const state = mount({ value: ["texas", "florida"] });
 
       expect(state.value.value).toBe("texas");
     });
 
     it("holds a list in multiple mode", () => {
-      const state = mount({defaultValue: ["texas", "florida"], selectionMode: "multiple"});
+      const state = mount({ defaultValue: ["texas", "florida"], selectionMode: "multiple" });
 
       expect(state.value.value).toEqual(["texas", "florida"]);
       expect(state.selectedItems.value.map((item) => item.key)).toEqual(["texas", "florida"]);
@@ -113,11 +113,11 @@ describe("useSelectState", () => {
 
     it("defaults to nothing chosen, shaped by the mode", () => {
       expect(mount().value.value).toBeNull();
-      expect(mount({selectionMode: "multiple"}).value.value).toEqual([]);
+      expect(mount({ selectionMode: "multiple" }).value.value).toEqual([]);
     });
 
     it("ignores a key the data does not know", () => {
-      const state = mount({defaultValue: "nowhere"});
+      const state = mount({ defaultValue: "nowhere" });
 
       expect(state.selectedItems.value).toEqual([]);
     });
@@ -126,7 +126,7 @@ describe("useSelectState", () => {
   describe("selecting", () => {
     it("writes the chosen key and closes, in single mode", () => {
       const onChange = vi.fn();
-      const state = mount({defaultOpen: true, onChange});
+      const state = mount({ defaultOpen: true, onChange });
 
       state.selection.replaceSelection("california");
 
@@ -136,7 +136,7 @@ describe("useSelectState", () => {
 
     it("stays open in multiple mode", () => {
       const onChange = vi.fn();
-      const state = mount({defaultOpen: true, onChange, selectionMode: "multiple"});
+      const state = mount({ defaultOpen: true, onChange, selectionMode: "multiple" });
 
       state.selection.toggleSelection("california");
 
@@ -145,7 +145,7 @@ describe("useSelectState", () => {
     });
 
     it("honours shouldCloseOnSelect against the mode's default", () => {
-      const single = mount({defaultOpen: true, shouldCloseOnSelect: false});
+      const single = mount({ defaultOpen: true, shouldCloseOnSelect: false });
 
       single.selection.replaceSelection("texas");
       expect(single.isOpen.value).toBe(true);
@@ -161,7 +161,7 @@ describe("useSelectState", () => {
     });
 
     it("never lets go of the last choice in single mode", () => {
-      const state = mount({defaultValue: "texas"});
+      const state = mount({ defaultValue: "texas" });
 
       state.selection.toggleSelection("texas");
 
@@ -169,7 +169,7 @@ describe("useSelectState", () => {
     });
 
     it("lets multiple mode empty out", () => {
-      const state = mount({defaultValue: ["texas"], selectionMode: "multiple"});
+      const state = mount({ defaultValue: ["texas"], selectionMode: "multiple" });
 
       state.selection.toggleSelection("texas");
 
@@ -179,7 +179,7 @@ describe("useSelectState", () => {
 
   describe("open state", () => {
     it("refuses to open on an empty collection", () => {
-      const state = mount({items: []});
+      const state = mount({ items: [] });
 
       state.open();
       expect(state.isOpen.value).toBe(false);
@@ -192,7 +192,7 @@ describe("useSelectState", () => {
     });
 
     it("opens an empty collection when told it may", () => {
-      const state = mount({allowsEmptyCollection: true, items: []});
+      const state = mount({ allowsEmptyCollection: true, items: [] });
 
       state.open();
 
@@ -200,7 +200,7 @@ describe("useSelectState", () => {
     });
 
     it("still closes an empty collection that is open", () => {
-      const state = mount({allowsEmptyCollection: true, defaultOpen: true, items: []});
+      const state = mount({ allowsEmptyCollection: true, defaultOpen: true, items: [] });
 
       state.toggle();
 
@@ -231,7 +231,7 @@ describe("useSelectState", () => {
     it("treats an empty multiple selection as nothing chosen", () => {
       const validate = vi.fn(() => null);
 
-      mount({selectionMode: "multiple", validate, validationBehavior: "aria"});
+      mount({ selectionMode: "multiple", validate, validationBehavior: "aria" });
 
       // A value of `null` skips custom validation entirely, and an empty list means the same
       // thing as nothing chosen — so `validate` must not be asked about `[]`.

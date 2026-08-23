@@ -1,4 +1,4 @@
-import type {SurfaceVariants} from "@ropav/styles";
+import type { SurfaceVariants } from "@ropav/styles";
 
 export interface SurfaceRootProps {
   class?: string;

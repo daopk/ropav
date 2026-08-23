@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {SelectValueProps, SelectValueSlotProps} from "./select.types";
+import type { SelectValueProps, SelectValueSlotProps } from "./select.types";
 
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useSelectContext} from "./select.context";
+import { useSelectContext } from "./select.context";
 
 const props = defineProps<SelectValueProps>();
 
@@ -17,9 +17,9 @@ const props = defineProps<SelectValueProps>();
  * again — it shows the option's text by default, and anything more is written here, with the
  * same values React hands its render function.
  */
-defineSlots<{default?: (props: SelectValueSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SelectValueSlotProps) => unknown }>();
 
-const {placeholder, select, selectedItems, selectedText, slots} = useSelectContext();
+const { placeholder, select, selectedItems, selectedText, slots } = useSelectContext();
 
 const callerSlots = useSlots();
 
@@ -34,7 +34,7 @@ const hasSlot = computed(() => Boolean(callerSlots["default"]));
 
 const isPlaceholder = computed(() => selectedItems.value.length === 0);
 
-const styles = computed(() => slots.value.value({class: props.class}));
+const styles = computed(() => slots.value.value({ class: props.class }));
 </script>
 
 <template>

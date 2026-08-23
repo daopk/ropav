@@ -1,13 +1,13 @@
-import type {VirtualizerTableCollection} from "@/utils/virtualizer-collection";
-import type {VirtualizerLayoutHost, VirtualizerNode} from "@/utils/virtualizer-layout";
-import type {VirtualizerKey} from "@/utils/virtualizer-layout-info";
-import type {LayoutNode} from "@/utils/virtualizer-list-layout";
+import type { VirtualizerTableCollection } from "@/utils/virtualizer-collection";
+import type { VirtualizerLayoutHost, VirtualizerNode } from "@/utils/virtualizer-layout";
+import type { VirtualizerKey } from "@/utils/virtualizer-layout-info";
+import type { LayoutNode } from "@/utils/virtualizer-list-layout";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {createTableCollection} from "@/utils/virtualizer-collection";
-import {Rect, Size} from "@/utils/virtualizer-geometry";
-import {TableLayout} from "@/utils/virtualizer-table-layout";
+import { createTableCollection } from "@/utils/virtualizer-collection";
+import { Rect, Size } from "@/utils/virtualizer-geometry";
+import { TableLayout } from "@/utils/virtualizer-table-layout";
 
 const COLUMNS = ["name", "role", "email"];
 
@@ -19,7 +19,7 @@ const WIDTHS = new Map<VirtualizerKey, number>([
 ]);
 
 const makeItems = (count: number) =>
-  Array.from({length: count}, (_, index) => ({id: index + 1, name: `Row ${index}`}));
+  Array.from({ length: count }, (_, index) => ({ id: index + 1, name: `Row ${index}` }));
 
 interface SetUpOptions {
   columnKeys?: string[];
@@ -36,7 +36,7 @@ interface SetUpResult<L extends TableLayout> {
   host: VirtualizerLayoutHost;
   layout: L;
   /** Run another pass, as the virtualizer does when something invalidated the layout. */
-  update: (context?: {columnWidths?: Map<VirtualizerKey, number>; sizeChanged?: boolean}) => void;
+  update: (context?: { columnWidths?: Map<VirtualizerKey, number>; sizeChanged?: boolean }) => void;
 }
 
 const setUp = <L extends TableLayout>(layout: L, options: SetUpOptions = {}): SetUpResult<L> => {
@@ -60,14 +60,14 @@ const setUp = <L extends TableLayout>(layout: L, options: SetUpOptions = {}): Se
 
   const update: SetUpResult<L>["update"] = (context = {}) => {
     layout.update({
-      layoutOptions: {columnWidths: context.columnWidths ?? options.columnWidths ?? WIDTHS},
+      layoutOptions: { columnWidths: context.columnWidths ?? options.columnWidths ?? WIDTHS },
       sizeChanged: context.sizeChanged,
     });
   };
 
   update();
 
-  return {collection, host, layout, update};
+  return { collection, host, layout, update };
 };
 
 const rectOf = (layout: TableLayout, key: VirtualizerKey) => layout.getLayoutInfo(key)?.rect;
@@ -84,7 +84,7 @@ const rowsIn = (layout: TableLayout, rect: Rect) =>
 describe("TableLayout", () => {
   describe("laying out the header", () => {
     it("stacks the header above the body and sticks it there", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
       });
       const header = layout.getLayoutInfo("t-header")!;
@@ -100,7 +100,9 @@ describe("TableLayout", () => {
     });
 
     it("places each column at the running total of the widths it was given", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 3});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 3,
+      });
 
       expect(rectOf(layout, "name")).toEqual(new Rect(0, 0, 230, 42));
       expect(rectOf(layout, "role")).toEqual(new Rect(230, 0, 230, 42));
@@ -108,14 +110,16 @@ describe("TableLayout", () => {
     });
 
     it("stacks the columns back to front", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 3});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 3,
+      });
 
       // Descending, so a column overlaps the one to its right rather than the other way round.
       expect(COLUMNS.map((key) => layout.getLayoutInfo(key)?.zIndex)).toEqual([4, 3, 2]);
     });
 
     it("gives a column with no width of its own no width at all", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         columnKeys: ["name", "unmeasured"],
         columnWidths: new Map([["name", 300]]),
         itemCount: 1,
@@ -127,7 +131,9 @@ describe("TableLayout", () => {
 
   describe("laying out a row", () => {
     it("puts each cell under its column and the row under the header", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 3});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 3,
+      });
 
       expect(rectOf(layout, 1)).toEqual(new Rect(0, 42, 700, 42));
       expect(rectOf(layout, "1:name")).toEqual(new Rect(0, 42, 230, 42));
@@ -138,7 +144,9 @@ describe("TableLayout", () => {
     });
 
     it("lets every part spill outside its own box", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 1});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 1,
+      });
 
       // A focus ring is drawn with a shadow, which would be cut off by a wrapper that clips.
       expect(layout.getLayoutInfo(1)?.allowOverflow).toBe(true);
@@ -148,7 +156,7 @@ describe("TableLayout", () => {
 
     it("takes the row's width from the header rather than from its own cells", () => {
       // The columns come to 300 while the container is 700 wide, and the row follows the columns.
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         columnKeys: ["name"],
         columnWidths: new Map([["name", 300]]),
         itemCount: 2,
@@ -173,7 +181,7 @@ describe("TableLayout", () => {
     }
 
     it("builds a screenful of rows out of a thousand", () => {
-      const {layout} = setUp(new CountingTableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new CountingTableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
       });
 
@@ -184,7 +192,7 @@ describe("TableLayout", () => {
     });
 
     it("places a row it never built once it is asked about by key", () => {
-      const {layout} = setUp(new CountingTableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new CountingTableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
       });
 
@@ -197,19 +205,21 @@ describe("TableLayout", () => {
 
   describe("choosing what is visible", () => {
     it("snaps the rectangle to whole rows, ignoring the gap", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
       });
 
       // 666.67 rounds up to 16 rows of 42, so the row starting exactly on the bottom edge still
       // counts — the search closes at the bottom and opens at the top.
       expect(rowsIn(layout, new Rect(0, 0, 700, 500 + 500 / 3))).toEqual(
-        Array.from({length: 16}, (_, index) => index + 1),
+        Array.from({ length: 16 }, (_, index) => index + 1),
       );
     });
 
     it("reports parents before children", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 2});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 2,
+      });
 
       expect(keysIn(layout, new Rect(0, 0, 700, 500))).toEqual([
         "t-header",
@@ -230,7 +240,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps the header in view once the rows have scrolled past it", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
       });
       const keys = keysIn(layout, new Rect(0, 5000, 700, 500));
@@ -243,7 +253,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps a persisted row in view wherever it is", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
         persistedKeys: [1],
       });
@@ -254,7 +264,7 @@ describe("TableLayout", () => {
     });
 
     it("keeps the loading sentinel in view even at the top of the table", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         hasLoader: true,
         itemCount: 1000,
       });
@@ -268,7 +278,7 @@ describe("TableLayout", () => {
 
   describe("an empty body", () => {
     it("fills the container so the empty state has somewhere to sit", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}));
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }));
 
       // Down to the bottom of the container rather than a container's worth below the header.
       expect(rectOf(layout, "t-body")).toEqual(new Rect(0, 42, 700, 458));
@@ -278,7 +288,7 @@ describe("TableLayout", () => {
 
   describe("changing the column widths", () => {
     it("moves every cell to the right of the one that changed", () => {
-      const {layout, update} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      const { layout, update } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 3,
       });
 
@@ -299,21 +309,21 @@ describe("TableLayout", () => {
     });
 
     it("asks to be laid out again only when a width really moved", () => {
-      const layout = new TableLayout({headingHeight: 42, rowHeight: 42});
+      const layout = new TableLayout({ headingHeight: 42, rowHeight: 42 });
       const same = new Map(WIDTHS);
 
       expect(
-        layout.shouldInvalidateLayoutOptions({columnWidths: same}, {columnWidths: WIDTHS}),
+        layout.shouldInvalidateLayoutOptions({ columnWidths: same }, { columnWidths: WIDTHS }),
       ).toBe(true);
       expect(
-        layout.shouldInvalidateLayoutOptions({columnWidths: WIDTHS}, {columnWidths: WIDTHS}),
+        layout.shouldInvalidateLayoutOptions({ columnWidths: WIDTHS }, { columnWidths: WIDTHS }),
       ).toBe(false);
     });
   });
 
   describe("rows of no declared height", () => {
     it("places every part at the fallback height and marks it an estimate", () => {
-      const {layout} = setUp(new TableLayout(), {itemCount: 3});
+      const { layout } = setUp(new TableLayout(), { itemCount: 3 });
 
       expect(rectOf(layout, "t-header")).toEqual(new Rect(0, 0, 700, 48));
       expect(rectOf(layout, 1)).toEqual(new Rect(0, 48, 700, 48));
@@ -322,7 +332,7 @@ describe("TableLayout", () => {
     });
 
     it("moves the rows below one whose cell measured taller", () => {
-      const {layout, update} = setUp(new TableLayout(), {itemCount: 3});
+      const { layout, update } = setUp(new TableLayout(), { itemCount: 3 });
 
       expect(layout.updateItemSize?.("1:name", new Size(230, 80))).toBe(true);
       update();
@@ -333,7 +343,7 @@ describe("TableLayout", () => {
     });
 
     it("reports a measurement that changed nothing", () => {
-      const {layout} = setUp(new TableLayout(), {itemCount: 1});
+      const { layout } = setUp(new TableLayout(), { itemCount: 1 });
 
       expect(layout.updateItemSize?.("1:name", new Size(230, 48))).toBe(false);
       expect(layout.updateItemSize?.("nothing", new Size(230, 80))).toBe(false);
@@ -346,7 +356,7 @@ describe("TableLayout", () => {
    */
   describe("drop targets", () => {
     const dropSetUp = (scrollTop = 0) =>
-      setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {
+      setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
         itemCount: 1000,
         visibleRect: new Rect(0, scrollTop, 700, 500),
       });
@@ -355,7 +365,7 @@ describe("TableLayout", () => {
 
     // A row's key is the item's own; a cell's is `<row>:<column>`.
     it("names a row rather than one of its cells", () => {
-      const {layout} = dropSetUp(21_000);
+      const { layout } = dropSetUp(21_000);
 
       expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({
         dropPosition: "on",
@@ -381,16 +391,18 @@ describe("TableLayout", () => {
      * not over anything droppable, which leaves the collection as a whole.
      */
     it("means the whole collection over the sticky header", () => {
-      const {layout} = dropSetUp();
+      const { layout } = dropSetUp();
 
-      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
-      expect(layout.getDropTargetFromPoint(10, 60, anything)).toMatchObject({key: 1});
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({ type: "root" });
+      expect(layout.getDropTargetFromPoint(10, 60, anything)).toMatchObject({ key: 1 });
     });
 
     it("falls back to the whole collection when there are no rows", () => {
-      const {layout} = setUp(new TableLayout({headingHeight: 42, rowHeight: 42}), {itemCount: 0});
+      const { layout } = setUp(new TableLayout({ headingHeight: 42, rowHeight: 42 }), {
+        itemCount: 0,
+      });
 
-      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({ type: "root" });
     });
 
     /**
@@ -400,18 +412,18 @@ describe("TableLayout", () => {
      * placed from the table's own origin and land under the sticky header.
      */
     it("hangs the indicator off the body", () => {
-      const {collection, layout} = dropSetUp();
-      const info = layout.getDropTargetLayoutInfo({dropPosition: "before", key: 5, type: "item"});
+      const { collection, layout } = dropSetUp();
+      const info = layout.getDropTargetLayoutInfo({ dropPosition: "before", key: 5, type: "item" });
 
       expect(info.parentKey).toBe(collection.bodyKey);
     });
 
     it("places the gap across the boundary between two rows", () => {
-      const {layout} = dropSetUp();
+      const { layout } = dropSetUp();
       const rowRect = layout.getLayoutInfo(5)!.rect;
 
       expect(
-        layout.getDropTargetLayoutInfo({dropPosition: "before", key: 5, type: "item"}).rect,
+        layout.getDropTargetLayoutInfo({ dropPosition: "before", key: 5, type: "item" }).rect,
       ).toEqual(new Rect(rowRect.x, rowRect.y - 1, rowRect.width, 2));
     });
   });

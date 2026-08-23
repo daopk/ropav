@@ -10,7 +10,7 @@ export const ProgressBar = Object.assign(ProgressBarRoot, {
   Track: ProgressBarTrack,
 });
 
-export {ProgressBarFill, ProgressBarOutput, ProgressBarRoot, ProgressBarTrack};
+export { ProgressBarFill, ProgressBarOutput, ProgressBarRoot, ProgressBarTrack };
 
 export type {
   ProgressBarFillProps,
@@ -21,6 +21,6 @@ export type {
   ProgressBarTrackProps,
 } from "./progress-bar.types";
 
-export {progressBarVariants} from "@ropav/styles";
+export { progressBarVariants } from "@ropav/styles";
 
-export type {ProgressBarVariants} from "@ropav/styles";
+export type { ProgressBarVariants } from "@ropav/styles";

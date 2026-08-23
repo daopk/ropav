@@ -1,24 +1,27 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick } from "vue";
 
-import {setInteractionModality} from "@/composables/use-interaction-states";
-import {useTooltipTrigger} from "@/composables/use-tooltip-trigger";
-import {resetTooltipWarmup, useTooltipTriggerState} from "@/composables/use-tooltip-trigger-state";
+import { setInteractionModality } from "@/composables/use-interaction-states";
+import { useTooltipTrigger } from "@/composables/use-tooltip-trigger";
+import {
+  resetTooltipWarmup,
+  useTooltipTriggerState,
+} from "@/composables/use-tooltip-trigger-state";
 
 type Options = Parameters<typeof useTooltipTrigger>[0];
 type StateOptions = Parameters<typeof useTooltipTriggerState>[0];
 
-const POINTER = {bubbles: true, pointerId: 1, pointerType: "mouse"} as const;
+const POINTER = { bubbles: true, pointerId: 1, pointerType: "mouse" } as const;
 
 const setup = (options: Options = {}, stateOptions: StateOptions = {}) => {
   const scope = effectScope();
   const result = scope.run(() => {
-    const state = useTooltipTriggerState({closeDelay: 500, delay: 1500, ...stateOptions});
+    const state = useTooltipTriggerState({ closeDelay: 500, delay: 1500, ...stateOptions });
 
-    return {state, trigger: useTooltipTrigger(options, state)};
+    return { state, trigger: useTooltipTrigger(options, state) };
   })!;
 
-  const {onBlur, onFocus, onKeydown, onPointerdown, onPointerenter, onPointerleave} =
+  const { onBlur, onFocus, onKeydown, onPointerdown, onPointerenter, onPointerleave } =
     result.trigger.responder.handlers.value;
 
   return {
@@ -26,10 +29,10 @@ const setup = (options: Options = {}, stateOptions: StateOptions = {}) => {
     dispose: () => scope.stop(),
     focus: () => onFocus(new FocusEvent("focus")),
     hoverEnd: (pointerType = "mouse") =>
-      onPointerleave(new PointerEvent("pointerleave", {...POINTER, pointerType})),
+      onPointerleave(new PointerEvent("pointerleave", { ...POINTER, pointerType })),
     hoverStart: (pointerType = "mouse") =>
-      onPointerenter(new PointerEvent("pointerenter", {...POINTER, pointerType})),
-    keydown: () => onKeydown(new KeyboardEvent("keydown", {key: "Enter"})),
+      onPointerenter(new PointerEvent("pointerenter", { ...POINTER, pointerType })),
+    keydown: () => onKeydown(new KeyboardEvent("keydown", { key: "Enter" })),
     pointerdown: () => onPointerdown(new PointerEvent("pointerdown", POINTER)),
     state: result.state,
     trigger: result.trigger,
@@ -106,7 +109,7 @@ describe("useTooltipTrigger", () => {
     });
 
     it("does nothing while disabled", () => {
-      const host = setup({isDisabled: true});
+      const host = setup({ isDisabled: true });
 
       host.hoverStart();
       vi.advanceTimersByTime(3000);
@@ -117,7 +120,7 @@ describe("useTooltipTrigger", () => {
     });
 
     it("does nothing when it only opens on focus", () => {
-      const host = setup({trigger: "focus"});
+      const host = setup({ trigger: "focus" });
 
       host.hoverStart();
       vi.advanceTimersByTime(3000);
@@ -170,7 +173,7 @@ describe("useTooltipTrigger", () => {
     it("does nothing while disabled", () => {
       setInteractionModality("keyboard");
 
-      const host = setup({isDisabled: true});
+      const host = setup({ isDisabled: true });
 
       host.focus();
 
@@ -249,7 +252,7 @@ describe("useTooltipTrigger", () => {
     });
 
     it("stays open through a press when asked to", () => {
-      const host = setup({shouldCloseOnPress: false});
+      const host = setup({ shouldCloseOnPress: false });
 
       host.hoverStart();
       vi.advanceTimersByTime(1500);
@@ -270,7 +273,7 @@ describe("useTooltipTrigger", () => {
       // The listener is attached once the tooltip is on screen, which is a flush after it opens.
       await nextTick();
 
-      document.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      document.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       // Listened for on the document: focus is still on the trigger, or nowhere at all after a
       // click, so nothing on the path from the key to the tooltip could handle it.
@@ -286,7 +289,7 @@ describe("useTooltipTrigger", () => {
       vi.advanceTimersByTime(1500);
       await nextTick();
 
-      document.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "a"}));
+      document.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "a" }));
 
       expect(host.state.isOpen.value).toBe(true);
 
@@ -307,7 +310,7 @@ describe("useTooltipTrigger", () => {
       vi.advanceTimersByTime(1500);
       await nextTick();
 
-      other.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      other.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       // Stopped in the capture phase on the document, so a dialog behind the tooltip does not also
       // close on the same key — one Escape dismisses one thing.
@@ -332,7 +335,7 @@ describe("useTooltipTrigger", () => {
 
       // Nothing should throw, and nothing should be left listening on the document.
       expect(() =>
-        document.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"})),
+        document.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" })),
       ).not.toThrow();
 
       host.dispose();

@@ -4,8 +4,8 @@ import type {
   PageBehavior,
   SelectionAlignment,
 } from "@/composables/use-calendar-state";
-import type {DayOfWeek, WeekdayStyle} from "@/utils/calendar";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { DayOfWeek, WeekdayStyle } from "@/utils/calendar";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 export interface CalendarFixtureProps {
   class?: string;

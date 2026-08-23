@@ -2,11 +2,11 @@ import type {
   DropOperationEvent,
   UseDroppableCollectionStateOptions,
 } from "@/composables/use-droppable-collection-state";
-import type {DragKey, DropTarget} from "@/utils/dnd-types";
+import type { DragKey, DropTarget } from "@/utils/dnd-types";
 
-import {describe, expect, it, vi} from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import {useDroppableCollectionState} from "@/composables/use-droppable-collection-state";
+import { useDroppableCollectionState } from "@/composables/use-droppable-collection-state";
 
 import {
   createFixtureCollection,
@@ -14,13 +14,13 @@ import {
   createFixtureTypes,
 } from "./dnd-collection-state-fixtures";
 
-const flat = () => createFixtureCollection([{key: "a"}, {key: "b"}, {key: "c"}]);
+const flat = () => createFixtureCollection([{ key: "a" }, { key: "b" }, { key: "c" }]);
 const tree = () =>
   createFixtureCollection([
-    {key: "folder"},
-    {key: "child-1", parentKey: "folder"},
-    {key: "child-2", parentKey: "folder"},
-    {key: "other"},
+    { key: "folder" },
+    { key: "child-1", parentKey: "folder" },
+    { key: "child-2", parentKey: "folder" },
+    { key: "other" },
   ]);
 
 const item = (key: DragKey, dropPosition: "after" | "before" | "on"): DropTarget => ({
@@ -29,7 +29,7 @@ const item = (key: DragKey, dropPosition: "after" | "before" | "on"): DropTarget
   type: "item",
 });
 
-const root: DropTarget = {type: "root"};
+const root: DropTarget = { type: "root" };
 
 /** A candidate drop, with the parts a test is not exercising filled in. */
 const operationEvent = (overrides: Partial<DropOperationEvent> = {}): DropOperationEvent => ({
@@ -66,7 +66,7 @@ describe("useDroppableCollectionState", () => {
     it("announces entering and leaving as the target moves", () => {
       const onDropEnter = vi.fn();
       const onDropExit = vi.fn();
-      const dropState = state({onDropEnter, onDropExit});
+      const dropState = state({ onDropEnter, onDropExit });
 
       dropState.setTarget(item("a", "on"));
       expect(onDropEnter).toHaveBeenCalledTimes(1);
@@ -79,7 +79,7 @@ describe("useDroppableCollectionState", () => {
 
     it("does nothing when set to the target it already has", () => {
       const onDropEnter = vi.fn();
-      const dropState = state({onDropEnter});
+      const dropState = state({ onDropEnter });
 
       dropState.setTarget(item("a", "on"));
       dropState.setTarget(item("a", "on"));
@@ -122,7 +122,7 @@ describe("useDroppableCollectionState", () => {
     // Sibling links, not list adjacency: a child's next sibling is the next item under the same
     // parent, so "after the last child" is not "before the folder's sibling".
     it("follows sibling links rather than list order in a tree", () => {
-      const dropState = state({collection: tree()});
+      const dropState = state({ collection: tree() });
 
       dropState.setTarget(item("child-2", "after"));
 
@@ -144,35 +144,35 @@ describe("useDroppableCollectionState", () => {
     });
 
     it("refuses everything while disabled", () => {
-      const dropState = state({isDisabled: true, onInsert: vi.fn()});
+      const dropState = state({ isDisabled: true, onInsert: vi.fn() });
 
       expect(dropState.getDropOperation(operationEvent())).toBe("cancel");
     });
 
     it("accepts an insert from outside between two items", () => {
-      const dropState = state({onInsert: vi.fn()});
+      const dropState = state({ onInsert: vi.fn() });
 
-      expect(dropState.getDropOperation(operationEvent({isInternal: false}))).toBe("move");
+      expect(dropState.getDropOperation(operationEvent({ isInternal: false }))).toBe("move");
     });
 
     // `onInsert` is for items arriving from elsewhere; the same gesture inside the collection is
     // a reorder, and a collection that only declared `onInsert` must not accept it.
     it("refuses an internal drag when only onInsert was supplied", () => {
-      const dropState = state({onInsert: vi.fn()});
+      const dropState = state({ onInsert: vi.fn() });
 
       expect(
         dropState.getDropOperation(
-          operationEvent({draggingKeys: new Set(["a"]), isInternal: true}),
+          operationEvent({ draggingKeys: new Set(["a"]), isInternal: true }),
         ),
       ).toBe("cancel");
     });
 
     it("accepts a reorder between siblings", () => {
-      const dropState = state({onReorder: vi.fn()});
+      const dropState = state({ onReorder: vi.fn() });
 
       expect(
         dropState.getDropOperation(
-          operationEvent({draggingKeys: new Set(["a"]), isInternal: true}),
+          operationEvent({ draggingKeys: new Set(["a"]), isInternal: true }),
         ),
       ).toBe("move");
     });
@@ -184,7 +184,7 @@ describe("useDroppableCollectionState", () => {
      * alone does not accept it.
      */
     it("refuses a reorder whose items do not share the target's parent", () => {
-      const dropState = state({collection: tree(), onReorder: vi.fn()});
+      const dropState = state({ collection: tree(), onReorder: vi.fn() });
 
       expect(
         dropState.getDropOperation(
@@ -198,7 +198,7 @@ describe("useDroppableCollectionState", () => {
     });
 
     it("accepts that same cross-parent drag as a move", () => {
-      const dropState = state({collection: tree(), onMove: vi.fn()});
+      const dropState = state({ collection: tree(), onMove: vi.fn() });
 
       expect(
         dropState.getDropOperation(
@@ -212,45 +212,45 @@ describe("useDroppableCollectionState", () => {
     });
 
     it("accepts a drop onto an item", () => {
-      const dropState = state({onItemDrop: vi.fn()});
+      const dropState = state({ onItemDrop: vi.fn() });
 
-      expect(dropState.getDropOperation(operationEvent({target: item("b", "on")}))).toBe("move");
+      expect(dropState.getDropOperation(operationEvent({ target: item("b", "on") }))).toBe("move");
     });
 
     it("accepts a root drop from outside", () => {
-      const dropState = state({onRootDrop: vi.fn()});
+      const dropState = state({ onRootDrop: vi.fn() });
 
-      expect(dropState.getDropOperation(operationEvent({target: root}))).toBe("move");
+      expect(dropState.getDropOperation(operationEvent({ target: root }))).toBe("move");
     });
 
     // Dropping a collection's own items onto its own root reads as a no-op.
     it("refuses a root drop that came from inside", () => {
-      const dropState = state({onRootDrop: vi.fn()});
+      const dropState = state({ onRootDrop: vi.fn() });
 
       expect(
         dropState.getDropOperation(
-          operationEvent({draggingKeys: new Set(["a"]), isInternal: true, target: root}),
+          operationEvent({ draggingKeys: new Set(["a"]), isInternal: true, target: root }),
         ),
       ).toBe("cancel");
     });
 
     // `onDrop` is the escape hatch: it replaces the specific handlers rather than joining them.
     it("accepts anything once onDrop is supplied", () => {
-      const dropState = state({onDrop: vi.fn()});
+      const dropState = state({ onDrop: vi.fn() });
 
-      expect(dropState.getDropOperation(operationEvent({target: root}))).toBe("move");
+      expect(dropState.getDropOperation(operationEvent({ target: root }))).toBe("move");
     });
   });
 
   describe("accepted drag types", () => {
     it("refuses a drag carrying none of the accepted types", () => {
-      const dropState = state({acceptedDragTypes: ["image/png"], onInsert: vi.fn()});
+      const dropState = state({ acceptedDragTypes: ["image/png"], onInsert: vi.fn() });
 
       expect(dropState.getDropOperation(operationEvent())).toBe("cancel");
     });
 
     it("accepts a drag carrying one of them", () => {
-      const dropState = state({acceptedDragTypes: ["text/plain"], onInsert: vi.fn()});
+      const dropState = state({ acceptedDragTypes: ["text/plain"], onInsert: vi.fn() });
 
       expect(dropState.getDropOperation(operationEvent())).toBe("move");
     });
@@ -258,7 +258,7 @@ describe("useDroppableCollectionState", () => {
 
   describe("dropping onto itself", () => {
     it("refuses dropping an item onto itself", () => {
-      const dropState = state({onItemDrop: vi.fn()});
+      const dropState = state({ onItemDrop: vi.fn() });
 
       expect(
         dropState.getDropOperation(
@@ -278,7 +278,7 @@ describe("useDroppableCollectionState", () => {
      * drag, leaving both unreachable.
      */
     it("refuses dropping a folder into its own child", () => {
-      const dropState = state({collection: tree(), onMove: vi.fn()});
+      const dropState = state({ collection: tree(), onMove: vi.fn() });
 
       expect(
         dropState.getDropOperation(
@@ -292,7 +292,7 @@ describe("useDroppableCollectionState", () => {
     });
 
     it("allows dropping onto an unrelated item", () => {
-      const dropState = state({collection: tree(), onItemDrop: vi.fn()});
+      const dropState = state({ collection: tree(), onItemDrop: vi.fn() });
 
       expect(
         dropState.getDropOperation(
@@ -308,7 +308,7 @@ describe("useDroppableCollectionState", () => {
 
   describe("the caller's own decision", () => {
     it("defers to getDropOperation when the drop is otherwise valid", () => {
-      const dropState = state({getDropOperation: () => "copy", onInsert: vi.fn()});
+      const dropState = state({ getDropOperation: () => "copy", onInsert: vi.fn() });
 
       expect(dropState.getDropOperation(operationEvent())).toBe("copy");
     });
@@ -316,33 +316,35 @@ describe("useDroppableCollectionState", () => {
     // The matrix runs first: a caller cannot opt into a drop the collection has no handler for.
     it("is not consulted for a drop the collection could not perform", () => {
       const getDropOperation = vi.fn(() => "copy" as const);
-      const dropState = state({getDropOperation});
+      const dropState = state({ getDropOperation });
 
       expect(dropState.getDropOperation(operationEvent())).toBe("cancel");
       expect(getDropOperation).not.toHaveBeenCalled();
     });
 
     it("falls back to the first allowed operation", () => {
-      const dropState = state({onInsert: vi.fn()});
+      const dropState = state({ onInsert: vi.fn() });
 
       expect(
-        dropState.getDropOperation(operationEvent({allowedOperations: ["copy", "move"]})),
+        dropState.getDropOperation(operationEvent({ allowedOperations: ["copy", "move"] })),
       ).toBe("copy");
     });
   });
 
   describe("shouldAcceptItemDrop", () => {
     it("refuses a drop onto an item the caller rejects", () => {
-      const dropState = state({onItemDrop: vi.fn(), shouldAcceptItemDrop: () => false});
+      const dropState = state({ onItemDrop: vi.fn(), shouldAcceptItemDrop: () => false });
 
-      expect(dropState.getDropOperation(operationEvent({target: item("b", "on")}))).toBe("cancel");
+      expect(dropState.getDropOperation(operationEvent({ target: item("b", "on") }))).toBe(
+        "cancel",
+      );
     });
 
     // It only governs "on" drops; a gap between items is not an item drop.
     it("leaves drops between items alone", () => {
-      const dropState = state({onInsert: vi.fn(), shouldAcceptItemDrop: () => false});
+      const dropState = state({ onInsert: vi.fn(), shouldAcceptItemDrop: () => false });
 
-      expect(dropState.getDropOperation(operationEvent({target: item("b", "before")}))).toBe(
+      expect(dropState.getDropOperation(operationEvent({ target: item("b", "before") }))).toBe(
         "move",
       );
     });

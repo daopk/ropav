@@ -1,5 +1,8 @@
-import type {ValidationBehavior, ValidationFunction} from "@/composables/use-form-validation-state";
-import type {UseSelectReturn} from "@/composables/use-select";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
+import type { UseSelectReturn } from "@/composables/use-select";
 import type {
   SelectSelectionMode,
   SelectedValue,

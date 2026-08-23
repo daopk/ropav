@@ -1,4 +1,4 @@
-import type {DragCollection, DragKey, DragKeyboardDelegate, DropTarget} from "./dnd-types";
+import type { DragCollection, DragKey, DragKeyboardDelegate, DropTarget } from "./dnd-types";
 
 /**
  * Moving the drop target with the arrow keys, ported from React Aria's
@@ -58,7 +58,7 @@ const getLastChild = (collection: DragCollection, key: DragKey): DropTarget | nu
 
   if (!lastChild) return null;
 
-  return {dropPosition: "after", key: lastChild.key, type: "item"};
+  return { dropPosition: "after", key: lastChild.key, type: "item" };
 };
 
 const nextDropTarget = (
@@ -68,12 +68,12 @@ const nextDropTarget = (
   wrap: boolean,
   horizontal: "left" | "right" | null,
 ): DropTarget | null => {
-  if (!target) return {type: "root"};
+  if (!target) return { type: "root" };
 
   if (target.type === "root") {
     const nextKey = keyboardDelegate.getFirstKey?.() ?? null;
 
-    return nextKey != null ? {dropPosition: "before", key: nextKey, type: "item"} : null;
+    return nextKey != null ? { dropPosition: "before", key: nextKey, type: "item" } : null;
   }
 
   const nextKey = horizontal
@@ -88,11 +88,11 @@ const nextDropTarget = (
   // The keyboard delegate may skip past the immediate next key — down a grid column, say. When
   // it does, jump straight there keeping the same position rather than walking positions here.
   if (nextKey != null && nextKey !== nextCollectionKey) {
-    return {dropPosition: target.dropPosition, key: nextKey, type: "item"};
+    return { dropPosition: target.dropPosition, key: nextKey, type: "item" };
   }
 
   if (target.dropPosition === "before") {
-    return {dropPosition: "on", key: target.key, type: "item"};
+    return { dropPosition: "on", key: target.key, type: "item" };
   }
 
   if (target.dropPosition === "on") {
@@ -102,10 +102,10 @@ const nextDropTarget = (
     // A following row at the same depth or deeper: its "before" is this item's "after", so use
     // the one name rather than offering the position twice.
     if (targetNode && nextNode && (nextNode.level ?? 0) >= (targetNode.level ?? 0)) {
-      return {dropPosition: "before", key: nextNode.key, type: "item"};
+      return { dropPosition: "before", key: nextNode.key, type: "item" };
     }
 
-    return {dropPosition: "after", key: target.key, type: "item"};
+    return { dropPosition: "after", key: target.key, type: "item" };
   }
 
   // "after": either continue among siblings, or climb out of this level.
@@ -121,17 +121,17 @@ const nextDropTarget = (
     const afterParent = parentNode?.nextKey != null ? collection.getItem(parentNode.nextKey) : null;
 
     if ((afterParent?.type ?? "item") === "item" && afterParent) {
-      return {dropPosition: "before", key: afterParent.key, type: "item"};
+      return { dropPosition: "before", key: afterParent.key, type: "item" };
     }
 
     if (parentNode && (parentNode.type ?? "item") === "item") {
-      return {dropPosition: "after", key: parentNode.key, type: "item"};
+      return { dropPosition: "after", key: parentNode.key, type: "item" };
     }
   }
 
-  if (nextSibling) return {dropPosition: "on", key: nextSibling.key, type: "item"};
+  if (nextSibling) return { dropPosition: "on", key: nextSibling.key, type: "item" };
 
-  return wrap ? {type: "root"} : null;
+  return wrap ? { type: "root" } : null;
 };
 
 const previousDropTarget = (
@@ -156,7 +156,7 @@ const previousDropTarget = (
       lastKey = node.parentKey ?? null;
     }
 
-    return prevKey != null ? {dropPosition: "after", key: prevKey, type: "item"} : null;
+    return prevKey != null ? { dropPosition: "after", key: prevKey, type: "item" } : null;
   }
 
   if (target.type === "item") {
@@ -170,7 +170,7 @@ const previousDropTarget = (
     );
 
     if (prevKey != null && prevKey !== prevCollectionKey) {
-      return {dropPosition: target.dropPosition, key: prevKey, type: "item"};
+      return { dropPosition: target.dropPosition, key: prevKey, type: "item" };
     }
 
     if (target.dropPosition === "before") {
@@ -184,23 +184,23 @@ const previousDropTarget = (
         if (lastChild) return lastChild;
       }
 
-      if (prevKey != null) return {dropPosition: "on", key: prevKey, type: "item"};
+      if (prevKey != null) return { dropPosition: "on", key: prevKey, type: "item" };
 
-      return {type: "root"};
+      return { type: "root" };
     }
 
     if (target.dropPosition === "on") {
-      return {dropPosition: "before", key: target.key, type: "item"};
+      return { dropPosition: "before", key: target.key, type: "item" };
     }
 
     const lastChild = getLastChild(collection, target.key);
 
     if (lastChild) return lastChild;
 
-    return {dropPosition: "on", key: target.key, type: "item"};
+    return { dropPosition: "on", key: target.key, type: "item" };
   }
 
-  return target.type !== "root" ? {type: "root"} : null;
+  return target.type !== "root" ? { type: "root" } : null;
 };
 
 /**

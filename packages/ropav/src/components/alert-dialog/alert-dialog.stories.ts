@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";
 import IconLockOpen from "~icons/gravity-ui/lock-open";
@@ -9,8 +9,8 @@ import IconSparkles from "~icons/gravity-ui/sparkles";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconTriangleExclamation from "~icons/gravity-ui/triangle-exclamation";
 
-import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import {ButtonRoot} from "../button";
+import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import { ButtonRoot } from "../button";
 
 import AlertDialogBackdrop from "./alert-dialog-backdrop.vue";
 import AlertDialogBody from "./alert-dialog-body.vue";
@@ -51,7 +51,7 @@ const components = {
 };
 
 const meta = {
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Overlays/AlertDialog",
 } satisfies Meta;
 
@@ -171,7 +171,7 @@ export const Statuses: Story = {
 export const Placements: Story = {
   render: () => ({
     components,
-    setup: () => ({placements: ["auto", "top", "center", "bottom"] as const}),
+    setup: () => ({ placements: ["auto", "top", "center", "bottom"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <AlertDialog v-for="placement in placements" :key="placement">
@@ -217,7 +217,7 @@ export const Placements: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({sizes: ["xs", "sm", "md", "lg", "cover"] as const}),
+    setup: () => ({ sizes: ["xs", "sm", "md", "lg", "cover"] as const }),
     template: `
       <div class="flex flex-wrap gap-4">
         <AlertDialog v-for="size in sizes" :key="size">
@@ -547,7 +547,7 @@ export const Controlled: Story = {
       const isOpen = shallowRef(false);
       const state = useOverlayTriggerState({});
 
-      return {isOpen, state};
+      return { isOpen, state };
     },
     template: `
       <div class="flex max-w-md flex-col gap-8">
@@ -796,7 +796,7 @@ export const CustomPortal: Story = {
         portalContainer.value = (element as HTMLElement | null) ?? null;
       };
 
-      return {portalContainer, setPortal};
+      return { portalContainer, setPortal };
     },
     template: `
       <div class="flex flex-col gap-4">

@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
+import { providePressResponder } from "../../composables/press-responder";
 
-import {useAlertDialogContext} from "./alert-dialog.context";
+import { useAlertDialogContext } from "./alert-dialog.context";
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {state} = useAlertDialogContext();
+const { state } = useAlertDialogContext();
 
 /**
  * Turns whatever pressable sits inside into a control that closes the dialog.

@@ -1,16 +1,16 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Button} from "../button";
-import {Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator} from "../checkbox";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
+import { Button } from "../button";
+import { Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator } from "../checkbox";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
 
-import {CheckboxGroup} from "./index";
+import { CheckboxGroup } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Checkbox.Content` through, so dot notation cannot be used here.
@@ -30,10 +30,10 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary"],
     },
   },
@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <CheckboxGroup name="interests" :is-disabled="args.isDisabled" :variant="args.variant">
         <Label>Select your interests</Label>
@@ -262,7 +262,7 @@ export const Controlled: Story = {
     setup: () => {
       const selected = shallowRef(["coding", "design"]);
 
-      return {selected};
+      return { selected };
     },
     template: `
       <CheckboxGroup class="min-w-[320px]" name="skills" v-model:value="selected">

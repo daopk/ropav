@@ -1,7 +1,7 @@
-import type {RadioGroupState} from "../../composables/use-radio-group-state";
-import type {ComputedRef} from "vue";
+import type { RadioGroupState } from "../../composables/use-radio-group-state";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface RadioGroupContext {
   /** Selection and validation shared by every radio in the group. */

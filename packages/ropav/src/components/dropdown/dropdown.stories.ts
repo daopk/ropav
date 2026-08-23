@@ -1,8 +1,8 @@
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconArrowRight from "~icons/gravity-ui/arrow-right";
 import IconArrowRightFromSquare from "~icons/gravity-ui/arrow-right-from-square";
 import IconBars from "~icons/gravity-ui/bars";
@@ -15,16 +15,16 @@ import IconPersons from "~icons/gravity-ui/persons";
 import IconSquarePlus from "~icons/gravity-ui/square-plus";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 
-import {avatarSrc} from "../../utils/story-assets";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {ButtonRoot} from "../button";
-import {DescriptionRoot} from "../description";
-import {HeaderRoot} from "../header";
-import {KbdAbbr, KbdContent, KbdRoot} from "../kbd";
-import {LabelRoot} from "../label";
-import {MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator} from "../menu-item";
-import {MenuSectionRoot} from "../menu-section";
-import {SeparatorRoot} from "../separator";
+import { avatarSrc } from "../../utils/story-assets";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { ButtonRoot } from "../button";
+import { DescriptionRoot } from "../description";
+import { HeaderRoot } from "../header";
+import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
+import { LabelRoot } from "../label";
+import { MenuItemIndicator, MenuItemRoot, MenuItemSubmenuIndicator } from "../menu-item";
+import { MenuSectionRoot } from "../menu-section";
+import { SeparatorRoot } from "../separator";
 
 import DropdownMenu from "./dropdown-menu.vue";
 import DropdownPopover from "./dropdown-popover.vue";
@@ -70,15 +70,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const FRUITS = [
-  {id: "apple", label: "Apple"},
-  {id: "banana", label: "Banana"},
-  {id: "cherry", label: "Cherry"},
+  { id: "apple", label: "Apple" },
+  { id: "banana", label: "Banana" },
+  { id: "cherry", label: "Cherry" },
 ];
 
 const FILE_ACTIONS = [
-  {icon: "IconSquarePlus", id: "new-file", label: "New file", letter: "N"},
-  {icon: "IconFolderOpen", id: "open-file", label: "Open file", letter: "O"},
-  {icon: "IconFloppyDisk", id: "save-file", label: "Save file", letter: "S"},
+  { icon: "IconSquarePlus", id: "new-file", label: "New file", letter: "N" },
+  { icon: "IconFolderOpen", id: "open-file", label: "Open file", letter: "O" },
+  { icon: "IconFloppyDisk", id: "save-file", label: "Save file", letter: "S" },
 ];
 
 const DESCRIBED_ACTIONS = [
@@ -140,7 +140,10 @@ export const Default: Story = {
 export const WithSingleSelection: Story = {
   render: () => ({
     components,
-    setup: () => ({fruits: FRUITS, selected: shallowRef<CollectionSelection>(new Set(["apple"]))}),
+    setup: () => ({
+      fruits: FRUITS,
+      selected: shallowRef<CollectionSelection>(new Set(["apple"])),
+    }),
     template: `
       <Dropdown>
         <Button aria-label="Menu" variant="secondary">Fruit</Button>
@@ -176,7 +179,10 @@ export const WithSingleSelection: Story = {
 export const SingleWithCustomIndicator: Story = {
   render: () => ({
     components,
-    setup: () => ({fruits: FRUITS, selected: shallowRef<CollectionSelection>(new Set(["apple"]))}),
+    setup: () => ({
+      fruits: FRUITS,
+      selected: shallowRef<CollectionSelection>(new Set(["apple"])),
+    }),
     // The indicator's slot receives the item's own selected state, which is what a custom mark
     // needs in order to know whether to draw anything at all.
     template: `
@@ -224,7 +230,10 @@ export const SingleWithCustomIndicator: Story = {
 export const WithMultipleSelection: Story = {
   render: () => ({
     components,
-    setup: () => ({fruits: FRUITS, selected: shallowRef<CollectionSelection>(new Set(["apple"]))}),
+    setup: () => ({
+      fruits: FRUITS,
+      selected: shallowRef<CollectionSelection>(new Set(["apple"])),
+    }),
     template: `
       <Dropdown>
         <Button aria-label="Menu" variant="secondary">Preferred Fruits</Button>
@@ -258,15 +267,15 @@ export const WithMultipleSelection: Story = {
 };
 
 const TEXT_STYLES = [
-  {id: "bold", label: "Bold", letter: "B"},
-  {id: "italic", label: "Italic", letter: "I"},
-  {id: "underline", label: "Underline", letter: "U"},
+  { id: "bold", label: "Bold", letter: "B" },
+  { id: "italic", label: "Italic", letter: "I" },
+  { id: "underline", label: "Underline", letter: "U" },
 ];
 
 const TEXT_ALIGNMENTS = [
-  {id: "left", label: "Left", letter: "A"},
-  {id: "center", label: "Center", letter: "H"},
-  {id: "right", label: "Right", letter: "D"},
+  { id: "left", label: "Left", letter: "A" },
+  { id: "center", label: "Center", letter: "H" },
+  { id: "right", label: "Right", letter: "D" },
 ];
 
 export const WithSectionLevelSelection: Story = {
@@ -355,9 +364,9 @@ export const WithKeyboardShortcuts: Story = {
     components,
     setup: () => ({
       actions: [
-        {id: "new", label: "New", letter: "N"},
-        {id: "open", label: "Open", letter: "O"},
-        {id: "save", label: "Save", letter: "S"},
+        { id: "new", label: "New", letter: "N" },
+        { id: "open", label: "Open", letter: "O" },
+        { id: "save", label: "Save", letter: "S" },
       ],
     }),
     template: `
@@ -394,7 +403,7 @@ export const WithKeyboardShortcuts: Story = {
 
 export const WithIcons: Story = {
   render: () => ({
-    components: {...components, IconFloppyDisk, IconFolderOpen, IconSquarePlus, IconTrashBin},
+    components: { ...components, IconFloppyDisk, IconFolderOpen, IconSquarePlus, IconTrashBin },
     template: `
       <Dropdown>
         <Button aria-label="Menu" variant="secondary">Actions</Button>
@@ -443,7 +452,7 @@ export const WithIcons: Story = {
 export const LongPressTrigger: Story = {
   render: () => ({
     components,
-    setup: () => ({actions: FILE_ACTIONS}),
+    setup: () => ({ actions: FILE_ACTIONS }),
     // Nothing on screen says the press has to be held, so the trigger describes the gesture to
     // assistive technology and answers Alt+ArrowDown as the keyboard way in.
     template: `
@@ -471,8 +480,8 @@ export const LongPressTrigger: Story = {
 
 export const WithDescriptions: Story = {
   render: () => ({
-    components: {...components, IconFloppyDisk, IconFolderOpen, IconSquarePlus, IconTrashBin},
-    setup: () => ({actions: DESCRIBED_ACTIONS}),
+    components: { ...components, IconFloppyDisk, IconFolderOpen, IconSquarePlus, IconTrashBin },
+    setup: () => ({ actions: DESCRIBED_ACTIONS }),
     template: `
       <Dropdown>
         <Button aria-label="Menu" variant="secondary">Actions</Button>
@@ -519,7 +528,7 @@ export const WithDescriptions: Story = {
 
 export const WithSections: Story = {
   render: () => ({
-    components: {...components, IconEllipsisVertical, IconPencil, IconSquarePlus, IconTrashBin},
+    components: { ...components, IconEllipsisVertical, IconPencil, IconSquarePlus, IconTrashBin },
     // A trigger of its own, for a control that is not a button: it carries the dropdown's own
     // trigger class and borrows the button's look through utilities.
     template: `
@@ -588,8 +597,8 @@ export const WithSections: Story = {
 
 export const WithDisabledItems: Story = {
   render: () => ({
-    components: {...components, IconBars, IconPencil, IconSquarePlus, IconTrashBin},
-    setup: () => ({disabledKeys: ["delete-file"]}),
+    components: { ...components, IconBars, IconPencil, IconSquarePlus, IconTrashBin },
+    setup: () => ({ disabledKeys: ["delete-file"] }),
     template: `
       <Dropdown>
         <Button is-icon-only aria-label="Menu" variant="secondary">
@@ -714,7 +723,7 @@ export const WithSubmenus: Story = {
 
 export const WithCustomSubmenuIndicator: Story = {
   render: () => ({
-    components: {...components, IconArrowRight},
+    components: { ...components, IconArrowRight },
     template: `
       <Dropdown>
         <Button aria-label="Menu" variant="secondary">Share</Button>
@@ -840,7 +849,7 @@ export const Controlled: Story = {
 export const ControlledOpenState: Story = {
   render: () => ({
     components,
-    setup: () => ({actions: FILE_ACTIONS, isOpen: shallowRef(false)}),
+    setup: () => ({ actions: FILE_ACTIONS, isOpen: shallowRef(false) }),
     template: `
       <div class="min-w-sm space-y-4">
         <p class="text-sm text-muted">
@@ -871,7 +880,7 @@ export const ControlledOpenState: Story = {
 
 export const CustomTrigger: Story = {
   render: () => ({
-    components: {...components, IconArrowRightFromSquare, IconGear, IconPersons},
+    components: { ...components, IconArrowRightFromSquare, IconGear, IconPersons },
     setup: () => ({
       avatarUrl: avatarSrc("orange"),
     }),

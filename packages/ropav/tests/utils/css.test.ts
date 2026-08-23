@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {parseCssTime} from "@/utils/css";
+import { parseCssTime } from "@/utils/css";
 
 describe("parseCssTime", () => {
   it("reads milliseconds", () => {

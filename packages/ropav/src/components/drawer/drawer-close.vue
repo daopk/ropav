@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
+import { providePressResponder } from "../../composables/press-responder";
 
-import {useDrawerContext} from "./drawer.context";
+import { useDrawerContext } from "./drawer.context";
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {state} = useDrawerContext();
+const { state } = useDrawerContext();
 
 /**
  * Turns whatever pressable sits inside into a control that closes the drawer.

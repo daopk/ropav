@@ -1,9 +1,9 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {AlertDialog} from "@/components/alert-dialog";
-import {ButtonRoot} from "@/components/button";
+import { AlertDialog } from "@/components/alert-dialog";
+import { ButtonRoot } from "@/components/button";
 
 /**
  * The dialog mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -26,34 +26,34 @@ const slot = (name: string) => document.body.querySelector(`[data-slot="${name}"
 
 const render = () =>
   renderInterop(AlertDialog, {
-    props: {defaultOpen: true},
+    props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, {default: () => "Delete account"}),
+        h(ButtonRoot, null, { default: () => "Delete account" }),
         h(
           AlertDialog.Backdrop,
-          {variant: "blur"},
+          { variant: "blur" },
           {
             default: () =>
               h(
                 AlertDialog.Container,
-                {placement: "top", size: "lg"},
+                { placement: "top", size: "lg" },
                 {
                   default: () =>
                     h(AlertDialog.Dialog, null, {
                       default: () => [
                         h(AlertDialog.Header, null, {
                           default: () => [
-                            h(AlertDialog.Icon, {status: "warning"}),
-                            h(AlertDialog.Heading, null, {default: () => "Delete account?"}),
+                            h(AlertDialog.Icon, { status: "warning" }),
+                            h(AlertDialog.Heading, null, { default: () => "Delete account?" }),
                           ],
                         }),
-                        h(AlertDialog.Body, null, {default: () => "This cannot be undone."}),
+                        h(AlertDialog.Body, null, { default: () => "This cannot be undone." }),
                         h(AlertDialog.Footer, null, {
                           default: () => [
-                            h(ButtonRoot, null, {default: () => "Learn more"}),
+                            h(ButtonRoot, null, { default: () => "Learn more" }),
                             h(AlertDialog.Close, null, {
-                              default: () => h(ButtonRoot, null, {default: () => "Delete"}),
+                              default: () => h(ButtonRoot, null, { default: () => "Delete" }),
                             }),
                           ],
                         }),
@@ -159,9 +159,9 @@ describe("AlertDialog (interop)", () => {
 
     await settle();
 
-    const remove = result.screen.getByRole("button", {name: "Delete"});
+    const remove = result.screen.getByRole("button", { name: "Delete" });
 
-    remove.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+    remove.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
     await settle();
 
     // The wrapper provides below the cleared boundary, so opting in still works from the host.

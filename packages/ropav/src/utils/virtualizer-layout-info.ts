@@ -1,4 +1,4 @@
-import type {Rect} from "./virtualizer-geometry";
+import type { Rect } from "./virtualizer-geometry";
 
 /**
  * What a layout hands the virtualizer for one element, ported from React Aria's `LayoutInfo`

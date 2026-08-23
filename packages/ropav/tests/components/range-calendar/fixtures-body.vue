@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarFixtureProps} from "./fixtures.types";
+import type { RangeCalendarFixtureProps } from "./fixtures.types";
 
 import {
   CalendarYearPickerCell,
@@ -27,8 +27,8 @@ import {
  * because the linter reads a literal `slot` attribute as Vue 2 slot syntax and rewrites it. It is an
  * ordinary prop here, and the same trick the component itself uses to put it back in the DOM.
  */
-const PREVIOUS = {slot: "previous"} as const;
-const NEXT = {slot: "next"} as const;
+const PREVIOUS = { slot: "previous" } as const;
+const NEXT = { slot: "next" } as const;
 
 /*
  * The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would turn
@@ -48,12 +48,12 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
   <RangeCalendarRoot v-if="props.attributeForm" aria-label="Stay" is-disabled>
     <RangeCalendarGrid>
       <RangeCalendarGridHeader>
-        <template #default="{day}">
+        <template #default="{ day }">
           <RangeCalendarHeaderCell>{{ day }}</RangeCalendarHeaderCell>
         </template>
       </RangeCalendarGridHeader>
       <RangeCalendarGridBody>
-        <template #default="{date}">
+        <template #default="{ date }">
           <RangeCalendarCell :date="date" />
         </template>
       </RangeCalendarGridBody>
@@ -98,14 +98,14 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
     </RangeCalendarHeader>
     <RangeCalendarGrid :weekday-style="props.weekdayStyle">
       <RangeCalendarGridHeader>
-        <template #default="{day}">
+        <template #default="{ day }">
           <RangeCalendarHeaderCell>{{ day }}</RangeCalendarHeaderCell>
         </template>
       </RangeCalendarGridHeader>
       <RangeCalendarGridBody>
-        <template #default="{date}">
+        <template #default="{ date }">
           <RangeCalendarCell :date="date">
-            <template v-if="props.withCellIndicator" #default="{formattedDate}">
+            <template v-if="props.withCellIndicator" #default="{ formattedDate }">
               {{ formattedDate }}
               <RangeCalendarCellIndicator />
             </template>
@@ -113,21 +113,21 @@ const props = withDefaults(defineProps<RangeCalendarFixtureProps>(), {
         </template>
       </RangeCalendarGridBody>
     </RangeCalendarGrid>
-    <RangeCalendarGrid v-if="props.withSecondMonth" :offset="{months: 1}">
+    <RangeCalendarGrid v-if="props.withSecondMonth" :offset="{ months: 1 }">
       <RangeCalendarGridHeader>
-        <template #default="{day}">
+        <template #default="{ day }">
           <RangeCalendarHeaderCell>{{ day }}</RangeCalendarHeaderCell>
         </template>
       </RangeCalendarGridHeader>
       <RangeCalendarGridBody>
-        <template #default="{date}">
+        <template #default="{ date }">
           <RangeCalendarCell :date="date" />
         </template>
       </RangeCalendarGridBody>
     </RangeCalendarGrid>
     <CalendarYearPickerGrid v-if="props.withYearPicker">
       <CalendarYearPickerGridBody>
-        <template #default="{year}">
+        <template #default="{ year }">
           <CalendarYearPickerCell :year="year" />
         </template>
       </CalendarYearPickerGridBody>

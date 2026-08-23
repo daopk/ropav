@@ -18,7 +18,7 @@ export const InputGroup = Object.assign(InputGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {InputGroupInput, InputGroupPrefix, InputGroupRoot, InputGroupSuffix, InputGroupTextArea};
+export { InputGroupInput, InputGroupPrefix, InputGroupRoot, InputGroupSuffix, InputGroupTextArea };
 
 export type {
   InputGroupRootProps,
@@ -33,13 +33,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideInputGroupContext, useInputGroupContext} from "./input-group.context";
+export { provideInputGroupContext, useInputGroupContext } from "./input-group.context";
 
-export type {InputGroupContext} from "./input-group.context";
+export type { InputGroupContext } from "./input-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputGroupVariants} from "@ropav/styles";
+export { inputGroupVariants } from "@ropav/styles";
 
-export type {InputGroupVariants} from "@ropav/styles";
+export type { InputGroupVariants } from "@ropav/styles";

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {AutocompleteFixtureItem, AutocompleteFixtureProps} from "./fixtures.types";
-import type {SelectedValue} from "@/composables/use-select-state";
+import type { AutocompleteFixtureItem, AutocompleteFixtureProps } from "./fixtures.types";
+import type { SelectedValue } from "@/composables/use-select-state";
 
 import {
   AutocompleteClearButton,
@@ -11,13 +11,13 @@ import {
   AutocompleteTrigger,
   AutocompleteValue,
 } from "@/components/autocomplete";
-import {DescriptionRoot} from "@/components/description";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {FieldErrorRoot} from "@/components/field-error";
-import {IconChevronDown} from "@/components/icons";
-import {LabelRoot} from "@/components/label";
-import {ListBoxRoot} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
+import { DescriptionRoot } from "@/components/description";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { FieldErrorRoot } from "@/components/field-error";
+import { IconChevronDown } from "@/components/icons";
+import { LabelRoot } from "@/components/label";
+import { ListBoxRoot } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
 import {
   SearchFieldClearButton,
   SearchFieldGroup,
@@ -25,7 +25,7 @@ import {
   SearchFieldRoot,
   SearchFieldSearchIcon,
 } from "@/components/search-field";
-import {useFilter} from "@/composables/use-filter";
+import { useFilter } from "@/composables/use-filter";
 
 /**
  * Every three-state boolean declares an explicit `undefined`: a cast `false` reads as the caller
@@ -47,9 +47,9 @@ const props = withDefaults(defineProps<AutocompleteFixtureProps>(), {
   isOpen: undefined,
   isRequired: undefined,
   items: (): AutocompleteFixtureItem[] => [
-    {id: "cat", name: "Cat"},
-    {id: "dog", name: "Dog"},
-    {id: "elephant", name: "Elephant"},
+    { id: "cat", name: "Cat" },
+    { id: "dog", name: "Dog" },
+    { id: "elephant", name: "Elephant" },
   ],
   name: undefined,
   placeholder: "Select an animal",
@@ -74,7 +74,7 @@ const emit = defineEmits<{
   inputChange: [value: string];
 }>();
 
-const filter = useFilter({sensitivity: "base"});
+const filter = useFilter({ sensitivity: "base" });
 </script>
 
 <template>
@@ -106,7 +106,7 @@ const filter = useFilter({sensitivity: "base"});
       <LabelRoot v-if="props.withLabel">Favorite Animal</LabelRoot>
       <AutocompleteTrigger :class="props.triggerClass">
         <AutocompleteValue :class="props.valueClass">
-          <template v-if="props.withCustomValue" #default="{isPlaceholder, selectedItems}">
+          <template v-if="props.withCustomValue" #default="{ isPlaceholder, selectedItems }">
             <span data-testid="custom-value">
               {{ isPlaceholder ? "nothing" : selectedItems.map((item) => item.key).join("+") }}
             </span>
@@ -125,7 +125,7 @@ const filter = useFilter({sensitivity: "base"});
           :items="props.filterItems"
           @input-change="emit('inputChange', $event)"
         >
-          <template #default="{items}">
+          <template #default="{ items }">
             <SearchFieldRoot aria-label="Search animals" auto-focus variant="secondary">
               <SearchFieldGroup>
                 <SearchFieldSearchIcon />

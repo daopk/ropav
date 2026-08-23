@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {CalendarHeadingHostProps} from "./calendar-heading-host.types";
+import type { CalendarHeadingHostProps } from "./calendar-heading-host.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import CalendarHeadingHarness from "./calendar-heading-harness.vue";
 

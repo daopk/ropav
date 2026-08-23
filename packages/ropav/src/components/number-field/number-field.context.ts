@@ -1,8 +1,8 @@
-import type {NumberFieldStepper, UseNumberFieldReturn} from "../../composables/use-number-field";
-import type {numberFieldVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { NumberFieldStepper, UseNumberFieldReturn } from "../../composables/use-number-field";
+import type { numberFieldVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface NumberFieldContext {
   /** Slot classes the parts pull their own class from. */
@@ -20,5 +20,5 @@ export interface NumberFieldContext {
  * step is a button that does nothing.
  */
 export const [useNumberFieldContext, provideNumberFieldContext] = createContext<NumberFieldContext>(
-  {name: "NumberFieldContext"},
+  { name: "NumberFieldContext" },
 );

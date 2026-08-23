@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {TabsRootProps} from "@/components/tabs";
-import type {CollectionKey} from "@/composables/use-collection";
+import type { TabsRootProps } from "@/components/tabs";
+import type { CollectionKey } from "@/composables/use-collection";
 
 import {
   TabsIndicator,
@@ -37,9 +37,9 @@ const props = withDefaults(
     forceMountPanels: undefined,
     isDisabled: undefined,
     items: () => [
-      {id: "overview", label: "Overview"},
-      {id: "analytics", label: "Analytics"},
-      {id: "reports", label: "Reports"},
+      { id: "overview", label: "Overview" },
+      { id: "analytics", label: "Analytics" },
+      { id: "reports", label: "Reports" },
     ],
     keyboardActivation: undefined,
     orientation: undefined,

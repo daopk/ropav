@@ -1,26 +1,26 @@
 <script setup lang="ts" vapor>
-import type {BreadcrumbsItemProps, BreadcrumbsItemSlotProps} from "./breadcrumbs.types";
+import type { BreadcrumbsItemProps, BreadcrumbsItemSlotProps } from "./breadcrumbs.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronRight} from "../icons";
-import {LinkRoot} from "../link";
+import { useId } from "../../composables/use-id";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronRight } from "../icons";
+import { LinkRoot } from "../link";
 
-import {useBreadcrumbsContext} from "./breadcrumbs.context";
+import { useBreadcrumbsContext } from "./breadcrumbs.context";
 
-defineOptions({inheritAttrs: false});
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<BreadcrumbsItemProps>(), {
   download: undefined,
   isDisabled: undefined,
 });
 
-const emit = defineEmits<{click: [event: MouseEvent]}>();
+const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
-defineSlots<{default?: (props: BreadcrumbsItemSlotProps) => unknown}>();
+defineSlots<{ default?: (props: BreadcrumbsItemSlotProps) => unknown }>();
 
 const context = useBreadcrumbsContext();
 const generatedKey = useId();
@@ -40,7 +40,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const isCurrent = computed(() => {

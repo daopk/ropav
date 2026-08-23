@@ -1,4 +1,4 @@
-import type {SwitchGroupVariants} from "@ropav/styles";
+import type { SwitchGroupVariants } from "@ropav/styles";
 
 export interface SwitchGroupRootProps {
   class?: string;

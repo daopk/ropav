@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {InputGroupRootProps, InputGroupRootSlotProps} from "./input-group.types";
+import type { InputGroupRootProps, InputGroupRootSlotProps } from "./input-group.types";
 
-import {inputGroupVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { inputGroupVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
-import {useTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {useTextFieldContext} from "../textfield/textfield.context";
+import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
+import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { useTextFieldContext } from "../textfield/textfield.context";
 
-import {provideInputGroupContext} from "./input-group.context";
+import { provideInputGroupContext } from "./input-group.context";
 
 // Three-state props declare an explicit `undefined` default so they can still fall through to
 // the field. Cast to `false` they would read as the caller claiming that state, and the group
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<InputGroupRootProps>(), {
   variant: undefined,
 });
 
-defineSlots<{default?: (props: InputGroupRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: InputGroupRootSlotProps) => unknown }>();
 
 // Both optional: a group outside any field is legal, exactly as it is in React.
 const control = useTextFieldControlContext();
@@ -41,17 +41,17 @@ const resolvedIsDisabled = computed(() => props.isDisabled ?? control?.isDisable
 const resolvedIsInvalid = computed(() => props.isInvalid ?? control?.isInvalid.value ?? false);
 
 const slots = computed(() =>
-  inputGroupVariants({fullWidth: props.fullWidth, variant: resolvedVariant.value}),
+  inputGroupVariants({ fullWidth: props.fullWidth, variant: resolvedVariant.value }),
 );
 
-provideInputGroupContext({slots});
+provideInputGroupContext({ slots });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 // Hover is read off this one only; press has no meaning for a shell around a control. The
 // stylesheet suppresses the hover fill while focus is inside, so the two have to be reported
 // together or a group that is both hovered and focused keeps the hover fill.
-const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
+const interaction = useInteractionStates({ isDisabled: resolvedIsDisabled });
 const focusWithin = useFocusWithin();
 
 // Only `input`, as in React — clicking beside a textarea does not pull focus into it. The

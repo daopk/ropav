@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import fs from "fs";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, "..");
@@ -10,7 +10,7 @@ const distDir = path.join(rootDir, "dist");
 
 // Create dist directory if it doesn't exist
 if (!fs.existsSync(distDir)) {
-  fs.mkdirSync(distDir, {recursive: true});
+  fs.mkdirSync(distDir, { recursive: true });
 }
 
 console.log("Copying CSS files to dist...");
@@ -26,7 +26,7 @@ const copyCssDirectory = (dirName) => {
 
   // Create directory in dist
   if (!fs.existsSync(distDirPath)) {
-    fs.mkdirSync(distDirPath, {recursive: true});
+    fs.mkdirSync(distDirPath, { recursive: true });
   }
 
   // Read all files in the directory

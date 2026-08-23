@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ErrorMessageRootProps} from "@/components/error-message";
+import type { ErrorMessageRootProps } from "@/components/error-message";
 
-import {DescriptionRoot} from "@/components/description";
-import {ErrorMessageRoot} from "@/components/error-message";
-import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
+import { DescriptionRoot } from "@/components/description";
+import { ErrorMessageRoot } from "@/components/error-message";
+import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids";
 
 /** `withDescription` is there to pin the order the field lists the two ids in. */
 const props = defineProps<
-  ErrorMessageRootProps & {text?: string; withDescription?: boolean; withFieldIds?: boolean}
+  ErrorMessageRootProps & { text?: string; withDescription?: boolean; withFieldIds?: boolean }
 >();
 
 const fieldIds = useFieldIds();

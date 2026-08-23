@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderHarnessProps} from "./color-slider.types";
+import type { ColorSliderHarnessProps } from "./color-slider.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import ColorSliderHost from "./color-slider-host.vue";
 
 // The locale has to come from an ancestor: `inject` reads the parent's provides, so a component
 // cannot see one it provided itself.
-const props = withDefaults(defineProps<ColorSliderHarnessProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorSliderHarnessProps>(), { isDisabled: undefined });
 
 provideLocale(() => props.locale);
 </script>

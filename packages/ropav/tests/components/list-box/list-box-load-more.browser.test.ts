@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./load-more-fixtures.vue";
 
@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 const render = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -33,7 +33,7 @@ describe("ListBox load more item (browser)", () => {
   it("asks for the next page when the end of the list is in view", async () => {
     const onLoadMore = vi.fn();
 
-    await render({onLoadMore});
+    await render({ onLoadMore });
 
     await observed();
 
@@ -47,7 +47,7 @@ describe("ListBox load more item (browser)", () => {
     const onLoadMore = vi.fn();
 
     await render({
-      items: Array.from({length: 60}, (_, index) => ({
+      items: Array.from({ length: 60 }, (_, index) => ({
         id: String(index),
         name: `Person ${index}`,
       })),
@@ -66,7 +66,7 @@ describe("ListBox load more item (browser)", () => {
     const onLoadMore = vi.fn();
 
     const result = await render({
-      items: Array.from({length: 60}, (_, index) => ({
+      items: Array.from({ length: 60 }, (_, index) => ({
         id: String(index),
         name: `Person ${index}`,
       })),

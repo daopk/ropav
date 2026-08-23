@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {getDragSession} from "@/composables/drag-manager";
-import {setInteractionModality} from "@/composables/use-interaction-states";
+import { getDragSession } from "@/composables/drag-manager";
+import { setInteractionModality } from "@/composables/use-interaction-states";
 
 import Fixture from "./drag-and-drop-fixtures.vue";
 
@@ -18,7 +18,7 @@ import Fixture from "./drag-and-drop-fixtures.vue";
 const unmounts: (() => void)[] = [];
 
 const renderList = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   unmounts.push(result.unmount);
   await nextTick();
@@ -29,7 +29,7 @@ const renderList = async (props: Record<string, unknown> = {}) => {
     ...list.querySelectorAll<HTMLElement>('[data-slot="list-box-drop-indicator"]'),
   ];
 
-  return {...result, indicators, list, options};
+  return { ...result, indicators, list, options };
 };
 
 /**
@@ -42,8 +42,8 @@ const renderList = async (props: Record<string, unknown> = {}) => {
 const press = (key: string, init: KeyboardEventInit = {}) => {
   const target = document.activeElement ?? document;
 
-  target.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
-  target.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key, ...init}));
+  target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
+  target.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key, ...init }));
 };
 
 const flushFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -73,7 +73,7 @@ describe("ListBox drag and drop", () => {
      * symmetric, and measuring 6006 against 6007 is what caught this build marking both.
      */
     it("marks every option as draggable", async () => {
-      const {list, options} = await renderList();
+      const { list, options } = await renderList();
 
       expect(list).not.toHaveAttribute("data-allows-dragging");
       for (const option of options()) {
@@ -85,7 +85,7 @@ describe("ListBox drag and drop", () => {
     // An option already acts on Enter, so the drag has to be reachable some other way — the
     // description is what tells the user which.
     it("tells the user to hold Alt, because Enter already selects", async () => {
-      const {options} = await renderList();
+      const { options } = await renderList();
       const describedBy = options()[0]!.getAttribute("aria-describedby");
       const description = document.getElementById(describedBy!);
 
@@ -95,10 +95,10 @@ describe("ListBox drag and drop", () => {
     // Every option is reachable by keyboard while a drag runs, so the indicator rows must not
     // also be in the tab order.
     it("keeps drop indicators out of the tab order", async () => {
-      const {indicators, options} = await renderList();
+      const { indicators, options } = await renderList();
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
       await nextTick();
 
@@ -116,16 +116,16 @@ describe("ListBox drag and drop", () => {
      * option for a screen reader to step through.
      */
     it("renders none while nothing is being dragged", async () => {
-      const {indicators} = await renderList();
+      const { indicators } = await renderList();
 
       expect(indicators()).toHaveLength(0);
     });
 
     it("appears once a keyboard drag begins", async () => {
-      const {indicators, options} = await renderList();
+      const { indicators, options } = await renderList();
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
       await nextTick();
 
@@ -133,10 +133,10 @@ describe("ListBox drag and drop", () => {
     });
 
     it("names each gap by the items around it", async () => {
-      const {indicators, options} = await renderList();
+      const { indicators, options } = await renderList();
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
       await nextTick();
 
@@ -148,10 +148,10 @@ describe("ListBox drag and drop", () => {
 
   describe("reordering with the keyboard", () => {
     it("starts a drag on Alt+Enter", async () => {
-      const {options} = await renderList();
+      const { options } = await renderList();
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
 
       expect(getDragSession()).not.toBeNull();
@@ -159,7 +159,7 @@ describe("ListBox drag and drop", () => {
 
     // Plain Enter belongs to the option's own action, and must not also start a drag.
     it("does not start a drag on Enter alone", async () => {
-      const {options} = await renderList();
+      const { options } = await renderList();
 
       options()[0]!.focus();
       press("Enter");
@@ -170,12 +170,12 @@ describe("ListBox drag and drop", () => {
 
     it("moves the item and reports the move", async () => {
       const onReorder = vi.fn();
-      const {options} = await renderList({onReorder});
+      const { options } = await renderList({ onReorder });
 
       expect(options().map((node) => node.textContent?.trim())).toEqual(["Ada", "Grace", "Alan"]);
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
 
       // Walk past the gaps to the end of the list.
@@ -189,17 +189,17 @@ describe("ListBox drag and drop", () => {
 
       expect(onReorder).toHaveBeenCalledTimes(1);
       expect(onReorder.mock.calls[0]?.[0]).toMatchObject({
-        target: {dropPosition: "after", key: "Alan", type: "item"},
+        target: { dropPosition: "after", key: "Alan", type: "item" },
       });
       expect(options().map((node) => node.textContent?.trim())).toEqual(["Grace", "Alan", "Ada"]);
     });
 
     it("leaves the list alone when the drag is cancelled", async () => {
       const onReorder = vi.fn();
-      const {options} = await renderList({onReorder});
+      const { options } = await renderList({ onReorder });
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
       press("ArrowDown");
       press("Escape");
@@ -212,10 +212,10 @@ describe("ListBox drag and drop", () => {
 
   describe("the dragged option", () => {
     it("reports itself as dragging while the drag is in flight", async () => {
-      const {options} = await renderList();
+      const { options } = await renderList();
 
       options()[0]!.focus();
-      press("Enter", {altKey: true});
+      press("Enter", { altKey: true });
       await flushFrame();
       await nextTick();
 

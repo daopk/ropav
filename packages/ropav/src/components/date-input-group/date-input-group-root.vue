@@ -1,11 +1,14 @@
 <script setup lang="ts" vapor>
-import type {DateInputGroupRootProps, DateInputGroupRootSlotProps} from "./date-input-group.types";
+import type {
+  DateInputGroupRootProps,
+  DateInputGroupRootSlotProps,
+} from "./date-input-group.types";
 
-import {dateInputGroupVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { dateInputGroupVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   provideDateInputGroupContext,
@@ -25,15 +28,15 @@ const props = withDefaults(defineProps<DateInputGroupRootProps>(), {
   variant: undefined,
 });
 
-defineSlots<{default?: (props: DateInputGroupRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: DateInputGroupRootSlotProps) => unknown }>();
 
 const slots = computed(() =>
-  dateInputGroupVariants({fullWidth: props.fullWidth, variant: props.variant}),
+  dateInputGroupVariants({ fullWidth: props.fullWidth, variant: props.variant }),
 );
 
-provideDateInputGroupContext({slots});
+provideDateInputGroupContext({ slots });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 /**
  * A picker above, when there is one, which owns this group rather than merely containing it.
@@ -52,7 +55,7 @@ const isDisabled = computed(() => props.isDisabled ?? owner?.isDisabled.value);
 const isInvalid = computed(() => props.isInvalid ?? owner?.isInvalid.value);
 
 // Hover is read off this one only; press has no meaning for a shell around a control.
-const interaction = useInteractionStates({isDisabled});
+const interaction = useInteractionStates({ isDisabled });
 const focusWithin = useFocusWithin();
 
 const setElement = (next: unknown) => {

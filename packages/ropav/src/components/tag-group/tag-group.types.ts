@@ -1,10 +1,10 @@
-import type {CollectionKey} from "../../composables/use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 import type {
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type {TagVariants} from "@ropav/styles";
+import type { TagVariants } from "@ropav/styles";
 
 export interface TagGroupRootProps {
   class?: string;

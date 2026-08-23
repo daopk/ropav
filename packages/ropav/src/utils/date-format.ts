@@ -1,4 +1,4 @@
-import type {Calendar, CalendarDateTime, DateValue, ZonedDateTime} from "@internationalized/date";
+import type { Calendar, CalendarDateTime, DateValue, ZonedDateTime } from "@internationalized/date";
 
 import {
   Time,
@@ -80,7 +80,7 @@ export const getFormatOptions = (
   const defaults = options.shouldForceLeadingZeros
     ? TWO_DIGIT_FIELD_OPTIONS
     : DEFAULT_FIELD_OPTIONS;
-  const resolved: FieldOptions = {...defaults, ...fieldOptions};
+  const resolved: FieldOptions = { ...defaults, ...fieldOptions };
   const granularity = options.granularity ?? "minute";
   const keys = Object.keys(resolved) as (keyof FieldOptions)[];
 
@@ -153,7 +153,7 @@ export const createPlaceholderDate = (
   if (placeholderValue) return convertValue(placeholderValue, calendar)!;
 
   const date = toCalendar(
-    now(timeZone ?? getLocalTimeZone()).set({hour: 0, millisecond: 0, minute: 0, second: 0}),
+    now(timeZone ?? getLocalTimeZone()).set({ hour: 0, millisecond: 0, minute: 0, second: 0 }),
     calendar,
   );
 

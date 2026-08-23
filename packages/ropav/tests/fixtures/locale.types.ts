@@ -1,5 +1,5 @@
-import type {Locale} from "@/utils/locale";
-import type {ComputedRef} from "vue";
+import type { Locale } from "@/utils/locale";
+import type { ComputedRef } from "vue";
 
 export interface LocaleHostProps {
   /** Handed the consumed locale so a test can read it without a rendered representation. */

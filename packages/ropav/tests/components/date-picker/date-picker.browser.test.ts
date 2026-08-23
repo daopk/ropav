@@ -1,9 +1,9 @@
-import {CalendarDate} from "@internationalized/date";
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -22,11 +22,14 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * green gate.
  */
 const SHARED_WITH_REACT = {
-  rules: {"color-contrast": {enabled: false}, "landmark-banner-is-top-level": {enabled: false}},
+  rules: {
+    "color-contrast": { enabled: false },
+    "landmark-banner-is-top-level": { enabled: false },
+  },
 };
 
 const render = (props: Record<string, unknown> = {}) =>
-  renderVapor(Fixture, {props: {label: "Appointment", locale: "en-US", ...props}});
+  renderVapor(Fixture, { props: { label: "Appointment", locale: "en-US", ...props } });
 
 type RenderResult = ReturnType<typeof render>;
 
@@ -99,13 +102,13 @@ afterEach(async () => {
 describe("DatePicker (browser)", () => {
   describe("axe", () => {
     it("finds nothing to complain about while closed", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about with the calendar open", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
       const popover = await open(result);
 
       await expectNoA11yViolations(popover, SHARED_WITH_REACT);
@@ -117,7 +120,7 @@ describe("DatePicker (browser)", () => {
        * renders no `Dialog`, so its `dialogProps` reach nothing and the overlay is a
        * `role="dialog"` with no accessible name. Here the overlay takes them.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
       const popover = await open(result);
 
       expect(popover.getAttribute("role")).toBe("dialog");
@@ -154,7 +157,7 @@ describe("DatePicker (browser)", () => {
     });
 
     it("picks a day and closes", async () => {
-      const result = mount({placeholderValue: jun(15)});
+      const result = mount({ placeholderValue: jun(15) });
       const popover = await open(result);
       const cell = [...popover.querySelectorAll<HTMLElement>("[data-slot='calendar-cell']")].find(
         (element) => element.textContent?.trim() === "20" && !element.dataset["outsideMonth"],
@@ -205,7 +208,7 @@ describe("DatePicker (browser)", () => {
     });
 
     it("takes focus into the calendar as it appears", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
       const popover = await open(result);
 
       expect(popover.contains(document.activeElement)).toBe(true);
@@ -213,7 +216,7 @@ describe("DatePicker (browser)", () => {
     });
 
     it("moves through the grid with the arrow keys", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await open(result);
 
@@ -267,7 +270,7 @@ describe("DatePicker (browser)", () => {
        * A field of segments is one tab stop per segment, and the button after them. Anything the
        * pointer can reach has to be reachable this way too.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       segmentOf(result, "month").focus();
       await userEvent.keyboard("{Tab}");

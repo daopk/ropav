@@ -1,7 +1,7 @@
-import {describe, expect, it} from "vitest";
-import {VaporFragment, createComponent, defineVaporComponent} from "vue";
+import { describe, expect, it } from "vitest";
+import { VaporFragment, createComponent, defineVaporComponent } from "vue";
 
-import {flattenBlock, isTextOnlyBlock} from "@/utils/block";
+import { flattenBlock, isTextOnlyBlock } from "@/utils/block";
 
 const text = (value: string) => document.createTextNode(value);
 const element = (tag: string) => document.createElement(tag);

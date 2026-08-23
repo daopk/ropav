@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ChipRootProps} from "@/components/chip";
+import type { ChipRootProps } from "@/components/chip";
 
-import {Chip} from "@/components/chip";
+import { Chip } from "@/components/chip";
 
 /**
  * `content` picks which shape of children the chip is handed, which is the thing under

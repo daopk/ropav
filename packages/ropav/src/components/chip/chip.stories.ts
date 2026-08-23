@@ -1,12 +1,12 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
 import IconCircleDashed from "~icons/gravity-ui/circle-dashed";
 import IconCircleFill from "~icons/gravity-ui/circle-fill";
 
-import {SeparatorRoot} from "../separator";
+import { SeparatorRoot } from "../separator";
 
-import {Chip, ChipLabel} from "./index";
+import { Chip, ChipLabel } from "./index";
 
 /**
  * Runtime-compiled story templates cannot resolve `Chip.Label` — dot notation is an SFC
@@ -28,15 +28,15 @@ const components = {
 const meta: StoryMeta = {
   argTypes: {
     color: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["accent", "default", "success", "warning", "danger"],
     },
     size: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["sm", "md", "lg"],
     },
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["primary", "secondary", "tertiary", "soft"],
     },
   },
@@ -60,7 +60,7 @@ export const Default: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Chip v-bind="args"><ChipLabel>Label</ChipLabel></Chip>
@@ -73,7 +73,7 @@ export const Sizes: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Chip v-bind="args" size="sm"><ChipLabel>Small</ChipLabel></Chip>
@@ -92,7 +92,7 @@ export const WithIcon: Story = {
   args: defaultArgs,
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <div class="flex items-center gap-3">
         <Chip v-bind="args">
@@ -118,10 +118,10 @@ export const Statuses: Story = {
     setup: () => ({
       args,
       statuses: [
-        {color: undefined, label: "Information"},
-        {color: "success", label: "Completed"},
-        {color: "warning", label: "Pending"},
-        {color: "danger", label: "Failed"},
+        { color: undefined, label: "Information" },
+        { color: "success", label: "Completed" },
+        { color: "warning", label: "Pending" },
+        { color: "danger", label: "Failed" },
       ],
       variants: ["primary", "secondary", "tertiary", "soft"],
     }),

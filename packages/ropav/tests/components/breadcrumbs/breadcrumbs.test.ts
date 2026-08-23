@@ -1,14 +1,14 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {BreadcrumbsItem} from "@/components/breadcrumbs";
+import { BreadcrumbsItem } from "@/components/breadcrumbs";
 
 import Fixture from "./fixtures.vue";
 import SeparatorFixture from "./separator-fixture.vue";
 
 const renderBreadcrumbs = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -24,7 +24,7 @@ const renderBreadcrumbs = async (props: Record<string, unknown> = {}) => {
 
 describe("Breadcrumbs", () => {
   it("renders a localized, labelled ordered list", async () => {
-    const {root, unmount} = await renderBreadcrumbs({locale: "fr-FR"});
+    const { root, unmount } = await renderBreadcrumbs({ locale: "fr-FR" });
 
     expect(root.tagName).toBe("OL");
     expect(root).toHaveAttribute("aria-label", "Chemin de navigation");
@@ -35,7 +35,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("lets an explicit accessible name override the localized fallback", async () => {
-    const {root, unmount} = await renderBreadcrumbs({ariaLabel: "Page hierarchy"});
+    const { root, unmount } = await renderBreadcrumbs({ ariaLabel: "Page hierarchy" });
 
     expect(root).toHaveAttribute("aria-label", "Page hierarchy");
 
@@ -43,7 +43,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("renders every item as a list item containing a styled link", async () => {
-    const {items, links, unmount} = await renderBreadcrumbs();
+    const { items, links, unmount } = await renderBreadcrumbs();
 
     expect(items).toHaveLength(3);
     expect(items.every((item) => item.tagName === "LI")).toBe(true);
@@ -56,7 +56,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("marks only the final item as the current page", async () => {
-    const {items, links, unmount} = await renderBreadcrumbs();
+    const { items, links, unmount } = await renderBreadcrumbs();
 
     expect(items[0]).not.toHaveAttribute("data-current");
     expect(items[2]).toHaveAttribute("data-current", "true");
@@ -68,7 +68,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("renders a default chevron between non-final items", async () => {
-    const {root, unmount} = await renderBreadcrumbs();
+    const { root, unmount } = await renderBreadcrumbs();
     const separators = root.querySelectorAll("[data-slot='breadcrumbs-separator']");
 
     expect(separators).toHaveLength(2);
@@ -78,7 +78,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("supports a plain text separator without adding a wrapper", async () => {
-    const {items, root, unmount} = await renderBreadcrumbs({separator: "/"});
+    const { items, root, unmount } = await renderBreadcrumbs({ separator: "/" });
 
     expect(root.querySelector("[data-slot='breadcrumbs-separator']")).toBeNull();
     expect(items[0]?.textContent?.replaceAll(/\s/g, "")).toBe("Home/");
@@ -89,7 +89,7 @@ describe("Breadcrumbs", () => {
   });
 
   it.each(["", 0])("uses the default chevron for falsy separator %j", async (separator) => {
-    const {root, unmount} = await renderBreadcrumbs({separator});
+    const { root, unmount } = await renderBreadcrumbs({ separator });
 
     expect(root.querySelectorAll("[data-slot='breadcrumbs-separator']")).toHaveLength(2);
 
@@ -97,7 +97,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("renders a component separator with the separator slot styling", async () => {
-    const {root, unmount} = await renderBreadcrumbs({separator: SeparatorFixture});
+    const { root, unmount } = await renderBreadcrumbs({ separator: SeparatorFixture });
     const separators = root.querySelectorAll("[data-testid='custom-separator']");
 
     expect(separators).toHaveLength(2);
@@ -115,15 +115,15 @@ describe("Breadcrumbs", () => {
 
   it("moves current state, disabled state, and separators after a keyed reorder", async () => {
     const props = reactive<{
-      items: {href?: string; id: string; label: string}[];
+      items: { href?: string; id: string; label: string }[];
     }>({
       items: [
-        {href: "#a", id: "a", label: "A"},
-        {href: "#b", id: "b", label: "B"},
-        {href: "#c", id: "c", label: "C"},
+        { href: "#a", id: "a", label: "A" },
+        { href: "#b", id: "b", label: "B" },
+        { href: "#c", id: "c", label: "C" },
       ],
     });
-    const {root, unmount} = await renderBreadcrumbs(props);
+    const { root, unmount } = await renderBreadcrumbs(props);
 
     expect(root.querySelector("[data-current='true']")).toHaveAttribute("data-testid", "c");
 
@@ -152,7 +152,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("cascades the disabled state to every link", async () => {
-    const {items, links, unmount} = await renderBreadcrumbs({isDisabled: true});
+    const { items, links, unmount } = await renderBreadcrumbs({ isDisabled: true });
 
     expect(links.every((link) => link.getAttribute("aria-disabled") === "true")).toBe(true);
     expect(items.every((item) => item.getAttribute("data-disabled") === "true")).toBe(true);
@@ -163,9 +163,9 @@ describe("Breadcrumbs", () => {
   it("reports item click and root action for an enabled, non-current item", async () => {
     const onAction = vi.fn();
     const onItemClick = vi.fn();
-    const {links, unmount} = await renderBreadcrumbs({onAction, onItemClick});
+    const { links, unmount } = await renderBreadcrumbs({ onAction, onItemClick });
 
-    links[0]!.dispatchEvent(new MouseEvent("click", {bubbles: true, cancelable: true}));
+    links[0]!.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
 
     expect(onItemClick).toHaveBeenCalledTimes(1);
     expect(onAction).toHaveBeenCalledWith("home");
@@ -176,9 +176,9 @@ describe("Breadcrumbs", () => {
   it("does not report activation for the current item", async () => {
     const onAction = vi.fn();
     const onItemClick = vi.fn();
-    const {links, unmount} = await renderBreadcrumbs({onAction, onItemClick});
+    const { links, unmount } = await renderBreadcrumbs({ onAction, onItemClick });
 
-    links[2]!.dispatchEvent(new MouseEvent("click", {bubbles: true, cancelable: true}));
+    links[2]!.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
 
     expect(onItemClick).not.toHaveBeenCalled();
     expect(onAction).not.toHaveBeenCalled();
@@ -187,7 +187,7 @@ describe("Breadcrumbs", () => {
   });
 
   it("merges caller classes and forwards attributes to the public elements", async () => {
-    const {items, root, unmount} = await renderBreadcrumbs({
+    const { items, root, unmount } = await renderBreadcrumbs({
       class: "mt-4",
       itemClass: "font-bold",
     });
@@ -201,8 +201,8 @@ describe("Breadcrumbs", () => {
   });
 
   it("updates the root disabled state reactively", async () => {
-    const props = reactive({isDisabled: false});
-    const {links, root, unmount} = await renderBreadcrumbs(props);
+    const props = reactive({ isDisabled: false });
+    const { links, root, unmount } = await renderBreadcrumbs(props);
 
     expect(links[0]).not.toHaveAttribute("aria-disabled");
 

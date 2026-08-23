@@ -1,10 +1,10 @@
-import type {SelectFixtureItem, SelectHostProps} from "../fixtures/select.types";
-import type {UseSelectReturn} from "@/composables/use-select";
-import type {UseSelectStateReturn} from "@/composables/use-select-state";
+import type { SelectFixtureItem, SelectHostProps } from "../fixtures/select.types";
+import type { UseSelectReturn } from "@/composables/use-select";
+import type { UseSelectStateReturn } from "@/composables/use-select-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/select-host.vue";
 
@@ -30,11 +30,11 @@ const mount = (props: SelectHostProps = {}) => {
 
   const trigger = result.container.querySelector<HTMLElement>('[data-testid="trigger"]')!;
 
-  return {select, state, trigger};
+  return { select, state, trigger };
 };
 
 const press = (element: Element, key: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
 };
 
 const type = (element: Element, text: string) => {
@@ -44,7 +44,7 @@ const type = (element: Element, text: string) => {
 describe("useSelect", () => {
   describe("the trigger's wiring", () => {
     it("announces that it opens a listbox", () => {
-      const {trigger} = mount();
+      const { trigger } = mount();
 
       expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
       expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -52,7 +52,7 @@ describe("useSelect", () => {
     });
 
     it("points aria-controls at the listbox only while open", async () => {
-      const {select, state, trigger} = mount();
+      const { select, state, trigger } = mount();
 
       state.open();
       await nextTick();
@@ -62,26 +62,26 @@ describe("useSelect", () => {
     });
 
     it("is named by its value first and its label second", () => {
-      const {select, trigger} = mount({ariaLabelledby: "field-label"});
+      const { select, trigger } = mount({ ariaLabelledby: "field-label" });
 
       expect(trigger).toHaveAttribute("aria-labelledby", `${select.valueId.value} field-label`);
     });
 
     it("names the listbox by the trigger itself when only aria-label is given", () => {
-      const {select} = mount({ariaLabel: "State"});
+      const { select } = mount({ ariaLabel: "State" });
 
       expect(select.labelledBy.value).toBe(select.triggerId.value);
     });
 
     it("carries the required and invalid states", () => {
-      const {trigger} = mount({isInvalid: true, isRequired: true});
+      const { trigger } = mount({ isInvalid: true, isRequired: true });
 
       expect(trigger).toHaveAttribute("aria-required", "true");
       expect(trigger).toHaveAttribute("aria-invalid", "true");
     });
 
     it("omits the state attributes it is not in", () => {
-      const {trigger} = mount();
+      const { trigger } = mount();
 
       expect(trigger).not.toHaveAttribute("aria-required");
       expect(trigger).not.toHaveAttribute("aria-invalid");
@@ -89,7 +89,7 @@ describe("useSelect", () => {
     });
 
     it("is disabled when the select is", () => {
-      const {trigger} = mount({isDisabled: true});
+      const { trigger } = mount({ isDisabled: true });
 
       expect(trigger).toBeDisabled();
     });
@@ -97,7 +97,7 @@ describe("useSelect", () => {
 
   describe("opening by keyboard", () => {
     it("opens on ArrowDown from the first option", async () => {
-      const {state, trigger} = mount();
+      const { state, trigger } = mount();
 
       press(trigger, "ArrowDown");
       await nextTick();
@@ -107,7 +107,7 @@ describe("useSelect", () => {
     });
 
     it("opens on ArrowUp from the last option", async () => {
-      const {state, trigger} = mount();
+      const { state, trigger } = mount();
 
       press(trigger, "ArrowUp");
       await nextTick();
@@ -117,7 +117,7 @@ describe("useSelect", () => {
     });
 
     it("stays shut while disabled", async () => {
-      const {state, trigger} = mount({isDisabled: true});
+      const { state, trigger } = mount({ isDisabled: true });
 
       press(trigger, "ArrowDown");
       await nextTick();
@@ -129,7 +129,7 @@ describe("useSelect", () => {
   describe("stepping through options on a closed trigger", () => {
     it("moves to the next option on ArrowRight without opening", async () => {
       const onChange = vi.fn();
-      const {state, trigger} = mount({defaultValue: "florida", onChange});
+      const { state, trigger } = mount({ defaultValue: "florida", onChange });
 
       press(trigger, "ArrowRight");
       await nextTick();
@@ -140,7 +140,7 @@ describe("useSelect", () => {
 
     it("moves to the previous option on ArrowLeft", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({defaultValue: "california", onChange});
+      const { trigger } = mount({ defaultValue: "california", onChange });
 
       press(trigger, "ArrowLeft");
       await nextTick();
@@ -150,7 +150,7 @@ describe("useSelect", () => {
 
     it("starts at the first option when nothing is chosen yet", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({onChange});
+      const { trigger } = mount({ onChange });
 
       press(trigger, "ArrowRight");
       await nextTick();
@@ -160,7 +160,7 @@ describe("useSelect", () => {
 
     it("stops at the ends", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({defaultValue: "texas", onChange});
+      const { trigger } = mount({ defaultValue: "texas", onChange });
 
       press(trigger, "ArrowRight");
       await nextTick();
@@ -170,7 +170,7 @@ describe("useSelect", () => {
 
     it("does nothing in multiple mode, where there is no next choice", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({
+      const { trigger } = mount({
         defaultValue: ["florida"],
         onChange,
         selectionMode: "multiple",
@@ -184,7 +184,7 @@ describe("useSelect", () => {
 
     it("leaves the arrow keys to the listbox once open", async () => {
       const onChange = vi.fn();
-      const {state, trigger} = mount({defaultOpen: true, defaultValue: "florida", onChange});
+      const { state, trigger } = mount({ defaultOpen: true, defaultValue: "florida", onChange });
 
       press(trigger, "ArrowRight");
       await nextTick();
@@ -197,7 +197,7 @@ describe("useSelect", () => {
   describe("typing to choose", () => {
     it("jumps to the option whose name starts with what was typed", async () => {
       const onChange = vi.fn();
-      const {state, trigger} = mount({onChange});
+      const { state, trigger } = mount({ onChange });
 
       type(trigger, "te");
       await nextTick();
@@ -208,7 +208,7 @@ describe("useSelect", () => {
 
     it("matches without regard to case", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({onChange});
+      const { trigger } = mount({ onChange });
 
       type(trigger, "CAL");
       await nextTick();
@@ -218,7 +218,7 @@ describe("useSelect", () => {
 
     it("is off in multiple mode", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({onChange, selectionMode: "multiple"});
+      const { trigger } = mount({ onChange, selectionMode: "multiple" });
 
       type(trigger, "te");
       await nextTick();
@@ -228,7 +228,7 @@ describe("useSelect", () => {
 
     it("is off while disabled", async () => {
       const onChange = vi.fn();
-      const {trigger} = mount({isDisabled: true, onChange});
+      const { trigger } = mount({ isDisabled: true, onChange });
 
       type(trigger, "te");
       await nextTick();
@@ -240,7 +240,7 @@ describe("useSelect", () => {
   describe("focus", () => {
     it("reports focus arriving and leaving", () => {
       const onFocusChange = vi.fn();
-      const {state, trigger} = mount({onFocusChange});
+      const { state, trigger } = mount({ onFocusChange });
 
       trigger.dispatchEvent(new FocusEvent("focus"));
 
@@ -255,7 +255,7 @@ describe("useSelect", () => {
 
     it("does not report leaving while the popover is open", () => {
       const onFocusChange = vi.fn();
-      const {state, trigger} = mount({defaultOpen: true, onFocusChange});
+      const { state, trigger } = mount({ defaultOpen: true, onFocusChange });
 
       trigger.dispatchEvent(new FocusEvent("focus"));
       onFocusChange.mockClear();
@@ -271,20 +271,20 @@ describe("useSelect", () => {
 
   describe("labelling", () => {
     it("hands out no ids for parts that never rendered", () => {
-      const {select, trigger} = mount();
+      const { select, trigger } = mount();
 
       expect(select.fieldIds.labelId.value).toBeUndefined();
       expect(trigger).not.toHaveAttribute("aria-describedby");
     });
 
     it("renders the label as a span, since the trigger is a composite", () => {
-      const {select} = mount();
+      const { select } = mount();
 
       expect(select.fieldIds.context.labelElementType).toBe("span");
     });
 
     it("moves focus to the trigger when the label is clicked", () => {
-      const {select, trigger} = mount();
+      const { select, trigger } = mount();
 
       select.fieldIds.context.onLabelClick?.();
 
@@ -292,7 +292,7 @@ describe("useSelect", () => {
     });
 
     it("leaves focus alone when a disabled select's label is clicked", () => {
-      const {select, trigger} = mount({isDisabled: true});
+      const { select, trigger } = mount({ isDisabled: true });
 
       select.fieldIds.context.onLabelClick?.();
 
@@ -300,7 +300,7 @@ describe("useSelect", () => {
     });
 
     it("keeps a caller's aria-describedby", () => {
-      const {trigger} = mount({ariaDescribedby: "outside-hint"});
+      const { trigger } = mount({ ariaDescribedby: "outside-hint" });
 
       expect(trigger).toHaveAttribute("aria-describedby", "outside-hint");
     });

@@ -1,8 +1,8 @@
-import type {Granularity, TimeValue} from "../utils/date-format";
-import type {DateFieldState} from "./use-date-field-state";
-import type {ValidationBehavior} from "./use-form-validation-state";
-import type {DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Granularity, TimeValue } from "../utils/date-format";
+import type { DateFieldState } from "./use-date-field-state";
+import type { ValidationBehavior } from "./use-form-validation-state";
+import type { DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
 import {
   GregorianCalendar,
@@ -13,10 +13,10 @@ import {
   toZoned,
   today,
 } from "@internationalized/date";
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
-import {useDateFieldState} from "./use-date-field-state";
+import { useControllableState } from "./use-controllable-state";
+import { useDateFieldState } from "./use-date-field-state";
 
 /** A time has no day, so the smallest unit it can show stops at the hour. */
 export type TimeGranularity = Exclude<Granularity, "day">;
@@ -87,7 +87,7 @@ const toDateTime = (value: TimeValue | null | undefined, date?: DateValue): Date
 export const useTimeFieldState = (options: UseTimeFieldStateOptions): TimeFieldState => {
   const placeholderValue = computed<TimeValue>(() => toValue(options.placeholderValue) ?? MIDNIGHT);
 
-  const {setState: setTime, state: value} = useControllableState<TimeValue | null>({
+  const { setState: setTime, state: value } = useControllableState<TimeValue | null>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -172,5 +172,5 @@ export const useTimeFieldState = (options: UseTimeFieldStateOptions): TimeFieldS
     value: () => toDateTime(value.value),
   });
 
-  return {...state, timeValue};
+  return { ...state, timeValue };
 };

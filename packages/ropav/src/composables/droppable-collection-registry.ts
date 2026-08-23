@@ -1,5 +1,5 @@
-import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
-import type {ShallowRef} from "vue";
+import type { UseDroppableCollectionStateReturn } from "./use-droppable-collection-state";
+import type { ShallowRef } from "vue";
 
 /**
  * Which element and id each droppable collection state belongs to.

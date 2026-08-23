@@ -1,23 +1,23 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 
-import {useDragAndDrop} from "../../composables/use-drag-and-drop";
-import {avatarSrc} from "../../utils/story-assets";
-import {ListLayout} from "../../utils/virtualizer-list-layout";
-import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
-import {DescriptionRoot} from "../description";
-import {HeaderRoot} from "../header";
-import {KbdAbbr, KbdContent, KbdRoot} from "../kbd";
-import {LabelRoot} from "../label";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {ListBoxSectionRoot} from "../list-box-section";
-import {SeparatorRoot} from "../separator";
-import {SurfaceRoot} from "../surface";
-import {VirtualizerRoot} from "../virtualizer";
+import { useDragAndDrop } from "../../composables/use-drag-and-drop";
+import { avatarSrc } from "../../utils/story-assets";
+import { ListLayout } from "../../utils/virtualizer-list-layout";
+import { AvatarFallback, AvatarImage, AvatarRoot } from "../avatar";
+import { DescriptionRoot } from "../description";
+import { HeaderRoot } from "../header";
+import { KbdAbbr, KbdContent, KbdRoot } from "../kbd";
+import { LabelRoot } from "../label";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { ListBoxSectionRoot } from "../list-box-section";
+import { SeparatorRoot } from "../separator";
+import { SurfaceRoot } from "../surface";
+import { VirtualizerRoot } from "../virtualizer";
 
-import {ListBoxDropIndicator, ListBoxRoot} from "./index";
+import { ListBoxDropIndicator, ListBoxRoot } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "ListBox.Item".
@@ -96,7 +96,7 @@ const userItems = (withIndicator: boolean) => `
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({avatarUrl, users: USERS.slice(0, 3)}),
+    setup: () => ({ avatarUrl, users: USERS.slice(0, 3) }),
     template: `
       <ListBox aria-label="Users" class="w-[220px]" selection-mode="single">
         ${userItems(true)}
@@ -127,7 +127,7 @@ const FILE_ACTIONS = [
 export const WithSections: Story = {
   render: () => ({
     components,
-    setup: () => ({actions: FILE_ACTIONS}),
+    setup: () => ({ actions: FILE_ACTIONS }),
     template: `
       <Surface class="w-[256px] rounded-3xl shadow-surface">
         <ListBox aria-label="File actions" class="w-full p-2" selection-mode="none">
@@ -179,7 +179,7 @@ export const WithSections: Story = {
 export const WithDisabledItems: Story = {
   render: () => ({
     components,
-    setup: () => ({actions: FILE_ACTIONS}),
+    setup: () => ({ actions: FILE_ACTIONS }),
     template: `
       <Surface class="w-[256px] rounded-3xl shadow-surface">
         <ListBox
@@ -221,7 +221,7 @@ export const WithDisabledItems: Story = {
 export const MultiSelect: Story = {
   render: () => ({
     components,
-    setup: () => ({avatarUrl, users: USERS}),
+    setup: () => ({ avatarUrl, users: USERS }),
     template: `
       <Surface class="w-[256px] rounded-3xl shadow-surface">
         <ListBox aria-label="Users" selection-mode="multiple">
@@ -235,7 +235,7 @@ export const MultiSelect: Story = {
 export const CustomCheckIcon: Story = {
   render: () => ({
     components,
-    setup: () => ({avatarUrl, users: USERS}),
+    setup: () => ({ avatarUrl, users: USERS }),
     template: `
       <Surface class="w-[256px] rounded-3xl shadow-surface">
         <ListBox aria-label="Users" selection-mode="multiple">
@@ -261,7 +261,7 @@ export const CustomCheckIcon: Story = {
 export const Controlled: Story = {
   render: () => ({
     components,
-    setup: () => ({avatarUrl, selected: ref(new Set(["2"])), users: USERS}),
+    setup: () => ({ avatarUrl, selected: ref(new Set(["2"])), users: USERS }),
     template: `
       <div class="flex flex-col gap-4">
         <Surface class="w-[256px] rounded-3xl shadow-surface">
@@ -333,7 +333,7 @@ interface VirtualizedUser {
 
 /** The same names in the same order as the React story, so the two can be compared row by row. */
 const generateUsers = (count: number): VirtualizedUser[] =>
-  Array.from({length: count}, (_, index) => {
+  Array.from({ length: count }, (_, index) => {
     const firstName = FIRST_NAMES[index % FIRST_NAMES.length]!;
     const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length]!;
 
@@ -347,7 +347,7 @@ const generateUsers = (count: number): VirtualizedUser[] =>
 export const Virtualization: Story = {
   render: () => ({
     components,
-    setup: () => ({layout: ListLayout, users: generateUsers(1000)}),
+    setup: () => ({ layout: ListLayout, users: generateUsers(1000) }),
     template: `
       <Virtualizer :layout="layout" :layout-options="{rowHeight: 50}">
         <ListBox
@@ -392,9 +392,9 @@ export const DragAndDrop: Story = {
       const order = ref(USERS.slice(0, 3).map((user) => user.id));
       const byId = new Map(USERS.map((user) => [user.id, user]));
 
-      const {dragAndDropHooks} = useDragAndDrop({
+      const { dragAndDropHooks } = useDragAndDrop({
         getItems: (keys) =>
-          [...keys].map((key) => ({"text/plain": byId.get(String(key))?.name ?? ""})),
+          [...keys].map((key) => ({ "text/plain": byId.get(String(key))?.name ?? "" })),
         onReorder(event) {
           const moving = [...event.keys].map(String);
           const rest = order.value.filter((key) => !moving.includes(key));

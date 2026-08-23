@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {SelectFixtureItem, SelectHostProps} from "./select.types";
+import type { SelectFixtureItem, SelectHostProps } from "./select.types";
 
-import {useSelect} from "@/composables/use-select";
-import {useSelectState} from "@/composables/use-select-state";
+import { useSelect } from "@/composables/use-select";
+import { useSelectState } from "@/composables/use-select-state";
 
 // Every three-state boolean declares an explicit `undefined`, at this layer too: `v-bind`
 // forwards a cast `false` as a value that is present, and no inner default can undo that.
@@ -19,9 +19,9 @@ const props = withDefaults(defineProps<SelectHostProps>(), {
   isOpen: undefined,
   isRequired: undefined,
   items: (): SelectFixtureItem[] => [
-    {id: "florida", name: "Florida"},
-    {id: "california", name: "California"},
-    {id: "texas", name: "Texas"},
+    { id: "florida", name: "Florida" },
+    { id: "california", name: "California" },
+    { id: "texas", name: "Texas" },
   ],
   name: undefined,
   shouldCloseOnSelect: undefined,

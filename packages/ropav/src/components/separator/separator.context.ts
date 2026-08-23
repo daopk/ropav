@@ -1,7 +1,7 @@
-import type {SeparatorVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { SeparatorVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface SeparatorContext {
   /**

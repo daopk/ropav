@@ -10,7 +10,7 @@ export const ColorSwatch = Object.assign(ColorSwatchRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ColorSwatchRoot};
+export { ColorSwatchRoot };
 
 export type {
   ColorSwatchRootProps,
@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorSwatchVariants} from "@ropav/styles";
+export { colorSwatchVariants } from "@ropav/styles";
 
-export type {ColorSwatchVariants} from "@ropav/styles";
+export type { ColorSwatchVariants } from "@ropav/styles";

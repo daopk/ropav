@@ -4,9 +4,9 @@ import type {
   ColorSwatchPickerIndicatorSlotProps,
 } from "./color-swatch-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   useColorSwatchPickerContext,
@@ -15,9 +15,9 @@ import {
 
 const props = defineProps<ColorSwatchPickerIndicatorProps>();
 
-defineSlots<{default?: (props: ColorSwatchPickerIndicatorSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSwatchPickerIndicatorSlotProps) => unknown }>();
 
-const {slots} = useColorSwatchPickerContext();
+const { slots } = useColorSwatchPickerContext();
 const item = useColorSwatchPickerItemContext();
 
 /**
@@ -43,7 +43,7 @@ const isLightColor = computed(() => {
 <template>
   <span
     aria-hidden="true"
-    :class="slots.indicator({class: props.class})"
+    :class="slots.indicator({ class: props.class })"
     :data-light-color="dataAttr(isLightColor)"
     data-slot="color-swatch-picker-indicator"
   >

@@ -1,17 +1,17 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {ToastQueue} from "@/components/toast";
+import { ToastQueue } from "@/components/toast";
 
 import ToastFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown>) => {
-  const result = renderVapor(ToastFixture, {props});
+  const result = renderVapor(ToastFixture, { props });
 
   mounted.push(result);
 
@@ -76,8 +76,8 @@ describe("Toast (browser)", () => {
     it("pins the region to the placement edge and sizes it from the declared width", async () => {
       const queue = new ToastQueue();
 
-      render({queue, width: 360});
-      queue.add({description: "All done", title: "Saved"});
+      render({ queue, width: 360 });
+      queue.add({ description: "All done", title: "Saved" });
       await waitForToasts(1);
 
       const styles = getComputedStyle(region()!);
@@ -92,13 +92,13 @@ describe("Toast (browser)", () => {
     it("clips a stacked toast to the height of the one in front of it", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
+      render({ queue });
       queue.add({
         description: "A description long enough to make this toast taller",
         title: "Tall",
       });
       await waitForToasts(1);
-      queue.add({title: "Short"});
+      queue.add({ title: "Short" });
       await waitForToasts(2);
       await settle();
 
@@ -120,8 +120,8 @@ describe("Toast (browser)", () => {
     it("keeps the list out of the layout so the stack is positioned by the stylesheet", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await waitForToasts(1);
 
       expect(getComputedStyle(region()!.querySelector("ol")!).display).toBe("contents");
@@ -133,8 +133,8 @@ describe("Toast (browser)", () => {
     it("animates a toast in", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"});
+      render({ queue });
+      queue.add({ title: "Saved" });
       await waitForToasts(1);
 
       // The animation is the stylesheet's, driven by `view-transition-class`; what this pins is
@@ -149,15 +149,15 @@ describe("Toast (browser)", () => {
       const first = new ToastQueue();
       const second = new ToastQueue();
 
-      render({placement: "top start", queue: first});
-      render({placement: "bottom end", queue: second});
+      render({ placement: "top start", queue: first });
+      render({ placement: "bottom end", queue: second });
       await settle();
 
       // A burst in the first region, then one toast in the second. With a single chain for the
       // whole document the second would not appear until the burst had finished animating, which
       // is seconds rather than frames.
-      for (let index = 0; index < 6; index += 1) first.add({title: `Burst ${index}`});
-      second.add({title: "Elsewhere"});
+      for (let index = 0; index < 6; index += 1) first.add({ title: `Burst ${index}` });
+      second.add({ title: "Elsewhere" });
 
       // Independent chains let the second region interrupt, so its toast lands in the time one
       // transition takes rather than after all six of the first region's.
@@ -176,8 +176,8 @@ describe("Toast (browser)", () => {
       const queue = new ToastQueue();
       const onClose = vi.fn();
 
-      render({queue});
-      queue.add({title: "Saved"}, {onClose, timeout: 0});
+      render({ queue });
+      queue.add({ title: "Saved" }, { onClose, timeout: 0 });
       await waitForToasts(1);
 
       // The close button is `opacity: 0` and `pointer-events: none` until the frontmost toast is
@@ -198,8 +198,8 @@ describe("Toast (browser)", () => {
     it("dismisses the toast when the close button is activated from the keyboard", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"}, {timeout: 0});
+      render({ queue });
+      queue.add({ title: "Saved" }, { timeout: 0 });
       await waitForToasts(1);
 
       // Only reachable in a real browser: jsdom does not turn Enter on a button into a click, so
@@ -213,8 +213,8 @@ describe("Toast (browser)", () => {
     it("holds the clock while the pointer is over the stack and releases it after", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"}, {timeout: 400});
+      render({ queue });
+      queue.add({ title: "Saved" }, { timeout: 400 });
       await waitForToasts(1);
 
       await userEvent.hover(toasts()[0]!);
@@ -232,8 +232,8 @@ describe("Toast (browser)", () => {
     it("holds the clock while focus is inside the stack", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({title: "Saved"}, {timeout: 400});
+      render({ queue });
+      queue.add({ title: "Saved" }, { timeout: 400 });
       await waitForToasts(1);
 
       toasts()[0]!.focus();
@@ -250,8 +250,8 @@ describe("Toast (browser)", () => {
     it("reports no axe violations", async () => {
       const queue = new ToastQueue();
 
-      render({queue});
-      queue.add({description: "All done", title: "Saved", variant: "success"});
+      render({ queue });
+      queue.add({ description: "All done", title: "Saved", variant: "success" });
       await waitForToasts(1);
 
       await expectNoA11yViolations(region()!);

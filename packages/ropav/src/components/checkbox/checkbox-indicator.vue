@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {CheckboxIndicatorProps, CheckboxSlotProps} from "./checkbox.types";
+import type { CheckboxIndicatorProps, CheckboxSlotProps } from "./checkbox.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useCheckboxContext} from "./checkbox.context";
+import { useCheckboxContext } from "./checkbox.context";
 
 const props = defineProps<CheckboxIndicatorProps>();
 
 // The mark a caller draws usually depends on the state — a tick that only appears once
 // selected, a different glyph while indeterminate — so the slot is handed the field state,
 // standing in for React's render-prop children.
-defineSlots<{default?: (props: CheckboxSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CheckboxSlotProps) => unknown }>();
 
-const {isDisabled, isIndeterminate, isInvalid, isReadOnly, isRequired, isSelected, slots} =
+const { isDisabled, isIndeterminate, isInvalid, isReadOnly, isRequired, isSelected, slots } =
   useCheckboxContext();
 
 // The tick is drawn by revealing its stroke: the path is 22 long with a 22 dash, so an offset

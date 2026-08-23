@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {PaginationItemProps} from "./pagination.types";
+import type { PaginationItemProps } from "./pagination.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {usePaginationContext} from "./pagination.context";
+import { usePaginationContext } from "./pagination.context";
 
 const props = defineProps<PaginationItemProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = usePaginationContext();
+const { slots } = usePaginationContext();
 </script>
 
 <template>

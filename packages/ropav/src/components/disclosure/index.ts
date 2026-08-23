@@ -42,13 +42,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useDisclosureContext} from "./disclosure.context";
+export { useDisclosureContext } from "./disclosure.context";
 
-export type {DisclosureContext} from "./disclosure.context";
+export type { DisclosureContext } from "./disclosure.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {disclosureVariants} from "@ropav/styles";
+export { disclosureVariants } from "@ropav/styles";
 
-export type {DisclosureVariants} from "@ropav/styles";
+export type { DisclosureVariants } from "@ropav/styles";

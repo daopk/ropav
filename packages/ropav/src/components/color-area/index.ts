@@ -13,7 +13,7 @@ export const ColorArea = Object.assign(ColorAreaRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ColorAreaRoot, ColorAreaThumb};
+export { ColorAreaRoot, ColorAreaThumb };
 
 export type {
   ColorAreaRootProps,
@@ -26,6 +26,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorAreaVariants} from "@ropav/styles";
+export { colorAreaVariants } from "@ropav/styles";
 
-export type {ColorAreaVariants} from "@ropav/styles";
+export type { ColorAreaVariants } from "@ropav/styles";

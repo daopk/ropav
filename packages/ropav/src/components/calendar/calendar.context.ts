@@ -1,18 +1,18 @@
-import type {AnyCalendarState, UseCalendarReturn} from "../../composables/use-calendar";
-import type {CalendarValue, PageBehavior} from "../../composables/use-calendar-state";
-import type {DayOfWeek, WeekdayStyle} from "../../utils/calendar";
-import type {CalendarDate, DateValue} from "@internationalized/date";
-import type {calendarVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { AnyCalendarState, UseCalendarReturn } from "../../composables/use-calendar";
+import type { CalendarValue, PageBehavior } from "../../composables/use-calendar-state";
+import type { DayOfWeek, WeekdayStyle } from "../../utils/calendar";
+import type { CalendarDate, DateValue } from "@internationalized/date";
+import type { calendarVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 /** What a day view needs that a month grid does not: how many days, and which ones. */
 export interface CalendarDayViewContext {
   days: number;
   firstDayOfWeek?: DayOfWeek;
   timeZone: string;
-  visibleRange: {start: CalendarDate; end: CalendarDate};
+  visibleRange: { start: CalendarDate; end: CalendarDate };
   weekdayStyle?: WeekdayStyle;
 }
 
@@ -45,7 +45,7 @@ export interface CalendarStateContext {
  * separate contexts and every consumer reads both, taking whichever is not null.
  */
 export const [useCalendarStateContext, provideCalendarStateContext] =
-  createContext<CalendarStateContext>({name: "CalendarStateContext"});
+  createContext<CalendarStateContext>({ name: "CalendarStateContext" });
 
 export interface CalendarGridContext {
   /** Spread onto the grid's header row container. */

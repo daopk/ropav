@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
-const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -31,7 +31,7 @@ const replace = async (element: HTMLInputElement, text: string) => {
 
 /** Settle every transition, so a measurement never lands mid-flight. */
 const settle = (container: HTMLElement) => {
-  for (const animation of container.getAnimations({subtree: true})) animation.finish();
+  for (const animation of container.getAnimations({ subtree: true })) animation.finish();
 };
 
 /**
@@ -44,7 +44,7 @@ describe("ColorField (browser)", () => {
     it("refuses a character that could never be part of a hex value", async () => {
       // The refusal happens on `beforeinput`, which is the only event that can still be cancelled —
       // and a synthetic `input` event never goes through it, so this is not provable in jsdom.
-      const {container, unmount} = renderField({defaultValue: "#0485F7"});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7" });
 
       await nextTick();
       await replace(input(container), "zz");
@@ -55,7 +55,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("accepts hex digits as they are typed", async () => {
-      const {container, unmount} = renderField({defaultValue: "#0485F7"});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7" });
 
       await nextTick();
       await replace(input(container), "abc");
@@ -67,7 +67,7 @@ describe("ColorField (browser)", () => {
 
     it("commits when focus leaves the field", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderField({defaultValue: "#0485F7", onChange});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7", onChange });
 
       await nextTick();
       await replace(input(container), "abc");
@@ -81,7 +81,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("puts a half-typed value back rather than throwing the colour away", async () => {
-      const {container, unmount} = renderField({defaultValue: "#0485F7"});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7" });
 
       await nextTick();
       await replace(input(container), "ff");
@@ -93,7 +93,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("refuses a letter in a channel field", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         channel: "red",
         colorSpace: "rgb",
         defaultValue: "#3B82F6",
@@ -108,7 +108,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("rewrites a channel value with its unit on commit", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         channel: "hue",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -128,7 +128,7 @@ describe("ColorField (browser)", () => {
     it("draws a focus ring once focus is inside", async () => {
       // `data-focus-within` is the hook the stylesheet uses; the ring itself is a box shadow, so
       // both are checked — the attribute alone would pass with no visible ring at all.
-      const {container, unmount} = renderField({defaultValue: "#0485F7"});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7" });
 
       await nextTick();
       await userEvent.click(input(container));
@@ -142,7 +142,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("pulls focus into the control when the padding beside it is clicked", async () => {
-      const {container, unmount} = renderField({defaultValue: "#0485F7", withPrefix: true});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7", withPrefix: true });
 
       await nextTick();
       await userEvent.click(slot(container, "color-input-group-prefix"));
@@ -154,7 +154,7 @@ describe("ColorField (browser)", () => {
 
     it("reaches the control with one tab stop", async () => {
       // A field is one stop, not two: the group must not be focusable in its own right.
-      const {container, unmount} = renderField({defaultValue: "#0485F7"});
+      const { container, unmount } = renderField({ defaultValue: "#0485F7" });
 
       await nextTick();
       await userEvent.tab();
@@ -167,13 +167,13 @@ describe("ColorField (browser)", () => {
 
   describe("the wheel", () => {
     it("steps the colour while focus is inside", async () => {
-      const {container, unmount} = renderField({defaultValue: "#0000FF"});
+      const { container, unmount } = renderField({ defaultValue: "#0000FF" });
 
       await nextTick();
       await userEvent.click(input(container));
 
       input(container).dispatchEvent(
-        new WheelEvent("wheel", {bubbles: true, cancelable: true, deltaY: 10}),
+        new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaY: 10 }),
       );
       await nextTick();
 
@@ -183,11 +183,11 @@ describe("ColorField (browser)", () => {
     });
 
     it("leaves the page to scroll while focus is elsewhere", async () => {
-      const {container, unmount} = renderField({defaultValue: "#0000FF"});
+      const { container, unmount } = renderField({ defaultValue: "#0000FF" });
 
       await nextTick();
 
-      const event = new WheelEvent("wheel", {bubbles: true, cancelable: true, deltaY: 10});
+      const event = new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaY: 10 });
 
       input(container).dispatchEvent(event);
       await nextTick();
@@ -203,7 +203,7 @@ describe("ColorField (browser)", () => {
     it("puts the field back to its default on a real reset", async () => {
       // The browser restores a control from its `value` *attribute*, which a Vapor binding never
       // writes — so the field has to put its own text back, a tick after the event.
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         defaultValue: "#0485F7",
         name: "color",
         withForm: true,
@@ -225,7 +225,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("submits the hex value the user sees", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         defaultValue: "#0485F7",
         name: "color",
         withForm: true,
@@ -249,7 +249,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("submits a channel value from its hidden input", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         channel: "hue",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -275,7 +275,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("refuses to submit an empty required field", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         isRequired: true,
         name: "color",
         withForm: true,
@@ -298,7 +298,7 @@ describe("ColorField (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations on the hex branch", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         defaultValue: "#0485F7",
         withDescription: true,
         withPrefix: true,
@@ -312,7 +312,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("has no violations on the channel branch", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         channel: "saturation",
         colorSpace: "hsl",
         defaultValue: "#7F007F",
@@ -326,7 +326,7 @@ describe("ColorField (browser)", () => {
     });
 
     it("has no violations on an invalid field", async () => {
-      const {container, unmount} = renderField({
+      const { container, unmount } = renderField({
         isInvalid: true,
         isRequired: true,
         withFieldError: true,
@@ -342,7 +342,7 @@ describe("ColorField (browser)", () => {
        * it is recorded as debt against `@ropav/styles` rather than papered over here. Every other
        * axe rule stays on, and the two configurations above check contrast with the rule enabled.
        */
-      await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
+      await expectNoA11yViolations(container, { rules: { "color-contrast": { enabled: false } } });
 
       unmount();
     });

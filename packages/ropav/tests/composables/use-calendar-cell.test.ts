@@ -1,25 +1,25 @@
-import type {UseCalendarCellReturn} from "@/composables/use-calendar-cell";
-import type {CalendarState} from "@/composables/use-calendar-state";
-import type {DateValue} from "@internationalized/date";
+import type { UseCalendarCellReturn } from "@/composables/use-calendar-cell";
+import type { CalendarState } from "@/composables/use-calendar-state";
+import type { DateValue } from "@internationalized/date";
 
-import {CalendarDate, getLocalTimeZone, today} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/calendar-cell-host.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
-  let ready!: {cells: Map<string, UseCalendarCellReturn>; state: CalendarState};
+  let ready!: { cells: Map<string, UseCalendarCellReturn>; state: CalendarState };
 
   Object.assign(props, {
     defaultFocusedValue: props["defaultFocusedValue"] ?? new CalendarDate(2026, 6, 15),
     locale: props["locale"] ?? "en-US",
-    onReady: (value: {cells: Map<string, UseCalendarCellReturn>; state: CalendarState}) =>
+    onReady: (value: { cells: Map<string, UseCalendarCellReturn>; state: CalendarState }) =>
       (ready = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -54,7 +54,7 @@ const press = (element: HTMLElement) => {
       width: 1,
     }),
   );
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
 };
 
 describe("useCalendarCell", () => {
@@ -75,7 +75,7 @@ describe("useCalendarCell", () => {
 
     it("says so when the date is selected", () => {
       expect(
-        setup({value: new CalendarDate(2026, 6, 10)})
+        setup({ value: new CalendarDate(2026, 6, 10) })
           .button(JUN(10))
           .getAttribute("aria-label"),
       ).toBe("Wednesday, June 10, 2026 selected");
@@ -83,7 +83,7 @@ describe("useCalendarCell", () => {
 
     it("says so when the date is today", () => {
       const now = today(getLocalTimeZone());
-      const calendar = setup({defaultFocusedValue: now});
+      const calendar = setup({ defaultFocusedValue: now });
 
       expect(calendar.button(String(now)).getAttribute("aria-label")).toContain("Today");
     });
@@ -103,13 +103,13 @@ describe("useCalendarCell", () => {
     });
 
     it("follows the locale", () => {
-      expect(setup({locale: "de-DE"}).button(JUN(15)).getAttribute("aria-label")).toBe(
+      expect(setup({ locale: "de-DE" }).button(JUN(15)).getAttribute("aria-label")).toBe(
         "Montag, 15. Juni 2026",
       );
     });
 
     it("writes the day number in the calendar system on screen", () => {
-      const calendar = setup({locale: "th-TH-u-ca-buddhist"});
+      const calendar = setup({ locale: "th-TH-u-ca-buddhist" });
       const [button] = [...calendar.container.querySelectorAll("[data-date]")];
 
       expect(button?.textContent?.trim()).toBeTruthy();
@@ -126,7 +126,7 @@ describe("useCalendarCell", () => {
 
     it("takes a disabled cell out of the tab order entirely", () => {
       // Not `-1`: a disabled date is not a stop the arrow keys should be able to reach either.
-      const calendar = setup({maxValue: new CalendarDate(2026, 6, 15)});
+      const calendar = setup({ maxValue: new CalendarDate(2026, 6, 15) });
 
       expect(calendar.button(JUN(16)).getAttribute("tabindex")).toBeNull();
     });
@@ -134,14 +134,14 @@ describe("useCalendarCell", () => {
 
   describe("what each state reports", () => {
     it("marks the selected date", () => {
-      const calendar = setup({value: new CalendarDate(2026, 6, 10)});
+      const calendar = setup({ value: new CalendarDate(2026, 6, 10) });
 
       expect(calendar.cell(JUN(10)).isSelected.value).toBe(true);
       expect(calendar.button(JUN(10)).closest("td")?.getAttribute("aria-selected")).toBe("true");
     });
 
     it("disables a date outside the bounds", () => {
-      const calendar = setup({minValue: new CalendarDate(2026, 6, 10)});
+      const calendar = setup({ minValue: new CalendarDate(2026, 6, 10) });
 
       expect(calendar.cell(JUN(9)).isDisabled.value).toBe(true);
       expect(calendar.button(JUN(9)).getAttribute("aria-disabled")).toBe("true");
@@ -157,7 +157,7 @@ describe("useCalendarCell", () => {
 
     it("marks an unavailable date without disabling it", () => {
       // Unavailable dates stay focusable so a user can find out they are unavailable.
-      const calendar = setup({isDateUnavailable: (date: DateValue) => date.day === 16});
+      const calendar = setup({ isDateUnavailable: (date: DateValue) => date.day === 16 });
 
       expect(calendar.cell(JUN(16)).isUnavailable.value).toBe(true);
       expect(calendar.cell(JUN(16)).isDisabled.value).toBe(false);
@@ -167,7 +167,7 @@ describe("useCalendarCell", () => {
     it("marks today", () => {
       const now = today(getLocalTimeZone());
 
-      expect(setup({defaultFocusedValue: now}).cell(String(now)).isToday.value).toBe(true);
+      expect(setup({ defaultFocusedValue: now }).cell(String(now)).isToday.value).toBe(true);
     });
 
     it("shows an invalid selection as selected, so the offending cell is the marked one", () => {
@@ -195,7 +195,7 @@ describe("useCalendarCell", () => {
 
     it("only reports a focused cell once focus is inside the calendar", () => {
       expect(setup().cell(JUN(15)).isFocused.value).toBe(false);
-      expect(setup({autoFocus: true}).cell(JUN(15)).isFocused.value).toBe(true);
+      expect(setup({ autoFocus: true }).cell(JUN(15)).isFocused.value).toBe(true);
     });
 
     it("never reports a cell outside the month as focused", async () => {
@@ -204,7 +204,7 @@ describe("useCalendarCell", () => {
        * June's. Only the one whose month it is may hold focus, or the same date would light up
        * twice.
        */
-      const calendar = setup({autoFocus: true, visibleDuration: {months: 2}});
+      const calendar = setup({ autoFocus: true, visibleDuration: { months: 2 } });
 
       calendar.state().setFocusedDate(new CalendarDate(2026, 7, 1));
       await nextTick();
@@ -227,7 +227,7 @@ describe("useCalendarCell", () => {
     });
 
     it("does nothing on a disabled cell", () => {
-      const calendar = setup({minValue: new CalendarDate(2026, 6, 10)});
+      const calendar = setup({ minValue: new CalendarDate(2026, 6, 10) });
 
       press(calendar.button(JUN(9)));
 
@@ -235,7 +235,7 @@ describe("useCalendarCell", () => {
     });
 
     it("does nothing on an unavailable cell", () => {
-      const calendar = setup({isDateUnavailable: (date: DateValue) => date.day === 16});
+      const calendar = setup({ isDateUnavailable: (date: DateValue) => date.day === 16 });
 
       press(calendar.button(JUN(16)));
 
@@ -243,7 +243,7 @@ describe("useCalendarCell", () => {
     });
 
     it("moves focus but selects nothing while read only", () => {
-      const calendar = setup({isReadOnly: true});
+      const calendar = setup({ isReadOnly: true });
 
       press(calendar.button(JUN(20)));
 
@@ -252,7 +252,7 @@ describe("useCalendarCell", () => {
 
     it("swallows the context menu, so a long press can drag instead", () => {
       const calendar = setup();
-      const event = new MouseEvent("contextmenu", {bubbles: true, cancelable: true});
+      const event = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
 
       calendar.button(JUN(15)).dispatchEvent(event);
 
@@ -262,7 +262,7 @@ describe("useCalendarCell", () => {
 
   describe("moving real focus", () => {
     it("focuses the element of whichever date the state focuses", async () => {
-      const calendar = setup({autoFocus: true});
+      const calendar = setup({ autoFocus: true });
 
       await nextTick();
       expect(document.activeElement).toBe(calendar.button(JUN(15)));
@@ -276,16 +276,16 @@ describe("useCalendarCell", () => {
     it("adopts focus that arrives from outside", () => {
       const calendar = setup();
 
-      calendar.button(JUN(20)).dispatchEvent(new FocusEvent("focus", {bubbles: false}));
+      calendar.button(JUN(20)).dispatchEvent(new FocusEvent("focus", { bubbles: false }));
 
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-20");
       expect(calendar.state().isFocused.value).toBe(true);
     });
 
     it("ignores focus arriving on a disabled cell", () => {
-      const calendar = setup({minValue: new CalendarDate(2026, 6, 10)});
+      const calendar = setup({ minValue: new CalendarDate(2026, 6, 10) });
 
-      calendar.button(JUN(9)).dispatchEvent(new FocusEvent("focus", {bubbles: false}));
+      calendar.button(JUN(9)).dispatchEvent(new FocusEvent("focus", { bubbles: false }));
 
       expect(String(calendar.state().focusedDate.value)).toBe("2026-06-15");
     });

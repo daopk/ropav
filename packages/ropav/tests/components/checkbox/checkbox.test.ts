@@ -1,14 +1,14 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {expectCheckedResetSource} from "../../harness/form-reset";
+import { expectCheckedResetSource } from "../../harness/form-reset";
 
 import CheckboxFixture from "./fixtures.vue";
 import CheckboxFormFixture from "./form-fixtures.vue";
 
 const renderCheckbox = (props: Record<string, unknown> = {}) =>
-  renderVapor(CheckboxFixture, {props});
+  renderVapor(CheckboxFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -35,7 +35,7 @@ const ownerForm = () => {
 describe("Checkbox", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(slot(container, "checkbox")).not.toBeNull();
       expect(slot(container, "checkbox-content")).not.toBeNull();
@@ -46,7 +46,7 @@ describe("Checkbox", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(slot(container, "checkbox").classList.contains("checkbox")).toBe(true);
       expect(slot(container, "checkbox-content").classList.contains("checkbox__content")).toBe(
@@ -63,7 +63,7 @@ describe("Checkbox", () => {
     });
 
     it("renders the clickable content as a label around a hidden checkbox input", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
       const content = slot(container, "checkbox-content");
       const input = inputIn(container);
 
@@ -77,7 +77,7 @@ describe("Checkbox", () => {
     });
 
     it("defaults to the primary variant", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(slot(container, "checkbox").classList.contains("checkbox--primary")).toBe(true);
 
@@ -85,7 +85,7 @@ describe("Checkbox", () => {
     });
 
     it("renders the secondary variant when asked", () => {
-      const {container, unmount} = renderCheckbox({variant: "secondary"});
+      const { container, unmount } = renderCheckbox({ variant: "secondary" });
 
       expect(slot(container, "checkbox").classList.contains("checkbox--secondary")).toBe(true);
 
@@ -93,7 +93,7 @@ describe("Checkbox", () => {
     });
 
     it("merges the caller's class", () => {
-      const {container, unmount} = renderCheckbox({class: "mt-4"});
+      const { container, unmount } = renderCheckbox({ class: "mt-4" });
 
       expect(slot(container, "checkbox").classList.contains("mt-4")).toBe(true);
 
@@ -101,7 +101,7 @@ describe("Checkbox", () => {
     });
 
     it("hides the indicator from assistive technology", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(slot(container, "checkbox-indicator").getAttribute("aria-hidden")).toBe("true");
 
@@ -111,7 +111,7 @@ describe("Checkbox", () => {
 
   describe("default indicator", () => {
     it("draws the tick with its stroke hidden while unselected", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
       const checkmark = slot(container, "checkbox-default-indicator--checkmark");
 
       expect(checkmark).not.toBeNull();
@@ -121,7 +121,7 @@ describe("Checkbox", () => {
     });
 
     it("slides the tick into view once selected", () => {
-      const {container, unmount} = renderCheckbox({defaultSelected: true});
+      const { container, unmount } = renderCheckbox({ defaultSelected: true });
 
       expect(
         slot(container, "checkbox-default-indicator--checkmark").getAttribute("stroke-dashoffset"),
@@ -131,7 +131,7 @@ describe("Checkbox", () => {
     });
 
     it("draws a line instead while indeterminate", () => {
-      const {container, unmount} = renderCheckbox({isIndeterminate: true});
+      const { container, unmount } = renderCheckbox({ isIndeterminate: true });
 
       expect(slot(container, "checkbox-default-indicator--indeterminate")).not.toBeNull();
       expect(
@@ -142,7 +142,7 @@ describe("Checkbox", () => {
     });
 
     it("steps aside for a mark the caller provides", () => {
-      const {container, unmount} = renderCheckbox({withCustomIndicator: true});
+      const { container, unmount } = renderCheckbox({ withCustomIndicator: true });
 
       expect(container.querySelector("[data-testid='custom-indicator']")).not.toBeNull();
       expect(
@@ -155,7 +155,7 @@ describe("Checkbox", () => {
 
   describe("selection", () => {
     it("starts unselected", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(inputIn(container).checked).toBe(false);
       expect(slot(container, "checkbox").getAttribute("data-selected")).toBeNull();
@@ -164,7 +164,7 @@ describe("Checkbox", () => {
     });
 
     it("honours defaultSelected while uncontrolled", () => {
-      const {container, unmount} = renderCheckbox({defaultSelected: true});
+      const { container, unmount } = renderCheckbox({ defaultSelected: true });
 
       expect(inputIn(container).checked).toBe(true);
       expect(slot(container, "checkbox").getAttribute("data-selected")).toBe("true");
@@ -173,7 +173,7 @@ describe("Checkbox", () => {
     });
 
     it("ticks when the label is clicked", async () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       await clickAndSettle(slot(container, "checkbox-content"));
 
@@ -185,7 +185,7 @@ describe("Checkbox", () => {
 
     it("reports the change to the caller", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderCheckbox({onChange});
+      const { container, unmount } = renderCheckbox({ onChange });
 
       await clickAndSettle(slot(container, "checkbox-content"));
 
@@ -195,8 +195,8 @@ describe("Checkbox", () => {
     });
 
     it("follows a controlled value rather than its own", async () => {
-      const props = reactive({isSelected: false, onChange: vi.fn()});
-      const {container, unmount} = renderCheckbox(props);
+      const props = reactive({ isSelected: false, onChange: vi.fn() });
+      const { container, unmount } = renderCheckbox(props);
 
       await clickAndSettle(slot(container, "checkbox-content"));
 
@@ -213,7 +213,7 @@ describe("Checkbox", () => {
     });
 
     it("refuses to change while read-only", async () => {
-      const {container, unmount} = renderCheckbox({isReadOnly: true});
+      const { container, unmount } = renderCheckbox({ isReadOnly: true });
 
       await clickAndSettle(slot(container, "checkbox-content"));
 
@@ -224,7 +224,7 @@ describe("Checkbox", () => {
     });
 
     it("cannot be reached at all while disabled", () => {
-      const {container, unmount} = renderCheckbox({isDisabled: true});
+      const { container, unmount } = renderCheckbox({ isDisabled: true });
 
       expect(inputIn(container).disabled).toBe(true);
       expect(slot(container, "checkbox").getAttribute("data-disabled")).toBe("true");
@@ -235,7 +235,7 @@ describe("Checkbox", () => {
 
   describe("indeterminate", () => {
     it("sets the DOM property, which has no attribute behind it", async () => {
-      const {container, unmount} = renderCheckbox({isIndeterminate: true});
+      const { container, unmount } = renderCheckbox({ isIndeterminate: true });
 
       await nextTick();
 
@@ -246,7 +246,7 @@ describe("Checkbox", () => {
     });
 
     it("publishes the mixed state on the root and the content", async () => {
-      const {container, unmount} = renderCheckbox({isIndeterminate: true});
+      const { container, unmount } = renderCheckbox({ isIndeterminate: true });
 
       await nextTick();
 
@@ -257,8 +257,8 @@ describe("Checkbox", () => {
     });
 
     it("clears the property when the mixed state goes away", async () => {
-      const props = reactive({isIndeterminate: true});
-      const {container, unmount} = renderCheckbox(props);
+      const props = reactive({ isIndeterminate: true });
+      const { container, unmount } = renderCheckbox(props);
 
       await nextTick();
       expect(inputIn(container).indeterminate).toBe(true);
@@ -274,15 +274,15 @@ describe("Checkbox", () => {
 
   describe("interaction states", () => {
     it("reports hover on the content", async () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
       const content = slot(container, "checkbox-content");
 
-      content.dispatchEvent(new PointerEvent("pointerenter", {pointerType: "mouse"}));
+      content.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" }));
       await nextTick();
 
       expect(content.getAttribute("data-hovered")).toBe("true");
 
-      content.dispatchEvent(new PointerEvent("pointerleave", {pointerType: "mouse"}));
+      content.dispatchEvent(new PointerEvent("pointerleave", { pointerType: "mouse" }));
       await nextTick();
 
       expect(content.getAttribute("data-hovered")).toBeNull();
@@ -291,15 +291,15 @@ describe("Checkbox", () => {
     });
 
     it("reports a held Space as a press", async () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
       const content = slot(container, "checkbox-content");
 
-      inputIn(container).dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: " "}));
+      inputIn(container).dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: " " }));
       await nextTick();
 
       expect(content.getAttribute("data-pressed")).toBe("true");
 
-      inputIn(container).dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: " "}));
+      inputIn(container).dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: " " }));
       await nextTick();
 
       expect(content.getAttribute("data-pressed")).toBeNull();
@@ -308,9 +308,9 @@ describe("Checkbox", () => {
     });
 
     it("ignores a held Space while read-only", async () => {
-      const {container, unmount} = renderCheckbox({isReadOnly: true});
+      const { container, unmount } = renderCheckbox({ isReadOnly: true });
 
-      inputIn(container).dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: " "}));
+      inputIn(container).dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: " " }));
       await nextTick();
 
       expect(slot(container, "checkbox-content").getAttribute("data-pressed")).toBeNull();
@@ -324,7 +324,7 @@ describe("Checkbox", () => {
     // an explicit tab index says so, which is why react-aria always sets it — `useToggle` picks
     // it up from `useFocusable`.
     it("renders an explicit tab index on the input", () => {
-      const {container, unmount} = renderCheckbox();
+      const { container, unmount } = renderCheckbox();
 
       expect(inputIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -332,7 +332,7 @@ describe("Checkbox", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {container, unmount} = renderCheckbox({isDisabled: true});
+      const { container, unmount } = renderCheckbox({ isDisabled: true });
 
       expect(inputIn(container).hasAttribute("tabindex")).toBe(false);
 
@@ -341,7 +341,7 @@ describe("Checkbox", () => {
 
     // Read-only is not a factor: only a disabled checkbox leaves the tab order.
     it("keeps the tab index when read only", () => {
-      const {container, unmount} = renderCheckbox({isReadOnly: true});
+      const { container, unmount } = renderCheckbox({ isReadOnly: true });
 
       expect(inputIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -351,7 +351,7 @@ describe("Checkbox", () => {
 
   describe("labelling", () => {
     it("puts the accessible name on the input, not the wrapper", () => {
-      const {container, unmount} = renderCheckbox({ariaLabel: "Accept terms"});
+      const { container, unmount } = renderCheckbox({ ariaLabel: "Accept terms" });
 
       expect(inputIn(container).getAttribute("aria-label")).toBe("Accept terms");
       expect(slot(container, "checkbox").getAttribute("aria-label")).toBeNull();
@@ -360,7 +360,7 @@ describe("Checkbox", () => {
     });
 
     it("describes the input with the help text nested in the field", async () => {
-      const {container, unmount} = renderCheckbox({withDescription: true});
+      const { container, unmount } = renderCheckbox({ withDescription: true });
 
       await nextTick();
 
@@ -372,7 +372,7 @@ describe("Checkbox", () => {
     });
 
     it("keeps the caller's own description ids alongside", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         ariaDescribedby: "outside-hint",
         withDescription: true,
       });
@@ -391,7 +391,7 @@ describe("Checkbox", () => {
   describe("forms", () => {
     it("submits its name and value while ticked", () => {
       const form = ownerForm();
-      const {unmount} = renderCheckbox({
+      const { unmount } = renderCheckbox({
         defaultSelected: true,
         form: form.id,
         name: "terms",
@@ -406,7 +406,7 @@ describe("Checkbox", () => {
 
     it("submits nothing while unticked", () => {
       const form = ownerForm();
-      const {unmount} = renderCheckbox({form: form.id, name: "terms"});
+      const { unmount } = renderCheckbox({ form: form.id, name: "terms" });
 
       expect(new FormData(form).get("terms")).toBeNull();
 
@@ -416,7 +416,7 @@ describe("Checkbox", () => {
 
     it("starts submitting once it is ticked", async () => {
       const form = ownerForm();
-      const {container, unmount} = renderCheckbox({form: form.id, name: "terms"});
+      const { container, unmount } = renderCheckbox({ form: form.id, name: "terms" });
 
       await clickAndSettle(slot(container, "checkbox-content"));
 
@@ -427,7 +427,7 @@ describe("Checkbox", () => {
     });
 
     it("defaults its submitted value to on", () => {
-      const {container, unmount} = renderCheckbox({defaultSelected: true, name: "terms"});
+      const { container, unmount } = renderCheckbox({ defaultSelected: true, name: "terms" });
 
       expect(inputIn(container).value).toBe("on");
 
@@ -439,8 +439,8 @@ describe("Checkbox", () => {
       // mirroring the state always lands after it and `checked` reads correct either way; a real
       // browser drains microtasks in between, restores from the half asserted here, and unticks a
       // box the state still calls selected. Red without the fix.
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
-        props: {defaultSelected: true, name: "terms"},
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
+        props: { defaultSelected: true, name: "terms" },
       });
 
       await nextTick();
@@ -455,8 +455,8 @@ describe("Checkbox", () => {
     });
 
     it("goes back to its default when the form is reset", async () => {
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
-        props: {defaultSelected: true, name: "terms"},
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
+        props: { defaultSelected: true, name: "terms" },
       });
       const form = container.querySelector("form")!;
 
@@ -474,7 +474,7 @@ describe("Checkbox", () => {
 
   describe("validation", () => {
     it("shows a field error as soon as the caller says the value is invalid", async () => {
-      const {container, unmount} = renderCheckbox({isInvalid: true, withFieldError: true});
+      const { container, unmount } = renderCheckbox({ isInvalid: true, withFieldError: true });
 
       await nextTick();
 
@@ -486,7 +486,7 @@ describe("Checkbox", () => {
     });
 
     it("makes no claim either way when isInvalid is left out", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         validate: () => "not acceptable",
         validationBehavior: "aria",
         withFieldError: true,
@@ -501,7 +501,7 @@ describe("Checkbox", () => {
     });
 
     it("keeps a validate message back until the checkbox commits", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         validate: (isSelected: boolean) => (isSelected ? true : "must be accepted"),
         withFieldError: true,
       });
@@ -515,7 +515,7 @@ describe("Checkbox", () => {
     });
 
     it("shows it at once under aria behaviour", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         validate: () => "must be accepted",
         validationBehavior: "aria",
         withFieldError: true,
@@ -531,7 +531,7 @@ describe("Checkbox", () => {
     });
 
     it("lets the caller word the message from what validation reported", async () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         validate: () => ["too soon", "and wrong"],
         validationBehavior: "aria",
         withCustomError: true,
@@ -547,7 +547,7 @@ describe("Checkbox", () => {
     });
 
     it("asks the browser to enforce required under native behaviour", () => {
-      const {container, unmount} = renderCheckbox({isRequired: true});
+      const { container, unmount } = renderCheckbox({ isRequired: true });
 
       expect(inputIn(container).required).toBe(true);
       expect(inputIn(container).getAttribute("aria-required")).toBeNull();
@@ -557,7 +557,7 @@ describe("Checkbox", () => {
     });
 
     it("announces required instead under aria behaviour", () => {
-      const {container, unmount} = renderCheckbox({
+      const { container, unmount } = renderCheckbox({
         isRequired: true,
         validationBehavior: "aria",
       });
@@ -569,8 +569,8 @@ describe("Checkbox", () => {
     });
 
     it("reveals the message on a failed submit", async () => {
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
-        props: {validate: () => "must be accepted", withFieldError: true},
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
+        props: { validate: () => "must be accepted", withFieldError: true },
       });
       const form = container.querySelector("form")!;
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
@@ -593,10 +593,10 @@ describe("Checkbox", () => {
     });
 
     it("shows a server error registered under its name", async () => {
-      const {container, unmount} = renderVapor(CheckboxFormFixture, {
+      const { container, unmount } = renderVapor(CheckboxFormFixture, {
         props: {
           name: "terms",
-          validationErrors: {terms: "rejected upstream"},
+          validationErrors: { terms: "rejected upstream" },
           withFieldError: true,
         },
       });

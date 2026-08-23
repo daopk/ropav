@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogFixtureProps} from "./fixtures.types";
+import type { AlertDialogFixtureProps } from "./fixtures.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {AlertDialog} from "@/components/alert-dialog";
-import {ButtonRoot} from "@/components/button";
+import { AlertDialog } from "@/components/alert-dialog";
+import { ButtonRoot } from "@/components/button";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that Vue
 // had cast would turn the dialog controlled, or read as a deliberate dismiss opt-in.
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<AlertDialogFixtureProps>(), {
   withoutHeading: undefined,
 });
 
-const emit = defineEmits<{openChange: [isOpen: boolean]}>();
+const emit = defineEmits<{ openChange: [isOpen: boolean] }>();
 
 const shouldCloseOnInteractOutside = (element: Element) =>
   !props.keepOpenFor || !element.closest(`#${props.keepOpenFor}`);
@@ -43,13 +43,13 @@ const shouldCloseOnInteractOutside = (element: Element) =>
  * static one — so binding `undefined` erases the default name instead of leaving it alone.
  */
 const closeTriggerAttrs = computed(() =>
-  props.closeTriggerLabel === undefined ? {} : {"aria-label": props.closeTriggerLabel},
+  props.closeTriggerLabel === undefined ? {} : { "aria-label": props.closeTriggerLabel },
 );
 
 /** Set by the button inside `AlertDialog.Close`, so a test can prove both handlers ran. */
 const removed = shallowRef(false);
 
-defineExpose({removed});
+defineExpose({ removed });
 </script>
 
 <template>
@@ -73,7 +73,7 @@ defineExpose({removed});
         :variant="props.variant"
       >
         <AlertDialog.Container :placement="props.placement" :size="props.size">
-          <AlertDialog.Dialog v-slot="{close}">
+          <AlertDialog.Dialog v-slot="{ close }">
             <AlertDialog.CloseTrigger v-if="props.withCloseTrigger" v-bind="closeTriggerAttrs" />
             <AlertDialog.Header>
               <AlertDialog.Icon v-if="props.withIcon" :status="props.iconStatus">

@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldStepperButtonProps} from "./number-field.types";
+import type { NumberFieldStepperButtonProps } from "./number-field.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {IconPlus} from "../icons";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { IconPlus } from "../icons";
 
-import {useNumberFieldContext} from "./number-field.context";
+import { useNumberFieldContext } from "./number-field.context";
 
 const props = defineProps<NumberFieldStepperButtonProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {field, increment, slots} = useNumberFieldContext();
+const { field, increment, slots } = useNumberFieldContext();
 
-const styles = computed(() => slots.value.incrementButton({class: props.class}));
+const styles = computed(() => slots.value.incrementButton({ class: props.class }));
 
 /**
  * `slot="increment"` is a live CSS contract, not a leftover of React Aria's slot system:
@@ -26,13 +26,13 @@ const styles = computed(() => slots.value.incrementButton({class: props.class}))
  * attribute as slot syntax, and the linter still flags either spelling. The vapor compiler passes
  * both straight through — measured in the DOM.
  */
-const incrementSlot = {slot: "increment"};
+const incrementSlot = { slot: "increment" };
 
-const attrs = computed(() => ({...incrementSlot, ...increment.attrs.value}));
+const attrs = computed(() => ({ ...incrementSlot, ...increment.attrs.value }));
 
 // The stylesheet scales the button down while it is held, keyed on `data-pressed` as well as on
 // `:active`, so the press has to be reported here.
-const interaction = useInteractionStates({isDisabled: increment.isDisabled});
+const interaction = useInteractionStates({ isDisabled: increment.isDisabled });
 
 /**
  * Where focus goes when a stepper is pressed.

@@ -1,10 +1,10 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
 import VirtualizedFixture from "./virtualized-fixtures.vue";
@@ -33,7 +33,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** Wait for the entry animation to finish, so the popover is measured at its settled size. */
@@ -56,7 +56,7 @@ afterEach(async () => {
 });
 
 const mount = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -289,7 +289,7 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("fades the clear button out with nothing to clear, and in with something", async () => {
-      const result = mount({selectionMode: "multiple", withClearButton: true});
+      const result = mount({ selectionMode: "multiple", withClearButton: true });
 
       await nextTick();
 
@@ -315,18 +315,22 @@ describe("Autocomplete (browser)", () => {
 
   describe("a windowed collection", () => {
     const mountVirtualized = async (props: Record<string, unknown> = {}) => {
-      const result = renderVapor(VirtualizedFixture, {props});
+      const result = renderVapor(VirtualizedFixture, { props });
 
       cleanups.push(result.unmount);
       await nextTick();
 
       const popover = await open(result.container);
 
-      return {...result, listbox: popover.querySelector<HTMLElement>('[role="listbox"]')!, popover};
+      return {
+        ...result,
+        listbox: popover.querySelector<HTMLElement>('[role="listbox"]')!,
+        popover,
+      };
     };
 
     it("keeps only a screenful of a thousand options in the DOM", async () => {
-      const {listbox} = await mountVirtualized();
+      const { listbox } = await mountVirtualized();
       const options = optionsOf();
 
       expect(options.length).toBeGreaterThan(0);
@@ -338,11 +342,11 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("brings further options in as it scrolls", async () => {
-      const {listbox} = await mountVirtualized();
+      const { listbox } = await mountVirtualized();
       const before = optionsOf().map((option) => option.textContent!.trim());
 
       listbox.scrollTop = 5000;
-      listbox.dispatchEvent(new Event("scroll", {bubbles: true}));
+      listbox.dispatchEvent(new Event("scroll", { bubbles: true }));
       await nextTick();
       await nextTick();
 
@@ -353,7 +357,7 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("gives a windowed option the full width of the list", async () => {
-      const {listbox} = await mountVirtualized();
+      const { listbox } = await mountVirtualized();
       const wrapped = [
         ...listbox.querySelectorAll<HTMLElement>(
           '[role="presentation"] > [data-slot="list-box-item"]',
@@ -367,7 +371,7 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("pages through the window by the layout's own geometry", async () => {
-      const {listbox} = await mountVirtualized();
+      const { listbox } = await mountVirtualized();
 
       await userEvent.keyboard("{ArrowDown}");
       await nextTick();
@@ -404,7 +408,7 @@ describe("Autocomplete (browser)", () => {
 
   describe("a form", () => {
     it("restores the chosen option when a real reset button is pressed", async () => {
-      const result = mount({defaultValue: "dog", name: "animal", withForm: true});
+      const result = mount({ defaultValue: "dog", name: "animal", withForm: true });
 
       await nextTick();
       await open(result.container);
@@ -431,7 +435,7 @@ describe("Autocomplete (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while closed", async () => {
-      const result = mount({withClearButton: true, withLabel: true});
+      const result = mount({ withClearButton: true, withLabel: true });
 
       await nextTick();
 
@@ -439,7 +443,7 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("has no violations while open", async () => {
-      const result = mount({withClearButton: true, withLabel: true});
+      const result = mount({ withClearButton: true, withLabel: true });
 
       await nextTick();
       await open(result.container);
@@ -448,7 +452,7 @@ describe("Autocomplete (browser)", () => {
     });
 
     it("has no violations with an option named from the search field", async () => {
-      const result = mount({withLabel: true});
+      const result = mount({ withLabel: true });
 
       await nextTick();
       await open(result.container);

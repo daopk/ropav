@@ -21,7 +21,7 @@ export const ColorField = Object.assign(ColorFieldRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ColorFieldRoot};
+export { ColorFieldRoot };
 
 export type {
   ColorFieldRootProps,
@@ -32,6 +32,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorFieldVariants} from "@ropav/styles";
+export { colorFieldVariants } from "@ropav/styles";
 
-export type {ColorFieldVariants} from "@ropav/styles";
+export type { ColorFieldVariants } from "@ropav/styles";

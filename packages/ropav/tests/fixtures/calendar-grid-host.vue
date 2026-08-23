@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {CalendarGridHostProps} from "./calendar-grid-host.types";
+import type { CalendarGridHostProps } from "./calendar-grid-host.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import CalendarGridHarness from "./calendar-grid-harness.vue";
 

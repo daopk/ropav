@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ColorFieldStateHostProps} from "./color-field.types";
+import type { ColorFieldStateHostProps } from "./color-field.types";
 
-import {useColorFieldState} from "@/composables/use-color-field-state";
+import { useColorFieldState } from "@/composables/use-color-field-state";
 
 // The composable has to run inside a component: it injects the form context, and `inject` outside
 // a component instance returns `undefined` rather than the default.

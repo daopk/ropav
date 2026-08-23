@@ -1,11 +1,11 @@
-import type {Locale} from "@/utils/locale";
-import type {ComputedRef} from "vue";
+import type { Locale } from "@/utils/locale";
+import type { ComputedRef } from "vue";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, reactive } from "vue";
 
-import {useDefaultLocale} from "@/composables/use-locale";
+import { useDefaultLocale } from "@/composables/use-locale";
 
 import Harness from "../fixtures/locale-harness.vue";
 
@@ -13,7 +13,7 @@ import Harness from "../fixtures/locale-harness.vue";
 const scoped = <T>(run: () => T) => {
   const scope = effectScope();
 
-  return {dispose: () => scope.stop(), value: scope.run(run)!};
+  return { dispose: () => scope.stop(), value: scope.run(run)! };
 };
 
 /**
@@ -53,9 +53,9 @@ const restoreLanguage = () => {
 const setup = (props: Record<string, unknown> = {}) => {
   let locale!: ComputedRef<Locale>;
 
-  Object.assign(props, {onReady: (value: ComputedRef<Locale>) => (locale = value)});
+  Object.assign(props, { onReady: (value: ComputedRef<Locale>) => (locale = value) });
 
-  return {...renderVapor(Harness, {props}), locale: () => locale};
+  return { ...renderVapor(Harness, { props }), locale: () => locale };
 };
 
 describe("useDefaultLocale", () => {
@@ -64,19 +64,19 @@ describe("useDefaultLocale", () => {
   });
 
   it("reports the browser's locale", () => {
-    const {dispose, value} = scoped(() => useDefaultLocale());
+    const { dispose, value } = scoped(() => useDefaultLocale());
 
-    expect(value.value).toEqual({direction: "ltr", locale: navigator.language});
+    expect(value.value).toEqual({ direction: "ltr", locale: navigator.language });
     dispose();
   });
 
   it("follows the browser's locale changing", async () => {
-    const {dispose, value} = scoped(() => useDefaultLocale());
+    const { dispose, value } = scoped(() => useDefaultLocale());
 
     stubLanguage("ar-AE");
     await nextTick();
 
-    expect(value.value).toEqual({direction: "rtl", locale: "ar-AE"});
+    expect(value.value).toEqual({ direction: "rtl", locale: "ar-AE" });
     dispose();
   });
 
@@ -95,7 +95,7 @@ describe("useDefaultLocale", () => {
     const second = scoped(() => useDefaultLocale());
 
     // React Aria reads its module-level value here and would still say `en-US`.
-    expect(second.value.value).toEqual({direction: "rtl", locale: "he-IL"});
+    expect(second.value.value).toEqual({ direction: "rtl", locale: "he-IL" });
     second.dispose();
   });
 
@@ -122,48 +122,48 @@ describe("useLocale", () => {
   });
 
   it("reads the locale an ancestor chose", () => {
-    const {locale, unmount} = setup({locale: "he-IL"});
+    const { locale, unmount } = setup({ locale: "he-IL" });
 
-    expect(locale().value).toEqual({direction: "rtl", locale: "he-IL"});
+    expect(locale().value).toEqual({ direction: "rtl", locale: "he-IL" });
     unmount();
   });
 
   it("falls back to the browser when nothing above has chosen", () => {
     stubLanguage("ar-AE");
-    const {locale, unmount} = setup({withProvider: false});
+    const { locale, unmount } = setup({ withProvider: false });
 
-    expect(locale().value).toEqual({direction: "rtl", locale: "ar-AE"});
+    expect(locale().value).toEqual({ direction: "rtl", locale: "ar-AE" });
     unmount();
   });
 
   it("keeps a unicode extension on the resolved tag", () => {
     // The calendar system rides on the tag, so dropping the extension would silently put an
     // Indian-calendar consumer back on the Gregorian one.
-    const {locale, unmount} = setup({locale: "hi-IN-u-ca-indian"});
+    const { locale, unmount } = setup({ locale: "hi-IN-u-ca-indian" });
 
-    expect(locale().value).toEqual({direction: "ltr", locale: "hi-IN-u-ca-indian"});
+    expect(locale().value).toEqual({ direction: "ltr", locale: "hi-IN-u-ca-indian" });
     unmount();
   });
 
   it("follows the chosen tag changing", async () => {
-    const props = reactive({locale: "en-US"});
-    const {locale, unmount} = setup(props);
+    const props = reactive({ locale: "en-US" });
+    const { locale, unmount } = setup(props);
 
     expect(locale().value.direction).toBe("ltr");
 
     props.locale = "ar-AE";
     await nextTick();
 
-    expect(locale().value).toEqual({direction: "rtl", locale: "ar-AE"});
+    expect(locale().value).toEqual({ direction: "rtl", locale: "ar-AE" });
     unmount();
   });
 
   it("hands the decision back to the browser for no tag", () => {
     // A provider binding a value that is not chosen yet must not pin the tree to a wrong language.
     stubLanguage("he-IL");
-    const {locale, unmount} = setup({locale: null});
+    const { locale, unmount } = setup({ locale: null });
 
-    expect(locale().value).toEqual({direction: "rtl", locale: "he-IL"});
+    expect(locale().value).toEqual({ direction: "rtl", locale: "he-IL" });
     unmount();
   });
 });

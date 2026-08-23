@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {MenuItemIndicatorProps, MenuItemIndicatorSlotProps} from "./menu-item.types";
+import type { MenuItemIndicatorProps, MenuItemIndicatorSlotProps } from "./menu-item.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useMenuItemContext} from "./menu-item.context";
+import { useMenuItemContext } from "./menu-item.context";
 
-const props = withDefaults(defineProps<MenuItemIndicatorProps>(), {type: "checkmark"});
+const props = withDefaults(defineProps<MenuItemIndicatorProps>(), { type: "checkmark" });
 
-defineSlots<{default?: (props: MenuItemIndicatorSlotProps) => unknown}>();
+defineSlots<{ default?: (props: MenuItemIndicatorSlotProps) => unknown }>();
 
-const {isSelected, slots} = useMenuItemContext();
+const { isSelected, slots } = useMenuItemContext();
 
 /**
  * The checkmark is drawn rather than revealed: the stroke is dashed to exactly its own length and
@@ -24,7 +24,7 @@ const strokeDashoffset = computed(() => (isSelected.value ? 44 : 66));
 <template>
   <span
     aria-hidden="true"
-    :class="slots.indicator({class: props.class})"
+    :class="slots.indicator({ class: props.class })"
     data-slot="menu-item-indicator"
     :data-type="props.type"
     :data-visible="dataAttr(isSelected)"

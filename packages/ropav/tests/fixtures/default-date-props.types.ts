@@ -1,6 +1,6 @@
-import type {DefaultDateProps} from "@/composables/use-default-date-props";
-import type {Granularity} from "@/utils/date-format";
-import type {DateValue} from "@internationalized/date";
+import type { DefaultDateProps } from "@/composables/use-default-date-props";
+import type { Granularity } from "@/utils/date-format";
+import type { DateValue } from "@internationalized/date";
 
 export interface DefaultDatePropsHostProps {
   value?: DateValue | null;

@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {TabsIndicatorProps} from "./tabs.types";
+import type { TabsIndicatorProps } from "./tabs.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useSharedElement, useSharedElementScope} from "../../composables/use-shared-element";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useSharedElement, useSharedElementScope } from "../../composables/use-shared-element";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useTabsContext, useTabsTabContext} from "./tabs.context";
+import { useTabsContext, useTabsTabContext } from "./tabs.context";
 
 const props = defineProps<TabsIndicatorProps>();
 
-const {slots} = useTabsContext();
-const {isSelected} = useTabsTabContext();
+const { slots } = useTabsContext();
+const { isSelected } = useTabsTabContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -21,7 +21,7 @@ const element = shallowRef<HTMLElement | null>(null);
  * like a single strip sliding along is really one element handing its place to the next. The name
  * is what the two ends of that handoff have in common.
  */
-const {isEntering, isExiting, isPresent} = useSharedElement({
+const { isEntering, isExiting, isPresent } = useSharedElement({
   elementRef: element,
   isVisible: () => isSelected.value,
   name: "SelectionIndicator",

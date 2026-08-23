@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {getDragSession} from "@/composables/drag-manager";
-import {setInteractionModality} from "@/composables/use-interaction-states";
+import { getDragSession } from "@/composables/drag-manager";
+import { setInteractionModality } from "@/composables/use-interaction-states";
 /**
  * Dragging inside a tree grid.
  *
@@ -17,7 +17,7 @@ import Fixture from "./tree-drag-and-drop-fixtures.vue";
 const unmounts: (() => void)[] = [];
 
 const renderTree = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   unmounts.push(result.unmount);
   await nextTick();
@@ -28,21 +28,21 @@ const renderTree = async (props: Record<string, unknown> = {}) => {
   const titles = () =>
     rows().map((row) => row.querySelectorAll("td")[1]!.textContent!.replace("chevron", "").trim());
 
-  return {...result, handles, rows, table, titles};
+  return { ...result, handles, rows, table, titles };
 };
 
 const press = (key: string, init: KeyboardEventInit = {}) => {
   const target = document.activeElement ?? document;
 
-  target.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key, ...init}));
-  target.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key, ...init}));
+  target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key, ...init }));
+  target.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key, ...init }));
 };
 
 /** The first button of a row is its drag handle; the second, if any, is the chevron. */
 const activateHandle = (handle: HTMLElement) => {
   handle.focus();
-  handle.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
-  handle.dispatchEvent(new MouseEvent("click", {bubbles: true, detail: 0}));
+  handle.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
+  handle.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 0 }));
 };
 
 const flushFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -58,7 +58,7 @@ afterEach(() => {
 
 describe("Table tree grid drag and drop", () => {
   it("drags from a nested row as readily as from a top-level one", async () => {
-    const {handles, titles} = await renderTree({defaultExpandedKeys: ["documents"]});
+    const { handles, titles } = await renderTree({ defaultExpandedKeys: ["documents"] });
 
     expect(titles()).toEqual(["Documents", "Report", "Budget", "Photos"]);
 
@@ -74,7 +74,7 @@ describe("Table tree grid drag and drop", () => {
    * drop inside one during a keyboard drag.
    */
   it("opens a closed row when the drop target rests on it", async () => {
-    const {handles, titles} = await renderTree();
+    const { handles, titles } = await renderTree();
 
     expect(titles()).toEqual(["Documents", "Photos"]);
 
@@ -94,7 +94,7 @@ describe("Table tree grid drag and drop", () => {
    * there was any drag and drop to light it — this is what finally does.
    */
   it("marks the row a drop would land on", async () => {
-    const {handles, rows} = await renderTree({defaultExpandedKeys: ["documents"]});
+    const { handles, rows } = await renderTree({ defaultExpandedKeys: ["documents"] });
 
     activateHandle(handles().filter((button) => button.textContent === "grip")[3]!);
     await flushFrame();
@@ -108,7 +108,7 @@ describe("Table tree grid drag and drop", () => {
 
   it("hands the drop to `onItemDrop` when it lands on a row", async () => {
     const onItemDrop = vi.fn();
-    const {handles} = await renderTree({defaultExpandedKeys: ["documents"], onItemDrop});
+    const { handles } = await renderTree({ defaultExpandedKeys: ["documents"], onItemDrop });
 
     activateHandle(handles().filter((button) => button.textContent === "grip")[3]!);
     await flushFrame();
@@ -119,11 +119,11 @@ describe("Table tree grid drag and drop", () => {
     await nextTick();
 
     expect(onItemDrop).toHaveBeenCalledTimes(1);
-    expect(onItemDrop.mock.calls[0]?.[0]).toMatchObject({target: {key: "budget"}});
+    expect(onItemDrop.mock.calls[0]?.[0]).toMatchObject({ target: { key: "budget" } });
   });
 
   it("closes it again on the opposite arrow", async () => {
-    const {handles, titles} = await renderTree({defaultExpandedKeys: ["documents"]});
+    const { handles, titles } = await renderTree({ defaultExpandedKeys: ["documents"] });
 
     // Three rows up from `Photos` is `Documents` itself: Budget, Report, then the folder.
     activateHandle(handles().filter((button) => button.textContent === "grip")[3]!);

@@ -1,8 +1,8 @@
-import type {CollectionKey, UseCollectionReturn} from "../../composables/use-collection";
-import type {breadcrumbsVariants} from "@ropav/styles";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { CollectionKey, UseCollectionReturn } from "../../composables/use-collection";
+import type { breadcrumbsVariants } from "@ropav/styles";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface BreadcrumbsContext {
   collection: UseCollectionReturn;
@@ -15,5 +15,5 @@ export interface BreadcrumbsContext {
 }
 
 export const [useBreadcrumbsContext, provideBreadcrumbsContext] = createContext<BreadcrumbsContext>(
-  {name: "BreadcrumbsContext"},
+  { name: "BreadcrumbsContext" },
 );

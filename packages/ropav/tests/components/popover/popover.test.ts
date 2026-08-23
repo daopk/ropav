@@ -1,10 +1,10 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import PopoverFixture from "./fixtures.vue";
 
-const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixture, {props});
+const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixture, { props });
 
 const POINTER = {
   bubbles: true,
@@ -20,22 +20,22 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** An outside interaction is two events: a pointerdown marks it, and the click dismisses. */
 const pressOutside = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** Focus leaving `element` for `relatedTarget`, which is what `focusout` reports. */
 const blurTo = (element: Element, relatedTarget: Element | null) =>
-  element.dispatchEvent(new FocusEvent("focusout", {bubbles: true, relatedTarget}));
+  element.dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget }));
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
-  element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: name}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: name }));
+  element.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: name }));
 };
 
 /**
@@ -55,7 +55,7 @@ describe("Popover", () => {
     it("renders nothing but the trigger while closed", () => {
       const result = render();
 
-      expect(result.screen.getByRole("button", {name: "Open popover"})).toBeTruthy();
+      expect(result.screen.getByRole("button", { name: "Open popover" })).toBeTruthy();
       expect(result.screen.queryByRole("dialog")).toBeNull();
       expect(document.body.querySelector(".popover")).toBeNull();
 
@@ -63,7 +63,7 @@ describe("Popover", () => {
     });
 
     it("renders the popover outside the app root", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -79,20 +79,20 @@ describe("Popover", () => {
     });
 
     it("exposes the compound parts", async () => {
-      const result = render({defaultOpen: true, withArrow: true});
+      const result = render({ defaultOpen: true, withArrow: true });
 
       await settle();
 
       expect(slot("popover-dialog")).toBeTruthy();
       expect(slot("popover-overlay-arrow-group")).toBeTruthy();
-      expect(result.screen.getByRole("heading", {name: "Popover heading"})).toBeTruthy();
+      expect(result.screen.getByRole("heading", { name: "Popover heading" })).toBeTruthy();
       expect(result.screen.getByText("Popover body")).toBeTruthy();
 
       result.unmount();
     });
 
     it("applies the block and element classes", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -104,7 +104,7 @@ describe("Popover", () => {
     });
 
     it("renders a way out for assistive technology at both ends", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -115,7 +115,7 @@ describe("Popover", () => {
     });
 
     it("renders one way out when the page behind stays live", async () => {
-      const result = render({defaultOpen: true, isNonModal: true});
+      const result = render({ defaultOpen: true, isNonModal: true });
 
       await settle();
 
@@ -127,7 +127,7 @@ describe("Popover", () => {
     });
 
     it("removes the popover once it closes", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
       key(result.screen.getByRole("dialog"), "Escape");
@@ -141,7 +141,7 @@ describe("Popover", () => {
 
   describe("the dialog role", () => {
     it("leaves the role to the dialog inside it", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -160,7 +160,7 @@ describe("Popover", () => {
     });
 
     it("takes the role itself when nothing inside is a dialog", async () => {
-      const result = render({defaultOpen: true, withoutDialog: true});
+      const result = render({ defaultOpen: true, withoutDialog: true });
 
       await settle();
 
@@ -174,7 +174,7 @@ describe("Popover", () => {
     });
 
     it("hands the id to whichever element is the dialog", async () => {
-      const withDialog = render({defaultOpen: true});
+      const withDialog = render({ defaultOpen: true });
 
       await settle();
 
@@ -191,12 +191,12 @@ describe("Popover", () => {
 
   describe("naming", () => {
     it("names the dialog by its heading", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
       const dialog = result.screen.getByRole("dialog");
-      const heading = result.screen.getByRole("heading", {name: "Popover heading"});
+      const heading = result.screen.getByRole("heading", { name: "Popover heading" });
 
       expect(dialog.getAttribute("aria-labelledby")).toBe(heading.getAttribute("id"));
 
@@ -204,7 +204,7 @@ describe("Popover", () => {
     });
 
     it("falls back to the trigger when there is no heading", async () => {
-      const result = render({defaultOpen: true, withoutHeading: true});
+      const result = render({ defaultOpen: true, withoutHeading: true });
 
       await settle();
 
@@ -218,7 +218,7 @@ describe("Popover", () => {
     });
 
     it("renders the heading one level below the page inside a dialog", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -228,7 +228,7 @@ describe("Popover", () => {
     });
 
     it("supports overriding the heading level", async () => {
-      const result = render({defaultOpen: true, headingLevel: 4});
+      const result = render({ defaultOpen: true, headingLevel: 4 });
 
       await settle();
 
@@ -241,7 +241,7 @@ describe("Popover", () => {
   describe("the trigger", () => {
     it("wires a bare button as the trigger", async () => {
       const result = render();
-      const trigger = result.getByRole("button", {name: "Open popover"});
+      const trigger = result.getByRole("button", { name: "Open popover" });
 
       expect(trigger.getAttribute("aria-expanded")).toBe("false");
       expect(trigger.hasAttribute("aria-controls")).toBe(false);
@@ -259,8 +259,8 @@ describe("Popover", () => {
     });
 
     it("makes markup that is not pressable into a trigger", async () => {
-      const result = render({withCustomTrigger: true});
-      const trigger = result.getByRole("button", {name: "Actions"});
+      const result = render({ withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Actions" });
 
       expect(trigger.tagName).toBe("DIV");
       expect(trigger.getAttribute("data-slot")).toBe("popover-trigger");
@@ -277,8 +277,8 @@ describe("Popover", () => {
     });
 
     it("reads as pressed for as long as the popover is open", async () => {
-      const result = render({withCustomTrigger: true});
-      const trigger = result.getByRole("button", {name: "Actions"});
+      const result = render({ withCustomTrigger: true });
+      const trigger = result.getByRole("button", { name: "Actions" });
 
       press(trigger);
       await settle();
@@ -289,7 +289,7 @@ describe("Popover", () => {
     });
 
     it("leaves a button inside the popover alone", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -313,7 +313,7 @@ describe("Popover", () => {
   describe("dismissal", () => {
     it("closes on Escape", async () => {
       const onOpenChange = vi.fn();
-      const result = render({defaultOpen: true, onOpenChange});
+      const result = render({ defaultOpen: true, onOpenChange });
 
       await settle();
       key(result.screen.getByRole("dialog"), "Escape");
@@ -330,7 +330,7 @@ describe("Popover", () => {
       // The bare attribute form, because a prop typed through an imported union compiles without
       // a `type` and Vue then never casts it — `:is-...="true"` would pass either way.
       const result = renderVapor(PopoverFixture, {
-        props: {defaultOpen: true, isKeyboardDismissDisabled: true, onOpenChange},
+        props: { defaultOpen: true, isKeyboardDismissDisabled: true, onOpenChange },
       });
 
       await settle();
@@ -344,7 +344,7 @@ describe("Popover", () => {
     });
 
     it("closes on an interaction outside it", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
       pressOutside(result.container.querySelector("#outside")!);
@@ -356,7 +356,7 @@ describe("Popover", () => {
     });
 
     it("stays open for an interaction inside it", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
       pressOutside(document.body.querySelector(".popover p")!);
@@ -368,7 +368,7 @@ describe("Popover", () => {
     });
 
     it("supports filtering which outside interactions dismiss it", async () => {
-      const result = render({defaultOpen: true, keepOpenFor: "outside"});
+      const result = render({ defaultOpen: true, keepOpenFor: "outside" });
 
       await settle();
       pressOutside(result.container.querySelector("#outside")!);
@@ -387,14 +387,14 @@ describe("Popover", () => {
      * That shape is non-modal *and* without a dialog inside: `Popover.Dialog` asks the popover to
      * contain focus, and a modal popover is the dialog itself and contains it too.
      */
-    const LEAVABLE = {defaultOpen: true, isNonModal: true, withoutDialog: true} as const;
+    const LEAVABLE = { defaultOpen: true, isNonModal: true, withoutDialog: true } as const;
 
     const bare = (name: "first" | "second") =>
       document.body.querySelector<HTMLElement>(`[data-testid="bare-${name}"]`)!;
 
     it("closes a popover focus can leave once focus reaches something outside it", async () => {
       const onOpenChange = vi.fn();
-      const result = render({...LEAVABLE, onOpenChange});
+      const result = render({ ...LEAVABLE, onOpenChange });
 
       await settle();
       blurTo(bare("first"), result.container.querySelector("#outside")!);
@@ -434,7 +434,7 @@ describe("Popover", () => {
     });
 
     it("supports filtering where focus may go without dismissing it", async () => {
-      const result = render({...LEAVABLE, keepOpenFor: "outside"});
+      const result = render({ ...LEAVABLE, keepOpenFor: "outside" });
 
       await settle();
       blurTo(bare("first"), result.container.querySelector("#outside")!);
@@ -446,7 +446,7 @@ describe("Popover", () => {
     });
 
     it("closes from the scoped slot", async () => {
-      const result = render({defaultOpen: true, withCloseFromSlot: true});
+      const result = render({ defaultOpen: true, withCloseFromSlot: true });
 
       await settle();
       press(result.screen.getByTestId("close-from-slot"));
@@ -460,7 +460,7 @@ describe("Popover", () => {
 
   describe("isolation", () => {
     it("hides the rest of the page from assistive technology", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -475,7 +475,7 @@ describe("Popover", () => {
     });
 
     it("leaves the page alone when it stays live", async () => {
-      const result = render({defaultOpen: true, isNonModal: true});
+      const result = render({ defaultOpen: true, isNonModal: true });
 
       await settle();
 
@@ -487,7 +487,7 @@ describe("Popover", () => {
 
   describe("the arrow", () => {
     it("renders the default shape with the slot the stylesheet keys on", async () => {
-      const result = render({defaultOpen: true, withArrow: true});
+      const result = render({ defaultOpen: true, withArrow: true });
 
       await settle();
 
@@ -503,7 +503,7 @@ describe("Popover", () => {
     });
 
     it("renders a supplied shape untouched", async () => {
-      const result = render({defaultOpen: true, withArrow: true, withCustomArrow: true});
+      const result = render({ defaultOpen: true, withArrow: true, withCustomArrow: true });
 
       await settle();
 
@@ -522,9 +522,9 @@ describe("Popover", () => {
   describe("state", () => {
     it("reports opening and closing", async () => {
       const onOpenChange = vi.fn();
-      const result = render({onOpenChange});
+      const result = render({ onOpenChange });
 
-      press(result.getByRole("button", {name: "Open popover"}));
+      press(result.getByRole("button", { name: "Open popover" }));
       await settle();
 
       expect(onOpenChange).toHaveBeenCalledWith(true);
@@ -534,7 +534,7 @@ describe("Popover", () => {
 
     it("leaves a controlled popover to its owner", async () => {
       const onOpenChange = vi.fn();
-      const result = render({isOpen: true, onOpenChange});
+      const result = render({ isOpen: true, onOpenChange });
 
       await settle();
       key(result.screen.getByRole("dialog"), "Escape");
@@ -548,7 +548,7 @@ describe("Popover", () => {
     });
 
     it("reports where it ended up", async () => {
-      const result = render({defaultOpen: true, placement: "top start", shouldFlip: false});
+      const result = render({ defaultOpen: true, placement: "top start", shouldFlip: false });
 
       await settle();
 

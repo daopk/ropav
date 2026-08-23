@@ -1,9 +1,9 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {defineComponent, h} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { defineComponent, h } from "vue";
 
-import {I18nProvider} from "@/components/i18n-provider";
-import {useLocale} from "@/composables/use-locale";
+import { I18nProvider } from "@/components/i18n-provider";
+import { useLocale } from "@/composables/use-locale";
 
 /**
  * The provider mounted the way a consumer mounts it: from a VDOM host, with the content written in
@@ -20,7 +20,7 @@ const Reader = defineComponent({
     const locale = useLocale();
 
     return () =>
-      h("span", {"data-direction": locale.value.direction, "data-slot": "reader"}, [
+      h("span", { "data-direction": locale.value.direction, "data-slot": "reader" }, [
         locale.value.locale,
       ]);
   },
@@ -28,29 +28,29 @@ const Reader = defineComponent({
 
 const render = (locale?: string) =>
   renderInterop(I18nProvider, {
-    props: {locale},
-    slots: {default: () => h(Reader)},
+    props: { locale },
+    slots: { default: () => h(Reader) },
   });
 
 const reader = () => document.body.querySelector("[data-slot='reader']");
 
 describe("I18nProvider (interop)", () => {
   it("reaches content written in a VDOM host", () => {
-    const {unmount} = render("de-DE");
+    const { unmount } = render("de-DE");
 
     expect(reader()?.textContent).toBe("de-DE");
     unmount();
   });
 
   it("reaches that content with the resolved direction too", () => {
-    const {unmount} = render("ar-AE");
+    const { unmount } = render("ar-AE");
 
     expect(reader()?.getAttribute("data-direction")).toBe("rtl");
     unmount();
   });
 
   it("leaves the browser's locale in force for host content when given none", () => {
-    const {unmount} = render();
+    const { unmount } = render();
 
     expect(reader()?.textContent).toBe(navigator.language);
     unmount();

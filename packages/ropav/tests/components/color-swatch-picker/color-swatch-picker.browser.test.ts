@@ -1,8 +1,8 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -10,7 +10,7 @@ import Fixture from "./fixtures.vue";
 const SIX = ["#F43F5E", "#D946EF", "#8B5CF6", "#3B82F6", "#06B6D4", "#10B981"];
 
 const renderPicker = async (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(Fixture, {props: {colors: SIX, ...props}});
+  const rendered = renderVapor(Fixture, { props: { colors: SIX, ...props } });
 
   await nextTick();
 
@@ -51,7 +51,7 @@ const inRows = (container: HTMLElement, width: string) => {
 describe("ColorSwatchPicker (browser)", () => {
   describe("two-dimensional navigation", () => {
     it("steps down into the next visible row rather than to the next swatch", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -73,7 +73,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("steps back up the same column", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -86,7 +86,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("stays put in the last row", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -101,7 +101,7 @@ describe("ColorSwatchPicker (browser)", () => {
     it("crosses a row boundary with the inline arrows", async () => {
       // Left and right are the flat order in a grid, so the swatch right of the last in a row is
       // the first in the next.
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -114,7 +114,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("reaches every swatch of a wrapped palette by keyboard", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -135,7 +135,7 @@ describe("ColorSwatchPicker (browser)", () => {
     it("answers ArrowDown by geometry, not by counting", async () => {
       // The same collection in rows of two puts a different swatch below the first, which is what
       // makes this geometry rather than a fixed stride.
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "96px");
 
@@ -158,7 +158,7 @@ describe("ColorSwatchPicker (browser)", () => {
 
   describe("pointer", () => {
     it("selects the swatch that was clicked", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await userEvent.click(optionAt(container, 2));
 
@@ -169,7 +169,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("moves the roving tab stop to the swatch that was clicked", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await userEvent.click(optionAt(container, 3));
 
@@ -184,7 +184,7 @@ describe("ColorSwatchPicker (browser)", () => {
        * driver click would hang waiting for a hit. Both halves are asserted — the swatch is out of
        * hit testing, and a click forced past that still selects nothing.
        */
-      const {container, unmount} = await renderPicker({disabled: ["#8B5CF6"]});
+      const { container, unmount } = await renderPicker({ disabled: ["#8B5CF6"] });
 
       await nextTick();
 
@@ -199,7 +199,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("reports hover on the swatch under the pointer", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await userEvent.hover(optionAt(container, 1));
 
@@ -216,7 +216,7 @@ describe("ColorSwatchPicker (browser)", () => {
 
   describe("layout", () => {
     it("wraps into rows by default", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await inRows(container, "128px");
 
@@ -228,7 +228,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("stacks into one column when asked", async () => {
-      const {container, unmount} = await renderPicker({layout: "stack"});
+      const { container, unmount } = await renderPicker({ layout: "stack" });
 
       await nextTick();
 
@@ -246,7 +246,7 @@ describe("ColorSwatchPicker (browser)", () => {
        * collection a grid. One item per row means the item below the first really is the second,
        * so ArrowDown does step — through the grid's rect comparison rather than by counting.
        */
-      const {container, unmount} = await renderPicker({layout: "stack"});
+      const { container, unmount } = await renderPicker({ layout: "stack" });
 
       await nextTick();
       await userEvent.tab();
@@ -260,7 +260,7 @@ describe("ColorSwatchPicker (browser)", () => {
 
   describe("appearance", () => {
     it("shrinks the swatch and colours the border once selected", async () => {
-      const {container, unmount} = await renderPicker({defaultValue: "#D946EF"});
+      const { container, unmount } = await renderPicker({ defaultValue: "#D946EF" });
 
       await nextTick();
 
@@ -275,7 +275,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("leaves an unselected item's border transparent", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await nextTick();
 
@@ -285,7 +285,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("paints each swatch its own colour", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await nextTick();
 
@@ -300,7 +300,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("keeps the checkmark out of the way until the swatch is selected", async () => {
-      const {container, unmount} = await renderPicker({defaultValue: "#D946EF"});
+      const { container, unmount } = await renderPicker({ defaultValue: "#D946EF" });
 
       await nextTick();
 
@@ -321,7 +321,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("shows a focus ring on the swatch the keyboard reached", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       await userEvent.tab();
 
@@ -334,7 +334,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("sizes the swatches by the size modifier", async () => {
-      const {container, unmount} = await renderPicker({size: "xl"});
+      const { container, unmount } = await renderPicker({ size: "xl" });
 
       await nextTick();
 
@@ -346,7 +346,7 @@ describe("ColorSwatchPicker (browser)", () => {
 
   describe("accessibility", () => {
     it("has no axe violations", async () => {
-      const {container, unmount} = await renderPicker({defaultValue: "#8B5CF6"});
+      const { container, unmount } = await renderPicker({ defaultValue: "#8B5CF6" });
 
       await nextTick();
       await expectNoA11yViolations(container);
@@ -355,7 +355,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("has no axe violations with a disabled swatch", async () => {
-      const {container, unmount} = await renderPicker({disabled: ["#F43F5E"]});
+      const { container, unmount } = await renderPicker({ disabled: ["#F43F5E"] });
 
       await nextTick();
       await expectNoA11yViolations(container);
@@ -364,7 +364,7 @@ describe("ColorSwatchPicker (browser)", () => {
     });
 
     it("takes one Tab to leave the whole palette", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       const after = document.createElement("button");
 

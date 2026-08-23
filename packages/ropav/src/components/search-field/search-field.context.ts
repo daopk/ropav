@@ -1,7 +1,7 @@
-import type {searchFieldVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { searchFieldVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface SearchFieldContext {
   /** Slot classes the parts pull their own class from. */

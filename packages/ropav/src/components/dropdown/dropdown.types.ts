@@ -1,6 +1,6 @@
-import type {MenuTriggerType} from "../../composables/use-menu-trigger";
-import type {Placement} from "../../utils/position";
-import type {MenuRootProps} from "../menu/menu.types";
+import type { MenuTriggerType } from "../../composables/use-menu-trigger";
+import type { Placement } from "../../utils/position";
+import type { MenuRootProps } from "../menu/menu.types";
 
 export interface DropdownRootProps {
   /** How the menu is opened. @default "press" */

@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {DisclosureBodyProps} from "./disclosure.types";
+import type { DisclosureBodyProps } from "./disclosure.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useDisclosureContext} from "./disclosure.context";
+import { useDisclosureContext } from "./disclosure.context";
 
 const props = defineProps<DisclosureBodyProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useDisclosureContext();
+const { slots } = useDisclosureContext();
 </script>
 
 <template>

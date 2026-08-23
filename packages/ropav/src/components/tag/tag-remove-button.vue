@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TagRemoveButtonProps} from "./tag.types";
+import type { TagRemoveButtonProps } from "./tag.types";
 
-import {CloseButtonRoot} from "../close-button";
+import { CloseButtonRoot } from "../close-button";
 
-import {useTagContext} from "./tag.context";
+import { useTagContext } from "./tag.context";
 
 const props = defineProps<TagRemoveButtonProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {remove, slots} = useTagContext();
+const { remove, slots } = useTagContext();
 
 /*
  * A plain `slot` DOM attribute, not Vue 2's slot syntax — React Aria emits it on the remove
@@ -19,14 +19,14 @@ const {remove, slots} = useTagContext();
  * syntax to the linter, and silencing that would need a template comment, which Vue keeps in the
  * rendered DOM.
  */
-const domAttributes = {slot: "remove"};
+const domAttributes = { slot: "remove" };
 </script>
 
 <template>
   <CloseButtonRoot
     v-bind="domAttributes"
     aria-label="Remove tag"
-    :class="slots.removeButton({class: props.class})"
+    :class="slots.removeButton({ class: props.class })"
     data-slot="tag-remove-button"
     @click="remove"
   >

@@ -1,18 +1,18 @@
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dndStrings} from "../i18n/dnd";
+import { dndStrings } from "../i18n/dnd";
 
-import {useDragSession} from "./drag-manager";
-import {useDragModality} from "./drag-modality";
-import {useDescription} from "./use-description";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDragSession } from "./drag-manager";
+import { useDragModality } from "./drag-modality";
+import { useDescription } from "./use-description";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export interface UseVirtualDropReturn {
   /** Attributes for the drop target. Never carries a listener — see the note on `handlers`. */
-  attrs: ComputedRef<{"aria-describedby": string | undefined}>;
-  handlers: {onClick: () => void};
+  attrs: ComputedRef<{ "aria-describedby": string | undefined }>;
+  handlers: { onClick: () => void };
 }
 
 /**
@@ -31,12 +31,12 @@ export const useVirtualDrop = (): UseVirtualDropReturn => {
     touch: "dropDescriptionTouch",
     virtual: "dropDescriptionVirtual",
   } as const;
-  const {describedBy} = useDescription(() =>
+  const { describedBy } = useDescription(() =>
     session.value ? stringFormatter.value.format(keys[modality.value]) : "",
   );
 
   return {
-    attrs: computed(() => ({"aria-describedby": describedBy.value})),
+    attrs: computed(() => ({ "aria-describedby": describedBy.value })),
     handlers: {
       /**
        * Deliberately empty, and deliberately present.

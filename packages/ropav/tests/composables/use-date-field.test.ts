@@ -1,13 +1,13 @@
-import type {DateFieldReady, TimeFieldReady} from "../fixtures/date-field.types";
+import type { DateFieldReady, TimeFieldReady } from "../fixtures/date-field.types";
 
-import {CalendarDate, Time} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, Time } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Harness from "../fixtures/date-field-harness.vue";
 import TimeHost from "../fixtures/time-field-host.vue";
-import {expectResetSource} from "../harness/form-reset";
+import { expectResetSource } from "../harness/form-reset";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: DateFieldReady;
@@ -17,7 +17,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: DateFieldReady) => (ready = value),
   });
 
-  const result = renderVapor(Harness, {props});
+  const result = renderVapor(Harness, { props });
   const find = <T extends HTMLElement>(slot: string) =>
     result.container.querySelector<T>(`[data-slot='${slot}']`)!;
 
@@ -34,9 +34,9 @@ const setup = (props: Record<string, unknown> = {}) => {
 const setupTime = (props: Record<string, unknown> = {}) => {
   let ready!: TimeFieldReady;
 
-  Object.assign(props, {onReady: (value: TimeFieldReady) => (ready = value)});
+  Object.assign(props, { onReady: (value: TimeFieldReady) => (ready = value) });
 
-  const result = renderVapor(TimeHost, {props});
+  const result = renderVapor(TimeHost, { props });
 
   return {
     ...result,
@@ -54,7 +54,12 @@ const part = (field: ReturnType<typeof setup>, name: string) => {
 
 const type = async (target: HTMLElement, data: string) => {
   target.dispatchEvent(
-    new InputEvent("beforeinput", {bubbles: true, cancelable: true, data, inputType: "insertText"}),
+    new InputEvent("beforeinput", {
+      bubbles: true,
+      cancelable: true,
+      data,
+      inputType: "insertText",
+    }),
   );
   await nextTick();
 };
@@ -65,7 +70,7 @@ const leave = async (from: HTMLElement) => {
 
   document.body.appendChild(outside);
   outside.focus();
-  from.dispatchEvent(new FocusEvent("focusout", {bubbles: true, relatedTarget: outside}));
+  from.dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget: outside }));
   await nextTick();
 
   return () => outside.remove();
@@ -74,7 +79,7 @@ const leave = async (from: HTMLElement) => {
 describe("useDateField", () => {
   describe("the group around the segments", () => {
     it("is a group naming itself", () => {
-      const field = setup({ariaLabel: "Birth date"});
+      const field = setup({ ariaLabel: "Birth date" });
 
       expect(field.group().getAttribute("role")).toBe("group");
       expect(field.group().getAttribute("aria-label")).toBe("Birth date");
@@ -82,7 +87,7 @@ describe("useDateField", () => {
     });
 
     it("points at its own visible label", () => {
-      const field = setup({label: "Birth date"});
+      const field = setup({ label: "Birth date" });
       const labelledBy = field.group().getAttribute("aria-labelledby");
 
       expect(labelledBy).toBe(field.label().id);
@@ -99,7 +104,7 @@ describe("useDateField", () => {
     });
 
     it("describes the value in words", () => {
-      const field = setup({defaultValue: new CalendarDate(2026, 6, 5)});
+      const field = setup({ defaultValue: new CalendarDate(2026, 6, 5) });
       const describedBy = field.group().getAttribute("aria-describedby")!;
       const description = document.getElementById(describedBy.split(" ")[0]!);
 
@@ -116,7 +121,7 @@ describe("useDateField", () => {
     });
 
     it("also points at a description of its own", async () => {
-      const field = setup({defaultValue: new CalendarDate(2026, 6, 5), description: "When born"});
+      const field = setup({ defaultValue: new CalendarDate(2026, 6, 5), description: "When born" });
 
       // The description claims its id as it mounts, which is after the group first rendered.
       await nextTick();
@@ -129,7 +134,7 @@ describe("useDateField", () => {
     });
 
     it("reports itself disabled", () => {
-      const field = setup({isDisabled: true});
+      const field = setup({ isDisabled: true });
 
       expect(field.group().getAttribute("aria-disabled")).toBe("true");
       field.unmount();
@@ -142,7 +147,7 @@ describe("useDateField", () => {
        * The picker already carries the group role, its label and its description, and the segments
        * are labelled by all of it — a second group here would be announced twice over.
        */
-      const field = setup({ariaLabel: "Birth date", role: "presentation"});
+      const field = setup({ ariaLabel: "Birth date", role: "presentation" });
 
       expect(field.group().getAttribute("role")).toBe("presentation");
       expect(field.group().getAttribute("aria-label")).toBeNull();
@@ -155,7 +160,7 @@ describe("useDateField", () => {
        * The id is the one prop that survives upstream's filter on the way into a presentational
        * field, so it is the one attribute besides the role that appears.
        */
-      const field = setup({ariaDescribedBy: "hint", id: "the-field", role: "presentation"});
+      const field = setup({ ariaDescribedBy: "hint", id: "the-field", role: "presentation" });
       const group = field.group();
 
       expect(group.getAttribute("id")).toBe("the-field");
@@ -165,7 +170,7 @@ describe("useDateField", () => {
 
     it("renders no id when the picker gave it none", () => {
       // A range picker names neither of its two fields, and a minted id would be one React has not.
-      const field = setup({role: "presentation"});
+      const field = setup({ role: "presentation" });
 
       expect(field.group().hasAttribute("id")).toBe(false);
       field.unmount();
@@ -173,7 +178,7 @@ describe("useDateField", () => {
 
     it("leaves the arrow keys to the picker", () => {
       // A picker steers one row of segments across two fields, so a field cannot steer its own.
-      const field = setup({role: "presentation"});
+      const field = setup({ role: "presentation" });
       const month = part(field, "month");
 
       month.focus();
@@ -193,7 +198,7 @@ describe("useDateField", () => {
 
   describe("the hidden input a form reads", () => {
     it("carries the value under its name", () => {
-      const field = setup({defaultValue: new CalendarDate(2026, 6, 5), name: "born"});
+      const field = setup({ defaultValue: new CalendarDate(2026, 6, 5), name: "born" });
 
       expect(field.input().getAttribute("name")).toBe("born");
       expect(field.input().value).toBe("2026-06-05");
@@ -221,7 +226,7 @@ describe("useDateField", () => {
     it("carries the time alone for a time field, not the date it holds", async () => {
       // One source for the string, which is the whole reason `inputValue` exists: a watcher reading
       // the field's own value would re-assert a full date over the time a form is meant to receive.
-      const field = setupTime({defaultValue: new Time(9, 30), name: "at"});
+      const field = setupTime({ defaultValue: new Time(9, 30), name: "at" });
 
       await nextTick();
       expect(field.input().value).toBe("09:30:00");
@@ -234,7 +239,7 @@ describe("useDateField", () => {
        * Only a real control takes part in constraint validation, so `type="hidden"` would let an
        * empty required field submit.
        */
-      const field = setup({isRequired: true, validationBehavior: "native"});
+      const field = setup({ isRequired: true, validationBehavior: "native" });
 
       expect(field.input().type).toBe("text");
       expect(field.input().hasAttribute("hidden")).toBe(true);
@@ -243,7 +248,7 @@ describe("useDateField", () => {
     });
 
     it("needs no control of its own under aria validation", () => {
-      const field = setup({isRequired: true, validationBehavior: "aria"});
+      const field = setup({ isRequired: true, validationBehavior: "aria" });
 
       expect(field.input().type).toBe("hidden");
       expect(field.input().hasAttribute("required")).toBe(false);
@@ -251,7 +256,7 @@ describe("useDateField", () => {
     });
 
     it("goes disabled with the field", () => {
-      const field = setup({isDisabled: true});
+      const field = setup({ isDisabled: true });
 
       expect(field.input().hasAttribute("disabled")).toBe(true);
       field.unmount();
@@ -261,18 +266,18 @@ describe("useDateField", () => {
   describe("focus", () => {
     it("reports focus arriving and leaving, but not moving along", async () => {
       const onFocusChange = vi.fn();
-      const field = setup({onFocusChange});
+      const field = setup({ onFocusChange });
       const month = part(field, "month");
       const day = part(field, "day");
 
-      month.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+      month.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
       await nextTick();
       expect(onFocusChange).toHaveBeenCalledTimes(1);
       expect(onFocusChange).toHaveBeenLastCalledWith(true);
 
       // Moving between segments still fires a focusout, but the field never lost focus.
-      month.dispatchEvent(new FocusEvent("focusout", {bubbles: true, relatedTarget: day}));
-      day.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+      month.dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget: day }));
+      day.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
       await nextTick();
       expect(onFocusChange).toHaveBeenCalledTimes(1);
 
@@ -285,7 +290,7 @@ describe("useDateField", () => {
 
     it("settles an impossible date on the way out", async () => {
       const onChange = vi.fn();
-      const field = setup({onChange});
+      const field = setup({ onChange });
       const day = part(field, "day");
 
       await type(part(field, "month"), "2");
@@ -296,7 +301,7 @@ describe("useDateField", () => {
       // February 30 is complete but is not a date, so it sits on screen uncommitted.
       expect(onChange).not.toHaveBeenCalled();
 
-      day.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+      day.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
       const cleanUp = await leave(day);
 
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -306,7 +311,7 @@ describe("useDateField", () => {
     });
 
     it("puts focus on the first segment when asked to", async () => {
-      const field = setup({autoFocus: true});
+      const field = setup({ autoFocus: true });
 
       await nextTick();
 
@@ -316,7 +321,7 @@ describe("useDateField", () => {
 
     it("hands focus to the first segment when its label is clicked", () => {
       // A label naming a group cannot point `for` at anything, so the click has to be answered.
-      const field = setup({label: "Birth date"});
+      const field = setup({ label: "Birth date" });
 
       field.label().click();
 
@@ -329,7 +334,7 @@ describe("useDateField", () => {
 
       expect(field.group().getAttribute("data-focus-within")).toBeNull();
 
-      part(field, "month").dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+      part(field, "month").dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
       await nextTick();
 
       expect(field.group().getAttribute("data-focus-within")).toBe("true");
@@ -370,21 +375,21 @@ describe("useDateField", () => {
 describe("useTimeField", () => {
   it("submits the time rather than the date it travelled as", () => {
     // The date only ever existed so the segment machinery had something whole to work with.
-    const field = setupTime({defaultValue: new Time(13, 45), name: "at"});
+    const field = setupTime({ defaultValue: new Time(13, 45), name: "at" });
 
     expect(field.input().value).toBe("13:45:00");
     field.unmount();
   });
 
   it("submits nothing while it is empty", () => {
-    const field = setupTime({name: "at"});
+    const field = setupTime({ name: "at" });
 
     expect(field.input().value).toBe("");
     field.unmount();
   });
 
   it("describes the time in words", () => {
-    const field = setupTime({defaultValue: new Time(13, 45)});
+    const field = setupTime({ defaultValue: new Time(13, 45) });
     const group = field.container.querySelector<HTMLElement>("[data-slot='group']")!;
     const describedBy = group.getAttribute("aria-describedby")!;
 

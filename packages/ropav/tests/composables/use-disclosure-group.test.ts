@@ -3,10 +3,10 @@ import type {
   UseDisclosureGroupReturn,
 } from "@/composables/use-disclosure-group";
 
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useDisclosureGroup} from "@/composables/use-disclosure-group";
+import { useDisclosureGroup } from "@/composables/use-disclosure-group";
 
 const scopes: (() => void)[] = [];
 
@@ -35,11 +35,11 @@ const createTriggers = (group: UseDisclosureGroupReturn, keys = ["a", "b", "c"])
     return button;
   });
 
-  return {buttons, container};
+  return { buttons, container };
 };
 
 const pressKey = (element: HTMLElement, key: string) =>
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
 
 afterEach(() => {
   scopes.splice(0).forEach((stop) => stop());
@@ -49,14 +49,14 @@ afterEach(() => {
 describe("useDisclosureGroup", () => {
   describe("expansion", () => {
     it("starts from defaultExpandedKeys", () => {
-      const group = createGroup({defaultExpandedKeys: ["a"]});
+      const group = createGroup({ defaultExpandedKeys: ["a"] });
 
       expect(group.isExpanded("a")).toBe(true);
       expect(group.isExpanded("b")).toBe(false);
     });
 
     it("collapses the open item when only one may be expanded", () => {
-      const group = createGroup({defaultExpandedKeys: ["a"]});
+      const group = createGroup({ defaultExpandedKeys: ["a"] });
 
       group.toggle("b");
 
@@ -65,7 +65,7 @@ describe("useDisclosureGroup", () => {
     });
 
     it("keeps items open when multiple may be expanded", () => {
-      const group = createGroup({allowsMultipleExpanded: true, defaultExpandedKeys: ["a"]});
+      const group = createGroup({ allowsMultipleExpanded: true, defaultExpandedKeys: ["a"] });
 
       group.toggle("b");
 
@@ -73,7 +73,7 @@ describe("useDisclosureGroup", () => {
     });
 
     it("toggles an expanded item closed", () => {
-      const group = createGroup({defaultExpandedKeys: ["a"]});
+      const group = createGroup({ defaultExpandedKeys: ["a"] });
 
       group.toggle("a");
 
@@ -82,7 +82,7 @@ describe("useDisclosureGroup", () => {
 
     it("calls onExpandedChange with the next key set", () => {
       const onExpandedChange = vi.fn();
-      const group = createGroup({allowsMultipleExpanded: true, onExpandedChange});
+      const group = createGroup({ allowsMultipleExpanded: true, onExpandedChange });
 
       group.expand("a");
 
@@ -92,7 +92,7 @@ describe("useDisclosureGroup", () => {
     it("supports controlled expandedKeys", () => {
       const expandedKeys = shallowRef<string[]>(["a"]);
       const onExpandedChange = vi.fn();
-      const group = createGroup({expandedKeys, onExpandedChange});
+      const group = createGroup({ expandedKeys, onExpandedChange });
 
       expect(group.isExpanded("a")).toBe(true);
 
@@ -108,7 +108,7 @@ describe("useDisclosureGroup", () => {
     });
 
     it("ignores expansion while the group is disabled", () => {
-      const group = createGroup({isDisabled: true});
+      const group = createGroup({ isDisabled: true });
 
       group.toggle("a");
       group.expand("a");
@@ -120,7 +120,7 @@ describe("useDisclosureGroup", () => {
   describe("keyboard navigation", () => {
     it("moves focus to the next and previous trigger", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       buttons[0]?.focus();
       pressKey(buttons[0]!, "ArrowDown");
@@ -132,7 +132,7 @@ describe("useDisclosureGroup", () => {
 
     it("moves focus to the first and last trigger", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       pressKey(buttons[1]!, "End");
       expect(document.activeElement).toBe(buttons[2]);
@@ -143,7 +143,7 @@ describe("useDisclosureGroup", () => {
 
     it("stays put at the ends of the list", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       buttons[0]?.focus();
       pressKey(buttons[0]!, "ArrowUp");
@@ -178,7 +178,7 @@ describe("useDisclosureGroup", () => {
 
     it("skips a disabled trigger", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       buttons[1]?.setAttribute("disabled", "");
 
@@ -190,7 +190,7 @@ describe("useDisclosureGroup", () => {
 
     it("claims the navigation keys so the page does not scroll", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       const notCancelled = pressKey(buttons[0]!, "ArrowDown");
 
@@ -199,7 +199,7 @@ describe("useDisclosureGroup", () => {
 
     it("leaves other keys alone", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
 
       const notCancelled = pressKey(buttons[0]!, "Tab");
 
@@ -208,7 +208,7 @@ describe("useDisclosureGroup", () => {
 
     it("stops navigating to a trigger once it is unregistered", () => {
       const group = createGroup();
-      const {buttons} = createTriggers(group);
+      const { buttons } = createTriggers(group);
       const unregister = group.registerTrigger("b", buttons[1]!);
 
       unregister();

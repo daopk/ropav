@@ -1,9 +1,9 @@
-import type {ColorAreaHarnessProps} from "../fixtures/color-area.types";
-import type {ColorAreaState, UseColorAreaReturn} from "@/composables";
+import type { ColorAreaHarnessProps } from "../fixtures/color-area.types";
+import type { ColorAreaState, UseColorAreaReturn } from "@/composables";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Harness from "../fixtures/color-area-harness.vue";
 
@@ -24,12 +24,12 @@ const setup = (props: Partial<ColorAreaHarnessProps> = {}) => {
   const el = (testid: string) =>
     rendered.container.querySelector<HTMLElement>(`[data-testid='${testid}']`)!;
 
-  return {...rendered, area, el, state};
+  return { ...rendered, area, el, state };
 };
 
 const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}) => {
   element.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: keyName, ...init}),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: keyName, ...init }),
   );
 
   return nextTick();
@@ -38,7 +38,7 @@ const key = (element: HTMLElement, keyName: string, init: KeyboardEventInit = {}
 describe("useColorArea", () => {
   describe("the gradient", () => {
     it("stacks three blended layers in rgb", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       // Three layers joined by a bare comma — the other two spaces have a space after it, and the
       // string is compared byte for byte against React.
@@ -55,7 +55,7 @@ describe("useColorArea", () => {
     });
 
     it("holds the third channel at its current value in rgb", () => {
-      const {area, unmount} = setup({
+      const { area, unmount } = setup({
         defaultValue: "rgb(50, 100, 255)",
         xChannel: "blue",
         yChannel: "green",
@@ -71,7 +71,7 @@ describe("useColorArea", () => {
     });
 
     it("paints hue across and saturation up in hsl, with no layer under them", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       // Reversed, so the x axis ends up underneath; and no flat colour is pushed, because the
       // held channel is the lightness rather than the hue.
@@ -87,7 +87,7 @@ describe("useColorArea", () => {
     });
 
     it("pushes a flat colour beneath both layers when the hue is the one held", () => {
-      const {area, unmount} = setup({
+      const { area, unmount } = setup({
         defaultValue: "hsl(30, 100%, 50%)",
         xChannel: "saturation",
         yChannel: "lightness",
@@ -105,7 +105,7 @@ describe("useColorArea", () => {
     });
 
     it("uses the hsb table in hsb, which is not the hsl one", () => {
-      const defaults = setup({defaultValue: "hsb(30, 100%, 100%)"});
+      const defaults = setup({ defaultValue: "hsb(30, 100%, 100%)" });
 
       // Saturation fades from *white* here rather than from grey, because the starting point of an
       // hsb gradient is `hsb(0, 100%, 100%)`.
@@ -133,7 +133,7 @@ describe("useColorArea", () => {
     });
 
     it("turns the x axis around in a right-to-left locale", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)", locale: "he-IL"});
+      const { area, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)", locale: "he-IL" });
 
       expect(area.areaStyle.value.background).toContain("linear-gradient(to left,");
       // The y axis is not a reading direction, so it stays put.
@@ -143,7 +143,7 @@ describe("useColorArea", () => {
     });
 
     it("keeps the area's own layout under the gradient", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       expect(area.areaStyle.value).toMatchObject({
         forcedColorAdjust: "none",
@@ -157,7 +157,7 @@ describe("useColorArea", () => {
 
   describe("the thumb", () => {
     it("sits at the fraction of each axis the value works out to", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       expect(area.thumbStyle.value).toMatchObject({
         left: "8.333333333333332%",
@@ -170,7 +170,7 @@ describe("useColorArea", () => {
     });
 
     it("counts y from the top", () => {
-      const {area, unmount} = setup({
+      const { area, unmount } = setup({
         defaultValue: "rgb(255, 100, 50)",
         xChannel: "red",
         yChannel: "green",
@@ -183,7 +183,7 @@ describe("useColorArea", () => {
     });
 
     it("mirrors its x position in a right-to-left locale", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(90, 100%, 50%)", locale: "he-IL"});
+      const { area, unmount } = setup({ defaultValue: "hsl(90, 100%, 50%)", locale: "he-IL" });
 
       // 90 of 360 is a quarter along, which in a mirrored area is three quarters from the left.
       expect(area.thumbStyle.value.left).toBe("75%");
@@ -192,7 +192,7 @@ describe("useColorArea", () => {
     });
 
     it("carries the role that keeps it out of the accessibility tree", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       // The two inputs inside it are the controls; the thumb is only what a pointer grabs.
       expect(area.thumbAttrs.role).toBe("presentation");
@@ -203,7 +203,7 @@ describe("useColorArea", () => {
 
   describe("labelling", () => {
     it("names the area as a group, and both inputs as the same one control", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       expect(area.areaAttrs.value.role).toBe("group");
       // Nothing to name it with, so the area itself stays unnamed while the inputs carry the name.
@@ -216,7 +216,7 @@ describe("useColorArea", () => {
     });
 
     it("folds a caller's label into the area's name and into both inputs'", () => {
-      const {area, unmount} = setup({ariaLabel: "Pick a colour"});
+      const { area, unmount } = setup({ ariaLabel: "Pick a colour" });
 
       expect(area.areaAttrs.value["aria-label"]).toBe("Pick a colour, Color picker");
       expect(area.xInputProps.value["aria-label"]).toBe("Pick a colour, Color picker");
@@ -225,7 +225,7 @@ describe("useColorArea", () => {
     });
 
     it("gives each input its own id under the area's", () => {
-      const {area, unmount} = setup({id: "the-area"});
+      const { area, unmount } = setup({ id: "the-area" });
 
       expect(area.areaAttrs.value.id).toBe("the-area");
       expect(area.xInputProps.value.id).toBe("the-area-x");
@@ -235,7 +235,7 @@ describe("useColorArea", () => {
     });
 
     it("puts an input's own id first when something else names it too", () => {
-      const {area, unmount} = setup({ariaLabelledby: "elsewhere", id: "the-area"});
+      const { area, unmount } = setup({ ariaLabelledby: "elsewhere", id: "the-area" });
 
       // `aria-labelledby` wins over `aria-label`, so without this the input's own label is dropped.
       expect(area.xInputProps.value["aria-labelledby"]).toBe("the-area-x elsewhere");
@@ -246,7 +246,7 @@ describe("useColorArea", () => {
 
   describe("the two hidden inputs", () => {
     it("carries each axis's own channel range", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       expect(area.xInputProps.value).toMatchObject({
         "aria-orientation": "horizontal",
@@ -268,7 +268,7 @@ describe("useColorArea", () => {
     });
 
     it("leaves only one of the two reachable, so one control is listed rather than two", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       // Nothing focused yet: x answers, y is hidden and out of the tab order.
       expect(area.xInputProps.value.tabindex).toBeUndefined();
@@ -280,7 +280,7 @@ describe("useColorArea", () => {
     });
 
     it("swaps which one is reachable when the other takes focus", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       area.yInputHandlers.onFocus();
 
@@ -293,7 +293,7 @@ describe("useColorArea", () => {
     });
 
     it("reveals both once the keyboard has moved the value", async () => {
-      const {area, el, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, el, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await key(el("thumb"), "ArrowRight");
 
@@ -306,16 +306,16 @@ describe("useColorArea", () => {
     });
 
     it("submits each channel under its own name", () => {
-      const {area, unmount} = setup({form: "the-form", xName: "hue", yName: "saturation"});
+      const { area, unmount } = setup({ form: "the-form", xName: "hue", yName: "saturation" });
 
-      expect(area.xInputProps.value).toMatchObject({form: "the-form", name: "hue"});
-      expect(area.yInputProps.value).toMatchObject({form: "the-form", name: "saturation"});
+      expect(area.xInputProps.value).toMatchObject({ form: "the-form", name: "hue" });
+      expect(area.yInputProps.value).toMatchObject({ form: "the-form", name: "saturation" });
 
       unmount();
     });
 
     it("disables both when the area is disabled", () => {
-      const {area, unmount} = setup({isDisabled: true});
+      const { area, unmount } = setup({ isDisabled: true });
 
       expect(area.xInputProps.value.disabled).toBe(true);
       expect(area.yInputProps.value.disabled).toBe(true);
@@ -324,7 +324,7 @@ describe("useColorArea", () => {
     });
 
     it("stays in the accessibility tree while out of sight", () => {
-      const {area, unmount} = setup();
+      const { area, unmount } = setup();
 
       expect(area.inputStyle).toMatchObject({
         height: "100%",
@@ -340,7 +340,7 @@ describe("useColorArea", () => {
 
   describe("value text", () => {
     it("reads all three channels before the value has been touched", () => {
-      const {area, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       expect(area.xInputProps.value["aria-valuetext"]).toBe(
         "Hue: 30°, Saturation: 100%, Lightness: 50%, vibrant orange",
@@ -354,7 +354,7 @@ describe("useColorArea", () => {
     });
 
     it("narrows to the channel that moved once the keyboard has been used", async () => {
-      const {area, el, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, el, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await key(el("thumb"), "ArrowRight");
 
@@ -364,10 +364,10 @@ describe("useColorArea", () => {
     });
 
     it("goes back to all three channels when focus leaves", async () => {
-      const {area, el, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, el, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await key(el("thumb"), "ArrowRight");
-      el("thumb").dispatchEvent(new FocusEvent("focusout", {bubbles: true}));
+      el("thumb").dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
       await nextTick();
 
       expect(area.xInputProps.value["aria-valuetext"]).toBe(
@@ -378,11 +378,11 @@ describe("useColorArea", () => {
     });
 
     it("stays narrowed while focus only moves between the two inputs", async () => {
-      const {area, el, unmount} = setup({defaultValue: "hsl(30, 100%, 50%)"});
+      const { area, el, unmount } = setup({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await key(el("thumb"), "ArrowRight");
       el("input-x").dispatchEvent(
-        new FocusEvent("focusout", {bubbles: true, relatedTarget: el("input-y")}),
+        new FocusEvent("focusout", { bubbles: true, relatedTarget: el("input-y") }),
       );
       await nextTick();
 
@@ -394,7 +394,7 @@ describe("useColorArea", () => {
 
   describe("keyboard", () => {
     it("steps with the arrows, along the axis the arrow points down", async () => {
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = el("thumb");
 
       await key(thumb, "ArrowRight");
@@ -413,13 +413,13 @@ describe("useColorArea", () => {
     });
 
     it("pages with shift, by each channel's own page size", async () => {
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = el("thumb");
 
-      await key(thumb, "ArrowRight", {shiftKey: true});
+      await key(thumb, "ArrowRight", { shiftKey: true });
       expect(state.xValue.value).toBe(45);
 
-      await key(thumb, "ArrowUp", {shiftKey: true});
+      await key(thumb, "ArrowUp", { shiftKey: true });
       expect(state.yValue.value).toBe(60);
 
       unmount();
@@ -428,7 +428,7 @@ describe("useColorArea", () => {
     it("pages along x with Home and End rather than jumping to the ends", async () => {
       // This is where a colour area parts company with a slider: Home and End are *pages*, not
       // jumps, and they run along the horizontal axis.
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = el("thumb");
 
       await key(thumb, "End");
@@ -441,7 +441,7 @@ describe("useColorArea", () => {
     });
 
     it("pages along y with PageUp and PageDown", async () => {
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const thumb = el("thumb");
 
       await key(thumb, "PageUp");
@@ -454,7 +454,7 @@ describe("useColorArea", () => {
     });
 
     it("turns the horizontal keys around in a right-to-left locale", async () => {
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)", locale: "he-IL"});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)", locale: "he-IL" });
       const thumb = el("thumb");
 
       // Right on the screen is towards the start of the value in a mirrored area.
@@ -469,7 +469,7 @@ describe("useColorArea", () => {
 
     it("reports the end of the interaction for each keystroke", async () => {
       const onChangeEnd = vi.fn();
-      const {el, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)", onChangeEnd});
+      const { el, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)", onChangeEnd });
 
       await key(el("thumb"), "PageUp");
 
@@ -479,7 +479,7 @@ describe("useColorArea", () => {
     });
 
     it("stays put while disabled", async () => {
-      const {el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)", isDisabled: true});
+      const { el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)", isDisabled: true });
 
       await key(el("thumb"), "ArrowRight");
 
@@ -491,27 +491,27 @@ describe("useColorArea", () => {
 
   describe("changes through an input", () => {
     it("routes each input to its own channel", () => {
-      const {area, el, state, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { area, el, state, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const inputX = el("input-x") as HTMLInputElement;
       const inputY = el("input-y") as HTMLInputElement;
 
       inputX.value = "90";
-      area.xInputHandlers.onChange({target: inputX} as unknown as Event);
+      area.xInputHandlers.onChange({ target: inputX } as unknown as Event);
       expect(state.xValue.value).toBe(90);
 
       inputY.value = "20";
-      area.yInputHandlers.onChange({target: inputY} as unknown as Event);
+      area.yInputHandlers.onChange({ target: inputY } as unknown as Event);
       expect(state.yValue.value).toBe(20);
 
       unmount();
     });
 
     it("narrows the value text, the same way the keyboard does", () => {
-      const {area, el, unmount} = setup({defaultValue: "hsl(30, 50%, 50%)"});
+      const { area, el, unmount } = setup({ defaultValue: "hsl(30, 50%, 50%)" });
       const inputX = el("input-x") as HTMLInputElement;
 
       inputX.value = "90";
-      area.xInputHandlers.onChange({target: inputX} as unknown as Event);
+      area.xInputHandlers.onChange({ target: inputX } as unknown as Event);
 
       expect(area.xInputProps.value["aria-valuetext"]).toBe("Hue: 90°, light vibrant yellow green");
 

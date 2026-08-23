@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {FieldErrorContentProps} from "./field-error.types";
+import type { FieldErrorContentProps } from "./field-error.types";
 
-import {fieldErrorVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { fieldErrorVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
 const props = defineProps<FieldErrorContentProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const styles = computed(() => fieldErrorVariants({class: props.class}));
+const styles = computed(() => fieldErrorVariants({ class: props.class }));
 
 // Split out from the root so the id is claimed only while a message is actually on screen.
 // A claim lasts as long as the scope that made it, so a single component holding the claim

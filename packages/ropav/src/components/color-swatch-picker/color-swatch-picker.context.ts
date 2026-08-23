@@ -1,11 +1,11 @@
-import type {UseCollectionReturn} from "../../composables/use-collection";
-import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
-import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
-import type {Color} from "../../utils/color-types";
-import type {colorSwatchPickerVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseCollectionReturn } from "../../composables/use-collection";
+import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
+import type { UseSelectionManagerReturn } from "../../composables/use-selection-manager";
+import type { Color } from "../../utils/color-types";
+import type { colorSwatchPickerVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface ColorSwatchPickerContext {
   collection: UseCollectionReturn;
@@ -26,7 +26,7 @@ export interface ColorSwatchPickerContext {
  * would render something that looks selectable but is not.
  */
 export const [useColorSwatchPickerContext, provideColorSwatchPickerContext] =
-  createContext<ColorSwatchPickerContext>({name: "ColorSwatchPickerContext"});
+  createContext<ColorSwatchPickerContext>({ name: "ColorSwatchPickerContext" });
 
 export interface ColorSwatchPickerItemContext {
   /** The colour this item stands for, which its swatch shows and its indicator measures. */
@@ -45,4 +45,4 @@ export interface ColorSwatchPickerItemContext {
  * like a bug in the palette rather than a missing parent.
  */
 export const [useColorSwatchPickerItemContext, provideColorSwatchPickerItemContext] =
-  createContext<ColorSwatchPickerItemContext>({name: "ColorSwatchPickerItemContext"});
+  createContext<ColorSwatchPickerItemContext>({ name: "ColorSwatchPickerItemContext" });

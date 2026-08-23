@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {TooltipTriggerProps} from "./tooltip.types";
+import type { TooltipTriggerProps } from "./tooltip.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { composeFocusResponder, useFocusResponder } from "../../composables/focus-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useTooltipContext} from "./tooltip.context";
+import { useTooltipContext } from "./tooltip.context";
 
 const props = defineProps<TooltipTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useTooltipContext();
+const { slots } = useTooltipContext();
 
 // Supplied by the tooltip root, which is what makes this a trigger rather than a plain box.
 const responder = useFocusResponder();
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);

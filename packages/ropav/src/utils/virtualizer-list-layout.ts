@@ -1,14 +1,14 @@
-import type {DropTarget, ItemDropTarget} from "./dnd-types";
+import type { DropTarget, ItemDropTarget } from "./dnd-types";
 import type {
   InvalidationContext,
   VirtualizerCollection,
   VirtualizerNode,
 } from "./virtualizer-layout";
-import type {VirtualizerKey} from "./virtualizer-layout-info";
+import type { VirtualizerKey } from "./virtualizer-layout-info";
 
-import {Rect, Size} from "./virtualizer-geometry";
-import {Layout} from "./virtualizer-layout";
-import {LayoutInfo} from "./virtualizer-layout-info";
+import { Rect, Size } from "./virtualizer-geometry";
+import { Layout } from "./virtualizer-layout";
+import { LayoutInfo } from "./virtualizer-layout-info";
 
 /**
  * A stack layout for the virtualizer, ported from React Aria's `ListLayout`.
@@ -582,14 +582,14 @@ export class ListLayout<
       }
     }
 
-    if (key == null || this.host!.collection.itemCount === 0) return {type: "root"};
+    if (key == null || this.host!.collection.itemCount === 0) return { type: "root" };
 
     const layoutInfo = this.getLayoutInfo(key);
 
     if (!layoutInfo) return null;
 
     const rect = layoutInfo.rect;
-    const target: DropTarget = {dropPosition: "on", key: layoutInfo.key, type: "item"};
+    const target: DropTarget = { dropPosition: "on", key: layoutInfo.key, type: "item" };
 
     /**
      * Where within the row the point means.
@@ -601,15 +601,18 @@ export class ListLayout<
     if (!isValidDropTarget(target)) {
       if (
         pointY <= rect.y + rect.height / 2 &&
-        isValidDropTarget({...target, dropPosition: "before"})
+        isValidDropTarget({ ...target, dropPosition: "before" })
       ) {
         target.dropPosition = "before";
-      } else if (isValidDropTarget({...target, dropPosition: "after"})) {
+      } else if (isValidDropTarget({ ...target, dropPosition: "after" })) {
         target.dropPosition = "after";
       }
-    } else if (pointY <= rect.y + 10 && isValidDropTarget({...target, dropPosition: "before"})) {
+    } else if (pointY <= rect.y + 10 && isValidDropTarget({ ...target, dropPosition: "before" })) {
       target.dropPosition = "before";
-    } else if (pointY >= rect.maxY - 10 && isValidDropTarget({...target, dropPosition: "after"})) {
+    } else if (
+      pointY >= rect.maxY - 10 &&
+      isValidDropTarget({ ...target, dropPosition: "after" })
+    ) {
       target.dropPosition = "after";
     }
 

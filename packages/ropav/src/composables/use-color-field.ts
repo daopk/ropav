@@ -1,18 +1,18 @@
-import type {ColorFieldState, UseColorFieldStateOptions} from "./use-color-field-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {TextFieldHandlers} from "./use-text-field";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ColorFieldState, UseColorFieldStateOptions } from "./use-color-field-state";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { TextFieldHandlers } from "./use-text-field";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import {setFormValue} from "../utils/form-value";
+import { setFormValue } from "../utils/form-value";
 
-import {useColorFieldState} from "./use-color-field-state";
-import {useFormReset} from "./use-form-reset";
-import {useFormattedTextField} from "./use-formatted-text-field";
-import {useScrollWheel} from "./use-scroll-wheel";
-import {useSpinButton} from "./use-spin-button";
-import {useTextField} from "./use-text-field";
+import { useColorFieldState } from "./use-color-field-state";
+import { useFormReset } from "./use-form-reset";
+import { useFormattedTextField } from "./use-formatted-text-field";
+import { useScrollWheel } from "./use-scroll-wheel";
+import { useSpinButton } from "./use-spin-button";
+import { useTextField } from "./use-text-field";
 
 export interface UseColorFieldOptions extends UseColorFieldStateOptions {
   id?: MaybeRefOrGetter<string | undefined>;
@@ -136,7 +136,7 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
     setFormValue(element.value, state.inputValue.value);
   };
 
-  watch([element, state.inputValue], reassert, {flush: "post", immediate: true});
+  watch([element, state.inputValue], reassert, { flush: "post", immediate: true });
 
   useFormattedTextField(() => element.value, {
     setInputValue: state.setInputValue,
@@ -174,7 +174,7 @@ export const useColorField = (options: UseColorFieldOptions = {}): UseColorField
       isDisabled.value ||
       isReadOnly.value ||
       !isFocused.value,
-    onScroll: ({deltaX, deltaY}) => {
+    onScroll: ({ deltaX, deltaY }) => {
       if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
 
       if (deltaY > 0) state.increment();

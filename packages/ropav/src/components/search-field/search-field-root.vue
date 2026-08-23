@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {SearchFieldRootProps, SearchFieldRootSlotProps} from "./search-field.types";
+import type { SearchFieldRootProps, SearchFieldRootSlotProps } from "./search-field.types";
 
-import {searchFieldVariants} from "@ropav/styles";
-import {computed, watch} from "vue";
+import { searchFieldVariants } from "@ropav/styles";
+import { computed, watch } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useAutocompleteInputContext} from "../../composables/use-autocomplete";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useSearchField} from "../../composables/use-search-field";
-import {provideTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
+import { providePressResponder } from "../../composables/press-responder";
+import { useAutocompleteInputContext } from "../../composables/use-autocomplete";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useSearchField } from "../../composables/use-search-field";
+import { provideTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideSearchFieldContext} from "./search-field.context";
+import { provideSearchFieldContext } from "./search-field.context";
 
 // Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean
 // to `false`, and a `false` here reads as the caller claiming that state: for `isInvalid` in
@@ -39,7 +39,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: SearchFieldRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SearchFieldRootSlotProps) => unknown }>();
 
 /**
  * The autocomplete this field filters, when it is inside one.
@@ -107,22 +107,22 @@ const field = useSearchField({
 watch(
   field.element,
   (element) => autocomplete?.setInputElement((element as HTMLInputElement | null) ?? null),
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const slots = computed(() =>
-  searchFieldVariants({fullWidth: props.fullWidth, variant: props.variant}),
+  searchFieldVariants({ fullWidth: props.fullWidth, variant: props.variant }),
 );
 
 provideFieldIdsContext(field.fieldIds);
 provideTextFieldControlContext(field);
-provideSearchFieldContext({isEmpty: field.isEmpty, slots});
-provideFieldErrorContext({validation: field.validation.displayValidation});
+provideSearchFieldContext({ isEmpty: field.isEmpty, slots });
+provideFieldErrorContext({ validation: field.validation.displayValidation });
 // The clear button takes its whole behaviour from here, which keeps it an ordinary close
 // button. React hands the same props down through the button context a `CloseButton` reads.
 providePressResponder(field.clearButtonResponder);
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 // `data-required` has to sit here rather than on the control: the stylesheet draws the asterisk
 // through `[data-required="true"] > .label`, so it reads the field, not the input. `data-empty`

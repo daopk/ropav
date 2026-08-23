@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue, watch} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue, watch } from "vue";
 
-import {isMac} from "../utils/platform";
+import { isMac } from "../utils/platform";
 
 /**
  * How the press reached the element.
@@ -366,7 +366,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
     if (!state.isPressed || !state.target) return;
 
     if (state.didFirePressStart && state.pointerType !== null) {
-      triggerPressEnd({...source, target: state.target}, state.pointerType, false);
+      triggerPressEnd({ ...source, target: state.target }, state.pointerType, false);
     }
 
     state.isPressed = false;
@@ -380,7 +380,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
   // A control disabled mid-press would otherwise stay stuck pressed, with its pointerup
   // listeners still attached to the document.
   watch(isDisabled, (disabled) => {
-    if (disabled && state.isPressed) cancel({target: state.target});
+    if (disabled && state.isPressed) cancel({ target: state.target });
   });
 
   onScopeDispose(() => {
@@ -534,7 +534,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
       const timeout = setTimeout(() => {
         if (!state.isPressed || !(state.target instanceof HTMLElement)) return;
 
-        if (clicked) cancel({target: state.target});
+        if (clicked) cancel({ target: state.target });
         else state.target.click();
       }, 80);
 
@@ -551,12 +551,12 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
       return;
     }
 
-    cancel({target: state.target});
+    cancel({ target: state.target });
     state.isOverTarget = false;
   };
 
   const onPointercancel = () => {
-    cancel({target: state.target});
+    cancel({ target: state.target });
   };
 
   const handlers: UsePressHandlers = {
@@ -564,7 +564,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
     onDragstart: (event) => {
       // Safari does not send pointercancel when a drag begins, so a dragged-away press would
       // stay open forever.
-      if (contains(event.currentTarget, event.target)) cancel({target: state.target});
+      if (contains(event.currentTarget, event.target)) cancel({ target: state.target });
     },
     onKeydown,
     onMousedown: (event) => {
@@ -630,7 +630,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
         state.pointerType !== null
       ) {
         state.isOverTarget = true;
-        triggerPressStart({target: state.target}, state.pointerType);
+        triggerPressStart({ target: state.target }, state.pointerType);
       }
     },
     onPointerleave: (event) => {
@@ -641,7 +641,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
         state.pointerType !== null
       ) {
         state.isOverTarget = false;
-        triggerPressEnd({target: state.target}, state.pointerType, false);
+        triggerPressEnd({ target: state.target }, state.pointerType, false);
       }
     },
     onPointerup: (event) => {
@@ -651,7 +651,7 @@ export const usePress = (options: UsePressOptions = {}): UsePressReturn => {
       // pointerup with no press behind it reports a press-up from here.
       if (event.button === 0 && !state.isPressed) {
         triggerPressUp(
-          {target: event.currentTarget as Element},
+          { target: event.currentTarget as Element },
           state.pointerType ?? (event.pointerType as PointerType),
         );
       }

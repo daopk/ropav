@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {BadgeRootProps} from "@/components/badge";
+import type { BadgeRootProps } from "@/components/badge";
 
-import {Badge} from "@/components/badge";
+import { Badge } from "@/components/badge";
 
 defineProps<
   BadgeRootProps & {

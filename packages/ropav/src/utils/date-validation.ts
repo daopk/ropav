@@ -1,15 +1,15 @@
-import type {ValidationResult} from "../composables/use-form-validation-state";
-import type {FormatterOptions} from "./date-format";
-import type {DateValue} from "@internationalized/date";
+import type { ValidationResult } from "../composables/use-form-validation-state";
+import type { FormatterOptions } from "./date-format";
+import type { DateValue } from "@internationalized/date";
 
-import {DateFormatter} from "@internationalized/date";
-import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
+import { DateFormatter } from "@internationalized/date";
+import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
 
-import {VALID_VALIDITY_STATE, mergeValidation} from "../composables/use-form-validation-state";
-import {dateValidationStrings} from "../i18n/date-validation";
+import { VALID_VALIDITY_STATE, mergeValidation } from "../composables/use-form-validation-state";
+import { dateValidationStrings } from "../i18n/date-validation";
 
-import {getFormatOptions} from "./date-format";
-import {getDefaultLocale} from "./locale";
+import { getFormatOptions } from "./date-format";
+import { getDefaultLocale } from "./locale";
 
 /** Built once: the table is fixed and the dictionary is read-only after construction. */
 const dictionary = new LocalizedStringDictionary(dateValidationStrings);
@@ -36,10 +36,10 @@ export const getDateValidationResult = (
   const errors: string[] = [];
 
   if (isInvalid) {
-    const {locale} = getDefaultLocale();
+    const { locale } = getDefaultLocale();
     const formatter = new LocalizedStringFormatter(locale, dictionary);
     const dateFormatter = new DateFormatter(locale, getFormatOptions({}, options));
-    const {timeZone} = dateFormatter.resolvedOptions();
+    const { timeZone } = dateFormatter.resolvedOptions();
 
     if (rangeUnderflow && minValue != null) {
       errors.push(
@@ -90,7 +90,7 @@ export const getDateValidationResult = (
  * neither end alone is the one at fault.
  */
 export const getRangeValidationResult = (
-  value: {start: DateValue | null; end: DateValue | null} | null,
+  value: { start: DateValue | null; end: DateValue | null } | null,
   minValue: DateValue | null | undefined,
   maxValue: DateValue | null | undefined,
   isDateUnavailable: ((date: DateValue) => boolean) | undefined,
@@ -105,7 +105,7 @@ export const getRangeValidationResult = (
     return merged;
   }
 
-  const {locale} = getDefaultLocale();
+  const { locale } = getDefaultLocale();
   const formatter = new LocalizedStringFormatter(locale, dictionary);
 
   return mergeValidation(merged, {

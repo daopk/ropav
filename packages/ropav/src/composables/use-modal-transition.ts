@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useEnterExit} from "./use-enter-exit";
+import { useEnterExit } from "./use-enter-exit";
 
 export interface UseModalTransitionOptions {
   /** The backdrop, which fades. */

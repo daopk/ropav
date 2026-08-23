@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -18,7 +18,7 @@ import Fixture from "./fixtures.vue";
 describe("DragPreview (browser)", () => {
   const dragStart = (element: HTMLElement) => {
     const dataTransfer = new DataTransfer();
-    const captured: {node: Element | null; x?: number; y?: number} = {node: null};
+    const captured: { node: Element | null; x?: number; y?: number } = { node: null };
     const original = dataTransfer.setDragImage.bind(dataTransfer);
 
     dataTransfer.setDragImage = (node: Element, x: number, y: number) => {
@@ -42,7 +42,7 @@ describe("DragPreview (browser)", () => {
   };
 
   it("hands setDragImage a node holding the rendered slot, synchronously", async () => {
-    const {container, unmount} = renderVapor(Fixture);
+    const { container, unmount } = renderVapor(Fixture);
 
     await nextTick();
 
@@ -58,7 +58,7 @@ describe("DragPreview (browser)", () => {
   });
 
   it("renders the preview offscreen rather than hidden, so it can be painted", async () => {
-    const {container, unmount} = renderVapor(Fixture);
+    const { container, unmount } = renderVapor(Fixture);
 
     await nextTick();
 
@@ -74,7 +74,7 @@ describe("DragPreview (browser)", () => {
   });
 
   it("passes the dragged items to the slot", async () => {
-    const {container, unmount} = renderVapor(Fixture);
+    const { container, unmount } = renderVapor(Fixture);
 
     await nextTick();
 
@@ -89,7 +89,7 @@ describe("DragPreview (browser)", () => {
   // Left in place for a frame so the browser can paint from it, then removed — otherwise every
   // drag would leave its preview behind in the DOM.
   it("clears the preview a frame after the drag starts", async () => {
-    const {container, unmount} = renderVapor(Fixture);
+    const { container, unmount } = renderVapor(Fixture);
 
     await nextTick();
 

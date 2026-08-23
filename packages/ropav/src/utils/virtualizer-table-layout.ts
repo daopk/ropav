@@ -1,12 +1,12 @@
-import type {ItemDropTarget} from "./dnd-types";
-import type {VirtualizerTableCollection} from "./virtualizer-collection";
-import type {InvalidationContext, VirtualizerNode} from "./virtualizer-layout";
-import type {VirtualizerKey} from "./virtualizer-layout-info";
-import type {LayoutNode, ListLayoutOptions} from "./virtualizer-list-layout";
+import type { ItemDropTarget } from "./dnd-types";
+import type { VirtualizerTableCollection } from "./virtualizer-collection";
+import type { InvalidationContext, VirtualizerNode } from "./virtualizer-layout";
+import type { VirtualizerKey } from "./virtualizer-layout-info";
+import type { LayoutNode, ListLayoutOptions } from "./virtualizer-list-layout";
 
-import {Rect, Size} from "./virtualizer-geometry";
-import {LayoutInfo} from "./virtualizer-layout-info";
-import {ListLayout} from "./virtualizer-list-layout";
+import { Rect, Size } from "./virtualizer-geometry";
+import { LayoutInfo } from "./virtualizer-layout-info";
+import { ListLayout } from "./virtualizer-list-layout";
 
 /**
  * A table layout for the virtualizer, ported from react-stately's `TableLayout`.
@@ -261,7 +261,12 @@ export class TableLayout<
     rect.width = width;
     rect.height = y - this.padding;
 
-    return {children, layoutInfo, node: collection.getNode(collection.headerKey), validRect: rect};
+    return {
+      children,
+      layoutInfo,
+      node: collection.getNode(collection.headerKey),
+      validRect: rect,
+    };
   }
 
   protected buildHeaderRow(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -292,12 +297,12 @@ export class TableLayout<
     rect.height = height;
     rect.width = x - rect.x;
 
-    return {children: columns, layoutInfo, node, validRect: rect};
+    return { children: columns, layoutInfo, node, validRect: rect };
   }
 
   protected buildColumn(node: VirtualizerNode, x: number, y: number): LayoutNode {
     const width = this.getRenderedColumnWidth(node);
-    const {height, isEstimated} = this.getEstimatedHeight(
+    const { height, isEstimated } = this.getEstimatedHeight(
       node,
       width,
       this.headingSize ?? this.rowSize,
@@ -308,7 +313,7 @@ export class TableLayout<
     layoutInfo.zIndex = 1;
     layoutInfo.estimatedSize = isEstimated;
 
-    return {children: [], layoutInfo, node, validRect: layoutInfo.rect};
+    return { children: [], layoutInfo, node, validRect: layoutInfo.rect };
   }
 
   protected buildRowGroup(y: number, node: VirtualizerNode): LayoutNode {
@@ -357,7 +362,7 @@ export class TableLayout<
     rect.width = width;
     rect.height = y - startY;
 
-    return {children, layoutInfo, node, validRect: rect.intersection(this.requestedRect)};
+    return { children, layoutInfo, node, validRect: rect.intersection(this.requestedRect) };
   }
 
   protected buildRow(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -383,12 +388,12 @@ export class TableLayout<
     rect.width = this.headerWidth();
     rect.height = height;
 
-    return {children, layoutInfo, node, validRect: rect.intersection(this.requestedRect)};
+    return { children, layoutInfo, node, validRect: rect.intersection(this.requestedRect) };
   }
 
   protected buildCell(node: VirtualizerNode, x: number, y: number): LayoutNode {
     const width = this.getRenderedColumnWidth(node);
-    const {height, isEstimated} = this.getEstimatedHeight(
+    const { height, isEstimated } = this.getEstimatedHeight(
       node,
       width,
       this.rowSize,
@@ -399,7 +404,7 @@ export class TableLayout<
     layoutInfo.zIndex = 1;
     layoutInfo.estimatedSize = isEstimated;
 
-    return {children: [], layoutInfo, node, validRect: layoutInfo.rect};
+    return { children: [], layoutInfo, node, validRect: layoutInfo.rect };
   }
 
   protected override buildLoader(node: VirtualizerNode, x: number, y: number): LayoutNode {
@@ -453,12 +458,12 @@ export class TableLayout<
     width: number,
     height: number | null,
     estimatedHeight: number | null,
-  ): {height: number; isEstimated: boolean} {
-    if (height != null) return {height, isEstimated: false};
+  ): { height: number; isEstimated: boolean } {
+    if (height != null) return { height, isEstimated: false };
 
     const previous = this.layoutNodes.get(node.key);
 
-    if (!previous) return {height: estimatedHeight ?? DEFAULT_ROW_HEIGHT, isEstimated: true};
+    if (!previous) return { height: estimatedHeight ?? DEFAULT_ROW_HEIGHT, isEstimated: true };
 
     return {
       height: previous.layoutInfo.rect.height,

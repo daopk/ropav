@@ -10,13 +10,13 @@ export const Label = Object.assign(LabelRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {LabelRoot};
+export { LabelRoot };
 
-export type {LabelRootProps, LabelRootProps as LabelProps} from "./label.types";
+export type { LabelRootProps, LabelRootProps as LabelProps } from "./label.types";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {labelVariants} from "@ropav/styles";
+export { labelVariants } from "@ropav/styles";
 
-export type {LabelVariants} from "@ropav/styles";
+export type { LabelVariants } from "@ropav/styles";

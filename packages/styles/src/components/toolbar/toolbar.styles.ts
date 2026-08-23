@@ -1,6 +1,6 @@
-import type {VariantProps} from "tailwind-variants";
+import type { VariantProps } from "tailwind-variants";
 
-import {tv} from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 const toolbarVariants = tv({
   base: "toolbar",
@@ -19,5 +19,5 @@ const toolbarVariants = tv({
   },
 });
 
-export {toolbarVariants};
+export { toolbarVariants };
 export type ToolbarVariants = VariantProps<typeof toolbarVariants>;

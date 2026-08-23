@@ -1,22 +1,22 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {LabelRoot} from "@/components/label";
+import { LabelRoot } from "@/components/label";
 import {
   ProgressCircleFillCircle,
   ProgressCircleRoot,
   ProgressCircleTrack,
   ProgressCircleTrackCircle,
 } from "@/components/progress-circle";
-import {CIRCUMFERENCE} from "@/components/progress-circle/progress-circle.constants";
+import { CIRCUMFERENCE } from "@/components/progress-circle/progress-circle.constants";
 
 const render = (isIndeterminate = false) =>
   renderInterop(ProgressCircleRoot, {
-    props: {color: "danger", isIndeterminate, value: 25},
+    props: { color: "danger", isIndeterminate, value: 25 },
     slots: {
       default: () => [
-        h(LabelRoot, null, {default: () => "Loading"}),
+        h(LabelRoot, null, { default: () => "Loading" }),
         h(ProgressCircleTrack, null, {
           default: () => [h(ProgressCircleTrackCircle), h(ProgressCircleFillCircle)],
         }),
@@ -26,7 +26,7 @@ const render = (isIndeterminate = false) =>
 
 describe("ProgressCircle under a vdom host", () => {
   it("forwards determinate state and classes into host-authored SVG parts", async () => {
-    const {container, unmount} = render();
+    const { container, unmount } = render();
     const root = container.querySelector('[data-slot="progress-circle"]');
     const label = container.querySelector('[data-slot="label"]');
 
@@ -46,7 +46,7 @@ describe("ProgressCircle under a vdom host", () => {
   });
 
   it("keeps host-authored SVG parts indeterminate", () => {
-    const {container, unmount} = render(true);
+    const { container, unmount } = render(true);
 
     expect(container.querySelector('[data-slot="progress-circle"]')).not.toHaveAttribute(
       "aria-valuenow",

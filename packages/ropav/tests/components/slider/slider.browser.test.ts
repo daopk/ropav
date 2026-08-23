@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import SliderFixture from "./fixtures.vue";
 
-const renderSlider = (props: Record<string, unknown> = {}) => renderVapor(SliderFixture, {props});
+const renderSlider = (props: Record<string, unknown> = {}) => renderVapor(SliderFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -19,10 +19,10 @@ const drag = async (element: HTMLElement, deltaX: number, deltaY = 0) => {
   const box = element.getBoundingClientRect();
   const startX = box.left + box.width / 2;
   const startY = box.top + box.height / 2;
-  const options = {bubbles: true, button: 0, pointerId: 1, pointerType: "mouse"};
+  const options = { bubbles: true, button: 0, pointerId: 1, pointerType: "mouse" };
 
   element.dispatchEvent(
-    new PointerEvent("pointerdown", {...options, clientX: startX, clientY: startY}),
+    new PointerEvent("pointerdown", { ...options, clientX: startX, clientY: startY }),
   );
   await nextTick();
 
@@ -45,7 +45,7 @@ const drag = async (element: HTMLElement, deltaX: number, deltaY = 0) => {
  */
 describe("Slider (browser)", () => {
   it("moves the thumb along the track under the pointer", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 0, step: 1});
+    const { container, unmount } = renderSlider({ defaultValue: 0, step: 1 });
 
     await nextTick();
 
@@ -65,7 +65,7 @@ describe("Slider (browser)", () => {
   });
 
   it("jumps the nearest thumb to a press on the track", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 0, step: 10});
+    const { container, unmount } = renderSlider({ defaultValue: 0, step: 10 });
 
     await nextTick();
 
@@ -87,7 +87,7 @@ describe("Slider (browser)", () => {
     expect(container.querySelector("input")!.value).toBe("50");
     expect(slot(container, "slider-thumb").getAttribute("data-dragging")).toBe("true");
 
-    window.dispatchEvent(new PointerEvent("pointerup", {pointerId: 1}));
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
     await nextTick();
 
     expect(slot(container, "slider-thumb").hasAttribute("data-dragging")).toBe(false);
@@ -96,7 +96,7 @@ describe("Slider (browser)", () => {
   });
 
   it("picks the thumb closest to the press in a range", async () => {
-    const {container, unmount} = renderSlider({
+    const { container, unmount } = renderSlider({
       defaultValue: [200, 800],
       maxValue: 1000,
       step: 100,
@@ -125,13 +125,13 @@ describe("Slider (browser)", () => {
     expect(high!.hasAttribute("data-dragging")).toBe(false);
     expect(high!.querySelector("input")!.value).toBe("800");
 
-    window.dispatchEvent(new PointerEvent("pointerup", {pointerId: 1}));
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
 
     unmount();
   });
 
   it("grows the fill with the value and colours the end of the track it reaches", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 0, step: 100});
+    const { container, unmount } = renderSlider({ defaultValue: 0, step: 100 });
 
     await nextTick();
 
@@ -158,7 +158,7 @@ describe("Slider (browser)", () => {
   });
 
   it("drags upwards on a vertical slider", async () => {
-    const {container, unmount} = renderSlider({
+    const { container, unmount } = renderSlider({
       defaultValue: 50,
       orientation: "vertical",
       step: 1,
@@ -178,7 +178,7 @@ describe("Slider (browser)", () => {
   });
 
   it("shrinks the thumb while it is being dragged", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 50});
+    const { container, unmount } = renderSlider({ defaultValue: 50 });
 
     await nextTick();
 
@@ -203,13 +203,13 @@ describe("Slider (browser)", () => {
     expect(getComputedStyle(thumb, "::after").scale).not.toBe(scaleWhenIdle);
     expect(getComputedStyle(thumb).cursor).toBe("grabbing");
 
-    window.dispatchEvent(new PointerEvent("pointerup", {pointerId: 1}));
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
 
     unmount();
   });
 
   it("paints a focus ring on the thumb when it is reached by keyboard", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 50});
+    const { container, unmount } = renderSlider({ defaultValue: 50 });
 
     await nextTick();
 
@@ -227,7 +227,7 @@ describe("Slider (browser)", () => {
   });
 
   it("steps with the keyboard once the thumb holds focus", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 50, step: 10});
+    const { container, unmount } = renderSlider({ defaultValue: 50, step: 10 });
 
     await nextTick();
     await userEvent.keyboard("{Tab}");
@@ -241,7 +241,7 @@ describe("Slider (browser)", () => {
   });
 
   it("hands focus to the first thumb when the label is clicked", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 30});
+    const { container, unmount } = renderSlider({ defaultValue: 30 });
 
     await nextTick();
     await userEvent.click(slot(container, "label"));
@@ -262,7 +262,7 @@ describe("Slider (browser)", () => {
    */
   describe("real pointer input", () => {
     it("drags the nearest thumb from a press on the track itself", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 0, step: 1});
+      const { container, unmount } = renderSlider({ defaultValue: 0, step: 1 });
 
       await nextTick();
 
@@ -271,8 +271,8 @@ describe("Slider (browser)", () => {
       const middle = box.height / 2;
 
       await userEvent.dragAndDrop(track, track, {
-        sourcePosition: {x: box.width / 4, y: middle},
-        targetPosition: {x: (box.width * 3) / 4, y: middle},
+        sourcePosition: { x: box.width / 4, y: middle },
+        targetPosition: { x: (box.width * 3) / 4, y: middle },
       });
       await nextTick();
 
@@ -286,7 +286,7 @@ describe("Slider (browser)", () => {
     });
 
     it("drags the thumb itself under a real pointer", async () => {
-      const {container, unmount} = renderSlider({defaultValue: 50, step: 1});
+      const { container, unmount } = renderSlider({ defaultValue: 50, step: 1 });
 
       await nextTick();
 
@@ -295,7 +295,7 @@ describe("Slider (browser)", () => {
       const box = track.getBoundingClientRect();
 
       await userEvent.dragAndDrop(thumb, track, {
-        targetPosition: {x: (box.width * 3) / 4, y: box.height / 2},
+        targetPosition: { x: (box.width * 3) / 4, y: box.height / 2 },
       });
       await nextTick();
 
@@ -308,7 +308,7 @@ describe("Slider (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderSlider({defaultValue: 30});
+    const { container, unmount } = renderSlider({ defaultValue: 30 });
 
     await nextTick();
     await expectNoA11yViolations(container);
@@ -317,7 +317,7 @@ describe("Slider (browser)", () => {
   });
 
   it("has no accessibility violations as a range", async () => {
-    const {container, unmount} = renderSlider({
+    const { container, unmount } = renderSlider({
       defaultValue: [100, 500],
       maxValue: 1000,
     });

@@ -1,27 +1,27 @@
 <script setup lang="ts" vapor>
-import type {SelectTriggerProps} from "./select.types";
+import type { SelectTriggerProps } from "./select.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useSelectContext} from "./select.context";
+import { useSelectContext } from "./select.context";
 
 const props = defineProps<SelectTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {select, slots, state} = useSelectContext();
+const { select, slots, state } = useSelectContext();
 
 // Supplied by the select root, which is what makes this button open a listbox.
 const responder = usePressResponder();
 
-const {isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave} =
-  useInteractionStates({isDisabled: () => Boolean(select.triggerAttributes.value["disabled"])});
+const { isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave } =
+  useInteractionStates({ isDisabled: () => Boolean(select.triggerAttributes.value["disabled"]) });
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);

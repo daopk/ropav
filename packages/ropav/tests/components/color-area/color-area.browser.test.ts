@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
-const renderArea = (props: Record<string, unknown> = {}) => renderVapor(Fixture, {props});
+const renderArea = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -15,14 +15,19 @@ const inputs = (container: HTMLElement) =>
   Array.from(container.querySelectorAll<HTMLInputElement>("input"));
 
 /** Press at a point given as fractions of an element, then move by pixels, then release. */
-const drag = async (element: HTMLElement, from: {x: number; y: number}, deltaX = 0, deltaY = 0) => {
+const drag = async (
+  element: HTMLElement,
+  from: { x: number; y: number },
+  deltaX = 0,
+  deltaY = 0,
+) => {
   const box = element.getBoundingClientRect();
   const startX = box.left + box.width * from.x;
   const startY = box.top + box.height * from.y;
-  const options = {bubbles: true, button: 0, pointerId: 1, pointerType: "mouse"};
+  const options = { bubbles: true, button: 0, pointerId: 1, pointerType: "mouse" };
 
   element.dispatchEvent(
-    new PointerEvent("pointerdown", {...options, clientX: startX, clientY: startY}),
+    new PointerEvent("pointerdown", { ...options, clientX: startX, clientY: startY }),
   );
   await nextTick();
 
@@ -49,7 +54,7 @@ const drag = async (element: HTMLElement, from: {x: number; y: number}, deltaX =
 describe("ColorArea (browser)", () => {
   describe("the gradient", () => {
     it("resolves three blended layers in rgb", async () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       await nextTick();
 
@@ -66,7 +71,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("resolves the hue wheel across an hsl area", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 100%, 50%)" });
 
       await nextTick();
 
@@ -80,7 +85,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("keeps the square the stylesheet asks for", async () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       await nextTick();
 
@@ -101,7 +106,7 @@ describe("ColorArea (browser)", () => {
       );
       plain.unmount();
 
-      const dotted = renderArea({showDots: true});
+      const dotted = renderArea({ showDots: true });
 
       await nextTick();
       expect(
@@ -113,13 +118,13 @@ describe("ColorArea (browser)", () => {
 
   describe("pointer", () => {
     it("jumps the colour to a press on the area itself", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(0, 0%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(0, 0%, 50%)" });
 
       await nextTick();
 
       // A press halfway across and a quarter down: hue 180 of 360, saturation 75 of 100 — y is
       // measured from the bottom.
-      await drag(slot(container, "color-area"), {x: 0.5, y: 0.25});
+      await drag(slot(container, "color-area"), { x: 0.5, y: 0.25 });
 
       expect(Number(inputs(container)[0]!.value)).toBeGreaterThan(170);
       expect(Number(inputs(container)[0]!.value)).toBeLessThan(190);
@@ -130,7 +135,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("keeps dragging after a press that landed on the area, not on the thumb", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(0, 0%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(0, 0%, 50%)" });
 
       await nextTick();
 
@@ -139,7 +144,7 @@ describe("ColorArea (browser)", () => {
 
       // This is what the second, gated move handler exists for: the press lands a quarter along
       // and the drag carries the colour another quarter without ever touching the thumb.
-      await drag(area, {x: 0.25, y: 0.5}, box.width / 4, 0);
+      await drag(area, { x: 0.25, y: 0.5 }, box.width / 4, 0);
 
       expect(Number(inputs(container)[0]!.value)).toBeGreaterThan(170);
       expect(Number(inputs(container)[0]!.value)).toBeLessThan(190);
@@ -149,7 +154,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("drags the thumb on both axes at once", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(180, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(180, 50%, 50%)" });
 
       await nextTick();
 
@@ -157,7 +162,7 @@ describe("ColorArea (browser)", () => {
 
       await drag(
         slot(container, "color-area-thumb"),
-        {x: 0.5, y: 0.5},
+        { x: 0.5, y: 0.5 },
         box.width / 4,
         -box.height / 4,
       );
@@ -170,7 +175,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("grows the thumb while it is being dragged", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(180, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(180, 50%, 50%)" });
 
       await nextTick();
 
@@ -197,7 +202,7 @@ describe("ColorArea (browser)", () => {
       for (const animation of thumb.getAnimations()) animation.finish();
       expect(thumb.getBoundingClientRect().width).toBeGreaterThan(idle);
 
-      window.dispatchEvent(new PointerEvent("pointerup", {pointerId: 1}));
+      window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 1 }));
       await nextTick();
 
       expect(thumb.hasAttribute("data-dragging")).toBe(false);
@@ -206,13 +211,13 @@ describe("ColorArea (browser)", () => {
     });
 
     it("does nothing at all while disabled", async () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(0, 0%, 50%)",
         isDisabled: true,
       });
 
       await nextTick();
-      await drag(slot(container, "color-area"), {x: 0.5, y: 0.5});
+      await drag(slot(container, "color-area"), { x: 0.5, y: 0.5 });
 
       expect(inputs(container)[0]!.value).toBe("0");
       expect(inputs(container)[1]!.value).toBe("0");
@@ -227,7 +232,7 @@ describe("ColorArea (browser)", () => {
      * re-attached by each of those renders, so only a real pointer exercises the path a user takes.
      */
     it("follows a real pointer across the area", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(0, 0%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(0, 0%, 50%)" });
 
       await nextTick();
 
@@ -235,8 +240,8 @@ describe("ColorArea (browser)", () => {
       const box = area.getBoundingClientRect();
 
       await userEvent.dragAndDrop(area, area, {
-        sourcePosition: {x: box.width / 4, y: box.height / 2},
-        targetPosition: {x: (box.width * 3) / 4, y: box.height / 2},
+        sourcePosition: { x: box.width / 4, y: box.height / 2 },
+        targetPosition: { x: (box.width * 3) / 4, y: box.height / 2 },
       });
       await nextTick();
 
@@ -249,7 +254,7 @@ describe("ColorArea (browser)", () => {
 
   describe("keyboard", () => {
     it("paints a focus ring on the thumb when it is reached by keyboard", async () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       await nextTick();
 
@@ -267,7 +272,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("reaches exactly one of the two inputs", async () => {
-      const {container, unmount} = renderArea();
+      const { container, unmount } = renderArea();
 
       await nextTick();
       await userEvent.keyboard("{Tab}");
@@ -283,7 +288,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("moves the colour on both axes once the thumb holds focus", async () => {
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 50%, 50%)"});
+      const { container, unmount } = renderArea({ defaultValue: "hsl(30, 50%, 50%)" });
 
       await nextTick();
       await userEvent.keyboard("{Tab}");
@@ -309,7 +314,7 @@ describe("ColorArea (browser)", () => {
   describe("reach", () => {
     it("gets the thumb into all four corners from the keyboard", async () => {
       // Saturation × lightness, so both axes run 0–100 and page by 10 — ten presses cover an axis.
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 50%, 50%)",
         xChannel: "saturation",
         yChannel: "lightness",
@@ -341,7 +346,7 @@ describe("ColorArea (browser)", () => {
     });
 
     it("gets the thumb into all four corners under a real pointer", async () => {
-      const {container, unmount} = renderArea({
+      const { container, unmount } = renderArea({
         defaultValue: "hsl(30, 50%, 50%)",
         xChannel: "saturation",
         yChannel: "lightness",
@@ -352,16 +357,16 @@ describe("ColorArea (browser)", () => {
       const area = slot(container, "color-area");
       const box = area.getBoundingClientRect();
       const corners = [
-        {expected: ["0", "100"], x: 1, y: 1},
-        {expected: ["100", "100"], x: box.width - 1, y: 1},
-        {expected: ["100", "0"], x: box.width - 1, y: box.height - 1},
-        {expected: ["0", "0"], x: 1, y: box.height - 1},
+        { expected: ["0", "100"], x: 1, y: 1 },
+        { expected: ["100", "100"], x: box.width - 1, y: 1 },
+        { expected: ["100", "0"], x: box.width - 1, y: box.height - 1 },
+        { expected: ["0", "0"], x: 1, y: box.height - 1 },
       ];
 
       for (const corner of corners) {
         await userEvent.dragAndDrop(area, area, {
-          sourcePosition: {x: box.width / 2, y: box.height / 2},
-          targetPosition: {x: corner.x, y: corner.y},
+          sourcePosition: { x: box.width / 2, y: box.height / 2 },
+          targetPosition: { x: corner.x, y: corner.y },
         });
         await nextTick();
 
@@ -382,7 +387,10 @@ describe("ColorArea (browser)", () => {
        * without it the browser puts a range input back to the midpoint of its range, which for a
        * hue is 180°.
        */
-      const {container, unmount} = renderArea({defaultValue: "hsl(30, 100%, 50%)", withForm: true});
+      const { container, unmount } = renderArea({
+        defaultValue: "hsl(30, 100%, 50%)",
+        withForm: true,
+      });
 
       await nextTick();
 
@@ -409,7 +417,7 @@ describe("ColorArea (browser)", () => {
   });
 
   it("has no accessibility violations", async () => {
-    const {container, unmount} = renderArea({ariaLabel: "Pick a colour"});
+    const { container, unmount } = renderArea({ ariaLabel: "Pick a colour" });
 
     await nextTick();
     await expectNoA11yViolations(container);
@@ -418,7 +426,7 @@ describe("ColorArea (browser)", () => {
   });
 
   it("has no accessibility violations with the dots overlay", async () => {
-    const {container, unmount} = renderArea({ariaLabel: "Pick a colour", showDots: true});
+    const { container, unmount } = renderArea({ ariaLabel: "Pick a colour", showDots: true });
 
     await nextTick();
     await expectNoA11yViolations(container);

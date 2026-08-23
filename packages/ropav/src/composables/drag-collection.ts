@@ -1,5 +1,5 @@
-import type {DragCollection, DragKey} from "../utils/dnd-types";
-import type {UseCollectionReturn} from "./use-collection";
+import type { DragCollection, DragKey } from "../utils/dnd-types";
+import type { UseCollectionReturn } from "./use-collection";
 
 /**
  * A `DragCollection` over an ordinary flat collection.

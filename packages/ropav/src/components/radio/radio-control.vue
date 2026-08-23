@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {RadioControlProps} from "./radio.types";
+import type { RadioControlProps } from "./radio.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useRadioContext} from "./radio.context";
+import { useRadioContext } from "./radio.context";
 
 const props = defineProps<RadioControlProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useRadioContext();
+const { slots } = useRadioContext();
 </script>
 
 <template>

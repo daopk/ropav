@@ -9,7 +9,7 @@
  * The dismissal is passed in rather than read from a context, so a modal — which has no overlay
  * scope of its own — can render the same button.
  */
-const props = defineProps<{close: () => void}>();
+const props = defineProps<{ close: () => void }>();
 </script>
 
 <template>

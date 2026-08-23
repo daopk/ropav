@@ -1,10 +1,10 @@
-import type {ItemDropTarget} from "../../utils/dnd-types";
-import type {Size} from "../../utils/virtualizer-geometry";
-import type {Layout} from "../../utils/virtualizer-layout";
-import type {LayoutInfo, VirtualizerKey} from "../../utils/virtualizer-layout-info";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { ItemDropTarget } from "../../utils/dnd-types";
+import type { Size } from "../../utils/virtualizer-geometry";
+import type { Layout } from "../../utils/virtualizer-layout";
+import type { LayoutInfo, VirtualizerKey } from "../../utils/virtualizer-layout-info";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 /**
  * What `Virtualizer` hands the collection inside it: the layout and how to configure it.

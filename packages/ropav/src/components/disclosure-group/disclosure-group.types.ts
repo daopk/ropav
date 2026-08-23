@@ -1,4 +1,4 @@
-import type {DisclosureKey} from "../../composables/use-disclosure-group";
+import type { DisclosureKey } from "../../composables/use-disclosure-group";
 
 export interface DisclosureGroupRootProps {
   class?: string;

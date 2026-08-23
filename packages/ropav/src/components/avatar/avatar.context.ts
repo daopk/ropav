@@ -1,8 +1,8 @@
-import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
-import type {avatarVariants} from "@ropav/styles";
-import type {ComputedRef, Ref} from "vue";
+import type { ImageLoadingStatus } from "../../composables/use-image-loading-status";
+import type { avatarVariants } from "@ropav/styles";
+import type { ComputedRef, Ref } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface AvatarContext {
   slots: ComputedRef<ReturnType<typeof avatarVariants>>;

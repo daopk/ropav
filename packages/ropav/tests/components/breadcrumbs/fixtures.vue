@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {BreadcrumbsRootProps} from "@/components/breadcrumbs";
+import type { BreadcrumbsRootProps } from "@/components/breadcrumbs";
 
-import {BreadcrumbsItem, BreadcrumbsRoot} from "@/components/breadcrumbs";
-import {I18nProvider} from "@/components/i18n-provider";
+import { BreadcrumbsItem, BreadcrumbsRoot } from "@/components/breadcrumbs";
+import { I18nProvider } from "@/components/i18n-provider";
 
 const props = defineProps<
   BreadcrumbsRootProps & {
     itemClass?: string;
-    items?: readonly {href?: string; id: string; label: string}[];
+    items?: readonly { href?: string; id: string; label: string }[];
     locale?: string;
     onAction?: (key: string | number) => void;
     onItemClick?: (event: MouseEvent) => void;

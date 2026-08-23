@@ -1,6 +1,6 @@
-import type {Component, VNodeChild} from "vue";
+import type { Component, VNodeChild } from "vue";
 
-import {getQueriesForElement} from "@testing-library/dom";
+import { getQueriesForElement } from "@testing-library/dom";
 import {
   createApp,
   createComponent,
@@ -60,7 +60,7 @@ export type RenderVaporResult = ReturnType<typeof renderVapor>;
  * ```
  */
 export const renderVapor = (component: VaporComponent, options: RenderVaporOptions = {}) => {
-  const {props = {}, slots = {}} = options;
+  const { props = {}, slots = {} } = options;
   const container = document.createElement("div");
 
   document.body.appendChild(container);
@@ -125,12 +125,12 @@ export type RenderInteropResult = ReturnType<typeof renderInterop>;
  * ```
  */
 export const renderInterop = (component: Component, options: RenderInteropOptions = {}) => {
-  const {props = {}, slots = {}} = options;
+  const { props = {}, slots = {} } = options;
   const container = document.createElement("div");
 
   document.body.appendChild(container);
 
-  const app = createApp({render: () => h(component, props, slots)});
+  const app = createApp({ render: () => h(component, props, slots) });
 
   app.use(vaporInteropPlugin);
   app.mount(container);
@@ -150,4 +150,4 @@ export const renderInterop = (component: Component, options: RenderInteropOption
   };
 };
 
-export {getQueriesForElement, waitFor, within} from "@testing-library/dom";
+export { getQueriesForElement, waitFor, within } from "@testing-library/dom";

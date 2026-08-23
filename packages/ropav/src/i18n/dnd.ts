@@ -1,4 +1,4 @@
-import type {LocalizedString, LocalizedStrings, Variables} from "@internationalized/string";
+import type { LocalizedString, LocalizedStrings, Variables } from "@internationalized/string";
 
 /** Every message key the drag and drop strings define. */
 export type DndStringKey =

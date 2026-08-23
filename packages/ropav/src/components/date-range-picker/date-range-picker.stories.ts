@@ -1,12 +1,12 @@
-import type {DateRange} from "../../composables/use-calendar";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { DateRange } from "../../composables/use-calendar";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {getLocalTimeZone, today} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 
-import {Button} from "../button";
+import { Button } from "../button";
 import {
   CalendarYearPickerCell,
   CalendarYearPickerGrid,
@@ -15,10 +15,10 @@ import {
   CalendarYearPickerTriggerHeading,
   CalendarYearPickerTriggerIndicator,
 } from "../calendar-year-picker";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
 import {
   RangeCalendarCell,
   RangeCalendarGrid,
@@ -80,13 +80,13 @@ const components = {
  * `slot` is bound rather than written literally because the linter reads a literal `slot` attribute
  * as Vue 2 slot syntax. Passed to the stories as data so the templates can bind it.
  */
-const PREVIOUS = {slot: "previous"} as const;
-const NEXT = {slot: "next"} as const;
-const START = {slot: "start"} as const;
-const END = {slot: "end"} as const;
+const PREVIOUS = { slot: "previous" } as const;
+const NEXT = { slot: "next" } as const;
+const START = { slot: "start" } as const;
+const END = { slot: "end" } as const;
 
 /** Everything every story below shares, so each one differs only in what it is showing. */
-const bindings = {end: END, next: NEXT, previous: PREVIOUS, start: START};
+const bindings = { end: END, next: NEXT, previous: PREVIOUS, start: START };
 
 /** The range calendar in the popover, which every story below repeats. */
 const calendar = `
@@ -160,7 +160,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => ({
     components,
-    setup: () => ({...bindings}),
+    setup: () => ({ ...bindings }),
     template: `
       <DateRangePickerRoot class="w-[320px]" end-name="endDate" start-name="startDate">
         <Label>Trip dates</Label>
@@ -176,9 +176,9 @@ export const Controlled: Story = {
     components,
     setup: () => {
       const start = today(getLocalTimeZone());
-      const value = shallowRef<DateRange | null>({end: start.add({days: 4}), start});
+      const value = shallowRef<DateRange | null>({ end: start.add({ days: 4 }), start });
 
-      return {...bindings, value};
+      return { ...bindings, value };
     },
     template: `
       <div class="flex w-[320px] flex-col gap-2">
@@ -207,7 +207,7 @@ export const Disabled: Story = {
     setup: () => {
       const start = today(getLocalTimeZone());
 
-      return {...bindings, value: {end: start.add({days: 4}), start}};
+      return { ...bindings, value: { end: start.add({ days: 4 }), start } };
     },
     template: `
       <DateRangePickerRoot
@@ -238,7 +238,7 @@ export const WithValidation: Story = {
             value.value.end.compare(value.value.start) < 0),
       );
 
-      return {...bindings, currentDate, isInvalid, value};
+      return { ...bindings, currentDate, isInvalid, value };
     },
     template: `
       <DateRangePickerRoot
@@ -263,7 +263,7 @@ export const WithValidation: Story = {
 export const WithCustomIndicator: Story = {
   render: () => ({
     components,
-    setup: () => ({...bindings}),
+    setup: () => ({ ...bindings }),
     template: `
       <DateRangePickerRoot class="w-[320px]" end-name="endDate" start-name="startDate">
         <Label>Trip dates</Label>
@@ -322,7 +322,7 @@ export const FormExample: Story = {
         }, 1200);
       };
 
-      return {...bindings, currentDate, isInvalid, isSubmitting, onSubmit, value};
+      return { ...bindings, currentDate, isInvalid, isSubmitting, onSubmit, value };
     },
     template: `
       <Form class="flex w-[320px] flex-col gap-3" @submit="onSubmit">

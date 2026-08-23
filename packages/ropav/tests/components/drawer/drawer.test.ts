@@ -1,13 +1,13 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import DrawerFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(DrawerFixture, {props});
+  const result = renderVapor(DrawerFixture, { props });
 
   mounted.push(result);
 
@@ -28,18 +28,18 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** An outside interaction is two events: a pointerdown marks it, and the click dismisses. */
 const pressOutside = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: name}));
-  element.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: name}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: name }));
+  element.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: name }));
 };
 
 /**
@@ -81,7 +81,7 @@ describe("Drawer", () => {
     it("renders nothing but the trigger while closed", () => {
       const result = render();
 
-      expect(result.screen.getByRole("button", {name: "Open drawer"})).toBeTruthy();
+      expect(result.screen.getByRole("button", { name: "Open drawer" })).toBeTruthy();
       expect(result.screen.queryByRole("dialog")).toBeNull();
       expect(slot("drawer-backdrop")).toBeNull();
 
@@ -89,7 +89,7 @@ describe("Drawer", () => {
     });
 
     it("renders the drawer outside the app root", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -104,7 +104,7 @@ describe("Drawer", () => {
     });
 
     it("nests backdrop, content and dialog in that order", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -122,7 +122,7 @@ describe("Drawer", () => {
     });
 
     it("carries the block classes", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -145,7 +145,7 @@ describe("Drawer", () => {
       portal.id = "portal";
       document.body.appendChild(portal);
 
-      const result = render({defaultOpen: true, portalContainer: portal});
+      const result = render({ defaultOpen: true, portalContainer: portal });
 
       await settle();
 
@@ -160,7 +160,7 @@ describe("Drawer", () => {
     it("opens on a press of the trigger", async () => {
       const result = render();
 
-      press(result.screen.getByRole("button", {name: "Open drawer"}));
+      press(result.screen.getByRole("button", { name: "Open drawer" }));
       await settle();
 
       expect(result.screen.queryByRole("dialog")).toBeTruthy();
@@ -203,7 +203,7 @@ describe("Drawer", () => {
 
   describe("dismissal", () => {
     it("closes on Escape", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -216,7 +216,7 @@ describe("Drawer", () => {
     });
 
     it("ignores Escape when keyboard dismissal is off", async () => {
-      const result = render({defaultOpen: true, isKeyboardDismissDisabled: true});
+      const result = render({ defaultOpen: true, isKeyboardDismissDisabled: true });
 
       await settle();
 
@@ -229,7 +229,7 @@ describe("Drawer", () => {
     });
 
     it("keeps Escape working when dismissing by press is off", async () => {
-      const result = render({defaultOpen: true, isDismissable: false});
+      const result = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -243,7 +243,7 @@ describe("Drawer", () => {
     });
 
     it("closes on a press outside the panel", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -258,7 +258,7 @@ describe("Drawer", () => {
     });
 
     it("ignores a press outside when dismissing is off", async () => {
-      const result = render({defaultOpen: true, isDismissable: false});
+      const result = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -271,7 +271,7 @@ describe("Drawer", () => {
     });
 
     it("ignores a press inside the panel", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -284,7 +284,7 @@ describe("Drawer", () => {
     });
 
     it("needs the click as well as the pointerdown", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -298,7 +298,7 @@ describe("Drawer", () => {
     });
 
     it("leaves an element the caller exempted alone", async () => {
-      const result = render({defaultOpen: true, keepOpenFor: "outside"});
+      const result = render({ defaultOpen: true, keepOpenFor: "outside" });
 
       await settle();
 
@@ -311,7 +311,7 @@ describe("Drawer", () => {
     });
 
     it("renders a dismiss button for a screen reader only while dismissable", async () => {
-      const dismissable = render({defaultOpen: true});
+      const dismissable = render({ defaultOpen: true });
 
       await settle();
 
@@ -324,7 +324,7 @@ describe("Drawer", () => {
 
       dismissable.unmount();
 
-      const fixed = render({defaultOpen: true, isDismissable: false});
+      const fixed = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -334,7 +334,7 @@ describe("Drawer", () => {
     });
 
     it("closes from the dialog's own slot", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -349,7 +349,7 @@ describe("Drawer", () => {
 
   describe("focus", () => {
     it("focuses the panel when it opens", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -382,7 +382,7 @@ describe("Drawer", () => {
 
   describe("the page behind", () => {
     it("hides everything outside the content from assistive technology", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -399,7 +399,7 @@ describe("Drawer", () => {
     });
 
     it("holds the page still while it is open", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -437,7 +437,7 @@ describe("Drawer", () => {
 
   describe("parts", () => {
     it("renders every part with its own slot and class", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true, withHandle: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true, withHandle: true });
 
       await settle();
 
@@ -461,7 +461,7 @@ describe("Drawer", () => {
     });
 
     it("renders the heading two levels down", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -472,7 +472,7 @@ describe("Drawer", () => {
 
     it("carries the placement modifier on both the content and the panel", async () => {
       for (const placement of ["top", "bottom", "left", "right"] as const) {
-        const result = render({defaultOpen: true, placement});
+        const result = render({ defaultOpen: true, placement });
 
         await settle();
 
@@ -495,7 +495,7 @@ describe("Drawer", () => {
     });
 
     it("slides up from the bottom by default", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -507,7 +507,7 @@ describe("Drawer", () => {
 
     it("carries the backdrop variant the backdrop decided", async () => {
       for (const variant of ["opaque", "blur", "transparent"] as const) {
-        const result = render({defaultOpen: true, variant});
+        const result = render({ defaultOpen: true, variant });
 
         await settle();
 
@@ -522,7 +522,7 @@ describe("Drawer", () => {
     });
 
     it("hides the handle from assistive technology and gives it a bar", async () => {
-      const result = render({defaultOpen: true, withHandle: true});
+      const result = render({ defaultOpen: true, withHandle: true });
 
       await settle();
 
@@ -538,7 +538,7 @@ describe("Drawer", () => {
     });
 
     it("claims the pointer on the panel and gives vertical scrolling back in the body", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -551,7 +551,7 @@ describe("Drawer", () => {
     });
 
     it("leaves the panel's pointer handling alone when it cannot be dismissed", async () => {
-      const result = render({defaultOpen: true, isDismissable: false});
+      const result = render({ defaultOpen: true, isDismissable: false });
 
       await settle();
 
@@ -564,7 +564,7 @@ describe("Drawer", () => {
 
   describe("labelling", () => {
     it("names the dialog by its heading", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -577,7 +577,7 @@ describe("Drawer", () => {
     });
 
     it("names the dialog by its trigger when nothing inside does", async () => {
-      const result = render({defaultOpen: true, withoutHeading: true});
+      const result = render({ defaultOpen: true, withoutHeading: true });
 
       await settle();
 
@@ -593,7 +593,7 @@ describe("Drawer", () => {
 
   describe("closing", () => {
     it("names the close trigger without being told to", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -619,7 +619,7 @@ describe("Drawer", () => {
     });
 
     it("closes from the close trigger", async () => {
-      const result = render({defaultOpen: true, withCloseTrigger: true});
+      const result = render({ defaultOpen: true, withCloseTrigger: true });
 
       await settle();
 
@@ -632,13 +632,13 @@ describe("Drawer", () => {
     });
 
     it("closes from a wrapped button and still runs its own handler", async () => {
-      const result = render({defaultOpen: true, withCloseWrapper: true});
+      const result = render({ defaultOpen: true, withCloseWrapper: true });
 
       await settle();
 
       expect(result.screen.getByTestId("saved").textContent).toBe("not saved");
 
-      press(result.screen.getByRole("button", {name: "Confirm"}));
+      press(result.screen.getByRole("button", { name: "Confirm" }));
       await settle();
 
       // Both, in that order: the wrapper's close is chained ahead of the button's own handler.
@@ -649,11 +649,11 @@ describe("Drawer", () => {
     });
 
     it("leaves an unmarked button inside alone", async () => {
-      const result = render({defaultOpen: true, withInsideButton: true});
+      const result = render({ defaultOpen: true, withInsideButton: true });
 
       await settle();
 
-      const inside = result.screen.getByRole("button", {name: "Inside action"});
+      const inside = result.screen.getByRole("button", { name: "Inside action" });
 
       // Opt-in, matching React: an ordinary button in a footer does not close the drawer, and it
       // does not claim the trigger's identity either.
@@ -671,7 +671,7 @@ describe("Drawer", () => {
 
   describe("animation state", () => {
     it("reports entry as a string rather than an empty attribute", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 
@@ -687,7 +687,7 @@ describe("Drawer", () => {
     });
 
     it("carries the exit on the content rather than on the panel", async () => {
-      const result = render({defaultOpen: true});
+      const result = render({ defaultOpen: true });
 
       await settle();
 

@@ -1,14 +1,14 @@
-import type {Color, ColorChannel, ColorSpace} from "../../utils/color-types";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Color, ColorChannel, ColorSpace } from "../../utils/color-types";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconShuffle from "~icons/gravity-ui/shuffle";
 
-import {parseColor} from "../../utils/color";
-import {ButtonRoot} from "../button";
-import {ColorAreaRoot, ColorAreaThumb} from "../color-area";
-import {ColorFieldRoot} from "../color-field";
+import { parseColor } from "../../utils/color";
+import { ButtonRoot } from "../button";
+import { ColorAreaRoot, ColorAreaThumb } from "../color-area";
+import { ColorFieldRoot } from "../color-field";
 import {
   ColorInputGroupInput,
   ColorInputGroupPrefix,
@@ -20,18 +20,18 @@ import {
   ColorSliderThumb,
   ColorSliderTrack,
 } from "../color-slider";
-import {ColorSwatchRoot} from "../color-swatch";
+import { ColorSwatchRoot } from "../color-swatch";
 import {
   ColorSwatchPickerItem,
   ColorSwatchPickerRoot,
   ColorSwatchPickerSwatch,
 } from "../color-swatch-picker";
-import {LabelRoot} from "../label";
-import {ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
+import { LabelRoot } from "../label";
+import { ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
 
-import {ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger} from "./index";
+import { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "ColorPicker.Trigger".
@@ -216,7 +216,7 @@ export const Controlled: Story = {
 export const WithSwatches: Story = {
   render: () => ({
     components,
-    setup: () => ({colorPresets}),
+    setup: () => ({ colorPresets }),
     template: `
       <ColorPicker default-value="#F43F5E">
         <ColorPickerTrigger>

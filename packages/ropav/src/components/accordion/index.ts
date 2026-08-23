@@ -46,6 +46,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {accordionVariants} from "@ropav/styles";
+export { accordionVariants } from "@ropav/styles";
 
-export type {AccordionVariants} from "@ropav/styles";
+export type { AccordionVariants } from "@ropav/styles";

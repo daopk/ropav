@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
+import { providePressResponder } from "../../composables/press-responder";
 
-import {useTableRowContext} from "./table.context";
+import { useTableRowContext } from "./table.context";
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {ariaLabelledBy, isDisabled, isExpanded, toggle} = useTableRowContext();
+const { ariaLabelledBy, isDisabled, isExpanded, toggle } = useTableRowContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 

@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {DescriptionRootProps} from "@/components/description";
+import type { DescriptionRootProps } from "@/components/description";
 
-import {DescriptionRoot} from "@/components/description";
-import {provideFieldIdsContext, useFieldIds} from "@/composables/use-field-ids";
+import { DescriptionRoot } from "@/components/description";
+import { provideFieldIdsContext, useFieldIds } from "@/composables/use-field-ids";
 
 /** `withFieldIds` stands in for a container that describes itself by its help text. */
-const props = defineProps<DescriptionRootProps & {text?: string; withFieldIds?: boolean}>();
+const props = defineProps<DescriptionRootProps & { text?: string; withFieldIds?: boolean }>();
 
 const fieldIds = useFieldIds();
 

@@ -35,7 +35,7 @@ export type Typography = {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {Code, Heading, Paragraph, Prose, TypographyRoot};
+export { Code, Heading, Paragraph, Prose, TypographyRoot };
 
 export type {
   CodeProps,
@@ -53,6 +53,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {typographyVariants} from "@ropav/styles";
+export { typographyVariants } from "@ropav/styles";
 
-export type {TypographyVariants} from "@ropav/styles";
+export type { TypographyVariants } from "@ropav/styles";

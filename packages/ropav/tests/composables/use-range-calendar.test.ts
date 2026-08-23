@@ -1,14 +1,14 @@
-import type {UseRangeCalendarReturn} from "@/composables/use-range-calendar";
-import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
+import type { UseRangeCalendarReturn } from "@/composables/use-range-calendar";
+import type { RangeCalendarState } from "@/composables/use-range-calendar-state";
 
-import {CalendarDate} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/range-calendar-host.vue";
 
-type Ready = {calendar: UseRangeCalendarReturn; state: RangeCalendarState};
+type Ready = { calendar: UseRangeCalendarReturn; state: RangeCalendarState };
 
 const mounted: (() => void)[] = [];
 
@@ -20,7 +20,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: Ready) => (ready = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   // Idempotent, so a test that unmounts on purpose does not unmount twice through the hook below.
   let isUnmounted = false;
@@ -65,10 +65,10 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
 
 /** A release with a real contact patch, as opposed to the zero-sized one a screen reader sends. */
 const release = (target: EventTarget = window) =>
-  target.dispatchEvent(new PointerEvent("pointerup", {bubbles: true, height: 23, width: 17}));
+  target.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, height: 23, width: 17 }));
 
 const press = (width: number, height: number) =>
-  window.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, height, width}));
+  window.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, height, width }));
 
 describe("useRangeCalendar", () => {
   describe("what it inherits from a plain calendar", () => {
@@ -78,18 +78,18 @@ describe("useRangeCalendar", () => {
 
     it("names itself after the dates on screen", () => {
       expect(
-        setup({defaultFocusedValue: jun(15)})
+        setup({ defaultFocusedValue: jun(15) })
           .root()
           .getAttribute("aria-label"),
       ).toContain("June 2026");
     });
 
     it("titles itself with the visible range", () => {
-      expect(setup({defaultFocusedValue: jun(15)}).calendar().title.value).toBe("June 2026");
+      expect(setup({ defaultFocusedValue: jun(15) }).calendar().title.value).toBe("June 2026");
     });
 
     it("pages on the next button", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.next().click();
 
@@ -99,7 +99,7 @@ describe("useRangeCalendar", () => {
 
   describe("a pointer released outside", () => {
     it("ends the pending range on the highlighted date", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -114,7 +114,7 @@ describe("useRangeCalendar", () => {
       const calendar = setup({
         commitBehavior: "clear",
         defaultFocusedValue: jun(15),
-        defaultValue: {end: jun(9), start: jun(5)},
+        defaultValue: { end: jun(9), start: jun(5) },
       });
 
       calendar.state().selectDate(jun(10));
@@ -130,7 +130,7 @@ describe("useRangeCalendar", () => {
       const calendar = setup({
         commitBehavior: "reset",
         defaultFocusedValue: jun(15),
-        defaultValue: {end: jun(9), start: jun(5)},
+        defaultValue: { end: jun(9), start: jun(5) },
         onChange,
       });
 
@@ -144,7 +144,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("leaves a pending range alone when focus has already left the calendar", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.outside().focus();
@@ -155,7 +155,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("leaves a pending range alone when the release lands on a button inside", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.cell().focus();
@@ -165,7 +165,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("ends the range when the release lands on something inside that is not a button", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(12));
@@ -177,7 +177,7 @@ describe("useRangeCalendar", () => {
 
     it("does nothing at all without a pending range", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(15), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(15), onChange });
 
       calendar.cell().focus();
       release();
@@ -187,7 +187,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("stops reporting a drag either way", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().setDragging(true);
       release();
@@ -196,7 +196,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("ignores the zero-sized release a screen reader sends before the click it stands for", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.cell().focus();
@@ -207,7 +207,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("acts on the release after a real press", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -219,7 +219,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("only skips the one release the zero-sized press was about", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -232,7 +232,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("stops answering once the calendar is gone", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
       const state = calendar.state();
 
       state.selectDate(jun(10));
@@ -248,10 +248,10 @@ describe("useRangeCalendar", () => {
     const leave = (calendar: ReturnType<typeof setup>, relatedTarget: EventTarget | null) =>
       calendar
         .cell()
-        .dispatchEvent(new FocusEvent("focusout", {bubbles: true, relatedTarget: relatedTarget}));
+        .dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget: relatedTarget }));
 
     it("ends the pending range", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -261,7 +261,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("ends the pending range when focus went nowhere at all", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       calendar.state().highlightDate(jun(14));
@@ -271,7 +271,7 @@ describe("useRangeCalendar", () => {
     });
 
     it("leaves the range alone while focus stays inside", () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().selectDate(jun(10));
       leave(calendar, calendar.next());
@@ -282,7 +282,7 @@ describe("useRangeCalendar", () => {
 
     it("does nothing without a pending range", () => {
       const onChange = vi.fn();
-      const calendar = setup({defaultFocusedValue: jun(15), onChange});
+      const calendar = setup({ defaultFocusedValue: jun(15), onChange });
 
       leave(calendar, calendar.outside());
 
@@ -293,7 +293,7 @@ describe("useRangeCalendar", () => {
       const calendar = setup({
         commitBehavior: "clear",
         defaultFocusedValue: jun(15),
-        defaultValue: {end: jun(9), start: jun(5)},
+        defaultValue: { end: jun(9), start: jun(5) },
       });
 
       calendar.state().selectDate(jun(20));
@@ -311,7 +311,7 @@ describe("useRangeCalendar", () => {
     const scroll = async (calendar: ReturnType<typeof setup>) => {
       await nextTick();
 
-      const event = new Event("touchmove", {bubbles: true, cancelable: true});
+      const event = new Event("touchmove", { bubbles: true, cancelable: true });
 
       calendar.cell().dispatchEvent(event);
 
@@ -319,7 +319,7 @@ describe("useRangeCalendar", () => {
     };
 
     it("keeps the page from scrolling under it", async () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().setDragging(true);
 
@@ -327,11 +327,11 @@ describe("useRangeCalendar", () => {
     });
 
     it("lets the page scroll when no range is being dragged", async () => {
-      expect(await scroll(setup({defaultFocusedValue: jun(15)}))).toBe(false);
+      expect(await scroll(setup({ defaultFocusedValue: jun(15) }))).toBe(false);
     });
 
     it("stops holding the page once the calendar is gone", async () => {
-      const calendar = setup({defaultFocusedValue: jun(15)});
+      const calendar = setup({ defaultFocusedValue: jun(15) });
 
       calendar.state().setDragging(true);
       await nextTick();
@@ -340,7 +340,7 @@ describe("useRangeCalendar", () => {
 
       calendar.unmount();
 
-      const event = new Event("touchmove", {bubbles: true, cancelable: true});
+      const event = new Event("touchmove", { bubbles: true, cancelable: true });
 
       cell.dispatchEvent(event);
 

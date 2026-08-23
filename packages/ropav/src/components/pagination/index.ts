@@ -59,6 +59,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {paginationVariants} from "@ropav/styles";
+export { paginationVariants } from "@ropav/styles";
 
-export type {PaginationVariants} from "@ropav/styles";
+export type { PaginationVariants } from "@ropav/styles";

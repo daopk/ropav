@@ -76,8 +76,8 @@ class DataTransferItemListStub {
   add(data: File | string, type?: string): DataTransferItemStub | null {
     const entry: StubEntry =
       typeof data === "string"
-        ? {data, file: null, kind: "string", type: type ?? ""}
-        : {data: "", file: data, kind: "file", type: data.type};
+        ? { data, file: null, kind: "string", type: type ?? "" }
+        : { data: "", file: data, kind: "file", type: data.type };
 
     // The spec refuses a second string item of a type already present.
     if (
@@ -146,7 +146,7 @@ class DataTransferStub {
 
   get files(): File[] {
     return this.items.entries
-      .filter((entry): entry is StubEntry & {file: File} => entry.file != null)
+      .filter((entry): entry is StubEntry & { file: File } => entry.file != null)
       .map((entry) => entry.file);
   }
 
@@ -187,7 +187,10 @@ class DataTransferStub {
 class DragEventStub extends MouseEvent {
   readonly dataTransfer: DataTransferStub | null;
 
-  constructor(type: string, init: MouseEventInit & {dataTransfer?: DataTransferStub | null} = {}) {
+  constructor(
+    type: string,
+    init: MouseEventInit & { dataTransfer?: DataTransferStub | null } = {},
+  ) {
     super(type, init);
     this.dataTransfer = init.dataTransfer ?? null;
   }

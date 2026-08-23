@@ -20,7 +20,7 @@ export const Popover = Object.assign(PopoverRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {PopoverArrow, PopoverContent, PopoverDialog, PopoverHeading, PopoverRoot, PopoverTrigger};
+export { PopoverArrow, PopoverContent, PopoverDialog, PopoverHeading, PopoverRoot, PopoverTrigger };
 
 export type {
   PopoverArrowProps,
@@ -37,13 +37,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {usePopoverContext} from "./popover.context";
+export { usePopoverContext } from "./popover.context";
 
-export type {PopoverContext} from "./popover.context";
+export type { PopoverContext } from "./popover.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {popoverVariants} from "@ropav/styles";
+export { popoverVariants } from "@ropav/styles";
 
-export type {PopoverVariants} from "@ropav/styles";
+export type { PopoverVariants } from "@ropav/styles";

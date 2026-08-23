@@ -1,11 +1,11 @@
-import type {ColorFieldState} from "@/composables/use-color-field-state";
-import type {Color} from "@/utils/color-types";
+import type { ColorFieldState } from "@/composables/use-color-field-state";
+import type { Color } from "@/utils/color-types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {parseColor} from "@/utils/color";
+import { parseColor } from "@/utils/color";
 
 import Host from "../fixtures/color-field-state-host.vue";
 
@@ -18,17 +18,17 @@ import Host from "../fixtures/color-field-state-host.vue";
 const mount = (props: Record<string, unknown> = {}) => {
   let state!: ColorFieldState;
 
-  Object.assign(props, {onReady: (next: ColorFieldState) => (state = next)});
+  Object.assign(props, { onReady: (next: ColorFieldState) => (state = next) });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
-  return {...result, state: () => state};
+  return { ...result, state: () => state };
 };
 
 describe("useColorFieldState", () => {
   describe("the value it starts with", () => {
     it("writes the default colour into the input", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       expect(state().inputValue.value).toBe("#0485F7");
       expect(state().colorValue.value?.toString("hex")).toBe("#0485F7");
@@ -37,7 +37,7 @@ describe("useColorFieldState", () => {
     });
 
     it("normalises a short hex on the way in", () => {
-      const {state, unmount} = mount({defaultValue: "#abc"});
+      const { state, unmount } = mount({ defaultValue: "#abc" });
 
       expect(state().inputValue.value).toBe("#AABBCC");
 
@@ -47,7 +47,7 @@ describe("useColorFieldState", () => {
     it("starts empty when the caller supplied nothing", () => {
       // Not black: `null` means the field has no colour, and writing `#000000` would put a value
       // in front of the user that nobody chose.
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       expect(state().inputValue.value).toBe("");
       expect(state().colorValue.value).toBeNull();
@@ -56,7 +56,7 @@ describe("useColorFieldState", () => {
     });
 
     it("starts empty on a controlled null", () => {
-      const {state, unmount} = mount({value: null});
+      const { state, unmount } = mount({ value: null });
 
       expect(state().inputValue.value).toBe("");
 
@@ -64,7 +64,7 @@ describe("useColorFieldState", () => {
     });
 
     it("treats an unparseable string as no colour at all", () => {
-      const {state, unmount} = mount({defaultValue: "not-a-color"});
+      const { state, unmount } = mount({ defaultValue: "not-a-color" });
 
       expect(state().colorValue.value).toBeNull();
       expect(state().inputValue.value).toBe("");
@@ -77,7 +77,7 @@ describe("useColorFieldState", () => {
     it("accepts a half-typed hex", () => {
       // Validation runs on commit, not on every keystroke — otherwise `#ff` on the way to
       // `#ffcc00` would be refused.
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       expect(state().validate("")).toBe(true);
       expect(state().validate("#")).toBe(true);
@@ -90,7 +90,7 @@ describe("useColorFieldState", () => {
     });
 
     it("refuses a seventh digit and anything that is not one", () => {
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       expect(state().validate("#ffcc001")).toBe(false);
       expect(state().validate("zz")).toBe(false);
@@ -101,7 +101,7 @@ describe("useColorFieldState", () => {
     });
 
     it("keeps the colour still while the text is being typed", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("#ff");
 
@@ -114,7 +114,7 @@ describe("useColorFieldState", () => {
 
   describe("committing", () => {
     it("parses the text and writes it back out in full", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("abc");
       state().commit();
@@ -126,7 +126,7 @@ describe("useColorFieldState", () => {
     });
 
     it("accepts text with no leading hash", () => {
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       state().setInputValue("ffcc00");
       state().commit();
@@ -138,7 +138,7 @@ describe("useColorFieldState", () => {
 
     it("puts the current colour back when the text cannot be parsed", () => {
       // Recoverable rather than destructive: a half-typed entry does not throw the colour away.
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("#ff");
       state().commit();
@@ -150,7 +150,7 @@ describe("useColorFieldState", () => {
     });
 
     it("clears the colour when the text is emptied", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("");
       state().commit();
@@ -162,7 +162,7 @@ describe("useColorFieldState", () => {
     });
 
     it("normalises the text even when the colour did not move", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("0485f7");
       state().commit();
@@ -174,7 +174,7 @@ describe("useColorFieldState", () => {
 
     it("reports a committed colour to its owner", () => {
       const onChange = vi.fn();
-      const {state, unmount} = mount({defaultValue: "#0485F7", onChange});
+      const { state, unmount } = mount({ defaultValue: "#0485F7", onChange });
 
       state().setInputValue("#000000");
       state().commit();
@@ -189,7 +189,7 @@ describe("useColorFieldState", () => {
       // Every `Color` method returns a new instance, so comparing by identity would report a
       // change on every keystroke that reparsed the same text.
       const onChange = vi.fn();
-      const {state, unmount} = mount({defaultValue: "#0485F7", onChange});
+      const { state, unmount } = mount({ defaultValue: "#0485F7", onChange });
 
       state().setInputValue("0485f7");
       state().commit();
@@ -203,7 +203,7 @@ describe("useColorFieldState", () => {
   describe("stepping", () => {
     it("steps the whole hex as one integer", () => {
       // A hex field is not three channels: incrementing `#0000FF` gives `#000100`.
-      const {state, unmount} = mount({defaultValue: "#0000FF"});
+      const { state, unmount } = mount({ defaultValue: "#0000FF" });
 
       state().increment();
 
@@ -213,7 +213,7 @@ describe("useColorFieldState", () => {
     });
 
     it("steps down", () => {
-      const {state, unmount} = mount({defaultValue: "#000100"});
+      const { state, unmount } = mount({ defaultValue: "#000100" });
 
       state().decrement();
 
@@ -223,7 +223,7 @@ describe("useColorFieldState", () => {
     });
 
     it("stops at white and at black", () => {
-      const {state: high, unmount: unmountHigh} = mount({defaultValue: "#FFFFFF"});
+      const { state: high, unmount: unmountHigh } = mount({ defaultValue: "#FFFFFF" });
 
       high().increment();
 
@@ -231,7 +231,7 @@ describe("useColorFieldState", () => {
 
       unmountHigh();
 
-      const {state: low, unmount: unmountLow} = mount({defaultValue: "#000000"});
+      const { state: low, unmount: unmountLow } = mount({ defaultValue: "#000000" });
 
       low().decrement();
 
@@ -241,7 +241,7 @@ describe("useColorFieldState", () => {
     });
 
     it("steps from black when the field is empty", () => {
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       state().increment();
 
@@ -253,7 +253,7 @@ describe("useColorFieldState", () => {
     it("steps from the text rather than from the colour", () => {
       // The text is what the user is looking at, so stepping has to start there — otherwise
       // typing a value and pressing the up arrow would step the old colour.
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setInputValue("#000000");
       state().increment();
@@ -264,7 +264,7 @@ describe("useColorFieldState", () => {
     });
 
     it("jumps to white and to black", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().incrementToMax();
 
@@ -280,7 +280,7 @@ describe("useColorFieldState", () => {
 
   describe("a controlled field", () => {
     it("keeps the owner's colour when the owner declines the change", async () => {
-      const {state, unmount} = mount({value: "#0485F7"});
+      const { state, unmount } = mount({ value: "#0485F7" });
 
       state().setInputValue("#000000");
       state().commit();
@@ -293,8 +293,8 @@ describe("useColorFieldState", () => {
     });
 
     it("follows the owner's colour into the text", async () => {
-      const props = reactive<{value: string | null}>({value: "#0485F7"});
-      const {state, unmount} = mount(props);
+      const props = reactive<{ value: string | null }>({ value: "#0485F7" });
+      const { state, unmount } = mount(props);
 
       props.value = "#FFCC00";
       await nextTick();
@@ -305,8 +305,8 @@ describe("useColorFieldState", () => {
     });
 
     it("empties the text when the owner clears the colour", async () => {
-      const props = reactive<{value: string | null}>({value: "#0485F7"});
-      const {state, unmount} = mount(props);
+      const props = reactive<{ value: string | null }>({ value: "#0485F7" });
+      const { state, unmount } = mount(props);
 
       props.value = null;
       await nextTick();
@@ -319,7 +319,7 @@ describe("useColorFieldState", () => {
 
   describe("what a form reset goes back to", () => {
     it("reports the default colour", () => {
-      const {state, unmount} = mount({defaultValue: "#0485F7"});
+      const { state, unmount } = mount({ defaultValue: "#0485F7" });
 
       state().setColorValue(parseColor("#000000"));
 
@@ -329,7 +329,7 @@ describe("useColorFieldState", () => {
     });
 
     it("reports where a controlled field started when it has no default", () => {
-      const {state, unmount} = mount({value: "#0485F7"});
+      const { state, unmount } = mount({ value: "#0485F7" });
 
       expect(state().defaultColorValue.value?.toString("hex")).toBe("#0485F7");
 
@@ -337,7 +337,7 @@ describe("useColorFieldState", () => {
     });
 
     it("reports nothing for a field that started empty", () => {
-      const {state, unmount} = mount();
+      const { state, unmount } = mount();
 
       expect(state().defaultColorValue.value).toBeNull();
 
@@ -348,7 +348,7 @@ describe("useColorFieldState", () => {
   describe("validation", () => {
     it("hands the colour to a validate function", () => {
       const validate = vi.fn<(value: Color | null) => string | null>(() => null);
-      const {state, unmount} = mount({defaultValue: "#0485F7", validate});
+      const { state, unmount } = mount({ defaultValue: "#0485F7", validate });
 
       // Read first: the verdict is a computed, so nothing runs `validate` until someone asks.
       expect(state().realtimeValidation.value.isInvalid).toBe(false);
@@ -359,7 +359,7 @@ describe("useColorFieldState", () => {
     });
 
     it("reveals a rejection once the field commits", () => {
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         defaultValue: "#0485F7",
         validate: () => "pick another",
         validationBehavior: "aria",
@@ -372,7 +372,7 @@ describe("useColorFieldState", () => {
     });
 
     it("holds a rejection back until commit under native behaviour", async () => {
-      const {state, unmount} = mount({
+      const { state, unmount } = mount({
         defaultValue: "#0485F7",
         validate: () => "pick another",
         validationBehavior: "native",

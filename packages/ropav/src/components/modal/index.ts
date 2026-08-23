@@ -68,13 +68,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useModalContext, useModalOverlayContext} from "./modal.context";
+export { useModalContext, useModalOverlayContext } from "./modal.context";
 
-export type {ModalContext, ModalOverlayContext} from "./modal.context";
+export type { ModalContext, ModalOverlayContext } from "./modal.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {modalVariants} from "@ropav/styles";
+export { modalVariants } from "@ropav/styles";
 
-export type {ModalVariants} from "@ropav/styles";
+export type { ModalVariants } from "@ropav/styles";

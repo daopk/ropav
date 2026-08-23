@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {ComboBoxFixtureItem, ComboBoxStateHostProps} from "./combo-box.types";
+import type { ComboBoxFixtureItem, ComboBoxStateHostProps } from "./combo-box.types";
 
-import {useComboBoxState} from "@/composables/use-combo-box-state";
+import { useComboBoxState } from "@/composables/use-combo-box-state";
 
 /**
  * Every three-state boolean declares an explicit `undefined`: a cast `false` would read as the
@@ -24,9 +24,9 @@ const props = withDefaults(defineProps<ComboBoxStateHostProps>(), {
   isInvalid: undefined,
   isReadOnly: undefined,
   items: (): ComboBoxFixtureItem[] => [
-    {id: "cat", name: "Cat"},
-    {id: "dog", name: "Dog"},
-    {id: "panda", name: "Panda"},
+    { id: "cat", name: "Cat" },
+    { id: "dog", name: "Dog" },
+    { id: "panda", name: "Panda" },
   ],
   menuTrigger: undefined,
   name: undefined,

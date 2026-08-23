@@ -1,19 +1,19 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconFloppyDisk from "~icons/gravity-ui/floppy-disk";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Input} from "../input";
-import {Label} from "../label";
-import {TextArea} from "../textarea";
-import {TextField} from "../textfield";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Input } from "../input";
+import { Label } from "../label";
+import { TextArea } from "../textarea";
+import { TextField } from "../textfield";
 
-import {FieldGroup, Fieldset, FieldsetActions, FieldsetLegend, FieldsetRoot} from "./index";
+import { FieldGroup, Fieldset, FieldsetActions, FieldsetLegend, FieldsetRoot } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `Fieldset.Legend` through, so dot notation cannot be used here.
@@ -59,7 +59,7 @@ export const Default: Story = {
         submitted.value = [...data.entries()].map(([key, value]) => key + ": " + value).join(", ");
       };
 
-      return {onSubmit, submitted};
+      return { onSubmit, submitted };
     },
     template: `
       <Form @submit="onSubmit">

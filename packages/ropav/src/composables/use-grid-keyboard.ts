@@ -1,14 +1,14 @@
-import type {CollectionKey} from "./use-collection";
-import type {ListKeyboardLayoutDelegate} from "./use-list-keyboard";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {UseTableCollectionReturn} from "./use-table-collection";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { ListKeyboardLayoutDelegate } from "./use-list-keyboard";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { UseTableCollectionReturn } from "./use-table-collection";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import {focusableIn, getScrollParent, isScrollable} from "../utils/focus";
+import { focusableIn, getScrollParent, isScrollable } from "../utils/focus";
 
-import {isTableCellControl} from "./use-table-collection";
+import { isTableCellControl } from "./use-table-collection";
 
 /**
  * Where focus sits in a grid.
@@ -65,7 +65,7 @@ export interface UseGridKeyboardReturn {
   rowTabIndex: (rowKey: CollectionKey) => number | undefined;
   cellTabIndex: (rowKey: CollectionKey, columnKey: CollectionKey | null) => number;
   /** Move focus to a target, and move real DOM focus with it. */
-  focusCell: (target: GridFocusTarget, options?: {scroll?: boolean}) => void;
+  focusCell: (target: GridFocusTarget, options?: { scroll?: boolean }) => void;
   /** Record focus that arrived on its own, from a click or from assistive technology. */
   claimFocus: (target: GridFocusTarget) => void;
   onKeydown: (event: KeyboardEvent) => void;
@@ -74,7 +74,7 @@ export interface UseGridKeyboardReturn {
   getKeyForSearch: (search: string, fromKey?: CollectionKey | null) => CollectionKey | null;
 }
 
-const NO_FOCUS: GridFocusTarget = {columnKey: null, rowKey: null};
+const NO_FOCUS: GridFocusTarget = { columnKey: null, rowKey: null };
 
 /**
  * Two-dimensional keyboard navigation for a grid, ported from React Aria's
@@ -92,7 +92,7 @@ const NO_FOCUS: GridFocusTarget = {columnKey: null, rowKey: null};
  *   first or last position.
  */
 export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboardReturn => {
-  const {collection, selection} = options;
+  const { collection, selection } = options;
 
   const escapeKeyBehavior = computed(() => toValue(options.escapeKeyBehavior) ?? "clearSelection");
 
@@ -102,7 +102,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
   // Matched to the collator React Aria uses, so a search behaves the same way: case- and
   // accent-insensitive, and tuned for prefix searching rather than sorting.
-  const collator = new Intl.Collator(undefined, {sensitivity: "base", usage: "search"});
+  const collator = new Intl.Collator(undefined, { sensitivity: "base", usage: "search" });
 
   const isReversed = () => {
     const element = getElement();
@@ -116,7 +116,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
   const columnIndex = (columnKey: CollectionKey) => collection.columns.indexOf(columnKey);
 
   const elementFor = (target: GridFocusTarget): HTMLElement | null => {
-    const {columnKey, rowKey} = target;
+    const { columnKey, rowKey } = target;
 
     if (rowKey == null) {
       return columnKey == null ? null : (collection.columns.getItem(columnKey)?.element() ?? null);
@@ -188,63 +188,65 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
    * The delegate
    * -------------------------------------------------------------------------------------------*/
   const keyBelow = (from: GridFocusTarget): GridFocusTarget | null => {
-    const {columnKey, rowKey} = from;
+    const { columnKey, rowKey } = from;
 
     // From a column header, down goes to the cell it sits above.
     if (rowKey == null) {
       const row = firstRow();
 
-      return row == null ? null : {columnKey, rowKey: row};
+      return row == null ? null : { columnKey, rowKey: row };
     }
 
     const next = rowAfter(rowKey);
 
-    return next == null ? null : {columnKey, rowKey: next};
+    return next == null ? null : { columnKey, rowKey: next };
   };
 
   const keyAbove = (from: GridFocusTarget): GridFocusTarget | null => {
-    const {columnKey, rowKey} = from;
+    const { columnKey, rowKey } = from;
 
     // A column header has nothing above it: the grid has a single header row.
     if (rowKey == null) return null;
 
     const previous = rowBefore(rowKey);
 
-    if (previous != null) return {columnKey, rowKey: previous};
+    if (previous != null) return { columnKey, rowKey: previous };
 
     // Leaving the first row goes up into the header — to the column above the cell that was
     // focused, or to the first column when the row itself was.
-    return {columnKey: columnKey ?? firstColumn(), rowKey: null};
+    return { columnKey: columnKey ?? firstColumn(), rowKey: null };
   };
 
   const keyAfter = (from: GridFocusTarget): GridFocusTarget | null => {
-    const {columnKey, rowKey} = from;
-
-    if (rowKey == null) {
-      return columnKey == null ? null : {columnKey: columnStepWrapping(columnKey, 1), rowKey: null};
-    }
-
-    // From the row itself, forwards means into its first cell.
-    if (columnKey == null) return {columnKey: firstColumn(), rowKey};
-
-    const next = columnStep(columnKey, 1);
-
-    // Running off the end of a row lands on the row, not on the next row's first cell.
-    return {columnKey: next, rowKey};
-  };
-
-  const keyBefore = (from: GridFocusTarget): GridFocusTarget | null => {
-    const {columnKey, rowKey} = from;
+    const { columnKey, rowKey } = from;
 
     if (rowKey == null) {
       return columnKey == null
         ? null
-        : {columnKey: columnStepWrapping(columnKey, -1), rowKey: null};
+        : { columnKey: columnStepWrapping(columnKey, 1), rowKey: null };
     }
 
-    if (columnKey == null) return {columnKey: lastColumn(), rowKey};
+    // From the row itself, forwards means into its first cell.
+    if (columnKey == null) return { columnKey: firstColumn(), rowKey };
 
-    return {columnKey: columnStep(columnKey, -1), rowKey};
+    const next = columnStep(columnKey, 1);
+
+    // Running off the end of a row lands on the row, not on the next row's first cell.
+    return { columnKey: next, rowKey };
+  };
+
+  const keyBefore = (from: GridFocusTarget): GridFocusTarget | null => {
+    const { columnKey, rowKey } = from;
+
+    if (rowKey == null) {
+      return columnKey == null
+        ? null
+        : { columnKey: columnStepWrapping(columnKey, -1), rowKey: null };
+    }
+
+    if (columnKey == null) return { columnKey: lastColumn(), rowKey };
+
+    return { columnKey: columnStep(columnKey, -1), rowKey };
   };
 
   const keyRightOf = (from: GridFocusTarget) => (isReversed() ? keyBefore(from) : keyAfter(from));
@@ -257,15 +259,15 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
       if (row == null) return null;
 
-      return {columnKey: from.columnKey == null ? null : firstColumn(), rowKey: row};
+      return { columnKey: from.columnKey == null ? null : firstColumn(), rowKey: row };
     }
 
     // Inside the header row, or inside a row's cells, home stays on that axis.
-    if (from.columnKey != null) return {columnKey: firstColumn(), rowKey: from.rowKey};
+    if (from.columnKey != null) return { columnKey: firstColumn(), rowKey: from.rowKey };
 
     const row = firstRow();
 
-    return row == null ? null : {columnKey: null, rowKey: row};
+    return row == null ? null : { columnKey: null, rowKey: row };
   };
 
   const lastKey = (from: GridFocusTarget, global: boolean): GridFocusTarget | null => {
@@ -274,14 +276,14 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
       if (row == null) return null;
 
-      return {columnKey: from.columnKey == null ? null : lastColumn(), rowKey: row};
+      return { columnKey: from.columnKey == null ? null : lastColumn(), rowKey: row };
     }
 
-    if (from.columnKey != null) return {columnKey: lastColumn(), rowKey: from.rowKey};
+    if (from.columnKey != null) return { columnKey: lastColumn(), rowKey: from.rowKey };
 
     const row = lastRow();
 
-    return row == null ? null : {columnKey: null, rowKey: row};
+    return row == null ? null : { columnKey: null, rowKey: row };
   };
 
   /**
@@ -404,7 +406,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     element.focus();
     // Guarded because jsdom does not implement it, and because only keyboard paths ask for it.
     if (scroll && typeof element.scrollIntoView === "function") {
-      element.scrollIntoView({block: "nearest"});
+      element.scrollIntoView({ block: "nearest" });
     }
   };
 
@@ -416,7 +418,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
    * rendered. React Aria has no equivalent: its virtualizer returns early when the element is
    * missing, and nothing brings the row in.
    */
-  const focusCell = (target: GridFocusTarget, focusOptions: {scroll?: boolean} = {}) => {
+  const focusCell = (target: GridFocusTarget, focusOptions: { scroll?: boolean } = {}) => {
     claimFocus(target);
 
     const element = elementFor(target);
@@ -450,7 +452,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     from: GridFocusTarget,
     intent: "expand" | "collapse",
   ) => {
-    const {expansion} = options;
+    const { expansion } = options;
 
     if (!expansion?.isTree()) return false;
     if (from.rowKey == null || from.columnKey != null) return false;
@@ -481,7 +483,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
     if (parentKey == null) return false;
 
-    focusCell({columnKey: null, rowKey: parentKey}, {scroll: true});
+    focusCell({ columnKey: null, rowKey: parentKey }, { scroll: true });
     event.preventDefault();
     event.stopPropagation();
 
@@ -503,7 +505,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     const move = (next: GridFocusTarget | null) => {
       if (!next) return;
 
-      focusCell(next, {scroll: true});
+      focusCell(next, { scroll: true });
       event.preventDefault();
       event.stopPropagation();
 
@@ -583,7 +585,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
       case " ": {
         if (from.rowKey == null || selection.selectionMode.value === "none") return;
 
-        selection.select(from.rowKey, {isShiftPressed: event.shiftKey});
+        selection.select(from.rowKey, { isShiftPressed: event.shiftKey });
         event.preventDefault();
 
         return;
@@ -608,7 +610,7 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
     const selected = fromLater ? selection.lastSelectedKey.value : selection.firstSelectedKey.value;
     const row = selected ?? (fromLater ? lastRow() : firstRow());
 
-    return {columnKey: null, rowKey: row};
+    return { columnKey: null, rowKey: row };
   };
 
   const onFocusin = (event: FocusEvent) => {
@@ -678,14 +680,14 @@ export const useGridKeyboard = (options: UseGridKeyboardOptions): UseGridKeyboar
 
       element.focus();
     },
-    {flush: "post"},
+    { flush: "post" },
   );
 
   // A row that goes away must not keep the tab stop with it, or the grid would have none.
   watch(
     () => collection.rows.size.value,
     () => {
-      const {rowKey} = focused.value;
+      const { rowKey } = focused.value;
 
       if (rowKey != null && !collection.rows.getItem(rowKey)) focused.value = NO_FOCUS;
     },

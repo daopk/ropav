@@ -1,27 +1,27 @@
-import type {RadioGroupState} from "@/composables";
+import type { RadioGroupState } from "@/composables";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Host from "../fixtures/radio-group-state-host.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => {
   let state!: RadioGroupState;
 
-  Object.assign(props, {onReady: (ready: RadioGroupState) => (state = ready)});
+  Object.assign(props, { onReady: (ready: RadioGroupState) => (state = ready) });
 
-  const rendered = renderVapor(Host, {props});
+  const rendered = renderVapor(Host, { props });
   const input = (value: string) =>
     rendered.container.querySelector<HTMLInputElement>(`[data-testid='input-${value}']`)!;
 
-  return {...rendered, input, state};
+  return { ...rendered, input, state };
 };
 
 describe("useRadioGroupState", () => {
   describe("name", () => {
     it("mints one when the caller gives none", () => {
-      const {state, unmount} = renderGroup();
+      const { state, unmount } = renderGroup();
 
       expect(state.name.value).toBeTruthy();
 
@@ -29,7 +29,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("uses the caller's name", () => {
-      const {state, unmount} = renderGroup({name: "plan"});
+      const { state, unmount } = renderGroup({ name: "plan" });
 
       expect(state.name.value).toBe("plan");
 
@@ -37,7 +37,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("shares one name across every radio, which is what groups them", () => {
-      const {input, unmount} = renderGroup({values: ["basic", "premium"]});
+      const { input, unmount } = renderGroup({ values: ["basic", "premium"] });
 
       expect(input("basic").name).toBe(input("premium").name);
 
@@ -47,7 +47,7 @@ describe("useRadioGroupState", () => {
 
   describe("selection", () => {
     it("starts with nothing selected", () => {
-      const {state, unmount} = renderGroup();
+      const { state, unmount } = renderGroup();
 
       expect(state.selectedValue.value).toBeNull();
 
@@ -55,7 +55,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("honours the default value while uncontrolled", () => {
-      const {state, unmount} = renderGroup({defaultValue: "premium"});
+      const { state, unmount } = renderGroup({ defaultValue: "premium" });
 
       expect(state.selectedValue.value).toBe("premium");
 
@@ -63,7 +63,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("replaces the selection rather than adding to it", () => {
-      const {state, unmount} = renderGroup({defaultValue: "basic"});
+      const { state, unmount } = renderGroup({ defaultValue: "basic" });
 
       state.setSelectedValue("premium");
 
@@ -74,7 +74,7 @@ describe("useRadioGroupState", () => {
 
     it("reports every change to the caller", () => {
       const onValueChange = vi.fn();
-      const {state, unmount} = renderGroup({onValueChange});
+      const { state, unmount } = renderGroup({ onValueChange });
 
       state.setSelectedValue("basic");
 
@@ -84,8 +84,8 @@ describe("useRadioGroupState", () => {
     });
 
     it("leaves its own state alone while controlled", async () => {
-      const props = reactive({onValueChange: vi.fn(), value: "basic"});
-      const {state, unmount} = renderGroup(props);
+      const props = reactive({ onValueChange: vi.fn(), value: "basic" });
+      const { state, unmount } = renderGroup(props);
 
       state.setSelectedValue("premium");
       await nextTick();
@@ -97,7 +97,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("keeps only one radio checked at a time", async () => {
-      const {input, state, unmount} = renderGroup({values: ["basic", "premium"]});
+      const { input, state, unmount } = renderGroup({ values: ["basic", "premium"] });
 
       state.setSelectedValue("basic");
       await nextTick();
@@ -115,7 +115,7 @@ describe("useRadioGroupState", () => {
 
   describe("read-only and disabled", () => {
     it("refuses a change while read-only", () => {
-      const {state, unmount} = renderGroup({isReadOnly: true});
+      const { state, unmount } = renderGroup({ isReadOnly: true });
 
       state.setSelectedValue("basic");
 
@@ -125,7 +125,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("refuses a change while disabled", () => {
-      const {state, unmount} = renderGroup({isDisabled: true});
+      const { state, unmount } = renderGroup({ isDisabled: true });
 
       state.setSelectedValue("basic");
 
@@ -137,7 +137,7 @@ describe("useRadioGroupState", () => {
 
   describe("reset value", () => {
     it("goes back to the default value when uncontrolled", () => {
-      const {state, unmount} = renderGroup({defaultValue: "basic"});
+      const { state, unmount } = renderGroup({ defaultValue: "basic" });
 
       state.setSelectedValue("premium");
 
@@ -147,8 +147,8 @@ describe("useRadioGroupState", () => {
     });
 
     it("goes back to what a controlled group first held", async () => {
-      const props = reactive({value: "basic" as string | null});
-      const {state, unmount} = renderGroup(props);
+      const props = reactive({ value: "basic" as string | null });
+      const { state, unmount } = renderGroup(props);
 
       props.value = "premium";
       await nextTick();
@@ -162,7 +162,7 @@ describe("useRadioGroupState", () => {
 
   describe("focus memory", () => {
     it("starts with no remembered radio", () => {
-      const {state, unmount} = renderGroup();
+      const { state, unmount } = renderGroup();
 
       expect(state.lastFocusedValue.value).toBeNull();
 
@@ -170,7 +170,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("remembers the radio focus last rested on", () => {
-      const {state, unmount} = renderGroup();
+      const { state, unmount } = renderGroup();
 
       state.setLastFocusedValue("premium");
 
@@ -182,7 +182,7 @@ describe("useRadioGroupState", () => {
 
   describe("validation", () => {
     it("commits as soon as a radio is chosen", async () => {
-      const {state, unmount} = renderGroup({
+      const { state, unmount } = renderGroup({
         validate: (value: string | null) => (value === "basic" ? "not that one" : true),
       });
 
@@ -196,7 +196,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("announces requiredness whatever is selected", () => {
-      const {state, unmount} = renderGroup({defaultValue: "basic", isRequired: true});
+      const { state, unmount } = renderGroup({ defaultValue: "basic", isRequired: true });
 
       // Unlike a checkbox group, this needs no emulation: `required` is name-scoped.
       expect(state.isRequired.value).toBe(true);
@@ -205,7 +205,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("lets a controlled isInvalid take the group over", () => {
-      const {state, unmount} = renderGroup({isInvalid: true});
+      const { state, unmount } = renderGroup({ isInvalid: true });
 
       expect(state.isInvalid.value).toBe(true);
 
@@ -213,7 +213,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("treats an absent isInvalid as no claim at all", () => {
-      const {state, unmount} = renderGroup();
+      const { state, unmount } = renderGroup();
 
       expect(state.isInvalid.value).toBe(false);
 
@@ -223,7 +223,7 @@ describe("useRadioGroupState", () => {
 
   describe("native required", () => {
     it("reports valueMissing on every radio while nothing is chosen", () => {
-      const {input, unmount} = renderGroup({isRequired: true, values: ["basic", "premium"]});
+      const { input, unmount } = renderGroup({ isRequired: true, values: ["basic", "premium"] });
 
       expect(input("basic").validity.valueMissing).toBe(true);
       expect(input("premium").validity.valueMissing).toBe(true);
@@ -232,7 +232,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("clears it across the whole named group once one is chosen", async () => {
-      const {input, state, unmount} = renderGroup({
+      const { input, state, unmount } = renderGroup({
         isRequired: true,
         values: ["basic", "premium"],
       });
@@ -249,7 +249,7 @@ describe("useRadioGroupState", () => {
 
     it("blocks a submit until one is chosen", async () => {
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
-      const {container, state, unmount} = renderGroup({
+      const { container, state, unmount } = renderGroup({
         isRequired: true,
         values: ["basic", "premium"],
       });
@@ -271,7 +271,7 @@ describe("useRadioGroupState", () => {
     });
 
     it("leaves the constraint off under aria behaviour", () => {
-      const {input, unmount} = renderGroup({
+      const { input, unmount } = renderGroup({
         isRequired: true,
         validationBehavior: "aria",
         values: ["basic"],

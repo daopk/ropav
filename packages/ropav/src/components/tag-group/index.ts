@@ -12,7 +12,7 @@ export const TagGroup = Object.assign(TagGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TagGroupList, TagGroupRoot};
+export { TagGroupList, TagGroupRoot };
 
 export type {
   TagGroupListProps,
@@ -23,13 +23,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useTagGroupContext} from "./tag-group.context";
+export { useTagGroupContext } from "./tag-group.context";
 
-export type {TagGroupContext} from "./tag-group.context";
+export type { TagGroupContext } from "./tag-group.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tagGroupVariants} from "@ropav/styles";
+export { tagGroupVariants } from "@ropav/styles";
 
-export type {TagGroupVariants} from "@ropav/styles";
+export type { TagGroupVariants } from "@ropav/styles";

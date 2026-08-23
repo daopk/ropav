@@ -1,11 +1,11 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import SwitchGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) =>
-  renderVapor(SwitchGroupFixture, {props});
+  renderVapor(SwitchGroupFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -13,7 +13,7 @@ const slot = (container: HTMLElement, name: string) =>
 describe("SwitchGroup", () => {
   describe("structure", () => {
     it("renders the group and its items wrapper with their data-slots", () => {
-      const {container, unmount} = renderGroup();
+      const { container, unmount } = renderGroup();
       const group = slot(container, "switch-group");
       const items = slot(container, "switch-group-items");
 
@@ -27,7 +27,7 @@ describe("SwitchGroup", () => {
     });
 
     it("merges a caller class into the group rather than the items wrapper", () => {
-      const {container, unmount} = renderGroup({class: "custom-class"});
+      const { container, unmount } = renderGroup({ class: "custom-class" });
 
       expect(slot(container, "switch-group").classList.contains("custom-class")).toBe(true);
       expect(slot(container, "switch-group-items").classList.contains("custom-class")).toBe(false);
@@ -38,7 +38,7 @@ describe("SwitchGroup", () => {
 
   describe("orientation", () => {
     it("lays the switches out vertically by default", () => {
-      const {container, unmount} = renderGroup();
+      const { container, unmount } = renderGroup();
 
       expect(slot(container, "switch-group").classList.contains("switch-group--vertical")).toBe(
         true,
@@ -48,7 +48,7 @@ describe("SwitchGroup", () => {
     });
 
     it("supports a horizontal group", () => {
-      const {container, unmount} = renderGroup({orientation: "horizontal"});
+      const { container, unmount } = renderGroup({ orientation: "horizontal" });
       const group = slot(container, "switch-group");
 
       expect(group.classList.contains("switch-group--horizontal")).toBe(true);
@@ -65,7 +65,7 @@ describe("SwitchGroup", () => {
       form.id = "switch-group-form";
       document.body.append(form);
 
-      const {container, unmount} = renderGroup({form: form.id});
+      const { container, unmount } = renderGroup({ form: form.id });
 
       const data = new FormData(form);
 

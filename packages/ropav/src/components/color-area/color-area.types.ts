@@ -1,4 +1,4 @@
-import type {Color, ColorChannel, ColorSpace} from "../../utils/color-types";
+import type { Color, ColorChannel, ColorSpace } from "../../utils/color-types";
 
 export interface ColorAreaRootProps {
   class?: string;

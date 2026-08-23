@@ -1,4 +1,4 @@
-import type {ToolbarOrientation} from "../../composables/use-toolbar";
+import type { ToolbarOrientation } from "../../composables/use-toolbar";
 
 export interface ToolbarRootProps {
   class?: string;

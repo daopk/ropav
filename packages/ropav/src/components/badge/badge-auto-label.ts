@@ -1,6 +1,6 @@
-import {createComponent, defineVaporComponent} from "vue";
+import { createComponent, defineVaporComponent } from "vue";
 
-import {flattenBlock, isTextOnlyBlock} from "../../utils/block";
+import { flattenBlock, isTextOnlyBlock } from "../../utils/block";
 
 import BadgeLabel from "./badge-label.vue";
 
@@ -14,14 +14,14 @@ import BadgeLabel from "./badge-label.vue";
  * those callers (including runtime-compiled stories) must render `Badge.Label` explicitly.
  */
 const BadgeAutoLabel = defineVaporComponent(
-  (_props, {slots}) => {
+  (_props, { slots }) => {
     const block = slots["default"]?.();
 
     if (block === undefined || !isTextOnlyBlock(flattenBlock(block))) return block ?? [];
 
-    return createComponent(BadgeLabel, null, {default: () => block});
+    return createComponent(BadgeLabel, null, { default: () => block });
   },
-  {name: "Ropav.Badge.AutoLabel"},
+  { name: "Ropav.Badge.AutoLabel" },
 );
 
 export default BadgeAutoLabel;

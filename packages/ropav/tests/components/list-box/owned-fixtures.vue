@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {FixtureItem} from "./fixtures.types";
-import type {FocusStrategy} from "@/composables/use-overlay-trigger-state";
-import type {CollectionSelection} from "@/composables/use-selection-manager";
+import type { FixtureItem } from "./fixtures.types";
+import type { FocusStrategy } from "@/composables/use-overlay-trigger-state";
+import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import {computed, watch} from "vue";
+import { computed, watch } from "vue";
 
-import {ListBoxRoot, provideListBoxStateContext} from "@/components/list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "@/components/list-box-item";
-import {useCollection} from "@/composables/use-collection";
-import {useSelectionManager} from "@/composables/use-selection-manager";
-import {createListCollection} from "@/utils/virtualizer-collection";
+import { ListBoxRoot, provideListBoxStateContext } from "@/components/list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "@/components/list-box-item";
+import { useCollection } from "@/composables/use-collection";
+import { useSelectionManager } from "@/composables/use-selection-manager";
+import { createListCollection } from "@/utils/virtualizer-collection";
 
 /**
  * Stands in for a picker: it owns the collection and the selection, and hands both down.
@@ -40,9 +40,9 @@ const props = withDefaults(
     focusedKey: undefined,
     fromData: undefined,
     items: (): FixtureItem[] => [
-      {id: "1", name: "Bob"},
-      {id: "2", name: "Fred"},
-      {id: "3", name: "Martha"},
+      { id: "1", name: "Bob" },
+      { id: "2", name: "Fred" },
+      { id: "3", name: "Martha" },
     ],
     labelledBy: undefined,
     listId: undefined,
@@ -53,7 +53,7 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits<{selectionChange: [keys: CollectionSelection]}>();
+const emit = defineEmits<{ selectionChange: [keys: CollectionSelection] }>();
 
 const source = computed(() =>
   props.fromData
@@ -64,7 +64,7 @@ const source = computed(() =>
     : null,
 );
 
-const collection = useCollection({source: () => source.value});
+const collection = useCollection({ source: () => source.value });
 
 const selection = useSelectionManager({
   collection,
@@ -87,7 +87,7 @@ watch(
     selection.setFocused(true);
     selection.setFocusedKey(key);
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 provideListBoxStateContext({
@@ -100,7 +100,7 @@ provideListBoxStateContext({
   shouldUseVirtualFocus: () => props.shouldUseVirtualFocus,
 });
 
-defineExpose({collection, selection});
+defineExpose({ collection, selection });
 </script>
 
 <template>

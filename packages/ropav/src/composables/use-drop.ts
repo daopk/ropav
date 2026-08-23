@@ -1,4 +1,4 @@
-import type {DropOperationMask} from "../utils/dnd-constants";
+import type { DropOperationMask } from "../utils/dnd-constants";
 import type {
   DragTypes,
   DropActivateEvent,
@@ -8,9 +8,9 @@ import type {
   DropMoveEvent,
   DropOperation,
 } from "../utils/dnd-types";
-import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
+import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
 import {
   DROP_EFFECT_TO_DROP_OPERATION,
@@ -29,10 +29,10 @@ import {
   setGlobalDnDState,
   setGlobalDropEffect,
 } from "../utils/dnd-state";
-import {isIPad, isMac} from "../utils/platform";
+import { isIPad, isMac } from "../utils/platform";
 
-import {registerDropTarget} from "./drag-manager";
-import {useVirtualDrop} from "./use-virtual-drop";
+import { registerDropTarget } from "./drag-manager";
+import { useVirtualDrop } from "./use-virtual-drop";
 
 /** How long the pointer must rest on a target before it is activated (e.g. a folder opens). */
 const DROP_ACTIVATE_TIMEOUT = 800;
@@ -69,9 +69,9 @@ export interface UseDropHandlers {
 }
 
 export interface UseDropReturn {
-  attrs: ComputedRef<{"aria-describedby"?: string}>;
+  attrs: ComputedRef<{ "aria-describedby"?: string }>;
   handlers: UseDropHandlers;
-  dropButtonAttrs: ComputedRef<{"aria-describedby"?: string}>;
+  dropButtonAttrs: ComputedRef<{ "aria-describedby"?: string }>;
   isDropTarget: ComputedRef<boolean>;
 }
 
@@ -167,7 +167,11 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
 
     const rect = rectOf(event);
 
-    options.onDropEnter({type: "dropenter", x: event.clientX - rect.x, y: event.clientY - rect.y});
+    options.onDropEnter({
+      type: "dropenter",
+      x: event.clientX - rect.x,
+      y: event.clientY - rect.y,
+    });
   };
 
   const fireDropExit = (event: DragEvent) => {
@@ -177,7 +181,7 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
 
     const rect = rectOf(event);
 
-    options.onDropExit({type: "dropexit", x: event.clientX - rect.x, y: event.clientY - rect.y});
+    options.onDropExit({ type: "dropexit", x: event.clientX - rect.x, y: event.clientY - rect.y });
   };
 
   const typesOf = (event: DragEvent): DragTypes =>
@@ -286,7 +290,7 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
     if (options.onDropMove && dropEffect !== "none") {
       const rect = rectOf(event);
 
-      options.onDropMove({type: "dropmove", x: x - rect.x, y: y - rect.y});
+      options.onDropMove({ type: "dropmove", x: x - rect.x, y: y - rect.y });
     }
 
     clearTimeout(dropActivateTimer);
@@ -296,7 +300,7 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
       const rect = rectOf(event);
 
       dropActivateTimer = setTimeout(() => {
-        onDropActivate({type: "dropactivate", x: x - rect.x, y: y - rect.y});
+        onDropActivate({ type: "dropactivate", x: x - rect.x, y: y - rect.y });
       }, DROP_ACTIVATE_TIMEOUT);
     }
   };
@@ -347,7 +351,7 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
       });
     }
 
-    const snapshot = {...globalDndState};
+    const snapshot = { ...globalDndState };
 
     dragOverElements.clear();
     fireDropExit(event);
@@ -394,7 +398,7 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
         }),
       );
     },
-    {immediate: true},
+    { immediate: true },
   );
 
   const virtual = useVirtualDrop();
@@ -403,12 +407,12 @@ export const useDrop = (options: UseDropOptions): UseDropReturn => {
     attrs: computed(() =>
       isDisabled() || hasDropButton()
         ? {}
-        : {"aria-describedby": virtual.attrs.value["aria-describedby"]},
+        : { "aria-describedby": virtual.attrs.value["aria-describedby"] },
     ),
     dropButtonAttrs: computed(() =>
       isDisabled() || !hasDropButton()
         ? {}
-        : {"aria-describedby": virtual.attrs.value["aria-describedby"]},
+        : { "aria-describedby": virtual.attrs.value["aria-describedby"] },
     ),
     handlers: {
       onClick: () => {

@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {OverlayPopoverProps} from "./overlay.types";
+import type { OverlayPopoverProps } from "./overlay.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useDismissable} from "../../composables/use-dismissable";
-import {useEnterExit} from "../../composables/use-enter-exit";
-import {useFocusScope} from "../../composables/use-focus-scope";
-import {useOverlayPosition} from "../../composables/use-overlay-position";
-import {usePreventScroll} from "../../composables/use-prevent-scroll";
-import {ariaHideOutside, keepVisible} from "../../utils/aria-hide-outside";
-import {dataAttr} from "../../utils/assertion";
-import {provideSurfaceContext} from "../surface";
+import { useDismissable } from "../../composables/use-dismissable";
+import { useEnterExit } from "../../composables/use-enter-exit";
+import { useFocusScope } from "../../composables/use-focus-scope";
+import { useOverlayPosition } from "../../composables/use-overlay-position";
+import { usePreventScroll } from "../../composables/use-prevent-scroll";
+import { ariaHideOutside, keepVisible } from "../../utils/aria-hide-outside";
+import { dataAttr } from "../../utils/assertion";
+import { provideSurfaceContext } from "../surface";
 
 import OverlayDismissButton from "./overlay-dismiss-button.vue";
-import {createOverlaySlotContexts, provideOverlaySlotContexts} from "./overlay-slots";
+import { createOverlaySlotContexts, provideOverlaySlotContexts } from "./overlay-slots";
 import {
   provideOverlayGroupContext,
   useOverlayGroupContext,
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<OverlayPopoverProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const target = useOverlayTargetContext();
 const group = useOverlayGroupContext();
@@ -65,7 +65,7 @@ const arrow = contexts.arrowElement;
 const isSubOverlay = Boolean(group) && target.trigger === "SubmenuTrigger";
 const groupContainer = isSubOverlay && group ? group.container : ownContainer;
 
-provideOverlayGroupContext({container: groupContainer});
+provideOverlayGroupContext({ container: groupContainer });
 
 /**
  * Where the overlay element is rendered.
@@ -77,9 +77,9 @@ const contentTarget = computed(() => groupContainer.value);
 
 // The overlay is a surface in its own right, so anything inside it that picks its colours from the
 // surface it sits on — a field, a chip — reads the overlay rather than the page behind it.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
-const {arrowStyle, overlayStyle, placement} = useOverlayPosition({
+const { arrowStyle, overlayStyle, placement } = useOverlayPosition({
   arrowBoundaryOffset: () => props.arrowBoundaryOffset,
   arrowRef: arrow,
   containerPadding: () => props.containerPadding,
@@ -110,7 +110,7 @@ provideOverlaySlotContexts(contexts);
  */
 const shouldBeDialog = computed(() => !isNonModal.value || target.trigger === "SubmenuTrigger");
 
-const {focusContainRequests, registeredDialogs} = contexts;
+const { focusContainRequests, registeredDialogs } = contexts;
 const domHasDialog = shallowRef(false);
 const isDialog = computed(
   () => shouldBeDialog.value && registeredDialogs.value === 0 && !domHasDialog.value,
@@ -123,7 +123,7 @@ watch(
   ([popover, shouldBe]) => {
     domHasDialog.value = Boolean(shouldBe && popover?.querySelector("[role=dialog]"));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 contexts.publish({
@@ -192,9 +192,9 @@ watch(
       return;
     }
 
-    onCleanup(ariaHideOutside([container ?? popover], {shouldUseInert: true}));
+    onCleanup(ariaHideOutside([container ?? popover], { shouldUseInert: true }));
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 // Ordered after the hiding above on purpose: cleanups run in the order their watchers were made,
@@ -211,7 +211,7 @@ useFocusScope({
 });
 
 // A non-modal overlay leaves the page live, so only a modal one holds it still.
-usePreventScroll({isDisabled: () => isNonModal.value || !target.state.isOpen.value});
+usePreventScroll({ isDisabled: () => isNonModal.value || !target.state.isOpen.value });
 
 /**
  * Focus the overlay itself once it appears, when it is the dialog and nothing inside holds focus.
@@ -232,9 +232,9 @@ watch(
 
     // Never scrolls: the overlay is positioned by measurement, and letting focus scroll the page
     // under it would leave it beside nothing.
-    popover.focus({preventScroll: true});
+    popover.focus({ preventScroll: true });
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 /**

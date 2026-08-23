@@ -1,11 +1,11 @@
-import type {Color, ColorChannel} from "../utils/color-types";
-import type {Direction} from "../utils/locale";
-import type {ColorAreaState} from "./use-color-area-state";
-import type {CSSProperties, ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Color, ColorChannel } from "../utils/color-types";
+import type { Direction } from "../utils/locale";
+import type { ColorAreaState } from "./use-color-area-state";
+import type { CSSProperties, ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {parseColor} from "../utils/color";
+import { parseColor } from "../utils/color";
 
 /** Stops of the hue wheel a gradient is drawn through, in degrees. */
 const HUE_STOPS = [0, 60, 120, 180, 240, 300, 360];
@@ -62,13 +62,13 @@ export interface UseColorAreaGradientReturn {
 export const useColorAreaGradient = (
   options: UseColorAreaGradientOptions,
 ): UseColorAreaGradientReturn => {
-  const {state} = options;
+  const { state } = options;
 
   /** Where the far end of the x axis is, which is where the text ends. */
   const end = computed(() => (toValue(options.direction) === "rtl" ? "left" : "right"));
 
   const background = computed<CSSProperties>(() => {
-    const {xChannel, yChannel, zChannel} = state.channels.value;
+    const { xChannel, yChannel, zChannel } = state.channels.value;
     const value = state.value.value;
     const zValue = value.getChannelValue(zChannel);
     const to = end.value;
@@ -107,7 +107,7 @@ export const useColorAreaGradient = (
     // behind them to show through.
     if (zChannel === "hue") layers.push(base.toString("css"));
 
-    return {background: layers.join(", ")};
+    return { background: layers.join(", ") };
   });
 
   return {
@@ -121,7 +121,7 @@ export const useColorAreaGradient = (
     })),
     thumbStyle: computed(() => {
       // `y` already counts downwards from the top, which is what `top` wants.
-      const {x, y} = state.getThumbPosition();
+      const { x, y } = state.getThumbPosition();
 
       return {
         forcedColorAdjust: "none",

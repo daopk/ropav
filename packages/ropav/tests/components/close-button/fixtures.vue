@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {CloseButtonResponderFixtureProps} from "./fixtures.types";
+import type { CloseButtonResponderFixtureProps } from "./fixtures.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {CloseButton} from "@/components/close-button";
-import {providePressResponder} from "@/composables/press-responder";
+import { CloseButton } from "@/components/close-button";
+import { providePressResponder } from "@/composables/press-responder";
 
 /**
  * Stands in for whatever drives the button from above — a search field owning its clear

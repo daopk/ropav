@@ -1,14 +1,14 @@
-import type {PageSize, ViewportSize} from "./use-viewport-size";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PageSize, ViewportSize } from "./use-viewport-size";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue, watch} from "vue";
+import { computed, toValue, watch } from "vue";
 
-import {ariaHideOutside} from "../utils/aria-hide-outside";
+import { ariaHideOutside } from "../utils/aria-hide-outside";
 
-import {useDismissable} from "./use-dismissable";
-import {useFocusScope} from "./use-focus-scope";
-import {usePreventScroll} from "./use-prevent-scroll";
-import {usePageSize, useViewportSize} from "./use-viewport-size";
+import { useDismissable } from "./use-dismissable";
+import { useFocusScope } from "./use-focus-scope";
+import { usePreventScroll } from "./use-prevent-scroll";
+import { usePageSize, useViewportSize } from "./use-viewport-size";
 
 export interface UseModalOverlayOptions {
   /**
@@ -90,9 +90,9 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
     ([open, modal], _previous, onCleanup) => {
       if (!open || !modal) return;
 
-      onCleanup(ariaHideOutside([modal], {shouldUseInert: true}));
+      onCleanup(ariaHideOutside([modal], { shouldUseInert: true }));
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   // Created after the hiding above on purpose: see the note on the composable.
@@ -103,7 +103,7 @@ export const useModalOverlay = (options: UseModalOverlayOptions): UseModalOverla
     scopeRef: options.modalRef,
   });
 
-  usePreventScroll({isDisabled: () => !isOpen()});
+  usePreventScroll({ isDisabled: () => !isOpen() });
 
   const viewport = useViewportSize();
   const page = usePageSize();

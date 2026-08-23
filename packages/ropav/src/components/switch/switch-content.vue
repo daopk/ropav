@@ -1,21 +1,21 @@
 <script setup lang="ts" vapor>
-import type {SwitchContentProps, SwitchContentSlotProps} from "./switch.types";
+import type { SwitchContentProps, SwitchContentSlotProps } from "./switch.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useFormReset} from "../../composables/use-form-reset";
-import {useFormValidation} from "../../composables/use-form-validation";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {setFormChecked} from "../../utils/form-value";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { useFormReset } from "../../composables/use-form-reset";
+import { useFormValidation } from "../../composables/use-form-validation";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { setFormChecked } from "../../utils/form-value";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useSwitchContext} from "./switch.context";
+import { useSwitchContext } from "./switch.context";
 
 const props = defineProps<SwitchContentProps>();
 
-defineSlots<{default?: (props: SwitchContentSlotProps) => unknown}>();
+defineSlots<{ default?: (props: SwitchContentSlotProps) => unknown }>();
 
 const {
   ariaLabel,

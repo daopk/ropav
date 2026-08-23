@@ -1,9 +1,9 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {Drawer} from "@/components/drawer";
+import { ButtonRoot } from "@/components/button";
+import { Drawer } from "@/components/drawer";
 
 /**
  * The drawer mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -25,32 +25,33 @@ const slot = (name: string) => document.body.querySelector(`[data-slot="${name}"
 
 const render = () =>
   renderInterop(Drawer, {
-    props: {defaultOpen: true},
+    props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(Drawer.Trigger, null, {default: () => "Open drawer"}),
+        h(Drawer.Trigger, null, { default: () => "Open drawer" }),
         h(
           Drawer.Backdrop,
-          {variant: "blur"},
+          { variant: "blur" },
           {
             default: () =>
               h(
                 Drawer.Content,
-                {placement: "right"},
+                { placement: "right" },
                 {
                   default: () =>
                     h(Drawer.Dialog, null, {
                       default: () => [
                         h(Drawer.Handle),
                         h(Drawer.Header, null, {
-                          default: () => h(Drawer.Heading, null, {default: () => "Drawer heading"}),
+                          default: () =>
+                            h(Drawer.Heading, null, { default: () => "Drawer heading" }),
                         }),
-                        h(Drawer.Body, null, {default: () => "Drawer body"}),
+                        h(Drawer.Body, null, { default: () => "Drawer body" }),
                         h(Drawer.Footer, null, {
                           default: () => [
-                            h(ButtonRoot, null, {default: () => "Inside action"}),
+                            h(ButtonRoot, null, { default: () => "Inside action" }),
                             h(Drawer.Close, null, {
-                              default: () => h(ButtonRoot, null, {default: () => "Confirm"}),
+                              default: () => h(ButtonRoot, null, { default: () => "Confirm" }),
                             }),
                           ],
                         }),
@@ -150,9 +151,9 @@ describe("Drawer (interop)", () => {
 
     await settle();
 
-    const confirm = result.screen.getByRole("button", {name: "Confirm"});
+    const confirm = result.screen.getByRole("button", { name: "Confirm" });
 
-    confirm.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+    confirm.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
     await settle();
 
     // The wrapper provides below the cleared boundary, so opting in still works from the host.

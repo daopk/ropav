@@ -1,6 +1,6 @@
-import type {ToastQueue} from "@/components/toast/toast-queue";
-import type {QueuedToast} from "@/components/toast/toast.types";
-import type {UseToastRegionReturn, UseToastReturn} from "@/composables";
+import type { ToastQueue } from "@/components/toast/toast-queue";
+import type { QueuedToast } from "@/components/toast/toast.types";
+import type { UseToastRegionReturn, UseToastReturn } from "@/composables";
 
 export interface ToastHostProps {
   onReady?: (api: UseToastReturn) => void;

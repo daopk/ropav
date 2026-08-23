@@ -14,7 +14,7 @@ export const Avatar = Object.assign(AvatarRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {AvatarRoot, AvatarImage, AvatarFallback};
+export { AvatarRoot, AvatarImage, AvatarFallback };
 
 export type {
   AvatarRootProps,
@@ -28,11 +28,11 @@ export type {
  * -----------------------------------------------------------------------------------------------*/
 // Re-exported so a caller can type a `loadingStatusChange` handler without reaching for the
 // composable the status comes from.
-export type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
+export type { ImageLoadingStatus } from "../../composables/use-image-loading-status";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {avatarVariants} from "@ropav/styles";
+export { avatarVariants } from "@ropav/styles";
 
-export type {AvatarVariants} from "@ropav/styles";
+export type { AvatarVariants } from "@ropav/styles";

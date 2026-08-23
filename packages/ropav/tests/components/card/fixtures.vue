@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {CardVariants} from "@ropav/styles";
+import type { CardVariants } from "@ropav/styles";
 
-import {Card} from "@/components/card";
+import { Card } from "@/components/card";
 
-defineProps<{class?: string; variant?: CardVariants["variant"]}>();
+defineProps<{ class?: string; variant?: CardVariants["variant"] }>();
 </script>
 
 <template>

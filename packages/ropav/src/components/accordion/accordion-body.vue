@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {AccordionBodyProps} from "./accordion.types";
+import type { AccordionBodyProps } from "./accordion.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAccordionContext} from "./accordion.context";
+import { useAccordionContext } from "./accordion.context";
 
 const props = defineProps<AccordionBodyProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAccordionContext();
+const { slots } = useAccordionContext();
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import {createContext} from "@/utils/create-context";
+import { createContext } from "@/utils/create-context";
 
 export interface GreetingContext {
   greeting: string;
@@ -9,7 +9,7 @@ export const [useGreetingContext, provideGreetingContext] = createContext<Greeti
 });
 
 export const [useOptionalContext, provideOptionalContext] = createContext<GreetingContext>({
-  defaultValue: {greeting: "fallback"},
+  defaultValue: { greeting: "fallback" },
   name: "OptionalContext",
   strict: false,
 });

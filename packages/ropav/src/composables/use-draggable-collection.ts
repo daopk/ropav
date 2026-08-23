@@ -1,9 +1,9 @@
-import type {UseDraggableCollectionStateReturn} from "./use-draggable-collection-state";
-import type {ShallowRef} from "vue";
+import type { UseDraggableCollectionStateReturn } from "./use-draggable-collection-state";
+import type { ShallowRef } from "vue";
 
-import {watchEffect} from "vue";
+import { watchEffect } from "vue";
 
-import {globalDndState, setDraggingCollectionRef} from "../utils/dnd-state";
+import { globalDndState, setDraggingCollectionRef } from "../utils/dnd-state";
 
 /**
  * Marks this collection as the one a drag came from, ported from React Aria's

@@ -1,9 +1,9 @@
-import type {InteractionModality} from "./use-interaction-states";
-import type {ComputedRef} from "vue";
+import type { InteractionModality } from "./use-interaction-states";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {getInteractionModality, useInteractionModality} from "./use-interaction-states";
+import { getInteractionModality, useInteractionModality } from "./use-interaction-states";
 
 /**
  * How a drag was started, which decides both the wording of every announcement and which keys

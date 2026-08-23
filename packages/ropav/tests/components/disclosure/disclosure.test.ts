@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {DisclosureTrigger} from "@/components/disclosure";
+import { DisclosureTrigger } from "@/components/disclosure";
 
 import DisclosureFixture from "./fixtures.vue";
 
@@ -18,7 +18,7 @@ const bareTriggerIn = (container: HTMLElement) =>
 describe("Disclosure", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(container.querySelector("[data-slot='disclosure']")).not.toBeNull();
       expect(container.querySelector("[data-slot='disclosure-heading']")).not.toBeNull();
@@ -31,7 +31,7 @@ describe("Disclosure", () => {
     });
 
     it("renders the BEM classes on each part", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(container.querySelector("[data-slot='disclosure']")).toHaveClass("disclosure");
       expect(container.querySelector("[data-slot='disclosure-heading']")).toHaveClass(
@@ -45,7 +45,7 @@ describe("Disclosure", () => {
     });
 
     it("renders the trigger as a native button of type button", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const trigger = triggerIn(container);
 
       expect(trigger?.tagName).toBe("BUTTON");
@@ -55,7 +55,7 @@ describe("Disclosure", () => {
     });
 
     it("renders the heading as an h3", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(container.querySelector("[data-slot='disclosure-heading']")?.tagName).toBe("H3");
 
@@ -63,7 +63,7 @@ describe("Disclosure", () => {
     });
 
     it("wraps the body content in the inner body element", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const body = container.querySelector("[data-slot='disclosure-body']");
 
       expect(body).toHaveClass("disclosure__body");
@@ -75,7 +75,7 @@ describe("Disclosure", () => {
 
   describe("aria wiring", () => {
     it("points aria-controls at the panel it owns", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(triggerIn(container)?.getAttribute("aria-controls")).toBe(contentIn(container)?.id);
       expect(contentIn(container)?.id).toBeTruthy();
@@ -84,7 +84,7 @@ describe("Disclosure", () => {
     });
 
     it("points aria-labelledby back at the trigger", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(contentIn(container)?.getAttribute("aria-labelledby")).toBe(triggerIn(container)?.id);
       expect(triggerIn(container)?.id).toBeTruthy();
@@ -93,7 +93,7 @@ describe("Disclosure", () => {
     });
 
     it("declares the panel role", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(contentIn(container)?.getAttribute("role")).toBe("group");
 
@@ -101,7 +101,7 @@ describe("Disclosure", () => {
     });
 
     it("prefixes the part ids with the id it is given, and keeps it off the DOM", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {id: "preview"}});
+      const { container, unmount } = renderVapor(DisclosureFixture, { props: { id: "preview" } });
 
       expect(triggerIn(container)?.id).toBe("preview-trigger");
       expect(contentIn(container)?.id).toBe("preview-panel");
@@ -115,7 +115,7 @@ describe("Disclosure", () => {
 
   describe("expansion", () => {
     it("expands on click and collapses again", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const trigger = triggerIn(container);
 
       expect(trigger?.getAttribute("aria-expanded")).toBe("false");
@@ -132,7 +132,9 @@ describe("Disclosure", () => {
     });
 
     it("starts expanded with defaultExpanded", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {defaultExpanded: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { defaultExpanded: true },
+      });
 
       expect(triggerIn(container)?.getAttribute("aria-expanded")).toBe("true");
       expect(contentIn(container)?.getAttribute("data-expanded")).toBe("true");
@@ -142,7 +144,9 @@ describe("Disclosure", () => {
 
     it("emits expandedChange with the next state", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {onExpandedChange}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { onExpandedChange },
+      });
 
       triggerIn(container)?.click();
       await nextTick();
@@ -154,8 +158,8 @@ describe("Disclosure", () => {
 
     it("honours a controlled isExpanded", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(DisclosureFixture, {
-        props: {isExpanded: false, onExpandedChange},
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { isExpanded: false, onExpandedChange },
       });
 
       triggerIn(container)?.click();
@@ -169,7 +173,7 @@ describe("Disclosure", () => {
     });
 
     it("reflects the expanded state on the root", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const root = container.querySelector("[data-slot='disclosure']");
 
       expect(root).not.toHaveAttribute("data-expanded");
@@ -185,7 +189,7 @@ describe("Disclosure", () => {
 
   describe("collapsed panel", () => {
     it("keeps the panel out of the tab order and the a11y tree", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const content = contentIn(container);
 
       // `until-found` rather than plain hidden, so find-in-page can still reveal it.
@@ -196,7 +200,7 @@ describe("Disclosure", () => {
     });
 
     it("sets the panel height variable to zero while collapsed", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(contentIn(container)?.style.getPropertyValue("--disclosure-panel-height")).toBe("0px");
 
@@ -204,7 +208,7 @@ describe("Disclosure", () => {
     });
 
     it("reveals the panel and releases its height when expanded", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       triggerIn(container)?.click();
       await nextTick();
@@ -219,10 +223,10 @@ describe("Disclosure", () => {
     });
 
     it("syncs the state when find-in-page reveals the panel", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const content = contentIn(container)!;
 
-      content.dispatchEvent(new Event("beforematch", {bubbles: true}));
+      content.dispatchEvent(new Event("beforematch", { bubbles: true }));
       await nextTick();
 
       expect(triggerIn(container)?.getAttribute("aria-expanded")).toBe("true");
@@ -233,7 +237,9 @@ describe("Disclosure", () => {
 
   describe("disabled", () => {
     it("disables the trigger", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { isDisabled: true },
+      });
 
       expect(triggerIn(container)?.disabled).toBe(true);
       expect(triggerIn(container)).toHaveAttribute("data-disabled", "true");
@@ -242,7 +248,9 @@ describe("Disclosure", () => {
     });
 
     it("does not expand while disabled", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { isDisabled: true },
+      });
 
       triggerIn(container)?.click();
       await nextTick();
@@ -253,7 +261,9 @@ describe("Disclosure", () => {
     });
 
     it("marks the root with data-disabled", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { isDisabled: true },
+      });
 
       expect(container.querySelector("[data-slot='disclosure']")).toHaveAttribute(
         "data-disabled",
@@ -264,7 +274,9 @@ describe("Disclosure", () => {
     });
 
     it("drops the tab index of a disabled trigger, so it is not reachable at all", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { isDisabled: true },
+      });
 
       expect(triggerIn(container)?.hasAttribute("tabindex")).toBe(false);
 
@@ -274,7 +286,7 @@ describe("Disclosure", () => {
 
   describe("tab order", () => {
     it("renders an explicit tab index on the trigger", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(triggerIn(container)?.getAttribute("tabindex")).toBe("0");
 
@@ -284,7 +296,7 @@ describe("Disclosure", () => {
 
   describe("indicator", () => {
     it("is the chevron itself when no icon is passed", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       // The icon carries the class rather than sitting inside a wrapper, so the `svg` selector
       // the button stylesheet reaches icons through still matches it.
@@ -295,8 +307,8 @@ describe("Disclosure", () => {
     });
 
     it("wraps a custom icon passed through the slot", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {
-        props: {customIndicator: true},
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { customIndicator: true },
       });
       const indicator = indicatorIn(container);
 
@@ -307,7 +319,7 @@ describe("Disclosure", () => {
     });
 
     it("reflects the expanded state, which is what rotates it", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
 
       expect(indicatorIn(container)).not.toHaveAttribute("data-expanded");
 
@@ -322,15 +334,15 @@ describe("Disclosure", () => {
 
   describe("interaction states", () => {
     it("reports hover, which the stylesheet keys on", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const trigger = triggerIn(container)!;
 
-      trigger.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
+      trigger.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
       await nextTick();
 
       expect(trigger).toHaveAttribute("data-hovered", "true");
 
-      trigger.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true}));
+      trigger.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true }));
       await nextTick();
 
       expect(trigger).not.toHaveAttribute("data-hovered");
@@ -339,7 +351,7 @@ describe("Disclosure", () => {
     });
 
     it("reports focus, which is the only path left for the focus ring", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture);
+      const { container, unmount } = renderVapor(DisclosureFixture);
       const trigger = triggerIn(container)!;
 
       trigger.dispatchEvent(new FocusEvent("focus"));
@@ -353,8 +365,8 @@ describe("Disclosure", () => {
 
   describe("a bare button as the trigger", () => {
     it("wires the aria attributes onto it", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {
-        props: {bareTrigger: true, id: "preview"},
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { bareTrigger: true, id: "preview" },
       });
       const trigger = bareTriggerIn(container);
 
@@ -366,7 +378,9 @@ describe("Disclosure", () => {
     });
 
     it("toggles the disclosure when pressed", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {props: {bareTrigger: true}});
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { bareTrigger: true },
+      });
       const trigger = bareTriggerIn(container)!;
 
       trigger.click();
@@ -379,8 +393,8 @@ describe("Disclosure", () => {
     });
 
     it("is disabled along with the disclosure", () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {
-        props: {bareTrigger: true, isDisabled: true},
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { bareTrigger: true, isDisabled: true },
       });
 
       expect(bareTriggerIn(container)?.disabled).toBe(true);
@@ -389,8 +403,8 @@ describe("Disclosure", () => {
     });
 
     it("leaves a button inside the panel an ordinary button", async () => {
-      const {container, unmount} = renderVapor(DisclosureFixture, {
-        props: {bareTrigger: true, defaultExpanded: true},
+      const { container, unmount } = renderVapor(DisclosureFixture, {
+        props: { bareTrigger: true, defaultExpanded: true },
       });
       const bodyButton = container.querySelector<HTMLButtonElement>("[data-testid='body-button']")!;
 

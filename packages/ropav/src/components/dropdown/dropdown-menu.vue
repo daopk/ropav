@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "../../composables/use-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {DropdownMenuProps} from "./dropdown.types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { DropdownMenuProps } from "./dropdown.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useMenu} from "../../composables/use-menu";
-import {provideSeparatorContext} from "../separator/separator.context";
+import { useMenu } from "../../composables/use-menu";
+import { provideSeparatorContext } from "../separator/separator.context";
 
-import {useDropdownContext, useDropdownPopoverTarget} from "./dropdown.context";
+import { useDropdownContext, useDropdownPopoverTarget } from "./dropdown.context";
 
 // `disallowEmptySelection` and `shouldCloseOnSelect` declare an explicit `undefined` default so an
 // absent prop stays absent rather than reading as an explicit `false`.
@@ -29,14 +29,14 @@ const callerSlots = defineSlots<{
   empty?: () => unknown;
 }>();
 
-const {slots} = useDropdownContext();
+const { slots } = useDropdownContext();
 const target = useDropdownPopoverTarget();
 
-const styles = computed(() => slots.value.menu({class: props.class}));
+const styles = computed(() => slots.value.menu({ class: props.class }));
 
 // A menu lays its own items out, so a rule between two of them has to take part in that
 // layout rather than being the block-level `hr` it would be on its own.
-provideSeparatorContext({elementType: "div"});
+provideSeparatorContext({ elementType: "div" });
 
 const menu = useMenu({
   autoFocus: target.autoFocus,

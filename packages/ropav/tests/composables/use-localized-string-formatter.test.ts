@@ -1,12 +1,12 @@
-import type {I18nHostReady} from "../fixtures/i18n.types";
+import type { I18nHostReady } from "../fixtures/i18n.types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {useLocalizedStringDictionary} from "@/composables/use-localized-string-formatter";
-import {calendarStrings} from "@/i18n/calendar";
-import {datepickerStrings} from "@/i18n/datepicker";
+import { useLocalizedStringDictionary } from "@/composables/use-localized-string-formatter";
+import { calendarStrings } from "@/i18n/calendar";
+import { datepickerStrings } from "@/i18n/datepicker";
 
 import Harness from "../fixtures/i18n-harness.vue";
 
@@ -19,9 +19,9 @@ import Harness from "../fixtures/i18n-harness.vue";
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: I18nHostReady;
 
-  Object.assign(props, {onReady: (value: I18nHostReady) => (ready = value)});
+  Object.assign(props, { onReady: (value: I18nHostReady) => (ready = value) });
 
-  return {...renderVapor(Harness, {props}), ready: () => ready};
+  return { ...renderVapor(Harness, { props }), ready: () => ready };
 };
 
 describe("useLocalizedStringDictionary", () => {
@@ -43,15 +43,15 @@ describe("useLocalizedStringDictionary", () => {
 describe("useLocalizedStringFormatter", () => {
   describe("locale", () => {
     it("formats in the locale an ancestor chose", () => {
-      const {ready, unmount} = setup({locale: "de-DE"});
+      const { ready, unmount } = setup({ locale: "de-DE" });
 
       expect(ready().strings.value.format("previous")).toBe("Zurück");
       unmount();
     });
 
     it("follows the locale changing", async () => {
-      const props = reactive({locale: "en-US"});
-      const {ready, unmount} = setup(props);
+      const props = reactive({ locale: "en-US" });
+      const { ready, unmount } = setup(props);
 
       expect(ready().strings.value.format("previous")).toBe("Previous");
 
@@ -63,7 +63,7 @@ describe("useLocalizedStringFormatter", () => {
     });
 
     it("falls back to English for a locale the table has no strings for", () => {
-      const {ready, unmount} = setup({locale: "cy-GB"});
+      const { ready, unmount } = setup({ locale: "cy-GB" });
 
       expect(ready().strings.value.format("previous")).toBe("Previous");
       unmount();
@@ -71,14 +71,14 @@ describe("useLocalizedStringFormatter", () => {
 
     it("resolves a region it has no exact entry for to the language", () => {
       // The table ships `de-DE`, not `de-AT`, and an Austrian user should still read German.
-      const {ready, unmount} = setup({locale: "de-AT"});
+      const { ready, unmount } = setup({ locale: "de-AT" });
 
       expect(ready().strings.value.format("previous")).toBe("Zurück");
       unmount();
     });
 
     it("ignores a unicode extension when choosing strings", () => {
-      const {ready, unmount} = setup({locale: "de-DE-u-ca-buddhist"});
+      const { ready, unmount } = setup({ locale: "de-DE-u-ca-buddhist" });
 
       expect(ready().strings.value.format("previous")).toBe("Zurück");
       unmount();
@@ -88,7 +88,7 @@ describe("useLocalizedStringFormatter", () => {
       // React Aria ships 34 locales and Hindi is not one of them, so the `hi-IN-u-ca-indian`
       // story reads English labels there too. The tag still decides the calendar system and the
       // date formatting; only these strings fall back.
-      const {ready, unmount} = setup({locale: "hi-IN-u-ca-indian"});
+      const { ready, unmount } = setup({ locale: "hi-IN-u-ca-indian" });
 
       expect(ready().strings.value.format("previous")).toBe("Previous");
       unmount();
@@ -97,19 +97,19 @@ describe("useLocalizedStringFormatter", () => {
 
   describe("variables", () => {
     it("interpolates a message's arguments", () => {
-      const {ready, unmount} = setup({locale: "en-US"});
+      const { ready, unmount } = setup({ locale: "en-US" });
 
-      expect(ready().strings.value.format("dateSelected", {date: "June 5"})).toBe(
+      expect(ready().strings.value.format("dateSelected", { date: "June 5" })).toBe(
         "June 5 selected",
       );
       unmount();
     });
 
     it("interpolates every argument of a multi-variable message", () => {
-      const {ready, unmount} = setup({locale: "en-US"});
+      const { ready, unmount } = setup({ locale: "en-US" });
 
       expect(
-        ready().strings.value.format("dateRange", {endDate: "June 9", startDate: "June 5"}),
+        ready().strings.value.format("dateRange", { endDate: "June 9", startDate: "June 5" }),
       ).toBe("June 5 to June 9");
       unmount();
     });
@@ -117,9 +117,9 @@ describe("useLocalizedStringFormatter", () => {
     it("interpolates in a locale that reorders the arguments", () => {
       // German puts "Ausgewähltes Datum" first too, but the point is that the compiled message
       // carries its own word order rather than a shared template being filled in.
-      const {ready, unmount} = setup({locale: "de-DE"});
+      const { ready, unmount } = setup({ locale: "de-DE" });
 
-      expect(ready().strings.value.format("selectedDateDescription", {date: "5. Juni"})).toBe(
+      expect(ready().strings.value.format("selectedDateDescription", { date: "5. Juni" })).toBe(
         "Ausgewähltes Datum: 5. Juni",
       );
       unmount();

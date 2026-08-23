@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {MeterFill, MeterOutput, MeterTrack} from "@/components/meter";
+import { MeterFill, MeterOutput, MeterTrack } from "@/components/meter";
 
 import Fixture from "./fixtures.vue";
 
@@ -11,7 +11,7 @@ const part = (container: HTMLElement, name: string) =>
 
 describe("Meter", () => {
   it("exposes meter semantics and the default percentage", async () => {
-    const {container, unmount} = renderVapor(Fixture, {props: {value: 60}});
+    const { container, unmount } = renderVapor(Fixture, { props: { value: 60 } });
     const root = part(container, "meter");
     const label = part(container, "label");
 
@@ -32,8 +32,8 @@ describe("Meter", () => {
   });
 
   it("clamps values before exposing and measuring them", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {maxValue: 80, minValue: 20, value: 100},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { maxValue: 80, minValue: 20, value: 100 },
     });
 
     expect(part(container, "meter")).toHaveAttribute("aria-valuenow", "80");
@@ -44,9 +44,9 @@ describe("Meter", () => {
   });
 
   it("formats custom ranges as raw values when a non-percent format is provided", () => {
-    const formatOptions = {currency: "USD", style: "currency"} as const;
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {formatOptions, maxValue: 1000, value: 750},
+    const formatOptions = { currency: "USD", style: "currency" } as const;
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { formatOptions, maxValue: 1000, value: 750 },
     });
     const expected = new Intl.NumberFormat("en-US", formatOptions).format(750);
 
@@ -58,8 +58,8 @@ describe("Meter", () => {
   });
 
   it("uses an explicit value label in aria and output", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {value: 4, valueLabel: "4 of 10"},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { value: 4, valueLabel: "4 of 10" },
     });
 
     expect(part(container, "meter")).toHaveAttribute("aria-valuetext", "4 of 10");
@@ -69,8 +69,8 @@ describe("Meter", () => {
   });
 
   it("lets caller output replace the formatted fallback", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {customOutput: true, value: 60},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { customOutput: true, value: 60 },
     });
 
     expect(part(container, "meter-output")).toHaveTextContent("Custom");
@@ -80,8 +80,8 @@ describe("Meter", () => {
   });
 
   it("combines an explicit aria-label with the visible label", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Storage usage", value: 45},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Storage usage", value: 45 },
     });
     const root = part(container, "meter")!;
     const label = part(container, "label")!;
@@ -96,8 +96,8 @@ describe("Meter", () => {
   });
 
   it("combines a visible label with external aria-labelledby ids", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabelledby: "ext", value: 45},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabelledby: "ext", value: 45 },
     });
     const root = part(container, "meter")!;
     const label = part(container, "label")!;
@@ -111,8 +111,8 @@ describe("Meter", () => {
   });
 
   it("combines aria-label and aria-labelledby without a visible label", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Storage usage", ariaLabelledby: "ext", value: 45, withLabel: false},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Storage usage", ariaLabelledby: "ext", value: 45, withLabel: false },
     });
     const root = part(container, "meter")!;
 
@@ -123,8 +123,8 @@ describe("Meter", () => {
   });
 
   it("updates label composition when aria-label changes", async () => {
-    const props = reactive({ariaLabel: undefined as string | undefined, value: 45});
-    const {container, unmount} = renderVapor(Fixture, {props});
+    const props = reactive({ ariaLabel: undefined as string | undefined, value: 45 });
+    const { container, unmount } = renderVapor(Fixture, { props });
     const root = part(container, "meter")!;
     const label = part(container, "label")!;
 
@@ -143,7 +143,7 @@ describe("Meter", () => {
   it.each(["default", "accent", "success", "warning", "danger"] as const)(
     "applies the %s color modifier",
     (color) => {
-      const {container, unmount} = renderVapor(Fixture, {props: {color}});
+      const { container, unmount } = renderVapor(Fixture, { props: { color } });
 
       expect(part(container, "meter")).toHaveClass(`meter--${color}`);
 
@@ -152,7 +152,7 @@ describe("Meter", () => {
   );
 
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
-    const {container, unmount} = renderVapor(Fixture, {props: {size}});
+    const { container, unmount } = renderVapor(Fixture, { props: { size } });
 
     expect(part(container, "meter")).toHaveClass(`meter--${size}`);
 
@@ -160,7 +160,7 @@ describe("Meter", () => {
   });
 
   it("merges caller classes and keeps computed width after caller style", () => {
-    const {container, unmount} = renderVapor(Fixture, {
+    const { container, unmount } = renderVapor(Fixture, {
       props: {
         class: "gap-2",
         fillClass: "rounded-none",
@@ -181,8 +181,8 @@ describe("Meter", () => {
   });
 
   it("publishes reactive scoped-slot state", async () => {
-    const props = reactive({value: 25});
-    const {container, unmount} = renderVapor(Fixture, {props});
+    const props = reactive({ value: 25 });
+    const { container, unmount } = renderVapor(Fixture, { props });
 
     expect(container.querySelector("[data-testid='slot-percentage']")).toHaveTextContent("25");
     expect(container.querySelector("[data-testid='slot-value-text']")).toHaveTextContent("25%");

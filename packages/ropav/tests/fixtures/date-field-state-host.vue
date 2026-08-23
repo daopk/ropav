@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DateFieldStateHostProps} from "./date-field-state.types";
+import type { DateFieldStateHostProps } from "./date-field-state.types";
 
-import {createCalendar} from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 
-import {useDateFieldState} from "@/composables/use-date-field-state";
+import { useDateFieldState } from "@/composables/use-date-field-state";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to

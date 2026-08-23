@@ -12,7 +12,7 @@ export const Link = Object.assign(LinkRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {LinkIcon, LinkRoot};
+export { LinkIcon, LinkRoot };
 
 export type {
   LinkRootProps,
@@ -26,13 +26,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideLinkContext, useLinkContext} from "./link.context";
+export { provideLinkContext, useLinkContext } from "./link.context";
 
-export type {LinkContext} from "./link.context";
+export type { LinkContext } from "./link.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {linkVariants} from "@ropav/styles";
+export { linkVariants } from "@ropav/styles";
 
-export type {LinkVariants} from "@ropav/styles";
+export type { LinkVariants } from "@ropav/styles";

@@ -1,13 +1,13 @@
-import type {Color} from "@/utils/color-types";
+import type { Color } from "@/utils/color-types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderPicker = async (props: Record<string, unknown> = {}) => {
-  const rendered = renderVapor(Fixture, {props});
+  const rendered = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -36,7 +36,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /**
@@ -55,7 +55,9 @@ const open = async () => {
 };
 
 const key = (element: Element, name: string) => {
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: name}));
+  element.dispatchEvent(
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: name }),
+  );
 
   return nextTick();
 };
@@ -72,7 +74,7 @@ afterEach(() => {
 describe("ColorPicker", () => {
   describe("structure", () => {
     it("renders the root and the trigger with their data-slot and BEM class", async () => {
-      const {container, unmount} = await renderPicker();
+      const { container, unmount } = await renderPicker();
 
       expect(container.querySelector("[data-slot='color-picker']")).toHaveClass("color-picker");
       expect(slot("color-picker-trigger")).toHaveClass("color-picker__trigger");
@@ -81,7 +83,7 @@ describe("ColorPicker", () => {
     });
 
     it("keeps the popover out of the document until it is opened", async () => {
-      const {unmount} = await renderPicker();
+      const { unmount } = await renderPicker();
 
       expect(document.querySelector("[data-slot='color-picker-popover']")).toBeNull();
 
@@ -93,7 +95,7 @@ describe("ColorPicker", () => {
     });
 
     it("makes the popover a dialog named by the trigger", async () => {
-      const {unmount} = await renderPicker();
+      const { unmount } = await renderPicker();
 
       await open();
 
@@ -110,7 +112,7 @@ describe("ColorPicker", () => {
     });
 
     it("reports the open state on the trigger", async () => {
-      const {unmount} = await renderPicker();
+      const { unmount } = await renderPicker();
 
       expect(slot("color-picker-trigger")).toHaveAttribute("aria-expanded", "false");
 
@@ -122,7 +124,7 @@ describe("ColorPicker", () => {
     });
 
     it("is a real button so it submits nothing by accident", async () => {
-      const {unmount} = await renderPicker();
+      const { unmount } = await renderPicker();
 
       expect(slot("color-picker-trigger").tagName).toBe("BUTTON");
       expect(slot("color-picker-trigger")).toHaveProperty("type", "button");
@@ -131,7 +133,7 @@ describe("ColorPicker", () => {
     });
 
     it("lets a caller's class through to tailwind-merge", async () => {
-      const {container, unmount} = await renderPicker({class: "w-40"});
+      const { container, unmount } = await renderPicker({ class: "w-40" });
 
       expect(container.querySelector("[data-slot='color-picker']")).toHaveClass("w-40");
 
@@ -139,7 +141,7 @@ describe("ColorPicker", () => {
     });
 
     it("starts open when told to", async () => {
-      const {unmount} = await renderPicker({defaultOpen: true});
+      const { unmount } = await renderPicker({ defaultOpen: true });
 
       await nextTick();
 
@@ -152,7 +154,7 @@ describe("ColorPicker", () => {
   describe("the shared colour", () => {
     it("hands the picker's colour to a swatch that has none", async () => {
       // This is the whole point of the context: the swatch in the trigger shows the value.
-      const {unmount} = await renderPicker({defaultValue: "#0485F7"});
+      const { unmount } = await renderPicker({ defaultValue: "#0485F7" });
 
       expect(slot("color-swatch")).toHaveAttribute("aria-label", "vibrant cyan blue");
       expect(slot("color-swatch").style.backgroundColor).toBe("rgb(4, 133, 247)");
@@ -161,7 +163,7 @@ describe("ColorPicker", () => {
     });
 
     it("lets a swatch's own colour win", async () => {
-      const {unmount} = await renderPicker({defaultValue: "#0485F7", swatchValue: "#FF0000"});
+      const { unmount } = await renderPicker({ defaultValue: "#0485F7", swatchValue: "#FF0000" });
 
       expect(slot("color-swatch").style.backgroundColor).toBe("rgb(255, 0, 0)");
 
@@ -169,7 +171,7 @@ describe("ColorPicker", () => {
     });
 
     it("drives a slider inside the popover", async () => {
-      const {unmount} = await renderPicker({defaultValue: "#0485F7"});
+      const { unmount } = await renderPicker({ defaultValue: "#0485F7" });
 
       await open();
 
@@ -180,7 +182,7 @@ describe("ColorPicker", () => {
     });
 
     it("lets a slider's own value win", async () => {
-      const {unmount} = await renderPicker({
+      const { unmount } = await renderPicker({
         defaultValue: "#0485F7",
         sliderValue: "hsb(0, 100%, 100%)",
       });
@@ -193,7 +195,7 @@ describe("ColorPicker", () => {
     });
 
     it("drives a colour area inside the popover", async () => {
-      const {unmount} = await renderPicker({defaultValue: "#0485F7"});
+      const { unmount } = await renderPicker({ defaultValue: "#0485F7" });
 
       await open();
 
@@ -207,7 +209,7 @@ describe("ColorPicker", () => {
     });
 
     it("drives a swatch picker and a colour field too", async () => {
-      const {unmount} = await renderPicker({defaultValue: "#EF4444", withEverything: true});
+      const { unmount } = await renderPicker({ defaultValue: "#EF4444", withEverything: true });
 
       await open();
 
@@ -231,7 +233,7 @@ describe("ColorPicker", () => {
        * "no colour", and the picker's colour must not fill it back in. This is the case that makes
        * the precedence an explicit `!== undefined` test rather than `??`.
        */
-      const {unmount} = await renderPicker({
+      const { unmount } = await renderPicker({
         defaultValue: "#EF4444",
         withEmptyField: true,
         withEverything: true,
@@ -252,7 +254,7 @@ describe("ColorPicker", () => {
   describe("changes coming back up", () => {
     it("reports a colour chosen inside the popover", async () => {
       const onChange = vi.fn();
-      const {unmount} = await renderPicker({
+      const { unmount } = await renderPicker({
         defaultValue: "#EF4444",
         onChange,
         withEverything: true,
@@ -270,7 +272,7 @@ describe("ColorPicker", () => {
     });
 
     it("shows the new colour on the trigger's swatch", async () => {
-      const {unmount} = await renderPicker({defaultValue: "#EF4444", withEverything: true});
+      const { unmount } = await renderPicker({ defaultValue: "#EF4444", withEverything: true });
 
       await open();
 
@@ -290,7 +292,7 @@ describe("ColorPicker", () => {
        */
       const onChange = vi.fn();
       const onSliderChange = vi.fn();
-      const {unmount} = await renderPicker({
+      const { unmount } = await renderPicker({
         defaultValue: "#0485F7",
         onChange,
         onSliderChange,
@@ -315,7 +317,7 @@ describe("ColorPicker", () => {
         value: "#EF4444",
         withEverything: true,
       });
-      const {unmount} = await renderPicker(props);
+      const { unmount } = await renderPicker(props);
 
       await open();
 
@@ -329,8 +331,8 @@ describe("ColorPicker", () => {
     });
 
     it("follows a controlled colour", async () => {
-      const props = reactive<Record<string, unknown>>({value: "#EF4444"});
-      const {unmount} = await renderPicker(props);
+      const props = reactive<Record<string, unknown>>({ value: "#EF4444" });
+      const { unmount } = await renderPicker(props);
 
       expect(slot("color-swatch").style.backgroundColor).toBe("rgb(239, 68, 68)");
 
@@ -346,7 +348,7 @@ describe("ColorPicker", () => {
   describe("open state", () => {
     it("reports opening and closing", async () => {
       const onOpenChange = vi.fn();
-      const {unmount} = await renderPicker({onOpenChange});
+      const { unmount } = await renderPicker({ onOpenChange });
 
       await open();
 
@@ -357,7 +359,7 @@ describe("ColorPicker", () => {
 
     it("stays closed when a caller holds it closed", async () => {
       const onOpenChange = vi.fn();
-      const {unmount} = await renderPicker({isOpen: false, onOpenChange});
+      const { unmount } = await renderPicker({ isOpen: false, onOpenChange });
 
       await open();
 
@@ -368,8 +370,8 @@ describe("ColorPicker", () => {
     });
 
     it("opens when a caller says so", async () => {
-      const props = reactive<Record<string, unknown>>({isOpen: false});
-      const {unmount} = await renderPicker(props);
+      const props = reactive<Record<string, unknown>>({ isOpen: false });
+      const { unmount } = await renderPicker(props);
 
       props["isOpen"] = true;
       await nextTick();

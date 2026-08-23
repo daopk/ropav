@@ -1,4 +1,4 @@
-import type {ColorStringKey} from "../i18n/color";
+import type { ColorStringKey } from "../i18n/color";
 import type {
   Color,
   ColorAxes,
@@ -8,10 +8,10 @@ import type {
   ColorSpace,
 } from "./color-types";
 
-import {NumberFormatter} from "@internationalized/number";
-import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
+import { NumberFormatter } from "@internationalized/number";
+import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
 
-import {colorStrings} from "../i18n/color";
+import { colorStrings } from "../i18n/color";
 
 import {
   GRAY_THRESHOLD,
@@ -21,7 +21,7 @@ import {
   YELLOW_GREEN_LIGHTNESS_THRESHOLD,
   rgbToOKLCH,
 } from "./color-oklch";
-import {clamp, toFixedNumber} from "./number";
+import { clamp, toFixedNumber } from "./number";
 
 /**
  * The colour model.
@@ -120,14 +120,14 @@ abstract class ColorBase implements Color {
    * With neither channel given, x is the first channel of the space and y the next — so `hsb`
    * yields hue × saturation with brightness held, and `rgb` yields red × green with blue held.
    */
-  getColorSpaceAxes(xyChannels: {xChannel?: ColorChannel; yChannel?: ColorChannel}): ColorAxes {
-    const {xChannel, yChannel} = xyChannels;
+  getColorSpaceAxes(xyChannels: { xChannel?: ColorChannel; yChannel?: ColorChannel }): ColorAxes {
+    const { xChannel, yChannel } = xyChannels;
     const channels = this.getColorChannels();
     const xCh = xChannel ?? channels.find((c) => c !== yChannel)!;
     const yCh = yChannel ?? channels.find((c) => c !== xCh)!;
     const zCh = channels.find((c) => c !== xCh && c !== yCh)!;
 
-    return {xChannel: xCh, yChannel: yCh, zChannel: zCh};
+    return { xChannel: xCh, yChannel: yCh, zChannel: zCh };
   }
 
   /**
@@ -182,15 +182,17 @@ abstract class ColorBase implements Color {
      * regardless, so without it a screen reader would read `"  orange"`.
      */
     if (alpha < 1) {
-      const percentTransparent = new NumberFormatter(locale, {style: "percent"}).format(1 - alpha);
+      const percentTransparent = new NumberFormatter(locale, { style: "percent" }).format(
+        1 - alpha,
+      );
 
       return formatter
-        .format("transparentColorName", {chroma, hue, lightness, percentTransparent})
+        .format("transparentColorName", { chroma, hue, lightness, percentTransparent })
         .replace(/\s+/g, " ")
         .trim();
     }
 
-    return formatter.format("colorName", {chroma, hue, lightness}).replace(/\s+/g, " ").trim();
+    return formatter.format("colorName", { chroma, hue, lightness }).replace(/\s+/g, " ").trim();
   }
 
   getHueName(locale: string): string {
@@ -478,9 +480,9 @@ class RGBColor extends ColorBase {
       case "red":
       case "green":
       case "blue":
-        return {maxValue: 0xff, minValue: 0x0, pageSize: 0x11, step: 0x1};
+        return { maxValue: 0xff, minValue: 0x0, pageSize: 0x11, step: 0x1 };
       case "alpha":
-        return {maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01};
+        return { maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01 };
       default:
         throw new Error("Unknown color channel: " + channel);
     }
@@ -491,9 +493,9 @@ class RGBColor extends ColorBase {
       case "red":
       case "green":
       case "blue":
-        return {style: "decimal"};
+        return { style: "decimal" };
       case "alpha":
-        return {style: "percent"};
+        return { style: "percent" };
       default:
         throw new Error("Unknown color channel: " + channel);
     }
@@ -668,12 +670,12 @@ class HSBColor extends ColorBase {
   override getChannelRange(channel: ColorChannel): ColorChannelRange {
     switch (channel) {
       case "hue":
-        return {maxValue: 360, minValue: 0, pageSize: 15, step: 1};
+        return { maxValue: 360, minValue: 0, pageSize: 15, step: 1 };
       case "saturation":
       case "brightness":
-        return {maxValue: 100, minValue: 0, pageSize: 10, step: 1};
+        return { maxValue: 100, minValue: 0, pageSize: 10, step: 1 };
       case "alpha":
-        return {maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01};
+        return { maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01 };
       default:
         throw new Error("Unknown color channel: " + channel);
     }
@@ -682,11 +684,11 @@ class HSBColor extends ColorBase {
   override getChannelFormatOptions(channel: ColorChannel): Intl.NumberFormatOptions {
     switch (channel) {
       case "hue":
-        return {style: "unit", unit: "degree", unitDisplay: "narrow"};
+        return { style: "unit", unit: "degree", unitDisplay: "narrow" };
       case "saturation":
       case "brightness":
       case "alpha":
-        return {style: "percent"};
+        return { style: "percent" };
       default:
         throw new Error("Unknown color channel: " + channel);
     }
@@ -856,12 +858,12 @@ class HSLColor extends ColorBase {
   override getChannelRange(channel: ColorChannel): ColorChannelRange {
     switch (channel) {
       case "hue":
-        return {maxValue: 360, minValue: 0, pageSize: 15, step: 1};
+        return { maxValue: 360, minValue: 0, pageSize: 15, step: 1 };
       case "saturation":
       case "lightness":
-        return {maxValue: 100, minValue: 0, pageSize: 10, step: 1};
+        return { maxValue: 100, minValue: 0, pageSize: 10, step: 1 };
       case "alpha":
-        return {maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01};
+        return { maxValue: 1, minValue: 0, pageSize: 0.1, step: 0.01 };
       default:
         throw new Error("Unknown color channel: " + channel);
     }
@@ -870,11 +872,11 @@ class HSLColor extends ColorBase {
   override getChannelFormatOptions(channel: ColorChannel): Intl.NumberFormatOptions {
     switch (channel) {
       case "hue":
-        return {style: "unit", unit: "degree", unitDisplay: "narrow"};
+        return { style: "unit", unit: "degree", unitDisplay: "narrow" };
       case "saturation":
       case "lightness":
       case "alpha":
-        return {style: "percent"};
+        return { style: "percent" };
       default:
         throw new Error("Unknown color channel: " + channel);
     }

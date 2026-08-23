@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {AccordionItem} from "@/components/accordion";
+import { AccordionItem } from "@/components/accordion";
 
 import AccordionFixture from "./fixtures.vue";
 import SurfaceFixture from "./surface-fixtures.vue";
@@ -15,12 +15,12 @@ const panelsIn = (container: HTMLElement) => [
 ];
 
 const pressKey = (element: HTMLElement, key: string) =>
-  element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key}));
+  element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key }));
 
 describe("Accordion", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       expect(container.querySelector("[data-slot='accordion']")).not.toBeNull();
       expect(container.querySelectorAll("[data-slot='accordion-item']")).toHaveLength(3);
@@ -33,7 +33,7 @@ describe("Accordion", () => {
     });
 
     it("renders the trigger as a native button of type button", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0];
 
       expect(trigger?.tagName).toBe("BUTTON");
@@ -43,7 +43,7 @@ describe("Accordion", () => {
     });
 
     it("wraps the body content in the inner body element", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const body = container.querySelector("[data-slot='accordion-body']");
 
       expect(body?.classList.contains("accordion__body")).toBe(true);
@@ -53,7 +53,7 @@ describe("Accordion", () => {
     });
 
     it("renders the heading as an h3", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       expect(container.querySelector("[data-slot='accordion-heading']")?.tagName).toBe("H3");
 
@@ -63,7 +63,7 @@ describe("Accordion", () => {
 
   describe("aria wiring", () => {
     it("points aria-controls at the panel it owns", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0];
       const panel = panelsIn(container)[0];
 
@@ -74,7 +74,7 @@ describe("Accordion", () => {
     });
 
     it("points aria-labelledby back at the trigger", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0];
       const panel = panelsIn(container)[0];
 
@@ -85,7 +85,7 @@ describe("Accordion", () => {
     });
 
     it("gives every item a distinct trigger and panel id", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const ids = triggersIn(container).map((trigger) => trigger.id);
 
       expect(new Set(ids).size).toBe(3);
@@ -94,7 +94,7 @@ describe("Accordion", () => {
     });
 
     it("reflects the expanded state on aria-expanded", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0];
 
       expect(trigger?.getAttribute("aria-expanded")).toBe("false");
@@ -108,7 +108,7 @@ describe("Accordion", () => {
     });
 
     it("declares the panel role", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       expect(panelsIn(container)[0]?.getAttribute("role")).toBe("group");
 
@@ -118,7 +118,7 @@ describe("Accordion", () => {
 
   describe("expansion", () => {
     it("expands an item on click", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       triggersIn(container)[0]?.click();
       await nextTick();
@@ -129,8 +129,8 @@ describe("Accordion", () => {
     });
 
     it("collapses an expanded item on click", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {defaultExpandedKeys: ["one"]},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { defaultExpandedKeys: ["one"] },
       });
 
       triggersIn(container)[0]?.click();
@@ -142,8 +142,8 @@ describe("Accordion", () => {
     });
 
     it("collapses the open item when only one may be expanded", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {defaultExpandedKeys: ["one"]},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { defaultExpandedKeys: ["one"] },
       });
 
       triggersIn(container)[1]?.click();
@@ -158,8 +158,8 @@ describe("Accordion", () => {
     });
 
     it("keeps items open when multiple may be expanded", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {allowsMultipleExpanded: true, defaultExpandedKeys: ["one"]},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { allowsMultipleExpanded: true, defaultExpandedKeys: ["one"] },
       });
 
       triggersIn(container)[1]?.click();
@@ -175,7 +175,7 @@ describe("Accordion", () => {
 
     it("emits expandedChange with the item ids", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {onExpandedChange}});
+      const { container, unmount } = renderVapor(AccordionFixture, { props: { onExpandedChange } });
 
       triggersIn(container)[2]?.click();
       await nextTick();
@@ -187,8 +187,8 @@ describe("Accordion", () => {
 
     it("honours controlled expandedKeys", async () => {
       const onExpandedChange = vi.fn();
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {expandedKeys: ["two"], onExpandedChange},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { expandedKeys: ["two"], onExpandedChange },
       });
 
       expect(panelsIn(container)[1]?.getAttribute("data-expanded")).toBe("true");
@@ -206,7 +206,7 @@ describe("Accordion", () => {
 
   describe("collapsed panel", () => {
     it("hides a collapsed panel from the tab order and the a11y tree", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const panel = panelsIn(container)[0];
 
       // `until-found` rather than plain hidden, so find-in-page can still reveal it.
@@ -217,7 +217,7 @@ describe("Accordion", () => {
     });
 
     it("sets the panel height variable to zero while collapsed", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       expect(panelsIn(container)[0]?.style.getPropertyValue("--disclosure-panel-height")).toBe(
         "0px",
@@ -227,7 +227,7 @@ describe("Accordion", () => {
     });
 
     it("reveals the panel and releases its height when expanded", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       triggersIn(container)[0]?.click();
       await nextTick();
@@ -242,8 +242,8 @@ describe("Accordion", () => {
     });
 
     it("starts already revealed for a default-expanded item", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {defaultExpandedKeys: ["one"]},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { defaultExpandedKeys: ["one"] },
       });
       const panel = panelsIn(container)[0];
 
@@ -256,7 +256,7 @@ describe("Accordion", () => {
 
   describe("keyboard navigation", () => {
     it("moves focus to the next and previous trigger", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const triggers = triggersIn(container);
 
       triggers[0]?.focus();
@@ -270,7 +270,7 @@ describe("Accordion", () => {
     });
 
     it("moves focus to the first and last trigger", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const triggers = triggersIn(container);
 
       pressKey(triggers[1]!, "End");
@@ -286,7 +286,7 @@ describe("Accordion", () => {
     // as "nothing is -1" rather than "no tabindex at all", because every enabled trigger now
     // carries an explicit 0 — see the tab order block for why.
     it("keeps every trigger tabbable rather than using roving tabindex", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       for (const trigger of triggersIn(container)) {
         expect(trigger.getAttribute("tabindex")).toBe("0");
@@ -296,7 +296,7 @@ describe("Accordion", () => {
     });
 
     it("toggles on Enter through native button activation", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0];
 
       // A native <button> turns Enter and Space into a click, so no key handling is needed.
@@ -311,7 +311,7 @@ describe("Accordion", () => {
 
   describe("disabled", () => {
     it("disables every trigger when the group is disabled", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {isDisabled: true}});
+      const { container, unmount } = renderVapor(AccordionFixture, { props: { isDisabled: true } });
 
       for (const trigger of triggersIn(container)) {
         expect(trigger.disabled).toBe(true);
@@ -321,8 +321,8 @@ describe("Accordion", () => {
     });
 
     it("disables a single item", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {disabledItem: "two"},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { disabledItem: "two" },
       });
       const triggers = triggersIn(container);
 
@@ -333,8 +333,8 @@ describe("Accordion", () => {
     });
 
     it("does not expand a disabled item", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {disabledItem: "one"},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { disabledItem: "one" },
       });
 
       triggersIn(container)[0]?.click();
@@ -346,8 +346,8 @@ describe("Accordion", () => {
     });
 
     it("marks the item with data-disabled", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {disabledItem: "one"},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { disabledItem: "one" },
       });
       const items = container.querySelectorAll("[data-slot='accordion-item']");
 
@@ -363,7 +363,7 @@ describe("Accordion", () => {
     // unless an explicit tab index says so, which is why react-aria always sets it.
     // Every enabled trigger keeps its own stop: the accordion pattern has no roving index.
     it("renders an explicit tab index on every trigger", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {}});
+      const { container, unmount } = renderVapor(AccordionFixture, { props: {} });
 
       for (const trigger of triggersIn(container)) {
         expect(trigger).toHaveAttribute("tabindex", "0");
@@ -373,7 +373,9 @@ describe("Accordion", () => {
     });
 
     it("drops the tab index of a disabled item, so it is not reachable at all", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {disabledItem: "two"}});
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { disabledItem: "two" },
+      });
       const triggers = triggersIn(container);
 
       expect(triggers[0]).toHaveAttribute("tabindex", "0");
@@ -389,15 +391,15 @@ describe("Accordion", () => {
     // `[data-focus-visible="true"]`, since the `&:focus-visible:not(:focus)` branch beside it
     // can never match on a real button.
     it("reports hover, which the stylesheet keys the trigger background on", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0]!;
 
-      trigger.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
+      trigger.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
       await nextTick();
 
       expect(trigger).toHaveAttribute("data-hovered", "true");
 
-      trigger.dispatchEvent(new PointerEvent("pointerleave", {bubbles: true}));
+      trigger.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true }));
       await nextTick();
 
       expect(trigger).not.toHaveAttribute("data-hovered");
@@ -406,7 +408,7 @@ describe("Accordion", () => {
     });
 
     it("reports focus, the only path left for the focus ring", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0]!;
 
       trigger.dispatchEvent(new FocusEvent("focus"));
@@ -425,10 +427,10 @@ describe("Accordion", () => {
     });
 
     it("reports press until the pointer is released, even away from the trigger", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const trigger = triggersIn(container)[0]!;
 
-      trigger.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      trigger.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
       await nextTick();
 
       expect(trigger).toHaveAttribute("data-pressed", "true");
@@ -442,13 +444,15 @@ describe("Accordion", () => {
     });
 
     it("reports none of them on a disabled trigger", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {disabledItem: "one"}});
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { disabledItem: "one" },
+      });
       const trigger = triggersIn(container)[0]!;
 
       expect(trigger).toHaveAttribute("data-disabled", "true");
 
-      trigger.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
-      trigger.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      trigger.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
+      trigger.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
       trigger.dispatchEvent(new FocusEvent("focus"));
       await nextTick();
 
@@ -462,7 +466,7 @@ describe("Accordion", () => {
 
   describe("indicator", () => {
     it("renders the built-in chevron when no slot content is passed", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const indicator = container.querySelector("[data-slot='accordion-indicator']");
 
       expect(indicator?.querySelector("svg")).not.toBeNull();
@@ -471,8 +475,8 @@ describe("Accordion", () => {
     });
 
     it("renders a custom icon from the slot instead of the chevron", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {
-        props: {customIndicator: true},
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { customIndicator: true },
       });
       const indicator = container.querySelector("[data-slot='accordion-indicator']");
 
@@ -483,7 +487,7 @@ describe("Accordion", () => {
     });
 
     it("reflects the expanded state, which is what rotates it", async () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const indicator = container.querySelector("[data-slot='accordion-indicator']");
 
       expect(indicator?.hasAttribute("data-expanded")).toBe(false);
@@ -499,7 +503,7 @@ describe("Accordion", () => {
 
   describe("styling", () => {
     it("renders the BEM classes on each part", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
 
       expect(container.querySelector("[data-slot='accordion']")?.classList).toContain("accordion");
       expect(container.querySelector("[data-slot='accordion-item']")?.classList).toContain(
@@ -512,7 +516,9 @@ describe("Accordion", () => {
     });
 
     it("applies the surface variant modifier", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {variant: "surface"}});
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { variant: "surface" },
+      });
 
       expect(container.querySelector("[data-slot='accordion']")?.classList).toContain(
         "accordion--surface",
@@ -522,7 +528,9 @@ describe("Accordion", () => {
     });
 
     it("marks items with data-hide-separator when the separator is hidden", () => {
-      const {container, unmount} = renderVapor(AccordionFixture, {props: {hideSeparator: true}});
+      const { container, unmount } = renderVapor(AccordionFixture, {
+        props: { hideSeparator: true },
+      });
 
       for (const item of container.querySelectorAll("[data-slot='accordion-item']")) {
         expect(item.getAttribute("data-hide-separator")).toBe("true");
@@ -532,7 +540,7 @@ describe("Accordion", () => {
     });
 
     it("omits data-hide-separator by default", () => {
-      const {container, unmount} = renderVapor(AccordionFixture);
+      const { container, unmount } = renderVapor(AccordionFixture);
       const item = container.querySelector("[data-slot='accordion-item']");
 
       expect(item?.hasAttribute("data-hide-separator")).toBe(false);
@@ -552,17 +560,17 @@ describe("Accordion", () => {
   });
   describe("surface context", () => {
     const surfaceOf = (props: Record<string, unknown> = {}) => {
-      const result = renderVapor(SurfaceFixture, {props});
+      const result = renderVapor(SurfaceFixture, { props });
       const consumer = result.container.querySelector('[data-testid="consumer"]');
 
       if (!consumer) throw new Error("consumer not rendered");
 
-      return {...result, consumer};
+      return { ...result, consumer };
     };
 
     it("tells descendants they sit on a surface accordion", () => {
       // The surface variant paints the default surface colour, whatever the accordion is called.
-      const {consumer, unmount} = surfaceOf({variant: "surface"});
+      const { consumer, unmount } = surfaceOf({ variant: "surface" });
 
       expect(consumer).toHaveAttribute("data-surface", "default");
 
@@ -570,7 +578,7 @@ describe("Accordion", () => {
     });
 
     it("offers no surface for the default variant standing alone", () => {
-      const {consumer, unmount} = surfaceOf();
+      const { consumer, unmount } = surfaceOf();
 
       expect(consumer).toHaveAttribute("data-surface", "none");
 
@@ -578,7 +586,7 @@ describe("Accordion", () => {
     });
 
     it("forwards the surface behind a non-surface accordion", () => {
-      const {consumer, unmount} = surfaceOf({outerVariant: "secondary"});
+      const { consumer, unmount } = surfaceOf({ outerVariant: "secondary" });
 
       expect(consumer).toHaveAttribute("data-surface", "secondary");
 
@@ -586,7 +594,7 @@ describe("Accordion", () => {
     });
 
     it("shadows an outer surface when it paints one itself", () => {
-      const {consumer, unmount} = surfaceOf({outerVariant: "tertiary", variant: "surface"});
+      const { consumer, unmount } = surfaceOf({ outerVariant: "tertiary", variant: "surface" });
 
       expect(consumer).toHaveAttribute("data-surface", "default");
 
@@ -595,8 +603,8 @@ describe("Accordion", () => {
 
     it("follows the variant when it changes", async () => {
       // `provide` runs once, so the variant has to be read on every access.
-      const props = reactive({outerVariant: "tertiary", variant: "surface"});
-      const {consumer, unmount} = surfaceOf(props);
+      const props = reactive({ outerVariant: "tertiary", variant: "surface" });
+      const { consumer, unmount } = surfaceOf(props);
 
       expect(consumer).toHaveAttribute("data-surface", "default");
 

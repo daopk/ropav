@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {FormValidationHostProps} from "./form-validation.types";
-import type {ValidationFunction} from "@/composables/use-form-validation-state";
+import type { FormValidationHostProps } from "./form-validation.types";
+import type { ValidationFunction } from "@/composables/use-form-validation-state";
 
-import {useFormValidationState} from "@/composables/use-form-validation-state";
+import { useFormValidationState } from "@/composables/use-form-validation-state";
 
 // `isInvalid` declares an explicit `undefined` default because it is a three-state prop:
 // absent means "no claim", while `false` is an active claim of validity. Vue casts an
 // absent boolean to `false`, which would pin the field valid and hide every other source.
-const props = withDefaults(defineProps<FormValidationHostProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<FormValidationHostProps>(), { isInvalid: undefined });
 
 const state = useFormValidationState({
   builtinValidation: () => props.builtinValidation,

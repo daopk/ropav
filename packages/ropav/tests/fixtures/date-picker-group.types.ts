@@ -1,4 +1,4 @@
-import type {UseDatePickerGroupReturn} from "@/composables/use-date-picker-group";
+import type { UseDatePickerGroupReturn } from "@/composables/use-date-picker-group";
 
 export interface DatePickerGroupHostProps {
   /** One entry per segment; true means that segment is still empty. */

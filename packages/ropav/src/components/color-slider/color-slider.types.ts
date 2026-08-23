@@ -1,5 +1,5 @@
-import type {SliderOrientation} from "../../composables/use-slider-state";
-import type {Color, ColorChannel, ColorSpace} from "../../utils/color-types";
+import type { SliderOrientation } from "../../composables/use-slider-state";
+import type { Color, ColorChannel, ColorSpace } from "../../utils/color-types";
 
 export interface ColorSliderRootProps {
   class?: string;

@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {CollectionKey} from "@/composables/use-collection";
+import type { CollectionKey } from "@/composables/use-collection";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Button} from "@/components/button";
+import { Button } from "@/components/button";
 import {
   TableBody,
   TableCell,
@@ -44,8 +44,8 @@ const data: TreeNode[] = [
     children: [
       {
         children: [
-          {children: [], id: "3", title: "Weekly Report", type: "File"},
-          {children: [], id: "4", title: "Budget", type: "File"},
+          { children: [], id: "3", title: "Weekly Report", type: "File" },
+          { children: [], id: "4", title: "Budget", type: "File" },
         ],
         id: "2",
         title: "Project",
@@ -58,8 +58,8 @@ const data: TreeNode[] = [
   },
   {
     children: [
-      {children: [], id: "6", title: "Image 1", type: "File"},
-      {children: [], id: "7", title: "Image 2", type: "File"},
+      { children: [], id: "6", title: "Image 1", type: "File" },
+      { children: [], id: "7", title: "Image 2", type: "File" },
     ],
     id: "5",
     title: "Photos",
@@ -86,7 +86,7 @@ interface FlatRow {
  */
 const flatten = (nodes: TreeNode[], level = 0, parentKey?: CollectionKey): FlatRow[] =>
   nodes.flatMap((node) => [
-    {level, node, parentKey},
+    { level, node, parentKey },
     ...(openKeys.value.has(node.id) ? flatten(node.children, level + 1, node.id) : []),
   ]);
 
@@ -119,7 +119,7 @@ const rows = computed(() => flatten(data));
           :parent-key="row.parentKey"
           :text-value="row.node.title"
         >
-          <TableCell v-slot="{hasChildRows, isTreeColumn}" :text-value="row.node.title">
+          <TableCell v-slot="{ hasChildRows, isTreeColumn }" :text-value="row.node.title">
             <TableExpandTrigger v-if="hasChildRows && isTreeColumn">
               <Button is-icon-only size="sm" variant="ghost">chevron</Button>
             </TableExpandTrigger>

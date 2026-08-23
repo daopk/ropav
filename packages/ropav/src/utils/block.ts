@@ -1,6 +1,6 @@
-import type {Block} from "vue";
+import type { Block } from "vue";
 
-import {isFragment, isVaporComponent} from "vue";
+import { isFragment, isVaporComponent } from "vue";
 
 /**
  * The DOM nodes a Vapor block resolves to, in document order.

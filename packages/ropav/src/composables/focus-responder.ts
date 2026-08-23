@@ -1,6 +1,6 @@
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
 /** The listeners a focusable takes from above, in the shape a template attaches them in. */
 export interface FocusResponderHandlers {

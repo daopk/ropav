@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {TableSortableColumnHeaderProps} from "./table.types";
+import type { TableSortableColumnHeaderProps } from "./table.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
-import {IconChevronUp} from "../icons";
+import { composeSlotClassName } from "../../utils/compose";
+import { IconChevronUp } from "../icons";
 
-import {useTableContext} from "./table.context";
+import { useTableContext } from "./table.context";
 
-const props = withDefaults(defineProps<TableSortableColumnHeaderProps>(), {showIndicator: true});
+const props = withDefaults(defineProps<TableSortableColumnHeaderProps>(), { showIndicator: true });
 
-defineSlots<{default?: () => unknown; indicator?: () => unknown}>();
+defineSlots<{ default?: () => unknown; indicator?: () => unknown }>();
 
-const {slots} = useTableContext();
+const { slots } = useTableContext();
 
 const showsIndicator = computed(() => props.showIndicator && Boolean(props.sortDirection));
 </script>

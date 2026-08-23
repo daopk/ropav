@@ -1,7 +1,7 @@
-import {playwright} from "@vitest/browser-playwright";
-import {defineConfig, mergeConfig} from "vitest/config";
+import { playwright } from "@vitest/browser-playwright";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-import {baseConfig} from "./base.mjs";
+import { baseConfig } from "./base.mjs";
 
 /**
  * Playwright Chromium defaults for `*.browser.test.*`.
@@ -20,7 +20,7 @@ export const createBrowserConfig = (setupFile) =>
         browser: {
           enabled: true,
           headless: true,
-          instances: [{browser: "chromium"}],
+          instances: [{ browser: "chromium" }],
           provider: playwright(),
         },
         globals: true,

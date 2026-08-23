@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {ProgressBarRootProps, ProgressBarSlotProps} from "./progress-bar.types";
+import type { ProgressBarRootProps, ProgressBarSlotProps } from "./progress-bar.types";
 
-import {progressBarVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { progressBarVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useProgressLabeling} from "../../composables/use-progress-labeling";
-import {useProgressValue} from "../../composables/use-progress-value";
-import {composeSlotClassName} from "../../utils/compose";
+import { useProgressLabeling } from "../../composables/use-progress-labeling";
+import { useProgressValue } from "../../composables/use-progress-value";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {provideProgressBarContext} from "./progress-bar.context";
+import { provideProgressBarContext } from "./progress-bar.context";
 
-const props = withDefaults(defineProps<ProgressBarRootProps>(), {isIndeterminate: undefined});
+const props = withDefaults(defineProps<ProgressBarRootProps>(), { isIndeterminate: undefined });
 
-defineSlots<{default?: (props: ProgressBarSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ProgressBarSlotProps) => unknown }>();
 
-const {ariaLabelledby, id} = useProgressLabeling({
+const { ariaLabelledby, id } = useProgressLabeling({
   ariaLabel: () => props.ariaLabel,
   ariaLabelledby: () => props.ariaLabelledby,
   id: () => props.id,
@@ -28,9 +28,9 @@ const state = useProgressValue({
   value: () => props.value,
   valueLabel: () => props.valueLabel,
 });
-const slots = computed(() => progressBarVariants({color: props.color, size: props.size}));
+const slots = computed(() => progressBarVariants({ color: props.color, size: props.size }));
 
-provideProgressBarContext({slots, state});
+provideProgressBarContext({ slots, state });
 </script>
 
 <template>

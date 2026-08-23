@@ -1,24 +1,24 @@
-import type {Color} from "../../utils/color-types";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Color } from "../../utils/color-types";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {parseColor} from "../../utils/color";
-import {ButtonRoot} from "../button";
+import { parseColor } from "../../utils/color";
+import { ButtonRoot } from "../button";
 import {
   ColorInputGroupInput,
   ColorInputGroupPrefix,
   ColorInputGroupRoot,
   ColorInputGroupSuffix,
 } from "../color-input-group";
-import {ColorSwatchRoot} from "../color-swatch";
-import {DescriptionRoot} from "../description";
-import {FieldErrorRoot} from "../field-error";
-import {FormRoot} from "../form";
-import {LabelRoot} from "../label";
+import { ColorSwatchRoot } from "../color-swatch";
+import { DescriptionRoot } from "../description";
+import { FieldErrorRoot } from "../field-error";
+import { FormRoot } from "../form";
+import { LabelRoot } from "../label";
 
-import {ColorFieldRoot} from "./index";
+import { ColorFieldRoot } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `ColorField.Group` through, so dot notation cannot be used here.
@@ -56,7 +56,7 @@ export const Default: Story = {
     setup: () => {
       const color = shallowRef<Color | null>(DEFAULT_COLOR);
 
-      return {color, onChange: (value: Color | null) => (color.value = value)};
+      return { color, onChange: (value: Color | null) => (color.value = value) };
     },
     template: `
       <ColorField class="w-[280px]" name="color" :value="color" @change="onChange">
@@ -251,7 +251,7 @@ export const ChannelEditing: Story = {
     setup: () => {
       const color = shallowRef<Color | null>(parseColor("#7F007F"));
 
-      return {color, onChange: (value: Color | null) => (color.value = value)};
+      return { color, onChange: (value: Color | null) => (color.value = value) };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -318,7 +318,7 @@ export const RGBChannels: Story = {
     setup: () => {
       const color = shallowRef<Color | null>(parseColor("#3B82F6"));
 
-      return {color, onChange: (value: Color | null) => (color.value = value)};
+      return { color, onChange: (value: Color | null) => (color.value = value) };
     },
     template: `
       <div class="flex flex-col gap-4">

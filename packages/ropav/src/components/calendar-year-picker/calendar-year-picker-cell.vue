@@ -4,18 +4,18 @@ import type {
   CalendarYearPickerCellSlotProps,
 } from "./calendar-year-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useYearPickerGridContext} from "./calendar-year-picker.context";
+import { useYearPickerGridContext } from "./calendar-year-picker.context";
 
 const props = withDefaults(defineProps<CalendarYearPickerCellProps>(), {
   excludeFromTabOrder: undefined,
 });
 
-defineSlots<{default?: (props: CalendarYearPickerCellSlotProps) => unknown}>();
+defineSlots<{ default?: (props: CalendarYearPickerCellSlotProps) => unknown }>();
 
 const {
   activeYear,
@@ -34,7 +34,7 @@ const {
  */
 const isSelected = computed(() => props.year === focusedYear.value);
 const formattedYear = computed(() => getFormattedYear(props.year));
-const styles = computed(() => slots.value.yearCell({class: props.class}));
+const styles = computed(() => slots.value.yearCell({ class: props.class }));
 
 /**
  * Only one year is a tab stop, and only while the picker is open.

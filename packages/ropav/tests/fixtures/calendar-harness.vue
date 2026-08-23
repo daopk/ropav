@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {CalendarHostProps} from "./calendar-host.types";
+import type { CalendarHostProps } from "./calendar-host.types";
 
-import {createCalendar} from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 
-import {useCalendar} from "@/composables/use-calendar";
-import {useCalendarState} from "@/composables/use-calendar-state";
+import { useCalendar } from "@/composables/use-calendar";
+import { useCalendarState } from "@/composables/use-calendar-state";
 
 /*
  * Every three-state boolean declares `default: undefined`: Vue casts an absent Boolean prop to
@@ -45,7 +45,7 @@ const calendar = useCalendar(
   state,
 );
 
-props.onReady?.({calendar, state});
+props.onReady?.({ calendar, state });
 </script>
 
 <template>

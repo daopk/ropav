@@ -11,7 +11,7 @@
 
 import fs from "fs";
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,22 +21,22 @@ const COMPONENTS_DIR = path.join(__dirname, "..", "components");
 // Patterns to replace: [attribute] -> [attribute="true"]
 const REPLACEMENT_PATTERNS = [
   // ARIA attributes
-  {pattern: /\[aria-disabled\](?!=")/g, replacement: '[aria-disabled="true"]'},
-  {pattern: /\[aria-invalid\](?!=")/g, replacement: '[aria-invalid="true"]'},
-  {pattern: /\[aria-checked\](?!=")/g, replacement: '[aria-checked="true"]'},
-  {pattern: /\[aria-selected\](?!=")/g, replacement: '[aria-selected="true"]'},
-  {pattern: /\[aria-expanded\](?!=")/g, replacement: '[aria-expanded="true"]'},
-  {pattern: /\[aria-multiselectable\](?!=")/g, replacement: '[aria-multiselectable="true"]'},
+  { pattern: /\[aria-disabled\](?!=")/g, replacement: '[aria-disabled="true"]' },
+  { pattern: /\[aria-invalid\](?!=")/g, replacement: '[aria-invalid="true"]' },
+  { pattern: /\[aria-checked\](?!=")/g, replacement: '[aria-checked="true"]' },
+  { pattern: /\[aria-selected\](?!=")/g, replacement: '[aria-selected="true"]' },
+  { pattern: /\[aria-expanded\](?!=")/g, replacement: '[aria-expanded="true"]' },
+  { pattern: /\[aria-multiselectable\](?!=")/g, replacement: '[aria-multiselectable="true"]' },
 
   // Data attributes
-  {pattern: /\[data-hovered\](?!=")/g, replacement: '[data-hovered="true"]'},
-  {pattern: /\[data-focus-visible\](?!=")/g, replacement: '[data-focus-visible="true"]'},
-  {pattern: /\[data-pressed\](?!=")/g, replacement: '[data-pressed="true"]'},
-  {pattern: /\[data-pending\](?!=")/g, replacement: '[data-pending="true"]'},
-  {pattern: /\[data-entering\](?!=")/g, replacement: '[data-entering="true"]'},
-  {pattern: /\[data-exiting\](?!=")/g, replacement: '[data-exiting="true"]'},
-  {pattern: /\[data-open\](?!=")/g, replacement: '[data-open="true"]'},
-  {pattern: /\[data-invalid\](?!=")/g, replacement: '[data-invalid="true"]'},
+  { pattern: /\[data-hovered\](?!=")/g, replacement: '[data-hovered="true"]' },
+  { pattern: /\[data-focus-visible\](?!=")/g, replacement: '[data-focus-visible="true"]' },
+  { pattern: /\[data-pressed\](?!=")/g, replacement: '[data-pressed="true"]' },
+  { pattern: /\[data-pending\](?!=")/g, replacement: '[data-pending="true"]' },
+  { pattern: /\[data-entering\](?!=")/g, replacement: '[data-entering="true"]' },
+  { pattern: /\[data-exiting\](?!=")/g, replacement: '[data-exiting="true"]' },
+  { pattern: /\[data-open\](?!=")/g, replacement: '[data-open="true"]' },
+  { pattern: /\[data-invalid\](?!=")/g, replacement: '[data-invalid="true"]' },
 ];
 
 /**
@@ -58,7 +58,7 @@ function processFile(filePath, dryRun = false) {
   // Collect all matches from all patterns first
   const allMatches = [];
 
-  for (const {pattern, replacement} of REPLACEMENT_PATTERNS) {
+  for (const { pattern, replacement } of REPLACEMENT_PATTERNS) {
     const regex = new RegExp(pattern.source, pattern.flags);
     let match;
 
@@ -74,7 +74,7 @@ function processFile(filePath, dryRun = false) {
   }
 
   if (allMatches.length === 0) {
-    return {changed: false};
+    return { changed: false };
   }
 
   // Sort matches by index in descending order for safe replacement
@@ -84,7 +84,7 @@ function processFile(filePath, dryRun = false) {
   const lineChanges = new Map();
 
   // Process matches in reverse order to preserve indices
-  for (const {index, length, replacement, text} of allMatches) {
+  for (const { index, length, replacement, text } of allMatches) {
     // Find which line this match is on
     const beforeMatch = content.substring(0, index);
     const lineNumber = beforeMatch.split("\n").length;
@@ -124,7 +124,7 @@ function processFile(filePath, dryRun = false) {
 
     let modifiedLine = lineChange.original;
 
-    for (const {length, position, replacement} of lineChange.replacements) {
+    for (const { length, position, replacement } of lineChange.replacements) {
       modifiedLine =
         modifiedLine.substring(0, position) +
         replacement +
@@ -155,7 +155,7 @@ function processFile(filePath, dryRun = false) {
     };
   }
 
-  return {changed: false};
+  return { changed: false };
 }
 
 /**
@@ -200,7 +200,7 @@ function main() {
       if (result.changes.length > 0) {
         const previewCount = Math.min(3, result.changes.length);
 
-        result.changes.slice(0, previewCount).forEach(({line, original, replacement}) => {
+        result.changes.slice(0, previewCount).forEach(({ line, original, replacement }) => {
           console.log(`   Line ${line}:`);
           console.log(`     - ${original}`);
           console.log(`     + ${replacement}`);

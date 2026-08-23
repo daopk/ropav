@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-const props = defineProps<{isOpen?: boolean}>();
+const props = defineProps<{ isOpen?: boolean }>();
 </script>
 
 <template>

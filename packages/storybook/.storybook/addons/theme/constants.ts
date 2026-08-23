@@ -12,8 +12,8 @@ export interface ThemeOption {
 }
 
 export const THEME_OPTIONS: ThemeOption[] = [
-  {value: "light", title: "Light", description: "Light theme"},
-  {value: "dark", title: "Dark", description: "Dark theme"},
+  { value: "light", title: "Light", description: "Light theme" },
+  { value: "dark", title: "Dark", description: "Dark theme" },
 ];
 
 export const isThemeKey = (value: string | undefined | null): value is ThemeKey =>

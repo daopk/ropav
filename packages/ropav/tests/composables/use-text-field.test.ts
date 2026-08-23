@@ -1,11 +1,11 @@
-import type {UseTextFieldReturn} from "@/composables/use-text-field";
+import type { UseTextFieldReturn } from "@/composables/use-text-field";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, reactive } from "vue";
 
 import Harness from "../fixtures/text-field-harness.vue";
-import {expectResetSource} from "../harness/form-reset";
+import { expectResetSource } from "../harness/form-reset";
 
 const cleanups: (() => void)[] = [];
 
@@ -21,9 +21,9 @@ const cleanups: (() => void)[] = [];
 const renderField = (props: Record<string, unknown> = {}) => {
   let field!: UseTextFieldReturn;
 
-  Object.assign(props, {onReady: (ready: UseTextFieldReturn) => (field = ready)});
+  Object.assign(props, { onReady: (ready: UseTextFieldReturn) => (field = ready) });
 
-  const result = renderVapor(Harness, {props});
+  const result = renderVapor(Harness, { props });
 
   cleanups.push(() => result.unmount());
 
@@ -45,7 +45,7 @@ const claim = (claimId: () => string | undefined) => {
 
   cleanups.push(() => scope.stop());
 
-  return {id: scope.run(claimId) as string | undefined, release: () => scope.stop()};
+  return { id: scope.run(claimId) as string | undefined, release: () => scope.stop() };
 };
 
 afterEach(() => {
@@ -57,7 +57,7 @@ describe("useTextField", () => {
     it("carries no listener, so the whole bag is safe to spread", () => {
       // A listener reaching a vapor element through `v-bind` is re-attached on every render
       // and lost mid-dispatch. Asserting the shape is cheaper than rediscovering that.
-      const {field} = renderField();
+      const { field } = renderField();
 
       const listenerKeys = Object.keys(field.attrs.value).filter((key) => /^on/i.test(key));
 
@@ -65,7 +65,7 @@ describe("useTextField", () => {
     });
 
     it("defaults the control to a text input", () => {
-      const {control, field} = renderField();
+      const { control, field } = renderField();
 
       expect(field.attrs.value["type"]).toBe("text");
       // Vue writes `type` as a DOM property and skips an unchanged value, so the default
@@ -76,7 +76,7 @@ describe("useTextField", () => {
 
     it("drops type and pattern once a textarea registers", async () => {
       // Neither is valid on a textarea, and only the element itself can settle which it is.
-      const {control, field} = renderField({
+      const { control, field } = renderField({
         elementType: "textarea",
         pattern: "[0-9]*",
         type: "email",
@@ -91,7 +91,7 @@ describe("useTextField", () => {
     });
 
     it("keeps type and pattern for an input", async () => {
-      const {control, field} = renderField({pattern: "[0-9]*", type: "email"});
+      const { control, field } = renderField({ pattern: "[0-9]*", type: "email" });
 
       await nextTick();
 
@@ -104,7 +104,7 @@ describe("useTextField", () => {
       // Handing `undefined` on has two failure modes: a reflected DOM property gets set to
       // its coerced default and renders an attribute nobody asked for, and a control merging
       // this bag over its own props has them wiped by keys the field never set.
-      const {field} = renderField();
+      const { field } = renderField();
 
       const undefinedKeys = Object.entries(field.attrs.value)
         .filter(([, value]) => value === undefined)
@@ -116,7 +116,7 @@ describe("useTextField", () => {
     });
 
     it("leaves an absent state off rather than rendering it false", () => {
-      const {control, field} = renderField();
+      const { control, field } = renderField();
 
       expect(field.attrs.value["disabled"]).toBeUndefined();
       expect(field.attrs.value["readonly"]).toBeUndefined();
@@ -129,7 +129,7 @@ describe("useTextField", () => {
 
   describe("required", () => {
     it("renders the attribute the browser enforces under native behaviour", () => {
-      const {control, field} = renderField({isRequired: true, validationBehavior: "native"});
+      const { control, field } = renderField({ isRequired: true, validationBehavior: "native" });
 
       expect(field.attrs.value["required"]).toBe(true);
       expect(field.attrs.value["aria-required"]).toBeUndefined();
@@ -137,7 +137,7 @@ describe("useTextField", () => {
     });
 
     it("announces requiredness instead when the browser is not enforcing it", () => {
-      const {control, field} = renderField({isRequired: true, validationBehavior: "aria"});
+      const { control, field } = renderField({ isRequired: true, validationBehavior: "aria" });
 
       expect(field.attrs.value["required"]).toBeUndefined();
       expect(field.attrs.value["aria-required"]).toBe(true);
@@ -151,7 +151,7 @@ describe("useTextField", () => {
     it("points the label at the control and the control back at the label", () => {
       // Both directions are needed: `aria-labelledby` names the control, `for` is what makes
       // a click on the label move focus into it.
-      const {field} = renderField();
+      const { field } = renderField();
       const labelId = claim(() => field.fieldIds.claimLabelId()).id;
 
       expect(field.fieldIds.labelFor.value).toBe(field.inputId.value);
@@ -159,13 +159,13 @@ describe("useTextField", () => {
     });
 
     it("leaves aria-labelledby off when nothing claimed a label", () => {
-      const {field} = renderField();
+      const { field } = renderField();
 
       expect(field.attrs.value["aria-labelledby"]).toBeUndefined();
     });
 
     it("takes a caller id for the control, so a label points at that", () => {
-      const {control, field} = renderField({id: "email"});
+      const { control, field } = renderField({ id: "email" });
 
       expect(control).toHaveAttribute("id", "email");
       expect(field.inputId.value).toBe("email");
@@ -176,13 +176,13 @@ describe("useTextField", () => {
     it("joins its own id in front when it has both a name and a chain", () => {
       // Otherwise assistive technology reads the chain instead of the name rather than
       // alongside it.
-      const {field} = renderField({ariaLabel: "Email", ariaLabelledby: "hint"});
+      const { field } = renderField({ ariaLabel: "Email", ariaLabelledby: "hint" });
 
       expect(field.attrs.value["aria-labelledby"]).toBe(`${field.inputId.value} hint`);
     });
 
     it("uses the chain as given when there is no name of its own", () => {
-      const {field} = renderField({ariaLabelledby: "hint"});
+      const { field } = renderField({ ariaLabelledby: "hint" });
 
       expect(field.attrs.value["aria-labelledby"]).toBe("hint");
     });
@@ -190,7 +190,7 @@ describe("useTextField", () => {
 
   describe("describedby", () => {
     it("lists only the slots something actually rendered", () => {
-      const {field} = renderField();
+      const { field } = renderField();
 
       expect(field.attrs.value["aria-describedby"]).toBeUndefined();
 
@@ -200,7 +200,7 @@ describe("useTextField", () => {
     });
 
     it("puts the description before the error message", () => {
-      const {field} = renderField();
+      const { field } = renderField();
       const description = claim(() => field.fieldIds.claimDescriptionId());
       const errorMessage = claim(() => field.fieldIds.claimErrorMessageId());
 
@@ -208,14 +208,14 @@ describe("useTextField", () => {
     });
 
     it("appends what the caller described the field with", () => {
-      const {field} = renderField({ariaDescribedby: "external"});
+      const { field } = renderField({ ariaDescribedby: "external" });
       const description = claim(() => field.fieldIds.claimDescriptionId());
 
       expect(field.attrs.value["aria-describedby"]).toBe(`${description.id} external`);
     });
 
     it("drops a slot again once its part goes away", () => {
-      const {field} = renderField();
+      const { field } = renderField();
       const description = claim(() => field.fieldIds.claimDescriptionId());
 
       description.release();
@@ -226,13 +226,13 @@ describe("useTextField", () => {
 
   describe("value", () => {
     it("starts empty", () => {
-      const {field} = renderField();
+      const { field } = renderField();
 
       expect(field.value.value).toBe("");
     });
 
     it("supports a default value", () => {
-      const {control, field} = renderField({defaultValue: "hello"});
+      const { control, field } = renderField({ defaultValue: "hello" });
 
       expect(field.value.value).toBe("hello");
       expect(control.value).toBe("hello");
@@ -240,7 +240,7 @@ describe("useTextField", () => {
 
     it("reports what the user typed", async () => {
       const onChange = vi.fn();
-      const {control, field} = renderField({onChange});
+      const { control, field } = renderField({ onChange });
 
       control.value = "typed";
       control.dispatchEvent(new Event("input"));
@@ -254,7 +254,7 @@ describe("useTextField", () => {
       // The browser has already moved the text, and a binding whose value did not change is
       // skipped, so nothing else would restore it.
       const onChange = vi.fn();
-      const {control, field} = renderField({onChange, value: "fixed"});
+      const { control, field } = renderField({ onChange, value: "fixed" });
 
       control.value = "typed";
       control.dispatchEvent(new Event("input"));
@@ -266,8 +266,8 @@ describe("useTextField", () => {
     });
 
     it("follows a controlled value its owner does accept", async () => {
-      const props = reactive({value: "first"});
-      const {control, field} = renderField(props);
+      const props = reactive({ value: "first" });
+      const { control, field } = renderField(props);
 
       expect(field.value.value).toBe("first");
 
@@ -283,7 +283,7 @@ describe("useTextField", () => {
     it("restores the default value and rewrites the control", async () => {
       // A reset restores the element from its `value` attribute, which the binding never
       // wrote, so state and element would otherwise disagree from then on.
-      const {control, field, form} = renderField({defaultValue: "default", withForm: true});
+      const { control, field, form } = renderField({ defaultValue: "default", withForm: true });
 
       await nextTick();
 
@@ -301,7 +301,7 @@ describe("useTextField", () => {
     });
 
     it("leaves the value alone when a reset is cancelled", async () => {
-      const {control, field, form} = renderField({
+      const { control, field, form } = renderField({
         cancelReset: true,
         defaultValue: "default",
         withForm: true,
@@ -323,7 +323,7 @@ describe("useTextField", () => {
       // The assertion the three tests below cannot make. A reset in jsdom is synchronous, so the
       // post-flush property write always lands after it and their `control.value` check passes
       // whether or not the reset source is written at all. This one goes red without it.
-      const {control} = renderField({defaultValue: "default", withForm: true});
+      const { control } = renderField({ defaultValue: "default", withForm: true });
 
       await nextTick();
       expectResetSource(control, "default");
@@ -340,7 +340,7 @@ describe("useTextField", () => {
     it("carries the text a reset restores from, on a textarea", async () => {
       // A different mechanism, not a second case of the same one: a textarea has no `value`
       // attribute, so its default lives in its child text content.
-      const {control} = renderField({
+      const { control } = renderField({
         defaultValue: "default",
         elementType: "textarea",
         withForm: true,
@@ -357,7 +357,7 @@ describe("useTextField", () => {
     });
 
     it("stays out of the way for a field that restores its own value", async () => {
-      const {control, field, form} = renderField({
+      const { control, field, form } = renderField({
         defaultValue: "default",
         skipFormReset: true,
         withForm: true,
@@ -378,7 +378,7 @@ describe("useTextField", () => {
 
   describe("validation", () => {
     it("reports a custom verdict as invalid", () => {
-      const {control, field} = renderField({
+      const { control, field } = renderField({
         validate: () => "Too short",
         validationBehavior: "aria",
       });
@@ -388,7 +388,7 @@ describe("useTextField", () => {
     });
 
     it("lets a caller pin the field valid, shadowing its own verdict", () => {
-      const {field} = renderField({
+      const { field } = renderField({
         isInvalid: false,
         validate: () => "Too short",
         validationBehavior: "aria",
@@ -398,7 +398,7 @@ describe("useTextField", () => {
     });
 
     it("hands the browser the field's own verdict", async () => {
-      const {control} = renderField({
+      const { control } = renderField({
         validate: () => "Too short",
         validationBehavior: "native",
       });
@@ -412,8 +412,8 @@ describe("useTextField", () => {
     it("uses a validation state built elsewhere rather than starting a second one", () => {
       // A number field validates the number it parsed, so a state over the text would give
       // the same field two verdicts that disagree.
-      const outer = renderField({validate: () => "Outer says no", validationBehavior: "aria"});
-      const inner = renderField({validationState: outer.field.validation});
+      const outer = renderField({ validate: () => "Outer says no", validationBehavior: "aria" });
+      const inner = renderField({ validationState: outer.field.validation });
 
       expect(inner.field.validation).toBe(outer.field.validation);
       expect(inner.field.isInvalid.value).toBe(true);
@@ -423,7 +423,7 @@ describe("useTextField", () => {
   describe("focus", () => {
     it("reports focus moving in and out", () => {
       const onFocusChange = vi.fn();
-      const {control} = renderField({onFocusChange});
+      const { control } = renderField({ onFocusChange });
 
       control.dispatchEvent(new FocusEvent("focus"));
 
@@ -435,7 +435,7 @@ describe("useTextField", () => {
     });
 
     it("takes focus when the control first reports itself", async () => {
-      const {control} = renderField({autoFocus: true});
+      const { control } = renderField({ autoFocus: true });
 
       await nextTick();
 
@@ -443,7 +443,7 @@ describe("useTextField", () => {
     });
 
     it("leaves focus alone without autoFocus", async () => {
-      const {control} = renderField();
+      const { control } = renderField();
 
       await nextTick();
 
@@ -455,10 +455,10 @@ describe("useTextField", () => {
     it("forwards keydown and keyup to the caller", () => {
       const onKeydownForward = vi.fn();
       const onKeyupForward = vi.fn();
-      const {control} = renderField({onKeydownForward, onKeyupForward});
+      const { control } = renderField({ onKeydownForward, onKeyupForward });
 
-      control.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}));
-      control.dispatchEvent(new KeyboardEvent("keyup", {key: "Enter"}));
+      control.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+      control.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
       expect(onKeydownForward).toHaveBeenCalledOnce();
       expect(onKeydownForward.mock.calls[0]![0]).toHaveProperty("key", "Enter");

@@ -1,26 +1,26 @@
 <script setup lang="ts" vapor>
-import type {PopoverRootProps} from "./popover.types";
+import type { PopoverRootProps } from "./popover.types";
 
-import {popoverVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { popoverVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {useDialogTrigger} from "../../composables/use-dialog-trigger";
-import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import {provideOverlayTargetContext} from "../overlay";
+import { providePressResponder } from "../../composables/press-responder";
+import { useDialogTrigger } from "../../composables/use-dialog-trigger";
+import { useOverlayTriggerState } from "../../composables/use-overlay-trigger-state";
+import { provideOverlayTargetContext } from "../overlay";
 
-import {providePopoverContext} from "./popover.context";
+import { providePopoverContext } from "./popover.context";
 
 // `isOpen` declares an explicit `undefined` default, which is what distinguishes an uncontrolled
 // popover from one a caller is holding closed.
-const props = withDefaults(defineProps<PopoverRootProps>(), {isOpen: undefined});
+const props = withDefaults(defineProps<PopoverRootProps>(), { isOpen: undefined });
 
 const emit = defineEmits<{
   openChange: [isOpen: boolean];
   "update:isOpen": [isOpen: boolean];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const state = useOverlayTriggerState({
   defaultOpen: props.defaultOpen,
@@ -38,7 +38,7 @@ const trigger = useDialogTrigger({}, state);
 // `Popover.Trigger` exists for markup that is not pressable on its own.
 providePressResponder(trigger.responder);
 
-providePopoverContext({slots: computed(() => popoverVariants())});
+providePopoverContext({ slots: computed(() => popoverVariants()) });
 
 provideOverlayTargetContext({
   // A dialog has no direction to carry into it, unlike a menu opened with an arrow key.

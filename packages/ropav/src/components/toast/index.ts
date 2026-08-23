@@ -4,7 +4,7 @@ import ToastContent from "./toast-content.vue";
 import ToastDescription from "./toast-description.vue";
 import ToastIndicator from "./toast-indicator.vue";
 import ToastProvider from "./toast-provider.vue";
-import {ToastQueue, toast} from "./toast-queue";
+import { ToastQueue, toast } from "./toast-queue";
 import ToastRoot from "./toast-root.vue";
 import ToastTitle from "./toast-title.vue";
 
@@ -72,7 +72,7 @@ export {
   useToastQueue,
 } from "./toast-queue";
 
-export type {ToastFunction, UseToastQueueReturn} from "./toast-queue";
+export type { ToastFunction, UseToastQueueReturn } from "./toast-queue";
 
 export {
   DEFAULT_GAP,
@@ -85,13 +85,13 @@ export {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useToastItemContext, useToastRegionContext} from "./toast.context";
+export { useToastItemContext, useToastRegionContext } from "./toast.context";
 
-export type {ToastItemContext, ToastRegionContext} from "./toast.context";
+export type { ToastItemContext, ToastRegionContext } from "./toast.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toastVariants} from "@ropav/styles";
+export { toastVariants } from "@ropav/styles";
 
-export type {ToastVariants} from "@ropav/styles";
+export type { ToastVariants } from "@ropav/styles";

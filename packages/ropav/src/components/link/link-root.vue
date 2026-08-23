@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {PressEvent} from "../../composables/use-press";
-import type {LinkRootProps, LinkRootSlotProps} from "./link.types";
+import type { PressEvent } from "../../composables/use-press";
+import type { LinkRootProps, LinkRootSlotProps } from "./link.types";
 
-import {linkVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { linkVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {usePress} from "../../composables/use-press";
-import {dataAttr} from "../../utils/assertion";
-import {useFieldsetContext} from "../fieldset/fieldset.context";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { usePress } from "../../composables/use-press";
+import { dataAttr } from "../../utils/assertion";
+import { useFieldsetContext } from "../fieldset/fieldset.context";
 
-import {provideLinkContext} from "./link.context";
+import { provideLinkContext } from "./link.context";
 
 // Every prop whose type *includes* `boolean` declares an explicit `undefined` default. Vue casts
 // an absent boolean to `false`, and a union containing boolean is enough for that to happen — the
@@ -25,9 +25,9 @@ const props = withDefaults(defineProps<LinkRootProps>(), {
 // Activation is published as a press rather than left to the DOM click. A link with no href
 // renders as a span, where Enter is prevented and no click follows — so a consumer listening for
 // clicks would never hear a keyboard activation. React routes the same signal through `onPress`.
-const emit = defineEmits<{press: [event: PressEvent]}>();
+const emit = defineEmits<{ press: [event: PressEvent] }>();
 
-defineSlots<{default?: (props: LinkRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: LinkRootSlotProps) => unknown }>();
 
 const fieldset = useFieldsetContext();
 
@@ -35,9 +35,9 @@ const resolvedIsDisabled = computed(() => Boolean(props.isDisabled ?? fieldset?.
 
 const slots = computed(() => linkVariants());
 
-provideLinkContext({slots});
+provideLinkContext({ slots });
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 // Press comes from `usePress` rather than from the interaction states, because a link activates
 // on Enter and the pressed styling has to follow the key being held — the interaction states
@@ -46,7 +46,7 @@ const press = usePress({
   isDisabled: resolvedIsDisabled,
   onPress: (event) => emit("press", event),
 });
-const interaction = useInteractionStates({isDisabled: resolvedIsDisabled});
+const interaction = useInteractionStates({ isDisabled: resolvedIsDisabled });
 
 // An anchor with no destination is not a link to the browser, and neither is a disabled one —
 // so those render as a span carrying the role instead, exactly as in React. The consequence is

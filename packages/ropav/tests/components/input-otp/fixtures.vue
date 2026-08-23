@@ -1,10 +1,15 @@
 <script setup lang="ts" vapor>
-import type {InputOTPFixtureProps} from "./fixtures.types";
+import type { InputOTPFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {InputOTPGroup, InputOTPRoot, InputOTPSeparator, InputOTPSlot} from "@/components/input-otp";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import {
+  InputOTPGroup,
+  InputOTPRoot,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/input-otp";
+import { Label } from "@/components/label";
 
 // `isDisabled` and `isInvalid` are left to cast, as the component does: nothing sits above the
 // field to inherit them from, so a cast `false` says exactly what an absent prop says.

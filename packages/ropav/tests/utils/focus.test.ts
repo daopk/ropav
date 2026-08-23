@@ -1,6 +1,11 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {FOCUSABLE_SELECTOR, createFocusManager, focusableIn, isElementVisible} from "@/utils/focus";
+import {
+  FOCUSABLE_SELECTOR,
+  createFocusManager,
+  focusableIn,
+  isElementVisible,
+} from "@/utils/focus";
 
 const build = (html: string) => {
   const container = document.createElement("div");
@@ -120,7 +125,7 @@ describe("focus utils", () => {
     };
 
     it("moves to each end", () => {
-      const {active, manager} = row();
+      const { active, manager } = row();
 
       expect(manager.focusFirst()?.id).toBe("first");
       expect(active()).toBe("first");
@@ -129,7 +134,7 @@ describe("focus utils", () => {
     });
 
     it("steps from whatever holds focus", () => {
-      const {active, manager} = row();
+      const { active, manager } = row();
 
       manager.focusFirst();
       manager.focusNext();
@@ -142,7 +147,7 @@ describe("focus utils", () => {
 
     it("skips whatever is not a stop", () => {
       // The separators between segments are not focusable, so one arrow press crosses them.
-      const {active, manager} = row();
+      const { active, manager } = row();
 
       manager.focusFirst();
       manager.focusNext();
@@ -151,7 +156,7 @@ describe("focus utils", () => {
     });
 
     it("stops at the ends", () => {
-      const {active, manager} = row();
+      const { active, manager } = row();
 
       manager.focusLast();
       expect(manager.focusNext()).toBeNull();
@@ -163,15 +168,15 @@ describe("focus utils", () => {
     });
 
     it("continues at the other end when asked to wrap", () => {
-      const {manager} = row();
+      const { manager } = row();
 
       manager.focusLast();
-      expect(manager.focusNext({wrap: true})?.id).toBe("first");
-      expect(manager.focusPrevious({wrap: true})?.id).toBe("third");
+      expect(manager.focusNext({ wrap: true })?.id).toBe("first");
+      expect(manager.focusPrevious({ wrap: true })?.id).toBe("third");
     });
 
     it("starts at an end when focus is elsewhere", () => {
-      const {manager} = row();
+      const { manager } = row();
       const outside = document.createElement("button");
 
       document.body.appendChild(outside);
@@ -185,12 +190,12 @@ describe("focus utils", () => {
     });
 
     it("moves from a given element rather than from focus", () => {
-      const {container, manager} = row();
+      const { container, manager } = row();
       const second = container.querySelector<HTMLElement>("#second")!;
 
       manager.focusFirst();
 
-      expect(manager.focusNext({from: second})?.id).toBe("third");
+      expect(manager.focusNext({ from: second })?.id).toBe("third");
     });
 
     it("does nothing before its root exists", () => {

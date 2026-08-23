@@ -1,4 +1,4 @@
-import type {LocalizedString, LocalizedStrings} from "@internationalized/string";
+import type { LocalizedString, LocalizedStrings } from "@internationalized/string";
 
 /** Every message key the date validation strings define. */
 export type DateValidationStringKey =

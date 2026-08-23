@@ -1,19 +1,22 @@
 <script setup lang="ts" vapor generic="T">
-import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {AutocompleteFilterProps, AutocompleteFilterSlotProps} from "./autocomplete.types";
+import type { UseListKeyboardReturn } from "../../composables/use-list-keyboard";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { AutocompleteFilterProps, AutocompleteFilterSlotProps } from "./autocomplete.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {provideAutocompleteInputContext, useAutocomplete} from "../../composables/use-autocomplete";
-import {useCollection} from "../../composables/use-collection";
-import {useControllableState} from "../../composables/use-controllable-state";
-import {defaultItemTextValue} from "../../composables/use-select-state";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {createListCollection} from "../../utils/virtualizer-collection";
-import {provideListBoxStateContext} from "../list-box";
+import {
+  provideAutocompleteInputContext,
+  useAutocomplete,
+} from "../../composables/use-autocomplete";
+import { useCollection } from "../../composables/use-collection";
+import { useControllableState } from "../../composables/use-controllable-state";
+import { defaultItemTextValue } from "../../composables/use-select-state";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { createListCollection } from "../../utils/virtualizer-collection";
+import { provideListBoxStateContext } from "../list-box";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 // `disableAutoFocusFirst` and `disableVirtualFocus` declare an explicit `undefined` default so an
 // absent prop stays absent rather than reading as an explicit `false`.
@@ -27,7 +30,7 @@ const emit = defineEmits<{
   "update:inputValue": [value: string];
 }>();
 
-defineSlots<{default?: (props: AutocompleteFilterSlotProps<T>) => unknown}>();
+defineSlots<{ default?: (props: AutocompleteFilterSlotProps<T>) => unknown }>();
 
 const root = useAutocompleteContext();
 
@@ -37,7 +40,7 @@ const root = useAutocompleteContext();
  * The field is one way of typing it — a caller could put a plain input there instead — and the
  * options that match it have to be known before either of them renders.
  */
-const {setState: setInputValue, state: inputValue} = useControllableState<string>({
+const { setState: setInputValue, state: inputValue } = useControllableState<string>({
   defaultValue: props.defaultInputValue ?? "",
   onValueChange: (value) => {
     emit("inputChange", value);
@@ -82,7 +85,7 @@ const filteredSource = computed(() =>
   }),
 );
 
-const collection = useCollection({source: () => filteredSource.value});
+const collection = useCollection({ source: () => filteredSource.value });
 
 /**
  * A second selection over the narrowed options, driven by the root's and writing back into it.

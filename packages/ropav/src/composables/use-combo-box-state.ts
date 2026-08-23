@@ -1,30 +1,30 @@
-import type {VirtualizerCollection, VirtualizerNode} from "../utils/virtualizer-layout";
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
+import type { VirtualizerCollection, VirtualizerNode } from "../utils/virtualizer-layout";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
 import type {
   FormValidationState,
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {FocusStrategy, MenuTriggerState} from "./use-overlay-trigger-state";
-import type {SelectSelectionMode, SelectedItem, SelectedValue} from "./use-select-state";
+import type { FocusStrategy, MenuTriggerState } from "./use-overlay-trigger-state";
+import type { SelectSelectionMode, SelectedItem, SelectedValue } from "./use-select-state";
 import type {
   CollectionSelection,
   DisabledBehavior,
   UseSelectionManagerReturn,
 } from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
-import {createListCollection} from "../utils/virtualizer-collection";
+import { createListCollection } from "../utils/virtualizer-collection";
 
-import {useCollection} from "./use-collection";
-import {useControllableState} from "./use-controllable-state";
-import {useFilter} from "./use-filter";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useMenuTriggerState} from "./use-overlay-trigger-state";
-import {defaultItemTextValue} from "./use-select-state";
-import {useSelectionManager} from "./use-selection-manager";
+import { useCollection } from "./use-collection";
+import { useControllableState } from "./use-controllable-state";
+import { useFilter } from "./use-filter";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useMenuTriggerState } from "./use-overlay-trigger-state";
+import { defaultItemTextValue } from "./use-select-state";
+import { useSelectionManager } from "./use-selection-manager";
 
 /**
  * What made the popover open, which decides whether it shows every option or only the matches.
@@ -193,7 +193,7 @@ export const useComboBoxState = <T>(
     }),
   );
 
-  const sourceCollection = useCollection({source: () => source.value});
+  const sourceCollection = useCollection({ source: () => source.value });
 
   const defaultValue = computed<SelectedValue>(
     () => options.defaultValue ?? (selectionMode.value === "single" ? null : []),
@@ -232,7 +232,7 @@ export const useComboBoxState = <T>(
   const showAllItems = shallowRef(false);
   const isFocusedRef = shallowRef(false);
 
-  const filter = useFilter({sensitivity: "base"});
+  const filter = useFilter({ sensitivity: "base" });
 
   /**
    * The matches, or every option when the caller narrows `items` itself.
@@ -281,7 +281,7 @@ export const useComboBoxState = <T>(
     return showAllItems.value ? source.value : filtered.value;
   });
 
-  const collection = useCollection({source: () => displayed.value});
+  const collection = useCollection({ source: () => displayed.value });
 
   const displayedItems = computed<T[]>(() =>
     displayed.value.keys.flatMap((key) => {
@@ -336,7 +336,7 @@ export const useComboBoxState = <T>(
 
       if (Array.isArray(current) && current.length === 0) return null;
 
-      return {inputValue: inputValue.value, value: current};
+      return { inputValue: inputValue.value, value: current };
     },
   });
 
@@ -400,7 +400,7 @@ export const useComboBoxState = <T>(
 
       if (!node) return [];
 
-      return [{key, textValue: textOf(key), value: node.content as T}];
+      return [{ key, textValue: textOf(key), value: node.content as T }];
     }),
   );
 
@@ -657,7 +657,7 @@ export const useComboBoxState = <T>(
     (next) => {
       if (next) lastCollection.value = next;
     },
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   watch(
@@ -672,7 +672,7 @@ export const useComboBoxState = <T>(
       textOf(selectedKey.value),
     ],
     sync,
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   return {

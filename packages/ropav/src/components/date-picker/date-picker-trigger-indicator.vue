@@ -1,19 +1,19 @@
 <script setup lang="ts" vapor>
-import type {DatePickerTriggerIndicatorProps} from "./date-picker.types";
+import type { DatePickerTriggerIndicatorProps } from "./date-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {IconCalendar} from "../icons";
+import { IconCalendar } from "../icons";
 
-import {useDatePickerContext} from "./date-picker.context";
+import { useDatePickerContext } from "./date-picker.context";
 
 const props = defineProps<DatePickerTriggerIndicatorProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const picker = useDatePickerContext();
 
-const styles = computed(() => picker.slots.value.triggerIndicator({class: props.class}));
+const styles = computed(() => picker.slots.value.triggerIndicator({ class: props.class }));
 </script>
 
 <template>

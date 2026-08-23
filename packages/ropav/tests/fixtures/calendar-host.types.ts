@@ -1,10 +1,10 @@
-import type {UseCalendarReturn} from "@/composables/use-calendar";
+import type { UseCalendarReturn } from "@/composables/use-calendar";
 import type {
   CalendarSelectionMode,
   CalendarState,
   CalendarValue,
 } from "@/composables/use-calendar-state";
-import type {DateDuration, DateValue} from "@internationalized/date";
+import type { DateDuration, DateValue } from "@internationalized/date";
 
 export interface CalendarHostProps {
   id?: string;
@@ -25,5 +25,5 @@ export interface CalendarHostProps {
   isInvalid?: boolean;
   locale?: string;
   /** Hands the live hooks back to the test. */
-  onReady?: (value: {calendar: UseCalendarReturn; state: CalendarState}) => void;
+  onReady?: (value: { calendar: UseCalendarReturn; state: CalendarState }) => void;
 }

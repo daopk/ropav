@@ -1,8 +1,8 @@
-import type {DateFieldState, DateSegment} from "@/composables/use-date-field-state";
-import type {UseDatePickerGroupReturn} from "@/composables/use-date-picker-group";
-import type {Granularity, MaxGranularity} from "@/utils/date-format";
-import type {FocusManager} from "@/utils/focus";
-import type {DateValue} from "@internationalized/date";
+import type { DateFieldState, DateSegment } from "@/composables/use-date-field-state";
+import type { UseDatePickerGroupReturn } from "@/composables/use-date-picker-group";
+import type { Granularity, MaxGranularity } from "@/utils/date-format";
+import type { FocusManager } from "@/utils/focus";
+import type { DateValue } from "@internationalized/date";
 
 export interface DateSegmentPartProps {
   segment: DateSegment;

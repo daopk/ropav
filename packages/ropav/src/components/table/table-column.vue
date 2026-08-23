@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {TableColumnProps, TableColumnSlotProps, TableSortDirection} from "./table.types";
+import type { TableColumnProps, TableColumnSlotProps, TableSortDirection } from "./table.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useDescription} from "../../composables/use-description";
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {tableColumnHeaderId} from "../../composables/use-table-collection";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {getCollectionTextValue} from "../../utils/text-value";
+import { useDescription } from "../../composables/use-description";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { tableColumnHeaderId } from "../../composables/use-table-collection";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { getCollectionTextValue } from "../../utils/text-value";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {
@@ -22,10 +22,10 @@ import {
 
 const props = defineProps<TableColumnProps>();
 
-defineSlots<{default?: (props: TableColumnSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TableColumnSlotProps) => unknown }>();
 
-const {slots} = useTableContext();
-const {collection, collectionId, keyboard, sort, sortDescriptor, tableId} = useTableGridContext();
+const { slots } = useTableContext();
+const { collection, collectionId, keyboard, sort, sortDescriptor, tableId } = useTableGridContext();
 
 // Falls back to a generated key so a column without an `id` still has a stable identity — the
 // same thing React Aria does when a `<Column>` carries no key.
@@ -53,7 +53,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const index = computed(() => collection.columns.indexOf(columnKey.value));
@@ -76,11 +76,11 @@ const ariaSort = computed(() =>
 
 // Says the header can be pressed at all — `aria-sort` reports the order but not that it is
 // yours to change. The wording is react-aria's own en-US string.
-const {describedBy} = useDescription(() => (allowsSorting.value ? "sortable column" : undefined));
+const { describedBy } = useDescription(() => (allowsSorting.value ? "sortable column" : undefined));
 
 const headerId = computed(() => tableColumnHeaderId(tableId.value, columnKey.value));
 
-provideTableColumnContext({columnKey, headerId});
+provideTableColumnContext({ columnKey, headerId });
 
 // Only inside a resizable container does a column have a width of its own; otherwise the browser
 // lays the table out and the attribute would fight it.
@@ -141,7 +141,7 @@ const onFocus = (event: FocusEvent) => {
 
   if (event.target !== element.value) return;
 
-  keyboard.claimFocus({columnKey: columnKey.value, rowKey: null});
+  keyboard.claimFocus({ columnKey: columnKey.value, rowKey: null });
 };
 
 /**
@@ -180,7 +180,7 @@ const onKeydown = (event: KeyboardEvent) => {
       data-slot="table-column"
       :data-sort-direction="sortDirection"
       role="columnheader"
-      :style="width ? {width} : undefined"
+      :style="width ? { width } : undefined"
       :tabindex="keyboard.columnTabIndex(columnKey)"
       @blur="states.onBlur"
       @click="onClick"

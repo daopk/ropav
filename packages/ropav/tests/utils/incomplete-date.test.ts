@@ -4,9 +4,9 @@ import {
   ZonedDateTime,
   createCalendar,
 } from "@internationalized/date";
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {IncompleteDate, fromHourCycle, toHourCycle} from "@/utils/incomplete-date";
+import { IncompleteDate, fromHourCycle, toHourCycle } from "@/utils/incomplete-date";
 
 const gregory = createCalendar("gregory");
 
@@ -64,7 +64,14 @@ describe("IncompleteDate", () => {
     it("takes each segment from the value", () => {
       const date = new IncompleteDate(gregory, "h23", new CalendarDateTime(2026, 6, 5, 13, 45, 30));
 
-      expect(date).toMatchObject({day: 5, hour: 13, minute: 45, month: 6, second: 30, year: 2026});
+      expect(date).toMatchObject({
+        day: 5,
+        hour: 13,
+        minute: 45,
+        month: 6,
+        second: 30,
+        year: 2026,
+      });
     });
 
     it("converts the hour into the locale's own clock", () => {
@@ -75,7 +82,7 @@ describe("IncompleteDate", () => {
     });
 
     it("leaves every segment blank for no value", () => {
-      expect(blank()).toMatchObject({day: null, hour: null, month: null, year: null});
+      expect(blank()).toMatchObject({ day: null, hour: null, month: null, year: null });
     });
   });
 
@@ -132,7 +139,7 @@ describe("IncompleteDate", () => {
       const previous = year1.cycle("year", -1, JANUARY_15, ["year", "month", "day"]);
 
       // Stepping below AD 1 reaches BC 1, not year 0 — which no calendar has.
-      expect(previous).toMatchObject({era: "BC", year: 1});
+      expect(previous).toMatchObject({ era: "BC", year: 1 });
     });
 
     it("cycles the day period between the two halves of the day", () => {
@@ -148,7 +155,7 @@ describe("IncompleteDate", () => {
       // An hour with no period is ambiguous, so one is taken from the placeholder.
       const set = blank("h12").set("hour", 5, new CalendarDateTime(2026, 1, 15, 21, 0));
 
-      expect(set).toMatchObject({dayPeriod: 1, hour: 5});
+      expect(set).toMatchObject({ dayPeriod: 1, hour: 5 });
     });
 
     it("takes the era alongside a year that has none", () => {
@@ -162,13 +169,13 @@ describe("IncompleteDate", () => {
       const dated = new IncompleteDate(gregory, "h23", new CalendarDate(2026, 6, 5));
 
       expect(dated.era).toBe("AD");
-      expect(dated.clear("year")).toMatchObject({era: null, year: null});
+      expect(dated.clear("year")).toMatchObject({ era: null, year: null });
     });
 
     it("leaves the other segments alone", () => {
       const dated = new IncompleteDate(gregory, "h23", new CalendarDate(2026, 6, 5));
 
-      expect(dated.clear("day")).toMatchObject({day: null, month: 6, year: 2026});
+      expect(dated.clear("day")).toMatchObject({ day: null, month: 6, year: 2026 });
     });
   });
 
@@ -214,13 +221,13 @@ describe("IncompleteDate", () => {
     it("reports the day range across any month", () => {
       const february = new IncompleteDate(gregory, "h23", new CalendarDate(2026, 2, 28));
 
-      expect(february.getSegmentLimits("day")).toEqual({maxValue: 31, minValue: 1, value: 28});
+      expect(february.getSegmentLimits("day")).toEqual({ maxValue: 31, minValue: 1, value: 28 });
     });
 
     it("reports the hour range for each clock", () => {
-      expect(blank("h12").getSegmentLimits("hour")).toMatchObject({maxValue: 12, minValue: 1});
-      expect(blank("h11").getSegmentLimits("hour")).toMatchObject({maxValue: 11, minValue: 0});
-      expect(blank("h23").getSegmentLimits("hour")).toMatchObject({maxValue: 23, minValue: 0});
+      expect(blank("h12").getSegmentLimits("hour")).toMatchObject({ maxValue: 12, minValue: 1 });
+      expect(blank("h11").getSegmentLimits("hour")).toMatchObject({ maxValue: 11, minValue: 0 });
+      expect(blank("h23").getSegmentLimits("hour")).toMatchObject({ maxValue: 23, minValue: 0 });
     });
 
     it("has nothing to say about a literal", () => {

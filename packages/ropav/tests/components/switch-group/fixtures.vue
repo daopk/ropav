@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {SwitchGroupRootProps} from "@/components/switch-group";
+import type { SwitchGroupRootProps } from "@/components/switch-group";
 
-import {Switch} from "@/components/switch";
-import {SwitchGroup} from "@/components/switch-group";
+import { Switch } from "@/components/switch";
+import { SwitchGroup } from "@/components/switch-group";
 
 defineProps<
   SwitchGroupRootProps & {
@@ -12,9 +12,9 @@ defineProps<
 >();
 
 const items = [
-  {label: "Allow Notifications", name: "notifications"},
-  {label: "Marketing emails", name: "marketing"},
-  {label: "Social media updates", name: "social"},
+  { label: "Allow Notifications", name: "notifications" },
+  { label: "Marketing emails", name: "marketing" },
+  { label: "Social media updates", name: "social" },
 ];
 </script>
 

@@ -1,16 +1,16 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 import IconBox from "~icons/gravity-ui/box";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconChevronUp from "~icons/gravity-ui/chevron-up";
 import IconQrCode from "~icons/gravity-ui/qr-code";
 import IconApple from "~icons/tabler/brand-apple-filled";
 
-import {qrCodeSrc} from "../../utils/story-assets";
-import {Button} from "../button";
-import {Chip} from "../chip";
+import { qrCodeSrc } from "../../utils/story-assets";
+import { Button } from "../button";
+import { Chip } from "../chip";
 
 import {
   Disclosure,
@@ -47,8 +47,8 @@ const QR_CODE_SRC = qrCodeSrc("https://github.com/daopk/ropav");
 
 const meta: StoryMeta = {
   argTypes: {
-    isDisabled: {control: {type: "boolean"}},
-    isExpanded: {control: {type: "boolean"}},
+    isDisabled: { control: { type: "boolean" } },
+    isExpanded: { control: { type: "boolean" } },
   },
   args: {
     isDisabled: false,
@@ -107,7 +107,7 @@ const setupTemplate = (args: Record<string, unknown>) => () => ({
 });
 
 export const Default: Story = {
-  render: (args) => ({components, setup: setupTemplate(args), template}),
+  render: (args) => ({ components, setup: setupTemplate(args), template }),
 };
 
 export const Controlled: Story = {
@@ -151,7 +151,7 @@ export const Controlled: Story = {
 export const ProductDetails: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, isExpanded: shallowRef(false)}),
+    setup: () => ({ args, isExpanded: shallowRef(false) }),
     template: `
       <div class="w-full max-w-md">
         <Disclosure :is-disabled="args.isDisabled" :is-expanded="isExpanded" @expanded-change="isExpanded = $event">
@@ -200,11 +200,11 @@ export const ProductDetails: Story = {
 };
 
 export const InitiallyExpanded: Story = {
-  args: {isExpanded: true},
-  render: (args) => ({components, setup: setupTemplate(args), template}),
+  args: { isExpanded: true },
+  render: (args) => ({ components, setup: setupTemplate(args), template }),
 };
 
 export const Disabled: Story = {
-  args: {isDisabled: true},
-  render: (args) => ({components, setup: setupTemplate(args), template}),
+  args: { isDisabled: true },
+  render: (args) => ({ components, setup: setupTemplate(args), template }),
 };

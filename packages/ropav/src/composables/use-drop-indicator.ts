@@ -1,22 +1,22 @@
-import type {DragKey} from "../utils/dnd-types";
-import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
-import type {UseDroppableItemOptions} from "./use-droppable-item";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { DragKey } from "../utils/dnd-types";
+import type { UseDroppableCollectionStateReturn } from "./use-droppable-collection-state";
+import type { UseDroppableItemOptions } from "./use-droppable-item";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {computed, useId} from "vue";
+import { computed, useId } from "vue";
 
-import {dndStrings} from "../i18n/dnd";
+import { dndStrings } from "../i18n/dnd";
 
-import {useDragSession} from "./drag-manager";
-import {getDroppableCollectionId} from "./droppable-collection-registry";
-import {useDroppableItem} from "./use-droppable-item";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDragSession } from "./drag-manager";
+import { getDroppableCollectionId } from "./droppable-collection-registry";
+import { useDroppableItem } from "./use-droppable-item";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export type UseDropIndicatorOptions = UseDroppableItemOptions;
 
 export interface UseDropIndicatorReturn {
   attrs: ComputedRef<Record<string, unknown>>;
-  handlers: {onClick: () => void};
+  handlers: { onClick: () => void };
   isDropTarget: ComputedRef<boolean>;
   /**
    * Whether the indicator should not be rendered at all.
@@ -49,12 +49,12 @@ export const useDropIndicator = (
     key == null ? "" : (state.collection.getItem(key)?.textValue ?? "");
 
   const label = computed(() => {
-    const {target} = options;
+    const { target } = options;
 
     if (target.type === "root") return stringFormatter.value.format("dropOnRoot");
 
     if (target.dropPosition === "on") {
-      return stringFormatter.value.format("dropOnItem", {itemText: textOf(target.key)});
+      return stringFormatter.value.format("dropOnItem", { itemText: textOf(target.key) });
     }
 
     // A gap is named by what sits on either side of it. One side is the target itself; the other
@@ -88,11 +88,11 @@ export const useDropIndicator = (
     }
 
     if (before != null) {
-      return stringFormatter.value.format("insertAfter", {itemText: textOf(before)});
+      return stringFormatter.value.format("insertAfter", { itemText: textOf(before) });
     }
 
     if (after != null) {
-      return stringFormatter.value.format("insertBefore", {itemText: textOf(after)});
+      return stringFormatter.value.format("insertBefore", { itemText: textOf(after) });
     }
 
     return "";

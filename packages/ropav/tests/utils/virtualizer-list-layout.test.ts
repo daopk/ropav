@@ -1,19 +1,19 @@
-import type {DropTarget} from "@/utils/dnd-types";
+import type { DropTarget } from "@/utils/dnd-types";
 import type {
   VirtualizerCollection,
   VirtualizerLayoutHost,
   VirtualizerNode,
 } from "@/utils/virtualizer-layout";
-import type {VirtualizerKey} from "@/utils/virtualizer-layout-info";
+import type { VirtualizerKey } from "@/utils/virtualizer-layout-info";
 
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {createListCollection} from "@/utils/virtualizer-collection";
-import {Rect, Size} from "@/utils/virtualizer-geometry";
-import {ListLayout} from "@/utils/virtualizer-list-layout";
+import { createListCollection } from "@/utils/virtualizer-collection";
+import { Rect, Size } from "@/utils/virtualizer-geometry";
+import { ListLayout } from "@/utils/virtualizer-list-layout";
 
 const makeItems = (count: number) =>
-  Array.from({length: count}, (_, index) => ({id: `item-${index}`, name: `Item ${index}`}));
+  Array.from({ length: count }, (_, index) => ({ id: `item-${index}`, name: `Item ${index}` }));
 
 interface HostOptions {
   collection?: VirtualizerCollection;
@@ -29,7 +29,7 @@ const createHost = (options: HostOptions = {}): VirtualizerLayoutHost => {
 
   return {
     collection:
-      options.collection ?? createListCollection({items: makeItems(options.itemCount ?? 0)}),
+      options.collection ?? createListCollection({ items: makeItems(options.itemCount ?? 0) }),
     isPersistedKey: (key) => persistedKeys.has(key),
     persistedKeys,
     size: options.size ?? new Size(300, 400),
@@ -50,7 +50,7 @@ const keysIn = (layout: ListLayout, rect: Rect) =>
 describe("ListLayout", () => {
   describe("content size", () => {
     it("stacks fixed rows and takes its width from the container", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
       // 1000 rows of 50px, no gap and no padding.
       expect(layout.getContentSize()).toEqual(new Size(300, 50_000));
@@ -60,8 +60,8 @@ describe("ListLayout", () => {
 
     it("insets by the padding and puts the gap only between rows", () => {
       const layout = attach(
-        new ListLayout({gap: 10, padding: 4, rowSize: 50}),
-        createHost({itemCount: 3}),
+        new ListLayout({ gap: 10, padding: 4, rowSize: 50 }),
+        createHost({ itemCount: 3 }),
       );
 
       expect(layout.getLayoutInfo("item-0")?.rect).toEqual(new Rect(4, 4, 292, 50));
@@ -72,7 +72,10 @@ describe("ListLayout", () => {
     });
 
     it("has no size and no padding when the collection is empty", () => {
-      const layout = attach(new ListLayout({padding: 4, rowSize: 50}), createHost({itemCount: 0}));
+      const layout = attach(
+        new ListLayout({ padding: 4, rowSize: 50 }),
+        createHost({ itemCount: 0 }),
+      );
 
       expect(layout.getContentSize()).toEqual(new Size(300, 0));
       expect(layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400))).toEqual([]);
@@ -81,36 +84,36 @@ describe("ListLayout", () => {
 
   describe("row size", () => {
     it("marks a row estimated when only an estimate was given", () => {
-      const layout = attach(new ListLayout({estimatedRowSize: 40}), createHost({itemCount: 2}));
+      const layout = attach(new ListLayout({ estimatedRowSize: 40 }), createHost({ itemCount: 2 }));
 
       expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(40);
       expect(layout.getLayoutInfo("item-1")?.estimatedSize).toBe(true);
     });
 
     it("does not mark a fixed row estimated", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 2}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 2 }));
 
       expect(layout.getLayoutInfo("item-1")?.estimatedSize).toBe(false);
     });
 
     it("falls back to React Aria's 48px when neither size is given", () => {
-      const layout = attach(new ListLayout(), createHost({itemCount: 2}));
+      const layout = attach(new ListLayout(), createHost({ itemCount: 2 }));
 
       expect(layout.getLayoutInfo("item-1")?.rect).toEqual(new Rect(0, 48, 300, 48));
     });
 
     it("takes new options on the next update", () => {
-      const host = createHost({itemCount: 10});
-      const layout = attach(new ListLayout({rowSize: 50}), host);
+      const host = createHost({ itemCount: 10 });
+      const layout = attach(new ListLayout({ rowSize: 50 }), host);
 
-      layout.update({layoutOptions: {rowSize: 20}});
+      layout.update({ layoutOptions: { rowSize: 20 } });
 
       expect(layout.getLayoutInfo("item-2")?.rect).toEqual(new Rect(0, 40, 300, 20));
       expect(layout.getContentSize()).toEqual(new Size(300, 200));
     });
 
     it("accepts React Aria's deprecated rowHeight alias, which the stories still pass", () => {
-      const layout = attach(new ListLayout({rowHeight: 50}), createHost({itemCount: 2}));
+      const layout = attach(new ListLayout({ rowHeight: 50 }), createHost({ itemCount: 2 }));
 
       expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(50);
     });
@@ -118,7 +121,7 @@ describe("ListLayout", () => {
 
   describe("visible layout infos", () => {
     it("returns the rows the rectangle covers, including the one it only touches", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
       // 400px of viewport is 8 whole rows; the row starting exactly at 400 touches the edge and
       // counts, matching React Aria's inclusive comparison.
@@ -136,12 +139,12 @@ describe("ListLayout", () => {
     });
 
     it("grows the rectangle to whole rows so a scroll within one row does not churn", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
       // Anywhere inside row 2 the rectangle snaps to the same 100..550: y floors to 100 and the
       // height grows to cover what the floor gave away. Every offset in that row renders the
       // same eleven rows, so scrolling a pixel at a time mounts nothing and unmounts nothing.
-      const insideRowTwo = Array.from({length: 11}, (_, index) => `item-${index + 1}`);
+      const insideRowTwo = Array.from({ length: 11 }, (_, index) => `item-${index + 1}`);
 
       expect(keysIn(layout, new Rect(0, 101, 300, 400))).toEqual(insideRowTwo);
       expect(keysIn(layout, new Rect(0, 137, 300, 400))).toEqual(insideRowTwo);
@@ -151,12 +154,12 @@ describe("ListLayout", () => {
       expect(keysIn(layout, new Rect(0, 100, 300, 400))).toEqual(insideRowTwo.slice(0, 10));
       // The set only ever slides by whole rows: the next row down starts one key later.
       expect(keysIn(layout, new Rect(0, 151, 300, 400))).toEqual(
-        Array.from({length: 11}, (_, index) => `item-${index + 2}`),
+        Array.from({ length: 11 }, (_, index) => `item-${index + 2}`),
       );
     });
 
     it("returns nothing for an unmeasured rectangle", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
       // The guard React Aria drops in tests: a container with no height shows no rows.
       expect(keysIn(layout, new Rect(0, 0, 300, 0))).toEqual([]);
@@ -164,8 +167,8 @@ describe("ListLayout", () => {
 
     it("keeps a persisted key in the window from far outside it", () => {
       const layout = attach(
-        new ListLayout({rowSize: 50}),
-        createHost({itemCount: 1000, persistedKeys: ["item-900"]}),
+        new ListLayout({ rowSize: 50 }),
+        createHost({ itemCount: 1000, persistedKeys: ["item-900"] }),
       );
 
       // The roving tab stop lives on the focused row; losing its element drops focus outright.
@@ -175,10 +178,10 @@ describe("ListLayout", () => {
 
   describe("node types", () => {
     it("sizes a loader by its own option", () => {
-      const collection = createListCollection({items: makeItems(1), type: "loader"});
+      const collection = createListCollection({ items: makeItems(1), type: "loader" });
       const layout = attach(
-        new ListLayout({loaderSize: 30, rowSize: 50}),
-        createHost({collection}),
+        new ListLayout({ loaderSize: 30, rowSize: 50 }),
+        createHost({ collection }),
       );
 
       expect(layout.getLayoutInfo("item-0")?.rect.height).toBe(30);
@@ -187,16 +190,16 @@ describe("ListLayout", () => {
     });
 
     it("refuses a node type it cannot place", () => {
-      const collection = createListCollection({items: makeItems(1), type: "section"});
+      const collection = createListCollection({ items: makeItems(1), type: "section" });
 
-      expect(() => attach(new ListLayout(), createHost({collection}))).toThrow(
+      expect(() => attach(new ListLayout(), createHost({ collection }))).toThrow(
         "Unsupported node type: section",
       );
     });
   });
 
   it("lets every row spill outside its own box", () => {
-    const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 3}));
+    const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 3 }));
 
     // The wrapper is sized by the layout; a focus ring drawn inside it is not.
     expect(layout.getLayoutInfo("item-0")?.allowOverflow).toBe(true);
@@ -216,7 +219,7 @@ class CountingListLayout extends ListLayout {
 
 describe("ListLayout laziness", () => {
   it("places a screenful rather than the whole collection", () => {
-    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+    const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
     // One row is placed to learn the stride; the other 999 are accounted for arithmetically,
     // which is why the scrollbar is right without a thousand rects existing.
@@ -227,12 +230,12 @@ describe("ListLayout laziness", () => {
 
     // The window asked about, and nothing below it.
     expect(new Set(layout.built)).toEqual(
-      new Set(Array.from({length: 9}, (_, index) => `item-${index}`)),
+      new Set(Array.from({ length: 9 }, (_, index) => `item-${index}`)),
     );
   });
 
   it("grows the placed region as the window moves down, and never shrinks it", () => {
-    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+    const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
     layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
     layout.getVisibleLayoutInfos(new Rect(0, 500, 300, 400));
@@ -248,13 +251,13 @@ describe("ListLayout laziness", () => {
   });
 
   it("skips the rows above the region after the container resizes mid-scroll", () => {
-    const scrolled = createHost({itemCount: 1000, visibleRect: new Rect(0, 20_000, 300, 400)});
-    const layout = attach(new CountingListLayout({rowSize: 50}), scrolled);
+    const scrolled = createHost({ itemCount: 1000, visibleRect: new Rect(0, 20_000, 300, 400) });
+    const layout = attach(new CountingListLayout({ rowSize: 50 }), scrolled);
 
     layout.built.length = 0;
     // A resize is what drops the cache and re-anchors the region on what is on screen. Only
     // then can the layout skip: rows 0 to 398 are counted, not placed.
-    layout.update({sizeChanged: true});
+    layout.update({ sizeChanged: true });
     layout.getVisibleLayoutInfos(scrolled.visibleRect);
 
     const placed = new Set(layout.built);
@@ -265,7 +268,7 @@ describe("ListLayout laziness", () => {
   });
 
   it("computes the whole layout when asked about a key it never reached", () => {
-    const layout = attach(new CountingListLayout({rowSize: 50}), createHost({itemCount: 1000}));
+    const layout = attach(new CountingListLayout({ rowSize: 50 }), createHost({ itemCount: 1000 }));
 
     layout.built.length = 0;
 
@@ -278,7 +281,7 @@ describe("ListLayout laziness", () => {
 
 describe("ListLayout measured rows", () => {
   const measuredLayout = () => {
-    const layout = attach(new ListLayout({estimatedRowSize: 40}), createHost({itemCount: 100}));
+    const layout = attach(new ListLayout({ estimatedRowSize: 40 }), createHost({ itemCount: 100 }));
 
     layout.getVisibleLayoutInfos(new Rect(0, 0, 300, 400));
 
@@ -310,7 +313,7 @@ describe("ListLayout measured rows", () => {
     const layout = measuredLayout();
 
     layout.updateItemSize("item-1", new Size(300, 90));
-    layout.update({itemSizeChanged: true});
+    layout.update({ itemSizeChanged: true });
 
     expect(layout.getLayoutInfo("item-0")?.rect).toEqual(new Rect(0, 0, 300, 40));
     expect(layout.getLayoutInfo("item-1")?.rect).toEqual(new Rect(0, 40, 300, 90));
@@ -322,7 +325,7 @@ describe("ListLayout measured rows", () => {
     const layout = measuredLayout();
 
     layout.updateItemSize("item-1", new Size(300, 90));
-    layout.update({sizeChanged: true});
+    layout.update({ sizeChanged: true });
 
     // A row's height depends on its width, so a resize makes every measurement a guess again.
     expect(layout.getLayoutInfo("item-1")?.rect.height).toBe(40);
@@ -330,14 +333,14 @@ describe("ListLayout measured rows", () => {
   });
 
   it("knows which option changes require a fresh layout", () => {
-    const layout = new ListLayout({rowSize: 50});
+    const layout = new ListLayout({ rowSize: 50 });
 
-    expect(layout.shouldInvalidateLayoutOptions({rowSize: 50}, {rowSize: 50})).toBe(false);
-    expect(layout.shouldInvalidateLayoutOptions({rowSize: 60}, {rowSize: 50})).toBe(true);
-    expect(layout.shouldInvalidateLayoutOptions({gap: 4}, {})).toBe(true);
+    expect(layout.shouldInvalidateLayoutOptions({ rowSize: 50 }, { rowSize: 50 })).toBe(false);
+    expect(layout.shouldInvalidateLayoutOptions({ rowSize: 60 }, { rowSize: 50 })).toBe(true);
+    expect(layout.shouldInvalidateLayoutOptions({ gap: 4 }, {})).toBe(true);
     // The deprecated alias has to compare against the current name, or a story that passes
     // `rowHeight` would look unchanged forever.
-    expect(layout.shouldInvalidateLayoutOptions({rowSize: 50}, {rowHeight: 50})).toBe(false);
+    expect(layout.shouldInvalidateLayoutOptions({ rowSize: 50 }, { rowHeight: 50 })).toBe(false);
   });
   /**
    * Resolving a drop from a point, which is the whole reason a layout can be a drop delegate.
@@ -347,9 +350,9 @@ describe("ListLayout measured rows", () => {
    * cannot answer.
    */
   describe("drop targets", () => {
-    const dropLayout = (options: {scrollTop?: number; itemCount?: number} = {}) =>
+    const dropLayout = (options: { scrollTop?: number; itemCount?: number } = {}) =>
       attach(
-        new ListLayout({rowSize: 50}),
+        new ListLayout({ rowSize: 50 }),
         createHost({
           itemCount: options.itemCount ?? 1000,
           visibleRect: new Rect(0, options.scrollTop ?? 0, 300, 400),
@@ -361,7 +364,7 @@ describe("ListLayout measured rows", () => {
     const gapsOnly = (target: DropTarget) => target.type === "item" && target.dropPosition !== "on";
 
     it("answers for a row far outside the window", () => {
-      const layout = dropLayout({scrollTop: 25_000});
+      const layout = dropLayout({ scrollTop: 25_000 });
 
       // 25 000 / 50 is row 500, and the point is 20px into it.
       expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({
@@ -375,7 +378,7 @@ describe("ListLayout measured rows", () => {
     // DOM search gets right for free and arithmetic has to be told.
     it("moves with the scroll offset", () => {
       const keys = [0, 1_000, 5_000, 25_000, 49_600].map((scrollTop) => {
-        const target = dropLayout({scrollTop}).getDropTargetFromPoint(10, 20, anything);
+        const target = dropLayout({ scrollTop }).getDropTargetFromPoint(10, 20, anything);
 
         return target?.type === "item" ? target.key : null;
       });
@@ -416,9 +419,9 @@ describe("ListLayout measured rows", () => {
     });
 
     it("falls back to the whole collection when there is nothing to drop near", () => {
-      const layout = attach(new ListLayout({rowSize: 50}), createHost({itemCount: 0}));
+      const layout = attach(new ListLayout({ rowSize: 50 }), createHost({ itemCount: 0 }));
 
-      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({type: "root"});
+      expect(layout.getDropTargetFromPoint(10, 20, anything)).toEqual({ type: "root" });
     });
 
     /**
@@ -429,10 +432,11 @@ describe("ListLayout measured rows", () => {
       const layout = dropLayout();
 
       expect(
-        layout.getDropTargetLayoutInfo({dropPosition: "before", key: "item-4", type: "item"}).rect,
+        layout.getDropTargetLayoutInfo({ dropPosition: "before", key: "item-4", type: "item" })
+          .rect,
       ).toEqual(new Rect(0, 199, 300, 2));
       expect(
-        layout.getDropTargetLayoutInfo({dropPosition: "after", key: "item-4", type: "item"}).rect,
+        layout.getDropTargetLayoutInfo({ dropPosition: "after", key: "item-4", type: "item" }).rect,
       ).toEqual(new Rect(0, 249, 300, 2));
     });
 
@@ -453,18 +457,19 @@ describe("ListLayout measured rows", () => {
       const layout = dropLayout();
 
       expect(
-        layout.getDropTargetLayoutInfo({dropPosition: "on", key: "item-4", type: "item"}).rect,
+        layout.getDropTargetLayoutInfo({ dropPosition: "on", key: "item-4", type: "item" }).rect,
       ).toEqual(new Rect(0, 200, 300, 50));
     });
 
     it("takes the thickness from the layout options", () => {
       const layout = attach(
-        new ListLayout({dropIndicatorThickness: 8, rowSize: 50}),
-        createHost({itemCount: 10}),
+        new ListLayout({ dropIndicatorThickness: 8, rowSize: 50 }),
+        createHost({ itemCount: 10 }),
       );
 
       expect(
-        layout.getDropTargetLayoutInfo({dropPosition: "before", key: "item-4", type: "item"}).rect,
+        layout.getDropTargetLayoutInfo({ dropPosition: "before", key: "item-4", type: "item" })
+          .rect,
       ).toEqual(new Rect(0, 196, 300, 8));
     });
   });

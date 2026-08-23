@@ -2,16 +2,16 @@ import type {
   ColorChannelFieldState,
   UseColorChannelFieldStateOptions,
 } from "./use-color-channel-field-state";
-import type {FieldIdsContext} from "./use-field-ids";
-import type {ValidationBehavior} from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { FieldIdsContext } from "./use-field-ids";
+import type { ValidationBehavior } from "./use-form-validation-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {useColorChannelFieldState} from "./use-color-channel-field-state";
-import {useFormValidation} from "./use-form-validation";
-import {useLocale} from "./use-locale";
-import {useNumberField} from "./use-number-field";
+import { useColorChannelFieldState } from "./use-color-channel-field-state";
+import { useFormValidation } from "./use-form-validation";
+import { useLocale } from "./use-locale";
+import { useNumberField } from "./use-number-field";
 
 export interface UseColorChannelFieldOptions extends UseColorChannelFieldStateOptions {
   id?: MaybeRefOrGetter<string | undefined>;
@@ -113,7 +113,7 @@ export const useColorChannelField = (
    * `Label` has actually claimed its id, which is not known until the bag is built.
    */
   const attrs = computed<Record<string, unknown>>(() => {
-    const all = {...field.attrs.value};
+    const all = { ...field.attrs.value };
 
     if (!all["aria-label"] && !all["aria-labelledby"]) {
       all["aria-label"] = state.colorValue.value.getChannelName(

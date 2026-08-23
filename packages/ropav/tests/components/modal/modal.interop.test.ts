@@ -1,9 +1,9 @@
-import {renderInterop} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {h, nextTick} from "vue";
+import { renderInterop } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { h, nextTick } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {Modal} from "@/components/modal";
+import { ButtonRoot } from "@/components/button";
+import { Modal } from "@/components/modal";
 
 /**
  * The modal mounted the way a consumer mounts it: from a VDOM host, with every part written in the
@@ -26,31 +26,31 @@ const slot = (name: string) => document.body.querySelector(`[data-slot="${name}"
 
 const render = () =>
   renderInterop(Modal, {
-    props: {defaultOpen: true},
+    props: { defaultOpen: true },
     slots: {
       default: () => [
-        h(ButtonRoot, null, {default: () => "Open modal"}),
+        h(ButtonRoot, null, { default: () => "Open modal" }),
         h(
           Modal.Backdrop,
-          {variant: "blur"},
+          { variant: "blur" },
           {
             default: () =>
               h(
                 Modal.Container,
-                {placement: "top", size: "lg"},
+                { placement: "top", size: "lg" },
                 {
                   default: () =>
                     h(Modal.Dialog, null, {
                       default: () => [
                         h(Modal.Header, null, {
-                          default: () => h(Modal.Heading, null, {default: () => "Modal heading"}),
+                          default: () => h(Modal.Heading, null, { default: () => "Modal heading" }),
                         }),
-                        h(Modal.Body, null, {default: () => "Modal body"}),
+                        h(Modal.Body, null, { default: () => "Modal body" }),
                         h(Modal.Footer, null, {
                           default: () => [
-                            h(ButtonRoot, null, {default: () => "Inside action"}),
+                            h(ButtonRoot, null, { default: () => "Inside action" }),
                             h(Modal.Close, null, {
-                              default: () => h(ButtonRoot, null, {default: () => "Confirm"}),
+                              default: () => h(ButtonRoot, null, { default: () => "Confirm" }),
                             }),
                           ],
                         }),
@@ -139,9 +139,9 @@ describe("Modal (interop)", () => {
 
     await settle();
 
-    const confirm = result.screen.getByRole("button", {name: "Confirm"});
+    const confirm = result.screen.getByRole("button", { name: "Confirm" });
 
-    confirm.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+    confirm.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
     await settle();
 
     // The wrapper provides below the cleared boundary, so opting in still works from the host.

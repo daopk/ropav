@@ -1,4 +1,4 @@
-import type {ValidationDetails} from "@/composables/use-form-validation-state";
+import type { ValidationDetails } from "@/composables/use-form-validation-state";
 
 export interface FieldErrorFixtureProps {
   isInvalid?: boolean;

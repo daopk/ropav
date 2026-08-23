@@ -1,11 +1,11 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {KbdAbbr, KbdContent, KbdRoot} from "./index";
+import { KbdAbbr, KbdContent, KbdRoot } from "./index";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "Kbd.Abbr".
-const components = {Kbd: KbdRoot, KbdAbbr, KbdContent};
+const components = { Kbd: KbdRoot, KbdAbbr, KbdContent };
 
 const meta: StoryMeta = {
   argTypes: {
@@ -134,7 +134,7 @@ export const LightVariant: Story = {
 export const NavigationKeys: Story = {
   render: () => ({
     components,
-    setup: () => ({keys: ["up", "down", "left", "right"]}),
+    setup: () => ({ keys: ["up", "down", "left", "right"] }),
     template: `
       <div class="flex items-center gap-4">
         <Kbd v-for="key in keys" :key="key"><KbdAbbr :key-value="key" /></Kbd>

@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor generic="T">
-import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
-import type {AutocompleteRootProps, AutocompleteRootSlotProps} from "./autocomplete.types";
+import type { SelectedValue, UseSelectStateReturn } from "../../composables/use-select-state";
+import type { AutocompleteRootProps, AutocompleteRootSlotProps } from "./autocomplete.types";
 
-import {autocompleteVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { autocompleteVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useLocale} from "../../composables/use-locale";
-import {useLocalizedStringFormatter} from "../../composables/use-localized-string-formatter";
-import {useSelect} from "../../composables/use-select";
-import {useSelectState} from "../../composables/use-select-state";
-import {selectStrings} from "../../i18n";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
-import {provideListBoxStateContext} from "../list-box";
-import {provideOverlayTargetContext} from "../overlay";
+import { providePressResponder } from "../../composables/press-responder";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useLocale } from "../../composables/use-locale";
+import { useLocalizedStringFormatter } from "../../composables/use-localized-string-formatter";
+import { useSelect } from "../../composables/use-select";
+import { useSelectState } from "../../composables/use-select-state";
+import { selectStrings } from "../../i18n";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
+import { provideListBoxStateContext } from "../list-box";
+import { provideOverlayTargetContext } from "../overlay";
 import SelectHiddenSelect from "../select/select-hidden-select.vue";
-import {provideSelectContext} from "../select/select.context";
+import { provideSelectContext } from "../select/select.context";
 
-import {provideAutocompleteContext} from "./autocomplete.context";
+import { provideAutocompleteContext } from "./autocomplete.context";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -46,7 +46,7 @@ const emit = defineEmits<{
   clear: [];
 }>();
 
-defineSlots<{default?: (props: AutocompleteRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: AutocompleteRootSlotProps) => unknown }>();
 
 /**
  * An autocomplete runs on a select's state, unchanged.
@@ -116,7 +116,7 @@ const selectedText = computed(() => {
 });
 
 const styles = computed(() =>
-  autocompleteVariants({fullWidth: props.fullWidth, variant: props.variant}),
+  autocompleteVariants({ fullWidth: props.fullWidth, variant: props.variant }),
 );
 
 const isDisabled = computed(() => Boolean(props.isDisabled));
@@ -125,7 +125,7 @@ const triggerElement = shallowRef<HTMLElement | null>(null);
 const clearButtonElement = shallowRef<HTMLElement | null>(null);
 
 provideFieldIdsContext(select.fieldIds.context);
-provideFieldErrorContext({validation: state.displayValidation});
+provideFieldErrorContext({ validation: state.displayValidation });
 
 provideAutocompleteContext({
   clearButtonElement,
@@ -208,7 +208,7 @@ providePressResponder(select.responder);
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(props.isDisabled)"
     :data-focused="dataAttr(state.isFocused.value)"
     :data-invalid="dataAttr(select.isInvalid.value)"

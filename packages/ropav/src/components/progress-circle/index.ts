@@ -26,6 +26,6 @@ export type {
   ProgressCircleTrackProps,
 } from "./progress-circle.types";
 
-export {progressCircleVariants} from "@ropav/styles";
+export { progressCircleVariants } from "@ropav/styles";
 
-export type {ProgressCircleVariants} from "@ropav/styles";
+export type { ProgressCircleVariants } from "@ropav/styles";

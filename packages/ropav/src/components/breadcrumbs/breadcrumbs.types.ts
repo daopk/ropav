@@ -1,4 +1,4 @@
-import type {LinkRootProps} from "../link";
+import type { LinkRootProps } from "../link";
 
 export type BreadcrumbKey = string | number;
 

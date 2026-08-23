@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ListBoxLoadMoreItemProps} from "./list-box.types";
+import type { ListBoxLoadMoreItemProps } from "./list-box.types";
 
-import {onUnmounted, shallowRef, watch} from "vue";
+import { onUnmounted, shallowRef, watch } from "vue";
 
-import {getScrollParent} from "../../utils/focus";
+import { getScrollParent } from "../../utils/focus";
 
-import {useListBoxContext} from "./list-box.context";
+import { useListBoxContext } from "./list-box.context";
 
 // `isLoading` declares an explicit `undefined` default so an absent prop stays absent rather than
 // reading as an explicit `false`.
@@ -14,17 +14,17 @@ const props = withDefaults(defineProps<ListBoxLoadMoreItemProps>(), {
   scrollOffset: 1,
 });
 
-const emit = defineEmits<{loadMore: []}>();
+const emit = defineEmits<{ loadMore: [] }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {collection} = useListBoxContext();
+const { collection } = useListBoxContext();
 
 const sentinel = shallowRef<HTMLElement | null>(null);
 
 /** Never in the layout, and never in the collection — it is a marker, not an option. */
-const SENTINEL_WRAPPER_STYLE = {height: "0px", position: "relative", width: "0px"} as const;
-const SENTINEL_STYLE = {height: "1px", position: "absolute", width: "1px"} as const;
+const SENTINEL_WRAPPER_STYLE = { height: "0px", position: "relative", width: "0px" } as const;
+const SENTINEL_STYLE = { height: "1px", position: "absolute", width: "1px" } as const;
 
 let observer: IntersectionObserver | undefined;
 

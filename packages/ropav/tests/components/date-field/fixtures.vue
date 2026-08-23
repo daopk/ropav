@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {DateFieldFixtureProps} from "./fixtures.types";
+import type { DateFieldFixtureProps } from "./fixtures.types";
 
 import {
   DateFieldGroup,
@@ -9,9 +9,9 @@ import {
   DateFieldSegment,
   DateFieldSuffix,
 } from "@/components/date-field";
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Label} from "@/components/label";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Label } from "@/components/label";
 
 /*
  * The three-state booleans need explicit `undefined` here too: forwarding a cast `false` would
@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
   <DateFieldRoot v-if="props.attributeForm" aria-label="Date" full-width :locale="props.locale">
     <DateFieldGroup full-width>
       <DateFieldInput>
-        <template #default="{segment}">
+        <template #default="{ segment }">
           <DateFieldSegment :segment="segment" />
         </template>
       </DateFieldInput>
@@ -60,7 +60,7 @@ const props = withDefaults(defineProps<DateFieldFixtureProps>(), {
       <DateFieldGroup :variant="props.variant">
         <DateFieldPrefix v-if="props.withPrefix">before</DateFieldPrefix>
         <DateFieldInput>
-          <template #default="{segment}">
+          <template #default="{ segment }">
             <DateFieldSegment :segment="segment" />
           </template>
         </DateFieldInput>

@@ -1,12 +1,12 @@
-import type {CollectionKey} from "../../composables/use-collection";
-import type {DragAndDropHooks} from "../../composables/use-drag-and-drop";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { DragAndDropHooks } from "../../composables/use-drag-and-drop";
 import type {
   DisabledBehavior,
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type {DropTarget} from "../../utils/dnd-types";
-import type {ListBoxVariants} from "@ropav/styles";
+import type { DropTarget } from "../../utils/dnd-types";
+import type { ListBoxVariants } from "@ropav/styles";
 
 /**
  * @typeParam T - The item type, inferred from `items`.

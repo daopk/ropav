@@ -1,18 +1,18 @@
-import type {DragKey} from "../utils/dnd-types";
-import type {UseDragHandlers} from "./use-drag";
-import type {UseDraggableCollectionStateReturn} from "./use-draggable-collection-state";
-import type {PressEvent} from "./use-press";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { DragKey } from "../utils/dnd-types";
+import type { UseDragHandlers } from "./use-drag";
+import type { UseDraggableCollectionStateReturn } from "./use-draggable-collection-state";
+import type { PressEvent } from "./use-press";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {dndStrings} from "../i18n/dnd";
-import {clearGlobalDnDState, isInternalDropOperation, setDraggingKeys} from "../utils/dnd-state";
+import { dndStrings } from "../i18n/dnd";
+import { clearGlobalDnDState, isInternalDropOperation, setDraggingKeys } from "../utils/dnd-state";
 
-import {useDragModality} from "./drag-modality";
-import {useDescription} from "./use-description";
-import {useDrag} from "./use-drag";
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useDragModality } from "./drag-modality";
+import { useDescription } from "./use-description";
+import { useDrag } from "./use-drag";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 export interface UseDraggableItemOptions {
   key: DragKey;
@@ -40,9 +40,9 @@ export interface UseDraggableItemReturn {
 
 /** How to start a drag, phrased for the modality and for whether a selection travels with it. */
 const DESCRIPTION_KEYS = {
-  keyboard: {notSelected: "dragDescriptionKeyboard", selected: "dragSelectedKeyboard"},
-  touch: {notSelected: "dragDescriptionLongPress", selected: "dragSelectedLongPress"},
-  virtual: {notSelected: "dragDescriptionVirtual", selected: "dragDescriptionVirtual"},
+  keyboard: { notSelected: "dragDescriptionKeyboard", selected: "dragSelectedKeyboard" },
+  touch: { notSelected: "dragDescriptionLongPress", selected: "dragSelectedLongPress" },
+  virtual: { notSelected: "dragDescriptionVirtual", selected: "dragDescriptionVirtual" },
 } as const;
 
 /**
@@ -73,7 +73,7 @@ export const useDraggableItem = (
       // global state still says.
       const isInternal = event.dropOperation === "cancel" ? false : isInternalDropOperation();
 
-      state.endDrag({...event, isInternal, keys: state.draggingKeys.value});
+      state.endDrag({ ...event, isInternal, keys: state.draggingKeys.value });
       clearGlobalDnDState();
     },
     onDragMove: (event) => state.moveDrag(event),
@@ -103,29 +103,29 @@ export const useDraggableItem = (
     if (hasAction() && modality.value === "keyboard") key += "Alt";
 
     return isSelected.value
-      ? stringFormatter.value.format(key as never, {count: dragCount.value})
+      ? stringFormatter.value.format(key as never, { count: dragCount.value })
       : stringFormatter.value.format(key as never);
   });
 
-  const {describedBy} = useDescription(description);
+  const { describedBy } = useDescription(description);
 
   const dragButtonLabel = computed(() => {
     if (description.value !== undefined) return undefined;
 
     if (isSelected.value) {
-      return stringFormatter.value.format("dragSelectedItems", {count: dragCount.value});
+      return stringFormatter.value.format("dragSelectedItems", { count: dragCount.value });
     }
 
     const itemText = state.collection.getItem(options.key)?.textValue ?? "";
 
-    return stringFormatter.value.format("dragItem", {itemText});
+    return stringFormatter.value.format("dragItem", { itemText });
   });
 
   return {
     attrs: computed(() => {
       if (isDisabled.value) return {};
 
-      const attrs: Record<string, unknown> = {...drag.attrs.value};
+      const attrs: Record<string, unknown> = { ...drag.attrs.value };
 
       if (description.value !== undefined) {
         // A long press selects rather than drags when the item has an action, so promising

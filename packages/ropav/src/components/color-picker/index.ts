@@ -14,7 +14,7 @@ export const ColorPicker = Object.assign(ColorPickerRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger};
+export { ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger };
 
 export type {
   ColorPickerPopoverProps,
@@ -28,13 +28,13 @@ export type {
  * Context
  * -----------------------------------------------------------------------------------------------*/
 // The shared colour value, exported so a caller composing their own colour control can join in.
-export {provideColorValueContext, useColorValueContext} from "./color-picker.context";
+export { provideColorValueContext, useColorValueContext } from "./color-picker.context";
 
-export type {ColorValueContext} from "./color-picker.context";
+export type { ColorValueContext } from "./color-picker.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorPickerVariants} from "@ropav/styles";
+export { colorPickerVariants } from "@ropav/styles";
 
-export type {ColorPickerVariants} from "@ropav/styles";
+export type { ColorPickerVariants } from "@ropav/styles";

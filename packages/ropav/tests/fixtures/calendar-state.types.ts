@@ -5,8 +5,8 @@ import type {
   PageBehavior,
   SelectionAlignment,
 } from "@/composables/use-calendar-state";
-import type {DayOfWeek} from "@/utils/calendar";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
+import type { DayOfWeek } from "@/utils/calendar";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
 
 export interface CalendarStateHostProps {
   value?: CalendarValue;

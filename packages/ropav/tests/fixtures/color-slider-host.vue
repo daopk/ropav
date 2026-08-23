@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderHostProps} from "./color-slider.types";
+import type { ColorSliderHostProps } from "./color-slider.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {useColorSlider} from "@/composables/use-color-slider";
-import {useColorSliderState} from "@/composables/use-color-slider-state";
+import { useColorSlider } from "@/composables/use-color-slider";
+import { useColorSliderState } from "@/composables/use-color-slider-state";
 
 // `isDisabled` declares `default: undefined`: Vue casts an absent Boolean prop to `false`, and a
 // forwarded `false` is not the same as absent.
-const props = withDefaults(defineProps<ColorSliderHostProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorSliderHostProps>(), { isDisabled: undefined });
 
 const trackEl = shallowRef<HTMLElement | null>(null);
 const inputEl = shallowRef<HTMLInputElement | null>(null);
@@ -46,7 +46,7 @@ const slider = useColorSlider({
   trackEl,
 });
 
-props.onReady?.({slider, state});
+props.onReady?.({ slider, state });
 </script>
 
 <template>

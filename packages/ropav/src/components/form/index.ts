@@ -10,6 +10,6 @@ export const Form = Object.assign(FormRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {FormRoot};
+export { FormRoot };
 
-export type {FormRootProps, FormRootProps as FormProps} from "./form.types";
+export type { FormRootProps, FormRootProps as FormProps } from "./form.types";

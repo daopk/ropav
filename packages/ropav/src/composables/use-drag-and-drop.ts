@@ -17,18 +17,18 @@ import type {
   DroppableCollectionRootDropEvent,
   ItemDropTarget,
 } from "../utils/dnd-types";
-import type {MaybeRefOrGetter} from "vue";
+import type { MaybeRefOrGetter } from "vue";
 
-import {ListDropTargetDelegate} from "../utils/dnd-list-drop-target-delegate";
+import { ListDropTargetDelegate } from "../utils/dnd-list-drop-target-delegate";
 
-import {isVirtualDragging} from "./drag-manager";
-import {useDraggableCollection} from "./use-draggable-collection";
-import {useDraggableCollectionState} from "./use-draggable-collection-state";
-import {useDraggableItem} from "./use-draggable-item";
-import {useDropIndicator} from "./use-drop-indicator";
-import {useDroppableCollection} from "./use-droppable-collection";
-import {useDroppableCollectionState} from "./use-droppable-collection-state";
-import {useDroppableItem} from "./use-droppable-item";
+import { isVirtualDragging } from "./drag-manager";
+import { useDraggableCollection } from "./use-draggable-collection";
+import { useDraggableCollectionState } from "./use-draggable-collection-state";
+import { useDraggableItem } from "./use-draggable-item";
+import { useDropIndicator } from "./use-drop-indicator";
+import { useDroppableCollection } from "./use-droppable-collection";
+import { useDroppableCollectionState } from "./use-droppable-collection-state";
+import { useDroppableItem } from "./use-droppable-item";
 
 export interface DragAndDropOptions {
   /* -- Dragging -------------------------------------------------------------------------- */
@@ -119,7 +119,7 @@ export const useDragAndDrop = (options: DragAndDropOptions): UseDragAndDropRetur
     options.onRootDrop,
   );
 
-  const hooks: DragAndDropHooks = {options};
+  const hooks: DragAndDropHooks = { options };
 
   if (isDraggable) {
     hooks.useDraggableCollectionState = useDraggableCollectionState;
@@ -138,5 +138,5 @@ export const useDragAndDrop = (options: DragAndDropOptions): UseDragAndDropRetur
     hooks.dropTargetDelegate = options.dropTargetDelegate;
   }
 
-  return {dragAndDropHooks: hooks};
+  return { dragAndDropHooks: hooks };
 };

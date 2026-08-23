@@ -1,17 +1,17 @@
-import type {TimeValue} from "../../utils/date-format";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { TimeValue } from "../../utils/date-format";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Time, getLocalTimeZone, now, parseTime} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { Time, getLocalTimeZone, now, parseTime } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconClock from "~icons/gravity-ui/clock";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
 
 import {
   TimeFieldGroup,
@@ -164,7 +164,7 @@ export const Disabled: Story = {
     setup: () => {
       const current = now(getLocalTimeZone());
 
-      return {timeValue: new Time(current.hour, current.minute, current.second)};
+      return { timeValue: new Time(current.hour, current.minute, current.second) };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -228,7 +228,7 @@ export const WithValidation: Story = {
           (value.value.compare(minTime) < 0 || value.value.compare(maxTime) > 0),
       );
 
-      return {isInvalid, maxTime, minTime, value};
+      return { isInvalid, maxTime, minTime, value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -335,7 +335,7 @@ export const FormExample: Story = {
         }, 1500);
       };
 
-      return {isInvalid, isSubmitting, maxTime, minTime, onSubmit, value};
+      return { isInvalid, isSubmitting, maxTime, minTime, onSubmit, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">

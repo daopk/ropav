@@ -1,6 +1,6 @@
-import type {UseDragOptions, UseDragReturn} from "@/composables/use-drag";
-import type {UseDropOptions, UseDropReturn} from "@/composables/use-drop";
-import type {UseDropIndicatorReturn} from "@/composables/use-drop-indicator";
+import type { UseDragOptions, UseDragReturn } from "@/composables/use-drag";
+import type { UseDropOptions, UseDropReturn } from "@/composables/use-drop";
+import type { UseDropIndicatorReturn } from "@/composables/use-drop-indicator";
 import type {
   DroppableCollectionKeyboardDelegate,
   UseDroppableCollectionOptions,
@@ -10,8 +10,8 @@ import type {
   UseDroppableCollectionStateOptions,
   UseDroppableCollectionStateReturn,
 } from "@/composables/use-droppable-collection-state";
-import type {UseSelectionManagerReturn} from "@/composables/use-selection-manager";
-import type {DragCollection, DropTarget, DropTargetDelegate} from "@/utils/dnd-types";
+import type { UseSelectionManagerReturn } from "@/composables/use-selection-manager";
+import type { DragCollection, DropTarget, DropTargetDelegate } from "@/utils/dnd-types";
 
 /**
  * What the drag and drop harnesses hand back.

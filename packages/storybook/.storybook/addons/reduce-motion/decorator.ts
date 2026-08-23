@@ -1,6 +1,6 @@
-import type {Decorator} from "@storybook/vue3-vite";
+import type { Decorator } from "@storybook/vue3-vite";
 
-import {REDUCE_MOTION_GLOBAL_TYPE_ID} from "./constants";
+import { REDUCE_MOTION_GLOBAL_TYPE_ID } from "./constants";
 
 /**
  * `data-reduce-motion="true"` is a real hook: `@ropav/styles` declares a custom variant

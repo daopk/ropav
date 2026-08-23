@@ -1,11 +1,11 @@
-import type {PressResponder} from "./press-responder";
-import type {UseTextFieldOptions, UseTextFieldReturn} from "./use-text-field";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { PressResponder } from "./press-responder";
+import type { UseTextFieldOptions, UseTextFieldReturn } from "./use-text-field";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {usePress} from "./use-press";
-import {useTextField} from "./use-text-field";
+import { usePress } from "./use-press";
+import { useTextField } from "./use-text-field";
 
 export interface UseSearchFieldOptions extends Omit<UseTextFieldOptions, "type"> {
   /** Kind of control the browser should offer. @default "search" */
@@ -101,7 +101,7 @@ export const useSearchField = (options: UseSearchFieldOptions = {}): UseSearchFi
 
   // Pressed rather than clicked: the field takes focus back on the way *down*, so that touching
   // the clear button never takes focus off the input and folds the on-screen keyboard away.
-  const {handlers, isPressed} = usePress({
+  const { handlers, isPressed } = usePress({
     isDisabled,
     onPress: clear,
     onPressStart: () => field.element.value?.focus(),

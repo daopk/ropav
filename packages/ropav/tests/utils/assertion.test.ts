@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {dataAttr} from "@/utils/assertion";
+import { dataAttr } from "@/utils/assertion";
 
 describe("dataAttr", () => {
   it('renders true as the string "true"', () => {

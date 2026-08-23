@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ColorSwatchPickerRootProps} from "@/components/color-swatch-picker";
-import type {Color} from "@/utils/color-types";
+import type { ColorSwatchPickerRootProps } from "@/components/color-swatch-picker";
+import type { Color } from "@/utils/color-types";
 
-import {ColorSwatchPicker} from "@/components/color-swatch-picker";
+import { ColorSwatchPicker } from "@/components/color-swatch-picker";
 
 defineProps<
   ColorSwatchPickerRootProps & {
@@ -19,7 +19,7 @@ defineProps<
   }
 >();
 
-defineEmits<{change: [value: Color]}>();
+defineEmits<{ change: [value: Color] }>();
 </script>
 
 <template>

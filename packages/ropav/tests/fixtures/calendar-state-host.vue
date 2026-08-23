@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {CalendarStateHostProps} from "./calendar-state.types";
+import type { CalendarStateHostProps } from "./calendar-state.types";
 
-import {createCalendar} from "@internationalized/date";
+import { createCalendar } from "@internationalized/date";
 
-import {useCalendarState} from "@/composables/use-calendar-state";
+import { useCalendarState } from "@/composables/use-calendar-state";
 
 /*
  * Every three-state boolean declares `default: undefined`. Vue casts an absent Boolean prop to

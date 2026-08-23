@@ -1,6 +1,6 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import {
   ProgressCircleFillCircle,
@@ -23,7 +23,7 @@ const part = (container: HTMLElement, name: string) =>
 
 describe("ProgressCircle", () => {
   it("uses a nested visible label as its accessible name", async () => {
-    const {container, unmount} = renderVapor(Fixture, {props: {value: 60, withLabel: true}});
+    const { container, unmount } = renderVapor(Fixture, { props: { value: 60, withLabel: true } });
     const root = part(container, "progress-circle");
     const label = part(container, "label");
 
@@ -37,8 +37,8 @@ describe("ProgressCircle", () => {
   });
 
   it("combines an explicit aria-label with the visible label", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Upload status", value: 60, withLabel: true},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Upload status", value: 60, withLabel: true },
     });
     const root = part(container, "progress-circle")!;
     const label = part(container, "label")!;
@@ -51,8 +51,8 @@ describe("ProgressCircle", () => {
   });
 
   it("combines a visible label with external aria-labelledby ids", async () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabelledby: "ext", value: 60, withLabel: true},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabelledby: "ext", value: 60, withLabel: true },
     });
     const root = part(container, "progress-circle")!;
     const label = part(container, "label")!;
@@ -66,8 +66,8 @@ describe("ProgressCircle", () => {
   });
 
   it("renders progress semantics and the exact SVG geometry", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Loading", value: 60},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Loading", value: 60 },
     });
     const root = part(container, "progress-circle");
     const track = part(container, "progress-circle-track");
@@ -94,8 +94,8 @@ describe("ProgressCircle", () => {
   });
 
   it("uses the fixed quarter-arc offset and removes value aria when indeterminate", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Loading", isIndeterminate: true, value: 60},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Loading", isIndeterminate: true, value: 60 },
     });
 
     expect(part(container, "progress-circle")).not.toHaveAttribute("aria-valuenow");
@@ -110,8 +110,8 @@ describe("ProgressCircle", () => {
   });
 
   it("clamps custom ranges before calculating the arc", () => {
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Loading", maxValue: 80, minValue: 20, value: -10},
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Loading", maxValue: 80, minValue: 20, value: -10 },
     });
 
     expect(part(container, "progress-circle")).toHaveAttribute("aria-valuenow", "20");
@@ -124,9 +124,9 @@ describe("ProgressCircle", () => {
   });
 
   it("uses custom value formatting in aria and scoped slot state", () => {
-    const formatOptions = {currency: "USD", style: "currency"} as const;
-    const {container, unmount} = renderVapor(Fixture, {
-      props: {ariaLabel: "Revenue", formatOptions, maxValue: 1000, value: 750},
+    const formatOptions = { currency: "USD", style: "currency" } as const;
+    const { container, unmount } = renderVapor(Fixture, {
+      props: { ariaLabel: "Revenue", formatOptions, maxValue: 1000, value: 750 },
     });
     const expected = new Intl.NumberFormat("en-US", formatOptions).format(750);
 
@@ -140,7 +140,9 @@ describe("ProgressCircle", () => {
   it.each(["default", "accent", "success", "warning", "danger"] as const)(
     "applies the %s color modifier",
     (color) => {
-      const {container, unmount} = renderVapor(Fixture, {props: {ariaLabel: "Loading", color}});
+      const { container, unmount } = renderVapor(Fixture, {
+        props: { ariaLabel: "Loading", color },
+      });
 
       expect(part(container, "progress-circle")).toHaveClass(`progress-circle--${color}`);
 
@@ -149,7 +151,7 @@ describe("ProgressCircle", () => {
   );
 
   it.each(["sm", "md", "lg"] as const)("applies the %s size modifier", (size) => {
-    const {container, unmount} = renderVapor(Fixture, {props: {ariaLabel: "Loading", size}});
+    const { container, unmount } = renderVapor(Fixture, { props: { ariaLabel: "Loading", size } });
 
     expect(part(container, "progress-circle")).toHaveClass(`progress-circle--${size}`);
 
@@ -157,7 +159,7 @@ describe("ProgressCircle", () => {
   });
 
   it("merges caller classes onto every public part", () => {
-    const {container, unmount} = renderVapor(Fixture, {
+    const { container, unmount } = renderVapor(Fixture, {
       props: {
         ariaLabel: "Loading",
         class: "opacity-80",
@@ -185,8 +187,8 @@ describe("ProgressCircle", () => {
   });
 
   it("updates the arc reactively", async () => {
-    const props = reactive({ariaLabel: "Loading", value: 25});
-    const {container, unmount} = renderVapor(Fixture, {props});
+    const props = reactive({ ariaLabel: "Loading", value: 25 });
+    const { container, unmount } = renderVapor(Fixture, { props });
 
     props.value = 75;
     await nextTick();

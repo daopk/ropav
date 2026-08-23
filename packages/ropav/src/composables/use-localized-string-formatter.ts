@@ -3,12 +3,12 @@ import type {
   LocalizedString,
   LocalizedStrings,
 } from "@internationalized/string";
-import type {ComputedRef} from "vue";
+import type { ComputedRef } from "vue";
 
-import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
-import {computed} from "vue";
+import { LocalizedStringDictionary, LocalizedStringFormatter } from "@internationalized/string";
+import { computed } from "vue";
 
-import {useLocale} from "./use-locale";
+import { useLocale } from "./use-locale";
 
 /**
  * Dictionaries built so far, keyed by the table each was built from.

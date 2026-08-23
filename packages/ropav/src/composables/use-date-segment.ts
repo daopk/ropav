@@ -1,20 +1,20 @@
-import type {FocusManager} from "../utils/focus";
-import type {DateFieldState, DateSegment} from "./use-date-field-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { FocusManager } from "../utils/focus";
+import type { DateFieldState, DateSegment } from "./use-date-field-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {CalendarDate, toCalendar} from "@internationalized/date";
-import {NumberParser} from "@internationalized/number";
-import {computed, onScopeDispose, toValue} from "vue";
+import { CalendarDate, toCalendar } from "@internationalized/date";
+import { NumberParser } from "@internationalized/number";
+import { computed, onScopeDispose, toValue } from "vue";
 
-import {isIOS} from "../utils/platform";
+import { isIOS } from "../utils/platform";
 
-import {useDateFormatter} from "./use-date-formatter";
-import {useDisplayNames} from "./use-display-names";
-import {useFilter} from "./use-filter";
-import {useId} from "./use-id";
-import {useLabels} from "./use-labels";
-import {useLocale} from "./use-locale";
-import {useSpinButton} from "./use-spin-button";
+import { useDateFormatter } from "./use-date-formatter";
+import { useDisplayNames } from "./use-display-names";
+import { useFilter } from "./use-filter";
+import { useId } from "./use-id";
+import { useLabels } from "./use-labels";
+import { useLocale } from "./use-locale";
+import { useSpinButton } from "./use-spin-button";
 
 export interface UseDateSegmentOptions {
   /** The segment this is behaviour for. A getter, because the field rebuilds them on every edit. */
@@ -80,7 +80,7 @@ const dayPeriodName = (formatter: Intl.DateTimeFormat, hour: number): string => 
  * the value.
  */
 export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentReturn => {
-  const {focusManager, state} = options;
+  const { focusManager, state } = options;
   const locale = useLocale();
   const displayNames = useDisplayNames();
   const segment = computed(() => toValue(options.segment));
@@ -160,15 +160,17 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
     value: () => segment.value.value ?? undefined,
   });
 
-  const parser = computed(() => new NumberParser(locale.value.locale, {maximumFractionDigits: 0}));
+  const parser = computed(
+    () => new NumberParser(locale.value.locale, { maximumFractionDigits: 0 }),
+  );
 
   // Safari's `dayPeriod` format option does not work, so the names are read off a formatter.
-  const filter = useFilter({sensitivity: "base"});
-  const dayPeriodFormatter = useDateFormatter({hour: "numeric", hour12: true});
+  const filter = useFilter({ sensitivity: "base" });
+  const dayPeriodFormatter = useDateFormatter({ hour: "numeric", hour12: true });
   const am = computed(() => dayPeriodName(dayPeriodFormatter.value, 0));
   const pm = computed(() => dayPeriodName(dayPeriodFormatter.value, 12));
 
-  const eraFormatter = useDateFormatter({era: "narrow", timeZone: "UTC", year: "numeric"});
+  const eraFormatter = useDateFormatter({ era: "narrow", timeZone: "UTC", year: "numeric" });
 
   /**
    * The era names, so typing their first character picks one.
@@ -184,13 +186,13 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
       era,
       formatted:
         eraFormatter.value
-          .formatToParts(base.set({day: 1, era, month: 1, year: 1}).toDate("UTC"))
+          .formatToParts(base.set({ day: 1, era, month: 1, year: 1 }).toDate("UTC"))
           .find((part) => part.type === "era")?.value ?? "",
     }));
     const prefix = commonPrefixLength(named.map((entry) => entry.formatted));
 
     return prefix
-      ? named.map((entry) => ({...entry, formatted: entry.formatted.slice(prefix)}))
+      ? named.map((entry) => ({ ...entry, formatted: entry.formatted.slice(prefix) }))
       : named;
   });
 
@@ -227,7 +229,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
 
     switch (current.type) {
       case "dayPeriod": {
-        const {startsWith} = filter.value;
+        const { startsWith } = filter.value;
 
         if (startsWith(am.value, key)) state.setSegment("dayPeriod", 0);
         else if (startsWith(pm.value, key)) state.setSegment("dayPeriod", 1);
@@ -259,7 +261,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
 
         if (Number.isNaN(typed)) return;
 
-        const {maxValue} = current;
+        const { maxValue } = current;
         // A number already past the maximum means the user has started a new one: typing 3 then 5
         // into a month is 3, then 5, not 35.
         const next = maxValue !== undefined && typed > maxValue ? parser.value.parse(key) : typed;
@@ -289,7 +291,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
     const element = getElement();
 
     enteredKeys = "";
-    element?.scrollIntoView?.({block: "nearest"});
+    element?.scrollIntoView?.({ block: "nearest" });
     // Chrome fires no input events at all unless the selection inside the segment is collapsed.
     if (element) window.getSelection()?.collapse(element);
     spin.onFocus();
@@ -384,7 +386,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
   };
 
   const onInput = (event: Event) => {
-    const {data, inputType} = event as InputEvent;
+    const { data, inputType } = event as InputEvent;
 
     if (inputType !== "insertCompositionText") return;
 
@@ -447,7 +449,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
     const current = segment.value;
 
     // A literal is punctuation. It is not a control and has nothing to announce.
-    if (current.type === "literal") return {"aria-hidden": "true"};
+    if (current.type === "literal") return { "aria-hidden": "true" };
 
     const editable = isEditable.value;
     const all: Record<string, unknown> = {
@@ -493,7 +495,7 @@ export const useDateSegment = (options: UseDateSegmentOptions): UseDateSegmentRe
     // A literal is punctuation, not a control: it has no caret to hide and no direction to pin.
     if (segment.value.type === "literal") return {};
 
-    const all: Record<string, string> = {caretColor: "transparent"};
+    const all: Record<string, string> = { caretColor: "transparent" };
 
     if (locale.value.direction !== "rtl") return all;
 

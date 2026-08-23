@@ -15,12 +15,12 @@
   "files.associations": {
     "**/.vscode/*.json": "jsonc"
   },
-  "[typescript]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
-  "[javascript]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
-  "[vue]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
-  "[css]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
-  "[json]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
-  "[jsonc]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[typescript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[vue]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[css]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[json]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "tailwindCSS.classFunctions": ["tv", "clsx", "cn"],
   "tailwindCSS.experimental.configFile": {
     "packages/storybook/styles/globals.css": [

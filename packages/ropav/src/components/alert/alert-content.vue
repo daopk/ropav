@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {AlertContentProps} from "./alert.types";
+import type { AlertContentProps } from "./alert.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAlertContext} from "./alert.context";
+import { useAlertContext } from "./alert.context";
 
 const props = defineProps<AlertContentProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAlertContext();
+const { slots } = useAlertContext();
 </script>
 
 <template>

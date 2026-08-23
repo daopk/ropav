@@ -1,7 +1,7 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
 
-import {useId} from "@/composables/use-id";
+import { useId } from "@/composables/use-id";
 
 import UseIdHost from "../fixtures/use-id-host.vue";
 
@@ -10,7 +10,7 @@ const read = (container: HTMLElement, testId: string) =>
 
 describe("useId", () => {
   it("renders a non-empty id inside a vapor component", () => {
-    const {container, unmount} = renderVapor(UseIdHost);
+    const { container, unmount } = renderVapor(UseIdHost);
 
     expect(read(container, "first")).toBeTruthy();
 
@@ -18,7 +18,7 @@ describe("useId", () => {
   });
 
   it("returns a distinct id per call within one component", () => {
-    const {container, unmount} = renderVapor(UseIdHost);
+    const { container, unmount } = renderVapor(UseIdHost);
 
     expect(read(container, "first")).not.toBe(read(container, "second"));
 
@@ -26,7 +26,7 @@ describe("useId", () => {
   });
 
   it("prefers the caller-supplied override", () => {
-    const {container, unmount} = renderVapor(UseIdHost, {props: {idOverride: "my-own-id"}});
+    const { container, unmount } = renderVapor(UseIdHost, { props: { idOverride: "my-own-id" } });
 
     expect(read(container, "first")).toBe("my-own-id");
     // The second call has no override and keeps its generated id.

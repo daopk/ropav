@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {TableCellProps, TableCellSlotProps} from "./table.types";
+import type { TableCellProps, TableCellSlotProps } from "./table.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useId} from "../../composables/use-id";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {tableCellId} from "../../composables/use-table-collection";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {getCollectionTextValue} from "../../utils/text-value";
+import { useId } from "../../composables/use-id";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { tableCellId } from "../../composables/use-table-collection";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { getCollectionTextValue } from "../../utils/text-value";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
 import {
@@ -20,11 +20,12 @@ import {
 
 const props = defineProps<TableCellProps>();
 
-defineSlots<{default?: (props: TableCellSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TableCellSlotProps) => unknown }>();
 
-const {slots} = useTableContext();
-const {collection, collectionId, keyboard, selection, tableId, treeColumn} = useTableGridContext();
-const {cells, hasChildRows, isExpanded, level, rowKey} = useTableRowContext();
+const { slots } = useTableContext();
+const { collection, collectionId, keyboard, selection, tableId, treeColumn } =
+  useTableGridContext();
+const { cells, hasChildRows, isExpanded, level, rowKey } = useTableRowContext();
 
 // A cell has no identity of its own in the public API — it is the nth cell of its row — so the
 // registration key is internal and the rendered key is derived from the column it lands under.
@@ -44,7 +45,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 // Which column this cell sits under, exactly as React Aria pairs the nth cell with the nth
@@ -75,14 +76,14 @@ const isTreeColumn = computed(
 
 // The stylesheet draws the cell's focus ring from `data-focus-visible`; its pseudo-class branch
 // is never reached, the same as everywhere else in the design system.
-const states = useInteractionStates({isDisabled: () => isDisabled.value});
+const states = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 const onFocus = (event: FocusEvent) => {
   states.onFocus();
 
   if (event.target !== element.value) return;
 
-  keyboard.claimFocus({columnKey: columnKey.value, rowKey: rowKey.value});
+  keyboard.claimFocus({ columnKey: columnKey.value, rowKey: rowKey.value });
 };
 
 /**

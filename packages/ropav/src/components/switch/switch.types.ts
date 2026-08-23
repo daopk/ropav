@@ -2,7 +2,7 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {SwitchVariants} from "@ropav/styles";
+import type { SwitchVariants } from "@ropav/styles";
 
 export interface SwitchRootProps {
   class?: string;

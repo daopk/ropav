@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {RadioGroupStateHostProps} from "./radio-group-state.types";
+import type { RadioGroupStateHostProps } from "./radio-group-state.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useRadioGroupState} from "@/composables/use-radio-group-state";
+import { useRadioGroupState } from "@/composables/use-radio-group-state";
 
-const props = withDefaults(defineProps<RadioGroupStateHostProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<RadioGroupStateHostProps>(), { isInvalid: undefined });
 
 const state = useRadioGroupState({
   defaultValue: () => props.defaultValue,

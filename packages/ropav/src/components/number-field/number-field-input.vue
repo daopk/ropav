@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {NumberFieldInputProps} from "./number-field.types";
+import type { NumberFieldInputProps } from "./number-field.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useNumberFieldContext} from "./number-field.context";
+import { useNumberFieldContext } from "./number-field.context";
 
 const props = defineProps<NumberFieldInputProps>();
 
-const {field, slots} = useNumberFieldContext();
+const { field, slots } = useNumberFieldContext();
 
 const setElement = (element: unknown) => {
   field.registerElement(element instanceof HTMLInputElement ? element : null);
 };
 
-const styles = computed(() => slots.value.input({class: props.class}));
+const styles = computed(() => slots.value.input({ class: props.class }));
 
 const attrs = computed(() => {
-  const merged: Record<string, unknown> = {...field.attrs.value};
+  const merged: Record<string, unknown> = { ...field.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
 
@@ -28,7 +28,7 @@ const attrs = computed(() => {
 
 // The stylesheet keys hover and focus on these attributes as well as on the native
 // pseudo-classes, so they are rendered here to match what React puts in the DOM.
-const interaction = useInteractionStates({isDisabled: field.isDisabled});
+const interaction = useInteractionStates({ isDisabled: field.isDisabled });
 
 const onFocus = (event: FocusEvent) => {
   interaction.onFocus();

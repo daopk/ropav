@@ -1,4 +1,4 @@
-import type {SeparatorVariants} from "@ropav/styles";
+import type { SeparatorVariants } from "@ropav/styles";
 
 export interface SeparatorRootProps {
   class?: string;

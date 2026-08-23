@@ -1,9 +1,9 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {beforeEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
-import {TableSortableColumnHeader} from "@/components/table";
-import {announce} from "@/utils/live-announcer";
+import { TableSortableColumnHeader } from "@/components/table";
+import { announce } from "@/utils/live-announcer";
 
 import Fixture from "./fixtures.vue";
 import SortableFixture from "./sortable-fixtures.vue";
@@ -13,7 +13,7 @@ import SortableFixture from "./sortable-fixtures.vue";
  * why every query waits a tick first — the same shape every other Vue collection has.
  */
 const renderTable = async (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   await nextTick();
 
@@ -35,7 +35,7 @@ const renderTable = async (props: Record<string, unknown> = {}) => {
 /** Send a key to whatever holds focus, the way a keypress actually arrives. */
 const press = (key: string, modifiers: Record<string, boolean> = {}) => {
   document.activeElement!.dispatchEvent(
-    new KeyboardEvent("keydown", {bubbles: true, key, ...modifiers}),
+    new KeyboardEvent("keydown", { bubbles: true, key, ...modifiers }),
   );
 };
 
@@ -56,8 +56,8 @@ const focusName = () => {
 };
 
 /** A click carrying modifier keys, which `HTMLElement.click()` cannot express. */
-const clickWith = (element: HTMLElement, modifiers: {ctrlKey?: boolean; shiftKey?: boolean}) => {
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, ...modifiers}));
+const clickWith = (element: HTMLElement, modifiers: { ctrlKey?: boolean; shiftKey?: boolean }) => {
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, ...modifiers }));
 };
 
 const cellsOf = (row: HTMLElement) => [...row.querySelectorAll<HTMLElement>("td")];
@@ -67,7 +67,7 @@ describe("Table", () => {
     // Native table elements rather than divs: the stylesheet keys on `th.table__column`,
     // `tbody`, and `tr:first-child td:first-child`.
     it("renders native table elements with a grid role", async () => {
-      const {body, head, root, table} = await renderTable();
+      const { body, head, root, table } = await renderTable();
 
       expect(root.tagName).toBe("DIV");
       expect(root).toHaveClass("table-root", "table-root--primary");
@@ -81,7 +81,7 @@ describe("Table", () => {
     });
 
     it("wraps the columns in a header row of its own", async () => {
-      const {head} = await renderTable();
+      const { head } = await renderTable();
       const headerRow = head.querySelector("tr")!;
 
       expect(headerRow).toHaveAttribute("role", "row");
@@ -92,7 +92,7 @@ describe("Table", () => {
     });
 
     it("renders the scroll container and the footer outside the table", async () => {
-      const {root} = await renderTable({withFooter: true});
+      const { root } = await renderTable({ withFooter: true });
       const scroll = root.querySelector('[data-slot="table-scroll-container"]')!;
       const footer = root.querySelector('[data-slot="table-footer"]')!;
 
@@ -103,13 +103,13 @@ describe("Table", () => {
     });
 
     it.each(["primary", "secondary"] as const)("renders the %s variant", async (variant) => {
-      const {root} = await renderTable({variant});
+      const { root } = await renderTable({ variant });
 
       expect(root).toHaveClass(`table-root--${variant}`);
     });
 
     it("merges a caller class through the variants", async () => {
-      const {columns, root} = await renderTable({class: "mt-4", columnClass: "text-end"});
+      const { columns, root } = await renderTable({ class: "mt-4", columnClass: "text-end" });
 
       expect(root).toHaveClass("table-root", "mt-4");
       expect(columns[0]).toHaveClass("table__column", "text-end");
@@ -118,7 +118,7 @@ describe("Table", () => {
 
   describe("columns", () => {
     it("numbers the columns from one, the way a grid reports them", async () => {
-      const {columns} = await renderTable();
+      const { columns } = await renderTable();
 
       expect(columns.map((column) => column.getAttribute("aria-colindex"))).toEqual([
         "1",
@@ -134,13 +134,13 @@ describe("Table", () => {
     });
 
     it("derives each column header id from the table and the column key", async () => {
-      const {columns, table} = await renderTable();
+      const { columns, table } = await renderTable();
 
       expect(columns[1]!.id).toBe(`${table.id}-role`);
     });
 
     it("shares one collection marker across every part", async () => {
-      const {columns, rows, table} = await renderTable();
+      const { columns, rows, table } = await renderTable();
       const marker = table.getAttribute("data-collection");
 
       expect(marker).toBeTruthy();
@@ -152,7 +152,7 @@ describe("Table", () => {
 
   describe("rows and cells", () => {
     it("keys a row by its id and a cell by the column it landed under", async () => {
-      const {rows} = await renderTable();
+      const { rows } = await renderTable();
 
       expect(rows[0]).toHaveAttribute("data-key", "4586932");
       expect(cellsOf(rows[0]!).map((cell) => cell.getAttribute("data-key"))).toEqual([
@@ -163,7 +163,7 @@ describe("Table", () => {
     });
 
     it("numbers cells from zero, unlike the columns above them", async () => {
-      const {rows} = await renderTable();
+      const { rows } = await renderTable();
 
       expect(cellsOf(rows[0]!).map((cell) => cell.getAttribute("data-column-index"))).toEqual([
         "0",
@@ -173,7 +173,7 @@ describe("Table", () => {
     });
 
     it("gives the row header cell a rowheader role and leaves the rest as grid cells", async () => {
-      const {rows} = await renderTable({rowHeaders: ["role"]});
+      const { rows } = await renderTable({ rowHeaders: ["role"] });
       const cells = cellsOf(rows[0]!);
 
       expect(cells.map((cell) => cell.getAttribute("role"))).toEqual([
@@ -186,7 +186,7 @@ describe("Table", () => {
     // Only the row header cell is pointed at, so only it needs an id. React Aria puts a
     // generated id on every other cell that nothing reads.
     it("names the row from its row header cell", async () => {
-      const {rows, table} = await renderTable();
+      const { rows, table } = await renderTable();
       const cells = cellsOf(rows[0]!);
 
       expect(cells[0]!.id).toBe(`${table.id}-4586932-name`);
@@ -195,7 +195,7 @@ describe("Table", () => {
     });
 
     it("points at every row header cell when more than one column asks", async () => {
-      const {rows, table} = await renderTable({rowHeaders: ["name", "role"]});
+      const { rows, table } = await renderTable({ rowHeaders: ["name", "role"] });
 
       expect(rows[0]).toHaveAttribute(
         "aria-labelledby",
@@ -205,14 +205,14 @@ describe("Table", () => {
 
     // With no column asking, the first one names the row rather than leaving it unnamed.
     it("falls back to the first column as the row header", async () => {
-      const {rows, table} = await renderTable({rowHeaders: []});
+      const { rows, table } = await renderTable({ rowHeaders: [] });
 
       expect(rows[0]).toHaveAttribute("aria-labelledby", `${table.id}-4586932-name`);
       expect(cellsOf(rows[0]!)[0]).toHaveAttribute("role", "rowheader");
     });
 
     it("exposes the nesting level a tree grid would use", async () => {
-      const {rows} = await renderTable();
+      const { rows } = await renderTable();
 
       expect(rows[0]).toHaveAttribute("data-level", "1");
       expect(rows[0]!.style.getPropertyValue("--table-row-level")).toBe("1");
@@ -222,7 +222,7 @@ describe("Table", () => {
 
   describe("empty state", () => {
     it("marks the body empty and spans the placeholder across every column", async () => {
-      const {body} = await renderTable({users: []});
+      const { body } = await renderTable({ users: [] });
 
       expect(body).toHaveAttribute("data-empty", "true");
 
@@ -236,7 +236,7 @@ describe("Table", () => {
     });
 
     it("keeps the placeholder out of a table that has rows", async () => {
-      const {body} = await renderTable();
+      const { body } = await renderTable();
 
       expect(body).not.toHaveAttribute("data-empty");
       expect(body.querySelectorAll("td")).toHaveLength(6);
@@ -247,7 +247,7 @@ describe("Table", () => {
     const SORTABLE = ["name", "role"];
 
     it("reports a sort state on every sortable column and none on the rest", async () => {
-      const {columns} = await renderTable({sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ sortableColumns: SORTABLE });
 
       expect(columns.map((column) => column.getAttribute("aria-sort"))).toEqual([
         "none",
@@ -262,8 +262,8 @@ describe("Table", () => {
     });
 
     it("marks only the sorted column with its direction", async () => {
-      const {columns} = await renderTable({
-        sortDescriptor: {column: "role", direction: "descending"},
+      const { columns } = await renderTable({
+        sortDescriptor: { column: "role", direction: "descending" },
         sortableColumns: SORTABLE,
       });
 
@@ -275,33 +275,33 @@ describe("Table", () => {
 
     it("starts a new column ascending", async () => {
       const onSortChange = vi.fn();
-      const {columns} = await renderTable({onSortChange, sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ onSortChange, sortableColumns: SORTABLE });
 
-      columns[1]!.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      columns[1]!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
-      expect(onSortChange).toHaveBeenCalledWith({column: "role", direction: "ascending"});
+      expect(onSortChange).toHaveBeenCalledWith({ column: "role", direction: "ascending" });
     });
 
     it("flips the column that is already sorted", async () => {
       const onSortChange = vi.fn();
-      const {columns} = await renderTable({
+      const { columns } = await renderTable({
         onSortChange,
-        sortDescriptor: {column: "name", direction: "ascending"},
+        sortDescriptor: { column: "name", direction: "ascending" },
         sortableColumns: SORTABLE,
       });
 
-      columns[0]!.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      columns[0]!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
-      expect(onSortChange).toHaveBeenCalledWith({column: "name", direction: "descending"});
+      expect(onSortChange).toHaveBeenCalledWith({ column: "name", direction: "descending" });
     });
 
     it("leaves a column that does not allow sorting alone", async () => {
       const onSortChange = vi.fn();
-      const {columns} = await renderTable({onSortChange, sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ onSortChange, sortableColumns: SORTABLE });
 
-      columns[2]!.dispatchEvent(new MouseEvent("click", {bubbles: true}));
+      columns[2]!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await nextTick();
 
       expect(onSortChange).not.toHaveBeenCalled();
@@ -310,30 +310,30 @@ describe("Table", () => {
     // A `th` is not a button, so neither key reaches it as a click.
     it.each(["Enter", " "])("sorts on %s from the keyboard", async (key) => {
       const onSortChange = vi.fn();
-      const {columns} = await renderTable({onSortChange, sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ onSortChange, sortableColumns: SORTABLE });
 
-      const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key});
+      const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key });
 
       columns[0]!.dispatchEvent(event);
       await nextTick();
 
-      expect(onSortChange).toHaveBeenCalledWith({column: "name", direction: "ascending"});
+      expect(onSortChange).toHaveBeenCalledWith({ column: "name", direction: "ascending" });
       // Space would scroll the table, and either key would reach the grid's own handler.
       expect(event.defaultPrevented).toBe(true);
     });
 
     it("ignores other keys", async () => {
       const onSortChange = vi.fn();
-      const {columns} = await renderTable({onSortChange, sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ onSortChange, sortableColumns: SORTABLE });
 
-      columns[0]!.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "a"}));
+      columns[0]!.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "a" }));
       await nextTick();
 
       expect(onSortChange).not.toHaveBeenCalled();
     });
 
     it("says a sortable column can be pressed", async () => {
-      const {columns} = await renderTable({sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ sortableColumns: SORTABLE });
       const describedBy = columns[0]!.getAttribute("aria-describedby")!;
 
       expect(document.getElementById(describedBy)).toHaveTextContent("sortable column");
@@ -341,8 +341,8 @@ describe("Table", () => {
     });
 
     it("describes the table by the order it is sorted in", async () => {
-      const {table} = await renderTable({
-        sortDescriptor: {column: "role", direction: "descending"},
+      const { table } = await renderTable({
+        sortDescriptor: { column: "role", direction: "descending" },
         sortableColumns: SORTABLE,
       });
       const describedBy = table.getAttribute("aria-describedby")!;
@@ -353,20 +353,20 @@ describe("Table", () => {
     });
 
     it("leaves the table undescribed while nothing is sorted", async () => {
-      const {table} = await renderTable({sortableColumns: SORTABLE});
+      const { table } = await renderTable({ sortableColumns: SORTABLE });
 
       // Absent rather than empty: React Aria renders `aria-describedby=""` here.
       expect(table).not.toHaveAttribute("aria-describedby");
     });
 
     it("reports hover and press only where a press does something", async () => {
-      const {columns} = await renderTable({sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ sortableColumns: SORTABLE });
       const sortable = columns[0]!;
       const plain = columns[2]!;
 
       for (const column of [sortable, plain]) {
-        column.dispatchEvent(new PointerEvent("pointerenter", {bubbles: true}));
-        column.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+        column.dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }));
+        column.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
       }
       await nextTick();
 
@@ -381,17 +381,17 @@ describe("Table", () => {
     // The stylesheet's only focus branch is the attribute one, so a column with no
     // `data-focus-visible` has no ring at all.
     it("reports focus on every column, sortable or not", async () => {
-      const {columns} = await renderTable({sortableColumns: SORTABLE});
+      const { columns } = await renderTable({ sortableColumns: SORTABLE });
 
-      columns[2]!.dispatchEvent(new FocusEvent("focus", {bubbles: false}));
+      columns[2]!.dispatchEvent(new FocusEvent("focus", { bubbles: false }));
       await nextTick();
 
       expect(columns[2]).toHaveAttribute("data-focused", "true");
     });
 
     it("hands the sort state to the column slot", async () => {
-      const {columns} = await renderTable({
-        sortDescriptor: {column: "name", direction: "ascending"},
+      const { columns } = await renderTable({
+        sortDescriptor: { column: "name", direction: "ascending" },
         sortableColumns: SORTABLE,
         withSortableHeader: true,
       });
@@ -405,7 +405,7 @@ describe("Table", () => {
 
   describe("selection", () => {
     it("leaves every selection attribute off when nothing can be selected", async () => {
-      const {rows, table} = await renderTable();
+      const { rows, table } = await renderTable();
 
       expect(table).not.toHaveAttribute("aria-multiselectable");
       expect(rows[0]).not.toHaveAttribute("aria-selected");
@@ -413,7 +413,7 @@ describe("Table", () => {
     });
 
     it("reports the mode on the table and on every row", async () => {
-      const {rows, table} = await renderTable({selectionMode: "multiple"});
+      const { rows, table } = await renderTable({ selectionMode: "multiple" });
 
       expect(table).toHaveAttribute("aria-multiselectable", "true");
       expect(rows[0]).toHaveAttribute("aria-selected", "false");
@@ -423,13 +423,13 @@ describe("Table", () => {
     // Single selection is not multi-selectable, so the attribute has to stay off rather than
     // be rendered as "false" — which is what React Aria does.
     it("keeps the table out of multi-select in single mode", async () => {
-      const {table} = await renderTable({selectionMode: "single"});
+      const { table } = await renderTable({ selectionMode: "single" });
 
       expect(table).not.toHaveAttribute("aria-multiselectable");
     });
 
     it("selects a row on click", async () => {
-      const {rows} = await renderTable({selectionMode: "multiple"});
+      const { rows } = await renderTable({ selectionMode: "multiple" });
 
       rows[0]!.click();
       await nextTick();
@@ -439,7 +439,7 @@ describe("Table", () => {
     });
 
     it("replaces the selection in single mode", async () => {
-      const {rows} = await renderTable({selectionMode: "single"});
+      const { rows } = await renderTable({ selectionMode: "single" });
 
       rows[0]!.click();
       rows[1]!.click();
@@ -450,7 +450,7 @@ describe("Table", () => {
     });
 
     it("adds to the selection in multiple mode", async () => {
-      const {rows} = await renderTable({selectionMode: "multiple"});
+      const { rows } = await renderTable({ selectionMode: "multiple" });
 
       rows[0]!.click();
       rows[1]!.click();
@@ -462,14 +462,14 @@ describe("Table", () => {
 
     it("extends the selection across a shift-click", async () => {
       const users = [
-        {email: "a@acme.com", id: 1, name: "Ann", role: "CEO"},
-        {email: "b@acme.com", id: 2, name: "Bob", role: "CTO"},
-        {email: "c@acme.com", id: 3, name: "Cleo", role: "COO"},
+        { email: "a@acme.com", id: 1, name: "Ann", role: "CEO" },
+        { email: "b@acme.com", id: 2, name: "Bob", role: "CTO" },
+        { email: "c@acme.com", id: 3, name: "Cleo", role: "COO" },
       ];
-      const {rows} = await renderTable({selectionMode: "multiple", users});
+      const { rows } = await renderTable({ selectionMode: "multiple", users });
 
       rows[0]!.click();
-      clickWith(rows[2]!, {shiftKey: true});
+      clickWith(rows[2]!, { shiftKey: true });
       await nextTick();
 
       expect(rows.map((row) => row.getAttribute("aria-selected"))).toEqual([
@@ -481,7 +481,7 @@ describe("Table", () => {
 
     it("reports the keys it was asked to change to", async () => {
       const onSelectionChange = vi.fn();
-      const {rows} = await renderTable({onSelectionChange, selectionMode: "multiple"});
+      const { rows } = await renderTable({ onSelectionChange, selectionMode: "multiple" });
 
       rows[1]!.click();
 
@@ -489,7 +489,7 @@ describe("Table", () => {
     });
 
     it("starts from the default keys", async () => {
-      const {rows} = await renderTable({
+      const { rows } = await renderTable({
         defaultSelectedKeys: [5273849],
         selectionMode: "multiple",
       });
@@ -499,7 +499,7 @@ describe("Table", () => {
     });
 
     it("marks a disabled row and ignores a click on it", async () => {
-      const {rows} = await renderTable({disabledKeys: [4586932], selectionMode: "multiple"});
+      const { rows } = await renderTable({ disabledKeys: [4586932], selectionMode: "multiple" });
 
       expect(rows[0]).toHaveAttribute("aria-disabled", "true");
       expect(rows[0]).toHaveAttribute("data-disabled", "true");
@@ -511,7 +511,7 @@ describe("Table", () => {
     });
 
     it("refuses to empty a selection it must keep", async () => {
-      const {rows} = await renderTable({
+      const { rows } = await renderTable({
         defaultSelectedKeys: [4586932],
         disallowEmptySelection: true,
         selectionMode: "multiple",
@@ -526,7 +526,7 @@ describe("Table", () => {
     // React Aria's press hook stops propagation, so a control inside a cell never lets the row
     // see the press. The row has to recognise the same case from the click that reaches it.
     it("leaves the row alone when a control inside a cell was clicked", async () => {
-      const {rows} = await renderTable({selectionMode: "multiple"});
+      const { rows } = await renderTable({ selectionMode: "multiple" });
       const button = document.createElement("button");
 
       rows[0]!.querySelector("td")!.append(button);
@@ -541,7 +541,7 @@ describe("Table", () => {
     // Always present, so there is something for the observer to watch even before the first page
     // fills the box. Inert and zero height so it is neither read nor laid out.
     it("keeps a sentinel row in the body at all times", async () => {
-      const {body} = await renderTable({withLoadMore: true});
+      const { body } = await renderTable({ withLoadMore: true });
       const sentinel = body.querySelector<HTMLElement>("tr[inert]")!;
 
       expect(sentinel.style.height).toBe("0px");
@@ -549,17 +549,17 @@ describe("Table", () => {
       const cell = sentinel.querySelector<HTMLElement>("td")!;
 
       expect(cell.style.padding).toBe("0px");
-      expect(cell.firstElementChild).toHaveStyle({height: "1px", width: "1px"});
+      expect(cell.firstElementChild).toHaveStyle({ height: "1px", width: "1px" });
     });
 
     it("renders no indicator row until it is loading", async () => {
-      const {body} = await renderTable({withLoadMore: true});
+      const { body } = await renderTable({ withLoadMore: true });
 
       expect(body.querySelector('[data-slot="table-load-more"]')).toBeNull();
     });
 
     it("spans the indicator row across every column", async () => {
-      const {body} = await renderTable({isLoading: true, withLoadMore: true});
+      const { body } = await renderTable({ isLoading: true, withLoadMore: true });
       const row = body.querySelector<HTMLElement>('[data-slot="table-load-more"]')!;
       const cell = row.querySelector<HTMLElement>("td")!;
 
@@ -573,7 +573,7 @@ describe("Table", () => {
     });
 
     it("styles the content inside the indicator row", async () => {
-      const {body} = await renderTable({isLoading: true, withLoadMore: true});
+      const { body } = await renderTable({ isLoading: true, withLoadMore: true });
       const content = body.querySelector('[data-slot="table-load-more-content"]')!;
 
       expect(content).toHaveClass("table__load-more-content");
@@ -581,7 +581,7 @@ describe("Table", () => {
     });
 
     it("leaves the sentinel out of a table that is not loading more", async () => {
-      const {body} = await renderTable();
+      const { body } = await renderTable();
 
       expect(body.querySelector("tr[inert]")).toBeNull();
     });
@@ -593,7 +593,7 @@ describe("Table", () => {
      * the tab stop only until something inside takes over.
      */
     const renderGrid = async (props: Record<string, unknown> = {}) => {
-      const result = await renderTable({selectionMode: "multiple", ...props});
+      const result = await renderTable({ selectionMode: "multiple", ...props });
 
       result.table.focus();
       await nextTick();
@@ -602,7 +602,7 @@ describe("Table", () => {
     };
 
     it("hands the tab stop to the first row as focus enters", async () => {
-      const {table} = await renderTable({selectionMode: "multiple"});
+      const { table } = await renderTable({ selectionMode: "multiple" });
 
       expect(table).toHaveAttribute("tabindex", "0");
 
@@ -614,7 +614,7 @@ describe("Table", () => {
     });
 
     it("keeps exactly one part tabbable at a time", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
       expect(rows[0]).toHaveAttribute("tabindex", "0");
       expect(rows[1]).toHaveAttribute("tabindex", "-1");
@@ -707,7 +707,7 @@ describe("Table", () => {
     });
 
     it("comes back down from a column header into the cell under it", async () => {
-      const {columns} = await renderGrid();
+      const { columns } = await renderGrid();
 
       columns[1]!.focus();
       press("ArrowDown");
@@ -717,7 +717,7 @@ describe("Table", () => {
     });
 
     it("stays in the header on the way up", async () => {
-      const {columns} = await renderGrid();
+      const { columns } = await renderGrid();
 
       columns[0]!.focus();
       press("ArrowUp");
@@ -728,7 +728,7 @@ describe("Table", () => {
 
     // The header row wraps, unlike the cells of a body row.
     it("wraps around the column headers", async () => {
-      const {columns} = await renderGrid();
+      const { columns } = await renderGrid();
 
       columns[0]!.focus();
       press("ArrowLeft");
@@ -760,21 +760,21 @@ describe("Table", () => {
     it("takes a modified Home and End to the ends of the whole grid", async () => {
       await renderGrid();
 
-      press("End", {ctrlKey: true});
+      press("End", { ctrlKey: true });
       await nextTick();
 
       expect(focusName()).toBe("row:5273849");
 
-      press("Home", {ctrlKey: true});
+      press("Home", { ctrlKey: true });
       await nextTick();
 
       expect(focusName()).toBe("row:4586932");
     });
 
     it("selects everything on the select-all chord", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
-      press("a", {ctrlKey: true});
+      press("a", { ctrlKey: true });
       await nextTick();
 
       expect(rows[0]).toHaveAttribute("aria-selected", "true");
@@ -782,7 +782,7 @@ describe("Table", () => {
     });
 
     it("clears the selection on Escape", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
       press(" ");
       await nextTick();
@@ -796,7 +796,7 @@ describe("Table", () => {
     });
 
     it("toggles the focused row on Space", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
       press(" ");
       await nextTick();
@@ -810,10 +810,10 @@ describe("Table", () => {
     });
 
     it("extends the selection across a shifted arrow", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
       press(" ");
-      press("ArrowDown", {shiftKey: true});
+      press("ArrowDown", { shiftKey: true });
       await nextTick();
 
       expect(rows[0]).toHaveAttribute("aria-selected", "true");
@@ -823,11 +823,11 @@ describe("Table", () => {
     // The selection manager runs on rows alone, so extending a range has to work the same
     // whether the focused position is a row or one of its cells.
     it("extends a range while focus is on a cell", async () => {
-      const {rows} = await renderGrid();
+      const { rows } = await renderGrid();
 
       press("ArrowRight");
       press(" ");
-      press("ArrowDown", {shiftKey: true});
+      press("ArrowDown", { shiftKey: true });
       await nextTick();
 
       expect(focusName()).toBe("cell:5273849:name");
@@ -855,13 +855,13 @@ describe("Table", () => {
     });
 
     it("skips a disabled row", async () => {
-      await renderGrid({disabledKeys: [4586932]});
+      await renderGrid({ disabledKeys: [4586932] });
 
       expect(focusName()).toBe("row:5273849");
     });
 
     it("leaves a disabled row out of the tab order entirely", async () => {
-      const {rows} = await renderTable({disabledKeys: [4586932], selectionMode: "multiple"});
+      const { rows } = await renderTable({ disabledKeys: [4586932], selectionMode: "multiple" });
 
       // React Aria omits the attribute rather than setting it to -1.
       expect(rows[0]).not.toHaveAttribute("tabindex");
@@ -870,7 +870,7 @@ describe("Table", () => {
 
     // A checkbox needs its own Space, and a button its own Enter.
     it("leaves keys pressed on a control inside a cell alone", async () => {
-      const {rows} = await renderGrid({withSelectionColumn: true});
+      const { rows } = await renderGrid({ withSelectionColumn: true });
       const checkbox = rows[0]!.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
 
       checkbox.focus();
@@ -890,7 +890,7 @@ describe("Table", () => {
     beforeEach(() => announce(""));
 
     const renderAnnouncing = async (props: Record<string, unknown> = {}) => {
-      const result = await renderTable({selectionMode: "multiple", ...props});
+      const result = await renderTable({ selectionMode: "multiple", ...props });
 
       result.table.focus();
       await nextTick();
@@ -924,7 +924,7 @@ describe("Table", () => {
     it("reports a select-all as one thing rather than row by row", async () => {
       await renderAnnouncing();
 
-      press("a", {ctrlKey: true});
+      press("a", { ctrlKey: true });
       await nextTick();
 
       expect(liveRegion()).toHaveTextContent("All items selected.");
@@ -935,7 +935,7 @@ describe("Table", () => {
 
       press(" ");
       await nextTick();
-      press("ArrowDown", {shiftKey: true});
+      press("ArrowDown", { shiftKey: true });
       await nextTick();
 
       expect(liveRegion()).toHaveTextContent("2 items selected.");
@@ -943,7 +943,7 @@ describe("Table", () => {
 
     // A selection the grid did not make is not the grid's news to report.
     it("stays quiet while focus is outside the grid", async () => {
-      const {rows} = await renderTable({selectionMode: "multiple"});
+      const { rows } = await renderTable({ selectionMode: "multiple" });
 
       rows[0]!.click();
       await nextTick();
@@ -954,10 +954,10 @@ describe("Table", () => {
 
   describe("selection checkbox", () => {
     const renderWithCheckboxes = (props: Record<string, unknown> = {}) =>
-      renderTable({selectionMode: "multiple", withSelectionColumn: true, ...props});
+      renderTable({ selectionMode: "multiple", withSelectionColumn: true, ...props });
 
     it("names the header checkbox for the whole table and each row's for its row", async () => {
-      const {checkboxes, rows} = await renderWithCheckboxes();
+      const { checkboxes, rows } = await renderWithCheckboxes();
       const [selectAll, first] = checkboxes;
 
       expect(selectAll).toHaveAttribute("aria-label", "Select All");
@@ -970,13 +970,13 @@ describe("Table", () => {
     });
 
     it("names a single-selection header checkbox without the plural", async () => {
-      const {checkboxes} = await renderWithCheckboxes({selectionMode: "single"});
+      const { checkboxes } = await renderWithCheckboxes({ selectionMode: "single" });
 
       expect(checkboxes[0]).toHaveAttribute("aria-label", "Select");
     });
 
     it("toggles its own row", async () => {
-      const {checkboxes, rows} = await renderWithCheckboxes();
+      const { checkboxes, rows } = await renderWithCheckboxes();
 
       checkboxes[1]!.click();
       await nextTick();
@@ -995,11 +995,11 @@ describe("Table", () => {
     // that visible: the row would extend a range where the checkbox only ticks one box.
     it("claims the press rather than letting the row read the modifiers", async () => {
       const users = [
-        {email: "a@acme.com", id: 1, name: "Ann", role: "CEO"},
-        {email: "b@acme.com", id: 2, name: "Bob", role: "CTO"},
-        {email: "c@acme.com", id: 3, name: "Cleo", role: "COO"},
+        { email: "a@acme.com", id: 1, name: "Ann", role: "CEO" },
+        { email: "b@acme.com", id: 2, name: "Bob", role: "CTO" },
+        { email: "c@acme.com", id: 3, name: "Cleo", role: "COO" },
       ];
-      const {rows} = await renderWithCheckboxes({users});
+      const { rows } = await renderWithCheckboxes({ users });
 
       rows[0]!.click();
       clickWith(rows[2]!.querySelector<HTMLElement>('[data-slot="checkbox-control"]')!, {
@@ -1015,7 +1015,7 @@ describe("Table", () => {
     });
 
     it("toggles every row from the header", async () => {
-      const {checkboxes, rows} = await renderWithCheckboxes();
+      const { checkboxes, rows } = await renderWithCheckboxes();
 
       checkboxes[0]!.click();
       await nextTick();
@@ -1030,7 +1030,7 @@ describe("Table", () => {
     });
 
     it("shows the mixed state while only some rows are selected", async () => {
-      const {checkboxes} = await renderWithCheckboxes();
+      const { checkboxes } = await renderWithCheckboxes();
 
       checkboxes[1]!.click();
       await nextTick();
@@ -1046,13 +1046,13 @@ describe("Table", () => {
     });
 
     it("disables the header checkbox unless several rows can be selected", async () => {
-      const {checkboxes} = await renderWithCheckboxes({selectionMode: "single"});
+      const { checkboxes } = await renderWithCheckboxes({ selectionMode: "single" });
 
       expect(checkboxes[0]!.disabled).toBe(true);
     });
 
     it("disables the checkbox of a row that cannot be selected", async () => {
-      const {checkboxes} = await renderWithCheckboxes({disabledKeys: [4586932]});
+      const { checkboxes } = await renderWithCheckboxes({ disabledKeys: [4586932] });
 
       expect(checkboxes[1]!.disabled).toBe(true);
       expect(checkboxes[2]!.disabled).toBe(false);
@@ -1061,10 +1061,10 @@ describe("Table", () => {
 
   describe("sortable column header", () => {
     const renderHeader = (props: Record<string, unknown> = {}) =>
-      renderVapor(SortableFixture, {props});
+      renderVapor(SortableFixture, { props });
 
     it("renders no indicator until a direction is set", () => {
-      const {container, unmount} = renderHeader();
+      const { container, unmount } = renderHeader();
       const header = container.querySelector('[data-slot="table-sortable-column-header"]')!;
 
       expect(header).toHaveClass("table__sortable-column-header");
@@ -1077,7 +1077,7 @@ describe("Table", () => {
     // The class lands on the icon itself rather than on a wrapper: the stylesheet sizes the
     // indicator to 12px, and a wrapper would take that size while the icon kept its own 16px.
     it.each(["ascending", "descending"] as const)("reflects the %s direction", (direction) => {
-      const {container, unmount} = renderHeader({sortDirection: direction});
+      const { container, unmount } = renderHeader({ sortDirection: direction });
       const header = container.querySelector('[data-slot="table-sortable-column-header"]')!;
       const indicator = header.querySelector('[data-slot="table-sortable-column-indicator"]')!;
 
@@ -1090,7 +1090,7 @@ describe("Table", () => {
     });
 
     it("can be asked for the label without the indicator", () => {
-      const {container, unmount} = renderHeader({
+      const { container, unmount } = renderHeader({
         showIndicator: false,
         sortDirection: "ascending",
       });

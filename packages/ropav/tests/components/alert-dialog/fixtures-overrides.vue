@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import {AlertDialog} from "@/components/alert-dialog";
-import {ButtonRoot} from "@/components/button";
+import { AlertDialog } from "@/components/alert-dialog";
+import { ButtonRoot } from "@/components/button";
 
 /**
  * Both dismissal routes opened the way a caller actually writes them.

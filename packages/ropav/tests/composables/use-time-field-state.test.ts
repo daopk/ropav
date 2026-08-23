@@ -1,11 +1,11 @@
-import type {TimeFieldState} from "@/composables/use-time-field-state";
-import type {TimeValue} from "@/utils/date-format";
-import type {DateSegmentType} from "@/utils/incomplete-date";
+import type { TimeFieldState } from "@/composables/use-time-field-state";
+import type { TimeValue } from "@/utils/date-format";
+import type { DateSegmentType } from "@/utils/incomplete-date";
 
-import {CalendarDateTime, Time, ZonedDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDateTime, Time, ZonedDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/time-field-state-host.vue";
 
@@ -23,7 +23,7 @@ const setup = (props: Record<string, unknown> = {}) => {
     onReady: (value: TimeFieldState) => (state = value),
   });
 
-  const result = renderVapor(Host, {props});
+  const result = renderVapor(Host, { props });
 
   return {
     ...result,
@@ -45,7 +45,7 @@ const setupWithChanges = (props: Record<string, unknown> = {}) => {
     onChange: (value: TimeValue | null) => emitted.push(value?.toString() ?? null),
   });
 
-  return {...field, emitted};
+  return { ...field, emitted };
 };
 
 const NEW_YORK_AFTERNOON = new ZonedDateTime(2026, 6, 5, "America/New_York", -14400000, 13, 45);
@@ -58,8 +58,8 @@ describe("useTimeFieldState", () => {
     });
 
     it("stops at whatever the granularity asks for", () => {
-      expect(setup({granularity: "hour"}).editable()).toEqual(["hour", "dayPeriod"]);
-      expect(setup({granularity: "second"}).editable()).toEqual([
+      expect(setup({ granularity: "hour" }).editable()).toEqual(["hour", "dayPeriod"]);
+      expect(setup({ granularity: "second" }).editable()).toEqual([
         "hour",
         "minute",
         "second",
@@ -68,23 +68,23 @@ describe("useTimeFieldState", () => {
     });
 
     it("leaves the period out of a 24-hour locale", () => {
-      expect(setup({locale: "de-DE"}).editable()).toEqual(["hour", "minute"]);
+      expect(setup({ locale: "de-DE" }).editable()).toEqual(["hour", "minute"]);
     });
 
     it("follows an explicit hour cycle over the locale's own", () => {
-      expect(setup({hourCycle: 24, locale: "en-US"}).editable()).not.toContain("dayPeriod");
-      expect(setup({hourCycle: 12, locale: "de-DE"}).editable()).toContain("dayPeriod");
+      expect(setup({ hourCycle: 24, locale: "en-US" }).editable()).not.toContain("dayPeriod");
+      expect(setup({ hourCycle: 12, locale: "de-DE" }).editable()).toContain("dayPeriod");
     });
 
     it("shows the zone a zoned value carries", () => {
-      const field = setup({value: NEW_YORK_AFTERNOON});
+      const field = setup({ value: NEW_YORK_AFTERNOON });
 
       expect(field.types()).toContain("timeZoneName");
       expect(field.text("timeZoneName")).toBe("EDT");
     });
 
     it("hides the zone when asked", () => {
-      expect(setup({hideTimeZone: true, value: NEW_YORK_AFTERNOON}).types()).not.toContain(
+      expect(setup({ hideTimeZone: true, value: NEW_YORK_AFTERNOON }).types()).not.toContain(
         "timeZoneName",
       );
     });
@@ -99,7 +99,7 @@ describe("useTimeFieldState", () => {
     });
 
     it("fills in from a value", () => {
-      const field = setup({value: new Time(13, 45)});
+      const field = setup({ value: new Time(13, 45) });
 
       // A 12-hour locale splits the afternoon between the hour and the period.
       expect(field.text("hour")).toBe("1");
@@ -108,11 +108,11 @@ describe("useTimeFieldState", () => {
     });
 
     it("keeps a 24-hour locale on a 24-hour clock", () => {
-      expect(setup({locale: "de-DE", value: new Time(13, 45)}).text("hour")).toBe("13");
+      expect(setup({ locale: "de-DE", value: new Time(13, 45) }).text("hour")).toBe("13");
     });
 
     it("pads the numbers when asked", () => {
-      const field = setup({shouldForceLeadingZeros: true, value: new Time(3, 5)});
+      const field = setup({ shouldForceLeadingZeros: true, value: new Time(3, 5) });
 
       expect(field.text("hour")).toBe("03");
       expect(field.text("minute")).toBe("05");
@@ -122,7 +122,7 @@ describe("useTimeFieldState", () => {
   describe("the value it reports", () => {
     it("hands back a plain time", () => {
       expect(
-        setup({value: new Time(13, 45)})
+        setup({ value: new Time(13, 45) })
           .state()
           .timeValue.value?.toString(),
       ).toBe("13:45:00");
@@ -130,11 +130,11 @@ describe("useTimeFieldState", () => {
 
     it("drops the date from a value that came with one", () => {
       expect(
-        setup({value: new CalendarDateTime(2026, 6, 5, 13, 45)})
+        setup({ value: new CalendarDateTime(2026, 6, 5, 13, 45) })
           .state()
           .timeValue.value?.toString(),
       ).toBe("13:45:00");
-      expect(setup({value: NEW_YORK_AFTERNOON}).state().timeValue.value?.toString()).toBe(
+      expect(setup({ value: NEW_YORK_AFTERNOON }).state().timeValue.value?.toString()).toBe(
         "13:45:00",
       );
     });
@@ -146,7 +146,7 @@ describe("useTimeFieldState", () => {
 
   describe("editing a segment", () => {
     it("starts an empty hour at the placeholder", async () => {
-      const withPlaceholder = setup({placeholderValue: new Time(9)});
+      const withPlaceholder = setup({ placeholderValue: new Time(9) });
 
       withPlaceholder.state().increment("hour");
       await nextTick();
@@ -192,7 +192,7 @@ describe("useTimeFieldState", () => {
     });
 
     it("pages the minute in steps of fifteen", async () => {
-      const field = setupWithChanges({defaultValue: new Time(13, 45)});
+      const field = setupWithChanges({ defaultValue: new Time(13, 45) });
 
       field.state().incrementPage("minute");
       await nextTick();
@@ -202,13 +202,13 @@ describe("useTimeFieldState", () => {
     });
 
     it("wraps a segment without carrying into the next", async () => {
-      const hour = setupWithChanges({defaultValue: new Time(23, 45), locale: "de-DE"});
+      const hour = setupWithChanges({ defaultValue: new Time(23, 45), locale: "de-DE" });
 
       hour.state().increment("hour");
       await nextTick();
       expect(hour.emitted).toEqual(["00:45:00"]);
 
-      const minute = setupWithChanges({defaultValue: new Time(9, 0), locale: "de-DE"});
+      const minute = setupWithChanges({ defaultValue: new Time(9, 0), locale: "de-DE" });
 
       minute.state().decrement("minute");
       await nextTick();
@@ -216,14 +216,14 @@ describe("useTimeFieldState", () => {
     });
 
     it("moves a time across noon by its period alone", async () => {
-      const morning = setupWithChanges({defaultValue: new Time(9, 30)});
+      const morning = setupWithChanges({ defaultValue: new Time(9, 30) });
 
       morning.state().setSegment("dayPeriod", 1);
       await nextTick();
       expect(morning.text("dayPeriod")).toBe("PM");
       expect(morning.emitted).toEqual(["21:30:00"]);
 
-      const evening = setupWithChanges({defaultValue: new Time(21, 30)});
+      const evening = setupWithChanges({ defaultValue: new Time(21, 30) });
 
       evening.state().increment("dayPeriod");
       await nextTick();
@@ -231,14 +231,14 @@ describe("useTimeFieldState", () => {
     });
 
     it("takes the hour to the ends of its own clock", async () => {
-      const max = setupWithChanges({defaultValue: new Time(9, 30)});
+      const max = setupWithChanges({ defaultValue: new Time(9, 30) });
 
       max.state().incrementToMax("hour");
       await nextTick();
       // On a 12-hour clock the largest hour shown is 11 and the smallest is 12, which is midnight.
       expect(max.emitted).toEqual(["11:30:00"]);
 
-      const min = setupWithChanges({defaultValue: new Time(9, 30)});
+      const min = setupWithChanges({ defaultValue: new Time(9, 30) });
 
       min.state().decrementToMin("hour");
       await nextTick();
@@ -246,7 +246,7 @@ describe("useTimeFieldState", () => {
     });
 
     it("fills a field that goes down to seconds", async () => {
-      const field = setupWithChanges({granularity: "second"});
+      const field = setupWithChanges({ granularity: "second" });
 
       field.state().setSegment("hour", 5);
       await nextTick();
@@ -260,7 +260,7 @@ describe("useTimeFieldState", () => {
 
     it("refuses to change while read only or disabled", async () => {
       for (const guard of ["isReadOnly", "isDisabled"]) {
-        const field = setupWithChanges({defaultValue: new Time(9, 30), [guard]: true});
+        const field = setupWithChanges({ defaultValue: new Time(9, 30), [guard]: true });
 
         field.state().increment("hour");
         await nextTick();
@@ -273,7 +273,7 @@ describe("useTimeFieldState", () => {
 
   describe("the date a time travelled as", () => {
     it("stays on a value that came with a date", async () => {
-      const field = setupWithChanges({defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45)});
+      const field = setupWithChanges({ defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45) });
 
       field.state().increment("hour");
       await nextTick();
@@ -282,7 +282,7 @@ describe("useTimeFieldState", () => {
     });
 
     it("keeps the zone a zoned value came with", async () => {
-      const field = setupWithChanges({defaultValue: NEW_YORK_AFTERNOON});
+      const field = setupWithChanges({ defaultValue: NEW_YORK_AFTERNOON });
 
       field.state().increment("hour");
       await nextTick();
@@ -357,7 +357,7 @@ describe("useTimeFieldState", () => {
 
     it("hands a custom validator the time, not the date it travelled as", () => {
       const validate = vi.fn().mockReturnValue(null);
-      const field = setup({validate, validationBehavior: "aria", value: new Time(13, 45)});
+      const field = setup({ validate, validationBehavior: "aria", value: new Time(13, 45) });
 
       // Reading the result is what runs the validator — nothing is validated until it is asked for.
       expect(field.state().displayValidation.value.validationErrors).toEqual([]);

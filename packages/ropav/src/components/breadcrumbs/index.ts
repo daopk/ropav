@@ -12,7 +12,7 @@ export const Breadcrumbs = Object.assign(BreadcrumbsRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {BreadcrumbsItem, BreadcrumbsRoot};
+export { BreadcrumbsItem, BreadcrumbsRoot };
 
 export type {
   BreadcrumbKey,
@@ -25,6 +25,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {breadcrumbsVariants} from "@ropav/styles";
+export { breadcrumbsVariants } from "@ropav/styles";
 
-export type {BreadcrumbsVariants} from "@ropav/styles";
+export type { BreadcrumbsVariants } from "@ropav/styles";

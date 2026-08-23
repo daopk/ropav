@@ -1,15 +1,15 @@
-import type {Color, ColorChannel, ColorSpace} from "../utils/color-types";
-import type {ValidationBehavior} from "./use-form-validation-state";
-import type {NumberFieldState} from "./use-number-field-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Color, ColorChannel, ColorSpace } from "../utils/color-types";
+import type { ValidationBehavior } from "./use-form-validation-state";
+import type { NumberFieldState } from "./use-number-field-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {parseColor} from "../utils/color";
+import { parseColor } from "../utils/color";
 
-import {parseColorValue} from "./use-color-field-state";
-import {useControllableState} from "./use-controllable-state";
-import {useNumberFieldState} from "./use-number-field-state";
+import { parseColorValue } from "./use-color-field-state";
+import { useControllableState } from "./use-controllable-state";
+import { useNumberFieldState } from "./use-number-field-state";
 
 export interface UseColorChannelFieldStateOptions {
   /** The channel the field edits. */
@@ -83,7 +83,7 @@ export const useColorChannelFieldState = (
   const controlledValue = computed(() => parseColorValue(toValue(options.value)));
   const defaultValue = computed(() => parseColorValue(toValue(options.defaultValue)));
 
-  const {setState: setColorValue, state: colorValue} = useControllableState<Color | null>({
+  const { setState: setColorValue, state: colorValue } = useControllableState<Color | null>({
     defaultValue: defaultValue.value ?? null,
     onValueChange: (value) => options.onChange?.(value),
     value: () => controlledValue.value,

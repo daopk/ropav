@@ -1,5 +1,5 @@
 // Re-export tailwind-variants for convenience
-export {tv, cn, type VariantProps} from "tailwind-variants";
+export { tv, cn, type VariantProps } from "tailwind-variants";
 
 // Export utility classes
 export * from "./utils";

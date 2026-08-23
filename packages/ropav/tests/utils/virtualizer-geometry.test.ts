@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {Point, Rect, Size} from "@/utils/virtualizer-geometry";
+import { Point, Rect, Size } from "@/utils/virtualizer-geometry";
 
 describe("Point", () => {
   it("exposes equality and the origin", () => {

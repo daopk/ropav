@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {ScrollShadowRootProps} from "./scroll-shadow.types";
+import type { ScrollShadowRootProps } from "./scroll-shadow.types";
 
-import {scrollShadowVariants} from "@ropav/styles";
-import {computed, shallowRef, watch} from "vue";
+import { scrollShadowVariants } from "@ropav/styles";
+import { computed, shallowRef, watch } from "vue";
 
-import {useScrollShadow} from "./use-scroll-shadow";
+import { useScrollShadow } from "./use-scroll-shadow";
 
 const props = withDefaults(defineProps<ScrollShadowRootProps>(), {
   hideScrollBar: false,
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<ScrollShadowRootProps>(), {
   visibility: "auto",
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -25,10 +25,10 @@ const styles = computed(() =>
     hideScrollBar: props.hideScrollBar,
     orientation: props.orientation,
     variant: props.variant,
-  }).base({class: props.class}),
+  }).base({ class: props.class }),
 );
 
-const style = computed(() => [{"--scroll-shadow-size": `${props.size}px`}, props.style]);
+const style = computed(() => [{ "--scroll-shadow-size": `${props.size}px` }, props.style]);
 
 const clearVisibility = (current: HTMLElement) => {
   delete current.dataset["topScroll"];
@@ -52,10 +52,10 @@ watch(
       current.dataset[`${visibility}Scroll`] = "true";
     }
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
-const {checkOverflow} = useScrollShadow({
+const { checkOverflow } = useScrollShadow({
   container: element,
   isEnabled: () => props.isEnabled,
   offset: () => props.offset,
@@ -64,7 +64,7 @@ const {checkOverflow} = useScrollShadow({
   visibility: () => props.visibility,
 });
 
-defineExpose({checkOverflow, element});
+defineExpose({ checkOverflow, element });
 </script>
 
 <template>

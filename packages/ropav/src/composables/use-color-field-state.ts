@@ -1,17 +1,17 @@
-import type {Color} from "../utils/color-types";
+import type { Color } from "../utils/color-types";
 import type {
   FormValidationState,
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue, watch} from "vue";
+import { computed, shallowRef, toValue, watch } from "vue";
 
-import {parseColor} from "../utils/color";
+import { parseColor } from "../utils/color";
 
-import {useControllableState} from "./use-controllable-state";
-import {useFormValidationState} from "./use-form-validation-state";
+import { useControllableState } from "./use-controllable-state";
+import { useFormValidationState } from "./use-form-validation-state";
 
 export interface UseColorFieldStateOptions {
   /** Controlled colour. A string is parsed; one that will not parse is treated as absent. */
@@ -106,12 +106,12 @@ const addColorValue = (color: Color | null, step: number): Color => {
  * ```
  */
 export const useColorFieldState = (options: UseColorFieldStateOptions = {}): ColorFieldState => {
-  const {step} = MIN_COLOR.getChannelRange("red");
+  const { step } = MIN_COLOR.getChannelRange("red");
 
   const controlledValue = computed(() => parseColorValue(toValue(options.value)));
   const defaultValue = computed(() => parseColorValue(toValue(options.defaultValue)));
 
-  const {setState: setColorValue, state: colorValue} = useControllableState<Color | null>({
+  const { setState: setColorValue, state: colorValue } = useControllableState<Color | null>({
     defaultValue: defaultValue.value ?? null,
     onValueChange: (value) => options.onChange?.(value),
     value: () => controlledValue.value,
@@ -147,7 +147,7 @@ export const useColorFieldState = (options: UseColorFieldStateOptions = {}): Col
     (next) => {
       inputValue.value = next ? next.toString("hex") : "";
     },
-    {flush: "sync"},
+    { flush: "sync" },
   );
 
   /**

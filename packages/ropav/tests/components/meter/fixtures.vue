@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {MeterRootProps} from "@/components/meter";
+import type { MeterRootProps } from "@/components/meter";
 
-import {Label} from "@/components/label";
-import {Meter} from "@/components/meter";
+import { Label } from "@/components/label";
+import { Meter } from "@/components/meter";
 
 withDefaults(
   defineProps<
@@ -49,7 +49,7 @@ withDefaults(
       <Meter.Fill
         :class="$props.fillClass"
         data-testid="fill"
-        :style="{backgroundColor: 'red', width: '1%'}"
+        :style="{ backgroundColor: 'red', width: '1%' }"
       />
     </Meter.Track>
     <span data-testid="slot-percentage">{{ slotProps.percentage }}</span>

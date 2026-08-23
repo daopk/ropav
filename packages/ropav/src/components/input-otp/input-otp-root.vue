@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {InputOTPRootProps} from "./input-otp.types";
+import type { InputOTPRootProps } from "./input-otp.types";
 
-import {inputOTPVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { inputOTPVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideInputOTPStateContext, useInputOTP} from "../../composables/use-input-otp";
-import {dataAttr} from "../../utils/assertion";
-import {provideFieldErrorContext} from "../field-error";
+import { provideInputOTPStateContext, useInputOTP } from "../../composables/use-input-otp";
+import { dataAttr } from "../../utils/assertion";
+import { provideFieldErrorContext } from "../field-error";
 
-import {provideInputOTPContext} from "./input-otp.context";
+import { provideInputOTPContext } from "./input-otp.context";
 
 const props = defineProps<InputOTPRootProps>();
 
@@ -37,12 +37,12 @@ const otp = useInputOTP({
   value: () => props.value,
 });
 
-const slots = computed(() => inputOTPVariants({variant: props.variant}));
+const slots = computed(() => inputOTPVariants({ variant: props.variant }));
 
 const isDisabled = computed(() => props.isDisabled === true);
 const isInvalid = computed(() => props.isInvalid === true);
 
-provideInputOTPContext({isDisabled, isInvalid, slots});
+provideInputOTPContext({ isDisabled, isInvalid, slots });
 provideInputOTPStateContext(otp);
 // The field runs no validation of its own — it is handed a verdict and passes it on, so a nested
 // `FieldError` has something to render.
@@ -66,14 +66,14 @@ provideFieldErrorContext({
   })),
 });
 
-const containerStyles = computed(() => slots.value.base({class: props.class}));
-const inputStyles = computed(() => slots.value.input({class: props.inputClass}));
+const containerStyles = computed(() => slots.value.base({ class: props.class }));
+const inputStyles = computed(() => slots.value.input({ class: props.inputClass }));
 
 /**
  * The control is laid over the whole field, and this layer is what stops the boxes from swallowing
  * the pointer on the way to it.
  */
-const wrapperStyle = {inset: "0", pointerEvents: "none", position: "absolute"} as const;
+const wrapperStyle = { inset: "0", pointerEvents: "none", position: "absolute" } as const;
 
 /**
  * React renders a `<noscript>` here holding a stylesheet that makes the hidden control visible

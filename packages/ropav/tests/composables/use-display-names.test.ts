@@ -1,17 +1,17 @@
-import type {I18nHostReady} from "../fixtures/i18n.types";
+import type { I18nHostReady } from "../fixtures/i18n.types";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
 import Harness from "../fixtures/i18n-harness.vue";
 
 const setup = (props: Record<string, unknown> = {}) => {
   let ready!: I18nHostReady;
 
-  Object.assign(props, {onReady: (value: I18nHostReady) => (ready = value)});
+  Object.assign(props, { onReady: (value: I18nHostReady) => (ready = value) });
 
-  return {...renderVapor(Harness, {props}), ready: () => ready};
+  return { ...renderVapor(Harness, { props }), ready: () => ready };
 };
 
 /**
@@ -30,7 +30,7 @@ afterEach(() => vi.restoreAllMocks());
 describe("useDisplayNames", () => {
   describe("naming the parts of a date", () => {
     it("names each part in the locale's own words", () => {
-      const {ready, unmount} = setup({locale: "en-US"});
+      const { ready, unmount } = setup({ locale: "en-US" });
       const names = ready().displayNames.value;
 
       expect(names.of("year")).toBe("year");
@@ -42,7 +42,7 @@ describe("useDisplayNames", () => {
     });
 
     it("follows the locale an ancestor chose", () => {
-      const {ready, unmount} = setup({locale: "de-DE"});
+      const { ready, unmount } = setup({ locale: "de-DE" });
       const names = ready().displayNames.value;
 
       expect(names.of("year")).toBe("Jahr");
@@ -51,8 +51,8 @@ describe("useDisplayNames", () => {
     });
 
     it("follows the locale changing", async () => {
-      const props = reactive({locale: "en-US"});
-      const {ready, unmount} = setup(props);
+      const props = reactive({ locale: "en-US" });
+      const { ready, unmount } = setup(props);
 
       expect(ready().displayNames.value.of("month")).toBe("month");
 
@@ -68,7 +68,7 @@ describe("useDisplayNames", () => {
     it("falls back to the shipped strings", () => {
       withoutDateTimeField();
 
-      const {ready, unmount} = setup({locale: "en-US"});
+      const { ready, unmount } = setup({ locale: "en-US" });
       const names = ready().displayNames.value;
 
       expect(names.of("year")).toBe("year");
@@ -80,7 +80,7 @@ describe("useDisplayNames", () => {
     it("still follows the locale", () => {
       withoutDateTimeField();
 
-      const {ready, unmount} = setup({locale: "de-DE"});
+      const { ready, unmount } = setup({ locale: "de-DE" });
 
       expect(ready().displayNames.value.of("year")).toBe("Jahr");
       unmount();
@@ -90,7 +90,7 @@ describe("useDisplayNames", () => {
       withoutDateTimeField();
 
       // Only 34 locales ship, and Hindi is not one of them, so English stands in.
-      const {ready, unmount} = setup({locale: "hi-IN"});
+      const { ready, unmount } = setup({ locale: "hi-IN" });
 
       expect(ready().displayNames.value.of("year")).toBe("year");
       unmount();
@@ -99,7 +99,7 @@ describe("useDisplayNames", () => {
     it("has no name for a part that is not a field", () => {
       withoutDateTimeField();
 
-      const {ready, unmount} = setup({locale: "en-US"});
+      const { ready, unmount } = setup({ locale: "en-US" });
 
       expect(ready().displayNames.value.of("literal")).toBeUndefined();
       unmount();

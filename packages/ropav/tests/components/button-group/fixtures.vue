@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ButtonGroupRootProps} from "@/components/button-group";
+import type { ButtonGroupRootProps } from "@/components/button-group";
 
-import {Button} from "@/components/button";
-import {ButtonGroup} from "@/components/button-group";
+import { Button } from "@/components/button";
+import { ButtonGroup } from "@/components/button-group";
 
 const props = withDefaults(
   defineProps<
@@ -30,7 +30,7 @@ const props = withDefaults(
   },
 );
 
-defineEmits<{click: [event: MouseEvent]}>();
+defineEmits<{ click: [event: MouseEvent] }>();
 </script>
 
 <template>

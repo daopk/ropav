@@ -1,26 +1,26 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Label} from "../label";
+import { Label } from "../label";
 
-import {Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack} from "./index";
+import { Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Slider.Track` through, so dot notation cannot be used here.
-const components = {Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack};
+const components = { Label, Slider, SliderFill, SliderOutput, SliderThumb, SliderTrack };
 
 const meta: StoryMeta = {
   argTypes: {
     isDisabled: {
-      control: {type: "boolean"},
+      control: { type: "boolean" },
     },
     orientation: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["horizontal", "vertical"],
     },
   },
   component: Slider,
-  decorators: [() => ({template: '<div class="w-96 p-8"><story /></div>'})],
+  decorators: [() => ({ template: '<div class="w-96 p-8"><story /></div>' })],
   parameters: {
     layout: "centered",
   },
@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Slider :default-value="30" :is-disabled="args.isDisabled" :orientation="args.orientation">
         <Label>Volume</Label>
@@ -49,10 +49,10 @@ export const Default: Story = {
 };
 
 export const Vertical: Story = {
-  decorators: [() => ({template: '<div class="h-96 p-8"><story /></div>'})],
+  decorators: [() => ({ template: '<div class="h-96 p-8"><story /></div>' })],
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Slider :default-value="30" :is-disabled="args.isDisabled" orientation="vertical">
         <Label>Volume</Label>
@@ -69,7 +69,7 @@ export const Vertical: Story = {
 export const Disabled: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Slider is-disabled :default-value="30" :orientation="args.orientation">
         <Label>Volume</Label>
@@ -88,7 +88,7 @@ export const Range: Story = {
     components,
     setup: () => ({
       args,
-      formatOptions: {currency: "USD", style: "currency"} as Intl.NumberFormatOptions,
+      formatOptions: { currency: "USD", style: "currency" } as Intl.NumberFormatOptions,
     }),
     template: `
       <Slider

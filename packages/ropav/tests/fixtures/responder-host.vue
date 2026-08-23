@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {FocusResponderHandlers} from "@/composables/focus-responder";
-import type {UsePressHandlers} from "@/composables/use-press";
+import type { FocusResponderHandlers } from "@/composables/focus-responder";
+import type { UsePressHandlers } from "@/composables/use-press";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {ButtonRoot} from "@/components/button";
-import {provideFocusResponder} from "@/composables/focus-responder";
-import {providePressResponder} from "@/composables/press-responder";
+import { ButtonRoot } from "@/components/button";
+import { provideFocusResponder } from "@/composables/focus-responder";
+import { providePressResponder } from "@/composables/press-responder";
 
 /**
  * A button with a press supplied from above, a hover-and-focus supplied from above, or both.
@@ -25,7 +25,7 @@ const noop = () => {};
 
 if (props.withPress) {
   providePressResponder({
-    attrs: computed(() => ({"aria-expanded": false, id: "press-id"})),
+    attrs: computed(() => ({ "aria-expanded": false, id: "press-id" })),
     handlers: computed<UsePressHandlers>(() => ({
       onClick: () => props.record("press:click"),
       onDragstart: noop,
@@ -43,7 +43,7 @@ if (props.withPress) {
 
 if (props.withFocus) {
   provideFocusResponder({
-    attrs: computed(() => ({"aria-describedby": "focus-description"})),
+    attrs: computed(() => ({ "aria-describedby": "focus-description" })),
     handlers: computed<FocusResponderHandlers>(() => ({
       onBlur: () => props.record("focus:blur"),
       onFocus: () => props.record("focus:focus"),

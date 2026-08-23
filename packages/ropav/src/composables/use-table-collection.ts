@@ -1,14 +1,14 @@
-import type {VirtualizerTableCollection} from "../utils/virtualizer-collection";
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
-import type {TableColumnSize} from "./use-table-column-layout";
-import type {ComputedRef} from "vue";
+import type { VirtualizerTableCollection } from "../utils/virtualizer-collection";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { TableColumnSize } from "./use-table-column-layout";
+import type { ComputedRef } from "vue";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {FOCUSABLE_SELECTOR} from "../utils/focus";
-import {createTableCollection} from "../utils/virtualizer-collection";
+import { FOCUSABLE_SELECTOR } from "../utils/focus";
+import { createTableCollection } from "../utils/virtualizer-collection";
 
-import {useCollection} from "./use-collection";
+import { useCollection } from "./use-collection";
 
 /** The least a registry needs from an entry: where it sits in the document. */
 export interface TableRegistryMeta {
@@ -124,7 +124,7 @@ export interface TableRowNodeMeta extends TableRegistryMeta {
 
 export interface TableTree extends TableRegistry<TableRowNodeMeta> {
   /** Where the row sits among its siblings, both one-based, as a treegrid reports it. */
-  position: (key: CollectionKey) => {posinset: number; setsize: number};
+  position: (key: CollectionKey) => { posinset: number; setsize: number };
 }
 
 /**
@@ -149,7 +149,7 @@ export const createTableTree = (): TableTree => {
       const siblings = siblingsOf(registry.getItem(key)?.parentKey() ?? null);
       const index = siblings.indexOf(key);
 
-      return {posinset: index + 1, setsize: siblings.length};
+      return { posinset: index + 1, setsize: siblings.length };
     },
   };
 };
@@ -228,7 +228,7 @@ export const useTableCollection = (
       )
     : null;
 
-  const rows = useCollection({source: () => virtualized?.value.rows});
+  const rows = useCollection({ source: () => virtualized?.value.rows });
 
   return {
     columns,

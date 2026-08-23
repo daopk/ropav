@@ -1,4 +1,4 @@
-import {TOP_LAYER_SELECTOR} from "./top-layer";
+import { TOP_LAYER_SELECTOR } from "./top-layer";
 
 const supportsInert = typeof HTMLElement !== "undefined" && "inert" in HTMLElement.prototype;
 
@@ -124,7 +124,7 @@ export const ariaHideOutside = (
 
     if (acceptRoot === NodeFilter.FILTER_REJECT) return;
 
-    const walker = document.createTreeWalker(from, NodeFilter.SHOW_ELEMENT, {acceptNode});
+    const walker = document.createTreeWalker(from, NodeFilter.SHOW_ELEMENT, { acceptNode });
     let node = walker.nextNode() as Element | null;
 
     while (node != null) {
@@ -162,7 +162,7 @@ export const ariaHideOutside = (
   const layer: Layer = {
     disconnect: () => observer.disconnect(),
     hiddenNodes,
-    observe: () => observer.observe(root, {childList: true, subtree: true}),
+    observe: () => observer.observe(root, { childList: true, subtree: true }),
     visibleNodes,
   };
 

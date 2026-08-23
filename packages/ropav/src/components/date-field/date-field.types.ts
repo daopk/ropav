@@ -1,6 +1,6 @@
-import type {ValidationBehavior} from "../../composables/use-form-validation-state";
-import type {Granularity, MaxGranularity} from "../../utils/date-format";
-import type {Calendar, CalendarIdentifier, DateValue} from "@internationalized/date";
+import type { ValidationBehavior } from "../../composables/use-form-validation-state";
+import type { Granularity, MaxGranularity } from "../../utils/date-format";
+import type { Calendar, CalendarIdentifier, DateValue } from "@internationalized/date";
 
 export interface DateFieldRootProps {
   class?: string;

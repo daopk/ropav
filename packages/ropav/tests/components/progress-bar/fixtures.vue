@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {ProgressBarRootProps} from "@/components/progress-bar";
+import type { ProgressBarRootProps } from "@/components/progress-bar";
 
-import {Label} from "@/components/label";
-import {ProgressBar} from "@/components/progress-bar";
+import { Label } from "@/components/label";
+import { ProgressBar } from "@/components/progress-bar";
 
 withDefaults(
   defineProps<
@@ -51,7 +51,7 @@ withDefaults(
       <ProgressBar.Fill
         :class="$props.fillClass"
         data-testid="fill"
-        :style="{backgroundColor: 'red', width: '1%'}"
+        :style="{ backgroundColor: 'red', width: '1%' }"
       />
     </ProgressBar.Track>
     <span data-testid="slot-indeterminate">{{ slotProps.isIndeterminate }}</span>

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DateSegmentHarnessProps} from "./date-segment.types";
+import type { DateSegmentHarnessProps } from "./date-segment.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import DateSegmentHost from "./date-segment-host.vue";
 

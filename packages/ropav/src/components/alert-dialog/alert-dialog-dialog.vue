@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogDialogProps} from "./alert-dialog.types";
+import type { AlertDialogDialogProps } from "./alert-dialog.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {provideSurfaceContext} from "../surface";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { provideSurfaceContext } from "../surface";
 
-import {useAlertDialogContext} from "./alert-dialog.context";
+import { useAlertDialogContext } from "./alert-dialog.context";
 
 const props = defineProps<AlertDialogDialogProps>();
 
-defineSlots<{default?: (props: {close: () => void}) => unknown}>();
+defineSlots<{ default?: (props: { close: () => void }) => unknown }>();
 
-const {dialogId, labelledBy, placement, slots, state} = useAlertDialogContext();
+const { dialogId, labelledBy, placement, slots, state } = useAlertDialogContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 
 // The dialog is a surface in its own right, so anything inside it that picks its colours from the
 // surface it sits on — a field, a chip — reads the dialog rather than the page behind it. React omits
 // this, which leaves an input in an alert dialog looking unlike the same input in a modal.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
 /**
  * Only the heading is referenced.
@@ -28,7 +28,7 @@ provideSurfaceContext({variant: computed(() => "default" as const)});
  * that announces itself as the dialog's description, and React resolves the same way. Adding one
  * here would make the two frameworks announce differently.
  */
-const {context, headingId} = useFieldIds({slots: ["heading"]});
+const { context, headingId } = useFieldIds({ slots: ["heading"] });
 
 provideFieldIdsContext(context);
 
@@ -40,7 +40,7 @@ provideFieldIdsContext(context);
  */
 const labelledByResolved = computed(() => headingId.value ?? labelledBy.value);
 
-const styles = computed(() => slots.value.dialog({class: props.class}));
+const styles = computed(() => slots.value.dialog({ class: props.class }));
 
 const setElement = (next: unknown) => {
   element.value = (next as HTMLElement | null) ?? null;
@@ -58,9 +58,9 @@ watch(
     if (!dialog) return;
     if (dialog.contains(document.activeElement)) return;
 
-    dialog.focus({preventScroll: true});
+    dialog.focus({ preventScroll: true });
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 </script>
 

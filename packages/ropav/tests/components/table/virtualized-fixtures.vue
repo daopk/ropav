@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import {SpinnerRoot} from "@/components/spinner";
+import { SpinnerRoot } from "@/components/spinner";
 import {
   TableBody,
   TableCell,
@@ -12,8 +12,8 @@ import {
   TableRow,
   TableScrollContainer,
 } from "@/components/table";
-import {VirtualizerRoot} from "@/components/virtualizer";
-import {TableLayout} from "@/utils/virtualizer-table-layout";
+import { VirtualizerRoot } from "@/components/virtualizer";
+import { TableLayout } from "@/utils/virtualizer-table-layout";
 
 export interface VirtualizedUser {
   email: string;
@@ -41,14 +41,14 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits<{loadMore: []}>();
+const emit = defineEmits<{ loadMore: [] }>();
 </script>
 
 <template>
   <VirtualizerRoot
     v-if="!props.withoutVirtualizer"
     :layout="TableLayout"
-    :layout-options="{headingHeight: props.rowHeight, rowHeight: props.rowHeight}"
+    :layout-options="{ headingHeight: props.rowHeight, rowHeight: props.rowHeight }"
   >
     <TableRoot>
       <TableScrollContainer>
@@ -63,7 +63,7 @@ const emit = defineEmits<{loadMore: []}>();
             <TableColumn id="email" :min-width="240">Email</TableColumn>
           </TableHeader>
           <TableBody :item-text-value="(item) => item.name" :items="props.items">
-            <template #default="{item}">
+            <template #default="{ item }">
               <TableRow :id="item!.id">
                 <TableCell>{{ item!.name }}</TableCell>
                 <TableCell>{{ item!.role }}</TableCell>

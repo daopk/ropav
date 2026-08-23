@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {DrawerCloseTriggerProps} from "./drawer.types";
+import type { DrawerCloseTriggerProps } from "./drawer.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {CloseButtonRoot} from "../close-button";
+import { CloseButtonRoot } from "../close-button";
 
-import {useDrawerContext} from "./drawer.context";
+import { useDrawerContext } from "./drawer.context";
 
 const props = defineProps<DrawerCloseTriggerProps>();
 
-const {slots, state} = useDrawerContext();
+const { slots, state } = useDrawerContext();
 
-const styles = computed(() => slots.value.closeTrigger({class: props.class}));
+const styles = computed(() => slots.value.closeTrigger({ class: props.class }));
 
 // A component's `click` is an emit rather than a DOM listener, so it is not subject to the rule that
 // keeps handlers off `v-bind`.

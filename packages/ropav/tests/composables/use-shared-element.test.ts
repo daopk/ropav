@@ -1,9 +1,9 @@
-import type {SharedElementScope, UseSharedElementReturn} from "@/composables/use-shared-element";
+import type { SharedElementScope, UseSharedElementReturn } from "@/composables/use-shared-element";
 
-import {afterEach, beforeEach, describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef, watch} from "vue";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef, watch } from "vue";
 
-import {createSharedElementScope, useSharedElement} from "@/composables/use-shared-element";
+import { createSharedElementScope, useSharedElement } from "@/composables/use-shared-element";
 
 const NAME = "SelectionIndicator";
 
@@ -50,7 +50,7 @@ interface Harness {
  */
 const mount = (
   scope: SharedElementScope,
-  options: {className?: string; isVisible?: boolean} = {},
+  options: { className?: string; isVisible?: boolean } = {},
 ): Harness => {
   const host = document.createElement("div");
 
@@ -87,7 +87,7 @@ const mount = (
           elementRef.value = null;
         }
       },
-      {flush: "post", immediate: true},
+      { flush: "post", immediate: true },
     );
 
     return result;
@@ -117,7 +117,7 @@ describe("useSharedElement", () => {
   describe("presence", () => {
     it("is present while visible and absent while not", async () => {
       const scope = createSharedElementScope();
-      const {shared, show} = mount(scope);
+      const { shared, show } = mount(scope);
 
       await nextTick();
 
@@ -131,7 +131,7 @@ describe("useSharedElement", () => {
 
     it("enters when there is nothing to transition from", async () => {
       const scope = createSharedElementScope();
-      const {shared} = mount(scope);
+      const { shared } = mount(scope);
 
       await nextTick();
       await nextTick();
@@ -147,7 +147,7 @@ describe("useSharedElement", () => {
   describe("the snapshot", () => {
     it("stores one before the element is patched away", async () => {
       const scope = createSharedElementScope();
-      const {show} = mount(scope);
+      const { show } = mount(scope);
 
       await nextTick();
       show(false);
@@ -158,7 +158,7 @@ describe("useSharedElement", () => {
 
     it("carries only the properties the stylesheet transitions", async () => {
       const scope = createSharedElementScope();
-      const {show} = mount(scope);
+      const { show } = mount(scope);
 
       await nextTick();
       show(false);
@@ -171,7 +171,7 @@ describe("useSharedElement", () => {
 
     it("stores nothing when nothing is transitioned", async () => {
       const scope = createSharedElementScope();
-      const {show} = mount(scope, {className: "plain"});
+      const { show } = mount(scope, { className: "plain" });
 
       await nextTick();
       show(false);
@@ -183,7 +183,7 @@ describe("useSharedElement", () => {
       // With no rule of its own an element reports `all`, which is a shorthand with no readable
       // value — carrying it over would write the engine's placeholder back as an inline style.
       const scope = createSharedElementScope();
-      const {show} = mount(scope, {className: "a"});
+      const { show } = mount(scope, { className: "a" });
 
       await nextTick();
       show(false);
@@ -193,7 +193,7 @@ describe("useSharedElement", () => {
 
     it("stores one on teardown as well as on the edge", async () => {
       const scope = createSharedElementScope();
-      const {stop} = mount(scope);
+      const { stop } = mount(scope);
 
       await nextTick();
       stop();
@@ -203,7 +203,7 @@ describe("useSharedElement", () => {
 
     it("stores nothing for an element that is already leaving", async () => {
       const scope = createSharedElementScope();
-      const {show, stop} = mount(scope);
+      const { show, stop } = mount(scope);
 
       await nextTick();
       show(false);
@@ -219,14 +219,14 @@ describe("useSharedElement", () => {
   describe("the handoff", () => {
     it("hands the snapshot to the element that mounts next", async () => {
       const scope = createSharedElementScope();
-      const outgoing = mount(scope, {className: "shared a"});
+      const outgoing = mount(scope, { className: "shared a" });
 
       await nextTick();
       await nextTick();
 
       outgoing.show(false);
 
-      const incoming = mount(scope, {className: "shared b", isVisible: true});
+      const incoming = mount(scope, { className: "shared b", isVisible: true });
 
       await nextTick();
       await nextTick();
@@ -238,13 +238,13 @@ describe("useSharedElement", () => {
 
     it("restores the real values a frame later", async () => {
       const scope = createSharedElementScope();
-      const outgoing = mount(scope, {className: "shared a"});
+      const outgoing = mount(scope, { className: "shared a" });
 
       await nextTick();
       await nextTick();
       outgoing.show(false);
 
-      const incoming = mount(scope, {className: "shared b"});
+      const incoming = mount(scope, { className: "shared b" });
 
       await nextTick();
       await nextTick();
@@ -256,13 +256,13 @@ describe("useSharedElement", () => {
 
     it("does not enter when it took over a snapshot", async () => {
       const scope = createSharedElementScope();
-      const outgoing = mount(scope, {className: "shared a"});
+      const outgoing = mount(scope, { className: "shared a" });
 
       await nextTick();
       await nextTick();
       outgoing.show(false);
 
-      const incoming = mount(scope, {className: "shared b"});
+      const incoming = mount(scope, { className: "shared b" });
 
       await nextTick();
       await nextTick();
@@ -272,12 +272,12 @@ describe("useSharedElement", () => {
 
     it("leaves without exiting when another element took the snapshot", async () => {
       const scope = createSharedElementScope();
-      const outgoing = mount(scope, {className: "shared a"});
+      const outgoing = mount(scope, { className: "shared a" });
 
       await nextTick();
       await nextTick();
       outgoing.show(false);
-      mount(scope, {className: "shared b"});
+      mount(scope, { className: "shared b" });
 
       await nextTick();
       await nextTick();
@@ -294,7 +294,7 @@ describe("useSharedElement", () => {
        * undo the arrival.
        */
       const scope = createSharedElementScope();
-      const {shared, show} = mount(scope, {isVisible: false});
+      const { shared, show } = mount(scope, { isVisible: false });
 
       // Flipped without awaiting, so it lands in the same tick as the leaving that was just
       // deferred — awaiting first would let the deferral run and there would be no race left.
@@ -307,7 +307,7 @@ describe("useSharedElement", () => {
 
     it("exits when nothing takes the snapshot", async () => {
       const scope = createSharedElementScope();
-      const {shared, show} = mount(scope);
+      const { shared, show } = mount(scope);
 
       await nextTick();
       await nextTick();
@@ -328,8 +328,8 @@ describe("useSharedElement", () => {
       // React's guarantee that every unmount runs before every mount does not exist here, so the
       // handoff has to hold with the incoming element created before the outgoing one.
       const scope = createSharedElementScope();
-      const incoming = mount(scope, {className: "shared b", isVisible: false});
-      const outgoing = mount(scope, {className: "shared a", isVisible: true});
+      const incoming = mount(scope, { className: "shared b", isVisible: false });
+      const outgoing = mount(scope, { className: "shared a", isVisible: true });
 
       await nextTick();
       await nextTick();
@@ -347,7 +347,7 @@ describe("useSharedElement", () => {
 
   it("survives an environment with no animation API", async () => {
     const scope = createSharedElementScope();
-    const {shared, show} = mount(scope);
+    const { shared, show } = mount(scope);
 
     await nextTick();
 

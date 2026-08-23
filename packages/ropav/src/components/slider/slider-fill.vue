@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {SliderFillProps} from "./slider.types";
+import type { SliderFillProps } from "./slider.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useSliderContext} from "./slider.context";
+import { useSliderContext } from "./slider.context";
 
 const props = defineProps<SliderFillProps>();
 
-const {slots, state} = useSliderContext();
+const { slots, state } = useSliderContext();
 
 /**
  * A single thumb fills from the start of the track; a range fills between its two thumbs.
@@ -28,8 +28,8 @@ const style = computed(() => {
 
   // A vertical slider fills upwards from the bottom.
   return state.orientation.value === "vertical"
-    ? {bottom: offset, height: length}
-    : {left: offset, width: length};
+    ? { bottom: offset, height: length }
+    : { left: offset, width: length };
 });
 </script>
 

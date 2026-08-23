@@ -3,15 +3,15 @@
  * select's listbox. Internal on purpose: this directory is listed in the build's skipped set and
  * never becomes a subpath of its own.
  */
-export {default as OverlayArrow} from "./overlay-arrow.vue";
-export {default as OverlayDismissButton} from "./overlay-dismiss-button.vue";
-export {default as OverlayPopover} from "./overlay-popover.vue";
+export { default as OverlayArrow } from "./overlay-arrow.vue";
+export { default as OverlayDismissButton } from "./overlay-dismiss-button.vue";
+export { default as OverlayPopover } from "./overlay-popover.vue";
 
-export {createOverlaySlotContexts, provideOverlaySlotContexts} from "./overlay-slots";
+export { createOverlaySlotContexts, provideOverlaySlotContexts } from "./overlay-slots";
 
-export type {OverlaySlotContexts} from "./overlay-slots";
+export type { OverlaySlotContexts } from "./overlay-slots";
 
-export type {OverlayArrowProps, OverlayPopoverProps} from "./overlay.types";
+export type { OverlayArrowProps, OverlayPopoverProps } from "./overlay.types";
 
 export {
   provideOverlayArrowContext,

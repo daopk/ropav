@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {FormValidationInputProps} from "./form-validation-input.types";
+import type { FormValidationInputProps } from "./form-validation-input.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {provideFormContext} from "@/composables/use-form-validation-state";
+import { provideFormContext } from "@/composables/use-form-validation-state";
 
 import FormValidationInputHost from "./form-validation-input-host.vue";
 
 // A component only sees what an *ancestor* provided, never its own provides, so the form
 // context has to live one level above the field that injects it.
-const props = withDefaults(defineProps<FormValidationInputProps>(), {isInvalid: undefined});
+const props = withDefaults(defineProps<FormValidationInputProps>(), { isInvalid: undefined });
 
 if (props.withForm) {
   provideFormContext({

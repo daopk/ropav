@@ -1,9 +1,9 @@
-import type {CollectionKey} from "./use-collection";
-import type {DragAndDropHooks} from "./use-drag-and-drop";
-import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
-import type {ComputedRef} from "vue";
+import type { CollectionKey } from "./use-collection";
+import type { DragAndDropHooks } from "./use-drag-and-drop";
+import type { UseDroppableCollectionStateReturn } from "./use-droppable-collection-state";
+import type { ComputedRef } from "vue";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
 /**
  * The keys a virtualized collection has to keep rendered while a drag is in flight, ported from

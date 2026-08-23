@@ -1,5 +1,5 @@
-import type {ColorSliderState} from "@/composables";
-import type {Color, ColorChannel, ColorSpace} from "@/utils/color-types";
+import type { ColorSliderState } from "@/composables";
+import type { Color, ColorChannel, ColorSpace } from "@/utils/color-types";
 
 export interface ColorSliderStateHostProps {
   channel?: ColorChannel;

@@ -4,10 +4,10 @@ import type {
   DateInputGroupInputSlotProps,
 } from "./date-input-group.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useFocusWithin, useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   provideDateFieldControlContext,
@@ -17,7 +17,7 @@ import {
 
 const props = defineProps<DateInputGroupInputProps>();
 
-defineSlots<{default?: (props: DateInputGroupInputSlotProps) => unknown}>();
+defineSlots<{ default?: (props: DateInputGroupInputSlotProps) => unknown }>();
 
 const group = useDateInputGroupContext();
 
@@ -26,17 +26,17 @@ const group = useDateInputGroupContext();
  * the segments below capture the field they were built against.
  */
 const control = useDateFieldControlContext().resolve(props.slot);
-const {field, setElement, setInputElement, state} = control;
+const { field, setElement, setInputElement, state } = control;
 
 /*
  * Republished flat, so the segments below need to know nothing about slots: they read whichever
  * field is nearest above them, which inside this input is always this one.
  */
-provideDateFieldControlContext({resolve: () => control});
+provideDateFieldControlContext({ resolve: () => control });
 
-const styles = computed(() => group?.slots.value.input({class: props.class}) ?? props.class);
+const styles = computed(() => group?.slots.value.input({ class: props.class }) ?? props.class);
 
-const interaction = useInteractionStates({isDisabled: state.isDisabled});
+const interaction = useInteractionStates({ isDisabled: state.isDisabled });
 const focusWithin = useFocusWithin();
 
 /*
@@ -72,7 +72,7 @@ const setHiddenInput = (next: unknown) =>
  * attribute as slot syntax, and the linter still flags either spelling. The vapor compiler passes
  * it straight through — measured in the DOM. React puts it there too, which is why it is kept.
  */
-const attrs = computed(() => ({...field.attrs.value, slot: props.slot}));
+const attrs = computed(() => ({ ...field.attrs.value, slot: props.slot }));
 </script>
 
 <template>

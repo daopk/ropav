@@ -3,7 +3,7 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "@/composables/use-form-validation-state";
-import type {UseTextFieldReturn} from "@/composables/use-text-field";
+import type { UseTextFieldReturn } from "@/composables/use-text-field";
 
 export interface TextFieldHostProps {
   value?: string;

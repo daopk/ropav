@@ -52,13 +52,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useAutocompleteContext} from "./autocomplete.context";
+export { useAutocompleteContext } from "./autocomplete.context";
 
-export type {AutocompleteContext} from "./autocomplete.context";
+export type { AutocompleteContext } from "./autocomplete.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {autocompleteVariants} from "@ropav/styles";
+export { autocompleteVariants } from "@ropav/styles";
 
-export type {AutocompleteVariants} from "@ropav/styles";
+export type { AutocompleteVariants } from "@ropav/styles";

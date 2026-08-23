@@ -1,22 +1,22 @@
 <script setup lang="ts" vapor>
-import type {AccordionPanelProps} from "./accordion.types";
+import type { AccordionPanelProps } from "./accordion.types";
 
-import {useDisclosurePanel} from "../../composables/use-disclosure-panel";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
+import { useDisclosurePanel } from "../../composables/use-disclosure-panel";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAccordionContext, useAccordionItemContext} from "./accordion.context";
+import { useAccordionContext, useAccordionItemContext } from "./accordion.context";
 
-const props = withDefaults(defineProps<AccordionPanelProps>(), {role: "group"});
+const props = withDefaults(defineProps<AccordionPanelProps>(), { role: "group" });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAccordionContext();
-const {isExpanded, panelId, toggle, triggerId} = useAccordionItemContext();
+const { slots } = useAccordionContext();
+const { isExpanded, panelId, toggle, triggerId } = useAccordionItemContext();
 
 // Owns the height variables the stylesheet animates and the `hidden` attribute that keeps a
 // collapsed panel out of the tab order.
-const {setPanelElement} = useDisclosurePanel({isExpanded});
+const { setPanelElement } = useDisclosurePanel({ isExpanded });
 
 /** Fired when find-in-page reveals the panel; the browser has already dropped `hidden`. */
 const onBeforeMatch = () => {

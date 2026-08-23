@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {DrawerBodyProps} from "./drawer.types";
+import type { DrawerBodyProps } from "./drawer.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useDrawerContext} from "./drawer.context";
+import { useDrawerContext } from "./drawer.context";
 
 const props = defineProps<DrawerBodyProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useDrawerContext();
+const { slots } = useDrawerContext();
 
-const styles = computed(() => slots.value.body({class: props.class}));
+const styles = computed(() => slots.value.body({ class: props.class }));
 
 /**
  * Vertical scrolling is opted back in here.

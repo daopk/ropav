@@ -1,6 +1,6 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {getColorChannels, normalizeHue, parseColor} from "@/utils/color";
+import { getColorChannels, normalizeHue, parseColor } from "@/utils/color";
 
 /**
  * Every expectation here is a value the real `react-stately` produces, not one this port
@@ -239,7 +239,7 @@ describe("Color channels", () => {
       yChannel: "saturation",
       zChannel: "brightness",
     });
-    expect(parseColor("hsb(0,0%,0%)").getColorSpaceAxes({xChannel: "brightness"})).toEqual({
+    expect(parseColor("hsb(0,0%,0%)").getColorSpaceAxes({ xChannel: "brightness" })).toEqual({
       xChannel: "brightness",
       yChannel: "hue",
       zChannel: "saturation",

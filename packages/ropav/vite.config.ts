@@ -1,10 +1,10 @@
-import type {Plugin, Rollup} from "vite";
+import type { Plugin, Rollup } from "vite";
 
 import fs from "node:fs";
 import path from "node:path";
 
 import vue from "@vitejs/plugin-vue";
-import {defineConfig} from "vite";
+import { defineConfig } from "vite";
 
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 
@@ -23,7 +23,7 @@ const replaceVersion = (): Plugin => ({
   transform(code, id) {
     if (!id.includes("version.ts")) return null;
 
-    return {code: code.replace("__ROPAV_VERSION__", packageJson.version), map: null};
+    return { code: code.replace("__ROPAV_VERSION__", packageJson.version), map: null };
   },
 });
 
@@ -71,7 +71,7 @@ const pruneOrphanChunks = (): Plugin => ({
  * Auto-discovered so adding a component never means touching this file.
  */
 const resolveEntries = () => {
-  const entries: Record<string, string> = {index: "src/index.ts"};
+  const entries: Record<string, string> = { index: "src/index.ts" };
 
   if (!fs.existsSync(COMPONENTS_DIR)) return entries;
 
@@ -129,7 +129,7 @@ export default defineConfig({
     replaceVersion(),
     pruneOrphanChunks(),
     // Safety net only — every SFC opts in explicitly via `<script setup lang="ts" vapor>`
-    vue({features: {vapor: true}}),
+    vue({ features: { vapor: true } }),
   ],
   resolve: {
     alias: {

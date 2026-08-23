@@ -1,4 +1,4 @@
-import type {CollectionKey} from "../../composables/use-collection";
+import type { CollectionKey } from "../../composables/use-collection";
 import type {
   CollectionSelection,
   SelectionBehavior,

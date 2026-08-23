@@ -1,21 +1,21 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
 
-import {SurfaceRoot} from "@/components/surface";
+import { SurfaceRoot } from "@/components/surface";
 
 import Fixture from "./fixtures.vue";
 
 const renderSurface = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(SurfaceRoot, {props});
+  const result = renderVapor(SurfaceRoot, { props });
   const surface = result.container.querySelector('[data-slot="surface"]');
 
   if (!surface) throw new Error("surface not rendered");
 
-  return {...result, surface};
+  return { ...result, surface };
 };
 
 const renderWithConsumer = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   return {
     ...result,
@@ -27,13 +27,13 @@ const renderWithConsumer = (props: Record<string, unknown> = {}) => {
 describe("Surface", () => {
   describe("structure", () => {
     it("renders a div carrying its data-slot", () => {
-      const {surface} = renderSurface();
+      const { surface } = renderSurface();
 
       expect(surface.tagName).toBe("DIV");
     });
 
     it("merges a caller class", () => {
-      const {surface} = renderSurface({class: "rounded-3xl"});
+      const { surface } = renderSurface({ class: "rounded-3xl" });
 
       expect(surface).toHaveClass("surface", "rounded-3xl");
     });
@@ -41,7 +41,7 @@ describe("Surface", () => {
 
   describe("variants", () => {
     it("defaults to the default variant", () => {
-      const {surface} = renderSurface();
+      const { surface } = renderSurface();
 
       expect(surface).toHaveClass("surface", "surface--default");
     });
@@ -49,7 +49,7 @@ describe("Surface", () => {
     it.each(["secondary", "tertiary", "transparent"] as const)(
       "renders the %s variant",
       (variant) => {
-        const {surface} = renderSurface({variant});
+        const { surface } = renderSurface({ variant });
 
         expect(surface).toHaveClass(`surface--${variant}`);
       },
@@ -58,7 +58,7 @@ describe("Surface", () => {
 
   describe("context", () => {
     it("tells descendants which surface they sit on", () => {
-      const {consumer} = renderWithConsumer({variant: "secondary"});
+      const { consumer } = renderWithConsumer({ variant: "secondary" });
 
       expect(consumer).toHaveAttribute("data-surface", "secondary");
     });
@@ -66,13 +66,13 @@ describe("Surface", () => {
     it("passes the default variant down, not undefined", () => {
       // A descendant picking an on-surface colour needs a value, so the default has to be
       // resolved here rather than left for every consumer to re-derive.
-      const {consumer} = renderWithConsumer({});
+      const { consumer } = renderWithConsumer({});
 
       expect(consumer).toHaveAttribute("data-surface", "default");
     });
 
     it("shadows an outer surface with the nearest one", () => {
-      const {nested} = renderWithConsumer({nestedVariant: "tertiary", variant: "secondary"});
+      const { nested } = renderWithConsumer({ nestedVariant: "tertiary", variant: "secondary" });
 
       expect(nested).toHaveAttribute("data-surface", "tertiary");
     });

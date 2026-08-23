@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {TagGroupRootProps} from "@/components/tag-group";
-import type {CollectionKey} from "@/composables/use-collection";
-import type {CollectionSelection} from "@/composables/use-selection-manager";
+import type { TagGroupRootProps } from "@/components/tag-group";
+import type { CollectionKey } from "@/composables/use-collection";
+import type { CollectionSelection } from "@/composables/use-selection-manager";
 
-import {DescriptionRoot} from "@/components/description";
-import {EmptyStateRoot} from "@/components/empty-state";
-import {LabelRoot} from "@/components/label";
-import {TagRemoveButton, TagRoot} from "@/components/tag";
-import {TagGroupList, TagGroupRoot} from "@/components/tag-group";
+import { DescriptionRoot } from "@/components/description";
+import { EmptyStateRoot } from "@/components/empty-state";
+import { LabelRoot } from "@/components/label";
+import { TagRemoveButton, TagRoot } from "@/components/tag";
+import { TagGroupList, TagGroupRoot } from "@/components/tag-group";
 
 /**
  * Booleans stay `default: undefined` so an absent prop reads as absent rather than as an explicit

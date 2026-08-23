@@ -1,14 +1,14 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
-import {Spinner} from "../spinner";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
+import { Spinner } from "../spinner";
 
 import {
   NumberField,
@@ -110,7 +110,7 @@ export const FullWidth: Story = {
 export const WithDescription: Story = {
   render: () => ({
     components,
-    setup: () => ({percent: {style: "percent"} as Intl.NumberFormatOptions}),
+    setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
         <NumberFieldRoot :default-value="1024" :min-value="0" name="width">
@@ -173,7 +173,7 @@ export const Required: Story = {
 export const Invalid: Story = {
   render: () => ({
     components,
-    setup: () => ({percent: {style: "percent"} as Intl.NumberFormatOptions}),
+    setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
         <NumberFieldRoot is-invalid is-required :min-value="0" name="quantity" :value="-5">
@@ -210,7 +210,7 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   render: () => ({
     components,
-    setup: () => ({percent: {style: "percent"} as Intl.NumberFormatOptions}),
+    setup: () => ({ percent: { style: "percent" } as Intl.NumberFormatOptions }),
     template: `
       <div class="flex flex-col gap-4">
         <NumberFieldRoot is-disabled :default-value="1024" :min-value="0" name="width">
@@ -250,7 +250,7 @@ export const Controlled: Story = {
     setup: () => {
       const value = shallowRef(1024);
 
-      return {value};
+      return { value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -281,7 +281,7 @@ export const WithValidation: Story = {
         () => value.value !== undefined && (value.value < 0 || value.value > 100),
       );
 
-      return {isInvalid, percent: {style: "percent"} as Intl.NumberFormatOptions, value};
+      return { isInvalid, percent: { style: "percent" } as Intl.NumberFormatOptions, value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -360,9 +360,9 @@ export const WithFormatOptions: Story = {
         currencySign: "accounting",
         style: "currency",
       } as Intl.NumberFormatOptions,
-      percent: {style: "percent"} as Intl.NumberFormatOptions,
-      unit: {style: "unit", unit: "kilogram", unitDisplay: "short"} as Intl.NumberFormatOptions,
-      usd: {currency: "USD", style: "currency"} as Intl.NumberFormatOptions,
+      percent: { style: "percent" } as Intl.NumberFormatOptions,
+      unit: { style: "unit", unit: "kilogram", unitDisplay: "short" } as Intl.NumberFormatOptions,
+      usd: { currency: "USD", style: "currency" } as Intl.NumberFormatOptions,
     }),
     template: `
       <div class="flex flex-col gap-4">
@@ -548,7 +548,7 @@ export const FormExample: Story = {
         }, 1500);
       };
 
-      return {STOCK_AVAILABLE, canSubmit, isOutOfStock, isSubmitting, onSubmit, submitted, value};
+      return { STOCK_AVAILABLE, canSubmit, isOutOfStock, isSubmitting, onSubmit, submitted, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">

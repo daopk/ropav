@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {DateSegmentHostProps} from "./date-segment.types";
+import type { DateSegmentHostProps } from "./date-segment.types";
 
-import {createCalendar} from "@internationalized/date";
-import {shallowRef} from "vue";
+import { createCalendar } from "@internationalized/date";
+import { shallowRef } from "vue";
 
-import {useDateFieldState} from "@/composables/use-date-field-state";
-import {useDatePickerGroup} from "@/composables/use-date-picker-group";
+import { useDateFieldState } from "@/composables/use-date-field-state";
+import { useDatePickerGroup } from "@/composables/use-date-picker-group";
 
 import DateSegmentPart from "./date-segment-part.vue";
 
@@ -32,9 +32,9 @@ const state = useDateFieldState({
   value: () => props.value,
 });
 
-const group = useDatePickerGroup({element});
+const group = useDatePickerGroup({ element });
 
-props.onReady?.({group, state});
+props.onReady?.({ group, state });
 </script>
 
 <template>

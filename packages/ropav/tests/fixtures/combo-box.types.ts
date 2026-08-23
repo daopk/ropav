@@ -1,12 +1,15 @@
-import type {UseComboBoxReturn} from "@/composables/use-combo-box";
+import type { UseComboBoxReturn } from "@/composables/use-combo-box";
 import type {
   ComboBoxFilter,
   ComboBoxMenuTrigger,
   ComboBoxValidationValue,
   UseComboBoxStateReturn,
 } from "@/composables/use-combo-box-state";
-import type {ValidationBehavior, ValidationFunction} from "@/composables/use-form-validation-state";
-import type {SelectSelectionMode, SelectedValue} from "@/composables/use-select-state";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
+import type { SelectSelectionMode, SelectedValue } from "@/composables/use-select-state";
 
 /** The datum every combo box fixture builds its options from. */
 export interface ComboBoxFixtureItem {

@@ -1,7 +1,7 @@
-import type {calendarYearPickerVariants} from "@ropav/styles";
-import type {ComputedRef, ShallowRef} from "vue";
+import type { calendarYearPickerVariants } from "@ropav/styles";
+import type { ComputedRef, ShallowRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface YearPickerContext {
   isYearPickerOpen: ComputedRef<boolean>;

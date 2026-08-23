@@ -2,7 +2,7 @@ import type {
   ToggleGroupKey,
   ToggleGroupSelectionMode,
 } from "../../composables/use-toggle-group-state";
-import type {ToggleButtonVariants} from "@ropav/styles";
+import type { ToggleButtonVariants } from "@ropav/styles";
 
 export interface ToggleButtonGroupRootProps {
   class?: string;

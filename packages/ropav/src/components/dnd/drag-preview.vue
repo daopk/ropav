@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DragItem, DragPreviewRenderer} from "@/utils/dnd-types";
+import type { DragItem, DragPreviewRenderer } from "@/utils/dnd-types";
 
-import {onScopeDispose, shallowRef, useTemplateRef} from "vue";
+import { onScopeDispose, shallowRef, useTemplateRef } from "vue";
 
 /**
  * The image that follows the pointer during a native drag.
@@ -25,7 +25,7 @@ import {onScopeDispose, shallowRef, useTemplateRef} from "vue";
  */
 const slots = defineSlots<{
   /** The preview content. Receives the items being dragged. */
-  default?: (props: {items: DragItem[]}) => unknown;
+  default?: (props: { items: DragItem[] }) => unknown;
 }>();
 
 const container = useTemplateRef<HTMLElement>("container");
@@ -49,7 +49,7 @@ const renderPreview: DragPreviewRenderer = (items, callback) => {
 
   host.replaceChildren();
 
-  const block = slots.default?.({items});
+  const block = slots.default?.({ items });
 
   if (block == null) {
     callback(null);
@@ -82,7 +82,7 @@ const insertBlock = (block: unknown, host: HTMLElement): void => {
     return;
   }
 
-  const nodes = (block as {nodes?: unknown}).nodes;
+  const nodes = (block as { nodes?: unknown }).nodes;
 
   if (nodes != null) insertBlock(nodes, host);
 };
@@ -91,7 +91,7 @@ onScopeDispose(() => {
   if (frame.value != null) cancelAnimationFrame(frame.value);
 });
 
-defineExpose({render: renderPreview});
+defineExpose({ render: renderPreview });
 </script>
 
 <template>

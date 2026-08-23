@@ -1,15 +1,15 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import DrawerFixture from "./fixtures.vue";
 
-const mounted: {unmount: () => void}[] = [];
+const mounted: { unmount: () => void }[] = [];
 
 const render = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(DrawerFixture, {props});
+  const result = renderVapor(DrawerFixture, { props });
 
   mounted.push(result);
 
@@ -27,7 +27,7 @@ const settled = async (element: HTMLElement) => {
 const slot = (name: string) => document.body.querySelector<HTMLElement>(`[data-slot="${name}"]`);
 
 const triggerOf = (result: RenderResult) =>
-  result.getByRole("button", {name: "Open drawer"}) as HTMLElement;
+  result.getByRole("button", { name: "Open drawer" }) as HTMLElement;
 
 const open = async (result: RenderResult) => {
   await userEvent.click(triggerOf(result));
@@ -155,7 +155,7 @@ describe("Drawer (browser)", () => {
         ["top", "y"],
         ["bottom", "y"],
       ] as const) {
-        const result = render({placement});
+        const result = render({ placement });
 
         await userEvent.click(triggerOf(result));
         await nextTick();
@@ -251,7 +251,9 @@ describe("Drawer (browser)", () => {
 
       // Above a bottom-pinned panel, inside the backdrop. Synthetic events cannot prove this: the
       // dismissal is decided by where the pointer really landed.
-      await userEvent.click(backdrop, {position: {x: Math.round(box.left + box.width / 2), y: 4}});
+      await userEvent.click(backdrop, {
+        position: { x: Math.round(box.left + box.width / 2), y: 4 },
+      });
       await nextTick();
       await nextTick();
 
@@ -262,7 +264,7 @@ describe("Drawer (browser)", () => {
     });
 
     it("leaves a button inside the panel as an ordinary button", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const inside = document.body.querySelector<HTMLElement>(
         "[data-slot='drawer-dialog'] [data-slot='button']",
@@ -286,7 +288,7 @@ describe("Drawer (browser)", () => {
 
   describe("the handle", () => {
     it("draws a bar the stylesheet reaches by its own slot", async () => {
-      const result = render({withHandle: true});
+      const result = render({ withHandle: true });
       const backdrop = await open(result);
       const bar = slot("drawer-handle")!.querySelector<HTMLElement>(
         "[data-slot='drawer-handle-bar']",
@@ -306,7 +308,7 @@ describe("Drawer (browser)", () => {
 
   describe("focus", () => {
     it("keeps Tab inside the panel", async () => {
-      const result = render({withInsideButton: true});
+      const result = render({ withInsideButton: true });
       const backdrop = await open(result);
       const dialog = slot("drawer-dialog")!;
 
@@ -324,11 +326,11 @@ describe("Drawer (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while open", async () => {
-      const result = render({withCloseTrigger: true, withHandle: true});
+      const result = render({ withCloseTrigger: true, withHandle: true });
       const backdrop = await open(result);
 
       await expectNoA11yViolations(slot("drawer-dialog")!, {
-        rules: {"color-contrast": {enabled: false}},
+        rules: { "color-contrast": { enabled: false } },
       });
 
       await close(backdrop);

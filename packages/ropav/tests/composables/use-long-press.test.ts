@@ -1,9 +1,9 @@
-import type {LongPressEvent} from "@/composables/use-long-press";
+import type { LongPressEvent } from "@/composables/use-long-press";
 
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick} from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick } from "vue";
 
-import {useLongPress} from "@/composables/use-long-press";
+import { useLongPress } from "@/composables/use-long-press";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -69,7 +69,7 @@ describe("useLongPress", () => {
   });
 
   it("reports the long press only once the threshold is met", () => {
-    const {dispose, element, events} = setup();
+    const { dispose, element, events } = setup();
 
     element.dispatchEvent(pointer("pointerdown"));
 
@@ -89,7 +89,7 @@ describe("useLongPress", () => {
   });
 
   it("honours a custom threshold", () => {
-    const {dispose, element, events} = setup({threshold: 200});
+    const { dispose, element, events } = setup({ threshold: 200 });
 
     element.dispatchEvent(pointer("pointerdown"));
     vi.advanceTimersByTime(200);
@@ -100,12 +100,12 @@ describe("useLongPress", () => {
   });
 
   it("does not report a long press when the press is released early", () => {
-    const {dispose, element, events} = setup();
+    const { dispose, element, events } = setup();
 
     element.dispatchEvent(pointer("pointerdown"));
     vi.advanceTimersByTime(100);
     element.dispatchEvent(pointer("pointerup"));
-    element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+    element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
     vi.advanceTimersByTime(1000);
 
     expect(events).toEqual(["longpressstart:mouse", "longpressend:mouse"]);
@@ -114,7 +114,7 @@ describe("useLongPress", () => {
   });
 
   it("cancels the ordinary press on the same element once the threshold is met", () => {
-    const {dispose, element} = setup();
+    const { dispose, element } = setup();
     const cancelled = vi.fn();
 
     element.addEventListener("pointercancel", cancelled);
@@ -129,12 +129,17 @@ describe("useLongPress", () => {
   });
 
   it("blocks the click that follows a long press", () => {
-    const {dispose, element} = setup();
+    const { dispose, element } = setup();
 
     element.dispatchEvent(pointer("pointerdown"));
     vi.advanceTimersByTime(500);
 
-    const click = new MouseEvent("click", {bubbles: true, button: 0, cancelable: true, detail: 1});
+    const click = new MouseEvent("click", {
+      bubbles: true,
+      button: 0,
+      cancelable: true,
+      detail: 1,
+    });
 
     element.dispatchEvent(click);
 
@@ -144,7 +149,7 @@ describe("useLongPress", () => {
   });
 
   it("keeps the press event bubbling so the element still handles its own press", () => {
-    const {dispose, element} = setup();
+    const { dispose, element } = setup();
     const outer = document.createElement("div");
 
     element.parentElement!.appendChild(outer);
@@ -162,9 +167,9 @@ describe("useLongPress", () => {
   });
 
   it("ignores a pointer type it was not asked to watch", () => {
-    const {dispose, element, events} = setup({pointerType: "touch"});
+    const { dispose, element, events } = setup({ pointerType: "touch" });
 
-    element.dispatchEvent(pointer("pointerdown", {pointerType: "mouse"}));
+    element.dispatchEvent(pointer("pointerdown", { pointerType: "mouse" }));
     vi.advanceTimersByTime(500);
 
     expect(events).toEqual([]);
@@ -173,10 +178,10 @@ describe("useLongPress", () => {
   });
 
   it("ignores a keyboard press, which has no hold to measure", () => {
-    const {dispose, element, events, longPress} = setup();
+    const { dispose, element, events, longPress } = setup();
 
     element.addEventListener("keydown", (event) => longPress.handlers.onKeydown(event));
-    element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+    element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
     vi.advanceTimersByTime(500);
 
     expect(events).toEqual([]);
@@ -185,7 +190,7 @@ describe("useLongPress", () => {
   });
 
   it("exposes a description so the gesture is discoverable", async () => {
-    const {dispose, longPress} = setup({accessibilityDescription: "Long press to open menu"});
+    const { dispose, longPress } = setup({ accessibilityDescription: "Long press to open menu" });
 
     await nextTick();
 
@@ -200,7 +205,7 @@ describe("useLongPress", () => {
   });
 
   it("removes the description node when the last consumer goes away", () => {
-    const {dispose, longPress} = setup({accessibilityDescription: "Long press to open menu"});
+    const { dispose, longPress } = setup({ accessibilityDescription: "Long press to open menu" });
     const id = longPress.describedBy.value!;
 
     dispose();
@@ -209,8 +214,8 @@ describe("useLongPress", () => {
   });
 
   it("shares one description node between consumers of the same text", () => {
-    const first = setup({accessibilityDescription: "Long press to open menu"});
-    const second = setup({accessibilityDescription: "Long press to open menu"});
+    const first = setup({ accessibilityDescription: "Long press to open menu" });
+    const second = setup({ accessibilityDescription: "Long press to open menu" });
 
     expect(second.longPress.describedBy.value).toBe(first.longPress.describedBy.value);
 
@@ -227,7 +232,7 @@ describe("useLongPress", () => {
   });
 
   it("exposes no description while disabled", () => {
-    const {dispose, longPress} = setup({
+    const { dispose, longPress } = setup({
       accessibilityDescription: "Long press to open menu",
       isDisabled: true,
     });

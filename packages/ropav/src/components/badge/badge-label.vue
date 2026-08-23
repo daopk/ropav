@@ -1,15 +1,15 @@
 <script setup lang="ts" vapor>
-import type {BadgeLabelProps} from "./badge.types";
+import type { BadgeLabelProps } from "./badge.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useBadgeContext} from "./badge.context";
+import { useBadgeContext } from "./badge.context";
 
 const props = defineProps<BadgeLabelProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useBadgeContext();
+const { slots } = useBadgeContext();
 </script>
 
 <template>

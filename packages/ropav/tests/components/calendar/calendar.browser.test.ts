@@ -1,9 +1,9 @@
-import {CalendarDate} from "@internationalized/date";
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { CalendarDate } from "@internationalized/date";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
@@ -25,15 +25,15 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  */
 const SHARED_WITH_REACT = {
   rules: {
-    "aria-required-children": {enabled: false},
-    "color-contrast": {enabled: false},
-    "landmark-banner-is-top-level": {enabled: false},
+    "aria-required-children": { enabled: false },
+    "color-contrast": { enabled: false },
+    "landmark-banner-is-top-level": { enabled: false },
   },
 };
 
 const render = (props: Record<string, unknown> = {}) =>
   renderVapor(Fixture, {
-    props: {ariaLabel: "Event date", defaultFocusedValue: jun(15), locale: "en-US", ...props},
+    props: { ariaLabel: "Event date", defaultFocusedValue: jun(15), locale: "en-US", ...props },
   });
 
 type RenderResult = ReturnType<typeof render>;
@@ -76,20 +76,20 @@ afterEach(() => {
 describe("Calendar (browser)", () => {
   describe("axe", () => {
     it("finds nothing to complain about", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about with the year picker open", async () => {
-      const result = mount({defaultYearPickerOpen: true, withYearPicker: true});
+      const result = mount({ defaultYearPickerOpen: true, withYearPicker: true });
 
       await nextTick();
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
 
     it("finds nothing to complain about while disabled", async () => {
-      const result = mount({isDisabled: true, value: jun(10)});
+      const result = mount({ isDisabled: true, value: jun(10) });
 
       await expectNoA11yViolations(result.container, SHARED_WITH_REACT);
     });
@@ -97,7 +97,7 @@ describe("Calendar (browser)", () => {
 
   describe("a real keyboard", () => {
     it("moves a day at a time with the arrow keys", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{ArrowRight}");
@@ -112,7 +112,7 @@ describe("Calendar (browser)", () => {
     });
 
     it("moves a week at a time with up and down", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{ArrowDown}");
@@ -131,7 +131,7 @@ describe("Calendar (browser)", () => {
        * The ends of the *section* on screen, which for a month view is the month — not the week.
        * A week view is where Home and End mean the ends of a week.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{Home}");
@@ -150,7 +150,7 @@ describe("Calendar (browser)", () => {
       const result = mount({
         defaultFocusedValue: jun(10),
         value: jun(10),
-        visibleDuration: {weeks: 1},
+        visibleDuration: { weeks: 1 },
       });
 
       cellOf(result, 10).focus();
@@ -167,7 +167,7 @@ describe("Calendar (browser)", () => {
     });
 
     it("pages by a month, keeping focus on a cell", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{PageDown}");
@@ -186,7 +186,7 @@ describe("Calendar (browser)", () => {
     });
 
     it("chooses the focused day with Enter", async () => {
-      const result = mount({defaultValue: jun(10)});
+      const result = mount({ defaultValue: jun(10) });
 
       cellOf(result, 10).focus();
       await userEvent.keyboard("{ArrowRight}");
@@ -203,7 +203,7 @@ describe("Calendar (browser)", () => {
        * `status-focused` draws with a box shadow and sets `outline-style: none`, so the outline is
        * the wrong thing to read — and reading it is how a missing ring passes unnoticed.
        */
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
       const cell = cellOf(result, 10);
 
       cell.focus();
@@ -217,7 +217,7 @@ describe("Calendar (browser)", () => {
        * A grid is one tab stop: Tab leaves it, and the arrow keys move inside it. The stop is the
        * *focused* date, which is not the selected one — nothing here has been chosen yet.
        */
-      const result = mount({defaultFocusedValue: jun(10)});
+      const result = mount({ defaultFocusedValue: jun(10) });
       const tabbable = cellsOf(result).filter((cell) => cell.getAttribute("tabindex") === "0");
 
       expect(tabbable).toHaveLength(1);
@@ -232,7 +232,7 @@ describe("Calendar (browser)", () => {
      * dropdown unopenable by mouse while every test stayed green.
      */
     it("chooses a day", async () => {
-      const result = mount({defaultValue: jun(10)});
+      const result = mount({ defaultValue: jun(10) });
 
       await userEvent.click(cellOf(result, 18));
       await nextTick();
@@ -241,7 +241,7 @@ describe("Calendar (browser)", () => {
     });
 
     it("pages with the nav buttons", async () => {
-      const result = mount({value: jun(10)});
+      const result = mount({ value: jun(10) });
 
       await userEvent.click(navButtonOf(result, "next"));
       await nextTick();
@@ -261,10 +261,10 @@ describe("Calendar (browser)", () => {
     });
 
     it("leaves a disabled day alone", async () => {
-      const result = mount({minValue: jun(10), value: jun(15)});
+      const result = mount({ minValue: jun(10), value: jun(15) });
       const before = cellOf(result, 15).dataset["selected"];
 
-      await userEvent.click(cellOf(result, 5), {force: true});
+      await userEvent.click(cellOf(result, 5), { force: true });
       await nextTick();
 
       expect(cellOf(result, 15).dataset["selected"]).toBe(before);
@@ -277,7 +277,7 @@ describe("Calendar (browser)", () => {
        * The only part of this package that measures one element to place another: the year grid
        * reads the day grid's own `offsetTop` and `offsetHeight`. Both are zero without layout.
        */
-      const result = mount({withYearPicker: true});
+      const result = mount({ withYearPicker: true });
 
       await userEvent.click(
         result.container.querySelector<HTMLElement>("[data-slot='calendar-year-picker-trigger']")!,
@@ -296,7 +296,7 @@ describe("Calendar (browser)", () => {
     });
 
     it("takes focus onto a year as it opens", async () => {
-      const result = mount({value: jun(10), withYearPicker: true});
+      const result = mount({ value: jun(10), withYearPicker: true });
 
       await userEvent.click(
         result.container.querySelector<HTMLElement>("[data-slot='calendar-year-picker-trigger']")!,

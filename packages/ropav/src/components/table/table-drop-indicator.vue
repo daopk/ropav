@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {TableDropIndicatorProps} from "./table.types";
+import type { TableDropIndicatorProps } from "./table.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
-import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
+import { dataAttr } from "../../utils/assertion";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
+import { useVirtualizerStateContext } from "../virtualizer/virtualizer.context";
 
 import TableVirtualizerItem from "./table-virtualizer-item.vue";
-import {useTableGridContext, useTableVirtualizerContext} from "./table.context";
+import { useTableGridContext, useTableVirtualizerContext } from "./table.context";
 
 /**
  * The position a drop would land in, as a row a screen reader can reach.
@@ -27,7 +27,7 @@ import {useTableGridContext, useTableVirtualizerContext} from "./table.context";
  */
 const props = defineProps<TableDropIndicatorProps>();
 
-const {columnCount, dragAndDropHooks, dropState} = useTableGridContext();
+const { columnCount, dragAndDropHooks, dropState } = useTableGridContext();
 const virtualizer = useTableVirtualizerContext();
 const virtualizerState = useVirtualizerStateContext();
 
@@ -35,7 +35,7 @@ const element = shallowRef<HTMLElement | null>(null);
 
 const indicator =
   dropState && dragAndDropHooks?.useDropIndicator
-    ? dragAndDropHooks.useDropIndicator({target: props.target}, dropState, element)
+    ? dragAndDropHooks.useDropIndicator({ target: props.target }, dropState, element)
     : null;
 
 const isHidden = computed(() => indicator?.isHidden.value ?? true);
@@ -87,13 +87,13 @@ const parentLayoutInfo = computed(() =>
       :data-drop-target="dataAttr(isDropTarget)"
       data-slot="table-drop-indicator"
       role="row"
-      :style="{'--table-row-level': level}"
+      :style="{ '--table-row-level': level }"
     >
       <component
         :is="virtualizer ? 'div' : 'td'"
         :colspan="virtualizer ? undefined : columnCount"
         role="gridcell"
-        :style="{padding: 0}"
+        :style="{ padding: 0 }"
       >
         <div
           ref="element"

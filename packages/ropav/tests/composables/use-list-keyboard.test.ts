@@ -1,14 +1,17 @@
-import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
-import type {UseListKeyboardOptions, UseListKeyboardReturn} from "@/composables/use-list-keyboard";
-import type {UseSelectionManagerOptions} from "@/composables/use-selection-manager";
+import type { CollectionKey, UseCollectionReturn } from "@/composables/use-collection";
+import type {
+  UseListKeyboardOptions,
+  UseListKeyboardReturn,
+} from "@/composables/use-list-keyboard";
+import type { UseSelectionManagerOptions } from "@/composables/use-selection-manager";
 
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick } from "vue";
 
-import {useCollection} from "@/composables/use-collection";
-import {useListKeyboard} from "@/composables/use-list-keyboard";
-import {useSelectionManager} from "@/composables/use-selection-manager";
-import {Rect, Size} from "@/utils/virtualizer-geometry";
+import { useCollection } from "@/composables/use-collection";
+import { useListKeyboard } from "@/composables/use-list-keyboard";
+import { useSelectionManager } from "@/composables/use-selection-manager";
+import { Rect, Size } from "@/utils/virtualizer-geometry";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];
@@ -36,7 +39,7 @@ const setup = (
      * jsdom has no layout, so every rect is zeroes and every item reads as sharing one row.
      * Grid navigation is geometry, so it has to be told.
      */
-    rects?: Record<string, {x: number; y: number}>;
+    rects?: Record<string, { x: number; y: number }>;
   } = {},
 ): Harness => {
   const scope = effectScope();
@@ -63,7 +66,7 @@ const setup = (
 
     if (rect) {
       element.getBoundingClientRect = () =>
-        ({height: 32, width: 32, x: rect.x, y: rect.y}) as DOMRect;
+        ({ height: 32, width: 32, x: rect.x, y: rect.y }) as DOMRect;
     }
 
     items.set(key, element);
@@ -93,7 +96,7 @@ const setup = (
       ...options.keyboard,
     });
 
-    return {collection, keyboard, selection};
+    return { collection, keyboard, selection };
   })!;
 
   const press = (key: string, init: KeyboardEventInit = {}) => {
@@ -106,14 +109,14 @@ const setup = (
       ...init,
     });
 
-    Object.defineProperty(event, "currentTarget", {value: container});
-    Object.defineProperty(event, "target", {value: target});
+    Object.defineProperty(event, "currentTarget", { value: container });
+    Object.defineProperty(event, "target", { value: target });
     harness.keyboard.onKeydown(event);
 
     return event;
   };
 
-  return {...harness, container, items, press};
+  return { ...harness, container, items, press };
 };
 
 /**
@@ -125,8 +128,8 @@ const setup = (
 const focusin = (target: Element, relatedTarget?: Element) => {
   const event = new FocusEvent("focusin");
 
-  Object.defineProperty(event, "target", {value: target});
-  if (relatedTarget) Object.defineProperty(event, "relatedTarget", {value: relatedTarget});
+  Object.defineProperty(event, "target", { value: target });
+  if (relatedTarget) Object.defineProperty(event, "relatedTarget", { value: relatedTarget });
 
   return event;
 };
@@ -139,7 +142,7 @@ afterEach(() => {
 describe("useListKeyboard", () => {
   describe("vertical navigation", () => {
     it("enters at the first item on ArrowDown", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
 
@@ -147,7 +150,7 @@ describe("useListKeyboard", () => {
     });
 
     it("enters at the last item on ArrowUp", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowUp");
 
@@ -155,7 +158,7 @@ describe("useListKeyboard", () => {
     });
 
     it("steps down and up", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
       press("ArrowDown");
@@ -168,7 +171,7 @@ describe("useListKeyboard", () => {
     });
 
     it("stops at the ends rather than wrapping", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowUp");
       press("ArrowDown");
@@ -177,7 +180,7 @@ describe("useListKeyboard", () => {
     });
 
     it("wraps when asked to", () => {
-      const {press, selection} = setup({keyboard: {shouldFocusWrap: true}});
+      const { press, selection } = setup({ keyboard: { shouldFocusWrap: true } });
 
       press("ArrowUp");
       press("ArrowDown");
@@ -186,7 +189,7 @@ describe("useListKeyboard", () => {
     });
 
     it("skips a disabled item", () => {
-      const {press, selection} = setup({disabled: ["b"]});
+      const { press, selection } = setup({ disabled: ["b"] });
 
       press("ArrowDown");
       press("ArrowDown");
@@ -196,7 +199,7 @@ describe("useListKeyboard", () => {
 
     it("does not select while moving", () => {
       // Selecting on focus is derived from replace behaviour, which a listbox never uses.
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
       press("ArrowDown");
@@ -207,7 +210,7 @@ describe("useListKeyboard", () => {
     it("leaves the horizontal arrows to the page", () => {
       // React Aria removes these methods outright on a vertical stack so horizontal scrolling
       // still works.
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
 
@@ -220,7 +223,7 @@ describe("useListKeyboard", () => {
 
   describe("horizontal navigation", () => {
     it("steps with the inline arrows", () => {
-      const {press, selection} = setup({keyboard: {orientation: "horizontal"}});
+      const { press, selection } = setup({ keyboard: { orientation: "horizontal" } });
 
       press("ArrowRight");
 
@@ -236,7 +239,7 @@ describe("useListKeyboard", () => {
     });
 
     it("still answers the block arrows", () => {
-      const {press, selection} = setup({keyboard: {orientation: "horizontal"}});
+      const { press, selection } = setup({ keyboard: { orientation: "horizontal" } });
 
       press("ArrowDown");
       press("ArrowDown");
@@ -248,12 +251,12 @@ describe("useListKeyboard", () => {
   describe("grid navigation", () => {
     // Three columns, two full rows. Only x and y are read, so the size never matters.
     const GRID = {
-      a: {x: 0, y: 0},
-      b: {x: 32, y: 0},
-      c: {x: 64, y: 0},
-      d: {x: 0, y: 32},
-      e: {x: 32, y: 32},
-      f: {x: 64, y: 32},
+      a: { x: 0, y: 0 },
+      b: { x: 32, y: 0 },
+      c: { x: 64, y: 0 },
+      d: { x: 0, y: 32 },
+      e: { x: 32, y: 32 },
+      f: { x: 64, y: 32 },
     };
 
     const KEYS = ["a", "b", "c", "d", "e", "f"];
@@ -263,11 +266,11 @@ describe("useListKeyboard", () => {
         keys: KEYS,
         rects: GRID,
         ...options,
-        keyboard: {layout: "grid", ...options.keyboard},
+        keyboard: { layout: "grid", ...options.keyboard },
       });
 
     it("steps down a column rather than to the next item", () => {
-      const {press, selection} = grid();
+      const { press, selection } = grid();
 
       press("ArrowDown");
       press("ArrowRight");
@@ -280,7 +283,7 @@ describe("useListKeyboard", () => {
     });
 
     it("steps back up the same column", () => {
-      const {press, selection} = grid();
+      const { press, selection } = grid();
 
       press("ArrowUp");
 
@@ -292,7 +295,7 @@ describe("useListKeyboard", () => {
     });
 
     it("stays put at the last row", () => {
-      const {press, selection} = grid();
+      const { press, selection } = grid();
 
       press("ArrowDown");
       press("ArrowDown");
@@ -307,7 +310,7 @@ describe("useListKeyboard", () => {
     it("walks the flat order with the inline arrows, across row boundaries", () => {
       // Left and right are plain next/previous in a grid: the item to the right of the last one
       // in a row is the first one in the next.
-      const {press, selection} = grid();
+      const { press, selection } = grid();
 
       press("ArrowUp");
       press("ArrowLeft");
@@ -321,7 +324,7 @@ describe("useListKeyboard", () => {
     });
 
     it("claims the inline arrows instead of leaving them to the page", () => {
-      const {press} = grid();
+      const { press } = grid();
 
       press("ArrowDown");
 
@@ -334,7 +337,7 @@ describe("useListKeyboard", () => {
        * passes the one directly below and then never finds another in that column. React Aria's
        * `findKey` returns null the same way.
        */
-      const {press, selection} = grid({disabled: ["e"]});
+      const { press, selection } = grid({ disabled: ["e"] });
 
       press("ArrowDown");
       press("ArrowRight");
@@ -349,7 +352,7 @@ describe("useListKeyboard", () => {
     it("reads the layout's geometry when there is one", () => {
       // A virtualized grid has only a screenful in the DOM, so the delegate has to be able to
       // answer instead. Every element here reports zeroes, so only the delegate can.
-      const {press, selection} = setup({
+      const { press, selection } = setup({
         keyboard: {
           layout: "grid",
           layoutDelegate: {
@@ -375,7 +378,7 @@ describe("useListKeyboard", () => {
     });
 
     it("mirrors the inline arrows in a right-to-left grid", () => {
-      const {press, selection} = grid({dir: "rtl"});
+      const { press, selection } = grid({ dir: "rtl" });
 
       press("ArrowDown");
       press("ArrowLeft");
@@ -390,16 +393,16 @@ describe("useListKeyboard", () => {
     it("crosses columns with the inline arrows when the grid is horizontal", () => {
       // Orientation flips which axis wraps: a horizontal grid fills a column before moving
       // across, so right of an item is the one in the same row of the next column.
-      const {press, selection} = setup({
-        keyboard: {layout: "grid", orientation: "horizontal"},
+      const { press, selection } = setup({
+        keyboard: { layout: "grid", orientation: "horizontal" },
         keys: KEYS,
         rects: {
-          a: {x: 0, y: 0},
-          b: {x: 0, y: 32},
-          c: {x: 0, y: 64},
-          d: {x: 32, y: 0},
-          e: {x: 32, y: 32},
-          f: {x: 32, y: 64},
+          a: { x: 0, y: 0 },
+          b: { x: 0, y: 32 },
+          c: { x: 0, y: 64 },
+          d: { x: 32, y: 0 },
+          e: { x: 32, y: 32 },
+          f: { x: 32, y: 64 },
         },
       });
 
@@ -416,7 +419,7 @@ describe("useListKeyboard", () => {
 
   describe("home and end", () => {
     it("jumps to the ends", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("End");
 
@@ -428,7 +431,7 @@ describe("useListKeyboard", () => {
     });
 
     it("skips a disabled item at the edge", () => {
-      const {press, selection} = setup({disabled: ["a", "d"]});
+      const { press, selection } = setup({ disabled: ["a", "d"] });
 
       press("Home");
 
@@ -441,9 +444,9 @@ describe("useListKeyboard", () => {
 
     it("ignores a shifted jump from nowhere", () => {
       // There is no anchor to extend a selection from yet.
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
-      press("Home", {shiftKey: true});
+      press("Home", { shiftKey: true });
 
       expect(selection.focusedKey.value).toBeNull();
     });
@@ -453,7 +456,7 @@ describe("useListKeyboard", () => {
     it("collapses to the ends when the list does not scroll", () => {
       // With no scroll there is no page to move by, which is also what makes this measurable
       // where layout is not.
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("PageDown");
 
@@ -467,34 +470,34 @@ describe("useListKeyboard", () => {
 
   describe("select all", () => {
     it("selects everything on the modifier chord in multiple mode", () => {
-      const {press, selection} = setup({selection: {selectionMode: "multiple"}});
+      const { press, selection } = setup({ selection: { selectionMode: "multiple" } });
 
-      press("a", {ctrlKey: true});
+      press("a", { ctrlKey: true });
 
       expect(selection.isSelectAll.value).toBe(true);
     });
 
     it("is ignored in single mode", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
-      press("a", {metaKey: true});
+      press("a", { metaKey: true });
 
       expect(selection.isEmpty.value).toBe(true);
     });
 
     it("is ignored when disallowed", () => {
-      const {press, selection} = setup({
-        keyboard: {disallowSelectAll: true},
-        selection: {selectionMode: "multiple"},
+      const { press, selection } = setup({
+        keyboard: { disallowSelectAll: true },
+        selection: { selectionMode: "multiple" },
       });
 
-      press("a", {ctrlKey: true});
+      press("a", { ctrlKey: true });
 
       expect(selection.isEmpty.value).toBe(true);
     });
 
     it("leaves a bare letter to typeahead", () => {
-      const {press, selection} = setup({selection: {selectionMode: "multiple"}});
+      const { press, selection } = setup({ selection: { selectionMode: "multiple" } });
       const event = press("a");
 
       expect(selection.isEmpty.value).toBe(true);
@@ -504,7 +507,7 @@ describe("useListKeyboard", () => {
 
   describe("escape", () => {
     it("clears the selection and claims the key", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       selection.setSelectedKeys(["a"]);
 
@@ -516,14 +519,14 @@ describe("useListKeyboard", () => {
 
     it("lets the key through when there was nothing to clear", () => {
       // This is what will let a listbox inside a popover still close on Escape.
-      const {press} = setup();
+      const { press } = setup();
       const event = press("Escape");
 
       expect(event.defaultPrevented).toBe(false);
     });
 
     it("lets the key through when clearing is turned off", () => {
-      const {press, selection} = setup({keyboard: {escapeKeyBehavior: "none"}});
+      const { press, selection } = setup({ keyboard: { escapeKeyBehavior: "none" } });
 
       selection.setSelectedKeys(["a"]);
 
@@ -537,7 +540,7 @@ describe("useListKeyboard", () => {
   describe("tab", () => {
     it("parks focus at the end and hands back to the browser", () => {
       // One Tab has to leave the whole collection, not walk through every item.
-      const {items, press} = setup();
+      const { items, press } = setup();
       const event = press("Tab");
 
       expect(document.activeElement).toBe(items.get("d"));
@@ -545,10 +548,10 @@ describe("useListKeyboard", () => {
     });
 
     it("parks focus on the collection itself when shifted", () => {
-      const {container, press} = setup();
+      const { container, press } = setup();
 
       container.tabIndex = -1;
-      press("Tab", {shiftKey: true});
+      press("Tab", { shiftKey: true });
 
       expect(document.activeElement).toBe(container);
     });
@@ -557,7 +560,7 @@ describe("useListKeyboard", () => {
   describe("activation", () => {
     it("calls onAction on Enter", () => {
       const onAction = vi.fn();
-      const {press} = setup({keyboard: {onAction}});
+      const { press } = setup({ keyboard: { onAction } });
 
       press("ArrowDown");
       press("Enter");
@@ -566,7 +569,7 @@ describe("useListKeyboard", () => {
     });
 
     it("selects on Space when a mode is set", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
       press(" ");
@@ -576,7 +579,7 @@ describe("useListKeyboard", () => {
 
     it("acts rather than selects on Space when there is no selection", () => {
       const onAction = vi.fn();
-      const {press} = setup({keyboard: {onAction}, selection: {selectionMode: "none"}});
+      const { press } = setup({ keyboard: { onAction }, selection: { selectionMode: "none" } });
 
       press("ArrowDown");
       press(" ");
@@ -586,7 +589,7 @@ describe("useListKeyboard", () => {
 
     it("leaves Enter and Space alone when the items handle them", () => {
       const onAction = vi.fn();
-      const {press, selection} = setup({keyboard: {disallowActivation: true, onAction}});
+      const { press, selection } = setup({ keyboard: { disallowActivation: true, onAction } });
 
       press("ArrowDown");
       press("Enter");
@@ -601,7 +604,7 @@ describe("useListKeyboard", () => {
 
   describe("tabindex", () => {
     it("makes the collection the tab stop until something inside is focused", () => {
-      const {keyboard, press} = setup();
+      const { keyboard, press } = setup();
 
       expect(keyboard.collectionTabIndex.value).toBe(0);
 
@@ -611,7 +614,7 @@ describe("useListKeyboard", () => {
     });
 
     it("gives exactly one item a tab stop", () => {
-      const {keyboard, press} = setup();
+      const { keyboard, press } = setup();
 
       press("ArrowDown");
       press("ArrowDown");
@@ -622,7 +625,7 @@ describe("useListKeyboard", () => {
 
     it("leaves a disabled item out of the tab order entirely", () => {
       // React Aria omits the attribute rather than setting it to -1.
-      const {keyboard} = setup({disabled: ["b"]});
+      const { keyboard } = setup({ disabled: ["b"] });
 
       expect(keyboard.itemTabIndex("b")).toBeUndefined();
     });
@@ -630,7 +633,7 @@ describe("useListKeyboard", () => {
 
   describe("focus entry", () => {
     it("prefers the first selected key over the first item", () => {
-      const {collection, container, keyboard, selection} = setup();
+      const { collection, container, keyboard, selection } = setup();
 
       selection.setSelectedKeys(["c"]);
       keyboard.onFocusin(focusin(container));
@@ -641,7 +644,7 @@ describe("useListKeyboard", () => {
 
     it("enters at the end when focus arrives from later in the document", () => {
       // That is Shift+Tab, and landing on the first item would send the user backwards.
-      const {container, keyboard, selection} = setup();
+      const { container, keyboard, selection } = setup();
       const after = document.createElement("button");
 
       document.body.appendChild(after);
@@ -654,7 +657,7 @@ describe("useListKeyboard", () => {
     });
 
     it("reports focus leaving the collection", () => {
-      const {container, keyboard, selection} = setup();
+      const { container, keyboard, selection } = setup();
 
       keyboard.onFocusin(focusin(container));
 
@@ -666,7 +669,7 @@ describe("useListKeyboard", () => {
     });
 
     it("leaves the focused key alone when the collection already holds focus", () => {
-      const {container, keyboard, selection} = setup();
+      const { container, keyboard, selection } = setup();
 
       selection.setFocused(true);
       keyboard.onFocusin(focusin(container));
@@ -677,7 +680,7 @@ describe("useListKeyboard", () => {
     });
 
     it("gives up focus when the event only bubbled through from elsewhere", () => {
-      const {container, keyboard, selection} = setup();
+      const { container, keyboard, selection } = setup();
       const elsewhere = document.createElement("button");
 
       document.body.appendChild(elsewhere);
@@ -694,13 +697,13 @@ describe("useListKeyboard", () => {
     });
 
     it("does not report a departure for focus moving between items", () => {
-      const {container, items, keyboard, selection} = setup();
+      const { container, items, keyboard, selection } = setup();
 
       keyboard.onFocusin(focusin(container));
 
       const event = new FocusEvent("focusout");
 
-      Object.defineProperty(event, "relatedTarget", {value: items.get("b")});
+      Object.defineProperty(event, "relatedTarget", { value: items.get("b") });
       keyboard.onFocusout(event);
 
       expect(selection.isFocused.value).toBe(true);
@@ -709,7 +712,7 @@ describe("useListKeyboard", () => {
 
   describe("real focus", () => {
     it("moves DOM focus onto the item a key press landed on", () => {
-      const {items, press} = setup();
+      const { items, press } = setup();
 
       press("ArrowDown");
 
@@ -717,7 +720,7 @@ describe("useListKeyboard", () => {
     });
 
     it("follows a key set programmatically once the collection has focus", async () => {
-      const {container, items, keyboard, selection} = setup();
+      const { container, items, keyboard, selection } = setup();
 
       keyboard.onFocusin(focusin(container));
       selection.setFocusedKey("c");
@@ -729,9 +732,9 @@ describe("useListKeyboard", () => {
 
   describe("search", () => {
     it("finds an item by prefix", () => {
-      const {keyboard} = setup({
+      const { keyboard } = setup({
         keys: ["bob", "brenda", "martha"],
-        text: {bob: "Bob", brenda: "Brenda", martha: "Martha"},
+        text: { bob: "Bob", brenda: "Brenda", martha: "Martha" },
       });
 
       expect(keyboard.getKeyForSearch("mar")).toBe("martha");
@@ -739,31 +742,31 @@ describe("useListKeyboard", () => {
 
     it("starts at the key it is given, not after it", () => {
       // A search that has grown by one character has to keep matching the item it is on.
-      const {keyboard} = setup({
+      const { keyboard } = setup({
         keys: ["bob", "brenda"],
-        text: {bob: "Bob", brenda: "Brenda"},
+        text: { bob: "Bob", brenda: "Brenda" },
       });
 
       expect(keyboard.getKeyForSearch("b", "bob")).toBe("bob");
     });
 
     it("matches without regard to case or diacritics", () => {
-      const {keyboard} = setup({keys: ["ecole"], text: {ecole: "École"}});
+      const { keyboard } = setup({ keys: ["ecole"], text: { ecole: "École" } });
 
       expect(keyboard.getKeyForSearch("ec")).toBe("ecole");
     });
 
     it("returns null when nothing matches", () => {
-      const {keyboard} = setup();
+      const { keyboard } = setup();
 
       expect(keyboard.getKeyForSearch("zz")).toBeNull();
     });
 
     it("skips a disabled item", () => {
-      const {keyboard} = setup({
+      const { keyboard } = setup({
         disabled: ["brenda"],
         keys: ["bob", "brenda"],
-        text: {bob: "Bob", brenda: "Brenda"},
+        text: { bob: "Bob", brenda: "Brenda" },
       });
 
       expect(keyboard.getKeyForSearch("br")).toBeNull();
@@ -772,14 +775,14 @@ describe("useListKeyboard", () => {
 
   describe("keys from outside", () => {
     it("ignores a key event from outside the collection", () => {
-      const {container, keyboard, selection} = setup();
+      const { container, keyboard, selection } = setup();
       const outside = document.createElement("div");
-      const event = new KeyboardEvent("keydown", {cancelable: true, key: "ArrowDown"});
+      const event = new KeyboardEvent("keydown", { cancelable: true, key: "ArrowDown" });
 
       document.body.appendChild(outside);
       containers.push(outside);
-      Object.defineProperty(event, "currentTarget", {value: container});
-      Object.defineProperty(event, "target", {value: outside});
+      Object.defineProperty(event, "currentTarget", { value: container });
+      Object.defineProperty(event, "target", { value: outside });
       keyboard.onKeydown(event);
       outside.remove();
 
@@ -789,7 +792,7 @@ describe("useListKeyboard", () => {
 
   describe("virtual focus", () => {
     it("moves the focused key without focusing anything", () => {
-      const {items, press, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { items, press, selection } = setup({ keyboard: { shouldUseVirtualFocus: true } });
 
       press("ArrowDown");
 
@@ -801,18 +804,18 @@ describe("useListKeyboard", () => {
     });
 
     it("scrolls the focused item into view even so", () => {
-      const {items, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { items, press } = setup({ keyboard: { shouldUseVirtualFocus: true } });
       const scrollIntoView = vi.fn();
 
       items.get("b")!.scrollIntoView = scrollIntoView;
       press("ArrowDown");
       press("ArrowDown");
 
-      expect(scrollIntoView).toHaveBeenCalledWith({block: "nearest"});
+      expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest" });
     });
 
     it("leaves nothing inside the collection tabbable", () => {
-      const {keyboard, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { keyboard, press } = setup({ keyboard: { shouldUseVirtualFocus: true } });
 
       expect(keyboard.collectionTabIndex.value).toBeUndefined();
       expect(keyboard.itemTabIndex("a")).toBeUndefined();
@@ -824,13 +827,13 @@ describe("useListKeyboard", () => {
     });
 
     it("takes a key event from outside the collection", () => {
-      const {keyboard, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { keyboard, selection } = setup({ keyboard: { shouldUseVirtualFocus: true } });
       const input = document.createElement("input");
-      const event = new KeyboardEvent("keydown", {cancelable: true, key: "ArrowDown"});
+      const event = new KeyboardEvent("keydown", { cancelable: true, key: "ArrowDown" });
 
       document.body.appendChild(input);
       containers.push(input);
-      Object.defineProperty(event, "target", {value: input});
+      Object.defineProperty(event, "target", { value: input });
       keyboard.onKeydown(event);
       input.remove();
 
@@ -840,7 +843,9 @@ describe("useListKeyboard", () => {
     });
 
     it("names the focused option for an outside control", () => {
-      const {keyboard, press} = setup({keyboard: {listId: "list", shouldUseVirtualFocus: true}});
+      const { keyboard, press } = setup({
+        keyboard: { listId: "list", shouldUseVirtualFocus: true },
+      });
 
       expect(keyboard.focusedNodeId.value).toBeUndefined();
 
@@ -850,7 +855,7 @@ describe("useListKeyboard", () => {
     });
 
     it("names nothing while focus is real", () => {
-      const {keyboard, press} = setup({keyboard: {listId: "list"}});
+      const { keyboard, press } = setup({ keyboard: { listId: "list" } });
 
       press("ArrowDown");
 
@@ -858,7 +863,7 @@ describe("useListKeyboard", () => {
     });
 
     it("leaves Tab alone rather than parking focus at an end", () => {
-      const {items, press} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { items, press } = setup({ keyboard: { shouldUseVirtualFocus: true } });
 
       press("ArrowDown");
       press("Tab");
@@ -869,8 +874,8 @@ describe("useListKeyboard", () => {
     });
 
     it("ignores focus arriving inside the collection", () => {
-      const {container, items, keyboard, selection} = setup({
-        keyboard: {shouldUseVirtualFocus: true},
+      const { container, items, keyboard, selection } = setup({
+        keyboard: { shouldUseVirtualFocus: true },
       });
 
       keyboard.onFocusin(focusin(items.get("c")!));
@@ -885,7 +890,7 @@ describe("useListKeyboard", () => {
     });
 
     it("does not follow a focused key set from outside with real focus", async () => {
-      const {items, selection} = setup({keyboard: {shouldUseVirtualFocus: true}});
+      const { items, selection } = setup({ keyboard: { shouldUseVirtualFocus: true } });
 
       selection.setFocused(true);
       selection.setFocusedKey("b");
@@ -897,8 +902,8 @@ describe("useListKeyboard", () => {
 
   describe("select on focus", () => {
     const SELECT_ON_FOCUS = {
-      keyboard: {orientation: "horizontal" as const, selectOnFocus: true, shouldFocusWrap: true},
-      selection: {selectionMode: "single" as const},
+      keyboard: { orientation: "horizontal" as const, selectOnFocus: true, shouldFocusWrap: true },
+      selection: { selectionMode: "single" as const },
     };
 
     /** The modifier that means "move focus only" differs by platform, so the platform is pinned. */
@@ -906,7 +911,7 @@ describe("useListKeyboard", () => {
       vi.spyOn(navigator, "platform", "get").mockReturnValue(platform);
 
     it("replaces the selection as focus moves when told to", () => {
-      const {press, selection} = setup(SELECT_ON_FOCUS);
+      const { press, selection } = setup(SELECT_ON_FOCUS);
 
       press("ArrowRight");
 
@@ -922,8 +927,8 @@ describe("useListKeyboard", () => {
     });
 
     it("defaults to the collection's replace behaviour", () => {
-      const {press, selection} = setup({
-        selection: {selectionBehavior: "replace", selectionMode: "single"},
+      const { press, selection } = setup({
+        selection: { selectionBehavior: "replace", selectionMode: "single" },
       });
 
       press("ArrowDown");
@@ -934,14 +939,14 @@ describe("useListKeyboard", () => {
 
     it("holds off while the non-contiguous modifier is down on an Apple platform", () => {
       const platform = onPlatform("MacIntel");
-      const {press, selection} = setup(SELECT_ON_FOCUS);
+      const { press, selection } = setup(SELECT_ON_FOCUS);
 
-      press("ArrowRight", {altKey: true});
+      press("ArrowRight", { altKey: true });
 
       expect(selection.focusedKey.value).toBe("a");
       expect(selection.isEmpty.value).toBe(true);
 
-      press("ArrowRight", {ctrlKey: true});
+      press("ArrowRight", { ctrlKey: true });
 
       expect([...selection.selectedKeys.value]).toEqual(["b"]);
 
@@ -950,14 +955,14 @@ describe("useListKeyboard", () => {
 
     it("holds off while the non-contiguous modifier is down elsewhere", () => {
       const platform = onPlatform("Linux x86_64");
-      const {press, selection} = setup(SELECT_ON_FOCUS);
+      const { press, selection } = setup(SELECT_ON_FOCUS);
 
-      press("ArrowRight", {ctrlKey: true});
+      press("ArrowRight", { ctrlKey: true });
 
       expect(selection.focusedKey.value).toBe("a");
       expect(selection.isEmpty.value).toBe(true);
 
-      press("ArrowRight", {altKey: true});
+      press("ArrowRight", { altKey: true });
 
       expect([...selection.selectedKeys.value]).toEqual(["b"]);
 
@@ -968,13 +973,13 @@ describe("useListKeyboard", () => {
       // React Aria's `home` and `end` replace the selection without consulting the modifier,
       // where its arrow and paging path consults it.
       const platform = onPlatform("Linux x86_64");
-      const {press, selection} = setup(SELECT_ON_FOCUS);
+      const { press, selection } = setup(SELECT_ON_FOCUS);
 
-      press("End", {ctrlKey: true});
+      press("End", { ctrlKey: true });
 
       expect([...selection.selectedKeys.value]).toEqual(["d"]);
 
-      press("Home", {ctrlKey: true});
+      press("Home", { ctrlKey: true });
 
       expect([...selection.selectedKeys.value]).toEqual(["a"]);
 
@@ -982,7 +987,7 @@ describe("useListKeyboard", () => {
     });
 
     it("chooses the entry key when focus first lands inside", () => {
-      const {items, keyboard, selection} = setup(SELECT_ON_FOCUS);
+      const { items, keyboard, selection } = setup(SELECT_ON_FOCUS);
 
       keyboard.onFocusin(focusin(items.get("a")!));
 
@@ -991,7 +996,7 @@ describe("useListKeyboard", () => {
 
     it("leaves an entry key that is already selected alone", () => {
       const onSelectionChange = vi.fn();
-      const {items, keyboard} = setup({
+      const { items, keyboard } = setup({
         ...SELECT_ON_FOCUS,
         selection: {
           defaultSelectedKeys: ["b"],
@@ -1006,7 +1011,7 @@ describe("useListKeyboard", () => {
     });
 
     it("does not choose on entry when focus was already inside", () => {
-      const {items, keyboard, selection} = setup(SELECT_ON_FOCUS);
+      const { items, keyboard, selection } = setup(SELECT_ON_FOCUS);
 
       selection.setFocused(true);
       keyboard.onFocusin(focusin(items.get("c")!));

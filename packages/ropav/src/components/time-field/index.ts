@@ -39,7 +39,7 @@ export {
   DateInputGroupSuffix as TimeFieldSuffix,
 };
 
-export {TimeFieldRoot};
+export { TimeFieldRoot };
 
 export type {
   TimeFieldRootProps,
@@ -61,6 +61,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateInputGroupVariants, timeFieldVariants} from "@ropav/styles";
+export { dateInputGroupVariants, timeFieldVariants } from "@ropav/styles";
 
-export type {DateInputGroupVariants, TimeFieldVariants} from "@ropav/styles";
+export type { DateInputGroupVariants, TimeFieldVariants } from "@ropav/styles";

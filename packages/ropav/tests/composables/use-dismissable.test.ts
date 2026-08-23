@@ -1,7 +1,7 @@
-import {describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useDismissable} from "@/composables/use-dismissable";
+import { useDismissable } from "@/composables/use-dismissable";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -12,7 +12,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
 };
 
 const setup = (
-  options: Partial<Parameters<typeof useDismissable>[0]> & {isOpen?: unknown} = {},
+  options: Partial<Parameters<typeof useDismissable>[0]> & { isOpen?: unknown } = {},
 ) => {
   const overlay = document.createElement("div");
   const inside = document.createElement("button");
@@ -48,15 +48,15 @@ const setup = (
 /** A press outside the overlay, as the browser would deliver it. */
 const pressOutside = (target: Element = document.body) => {
   target.dispatchEvent(
-    new PointerEvent("pointerdown", {bubbles: true, button: 0, composed: true, pointerId: 1}),
+    new PointerEvent("pointerdown", { bubbles: true, button: 0, composed: true, pointerId: 1 }),
   );
-  target.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, composed: true}));
+  target.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, composed: true }));
 };
 
 describe("useDismissable", () => {
   describe("interacting outside", () => {
     it("dismisses on a press outside", () => {
-      const {dispose, onClose} = setup();
+      const { dispose, onClose } = setup();
 
       pressOutside();
 
@@ -66,7 +66,7 @@ describe("useDismissable", () => {
     });
 
     it("leaves the overlay alone on a press inside a top layer", () => {
-      const {dispose, onClose} = setup();
+      const { dispose, onClose } = setup();
       const region = document.createElement("div");
       const button = document.createElement("button");
 
@@ -85,7 +85,7 @@ describe("useDismissable", () => {
     });
 
     it("leaves the overlay alone on a press inside it", () => {
-      const {dispose, inside, onClose} = setup();
+      const { dispose, inside, onClose } = setup();
 
       pressOutside(inside);
 
@@ -95,12 +95,12 @@ describe("useDismissable", () => {
     });
 
     it("ignores a drag that starts outside and ends inside", () => {
-      const {dispose, inside, onClose} = setup();
+      const { dispose, inside, onClose } = setup();
 
       document.body.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, composed: true}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, composed: true }),
       );
-      inside.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, composed: true}));
+      inside.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, composed: true }));
 
       // Deciding on the pointerdown alone would dismiss here, which is wrong: the interaction
       // ended on the overlay.
@@ -110,13 +110,13 @@ describe("useDismissable", () => {
     });
 
     it("ignores a press that starts inside and ends outside", () => {
-      const {dispose, inside, onClose} = setup();
+      const { dispose, inside, onClose } = setup();
 
       inside.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, composed: true}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, composed: true }),
       );
       document.body.dispatchEvent(
-        new MouseEvent("click", {bubbles: true, button: 0, composed: true}),
+        new MouseEvent("click", { bubbles: true, button: 0, composed: true }),
       );
 
       expect(onClose).not.toHaveBeenCalled();
@@ -125,13 +125,13 @@ describe("useDismissable", () => {
     });
 
     it("ignores a secondary button", () => {
-      const {dispose, onClose} = setup();
+      const { dispose, onClose } = setup();
 
       document.body.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 2, composed: true}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 2, composed: true }),
       );
       document.body.dispatchEvent(
-        new MouseEvent("click", {bubbles: true, button: 2, composed: true}),
+        new MouseEvent("click", { bubbles: true, button: 2, composed: true }),
       );
 
       expect(onClose).not.toHaveBeenCalled();
@@ -140,7 +140,7 @@ describe("useDismissable", () => {
     });
 
     it("does not dismiss while closed", () => {
-      const {dispose, onClose} = setup({isOpen: false});
+      const { dispose, onClose } = setup({ isOpen: false });
 
       pressOutside();
 
@@ -150,7 +150,7 @@ describe("useDismissable", () => {
     });
 
     it("does not dismiss when it was not asked to be dismissable", () => {
-      const {dispose, onClose} = setup({isDismissable: false});
+      const { dispose, onClose } = setup({ isDismissable: false });
 
       pressOutside();
 
@@ -164,7 +164,7 @@ describe("useDismissable", () => {
 
       document.body.appendChild(spared);
 
-      const {dispose, onClose} = setup({
+      const { dispose, onClose } = setup({
         shouldCloseOnInteractOutside: (element) => element !== spared,
       });
 
@@ -183,7 +183,7 @@ describe("useDismissable", () => {
     });
 
     it("ignores an interaction with an element already gone from the page", () => {
-      const {dispose, onClose} = setup();
+      const { dispose, onClose } = setup();
       const removed = document.createElement("button");
 
       // Nothing can be said about whether a detached element is inside the overlay, and this is
@@ -198,9 +198,9 @@ describe("useDismissable", () => {
 
   describe("Escape", () => {
     it("dismisses on Escape", () => {
-      const {dispose, onClose, overlay} = setup();
+      const { dispose, onClose, overlay } = setup();
 
-      overlay.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       expect(onClose).toHaveBeenCalledTimes(1);
 
@@ -208,9 +208,9 @@ describe("useDismissable", () => {
     });
 
     it("dismisses on Escape even when interacting outside does not", () => {
-      const {dispose, onClose, overlay} = setup({isDismissable: false});
+      const { dispose, onClose, overlay } = setup({ isDismissable: false });
 
-      overlay.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       expect(onClose).toHaveBeenCalledTimes(1);
 
@@ -218,9 +218,9 @@ describe("useDismissable", () => {
     });
 
     it("leaves Escape alone when keyboard dismissal is disabled", () => {
-      const {dispose, onClose, overlay} = setup({isKeyboardDismissDisabled: true});
+      const { dispose, onClose, overlay } = setup({ isKeyboardDismissDisabled: true });
 
-      overlay.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       expect(onClose).not.toHaveBeenCalled();
 
@@ -228,8 +228,12 @@ describe("useDismissable", () => {
     });
 
     it("stops Escape so nothing further up also dismisses", () => {
-      const {dispose, overlay} = setup();
-      const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "Escape"});
+      const { dispose, overlay } = setup();
+      const event = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: "Escape",
+      });
       const outerSaw = vi.fn();
 
       document.body.addEventListener("keydown", outerSaw);
@@ -242,9 +246,9 @@ describe("useDismissable", () => {
     });
 
     it("ignores other keys", () => {
-      const {dispose, onClose, overlay} = setup();
+      const { dispose, onClose, overlay } = setup();
 
-      overlay.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
 
       expect(onClose).not.toHaveBeenCalled();
 
@@ -271,7 +275,7 @@ describe("useDismissable", () => {
       const outer = setup();
       const inner = setup();
 
-      inner.overlay.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Escape"}));
+      inner.overlay.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
 
       expect(inner.onClose).toHaveBeenCalledTimes(1);
       expect(outer.onClose).not.toHaveBeenCalled();
@@ -283,7 +287,7 @@ describe("useDismissable", () => {
     it("hands dismissal back to the outer overlay once the inner one closes", async () => {
       const isOpen = shallowRef(true);
       const outer = setup();
-      const inner = setup({isOpen});
+      const inner = setup({ isOpen });
 
       isOpen.value = false;
       await nextTick();

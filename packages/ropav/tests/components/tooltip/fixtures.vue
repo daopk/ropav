@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {TooltipFixtureProps} from "./fixtures.types";
+import type { TooltipFixtureProps } from "./fixtures.types";
 
-import {ButtonRoot} from "@/components/button";
-import {Tooltip} from "@/components/tooltip";
+import { ButtonRoot } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 
 // Every three-state boolean declares an explicit `undefined` default: forwarding a `false` that
 // Vue had cast would turn the tooltip controlled, or read as a deliberate opt-out of closing on
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<TooltipFixtureProps>(), {
   withCustomTrigger: undefined,
 });
 
-const emit = defineEmits<{openChange: [isOpen: boolean]}>();
+const emit = defineEmits<{ openChange: [isOpen: boolean] }>();
 </script>
 
 <template>

@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconCircleDollar from "~icons/gravity-ui/circle-dollar";
 
-import {avatarSrc, photoSrc} from "../../utils/story-assets";
-import {Avatar, AvatarFallback, AvatarImage} from "../avatar";
-import {Button} from "../button";
-import {CloseButton} from "../close-button";
-import {Form} from "../form";
-import {Input} from "../input";
-import {Label} from "../label";
-import {LinkIcon, LinkRoot} from "../link";
-import {TextField} from "../textfield";
+import { avatarSrc, photoSrc } from "../../utils/story-assets";
+import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { Button } from "../button";
+import { CloseButton } from "../close-button";
+import { Form } from "../form";
+import { Input } from "../input";
+import { Label } from "../label";
+import { LinkIcon, LinkRoot } from "../link";
+import { TextField } from "../textfield";
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "./index";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./index";
 
 /**
  * Story templates are compiled at runtime, where Vue resolves a tag like `Card.Header`
@@ -54,7 +54,7 @@ const blurMask = {
 const meta: StoryMeta = {
   argTypes: {
     variant: {
-      control: {type: "select"},
+      control: { type: "select" },
       options: ["transparent", "default", "secondary", "tertiary"],
     },
   },
@@ -72,7 +72,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args}),
+    setup: () => ({ args }),
     template: `
       <Card class="w-[400px]" v-bind="args">
         <IconCircleDollar
@@ -158,7 +158,7 @@ export const Variants: Story = {
 export const Horizontal: Story = {
   render: (args) => ({
     components,
-    setup: () => ({args, src: photoSrc("porsche", 640, 360)}),
+    setup: () => ({ args, src: photoSrc("porsche", 640, 360) }),
     template: `
       <Card class="w-full items-stretch md:flex-row" v-bind="args">
         <img
@@ -262,7 +262,7 @@ export const WithImages: Story = {
   },
   render: (args) => ({
     components,
-    setup: () => ({args, avatarSrc, blurMask, photoSrc}),
+    setup: () => ({ args, avatarSrc, blurMask, photoSrc }),
     template: `
       <div class="flex w-full items-center justify-center">
         <div class="grid w-full max-w-2xl grid-cols-12 gap-4 p-4">
@@ -494,7 +494,7 @@ export const WithForm: Story = {
         submitted.value = [...data.entries()].map(([key, value]) => key + ": " + value).join(", ");
       };
 
-      return {args, onSubmit, submitted};
+      return { args, onSubmit, submitted };
     },
     template: `
       <Card class="w-full max-w-md" v-bind="args">

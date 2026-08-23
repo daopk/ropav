@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {TabsListContainerProps} from "./tabs.types";
+import type { TabsListContainerProps } from "./tabs.types";
 
-import {computed, useTemplateRef} from "vue";
+import { computed, useTemplateRef } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 import IconChevronDown from "../icons/icon-chevron-down.vue";
 import IconChevronLeft from "../icons/icon-chevron-left.vue";
 import IconChevronRight from "../icons/icon-chevron-right.vue";
 import IconChevronUp from "../icons/icon-chevron-up.vue";
-import {ScrollShadowRoot as Scroller} from "../scroll-shadow";
+import { ScrollShadowRoot as Scroller } from "../scroll-shadow";
 
-import {useTabsContext} from "./tabs.context";
+import { useTabsContext } from "./tabs.context";
 
 /** How much of the visible strip one press of a chevron travels. */
 const SCROLL_FRACTION = 0.8;
@@ -20,9 +20,9 @@ const SHADOW_SIZE = 64;
 
 const props = defineProps<TabsListContainerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {orientation, slots} = useTabsContext();
+const { orientation, slots } = useTabsContext();
 
 const isVertical = computed(() => orientation.value === "vertical");
 
@@ -31,7 +31,7 @@ const isVertical = computed(() => orientation.value === "vertical");
  * SFC as a function, so `InstanceType` has nothing to instantiate. Vue unwraps an exposed ref on
  * the way out, which is why `element` is the element itself and not a ref to it.
  */
-const scroller = useTemplateRef<{element: HTMLElement | null}>("scroller");
+const scroller = useTemplateRef<{ element: HTMLElement | null }>("scroller");
 
 const getScroller = () => scroller.value?.element ?? null;
 
@@ -59,7 +59,7 @@ const scrollBy = (direction: 1 | -1) => {
 
   if (next === current) return;
 
-  element.scrollTo({behavior: "smooth", [vertical ? "top" : "left"]: next});
+  element.scrollTo({ behavior: "smooth", [vertical ? "top" : "left"]: next });
 };
 
 const previousLabel = computed(() => (isVertical.value ? "Scroll tabs up" : "Scroll tabs left"));

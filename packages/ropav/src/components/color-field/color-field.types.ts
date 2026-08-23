@@ -3,7 +3,7 @@ import type {
   ValidationDetails,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {Color, ColorChannel, ColorSpace} from "../../utils/color-types";
+import type { Color, ColorChannel, ColorSpace } from "../../utils/color-types";
 
 export interface ColorFieldRootProps {
   class?: string;

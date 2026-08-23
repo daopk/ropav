@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {providePressResponder} from "../../composables/press-responder";
+import { providePressResponder } from "../../composables/press-responder";
 
-import {useModalContext} from "./modal.context";
+import { useModalContext } from "./modal.context";
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {state} = useModalContext();
+const { state } = useModalContext();
 
 /**
  * Turns whatever pressable sits inside into a control that closes the modal.

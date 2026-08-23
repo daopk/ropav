@@ -1,20 +1,20 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Surface} from "../surface";
+import { Surface } from "../surface";
 
-import {TextArea} from "./index";
+import { TextArea } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve dot notation through.
-const components = {Surface, TextArea};
+const components = { Surface, TextArea };
 
 // The title says `Textarea` while the component is `TextArea`, matching React so the two
 // Storybook sidebars line up.
 const meta: StoryMeta = {
   argTypes: {},
   component: TextArea,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Forms/Textarea",
 };
 

@@ -1,4 +1,4 @@
-import type {CollectionKey} from "@/composables/use-collection";
+import type { CollectionKey } from "@/composables/use-collection";
 import type {
   TableCellMeta,
   TableColumnMeta,
@@ -6,8 +6,8 @@ import type {
   UseTableCollectionReturn,
 } from "@/composables/use-table-collection";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {computed, effectScope} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { computed, effectScope } from "vue";
 
 import {
   createTableRegistry,
@@ -44,7 +44,7 @@ const elementsFor = (keys: CollectionKey[]) => {
     elements.set(key, element);
   }
 
-  return {container, elements};
+  return { container, elements };
 };
 
 /** A column that leaves every width to the browser, which is every column outside a resize. */
@@ -58,9 +58,9 @@ const NO_WIDTHS = {
 const registerColumns = (
   columns: TableRegistry<TableColumnMeta>,
   keys: CollectionKey[],
-  options: {rowHeaders?: CollectionKey[]; registerOrder?: CollectionKey[]} = {},
+  options: { rowHeaders?: CollectionKey[]; registerOrder?: CollectionKey[] } = {},
 ) => {
-  const {elements} = elementsFor(keys);
+  const { elements } = elementsFor(keys);
   const cleanups = new Map<CollectionKey, () => void>();
 
   for (const key of options.registerOrder ?? keys) {
@@ -75,7 +75,7 @@ const registerColumns = (
     );
   }
 
-  return {cleanups, elements};
+  return { cleanups, elements };
 };
 
 afterEach(() => {
@@ -112,7 +112,7 @@ describe("createTableRegistry", () => {
     const registry = inScope(() => createTableRegistry<TableColumnMeta>());
     const index = inScope(() => computed(() => registry.indexOf("status")));
 
-    const {cleanups} = registerColumns(registry, ["name", "role", "status"]);
+    const { cleanups } = registerColumns(registry, ["name", "role", "status"]);
 
     expect(index.value).toBe(2);
 
@@ -123,7 +123,7 @@ describe("createTableRegistry", () => {
 
   it("leaves a detached entry out, so the comparator stays transitive", () => {
     const registry = inScope(() => createTableRegistry<TableColumnMeta>());
-    const {elements} = registerColumns(registry, ["name", "role", "status"]);
+    const { elements } = registerColumns(registry, ["name", "role", "status"]);
 
     elements.get("role")!.remove();
 
@@ -133,7 +133,7 @@ describe("createTableRegistry", () => {
 
   it("keeps a re-registration when the stale cleanup runs", () => {
     const registry = inScope(() => createTableRegistry<TableColumnMeta>());
-    const {cleanups, elements} = registerColumns(registry, ["name"]);
+    const { cleanups, elements } = registerColumns(registry, ["name"]);
 
     const replace = registry.register("name", {
       ...NO_WIDTHS,
@@ -159,7 +159,7 @@ describe("useTableCollection", () => {
   it("takes the row headers a column asked for", () => {
     const collection = createCollection();
 
-    registerColumns(collection.columns, ["select", "name", "role"], {rowHeaders: ["name"]});
+    registerColumns(collection.columns, ["select", "name", "role"], { rowHeaders: ["name"] });
 
     expect([...collection.rowHeaderColumnKeys.value]).toEqual(["name"]);
   });
@@ -192,7 +192,7 @@ describe("useTableCollection", () => {
 
   it("exposes rows as a plain collection, so the selection manager can take them", () => {
     const collection = createCollection();
-    const {elements} = elementsFor(["1", "2"]);
+    const { elements } = elementsFor(["1", "2"]);
 
     collection.rows.register("1", {
       element: () => elements.get("1") ?? null,

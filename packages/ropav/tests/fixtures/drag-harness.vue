@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {DragHarnessOptions, DragHarnessReady} from "./dnd-harness.types";
+import type { DragHarnessOptions, DragHarnessReady } from "./dnd-harness.types";
 
-import {onMounted, useTemplateRef} from "vue";
+import { onMounted, useTemplateRef } from "vue";
 
-import {useDrag} from "@/composables/use-drag";
+import { useDrag } from "@/composables/use-drag";
 
 /**
  * Mounts `useDrag` so it has a component to inject a locale from.
@@ -18,9 +18,9 @@ const props = defineProps<{
 }>();
 
 const element = useTemplateRef<HTMLElement>("element");
-const drag = useDrag({getItems: () => [{"text/plain": "dragged"}], ...props.options});
+const drag = useDrag({ getItems: () => [{ "text/plain": "dragged" }], ...props.options });
 
-onMounted(() => props.onReady({...drag, element: element.value!}));
+onMounted(() => props.onReady({ ...drag, element: element.value! }));
 </script>
 
 <template>

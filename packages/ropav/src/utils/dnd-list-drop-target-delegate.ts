@@ -1,5 +1,5 @@
-import type {DragCollection, DragKey, DropTarget, DropTargetDelegate} from "./dnd-types";
-import type {ShallowRef} from "vue";
+import type { DragCollection, DragKey, DropTarget, DropTargetDelegate } from "./dnd-types";
+import type { ShallowRef } from "vue";
 
 export interface ListDropTargetDelegateOptions {
   /** Whether items are arranged in a single line or wrap into a grid. @default "stack" */
@@ -73,7 +73,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
   ): DropTarget {
     const container = this.element.value;
 
-    if (!container) return {type: "root"};
+    if (!container) return { type: "root" };
 
     // Only items are drop targets. A load-more sentinel carries no key and would otherwise
     // crash the search when the pointer passes over it.
@@ -81,7 +81,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
       (key) => (this.collection.getItem(key)?.type ?? "item") === "item",
     );
 
-    if (items.length < 1) return {type: "root"};
+    if (items.length < 1) return { type: "root" };
 
     const containerRect = container.getBoundingClientRect();
     // The point arrives relative to the container; the rects below are viewport-relative.
@@ -136,7 +136,7 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
     // The pointer fell between two items, or past the end. Attach to the nearest edge.
     const key = items[Math.min(low, items.length - 1)];
 
-    if (key == null) return {type: "root"};
+    if (key == null) return { type: "root" };
 
     const rect = elementMap.get(String(key))?.getBoundingClientRect();
     const isBefore =
@@ -165,23 +165,23 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
     isFlowRTL: boolean,
     isValidDropTarget: (target: DropTarget) => boolean,
   ): DropTarget {
-    const target: DropTarget = {dropPosition: "on", key, type: "item"};
+    const target: DropTarget = { dropPosition: "on", key, type: "item" };
     const before = isFlowRTL ? ("after" as const) : ("before" as const);
     const after = isFlowRTL ? ("before" as const) : ("after" as const);
 
     if (isValidDropTarget(target)) {
       if (
         flow <= this.getFlowStart(rect) + 5 &&
-        isValidDropTarget({...target, dropPosition: "before"})
+        isValidDropTarget({ ...target, dropPosition: "before" })
       ) {
-        return {...target, dropPosition: before};
+        return { ...target, dropPosition: before };
       }
 
       if (
         flow >= this.getFlowEnd(rect) - 5 &&
-        isValidDropTarget({...target, dropPosition: "after"})
+        isValidDropTarget({ ...target, dropPosition: "after" })
       ) {
-        return {...target, dropPosition: after};
+        return { ...target, dropPosition: after };
       }
 
       return target;
@@ -189,12 +189,12 @@ export class ListDropTargetDelegate implements DropTargetDelegate {
 
     const middle = this.getFlowStart(rect) + (this.getFlowEnd(rect) - this.getFlowStart(rect)) / 2;
 
-    if (flow <= middle && isValidDropTarget({...target, dropPosition: "before"})) {
-      return {...target, dropPosition: before};
+    if (flow <= middle && isValidDropTarget({ ...target, dropPosition: "before" })) {
+      return { ...target, dropPosition: before };
     }
 
-    if (flow >= middle && isValidDropTarget({...target, dropPosition: "after"})) {
-      return {...target, dropPosition: after};
+    if (flow >= middle && isValidDropTarget({ ...target, dropPosition: "after" })) {
+      return { ...target, dropPosition: after };
     }
 
     return target;

@@ -1,13 +1,13 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {expectCheckedResetSource} from "../../harness/form-reset";
+import { expectCheckedResetSource } from "../../harness/form-reset";
 
 import SwitchFixture from "./fixtures.vue";
 import SwitchFormFixture from "./form-fixtures.vue";
 
-const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, {props});
+const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, { props });
 
 const slot = (container: HTMLElement, name: string) =>
   container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
@@ -31,7 +31,7 @@ const clickAndSettle = async (element: HTMLElement) => {
 describe("Switch", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       expect(slot(container, "switch")).not.toBeNull();
       expect(slot(container, "switch-content")).not.toBeNull();
@@ -42,7 +42,7 @@ describe("Switch", () => {
     });
 
     it("renders the BEM classes of each part", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       expect(slot(container, "switch").classList.contains("switch")).toBe(true);
       expect(slot(container, "switch-content").classList.contains("switch__content")).toBe(true);
@@ -53,7 +53,7 @@ describe("Switch", () => {
     });
 
     it("renders the clickable content as a label around a hidden switch input", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
       const content = slot(container, "switch-content");
       const input = inputIn(container);
 
@@ -69,7 +69,7 @@ describe("Switch", () => {
     });
 
     it("renders the icon passed to the thumb", () => {
-      const {getByTestId, unmount} = renderSwitch({withIcon: true});
+      const { getByTestId, unmount } = renderSwitch({ withIcon: true });
 
       expect(getByTestId("thumb-icon")).toBeInTheDocument();
 
@@ -77,7 +77,7 @@ describe("Switch", () => {
     });
 
     it("puts the accessible name on the input rather than on the wrapper", () => {
-      const {container, unmount} = renderSwitch({ariaLabel: "Enable notifications"});
+      const { container, unmount } = renderSwitch({ ariaLabel: "Enable notifications" });
 
       expect(inputIn(container).getAttribute("aria-label")).toBe("Enable notifications");
       expect(slot(container, "switch").hasAttribute("aria-label")).toBe(false);
@@ -86,16 +86,16 @@ describe("Switch", () => {
     });
 
     it("exposes the label text as the accessible name", () => {
-      const {getByRole, unmount} = renderSwitch();
+      const { getByRole, unmount } = renderSwitch();
 
-      expect(getByRole("switch", {name: "Enable notifications"})).toBeInTheDocument();
+      expect(getByRole("switch", { name: "Enable notifications" })).toBeInTheDocument();
 
       unmount();
     });
 
     it("maps size to the block modifier", () => {
       for (const size of ["sm", "md", "lg"] as const) {
-        const {container, unmount} = renderSwitch({size});
+        const { container, unmount } = renderSwitch({ size });
 
         expect(slot(container, "switch").classList.contains(`switch--${size}`)).toBe(true);
 
@@ -104,7 +104,7 @@ describe("Switch", () => {
     });
 
     it("merges a caller class into the root", () => {
-      const {container, unmount} = renderSwitch({class: "custom-class"});
+      const { container, unmount } = renderSwitch({ class: "custom-class" });
 
       expect(slot(container, "switch").classList.contains("custom-class")).toBe(true);
       expect(slot(container, "switch").classList.contains("switch")).toBe(true);
@@ -115,7 +115,7 @@ describe("Switch", () => {
 
   describe("selection", () => {
     it("starts off", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       expect(inputIn(container).checked).toBe(false);
       expect(slot(container, "switch").hasAttribute("data-selected")).toBe(false);
@@ -124,7 +124,7 @@ describe("Switch", () => {
     });
 
     it("supports defaultSelected", () => {
-      const {container, unmount} = renderSwitch({defaultSelected: true});
+      const { container, unmount } = renderSwitch({ defaultSelected: true });
 
       expect(inputIn(container).checked).toBe(true);
       expect(slot(container, "switch").getAttribute("data-selected")).toBe("true");
@@ -142,7 +142,7 @@ describe("Switch", () => {
 
       document.body.append(form);
 
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         defaultSelected: true,
         form: formId(form),
         name: "notifications",
@@ -161,7 +161,7 @@ describe("Switch", () => {
     });
 
     it("toggles when the label is clicked", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       await clickAndSettle(slot(container, "switch-content"));
 
@@ -177,7 +177,7 @@ describe("Switch", () => {
     });
 
     it("toggles when the input itself is clicked", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       await clickAndSettle(inputIn(container));
 
@@ -188,7 +188,7 @@ describe("Switch", () => {
 
     it("calls change with the new value", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderSwitch({onChange});
+      const { container, unmount } = renderSwitch({ onChange });
 
       await clickAndSettle(slot(container, "switch-content"));
 
@@ -200,8 +200,8 @@ describe("Switch", () => {
 
     it("leaves a controlled switch to its owner", async () => {
       const onChange = vi.fn();
-      const props = reactive({isSelected: false, onChange});
-      const {container, unmount} = renderVapor(SwitchFixture, {props});
+      const props = reactive({ isSelected: false, onChange });
+      const { container, unmount } = renderVapor(SwitchFixture, { props });
 
       await clickAndSettle(slot(container, "switch-content"));
 
@@ -223,7 +223,7 @@ describe("Switch", () => {
   describe("states", () => {
     it("supports isDisabled", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderSwitch({isDisabled: true, onChange});
+      const { container, unmount } = renderSwitch({ isDisabled: true, onChange });
 
       expect(inputIn(container).disabled).toBe(true);
       expect(slot(container, "switch").getAttribute("data-disabled")).toBe("true");
@@ -239,7 +239,7 @@ describe("Switch", () => {
 
     it("supports isReadOnly", async () => {
       const onChange = vi.fn();
-      const {container, unmount} = renderSwitch({isReadOnly: true, onChange});
+      const { container, unmount } = renderSwitch({ isReadOnly: true, onChange });
 
       expect(inputIn(container).getAttribute("aria-readonly")).toBe("true");
       // Focusable, unlike a disabled switch — the value can be read, just not changed.
@@ -254,7 +254,7 @@ describe("Switch", () => {
     });
 
     it("supports isInvalid", () => {
-      const {container, unmount} = renderSwitch({isInvalid: true});
+      const { container, unmount } = renderSwitch({ isInvalid: true });
 
       expect(inputIn(container).getAttribute("aria-invalid")).toBe("true");
       expect(slot(container, "switch").getAttribute("data-invalid")).toBe("true");
@@ -263,7 +263,7 @@ describe("Switch", () => {
     });
 
     it("supports isRequired", () => {
-      const {container, unmount} = renderSwitch({isRequired: true});
+      const { container, unmount } = renderSwitch({ isRequired: true });
 
       expect(inputIn(container).required).toBe(true);
       expect(slot(container, "switch").getAttribute("data-required")).toBe("true");
@@ -274,15 +274,15 @@ describe("Switch", () => {
 
   describe("interaction states", () => {
     it("renders data-hovered while the pointer is over the content", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
       const content = slot(container, "switch-content");
 
-      content.dispatchEvent(new PointerEvent("pointerenter", {pointerType: "mouse"}));
+      content.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" }));
       await nextTick();
 
       expect(content.getAttribute("data-hovered")).toBe("true");
 
-      content.dispatchEvent(new PointerEvent("pointerleave", {pointerType: "mouse"}));
+      content.dispatchEvent(new PointerEvent("pointerleave", { pointerType: "mouse" }));
       await nextTick();
 
       expect(content.hasAttribute("data-hovered")).toBe(false);
@@ -291,10 +291,10 @@ describe("Switch", () => {
     });
 
     it("renders data-pressed while the pointer is down", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
       const content = slot(container, "switch-content");
 
-      content.dispatchEvent(new PointerEvent("pointerdown", {bubbles: true, button: 0}));
+      content.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0 }));
       await nextTick();
 
       expect(content.getAttribute("data-pressed")).toBe("true");
@@ -308,16 +308,16 @@ describe("Switch", () => {
     });
 
     it("renders data-pressed while Space is held", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
       const content = slot(container, "switch-content");
       const input = inputIn(container);
 
-      input.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: " "}));
+      input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: " " }));
       await nextTick();
 
       expect(content.getAttribute("data-pressed")).toBe("true");
 
-      input.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: " "}));
+      input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: " " }));
       await nextTick();
 
       expect(content.hasAttribute("data-pressed")).toBe(false);
@@ -326,7 +326,7 @@ describe("Switch", () => {
     });
 
     it("renders data-focused while the input holds focus", async () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
       const content = slot(container, "switch-content");
 
       inputIn(container).focus();
@@ -348,7 +348,7 @@ describe("Switch", () => {
     // an explicit tab index says so, which is why react-aria always sets it — `useToggle` picks
     // it up from `useFocusable`.
     it("renders an explicit tab index on the input", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       expect(inputIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -356,7 +356,7 @@ describe("Switch", () => {
     });
 
     it("drops the tab index when disabled, so it is not reachable at all", () => {
-      const {container, unmount} = renderSwitch({isDisabled: true});
+      const { container, unmount } = renderSwitch({ isDisabled: true });
 
       expect(inputIn(container).hasAttribute("tabindex")).toBe(false);
 
@@ -366,7 +366,7 @@ describe("Switch", () => {
     // Read-only is not a factor: the input stays focusable, since only a disabled switch gets
     // the `disabled` attribute.
     it("keeps the tab index when read only", () => {
-      const {container, unmount} = renderSwitch({isReadOnly: true});
+      const { container, unmount } = renderSwitch({ isReadOnly: true });
 
       expect(inputIn(container)).toHaveAttribute("tabindex", "0");
 
@@ -376,7 +376,7 @@ describe("Switch", () => {
 
   describe("help text", () => {
     it("points the input at a description that is rendered", async () => {
-      const {container, unmount} = renderSwitch({withDescription: true});
+      const { container, unmount } = renderSwitch({ withDescription: true });
       const description = slot(container, "description");
 
       // The description claims its id as it mounts, so the input picks it up on the
@@ -390,7 +390,7 @@ describe("Switch", () => {
     });
 
     it("leaves aria-describedby off when there is no help text", () => {
-      const {container, unmount} = renderSwitch();
+      const { container, unmount } = renderSwitch();
 
       expect(inputIn(container).hasAttribute("aria-describedby")).toBe(false);
 
@@ -404,7 +404,7 @@ describe("Switch", () => {
 
       document.body.append(form);
 
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         defaultSelected: true,
         form: formId(form),
         name: "notifications",
@@ -422,7 +422,7 @@ describe("Switch", () => {
 
       document.body.append(form);
 
-      const {unmount} = renderSwitch({form: formId(form), name: "notifications"});
+      const { unmount } = renderSwitch({ form: formId(form), name: "notifications" });
 
       expect(new FormData(form).get("notifications")).toBeNull();
 
@@ -431,7 +431,7 @@ describe("Switch", () => {
     });
 
     it("submits a caller value in place of the native one", () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         defaultSelected: true,
         name: "notifications",
         value: "enabled",
@@ -443,7 +443,7 @@ describe("Switch", () => {
     });
 
     it("leaves the input at the native on when no value is given", () => {
-      const {container, unmount} = renderSwitch({name: "notifications"});
+      const { container, unmount } = renderSwitch({ name: "notifications" });
 
       expect(inputIn(container).value).toBe("on");
 
@@ -455,7 +455,7 @@ describe("Switch", () => {
 
       document.body.append(form);
 
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         defaultSelected: true,
         form: formId(form),
         name: "notifications",
@@ -478,12 +478,12 @@ describe("Switch", () => {
 
 describe("Switch validation", () => {
   const renderInForm = (props: Record<string, unknown> = {}) => {
-    const rendered = renderVapor(SwitchFormFixture, {props});
+    const rendered = renderVapor(SwitchFormFixture, { props });
     const at = (testId: string) =>
       rendered.container.querySelector<HTMLElement>(`[data-testid='${testId}']`)!;
     const error = () => rendered.container.querySelector<HTMLElement>("[data-slot='field-error']");
 
-    return {...rendered, at, error};
+    return { ...rendered, at, error };
   };
 
   /** Press submit with the form's own navigation suppressed. */
@@ -499,7 +499,7 @@ describe("Switch validation", () => {
 
   describe("prop-driven", () => {
     it("shows a field error as soon as the caller says the value is invalid", async () => {
-      const {container, unmount} = renderSwitch({isInvalid: true, withFieldError: true});
+      const { container, unmount } = renderSwitch({ isInvalid: true, withFieldError: true });
 
       await nextTick();
 
@@ -509,7 +509,7 @@ describe("Switch validation", () => {
     });
 
     it("leaves the switch alone when no claim is made either way", async () => {
-      const {container, unmount} = renderSwitch({withFieldError: true});
+      const { container, unmount } = renderSwitch({ withFieldError: true });
 
       await nextTick();
 
@@ -522,7 +522,7 @@ describe("Switch validation", () => {
 
   describe("validate", () => {
     it("keeps the message back until the switch commits", async () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         validate: (isSelected: boolean) => (isSelected ? true : "must be on"),
         withFieldError: true,
       });
@@ -537,7 +537,7 @@ describe("Switch validation", () => {
     });
 
     it("shows the message at once under aria behaviour", async () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         validate: () => "not acceptable",
         validationBehavior: "aria",
         withFieldError: true,
@@ -553,7 +553,7 @@ describe("Switch validation", () => {
     });
 
     it("describes the switch with the message it shows", async () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         validate: () => "not acceptable",
         validationBehavior: "aria",
         withFieldError: true,
@@ -570,7 +570,7 @@ describe("Switch validation", () => {
     });
 
     it("clears the message once the value becomes acceptable", async () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         validate: (isSelected: boolean) => (isSelected ? true : "must be on"),
         validationBehavior: "aria",
         withFieldError: true,
@@ -588,7 +588,7 @@ describe("Switch validation", () => {
     });
 
     it("lets the caller word the message from what validation reported", async () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         validate: () => ["too soon", "and wrong"],
         validationBehavior: "aria",
         withCustomError: true,
@@ -606,7 +606,7 @@ describe("Switch validation", () => {
 
   describe("required", () => {
     it("asks the browser to enforce it under native behaviour", () => {
-      const {container, unmount} = renderSwitch({isRequired: true});
+      const { container, unmount } = renderSwitch({ isRequired: true });
 
       expect(inputIn(container).required).toBe(true);
       expect(inputIn(container).getAttribute("aria-required")).toBeNull();
@@ -615,7 +615,7 @@ describe("Switch validation", () => {
     });
 
     it("announces it instead under aria behaviour", () => {
-      const {container, unmount} = renderSwitch({
+      const { container, unmount } = renderSwitch({
         isRequired: true,
         validationBehavior: "aria",
       });
@@ -630,7 +630,7 @@ describe("Switch validation", () => {
   describe("inside a form", () => {
     it("blocks the submit while the value is not acceptable", async () => {
       const onSubmit = vi.fn((event: Event) => event.preventDefault());
-      const {container, unmount} = renderInForm({validate: () => "no"});
+      const { container, unmount } = renderInForm({ validate: () => "no" });
 
       await nextTick();
       container.querySelector("form")!.addEventListener("submit", onSubmit);
@@ -642,7 +642,7 @@ describe("Switch validation", () => {
     });
 
     it("reveals the message on a failed submit", async () => {
-      const {container, error, unmount} = renderInForm({
+      const { container, error, unmount } = renderInForm({
         validate: () => "must be on",
         withFieldError: true,
       });
@@ -662,7 +662,7 @@ describe("Switch validation", () => {
     });
 
     it("takes its validation behaviour from the form", async () => {
-      const {error, unmount} = renderInForm({
+      const { error, unmount } = renderInForm({
         validate: () => "shown at once",
         validationBehavior: "aria",
         withFieldError: true,
@@ -676,9 +676,9 @@ describe("Switch validation", () => {
     });
 
     it("shows a server error registered under its name", async () => {
-      const {error, unmount} = renderInForm({
+      const { error, unmount } = renderInForm({
         name: "notifications",
-        validationErrors: {notifications: "rejected upstream"},
+        validationErrors: { notifications: "rejected upstream" },
         withFieldError: true,
       });
 
@@ -690,9 +690,9 @@ describe("Switch validation", () => {
     });
 
     it("hides the server error once the user acts on the switch", async () => {
-      const {container, error, unmount} = renderInForm({
+      const { container, error, unmount } = renderInForm({
         name: "notifications",
-        validationErrors: {notifications: "rejected upstream"},
+        validationErrors: { notifications: "rejected upstream" },
         withFieldError: true,
       });
 
@@ -708,7 +708,7 @@ describe("Switch validation", () => {
     });
 
     it("clears a revealed message when the form is reset", async () => {
-      const {container, error, unmount} = renderInForm({
+      const { container, error, unmount } = renderInForm({
         validate: () => "must be on",
         withFieldError: true,
       });

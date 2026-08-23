@@ -1,17 +1,20 @@
 <script setup lang="ts" vapor>
-import type {ListBoxItemIndicatorProps, ListBoxItemIndicatorSlotProps} from "./list-box-item.types";
+import type {
+  ListBoxItemIndicatorProps,
+  ListBoxItemIndicatorSlotProps,
+} from "./list-box-item.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {dataAttr} from "../../utils/assertion";
+import { dataAttr } from "../../utils/assertion";
 
-import {useListBoxItemContext} from "./list-box-item.context";
+import { useListBoxItemContext } from "./list-box-item.context";
 
 const props = defineProps<ListBoxItemIndicatorProps>();
 
-defineSlots<{default?: (props: ListBoxItemIndicatorSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ListBoxItemIndicatorSlotProps) => unknown }>();
 
-const {isSelected, slots} = useListBoxItemContext();
+const { isSelected, slots } = useListBoxItemContext();
 
 // The checkmark is drawn rather than toggled: the dash offset animates the stroke into place, so
 // the element stays mounted and only this number changes.
@@ -21,7 +24,7 @@ const strokeDashoffset = computed(() => (isSelected.value ? 44 : 66));
 <template>
   <span
     aria-hidden="true"
-    :class="slots.indicator({class: props.class})"
+    :class="slots.indicator({ class: props.class })"
     :data-slot="'list-box-item-indicator'"
     :data-visible="dataAttr(isSelected)"
   >

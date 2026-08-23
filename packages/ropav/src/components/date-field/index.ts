@@ -39,7 +39,7 @@ export {
   DateInputGroupSuffix as DateFieldSuffix,
 };
 
-export {DateFieldRoot};
+export { DateFieldRoot };
 
 export type {
   DateFieldRootProps,
@@ -61,6 +61,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateFieldVariants, dateInputGroupVariants} from "@ropav/styles";
+export { dateFieldVariants, dateInputGroupVariants } from "@ropav/styles";
 
-export type {DateFieldVariants, DateInputGroupVariants} from "@ropav/styles";
+export type { DateFieldVariants, DateInputGroupVariants } from "@ropav/styles";

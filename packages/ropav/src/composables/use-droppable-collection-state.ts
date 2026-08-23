@@ -14,10 +14,10 @@ import type {
   DroppableCollectionRootDropEvent,
   ItemDropTarget,
 } from "../utils/dnd-types";
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { UseSelectionManagerReturn } from "./use-selection-manager";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
 /** Everything the validity matrix needs to judge one candidate drop. */
 export interface DropOperationEvent {
@@ -103,7 +103,7 @@ const isDraggingWithinParent = <T>(
 export const useDroppableCollectionState = <T = unknown>(
   options: UseDroppableCollectionStateOptions<T>,
 ): UseDroppableCollectionStateReturn<T> => {
-  const {collection, selectionManager} = options;
+  const { collection, selectionManager } = options;
   const target = shallowRef<DropTarget | null>(null);
   const isDisabled = () => Boolean(toValue(options.isDisabled));
 
@@ -119,12 +119,14 @@ export const useDroppableCollectionState = <T = unknown>(
     if (!node) return null;
 
     if (candidate.dropPosition === "before") {
-      return node.prevKey != null ? {dropPosition: "after", key: node.prevKey, type: "item"} : null;
+      return node.prevKey != null
+        ? { dropPosition: "after", key: node.prevKey, type: "item" }
+        : null;
     }
 
     if (candidate.dropPosition === "after") {
       return node.nextKey != null
-        ? {dropPosition: "before", key: node.nextKey, type: "item"}
+        ? { dropPosition: "before", key: node.nextKey, type: "item" }
         : null;
     }
 
@@ -157,7 +159,7 @@ export const useDroppableCollectionState = <T = unknown>(
 
   /** Which operation the collection would perform, judged by the handlers it was given. */
   const defaultGetDropOperation = (event: DropOperationEvent): DropOperation => {
-    const {allowedOperations, draggingKeys, isInternal, target: candidate} = event;
+    const { allowedOperations, draggingKeys, isInternal, target: candidate } = event;
     const types = event.types;
     const accepted = options.acceptedDragTypes ?? "all";
 
@@ -214,7 +216,7 @@ export const useDroppableCollectionState = <T = unknown>(
   return {
     collection,
     getDropOperation(event) {
-      const {draggingKeys, isInternal, target: candidate} = event;
+      const { draggingKeys, isInternal, target: candidate } = event;
 
       // An item cannot be dropped onto itself, nor into anything it contains — that would
       // detach a subtree and reparent it under a node that is travelling with it.
@@ -244,9 +246,9 @@ export const useDroppableCollectionState = <T = unknown>(
 
       // Coordinates are not known here — the state layer is told which target, not where the
       // pointer is — so they are reported as the origin, as upstream does.
-      if (current) options.onDropExit?.({target: current, type: "dropexit", x: 0, y: 0});
+      if (current) options.onDropExit?.({ target: current, type: "dropexit", x: 0, y: 0 });
 
-      if (newTarget) options.onDropEnter?.({target: newTarget, type: "dropenter", x: 0, y: 0});
+      if (newTarget) options.onDropEnter?.({ target: newTarget, type: "dropenter", x: 0, y: 0 });
 
       target.value = newTarget ?? null;
     },

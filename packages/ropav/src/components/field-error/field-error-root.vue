@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {FieldErrorRootProps, FieldErrorSlotProps} from "./field-error.types";
+import type { FieldErrorRootProps, FieldErrorSlotProps } from "./field-error.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {DEFAULT_VALIDATION_RESULT} from "../../composables/use-form-validation-state";
+import { DEFAULT_VALIDATION_RESULT } from "../../composables/use-form-validation-state";
 
 import FieldErrorContent from "./field-error-content.vue";
-import {useFieldErrorContext} from "./field-error.context";
+import { useFieldErrorContext } from "./field-error.context";
 
 const props = defineProps<FieldErrorRootProps>();
 
-defineSlots<{default?: (props: FieldErrorSlotProps) => unknown}>();
+defineSlots<{ default?: (props: FieldErrorSlotProps) => unknown }>();
 
 const fieldError = useFieldErrorContext();
 

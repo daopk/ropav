@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {PasswordManagerBadgeHostProps} from "./password-manager-badge.types";
+import type { PasswordManagerBadgeHostProps } from "./password-manager-badge.types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {usePasswordManagerBadge} from "@/composables/use-password-manager-badge";
+import { usePasswordManagerBadge } from "@/composables/use-password-manager-badge";
 
 // The composable has to run inside a component: its polling and its retries hang off effects,
 // which need a scope to be cleaned up with.
-const props = withDefaults(defineProps<PasswordManagerBadgeHostProps>(), {isFocused: false});
+const props = withDefaults(defineProps<PasswordManagerBadgeHostProps>(), { isFocused: false });
 
 const container = shallowRef<HTMLElement | null>(null);
 const input = shallowRef<HTMLInputElement | null>(null);

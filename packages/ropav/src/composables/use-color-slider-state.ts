@@ -1,15 +1,15 @@
-import type {Color, ColorChannel, ColorSpace} from "../utils/color-types";
-import type {SliderOrientation, SliderState} from "./use-slider-state";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Color, ColorChannel, ColorSpace } from "../utils/color-types";
+import type { SliderOrientation, SliderState } from "./use-slider-state";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, toValue} from "vue";
+import { computed, toValue } from "vue";
 
-import {normalizeColor, parseColor} from "../utils/color";
+import { normalizeColor, parseColor } from "../utils/color";
 
-import {useControllableState} from "./use-controllable-state";
-import {useLocale} from "./use-locale";
-import {useNumberFormatter} from "./use-number-formatter";
-import {useSliderState} from "./use-slider-state";
+import { useControllableState } from "./use-controllable-state";
+import { useLocale } from "./use-locale";
+import { useNumberFormatter } from "./use-number-formatter";
+import { useSliderState } from "./use-slider-state";
 
 export interface UseColorSliderStateOptions {
   /** The channel the slider drives. */
@@ -93,7 +93,7 @@ export const useColorSliderState = (options: UseColorSliderStateOptions): ColorS
     return value ? normalizeColor(value) : undefined;
   });
 
-  const {setState: setColor, state: colorValue} = useControllableState<Color>({
+  const { setState: setColor, state: colorValue } = useControllableState<Color>({
     // Non-null: the guard above rules out both being absent, so whichever is present lands here.
     defaultValue: (defaultValue.value ?? controlledValue.value)!,
     onValueChange: (value) => options.onChange?.(value),

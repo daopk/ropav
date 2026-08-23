@@ -16,7 +16,7 @@ export const Tooltip = Object.assign(TooltipRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TooltipArrow, TooltipContent, TooltipRoot, TooltipTrigger};
+export { TooltipArrow, TooltipContent, TooltipRoot, TooltipTrigger };
 
 export type {
   TooltipArrowProps,
@@ -30,13 +30,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useTooltipContext} from "./tooltip.context";
+export { useTooltipContext } from "./tooltip.context";
 
-export type {TooltipContext} from "./tooltip.context";
+export type { TooltipContext } from "./tooltip.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tooltipVariants} from "@ropav/styles";
+export { tooltipVariants } from "@ropav/styles";
 
-export type {TooltipVariants} from "@ropav/styles";
+export type { TooltipVariants } from "@ropav/styles";

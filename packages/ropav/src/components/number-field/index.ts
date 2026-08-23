@@ -39,13 +39,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {provideNumberFieldContext, useNumberFieldContext} from "./number-field.context";
+export { provideNumberFieldContext, useNumberFieldContext } from "./number-field.context";
 
-export type {NumberFieldContext} from "./number-field.context";
+export type { NumberFieldContext } from "./number-field.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {numberFieldVariants} from "@ropav/styles";
+export { numberFieldVariants } from "@ropav/styles";
 
-export type {NumberFieldVariants} from "@ropav/styles";
+export type { NumberFieldVariants } from "@ropav/styles";

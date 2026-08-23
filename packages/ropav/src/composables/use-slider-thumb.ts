@@ -1,13 +1,13 @@
-import type {SliderOrientation, SliderState} from "./use-slider-state";
-import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type { SliderOrientation, SliderState } from "./use-slider-state";
+import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import {computed, nextTick, onScopeDispose, toValue, watch, watchEffect} from "vue";
+import { computed, nextTick, onScopeDispose, toValue, watch, watchEffect } from "vue";
 
-import {setFormValue} from "../utils/form-value";
-import {clamp} from "../utils/number";
+import { setFormValue } from "../utils/form-value";
+import { clamp } from "../utils/number";
 
-import {useFormReset} from "./use-form-reset";
-import {useMove} from "./use-move";
+import { useFormReset } from "./use-form-reset";
+import { useMove } from "./use-move";
 
 export interface UseSliderThumbOptions {
   state: SliderState;
@@ -89,7 +89,7 @@ export interface UseSliderThumbReturn {
  * ```
  */
 export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbReturn => {
-  const {inputEl, state, trackEl} = options;
+  const { inputEl, state, trackEl } = options;
 
   const index = computed(() => toValue(options.index) ?? 0);
   const isDisabled = computed(() => Boolean(toValue(options.isDisabled)) || state.isDisabled.value);
@@ -100,7 +100,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
   const focusInput = () => {
     // Without `preventScroll` a thumb near the edge of a scroll container drags the page
     // sideways as it takes focus, which reads as the slider jumping.
-    inputEl.value?.focus({preventScroll: true});
+    inputEl.value?.focus({ preventScroll: true });
   };
 
   // Registered as the thumb is created, not after mount: a press on the track looks for an
@@ -109,7 +109,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
 
   // The state decides which thumb holds focus — a press on the track hands it over — so real
   // focus follows the state rather than the other way around.
-  watch(isFocused, (focused) => focused && focusInput(), {immediate: true});
+  watch(isFocused, (focused) => focused && focusInput(), { immediate: true });
 
   /** Bracket a keyboard change in a drag, so the interaction reports an end of its own. */
   const keyboardUpdate = (update: () => void) => {
@@ -121,8 +121,8 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
   /** Where the thumb sits along the track while dragging, in pixels. */
   let currentPosition: number | null = null;
 
-  const {handlers: moveHandlers} = useMove({
-    onMove: ({deltaX, deltaY, pointerType, shiftKey}) => {
+  const { handlers: moveHandlers } = useMove({
+    onMove: ({ deltaX, deltaY, pointerType, shiftKey }) => {
       if (!trackEl.value) return;
 
       const rect = trackEl.value.getBoundingClientRect();
@@ -242,7 +242,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
   watch(
     [inputEl, () => state.getThumbValue(index.value)],
     ([input, value]) => setFormValue(input, String(value)),
-    {flush: "post", immediate: true},
+    { flush: "post", immediate: true },
   );
 
   onScopeDispose(() => detachRelease?.(), true);
@@ -280,7 +280,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
     isDisabled,
     isDragging,
     isFocused,
-    thumbHandlers: {onKeydown, onPointerdown},
+    thumbHandlers: { onKeydown, onPointerdown },
     thumbStyle: computed(() => {
       const percent = state.getThumbPercent(index.value);
       // A vertical track is measured from the top, so the value has to be turned around.
@@ -290,7 +290,7 @@ export const useSliderThumb = (options: UseSliderThumbOptions): UseSliderThumbRe
         position: "absolute" as const,
         touchAction: "none" as const,
         transform: "translate(-50%, -50%)",
-        ...(isVertical.value ? {top: offset} : {left: offset}),
+        ...(isVertical.value ? { top: offset } : { left: offset }),
       };
     }),
   };

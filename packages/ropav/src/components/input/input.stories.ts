@@ -1,18 +1,18 @@
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {Surface} from "../surface";
+import { Surface } from "../surface";
 
-import {Input} from "./index";
+import { Input } from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve dot notation through.
-const components = {Input, Surface};
+const components = { Input, Surface };
 
 const meta: StoryMeta = {
   argTypes: {},
   component: Input,
-  parameters: {layout: "centered"},
+  parameters: { layout: "centered" },
   title: "Components/Forms/Input",
 };
 

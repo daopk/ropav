@@ -1,5 +1,8 @@
-import type {ValidationBehavior, ValidationFunction} from "@/composables/use-form-validation-state";
-import type {NumberFieldCommitBehavior} from "@/composables/use-number-field-state";
+import type {
+  ValidationBehavior,
+  ValidationFunction,
+} from "@/composables/use-form-validation-state";
+import type { NumberFieldCommitBehavior } from "@/composables/use-number-field-state";
 
 export interface NumberFieldFixtureProps {
   class?: string;

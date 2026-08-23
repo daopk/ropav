@@ -1,9 +1,9 @@
-import type {ShallowRef} from "vue";
+import type { ShallowRef } from "vue";
 
-import {onScopeDispose, shallowRef} from "vue";
+import { onScopeDispose, shallowRef } from "vue";
 
-import {isScrollable} from "../utils/focus";
-import {isIOS, isWebKit, willOpenKeyboard} from "../utils/platform";
+import { isScrollable } from "../utils/focus";
+import { isIOS, isWebKit, willOpenKeyboard } from "../utils/platform";
 
 export interface ViewportSize {
   width: number;
@@ -27,7 +27,7 @@ const getVisualViewport = () =>
  * therefore puts its footer under the keyboard, which is the whole reason this exists.
  */
 const measureViewport = (): ViewportSize => {
-  if (typeof document === "undefined") return {height: 0, width: 0};
+  if (typeof document === "undefined") return { height: 0, width: 0 };
 
   const viewport = getVisualViewport();
 
@@ -126,7 +126,7 @@ export const useViewportSize = (): ShallowRef<ViewportSize> => {
 };
 
 const measurePage = (): PageSize => {
-  if (typeof document === "undefined") return {height: undefined, width: undefined};
+  if (typeof document === "undefined") return { height: undefined, width: undefined };
 
   const scrolling = isScrollable(document.body)
     ? document.body

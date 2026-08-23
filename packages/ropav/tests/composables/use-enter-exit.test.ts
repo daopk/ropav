@@ -1,7 +1,7 @@
-import {describe, expect, it} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { describe, expect, it } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useEnterExit} from "@/composables/use-enter-exit";
+import { useEnterExit } from "@/composables/use-enter-exit";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -11,7 +11,7 @@ const withScope = <T>(setup: () => T): [T, () => void] => {
   return [result, () => scope.stop()];
 };
 
-const setup = (options: {isOpen?: boolean; isReady?: boolean} = {}) => {
+const setup = (options: { isOpen?: boolean; isReady?: boolean } = {}) => {
   const element = document.createElement("div");
 
   document.body.appendChild(element);
@@ -19,7 +19,7 @@ const setup = (options: {isOpen?: boolean; isReady?: boolean} = {}) => {
   const isOpen = shallowRef(options.isOpen ?? true);
   const isReady = shallowRef(options.isReady ?? true);
 
-  const [state, dispose] = withScope(() => useEnterExit({elementRef: element, isOpen, isReady}));
+  const [state, dispose] = withScope(() => useEnterExit({ elementRef: element, isOpen, isReady }));
 
   return {
     dispose: () => {
@@ -49,7 +49,7 @@ const settle = async () => {
 describe("useEnterExit", () => {
   describe("presence", () => {
     it("is present while open", () => {
-      const {dispose, state} = setup();
+      const { dispose, state } = setup();
 
       expect(state.isPresent.value).toBe(true);
 
@@ -57,7 +57,7 @@ describe("useEnterExit", () => {
     });
 
     it("is absent while closed", () => {
-      const {dispose, state} = setup({isOpen: false});
+      const { dispose, state } = setup({ isOpen: false });
 
       expect(state.isPresent.value).toBe(false);
 
@@ -65,7 +65,7 @@ describe("useEnterExit", () => {
     });
 
     it("goes absent once the exit has finished", async () => {
-      const {dispose, isOpen, state} = setup();
+      const { dispose, isOpen, state } = setup();
 
       isOpen.value = false;
       await settle();
@@ -79,7 +79,7 @@ describe("useEnterExit", () => {
 
   describe("entering", () => {
     it("clears the entering state once the animation has finished", async () => {
-      const {dispose, state} = setup();
+      const { dispose, state } = setup();
 
       await settle();
 
@@ -89,7 +89,7 @@ describe("useEnterExit", () => {
     });
 
     it("does not report entering until the element is ready", async () => {
-      const {dispose, isReady, state} = setup({isReady: false});
+      const { dispose, isReady, state } = setup({ isReady: false });
 
       await settle();
 
@@ -106,7 +106,7 @@ describe("useEnterExit", () => {
     });
 
     it("enters again when it is reopened", async () => {
-      const {dispose, isOpen, isReady, state} = setup();
+      const { dispose, isOpen, isReady, state } = setup();
 
       await settle();
 
@@ -133,7 +133,7 @@ describe("useEnterExit", () => {
 
   describe("reopening mid-exit", () => {
     it("returns to open rather than finishing the exit", async () => {
-      const {dispose, isOpen, state} = setup();
+      const { dispose, isOpen, state } = setup();
 
       await settle();
       isOpen.value = false;

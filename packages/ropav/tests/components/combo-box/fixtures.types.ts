@@ -1,5 +1,5 @@
-import type {ComboBoxFilter, ComboBoxMenuTrigger} from "@/composables/use-combo-box-state";
-import type {SelectedValue} from "@/composables/use-select-state";
+import type { ComboBoxFilter, ComboBoxMenuTrigger } from "@/composables/use-combo-box-state";
+import type { SelectedValue } from "@/composables/use-select-state";
 
 /** The datum every combo box fixture builds its options from. */
 export interface ComboBoxFixtureItem {

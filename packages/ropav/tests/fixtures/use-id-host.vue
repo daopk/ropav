@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import {useId} from "@/composables/use-id";
+import { useId } from "@/composables/use-id";
 
-const props = defineProps<{idOverride?: string}>();
+const props = defineProps<{ idOverride?: string }>();
 
 const first = useId(() => props.idOverride);
 const second = useId();

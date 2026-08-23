@@ -14,7 +14,7 @@ export const Kbd = Object.assign(KbdRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {KbdAbbr, KbdContent, KbdRoot};
+export { KbdAbbr, KbdContent, KbdRoot };
 
 export type {
   KbdAbbrProps,
@@ -23,20 +23,20 @@ export type {
   KbdRootProps as KbdProps,
 } from "./kbd.types";
 
-export {kbdKeysLabelMap, kbdKeysMap} from "./kbd.constants";
+export { kbdKeysLabelMap, kbdKeysMap } from "./kbd.constants";
 
-export type {KbdKey} from "./kbd.constants";
+export type { KbdKey } from "./kbd.constants";
 
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useKbdContext} from "./kbd.context";
+export { useKbdContext } from "./kbd.context";
 
-export type {KbdContext} from "./kbd.context";
+export type { KbdContext } from "./kbd.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {kbdVariants} from "@ropav/styles";
+export { kbdVariants } from "@ropav/styles";
 
-export type {KbdVariants} from "@ropav/styles";
+export type { KbdVariants } from "@ropav/styles";

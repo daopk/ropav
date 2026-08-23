@@ -1,7 +1,7 @@
-import type {paginationVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { paginationVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface PaginationContext {
   slots: ComputedRef<ReturnType<typeof paginationVariants>>;

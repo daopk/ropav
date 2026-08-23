@@ -1,10 +1,10 @@
-import type {Locale} from "../utils/locale";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { Locale } from "../utils/locale";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import {createContext} from "../utils/create-context";
-import {getDefaultLocale, isRTL} from "../utils/locale";
+import { createContext } from "../utils/create-context";
+import { getDefaultLocale, isRTL } from "../utils/locale";
 
 /**
  * The locale an ancestor has chosen, or `null` when nobody has and the browser's own should win.
@@ -91,7 +91,7 @@ export const provideLocale = (
 
     if (tag == null) return fallback.value;
 
-    return {direction: isRTL(tag) ? "rtl" : "ltr", locale: tag};
+    return { direction: isRTL(tag) ? "rtl" : "ltr", locale: tag };
   });
 
   provideLocaleContext(resolved);

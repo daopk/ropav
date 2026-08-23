@@ -10,7 +10,7 @@ export const ListBoxSection = Object.assign(ListBoxSectionRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ListBoxSectionRoot};
+export { ListBoxSectionRoot };
 
 export type {
   ListBoxSectionRootProps,
@@ -20,4 +20,4 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {listboxSectionVariants} from "@ropav/styles";
+export { listboxSectionVariants } from "@ropav/styles";

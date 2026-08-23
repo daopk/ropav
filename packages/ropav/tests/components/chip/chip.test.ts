@@ -1,8 +1,8 @@
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it, vi} from "vitest";
-import {nextTick, reactive} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it, vi } from "vitest";
+import { nextTick, reactive } from "vue";
 
-import {ChipLabel} from "@/components/chip";
+import { ChipLabel } from "@/components/chip";
 
 import ChipFixture from "./fixtures.vue";
 
@@ -12,7 +12,7 @@ const slot = (container: HTMLElement, name: string) =>
 describe("Chip", () => {
   describe("label", () => {
     it("wraps a text-only child in Chip.Label", () => {
-      const {container, unmount} = renderVapor(ChipFixture);
+      const { container, unmount } = renderVapor(ChipFixture);
       const label = slot(container, "chip-label");
 
       expect(label?.textContent).toBe("Label");
@@ -22,7 +22,7 @@ describe("Chip", () => {
     });
 
     it("wraps a number, which reads as text too", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {content: "number"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { content: "number" } });
 
       expect(slot(container, "chip-label")?.textContent).toBe("24");
 
@@ -31,7 +31,7 @@ describe("Chip", () => {
 
     it("wraps an empty string, because emptiness is not the question", () => {
       // React wraps `{""}` as well — what decides is that the child is text at all.
-      const {container, unmount} = renderVapor(ChipFixture, {props: {label: ""}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { label: "" } });
 
       expect(slot(container, "chip-label")?.textContent).toBe("");
 
@@ -39,7 +39,7 @@ describe("Chip", () => {
     });
 
     it("leaves an explicit Chip.Label alone", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {content: "explicit"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { content: "explicit" } });
 
       expect(slot(container, "chip-label")?.textContent).toBe("Explicit label");
 
@@ -47,7 +47,7 @@ describe("Chip", () => {
     });
 
     it("renders exactly one label element, never a nested pair", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {content: "explicit"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { content: "explicit" } });
 
       expect(container.querySelectorAll("[data-slot='chip-label']")).toHaveLength(1);
 
@@ -55,7 +55,7 @@ describe("Chip", () => {
     });
 
     it("leaves markup alongside a label untouched", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {content: "icon"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { content: "icon" } });
       const chip = slot(container, "chip");
 
       expect(chip?.querySelector("[data-testid='leading-icon']")).not.toBeNull();
@@ -67,7 +67,7 @@ describe("Chip", () => {
     });
 
     it("renders no label at all for a chip with no children", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {content: "none"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { content: "none" } });
 
       expect(container.querySelectorAll("[data-slot='chip-label']")).toHaveLength(0);
       expect(slot(container, "chip")?.textContent).toBe("");
@@ -78,8 +78,8 @@ describe("Chip", () => {
     it("keeps a wrapped label reactive", async () => {
       // The slot is called once and the block it returned is what got wrapped, so the text
       // node inside the label has to still be the one the caller's effect writes to.
-      const props = reactive({label: "Hello"});
-      const {container, unmount} = renderVapor(ChipFixture, {props});
+      const props = reactive({ label: "Hello" });
+      const { container, unmount } = renderVapor(ChipFixture, { props });
 
       props.label = "Updated";
       await nextTick();
@@ -92,7 +92,7 @@ describe("Chip", () => {
 
   describe("structure", () => {
     it("renders the root with its data-slot", () => {
-      const {container, unmount} = renderVapor(ChipFixture);
+      const { container, unmount } = renderVapor(ChipFixture);
 
       expect(slot(container, "chip")?.tagName).toBe("SPAN");
 
@@ -102,7 +102,7 @@ describe("Chip", () => {
 
   describe("styling", () => {
     it("renders the BEM block class", () => {
-      const {container, unmount} = renderVapor(ChipFixture);
+      const { container, unmount } = renderVapor(ChipFixture);
 
       expect(slot(container, "chip")?.classList.contains("chip")).toBe(true);
 
@@ -110,7 +110,7 @@ describe("Chip", () => {
     });
 
     it("applies the default color and variant modifiers", () => {
-      const {container, unmount} = renderVapor(ChipFixture);
+      const { container, unmount } = renderVapor(ChipFixture);
       const root = slot(container, "chip");
 
       expect(root?.classList.contains("chip--default")).toBe(true);
@@ -124,7 +124,7 @@ describe("Chip", () => {
       ["size", "lg", "chip--lg"],
       ["variant", "tertiary", "chip--tertiary"],
     ])("applies the %s modifier class", (prop, value, expected) => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {[prop]: value}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { [prop]: value } });
 
       expect(slot(container, "chip")?.classList.contains(expected)).toBe(true);
 
@@ -132,7 +132,7 @@ describe("Chip", () => {
     });
 
     it("merges a caller class onto the root", () => {
-      const {container, unmount} = renderVapor(ChipFixture, {props: {class: "uppercase"}});
+      const { container, unmount } = renderVapor(ChipFixture, { props: { class: "uppercase" } });
       const root = slot(container, "chip");
 
       expect(root?.classList.contains("chip")).toBe(true);

@@ -1,4 +1,4 @@
-import type {CloseButtonVariants} from "@ropav/styles";
+import type { CloseButtonVariants } from "@ropav/styles";
 
 export interface CloseButtonRootProps {
   class?: string;

@@ -1,20 +1,20 @@
-import type {FieldOptions, FormatterOptions, Granularity, TimeValue} from "../utils/date-format";
-import type {DateRange} from "./use-calendar";
-import type {FormValidationState, ValidationBehavior} from "./use-form-validation-state";
-import type {OverlayTriggerState} from "./use-overlay-trigger-state";
-import type {DateValue} from "@internationalized/date";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { FieldOptions, FormatterOptions, Granularity, TimeValue } from "../utils/date-format";
+import type { DateRange } from "./use-calendar";
+import type { FormValidationState, ValidationBehavior } from "./use-form-validation-state";
+import type { OverlayTriggerState } from "./use-overlay-trigger-state";
+import type { DateValue } from "@internationalized/date";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {DateFormatter, toCalendarDate, toCalendarDateTime} from "@internationalized/date";
-import {computed, shallowRef, toValue} from "vue";
+import { DateFormatter, toCalendarDate, toCalendarDateTime } from "@internationalized/date";
+import { computed, shallowRef, toValue } from "vue";
 
-import {getFormatOptions, getPlaceholderTime} from "../utils/date-format";
-import {getRangeValidationResult} from "../utils/date-validation";
+import { getFormatOptions, getPlaceholderTime } from "../utils/date-format";
+import { getRangeValidationResult } from "../utils/date-validation";
 
-import {useControllableState} from "./use-controllable-state";
-import {useDefaultDateProps} from "./use-default-date-props";
-import {useFormValidationState} from "./use-form-validation-state";
-import {useOverlayTriggerState} from "./use-overlay-trigger-state";
+import { useControllableState } from "./use-controllable-state";
+import { useDefaultDateProps } from "./use-default-date-props";
+import { useFormValidationState } from "./use-form-validation-state";
+import { useOverlayTriggerState } from "./use-overlay-trigger-state";
 
 /** A range where either end may still be missing, which is what a half-typed range looks like. */
 export interface PartialDateRange {
@@ -88,18 +88,21 @@ export interface DateRangePickerState extends OverlayTriggerState, FormValidatio
   hasTime: ComputedRef<boolean>;
   isInvalid: ComputedRef<boolean>;
   /** Both ends written out for a screen reader, or `null` while the range is incomplete. */
-  formatValue: (locale: string, fieldOptions: FieldOptions) => {start: string; end: string} | null;
+  formatValue: (
+    locale: string,
+    fieldOptions: FieldOptions,
+  ) => { start: string; end: string } | null;
   getDateFormatter: (locale: string, formatOptions: FormatterOptions) => DateFormatter;
 }
 
-const EMPTY: PartialDateRange = Object.freeze({end: null, start: null});
+const EMPTY: PartialDateRange = Object.freeze({ end: null, start: null });
 
 const isComplete = (range: PartialDateRange | null): range is DateRange =>
   range?.start != null && range.end != null;
 
 const isCompleteTime = (
   range: PartialTimeRange | null,
-): range is {start: TimeValue; end: TimeValue} => range?.start != null && range.end != null;
+): range is { start: TimeValue; end: TimeValue } => range?.start != null && range.end != null;
 
 /**
  * The state behind a date range picker: the two ends of the range, whether the popover is open, and
@@ -123,7 +126,7 @@ export const useDateRangePickerState = (
     onOpenChange: options.onOpenChange,
   });
 
-  const {setState: setControlledValue, state: controlledValue} =
+  const { setState: setControlledValue, state: controlledValue } =
     useControllableState<DateRange | null>({
       defaultValue: toValue(options.defaultValue) ?? null,
       onValueChange: options.onChange,
@@ -160,7 +163,7 @@ export const useDateRangePickerState = (
   const shape = computed(
     () => value.value.start || value.value.end || toValue(options.placeholderValue) || null,
   );
-  const {defaultTimeZone, granularity} = useDefaultDateProps(shape, () =>
+  const { defaultTimeZone, granularity } = useDefaultDateProps(shape, () =>
     toValue(options.granularity),
   );
 
@@ -241,7 +244,7 @@ export const useDateRangePickerState = (
 
   const placeholderTime = () => getPlaceholderTime(toValue(options.placeholderValue));
 
-  const commitValue = (dates: DateRange, times: {start: TimeValue; end: TimeValue}) => {
+  const commitValue = (dates: DateRange, times: { start: TimeValue; end: TimeValue }) => {
     // A zoned time keeps its own zone and offset, so the date is folded into it rather than the
     // other way round.
     setValue({
@@ -357,7 +360,7 @@ export const useDateRangePickerState = (
             else if (index > separator) end += parts[index]!.value;
           }
 
-          return {end, start};
+          return { end, start };
         } catch {
           // Formatting a range fails when the end comes before the start; fall through and write
           // the two dates out separately instead.
@@ -376,10 +379,10 @@ export const useDateRangePickerState = (
         );
       }
 
-      return {end: endFormatter.format(endDate), start: startFormatter.format(startDate)};
+      return { end: endFormatter.format(endDate), start: startFormatter.format(startDate) };
     },
     getDateFormatter: (locale, formatOptions) =>
-      new DateFormatter(locale, getFormatOptions({}, {...formatOpts.value, ...formatOptions})),
+      new DateFormatter(locale, getFormatOptions({}, { ...formatOpts.value, ...formatOptions })),
     granularity,
     hasTime,
     isInvalid: computed(() => validation.displayValidation.value.isInvalid),
@@ -388,8 +391,8 @@ export const useDateRangePickerState = (
 
       setDateRange(
         part === "start"
-          ? {end: dates?.end ?? null, start: date}
-          : {end: date, start: dates?.start ?? null},
+          ? { end: dates?.end ?? null, start: date }
+          : { end: date, start: dates?.start ?? null },
       );
     },
     setDateRange,
@@ -398,8 +401,8 @@ export const useDateRangePickerState = (
 
       setValue(
         part === "start"
-          ? {end: current.end, start: dateTime}
-          : {end: dateTime, start: current.start},
+          ? { end: current.end, start: dateTime }
+          : { end: dateTime, start: current.start },
       );
     },
     setOpen: (isOpen) => {
@@ -425,8 +428,8 @@ export const useDateRangePickerState = (
 
       setTimeRange(
         part === "start"
-          ? {end: times?.end ?? null, start: time}
-          : {end: time, start: times?.start ?? null},
+          ? { end: times?.end ?? null, start: time }
+          : { end: time, start: times?.start ?? null },
       );
     },
     setTimeRange,

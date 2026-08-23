@@ -22,7 +22,7 @@ export const Tabs = Object.assign(TabsRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TabsRoot, TabsListContainer, TabsList, TabsTab, TabsIndicator, TabsSeparator, TabsPanel};
+export { TabsRoot, TabsListContainer, TabsList, TabsTab, TabsIndicator, TabsSeparator, TabsPanel };
 
 export type {
   TabsRootProps,
@@ -43,13 +43,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useTabsContext, useTabsTabContext} from "./tabs.context";
+export { useTabsContext, useTabsTabContext } from "./tabs.context";
 
-export type {TabsContext, TabsTabContext} from "./tabs.context";
+export type { TabsContext, TabsTabContext } from "./tabs.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tabsVariants} from "@ropav/styles";
+export { tabsVariants } from "@ropav/styles";
 
-export type {TabsVariants} from "@ropav/styles";
+export type { TabsVariants } from "@ropav/styles";

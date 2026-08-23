@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {I18nHarnessProps} from "./i18n.types";
+import type { I18nHarnessProps } from "./i18n.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import I18nHost from "./i18n-host.vue";
 

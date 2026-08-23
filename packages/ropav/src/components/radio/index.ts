@@ -16,7 +16,7 @@ export const Radio = Object.assign(RadioRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {RadioRoot, RadioContent, RadioControl, RadioIndicator};
+export { RadioRoot, RadioContent, RadioControl, RadioIndicator };
 
 export type {
   RadioRootProps,
@@ -28,13 +28,13 @@ export type {
   RadioContentSlotProps,
 } from "./radio.types";
 
-export {useRadioContext, provideRadioContext} from "./radio.context";
+export { useRadioContext, provideRadioContext } from "./radio.context";
 
-export type {RadioContext} from "./radio.context";
+export type { RadioContext } from "./radio.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {radioVariants} from "@ropav/styles";
+export { radioVariants } from "@ropav/styles";
 
-export type {RadioVariants} from "@ropav/styles";
+export type { RadioVariants } from "@ropav/styles";

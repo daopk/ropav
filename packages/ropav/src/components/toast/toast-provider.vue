@@ -1,23 +1,23 @@
 <script setup lang="ts" vapor>
-import type {ToastProviderProps, ToastProviderSlotProps} from "./toast.types";
-import type {CSSProperties} from "vue";
+import type { ToastProviderProps, ToastProviderSlotProps } from "./toast.types";
+import type { CSSProperties } from "vue";
 
-import {toastVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { toastVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useLocale} from "../../composables/use-locale";
-import {useToastRegion} from "../../composables/use-toast-region";
-import {composeSlotClassName} from "../../utils/compose";
+import { useLocale } from "../../composables/use-locale";
+import { useToastRegion } from "../../composables/use-toast-region";
+import { composeSlotClassName } from "../../utils/compose";
 
 import ToastDefaultContent from "./toast-default-content.vue";
-import {toastQueue, useToastQueue} from "./toast-queue";
+import { toastQueue, useToastQueue } from "./toast-queue";
 import {
   DEFAULT_GAP,
   DEFAULT_MAX_VISIBLE_TOAST,
   DEFAULT_SCALE_FACTOR,
   DEFAULT_TOAST_WIDTH,
 } from "./toast.constants";
-import {provideToastRegionContext} from "./toast.context";
+import { provideToastRegionContext } from "./toast.context";
 
 const props = withDefaults(defineProps<ToastProviderProps>(), {
   gap: DEFAULT_GAP,
@@ -26,11 +26,11 @@ const props = withDefaults(defineProps<ToastProviderProps>(), {
   width: DEFAULT_TOAST_WIDTH,
 });
 
-defineSlots<{default?: (props: ToastProviderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ToastProviderSlotProps) => unknown }>();
 
 const queue = computed(() => props.queue ?? toastQueue);
 
-const {visibleToasts} = useToastQueue(queue);
+const { visibleToasts } = useToastQueue(queue);
 
 const element = shallowRef<HTMLElement | null>(null);
 
@@ -46,7 +46,7 @@ const region = useToastRegion({
   visibleToasts,
 });
 
-const slots = computed(() => toastVariants({placement: props.placement}));
+const slots = computed(() => toastVariants({ placement: props.placement }));
 
 const locale = useLocale();
 
@@ -70,12 +70,12 @@ provideToastRegionContext({
   onToastHeightChange: (key, height) => {
     if (heights.value[key] === height) return;
 
-    heights.value = {...heights.value, [key]: height};
+    heights.value = { ...heights.value, [key]: height };
   },
   onToastHeightRemove: (key) => {
     if (!(key in heights.value)) return;
 
-    const {[key]: _removed, ...rest} = heights.value;
+    const { [key]: _removed, ...rest } = heights.value;
 
     heights.value = rest;
   },
@@ -100,7 +100,7 @@ const regionStyle = computed<CSSProperties>(() => ({
  * The list and every row are `display: contents`, so the ordered list gives the toasts their
  * semantics without taking part in the layout the stylesheet builds out of absolute positioning.
  */
-const CONTENTS_STYLE: CSSProperties = {display: "contents"};
+const CONTENTS_STYLE: CSSProperties = { display: "contents" };
 </script>
 
 <template>

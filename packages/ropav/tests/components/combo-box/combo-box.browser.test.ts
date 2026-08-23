@@ -1,12 +1,12 @@
-import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it} from "vitest";
-import {userEvent} from "vitest/browser";
-import {nextTick} from "vue";
+import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { userEvent } from "vitest/browser";
+import { nextTick } from "vue";
 
-import {isAppleDevice} from "@/utils/platform";
+import { isAppleDevice } from "@/utils/platform";
 
-import {pressRealReset} from "../../harness/real-reset";
+import { pressRealReset } from "../../harness/real-reset";
 
 import Fixture from "./fixtures.vue";
 
@@ -37,7 +37,7 @@ const POINTER = {
 const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
-  element.dispatchEvent(new MouseEvent("click", {bubbles: true, button: 0, detail: 1}));
+  element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
 };
 
 /** Wait for the entry animation to finish, so the popover is measured at its settled size. */
@@ -60,7 +60,7 @@ afterEach(async () => {
 });
 
 const mount = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props});
+  const result = renderVapor(Fixture, { props });
 
   cleanups.push(result.unmount);
 
@@ -112,7 +112,7 @@ const realPress = async (element: Element) => {
  */
 const pressIsClaimed = async (
   element: Element,
-  options: {position?: {x: number; y: number}} = {},
+  options: { position?: { x: number; y: number } } = {},
 ) => {
   let claimed: boolean | null = null;
   const onMousedown = (event: Event) => {
@@ -184,7 +184,7 @@ describe("ComboBox (browser)", () => {
       // The listbox's own padding, which is the gap between two options — a press that chose
       // nothing must leave everything exactly as it was.
       const claimed = await pressIsClaimed(listBox, {
-        position: {x: 2, y: Math.round(box.height / 2)},
+        position: { x: 2, y: Math.round(box.height / 2) },
       });
 
       expect(claimed).toBe(true);
@@ -345,7 +345,7 @@ describe("ComboBox (browser)", () => {
         if (text && messages.at(-1) !== text) messages.push(text);
       });
 
-      if (region) observer.observe(region, {characterData: true, childList: true, subtree: true});
+      if (region) observer.observe(region, { characterData: true, childList: true, subtree: true });
       cleanups.push(() => observer.disconnect());
 
       return messages;
@@ -435,7 +435,7 @@ describe("ComboBox (browser)", () => {
 
   describe("a form", () => {
     it("puts both halves back when a real reset button is pressed", async () => {
-      const result = mount({defaultValue: "cat", name: "animal", withForm: true});
+      const result = mount({ defaultValue: "cat", name: "animal", withForm: true });
 
       await nextTick();
       await open(result.container);
@@ -460,7 +460,7 @@ describe("ComboBox (browser)", () => {
 
   describe("accessibility", () => {
     it("has no violations while shut", async () => {
-      const result = mount({withDescription: true, withLabel: true});
+      const result = mount({ withDescription: true, withLabel: true });
 
       await nextTick();
 
@@ -468,7 +468,7 @@ describe("ComboBox (browser)", () => {
     });
 
     it("has no violations while showing its options", async () => {
-      const result = mount({withLabel: true});
+      const result = mount({ withLabel: true });
 
       await nextTick();
 

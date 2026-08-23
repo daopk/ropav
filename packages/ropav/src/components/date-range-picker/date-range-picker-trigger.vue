@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {DateRangePickerTriggerProps} from "./date-range-picker.types";
+import type { DateRangePickerTriggerProps } from "./date-range-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useDateRangePickerContext} from "./date-range-picker.context";
+import { useDateRangePickerContext } from "./date-range-picker.context";
 
 const props = defineProps<DateRangePickerTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const picker = useDateRangePickerContext();
 
-const styles = computed(() => picker.slots.value.trigger({class: props.class}));
+const styles = computed(() => picker.slots.value.trigger({ class: props.class }));
 
 // The stylesheet keys hover and the focus ring on data attributes as well as on the pseudo-classes,
 // so the states have to be reported from here too.
-const interaction = useInteractionStates({isDisabled: picker.isTriggerDisabled});
+const interaction = useInteractionStates({ isDisabled: picker.isTriggerDisabled });
 
 const setElement = (next: unknown) => {
   picker.setTriggerElement(next instanceof HTMLElement ? next : null);

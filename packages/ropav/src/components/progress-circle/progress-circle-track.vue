@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {ProgressCircleTrackProps} from "./progress-circle.types";
+import type { ProgressCircleTrackProps } from "./progress-circle.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {VIEW_BOX} from "./progress-circle.constants";
-import {useProgressCircleContext} from "./progress-circle.context";
+import { VIEW_BOX } from "./progress-circle.constants";
+import { useProgressCircleContext } from "./progress-circle.context";
 
 const props = defineProps<ProgressCircleTrackProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useProgressCircleContext();
+const { slots } = useProgressCircleContext();
 </script>
 
 <template>

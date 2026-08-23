@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {PaginationEllipsisProps} from "./pagination.types";
+import type { PaginationEllipsisProps } from "./pagination.types";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {usePaginationContext} from "./pagination.context";
+import { usePaginationContext } from "./pagination.context";
 
 const props = defineProps<PaginationEllipsisProps>();
 
-const {slots} = usePaginationContext();
+const { slots } = usePaginationContext();
 </script>
 
 <template>

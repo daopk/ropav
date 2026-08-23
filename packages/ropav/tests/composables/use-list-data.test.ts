@@ -1,9 +1,9 @@
-import type {ListData, UseListDataOptions} from "@/composables/use-list-data";
+import type { ListData, UseListDataOptions } from "@/composables/use-list-data";
 
-import {afterEach, describe, expect, it} from "vitest";
-import {effectScope} from "vue";
+import { afterEach, describe, expect, it } from "vitest";
+import { effectScope } from "vue";
 
-import {useListData} from "@/composables/use-list-data";
+import { useListData } from "@/composables/use-list-data";
 
 const scopes: (() => void)[] = [];
 
@@ -13,10 +13,10 @@ interface Item {
 }
 
 const ITEMS: Item[] = [
-  {id: "1", name: "News"},
-  {id: "2", name: "Travel"},
-  {id: "3", name: "Gaming"},
-  {id: "4", name: "Shopping"},
+  { id: "1", name: "News" },
+  { id: "2", name: "Travel" },
+  { id: "3", name: "Gaming" },
+  { id: "4", name: "Shopping" },
 ];
 
 const createList = (options: UseListDataOptions<Item> = {}): ListData<Item> => {
@@ -24,7 +24,7 @@ const createList = (options: UseListDataOptions<Item> = {}): ListData<Item> => {
 
   scopes.push(() => scope.stop());
 
-  return scope.run(() => useListData<Item>({initialItems: ITEMS, ...options})) as ListData<Item>;
+  return scope.run(() => useListData<Item>({ initialItems: ITEMS, ...options })) as ListData<Item>;
 };
 
 const names = (list: ListData<Item>) => list.items.value.map((item) => item.name);
@@ -45,11 +45,11 @@ describe("useListData", () => {
     });
 
     it("accepts initially selected keys", () => {
-      expect(keys(createList({initialSelectedKeys: ["2"]}))).toEqual(["2"]);
+      expect(keys(createList({ initialSelectedKeys: ["2"] }))).toEqual(["2"]);
     });
 
     it("accepts all as an initial selection", () => {
-      expect(createList({initialSelectedKeys: "all"}).selectedKeys.value).toBe("all");
+      expect(createList({ initialSelectedKeys: "all" }).selectedKeys.value).toBe("all");
     });
 
     it("derives keys from id, then key", () => {
@@ -59,7 +59,7 @@ describe("useListData", () => {
     });
 
     it("accepts a custom key function", () => {
-      const list = createList({getKey: (item) => item.name});
+      const list = createList({ getKey: (item) => item.name });
 
       expect(list.getItem("Gaming")?.id).toBe("3");
     });
@@ -69,7 +69,7 @@ describe("useListData", () => {
     it("inserts at an index", () => {
       const list = createList();
 
-      list.insert(1, {id: "5", name: "Food"});
+      list.insert(1, { id: "5", name: "Food" });
 
       expect(names(list)).toEqual(["News", "Food", "Travel", "Gaming", "Shopping"]);
     });
@@ -77,17 +77,17 @@ describe("useListData", () => {
     it("inserts before and after a key", () => {
       const list = createList();
 
-      list.insertBefore("3", {id: "5", name: "Food"});
-      list.insertAfter("4", {id: "6", name: "Music"});
+      list.insertBefore("3", { id: "5", name: "Food" });
+      list.insertAfter("4", { id: "6", name: "Music" });
 
       expect(names(list)).toEqual(["News", "Travel", "Food", "Gaming", "Shopping", "Music"]);
     });
 
     it("appends and prepends", () => {
-      const list = createList({initialItems: []});
+      const list = createList({ initialItems: [] });
 
-      list.append({id: "1", name: "News"});
-      list.prepend({id: "2", name: "Travel"});
+      list.append({ id: "1", name: "News" });
+      list.prepend({ id: "2", name: "Travel" });
 
       expect(names(list)).toEqual(["Travel", "News"]);
     });
@@ -95,15 +95,15 @@ describe("useListData", () => {
     it("ignores an unknown key when the list has items", () => {
       const list = createList();
 
-      list.insertBefore("nope", {id: "5", name: "Food"});
+      list.insertBefore("nope", { id: "5", name: "Food" });
 
       expect(names(list)).toHaveLength(4);
     });
 
     it("inserts into an empty list even for an unknown key", () => {
-      const list = createList({initialItems: []});
+      const list = createList({ initialItems: [] });
 
-      list.insertBefore("nope", {id: "5", name: "Food"});
+      list.insertBefore("nope", { id: "5", name: "Food" });
 
       expect(names(list)).toEqual(["Food"]);
     });
@@ -111,7 +111,7 @@ describe("useListData", () => {
 
   describe("removing", () => {
     it("removes by key and drops it from the selection", () => {
-      const list = createList({initialSelectedKeys: ["2", "3"]});
+      const list = createList({ initialSelectedKeys: ["2", "3"] });
 
       list.remove("2");
 
@@ -121,7 +121,7 @@ describe("useListData", () => {
 
     it("clears the selection once the list empties", () => {
       // An "all" left standing over an empty list would keep claiming everything about nothing.
-      const list = createList({initialSelectedKeys: "all"});
+      const list = createList({ initialSelectedKeys: "all" });
 
       list.remove("1", "2", "3", "4");
 
@@ -129,7 +129,7 @@ describe("useListData", () => {
     });
 
     it("removes the selected items", () => {
-      const list = createList({initialSelectedKeys: ["1", "3"]});
+      const list = createList({ initialSelectedKeys: ["1", "3"] });
 
       list.removeSelectedItems();
 
@@ -138,7 +138,7 @@ describe("useListData", () => {
     });
 
     it("empties the list when everything is selected", () => {
-      const list = createList({initialSelectedKeys: "all"});
+      const list = createList({ initialSelectedKeys: "all" });
 
       list.removeSelectedItems();
 
@@ -201,7 +201,7 @@ describe("useListData", () => {
     it("replaces an item", () => {
       const list = createList();
 
-      list.update("2", {id: "2", name: "Trips"});
+      list.update("2", { id: "2", name: "Trips" });
 
       expect(names(list)).toEqual(["News", "Trips", "Gaming", "Shopping"]);
     });
@@ -209,7 +209,7 @@ describe("useListData", () => {
     it("derives the replacement from the current item", () => {
       const list = createList();
 
-      list.update("2", (previous) => ({...previous, name: `${previous.name}!`}));
+      list.update("2", (previous) => ({ ...previous, name: `${previous.name}!` }));
 
       expect(list.getItem("2")?.name).toBe("Travel!");
     });
@@ -217,7 +217,7 @@ describe("useListData", () => {
     it("ignores an unknown key", () => {
       const list = createList();
 
-      list.update("nope", {id: "nope", name: "Nope"});
+      list.update("nope", { id: "nope", name: "Nope" });
 
       expect(names(list)).toHaveLength(4);
     });
@@ -240,7 +240,7 @@ describe("useListData", () => {
     });
 
     it("still resolves a filtered-out item by key", () => {
-      const list = createList({filter: (item, text) => item.name.startsWith(text)});
+      const list = createList({ filter: (item, text) => item.name.startsWith(text) });
 
       list.setFilterText("News");
 
@@ -266,7 +266,7 @@ describe("useListData", () => {
     });
 
     it("adds and removes keys", () => {
-      const list = createList({initialSelectedKeys: ["1"]});
+      const list = createList({ initialSelectedKeys: ["1"] });
 
       list.addKeysToSelection(new Set(["3"]));
 
@@ -278,7 +278,7 @@ describe("useListData", () => {
     });
 
     it("leaves an all selection alone when adding", () => {
-      const list = createList({initialSelectedKeys: "all"});
+      const list = createList({ initialSelectedKeys: "all" });
 
       list.addKeysToSelection(new Set(["1"]));
 
@@ -286,7 +286,7 @@ describe("useListData", () => {
     });
 
     it("resolves an all selection when removing from it", () => {
-      const list = createList({initialSelectedKeys: "all"});
+      const list = createList({ initialSelectedKeys: "all" });
 
       list.removeKeysFromSelection(new Set(["1"]));
 
@@ -294,7 +294,7 @@ describe("useListData", () => {
     });
 
     it("empties the selection when asked to remove all", () => {
-      const list = createList({initialSelectedKeys: ["1", "2"]});
+      const list = createList({ initialSelectedKeys: ["1", "2"] });
 
       list.removeKeysFromSelection("all");
 

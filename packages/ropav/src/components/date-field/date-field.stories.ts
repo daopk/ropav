@@ -1,24 +1,24 @@
-import type {SelectedValue} from "../../composables/use-select-state";
+import type { SelectedValue } from "../../composables/use-select-state";
 // Aliased: the `Granularity` story below would otherwise merge with the type name.
-import type {Granularity as DateGranularity} from "../../utils/date-format";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Granularity as DateGranularity } from "../../utils/date-format";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {getLocalTimeZone, parseDate, parseZonedDateTime, today} from "@internationalized/date";
-import {computed, shallowRef} from "vue";
+import { getLocalTimeZone, parseDate, parseZonedDateTime, today } from "@internationalized/date";
+import { computed, shallowRef } from "vue";
 import IconCalendar from "~icons/gravity-ui/calendar";
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconCircleQuestion from "~icons/gravity-ui/circle-question";
 
-import {Button} from "../button";
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-import {Form} from "../form";
-import {Label} from "../label";
-import {ListBoxRoot} from "../list-box";
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
-import {Tooltip, TooltipContent, TooltipTrigger} from "../tooltip";
+import { Button } from "../button";
+import { Description } from "../description";
+import { FieldError } from "../field-error";
+import { Form } from "../form";
+import { Label } from "../label";
+import { ListBoxRoot } from "../list-box";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue } from "../select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 
 import {
   DateFieldGroup,
@@ -69,14 +69,14 @@ const input = `
 `;
 
 /** The four granularities a date field can show, as data — a Vue select reads its options. */
-const GRANULARITY_OPTIONS: {id: DateGranularity; label: string}[] = [
-  {id: "day", label: "Day"},
-  {id: "hour", label: "Hour"},
-  {id: "minute", label: "Minute"},
-  {id: "second", label: "Second"},
+const GRANULARITY_OPTIONS: { id: DateGranularity; label: string }[] = [
+  { id: "day", label: "Day" },
+  { id: "hour", label: "Hour" },
+  { id: "minute", label: "Minute" },
+  { id: "second", label: "Second" },
 ];
 
-const byLabel = (option: {label: string}) => option.label;
+const byLabel = (option: { label: string }) => option.label;
 
 const meta: StoryMeta = {
   component: DateFieldRoot,
@@ -208,7 +208,7 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   render: () => ({
     components,
-    setup: () => ({todayDate: today(getLocalTimeZone())}),
+    setup: () => ({ todayDate: today(getLocalTimeZone()) }),
     template: `
       <div class="flex flex-col gap-4">
         <DateFieldRoot is-disabled class="w-[256px]" name="date" :value="todayDate">
@@ -262,7 +262,7 @@ export const WithValidation: Story = {
       const value = shallowRef<ReturnType<typeof today> | null>(null);
       const isInvalid = computed(() => value.value !== null && value.value.compare(todayDate) < 0);
 
-      return {isInvalid, todayDate, value};
+      return { isInvalid, todayDate, value };
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -363,7 +363,7 @@ export const FormExample: Story = {
         }, 1500);
       };
 
-      return {isInvalid, isSubmitting, onSubmit, todayDate, value};
+      return { isInvalid, isSubmitting, onSubmit, todayDate, value };
     },
     template: `
       <Form class="flex w-[280px] flex-col gap-4" @submit="onSubmit">

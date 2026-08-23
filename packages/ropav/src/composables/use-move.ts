@@ -1,6 +1,6 @@
-import type {PointerType} from "./use-press";
+import type { PointerType } from "./use-press";
 
-import {onScopeDispose} from "vue";
+import { onScopeDispose } from "vue";
 
 /** The modifier state every move event carries over from the event that produced it. */
 interface ModifierKeys {
@@ -84,10 +84,10 @@ const KEYBOARD_DELTA: Record<string, [deltaX: number, deltaY: number]> = {
  * ```
  */
 export const useMove = (options: UseMoveOptions): UseMoveReturn => {
-  const {onMove, onMoveEnd, onMoveStart} = options;
+  const { onMove, onMoveEnd, onMoveStart } = options;
 
   let didMove = false;
-  let lastPosition: {pageX: number; pageY: number} | null = null;
+  let lastPosition: { pageX: number; pageY: number } | null = null;
   let pointerId: number | null = null;
   let detachGlobalListeners: (() => void) | undefined;
 
@@ -109,10 +109,10 @@ export const useMove = (options: UseMoveOptions): UseMoveReturn => {
     // it — a press that never moves is a click, and must not read as a drag.
     if (!didMove) {
       didMove = true;
-      onMoveStart?.({...modifiers, pointerType, type: "movestart"});
+      onMoveStart?.({ ...modifiers, pointerType, type: "movestart" });
     }
 
-    onMove?.({...modifiers, deltaX, deltaY, pointerType, type: "move"});
+    onMove?.({ ...modifiers, deltaX, deltaY, pointerType, type: "move" });
   };
 
   const end = (event: ModifierKeys, pointerType: PointerType) => {
@@ -139,7 +139,7 @@ export const useMove = (options: UseMoveOptions): UseMoveReturn => {
       event.pageX - (lastPosition?.pageX ?? 0),
       event.pageY - (lastPosition?.pageY ?? 0),
     );
-    lastPosition = {pageX: event.pageX, pageY: event.pageY};
+    lastPosition = { pageX: event.pageX, pageY: event.pageY };
   };
 
   const onPointerup = (event: PointerEvent) => {
@@ -158,7 +158,7 @@ export const useMove = (options: UseMoveOptions): UseMoveReturn => {
     start();
     event.stopPropagation();
     event.preventDefault();
-    lastPosition = {pageX: event.pageX, pageY: event.pageY};
+    lastPosition = { pageX: event.pageX, pageY: event.pageY };
     pointerId = event.pointerId;
 
     // On the window rather than the element: a drag keeps going once the pointer leaves the
@@ -195,5 +195,5 @@ export const useMove = (options: UseMoveOptions): UseMoveReturn => {
     pointerId = null;
   }, true);
 
-  return {handlers: {onKeydown, onPointerdown}};
+  return { handlers: { onKeydown, onPointerdown } };
 };

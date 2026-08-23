@@ -1,8 +1,8 @@
-import type {UseInputOTPReturn} from "@/composables/use-input-otp";
+import type { UseInputOTPReturn } from "@/composables/use-input-otp";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {nextTick} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import Host from "../fixtures/input-otp-host.vue";
 
@@ -41,9 +41,9 @@ const type = (control: HTMLInputElement, value: string) => {
  * covered in the browser suite; this exercises the branch that decides what the paste replaces.
  */
 const pasteEvent = (text: string) => {
-  const event = new Event("paste", {bubbles: true, cancelable: true});
+  const event = new Event("paste", { bubbles: true, cancelable: true });
 
-  Object.defineProperty(event, "clipboardData", {value: {getData: () => text}});
+  Object.defineProperty(event, "clipboardData", { value: { getData: () => text } });
 
   return event;
 };
@@ -59,12 +59,12 @@ const pretendIOS = () => {
 
   Object.defineProperty(window, "CSS", {
     configurable: true,
-    value: {...original, supports: () => true},
+    value: { ...original, supports: () => true },
     writable: true,
   });
 
   return () => {
-    Object.defineProperty(window, "CSS", {configurable: true, value: original, writable: true});
+    Object.defineProperty(window, "CSS", { configurable: true, value: original, writable: true });
   };
 };
 
@@ -76,7 +76,7 @@ describe("useInputOTP", () => {
   describe("value", () => {
     it("reports what was typed and tells the caller", () => {
       const onChange = vi.fn();
-      const {control, otp, unmount} = mount({onChange});
+      const { control, otp, unmount } = mount({ onChange });
 
       type(control(), "12");
 
@@ -87,7 +87,7 @@ describe("useInputOTP", () => {
     });
 
     it("takes no more characters than the code is long", () => {
-      const {control, otp, unmount} = mount({maxLength: 4});
+      const { control, otp, unmount } = mount({ maxLength: 4 });
 
       type(control(), "1234567");
 
@@ -97,7 +97,7 @@ describe("useInputOTP", () => {
     });
 
     it("starts from the default value", () => {
-      const {otp, unmount} = mount({defaultValue: "12"});
+      const { otp, unmount } = mount({ defaultValue: "12" });
 
       expect(otp().value.value).toBe("12");
 
@@ -105,7 +105,7 @@ describe("useInputOTP", () => {
     });
 
     it("keeps the caller's value when the caller declines the change", async () => {
-      const {control, otp, unmount} = mount({value: "12"});
+      const { control, otp, unmount } = mount({ value: "12" });
 
       type(control(), "123");
       await nextTick();
@@ -120,7 +120,7 @@ describe("useInputOTP", () => {
   describe("pattern", () => {
     it("refuses a value the pattern does not allow", () => {
       const onChange = vi.fn();
-      const {control, otp, unmount} = mount({onChange, pattern: "^[a-zA-Z]+$"});
+      const { control, otp, unmount } = mount({ onChange, pattern: "^[a-zA-Z]+$" });
 
       type(control(), "12");
 
@@ -131,7 +131,7 @@ describe("useInputOTP", () => {
     });
 
     it("puts the refused characters back on the control", () => {
-      const {control, unmount} = mount({defaultValue: "ab", pattern: "^[a-zA-Z]+$"});
+      const { control, unmount } = mount({ defaultValue: "ab", pattern: "^[a-zA-Z]+$" });
 
       type(control(), "ab1");
 
@@ -141,7 +141,7 @@ describe("useInputOTP", () => {
     });
 
     it("accepts a value the pattern allows", () => {
-      const {control, otp, unmount} = mount({pattern: /^\d+$/});
+      const { control, otp, unmount } = mount({ pattern: /^\d+$/ });
 
       type(control(), "12");
 
@@ -151,7 +151,7 @@ describe("useInputOTP", () => {
     });
 
     it("exposes the pattern to the browser as well", () => {
-      const {control, unmount} = mount({pattern: "^[a-zA-Z]+$"});
+      const { control, unmount } = mount({ pattern: "^[a-zA-Z]+$" });
 
       expect(control()).toHaveAttribute("pattern", "^[a-zA-Z]+$");
 
@@ -164,7 +164,7 @@ describe("useInputOTP", () => {
     // React runs it — after the commit, not during the keystroke.
     it("calls onComplete when the last slot fills", async () => {
       const onComplete = vi.fn();
-      const {control, unmount} = mount({maxLength: 4, onComplete});
+      const { control, unmount } = mount({ maxLength: 4, onComplete });
 
       type(control(), "123");
       await nextTick();
@@ -179,7 +179,7 @@ describe("useInputOTP", () => {
 
     it("does not call onComplete for a code that arrives already full", async () => {
       const onComplete = vi.fn();
-      const {unmount} = mount({defaultValue: "1234", maxLength: 4, onComplete});
+      const { unmount } = mount({ defaultValue: "1234", maxLength: 4, onComplete });
 
       await nextTick();
 
@@ -190,7 +190,7 @@ describe("useInputOTP", () => {
 
     it("does not call onComplete again while the code stays full", async () => {
       const onComplete = vi.fn();
-      const {control, unmount} = mount({maxLength: 4, onComplete});
+      const { control, unmount } = mount({ maxLength: 4, onComplete });
 
       type(control(), "1234");
       await nextTick();
@@ -206,7 +206,7 @@ describe("useInputOTP", () => {
 
   describe("slot states", () => {
     it("reports one slot per character the code is long", () => {
-      const {otp, unmount} = mount({maxLength: 4});
+      const { otp, unmount } = mount({ maxLength: 4 });
 
       expect(otp().slotStates.value).toHaveLength(4);
 
@@ -214,7 +214,7 @@ describe("useInputOTP", () => {
     });
 
     it("hands each slot its own character, and null past the end", () => {
-      const {control, otp, unmount} = mount({maxLength: 4});
+      const { control, otp, unmount } = mount({ maxLength: 4 });
 
       type(control(), "ab");
 
@@ -224,7 +224,7 @@ describe("useInputOTP", () => {
     });
 
     it("shows the placeholder only while nothing at all is typed", () => {
-      const {control, otp, unmount} = mount({maxLength: 4, placeholder: "····"});
+      const { control, otp, unmount } = mount({ maxLength: 4, placeholder: "····" });
 
       expect(otp().slotStates.value.map((slot) => slot.placeholderChar)).toEqual([
         "·",
@@ -241,7 +241,7 @@ describe("useInputOTP", () => {
     });
 
     it("marks the slot the caret is on as active", () => {
-      const {control, otp, unmount} = mount({maxLength: 4});
+      const { control, otp, unmount } = mount({ maxLength: 4 });
 
       control().focus();
       otp().handlers.onFocus();
@@ -257,7 +257,7 @@ describe("useInputOTP", () => {
     });
 
     it("marks every slot a selection covers as active", () => {
-      const {control, otp, unmount} = mount({defaultValue: "abc", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "abc", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(0, 2);
@@ -271,7 +271,7 @@ describe("useInputOTP", () => {
     });
 
     it("draws a caret only on an active slot with nothing in it", () => {
-      const {control, otp, unmount} = mount({defaultValue: "a", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "a", maxLength: 4 });
 
       control().focus();
       otp().handlers.onFocus();
@@ -286,7 +286,7 @@ describe("useInputOTP", () => {
     });
 
     it("reports no active slot while focus is elsewhere", () => {
-      const {control, otp, unmount} = mount({defaultValue: "ab", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "ab", maxLength: 4 });
 
       control().focus();
       otp().handlers.onFocus();
@@ -300,7 +300,7 @@ describe("useInputOTP", () => {
 
   describe("focus", () => {
     it("puts the caret on the first empty slot", () => {
-      const {control, otp, unmount} = mount({defaultValue: "ab", maxLength: 6});
+      const { control, otp, unmount } = mount({ defaultValue: "ab", maxLength: 6 });
 
       control().focus();
       otp().handlers.onFocus();
@@ -312,7 +312,7 @@ describe("useInputOTP", () => {
     });
 
     it("puts the caret on the last slot when the code is full", () => {
-      const {control, otp, unmount} = mount({defaultValue: "abcd", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "abcd", maxLength: 4 });
 
       control().focus();
       otp().handlers.onFocus();
@@ -326,7 +326,7 @@ describe("useInputOTP", () => {
 
   describe("selection mirroring", () => {
     it("snaps a caret at the start onto the first character", () => {
-      const {control, otp, unmount} = mount({defaultValue: "abcd", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "abcd", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(0, 0);
@@ -340,7 +340,7 @@ describe("useInputOTP", () => {
     });
 
     it("snaps a caret at the end onto the last character", () => {
-      const {control, otp, unmount} = mount({defaultValue: "abcd", maxLength: 4});
+      const { control, otp, unmount } = mount({ defaultValue: "abcd", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(4, 4);
@@ -354,7 +354,7 @@ describe("useInputOTP", () => {
     });
 
     it("leaves the caret between slots while there is still room to type", () => {
-      const {control, unmount} = mount({defaultValue: "ab", maxLength: 4});
+      const { control, unmount } = mount({ defaultValue: "ab", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(2, 2);
@@ -367,7 +367,7 @@ describe("useInputOTP", () => {
     });
 
     it("publishes the mirrored selection on the control", async () => {
-      const {control, unmount} = mount({defaultValue: "abcd", maxLength: 4});
+      const { control, unmount } = mount({ defaultValue: "abcd", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(0, 0);
@@ -381,7 +381,7 @@ describe("useInputOTP", () => {
     });
 
     it("drops the mirror when the control is not the focused element", async () => {
-      const {control, unmount} = mount({defaultValue: "abcd", maxLength: 4});
+      const { control, unmount } = mount({ defaultValue: "abcd", maxLength: 4 });
 
       control().focus();
       control().setSelectionRange(0, 0);
@@ -402,7 +402,7 @@ describe("useInputOTP", () => {
   describe("paste", () => {
     it("inserts pasted text at the caret", () => {
       const restore = pretendIOS();
-      const {control, otp, unmount} = mount({defaultValue: "ab", maxLength: 6});
+      const { control, otp, unmount } = mount({ defaultValue: "ab", maxLength: 6 });
 
       control().setSelectionRange(2, 2);
       control().dispatchEvent(pasteEvent("cd"));
@@ -415,7 +415,7 @@ describe("useInputOTP", () => {
 
     it("replaces the selection when there is one", () => {
       const restore = pretendIOS();
-      const {control, otp, unmount} = mount({defaultValue: "abcd", maxLength: 6});
+      const { control, otp, unmount } = mount({ defaultValue: "abcd", maxLength: 6 });
 
       control().setSelectionRange(0, 4);
       control().dispatchEvent(pasteEvent("xy"));
@@ -428,7 +428,7 @@ describe("useInputOTP", () => {
 
     it("takes no more pasted characters than the code is long", () => {
       const restore = pretendIOS();
-      const {control, otp, unmount} = mount({maxLength: 4});
+      const { control, otp, unmount } = mount({ maxLength: 4 });
 
       control().setSelectionRange(0, 0);
       control().dispatchEvent(pasteEvent("1234567"));
@@ -441,7 +441,7 @@ describe("useInputOTP", () => {
 
     it("refuses a paste the pattern does not allow", () => {
       const restore = pretendIOS();
-      const {control, otp, unmount} = mount({maxLength: 4, pattern: "^\\d+$"});
+      const { control, otp, unmount } = mount({ maxLength: 4, pattern: "^\\d+$" });
 
       control().setSelectionRange(0, 0);
       control().dispatchEvent(pasteEvent("ab"));
@@ -453,7 +453,7 @@ describe("useInputOTP", () => {
     });
 
     it("lets the caller rewrite pasted text, on any platform", () => {
-      const {control, otp, unmount} = mount({
+      const { control, otp, unmount } = mount({
         maxLength: 6,
         pasteTransformer: (pasted: string) => pasted.replace(/\D/g, ""),
       });
@@ -467,7 +467,7 @@ describe("useInputOTP", () => {
     });
 
     it("leaves the paste to the browser when nothing needs fixing", () => {
-      const {control, otp, unmount} = mount({maxLength: 6});
+      const { control, otp, unmount } = mount({ maxLength: 6 });
       const event = pasteEvent("123");
 
       control().dispatchEvent(event);
@@ -481,7 +481,7 @@ describe("useInputOTP", () => {
 
   describe("attributes", () => {
     it("carries no listener key, so nothing is lost through v-bind", () => {
-      const {otp, unmount} = mount();
+      const { otp, unmount } = mount();
 
       expect(Object.keys(otp().attrs.value).filter((key) => key.startsWith("on"))).toEqual([]);
 
@@ -489,7 +489,7 @@ describe("useInputOTP", () => {
     });
 
     it("asks the platform for a one-time code and a numeric keyboard", () => {
-      const {control, unmount} = mount();
+      const { control, unmount } = mount();
 
       expect(control()).toHaveAttribute("autocomplete", "one-time-code");
       expect(control()).toHaveAttribute("inputmode", "numeric");
@@ -500,7 +500,7 @@ describe("useInputOTP", () => {
     });
 
     it("says the field is empty while nothing is typed", async () => {
-      const {control, unmount} = mount();
+      const { control, unmount } = mount();
 
       expect(control()).toHaveAttribute("data-input-otp-placeholder-shown", "true");
 
@@ -513,7 +513,7 @@ describe("useInputOTP", () => {
     });
 
     it("lets the caller name a different autofill hint", () => {
-      const {control, unmount} = mount({autoComplete: "off"});
+      const { control, unmount } = mount({ autoComplete: "off" });
 
       expect(control()).toHaveAttribute("autocomplete", "off");
 
@@ -521,7 +521,7 @@ describe("useInputOTP", () => {
     });
 
     it("names the field for assistive technology when a placeholder is given", () => {
-      const {control, unmount} = mount({placeholder: "······"});
+      const { control, unmount } = mount({ placeholder: "······" });
 
       expect(control()).toHaveAttribute("aria-placeholder", "······");
 
@@ -544,7 +544,7 @@ describe("useInputOTP", () => {
     });
 
     it("tells the container how tall the control came out", () => {
-      const {container, unmount} = mount();
+      const { container, unmount } = mount();
       const host = container.querySelector<HTMLElement>("[data-input-otp-container]")!;
 
       expect(host.style.getPropertyValue("--root-height")).toBe("0px");
@@ -553,7 +553,7 @@ describe("useInputOTP", () => {
     });
 
     it("stretches the control over the whole field without showing it", () => {
-      const {otp, unmount} = mount();
+      const { otp, unmount } = mount();
 
       expect(otp().inputStyle.value).toMatchObject({
         caretColor: "transparent",
@@ -569,7 +569,7 @@ describe("useInputOTP", () => {
     });
 
     it("lets a pointer fall through the boxes to the control underneath", () => {
-      const {otp, unmount} = mount();
+      const { otp, unmount } = mount();
 
       expect(otp().rootStyle.value["pointerEvents"]).toBe("none");
       expect(otp().rootStyle.value["cursor"]).toBe("text");
@@ -578,7 +578,7 @@ describe("useInputOTP", () => {
     });
 
     it("shows a disabled field is not for typing in", () => {
-      const {otp, unmount} = mount({isDisabled: true});
+      const { otp, unmount } = mount({ isDisabled: true });
 
       expect(otp().rootStyle.value["cursor"]).toBe("default");
 
@@ -588,7 +588,7 @@ describe("useInputOTP", () => {
 
   describe("hovering", () => {
     it("reports the pointer over the control", () => {
-      const {otp, unmount} = mount();
+      const { otp, unmount } = mount();
 
       otp().handlers.onMouseover();
       expect(otp().isHovering.value).toBe(true);
@@ -600,7 +600,7 @@ describe("useInputOTP", () => {
     });
 
     it("reports no hover on a disabled field", () => {
-      const {otp, unmount} = mount({isDisabled: true});
+      const { otp, unmount } = mount({ isDisabled: true });
 
       otp().handlers.onMouseover();
 
@@ -612,7 +612,7 @@ describe("useInputOTP", () => {
 
   describe("scripting fallback", () => {
     it("hands out styles that make the control usable with no script", () => {
-      const {otp, unmount} = mount();
+      const { otp, unmount } = mount();
 
       expect(otp().noScriptCss.value).toContain("[data-input-otp]");
 
@@ -620,7 +620,7 @@ describe("useInputOTP", () => {
     });
 
     it("renders none when the caller turns it off", () => {
-      const {otp, unmount} = mount({noScriptCss: null});
+      const { otp, unmount } = mount({ noScriptCss: null });
 
       expect(otp().noScriptCss.value).toBeNull();
 
@@ -639,7 +639,7 @@ describe("useInputOTP", () => {
       vi.useFakeTimers();
 
       const onChange = vi.fn();
-      const {control, unmount} = mount({onChange});
+      const { control, unmount } = mount({ onChange });
 
       type(control(), "12");
       expect(onChange).toHaveBeenCalledTimes(1);

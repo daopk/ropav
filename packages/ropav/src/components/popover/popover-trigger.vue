@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {PopoverTriggerProps} from "./popover.types";
+import type { PopoverTriggerProps } from "./popover.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composePressResponder, usePressResponder} from "../../composables/press-responder";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { composePressResponder, usePressResponder } from "../../composables/press-responder";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {usePopoverContext} from "./popover.context";
+import { usePopoverContext } from "./popover.context";
 
 const props = defineProps<PopoverTriggerProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = usePopoverContext();
+const { slots } = usePopoverContext();
 
 // Supplied by the popover root, which is what makes this a trigger rather than a plain box.
 const responder = usePressResponder();
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 const setElement = (element: unknown) => {
   responder?.registerElement((element as HTMLElement | null) ?? null);
@@ -26,7 +26,7 @@ const setElement = (element: unknown) => {
 
 // The stylesheet keys the focus ring on the attribute, and a `div` has no pseudo-class branch it
 // could fall back to.
-const {isFocusVisible, onBlur, onFocus} = useInteractionStates();
+const { isFocusVisible, onBlur, onFocus } = useInteractionStates();
 
 // A `div` is not focusable on its own, and this one has to be: the popover is opened from it by
 // keyboard as well as by pointer.

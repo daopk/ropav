@@ -1,8 +1,11 @@
-import type {FormValidationState, ValidationResult} from "@/composables/use-form-validation-state";
+import type {
+  FormValidationState,
+  ValidationResult,
+} from "@/composables/use-form-validation-state";
 
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick, reactive, watch} from "vue";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick, reactive, watch } from "vue";
 
 import {
   CUSTOM_VALIDITY_STATE,
@@ -24,9 +27,9 @@ import Harness from "../fixtures/form-validation-harness.vue";
 const renderState = (props: Record<string, unknown> = {}) => {
   let state!: FormValidationState;
 
-  Object.assign(props, {onReady: (ready: FormValidationState) => (state = ready)});
+  Object.assign(props, { onReady: (ready: FormValidationState) => (state = ready) });
 
-  return {...renderVapor(Harness, {props}), state};
+  return { ...renderVapor(Harness, { props }), state };
 };
 
 const read = (container: HTMLElement, testId: string) =>
@@ -34,18 +37,18 @@ const read = (container: HTMLElement, testId: string) =>
 
 const nativeResult = (overrides: Partial<ValidationResult["validationDetails"]>) => ({
   isInvalid: true,
-  validationDetails: {...VALID_VALIDITY_STATE, valid: false, ...overrides},
+  validationDetails: { ...VALID_VALIDITY_STATE, valid: false, ...overrides },
   validationErrors: ["from the browser"],
 });
 
 describe("useFormValidationState", () => {
   describe("precedence", () => {
     it("lets a controlled isInvalid shadow every other source", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         isInvalid: true,
         name: "field",
         validate: () => "from validate",
-        validationErrors: {field: "from the server"},
+        validationErrors: { field: "from the server" },
         withForm: true,
       });
 
@@ -57,7 +60,7 @@ describe("useFormValidationState", () => {
     });
 
     it("treats isInvalid false as a claim of validity, not as an absent prop", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         isInvalid: false,
         validate: () => "from validate",
         validationBehavior: "aria",
@@ -70,7 +73,7 @@ describe("useFormValidationState", () => {
     });
 
     it("reports a valid validity state for isInvalid false", () => {
-      const {state, unmount} = renderState({isInvalid: false});
+      const { state, unmount } = renderState({ isInvalid: false });
 
       expect(state.realtimeValidation.value.validationDetails).toEqual(VALID_VALIDITY_STATE);
 
@@ -78,7 +81,7 @@ describe("useFormValidationState", () => {
     });
 
     it("marks a prop-driven failure as a custom error", () => {
-      const {state, unmount} = renderState({isInvalid: true});
+      const { state, unmount } = renderState({ isInvalid: true });
 
       expect(state.realtimeValidation.value.validationDetails).toEqual(CUSTOM_VALIDITY_STATE);
 
@@ -86,10 +89,10 @@ describe("useFormValidationState", () => {
     });
 
     it("prefers a server error over validate", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         name: "field",
         validate: () => "from validate",
-        validationErrors: {field: "from the server"},
+        validationErrors: { field: "from the server" },
         withForm: true,
       });
 
@@ -99,8 +102,8 @@ describe("useFormValidationState", () => {
     });
 
     it("prefers validate over a builtin result", () => {
-      const {state, unmount} = renderState({
-        builtinValidation: nativeResult({valueMissing: true}),
+      const { state, unmount } = renderState({
+        builtinValidation: nativeResult({ valueMissing: true }),
         validate: () => "from validate",
       });
 
@@ -110,7 +113,7 @@ describe("useFormValidationState", () => {
     });
 
     it("ignores a builtin result that passes", () => {
-      const {state, unmount} = renderState({builtinValidation: DEFAULT_VALIDATION_RESULT});
+      const { state, unmount } = renderState({ builtinValidation: DEFAULT_VALIDATION_RESULT });
 
       expect(state.realtimeValidation.value).toEqual(DEFAULT_VALIDATION_RESULT);
 
@@ -120,7 +123,7 @@ describe("useFormValidationState", () => {
 
   describe("validate", () => {
     it("accepts a single message", () => {
-      const {state, unmount} = renderState({validate: () => "nope", value: true});
+      const { state, unmount } = renderState({ validate: () => "nope", value: true });
 
       expect(state.realtimeValidation.value.validationErrors).toEqual(["nope"]);
 
@@ -128,7 +131,7 @@ describe("useFormValidationState", () => {
     });
 
     it("accepts several messages", () => {
-      const {state, unmount} = renderState({validate: () => ["one", "two"], value: true});
+      const { state, unmount } = renderState({ validate: () => ["one", "two"], value: true });
 
       expect(state.realtimeValidation.value.validationErrors).toEqual(["one", "two"]);
 
@@ -141,7 +144,7 @@ describe("useFormValidationState", () => {
       ["undefined", undefined],
       ["an empty array", []],
     ])("treats %s as acceptable", (_label, result) => {
-      const {state, unmount} = renderState({validate: () => result, value: true});
+      const { state, unmount } = renderState({ validate: () => result, value: true });
 
       expect(state.realtimeValidation.value.isInvalid).toBe(false);
 
@@ -149,7 +152,7 @@ describe("useFormValidationState", () => {
     });
 
     it("skips validation entirely when the value is null", () => {
-      const {state, unmount} = renderState({validate: () => "never runs", value: null});
+      const { state, unmount } = renderState({ validate: () => "never runs", value: null });
 
       expect(state.realtimeValidation.value.isInvalid).toBe(false);
 
@@ -162,7 +165,7 @@ describe("useFormValidationState", () => {
         validationBehavior: "aria" as const,
         value: false,
       });
-      const {state, unmount} = renderState(props);
+      const { state, unmount } = renderState(props);
 
       expect(state.realtimeValidation.value.isInvalid).toBe(true);
 
@@ -177,7 +180,7 @@ describe("useFormValidationState", () => {
 
   describe("validation behavior", () => {
     it("defaults to native with no form above it", () => {
-      const {container, state, unmount} = renderState();
+      const { container, state, unmount } = renderState();
 
       expect(state.validationBehavior.value).toBe("native");
       expect(read(container, "behavior")).toBe("native");
@@ -186,7 +189,7 @@ describe("useFormValidationState", () => {
     });
 
     it("takes the surrounding form's default", () => {
-      const {state, unmount} = renderState({formValidationBehavior: "aria", withForm: true});
+      const { state, unmount } = renderState({ formValidationBehavior: "aria", withForm: true });
 
       expect(state.validationBehavior.value).toBe("aria");
 
@@ -194,7 +197,7 @@ describe("useFormValidationState", () => {
     });
 
     it("lets the field override the form", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         formValidationBehavior: "aria",
         validationBehavior: "native",
         withForm: true,
@@ -208,7 +211,7 @@ describe("useFormValidationState", () => {
 
   describe("aria behavior", () => {
     it("displays a validate error with no commit", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         validate: () => "shown at once",
         validationBehavior: "aria",
         value: true,
@@ -220,9 +223,9 @@ describe("useFormValidationState", () => {
     });
 
     it("reveals an updated validation immediately", async () => {
-      const {state, unmount} = renderState({validationBehavior: "aria"});
+      const { state, unmount } = renderState({ validationBehavior: "aria" });
 
-      state.updateValidation(nativeResult({valueMissing: true}));
+      state.updateValidation(nativeResult({ valueMissing: true }));
       await nextTick();
 
       expect(state.displayValidation.value.isInvalid).toBe(true);
@@ -233,7 +236,10 @@ describe("useFormValidationState", () => {
 
   describe("native behavior", () => {
     it("hides a validate error until the field commits", async () => {
-      const {state, unmount} = renderState({validate: () => "hidden until commit", value: true});
+      const { state, unmount } = renderState({
+        validate: () => "hidden until commit",
+        value: true,
+      });
 
       expect(state.realtimeValidation.value.isInvalid).toBe(true);
       expect(state.displayValidation.value.isInvalid).toBe(false);
@@ -247,7 +253,7 @@ describe("useFormValidationState", () => {
     });
 
     it("defers the commit rather than applying it inline", () => {
-      const {state, unmount} = renderState({validate: () => "later", value: true});
+      const { state, unmount } = renderState({ validate: () => "later", value: true });
 
       state.commitValidation();
 
@@ -259,7 +265,7 @@ describe("useFormValidationState", () => {
     });
 
     it("collapses repeated commits in one tick into a single reveal", async () => {
-      const {state, unmount} = renderState({validate: () => "once", value: true});
+      const { state, unmount } = renderState({ validate: () => "once", value: true });
       let reveals = 0;
       const stop = watch(state.displayValidation, () => {
         reveals += 1;
@@ -279,9 +285,9 @@ describe("useFormValidationState", () => {
     });
 
     it("holds an updated validation back until commit", async () => {
-      const {state, unmount} = renderState();
+      const { state, unmount } = renderState();
 
-      state.updateValidation(nativeResult({valueMissing: true}));
+      state.updateValidation(nativeResult({ valueMissing: true }));
       await nextTick();
 
       expect(state.displayValidation.value.isInvalid).toBe(false);
@@ -297,7 +303,7 @@ describe("useFormValidationState", () => {
 
   describe("reset", () => {
     it("puts the displayed state back to valid", async () => {
-      const {state, unmount} = renderState({validate: () => "boom", value: true});
+      const { state, unmount } = renderState({ validate: () => "boom", value: true });
 
       state.commitValidation();
       await nextTick();
@@ -310,7 +316,7 @@ describe("useFormValidationState", () => {
     });
 
     it("cancels a commit that was already queued", async () => {
-      const {state, unmount} = renderState({validate: () => "boom", value: true});
+      const { state, unmount } = renderState({ validate: () => "boom", value: true });
 
       state.commitValidation();
       state.resetValidation();
@@ -324,9 +330,9 @@ describe("useFormValidationState", () => {
 
   describe("server errors", () => {
     it("shows the error registered under the field name", () => {
-      const {container, state, unmount} = renderState({
+      const { container, state, unmount } = renderState({
         name: "email",
-        validationErrors: {email: "already taken"},
+        validationErrors: { email: "already taken" },
         withForm: true,
       });
 
@@ -337,9 +343,9 @@ describe("useFormValidationState", () => {
     });
 
     it("accepts several messages for one field", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         name: "email",
-        validationErrors: {email: ["too short", "already taken"]},
+        validationErrors: { email: ["too short", "already taken"] },
         withForm: true,
       });
 
@@ -352,9 +358,9 @@ describe("useFormValidationState", () => {
     });
 
     it("gathers the errors of every name a composite field submits under", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         name: ["start", "end"],
-        validationErrors: {end: "too late", start: "too early"},
+        validationErrors: { end: "too late", start: "too early" },
         withForm: true,
       });
 
@@ -364,9 +370,9 @@ describe("useFormValidationState", () => {
     });
 
     it("ignores errors belonging to another field", () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         name: "email",
-        validationErrors: {password: "too short"},
+        validationErrors: { password: "too short" },
         withForm: true,
       });
 
@@ -376,9 +382,9 @@ describe("useFormValidationState", () => {
     });
 
     it("hides the error once the user acts on the field", async () => {
-      const {state, unmount} = renderState({
+      const { state, unmount } = renderState({
         name: "email",
-        validationErrors: {email: "already taken"},
+        validationErrors: { email: "already taken" },
         withForm: true,
       });
 
@@ -393,17 +399,17 @@ describe("useFormValidationState", () => {
     it("shows them again when the server answers afresh", async () => {
       const props = reactive({
         name: "email",
-        validationErrors: {email: "already taken"} as Record<string, string>,
+        validationErrors: { email: "already taken" } as Record<string, string>,
         withForm: true,
       });
-      const {state, unmount} = renderState(props);
+      const { state, unmount } = renderState(props);
 
       state.commitValidation();
       await nextTick();
       expect(state.displayValidation.value.isInvalid).toBe(false);
 
       // A new object is what marks a new response; mutating the old one would not.
-      props.validationErrors = {email: "still taken"};
+      props.validationErrors = { email: "still taken" };
       await nextTick();
 
       expect(state.displayValidation.value.validationErrors).toEqual(["still taken"]);
@@ -412,9 +418,9 @@ describe("useFormValidationState", () => {
     });
 
     it("keeps them hidden while the same response is still on screen", async () => {
-      const errors = {email: "already taken"};
-      const props = reactive({name: "email", validationErrors: errors, withForm: true});
-      const {state, unmount} = renderState(props);
+      const errors = { email: "already taken" };
+      const props = reactive({ name: "email", validationErrors: errors, withForm: true });
+      const { state, unmount } = renderState(props);
 
       state.commitValidation();
       await nextTick();
@@ -429,8 +435,8 @@ describe("useFormValidationState", () => {
     });
 
     it("ignores a form's errors for a field that submits no name", () => {
-      const {state, unmount} = renderState({
-        validationErrors: {email: "already taken"},
+      const { state, unmount } = renderState({
+        validationErrors: { email: "already taken" },
         withForm: true,
       });
 
@@ -444,8 +450,8 @@ describe("useFormValidationState", () => {
     it("hands it straight back rather than building one", () => {
       // A picker holds the value and the bounds, so its verdict is the only one that can be
       // right; a second state built here would disagree with it about the same value.
-      const owner = renderState({validate: () => "from the owner", value: "x"});
-      const borrower = renderState({validationState: owner.state, value: "x"});
+      const owner = renderState({ validate: () => "from the owner", value: "x" });
+      const borrower = renderState({ validationState: owner.state, value: "x" });
 
       expect(borrower.state).toBe(owner.state);
       borrower.unmount();
@@ -453,7 +459,7 @@ describe("useFormValidationState", () => {
     });
 
     it("ignores every other option it was given", () => {
-      const owner = renderState({value: "x"});
+      const owner = renderState({ value: "x" });
       const borrower = renderState({
         isInvalid: true,
         validate: () => "ignored",
@@ -468,8 +474,8 @@ describe("useFormValidationState", () => {
     });
 
     it("reports what the owner reveals", async () => {
-      const owner = renderState({validate: () => "from the owner", value: "x"});
-      const borrower = renderState({validationState: owner.state, value: "x"});
+      const owner = renderState({ validate: () => "from the owner", value: "x" });
+      const borrower = renderState({ validationState: owner.state, value: "x" });
 
       expect(read(borrower.container, "display-invalid")).toBe("false");
 
@@ -497,7 +503,7 @@ describe("useFormValidationState", () => {
       // Two parts of one value failing the same way is one thing to tell the user, not two.
       const failure = {
         isInvalid: true,
-        validationDetails: {...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false},
+        validationDetails: { ...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false },
         validationErrors: ["Too late"],
       };
 
@@ -508,12 +514,12 @@ describe("useFormValidationState", () => {
       const merged = mergeValidation(
         {
           isInvalid: true,
-          validationDetails: {...VALID_VALIDITY_STATE, rangeUnderflow: true, valid: false},
+          validationDetails: { ...VALID_VALIDITY_STATE, rangeUnderflow: true, valid: false },
           validationErrors: ["Too early"],
         },
         {
           isInvalid: true,
-          validationDetails: {...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false},
+          validationDetails: { ...VALID_VALIDITY_STATE, rangeOverflow: true, valid: false },
           validationErrors: ["Too late"],
         },
       );
@@ -544,7 +550,7 @@ describe("useFormValidationState", () => {
       expect(
         isEqualValidation(DEFAULT_VALIDATION_RESULT, {
           isInvalid: false,
-          validationDetails: {...VALID_VALIDITY_STATE},
+          validationDetails: { ...VALID_VALIDITY_STATE },
           validationErrors: [],
         }),
       ).toBe(true);
@@ -553,8 +559,8 @@ describe("useFormValidationState", () => {
     it("fails when the messages differ", () => {
       expect(
         isEqualValidation(
-          {isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: ["a"]},
-          {isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: ["b"]},
+          { isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: ["a"] },
+          { isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: ["b"] },
         ),
       ).toBe(false);
     });
@@ -562,10 +568,10 @@ describe("useFormValidationState", () => {
     it("fails when the failing constraint differs", () => {
       expect(
         isEqualValidation(
-          {isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: []},
+          { isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: [] },
           {
             isInvalid: true,
-            validationDetails: {...VALID_VALIDITY_STATE, valid: false, valueMissing: true},
+            validationDetails: { ...VALID_VALIDITY_STATE, valid: false, valueMissing: true },
             validationErrors: [],
           },
         ),

@@ -10,7 +10,7 @@ export const SwitchGroup = Object.assign(SwitchGroupRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {SwitchGroupRoot};
+export { SwitchGroupRoot };
 
 export type {
   SwitchGroupRootProps,
@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {switchGroupVariants} from "@ropav/styles";
+export { switchGroupVariants } from "@ropav/styles";
 
-export type {SwitchGroupVariants} from "@ropav/styles";
+export type { SwitchGroupVariants } from "@ropav/styles";

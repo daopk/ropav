@@ -1,10 +1,10 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
-import {useId} from "./use-id";
+import { useId } from "./use-id";
 
 /**
  * The ids a container hands to the text parts nested inside it, so the container can

@@ -1,4 +1,4 @@
-import type {DndStringKey} from "../i18n/dnd";
+import type { DndStringKey } from "../i18n/dnd";
 import type {
   DragEndEvent,
   DragItem,
@@ -10,17 +10,17 @@ import type {
   DropOperation,
   DropTarget as DropTargetDescriptor,
 } from "../utils/dnd-types";
-import type {LocalizedString, LocalizedStringFormatter} from "@internationalized/string";
-import type {ComputedRef, Ref, ShallowRef} from "vue";
+import type { LocalizedString, LocalizedStringFormatter } from "@internationalized/string";
+import type { ComputedRef, Ref, ShallowRef } from "vue";
 
-import {onScopeDispose, readonly, shallowRef} from "vue";
+import { onScopeDispose, readonly, shallowRef } from "vue";
 
-import {ariaHideOutside} from "../utils/aria-hide-outside";
-import {getTypes} from "../utils/dnd-data-transfer";
-import {announce} from "../utils/live-announcer";
+import { ariaHideOutside } from "../utils/aria-hide-outside";
+import { getTypes } from "../utils/dnd-data-transfer";
+import { announce } from "../utils/live-announcer";
 
-import {getDragModality} from "./drag-modality";
-import {isVirtualClick, isVirtualPointerEvent} from "./use-press";
+import { getDragModality } from "./drag-modality";
+import { isVirtualClick, isVirtualPointerEvent } from "./use-press";
 
 /**
  * The keyboard and screen reader drag session, ported from React Aria's `dnd/DragManager.ts`.
@@ -125,10 +125,10 @@ const HIDDEN_SELECTOR = '[aria-hidden="true"], [inert]';
 const contains = (node: Element | null | undefined, other: Node | null | undefined): boolean =>
   node != null && other != null && node.contains(other);
 
-const centerOf = (element: Element): {x: number; y: number} => {
+const centerOf = (element: Element): { x: number; y: number } => {
   const rect = element.getBoundingClientRect();
 
-  return {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2};
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 };
 
 const notifySubscribers = (): void => {
@@ -506,7 +506,7 @@ export class DragSession {
         ...validDropItems.flatMap(withActivateButton),
         ...visibleDropTargets.flatMap(withActivateButton),
       ],
-      {shouldUseInert: true},
+      { shouldUseInert: true },
     );
 
     this.mutationObserver.observe(document.body, {
@@ -622,7 +622,7 @@ export class DragSession {
 
       if (dropTarget) {
         dropTarget.onDropEnter?.(
-          {type: "dropenter", ...centerOf(dropTarget.element)},
+          { type: "dropenter", ...centerOf(dropTarget.element) },
           this.dragTarget,
         );
 
@@ -667,7 +667,7 @@ export class DragSession {
     if (this.currentDropTarget && !this.currentDropTarget.preventFocusOnDrop) {
       // Focus never actually moved during the drag — `cancelEvent` swallowed every focus event
       // — so state keyed on it, the focus ring in particular, is stale. Replay one.
-      document.activeElement?.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+      document.activeElement?.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
     }
 
     this.setCurrentDropTarget(null);
@@ -679,7 +679,7 @@ export class DragSession {
 
     if (!this.dragTarget.element.closest(HIDDEN_SELECTOR)) this.dragTarget.element.focus();
 
-    document.activeElement?.dispatchEvent(new FocusEvent("focusin", {bubbles: true}));
+    document.activeElement?.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
     announce(this.stringFormatter.value.format("dropCanceled"));
   }
 
@@ -734,7 +734,7 @@ export class DragSession {
     if (!dropTarget?.onDropActivate) return;
 
     dropTarget.onDropActivate(
-      {type: "dropactivate", ...centerOf(dropTarget.element)},
+      { type: "dropactivate", ...centerOf(dropTarget.element) },
       dropItem?.target ?? null,
     );
   }

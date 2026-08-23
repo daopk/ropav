@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {AlertDialogFooterProps} from "./alert-dialog.types";
+import type { AlertDialogFooterProps } from "./alert-dialog.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useAlertDialogContext} from "./alert-dialog.context";
+import { useAlertDialogContext } from "./alert-dialog.context";
 
 const props = defineProps<AlertDialogFooterProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {slots} = useAlertDialogContext();
+const { slots } = useAlertDialogContext();
 
-const styles = computed(() => slots.value.footer({class: props.class}));
+const styles = computed(() => slots.value.footer({ class: props.class }));
 </script>
 
 <template>

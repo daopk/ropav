@@ -1,12 +1,12 @@
-import {CalendarDate, CalendarDateTime} from "@internationalized/date";
-import {renderVapor} from "@ropav/testing/helpers/vue";
-import {describe, expect, it} from "vitest";
-import {nextTick} from "vue";
+import { CalendarDate, CalendarDateTime } from "@internationalized/date";
+import { renderVapor } from "@ropav/testing/helpers/vue";
+import { describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 
 import Fixture from "./fixtures.vue";
 
 const renderDateField = (props: Record<string, unknown> = {}) => {
-  const result = renderVapor(Fixture, {props: {locale: "en-US", ...props}});
+  const result = renderVapor(Fixture, { props: { locale: "en-US", ...props } });
   const slot = (name: string) =>
     result.container.querySelector<HTMLElement>(`[data-slot='${name}']`)!;
 
@@ -30,7 +30,7 @@ const renderDateField = (props: Record<string, unknown> = {}) => {
 describe("DateField", () => {
   describe("structure", () => {
     it("renders every part with its data-slot", () => {
-      const {slot, unmount} = renderDateField({
+      const { slot, unmount } = renderDateField({
         withDescription: true,
         withPrefix: true,
         withSuffix: true,
@@ -48,7 +48,7 @@ describe("DateField", () => {
     });
 
     it("renders one segment per part of the date, in the locale's order", () => {
-      const {segments, unmount} = renderDateField({locale: "en-GB"});
+      const { segments, unmount } = renderDateField({ locale: "en-GB" });
 
       expect(
         segments()
@@ -59,7 +59,7 @@ describe("DateField", () => {
     });
 
     it("groups the segments and names the group after the label", () => {
-      const {input, slot, unmount} = renderDateField();
+      const { input, slot, unmount } = renderDateField();
 
       expect(input()).toHaveAttribute("role", "group");
       expect(input()).toHaveAttribute("aria-labelledby", slot("label").id);
@@ -67,7 +67,7 @@ describe("DateField", () => {
     });
 
     it("carries the value on a hidden input under its name", () => {
-      const {submitted, unmount} = renderDateField({
+      const { submitted, unmount } = renderDateField({
         defaultValue: new CalendarDate(2026, 6, 5),
         name: "born",
       });
@@ -82,7 +82,7 @@ describe("DateField", () => {
   describe("variants", () => {
     it("applies the group's visual variant", () => {
       expect(renderDateField().group()).toHaveClass("date-input-group--primary");
-      expect(renderDateField({variant: "secondary"}).group()).toHaveClass(
+      expect(renderDateField({ variant: "secondary" }).group()).toHaveClass(
         "date-input-group--secondary",
       );
     });
@@ -92,7 +92,7 @@ describe("DateField", () => {
        * The bare form is what a caller writes and the only form that catches a boolean prop with
        * no runtime type: `:full-width="true"` stays green while such a bug is alive.
        */
-      const {group, root, unmount} = renderDateField({attributeForm: true});
+      const { group, root, unmount } = renderDateField({ attributeForm: true });
 
       expect(root).toHaveClass("date-field--full-width");
       expect(group()).toHaveClass("date-input-group--full-width");
@@ -100,7 +100,7 @@ describe("DateField", () => {
     });
 
     it("takes a class of its own", () => {
-      const {root, unmount} = renderDateField({class: "w-64"});
+      const { root, unmount } = renderDateField({ class: "w-64" });
 
       expect(root).toHaveClass("w-64");
       expect(root).toHaveClass("date-field");
@@ -110,7 +110,7 @@ describe("DateField", () => {
 
   describe("state", () => {
     it("reports being disabled on the field and the segments", () => {
-      const {input, root, segment, submitted, unmount} = renderDateField({isDisabled: true});
+      const { input, root, segment, submitted, unmount } = renderDateField({ isDisabled: true });
 
       expect(root).toHaveAttribute("data-disabled", "true");
       expect(input()).toHaveAttribute("aria-disabled", "true");
@@ -125,20 +125,20 @@ describe("DateField", () => {
        * The group is styled from these, not from the field above it: `status-disabled` dims it and
        * takes it out of the pointer's reach, and the focus ring is drawn from the invalid state.
        */
-      const disabled = renderDateField({isDisabled: true});
+      const disabled = renderDateField({ isDisabled: true });
 
       expect(disabled.group()).toHaveAttribute("data-disabled", "true");
       expect(disabled.group()).toHaveAttribute("aria-disabled", "true");
       disabled.unmount();
 
-      const invalid = renderDateField({isInvalid: true});
+      const invalid = renderDateField({ isInvalid: true });
 
       expect(invalid.group()).toHaveAttribute("data-invalid", "true");
       invalid.unmount();
     });
 
     it("reports being read only without leaving the tab order", () => {
-      const {root, segment, unmount} = renderDateField({isReadOnly: true});
+      const { root, segment, unmount } = renderDateField({ isReadOnly: true });
 
       expect(root).toHaveAttribute("data-readonly", "true");
       expect(segment("month")).toHaveAttribute("aria-readonly", "true");
@@ -150,14 +150,14 @@ describe("DateField", () => {
     it("marks itself required, which is what draws the asterisk", () => {
       // The stylesheet reaches the asterisk through `[data-required="true"] > .label`, so the
       // attribute has to sit on the field rather than on a control inside it.
-      const {root, unmount} = renderDateField({isRequired: true});
+      const { root, unmount } = renderDateField({ isRequired: true });
 
       expect(root).toHaveAttribute("data-required", "true");
       unmount();
     });
 
     it("reports being invalid down to the segments", () => {
-      const {root, segment, unmount} = renderDateField({isInvalid: true});
+      const { root, segment, unmount } = renderDateField({ isInvalid: true });
 
       expect(root).toHaveAttribute("data-invalid", "true");
       expect(segment("month")).toHaveAttribute("aria-invalid", "true");
@@ -165,7 +165,7 @@ describe("DateField", () => {
     });
 
     it("works out for itself that a value is out of range", () => {
-      const {root, unmount} = renderDateField({
+      const { root, unmount } = renderDateField({
         defaultValue: new CalendarDate(2026, 1, 1),
         minValue: new CalendarDate(2026, 6, 1),
         validationBehavior: "aria",
@@ -178,7 +178,7 @@ describe("DateField", () => {
 
   describe("granularity", () => {
     it("adds the time segments a finer granularity needs", () => {
-      const {segments, unmount} = renderDateField({
+      const { segments, unmount } = renderDateField({
         defaultValue: new CalendarDateTime(2026, 6, 5, 13, 45),
         granularity: "minute",
       });
@@ -193,13 +193,13 @@ describe("DateField", () => {
 
   describe("editing", () => {
     it("steps a segment with the arrow keys", async () => {
-      const {segment, submitted, unmount} = renderDateField({
+      const { segment, submitted, unmount } = renderDateField({
         defaultValue: new CalendarDate(2026, 6, 5),
         name: "born",
       });
 
       segment("day").dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowUp"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowUp" }),
       );
       await nextTick();
 
@@ -208,7 +208,7 @@ describe("DateField", () => {
     });
 
     it("types a whole date straight through, one segment at a time", async () => {
-      const {segment, submitted, unmount} = renderDateField({name: "born"});
+      const { segment, submitted, unmount } = renderDateField({ name: "born" });
       const type = async (part: string, data: string) => {
         segment(part).dispatchEvent(
           new InputEvent("beforeinput", {
@@ -233,11 +233,11 @@ describe("DateField", () => {
     });
 
     it("moves between segments with the arrow keys", () => {
-      const {segment, unmount} = renderDateField();
+      const { segment, unmount } = renderDateField();
 
       segment("month").focus();
       segment("month").dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowRight"}),
+        new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key: "ArrowRight" }),
       );
 
       expect(document.activeElement).toBe(segment("day"));
@@ -247,14 +247,14 @@ describe("DateField", () => {
 
   describe("labelling", () => {
     it("points the group at a visible label", () => {
-      const {input, slot, unmount} = renderDateField();
+      const { input, slot, unmount } = renderDateField();
 
       expect(input()).toHaveAttribute("aria-labelledby", slot("label").id);
       unmount();
     });
 
     it("takes a label of its own when there is none on screen", () => {
-      const {input, unmount} = renderDateField({ariaLabel: "Birth date", withLabel: false});
+      const { input, unmount } = renderDateField({ ariaLabel: "Birth date", withLabel: false });
 
       expect(input()).toHaveAttribute("aria-label", "Birth date");
       unmount();
@@ -262,7 +262,7 @@ describe("DateField", () => {
 
     it("moves focus into the field when the label is clicked", () => {
       // The label names a group, so it can point `for` at nothing and has to answer the click.
-      const {segment, slot, unmount} = renderDateField();
+      const { segment, slot, unmount } = renderDateField();
 
       slot("label").click();
 
@@ -271,7 +271,7 @@ describe("DateField", () => {
     });
 
     it("describes the value in words, and its own description too", async () => {
-      const {input, slot, unmount} = renderDateField({
+      const { input, slot, unmount } = renderDateField({
         defaultValue: new CalendarDate(2026, 6, 5),
         withDescription: true,
       });

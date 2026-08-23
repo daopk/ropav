@@ -6,11 +6,11 @@ import {
   toCalendarDateTime,
   toLocalTimeZone,
 } from "@internationalized/date";
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
 
-import {useDateFieldControlContext} from "./date-input-group.context";
+import { useDateFieldControlContext } from "./date-input-group.context";
 
 /**
  * A native date input, out of sight, so the browser can autofill the field.
@@ -20,7 +20,7 @@ import {useDateFieldControlContext} from "./date-input-group.context";
  * nothing to fill in. Its `form` is deliberately empty, so what it holds is never submitted — the
  * field's own hidden input is what a form reads.
  */
-const {state} = useDateFieldControlContext().resolve();
+const { state } = useDateFieldControlContext().resolve();
 
 const props = defineProps<{
   /** What kind of value the browser may offer to fill in. */
@@ -29,7 +29,7 @@ const props = defineProps<{
 }>();
 
 /** Fixed rather than absolute, so the input cannot add scroll to the page. */
-const style = {...visuallyHiddenStyle, left: 0, position: "fixed", top: 0} as const;
+const style = { ...visuallyHiddenStyle, left: 0, position: "fixed", top: 0 } as const;
 
 const step = computed(() => {
   if (state.granularity.value === "second") return 1;
@@ -52,7 +52,7 @@ const value = computed(() => {
 /** Which time segments the value carries, so only those are written back. */
 const TIME_SEGMENTS = ["hour", "minute", "second"] as const;
 const DATE_SEGMENTS = ["day", "month", "year"] as const;
-const GRANULARITY_DEPTH = {hour: 1, minute: 2, second: 3} as const;
+const GRANULARITY_DEPTH = { hour: 1, minute: 2, second: 3 } as const;
 
 const onChange = (event: Event) => {
   const text = (event.target as HTMLInputElement).value;

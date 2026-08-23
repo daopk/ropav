@@ -1,6 +1,6 @@
-import type {Calendar, DateValue, ZonedDateTime} from "@internationalized/date";
+import type { Calendar, DateValue, ZonedDateTime } from "@internationalized/date";
 
-import {CalendarDate} from "@internationalized/date";
+import { CalendarDate } from "@internationalized/date";
 
 /** How the hours of a day are numbered in a locale. */
 export type HourCycle = "h11" | "h12" | "h23" | "h24";
@@ -314,7 +314,7 @@ export class IncompleteDate {
           this.day ?? 1,
         );
 
-        date = date.cycle(field, amount, {round: true});
+        date = date.cycle(field, amount, { round: true });
         result.era = date.era;
         result.year = date.year;
         break;
@@ -403,7 +403,7 @@ export class IncompleteDate {
       // A stored offset that no longer matches means the wall time was reached from the other side
       // of a daylight-saving change, so the instant has to be shifted to keep it.
       if ("offset" in result && this.offset != null && result.offset !== this.offset) {
-        result = result.add({milliseconds: result.offset - this.offset});
+        result = result.add({ milliseconds: result.offset - this.offset });
       }
 
       return result;
@@ -430,23 +430,23 @@ export class IncompleteDate {
         };
       }
       case "year":
-        return {maxValue: 9999, minValue: 1, value: this.year};
+        return { maxValue: 9999, minValue: 1, value: this.year };
       case "month":
-        return {maxValue: this.calendar.getMaximumMonthsInYear(), minValue: 1, value: this.month};
+        return { maxValue: this.calendar.getMaximumMonthsInYear(), minValue: 1, value: this.month };
       case "day":
-        return {maxValue: this.calendar.getMaximumDaysInMonth(), minValue: 1, value: this.day};
+        return { maxValue: this.calendar.getMaximumDaysInMonth(), minValue: 1, value: this.day };
       case "dayPeriod":
-        return {maxValue: 1, minValue: 0, value: this.dayPeriod};
+        return { maxValue: 1, minValue: 0, value: this.dayPeriod };
       case "hour": {
-        if (this.hourCycle === "h12") return {maxValue: 12, minValue: 1, value: this.hour};
-        if (this.hourCycle === "h11") return {maxValue: 11, minValue: 0, value: this.hour};
+        if (this.hourCycle === "h12") return { maxValue: 12, minValue: 1, value: this.hour };
+        if (this.hourCycle === "h11") return { maxValue: 11, minValue: 0, value: this.hour };
 
-        return {maxValue: 23, minValue: 0, value: this.hour};
+        return { maxValue: 23, minValue: 0, value: this.hour };
       }
       case "minute":
-        return {maxValue: 59, minValue: 0, value: this.minute};
+        return { maxValue: 59, minValue: 0, value: this.minute };
       case "second":
-        return {maxValue: 59, minValue: 0, value: this.second};
+        return { maxValue: 59, minValue: 0, value: this.second };
     }
 
     return undefined;

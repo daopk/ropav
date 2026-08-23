@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {AutocompleteTriggerProps, AutocompleteTriggerSlotProps} from "./autocomplete.types";
+import type { AutocompleteTriggerProps, AutocompleteTriggerSlotProps } from "./autocomplete.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
-import {useAutocompleteContext} from "./autocomplete.context";
+import { useAutocompleteContext } from "./autocomplete.context";
 
 // `isDisabled` declares an explicit `undefined` default so an absent prop falls back to the
 // autocomplete's own state rather than reading as an explicit `false`.
-const props = withDefaults(defineProps<AutocompleteTriggerProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<AutocompleteTriggerProps>(), { isDisabled: undefined });
 
-defineSlots<{default?: (props: AutocompleteTriggerSlotProps) => unknown}>();
+defineSlots<{ default?: (props: AutocompleteTriggerSlotProps) => unknown }>();
 
 const {
   clearButtonElement,
@@ -25,10 +25,10 @@ const {
 
 const resolvedIsDisabled = computed(() => props.isDisabled ?? rootDisabled.value);
 
-const {isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave} =
-  useInteractionStates({isDisabled: () => resolvedIsDisabled.value});
+const { isFocusVisible, isFocused, isHovered, onBlur, onFocus, onPointerenter, onPointerleave } =
+  useInteractionStates({ isDisabled: () => resolvedIsDisabled.value });
 
-const styles = computed(() => slots.value.trigger({class: props.class}));
+const styles = computed(() => slots.value.trigger({ class: props.class }));
 
 // A named callback rather than a string `ref`, which `vue-tsc` does not count as a read.
 const setElement = (element: unknown) => {

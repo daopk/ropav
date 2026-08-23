@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DateFieldHarnessProps} from "./date-field.types";
+import type { DateFieldHarnessProps } from "./date-field.types";
 
-import {provideLocale} from "@/composables/use-locale";
+import { provideLocale } from "@/composables/use-locale";
 
 import DateFieldHost from "./date-field-host.vue";
 

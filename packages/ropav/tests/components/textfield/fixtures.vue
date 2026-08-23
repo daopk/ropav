@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {TextFieldFixtureProps} from "./fixtures.types";
+import type { TextFieldFixtureProps } from "./fixtures.types";
 
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Input} from "@/components/input";
-import {Label} from "@/components/label";
-import {TextArea} from "@/components/textarea";
-import {TextField} from "@/components/textfield";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { TextArea } from "@/components/textarea";
+import { TextField } from "@/components/textfield";
 
 // The three-state booleans need explicit `undefined` here too: forwarding a cast `false`
 // would turn the field controlled, or claim it valid, without any test asking for it.

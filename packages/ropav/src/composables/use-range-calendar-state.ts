@@ -1,7 +1,7 @@
-import type {CalendarRange, DateRange, RangeCalendarLikeState} from "./use-calendar";
-import type {SelectionAlignment, UseCalendarStateOptions} from "./use-calendar-state";
-import type {CalendarDate, DateDuration, DateValue} from "@internationalized/date";
-import type {MaybeRefOrGetter} from "vue";
+import type { CalendarRange, DateRange, RangeCalendarLikeState } from "./use-calendar";
+import type { SelectionAlignment, UseCalendarStateOptions } from "./use-calendar-state";
+import type { CalendarDate, DateDuration, DateValue } from "@internationalized/date";
+import type { MaybeRefOrGetter } from "vue";
 
 import {
   GregorianCalendar,
@@ -10,13 +10,18 @@ import {
   toCalendar,
   toCalendarDate,
 } from "@internationalized/date";
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {alignCenter, constrainValue, isDateInvalid, previousAvailableDate} from "../utils/calendar";
+import {
+  alignCenter,
+  constrainValue,
+  isDateInvalid,
+  previousAvailableDate,
+} from "../utils/calendar";
 
-import {useCalendarState} from "./use-calendar-state";
-import {useControllableState} from "./use-controllable-state";
-import {useLocale} from "./use-locale";
+import { useCalendarState } from "./use-calendar-state";
+import { useControllableState } from "./use-controllable-state";
+import { useLocale } from "./use-locale";
 
 export interface UseRangeCalendarStateOptions extends Omit<
   UseCalendarStateOptions,
@@ -61,7 +66,7 @@ const makeRange = (start: DateValue, end: DateValue): CalendarRange | null => {
   // The user can drag either way, so the anchor is not necessarily the earlier end.
   if (to.compare(from) < 0) [from, to] = [to, from];
 
-  return {end: toCalendarDate(to), start: toCalendarDate(from)};
+  return { end: toCalendarDate(to), start: toCalendarDate(from) };
 };
 
 /**
@@ -91,7 +96,7 @@ const nextUnavailableDate = (
   visibleDuration: DateDuration,
   direction: 1 | -1,
 ): CalendarDate | undefined => {
-  let nextDate = anchor.add({days: direction});
+  let nextDate = anchor.add({ days: direction });
   const lowerBound = anchor.subtract(visibleDuration);
   const upperBound = anchor.add(visibleDuration);
 
@@ -99,11 +104,11 @@ const nextUnavailableDate = (
     (direction < 0 ? nextDate.compare(lowerBound) >= 0 : nextDate.compare(upperBound) <= 0) &&
     !isDateUnavailable(nextDate)
   ) {
-    nextDate = nextDate.add({days: direction});
+    nextDate = nextDate.add({ days: direction });
   }
 
   // Nothing blocked the way inside the search window, so the range is unbounded on this side.
-  if (isDateUnavailable(nextDate)) return nextDate.add({days: -direction});
+  if (isDateUnavailable(nextDate)) return nextDate.add({ days: -direction });
 
   return undefined;
 };
@@ -125,12 +130,12 @@ export const useRangeCalendarState = (
   const resolvedLocale = useLocale();
   const locale = computed(() => toValue(options.locale) ?? resolvedLocale.value.locale);
   const visibleDuration = computed<DateDuration>(
-    () => toValue(options.visibleDuration) ?? {months: 1},
+    () => toValue(options.visibleDuration) ?? { months: 1 },
   );
   const minValue = computed(() => toValue(options.minValue));
   const maxValue = computed(() => toValue(options.maxValue));
 
-  const {setState: setValue, state: value} = useControllableState<DateRange | null>({
+  const { setState: setValue, state: value } = useControllableState<DateRange | null>({
     defaultValue: toValue(options.defaultValue) ?? null,
     onValueChange: options.onChange,
     value: () => toValue(options.value),
@@ -156,7 +161,7 @@ export const useRangeCalendarState = (
       minValue.value,
       maxValue.value,
     );
-    const end = start.add(visibleDuration.value).subtract({days: 1});
+    const end = start.add(visibleDuration.value).subtract({ days: 1 });
 
     return range.end.compare(end) > 0 ? "start" : "center";
   });
@@ -287,9 +292,9 @@ export const useRangeCalendarState = (
     const range = getAvailableRange(anchor);
     const isUnusable = (date: CalendarDate) =>
       isInvalid(date) || isDateInvalid(date, range?.start, range?.end);
-    let nextDay = anchor.add({days: 1});
+    let nextDay = anchor.add({ days: 1 });
 
-    if (isUnusable(nextDay)) nextDay = anchor.subtract({days: 1});
+    if (isUnusable(nextDay)) nextDay = anchor.subtract({ days: 1 });
 
     if (!isUnusable(nextDay)) {
       calendar.setFocusedDate(nextDay);

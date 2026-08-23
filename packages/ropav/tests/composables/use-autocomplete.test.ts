@@ -1,13 +1,13 @@
-import type {UseAutocompleteOptions, UseAutocompleteReturn} from "@/composables/use-autocomplete";
-import type {CollectionKey} from "@/composables/use-collection";
+import type { UseAutocompleteOptions, UseAutocompleteReturn } from "@/composables/use-autocomplete";
+import type { CollectionKey } from "@/composables/use-collection";
 
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, nextTick, shallowRef} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, nextTick, shallowRef } from "vue";
 
-import {useAutocomplete} from "@/composables/use-autocomplete";
-import {useCollection} from "@/composables/use-collection";
-import {useListKeyboard} from "@/composables/use-list-keyboard";
-import {useSelectionManager} from "@/composables/use-selection-manager";
+import { useAutocomplete } from "@/composables/use-autocomplete";
+import { useCollection } from "@/composables/use-collection";
+import { useListKeyboard } from "@/composables/use-list-keyboard";
+import { useSelectionManager } from "@/composables/use-selection-manager";
 
 const scopes: (() => void)[] = [];
 const nodes: HTMLElement[] = [];
@@ -99,25 +99,25 @@ const setup = (
       ...options.autocomplete,
     });
 
-    return {autocomplete, collection, keyboard, selection};
+    return { autocomplete, collection, keyboard, selection };
   })!;
 
   const press = (key: string, init: KeyboardEventInit = {}) => {
-    const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key, ...init});
+    const event = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, key, ...init });
 
-    Object.defineProperty(event, "target", {value: input});
+    Object.defineProperty(event, "target", { value: input });
     harness.autocomplete.onKeydown(event);
 
     return event;
   };
 
   const type = (value: string, inputType = "insertText") => {
-    input.dispatchEvent(new InputEvent("beforeinput", {bubbles: true, inputType}));
+    input.dispatchEvent(new InputEvent("beforeinput", { bubbles: true, inputType }));
     input.value = value;
     harness.autocomplete.setInputValue(value);
   };
 
-  return {...harness, input, items, list, press, type};
+  return { ...harness, input, items, list, press, type };
 };
 
 afterEach(() => {
@@ -129,7 +129,7 @@ describe("useAutocomplete", () => {
   describe("input value", () => {
     it("starts empty and reports what it is set to", () => {
       const onInputChange = vi.fn();
-      const {autocomplete} = setup({autocomplete: {onInputChange}});
+      const { autocomplete } = setup({ autocomplete: { onInputChange } });
 
       expect(autocomplete.inputValue.value).toBe("");
 
@@ -140,14 +140,14 @@ describe("useAutocomplete", () => {
     });
 
     it("starts on the value it was given", () => {
-      const {autocomplete} = setup({autocomplete: {defaultInputValue: "dog"}});
+      const { autocomplete } = setup({ autocomplete: { defaultInputValue: "dog" } });
 
       expect(autocomplete.inputValue.value).toBe("dog");
     });
 
     it("leaves a controlled value to its owner", () => {
       const onInputChange = vi.fn();
-      const {autocomplete} = setup({autocomplete: {inputValue: "pinned", onInputChange}});
+      const { autocomplete } = setup({ autocomplete: { inputValue: "pinned", onInputChange } });
 
       autocomplete.setInputValue("typed");
 
@@ -158,14 +158,14 @@ describe("useAutocomplete", () => {
 
   describe("attributes for the input", () => {
     it("points the input at the collection", () => {
-      const {autocomplete} = setup();
+      const { autocomplete } = setup();
 
       expect(autocomplete.inputAttributes.value["aria-controls"]).toBe("list");
       expect(autocomplete.inputAttributes.value["aria-autocomplete"]).toBe("list");
     });
 
     it("turns off every suggestion the browser would add of its own", () => {
-      const {autocomplete} = setup();
+      const { autocomplete } = setup();
       const attributes = autocomplete.inputAttributes.value;
 
       expect(attributes.autocomplete).toBe("off");
@@ -175,7 +175,7 @@ describe("useAutocomplete", () => {
     });
 
     it("names the option virtual focus is on", () => {
-      const {autocomplete, press} = setup();
+      const { autocomplete, press } = setup();
 
       expect(autocomplete.inputAttributes.value["aria-activedescendant"]).toBeUndefined();
 
@@ -189,7 +189,7 @@ describe("useAutocomplete", () => {
     it.each(["ArrowDown", "ArrowUp", "Home", "End", "PageUp", "PageDown"])(
       "moves virtual focus on %s and keeps the caret still",
       (key) => {
-        const {input, press, selection} = setup();
+        const { input, press, selection } = setup();
 
         input.focus();
 
@@ -204,7 +204,7 @@ describe("useAutocomplete", () => {
     );
 
     it("steps through the options", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
       press("ArrowDown");
@@ -213,19 +213,19 @@ describe("useAutocomplete", () => {
     });
 
     it("leaves Shift+Home to the caret while nothing is focused", () => {
-      const {press, selection} = setup();
-      const event = press("Home", {shiftKey: true});
+      const { press, selection } = setup();
+      const event = press("Home", { shiftKey: true });
 
       expect(selection.focusedKey.value).toBeNull();
       expect(event.defaultPrevented).toBe(false);
     });
 
     it("hands Shift+End to the collection once something is focused", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
 
-      const event = press("End", {shiftKey: true});
+      const event = press("End", { shiftKey: true });
 
       expect(selection.focusedKey.value).toBe("c");
       expect(event.defaultPrevented).toBe(true);
@@ -234,7 +234,7 @@ describe("useAutocomplete", () => {
 
   describe("keys the caret keeps", () => {
     it("leaves Space alone entirely", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
 
@@ -246,14 +246,14 @@ describe("useAutocomplete", () => {
     });
 
     it.each(["Escape", "Tab"])("leaves %s to whatever encloses the field", (key) => {
-      const {press} = setup();
+      const { press } = setup();
       const event = press(key);
 
       expect(event.defaultPrevented).toBe(false);
     });
 
     it("leaves the inline arrows to the caret while nothing is focused", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
       const event = press("ArrowRight");
 
       expect(event.defaultPrevented).toBe(false);
@@ -261,7 +261,7 @@ describe("useAutocomplete", () => {
     });
 
     it("clears virtual focus once an inline arrow is pressed with something focused", () => {
-      const {autocomplete, press, selection} = setup();
+      const { autocomplete, press, selection } = setup();
 
       press("ArrowDown");
       press("ArrowLeft");
@@ -274,7 +274,7 @@ describe("useAutocomplete", () => {
 
   describe("choosing an option", () => {
     it("selects the focused option on Enter", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
 
       press("ArrowDown");
 
@@ -285,7 +285,7 @@ describe("useAutocomplete", () => {
     });
 
     it("leaves Enter to the form while nothing is focused", () => {
-      const {press, selection} = setup();
+      const { press, selection } = setup();
       const event = press("Enter");
 
       expect(selection.selectedKeys.value.size).toBe(0);
@@ -295,7 +295,7 @@ describe("useAutocomplete", () => {
 
   describe("typing", () => {
     it("moves virtual focus to the first option when text is typed forwards", () => {
-      const {selection, type} = setup();
+      const { selection, type } = setup();
 
       type("a");
 
@@ -305,7 +305,7 @@ describe("useAutocomplete", () => {
     it.each(["insertCompositionText", "insertFromComposition"])(
       "treats %s as typing forwards, for an input method that composes",
       (inputType) => {
-        const {selection, type} = setup();
+        const { selection, type } = setup();
 
         type("あ", inputType);
 
@@ -314,7 +314,7 @@ describe("useAutocomplete", () => {
     );
 
     it("skips the first option when asked to", () => {
-      const {selection, type} = setup({autocomplete: {disableAutoFocusFirst: true}});
+      const { selection, type } = setup({ autocomplete: { disableAutoFocusFirst: true } });
 
       type("a");
 
@@ -322,7 +322,7 @@ describe("useAutocomplete", () => {
     });
 
     it("skips a disabled first option", () => {
-      const {selection, type} = setup({disabled: ["a"]});
+      const { selection, type } = setup({ disabled: ["a"] });
 
       type("a");
 
@@ -332,7 +332,7 @@ describe("useAutocomplete", () => {
     it.each(["insertFromPaste", "deleteContentBackward", "historyUndo"])(
       "clears virtual focus when the text is edited by %s",
       (inputType) => {
-        const {press, selection, type} = setup();
+        const { press, selection, type } = setup();
 
         press("ArrowDown");
         type("x", inputType);
@@ -344,7 +344,7 @@ describe("useAutocomplete", () => {
     );
 
     it("clears virtual focus when the focused option is filtered away", async () => {
-      const {collection, press, selection} = setup();
+      const { collection, press, selection } = setup();
 
       press("ArrowDown");
       expect(selection.focusedKey.value).toBe("a");
@@ -367,22 +367,22 @@ describe("useAutocomplete", () => {
 
   describe("the pointer", () => {
     it("clears virtual focus when the input itself is pressed", () => {
-      const {input, press, selection} = setup();
+      const { input, press, selection } = setup();
 
       press("ArrowDown");
       input.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "mouse"}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
       );
 
       expect(selection.focusedKey.value).toBeNull();
     });
 
     it("leaves virtual focus alone on a touch", () => {
-      const {input, press, selection} = setup();
+      const { input, press, selection } = setup();
 
       press("ArrowDown");
       input.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 0, pointerType: "touch"}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch" }),
       );
 
       // A tap is not a request to put focus back in the text, so the option stays lit.
@@ -390,11 +390,11 @@ describe("useAutocomplete", () => {
     });
 
     it("leaves virtual focus alone on a secondary button", () => {
-      const {input, press, selection} = setup();
+      const { input, press, selection } = setup();
 
       press("ArrowDown");
       input.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 2, pointerType: "mouse"}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 2, pointerType: "mouse" }),
       );
 
       expect(selection.focusedKey.value).toBe("a");
@@ -403,7 +403,7 @@ describe("useAutocomplete", () => {
 
   describe("leaving the field", () => {
     it("clears virtual focus on blur", () => {
-      const {autocomplete, press, selection} = setup();
+      const { autocomplete, press, selection } = setup();
 
       press("ArrowDown");
       autocomplete.onBlur();
@@ -414,7 +414,7 @@ describe("useAutocomplete", () => {
 
   describe("before the collection exists", () => {
     it("leaves every key alone until the collection reports its keyboard", () => {
-      const {press, selection} = setup({withoutKeyboard: true});
+      const { press, selection } = setup({ withoutKeyboard: true });
       const event = press("ArrowDown");
 
       // The overlay a picker's collection lives in is not mounted while the picker is shut, so
@@ -424,7 +424,7 @@ describe("useAutocomplete", () => {
     });
 
     it("names no option", () => {
-      const {autocomplete} = setup({withoutKeyboard: true});
+      const { autocomplete } = setup({ withoutKeyboard: true });
 
       expect(autocomplete.inputAttributes.value["aria-activedescendant"]).toBeUndefined();
     });
@@ -432,7 +432,7 @@ describe("useAutocomplete", () => {
 
   describe("without virtual focus", () => {
     it("hands no key to the collection at all", () => {
-      const {press, selection} = setup({autocomplete: {disableVirtualFocus: true}});
+      const { press, selection } = setup({ autocomplete: { disableVirtualFocus: true } });
       const event = press("ArrowDown");
 
       expect(selection.focusedKey.value).toBeNull();
@@ -440,7 +440,7 @@ describe("useAutocomplete", () => {
     });
 
     it("leaves typing to the text", () => {
-      const {selection, type} = setup({autocomplete: {disableVirtualFocus: true}});
+      const { selection, type } = setup({ autocomplete: { disableVirtualFocus: true } });
 
       type("a");
 

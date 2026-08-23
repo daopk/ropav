@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {DragKey, DroppableCollectionReorderEvent} from "@/utils/dnd-types";
+import type { DragKey, DroppableCollectionReorderEvent } from "@/utils/dnd-types";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 
-import {ListBox} from "@/components/list-box";
-import {useDragAndDrop} from "@/composables/use-drag-and-drop";
+import { ListBox } from "@/components/list-box";
+import { useDragAndDrop } from "@/composables/use-drag-and-drop";
 
 /**
  * A reorderable list box.
@@ -18,13 +18,13 @@ const props = withDefaults(
     selectionMode?: "multiple" | "none" | "single";
     onReorder?: (event: DroppableCollectionReorderEvent) => void;
   }>(),
-  {labels: () => ["Ada", "Grace", "Alan"], onReorder: undefined, selectionMode: "multiple"},
+  { labels: () => ["Ada", "Grace", "Alan"], onReorder: undefined, selectionMode: "multiple" },
 );
 
 const order = shallowRef<string[]>([...props.labels]);
 
-const {dragAndDropHooks} = useDragAndDrop({
-  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({"text/plain": String(key)})),
+const { dragAndDropHooks } = useDragAndDrop({
+  getItems: (keys: Set<DragKey>) => [...keys].map((key) => ({ "text/plain": String(key) })),
   onReorder(event) {
     props.onReorder?.(event);
 
@@ -38,7 +38,7 @@ const {dragAndDropHooks} = useDragAndDrop({
   },
 });
 
-defineExpose({order});
+defineExpose({ order });
 </script>
 
 <template>
@@ -48,11 +48,11 @@ defineExpose({order});
     :selection-mode="props.selectionMode"
   >
     <template v-for="label in order" :key="label">
-      <ListBox.DropIndicator :target="{dropPosition: 'before', key: label, type: 'item'}" />
+      <ListBox.DropIndicator :target="{ dropPosition: 'before', key: label, type: 'item' }" />
       <ListBox.Item :id="label">{{ label }}</ListBox.Item>
     </template>
     <ListBox.DropIndicator
-      :target="{dropPosition: 'after', key: order[order.length - 1]!, type: 'item'}"
+      :target="{ dropPosition: 'after', key: order[order.length - 1]!, type: 'item' }"
     />
   </ListBox>
 </template>

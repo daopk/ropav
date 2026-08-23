@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {InputGroupTextAreaProps} from "./input-group.types";
+import type { InputGroupTextAreaProps } from "./input-group.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {useTextFieldControlContext} from "../../composables/use-text-field";
-import {dataAttr} from "../../utils/assertion";
-import {setFormValue} from "../../utils/form-value";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { useTextFieldControlContext } from "../../composables/use-text-field";
+import { dataAttr } from "../../utils/assertion";
+import { setFormValue } from "../../utils/form-value";
 
-import {useInputGroupContext} from "./input-group.context";
+import { useInputGroupContext } from "./input-group.context";
 
 const props = defineProps<InputGroupTextAreaProps>();
 
@@ -17,7 +17,7 @@ const emit = defineEmits<{
   "update:value": [value: string];
 }>();
 
-const {slots} = useInputGroupContext();
+const { slots } = useInputGroupContext();
 
 // Optional: a group can hold a control without a field around it, exactly as in React.
 const control = useTextFieldControlContext();
@@ -29,14 +29,14 @@ const setElement = (next: unknown) => {
   control?.registerElement(element.value);
 };
 
-const styles = computed(() => slots.value.input({class: props.class}));
+const styles = computed(() => slots.value.input({ class: props.class }));
 
 // A prop set here wins over what the field supplies, which is how React merges context props
 // too. Spreading the field's bag blindly would undo it: the bag carries every key it knows
 // about, so an absent field placeholder arrives as `placeholder: undefined` and would remove
 // one set on the control itself.
 const attrs = computed(() => {
-  const merged: Record<string, unknown> = {...control?.attrs.value};
+  const merged: Record<string, unknown> = { ...control?.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
   if (props.value !== undefined) merged["value"] = props.value;
@@ -46,7 +46,7 @@ const attrs = computed(() => {
 
 // The stylesheet keys hover and focus on these attributes as well as on the native
 // pseudo-classes, so they are rendered here to match what React puts in the DOM.
-const interaction = useInteractionStates({isDisabled: () => control?.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled.value });
 
 // Bumped on every input so the re-assert below runs even when the value the caller holds has
 // not moved — which is the whole case worth handling.
@@ -81,7 +81,7 @@ watch(
 
     setFormValue(el, pinned);
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 /*
@@ -93,7 +93,7 @@ watch(
 watch(
   () => props.value !== undefined,
   (owned) => control?.setValueOwned(owned),
-  {immediate: true},
+  { immediate: true },
 );
 
 const onFocus = (event: FocusEvent) => {

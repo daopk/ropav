@@ -1,38 +1,38 @@
 <script setup lang="ts" vapor generic="T">
-import type {CollectionKey} from "../../composables/use-collection";
-import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {DropTargetDelegate} from "../../utils/dnd-types";
-import type {VirtualizerNode} from "../../utils/virtualizer-layout";
-import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
+import type { CollectionKey } from "../../composables/use-collection";
+import type { UseDroppableCollectionReturn } from "../../composables/use-droppable-collection";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { DropTargetDelegate } from "../../utils/dnd-types";
+import type { VirtualizerNode } from "../../utils/virtualizer-layout";
+import type { ListBoxRootProps, ListBoxRootSlotProps } from "./list-box.types";
 
-import {listboxVariants} from "@ropav/styles";
-import {computed, onScopeDispose, shallowRef, toValue} from "vue";
+import { listboxVariants } from "@ropav/styles";
+import { computed, onScopeDispose, shallowRef, toValue } from "vue";
 
-import {toDragCollection} from "../../composables/drag-collection";
-import {useCollection} from "../../composables/use-collection";
-import {useCollectionAutoFocus} from "../../composables/use-collection-auto-focus";
-import {useDndPersistedKeys} from "../../composables/use-dnd-persisted-keys";
-import {useId} from "../../composables/use-id";
-import {useListKeyboard} from "../../composables/use-list-keyboard";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {useTypeahead} from "../../composables/use-typeahead";
-import {useVirtualizer} from "../../composables/use-virtualizer";
-import {useVirtualizerScroll} from "../../composables/use-virtualizer-scroll";
-import {dataAttr} from "../../utils/assertion";
-import {createListCollection} from "../../utils/virtualizer-collection";
-import {provideSeparatorContext} from "../separator/separator.context";
-import {VirtualizerItem} from "../virtualizer";
+import { toDragCollection } from "../../composables/drag-collection";
+import { useCollection } from "../../composables/use-collection";
+import { useCollectionAutoFocus } from "../../composables/use-collection-auto-focus";
+import { useDndPersistedKeys } from "../../composables/use-dnd-persisted-keys";
+import { useId } from "../../composables/use-id";
+import { useListKeyboard } from "../../composables/use-list-keyboard";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { useTypeahead } from "../../composables/use-typeahead";
+import { useVirtualizer } from "../../composables/use-virtualizer";
+import { useVirtualizerScroll } from "../../composables/use-virtualizer-scroll";
+import { dataAttr } from "../../utils/assertion";
+import { createListCollection } from "../../utils/virtualizer-collection";
+import { provideSeparatorContext } from "../separator/separator.context";
+import { VirtualizerItem } from "../virtualizer";
 import {
   provideVirtualizerStateContext,
   useVirtualizerConfigContext,
 } from "../virtualizer/virtualizer.context";
 
 import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
-import {provideListBoxContext, useListBoxStateContext} from "./list-box.context";
+import { provideListBoxContext, useListBoxStateContext } from "./list-box.context";
 
 /** Stands in while a virtualized listbox has no data yet, so the layout has something to read. */
-const EMPTY_COLLECTION = createListCollection({items: []});
+const EMPTY_COLLECTION = createListCollection({ items: [] });
 
 const props = defineProps<ListBoxRootProps<T>>();
 
@@ -57,7 +57,7 @@ const callerSlots = defineSlots<{
  */
 const itemOf = (node?: VirtualizerNode) => node?.content as T | undefined;
 
-const styles = computed(() => listboxVariants({class: props.class, variant: props.variant}));
+const styles = computed(() => listboxVariants({ class: props.class, variant: props.variant }));
 
 /**
  * The state this listbox runs on, which is not always its own.
@@ -110,7 +110,7 @@ const source = computed(() => {
 
 const isVirtualized = computed(() => source.value != null);
 
-const collection = owner?.collection ?? useCollection({source: () => source.value});
+const collection = owner?.collection ?? useCollection({ source: () => source.value });
 
 const selection =
   owner?.selection ??
@@ -287,7 +287,7 @@ if (dnd && dropState) {
 }
 
 /** Whether the collection as a whole is the current drop target. */
-const isRootDropTarget = computed(() => dropState?.isDropTarget({type: "root"}) ?? false);
+const isRootDropTarget = computed(() => dropState?.isDropTarget({ type: "root" }) ?? false);
 
 /**
  * A windowed listbox renders its own drop indicators; a plain one leaves them to the caller.
@@ -304,7 +304,7 @@ const lastItemKey = computed(() => collection.getLastKey());
 
 // A listbox lays its own options out, so a rule between two of them has to take part in that
 // layout rather than being the block-level `hr` it would be on its own.
-provideSeparatorContext({elementType: "div"});
+provideSeparatorContext({ elementType: "div" });
 
 const typeahead = useTypeahead({
   focusedKey: () => selection.focusedKey.value,
@@ -312,7 +312,7 @@ const typeahead = useTypeahead({
   // Under virtual focus the characters are text the user is typing into the control beside the
   // listbox, which filters the options — searching them at the same time would fight over them.
   isDisabled: shouldUseVirtualFocus,
-  onSearchMatch: (key) => keyboard.focusKey(key, {scroll: true}),
+  onSearchMatch: (key) => keyboard.focusKey(key, { scroll: true }),
 });
 
 provideListBoxContext({
@@ -336,7 +336,7 @@ provideListBoxContext({
  * it from wherever the user actually is.
  */
 if (owner) {
-  useCollectionAutoFocus({autoFocus: owner.autoFocus, element, keyboard, selection});
+  useCollectionAutoFocus({ autoFocus: owner.autoFocus, element, keyboard, selection });
 }
 
 if (virtualizer && virtualizerConfig) {
@@ -404,7 +404,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
       <template v-for="view in virtualizer?.visibleViews.value" :key="view.key">
         <ListBoxDropIndicator
           v-if="rendersDropIndicators"
-          :target="{dropPosition: 'before', key: view.key, type: 'item'}"
+          :target="{ dropPosition: 'before', key: view.key, type: 'item' }"
         />
         <VirtualizerItem :layout-info="view.layoutInfo">
           <slot :index="view.node?.index" :item="itemOf(view.node)" />
@@ -412,7 +412,7 @@ const hasEmptySlot = computed(() => Boolean(callerSlots["empty"]));
       </template>
       <ListBoxDropIndicator
         v-if="rendersDropIndicators && lastItemKey != null"
-        :target="{dropPosition: 'after', key: lastItemKey, type: 'item'}"
+        :target="{ dropPosition: 'after', key: lastItemKey, type: 'item' }"
       />
     </div>
     <slot v-else />

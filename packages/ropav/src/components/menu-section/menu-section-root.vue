@@ -1,13 +1,13 @@
 <script setup lang="ts" vapor>
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {MenuSectionRootProps} from "./menu-section.types";
+import type { CollectionSelection } from "../../composables/use-selection-manager";
+import type { MenuSectionRootProps } from "./menu-section.types";
 
-import {menuSectionVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { menuSectionVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useSelectionManager} from "../../composables/use-selection-manager";
-import {provideMenuSectionContext, useMenuContext} from "../menu/menu.context";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useSelectionManager } from "../../composables/use-selection-manager";
+import { provideMenuSectionContext, useMenuContext } from "../menu/menu.context";
 
 // `disallowEmptySelection` declares an explicit `undefined` default so an absent prop stays
 // absent rather than reading as an explicit `false`.
@@ -21,11 +21,11 @@ const emit = defineEmits<{
   "update:selectedKeys": [keys: CollectionSelection];
 }>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const menu = useMenuContext();
 
-const styles = computed(() => menuSectionVariants({class: props.class}));
+const styles = computed(() => menuSectionVariants({ class: props.class }));
 
 /**
  * A selection of the section's own, sharing the menu's focus.
@@ -56,7 +56,7 @@ provideMenuSectionContext({
 
 // ARIA does not allow a heading inside a menu, so the section's `Header` is demoted to
 // presentation and reused only as the visual label this group points at.
-const fieldIds = useFieldIds({headingRole: "presentation", slots: ["heading"]});
+const fieldIds = useFieldIds({ headingRole: "presentation", slots: ["heading"] });
 
 provideFieldIdsContext(fieldIds.context);
 </script>

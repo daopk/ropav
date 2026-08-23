@@ -1,8 +1,8 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, nextTick, shallowRef, toValue, watch} from "vue";
+import { computed, nextTick, shallowRef, toValue, watch } from "vue";
 
-import {createContext} from "../utils/create-context";
+import { createContext } from "../utils/create-context";
 
 /**
  * Snapshot of an element's `ValidityState`.
@@ -80,7 +80,7 @@ export const DEFAULT_VALIDATION_RESULT: ValidationResult = Object.freeze({
  */
 export const mergeValidation = (...results: ValidationResult[]): ValidationResult => {
   const errors = new Set<string>();
-  const details = {...VALID_VALIDITY_STATE};
+  const details = { ...VALID_VALIDITY_STATE };
   let isInvalid = false;
 
   for (const result of results) {
@@ -95,7 +95,7 @@ export const mergeValidation = (...results: ValidationResult[]): ValidationResul
 
   details.valid = !isInvalid;
 
-  return {isInvalid, validationDetails: details, validationErrors: [...errors]};
+  return { isInvalid, validationDetails: details, validationErrors: [...errors] };
 };
 
 /** Form controls that take part in constraint validation. */
@@ -204,7 +204,7 @@ const runValidate = <T>(validate: ValidationFunction<T>, value: T): string[] => 
 
 const toValidationResult = (errors: string[]): ValidationResult | null =>
   errors.length > 0
-    ? {isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: errors}
+    ? { isInvalid: true, validationDetails: CUSTOM_VALIDITY_STATE, validationErrors: errors }
     : null;
 
 /**

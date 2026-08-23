@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {AvatarFallbackProps} from "./avatar.types";
+import type { AvatarFallbackProps } from "./avatar.types";
 
-import {shallowRef, watchEffect} from "vue";
+import { shallowRef, watchEffect } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useAvatarContext} from "./avatar.context";
+import { useAvatarContext } from "./avatar.context";
 
 const props = defineProps<AvatarFallbackProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {imageStatus, slots} = useAvatarContext();
+const { imageStatus, slots } = useAvatarContext();
 
 const canRender = shallowRef(props.delayMs === undefined);
 
@@ -37,7 +37,7 @@ watchEffect((onCleanup) => {
 <template>
   <span
     v-if="canRender && imageStatus !== 'loaded'"
-    :class="composeSlotClassName(slots.fallback, props.class, {color: props.color})"
+    :class="composeSlotClassName(slots.fallback, props.class, { color: props.color })"
     data-slot="avatar-fallback"
   >
     <slot />

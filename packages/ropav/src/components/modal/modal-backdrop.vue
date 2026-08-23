@@ -1,16 +1,16 @@
 <script setup lang="ts" vapor>
-import type {ModalBackdropProps} from "./modal.types";
+import type { ModalBackdropProps } from "./modal.types";
 
-import {modalVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { modalVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {provideFocusResponder} from "../../composables/focus-responder";
-import {providePressResponder} from "../../composables/press-responder";
-import {useModalOverlay} from "../../composables/use-modal-overlay";
-import {useModalTransition} from "../../composables/use-modal-transition";
-import {dataAttr} from "../../utils/assertion";
+import { provideFocusResponder } from "../../composables/focus-responder";
+import { providePressResponder } from "../../composables/press-responder";
+import { useModalOverlay } from "../../composables/use-modal-overlay";
+import { useModalTransition } from "../../composables/use-modal-transition";
+import { dataAttr } from "../../utils/assertion";
 
-import {provideModalContext, provideModalOverlayContext, useModalContext} from "./modal.context";
+import { provideModalContext, provideModalOverlayContext, useModalContext } from "./modal.context";
 
 // The three-state booleans declare an explicit `undefined` default so an absent prop stays absent
 // rather than reading as a deliberate `false`.
@@ -21,10 +21,10 @@ const props = withDefaults(defineProps<ModalBackdropProps>(), {
   isKeyboardDismissDisabled: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const context = useModalContext();
-const {state} = context;
+const { state } = context;
 
 const backdropElement = shallowRef<HTMLElement | null>(null);
 const contentElement = shallowRef<HTMLElement | null>(null);
@@ -72,10 +72,10 @@ provideFocusResponder(null);
 
 const slots = computed(() => ({
   ...context.slots.value,
-  ...modalVariants({variant: props.variant}),
+  ...modalVariants({ variant: props.variant }),
 }));
 
-provideModalContext({...context, slots});
+provideModalContext({ ...context, slots });
 
 provideModalOverlayContext({
   close: state.close,
@@ -88,7 +88,7 @@ provideModalOverlayContext({
   },
 });
 
-const styles = computed(() => slots.value.backdrop({class: props.class}));
+const styles = computed(() => slots.value.backdrop({ class: props.class }));
 
 const target = computed(() => props.portalContainer ?? "body");
 

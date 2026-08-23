@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {TooltipContentProps} from "./tooltip.types";
+import type { TooltipContentProps } from "./tooltip.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useEnterExit} from "../../composables/use-enter-exit";
-import {useOverlayPosition} from "../../composables/use-overlay-position";
-import {dataAttr} from "../../utils/assertion";
-import {provideOverlayArrowContext} from "../overlay";
+import { useEnterExit } from "../../composables/use-enter-exit";
+import { useOverlayPosition } from "../../composables/use-overlay-position";
+import { dataAttr } from "../../utils/assertion";
+import { provideOverlayArrowContext } from "../overlay";
 
-import {useTooltipContext} from "./tooltip.context";
+import { useTooltipContext } from "./tooltip.context";
 
 // The three-state booleans declare an explicit `undefined` default so an absent prop stays absent
 // rather than reading as an explicit `false`.
@@ -19,9 +19,9 @@ const props = withDefaults(defineProps<TooltipContentProps>(), {
   showArrow: false,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
-const {shouldSkipAnimation, slots, state, tooltipId, triggerElement} = useTooltipContext();
+const { shouldSkipAnimation, slots, state, tooltipId, triggerElement } = useTooltipContext();
 
 const element = shallowRef<HTMLElement | null>(null);
 const arrow = shallowRef<Element | null>(null);
@@ -35,7 +35,7 @@ const arrow = shallowRef<Element | null>(null);
  * going through it would mean turning every part of it off. React Aria draws the line in the same
  * place — its tooltip does not go through `usePopover` either.
  */
-const {arrowStyle, overlayStyle, placement} = useOverlayPosition({
+const { arrowStyle, overlayStyle, placement } = useOverlayPosition({
   arrowBoundaryOffset: () => props.arrowBoundaryOffset,
   arrowRef: arrow,
   containerPadding: () => props.containerPadding,
@@ -80,7 +80,7 @@ const isPresent = computed(
   () => state.isOpen.value || enterExit.isExiting.value || props.isExiting === true,
 );
 
-const styles = computed(() => slots.value.base({class: props.class}));
+const styles = computed(() => slots.value.base({ class: props.class }));
 
 const target = computed(() => props.portalContainer ?? "body");
 

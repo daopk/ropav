@@ -1,4 +1,4 @@
-import type {AlertVariants} from "@ropav/styles";
+import type { AlertVariants } from "@ropav/styles";
 
 export interface AlertRootProps {
   class?: string;

@@ -1,5 +1,5 @@
-import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
-import {ListBoxSectionRoot} from "../list-box-section";
+import { ListBoxItemIndicator, ListBoxItemRoot } from "../list-box-item";
+import { ListBoxSectionRoot } from "../list-box-section";
 
 import ListBoxDropIndicator from "./list-box-drop-indicator.vue";
 import ListBoxLoadMoreItem from "./list-box-load-more-item.vue";
@@ -20,7 +20,7 @@ export const ListBox = Object.assign(ListBoxRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Component
  * -----------------------------------------------------------------------------------------------*/
-export {ListBoxDropIndicator, ListBoxLoadMoreItem, ListBoxRoot};
+export { ListBoxDropIndicator, ListBoxLoadMoreItem, ListBoxRoot };
 
 export type {
   ListBoxDropIndicatorProps,
@@ -38,11 +38,11 @@ export {
   useListBoxStateContext,
 } from "./list-box.context";
 
-export type {ListBoxContext, ListBoxStateContext} from "./list-box.context";
+export type { ListBoxContext, ListBoxStateContext } from "./list-box.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {listboxVariants} from "@ropav/styles";
+export { listboxVariants } from "@ropav/styles";
 
-export type {ListBoxVariants} from "@ropav/styles";
+export type { ListBoxVariants } from "@ropav/styles";

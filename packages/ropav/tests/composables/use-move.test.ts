@@ -1,9 +1,9 @@
-import type {MoveEndEvent, MoveMoveEvent, MoveStartEvent} from "@/composables/use-move";
+import type { MoveEndEvent, MoveMoveEvent, MoveStartEvent } from "@/composables/use-move";
 
-import {describe, expect, it} from "vitest";
-import {effectScope} from "vue";
+import { describe, expect, it } from "vitest";
+import { effectScope } from "vue";
 
-import {useMove} from "@/composables/use-move";
+import { useMove } from "@/composables/use-move";
 
 /** Run a composable in a disposable scope, mirroring a component lifetime. */
 const withScope = <T>(setup: () => T): [T, () => void] => {
@@ -45,19 +45,25 @@ const setup = () => {
 
 const pointerdown = (element: HTMLElement, x: number, y: number, pointerId = 1) =>
   element.dispatchEvent(
-    new PointerEvent("pointerdown", {bubbles: true, button: 0, clientX: x, clientY: y, pointerId}),
+    new PointerEvent("pointerdown", {
+      bubbles: true,
+      button: 0,
+      clientX: x,
+      clientY: y,
+      pointerId,
+    }),
   );
 
 const pointermove = (x: number, y: number, pointerId = 1) =>
-  window.dispatchEvent(new PointerEvent("pointermove", {clientX: x, clientY: y, pointerId}));
+  window.dispatchEvent(new PointerEvent("pointermove", { clientX: x, clientY: y, pointerId }));
 
 const pointerup = (pointerId = 1) =>
-  window.dispatchEvent(new PointerEvent("pointerup", {pointerId}));
+  window.dispatchEvent(new PointerEvent("pointerup", { pointerId }));
 
 describe("useMove", () => {
   describe("pointer", () => {
     it("reports movement as deltas from the last position", () => {
-      const {dispose, element, events, types} = setup();
+      const { dispose, element, events, types } = setup();
 
       pointerdown(element, 10, 10);
       // The press alone is not a move.
@@ -78,7 +84,7 @@ describe("useMove", () => {
     });
 
     it("ignores a move that goes nowhere", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
       pointerdown(element, 10, 10);
       pointermove(10, 10);
@@ -90,7 +96,7 @@ describe("useMove", () => {
     });
 
     it("keeps following the pointer once it leaves the element", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
       pointerdown(element, 10, 10);
       pointermove(400, 400);
@@ -103,7 +109,7 @@ describe("useMove", () => {
     });
 
     it("ignores a second pointer while one is already dragging", () => {
-      const {dispose, element, events, types} = setup();
+      const { dispose, element, events, types } = setup();
 
       pointerdown(element, 10, 10, 1);
       pointerdown(element, 50, 50, 2);
@@ -118,11 +124,11 @@ describe("useMove", () => {
     });
 
     it("ends the interaction when the pointer is cancelled", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
       pointerdown(element, 10, 10);
       pointermove(20, 10);
-      window.dispatchEvent(new PointerEvent("pointercancel", {pointerId: 1}));
+      window.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 1 }));
 
       expect(types()).toEqual(["movestart", "move", "moveend"]);
 
@@ -130,10 +136,10 @@ describe("useMove", () => {
     });
 
     it("only drags with the primary button", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
       element.dispatchEvent(
-        new PointerEvent("pointerdown", {bubbles: true, button: 2, pointerId: 3}),
+        new PointerEvent("pointerdown", { bubbles: true, button: 2, pointerId: 3 }),
       );
       pointermove(50, 50, 3);
 
@@ -143,7 +149,7 @@ describe("useMove", () => {
     });
 
     it("stops listening once the scope is gone", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
       pointerdown(element, 10, 10);
       dispose();
@@ -155,9 +161,9 @@ describe("useMove", () => {
 
   describe("keyboard", () => {
     it("reports one arrow press as a single unit move", () => {
-      const {dispose, element, events, types} = setup();
+      const { dispose, element, events, types } = setup();
 
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
 
       // Start and end come with it, so a consumer can treat a key press like a whole drag.
       expect(types()).toEqual(["movestart", "move", "moveend"]);
@@ -177,9 +183,9 @@ describe("useMove", () => {
       };
 
       for (const [key, [deltaX, deltaY]] of Object.entries(deltas)) {
-        const {dispose, element, events} = setup();
+        const { dispose, element, events } = setup();
 
-        element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key}));
+        element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key }));
 
         expect([(events[1] as MoveMoveEvent).deltaX, (events[1] as MoveMoveEvent).deltaY]).toEqual([
           deltaX,
@@ -191,8 +197,12 @@ describe("useMove", () => {
     });
 
     it("consumes the key so a native control does not act on it too", () => {
-      const {dispose, element} = setup();
-      const event = new KeyboardEvent("keydown", {bubbles: true, cancelable: true, key: "ArrowUp"});
+      const { dispose, element } = setup();
+      const event = new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: "ArrowUp",
+      });
 
       element.dispatchEvent(event);
 
@@ -202,10 +212,10 @@ describe("useMove", () => {
     });
 
     it("carries the modifier state through", () => {
-      const {dispose, element, events} = setup();
+      const { dispose, element, events } = setup();
 
       element.dispatchEvent(
-        new KeyboardEvent("keydown", {bubbles: true, key: "ArrowRight", shiftKey: true}),
+        new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight", shiftKey: true }),
       );
 
       expect((events[1] as MoveMoveEvent).shiftKey).toBe(true);
@@ -214,9 +224,9 @@ describe("useMove", () => {
     });
 
     it("leaves other keys alone", () => {
-      const {dispose, element, types} = setup();
+      const { dispose, element, types } = setup();
 
-      element.dispatchEvent(new KeyboardEvent("keydown", {bubbles: true, key: "Enter"}));
+      element.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
 
       expect(types()).toEqual([]);
 

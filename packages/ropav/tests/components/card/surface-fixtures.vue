@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {CardRootProps} from "@/components/card";
-import type {SurfaceRootProps} from "@/components/surface";
+import type { CardRootProps } from "@/components/card";
+import type { SurfaceRootProps } from "@/components/surface";
 
-import {Card} from "@/components/card";
-import {SurfaceRoot} from "@/components/surface";
+import { Card } from "@/components/card";
+import { SurfaceRoot } from "@/components/surface";
 
 import SurfaceConsumer from "../../fixtures/surface-consumer.vue";
 
 /** `outerVariant` puts a real surface above the card, which is what transparent forwards. */
-const props = defineProps<CardRootProps & {outerVariant?: SurfaceRootProps["variant"]}>();
+const props = defineProps<CardRootProps & { outerVariant?: SurfaceRootProps["variant"] }>();
 </script>
 
 <template>

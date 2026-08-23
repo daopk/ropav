@@ -12,7 +12,7 @@ export const Tag = Object.assign(TagRoot, {
 /* -------------------------------------------------------------------------------------------------
  * Named Components
  * -----------------------------------------------------------------------------------------------*/
-export {TagRemoveButton, TagRoot};
+export { TagRemoveButton, TagRoot };
 
 export type {
   TagRemoveButtonProps,
@@ -24,13 +24,13 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
-export {useTagContext} from "./tag.context";
+export { useTagContext } from "./tag.context";
 
-export type {TagContext} from "./tag.context";
+export type { TagContext } from "./tag.context";
 
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tagVariants} from "@ropav/styles";
+export { tagVariants } from "@ropav/styles";
 
-export type {TagVariants} from "@ropav/styles";
+export type { TagVariants } from "@ropav/styles";

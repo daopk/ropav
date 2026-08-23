@@ -122,7 +122,7 @@ export class TreeDropTargetDelegate implements DropTargetDelegate {
       }
 
       if (keyBefore != null) {
-        const converted: ItemDropTarget = {dropPosition: "after", key: keyBefore, type: "item"};
+        const converted: ItemDropTarget = { dropPosition: "after", key: keyBefore, type: "item" };
 
         if (isValidDropTarget(converted)) resolved = converted;
       }
@@ -130,7 +130,7 @@ export class TreeDropTargetDelegate implements DropTargetDelegate {
 
     const potentialTargets = this.getPotentialTargets(resolved, isValidDropTarget);
 
-    if (potentialTargets.length === 0) return {type: "root"};
+    if (potentialTargets.length === 0) return { type: "root" };
 
     if (potentialTargets.length === 1) {
       // Not at a boundary, so nothing to remember about which level was preferred.
@@ -160,7 +160,7 @@ export class TreeDropTargetDelegate implements DropTargetDelegate {
 
     // Step over rows that are not items — a loader, a section header — to the next real one.
     while (currentItem && (currentItem.type ?? "item") !== "item" && currentItem.nextKey != null) {
-      target = {...target, key: currentItem.nextKey};
+      target = { ...target, key: currentItem.nextKey };
       currentItem = collection.getItem(currentItem.nextKey);
     }
 
@@ -208,7 +208,7 @@ export class TreeDropTargetDelegate implements DropTargetDelegate {
       const isLastChildAtLevel = !nextItem || nextItem.parentKey !== parentKey;
 
       if (isLastChildAtLevel) {
-        const afterParent: ItemDropTarget = {dropPosition: "after", key: parentKey, type: "item"};
+        const afterParent: ItemDropTarget = { dropPosition: "after", key: parentKey, type: "item" };
 
         if (isValidDropTarget(afterParent)) ancestorTargets.push(afterParent);
         if (nextItem) break;
@@ -237,7 +237,7 @@ export class TreeDropTargetDelegate implements DropTargetDelegate {
         currentItem.level != null &&
         nextNode.level > currentItem.level
       ) {
-        const beforeNext: ItemDropTarget = {dropPosition: "before", key: nextKey, type: "item"};
+        const beforeNext: ItemDropTarget = { dropPosition: "before", key: nextKey, type: "item" };
 
         if (isValidDropTarget(beforeNext)) return [beforeNext];
       }

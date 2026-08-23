@@ -1,9 +1,9 @@
-import type {UseSelectReturn} from "../../composables/use-select";
-import type {SelectedItem, UseSelectStateReturn} from "../../composables/use-select-state";
-import type {selectVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { UseSelectReturn } from "../../composables/use-select";
+import type { SelectedItem, UseSelectStateReturn } from "../../composables/use-select-state";
+import type { selectVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface SelectContext {
   slots: ComputedRef<ReturnType<typeof selectVariants>>;

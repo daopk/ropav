@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {FormFixtureProps} from "./fixtures.types";
+import type { FormFixtureProps } from "./fixtures.types";
 
-import {Form} from "@/components/form";
+import { Form } from "@/components/form";
 
 import FormValidationHost from "../../fixtures/form-validation-host.vue";
 

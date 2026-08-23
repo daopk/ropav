@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {PaginationPreviousIconProps} from "./pagination.types";
+import type { PaginationPreviousIconProps } from "./pagination.types";
 
-import {IconChevronLeft} from "../icons";
+import { IconChevronLeft } from "../icons";
 
 const props = defineProps<PaginationPreviousIconProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 </script>
 
 <template>

@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
-import type {SwitchFixtureProps} from "./fixtures.types";
-import type {FormRootProps} from "@/components/form";
+import type { SwitchFixtureProps } from "./fixtures.types";
+import type { FormRootProps } from "@/components/form";
 
-import {Form} from "@/components/form";
+import { Form } from "@/components/form";
 
 import SwitchFixture from "./fixtures.vue";
 

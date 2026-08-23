@@ -1,9 +1,9 @@
-import type {CollectionKey, UseCollectionReturn} from "./use-collection";
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { CollectionKey, UseCollectionReturn } from "./use-collection";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, shallowRef, toValue} from "vue";
+import { computed, shallowRef, toValue } from "vue";
 
-import {useControllableState} from "./use-controllable-state";
+import { useControllableState } from "./use-controllable-state";
 
 export type SelectionMode = "none" | "single" | "multiple";
 
@@ -79,7 +79,7 @@ export interface UseSelectionManagerReturn {
   /** What a press means, given the mode, the behaviour and the modifiers. */
   select: (
     key: CollectionKey,
-    options?: {isShiftPressed?: boolean; isCtrlPressed?: boolean},
+    options?: { isShiftPressed?: boolean; isCtrlPressed?: boolean },
   ) => void;
 }
 
@@ -98,7 +98,7 @@ export interface UseSelectionManagerReturn {
 export const useSelectionManager = (
   options: UseSelectionManagerOptions,
 ): UseSelectionManagerReturn => {
-  const {collection} = options;
+  const { collection } = options;
 
   const selectionMode = computed(() => toValue(options.selectionMode) ?? "none");
   const selectionBehavior = computed(() => toValue(options.selectionBehavior) ?? "toggle");
@@ -109,7 +109,7 @@ export const useSelectionManager = (
   const toSelection = (keys: "all" | Iterable<CollectionKey>): CollectionSelection =>
     keys === "all" ? "all" : new Set(keys);
 
-  const {setState, state} = useControllableState<CollectionSelection>({
+  const { setState, state } = useControllableState<CollectionSelection>({
     defaultValue: toSelection(options.defaultSelectedKeys ?? []),
     onValueChange: options.onSelectionChange,
     value: () => {

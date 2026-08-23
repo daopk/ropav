@@ -1,25 +1,25 @@
 <script setup lang="ts" vapor>
-import type {ListBoxItemRootProps, ListBoxItemSlotProps} from "./list-box-item.types";
+import type { ListBoxItemRootProps, ListBoxItemSlotProps } from "./list-box-item.types";
 
-import {listboxItemVariants} from "@ropav/styles";
-import {computed, shallowRef, watch} from "vue";
+import { listboxItemVariants } from "@ropav/styles";
+import { computed, shallowRef, watch } from "vue";
 
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useId } from "../../composables/use-id";
 import {
   useInteractionModality,
   useInteractionStates,
 } from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {getCollectionTextValue} from "../../utils/text-value";
-import {useListBoxContext} from "../list-box/list-box.context";
-import {useVirtualizerStateContext} from "../virtualizer/virtualizer.context";
+import { dataAttr } from "../../utils/assertion";
+import { getCollectionTextValue } from "../../utils/text-value";
+import { useListBoxContext } from "../list-box/list-box.context";
+import { useVirtualizerStateContext } from "../virtualizer/virtualizer.context";
 
-import {provideListBoxItemContext} from "./list-box-item.context";
+import { provideListBoxItemContext } from "./list-box-item.context";
 
 const props = defineProps<ListBoxItemRootProps>();
 
-defineSlots<{default?: (props: ListBoxItemSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ListBoxItemSlotProps) => unknown }>();
 
 const {
   collection,
@@ -54,7 +54,7 @@ const positionInSet = computed(() => {
 
 const setSize = computed(() => (virtualizer ? virtualizer.itemCount.value : undefined));
 
-const slots = computed(() => listboxItemVariants({variant: props.variant}));
+const slots = computed(() => listboxItemVariants({ variant: props.variant }));
 
 // Falls back to a generated key so an item without an `id` still has a stable identity.
 const generatedKey = useId();
@@ -77,7 +77,7 @@ watch(
       }),
     );
   },
-  {flush: "post", immediate: true},
+  { flush: "post", immediate: true },
 );
 
 const isSelected = computed(() => selection.isSelected(itemKey.value));
@@ -86,10 +86,10 @@ const selectionMode = computed(() => selection.selectionMode.value);
 
 // Only the description slot is wired: the item names itself from its content, exactly as the
 // React build does, so handing out a label id would add an attribute nothing points at.
-const fieldIds = useFieldIds({slots: ["description"]});
+const fieldIds = useFieldIds({ slots: ["description"] });
 
 provideFieldIdsContext(fieldIds.context);
-provideListBoxItemContext({isSelected, slots});
+provideListBoxItemContext({ isSelected, slots });
 
 const {
   isFocusVisible: isRealFocusVisible,
@@ -101,7 +101,7 @@ const {
   onPointerdown,
   onPointerenter: onPointerenterState,
   onPointerleave,
-} = useInteractionStates({isDisabled: () => isDisabled.value});
+} = useInteractionStates({ isDisabled: () => isDisabled.value });
 
 /**
  * Whether the collection considers this the focused option without any element being focused.
@@ -204,13 +204,13 @@ const onFocus = (event: FocusEvent) => {
  */
 const draggable =
   dragState && dragAndDropHooks?.useDraggableItem
-    ? dragAndDropHooks.useDraggableItem({hasAction: true, key: itemKey.value}, dragState)
+    ? dragAndDropHooks.useDraggableItem({ hasAction: true, key: itemKey.value }, dragState)
     : null;
 
 const droppable =
   dropState && dragAndDropHooks?.useDroppableItem
     ? dragAndDropHooks.useDroppableItem(
-        {target: {dropPosition: "on", key: itemKey.value, type: "item"}},
+        { target: { dropPosition: "on", key: itemKey.value, type: "item" } },
         dropState,
         element,
       )
@@ -229,10 +229,10 @@ const isDropTarget = computed(() => droppable?.isDropTarget.value ?? false);
  * leaving it here would silently drop the drag instructions.
  */
 const dndAttrs = computed(() => {
-  const {["aria-describedby"]: _drag, ...drag} = draggable?.attrs.value ?? {};
-  const {["aria-describedby"]: _drop, ...drop} = droppable?.attrs.value ?? {};
+  const { ["aria-describedby"]: _drag, ...drag } = draggable?.attrs.value ?? {};
+  const { ["aria-describedby"]: _drop, ...drop } = droppable?.attrs.value ?? {};
 
-  return {...drag, ...drop};
+  return { ...drag, ...drop };
 });
 
 /** The drag instructions, or the item's own description when there is no drag to describe. */
@@ -272,7 +272,7 @@ const onClick = (event: MouseEvent) => {
     :aria-posinset="positionInSet"
     :aria-selected="selectionMode === 'none' ? undefined : isSelected"
     :aria-setsize="setSize"
-    :class="slots.item({class: props.class})"
+    :class="slots.item({ class: props.class })"
     v-bind="dndAttrs"
     :data-allows-dragging="dataAttr(draggable != null)"
     :data-collection="collectionId"

@@ -1,7 +1,7 @@
-import type {cardVariants} from "@ropav/styles";
-import type {ComputedRef} from "vue";
+import type { cardVariants } from "@ropav/styles";
+import type { ComputedRef } from "vue";
 
-import {createContext} from "../../utils/create-context";
+import { createContext } from "../../utils/create-context";
 
 export interface CardContext {
   slots: ComputedRef<ReturnType<typeof cardVariants>>;

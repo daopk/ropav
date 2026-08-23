@@ -1,14 +1,14 @@
 <script setup lang="ts" vapor>
-import type {LabelRootProps} from "./label.types";
+import type { LabelRootProps } from "./label.types";
 
-import {labelVariants} from "@ropav/styles";
-import {computed} from "vue";
+import { labelVariants } from "@ropav/styles";
+import { computed } from "vue";
 
-import {useFieldIdsContext} from "../../composables/use-field-ids";
+import { useFieldIdsContext } from "../../composables/use-field-ids";
 
 const props = defineProps<LabelRootProps>();
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const styles = computed(() =>
   labelVariants({

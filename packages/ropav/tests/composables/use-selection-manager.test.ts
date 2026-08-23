@@ -1,14 +1,14 @@
-import type {CollectionKey, UseCollectionReturn} from "@/composables/use-collection";
+import type { CollectionKey, UseCollectionReturn } from "@/composables/use-collection";
 import type {
   UseSelectionManagerOptions,
   UseSelectionManagerReturn,
 } from "@/composables/use-selection-manager";
 
-import {afterEach, describe, expect, it, vi} from "vitest";
-import {effectScope, shallowRef} from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { effectScope, shallowRef } from "vue";
 
-import {useCollection} from "@/composables/use-collection";
-import {useSelectionManager} from "@/composables/use-selection-manager";
+import { useCollection } from "@/composables/use-collection";
+import { useSelectionManager } from "@/composables/use-selection-manager";
 
 const scopes: (() => void)[] = [];
 const containers: HTMLElement[] = [];
@@ -40,7 +40,7 @@ const createCollection = (keys: CollectionKey[], disabled: CollectionKey[] = [])
 };
 
 const createManager = (
-  props: Omit<UseSelectionManagerOptions, "collection"> & {collection?: UseCollectionReturn} = {},
+  props: Omit<UseSelectionManagerOptions, "collection"> & { collection?: UseCollectionReturn } = {},
 ): UseSelectionManagerReturn => {
   const scope = effectScope();
 
@@ -48,7 +48,9 @@ const createManager = (
 
   const collection = props.collection ?? createCollection(["a", "b", "c", "d"]);
 
-  return scope.run(() => useSelectionManager({...props, collection})) as UseSelectionManagerReturn;
+  return scope.run(() =>
+    useSelectionManager({ ...props, collection }),
+  ) as UseSelectionManagerReturn;
 };
 
 afterEach(() => {
@@ -71,7 +73,7 @@ describe("useSelectionManager", () => {
 
     it("ignores every selection call in none mode", () => {
       const onSelectionChange = vi.fn();
-      const manager = createManager({onSelectionChange});
+      const manager = createManager({ onSelectionChange });
 
       manager.toggleSelection("a");
       manager.replaceSelection("a");
@@ -86,7 +88,7 @@ describe("useSelectionManager", () => {
 
   describe("single selection", () => {
     it("replaces the selection", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.select("a");
       manager.select("b");
@@ -95,7 +97,7 @@ describe("useSelectionManager", () => {
     });
 
     it("turns the selected key off again", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.select("a");
       manager.select("a");
@@ -117,7 +119,7 @@ describe("useSelectionManager", () => {
     });
 
     it("takes only the first key offered to setSelectedKeys", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.setSelectedKeys(["b", "c"]);
 
@@ -127,7 +129,7 @@ describe("useSelectionManager", () => {
 
   describe("multiple selection", () => {
     it("adds and removes keys under toggle behaviour", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.select("a");
       manager.select("b");
@@ -159,7 +161,7 @@ describe("useSelectionManager", () => {
       });
 
       manager.select("a");
-      manager.select("b", {isCtrlPressed: true});
+      manager.select("b", { isCtrlPressed: true });
 
       expect([...manager.selectedKeys.value]).toEqual(["a", "b"]);
     });
@@ -179,30 +181,30 @@ describe("useSelectionManager", () => {
 
   describe("range extension", () => {
     it("selects the span between the anchor and the key", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.select("b");
-      manager.select("d", {isShiftPressed: true});
+      manager.select("d", { isShiftPressed: true });
 
       expect([...manager.selectedKeys.value].sort()).toEqual(["b", "c", "d"]);
     });
 
     it("extends backwards from the anchor", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.select("c");
-      manager.select("a", {isShiftPressed: true});
+      manager.select("a", { isShiftPressed: true });
 
       expect([...manager.selectedKeys.value].sort()).toEqual(["a", "b", "c"]);
     });
 
     it("shrinks the span when the range is pulled back", () => {
       // Without dropping the previous span first, shrinking would leave keys selected.
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.select("a");
-      manager.select("d", {isShiftPressed: true});
-      manager.select("b", {isShiftPressed: true});
+      manager.select("d", { isShiftPressed: true });
+      manager.select("b", { isShiftPressed: true });
 
       expect([...manager.selectedKeys.value].sort()).toEqual(["a", "b"]);
     });
@@ -214,13 +216,13 @@ describe("useSelectionManager", () => {
       });
 
       manager.select("a");
-      manager.select("c", {isShiftPressed: true});
+      manager.select("c", { isShiftPressed: true });
 
       expect([...manager.selectedKeys.value].sort()).toEqual(["a", "c"]);
     });
 
     it("collapses to the pressed key when coming from a select-all", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.selectAll();
       manager.extendSelection("b");
@@ -229,7 +231,7 @@ describe("useSelectionManager", () => {
     });
 
     it("replaces rather than extends in single mode", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.select("a");
       manager.extendSelection("c");
@@ -241,7 +243,7 @@ describe("useSelectionManager", () => {
   describe("select all", () => {
     it("reports all verbatim so a change handler sees what React reports", () => {
       const onSelectionChange = vi.fn();
-      const manager = createManager({onSelectionChange, selectionMode: "multiple"});
+      const manager = createManager({ onSelectionChange, selectionMode: "multiple" });
 
       manager.selectAll();
 
@@ -250,7 +252,7 @@ describe("useSelectionManager", () => {
     });
 
     it("resolves all against the collection when read as keys", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.selectAll();
 
@@ -270,7 +272,7 @@ describe("useSelectionManager", () => {
     });
 
     it("is refused in single mode", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.selectAll();
 
@@ -278,7 +280,7 @@ describe("useSelectionManager", () => {
     });
 
     it("recognises an explicit full selection as select-all", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.setSelectedKeys(["a", "b", "c", "d"]);
 
@@ -289,7 +291,7 @@ describe("useSelectionManager", () => {
 
   describe("clearing", () => {
     it("empties the selection", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.setSelectedKeys(["a", "b"]);
       manager.clearSelection();
@@ -312,7 +314,7 @@ describe("useSelectionManager", () => {
 
   describe("disabled items", () => {
     it("blocks selection of a key listed as disabled", () => {
-      const manager = createManager({disabledKeys: ["b"], selectionMode: "multiple"});
+      const manager = createManager({ disabledKeys: ["b"], selectionMode: "multiple" });
 
       manager.select("b");
 
@@ -344,7 +346,7 @@ describe("useSelectionManager", () => {
     });
 
     it("cannot select a key the collection does not hold", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       expect(manager.canSelectItem("nope")).toBe(false);
     });
@@ -352,7 +354,7 @@ describe("useSelectionManager", () => {
 
   describe("selection order", () => {
     it("reports the first and last selected keys in document order", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       manager.setSelectedKeys(["c", "a"]);
 
@@ -361,7 +363,7 @@ describe("useSelectionManager", () => {
     });
 
     it("reports null when nothing is selected", () => {
-      const manager = createManager({selectionMode: "multiple"});
+      const manager = createManager({ selectionMode: "multiple" });
 
       expect(manager.firstSelectedKey.value).toBeNull();
       expect(manager.lastSelectedKey.value).toBeNull();
@@ -412,7 +414,7 @@ describe("useSelectionManager", () => {
 
   describe("focused key", () => {
     it("holds a key the collection knows", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.setFocusedKey("b");
 
@@ -421,7 +423,7 @@ describe("useSelectionManager", () => {
 
     it("refuses a key the collection does not hold", () => {
       // Storing it would park focus on nothing and be puzzled over much later.
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.setFocusedKey("nope");
 
@@ -429,7 +431,7 @@ describe("useSelectionManager", () => {
     });
 
     it("clears back to null", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       manager.setFocusedKey("b");
       manager.setFocusedKey(null);
@@ -438,7 +440,7 @@ describe("useSelectionManager", () => {
     });
 
     it("tracks whether the collection has focus", () => {
-      const manager = createManager({selectionMode: "single"});
+      const manager = createManager({ selectionMode: "single" });
 
       expect(manager.isFocused.value).toBe(false);
 
@@ -452,8 +454,8 @@ describe("useSelectionManager", () => {
 describe("useSelectionManager with a shared focus source", () => {
   it("reads and writes the focused key through the parent", () => {
     const collection = createCollection(["bold", "italic", "left"]);
-    const parent = createManager({collection});
-    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+    const parent = createManager({ collection });
+    const scoped = createManager({ collection, focusSource: parent, selectionMode: "multiple" });
 
     parent.setFocused(true);
     parent.setFocusedKey("italic");
@@ -466,8 +468,8 @@ describe("useSelectionManager with a shared focus source", () => {
 
   it("writes focus back to the parent", () => {
     const collection = createCollection(["bold", "italic", "left"]);
-    const parent = createManager({collection});
-    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+    const parent = createManager({ collection });
+    const scoped = createManager({ collection, focusSource: parent, selectionMode: "multiple" });
 
     scoped.setFocusedKey("bold");
 
@@ -476,8 +478,8 @@ describe("useSelectionManager with a shared focus source", () => {
 
   it("keeps a selection of its own", () => {
     const collection = createCollection(["bold", "italic", "left"]);
-    const parent = createManager({collection, selectionMode: "single"});
-    const scoped = createManager({collection, focusSource: parent, selectionMode: "multiple"});
+    const parent = createManager({ collection, selectionMode: "single" });
+    const scoped = createManager({ collection, focusSource: parent, selectionMode: "multiple" });
 
     scoped.setSelectedKeys(["bold", "italic"]);
 

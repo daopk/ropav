@@ -1,12 +1,12 @@
-import type {SliderState} from "./use-slider-state";
-import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
+import type { SliderState } from "./use-slider-state";
+import type { CSSProperties, ComputedRef, MaybeRefOrGetter, Ref } from "vue";
 
-import {computed, onScopeDispose, toValue} from "vue";
+import { computed, onScopeDispose, toValue } from "vue";
 
-import {clamp} from "../utils/number";
+import { clamp } from "../utils/number";
 
-import {setInteractionModality} from "./use-interaction-states";
-import {useMove} from "./use-move";
+import { setInteractionModality } from "./use-interaction-states";
+import { useMove } from "./use-move";
 
 export interface UseSliderOptions {
   state: SliderState;
@@ -41,7 +41,7 @@ export interface UseSliderReturn {
    * through `v-bind`: a vapor render re-attaches every `on*` key that arrived that way, which
    * drops the listener when the press itself is what re-rendered the element.
    */
-  trackHandlers: {onPointerdown: (event: PointerEvent) => void};
+  trackHandlers: { onPointerdown: (event: PointerEvent) => void };
   /** Inline styles the track needs whatever the stylesheet says. */
   trackStyle: CSSProperties;
   outputProps: ComputedRef<SliderOutputAttrs>;
@@ -71,7 +71,7 @@ export interface UseSliderReturn {
  * ```
  */
 export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
-  const {state, trackEl} = options;
+  const { state, trackEl } = options;
 
   const isVertical = computed(() => state.orientation.value === "vertical");
 
@@ -106,8 +106,8 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
     return isVertical.value ? rect.height : rect.width;
   };
 
-  const {handlers: moveHandlers} = useMove({
-    onMove: ({deltaX, deltaY}) => {
+  const { handlers: moveHandlers } = useMove({
+    onMove: ({ deltaX, deltaY }) => {
       if (!trackEl.value || draggingIndex === null) return;
 
       const size = trackSize();
@@ -242,6 +242,6 @@ export const useSlider = (options: UseSliderOptions): UseSliderReturn => {
         moveHandlers.onPointerdown(event);
       },
     },
-    trackStyle: {position: "relative", touchAction: "none"},
+    trackStyle: { position: "relative", touchAction: "none" },
   };
 };

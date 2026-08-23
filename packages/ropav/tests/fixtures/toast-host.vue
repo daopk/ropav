@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ToastHostProps} from "./toast.types";
+import type { ToastHostProps } from "./toast.types";
 
-import {onMounted, onScopeDispose} from "vue";
+import { onMounted, onScopeDispose } from "vue";
 
-import {useToast} from "@/composables/use-toast";
+import { useToast } from "@/composables/use-toast";
 
-const props = withDefaults(defineProps<ToastHostProps>(), {showDescription: undefined});
+const props = withDefaults(defineProps<ToastHostProps>(), { showDescription: undefined });
 
 const api = useToast({
   onClose: () => props.toast.onClose?.(),

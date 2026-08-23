@@ -1,18 +1,18 @@
 <script setup lang="ts" vapor>
-import type {Color, ColorSpace} from "../../utils/color-types";
-import type {ColorSliderRootProps, ColorSliderSlotProps} from "./color-slider.types";
+import type { Color, ColorSpace } from "../../utils/color-types";
+import type { ColorSliderRootProps, ColorSliderSlotProps } from "./color-slider.types";
 
-import {colorSliderVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { colorSliderVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useColorSlider} from "../../composables/use-color-slider";
-import {useColorSliderState} from "../../composables/use-color-slider-state";
-import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";
-import {useId} from "../../composables/use-id";
-import {dataAttr} from "../../utils/assertion";
-import {useColorValueContext} from "../color-picker/color-picker.context";
+import { useColorSlider } from "../../composables/use-color-slider";
+import { useColorSliderState } from "../../composables/use-color-slider-state";
+import { provideFieldIdsContext, useFieldIds } from "../../composables/use-field-ids";
+import { useId } from "../../composables/use-id";
+import { dataAttr } from "../../utils/assertion";
+import { useColorValueContext } from "../color-picker/color-picker.context";
 
-import {provideColorSliderContext} from "./color-slider.context";
+import { provideColorSliderContext } from "./color-slider.context";
 
 /** Channels that exist in exactly one colour space, and which one. */
 const CHANNEL_TO_REQUIRED_COLOR_SPACE: Partial<Record<string, ColorSpace>> = {
@@ -59,7 +59,7 @@ const getValidColorSpace = (channel: string, colorSpace?: ColorSpace): ColorSpac
   return colorSpace;
 };
 
-const props = withDefaults(defineProps<ColorSliderRootProps>(), {isDisabled: undefined});
+const props = withDefaults(defineProps<ColorSliderRootProps>(), { isDisabled: undefined });
 
 const emit = defineEmits<{
   change: [value: Color];
@@ -67,7 +67,7 @@ const emit = defineEmits<{
   "update:value": [value: Color];
 }>();
 
-defineSlots<{default?: (props: ColorSliderSlotProps) => unknown}>();
+defineSlots<{ default?: (props: ColorSliderSlotProps) => unknown }>();
 
 const sliderId = useId(() => props.id);
 
@@ -111,7 +111,7 @@ const setInputEl = (element: unknown) => {
 
 // A visible label names the group, and the thumb points at it too so it is announced with the
 // thumb's own value.
-const {context: fieldIds, labelId} = useFieldIds({slots: ["label"]});
+const { context: fieldIds, labelId } = useFieldIds({ slots: ["label"] });
 
 provideFieldIdsContext(fieldIds);
 
@@ -132,7 +132,7 @@ const slider = useColorSlider({
 
 const styles = computed(() => colorSliderVariants());
 
-provideColorSliderContext({channel, setInputEl, setTrackEl, slider, slots: styles, state});
+provideColorSliderContext({ channel, setInputEl, setTrackEl, slider, slots: styles, state });
 
 /**
  * The label carries no `for`: pointing it at the thumb makes VoiceOver announce the thumb by the
@@ -149,7 +149,7 @@ const onClick = (event: MouseEvent) => {
 
 <template>
   <div
-    :class="styles.base({class: props.class})"
+    :class="styles.base({ class: props.class })"
     :data-disabled="dataAttr(state.isDisabled.value)"
     :data-orientation="state.orientation.value"
     data-slot="color-slider"

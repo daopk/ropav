@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {ColorInputGroupInputProps} from "./color-input-group.types";
+import type { ColorInputGroupInputProps } from "./color-input-group.types";
 
-import {computed, shallowRef} from "vue";
+import { computed, shallowRef } from "vue";
 
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
 
 import {
   useColorInputGroupContext,
@@ -13,7 +13,7 @@ import {
 
 const props = defineProps<ColorInputGroupInputProps>();
 
-const {slots} = useColorInputGroupContext();
+const { slots } = useColorInputGroupContext();
 
 // Optional: a group can hold a control without a field around it, exactly as in React.
 const control = useColorInputGroupControlContext();
@@ -25,14 +25,14 @@ const setElement = (next: unknown) => {
   control?.registerElement(element.value);
 };
 
-const styles = computed(() => slots.value.input({class: props.class}));
+const styles = computed(() => slots.value.input({ class: props.class }));
 
 // A prop set here wins over what the field supplies, which is how React merges context props
 // too. Spreading the field's bag blindly would undo it: the bag carries every key it knows
 // about, so an absent field placeholder arrives as `placeholder: undefined` and would remove one
 // set on the control itself.
 const attrs = computed(() => {
-  const merged: Record<string, unknown> = {...control?.attrs.value};
+  const merged: Record<string, unknown> = { ...control?.attrs.value };
 
   if (props.placeholder !== undefined) merged["placeholder"] = props.placeholder;
 
@@ -41,7 +41,7 @@ const attrs = computed(() => {
 
 // The stylesheet keys hover and focus on these attributes as well as on the native
 // pseudo-classes, so they are rendered here to match what React puts in the DOM.
-const interaction = useInteractionStates({isDisabled: () => control?.isDisabled.value});
+const interaction = useInteractionStates({ isDisabled: () => control?.isDisabled.value });
 
 const onFocus = (event: FocusEvent) => {
   interaction.onFocus();

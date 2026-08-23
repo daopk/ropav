@@ -1,11 +1,11 @@
-import type {ComputedRef, MaybeRefOrGetter} from "vue";
+import type { ComputedRef, MaybeRefOrGetter } from "vue";
 
-import {computed, onScopeDispose, toValue, watch} from "vue";
+import { computed, onScopeDispose, toValue, watch } from "vue";
 
-import {spinbuttonStrings} from "../i18n/spinbutton";
-import {announce} from "../utils/live-announcer";
+import { spinbuttonStrings } from "../i18n/spinbutton";
+import { announce } from "../utils/live-announcer";
 
-import {useLocalizedStringFormatter} from "./use-localized-string-formatter";
+import { useLocalizedStringFormatter } from "./use-localized-string-formatter";
 
 /**
  * How long a held button waits before it starts repeating, and how fast it repeats after that.

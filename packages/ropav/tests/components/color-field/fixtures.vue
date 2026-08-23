@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
-import type {ColorFieldRootProps} from "@/components/color-field";
-import type {Color} from "@/utils/color-types";
+import type { ColorFieldRootProps } from "@/components/color-field";
+import type { Color } from "@/utils/color-types";
 
-import {ColorField} from "@/components/color-field";
-import {Description} from "@/components/description";
-import {FieldError} from "@/components/field-error";
-import {Label} from "@/components/label";
+import { ColorField } from "@/components/color-field";
+import { Description } from "@/components/description";
+import { FieldError } from "@/components/field-error";
+import { Label } from "@/components/label";
 
 withDefaults(
   defineProps<

@@ -1,24 +1,24 @@
 <script setup lang="ts" vapor>
-import type {RadioContentProps, RadioContentSlotProps} from "./radio.types";
+import type { RadioContentProps, RadioContentSlotProps } from "./radio.types";
 
-import {computed, shallowRef, watch} from "vue";
+import { computed, shallowRef, watch } from "vue";
 
-import {useFormReset} from "../../composables/use-form-reset";
-import {useFormValidation} from "../../composables/use-form-validation";
-import {useInteractionStates} from "../../composables/use-interaction-states";
-import {dataAttr} from "../../utils/assertion";
-import {composeSlotClassName} from "../../utils/compose";
-import {setFormChecked} from "../../utils/form-value";
-import {visuallyHiddenStyle} from "../../utils/visually-hidden";
-import {useRadioGroupContext} from "../radio-group/radio-group.context";
+import { useFormReset } from "../../composables/use-form-reset";
+import { useFormValidation } from "../../composables/use-form-validation";
+import { useInteractionStates } from "../../composables/use-interaction-states";
+import { dataAttr } from "../../utils/assertion";
+import { composeSlotClassName } from "../../utils/compose";
+import { setFormChecked } from "../../utils/form-value";
+import { visuallyHiddenStyle } from "../../utils/visually-hidden";
+import { useRadioGroupContext } from "../radio-group/radio-group.context";
 
-import {useRadioContext} from "./radio.context";
+import { useRadioContext } from "./radio.context";
 
 const props = defineProps<RadioContentProps>();
 
-defineSlots<{default?: (props: RadioContentSlotProps) => unknown}>();
+defineSlots<{ default?: (props: RadioContentSlotProps) => unknown }>();
 
-const {state} = useRadioGroupContext();
+const { state } = useRadioGroupContext();
 
 const {
   ariaLabel,

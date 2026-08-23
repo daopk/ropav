@@ -1,12 +1,12 @@
 <script setup lang="ts" vapor>
-import type {DateRangePickerPopoverProps} from "./date-range-picker.types";
+import type { DateRangePickerPopoverProps } from "./date-range-picker.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts} from "../overlay";
-import {provideSurfaceContext} from "../surface";
+import { OverlayPopover, createOverlaySlotContexts, provideOverlaySlotContexts } from "../overlay";
+import { provideSurfaceContext } from "../surface";
 
-import {useDateRangePickerContext} from "./date-range-picker.context";
+import { useDateRangePickerContext } from "./date-range-picker.context";
 
 // `shouldFlip` and `isKeyboardDismissDisabled` declare an explicit `undefined` default so an absent
 // prop stays absent rather than reading as an explicit `false`.
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<DateRangePickerPopoverProps>(), {
   shouldFlip: undefined,
 });
 
-defineSlots<{default?: () => unknown}>();
+defineSlots<{ default?: () => unknown }>();
 
 const picker = useDateRangePickerContext();
 
@@ -32,9 +32,9 @@ provideOverlaySlotContexts(contexts);
 
 // The calendar inside sits on an overlay rather than on the page, and picks its own colours from
 // that: same as React, which wraps the popover in a default surface.
-provideSurfaceContext({variant: computed(() => "default" as const)});
+provideSurfaceContext({ variant: computed(() => "default" as const) });
 
-const styles = computed(() => picker.slots.value.popover({class: props.class}));
+const styles = computed(() => picker.slots.value.popover({ class: props.class }));
 </script>
 
 <template>

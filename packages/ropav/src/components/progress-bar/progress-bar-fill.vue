@@ -1,17 +1,17 @@
 <script setup lang="ts" vapor>
-import type {ProgressBarFillProps} from "./progress-bar.types";
+import type { ProgressBarFillProps } from "./progress-bar.types";
 
-import {computed} from "vue";
+import { computed } from "vue";
 
-import {composeSlotClassName} from "../../utils/compose";
+import { composeSlotClassName } from "../../utils/compose";
 
-import {useProgressBarContext} from "./progress-bar.context";
+import { useProgressBarContext } from "./progress-bar.context";
 
 const props = defineProps<ProgressBarFillProps>();
 
-const {slots, state} = useProgressBarContext();
+const { slots, state } = useProgressBarContext();
 const widthStyle = computed(() =>
-  state.isIndeterminate.value ? {width: undefined} : {width: `${state.percentage.value ?? 0}%`},
+  state.isIndeterminate.value ? { width: undefined } : { width: `${state.percentage.value ?? 0}%` },
 );
 </script>
 

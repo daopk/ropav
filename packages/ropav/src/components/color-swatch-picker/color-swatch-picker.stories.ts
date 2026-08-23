@@ -1,11 +1,11 @@
-import type {Color} from "../../utils/color-types";
-import type {StoryMeta} from "../../utils/story-meta";
-import type {StoryObj} from "@storybook/vue3";
+import type { Color } from "../../utils/color-types";
+import type { StoryMeta } from "../../utils/story-meta";
+import type { StoryObj } from "@storybook/vue3";
 
-import {shallowRef} from "vue";
+import { shallowRef } from "vue";
 import IconStarFill from "~icons/gravity-ui/star-fill";
 
-import {parseColor} from "../../utils/color";
+import { parseColor } from "../../utils/color";
 
 import {
   ColorSwatchPickerIndicator,
@@ -60,10 +60,10 @@ const SWATCHES = `
 `;
 
 export const Default: Story = {
-  args: {layout: "grid", size: "md", variant: "circle"},
+  args: { layout: "grid", size: "md", variant: "circle" },
   render: (args) => ({
     components,
-    setup: () => ({args, colors: defaultColors}),
+    setup: () => ({ args, colors: defaultColors }),
     template: `
       <ColorSwatchPicker v-bind="args">${SWATCHES}</ColorSwatchPicker>
     `,
@@ -73,7 +73,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: defaultColors, sizes: ["xs", "sm", "md", "lg", "xl"]}),
+    setup: () => ({ colors: defaultColors, sizes: ["xs", "sm", "md", "lg", "xl"] }),
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="size in sizes" :key="size" class="flex flex-col gap-2">
@@ -88,7 +88,7 @@ export const Sizes: Story = {
 export const Variants: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: defaultColors, variants: ["circle", "square"]}),
+    setup: () => ({ colors: defaultColors, variants: ["circle", "square"] }),
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="variant in variants" :key="variant" class="flex flex-col gap-2">
@@ -103,7 +103,7 @@ export const Variants: Story = {
 export const Layouts: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: defaultColors, layouts: ["grid", "stack"]}),
+    setup: () => ({ colors: defaultColors, layouts: ["grid", "stack"] }),
     template: `
       <div class="flex flex-col gap-8">
         <div v-for="layout in layouts" :key="layout" class="flex flex-col gap-2">
@@ -163,7 +163,7 @@ export const Controlled: Story = {
 export const Disabled: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: defaultColors}),
+    setup: () => ({ colors: defaultColors }),
     template: `
       <ColorSwatchPicker>
         <ColorSwatchPickerItem v-for="color in colors" :key="color" is-disabled :color="color">
@@ -178,7 +178,7 @@ export const Disabled: Story = {
 export const WithDefaultValue: Story = {
   render: () => ({
     components,
-    setup: () => ({colors: defaultColors}),
+    setup: () => ({ colors: defaultColors }),
     template: `
       <ColorSwatchPicker default-value="#8B5CF6">${SWATCHES}</ColorSwatchPicker>
     `,
@@ -187,8 +187,8 @@ export const WithDefaultValue: Story = {
 
 export const WithCustomIndicator: Story = {
   render: () => ({
-    components: {...components, IconStarFill},
-    setup: () => ({colors: defaultColors}),
+    components: { ...components, IconStarFill },
+    setup: () => ({ colors: defaultColors }),
     template: `
       <ColorSwatchPicker>
         <ColorSwatchPickerItem v-for="color in colors" :key="color" :color="color">

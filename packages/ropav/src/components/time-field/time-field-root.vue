@@ -1,20 +1,20 @@
 <script setup lang="ts" vapor>
-import type {TimeValue} from "../../utils/date-format";
-import type {DateFieldControl} from "../date-input-group";
-import type {TimeFieldRootProps, TimeFieldRootSlotProps} from "./time-field.types";
+import type { TimeValue } from "../../utils/date-format";
+import type { DateFieldControl } from "../date-input-group";
+import type { TimeFieldRootProps, TimeFieldRootSlotProps } from "./time-field.types";
 
-import {timeFieldVariants} from "@ropav/styles";
-import {computed, shallowRef} from "vue";
+import { timeFieldVariants } from "@ropav/styles";
+import { computed, shallowRef } from "vue";
 
-import {useTimeField} from "../../composables/use-date-field";
-import {provideFieldIdsContext} from "../../composables/use-field-ids";
-import {useTimeFieldState} from "../../composables/use-time-field-state";
-import {dataAttr} from "../../utils/assertion";
+import { useTimeField } from "../../composables/use-date-field";
+import { provideFieldIdsContext } from "../../composables/use-field-ids";
+import { useTimeFieldState } from "../../composables/use-time-field-state";
+import { dataAttr } from "../../utils/assertion";
 import {
   provideDateFieldControlContext,
   provideDateInputGroupOwnerContext,
 } from "../date-input-group";
-import {provideFieldErrorContext} from "../field-error";
+import { provideFieldErrorContext } from "../field-error";
 
 /*
  * Every three-state prop declares an explicit `undefined` default. Vue casts an absent boolean to
@@ -38,7 +38,7 @@ const emit = defineEmits<{
   focusChange: [isFocused: boolean];
 }>();
 
-defineSlots<{default?: (props: TimeFieldRootSlotProps) => unknown}>();
+defineSlots<{ default?: (props: TimeFieldRootSlotProps) => unknown }>();
 
 const element = shallowRef<HTMLElement | null>(null);
 const inputElement = shallowRef<HTMLInputElement | null>(null);
@@ -100,7 +100,7 @@ const control: DateFieldControl = {
   state,
 };
 
-provideDateFieldControlContext({resolve: () => control});
+provideDateFieldControlContext({ resolve: () => control });
 
 /*
  * The group around the segments is the field's, so it shows the field's state without being told.
@@ -109,7 +109,7 @@ provideDateFieldControlContext({resolve: () => control});
  * name is announced twice for two nested groups. Here only the inner one carries them.
  */
 provideDateInputGroupOwnerContext({
-  attrs: computed(() => ({"aria-disabled": state.isDisabled.value || undefined})),
+  attrs: computed(() => ({ "aria-disabled": state.isDisabled.value || undefined })),
   handlers: {
     ...field.handlers,
     onFocusin: field.onFocusin,
@@ -121,9 +121,11 @@ provideDateInputGroupOwnerContext({
   // Nothing above needs it: the field's own element is the row of segments, which reports itself.
   setElement: () => {},
 });
-provideFieldErrorContext({validation: state.displayValidation});
+provideFieldErrorContext({ validation: state.displayValidation });
 
-const styles = computed(() => timeFieldVariants({class: props.class, fullWidth: props.fullWidth}));
+const styles = computed(() =>
+  timeFieldVariants({ class: props.class, fullWidth: props.fullWidth }),
+);
 </script>
 
 <template>
