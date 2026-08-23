@@ -56,7 +56,7 @@
     "test:watch": "vitest",
     "test:jsdom": "vitest run --project vue-jsdom",
     "test:browser": "vitest run --project vue-browser",
-    "clean": "rm -rf dist .turbo tsconfig.tsbuildinfo",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "prepack": "clean-package && node scripts/update-exports.mjs",
     "postpack": "clean-package restore"
   },

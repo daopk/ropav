@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-HeroUI v3 is a modern React UI library built with Tailwind CSS v4, using a pnpm monorepo structure managed by Turborepo.
+HeroUI v3 is a modern React UI library built with Tailwind CSS v4, using a pnpm monorepo structure managed by pnpm workspaces.
 
 ### Key Technical Stack
 
@@ -13,7 +13,7 @@ HeroUI v3 is a modern React UI library built with Tailwind CSS v4, using a pnpm 
 - **React**: v19+
 - **Tailwind CSS**: v4.1.18
 - **TypeScript**: v5.9.3
-- **Turborepo**: Build orchestration
+- **pnpm workspaces**: Build orchestration (`pnpm -r`)
 - **Storybook**: Component development
 - **Vitest**: Testing framework
 
@@ -40,7 +40,7 @@ pnpm build --filter=@heroui/react
 # Run linting
 pnpm lint
 
-# Run tests (turbo → packages with a test script; jsdom + browser)
+# Run tests (pnpm -r → packages with a test script; jsdom + browser)
 pnpm test
 
 # Filter by file name (e.g. button.test.tsx)
@@ -120,7 +120,6 @@ git commit -m "ci: add Claude Code GitHub Action workflow"
 │   ├── standard/      # Shared ESLint, Prettier, TypeScript configs
 │   ├── storybook/     # Storybook configuration
 │   └── testing/       # Shared test harness (@heroui/testing)
-├── turbo.json         # Turborepo configuration
 └── pnpm-workspace.yaml # Workspace definition
 ```
 

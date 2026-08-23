@@ -83,7 +83,7 @@ https://www.conventionalcommits.org/ or check out the
    As you go, you can run `pnpm build --filter=<module>` and
    `pnpm --filter @heroui/react exec vitest run <name>` e.g. `pnpm build --filter=@heroui/react && pnpm --filter @heroui/react exec vitest run avatar` to make sure everything works as expected.
 
-   > To know more about the `--filter` option, please check the turborepo [docs](https://turborepo.org/docs/core-concepts/filtering).
+   > To know more about the `--filter` option, please check the pnpm [docs](https://pnpm.io/filtering).
 
 4. Version bumping is handled by maintainers using `pnpm version:bump` which
    uses [bumpp](https://github.com/antfu/bumpp) to interactively bump the
@@ -103,7 +103,7 @@ pnpm i --hoist
 pnpm install --hoist
 ```
 
-We use [Turbo Repo](https://turborepo.org/) for the project management.
+We use [pnpm workspaces](https://pnpm.io/workspaces) for the project management.
 
 2. If you will be working on the components source code, you can use the following command to start the webpack dev server:
 

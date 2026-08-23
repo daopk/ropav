@@ -4,7 +4,7 @@ Instructions for AI agents working with the HeroUI v3 repository.
 
 ## Repository Overview
 
-HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized as a **pnpm monorepo** managed by **Turborepo**. Components are built on top of [React Aria Components](https://react-spectrum.adobe.com/react-aria/) and follow a compound component pattern similar to Radix UI.
+HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized as a **pnpm monorepo** managed by **pnpm workspaces**. Components are built on top of [React Aria Components](https://react-spectrum.adobe.com/react-aria/) and follow a compound component pattern similar to Radix UI.
 
 ### Tech Stack
 
@@ -15,7 +15,7 @@ HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized
 | React | 19+ | UI framework |
 | Tailwind CSS | 4.x | Styling |
 | TypeScript | 5.x | Type safety |
-| Turborepo | 2.x | Build orchestration |
+| pnpm workspaces | — | Build orchestration (`pnpm -r`) |
 | Storybook | Latest | Component development |
 | Vitest | 4.x | Testing |
 | React Aria Components | Latest | Accessibility primitives |
@@ -37,7 +37,6 @@ HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized
 │   ├── standard/          # Shared ESLint, Prettier, TS configs
 │   ├── storybook/         # Storybook configuration
 │   └── testing/           # Shared test harness (@heroui/testing)
-├── turbo.json
 └── pnpm-workspace.yaml
 ```
 
@@ -298,7 +297,7 @@ calendar-year-picker
 
 1. **`pnpm i` triggers builds** — The `postinstall` hook builds `@heroui/styles` and runs `typegen:docs` and `typegen:docs-cn`. If it fails, run `pnpm --filter @heroui/styles build` manually.
 
-2. **Build order matters** — `@heroui/styles` must build before `@heroui/react`. Running `pnpm build` from root handles this via Turbo's `^build` dependency.
+2. **Build order matters** — `@heroui/styles` must build before `@heroui/react`. Running `pnpm build` from root handles this — `pnpm -r run build` walks the workspace in topological order.
 
 3. **Native addons allowlist** — `onlyBuiltDependencies` in root `pnpm-workspace.yaml` allows native compilation for `esbuild`, `@swc/core`, `@parcel/watcher`, etc. If this list is missing, you'll see "Ignored build scripts" warnings.
 
