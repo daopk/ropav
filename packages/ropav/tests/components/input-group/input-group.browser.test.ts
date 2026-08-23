@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
@@ -84,6 +86,8 @@ describe("InputGroup (browser)", () => {
     await userEvent.click(control);
     await nextTick();
 
+    await settled(group);
+
     expect(getComputedStyle(group).boxShadow).not.toBe(idle);
     expect(getComputedStyle(control).outlineStyle).toBe("none");
 
@@ -104,6 +108,8 @@ describe("InputGroup (browser)", () => {
 
     expect(group).toHaveAttribute("data-hovered", "true");
 
+    await settled(group);
+
     const hovered = getComputedStyle(group).backgroundColor;
 
     expect(hovered).not.toBe(idle);
@@ -112,6 +118,9 @@ describe("InputGroup (browser)", () => {
     await nextTick();
 
     expect(group).toHaveAttribute("data-focus-within", "true");
+
+    await settled(group);
+
     expect(getComputedStyle(group).backgroundColor).not.toBe(hovered);
 
     unmount();

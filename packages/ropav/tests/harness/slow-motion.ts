@@ -44,7 +44,6 @@ export const startSlowMotion = (): void => {
   if (sheet) return;
 
   sheet = document.createElement("style");
-  sheet.dataset.testid = "slow-motion";
   sheet.textContent = SLOW_MOTION_CSS;
   document.head.append(sheet);
 };

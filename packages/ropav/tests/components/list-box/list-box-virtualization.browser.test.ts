@@ -3,6 +3,8 @@ import { renderVapor } from "@ropav/testing/helpers/vue";
 import { beforeEach, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
 const users = Array.from({ length: 1000 }, (_, index) => ({
@@ -115,6 +117,9 @@ describe("ListBox virtualization (browser)", () => {
     const wrapper = focused.parentElement!;
 
     expect(wrapper.getAttribute("role")).toBe("presentation");
+
+    await settled(wrapper);
+
     expect(getComputedStyle(wrapper).contain).toBe("size layout style");
     // The ring is a shadow, and the wrapper lets content overflow so it is not clipped away.
     expect(getComputedStyle(wrapper).overflow).toBe("visible");

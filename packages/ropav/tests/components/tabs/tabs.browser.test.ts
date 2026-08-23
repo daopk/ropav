@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import TabsFixture from "./fixtures.vue";
 
 const OVERFLOW_ITEMS = [
@@ -239,6 +241,9 @@ describe("Tabs (browser)", () => {
 
       expect(overview).toHaveAttribute("data-focus-visible", "true");
       expect(analytics).not.toHaveAttribute("data-focus-visible");
+
+      await settled(overview!);
+
       // The shared stylesheet draws the ring with `ring-2`, which is a box shadow — asserting an
       // outline here would pass on the browser's own focus ring and prove nothing about ours.
       expect(getComputedStyle(overview!).boxShadow).not.toBe(

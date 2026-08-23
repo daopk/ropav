@@ -6,6 +6,8 @@ import { nextTick } from "vue";
 
 import { Button } from "@/components/button";
 
+import { settled } from "../../harness/settle";
+
 const renderButton = (props: Record<string, unknown> = {}) =>
   renderVapor(Button, {
     props,
@@ -34,6 +36,9 @@ describe("Button (browser)", () => {
     // The ring is a ring utility, so it lands on box-shadow. `outline-style` stays
     // `none` in both states, which makes outline useless as the assertion here.
     expect(button.getAttribute("data-focus-visible")).toBe("true");
+
+    await settled(button);
+
     expect(getComputedStyle(button).boxShadow).not.toBe(shadowWhenIdle);
 
     unmount();
@@ -51,6 +56,9 @@ describe("Button (browser)", () => {
     // The rendered attribute agrees with what the browser itself computes.
     expect(button.matches(":focus-visible")).toBe(false);
     expect(button.hasAttribute("data-focus-visible")).toBe(false);
+
+    await settled(button);
+
     expect(getComputedStyle(button).boxShadow).toBe(shadowWhenIdle);
 
     unmount();

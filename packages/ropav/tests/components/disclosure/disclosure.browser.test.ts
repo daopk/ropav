@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import DisclosureFixture from "./fixtures.vue";
 
 const triggerIn = (container: HTMLElement) =>
@@ -146,6 +148,9 @@ describe("Disclosure (browser)", () => {
     // through `[data-focus-visible]` — the pseudo-class branch of the rule never matches.
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute("data-focus-visible", "true");
+
+    await settled(trigger);
+
     expect(getComputedStyle(trigger).boxShadow).not.toBe(shadowBefore);
     expect(getComputedStyle(trigger).boxShadow).not.toBe("none");
 
@@ -161,6 +166,9 @@ describe("Disclosure (browser)", () => {
 
     expect(trigger).toHaveFocus();
     expect(trigger).not.toHaveAttribute("data-focus-visible");
+
+    await settled(trigger);
+
     expect(getComputedStyle(trigger).boxShadow).toBe("none");
 
     unmount();

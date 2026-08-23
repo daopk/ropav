@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
 import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
 
 import DropdownFixture from "./fixtures.vue";
@@ -30,35 +31,14 @@ const press = (element: Element) => {
 };
 
 /** Wait for the entry animation to finish, so the popover is measured at its settled size. */
-const settled = async (popover: HTMLElement) => {
-  await Promise.allSettled(popover.getAnimations().map((animation) => animation.finished));
-  await nextTick();
-};
-
-/**
- * Put the trigger where the popover fits beside it.
- *
- * The test window is narrow. A trigger in the middle of it leaves no room for a 220px popover to
- * the right, so the popover is shifted inwards to stay on screen — correct, but it hides whether
- * the alignment itself is right. Placed on the boundary's own padded edge instead, nothing needs
- * shifting and the alignment is readable.
- */
 const place = (result: RenderResult) => {
   result.container.style.position = "fixed";
   result.container.style.left = "12px";
   result.container.style.top = "40%";
 };
 
-/**
- * The trigger's geometry as the popover was positioned against it.
- *
- * Measured before opening on purpose: a trigger looks pressed for as long as its menu is open, and
- * the pressed state scales it down, so its rectangle afterwards is a fraction of a pixel narrower
- * than the one the popover was placed against.
- */
 const measure = (element: Element) => element.getBoundingClientRect();
 
-/** Close an open menu and let its exit animation finish, leaving focus where the page would. */
 const dismiss = async (result: RenderResult) => {
   const popover = result.screen.queryByRole("dialog") as HTMLElement | null;
 
@@ -349,6 +329,9 @@ describe("Dropdown (browser)", () => {
       const item = document.activeElement as HTMLElement;
 
       expect(item).toHaveAttribute("data-focus-visible", "true");
+
+      await settled(item);
+
       // The stylesheet paints the ring with a shadow and sets `outline-style: none`, so the
       // outline is not where the ring lives.
       expect(getComputedStyle(item).boxShadow).not.toBe("none");

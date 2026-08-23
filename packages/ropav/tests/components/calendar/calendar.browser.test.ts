@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
@@ -208,6 +210,8 @@ describe("Calendar (browser)", () => {
 
       cell.focus();
       await nextTick();
+
+      await settled(cell);
 
       expect(getComputedStyle(cell).boxShadow).not.toBe("none");
     });

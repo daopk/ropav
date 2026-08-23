@@ -6,6 +6,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { pressRealReset } from "../../harness/real-reset";
+import { settled } from "../../harness/settle";
 
 import Fixture from "./fixtures.vue";
 
@@ -198,6 +199,8 @@ describe("DateField (browser)", () => {
 
       segmentOf(result, "month").focus();
       await nextTick();
+
+      await settled(groupOf(result));
 
       expect(getComputedStyle(groupOf(result)).boxShadow).not.toBe("none");
     });

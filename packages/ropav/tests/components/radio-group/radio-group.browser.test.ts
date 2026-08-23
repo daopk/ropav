@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { pressRealReset } from "../../harness/real-reset";
+import { settled } from "../../harness/settle";
 
 import RadioGroupFixture from "./fixtures.vue";
 
@@ -69,6 +70,8 @@ describe("RadioGroup (browser)", () => {
 
     await userEvent.keyboard("{Tab}");
     await nextTick();
+
+    await settled(controls()[0]!);
 
     // The ring is drawn with a box shadow and `outline-style: none`, so the outline says
     // nothing about whether it is there.

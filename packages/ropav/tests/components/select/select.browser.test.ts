@@ -4,17 +4,10 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
-/**
- * What only a real browser can answer for a select.
- *
- * The stylesheet is the first half: `.select__trigger:has(.select__indicator)` and
- * `min-w-(--trigger-width)` are rules jsdom never applies, and a focus ring drawn with
- * `box-shadow` reads as nothing there. The second half is time and geometry — the entry animation
- * finishing, the popover leaving the DOM after its exit, and where it actually lands next to the
- * trigger. The jsdom clock is frozen and its layout is all zeroes, so none of it is provable there.
- */
 const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
 
 type RenderResult = ReturnType<typeof render>;
@@ -34,12 +27,6 @@ const press = (element: Element) => {
   element.dispatchEvent(new PointerEvent("pointerdown", POINTER));
   element.dispatchEvent(new PointerEvent("pointerup", POINTER));
   element.dispatchEvent(new MouseEvent("click", { bubbles: true, button: 0, detail: 1 }));
-};
-
-/** Wait for the entry animation to finish, so the popover is measured at its settled size. */
-const settled = async (popover: HTMLElement) => {
-  await Promise.allSettled(popover.getAnimations().map((animation) => animation.finished));
-  await nextTick();
 };
 
 const triggerOf = (result: RenderResult) =>
@@ -130,6 +117,8 @@ describe("Select (browser)", () => {
       // The pseudo-class branch of this rule is `:focus-visible:not(:focus)`, which nothing ever
       // satisfies — so the ring exists only if the attribute is emitted.
       expect(trigger).toHaveAttribute("data-focus-visible", "true");
+
+      await settled(trigger);
 
       // Drawn with `box-shadow`, not an outline, and the trigger already carries a resting
       // shadow — so the assertion has to be that it *changed*, not that it exists.

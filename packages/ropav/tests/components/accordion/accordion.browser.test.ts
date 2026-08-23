@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import AccordionFixture from "./fixtures.vue";
 
 const triggersIn = (container: HTMLElement) => [
@@ -138,6 +140,9 @@ describe("Accordion (browser)", () => {
     // `&:focus-visible:not(:focus)` branch beside it can never match on a real button.
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute("data-focus-visible", "true");
+
+    await settled(trigger);
+
     expect(getComputedStyle(trigger).boxShadow).not.toBe(shadowBefore);
     expect(getComputedStyle(trigger).boxShadow).not.toBe("none");
 
@@ -153,6 +158,9 @@ describe("Accordion (browser)", () => {
 
     expect(trigger).toHaveFocus();
     expect(trigger).not.toHaveAttribute("data-focus-visible");
+
+    await settled(trigger);
+
     expect(getComputedStyle(trigger).boxShadow).toBe("none");
 
     unmount();

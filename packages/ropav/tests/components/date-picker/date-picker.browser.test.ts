@@ -5,22 +5,12 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
 
-/**
- * Two rules react-aria's own build fails in exactly the same places, measured on both sides with
- * axe against the open popover.
- *
- * `color-contrast`: a selected calendar cell is near-white on `--accent`, which is about 3.7:1.
- * `landmark-banner-is-top-level`: `Calendar.Header` renders a `<header>`, which is a banner
- * landmark, and inside a popover it is not top level.
- *
- * Both live in `@ropav/styles` and in the component shape it assumes rather than in the behaviour
- * layer, so they are excluded here and recorded as debt instead of being silently absorbed into a
- * green gate.
- */
 const SHARED_WITH_REACT = {
   rules: {
     "color-contrast": { enabled: false },
@@ -35,17 +25,10 @@ type RenderResult = ReturnType<typeof render>;
 
 let mounted: RenderResult | null = null;
 
-/** Mount and remember it, so a throwing assertion still gets torn down. */
 const mount = (props: Record<string, unknown> = {}) => {
   mounted = render(props);
 
   return mounted;
-};
-
-/** Wait for the entry or exit animation to finish, so the popover is measured at its final size. */
-const settled = async (element: HTMLElement) => {
-  await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
-  await nextTick();
 };
 
 const popoverOf = () => document.body.querySelector<HTMLElement>(".date-picker__popover");
@@ -261,6 +244,8 @@ describe("DatePicker (browser)", () => {
 
       triggerOf(result).focus();
       await nextTick();
+
+      await settled(triggerOf(result));
 
       expect(getComputedStyle(triggerOf(result)).boxShadow).not.toBe("none");
     });

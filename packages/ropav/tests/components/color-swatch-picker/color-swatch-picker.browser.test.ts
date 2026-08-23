@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 /** Six swatches, which the fixture's own wrapping turns into rows once there is a width. */
@@ -328,6 +330,9 @@ describe("ColorSwatchPicker (browser)", () => {
       const item = optionAt(container, 0);
 
       expect(item).toHaveAttribute("data-focus-visible", "true");
+
+      await settled(item);
+
       expect(getComputedStyle(item).boxShadow).not.toBe("none");
 
       unmount();

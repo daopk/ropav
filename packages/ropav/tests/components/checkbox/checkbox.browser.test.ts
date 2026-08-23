@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { pressRealReset } from "../../harness/real-reset";
+import { settled } from "../../harness/settle";
 
 import CheckboxFixture from "./fixtures.vue";
 import CheckboxFormFixture from "./form-fixtures.vue";
@@ -32,6 +33,8 @@ describe("Checkbox (browser)", () => {
     await userEvent.keyboard("{Tab}");
     await nextTick();
 
+    await settled(control);
+
     // The ring is drawn with a box shadow and `outline-style: none`, so the outline says
     // nothing about whether it is there.
     expect(getComputedStyle(control).boxShadow).not.toBe(shadowWhenIdle);
@@ -49,6 +52,9 @@ describe("Checkbox (browser)", () => {
     await nextTick();
 
     expect(slot(container, "checkbox-content").hasAttribute("data-focus-visible")).toBe(false);
+
+    await settled(control);
+
     expect(getComputedStyle(control).boxShadow).toBe(shadowWhenIdle);
 
     unmount();
@@ -78,6 +84,8 @@ describe("Checkbox (browser)", () => {
     await nextTick();
     await waitForTransition();
 
+    await settled(control);
+
     expect(getComputedStyle(control, "::before").opacity).toBe("1");
     expect(getComputedStyle(control, "::before").scale).toBe("1");
 
@@ -95,6 +103,9 @@ describe("Checkbox (browser)", () => {
     await waitForTransition();
 
     expect(content.getAttribute("data-hovered")).toBe("true");
+
+    await settled(control);
+
     expect(getComputedStyle(control, "::before").backgroundColor).not.toBe(idle);
 
     unmount();

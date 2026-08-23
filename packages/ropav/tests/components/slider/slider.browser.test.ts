@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import SliderFixture from "./fixtures.vue";
 
 const renderSlider = (props: Record<string, unknown> = {}) => renderVapor(SliderFixture, { props });
@@ -220,6 +222,9 @@ describe("Slider (browser)", () => {
     await nextTick();
 
     expect(thumb.getAttribute("data-focus-visible")).toBe("true");
+
+    await settled(thumb);
+
     // `status-focused` draws the ring with a box shadow, not with an outline.
     expect(getComputedStyle(thumb).boxShadow).not.toBe(shadowWhenIdle);
 

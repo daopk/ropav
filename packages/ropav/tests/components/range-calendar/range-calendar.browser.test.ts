@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const jun = (day: number) => new CalendarDate(2026, 6, day);
@@ -219,6 +221,8 @@ describe("RangeCalendar (browser)", () => {
       await nextTick();
 
       const painted = cell.querySelector<HTMLElement>("[data-slot='range-calendar-cell-button']")!;
+
+      await settled(painted);
 
       expect(getComputedStyle(painted).boxShadow).not.toBe("none");
     });

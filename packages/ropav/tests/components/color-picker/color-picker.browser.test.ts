@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
@@ -11,17 +13,6 @@ const render = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { p
 type RenderResult = ReturnType<typeof render>;
 
 /** Wait for the entry or exit animation to finish, so the popover is measured at its final size. */
-const settled = async (element: HTMLElement) => {
-  await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
-  await nextTick();
-};
-
-/**
- * Put the trigger where the popover fits beside it.
- *
- * The test window is narrow, and a trigger in the middle of it leaves no room for the placement
- * that was asked for — correct behaviour, but it hides whether the placement was honoured.
- */
 const place = (result: RenderResult) => {
   result.container.style.position = "fixed";
   result.container.style.left = "12px";
@@ -247,6 +238,8 @@ describe("ColorPicker (browser)", () => {
       await userEvent.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}");
       await nextTick();
 
+      await settled(slots("color-swatch")[0]!);
+
       expect(getComputedStyle(slots("color-swatch")[0]!).backgroundColor).not.toBe(before);
 
       await close(popover);
@@ -262,6 +255,8 @@ describe("ColorPicker (browser)", () => {
 
       await userEvent.click(document.body.querySelectorAll<HTMLElement>("[role='option']")[1]!);
       await nextTick();
+
+      await settled(slots("color-swatch")[0]!);
 
       expect(getComputedStyle(slots("color-swatch")[0]!).backgroundColor).toBe("rgb(34, 197, 94)");
 
@@ -299,6 +294,9 @@ describe("ColorPicker (browser)", () => {
       const trigger = slot("color-picker-trigger");
 
       expect(trigger).toHaveAttribute("data-focus-visible", "true");
+
+      await settled(trigger);
+
       expect(getComputedStyle(trigger).boxShadow).not.toBe("none");
 
       result.unmount();

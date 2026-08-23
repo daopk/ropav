@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import ButtonGroupFixture from "./fixtures.vue";
 
 const renderGroup = (props: Record<string, unknown> = {}) =>
@@ -77,6 +79,9 @@ describe("ButtonGroup (browser)", () => {
     // Keyed on the same attribute as the focus ring, so the ring is not clipped by the
     // button next to it.
     expect(first.getAttribute("data-focus-visible")).toBe("true");
+
+    await settled(first);
+
     expect(getComputedStyle(first).zIndex).toBe("10");
 
     unmount();

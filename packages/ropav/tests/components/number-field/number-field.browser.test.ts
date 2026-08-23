@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const renderNumberField = (props: Record<string, unknown> = {}) =>
@@ -312,6 +314,9 @@ describe("NumberField (browser)", () => {
     await nextTick();
 
     expect(group).toHaveAttribute("data-focus-within", "true");
+
+    await settled(group);
+
     expect(getComputedStyle(group).boxShadow).not.toBe(idle);
     expect(getComputedStyle(input).outlineStyle).toBe("none");
 
@@ -328,12 +333,16 @@ describe("NumberField (browser)", () => {
     await userEvent.hover(group);
     await nextTick();
 
+    await settled(group);
+
     const hovered = getComputedStyle(group).backgroundColor;
 
     expect(hovered).not.toBe(idle);
 
     await userEvent.click(input);
     await nextTick();
+
+    await settled(group);
 
     expect(getComputedStyle(group).backgroundColor).not.toBe(hovered);
 

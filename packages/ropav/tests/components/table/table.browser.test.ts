@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 import ResizableFixture from "./resizable-fixtures.vue";
 
@@ -346,6 +348,9 @@ describe("Table column resizing (browser)", () => {
     await userEvent.hover(resizers[0]!, { position: { x: 4, y: 8 } });
 
     expect(resizers[0]).toHaveAttribute("data-hovered", "true");
+
+    await settled(resizers[0]!);
+
     // The hairline separator becomes a full-height accent bar, which is the only affordance
     // saying the edge can be dragged.
     expect(getComputedStyle(resizers[0]!).width).toBe("2px");

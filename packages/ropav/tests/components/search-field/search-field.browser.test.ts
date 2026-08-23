@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const mounted: { unmount: () => void }[] = [];
@@ -103,6 +105,8 @@ describe("SearchField (browser)", () => {
     await userEvent.keyboard("shoes");
     await nextTick();
 
+    await settled(clearButton);
+
     expect(getComputedStyle(clearButton).opacity).toBe("1");
     expect(getComputedStyle(clearButton).pointerEvents).not.toBe("none");
 
@@ -177,6 +181,9 @@ describe("SearchField (browser)", () => {
     await nextTick();
 
     expect(group).toHaveAttribute("data-focus-within", "true");
+
+    await settled(group);
+
     expect(getComputedStyle(group).boxShadow).not.toBe(idle);
     expect(getComputedStyle(control).outlineStyle).toBe("none");
 
@@ -194,6 +201,8 @@ describe("SearchField (browser)", () => {
 
     await userEvent.hover(group);
     await nextTick();
+
+    await settled(group);
 
     const hovered = getComputedStyle(group).backgroundColor;
 

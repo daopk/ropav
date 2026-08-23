@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import Fixture from "./fixtures.vue";
 
 const renderField = (props: Record<string, unknown> = {}) => renderVapor(Fixture, { props });
@@ -136,6 +138,9 @@ describe("ColorField (browser)", () => {
       const group = slot(container, "color-input-group");
 
       expect(group).toHaveAttribute("data-focus-within", "true");
+
+      await settled(group);
+
       expect(getComputedStyle(group).boxShadow).not.toBe("none");
 
       unmount();
