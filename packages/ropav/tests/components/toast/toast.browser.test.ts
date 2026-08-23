@@ -30,6 +30,13 @@ const toasts = () => [...document.body.querySelectorAll<HTMLElement>('[data-slot
 
 const closeButton = () => document.body.querySelector<HTMLElement>('button[aria-label="Close"]')!;
 
+/** What the browser would hand a press aimed at the middle of `element`. */
+const elementAtCentre = (element: HTMLElement) => {
+  const rect = element.getBoundingClientRect();
+
+  return document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+};
+
 /**
  * Poll rather than count ticks.
  *
@@ -41,13 +48,13 @@ const closeButton = () => document.body.querySelector<HTMLElement>('button[aria-
  */
 const waitUntil = async (
   what: string,
-  predicate: () => boolean,
+  predicate: () => boolean | Promise<boolean>,
   budget = 2000,
 ): Promise<number> => {
   const started = performance.now();
 
   while (performance.now() - started < budget) {
-    if (predicate()) return Math.round(performance.now() - started);
+    if (await predicate()) return Math.round(performance.now() - started);
     await nextFrame();
   }
 
@@ -183,14 +190,35 @@ describe("Toast (browser)", () => {
       queue.add({ title: "Saved" }, { onClose, timeout: 0 });
       await waitForToasts(1);
 
-      // The close button is `opacity: 0` and `pointer-events: none` until the frontmost toast is
-      // hovered — the stylesheet reveals it on hover, so a click without one is not a path a user
-      // has, and Playwright refuses it for the same reason.
-      await userEvent.hover(toasts()[0]!);
-      await waitUntil(
-        "the close button to be revealed",
-        () => getComputedStyle(closeButton()).pointerEvents === "auto",
-      );
+      // The stylesheet reveals the close button on hover and takes it out of hit testing otherwise,
+      // so a press without one is not a path a user has. Asserted from a parked pointer rather than
+      // assumed, since where the pointer starts is whatever the last case left behind.
+      await userEvent.hover(document.documentElement);
+      await nextFrame();
+
+      expect(getComputedStyle(closeButton()).pointerEvents).toBe("none");
+
+      /**
+       * Aim until the button is really the element under its own centre.
+       *
+       * `pointer-events: auto` is not the same question. The button sits 6px inside the toast's
+       * 24px rounded corner, so its centre is inside the toast's box but outside the toast's shape
+       * — with the button not hovered, a press there falls past the rounded edge, past the region
+       * that is `pointer-events: none`, and onto `<body>`. That is the whole failure: Playwright
+       * reports `<body> intercepts pointer events` and retries the same doomed point until its own
+       * action timeout, roughly 15s later.
+       *
+       * And the pointer can end up off the toast without this test moving it. The toast is
+       * `position: fixed`, and a click scrolls the frame into view first — which in a full-suite
+       * run of 48 frames is a scroll that actually happens, moving the toast out from under a
+       * pointer parked at its centre. Re-aiming inside the poll heals that, and leaves the pointer
+       * already where the click is about to land, so the click's own scroll is a no-op.
+       */
+      await waitUntil("the close button to be reachable by a pointer", async () => {
+        await userEvent.hover(toasts()[0]!);
+
+        return elementAtCentre(closeButton()) === closeButton();
+      });
 
       await userEvent.click(closeButton());
       await waitForNoRegion();
