@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
 import { pressRealReset } from "../../harness/real-reset";
+import { settled } from "../../harness/settle";
 
 import Fixture from "./fixtures.vue";
 import FormFixture from "./form-fixtures.vue";
@@ -63,6 +64,11 @@ describe("TextField (browser)", () => {
     await userEvent.hover(input);
     await nextTick();
 
+    // Sampled once the transition has finished rather than on whichever of its frames this tick
+    // landed on — an unsettled sample can still be the colour it started from, which is
+    // byte-identical to `idle` and reads as this test failing.
+    await settled(input);
+
     const hovered = getComputedStyle(input).backgroundColor;
 
     expect(hovered).not.toBe(idle);
@@ -70,6 +76,7 @@ describe("TextField (browser)", () => {
 
     await userEvent.click(input);
     await nextTick();
+    await settled(input);
 
     expect(getComputedStyle(input).backgroundColor).not.toBe(hovered);
 
