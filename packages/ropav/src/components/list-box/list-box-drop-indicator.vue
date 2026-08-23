@@ -48,7 +48,8 @@ const layoutInfo = computed(() => {
   return virtualizer.getDropTargetLayoutInfo(props.target);
 });
 
-/** Attributes only, never listeners — see §3.4. */
+/** Attributes only, never listeners — Vapor re-attaches every `on*` key spread through `v-bind`
+ * on each render, so those are wired statically with `@event` instead. */
 const attrs = computed(() => ({
   ...indicator?.attrs.value,
   class: ["list-box__drop-indicator", props.class],

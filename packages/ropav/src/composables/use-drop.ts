@@ -134,7 +134,7 @@ const resolveDropOperation = (
  * `drag-manager.ts` so the same target is reachable by keyboard and screen reader.
  *
  * As with `useDrag`, `attrs` and `handlers` are separate because Vapor re-attaches any `on*` key
- * that arrives via `v-bind` on every render (§3.4). Bind `attrs`; wire `handlers` with `@event`.
+ * that arrives via `v-bind` on every render. Bind `attrs`; wire `handlers` with `@event`.
  */
 export const useDrop = (options: UseDropOptions): UseDropReturn => {
   const isDropTarget = shallowRef(false);

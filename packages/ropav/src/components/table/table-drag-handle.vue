@@ -41,7 +41,7 @@ providePressResponder({
     // add a dead stop to every row.
     disabled: drag?.dragButtonAttrs.value.isDisabled || undefined,
     // Visible, and deliberately not a hit target — see above. This is a style, not a listener,
-    // so §3.4 does not apply to passing it through `attrs`.
+    // so the rule against spreading `on*` keys through `v-bind` does not apply to it.
     style: {pointerEvents: "none"},
   })),
   handlers: computed(() => ({

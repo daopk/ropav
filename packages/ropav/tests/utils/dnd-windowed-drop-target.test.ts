@@ -14,8 +14,8 @@ import {ListLayout} from "@/utils/virtualizer-list-layout";
  *
  * Both delegates answer the same question. The difference is what they can see: one searches for
  * elements, and in a windowed collection all but a screenful of them are absent. This pins the
- * failure rather than just asserting the replacement works — the whole of debt #47 is that the
- * DOM answer is wrong here, and a test that only exercises the new path would pass just as well
+ * failure rather than just asserting the replacement works — the whole point is that the DOM
+ * answer is wrong here, and a test that only exercises the new path would pass just as well
  * against the old one.
  */
 

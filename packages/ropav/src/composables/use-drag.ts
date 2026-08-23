@@ -82,7 +82,7 @@ export interface UseDragReturn {
  * events for a pointer, Enter for the keyboard, and a click with no pointer behind it for a
  * screen reader. The last two hand off to the drag session in `drag-manager.ts`.
  *
- * **`attrs` and `handlers` are separate, and that is load-bearing** (§3.4 of the roadmap). Vapor
+ * **`attrs` and `handlers` are separate, and that is load-bearing.** Vapor
  * removes and re-adds every `on*` key that arrives through `v-bind` on each render, so a listener
  * spread that way ends up behind the template's own and can be torn off mid-dispatch. A drag
  * re-renders the instant it starts — `data-dragging` flips — so this is certain to bite rather

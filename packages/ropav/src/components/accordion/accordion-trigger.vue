@@ -32,7 +32,7 @@ const tabindex = computed(() => (isDisabled.value ? undefined : 0));
 // React builds this part on React Aria's `Button`, which renders the same five attributes. The
 // focus ring is the one that has to be here: `accordion.css` paints it from
 // `[data-focus-visible="true"]`, and the `&:focus-visible:not(:focus)` branch beside it can never
-// match on a real button (debt #14), so without this the trigger has no ring at all.
+// match on a real button, so without this the trigger has no ring at all.
 const {
   isFocusVisible,
   isFocused,

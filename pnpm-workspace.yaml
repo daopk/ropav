@@ -3,7 +3,9 @@ packages:
 
 # The vue toolchain moves in lockstep: `@vue/compiler-vapor` must match `vue` exactly, and
 # `vue` itself is pinned to an RC (dist-tag `rc`; `latest` is still 3.5.x and carries no vapor).
-# `peerDependencies` deliberately stay literal ranges — see ROADMAP §2.
+# `peerDependencies` deliberately stay literal ranges, never `catalog:`: `clean-package` strips
+# `devDependencies` at `prepack` but keeps peer ranges, so a `catalog:` left in one would ship
+# unresolved to consumers.
 catalog:
   "@vitejs/plugin-vue": 6.0.8
   "@vue/compiler-vapor": 3.6.0-rc.5

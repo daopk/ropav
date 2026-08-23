@@ -12,10 +12,11 @@ import {onScopeDispose, shallowRef, useTemplateRef} from "vue";
  * Vue 3.6 exposes no `flushSync`, and Vapor's scheduler is asynchronous.
  *
  * What works instead: the container is **always mounted**, and the slot is called directly at
- * drag time. A Vapor slot function returns a real Block synchronously — the roadmap's §3.1
- * correction — so `insert()` puts live DOM in the container before `setDragImage` reads it, with
- * no scheduler involved. The slot is called exactly once per drag and the block it produces is
- * the block that gets inserted, which is the condition §3.1 sets for reading a slot at all.
+ * drag time. Calling a Vapor slot is **execution**, not inspection — it builds real DOM and
+ * registers reactive effects — but it returns that Block synchronously, so `insert()` puts live
+ * DOM in the container before `setDragImage` reads it, with no scheduler involved. Calling a slot
+ * is only safe under one condition: it is called exactly once and the block it produces is the
+ * block that gets inserted. Both hold here.
  *
  * Known limit: a slot supplied by a **VDOM host** through `vaporInteropPlugin` cannot be
  * rendered this way, because interop fills its nodes on `frag.insert()` rather than on call.

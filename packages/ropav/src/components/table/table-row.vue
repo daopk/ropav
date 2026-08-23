@@ -158,7 +158,8 @@ const isDragging = computed(() => dragState?.isDragging(rowKey.value) ?? false);
 const isDropTarget = computed(() => dropIndicator?.isDropTarget.value ?? false);
 const allowsDragging = computed(() => draggable != null);
 
-/** Attributes from the drag half. Never listeners — see §3.4. */
+/** Attributes from the drag half. Never listeners — Vapor re-attaches every `on*` key spread
+ * through `v-bind` on each render, so those are wired statically with `@event` instead. */
 const dragAttrs = computed(() => draggable?.attrs.value ?? {});
 
 provideTableRowContext({

@@ -220,7 +220,9 @@ const isDragging = computed(() => dragState?.isDragging(itemKey.value) ?? false)
 const isDropTarget = computed(() => droppable?.isDropTarget.value ?? false);
 
 /**
- * Attributes from both halves, merged. Never listeners — see §3.4.
+ * Attributes from both halves, merged. Never listeners: Vapor tears down and re-adds every `on*`
+ * key that arrives through `v-bind` on each render, so one spread that way can be lost
+ * mid-dispatch. Listeners are attached statically with `@event`.
  *
  * `aria-describedby` is pulled out and merged by hand below: the item already binds one for its
  * description slot, and an explicit binding beats `v-bind` whichever order they appear in, so

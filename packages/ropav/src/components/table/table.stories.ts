@@ -1200,8 +1200,7 @@ export const DragAndDrop: Story = {
 /**
  * Reordering a thousand rows, of which only a screenful is ever in the DOM.
  *
- * Two things a plain table gets for free have to be arranged here, and both are what debt #47
- * was about:
+ * Two things a plain table gets for free have to be arranged here:
  *
  * - **The pointer resolves against the layout, not the DOM.** The element-searching delegate
  *   would only ever find the rows that happen to be rendered; the layout knows where all thousand
