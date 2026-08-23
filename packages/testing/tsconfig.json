@@ -1,8 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@heroui/standard/tsconfig/react.json",
+  "extends": "@heroui/standard/tsconfig/vue.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
     "noEmit": true,
     "declaration": false,
     "declarationMap": false,

@@ -1,22 +1,18 @@
-import {dirname, join} from "node:path";
-import {fileURLToPath} from "node:url";
-
 import {playwright} from "@vitest/browser-playwright";
 import {defineConfig, mergeConfig} from "vitest/config";
 
 import {baseConfig} from "./base.mjs";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const reactSetupFile = join(__dirname, "../setup/browser.ts");
-
 /**
  * Playwright Chromium defaults for `*.browser.test.*`.
  *
- * The provider and browser settings are framework-agnostic; only the setup file differs
- * per renderer. Vitest's `mergeConfig` concatenates `setupFiles`, so the setup file has
- * to be chosen here rather than overridden downstream.
+ * The provider and browser settings carry no framework of their own, so the setup file is
+ * the caller's to supply. It has to be passed in here rather than overridden downstream:
+ * Vitest's `mergeConfig` concatenates `setupFiles` instead of replacing them.
+ *
+ * @param {string} setupFile Absolute path to the setup file for this project.
  */
-export const createBrowserConfig = (setupFile = reactSetupFile) =>
+export const createBrowserConfig = (setupFile) =>
   mergeConfig(
     baseConfig,
     defineConfig({
@@ -33,6 +29,3 @@ export const createBrowserConfig = (setupFile = reactSetupFile) =>
       },
     }),
   );
-
-/** Playwright Chromium defaults for React browser tests. */
-export const browserConfig = createBrowserConfig();
