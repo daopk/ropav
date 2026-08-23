@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { settled } from "../../harness/settle";
+
 import SwitchFixture from "./fixtures.vue";
 
 const renderSwitch = (props: Record<string, unknown> = {}) => renderVapor(SwitchFixture, { props });
@@ -59,12 +61,18 @@ describe("Switch (browser)", () => {
 
     expect(content.getAttribute("data-hovered")).toBe("true");
 
+    // Sampled once the transition has finished, not on whichever of its frames the tick landed on:
+    // the colour the stylesheet settles on is the claim, and an unsettled sample can still be the
+    // colour it started from — which is byte-identical to `idle` and reads as this test failing.
+    await settled(control);
+
     const hovered = getComputedStyle(control).backgroundColor;
 
     expect(hovered).not.toBe(idle);
 
     await userEvent.click(content);
     await nextTick();
+    await settled(control);
 
     // The accent fill is what the checked branch of the stylesheet paints.
     expect(getComputedStyle(control).backgroundColor).not.toBe(hovered);
