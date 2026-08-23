@@ -2,7 +2,7 @@
 import type {ColorSliderRootProps, ColorSliderSlotProps} from "./color-slider.types";
 import type {Color, ColorSpace} from "../../utils/color-types";
 
-import {colorSliderVariants} from "@heroui/styles";
+import {colorSliderVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useColorSlider} from "../../composables/use-color-slider";

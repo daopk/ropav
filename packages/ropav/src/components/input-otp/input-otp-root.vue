@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {InputOTPRootProps} from "./input-otp.types";
 
-import {inputOTPVariants} from "@heroui/styles";
+import {inputOTPVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideInputOTPStateContext, useInputOTP} from "../../composables/use-input-otp";

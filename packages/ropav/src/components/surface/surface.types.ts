@@ -1,4 +1,4 @@
-import type {SurfaceVariants} from "@heroui/styles";
+import type {SurfaceVariants} from "@ropav/styles";
 
 export interface SurfaceRootProps {
   class?: string;

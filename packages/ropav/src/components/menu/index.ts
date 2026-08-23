@@ -22,6 +22,6 @@ export type {MenuContext, MenuSectionContext} from "./menu.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {menuVariants} from "@heroui/styles";
+export {menuVariants} from "@ropav/styles";
 
-export type {MenuVariants} from "@heroui/styles";
+export type {MenuVariants} from "@ropav/styles";

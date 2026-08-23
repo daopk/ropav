@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {RadioGroupRootProps, RadioGroupSlotProps} from "./radio-group.types";
 
-import {radioGroupVariants} from "@heroui/styles";
+import {radioGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

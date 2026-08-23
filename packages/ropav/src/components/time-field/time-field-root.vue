@@ -3,7 +3,7 @@ import type {TimeFieldRootProps, TimeFieldRootSlotProps} from "./time-field.type
 import type {TimeValue} from "../../utils/date-format";
 import type {DateFieldControl} from "../date-input-group";
 
-import {timeFieldVariants} from "@heroui/styles";
+import {timeFieldVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useTimeField} from "../../composables/use-date-field";

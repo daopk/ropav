@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {FieldErrorContentProps} from "./field-error.types";
 
-import {fieldErrorVariants} from "@heroui/styles";
+import {fieldErrorVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFieldIdsContext} from "../../composables/use-field-ids";

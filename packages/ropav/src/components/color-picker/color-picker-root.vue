@@ -2,7 +2,7 @@
 import type {ColorPickerRootProps, ColorPickerRootSlotProps} from "./color-picker.types";
 import type {Color} from "../../utils/color-types";
 
-import {colorPickerVariants} from "@heroui/styles";
+import {colorPickerVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

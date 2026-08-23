@@ -1114,7 +1114,7 @@ export const Virtualization: Story = {
  *
  * Two things are the caller's here, deliberately:
  *
- * - **The drop indicator has no styling of its own.** `@heroui/styles` has no rule for one, and
+ * - **The drop indicator has no styling of its own.** `@ropav/styles` has no rule for one, and
  *   React Aria ships its own unstyled too, so the line is styled through the indicator's own
  *   `class` here rather than by adding a rule to the shared stylesheet. `data-drop-target` and
  *   the `table__drop-indicator` class are emitted either way, so a rule added there later would

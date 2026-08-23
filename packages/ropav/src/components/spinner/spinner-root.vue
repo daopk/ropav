@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SpinnerRootProps} from "./spinner.types";
 
-import {spinnerVariants} from "@heroui/styles";
+import {spinnerVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useId} from "../../composables/use-id";

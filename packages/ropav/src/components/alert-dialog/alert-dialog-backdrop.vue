@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {AlertDialogBackdropProps} from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@heroui/styles";
+import {alertDialogVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFocusResponder} from "../../composables/focus-responder";

@@ -4,7 +4,7 @@ import type {
   CalendarYearPickerTriggerSlotProps,
 } from "./calendar-year-picker.types";
 
-import {calendarYearPickerVariants} from "@heroui/styles";
+import {calendarYearPickerVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useCalendarHeading} from "../../composables/use-calendar-heading";

@@ -2,7 +2,7 @@
 import type {SelectRootProps, SelectRootSlotProps} from "./select.types";
 import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
 
-import {selectVariants} from "@heroui/styles";
+import {selectVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

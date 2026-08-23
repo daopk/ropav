@@ -24,6 +24,6 @@ export type {SeparatorContext} from "./separator.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {separatorVariants} from "@heroui/styles";
+export {separatorVariants} from "@ropav/styles";
 
-export type {SeparatorVariants} from "@heroui/styles";
+export type {SeparatorVariants} from "@ropav/styles";

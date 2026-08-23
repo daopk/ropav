@@ -27,6 +27,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorAreaVariants} from "@heroui/styles";
+export {colorAreaVariants} from "@ropav/styles";
 
-export type {ColorAreaVariants} from "@heroui/styles";
+export type {ColorAreaVariants} from "@ropav/styles";

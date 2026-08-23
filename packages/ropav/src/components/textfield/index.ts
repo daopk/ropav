@@ -25,6 +25,6 @@ export type {TextFieldContext} from "./textfield.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {textFieldVariants} from "@heroui/styles";
+export {textFieldVariants} from "@ropav/styles";
 
-export type {TextFieldVariants} from "@heroui/styles";
+export type {TextFieldVariants} from "@ropav/styles";

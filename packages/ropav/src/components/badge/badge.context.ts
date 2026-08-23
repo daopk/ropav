@@ -1,4 +1,4 @@
-import type {badgeVariants} from "@heroui/styles";
+import type {badgeVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

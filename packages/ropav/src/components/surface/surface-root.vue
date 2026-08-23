@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SurfaceRootProps} from "./surface.types";
 
-import {surfaceVariants} from "@heroui/styles";
+import {surfaceVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideSurfaceContext} from "./surface.context";

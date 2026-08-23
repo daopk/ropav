@@ -48,6 +48,6 @@ export type {InputOTPContext} from "./input-otp.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputOTPVariants} from "@heroui/styles";
+export {inputOTPVariants} from "@ropav/styles";
 
-export type {InputOTPVariants} from "@heroui/styles";
+export type {InputOTPVariants} from "@ropav/styles";

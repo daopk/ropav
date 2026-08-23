@@ -25,6 +25,6 @@ export type {RadioGroupContext} from "./radio-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {radioGroupVariants} from "@heroui/styles";
+export {radioGroupVariants} from "@ropav/styles";
 
-export type {RadioGroupVariants} from "@heroui/styles";
+export type {RadioGroupVariants} from "@ropav/styles";

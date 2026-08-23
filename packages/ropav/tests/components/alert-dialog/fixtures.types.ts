@@ -1,5 +1,5 @@
 import type {AlertDialogPlacement, AlertDialogStatus} from "@/components/alert-dialog";
-import type {AlertDialogVariants} from "@heroui/styles";
+import type {AlertDialogVariants} from "@ropav/styles";
 
 export interface AlertDialogFixtureProps {
   defaultOpen?: boolean;

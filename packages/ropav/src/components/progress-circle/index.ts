@@ -28,6 +28,6 @@ export type {
   ProgressCircleTrackProps,
 } from "./progress-circle.types";
 
-export {progressCircleVariants} from "@heroui/styles";
+export {progressCircleVariants} from "@ropav/styles";
 
-export type {ProgressCircleVariants} from "@heroui/styles";
+export type {ProgressCircleVariants} from "@ropav/styles";

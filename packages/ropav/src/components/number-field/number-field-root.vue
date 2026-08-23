@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {NumberFieldRootProps, NumberFieldRootSlotProps} from "./number-field.types";
 
-import {numberFieldVariants} from "@heroui/styles";
+import {numberFieldVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideFieldIdsContext} from "../../composables/use-field-ids";

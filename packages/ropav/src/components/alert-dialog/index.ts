@@ -76,6 +76,6 @@ export type {AlertDialogContext, AlertDialogOverlayContext} from "./alert-dialog
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {alertDialogVariants} from "@heroui/styles";
+export {alertDialogVariants} from "@ropav/styles";
 
-export type {AlertDialogVariants} from "@heroui/styles";
+export type {AlertDialogVariants} from "@ropav/styles";

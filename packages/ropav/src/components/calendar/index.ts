@@ -100,6 +100,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {calendarVariants} from "@heroui/styles";
+export {calendarVariants} from "@ropav/styles";
 
-export type {CalendarVariants} from "@heroui/styles";
+export type {CalendarVariants} from "@ropav/styles";

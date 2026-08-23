@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ProgressCircleRootProps, ProgressCircleSlotProps} from "./progress-circle.types";
 
-import {progressCircleVariants} from "@heroui/styles";
+import {progressCircleVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useProgressLabeling} from "../../composables/use-progress-labeling";

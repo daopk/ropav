@@ -1,5 +1,5 @@
 import type {CollectionKey, UseCollectionReturn} from "../../composables/use-collection";
-import type {breadcrumbsVariants} from "@heroui/styles";
+import type {breadcrumbsVariants} from "@ropav/styles";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

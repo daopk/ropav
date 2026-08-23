@@ -3,7 +3,7 @@ import type {UseFieldIdsReturn} from "../../composables/use-field-ids";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {UseTypeaheadReturn} from "../../composables/use-typeahead";
-import type {TagVariants, tagGroupVariants} from "@heroui/styles";
+import type {TagVariants, tagGroupVariants} from "@ropav/styles";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

@@ -2,7 +2,7 @@
 import type {ColorAreaRootProps, ColorAreaSlotProps} from "./color-area.types";
 import type {Color} from "../../utils/color-types";
 
-import {colorAreaVariants} from "@heroui/styles";
+import {colorAreaVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useColorArea} from "../../composables/use-color-area";

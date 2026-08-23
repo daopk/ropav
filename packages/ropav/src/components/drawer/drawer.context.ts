@@ -1,6 +1,6 @@
 import type {DrawerPlacement} from "./drawer.types";
 import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {drawerVariants} from "@heroui/styles";
+import type {drawerVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

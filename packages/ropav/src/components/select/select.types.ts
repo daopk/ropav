@@ -10,7 +10,7 @@ import type {
 } from "../../composables/use-select-state";
 import type {DisabledBehavior} from "../../composables/use-selection-manager";
 import type {Placement} from "../../utils/position";
-import type {SelectVariants} from "@heroui/styles";
+import type {SelectVariants} from "@ropav/styles";
 
 export interface SelectRootProps<T = unknown> {
   class?: string;

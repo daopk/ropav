@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {InputGroupRootProps, InputGroupRootSlotProps} from "./input-group.types";
 
-import {inputGroupVariants} from "@heroui/styles";
+import {inputGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";

@@ -1,4 +1,4 @@
-import type {PaginationVariants} from "@heroui/styles";
+import type {PaginationVariants} from "@ropav/styles";
 
 export interface PaginationRootProps {
   class?: string;

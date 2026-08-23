@@ -37,6 +37,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {disclosureGroupVariants} from "@heroui/styles";
+export {disclosureGroupVariants} from "@ropav/styles";
 
-export type {DisclosureGroupVariants} from "@heroui/styles";
+export type {DisclosureGroupVariants} from "@ropav/styles";

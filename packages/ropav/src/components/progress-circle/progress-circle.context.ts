@@ -1,5 +1,5 @@
 import type {ProgressValueState} from "../../composables/use-progress-value";
-import type {progressCircleVariants} from "@heroui/styles";
+import type {progressCircleVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

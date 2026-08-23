@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DropdownRootProps} from "./dropdown.types";
 
-import {dropdownVariants} from "@heroui/styles";
+import {dropdownVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

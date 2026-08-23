@@ -75,6 +75,6 @@ export type {DrawerContext, DrawerOverlayContext} from "./drawer.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {drawerVariants} from "@heroui/styles";
+export {drawerVariants} from "@ropav/styles";
 
-export type {DrawerVariants} from "@heroui/styles";
+export type {DrawerVariants} from "@ropav/styles";

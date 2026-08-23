@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TagRootProps, TagSlotProps} from "./tag.types";
 
-import {tagVariants} from "@heroui/styles";
+import {tagVariants} from "@ropav/styles";
 import {computed, shallowRef, watch} from "vue";
 
 import {useId} from "../../composables/use-id";

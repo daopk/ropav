@@ -1,4 +1,4 @@
-import type {SkeletonVariants} from "@heroui/styles";
+import type {SkeletonVariants} from "@ropav/styles";
 
 export interface SkeletonRootProps {
   class?: string;

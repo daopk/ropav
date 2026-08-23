@@ -1,7 +1,7 @@
 import type {UseDateFieldReturn} from "../../composables/use-date-field";
 import type {DateFieldState} from "../../composables/use-date-field-state";
 import type {UsePressHandlers} from "../../composables/use-press";
-import type {dateInputGroupVariants} from "@heroui/styles";
+import type {dateInputGroupVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

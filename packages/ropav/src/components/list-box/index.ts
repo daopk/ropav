@@ -43,6 +43,6 @@ export type {ListBoxContext, ListBoxStateContext} from "./list-box.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {listboxVariants} from "@heroui/styles";
+export {listboxVariants} from "@ropav/styles";
 
-export type {ListBoxVariants} from "@heroui/styles";
+export type {ListBoxVariants} from "@ropav/styles";

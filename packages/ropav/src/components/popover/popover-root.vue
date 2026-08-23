@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {PopoverRootProps} from "./popover.types";
 
-import {popoverVariants} from "@heroui/styles";
+import {popoverVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

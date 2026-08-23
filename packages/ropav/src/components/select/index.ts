@@ -41,6 +41,6 @@ export type {SelectContext} from "./select.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {selectVariants} from "@heroui/styles";
+export {selectVariants} from "@ropav/styles";
 
-export type {SelectVariants} from "@heroui/styles";
+export type {SelectVariants} from "@ropav/styles";

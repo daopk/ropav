@@ -55,6 +55,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateInputGroupVariants} from "@heroui/styles";
+export {dateInputGroupVariants} from "@ropav/styles";
 
-export type {DateInputGroupVariants} from "@heroui/styles";
+export type {DateInputGroupVariants} from "@ropav/styles";

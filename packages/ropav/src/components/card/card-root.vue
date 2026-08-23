@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {CardRootProps} from "./card.types";
 
-import {cardVariants} from "@heroui/styles";
+import {cardVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideSurfaceContext, useSurfaceContext} from "../surface";

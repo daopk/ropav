@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DrawerRootProps} from "./drawer.types";
 
-import {drawerVariants} from "@heroui/styles";
+import {drawerVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

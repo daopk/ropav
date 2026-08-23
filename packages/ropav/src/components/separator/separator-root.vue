@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SeparatorRootProps} from "./separator.types";
 
-import {separatorVariants} from "@heroui/styles";
+import {separatorVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useSeparatorContext} from "./separator.context";

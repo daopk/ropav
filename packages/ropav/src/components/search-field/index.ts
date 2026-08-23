@@ -50,6 +50,6 @@ export type {SearchFieldContext} from "./search-field.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {searchFieldVariants} from "@heroui/styles";
+export {searchFieldVariants} from "@ropav/styles";
 
-export type {SearchFieldVariants} from "@heroui/styles";
+export type {SearchFieldVariants} from "@ropav/styles";

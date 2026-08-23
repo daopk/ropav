@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {KbdRootProps} from "./kbd.types";
 
-import {kbdVariants} from "@heroui/styles";
+import {kbdVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideKbdContext} from "./kbd.context";

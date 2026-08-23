@@ -1,4 +1,4 @@
-import type {SpinnerVariants} from "@heroui/styles";
+import type {SpinnerVariants} from "@ropav/styles";
 
 export interface SpinnerRootProps {
   class?: string;

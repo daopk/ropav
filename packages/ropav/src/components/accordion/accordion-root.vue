@@ -2,7 +2,7 @@
 import type {AccordionRootProps} from "./accordion.types";
 import type {DisclosureKey} from "../../composables/use-disclosure-group";
 
-import {accordionVariants} from "@heroui/styles";
+import {accordionVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useDisclosureGroup} from "../../composables/use-disclosure-group";

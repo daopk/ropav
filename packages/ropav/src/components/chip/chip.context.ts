@@ -1,4 +1,4 @@
-import type {chipVariants} from "@heroui/styles";
+import type {chipVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {AlertDialogIconProps} from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@heroui/styles";
+import {alertDialogVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {DangerIcon, InfoIcon, SuccessIcon, WarningIcon} from "../icons";

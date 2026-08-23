@@ -53,6 +53,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {typographyVariants} from "@heroui/styles";
+export {typographyVariants} from "@ropav/styles";
 
-export type {TypographyVariants} from "@heroui/styles";
+export type {TypographyVariants} from "@ropav/styles";

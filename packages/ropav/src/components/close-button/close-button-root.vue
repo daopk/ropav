@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {CloseButtonRootProps, CloseButtonSlotProps} from "./close-button.types";
 
-import {closeButtonVariants} from "@heroui/styles";
+import {closeButtonVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";

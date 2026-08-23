@@ -52,6 +52,6 @@ export type {DisclosureContext} from "./disclosure.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {disclosureVariants} from "@heroui/styles";
+export {disclosureVariants} from "@ropav/styles";
 
-export type {DisclosureVariants} from "@heroui/styles";
+export type {DisclosureVariants} from "@ropav/styles";

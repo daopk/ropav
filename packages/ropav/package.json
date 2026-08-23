@@ -60,10 +60,10 @@
   },
   "clean-package": "./clean-package.config.json",
   "dependencies": {
-    "@heroui/styles": "^3.2.4",
     "@internationalized/date": "3.12.3",
     "@internationalized/number": "3.6.7",
     "@internationalized/string": "3.2.10",
+    "@ropav/styles": "workspace:*",
     "tailwind-variants": "3.3.1"
   },
   "devDependencies": {

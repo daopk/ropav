@@ -1,6 +1,6 @@
 import type {QueuedToast} from "./toast.types";
 import type {ToastContentAttrs} from "../../composables/use-toast";
-import type {ToastVariants, toastVariants} from "@heroui/styles";
+import type {ToastVariants, toastVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

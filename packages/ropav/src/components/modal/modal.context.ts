@@ -1,6 +1,6 @@
 import type {ModalPlacement} from "./modal.types";
 import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {modalVariants} from "@heroui/styles";
+import type {modalVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

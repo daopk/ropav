@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {CheckboxRootProps, CheckboxSlotProps} from "./checkbox.types";
 
-import {checkboxVariants} from "@heroui/styles";
+import {checkboxVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useControllableState} from "../../composables/use-controllable-state";

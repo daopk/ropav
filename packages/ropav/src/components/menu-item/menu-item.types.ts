@@ -1,6 +1,6 @@
 import type {CollectionKey} from "../../composables/use-collection";
 import type {SelectionMode} from "../../composables/use-selection-manager";
-import type {MenuItemVariants} from "@heroui/styles";
+import type {MenuItemVariants} from "@ropav/styles";
 
 /** State handed to the default slot, so content can follow the item's own state. */
 export interface MenuItemSlotProps {

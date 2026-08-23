@@ -1,4 +1,4 @@
-import type {CloseButtonVariants} from "@heroui/styles";
+import type {CloseButtonVariants} from "@ropav/styles";
 
 export interface CloseButtonRootProps {
   class?: string;

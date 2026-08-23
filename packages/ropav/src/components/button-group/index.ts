@@ -30,6 +30,6 @@ export type {ButtonGroupContext} from "./button-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {buttonGroupVariants} from "@heroui/styles";
+export {buttonGroupVariants} from "@ropav/styles";
 
-export type {ButtonGroupVariants} from "@heroui/styles";
+export type {ButtonGroupVariants} from "@ropav/styles";

@@ -1,4 +1,4 @@
-import type {colorInputGroupVariants} from "@heroui/styles";
+import type {colorInputGroupVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

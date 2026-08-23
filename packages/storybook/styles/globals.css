@@ -1,4 +1,4 @@
-/* The stylesheet the library ships, not `@heroui/styles` directly - it carries rules on top. */
+/* The stylesheet the library ships, not `@ropav/styles` directly - it carries rules on top. */
 @import "ropav/styles";
 
 /* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */

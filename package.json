@@ -22,7 +22,7 @@
     "typecheck": "pnpm -r --no-sort run typecheck",
     "test": "pnpm -r --no-sort run test",
     "clean": "pnpm clean:cache && pnpm i",
-    "clean:cache": "find . \\( -name '.next' -o -name 'dist' -o -name 'node_modules' -o -name '.source' -o -name '.contentlayer' -o -name '.vitest-attachments' -o -name 'coverage' -o -name 'bundle-sizes.json'  -o -name 'tsconfig.tsbuildinfo'  -o -name 'pnpm-lock.yaml' \\) -prune -exec rm -rf '{}' +",
+    "clean:cache": "find . \\( -name '.next' -o -name 'dist' -o -name 'node_modules' -o -name '.source' -o -name '.contentlayer' -o -name '.vitest-attachments' -o -name 'coverage' -o -name 'bundle-sizes.json' -o -name 'bundle-size.json'  -o -name 'tsconfig.tsbuildinfo'  -o -name 'pnpm-lock.yaml' \\) -prune -exec rm -rf '{}' +",
     "upli": "pnpm up --filter \"./**\"  -L -i",
     "prepare": "husky"
   },

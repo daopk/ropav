@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SliderRootProps, SliderSlotProps} from "./slider.types";
 
-import {sliderVariants} from "@heroui/styles";
+import {sliderVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

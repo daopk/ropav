@@ -1,7 +1,7 @@
 import type {SelectedItem, SelectedValue} from "../../composables/use-select-state";
 import type {Placement} from "../../utils/position";
 import type {SelectRootProps} from "../select/select.types";
-import type {AutocompleteVariants} from "@heroui/styles";
+import type {AutocompleteVariants} from "@ropav/styles";
 
 /**
  * An autocomplete is a select whose options can be narrowed by typing, so it takes every prop a

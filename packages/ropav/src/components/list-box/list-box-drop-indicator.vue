@@ -16,7 +16,7 @@ import {useListBoxContext} from "./list-box.context";
  * these, so an indicator that only existed while active would be unreachable. `isHidden` is what
  * removes it when there is no drag at all.
  *
- * **Unstyled on purpose.** `@heroui/styles` has no rule for this, and React Aria ships its own
+ * **Unstyled on purpose.** `@ropav/styles` has no rule for this, and React Aria ships its own
  * `DropIndicator` unstyled too — the class and `data-drop-target` are emitted so a rule can be
  * added later, or supplied by the caller, without touching this component.
  */

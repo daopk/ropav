@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ProseProps} from "./typography.types";
 
-import {typographyVariants} from "@heroui/styles";
+import {typographyVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 const props = defineProps<ProseProps>();

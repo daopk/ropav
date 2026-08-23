@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TableRootProps} from "./table.types";
 
-import {tableVariants} from "@heroui/styles";
+import {tableVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideTableContext} from "./table.context";

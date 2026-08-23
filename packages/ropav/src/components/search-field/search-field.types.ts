@@ -3,7 +3,7 @@ import type {
   ValidationDetails,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {SearchFieldVariants} from "@heroui/styles";
+import type {SearchFieldVariants} from "@ropav/styles";
 
 // Boolean props are declared as plain `boolean` rather than through the variants type. The
 // SFC compiler cannot resolve an imported indexed-access type into a runtime prop type, and

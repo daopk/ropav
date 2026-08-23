@@ -1,5 +1,5 @@
 import type {ToggleGroupKey} from "../../composables/use-toggle-group-state";
-import type {ToggleButtonVariants} from "@heroui/styles";
+import type {ToggleButtonVariants} from "@ropav/styles";
 
 export interface ToggleButtonRootProps {
   class?: string;

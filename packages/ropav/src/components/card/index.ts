@@ -38,6 +38,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {cardVariants} from "@heroui/styles";
+export {cardVariants} from "@ropav/styles";
 
-export type {CardVariants} from "@heroui/styles";
+export type {CardVariants} from "@ropav/styles";

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {FieldsetRootProps} from "./fieldset.types";
 
-import {fieldsetVariants} from "@heroui/styles";
+import {fieldsetVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {dataAttr} from "../../utils/assertion";

@@ -25,6 +25,6 @@ export type {CheckboxGroupContext} from "./checkbox-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {checkboxGroupVariants} from "@heroui/styles";
+export {checkboxGroupVariants} from "@ropav/styles";
 
-export type {CheckboxGroupVariants} from "@heroui/styles";
+export type {CheckboxGroupVariants} from "@ropav/styles";

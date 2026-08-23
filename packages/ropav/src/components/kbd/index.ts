@@ -37,6 +37,6 @@ export type {KbdContext} from "./kbd.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {kbdVariants} from "@heroui/styles";
+export {kbdVariants} from "@ropav/styles";
 
-export type {KbdVariants} from "@heroui/styles";
+export type {KbdVariants} from "@ropav/styles";

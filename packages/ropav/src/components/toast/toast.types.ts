@@ -1,6 +1,6 @@
 import type {Timer, ToastQueue} from "./toast-queue";
 import type {ButtonRootProps} from "../button";
-import type {ToastVariants} from "@heroui/styles";
+import type {ToastVariants} from "@ropav/styles";
 import type {Component} from "vue";
 
 /* -------------------------------------------------------------------------------------------------

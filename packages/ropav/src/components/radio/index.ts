@@ -37,6 +37,6 @@ export type {RadioContext} from "./radio.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {radioVariants} from "@heroui/styles";
+export {radioVariants} from "@ropav/styles";
 
-export type {RadioVariants} from "@heroui/styles";
+export type {RadioVariants} from "@ropav/styles";

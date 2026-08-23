@@ -425,7 +425,7 @@ describe("Tooltip (browser)", () => {
       // Scoped to the tooltip, the way the popover suite scopes its own: the trigger is an
       // ordinary button covered by the button suite, and its primary variant pairs `--accent`
       // (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1 — a palette finding in
-      // `@heroui/styles` that applies to `@heroui/react` identically.
+      // `@ropav/styles` that applies to `@heroui/react` identically.
       await expectNoA11yViolations(tooltip);
 
       result.unmount();

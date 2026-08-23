@@ -7,7 +7,7 @@ import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {Color} from "../../utils/color-types";
 
-import {colorSwatchPickerVariants} from "@heroui/styles";
+import {colorSwatchPickerVariants} from "@ropav/styles";
 import {computed, shallowRef, triggerRef} from "vue";
 
 import {useCollection} from "../../composables/use-collection";

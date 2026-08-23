@@ -1,5 +1,5 @@
 import type {ProgressValueState} from "../../composables/use-progress-value";
-import type {meterVariants} from "@heroui/styles";
+import type {meterVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

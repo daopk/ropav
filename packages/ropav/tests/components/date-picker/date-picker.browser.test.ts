@@ -17,7 +17,7 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * `landmark-banner-is-top-level`: `Calendar.Header` renders a `<header>`, which is a banner
  * landmark, and inside a popover it is not top level.
  *
- * Both live in `@heroui/styles` and in HeroUI's own component shape rather than in this port, so
+ * Both live in `@ropav/styles` and in HeroUI's own component shape rather than in this port, so
  * they are excluded here and recorded as debt instead of being silently absorbed into a green gate.
  */
 const SHARED_WITH_REACT = {

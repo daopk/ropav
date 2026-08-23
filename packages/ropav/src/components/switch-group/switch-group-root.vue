@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SwitchGroupRootProps} from "./switch-group.types";
 
-import {switchGroupVariants} from "@heroui/styles";
+import {switchGroupVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 const props = defineProps<SwitchGroupRootProps>();

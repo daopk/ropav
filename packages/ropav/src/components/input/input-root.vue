@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {InputRootProps} from "./input.types";
 
-import {inputVariants} from "@heroui/styles";
+import {inputVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useInteractionStates} from "../../composables/use-interaction-states";

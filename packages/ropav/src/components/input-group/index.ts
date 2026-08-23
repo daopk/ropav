@@ -43,6 +43,6 @@ export type {InputGroupContext} from "./input-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputGroupVariants} from "@heroui/styles";
+export {inputGroupVariants} from "@ropav/styles";
 
-export type {InputGroupVariants} from "@heroui/styles";
+export type {InputGroupVariants} from "@ropav/styles";

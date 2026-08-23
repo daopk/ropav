@@ -40,6 +40,6 @@ export type {FieldsetContext} from "./fieldset.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {fieldsetVariants} from "@heroui/styles";
+export {fieldsetVariants} from "@ropav/styles";
 
-export type {FieldsetVariants} from "@heroui/styles";
+export type {FieldsetVariants} from "@ropav/styles";

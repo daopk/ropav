@@ -35,6 +35,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorFieldVariants} from "@heroui/styles";
+export {colorFieldVariants} from "@ropav/styles";
 
-export type {ColorFieldVariants} from "@heroui/styles";
+export type {ColorFieldVariants} from "@ropav/styles";

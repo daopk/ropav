@@ -1,5 +1,5 @@
 import type {ToastQueue} from "@/components/toast";
-import type {ToastVariants} from "@heroui/styles";
+import type {ToastVariants} from "@ropav/styles";
 
 export interface ToastFixtureProps {
   ariaLabel?: string;

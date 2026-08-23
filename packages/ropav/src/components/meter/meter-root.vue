@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {MeterRootProps, MeterSlotProps} from "./meter.types";
 
-import {meterVariants} from "@heroui/styles";
+import {meterVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useProgressLabeling} from "../../composables/use-progress-labeling";

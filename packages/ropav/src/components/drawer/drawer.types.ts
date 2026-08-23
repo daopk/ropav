@@ -1,5 +1,5 @@
 import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {DrawerVariants} from "@heroui/styles";
+import type {DrawerVariants} from "@ropav/styles";
 import type {CSSProperties} from "vue";
 
 /** Which edge the drawer slides in from. */

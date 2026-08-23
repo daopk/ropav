@@ -1,4 +1,4 @@
-import type {linkVariants} from "@heroui/styles";
+import type {linkVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

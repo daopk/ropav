@@ -4,8 +4,8 @@ import type {CalendarRootProps, CalendarRootSlotProps} from "./calendar.types";
 import type {CalendarValue} from "../../composables/use-calendar-state";
 import type {DateValue} from "@internationalized/date";
 
-import {calendarVariants} from "@heroui/styles";
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
+import {calendarVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useCalendar} from "../../composables/use-calendar";

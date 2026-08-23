@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ListBoxSectionRootProps} from "./list-box-section.types";
 
-import {listboxSectionVariants} from "@heroui/styles";
+import {listboxSectionVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

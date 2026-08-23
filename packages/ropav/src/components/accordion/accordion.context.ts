@@ -1,5 +1,5 @@
 import type {UseDisclosureGroupReturn} from "../../composables/use-disclosure-group";
-import type {accordionVariants} from "@heroui/styles";
+import type {accordionVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

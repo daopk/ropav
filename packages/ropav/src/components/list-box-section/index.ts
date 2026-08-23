@@ -20,4 +20,4 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {listboxSectionVariants} from "@heroui/styles";
+export {listboxSectionVariants} from "@ropav/styles";

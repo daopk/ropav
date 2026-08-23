@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TypographyRootProps} from "./typography.types";
 
-import {typographyVariants} from "@heroui/styles";
+import {typographyVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {DEFAULT_ELEMENT_BY_TYPE} from "./typography.constants";

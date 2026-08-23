@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TooltipRootProps} from "./tooltip.types";
 
-import {tooltipVariants} from "@heroui/styles";
+import {tooltipVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideFocusResponder} from "../../composables/focus-responder";

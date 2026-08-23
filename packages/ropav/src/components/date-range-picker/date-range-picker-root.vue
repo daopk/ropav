@@ -7,8 +7,8 @@ import type {DateRange} from "../../composables/use-calendar";
 import type {DateRangePickerFieldOptions} from "../../composables/use-date-range-picker";
 import type {DateFieldControl} from "../date-input-group";
 
-import {dateRangePickerVariants} from "@heroui/styles";
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
+import {dateRangePickerVariants} from "@ropav/styles";
 import {computed, onScopeDispose, shallowRef, watch} from "vue";
 
 import {useDateField} from "../../composables/use-date-field";

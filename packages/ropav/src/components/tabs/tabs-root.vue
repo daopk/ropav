@@ -2,7 +2,7 @@
 import type {TabsRootProps, TabsRootSlotProps} from "./tabs.types";
 import type {CollectionKey} from "../../composables/use-collection";
 
-import {tabsVariants} from "@heroui/styles";
+import {tabsVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useFocusWithin} from "../../composables/use-interaction-states";

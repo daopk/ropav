@@ -1,4 +1,4 @@
-import type {ProgressBarVariants} from "@heroui/styles";
+import type {ProgressBarVariants} from "@ropav/styles";
 import type {CSSProperties} from "vue";
 
 export interface ProgressBarRootProps {

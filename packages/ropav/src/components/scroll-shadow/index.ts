@@ -19,9 +19,9 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {scrollShadowVariants} from "@heroui/styles";
+export {scrollShadowVariants} from "@ropav/styles";
 
-export type {ScrollShadowVariants} from "@heroui/styles";
+export type {ScrollShadowVariants} from "@ropav/styles";
 
 /* -------------------------------------------------------------------------------------------------
  * Composable

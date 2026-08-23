@@ -2,7 +2,7 @@ import type {UseCollectionReturn} from "../../composables/use-collection";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {UseSelectionManagerReturn} from "../../composables/use-selection-manager";
 import type {Color} from "../../utils/color-types";
-import type {colorSwatchPickerVariants} from "@heroui/styles";
+import type {colorSwatchPickerVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

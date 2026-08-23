@@ -1,5 +1,5 @@
 import type {DrawerPlacement} from "@/components/drawer";
-import type {DrawerVariants} from "@heroui/styles";
+import type {DrawerVariants} from "@ropav/styles";
 
 export interface DrawerFixtureProps {
   defaultOpen?: boolean;

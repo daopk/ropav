@@ -35,6 +35,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {alertVariants} from "@heroui/styles";
+export {alertVariants} from "@ropav/styles";
 
-export type {AlertVariants} from "@heroui/styles";
+export type {AlertVariants} from "@ropav/styles";

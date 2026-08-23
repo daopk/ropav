@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ToggleButtonRootProps, ToggleButtonSlotProps} from "./toggle-button.types";
 
-import {toggleButtonVariants} from "@heroui/styles";
+import {toggleButtonVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useControllableState} from "../../composables/use-controllable-state";

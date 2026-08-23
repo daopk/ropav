@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    // The package is framework-agnostic and never touches the DOM: it is `tv()` calls and
+    // CSS. `lib`/`types` override rather than merge, so both are narrowed from the base -
+    // no `vite/client`, which this package has no reason to depend on.
+    "lib": ["ESNext"],
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

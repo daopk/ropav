@@ -1,5 +1,5 @@
 import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
-import type {avatarVariants} from "@heroui/styles";
+import type {avatarVariants} from "@ropav/styles";
 import type {ComputedRef, Ref} from "vue";
 
 import {createContext} from "../../utils/create-context";

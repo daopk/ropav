@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SwitchRootProps, SwitchSlotProps} from "./switch.types";
 
-import {switchVariants} from "@heroui/styles";
+import {switchVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useControllableState} from "../../composables/use-controllable-state";

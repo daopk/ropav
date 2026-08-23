@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {BreadcrumbsRootProps} from "./breadcrumbs.types";
 
-import {breadcrumbsVariants} from "@heroui/styles";
+import {breadcrumbsVariants} from "@ropav/styles";
 import {computed, shallowRef, watch} from "vue";
 
 import {useCollection} from "../../composables/use-collection";

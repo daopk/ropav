@@ -3,7 +3,7 @@ import type {MenuRootProps} from "./menu.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 
-import {menuVariants} from "@heroui/styles";
+import {menuVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useMenu} from "../../composables/use-menu";

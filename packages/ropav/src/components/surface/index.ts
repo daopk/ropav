@@ -24,6 +24,6 @@ export type {SurfaceContext} from "./surface.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {surfaceVariants} from "@heroui/styles";
+export {surfaceVariants} from "@ropav/styles";
 
-export type {SurfaceVariants} from "@heroui/styles";
+export type {SurfaceVariants} from "@ropav/styles";

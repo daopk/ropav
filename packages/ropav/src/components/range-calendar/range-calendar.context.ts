@@ -1,7 +1,7 @@
 import type {DateRange} from "../../composables/use-calendar";
 import type {CalendarDayViewContext, CalendarOwnedProps} from "../calendar/calendar.context";
-import type {rangeCalendarVariants} from "@heroui/styles";
 import type {CalendarDate, DateValue} from "@internationalized/date";
+import type {rangeCalendarVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

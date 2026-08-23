@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ListBoxItemRootProps, ListBoxItemSlotProps} from "./list-box-item.types";
 
-import {listboxItemVariants} from "@heroui/styles";
+import {listboxItemVariants} from "@ropav/styles";
 import {computed, shallowRef, watch} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

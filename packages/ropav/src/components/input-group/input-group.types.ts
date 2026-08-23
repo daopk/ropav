@@ -1,4 +1,4 @@
-import type {InputGroupVariants} from "@heroui/styles";
+import type {InputGroupVariants} from "@ropav/styles";
 
 // Boolean props are declared as plain `boolean` rather than through the variants type. The
 // SFC compiler cannot resolve an imported indexed-access type into a runtime prop type, and

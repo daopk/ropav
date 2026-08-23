@@ -52,6 +52,6 @@ export type {DropdownContext, DropdownPopoverTarget} from "./dropdown.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dropdownVariants} from "@heroui/styles";
+export {dropdownVariants} from "@ropav/styles";
 
-export type {DropdownVariants} from "@heroui/styles";
+export type {DropdownVariants} from "@ropav/styles";

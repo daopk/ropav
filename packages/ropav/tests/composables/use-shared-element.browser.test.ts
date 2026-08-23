@@ -10,7 +10,7 @@ import {createSharedElementScope, useSharedElement} from "@/composables/use-shar
  *
  * jsdom answers every rect with zeroes, so every delta the handoff computes is `0px 0px` there and
  * the one thing this composable exists to do is unobservable. The stylesheet is declared here
- * rather than taken from `@heroui/styles` so the durations and offsets are the test's own.
+ * rather than taken from `@ropav/styles` so the durations and offsets are the test's own.
  */
 const DURATION = 120;
 const NAME = "SelectionIndicator";

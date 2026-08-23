@@ -63,6 +63,6 @@ export type {AutocompleteContext} from "./autocomplete.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {autocompleteVariants} from "@heroui/styles";
+export {autocompleteVariants} from "@ropav/styles";
 
-export type {AutocompleteVariants} from "@heroui/styles";
+export type {AutocompleteVariants} from "@ropav/styles";

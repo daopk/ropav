@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DrawerBackdropProps} from "./drawer.types";
 
-import {drawerVariants} from "@heroui/styles";
+import {drawerVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFocusResponder} from "../../composables/focus-responder";

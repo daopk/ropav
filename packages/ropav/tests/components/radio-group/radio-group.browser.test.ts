@@ -172,7 +172,7 @@ describe("RadioGroup (browser)", () => {
       await nextTick();
       // `color-contrast` is scoped out for this one case: `[data-invalid] .label` paints the
       // label in `--danger`, which falls short of 4.5:1. Verified byte-identical on React at
-      // 6006 (`oklch(0.6532 0.2328 25.74)`), so it is a `@heroui/styles` shortfall both
+      // 6006 (`oklch(0.6532 0.2328 25.74)`), so it is a `@ropav/styles` shortfall both
       // frameworks share rather than anything this port introduced.
       await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});
 

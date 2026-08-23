@@ -1,5 +1,5 @@
 import type {Color} from "../../utils/color-types";
-import type {colorPickerVariants} from "@heroui/styles";
+import type {colorPickerVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

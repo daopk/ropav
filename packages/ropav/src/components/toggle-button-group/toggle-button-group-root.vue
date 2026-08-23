@@ -2,7 +2,7 @@
 import type {ToggleButtonGroupRootProps} from "./toggle-button-group.types";
 import type {ToggleGroupKey} from "../../composables/use-toggle-group-state";
 
-import {toggleButtonGroupVariants} from "@heroui/styles";
+import {toggleButtonGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useToggleGroupState} from "../../composables/use-toggle-group-state";

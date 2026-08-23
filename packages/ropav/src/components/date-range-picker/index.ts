@@ -75,6 +75,6 @@ export type {DateRangePickerContext} from "./date-range-picker.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {dateRangePickerVariants} from "@heroui/styles";
+export {dateRangePickerVariants} from "@ropav/styles";
 
-export type {DateRangePickerVariants} from "@heroui/styles";
+export type {DateRangePickerVariants} from "@ropav/styles";

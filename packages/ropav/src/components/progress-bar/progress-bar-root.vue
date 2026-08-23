@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ProgressBarRootProps, ProgressBarSlotProps} from "./progress-bar.types";
 
-import {progressBarVariants} from "@heroui/styles";
+import {progressBarVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useProgressLabeling} from "../../composables/use-progress-labeling";

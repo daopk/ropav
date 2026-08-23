@@ -1,13 +1,14 @@
 # Vue component library
 
 A Vue 3 component library built on [Vue Vapor](https://github.com/vuejs/core-vapor), styled by
-[`@heroui/styles`](https://www.npmjs.com/package/@heroui/styles) and Tailwind CSS v4.
+[`@ropav/styles`](packages/styles) and Tailwind CSS v4.
 
 ## Packages
 
 | Package              | Description                                      |
 | -------------------- | ------------------------------------------------ |
 | `packages/ropav`     | The component library                            |
+| `packages/styles`    | CSS + `tv()` variants (`@ropav/styles`)          |
 | `packages/storybook` | Storybook — the only place to see components run |
 | `packages/testing`   | Shared test harness (jsdom + Playwright browser) |
 

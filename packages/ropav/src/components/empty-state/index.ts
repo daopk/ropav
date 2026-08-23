@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {emptyStateVariants} from "@heroui/styles";
+export {emptyStateVariants} from "@ropav/styles";
 
-export type {EmptyStateVariants} from "@heroui/styles";
+export type {EmptyStateVariants} from "@ropav/styles";

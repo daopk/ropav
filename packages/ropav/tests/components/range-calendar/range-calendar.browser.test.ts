@@ -19,7 +19,7 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * `aria-required-children`: the year picker's grid is a `listbox` whose children are cells rather
  * than `option`s.
  *
- * All three live in `@heroui/styles` and in HeroUI's own component shape rather than in this port,
+ * All three live in `@ropav/styles` and in HeroUI's own component shape rather than in this port,
  * so they are excluded here and recorded as debt instead of being absorbed into a green gate.
  */
 const SHARED_WITH_REACT = {

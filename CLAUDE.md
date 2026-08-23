@@ -74,7 +74,7 @@ pnpm typecheck
 ### Package-Specific Commands
 
 - Use `--filter` flag with package name: `pnpm build --filter=@heroui/react`
-- Main packages: `@heroui/react`, `@heroui/styles`, `@heroui/docs`, `@heroui/storybook`
+- Main packages: `ropav`, `@ropav/styles`, `@ropav/storybook`
 
 ## Git Commit Convention
 
@@ -116,7 +116,7 @@ git commit -m "ci: add Claude Code GitHub Action workflow"
 │   └── docs/          # Documentation site (Next.js + Fumadocs)
 ├── packages/
 │   ├── react/         # Main UI component library (@heroui/react)
-│   ├── styles/        # CSS styles & variants (@heroui/styles)
+│   ├── styles/        # CSS styles & variants (@ropav/styles)
 │   ├── standard/      # Shared ESLint, Prettier, TypeScript configs
 │   ├── storybook/     # Storybook configuration
 │   └── testing/       # Shared test harness (@heroui/testing)
@@ -147,7 +147,7 @@ component-name/
 
 **Migration to CSS-based Styling**:
 
-- The `button` component has been migrated to use CSS styles from `@heroui/styles/src/components/button.css`
+- The `button` component has been migrated to use CSS styles from `packages/styles/components/button.css`
 - This approach allows for better customization through CSS utilities and `@utility` directives
 - Other components will gradually be migrated to follow this CSS-based pattern
 - Components use `tv()` from `tailwind-variants` to map variant props to BEM class names

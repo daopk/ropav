@@ -1,4 +1,4 @@
-import type {calendarYearPickerVariants} from "@heroui/styles";
+import type {calendarYearPickerVariants} from "@ropav/styles";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

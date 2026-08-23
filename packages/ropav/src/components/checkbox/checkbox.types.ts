@@ -2,7 +2,7 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {CheckboxVariants} from "@heroui/styles";
+import type {CheckboxVariants} from "@ropav/styles";
 
 export interface CheckboxRootProps {
   class?: string;

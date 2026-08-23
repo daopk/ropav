@@ -40,6 +40,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {sliderVariants} from "@heroui/styles";
+export {sliderVariants} from "@ropav/styles";
 
-export type {SliderVariants} from "@heroui/styles";
+export type {SliderVariants} from "@ropav/styles";

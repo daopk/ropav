@@ -25,6 +25,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {breadcrumbsVariants} from "@heroui/styles";
+export {breadcrumbsVariants} from "@ropav/styles";
 
-export type {BreadcrumbsVariants} from "@heroui/styles";
+export type {BreadcrumbsVariants} from "@ropav/styles";

@@ -35,6 +35,6 @@ export type {MenuItemContext, MenuItemPopupContext} from "./menu-item.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {menuItemVariants} from "@heroui/styles";
+export {menuItemVariants} from "@ropav/styles";
 
-export type {MenuItemVariants} from "@heroui/styles";
+export type {MenuItemVariants} from "@ropav/styles";

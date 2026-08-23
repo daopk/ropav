@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TextAreaRootProps} from "./textarea.types";
 
-import {textAreaVariants} from "@heroui/styles";
+import {textAreaVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useInteractionStates} from "../../composables/use-interaction-states";

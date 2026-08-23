@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {CalendarYearPickerGridProps} from "./calendar-year-picker.types";
 
-import {calendarYearPickerVariants} from "@heroui/styles";
+import {calendarYearPickerVariants} from "@ropav/styles";
 import {computed, onScopeDispose, shallowRef, watch, watchEffect} from "vue";
 
 import {useCalendarYearPicker} from "../../composables/use-calendar-year-picker";

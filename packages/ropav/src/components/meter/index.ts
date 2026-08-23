@@ -23,6 +23,6 @@ export type {
   MeterTrackProps,
 } from "./meter.types";
 
-export {meterVariants} from "@heroui/styles";
+export {meterVariants} from "@ropav/styles";
 
-export type {MeterVariants} from "@heroui/styles";
+export type {MeterVariants} from "@ropav/styles";

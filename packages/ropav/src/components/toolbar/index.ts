@@ -24,6 +24,6 @@ export type {ToolbarContext} from "./toolbar.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toolbarVariants} from "@heroui/styles";
+export {toolbarVariants} from "@ropav/styles";
 
-export type {ToolbarVariants} from "@heroui/styles";
+export type {ToolbarVariants} from "@ropav/styles";

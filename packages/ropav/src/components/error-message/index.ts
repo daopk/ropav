@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {errorMessageVariants} from "@heroui/styles";
+export {errorMessageVariants} from "@ropav/styles";
 
-export type {ErrorMessageVariants} from "@heroui/styles";
+export type {ErrorMessageVariants} from "@ropav/styles";

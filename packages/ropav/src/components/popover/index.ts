@@ -44,6 +44,6 @@ export type {PopoverContext} from "./popover.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {popoverVariants} from "@heroui/styles";
+export {popoverVariants} from "@ropav/styles";
 
-export type {PopoverVariants} from "@heroui/styles";
+export type {PopoverVariants} from "@ropav/styles";

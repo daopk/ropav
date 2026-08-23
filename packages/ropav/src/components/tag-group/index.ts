@@ -30,6 +30,6 @@ export type {TagGroupContext} from "./tag-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tagGroupVariants} from "@heroui/styles";
+export {tagGroupVariants} from "@ropav/styles";
 
-export type {TagGroupVariants} from "@heroui/styles";
+export type {TagGroupVariants} from "@ropav/styles";

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {BadgeRootProps} from "./badge.types";
 
-import {badgeVariants} from "@heroui/styles";
+import {badgeVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {composeSlotClassName} from "../../utils/compose";

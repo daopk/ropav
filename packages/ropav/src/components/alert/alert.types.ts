@@ -1,4 +1,4 @@
-import type {AlertVariants} from "@heroui/styles";
+import type {AlertVariants} from "@ropav/styles";
 
 export interface AlertRootProps {
   class?: string;

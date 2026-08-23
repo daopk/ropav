@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ModalBackdropProps} from "./modal.types";
 
-import {modalVariants} from "@heroui/styles";
+import {modalVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideFocusResponder} from "../../composables/focus-responder";

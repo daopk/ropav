@@ -15,7 +15,7 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * One rule react-aria's own build fails in exactly the same places, measured on both sides with axe
  * against the same markup: a label, and an invalid segment, sit below 4.5:1 against the field.
  *
- * It lives in `@heroui/styles` rather than in this port, so it is excluded here and recorded as debt
+ * It lives in `@ropav/styles` rather than in this port, so it is excluded here and recorded as debt
  * instead of being absorbed into a green gate.
  */
 const SHARED_WITH_REACT = {rules: {"color-contrast": {enabled: false}}};

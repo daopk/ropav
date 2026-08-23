@@ -98,6 +98,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tableVariants} from "@heroui/styles";
+export {tableVariants} from "@ropav/styles";
 
-export type {TableVariants} from "@heroui/styles";
+export type {TableVariants} from "@ropav/styles";

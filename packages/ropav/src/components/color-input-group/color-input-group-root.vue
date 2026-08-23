@@ -4,7 +4,7 @@ import type {
   ColorInputGroupRootSlotProps,
 } from "./color-input-group.types";
 
-import {colorInputGroupVariants} from "@heroui/styles";
+import {colorInputGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";

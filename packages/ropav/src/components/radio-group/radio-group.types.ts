@@ -2,7 +2,7 @@ import type {
   ValidationBehavior,
   ValidationFunction,
 } from "../../composables/use-form-validation-state";
-import type {RadioGroupVariants} from "@heroui/styles";
+import type {RadioGroupVariants} from "@ropav/styles";
 
 export interface RadioGroupRootProps {
   class?: string;

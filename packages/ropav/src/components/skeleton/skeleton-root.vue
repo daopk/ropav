@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor>
 import type {SkeletonRootProps} from "./skeleton.types";
-import type {SkeletonVariants} from "@heroui/styles";
+import type {SkeletonVariants} from "@ropav/styles";
 
-import {skeletonVariants} from "@heroui/styles";
+import {skeletonVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useCssVariable} from "../../composables/use-css-variable";

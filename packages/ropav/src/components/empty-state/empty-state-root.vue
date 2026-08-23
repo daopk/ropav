@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {EmptyStateRootProps} from "./empty-state.types";
 
-import {emptyStateVariants} from "@heroui/styles";
+import {emptyStateVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 const props = defineProps<EmptyStateRootProps>();

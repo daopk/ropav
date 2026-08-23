@@ -30,6 +30,6 @@ export type {FieldErrorContext} from "./field-error.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {fieldErrorVariants} from "@heroui/styles";
+export {fieldErrorVariants} from "@ropav/styles";
 
-export type {FieldErrorVariants} from "@heroui/styles";
+export type {FieldErrorVariants} from "@ropav/styles";

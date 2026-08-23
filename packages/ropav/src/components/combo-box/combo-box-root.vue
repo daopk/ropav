@@ -4,7 +4,7 @@ import type {UseComboBoxStateReturn} from "../../composables/use-combo-box-state
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {SelectedValue} from "../../composables/use-select-state";
 
-import {comboBoxVariants} from "@heroui/styles";
+import {comboBoxVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

@@ -1,8 +1,8 @@
 import type {AnyCalendarState, UseCalendarReturn} from "../../composables/use-calendar";
 import type {CalendarValue, PageBehavior} from "../../composables/use-calendar-state";
 import type {DayOfWeek, WeekdayStyle} from "../../utils/calendar";
-import type {calendarVariants} from "@heroui/styles";
 import type {CalendarDate, DateValue} from "@internationalized/date";
+import type {calendarVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

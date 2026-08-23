@@ -2,7 +2,7 @@
 import type {MenuSectionRootProps} from "./menu-section.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 
-import {menuSectionVariants} from "@heroui/styles";
+import {menuSectionVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

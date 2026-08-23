@@ -21,7 +21,7 @@ import {useTableGridContext, useTableVirtualizerContext} from "./table.context";
  * it — a grid will not let a row be a control, and a zero-height row with one full-width cell is
  * how React Aria fits an indicator into a table without disturbing the column layout.
  *
- * **Unstyled on purpose.** `@heroui/styles` has no rule for this, and React Aria ships its own
+ * **Unstyled on purpose.** `@ropav/styles` has no rule for this, and React Aria ships its own
  * `DropIndicator` unstyled too — the class and `data-drop-target` are emitted so a rule can be
  * added later, or supplied by the caller, without touching this component.
  */

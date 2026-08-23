@@ -57,6 +57,6 @@ export type {YearPickerContext} from "./calendar-year-picker.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {calendarYearPickerVariants} from "@heroui/styles";
+export {calendarYearPickerVariants} from "@ropav/styles";
 
-export type {CalendarYearPickerVariants} from "@heroui/styles";
+export type {CalendarYearPickerVariants} from "@ropav/styles";

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ModalRootProps} from "./modal.types";
 
-import {modalVariants} from "@heroui/styles";
+import {modalVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

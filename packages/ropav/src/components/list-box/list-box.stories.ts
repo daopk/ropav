@@ -382,7 +382,7 @@ export const Virtualization: Story = {
  * **Alt+Enter** rather than plain Enter, because Enter already selects. The option's own
  * description says so, and a screen reader reads it out on focus.
  *
- * The drop indicator carries no styling of its own — `@heroui/styles` has no rule for one, and
+ * The drop indicator carries no styling of its own — `@ropav/styles` has no rule for one, and
  * React Aria ships its own unstyled too — so the line is the indicator's own `class` here.
  */
 export const DragAndDrop: Story = {

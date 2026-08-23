@@ -1,5 +1,5 @@
 import type {UseToggleGroupStateReturn} from "../../composables/use-toggle-group-state";
-import type {ToggleButtonVariants, toggleButtonGroupVariants} from "@heroui/styles";
+import type {ToggleButtonVariants, toggleButtonGroupVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

@@ -1,4 +1,4 @@
-import type {disclosureVariants} from "@heroui/styles";
+import type {disclosureVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

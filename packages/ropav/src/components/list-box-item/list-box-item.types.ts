@@ -1,5 +1,5 @@
 import type {CollectionKey} from "../../composables/use-collection";
-import type {ListBoxItemVariants} from "@heroui/styles";
+import type {ListBoxItemVariants} from "@ropav/styles";
 
 export interface ListBoxItemRootProps {
   class?: string;

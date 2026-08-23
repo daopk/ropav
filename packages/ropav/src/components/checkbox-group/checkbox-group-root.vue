@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {CheckboxGroupRootProps, CheckboxGroupSlotProps} from "./checkbox-group.types";
 
-import {checkboxGroupVariants} from "@heroui/styles";
+import {checkboxGroupVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useCheckboxGroupState} from "../../composables/use-checkbox-group-state";

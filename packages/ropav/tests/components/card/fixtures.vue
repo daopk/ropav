@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import type {CardVariants} from "@heroui/styles";
+import type {CardVariants} from "@ropav/styles";
 
 import {Card} from "@/components/card";
 

@@ -49,6 +49,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {accordionVariants} from "@heroui/styles";
+export {accordionVariants} from "@ropav/styles";
 
-export type {AccordionVariants} from "@heroui/styles";
+export type {AccordionVariants} from "@ropav/styles";

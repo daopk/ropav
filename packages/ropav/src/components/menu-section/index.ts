@@ -18,6 +18,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {menuSectionVariants} from "@heroui/styles";
+export {menuSectionVariants} from "@ropav/styles";
 
-export type {MenuSectionVariants} from "@heroui/styles";
+export type {MenuSectionVariants} from "@ropav/styles";

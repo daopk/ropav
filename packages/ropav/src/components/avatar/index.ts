@@ -36,6 +36,6 @@ export type {ImageLoadingStatus} from "../../composables/use-image-loading-statu
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {avatarVariants} from "@heroui/styles";
+export {avatarVariants} from "@ropav/styles";
 
-export type {AvatarVariants} from "@heroui/styles";
+export type {AvatarVariants} from "@ropav/styles";

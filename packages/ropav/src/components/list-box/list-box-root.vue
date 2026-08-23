@@ -6,7 +6,7 @@ import type {CollectionSelection} from "../../composables/use-selection-manager"
 import type {DropTargetDelegate} from "../../utils/dnd-types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
 
-import {listboxVariants} from "@heroui/styles";
+import {listboxVariants} from "@ropav/styles";
 import {computed, onScopeDispose, shallowRef, toValue} from "vue";
 
 import {toDragCollection} from "../../composables/drag-collection";

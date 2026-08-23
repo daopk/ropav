@@ -1,4 +1,4 @@
-import type {BadgeVariants} from "@heroui/styles";
+import type {BadgeVariants} from "@ropav/styles";
 
 export interface BadgeAnchorProps {
   class?: string;

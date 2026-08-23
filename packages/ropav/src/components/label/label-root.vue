@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {LabelRootProps} from "./label.types";
 
-import {labelVariants} from "@heroui/styles";
+import {labelVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFieldIdsContext} from "../../composables/use-field-ids";

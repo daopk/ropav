@@ -1,4 +1,4 @@
-import type {SwitchGroupVariants} from "@heroui/styles";
+import type {SwitchGroupVariants} from "@ropav/styles";
 
 export interface SwitchGroupRootProps {
   class?: string;

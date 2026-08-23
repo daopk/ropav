@@ -4,8 +4,8 @@ import type {DateRange} from "../../composables/use-calendar";
 import type {CalendarDayViewContext} from "../calendar/calendar.context";
 import type {CalendarDate as CalendarDateValue, DateValue} from "@internationalized/date";
 
-import {rangeCalendarVariants} from "@heroui/styles";
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
+import {rangeCalendarVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useControllableState} from "../../composables/use-controllable-state";

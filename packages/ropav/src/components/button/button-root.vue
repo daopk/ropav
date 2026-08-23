@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ButtonRootProps, ButtonSlotProps} from "./button.types";
 
-import {buttonVariants} from "@heroui/styles";
+import {buttonVariants} from "@ropav/styles";
 import {computed, watch} from "vue";
 
 import {composeFocusResponder, useFocusResponder} from "../../composables/focus-responder";

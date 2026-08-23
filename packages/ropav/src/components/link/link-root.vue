@@ -2,7 +2,7 @@
 import type {LinkRootProps, LinkRootSlotProps} from "./link.types";
 import type {PressEvent} from "../../composables/use-press";
 
-import {linkVariants} from "@heroui/styles";
+import {linkVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useInteractionStates} from "../../composables/use-interaction-states";

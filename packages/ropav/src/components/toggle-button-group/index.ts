@@ -30,6 +30,6 @@ export type {ToggleButtonGroupContext} from "./toggle-button-group.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toggleButtonGroupVariants} from "@heroui/styles";
+export {toggleButtonGroupVariants} from "@ropav/styles";
 
-export type {ToggleButtonGroupVariants} from "@heroui/styles";
+export type {ToggleButtonGroupVariants} from "@ropav/styles";

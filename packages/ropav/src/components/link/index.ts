@@ -36,6 +36,6 @@ export type {LinkContext} from "./link.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {linkVariants} from "@heroui/styles";
+export {linkVariants} from "@ropav/styles";
 
-export type {LinkVariants} from "@heroui/styles";
+export type {LinkVariants} from "@ropav/styles";

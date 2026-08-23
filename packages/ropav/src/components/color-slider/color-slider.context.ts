@@ -1,7 +1,7 @@
 import type {UseColorSliderReturn} from "../../composables/use-color-slider";
 import type {ColorSliderState} from "../../composables/use-color-slider-state";
 import type {ColorChannel} from "../../utils/color-types";
-import type {colorSliderVariants} from "@heroui/styles";
+import type {colorSliderVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

@@ -23,6 +23,6 @@ export type {
   ProgressBarTrackProps,
 } from "./progress-bar.types";
 
-export {progressBarVariants} from "@heroui/styles";
+export {progressBarVariants} from "@ropav/styles";
 
-export type {ProgressBarVariants} from "@heroui/styles";
+export type {ProgressBarVariants} from "@ropav/styles";

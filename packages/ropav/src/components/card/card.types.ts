@@ -1,4 +1,4 @@
-import type {CardVariants} from "@heroui/styles";
+import type {CardVariants} from "@ropav/styles";
 
 export interface CardRootProps {
   class?: string;

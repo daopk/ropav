@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DescriptionRootProps} from "./description.types";
 
-import {descriptionVariants} from "@heroui/styles";
+import {descriptionVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFieldIdsContext} from "../../composables/use-field-ids";

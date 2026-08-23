@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {AlertRootProps} from "./alert.types";
 
-import {alertVariants} from "@heroui/styles";
+import {alertVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {composeSlotClassName} from "../../utils/compose";

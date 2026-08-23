@@ -2,7 +2,7 @@
 import type {AvatarRootProps} from "./avatar.types";
 import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
 
-import {avatarVariants} from "@heroui/styles";
+import {avatarVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {provideAvatarContext} from "./avatar.context";

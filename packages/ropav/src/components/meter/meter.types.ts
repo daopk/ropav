@@ -1,4 +1,4 @@
-import type {MeterVariants} from "@heroui/styles";
+import type {MeterVariants} from "@ropav/styles";
 import type {CSSProperties} from "vue";
 
 export interface MeterRootProps {

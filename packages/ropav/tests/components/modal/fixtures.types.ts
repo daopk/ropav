@@ -1,5 +1,5 @@
 import type {ModalPlacement} from "@/components/modal";
-import type {ModalVariants} from "@heroui/styles";
+import type {ModalVariants} from "@ropav/styles";
 
 export interface ModalFixtureProps {
   defaultOpen?: boolean;

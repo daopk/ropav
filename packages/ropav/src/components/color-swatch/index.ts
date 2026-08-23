@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorSwatchVariants} from "@heroui/styles";
+export {colorSwatchVariants} from "@ropav/styles";
 
-export type {ColorSwatchVariants} from "@heroui/styles";
+export type {ColorSwatchVariants} from "@ropav/styles";

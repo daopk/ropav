@@ -2,7 +2,7 @@
 import type {ToastProviderProps, ToastProviderSlotProps} from "./toast.types";
 import type {CSSProperties} from "vue";
 
-import {toastVariants} from "@heroui/styles";
+import {toastVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useLocale} from "../../composables/use-locale";

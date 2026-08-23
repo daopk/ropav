@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {MenuItemRootProps, MenuItemSlotProps} from "./menu-item.types";
 
-import {menuItemVariants} from "@heroui/styles";
+import {menuItemVariants} from "@ropav/styles";
 import {computed, shallowRef, watch} from "vue";
 
 import {provideFieldIdsContext, useFieldIds} from "../../composables/use-field-ids";

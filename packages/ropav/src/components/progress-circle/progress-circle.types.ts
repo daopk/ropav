@@ -1,4 +1,4 @@
-import type {ProgressCircleVariants} from "@heroui/styles";
+import type {ProgressCircleVariants} from "@ropav/styles";
 
 export interface ProgressCircleRootProps {
   class?: string;

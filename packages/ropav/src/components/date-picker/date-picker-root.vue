@@ -3,8 +3,8 @@ import type {DatePickerRootProps, DatePickerRootSlotProps} from "./date-picker.t
 import type {DateFieldControl} from "../date-input-group";
 import type {DateValue} from "@internationalized/date";
 
-import {datePickerVariants} from "@heroui/styles";
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
+import {datePickerVariants} from "@ropav/styles";
 import {computed, onScopeDispose, shallowRef, watch} from "vue";
 
 import {useDateField} from "../../composables/use-date-field";

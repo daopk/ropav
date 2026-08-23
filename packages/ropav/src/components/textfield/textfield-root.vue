@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {TextFieldRootProps, TextFieldSlotProps} from "./textfield.types";
 
-import {textFieldVariants} from "@heroui/styles";
+import {textFieldVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {provideFieldIdsContext} from "../../composables/use-field-ids";

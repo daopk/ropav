@@ -8,7 +8,7 @@ import {useEnterExit} from "@/composables/use-enter-exit";
  *
  * jsdom implements none, so the composable's waits resolve immediately there and every ordering
  * question it exists to answer is unobservable. The keyframes are declared here rather than taken
- * from `@heroui/styles` so the durations are the test's own.
+ * from `@ropav/styles` so the durations are the test's own.
  */
 const DURATION = 200;
 

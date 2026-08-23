@@ -1,6 +1,6 @@
 import type {UseSliderReturn} from "../../composables/use-slider";
 import type {SliderState} from "../../composables/use-slider-state";
-import type {sliderVariants} from "@heroui/styles";
+import type {sliderVariants} from "@ropav/styles";
 import type {ComputedRef, Ref} from "vue";
 
 import {createContext} from "../../utils/create-context";

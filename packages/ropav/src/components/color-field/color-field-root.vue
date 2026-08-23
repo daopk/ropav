@@ -5,7 +5,7 @@ import type {UseColorFieldReturn} from "../../composables/use-color-field";
 import type {Color} from "../../utils/color-types";
 import type {ColorInputGroupControlHandlers} from "../color-input-group";
 
-import {colorFieldVariants} from "@heroui/styles";
+import {colorFieldVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useColorChannelField} from "../../composables/use-color-channel-field";

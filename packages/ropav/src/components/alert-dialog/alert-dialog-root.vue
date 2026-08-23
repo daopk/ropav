@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {AlertDialogRootProps} from "./alert-dialog.types";
 
-import {alertDialogVariants} from "@heroui/styles";
+import {alertDialogVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

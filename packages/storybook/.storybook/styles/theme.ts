@@ -1,6 +1,6 @@
 import {create, themes as storybookThemes} from "storybook/theming";
 
-// Palette from `@heroui/styles` (OKLCH -> Hex approximation)
+// Palette from `@ropav/styles` (OKLCH -> Hex approximation)
 const colors = {
   white: "#FFFFFF",
   black: "#000000",

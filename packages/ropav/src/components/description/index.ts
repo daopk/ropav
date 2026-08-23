@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {descriptionVariants} from "@heroui/styles";
+export {descriptionVariants} from "@ropav/styles";
 
-export type {DescriptionVariants} from "@heroui/styles";
+export type {DescriptionVariants} from "@ropav/styles";

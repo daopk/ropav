@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {SearchFieldRootProps, SearchFieldRootSlotProps} from "./search-field.types";
 
-import {searchFieldVariants} from "@heroui/styles";
+import {searchFieldVariants} from "@ropav/styles";
 import {computed, watch} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

@@ -17,6 +17,6 @@ export type {InputRootProps, InputRootProps as InputProps} from "./input.types";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {inputVariants} from "@heroui/styles";
+export {inputVariants} from "@ropav/styles";
 
-export type {InputVariants} from "@heroui/styles";
+export type {InputVariants} from "@ropav/styles";

@@ -34,6 +34,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorSliderVariants} from "@heroui/styles";
+export {colorSliderVariants} from "@ropav/styles";
 
-export type {ColorSliderVariants} from "@heroui/styles";
+export type {ColorSliderVariants} from "@ropav/styles";

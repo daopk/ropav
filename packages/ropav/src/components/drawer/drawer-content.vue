@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DrawerContentProps} from "./drawer.types";
 
-import {drawerVariants} from "@heroui/styles";
+import {drawerVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {dataAttr} from "../../utils/assertion";

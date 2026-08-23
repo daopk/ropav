@@ -32,7 +32,7 @@ HeroUI v3 is a modern React UI library built with **Tailwind CSS v4**, organized
 │   │   ├── src/components/  # All components
 │   │   ├── src/utils/       # Shared utilities
 │   │   └── scripts/         # Build & codegen scripts
-│   ├── styles/            # CSS styles & variants (@heroui/styles)
+│   ├── styles/            # CSS styles & variants (@ropav/styles)
 │   │   └── src/components/  # Per-component .css files
 │   ├── standard/          # Shared ESLint, Prettier, TS configs
 │   ├── storybook/         # Storybook configuration
@@ -295,9 +295,9 @@ calendar-year-picker
 
 ## Non-obvious Gotchas
 
-1. **`pnpm i` triggers builds** — The `postinstall` hook builds `@heroui/styles` and runs `typegen:docs` and `typegen:docs-cn`. If it fails, run `pnpm --filter @heroui/styles build` manually.
+1. **`@ropav/styles` lives in the workspace** — `packages/styles`, consumed as `workspace:*`, not from npm. Its `exports` point at source (`src/index.ts`, `index.css`), so editing a `.css` file there shows up in Storybook and in the browser suite without a build. `pnpm --filter @ropav/styles build` only matters before `pnpm pack`.
 
-2. **Build order matters** — `@heroui/styles` must build before `@heroui/react`. Running `pnpm build` from root handles this — `pnpm -r run build` walks the workspace in topological order.
+2. **Build order matters** — `@ropav/styles` must build before `ropav`. Running `pnpm build` from root handles this — `pnpm -r run build` walks the workspace in topological order.
 
 3. **Native addons allowlist** — `onlyBuiltDependencies` in root `pnpm-workspace.yaml` allows native compilation for `esbuild`, `@swc/core`, `@parcel/watcher`, etc. If this list is missing, you'll see "Ignored build scripts" warnings.
 

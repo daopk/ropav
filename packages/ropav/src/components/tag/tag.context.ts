@@ -1,5 +1,5 @@
 import type {CollectionKey} from "../../composables/use-collection";
-import type {tagVariants} from "@heroui/styles";
+import type {tagVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

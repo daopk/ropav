@@ -96,6 +96,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {rangeCalendarVariants} from "@heroui/styles";
+export {rangeCalendarVariants} from "@ropav/styles";
 
-export type {RangeCalendarVariants} from "@heroui/styles";
+export type {RangeCalendarVariants} from "@ropav/styles";

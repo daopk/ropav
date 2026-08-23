@@ -53,6 +53,6 @@ export type {TabsContext, TabsTabContext} from "./tabs.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tabsVariants} from "@heroui/styles";
+export {tabsVariants} from "@ropav/styles";
 
-export type {TabsVariants} from "@heroui/styles";
+export type {TabsVariants} from "@ropav/styles";

@@ -47,6 +47,6 @@ export type {ComboBoxContext} from "./combo-box.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {comboBoxVariants} from "@heroui/styles";
+export {comboBoxVariants} from "@ropav/styles";
 
-export type {ComboBoxVariants} from "@heroui/styles";
+export type {ComboBoxVariants} from "@ropav/styles";

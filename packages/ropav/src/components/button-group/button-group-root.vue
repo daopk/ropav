@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ButtonGroupRootProps} from "./button-group.types";
 
-import {buttonGroupVariants} from "@heroui/styles";
+import {buttonGroupVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {dataAttr} from "../../utils/assertion";

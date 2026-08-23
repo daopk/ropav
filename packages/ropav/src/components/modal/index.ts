@@ -75,6 +75,6 @@ export type {ModalContext, ModalOverlayContext} from "./modal.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {modalVariants} from "@heroui/styles";
+export {modalVariants} from "@ropav/styles";
 
-export type {ModalVariants} from "@heroui/styles";
+export type {ModalVariants} from "@ropav/styles";

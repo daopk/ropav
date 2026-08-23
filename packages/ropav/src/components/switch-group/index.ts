@@ -20,6 +20,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {switchGroupVariants} from "@heroui/styles";
+export {switchGroupVariants} from "@ropav/styles";
 
-export type {SwitchGroupVariants} from "@heroui/styles";
+export type {SwitchGroupVariants} from "@ropav/styles";

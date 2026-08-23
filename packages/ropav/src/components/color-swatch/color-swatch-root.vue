@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ColorSwatchRootProps, ColorSwatchSlotProps} from "./color-swatch.types";
 
-import {colorSwatchVariants} from "@heroui/styles";
+import {colorSwatchVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useColorSwatch} from "../../composables/use-color-swatch";

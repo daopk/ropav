@@ -21,6 +21,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {buttonVariants} from "@heroui/styles";
+export {buttonVariants} from "@ropav/styles";
 
-export type {ButtonVariants} from "@heroui/styles";
+export type {ButtonVariants} from "@ropav/styles";

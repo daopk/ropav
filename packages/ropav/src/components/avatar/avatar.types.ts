@@ -1,4 +1,4 @@
-import type {AvatarVariants} from "@heroui/styles";
+import type {AvatarVariants} from "@ropav/styles";
 
 export interface AvatarRootProps {
   class?: string;

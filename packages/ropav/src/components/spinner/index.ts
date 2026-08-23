@@ -17,6 +17,6 @@ export type {SpinnerRootProps, SpinnerRootProps as SpinnerProps} from "./spinner
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {spinnerVariants} from "@heroui/styles";
+export {spinnerVariants} from "@ropav/styles";
 
-export type {SpinnerVariants} from "@heroui/styles";
+export type {SpinnerVariants} from "@ropav/styles";

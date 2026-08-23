@@ -93,7 +93,7 @@ const external = [
   ...Object.keys(packageJson.peerDependencies ?? {}),
   ...Object.keys(packageJson.dependencies ?? {}),
   /^vue($|\/)/,
-  /^@heroui\/styles($|\/)/,
+  /^@ropav\/styles($|\/)/,
   /^tailwind-variants($|\/)/,
 ];
 

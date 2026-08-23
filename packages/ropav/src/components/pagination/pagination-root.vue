@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {PaginationRootProps} from "./pagination.types";
 
-import {paginationVariants} from "@heroui/styles";
+import {paginationVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePaginationContext} from "./pagination.context";

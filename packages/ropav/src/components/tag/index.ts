@@ -31,6 +31,6 @@ export type {TagContext} from "./tag.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tagVariants} from "@heroui/styles";
+export {tagVariants} from "@ropav/styles";
 
-export type {TagVariants} from "@heroui/styles";
+export type {TagVariants} from "@ropav/styles";

@@ -2,7 +2,7 @@
 import type {DisclosureRootProps} from "./disclosure.types";
 import type {DisclosureKey} from "../../composables/use-disclosure-group";
 
-import {disclosureVariants} from "@heroui/styles";
+import {disclosureVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ChipRootProps} from "./chip.types";
 
-import {chipVariants} from "@heroui/styles";
+import {chipVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import ChipAutoLabel from "./chip-auto-label";

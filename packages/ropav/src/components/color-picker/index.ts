@@ -38,6 +38,6 @@ export type {ColorValueContext} from "./color-picker.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {colorPickerVariants} from "@heroui/styles";
+export {colorPickerVariants} from "@ropav/styles";
 
-export type {ColorPickerVariants} from "@heroui/styles";
+export type {ColorPickerVariants} from "@ropav/styles";

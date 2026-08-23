@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {HeaderRootProps} from "./header.types";
 
-import {headerVariants} from "@heroui/styles";
+import {headerVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFieldIdsContext} from "../../composables/use-field-ids";

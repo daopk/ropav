@@ -6,7 +6,7 @@ import type {
   SelectionMode,
 } from "../../composables/use-selection-manager";
 import type {DropTarget} from "../../utils/dnd-types";
-import type {ListBoxVariants} from "@heroui/styles";
+import type {ListBoxVariants} from "@ropav/styles";
 
 /**
  * @typeParam T - The item type, inferred from `items`.

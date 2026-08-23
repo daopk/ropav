@@ -95,6 +95,6 @@ export type {ToastItemContext, ToastRegionContext} from "./toast.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {toastVariants} from "@heroui/styles";
+export {toastVariants} from "@ropav/styles";
 
-export type {ToastVariants} from "@heroui/styles";
+export type {ToastVariants} from "@ropav/styles";

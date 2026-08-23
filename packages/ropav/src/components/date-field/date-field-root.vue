@@ -3,8 +3,8 @@ import type {DateFieldRootProps, DateFieldRootSlotProps} from "./date-field.type
 import type {DateFieldControl} from "../date-input-group";
 import type {DateValue} from "@internationalized/date";
 
-import {dateFieldVariants} from "@heroui/styles";
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
+import {dateFieldVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useDateField} from "../../composables/use-date-field";

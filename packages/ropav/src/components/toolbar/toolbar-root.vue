@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ToolbarRootProps} from "./toolbar.types";
 
-import {toolbarVariants} from "@heroui/styles";
+import {toolbarVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {useToolbar} from "../../composables/use-toolbar";

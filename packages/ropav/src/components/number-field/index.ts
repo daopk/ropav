@@ -49,6 +49,6 @@ export type {NumberFieldContext} from "./number-field.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {numberFieldVariants} from "@heroui/styles";
+export {numberFieldVariants} from "@ropav/styles";
 
-export type {NumberFieldVariants} from "@heroui/styles";
+export type {NumberFieldVariants} from "@ropav/styles";

@@ -1,5 +1,5 @@
 import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
-import type {ModalVariants} from "@heroui/styles";
+import type {ModalVariants} from "@ropav/styles";
 import type {CSSProperties} from "vue";
 
 /** Where the dialog sits in the container. `auto` is bottom on a phone and centred above it. */

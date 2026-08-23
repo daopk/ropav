@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ScrollShadowRootProps} from "./scroll-shadow.types";
 
-import {scrollShadowVariants} from "@heroui/styles";
+import {scrollShadowVariants} from "@ropav/styles";
 import {computed, shallowRef, watch} from "vue";
 
 import {useScrollShadow} from "./use-scroll-shadow";

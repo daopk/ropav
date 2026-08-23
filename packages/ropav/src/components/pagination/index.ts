@@ -62,6 +62,6 @@ export type {
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {paginationVariants} from "@heroui/styles";
+export {paginationVariants} from "@ropav/styles";
 
-export type {PaginationVariants} from "@heroui/styles";
+export type {PaginationVariants} from "@ropav/styles";

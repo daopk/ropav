@@ -1,7 +1,7 @@
 import type {ValidationDetails} from "../../composables/use-form-validation-state";
 import type {InputOTPTextAlign} from "../../composables/use-input-otp";
 import type {PushPasswordManagerStrategy} from "../../composables/use-password-manager-badge";
-import type {InputOTPVariants} from "@heroui/styles";
+import type {InputOTPVariants} from "@ropav/styles";
 
 // `isDisabled` and `isInvalid` are plain booleans with no explicit `undefined` default, unlike
 // every other field here. Nothing sits above this one to inherit from — it reads no context —

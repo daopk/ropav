@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ErrorMessageRootProps} from "./error-message.types";
 
-import {errorMessageVariants} from "@heroui/styles";
+import {errorMessageVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFieldIdsContext} from "../../composables/use-field-ids";

@@ -1,4 +1,4 @@
-import type {ScrollShadowVariants} from "@heroui/styles";
+import type {ScrollShadowVariants} from "@ropav/styles";
 import type {StyleValue} from "vue";
 
 export type ScrollShadowVisibility = "auto" | "both" | "top" | "bottom" | "left" | "right" | "none";

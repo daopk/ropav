@@ -2,7 +2,7 @@
 import type {AutocompleteRootProps, AutocompleteRootSlotProps} from "./autocomplete.types";
 import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
 
-import {autocompleteVariants} from "@heroui/styles";
+import {autocompleteVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {providePressResponder} from "../../composables/press-responder";

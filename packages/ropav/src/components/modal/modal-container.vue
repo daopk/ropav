@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {ModalContainerProps} from "./modal.types";
 
-import {modalVariants} from "@heroui/styles";
+import {modalVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";
 
 import {dataAttr} from "../../utils/assertion";

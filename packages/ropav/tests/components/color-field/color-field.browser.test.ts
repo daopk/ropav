@@ -339,7 +339,7 @@ describe("ColorField (browser)", () => {
        * invalid field paints both its label and its error message with `--danger`, which resolves
        * to `oklch(0.6532 0.2328 25.74)` — a mid-lightness red that does not reach 4.5:1 against
        * white. The colour comes from the shared stylesheet, so React has exactly the same problem;
-       * it is recorded as debt against `@heroui/styles` rather than papered over here. Every other
+       * it is recorded as debt against `@ropav/styles` rather than papered over here. Every other
        * axe rule stays on, and the two configurations above check contrast with the rule enabled.
        */
       await expectNoA11yViolations(container, {rules: {"color-contrast": {enabled: false}}});

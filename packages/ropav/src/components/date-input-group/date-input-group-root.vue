@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
 import type {DateInputGroupRootProps, DateInputGroupRootSlotProps} from "./date-input-group.types";
 
-import {dateInputGroupVariants} from "@heroui/styles";
+import {dateInputGroupVariants} from "@ropav/styles";
 import {computed} from "vue";
 
 import {useFocusWithin, useInteractionStates} from "../../composables/use-interaction-states";

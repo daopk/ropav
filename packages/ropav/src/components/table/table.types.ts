@@ -7,7 +7,7 @@ import type {
 } from "../../composables/use-selection-manager";
 import type {TableColumnSize} from "../../composables/use-table-column-layout";
 import type {DropTarget} from "../../utils/dnd-types";
-import type {CheckboxVariants, TableVariants} from "@heroui/styles";
+import type {CheckboxVariants, TableVariants} from "@ropav/styles";
 
 export interface TableRootProps {
   class?: string;

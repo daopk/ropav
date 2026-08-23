@@ -499,7 +499,7 @@ describe("Popover (browser)", () => {
 
       // `color-contrast` is scoped out, not silenced: the button inside the popover is a primary
       // one, pairing `--accent` (#0485F7) with `--accent-foreground` (#FCFCFC) for 3.59:1, under
-      // the 4.5:1 WCAG AA floor. Both come from `@heroui/styles`, so the finding belongs to the
+      // the 4.5:1 WCAG AA floor. Both come from `@ropav/styles`, so the finding belongs to the
       // palette and applies equally to `@heroui/react` — it is not something the popover decides.
       await expectNoA11yViolations(popover, {rules: {"color-contrast": {enabled: false}}});
 

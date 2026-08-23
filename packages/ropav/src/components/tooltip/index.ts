@@ -37,6 +37,6 @@ export type {TooltipContext} from "./tooltip.context";
 /* -------------------------------------------------------------------------------------------------
  * Variants
  * -----------------------------------------------------------------------------------------------*/
-export {tooltipVariants} from "@heroui/styles";
+export {tooltipVariants} from "@ropav/styles";
 
-export type {TooltipVariants} from "@heroui/styles";
+export type {TooltipVariants} from "@ropav/styles";

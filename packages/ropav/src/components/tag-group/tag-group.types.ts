@@ -4,7 +4,7 @@ import type {
   SelectionBehavior,
   SelectionMode,
 } from "../../composables/use-selection-manager";
-import type {TagVariants} from "@heroui/styles";
+import type {TagVariants} from "@ropav/styles";
 
 export interface TagGroupRootProps {
   class?: string;

@@ -1,4 +1,4 @@
-import type {inputOTPVariants} from "@heroui/styles";
+import type {inputOTPVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 
 import {createContext} from "../../utils/create-context";

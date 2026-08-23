@@ -1,4 +1,4 @@
-import type {TypographyVariants} from "@heroui/styles";
+import type {TypographyVariants} from "@ropav/styles";
 import type {HTMLAttributes} from "vue";
 
 export type TypographyType = NonNullable<TypographyVariants["type"]>;
