@@ -34,7 +34,7 @@
     "postcss": "8.5.23",
     "storybook": "10.2.10",
     "tailwindcss": "4.3.0",
-    "typescript": "5.9.3",
+    "typescript": "catalog:",
     "unplugin-icons": "23.0.1",
     "vite": "7.3.5",
     "vue-tsc": "catalog:"

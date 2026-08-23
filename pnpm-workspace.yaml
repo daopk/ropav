@@ -6,15 +6,23 @@ packages:
 # `peerDependencies` deliberately stay literal ranges, never `catalog:`: `clean-package` strips
 # `devDependencies` at `prepack` but keeps peer ranges, so a `catalog:` left in one would ship
 # unresolved to consumers.
+#
+# `typescript` is an alias, not a version: `typescript-native-bridge` keeps the classic TypeScript
+# API that Volar compiles `.vue` templates through, and runs the tsgo 7.0.2 Go checker behind it.
+# Plain `typescript@7` cannot be used here — it drops the `typescript/lib/tsc` subpath that
+# `vue-tsc` resolves, and every `vue-tsc` release so far caps its peer range below 6.1. Revisit
+# once TypeScript 7.1 stabilises the programmatic API and `vue-tsc` supports it directly.
 catalog:
   "@vitejs/plugin-vue": 6.0.8
   "@vue/compiler-vapor": 3.6.0-rc.5
+  typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
   vue: 3.6.0-rc.5
   vue-tsc: 3.3.10
 
 overrides:
   shiki: 3.20.0
   ts-morph: 27.0.2
+  typescript: npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2
 
 onlyBuiltDependencies:
   - "@parcel/watcher"

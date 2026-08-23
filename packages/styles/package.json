@@ -75,7 +75,7 @@
     "rollup": "4.59.0",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "tailwindcss": "4.3.0",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0"

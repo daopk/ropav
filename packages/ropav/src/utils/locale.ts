@@ -56,16 +56,16 @@ const RTL_LANGS = new Set([
 /**
  * The part of `Intl.Locale` that reports writing direction.
  *
- * Declared here because it postdates the TypeScript DOM lib this repo builds against, and because
- * browsers shipped it as a property before it was standardised as a method — so both spellings
- * have to be reachable without widening `Intl.Locale` itself.
+ * `getTextInfo()` is in the lib now, so only the property spelling is declared here: browsers
+ * shipped `textInfo` before it was standardised as a method, and it still has to be reachable
+ * without widening `Intl.Locale` itself. The call site keeps its `typeof` guard for the same
+ * reason — the lib types the method as always present, but the older engines do not have it.
  */
 interface LocaleTextInfo {
-  direction: string;
+  direction?: string;
 }
 
 interface LocaleWithTextInfo extends Intl.Locale {
-  getTextInfo?: () => LocaleTextInfo;
   textInfo?: LocaleTextInfo;
 }
 
