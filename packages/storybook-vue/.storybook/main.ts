@@ -35,8 +35,6 @@ const config: StorybookConfig = {
     name: "@storybook/vue3-vite",
     options: {},
   },
-  // Brand assets are shared with the React Storybook rather than duplicated.
-  staticDirs: [join(__dirname, "../../storybook/public")],
   stories: [...getStories()],
 };
 
