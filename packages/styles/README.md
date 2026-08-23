@@ -121,7 +121,7 @@ empty rule with a comment saying why. A component with no size modifier never lo
 component that publishes it as an attribute. The `data-*` contract is shared with `@heroui/react`, which is
 what makes the two libraries look identical.
 
-`CLAUDE.md`, section "CSS Class Naming Convention", has the full rules.
+`components/button.css` is the densest example of both — read it before writing a new component file.
 
 ## Theming
 
