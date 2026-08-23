@@ -62,7 +62,7 @@
   },
   "clean-package": "./clean-package.config.json",
   "dependencies": {
-    "@heroui/styles": "workspace:*",
+    "@heroui/styles": "^3.2.4",
     "@internationalized/date": "3.12.3",
     "@internationalized/number": "3.6.7",
     "@internationalized/string": "3.2.10",

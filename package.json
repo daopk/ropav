@@ -46,8 +46,7 @@
     "clean": "pnpm clean:cache && pnpm i",
     "clean:cache": "find . \\( -name '.turbo' -o -name '.next' -o -name 'dist' -o -name 'node_modules' -o -name '.source' -o -name '.contentlayer' -o -name '.vitest-attachments' -o -name 'coverage' -o -name 'bundle-sizes.json'  -o -name 'tsconfig.tsbuildinfo'  -o -name 'pnpm-lock.yaml' \\) -prune -exec rm -rf '{}' +",
     "upli": "pnpm up --filter \"./**\"  -L -i",
-    "prepare": "husky",
-    "postinstall": "pnpm --filter @heroui/styles build && pnpm typegen:docs && pnpm typegen:docs-cn"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@babel/core": "7.29.6",
