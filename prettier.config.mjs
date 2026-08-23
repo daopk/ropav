@@ -17,10 +17,7 @@ const config = {
   tabWidth: 2,
   tailwindAttributes: ["className", "classNames"],
   tailwindFunctions: ["tv", "clsx", "cn"],
-  tailwindStylesheet: path.resolve(
-    import.meta.dirname,
-    "./packages/storybook-vue/styles/globals.css",
-  ),
+  tailwindStylesheet: path.resolve(import.meta.dirname, "./packages/storybook/styles/globals.css"),
   trailingComma: "all",
   useTabs: false,
 };

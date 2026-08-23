@@ -13,7 +13,7 @@
     "url": "https://github.com/heroui-inc/heroui"
   },
   "scripts": {
-    "dev": "dotenv -- turbo dev --filter=@heroui/storybook-vue",
+    "dev": "dotenv -- turbo dev --filter=@ropav/storybook",
     "build": "turbo build",
     "lint": "turbo lint",
     "lint:fix": "turbo lint -- --fix",

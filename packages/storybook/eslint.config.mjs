@@ -7,9 +7,8 @@ const config = defineConfig([
   {
     rules: {
       // Storybook config objects follow documented shapes — `globalTypes` entries read
-      // name, description, defaultValue, toolbar — and mirror their React counterparts
-      // key for key. Alphabetising them would only make both harder to compare.
-      // `eslint/react.mjs` already disables this for `@heroui/storybook`.
+      // name, description, defaultValue, toolbar — in that order. Alphabetising them
+      // would only make them harder to check against the docs.
       "sort-keys": "off",
       "sort-keys-fix/sort-keys-fix": "off",
     },
