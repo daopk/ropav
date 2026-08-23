@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import ModalFixture from "./fixtures.vue";
 
 const mounted: { unmount: () => void }[] = [];
@@ -56,6 +58,8 @@ const close = async (backdrop: HTMLElement) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   while (mounted.length > 0) {
     try {
       mounted.pop()!.unmount();
@@ -107,6 +111,11 @@ describe("Modal (browser)", () => {
       const backdrop = await open(result);
       const container = slot("modal-container")!;
 
+      // After the entry has settled, so only the exit is stretched: all four assertions below have
+      // to land inside it, and at the stylesheet's own duration they are racing a `userEvent` round
+      // trip. None of them is about how long the exit takes.
+      startSlowMotion();
+
       await userEvent.keyboard("{Escape}");
       await nextTick();
       await nextTick();
@@ -117,6 +126,11 @@ describe("Modal (browser)", () => {
       expect(container.getAttribute("data-exiting")).toBe("true");
       expect(backdrop.isConnected).toBe(true);
       expect(container.isConnected).toBe(true);
+
+      // Both, because the exit state is the union of the two: finishing only the backdrop would
+      // leave the container's own animation running and prove nothing about the union.
+      finishAnimations(backdrop);
+      finishAnimations(container);
 
       await settled(backdrop);
       await nextTick();
