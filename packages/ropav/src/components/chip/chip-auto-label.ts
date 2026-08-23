@@ -28,7 +28,7 @@ const ChipAutoLabel = defineVaporComponent(
 
     return createComponent(ChipLabel, null, {default: () => block});
   },
-  {name: "HeroUI.Chip.AutoLabel"},
+  {name: "Ropav.Chip.AutoLabel"},
 );
 
 export default ChipAutoLabel;

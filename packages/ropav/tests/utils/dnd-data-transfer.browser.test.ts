@@ -10,7 +10,7 @@ import {
 /**
  * The codec against a real `DataTransfer`.
  *
- * What jsdom cannot settle: the stub in `@heroui/testing` is a store that answers the way the
+ * What jsdom cannot settle: the stub in `@ropav/testing` is a store that answers the way the
  * spec says, so a test passing against it proves the codec agrees with *our reading* of the
  * spec. These prove it agrees with an actual browser — that `items.add` really refuses a
  * duplicate string type, that `types` really grows a `"Files"` entry, and that a `File` really

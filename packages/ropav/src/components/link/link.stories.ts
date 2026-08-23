@@ -44,11 +44,11 @@ export const Default: Story = {
         </LinkRoot>
         <LinkRoot
           :class="buttonClass"
-          href="https://heroui.com"
+          href="https://github.com/daopk/ropav"
           rel="noopener noreferrer"
           target="_blank"
         >
-          HeroUI
+          Ropav
           <LinkIcon class="h-2 w-2" />
         </LinkRoot>
       </div>

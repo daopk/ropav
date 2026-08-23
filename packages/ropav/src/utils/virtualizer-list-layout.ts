@@ -23,8 +23,8 @@ import {LayoutInfo} from "./virtualizer-layout-info";
  * measured row survive the next pass instead of being placed at an estimate again.
  *
  * Two things are deliberately absent, both recorded as debt: the horizontal orientation, which no
- * HeroUI collection uses, and the `section`/`header`/`separator` node types, which cannot reach a
- * layout through the data-driven collection this build has.
+ * collection in this library uses, and the `section`/`header`/`separator` node types, which cannot
+ * reach a layout through the data-driven collection this build has.
  */
 
 /** The height React Aria falls back to when neither a fixed nor an estimated size is given. */

@@ -2,9 +2,8 @@
  * Geometry primitives for the virtualizer, ported from React Aria's `Point`, `Size` and `Rect`.
  *
  * Pure arithmetic with no DOM and no framework in it, kept as its own unit rather than reached
- * for through a windowing library: HeroUI's Vue and React builds are verified against each other
- * by comparing the geometry a layout produces, and different arithmetic would make every
- * difference between them unattributable.
+ * for through a windowing library, so the geometry a layout produces is readable here rather than
+ * inside a dependency.
  *
  * One deliberate omission. React Aria's `Rect.intersects` widens itself under
  * `NODE_ENV === "test"`, dropping the `area > 0` guard so a collection with no measured size

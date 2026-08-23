@@ -1,7 +1,7 @@
 import type {SelectFixtureItem, SelectStateHostProps} from "../fixtures/select.types";
 import type {UseSelectStateReturn} from "@/composables/use-select-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

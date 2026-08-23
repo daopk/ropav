@@ -1,7 +1,7 @@
 import type {TabListStateHostProps} from "../fixtures/tab-list-state.types";
 import type {CollectionKey, UseTabListStateReturn} from "@/composables";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, shallowRef} from "vue";
 

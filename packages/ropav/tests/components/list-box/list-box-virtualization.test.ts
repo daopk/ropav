@@ -1,11 +1,11 @@
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 
 import VirtualizedFixture from "./virtualized-fixtures.vue";
 
 const users = Array.from({length: 1000}, (_, index) => ({
-  email: `user${index}@heroui.com`,
+  email: `user${index}@ropav.com`,
   id: `user-${index}`,
   name: `User ${index}`,
 }));

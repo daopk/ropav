@@ -1,7 +1,7 @@
 import type {DefaultDateProps} from "@/composables/use-default-date-props";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate, CalendarDateTime, ZonedDateTime} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick, reactive} from "vue";
 

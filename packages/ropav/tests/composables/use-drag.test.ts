@@ -1,6 +1,6 @@
 import type {DragHarnessOptions, DragHarnessReady} from "../fixtures/dnd-harness.types";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 import {getDragSession} from "@/composables/drag-manager";

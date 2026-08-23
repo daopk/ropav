@@ -1,8 +1,8 @@
 import type {DropHarnessOptions, DropHarnessReady} from "../fixtures/dnd-harness.types";
 import type {DndStringFormatter} from "@/composables/drag-manager";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {computed, shallowRef} from "vue";
 

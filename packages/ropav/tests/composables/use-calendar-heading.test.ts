@@ -2,8 +2,8 @@ import type {CalendarState} from "@/composables/use-calendar-state";
 import type {UseCalendarYearPickerReturn} from "@/composables/use-calendar-year-picker";
 import type {ComputedRef} from "vue";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 

@@ -1,6 +1,6 @@
 import type {Color} from "@/utils/color-types";
 
-import {renderInterop} from "@heroui/testing/helpers/vue";
+import {renderInterop} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {h, nextTick} from "vue";
 

@@ -1,7 +1,7 @@
 import type {ComboBoxFixtureItem, ComboBoxStateHostProps} from "../fixtures/combo-box.types";
 import type {UseComboBoxStateReturn} from "@/composables/use-combo-box-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

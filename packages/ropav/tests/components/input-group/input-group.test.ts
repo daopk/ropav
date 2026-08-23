@@ -1,4 +1,4 @@
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
@@ -382,9 +382,9 @@ describe("InputGroup", () => {
 
   describe("value", () => {
     it("shows the value the field holds", () => {
-      const {control, unmount} = renderGroup({fieldDefaultValue: "heroui.com", withField: true});
+      const {control, unmount} = renderGroup({fieldDefaultValue: "ropav.com", withField: true});
 
-      expect(control).toHaveValue("heroui.com");
+      expect(control).toHaveValue("ropav.com");
 
       unmount();
     });
@@ -396,8 +396,8 @@ describe("InputGroup", () => {
         withField: true,
       });
 
-      type(control, "heroui");
-      expect(onChange).toHaveBeenCalledWith("heroui");
+      type(control, "ropav");
+      expect(onChange).toHaveBeenCalledWith("ropav");
 
       unmount();
     });

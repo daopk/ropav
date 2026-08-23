@@ -92,7 +92,7 @@ export const Default: Story = {
         <CardFooter>
           <Link
             aria-label="Go to Acme Creator Hub (opens in new tab)"
-            href="https://heroui.com"
+            href="https://github.com/daopk/ropav"
             rel="noopener noreferrer"
             target="_blank"
           >

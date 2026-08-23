@@ -9,7 +9,7 @@ import {
 } from "@/utils/dnd-data-transfer";
 
 /**
- * Runs against the jsdom `DataTransfer` stub from `@heroui/testing` — see
+ * Runs against the jsdom `DataTransfer` stub from `@ropav/testing` — see
  * `packages/testing/setup/data-transfer.ts`. The stub stores and reports; it does not simulate
  * a browser. Anything that needs the real object is in the sibling `.browser.test.ts`.
  */

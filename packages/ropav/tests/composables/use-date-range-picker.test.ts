@@ -1,8 +1,8 @@
 import type {UseDateRangePickerReturn} from "@/composables/use-date-range-picker";
 import type {DateRangePickerState} from "@/composables/use-date-range-picker-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

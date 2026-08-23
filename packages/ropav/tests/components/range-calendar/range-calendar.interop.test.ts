@@ -1,7 +1,7 @@
 import type {CalendarDate as CalendarDateType} from "@internationalized/date";
 
-import {renderInterop} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderInterop} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {h, nextTick} from "vue";
 

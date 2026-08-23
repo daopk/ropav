@@ -281,11 +281,11 @@ export const WithLinkButton: Story = {
     template: `
       <a
         :class="buttonVariants({isIconOnly: args.isIconOnly, size: args.size, variant: args.variant})"
-        href="https://www.heroui.com"
+        href="https://github.com/daopk/ropav"
         rel="noopener noreferrer"
         target="_blank"
       >
-        HeroUI
+        Ropav
       </a>
     `,
   }),

@@ -127,7 +127,7 @@ async function main() {
   const compareOnly = args.includes("--compare");
 
   console.log("=".repeat(60));
-  console.log("HeroUI CSS Bundle Size Measurement");
+  console.log("Ropav CSS Bundle Size Measurement");
   console.log("=".repeat(60));
   console.log();
 

@@ -34,9 +34,9 @@ const props = withDefaults(defineProps<SelectFixtureProps>(), {
   isOpen: undefined,
   isRequired: undefined,
   items: (): SelectFixtureItem[] => [
-    {email: "fl@heroui.com", id: "florida", name: "Florida"},
-    {email: "ca@heroui.com", id: "california", name: "California"},
-    {email: "tx@heroui.com", id: "texas", name: "Texas"},
+    {email: "fl@ropav.com", id: "florida", name: "Florida"},
+    {email: "ca@ropav.com", id: "california", name: "California"},
+    {email: "tx@ropav.com", id: "texas", name: "Texas"},
   ],
   name: undefined,
   placeholder: "Select one",

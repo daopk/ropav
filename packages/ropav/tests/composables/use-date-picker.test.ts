@@ -1,8 +1,8 @@
 import type {UseDatePickerReturn} from "@/composables/use-date-picker";
 import type {DatePickerState} from "@/composables/use-date-picker-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 

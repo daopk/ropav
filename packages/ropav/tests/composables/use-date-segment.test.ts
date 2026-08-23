@@ -1,7 +1,7 @@
 import type {DateSegmentReady} from "../fixtures/date-segment.types";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate, CalendarDateTime} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 

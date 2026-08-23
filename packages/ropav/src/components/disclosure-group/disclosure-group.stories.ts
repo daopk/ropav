@@ -147,7 +147,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-/** The two HeroUI Native disclosures, shared by the first two stories. */
+/** The two Ropav Native disclosures, shared by the first two stories. */
 const nativeItems = `
   <Disclosure id="preview">
     <DisclosureHeading>
@@ -157,7 +157,7 @@ const nativeItems = `
       >
         <div class="flex w-full items-center justify-start gap-2">
           <IconQrCode />
-          Preview HeroUI Native
+          Preview Ropav Native
         </div>
         <DisclosureIndicator class="text-muted" />
       </Button>
@@ -165,7 +165,7 @@ const nativeItems = `
     <DisclosureContent>
       <DisclosureBody class="mx-2 flex flex-col items-center gap-2 p-4 text-center">
         <p class="text-sm text-muted">
-          Scan this QR code with your camera app to preview the HeroUI native components.
+          Scan this QR code with your camera app to preview the Ropav native components.
         </p>
         <img alt="Expo Go QR Code" class="aspect-square w-full max-w-54 object-cover" :src="qrCodeSrc" />
         <p class="text-sm text-muted">Expo must be installed on your device.</p>
@@ -178,14 +178,14 @@ const nativeItems = `
   </Disclosure>
   <Separator class="my-2" />
   <Disclosure id="download">
-    <DisclosureHeading aria-label="Download HeroUI Native">
+    <DisclosureHeading aria-label="Download Ropav Native">
       <Button
         :class="['w-full border-none', !expandedKeys.has('download') && 'bg-transparent']"
         :variant="expandedKeys.has('download') ? 'secondary' : 'tertiary'"
       >
         <div class="flex w-full items-center justify-start gap-2">
           <IconApple />
-          Download HeroUI Native
+          Download Ropav Native
         </div>
         <DisclosureIndicator class="text-muted" />
       </Button>
@@ -193,7 +193,7 @@ const nativeItems = `
     <DisclosureContent>
       <DisclosureBody class="mx-2 flex flex-col items-center gap-2 p-4 text-center">
         <p class="text-sm text-muted">
-          Scan this QR code with your camera app to preview the HeroUI native components.
+          Scan this QR code with your camera app to preview the Ropav native components.
         </p>
         <img alt="Expo Go QR Code" class="aspect-square w-full max-w-54 object-cover" :src="qrCodeSrc" />
         <p class="text-sm text-muted">Expo must be installed on your device.</p>
@@ -264,7 +264,7 @@ export const Controlled: Story = {
       <div class="w-full max-w-md">
         <div class="flex flex-col gap-4 rounded-3xl bg-surface p-4 shadow-surface">
           <div class="mb-2 flex items-center justify-between">
-            <h3 class="text-lg font-semibold">HeroUI Native</h3>
+            <h3 class="text-lg font-semibold">Ropav Native</h3>
             <div class="flex gap-2">
               <Button
                 aria-label="Previous disclosure"

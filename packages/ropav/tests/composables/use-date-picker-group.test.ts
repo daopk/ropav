@@ -1,6 +1,6 @@
 import type {UseDatePickerGroupReturn} from "@/composables/use-date-picker-group";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import Harness from "../fixtures/date-picker-group-harness.vue";

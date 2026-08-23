@@ -1,7 +1,6 @@
 import type {CalendarState} from "@/composables/use-calendar-state";
 import type {CalendarDate as CalendarDateType, DateValue} from "@internationalized/date";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {
   CalendarDate,
   CalendarDateTime,
@@ -9,6 +8,7 @@ import {
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 

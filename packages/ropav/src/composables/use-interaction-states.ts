@@ -149,7 +149,7 @@ export interface UseInteractionStatesReturn {
  * Track hover, press and focus so a component can publish them as `data-*`
  * attributes.
  *
- * The HeroUI stylesheet keys its interactive states on `data-hovered`,
+ * The stylesheet keys its interactive states on `data-hovered`,
  * `data-pressed` and `data-focus-visible`, so a component that renders none of them
  * loses those styles — the focus ring in particular, whose pseudo-class branch is
  * not reachable.

@@ -1,6 +1,6 @@
-import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
@@ -17,8 +17,9 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * `landmark-banner-is-top-level`: `RangeCalendar.Header` renders a `<header>`, which is a banner
  * landmark, and inside a popover it is not top level.
  *
- * Both live in `@ropav/styles` and in HeroUI's own component shape rather than in this port, so
- * they are excluded here and recorded as debt instead of being silently absorbed into a green gate.
+ * Both live in `@ropav/styles` and in the component shape it assumes rather than in the behaviour
+ * layer, so they are excluded here and recorded as debt instead of being silently absorbed into a
+ * green gate.
  */
 const SHARED_WITH_REACT = {
   rules: {"color-contrast": {enabled: false}, "landmark-banner-is-top-level": {enabled: false}},

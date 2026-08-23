@@ -270,9 +270,9 @@ export const useFormValidationState = <T>(
 
   const form = useFormContext();
 
-  // React Aria's raw hooks default to `"aria"`, but React Aria Components — which is what
-  // HeroUI React actually composes — defaults to `"native"`. Taking the hook's default here
-  // would quietly switch native constraint validation off for every field in the library.
+  // React Aria's raw hooks default to `"aria"`, but React Aria Components defaults to
+  // `"native"`. Taking the hook's default here would quietly switch native constraint
+  // validation off for every field in the library.
   const validationBehavior = computed<ValidationBehavior>(
     () => toValue(options.validationBehavior) ?? form?.validationBehavior.value ?? "native",
   );

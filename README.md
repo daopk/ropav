@@ -1,7 +1,11 @@
-# Vue component library
+# Ropav
 
 A Vue 3 component library built on [Vue Vapor](https://github.com/vuejs/core-vapor), styled by
-[`@ropav/styles`](packages/styles) and Tailwind CSS v4.
+[`@ropav/styles`](packages/styles) and Tailwind CSS v4. Published on npm as
+[`ropav`](https://www.npmjs.com/package/ropav).
+
+> Ropav is a port of [HeroUI v3](https://github.com/heroui-inc/heroui) to Vue Vapor: the style layer is
+> vendored from `@heroui/styles@3.2.4`, the behaviour layer is re-implemented from React Aria.
 
 ## Packages
 
@@ -27,4 +31,4 @@ pnpm test        # Vitest — jsdom + browser (needs `playwright install chromiu
 
 ## License
 
-Apache License 2.0 — see [LICENSE](./LICENSE).
+Apache License 2.0 — see [LICENSE](./LICENSE), which keeps the original copyright.

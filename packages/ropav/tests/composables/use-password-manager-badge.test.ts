@@ -1,6 +1,6 @@
 import type {UsePasswordManagerBadgeReturn} from "@/composables/use-password-manager-badge";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 

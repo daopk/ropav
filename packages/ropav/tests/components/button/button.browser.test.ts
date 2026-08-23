@@ -1,5 +1,5 @@
-import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
@@ -111,7 +111,7 @@ describe("Button (browser)", () => {
     const {container, unmount} = renderButton();
     const button = buttonIn(container);
 
-    // Proves the compiled HeroUI CSS is actually loaded in this environment.
+    // Proves the compiled `@ropav/styles` CSS is actually loaded in this environment.
     expect(button.classList.contains("button")).toBe(true);
     expect(getComputedStyle(button).display).toBe("inline-flex");
 

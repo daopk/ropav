@@ -59,7 +59,7 @@ describe("getCollectionTextValue", () => {
     it("prefers the label over the rest of the row", () => {
       // Typing "b" has to find Bob, not the email address that also starts with one.
       const element = build(
-        '<span data-slot="label">Bob</span><span data-slot="description">bob@heroui.com</span>',
+        '<span data-slot="label">Bob</span><span data-slot="description">bob@ropav.com</span>',
       );
 
       expect(getCollectionTextValue(element)).toBe("Bob");
@@ -75,7 +75,7 @@ describe("getCollectionTextValue", () => {
     });
 
     it("drops the description even without a label", () => {
-      const element = build('Bob<span data-slot="description">bob@heroui.com</span>');
+      const element = build('Bob<span data-slot="description">bob@ropav.com</span>');
 
       expect(getCollectionTextValue(element)).toBe("Bob");
     });

@@ -1,6 +1,6 @@
 import type {UseColorChannelFieldReturn} from "@/composables/use-color-channel-field";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

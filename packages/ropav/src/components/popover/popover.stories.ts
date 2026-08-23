@@ -141,7 +141,7 @@ export const WithCustomContent: Story = {
               </Avatar>
               <div class="flex flex-col gap-0">
                 <p class="text-sm leading-5 font-medium">Zoe</p>
-                <p class="text-xs leading-none text-muted">zoe@heroui.com</p>
+                <p class="text-xs leading-none text-muted">zoe@ropav.com</p>
               </div>
             </div>
           </PopoverTrigger>

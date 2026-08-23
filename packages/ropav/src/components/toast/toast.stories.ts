@@ -77,7 +77,7 @@ export const Default: Story = {
       showDefault: () =>
         toast("You have been invited to join a team", {
           actionProps: {label: "Dismiss", onPress: () => toast.clear(), variant: "tertiary"},
-          description: "Bob sent you an invitation to join HeroUI team",
+          description: "Bob sent you an invitation to join Ropav team",
           indicator: IconPersons as Component,
           variant: "default",
         }),
@@ -88,7 +88,7 @@ export const Default: Story = {
             label: "Billing",
             onPress: noop,
           },
-          description: "You can continue using HeroUI Chat",
+          description: "You can continue using Ropav Chat",
         }),
       showWarning: () =>
         toast.warning("You have no credits left", {

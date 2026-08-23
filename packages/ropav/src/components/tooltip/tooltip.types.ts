@@ -24,8 +24,8 @@ export interface TooltipRootProps {
    * Whether a tooltip replacing another one appears without an animation.
    *
    * Off by default, which is a deliberate difference from React Aria: it skips both animations
-   * while its shared warmup timer is running, and HeroUI drives them from the stylesheet where the
-   * fade is what makes a swap read as one label moving rather than two flashing.
+   * while its shared warmup timer is running, whereas here the fade is driven from the stylesheet
+   * and is what makes a swap read as one label moving rather than two flashing.
    *
    * @default false
    */

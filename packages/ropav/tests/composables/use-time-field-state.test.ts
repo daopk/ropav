@@ -2,8 +2,8 @@ import type {TimeFieldState} from "@/composables/use-time-field-state";
 import type {TimeValue} from "@/utils/date-format";
 import type {DateSegmentType} from "@/utils/incomplete-date";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDateTime, Time, ZonedDateTime} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

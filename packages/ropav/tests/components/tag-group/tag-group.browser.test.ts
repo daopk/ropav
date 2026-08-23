@@ -1,5 +1,5 @@
-import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

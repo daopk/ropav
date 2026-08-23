@@ -1,4 +1,4 @@
-import {renderInterop} from "@heroui/testing/helpers/vue";
+import {renderInterop} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {defineComponent, h} from "vue";
 

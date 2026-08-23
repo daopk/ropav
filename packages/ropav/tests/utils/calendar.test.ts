@@ -22,10 +22,9 @@ import {
 } from "@/utils/calendar";
 
 /*
- * Every expectation here was read off the implementations this ports — react-stately's
- * `calendar/utils.ts` and HeroUI React's `utils/calendar.ts` — run over the same inputs, rather
- * than worked out by hand. Calendar arithmetic across systems is exactly where a hand-derived
- * expectation quietly bakes in the bug it was supposed to catch.
+ * Every expectation here was read off react-stately's `calendar/utils.ts` run over the same
+ * inputs, rather than worked out by hand. Calendar arithmetic across systems is exactly where a
+ * hand-derived expectation quietly bakes in the bug it was supposed to catch.
  */
 
 const date = (year: number, month: number, day: number) => new CalendarDate(year, month, day);

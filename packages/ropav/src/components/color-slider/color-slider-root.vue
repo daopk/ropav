@@ -39,7 +39,7 @@ const getValidColorSpace = (channel: string, colorSpace?: ColorSpace): ColorSpac
   if (requiredSpace && colorSpace && colorSpace !== requiredSpace) {
     // eslint-disable-next-line no-console
     console.warn(
-      `[HeroUI ColorSlider] Invalid combination: channel="${channel}" requires colorSpace="${requiredSpace}", ` +
+      `[Ropav ColorSlider] Invalid combination: channel="${channel}" requires colorSpace="${requiredSpace}", ` +
         `but received colorSpace="${colorSpace}". Auto-correcting to "${requiredSpace}".`,
     );
 
@@ -49,7 +49,7 @@ const getValidColorSpace = (channel: string, colorSpace?: ColorSpace): ColorSpac
   if (HSL_HSB_ONLY_CHANNELS.has(channel) && colorSpace === "rgb") {
     // eslint-disable-next-line no-console
     console.warn(
-      `[HeroUI ColorSlider] Invalid combination: channel="${channel}" is not available in RGB color space. ` +
+      `[Ropav ColorSlider] Invalid combination: channel="${channel}" is not available in RGB color space. ` +
         `Use colorSpace="hsl" or colorSpace="hsb" instead. Auto-correcting to "hsl".`,
     );
 

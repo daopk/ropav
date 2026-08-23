@@ -76,14 +76,14 @@ const template = `
       <DisclosureHeading>
         <Button variant="secondary">
           <IconQrCode />
-          Preview HeroUI Native
+          Preview Ropav Native
           <DisclosureIndicator />
         </Button>
       </DisclosureHeading>
       <DisclosureContent>
         <DisclosureBody class="flex flex-col items-center rounded-3xl bg-surface p-2 p-4 text-center shadow-surface">
           <p class="text-sm text-muted">
-            Scan this QR code with your camera app to preview the HeroUI native components.
+            Scan this QR code with your camera app to preview the Ropav native components.
           </p>
           <img
             alt="Expo Go QR Code"

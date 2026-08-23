@@ -67,7 +67,7 @@
     "tailwind-variants": "3.3.1"
   },
   "devDependencies": {
-    "@heroui/testing": "workspace:*",
+    "@ropav/testing": "workspace:*",
     "@storybook/vue3": "10.2.10",
     "@tailwindcss/vite": "4.3.0",
     "@tanstack/vue-table": "8.21.3",

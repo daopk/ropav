@@ -89,7 +89,7 @@ export const Default: Story = {
                 <ModalIcon class="bg-default text-foreground">
                   <IconRocket class="size-5" />
                 </ModalIcon>
-                <ModalHeading>Welcome to HeroUI</ModalHeading>
+                <ModalHeading>Welcome to Ropav</ModalHeading>
               </ModalHeader>
               <ModalBody>
                 <p>

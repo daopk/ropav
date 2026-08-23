@@ -1,7 +1,7 @@
 import type {ColorSliderHarnessProps} from "../fixtures/color-slider.types";
 import type {ColorSliderState, UseColorSliderReturn} from "@/composables";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 
 import Harness from "../fixtures/color-slider-harness.vue";

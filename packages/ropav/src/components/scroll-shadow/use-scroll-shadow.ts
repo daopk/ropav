@@ -20,8 +20,8 @@ export interface UseScrollShadowReturn {
 /**
  * Detect the scrollable edges around an element and publish them as `data-*` attributes.
  *
- * Ported from HeroUI React's `use-scroll-shadow.ts`. The callback reads every option lazily, so
- * orientation, offset, enabled state, and controlled/automatic mode all remain reactive in Vue.
+ * The callback reads every option lazily, so orientation, offset, enabled state, and
+ * controlled/automatic mode all remain reactive.
  */
 export const useScrollShadow = (options: UseScrollShadowProps): UseScrollShadowReturn => {
   let previous: {hasScrollAfter: boolean; hasScrollBefore: boolean} | null = null;

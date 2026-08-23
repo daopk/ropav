@@ -2,13 +2,13 @@ import type {DateRange} from "@/composables/use-calendar";
 import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
 import type {DateValue} from "@internationalized/date";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {
   BuddhistCalendar,
   CalendarDate,
   CalendarDateTime,
   ZonedDateTime,
 } from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 
 import Host from "../fixtures/range-calendar-state-host.vue";

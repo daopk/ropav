@@ -5,8 +5,8 @@ import type {
 import type {DndStringFormatter} from "@/composables/drag-manager";
 import type {DropTarget} from "@/utils/dnd-types";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {computed, nextTick} from "vue";
 

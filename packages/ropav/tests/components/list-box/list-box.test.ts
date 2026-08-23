@@ -1,4 +1,4 @@
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
@@ -230,7 +230,7 @@ describe("ListBox", () => {
       // The email would otherwise win on "b", which is what the exclusion list prevents.
       const {items, listbox} = await render({
         items: [
-          {email: "bob@heroui.com", id: "1", name: "Zeta"},
+          {email: "bob@ropav.com", id: "1", name: "Zeta"},
           {id: "2", name: "Bob"},
         ],
       });
@@ -337,8 +337,8 @@ describe("ListBox", () => {
     });
 
     it("does not name the option by its label, matching React", async () => {
-      // React Aria only hands out a label id when something takes the label slot, and HeroUI's
-      // Label does not; the option names itself from its content instead.
+      // React Aria only hands out a label id when something takes the label slot, and the Label
+      // here does not; the option names itself from its content instead.
       const {items} = await render();
 
       expect(items()[0]!.querySelector('[data-slot="label"]')).not.toHaveAttribute("id");

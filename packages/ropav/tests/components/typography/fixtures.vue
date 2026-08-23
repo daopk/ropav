@@ -77,6 +77,6 @@ const nativeAttributes = {
     :weight="props.weight"
     @click="props.onNativeClick"
   >
-    HeroUI Typography
+    Ropav Typography
   </TypographyRoot>
 </template>

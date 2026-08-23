@@ -17,7 +17,7 @@ import {
 /**
  * Reading and writing the native `DataTransfer`, ported from React Aria's `dnd/utils.ts`.
  *
- * The native API is narrower than the one HeroUI exposes: a `DataTransfer` holds at most one
+ * The native API is narrower than the one this library exposes: a `DataTransfer` holds at most one
  * entry per mime type, and only a handful of types survive a drag between applications. Both
  * limits are worked around by serializing the full item list into `CUSTOM_DRAG_TYPE` whenever
  * the native representation would lose information.

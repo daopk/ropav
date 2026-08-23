@@ -63,7 +63,7 @@ const pruneOrphanChunks = (): Plugin => ({
       if (isChunk(output) && !reachable.has(fileName)) delete bundle[fileName];
     }
   },
-  name: "heroui-prune-orphan-chunks",
+  name: "ropav-prune-orphan-chunks",
 });
 
 /**

@@ -1,9 +1,9 @@
 /* =============================================================================
- * HeroUI scrollbar system
+ * Ropav scrollbar system
  *
  * Modes via data-scrollbar on any ancestor:
- *   (unset) — HeroUI scrollbar from theme --scrollbar-width/color/gutter (light/dark)
- *   thin    — HeroUI themed thin scrollbar, useful for overriding inherited default mode
+ *   (unset) — Ropav scrollbar from theme --scrollbar-width/color/gutter (light/dark)
+ *   thin    — Ropav themed thin scrollbar, useful for overriding inherited default mode
  *   default — OS / browser scrollbar (auto)
  *   none    — hidden (inherited to descendants using @apply scrollbar)
  *

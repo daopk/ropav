@@ -21,7 +21,7 @@ const BadgeAutoLabel = defineVaporComponent(
 
     return createComponent(BadgeLabel, null, {default: () => block});
   },
-  {name: "HeroUI.Badge.AutoLabel"},
+  {name: "Ropav.Badge.AutoLabel"},
 );
 
 export default BadgeAutoLabel;

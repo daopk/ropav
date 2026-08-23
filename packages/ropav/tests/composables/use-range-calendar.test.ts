@@ -1,8 +1,8 @@
 import type {UseRangeCalendarReturn} from "@/composables/use-range-calendar";
 import type {RangeCalendarState} from "@/composables/use-range-calendar-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 

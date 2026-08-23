@@ -1,8 +1,8 @@
 import type {DateFieldState} from "@/composables/use-date-field-state";
 import type {DateValue} from "@internationalized/date";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate, CalendarDateTime, createCalendar} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 

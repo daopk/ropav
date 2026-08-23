@@ -1,6 +1,6 @@
 import type {FocusResponder} from "@/composables/focus-responder";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {computed, nextTick} from "vue";
 

@@ -1,6 +1,6 @@
-import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
@@ -19,8 +19,9 @@ const jun = (day: number) => new CalendarDate(2026, 6, day);
  * `aria-required-children`: the year picker's grid is a `listbox` whose children are cells rather
  * than `option`s.
  *
- * All three live in `@ropav/styles` and in HeroUI's own component shape rather than in this port,
- * so they are excluded here and recorded as debt instead of being absorbed into a green gate.
+ * All three live in `@ropav/styles` and in the component shape it assumes rather than in the
+ * behaviour layer, so they are excluded here and recorded as debt instead of being absorbed into a
+ * green gate.
  */
 const SHARED_WITH_REACT = {
   rules: {

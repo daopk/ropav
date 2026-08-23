@@ -2,9 +2,8 @@
  * Overlay positioning, ported from React Aria's `calculatePosition`.
  *
  * Framework-agnostic DOM measurement and arithmetic, kept as one unit rather than reached for
- * through a positioning library. HeroUI's Vue and React builds are verified against each other
- * by comparing geometry, and a different algorithm would make every difference between them
- * unattributable.
+ * through a positioning library, so every number an overlay is placed at is readable here rather
+ * than inside a dependency.
  */
 
 /** Where the overlay sits relative to its trigger, optionally aligned on the cross axis. */

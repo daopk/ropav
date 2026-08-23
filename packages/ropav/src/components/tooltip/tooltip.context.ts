@@ -14,8 +14,8 @@ export interface TooltipContext {
   /**
    * Whether this open or close happens without an animation.
    *
-   * Always `false` unless the caller asked otherwise, which is where HeroUI parts company with
-   * React Aria's warmup skip.
+   * Always `false` unless the caller asked otherwise, which is where this build parts company
+   * with React Aria's warmup skip.
    */
   shouldSkipAnimation: ComputedRef<boolean>;
 }

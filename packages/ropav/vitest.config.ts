@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import {vueBrowserConfig, vueConfig} from "@heroui/testing/configs/vue";
+import {vueBrowserConfig, vueConfig} from "@ropav/testing/configs/vue";
 import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import {defineConfig, mergeConfig} from "vitest/config";

@@ -1,6 +1,6 @@
 import type {I18nHostReady} from "../fixtures/i18n.types";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 

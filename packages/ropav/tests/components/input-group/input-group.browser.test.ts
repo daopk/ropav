@@ -1,5 +1,5 @@
-import {expectNoA11yViolations} from "@heroui/testing/helpers/a11y";
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {expectNoA11yViolations} from "@ropav/testing/helpers/a11y";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";
@@ -146,7 +146,7 @@ describe("InputGroup (browser)", () => {
     // already holds focus that has to be a no-op, or clicking a prefix beside a caret placed
     // mid-word would drag the caret away with it.
     const {container, unmount} = renderGroup({
-      fieldDefaultValue: "heroui.com",
+      fieldDefaultValue: "ropav.com",
       withField: true,
       withPrefix: true,
     });

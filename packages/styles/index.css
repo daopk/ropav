@@ -1,6 +1,6 @@
 @layer theme, base, components, utilities;
 
-/* HeroUI v3 Styles - Layered Theme Architecture */
+/* Ropav Styles - Layered Theme Architecture */
 
 /* Base layer - Tailwind CSS v4 */
 @import "tailwindcss";

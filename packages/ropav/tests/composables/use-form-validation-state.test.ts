@@ -1,6 +1,6 @@
 import type {FormValidationState, ValidationResult} from "@/composables/use-form-validation-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick, reactive, watch} from "vue";
 

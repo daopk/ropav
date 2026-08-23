@@ -1,7 +1,7 @@
 import type {UseLabelsReturn} from "@/composables/use-labels";
 import type {ComputedRef} from "vue";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick, reactive} from "vue";
 

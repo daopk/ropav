@@ -1,8 +1,8 @@
 import type {UseCalendarGridReturn} from "@/composables/use-calendar-grid";
 import type {CalendarState} from "@/composables/use-calendar-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 
 import Host from "../fixtures/calendar-grid-host.vue";

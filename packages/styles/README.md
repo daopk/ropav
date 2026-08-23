@@ -7,18 +7,8 @@ Framework-agnostic — not a line of Vue or React in it. `dependencies` are `tai
 
 ## Provenance
 
-This package is a **derivative work of [`@heroui/styles@3.2.4`](https://github.com/heroui-inc/heroui/tree/v3.2.4/packages/styles)**.
-It used to be installed from npm; it now lives in the workspace so it can be fixed in place. The trade that
-buys: this repo no longer gets upstream patches for free, and in exchange a real bug in the style layer can be
-fixed here instead of only filed upstream and waited on.
-
-> **The CSS and `src/**` are deliberately byte-for-byte identical to upstream `v3.2.4`.** That is what keeps a
-> `diff` against upstream readable. Anything that changes from here on is a **deliberate divergence**, and the reason it is worth
-> losing parity for belongs in the commit message.
->
-> One exception from the vendoring pass: `color-picker.css`, `list-box-item.css`, and `select.css` each had one
-> `@apply` line reordered by `prettier-plugin-tailwindcss`, which this repo runs and upstream does not. Class
-> order only — the generated CSS is unchanged.
+A derivative work of [`@heroui/styles@3.2.4`](https://github.com/heroui-inc/heroui/tree/v3.2.4/packages/styles),
+vendored into this workspace so the style layer can be fixed in place. See the root [README](../../README.md).
 
 ## Installation
 
@@ -145,10 +135,9 @@ Tokens cover base colors (`--background`, `--surface`, `--overlay`, `--muted`), 
 fields (`--field-background`, `--field-border`, `--field-radius`, …), layout knobs (`--spacing`,
 `--border-width`, `--radius`, `--ring-offset-width`, `--cursor-interactive`), the scrollbar set, and shadows.
 
-**`themes/default/variables.css` is the source of truth — read it rather than a list in a README**, which is
-how the upstream README ended up documenting values that no longer matched the file. `themes/shared/theme.css`
-holds what is derived from those tokens: the `--radius-xs` … `--radius-4xl` scale, `color-mix()` hover and soft
-variants, and the easing curves.
+**`themes/default/variables.css` is the source of truth — read it rather than a list in a README**, which goes
+stale the moment a token moves. `themes/shared/theme.css` holds what is derived from those tokens: the
+`--radius-xs` … `--radius-4xl` scale, `color-mix()` hover and soft variants, and the easing curves.
 
 ## Build
 

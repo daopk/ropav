@@ -1,4 +1,4 @@
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it} from "vitest";
 import {userEvent} from "vitest/browser";
 import {nextTick} from "vue";

@@ -1,6 +1,6 @@
 import type {CollectionKey} from "@/composables/use-collection";
 
-import {renderInterop} from "@heroui/testing/helpers/vue";
+import {renderInterop} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {h, nextTick} from "vue";
 

@@ -169,7 +169,7 @@ importers:
         specifier: 3.3.1
         version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
     devDependencies:
-      '@heroui/testing':
+      '@ropav/testing':
         specifier: workspace:*
         version: link:../testing
       '@storybook/vue3':
@@ -3053,6 +3053,7 @@ packages:
   eslint@9.39.2:
     resolution: {integrity: sha512-LEyamqS7W5HB3ujJyvi0HQK/dtVINZvd5mAAp9eT5S/ujByGjiZLCzPcHVzuXbpJDJF/cxwHlfceVUDZ2lnSTw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'

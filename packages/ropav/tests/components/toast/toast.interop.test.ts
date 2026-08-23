@@ -1,6 +1,6 @@
 import type {QueuedToast} from "@/components/toast";
 
-import {renderInterop} from "@heroui/testing/helpers/vue";
+import {renderInterop} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it} from "vitest";
 import {h, nextTick} from "vue";
 

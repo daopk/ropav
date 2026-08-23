@@ -1,6 +1,6 @@
 import type {ProseProps, Typography, TypographyRootProps} from "@/components/typography";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick, reactive} from "vue";
 
@@ -32,7 +32,7 @@ describe("Typography", () => {
     const {element, unmount} = renderTypography();
 
     expect(element.tagName).toBe("P");
-    expect(element).toHaveTextContent("HeroUI Typography");
+    expect(element).toHaveTextContent("Ropav Typography");
     expect(element).toHaveAttribute("data-slot", "typography");
     expect(element).toHaveAttribute("data-type", "body");
     expect(element).toHaveClass(

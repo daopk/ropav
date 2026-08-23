@@ -1,6 +1,6 @@
 import type {UseTextFieldReturn} from "@/composables/use-text-field";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {effectScope, nextTick, reactive} from "vue";
 

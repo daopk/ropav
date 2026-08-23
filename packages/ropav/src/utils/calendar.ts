@@ -184,9 +184,7 @@ export const isEqualDuration = (a: DateDuration, b: DateDuration): boolean =>
   a === b ||
   (a.days === b.days && a.weeks === b.weeks && a.months === b.months && a.years === b.years);
 
-/*
- * Year bounds and day-view grids, ported from HeroUI React's `packages/react/src/utils/calendar.ts`.
- */
+/* Year bounds and day-view grids. */
 
 /**
  * How far a calendar system's year numbering sits from the Gregorian one.

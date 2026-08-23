@@ -1,10 +1,8 @@
 @import "@ropav/styles";
 
 /**
- * Rules layered on top of `@ropav/styles` rather than merged into it, so that the vendored
- * stylesheet stays byte-identical to the upstream `@heroui/styles@3.2.4` it was copied from
- * and a `diff` against upstream still reads. Each one that upstream later adopts - or that
- * this repo decides to fold into `packages/styles` - can be deleted on its own.
+ * Rules layered on top of `@ropav/styles` rather than merged into it, so each one stays
+ * separately deletable once `packages/styles` folds it in.
  */
 @layer components {
   /**

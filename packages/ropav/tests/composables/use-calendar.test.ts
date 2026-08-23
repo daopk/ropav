@@ -1,8 +1,8 @@
 import type {UseCalendarReturn} from "@/composables/use-calendar";
 import type {CalendarState} from "@/composables/use-calendar-state";
 
-import {renderVapor} from "@heroui/testing/helpers/vue";
 import {CalendarDate} from "@internationalized/date";
+import {renderVapor} from "@ropav/testing/helpers/vue";
 import {describe, expect, it} from "vitest";
 import {nextTick, reactive} from "vue";
 
