@@ -54,7 +54,6 @@
     "build:fast": "node scripts/build.mjs",
     "dev": "rollup -c rollup.config.mjs --watch",
     "measure-size": "node scripts/measure-bundle-size.mjs",
-    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "prepack": "clean-package",

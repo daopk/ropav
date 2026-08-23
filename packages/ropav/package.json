@@ -1,7 +1,7 @@
 {
   "name": "ropav",
   "version": "0.3.0",
-  "description": "🚀 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
+  "description": "\ud83d\ude80 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
@@ -48,7 +48,6 @@
     "dev": "vite build --watch",
     "build": "node scripts/build.mjs --tsc",
     "build:fast": "node scripts/build.mjs",
-    "lint": "eslint .",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

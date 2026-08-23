@@ -4,45 +4,25 @@
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.prettierPath": "node_modules/prettier",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "eslint.workingDirectories": [{"mode": "auto"}],
-  "eslint.options": {"flags": ["v10_config_lookup_from_file"]},
-  "editor.formatOnSave": false,
+  "oxc.enable": true,
+  "oxc.fmt.experimental": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.oxc": "explicit"
   },
   "files.associations": {
     "**/.vscode/*.json": "jsonc"
   },
-  "[html]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "[typescript]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[javascript]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[vue]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[css]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[json]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
+  "[jsonc]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
   "tailwindCSS.classFunctions": ["tv", "clsx", "cn"],
-  "tailwindCSS.classAttributes": ["className", "classNames"],
   "tailwindCSS.experimental.configFile": {
-    "packages/storybook/styles/globals.css": [
-      "apps/**",
-      "packages/react/**",
-      "packages/storybook/**",
-      "packages/styles/**"
-    ]
+    "packages/storybook/styles/globals.css": ["packages/ropav/**", "packages/storybook/**", "packages/styles/**"]
   }
 }

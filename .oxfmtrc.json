@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": false,
+  "endOfLine": "lf",
+  "printWidth": 100,
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "stylesheet": "packages/storybook/styles/globals.css",
+    "functions": ["tv", "clsx", "cn"]
+  },
+  "sortImports": {
+    "groups": [
+      "type",
+      "builtin",
+      "external",
+      "internal",
+      "subpath",
+      "parent",
+      "sibling",
+      "index",
+      "side_effect",
+      "style",
+      "unknown"
+    ],
+    "newlinesBetween": true,
+    "ignoreCase": true,
+    "order": "asc",
+    "internalPattern": ["@/", "~/", "#"]
+  },
+  "ignorePatterns": [
+    "**/dist",
+    "**/build",
+    "**/storybook-static",
+    "**/.rollup.cache",
+    "**/node_modules",
+    "**/coverage",
+    "**/__snapshots__",
+    "**/.DS_Store",
+    "pnpm-lock.yaml",
+    "**/*.md",
+    "**/*.mdx"
+  ]
+}
