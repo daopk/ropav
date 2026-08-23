@@ -1,9 +1,9 @@
-import type { Meta } from "@storybook/vue3";
+import type { Meta } from "@storybook/vue3-vite";
 
 /**
  * A story's `meta`, with `component` loosened.
  *
- * `@storybook/vue3` types `component` as `Omit<ConcreteComponent, "props">` — an object
+ * Storybook types `component` as `Omit<ConcreteComponent, "props">` — an object
  * component. `vue-tsc` types a Vapor SFC as a function instead, so every `component: XRoot`
  * is rejected even though Storybook renders it. The value only feeds the autodocs page, and
  * `StoryObj<typeof meta>` takes its args from `render`, not from here.

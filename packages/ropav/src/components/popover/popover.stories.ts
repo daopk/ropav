@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
 import IconCircleInfo from "~icons/gravity-ui/circle-info";

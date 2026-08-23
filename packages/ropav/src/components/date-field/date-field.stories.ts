@@ -2,7 +2,7 @@ import type { SelectedValue } from "../../composables/use-select-state";
 // Aliased: the `Granularity` story below would otherwise merge with the type name.
 import type { Granularity as DateGranularity } from "../../utils/date-format";
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { getLocalTimeZone, parseDate, parseZonedDateTime, today } from "@internationalized/date";
 import { computed, shallowRef } from "vue";

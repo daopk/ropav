@@ -1,7 +1,7 @@
 import type { DateRange } from "../../composables/use-calendar";
 import type { StoryMeta } from "../../utils/story-meta";
 import type { CalendarDate, DateValue } from "@internationalized/date";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import {
   getLocalTimeZone,

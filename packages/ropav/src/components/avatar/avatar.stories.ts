@@ -1,5 +1,5 @@
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import IconPerson from "~icons/gravity-ui/person";
 import IconPersonGear from "~icons/gravity-ui/person-gear";

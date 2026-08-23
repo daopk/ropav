@@ -1,6 +1,6 @@
 import type { StoryMeta } from "../../utils/story-meta";
 import type { DateValue } from "@internationalized/date";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import {
   getLocalTimeZone,

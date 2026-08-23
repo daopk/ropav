@@ -1,6 +1,6 @@
 import type { CollectionSelection } from "../../composables/use-selection-manager";
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { computed, shallowRef } from "vue";
 import IconArrowRight from "~icons/gravity-ui/arrow-right";

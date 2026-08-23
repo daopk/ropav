@@ -1,5 +1,5 @@
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
 import IconBold from "~icons/gravity-ui/bold";

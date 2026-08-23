@@ -1,6 +1,6 @@
 import type { SelectedValue } from "../../composables/use-select-state";
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { computed, shallowRef } from "vue";
 import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";

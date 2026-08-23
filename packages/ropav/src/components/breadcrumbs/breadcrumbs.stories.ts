@@ -1,5 +1,5 @@
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import IconCaretRight from "~icons/gravity-ui/caret-right";
 

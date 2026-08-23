@@ -1,6 +1,6 @@
 import type { Color, ColorChannel, ColorSpace } from "../../utils/color-types";
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { computed, shallowRef } from "vue";
 import IconShuffle from "~icons/gravity-ui/shuffle";

@@ -1,5 +1,5 @@
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import IconArrowUturnCcwLeft from "~icons/gravity-ui/arrow-uturn-ccw-left";
 import IconArrowUturnCwRight from "~icons/gravity-ui/arrow-uturn-cw-right";

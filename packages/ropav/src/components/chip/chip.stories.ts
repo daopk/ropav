@@ -1,5 +1,5 @@
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import IconCircleDashed from "~icons/gravity-ui/circle-dashed";
 import IconCircleFill from "~icons/gravity-ui/circle-fill";

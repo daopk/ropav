@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { shallowRef } from "vue";
 import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";

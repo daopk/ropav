@@ -66,7 +66,7 @@
   },
   "devDependencies": {
     "@ropav/testing": "workspace:*",
-    "@storybook/vue3": "10.2.10",
+    "@storybook/vue3-vite": "10.2.10",
     "@tailwindcss/vite": "4.3.0",
     "@tanstack/vue-table": "8.21.3",
     "@types/fs-extra": "11.0.4",

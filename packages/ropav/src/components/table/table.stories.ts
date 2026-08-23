@@ -1,7 +1,7 @@
 import type { CollectionSelection } from "../../composables/use-selection-manager";
 import type { StoryMeta } from "../../utils/story-meta";
 import type { TableRootProps, TableSortDescriptor } from "./table.types";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 import type { SortingState, Updater } from "@tanstack/vue-table";
 
 import {

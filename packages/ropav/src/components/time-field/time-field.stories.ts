@@ -1,6 +1,6 @@
 import type { TimeValue } from "../../utils/date-format";
 import type { StoryMeta } from "../../utils/story-meta";
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 
 import { Time, getLocalTimeZone, now, parseTime } from "@internationalized/date";
 import { computed, shallowRef } from "vue";
