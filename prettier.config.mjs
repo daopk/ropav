@@ -1,17 +1,28 @@
 import path from "path";
 
-import preset from "@heroui/standard/prettier/base.mjs";
-
-/** @type {import("prettier").Config} */
+/**
+ * @see https://prettier.io/docs/en/configuration.html
+ * @type {import("prettier").Config}
+ */
 const config = {
-  ...preset,
+  arrowParens: "always",
+  bracketSameLine: false,
+  bracketSpacing: false,
+  endOfLine: "auto",
+  jsxSingleQuote: false,
   plugins: ["prettier-plugin-tailwindcss"],
+  printWidth: 100,
+  semi: true,
+  singleQuote: false,
+  tabWidth: 2,
   tailwindAttributes: ["className", "classNames"],
   tailwindFunctions: ["tv", "clsx", "cn"],
   tailwindStylesheet: path.resolve(
     import.meta.dirname,
     "./packages/storybook-vue/styles/globals.css",
   ),
+  trailingComma: "all",
+  useTabs: false,
 };
 
 export default config;

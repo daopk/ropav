@@ -31,7 +31,6 @@
     "vue": "^3.6.0-rc.5"
   },
   "devDependencies": {
-    "@heroui/standard": "workspace:*",
     "typescript": "5.9.3",
     "vitest": "4.1.10",
     "vue": "catalog:"

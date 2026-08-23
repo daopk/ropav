@@ -17,7 +17,6 @@
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@heroui/standard": "workspace:*",
     "@iconify-json/gravity-ui": "1.2.10",
     "@iconify-json/ic": "1.2.4",
     "@iconify-json/logos": "1.2.13",

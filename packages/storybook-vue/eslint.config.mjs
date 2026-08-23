@@ -1,8 +1,9 @@
-import baseVueConfig from "@heroui/standard/eslint/vue.mjs";
 import {defineConfig} from "eslint/config";
 
+import {vueConfig} from "../../eslint.config.mjs";
+
 const config = defineConfig([
-  ...baseVueConfig,
+  ...vueConfig,
   {
     rules: {
       // Storybook config objects follow documented shapes — `globalTypes` entries read
