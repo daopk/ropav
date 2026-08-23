@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+
 import PopoverFixture from "./fixtures.vue";
 
 const render = (props: Record<string, unknown> = {}) => renderVapor(PopoverFixture, { props });
@@ -58,6 +60,8 @@ const close = async (popover: HTMLElement) => {
 };
 
 afterEach(() => {
+  stopSlowMotion();
+
   // The page-wide scroll lock and the `inert` marking both live outside the container. A failing
   // test throws before it can close its popover, and a leaked `inert` makes every later press
   // time out instead of failing — so one broken assertion would read as ten broken ones. The
@@ -470,6 +474,12 @@ describe("Popover (browser)", () => {
 
       const popover = await open(result);
 
+      // After the entry has settled, so only the exit is stretched: the three assertions below all
+      // have to land inside it, and at the stylesheet's own duration they are racing a `userEvent`
+      // round trip. Everything asserted holds at any duration — that the exit is reported, that
+      // the element outlives it, and that it goes once the animation ends.
+      startSlowMotion();
+
       await userEvent.keyboard("{Escape}");
       await nextTick();
 
@@ -479,6 +489,9 @@ describe("Popover (browser)", () => {
       expect(popover.isConnected).toBe(true);
       expect(popover.getAnimations().length).toBeGreaterThan(0);
 
+      // Driven to its end rather than waited out, which is what proves the second half: the
+      // element goes *because* the animation finished, not because enough time passed.
+      finishAnimations(popover);
       await settled(popover);
       await nextTick();
       await nextTick();
