@@ -1,31 +1,36 @@
 {
   "name": "ropav",
   "version": "0.3.0",
-  "description": "\ud83d\ude80 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
+  "description": "🚀 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
+  "keywords": [
+    "components",
+    "ropav",
+    "vapor",
+    "vapor mode",
+    "vue",
+    "vue 3",
+    "vue components",
+    "vue ui"
+  ],
+  "homepage": "https://github.com/daopk/ropav",
+  "bugs": {
+    "url": "https://github.com/daopk/ropav/issues"
+  },
   "license": "Apache-2.0",
+  "author": "daopk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daopk/ropav.git",
+    "directory": "packages/ropav"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "author": "daopk",
-  "homepage": "https://github.com/daopk/ropav",
-  "keywords": [
-    "ropav",
-    "vue",
-    "vue 3",
-    "vapor",
-    "vapor mode",
-    "components",
-    "vue components",
-    "vue ui"
-  ],
-  "files": [
-    "dist"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
   "exports": {
     ".": {
       "import": "./src/index.ts"
@@ -36,13 +41,8 @@
       "default": "./src/styles.css"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/daopk/ropav.git",
-    "directory": "packages/ropav"
-  },
-  "bugs": {
-    "url": "https://github.com/daopk/ropav/issues"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "vite build --watch",
@@ -57,7 +57,6 @@
     "prepack": "clean-package && node scripts/update-exports.mjs",
     "postpack": "clean-package restore"
   },
-  "clean-package": "./clean-package.config.json",
   "dependencies": {
     "@internationalized/date": "3.12.3",
     "@internationalized/number": "3.6.7",
@@ -85,5 +84,6 @@
   "peerDependencies": {
     "tailwindcss": ">=4.0.0",
     "vue": "^3.6.0-rc.5"
-  }
+  },
+  "clean-package": "./clean-package.config.json"
 }

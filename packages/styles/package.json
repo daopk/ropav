@@ -2,28 +2,35 @@
   "name": "@ropav/styles",
   "version": "0.3.0",
   "description": "Ropav core styles - framework-agnostic CSS and Tailwind variants",
-  "license": "Apache-2.0",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "style": "./index.css",
-  "author": "daopk",
+  "keywords": [
+    "css",
+    "design system",
+    "ropav",
+    "tailwind-variants",
+    "tailwindcss"
+  ],
   "homepage": "https://github.com/daopk/ropav",
+  "bugs": {
+    "url": "https://github.com/daopk/ropav/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "daopk",
   "repository": {
     "type": "git",
     "url": "https://github.com/daopk/ropav.git",
     "directory": "packages/styles"
   },
-  "bugs": {
-    "url": "https://github.com/daopk/ropav/issues"
-  },
-  "keywords": [
-    "ropav",
-    "css",
-    "tailwindcss",
-    "tailwind-variants",
-    "design system"
+  "style": "./index.css",
+  "files": [
+    "dist",
+    "src"
   ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "style": "./index.css",
@@ -42,13 +49,9 @@
     },
     "./package.json": "./package.json"
   },
-  "sideEffects": [
-    "*.css"
-  ],
-  "files": [
-    "dist",
-    "src"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node scripts/build.mjs --tsc",
     "build:fast": "node scripts/build.mjs",
@@ -58,10 +61,6 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "prepack": "clean-package",
     "postpack": "clean-package restore"
-  },
-  "clean-package": "./clean-package.config.json",
-  "publishConfig": {
-    "access": "public"
   },
   "dependencies": {
     "tailwind-variants": "3.3.1",
@@ -80,5 +79,6 @@
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0"
-  }
+  },
+  "clean-package": "./clean-package.config.json"
 }

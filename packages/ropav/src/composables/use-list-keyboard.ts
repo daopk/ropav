@@ -420,7 +420,7 @@ export const useListKeyboard = (options: UseListKeyboardOptions): UseListKeyboar
      * collection persists its focused key wherever it sits — so the element exists one tick
      * later, and focus lands then.
      */
-    nextTick(() => {
+    void nextTick(() => {
       const rendered = collection.getElement(key);
 
       if (rendered) land(rendered, focusOptions.scroll);

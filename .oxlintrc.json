@@ -81,7 +81,16 @@
         "next": "return"
       }
     ],
-    "storybook/no-renderer-packages": "off"
+    "storybook/no-renderer-packages": "off",
+    "typescript/await-thenable": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-base-to-string": "error",
+    "typescript/no-misused-spread": "error",
+    "typescript/no-meaningless-void-operator": "error",
+    "typescript/no-duplicate-type-constituents": "error",
+    "typescript/unbound-method": "off",
+    "typescript/restrict-template-expressions": "off",
+    "typescript/require-array-sort-compare": "off"
   },
   "overrides": [
     {
@@ -121,6 +130,14 @@
         "no-console": "off",
         "no-unsafe-optional-chaining": "off"
       }
+    },
+    {
+      "files": ["**/*.stories.{ts,vue}", "**/tests/**"],
+      "rules": {
+        "typescript/no-base-to-string": "off",
+        "typescript/no-misused-spread": "off",
+        "typescript/await-thenable": "off"
+      }
     }
   ],
   "ignorePatterns": [
@@ -131,5 +148,8 @@
     "**/node_modules",
     "**/coverage",
     "**/__snapshots__"
-  ]
+  ],
+  "options": {
+    "typeAware": true
+  }
 }

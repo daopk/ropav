@@ -7,6 +7,9 @@ import type { CheckboxGroupVariants, CheckboxVariants } from "@ropav/styles";
 export interface CheckboxGroupRootProps {
   class?: string;
   /** Variant the checkboxes inside take unless they name their own. @default "primary" */
+  // Intersected on purpose: the group only offers variants both scales define, so the two
+  // staying in sync is the point even while they are identical.
+  // oxlint-disable-next-line typescript/no-duplicate-type-constituents
   variant?: CheckboxVariants["variant"] & CheckboxGroupVariants["variant"];
   /** Selected values. Makes the group controlled. */
   value?: string[];

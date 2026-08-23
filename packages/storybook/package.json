@@ -1,7 +1,7 @@
 {
   "name": "@ropav/storybook",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "storybook dev --host 127.0.0.1 --port 6006 --no-open",

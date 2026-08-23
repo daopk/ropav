@@ -35,18 +35,18 @@ export interface UseDroppableCollectionStateOptions<T = unknown> {
   isDisabled?: MaybeRefOrGetter<boolean | undefined>;
   /** Which drag types this collection will take. `"all"` accepts anything. */
   acceptedDragTypes?: "all" | DragType[];
-  onInsert?: (event: DroppableCollectionInsertDropEvent) => void;
-  onRootDrop?: (event: DroppableCollectionRootDropEvent) => void;
-  onItemDrop?: (event: DroppableCollectionOnItemDropEvent) => void;
+  onInsert?: (event: DroppableCollectionInsertDropEvent) => void | Promise<void>;
+  onRootDrop?: (event: DroppableCollectionRootDropEvent) => void | Promise<void>;
+  onItemDrop?: (event: DroppableCollectionOnItemDropEvent) => void | Promise<void>;
   /** Reordering within one parent. Between items only, never onto one. */
-  onReorder?: (event: DroppableCollectionReorderEvent) => void;
+  onReorder?: (event: DroppableCollectionReorderEvent) => void | Promise<void>;
   /** Moving within the collection, including onto an item and across parents. */
-  onMove?: (event: DroppableCollectionReorderEvent) => void;
+  onMove?: (event: DroppableCollectionReorderEvent) => void | Promise<void>;
   shouldAcceptItemDrop?: (target: ItemDropTarget, types: DragTypes) => boolean;
   onDropEnter?: (event: DroppableCollectionEnterEvent) => void;
   onDropExit?: (event: DroppableCollectionExitEvent) => void;
   /** When given, this replaces the specific handlers above rather than adding to them. */
-  onDrop?: (event: DroppableCollectionDropEvent) => void;
+  onDrop?: (event: DroppableCollectionDropEvent) => void | Promise<void>;
   getDropOperation?: (
     target: DropTarget,
     types: DragTypes,

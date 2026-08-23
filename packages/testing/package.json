@@ -1,7 +1,7 @@
 {
   "name": "@ropav/testing",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
     "./configs/base": "./configs/base.mjs",
@@ -26,13 +26,13 @@
     "jsdom": "30.0.1",
     "playwright": "1.62.1"
   },
-  "peerDependencies": {
-    "vitest": "^4.1.0",
-    "vue": "^3.6.0-rc.5"
-  },
   "devDependencies": {
     "typescript": "5.9.3",
     "vitest": "4.1.10",
     "vue": "catalog:"
+  },
+  "peerDependencies": {
+    "vitest": "^4.1.0",
+    "vue": "^3.6.0-rc.5"
   }
 }

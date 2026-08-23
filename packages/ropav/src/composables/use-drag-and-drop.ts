@@ -48,17 +48,17 @@ export interface DragAndDropOptions {
   /* -- Dropping -------------------------------------------------------------------------- */
 
   /** Items from elsewhere dropped between two rows. */
-  onInsert?: (event: DroppableCollectionInsertDropEvent) => void;
+  onInsert?: (event: DroppableCollectionInsertDropEvent) => void | Promise<void>;
   /** Items from elsewhere dropped on the collection itself. */
-  onRootDrop?: (event: DroppableCollectionRootDropEvent) => void;
+  onRootDrop?: (event: DroppableCollectionRootDropEvent) => void | Promise<void>;
   /** Items dropped onto a row rather than between two. */
-  onItemDrop?: (event: DroppableCollectionOnItemDropEvent) => void;
+  onItemDrop?: (event: DroppableCollectionOnItemDropEvent) => void | Promise<void>;
   /** Rows of this collection moved between siblings. */
-  onReorder?: (event: DroppableCollectionReorderEvent) => void;
+  onReorder?: (event: DroppableCollectionReorderEvent) => void | Promise<void>;
   /** Rows of this collection moved anywhere, including onto a row or across parents. */
-  onMove?: (event: DroppableCollectionReorderEvent) => void;
+  onMove?: (event: DroppableCollectionReorderEvent) => void | Promise<void>;
   /** Replaces every handler above, for a caller that wants to route drops itself. */
-  onDrop?: (event: DroppableCollectionDropEvent) => void;
+  onDrop?: (event: DroppableCollectionDropEvent) => void | Promise<void>;
   onDropActivate?: (event: DroppableCollectionActivateEvent) => void;
   acceptedDragTypes?: "all" | DragType[];
   shouldAcceptItemDrop?: (target: ItemDropTarget, types: DragTypes) => boolean;

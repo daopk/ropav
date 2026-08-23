@@ -10,7 +10,7 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": false,
-  "sortPackageJson": false,
+  "sortPackageJson": true,
   "sortTailwindcss": {
     "stylesheet": "packages/storybook/styles/globals.css",
     "functions": ["tv", "clsx", "cn"]
