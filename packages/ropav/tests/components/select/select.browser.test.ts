@@ -1,9 +1,10 @@
 import { expectNoA11yViolations } from "@ropav/testing/helpers/a11y";
 import { renderVapor } from "@ropav/testing/helpers/vue";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { userEvent } from "vitest/browser";
 import { nextTick } from "vue";
 
+import { parkPointer } from "../../harness/park-pointer";
 import { settled } from "../../harness/settle";
 
 import Fixture from "./fixtures.vue";
@@ -47,6 +48,18 @@ const open = async (result: RenderResult) => {
 };
 
 const cleanups: Array<() => void> = [];
+
+/**
+ * Every case starts with the pointer out of the way.
+ *
+ * The listbox follows the pointer with its highlight, which is a feature and is asserted below. The
+ * cost is that a list opening under a pointer left somewhere by an earlier case — or by another
+ * file, since the page and its one pointer are shared by the whole run — takes its focus from
+ * whatever sits beneath it instead of from the option the test asked for. That surfaced as
+ * `starts on the chosen option` naming the first option rather than the chosen one, with nothing
+ * in the case having moved a pointer.
+ */
+beforeEach(parkPointer);
 
 afterEach(async () => {
   while (cleanups.length > 0) cleanups.pop()?.();
