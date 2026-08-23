@@ -1,4 +1,5 @@
-// Real HeroUI CSS, compiled by `@tailwindcss/vite`, so browser tests assert against the
-// same stylesheet the library ships. Without it a collapsed panel would only look
-// collapsed because of `hidden`, and axe would judge contrast on unstyled markup.
-import "@heroui/styles/css";
+// The stylesheet this package ships, compiled by `@tailwindcss/vite`, so browser tests
+// assert against what a consumer installs - `@heroui/styles` plus the rules carried here
+// on top of it. Without it a collapsed panel would only look collapsed because of
+// `hidden`, and axe would judge contrast on unstyled markup.
+import "@/styles.css";

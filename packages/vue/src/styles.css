@@ -1,2 +1,42 @@
-/* Placeholder file for build process */
 @import "@heroui/styles";
+
+/**
+ * Two rules that exist in the `@heroui/styles` sources but not in its published `3.2.4`
+ * tarball - the release lags the source tree. They are carried here so that installing
+ * this package gets the same layout its browser tests assert. Both are same-layer,
+ * higher-or-equal specificity overrides of what the tarball ships, so a `@heroui/styles`
+ * release that finally includes them makes these blocks redundant rather than conflicting,
+ * and each can then be deleted on its own.
+ */
+@layer components {
+  /**
+   * `.number-field__group` is published as a fixed `40px 1fr 40px`, which reserves both
+   * stepper columns whether or not the steppers are rendered. A field with one stepper,
+   * or none, gets 40px of dead space per missing button.
+   */
+  .number-field__group {
+    grid-template-columns: 1fr;
+
+    &:has([slot="decrement"]) {
+      grid-template-columns: 40px 1fr;
+    }
+
+    &:has([slot="increment"]) {
+      grid-template-columns: 1fr 40px;
+    }
+
+    &:has([slot="decrement"]):has([slot="increment"]) {
+      grid-template-columns: 40px 1fr 40px;
+    }
+  }
+
+  /**
+   * A vertical group stacks along the block axis, so its cross axis is the one that decides
+   * button width. `.button` is `w-fit`, which would leave each button as wide as its own
+   * label and centred against the widest one - a ragged left and right edge. `min-width`
+   * squares them up without overriding the fixed width an icon-only button relies on.
+   */
+  .button-group--vertical .button {
+    @apply min-w-full;
+  }
+}

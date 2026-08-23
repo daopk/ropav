@@ -1,4 +1,5 @@
-@import "@heroui/styles";
+/* The stylesheet the library ships, not `@heroui/styles` directly - it carries rules on top. */
+@import "@heroui/vue/styles";
 
 /* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */
 @source "../../vue/src/**/*.{vue,ts}";
