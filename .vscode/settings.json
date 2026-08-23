@@ -23,6 +23,10 @@
   "[jsonc]": {"editor.defaultFormatter": "oxc.oxc-vscode"},
   "tailwindCSS.classFunctions": ["tv", "clsx", "cn"],
   "tailwindCSS.experimental.configFile": {
-    "packages/storybook/styles/globals.css": ["packages/ropav/**", "packages/storybook/**", "packages/styles/**"]
+    "packages/storybook/styles/globals.css": [
+      "packages/ropav/**",
+      "packages/storybook/**",
+      "packages/styles/**"
+    ]
   }
 }

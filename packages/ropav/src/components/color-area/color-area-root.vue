@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {ColorAreaRootProps, ColorAreaSlotProps} from "./color-area.types";
 import type {Color} from "../../utils/color-types";
+import type {ColorAreaRootProps, ColorAreaSlotProps} from "./color-area.types";
 
 import {colorAreaVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

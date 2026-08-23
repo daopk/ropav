@@ -2,12 +2,6 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
-
-import {Description} from "../description";
-import {FieldError} from "../field-error";
-
-import {Switch, SwitchContent, SwitchControl, SwitchIcon, SwitchThumb} from "./index";
-
 import IconBellFill from "~icons/gravity-ui/bell-fill";
 import IconBellSlash from "~icons/gravity-ui/bell-slash";
 import IconCheck from "~icons/gravity-ui/check";
@@ -18,6 +12,11 @@ import IconPower from "~icons/gravity-ui/power";
 import IconSun from "~icons/gravity-ui/sun";
 import IconVolumeFill from "~icons/gravity-ui/volume-fill";
 import IconVolumeSlashFill from "~icons/gravity-ui/volume-slash-fill";
+
+import {Description} from "../description";
+import {FieldError} from "../field-error";
+
+import {Switch, SwitchContent, SwitchControl, SwitchIcon, SwitchThumb} from "./index";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Switch.Content` through, so dot notation cannot be used here.

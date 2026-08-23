@@ -1,9 +1,9 @@
+import type {Color} from "../utils/color-types";
 import type {
   FormValidationState,
   ValidationBehavior,
   ValidationFunction,
 } from "./use-form-validation-state";
-import type {Color} from "../utils/color-types";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, shallowRef, toValue, watch} from "vue";

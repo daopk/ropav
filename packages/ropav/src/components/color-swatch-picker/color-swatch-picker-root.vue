@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
+import type {CollectionKey} from "../../composables/use-collection";
+import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {Color} from "../../utils/color-types";
 import type {
   ColorSwatchPickerRootProps,
   ColorSwatchPickerRootSlotProps,
 } from "./color-swatch-picker.types";
-import type {CollectionKey} from "../../composables/use-collection";
-import type {CollectionSelection} from "../../composables/use-selection-manager";
-import type {Color} from "../../utils/color-types";
 
 import {colorSwatchPickerVariants} from "@ropav/styles";
 import {computed, shallowRef, triggerRef} from "vue";

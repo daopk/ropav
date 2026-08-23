@@ -2,6 +2,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconFloppyDisk from "~icons/gravity-ui/floppy-disk";
 
 import {Button} from "../button";
 import {Description} from "../description";
@@ -13,8 +14,6 @@ import {TextArea} from "../textarea";
 import {TextField} from "../textfield";
 
 import {FieldGroup, Fieldset, FieldsetActions, FieldsetLegend, FieldsetRoot} from "./index";
-
-import IconFloppyDisk from "~icons/gravity-ui/floppy-disk";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `Fieldset.Legend` through, so dot notation cannot be used here.

@@ -1,13 +1,13 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import IconBell from "~icons/gravity-ui/bell";
+
 import {avatarSrc} from "../../utils/story-assets";
 import {Avatar, AvatarImage} from "../avatar";
 import {SeparatorRoot} from "../separator";
 
 import {Badge, BadgeAnchor, BadgeLabel} from "./index";
-
-import IconBell from "~icons/gravity-ui/bell";
 
 /** Runtime-compiled stories register compound parts individually instead of using dot notation. */
 const components = {

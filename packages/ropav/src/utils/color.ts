@@ -1,3 +1,4 @@
+import type {ColorStringKey} from "../i18n/color";
 import type {
   Color,
   ColorAxes,
@@ -6,7 +7,6 @@ import type {
   ColorFormat,
   ColorSpace,
 } from "./color-types";
-import type {ColorStringKey} from "../i18n/color";
 
 import {NumberFormatter} from "@internationalized/number";
 import {LocalizedStringDictionary, LocalizedStringFormatter} from "@internationalized/string";

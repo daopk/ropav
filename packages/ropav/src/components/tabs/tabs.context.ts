@@ -1,6 +1,6 @@
-import type {TabsKeyboardActivation, TabsOrientation} from "./tabs.types";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {UseTabListStateReturn} from "../../composables/use-tab-list-state";
+import type {TabsKeyboardActivation, TabsOrientation} from "./tabs.types";
 import type {tabsVariants} from "@ropav/styles";
 import type {ComputedRef, ShallowRef} from "vue";
 

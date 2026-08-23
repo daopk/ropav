@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
+import type {CalendarValue} from "../../composables/use-calendar-state";
 import type {CalendarDayViewContext} from "./calendar.context";
 import type {CalendarRootProps, CalendarRootSlotProps} from "./calendar.types";
-import type {CalendarValue} from "../../composables/use-calendar-state";
 import type {DateValue} from "@internationalized/date";
 
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";

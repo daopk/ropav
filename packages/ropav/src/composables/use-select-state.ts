@@ -1,3 +1,4 @@
+import type {VirtualizerNode} from "../utils/virtualizer-layout";
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
 import type {
   FormValidationState,
@@ -10,7 +11,6 @@ import type {
   DisabledBehavior,
   UseSelectionManagerReturn,
 } from "./use-selection-manager";
-import type {VirtualizerNode} from "../utils/virtualizer-layout";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, shallowRef, toValue} from "vue";

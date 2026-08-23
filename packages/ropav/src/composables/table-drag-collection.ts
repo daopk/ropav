@@ -1,6 +1,6 @@
+import type {DragCollection, DragCollectionNode, DragKey} from "../utils/dnd-types";
 import type {CollectionKey} from "./use-collection";
 import type {UseTableCollectionReturn} from "./use-table-collection";
-import type {DragCollection, DragCollectionNode, DragKey} from "../utils/dnd-types";
 
 /**
  * A `DragCollection` over a table's rows.

@@ -4,7 +4,6 @@ import {nextTick} from "vue";
 
 import {getDragSession} from "@/composables/drag-manager";
 import {setInteractionModality} from "@/composables/use-interaction-states";
-
 /**
  * Dragging inside a tree grid.
  *

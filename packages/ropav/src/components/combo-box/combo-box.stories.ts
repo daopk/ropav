@@ -3,6 +3,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
 import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
@@ -26,8 +27,6 @@ import ComboBoxPopover from "./combo-box-popover.vue";
 import ComboBoxRoot from "./combo-box-root.vue";
 import ComboBoxTrigger from "./combo-box-trigger.vue";
 import ComboBoxValue from "./combo-box-value.vue";
-
-import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata, so
 // a dotted tag would be looked up as a component literally named "ComboBox.Trigger".

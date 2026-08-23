@@ -3,6 +3,9 @@ import type {StoryObj} from "@storybook/vue3";
 import type {Component} from "vue";
 
 import {shallowRef} from "vue";
+import IconHardDrive from "~icons/gravity-ui/hard-drive";
+import IconPersons from "~icons/gravity-ui/persons";
+import IconStar from "~icons/gravity-ui/star";
 
 import {Button} from "../button";
 
@@ -17,10 +20,6 @@ import {
   ToastTitle,
   toast,
 } from "./index";
-
-import IconHardDrive from "~icons/gravity-ui/hard-drive";
-import IconPersons from "~icons/gravity-ui/persons";
-import IconStar from "~icons/gravity-ui/star";
 
 /** Runtime-compiled stories register compound parts individually instead of using dot notation. */
 const components = {

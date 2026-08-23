@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {DropdownMenuProps} from "./dropdown.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {DropdownMenuProps} from "./dropdown.types";
 
 import {computed} from "vue";
 

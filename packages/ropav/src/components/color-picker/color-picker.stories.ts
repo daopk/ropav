@@ -3,6 +3,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconShuffle from "~icons/gravity-ui/shuffle";
 
 import {parseColor} from "../../utils/color";
 import {ButtonRoot} from "../button";
@@ -31,8 +32,6 @@ import {ListBoxItemIndicator, ListBoxItemRoot} from "../list-box-item";
 import {SelectIndicator, SelectPopover, SelectRoot, SelectTrigger, SelectValue} from "../select";
 
 import {ColorPickerPopover, ColorPickerRoot, ColorPickerTrigger} from "./index";
-
-import IconShuffle from "~icons/gravity-ui/shuffle";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "ColorPicker.Trigger".

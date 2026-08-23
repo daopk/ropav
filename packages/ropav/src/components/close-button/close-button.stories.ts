@@ -2,10 +2,9 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconCircleXmark from "~icons/gravity-ui/circle-xmark";
 
 import {CloseButton} from "./index";
-
-import IconCircleXmark from "~icons/gravity-ui/circle-xmark";
 
 const components = {CloseButton};
 

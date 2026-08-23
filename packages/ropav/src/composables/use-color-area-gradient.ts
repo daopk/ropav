@@ -1,6 +1,6 @@
-import type {ColorAreaState} from "./use-color-area-state";
 import type {Color, ColorChannel} from "../utils/color-types";
 import type {Direction} from "../utils/locale";
+import type {ColorAreaState} from "./use-color-area-state";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, toValue} from "vue";

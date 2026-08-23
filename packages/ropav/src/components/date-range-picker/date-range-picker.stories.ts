@@ -4,6 +4,7 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, today} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
+import IconChevronDown from "~icons/gravity-ui/chevron-down";
 
 import {Button} from "../button";
 import {
@@ -40,8 +41,6 @@ import {
   DateRangePickerTrigger,
   DateRangePickerTriggerIndicator,
 } from "./index";
-
-import IconChevronDown from "~icons/gravity-ui/chevron-down";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `DateRangePicker.Trigger` through, so dot notation cannot be used here.

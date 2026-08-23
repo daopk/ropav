@@ -1,7 +1,7 @@
+import type {DragKey} from "../utils/dnd-types";
 import type {UseDragHandlers} from "./use-drag";
 import type {UseDraggableCollectionStateReturn} from "./use-draggable-collection-state";
 import type {PressEvent} from "./use-press";
-import type {DragKey} from "../utils/dnd-types";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, toValue} from "vue";

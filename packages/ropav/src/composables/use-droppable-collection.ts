@@ -1,8 +1,3 @@
-import type {UseDropHandlers} from "./use-drop";
-import type {
-  UseDroppableCollectionStateOptions,
-  UseDroppableCollectionStateReturn,
-} from "./use-droppable-collection-state";
 import type {
   DragCollection,
   DragKey,
@@ -15,6 +10,11 @@ import type {
   DroppableCollectionActivateEvent,
   DroppableCollectionDropEvent,
 } from "../utils/dnd-types";
+import type {UseDropHandlers} from "./use-drop";
+import type {
+  UseDroppableCollectionStateOptions,
+  UseDroppableCollectionStateReturn,
+} from "./use-droppable-collection-state";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {computed, onScopeDispose, useId, watch} from "vue";

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {AvatarImageProps} from "./avatar.types";
 import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
+import type {AvatarImageProps} from "./avatar.types";
 
 import {watch} from "vue";
 

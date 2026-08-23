@@ -1,11 +1,11 @@
 <script setup lang="ts" vapor>
+import type {DateRange} from "../../composables/use-calendar";
+import type {DateRangePickerFieldOptions} from "../../composables/use-date-range-picker";
+import type {DateFieldControl} from "../date-input-group";
 import type {
   DateRangePickerRootProps,
   DateRangePickerRootSlotProps,
 } from "./date-range-picker.types";
-import type {DateRange} from "../../composables/use-calendar";
-import type {DateRangePickerFieldOptions} from "../../composables/use-date-range-picker";
-import type {DateFieldControl} from "../date-input-group";
 
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";
 import {dateRangePickerVariants} from "@ropav/styles";

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {TableRowProps, TableRowSlotProps} from "./table.types";
 import type {TableCellMeta} from "../../composables/use-table-collection";
+import type {TableRowProps, TableRowSlotProps} from "./table.types";
 
 import {computed, shallowRef, watch} from "vue";
 

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {AccordionItemProps} from "./accordion.types";
 import type {DisclosureKey} from "../../composables/use-disclosure-group";
+import type {AccordionItemProps} from "./accordion.types";
 
 import {computed} from "vue";
 

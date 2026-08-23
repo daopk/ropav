@@ -1,9 +1,9 @@
 <script setup lang="ts" vapor>
-import type {ColorFieldRootProps, ColorFieldRootSlotProps} from "./color-field.types";
 import type {UseColorChannelFieldReturn} from "../../composables/use-color-channel-field";
 import type {UseColorFieldReturn} from "../../composables/use-color-field";
 import type {Color} from "../../utils/color-types";
 import type {ColorInputGroupControlHandlers} from "../color-input-group";
+import type {ColorFieldRootProps, ColorFieldRootSlotProps} from "./color-field.types";
 
 import {colorFieldVariants} from "@ropav/styles";
 import {computed} from "vue";

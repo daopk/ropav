@@ -1,12 +1,12 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import IconCircleDashed from "~icons/gravity-ui/circle-dashed";
+import IconCircleFill from "~icons/gravity-ui/circle-fill";
+
 import {SeparatorRoot} from "../separator";
 
 import {Chip, ChipLabel} from "./index";
-
-import IconCircleDashed from "~icons/gravity-ui/circle-dashed";
-import IconCircleFill from "~icons/gravity-ui/circle-fill";
 
 /**
  * Runtime-compiled story templates cannot resolve `Chip.Label` — dot notation is an SFC

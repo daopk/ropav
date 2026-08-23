@@ -1,4 +1,3 @@
-import type {TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {
   TableCellMeta,
   TableCollectionItems,
@@ -19,6 +18,7 @@ import type {
 import type {VirtualizerView} from "../../composables/use-virtualizer";
 import type {VirtualizerTableCollection} from "../../utils/virtualizer-collection";
 import type {LayoutInfo, VirtualizerKey} from "../../utils/virtualizer-layout-info";
+import type {TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {tableVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 

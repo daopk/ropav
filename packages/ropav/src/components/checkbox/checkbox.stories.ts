@@ -2,6 +2,9 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconBell from "~icons/gravity-ui/bell";
+import IconComment from "~icons/gravity-ui/comment";
+import IconEnvelope from "~icons/gravity-ui/envelope";
 
 import {CheckboxGroup} from "../checkbox-group";
 import {Description} from "../description";
@@ -9,10 +12,6 @@ import {FieldError} from "../field-error";
 import {Label} from "../label";
 
 import {Checkbox, CheckboxContent, CheckboxControl, CheckboxIndicator} from "./index";
-
-import IconBell from "~icons/gravity-ui/bell";
-import IconComment from "~icons/gravity-ui/comment";
-import IconEnvelope from "~icons/gravity-ui/envelope";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Checkbox.Content` through, so dot notation cannot be used here.

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {ToggleButtonGroupRootProps} from "./toggle-button-group.types";
 import type {ToggleGroupKey} from "../../composables/use-toggle-group-state";
+import type {ToggleButtonGroupRootProps} from "./toggle-button-group.types";
 
 import {toggleButtonGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

@@ -1,5 +1,5 @@
-import type {Timer, ToastQueue} from "./toast-queue";
 import type {ButtonRootProps} from "../button";
+import type {Timer, ToastQueue} from "./toast-queue";
 import type {ToastVariants} from "@ropav/styles";
 import type {Component} from "vue";
 

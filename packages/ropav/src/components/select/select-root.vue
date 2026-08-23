@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor generic="T">
-import type {SelectRootProps, SelectRootSlotProps} from "./select.types";
 import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
+import type {SelectRootProps, SelectRootSlotProps} from "./select.types";
 
 import {selectVariants} from "@ropav/styles";
 import {computed} from "vue";

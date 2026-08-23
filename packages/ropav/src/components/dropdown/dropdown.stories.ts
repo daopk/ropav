@@ -3,6 +3,17 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconArrowRight from "~icons/gravity-ui/arrow-right";
+import IconArrowRightFromSquare from "~icons/gravity-ui/arrow-right-from-square";
+import IconBars from "~icons/gravity-ui/bars";
+import IconEllipsisVertical from "~icons/gravity-ui/ellipsis-vertical";
+import IconFloppyDisk from "~icons/gravity-ui/floppy-disk";
+import IconFolderOpen from "~icons/gravity-ui/folder-open";
+import IconGear from "~icons/gravity-ui/gear";
+import IconPencil from "~icons/gravity-ui/pencil";
+import IconPersons from "~icons/gravity-ui/persons";
+import IconSquarePlus from "~icons/gravity-ui/square-plus";
+import IconTrashBin from "~icons/gravity-ui/trash-bin";
 
 import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
@@ -20,18 +31,6 @@ import DropdownPopover from "./dropdown-popover.vue";
 import DropdownRoot from "./dropdown-root.vue";
 import DropdownSubmenuTrigger from "./dropdown-submenu-trigger.vue";
 import DropdownTrigger from "./dropdown-trigger.vue";
-
-import IconArrowRight from "~icons/gravity-ui/arrow-right";
-import IconArrowRightFromSquare from "~icons/gravity-ui/arrow-right-from-square";
-import IconBars from "~icons/gravity-ui/bars";
-import IconEllipsisVertical from "~icons/gravity-ui/ellipsis-vertical";
-import IconFloppyDisk from "~icons/gravity-ui/floppy-disk";
-import IconFolderOpen from "~icons/gravity-ui/folder-open";
-import IconGear from "~icons/gravity-ui/gear";
-import IconPencil from "~icons/gravity-ui/pencil";
-import IconPersons from "~icons/gravity-ui/persons";
-import IconSquarePlus from "~icons/gravity-ui/square-plus";
-import IconTrashBin from "~icons/gravity-ui/trash-bin";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "Dropdown.Item".

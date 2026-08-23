@@ -1,5 +1,5 @@
-import type {ModalPlacement} from "./modal.types";
 import type {OverlayTriggerState} from "../../composables/use-overlay-trigger-state";
+import type {ModalPlacement} from "./modal.types";
 import type {modalVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 

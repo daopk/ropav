@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor>
-import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {TableCollectionItems} from "../../composables/use-table-collection";
 import type {DropTargetDelegate} from "../../utils/dnd-types";
+import type {TableContentProps, TableSortDescriptor, TableSortDirection} from "./table.types";
 
 import {computed, shallowRef, watch} from "vue";
 

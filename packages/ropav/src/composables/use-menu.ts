@@ -10,8 +10,8 @@ import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 
 import {computed, shallowRef, toValue} from "vue";
 
-import {provideMenuContext} from "../components/menu/menu.context";
 import {provideMenuItemPopupContext} from "../components/menu-item/menu-item.context";
+import {provideMenuContext} from "../components/menu/menu.context";
 
 import {useCollection} from "./use-collection";
 import {useCollectionAutoFocus} from "./use-collection-auto-focus";

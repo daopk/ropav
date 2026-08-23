@@ -1,4 +1,3 @@
-import type {UseSelectionManagerReturn} from "./use-selection-manager";
 import type {
   DragCollection,
   DragKey,
@@ -15,6 +14,7 @@ import type {
   DroppableCollectionRootDropEvent,
   ItemDropTarget,
 } from "../utils/dnd-types";
+import type {UseSelectionManagerReturn} from "./use-selection-manager";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, shallowRef, toValue} from "vue";

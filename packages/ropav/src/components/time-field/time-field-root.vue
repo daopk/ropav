@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {TimeFieldRootProps, TimeFieldRootSlotProps} from "./time-field.types";
 import type {TimeValue} from "../../utils/date-format";
 import type {DateFieldControl} from "../date-input-group";
+import type {TimeFieldRootProps, TimeFieldRootSlotProps} from "./time-field.types";
 
 import {timeFieldVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

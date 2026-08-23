@@ -1,4 +1,3 @@
-import type {PressEvent} from "./use-press";
 import type {DropOperationMask} from "../utils/dnd-constants";
 import type {
   DragEndEvent,
@@ -8,6 +7,7 @@ import type {
   DragStartEvent,
   DropOperation,
 } from "../utils/dnd-types";
+import type {PressEvent} from "./use-press";
 import type {ComputedRef, MaybeRefOrGetter, ShallowRef} from "vue";
 
 import {computed, onScopeDispose, shallowRef, toValue} from "vue";

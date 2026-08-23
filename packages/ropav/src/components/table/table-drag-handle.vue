@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {TableDragHandleProps} from "./table.types";
 import type {PointerType} from "../../composables/use-press";
+import type {TableDragHandleProps} from "./table.types";
 
 import {computed, shallowRef} from "vue";
 

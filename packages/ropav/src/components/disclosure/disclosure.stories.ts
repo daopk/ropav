@@ -2,6 +2,11 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconBox from "~icons/gravity-ui/box";
+import IconChevronDown from "~icons/gravity-ui/chevron-down";
+import IconChevronUp from "~icons/gravity-ui/chevron-up";
+import IconQrCode from "~icons/gravity-ui/qr-code";
+import IconApple from "~icons/tabler/brand-apple-filled";
 
 import {qrCodeSrc} from "../../utils/story-assets";
 import {Button} from "../button";
@@ -15,12 +20,6 @@ import {
   DisclosureIndicator,
   DisclosureTrigger,
 } from "./index";
-
-import IconBox from "~icons/gravity-ui/box";
-import IconChevronDown from "~icons/gravity-ui/chevron-down";
-import IconChevronUp from "~icons/gravity-ui/chevron-up";
-import IconQrCode from "~icons/gravity-ui/qr-code";
-import IconApple from "~icons/tabler/brand-apple-filled";
 
 /**
  * Story templates are compiled at runtime, where Vue resolves a tag like `Disclosure.Trigger`

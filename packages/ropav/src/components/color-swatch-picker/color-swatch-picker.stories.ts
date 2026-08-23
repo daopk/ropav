@@ -3,6 +3,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconStarFill from "~icons/gravity-ui/star-fill";
 
 import {parseColor} from "../../utils/color";
 
@@ -12,8 +13,6 @@ import {
   ColorSwatchPickerRoot,
   ColorSwatchPickerSwatch,
 } from "./index";
-
-import IconStarFill from "~icons/gravity-ui/star-fill";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "ColorSwatchPicker.Item".

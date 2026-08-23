@@ -2,11 +2,6 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
-
-import {Spinner} from "../spinner";
-
-import {Button, buttonVariants} from "./index";
-
 import IconEllipsis from "~icons/gravity-ui/ellipsis";
 import IconEnvelope from "~icons/gravity-ui/envelope";
 import IconGlobe from "~icons/gravity-ui/globe";
@@ -17,6 +12,10 @@ import IconLogoYandex from "~icons/gravity-ui/logo-yandex";
 import IconPaperclip from "~icons/gravity-ui/paperclip";
 import IconPlus from "~icons/gravity-ui/plus";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
+
+import {Spinner} from "../spinner";
+
+import {Button, buttonVariants} from "./index";
 
 const components = {Button, Spinner};
 

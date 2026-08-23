@@ -6,8 +6,8 @@ import {computed, onScopeDispose, shallowRef, watch} from "vue";
 import {useId} from "../../composables/use-id";
 import {useSubmenuTriggerState} from "../../composables/use-overlay-trigger-state";
 import {useSafelyMouseToSubmenu} from "../../composables/use-safely-mouse-to-submenu";
-import {useMenuContext} from "../menu/menu.context";
 import {provideMenuItemPopupContext} from "../menu-item/menu-item.context";
+import {useMenuContext} from "../menu/menu.context";
 
 import {provideDropdownPopoverTarget, useDropdownContext} from "./dropdown.context";
 

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {TabsRootProps, TabsRootSlotProps} from "./tabs.types";
 import type {CollectionKey} from "../../composables/use-collection";
+import type {TabsRootProps, TabsRootSlotProps} from "./tabs.types";
 
 import {tabsVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

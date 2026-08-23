@@ -1,5 +1,5 @@
-import type {QueuedToast} from "./toast.types";
 import type {ToastContentAttrs} from "../../composables/use-toast";
+import type {QueuedToast} from "./toast.types";
 import type {ToastVariants, toastVariants} from "@ropav/styles";
 import type {ComputedRef} from "vue";
 

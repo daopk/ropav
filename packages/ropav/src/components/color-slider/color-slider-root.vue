@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {ColorSliderRootProps, ColorSliderSlotProps} from "./color-slider.types";
 import type {Color, ColorSpace} from "../../utils/color-types";
+import type {ColorSliderRootProps, ColorSliderSlotProps} from "./color-slider.types";
 
 import {colorSliderVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

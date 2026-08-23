@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {AccordionRootProps} from "./accordion.types";
 import type {DisclosureKey} from "../../composables/use-disclosure-group";
+import type {AccordionRootProps} from "./accordion.types";
 
 import {accordionVariants} from "@ropav/styles";
 import {computed} from "vue";

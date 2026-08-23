@@ -1,6 +1,6 @@
+import type {VirtualizerTableCollection} from "../utils/virtualizer-collection";
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
 import type {TableColumnSize} from "./use-table-column-layout";
-import type {VirtualizerTableCollection} from "../utils/virtualizer-collection";
 import type {ComputedRef} from "vue";
 
 import {computed, shallowRef} from "vue";

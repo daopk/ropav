@@ -1,6 +1,7 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconCircleInfo from "~icons/gravity-ui/circle-info";
 
 import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
@@ -13,8 +14,6 @@ import PopoverDialog from "./popover-dialog.vue";
 import PopoverHeading from "./popover-heading.vue";
 import PopoverRoot from "./popover-root.vue";
 import PopoverTrigger from "./popover-trigger.vue";
-
-import IconCircleInfo from "~icons/gravity-ui/circle-info";
 
 // Registered under flat names: a story template is compiled at runtime with no binding
 // metadata, so a dotted tag would be looked up as a component literally named "Popover.Dialog".

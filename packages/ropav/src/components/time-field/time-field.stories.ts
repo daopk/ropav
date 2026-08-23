@@ -4,6 +4,8 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {Time, getLocalTimeZone, now, parseTime} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
+import IconChevronDown from "~icons/gravity-ui/chevron-down";
+import IconClock from "~icons/gravity-ui/clock";
 
 import {Button} from "../button";
 import {Description} from "../description";
@@ -19,9 +21,6 @@ import {
   TimeFieldSegment,
   TimeFieldSuffix,
 } from "./index";
-
-import IconChevronDown from "~icons/gravity-ui/chevron-down";
-import IconClock from "~icons/gravity-ui/clock";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `TimeField.Group` through, so dot notation cannot be used here.

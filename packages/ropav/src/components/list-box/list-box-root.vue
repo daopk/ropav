@@ -1,10 +1,10 @@
 <script setup lang="ts" vapor generic="T">
-import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
 import type {CollectionKey} from "../../composables/use-collection";
 import type {UseDroppableCollectionReturn} from "../../composables/use-droppable-collection";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {DropTargetDelegate} from "../../utils/dnd-types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
+import type {ListBoxRootProps, ListBoxRootSlotProps} from "./list-box.types";
 
 import {listboxVariants} from "@ropav/styles";
 import {computed, onScopeDispose, shallowRef, toValue} from "vue";

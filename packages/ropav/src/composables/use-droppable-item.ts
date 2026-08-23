@@ -1,5 +1,5 @@
-import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
 import type {DropTarget} from "../utils/dnd-types";
+import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {computed, watch} from "vue";

@@ -2,6 +2,8 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconArrowLeft from "~icons/gravity-ui/arrow-left";
+import IconArrowRight from "~icons/gravity-ui/arrow-right";
 
 import {SeparatorRoot} from "../separator";
 
@@ -17,9 +19,6 @@ import {
   PaginationPreviousIcon,
   PaginationSummary,
 } from "./index";
-
-import IconArrowLeft from "~icons/gravity-ui/arrow-left";
-import IconArrowRight from "~icons/gravity-ui/arrow-right";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.

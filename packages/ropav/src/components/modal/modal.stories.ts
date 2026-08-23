@@ -1,6 +1,13 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
+import IconCircleCheck from "~icons/gravity-ui/circle-check";
+import IconCircleInfo from "~icons/gravity-ui/circle-info";
+import IconEnvelope from "~icons/gravity-ui/envelope";
+import IconGear from "~icons/gravity-ui/gear";
+import IconRocket from "~icons/gravity-ui/rocket";
+import IconSparkles from "~icons/gravity-ui/sparkles";
 
 import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
 import {ButtonRoot} from "../button";
@@ -23,14 +30,6 @@ import ModalHeading from "./modal-heading.vue";
 import ModalIcon from "./modal-icon.vue";
 import ModalRoot from "./modal-root.vue";
 import ModalTrigger from "./modal-trigger.vue";
-
-import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
-import IconCircleCheck from "~icons/gravity-ui/circle-check";
-import IconCircleInfo from "~icons/gravity-ui/circle-info";
-import IconEnvelope from "~icons/gravity-ui/envelope";
-import IconGear from "~icons/gravity-ui/gear";
-import IconRocket from "~icons/gravity-ui/rocket";
-import IconSparkles from "~icons/gravity-ui/sparkles";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "Modal.Dialog".

@@ -1,6 +1,6 @@
-import "@testing-library/jest-dom/vitest";
-
 import {installDataTransfer} from "./data-transfer";
+
+import "@testing-library/jest-dom/vitest";
 
 // Vapor components rely on native DOM behaviour rather than a pointer-event
 // abstraction, so no `installPointerEvent()` equivalent is needed here.

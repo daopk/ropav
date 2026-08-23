@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {ColorPickerRootProps, ColorPickerRootSlotProps} from "./color-picker.types";
 import type {Color} from "../../utils/color-types";
+import type {ColorPickerRootProps, ColorPickerRootSlotProps} from "./color-picker.types";
 
 import {colorPickerVariants} from "@ropav/styles";
 import {computed} from "vue";

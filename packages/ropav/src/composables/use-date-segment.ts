@@ -1,5 +1,5 @@
-import type {DateFieldState, DateSegment} from "./use-date-field-state";
 import type {FocusManager} from "../utils/focus";
+import type {DateFieldState, DateSegment} from "./use-date-field-state";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {CalendarDate, toCalendar} from "@internationalized/date";

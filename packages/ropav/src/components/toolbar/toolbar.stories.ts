@@ -1,14 +1,6 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
-import {Button} from "../button";
-import {ButtonGroup, ButtonGroupSeparator} from "../button-group";
-import {SeparatorRoot} from "../separator";
-import {ToggleButton} from "../toggle-button";
-import {ToggleButtonGroup, ToggleButtonGroupSeparator} from "../toggle-button-group";
-
-import {Toolbar} from "./index";
-
 import IconArrowUturnCcwLeft from "~icons/gravity-ui/arrow-uturn-ccw-left";
 import IconArrowUturnCwRight from "~icons/gravity-ui/arrow-uturn-cw-right";
 import IconBold from "~icons/gravity-ui/bold";
@@ -19,6 +11,14 @@ import IconTextAlignCenter from "~icons/gravity-ui/text-align-center";
 import IconTextAlignLeft from "~icons/gravity-ui/text-align-left";
 import IconTextAlignRight from "~icons/gravity-ui/text-align-right";
 import IconUnderline from "~icons/gravity-ui/underline";
+
+import {Button} from "../button";
+import {ButtonGroup, ButtonGroupSeparator} from "../button-group";
+import {SeparatorRoot} from "../separator";
+import {ToggleButton} from "../toggle-button";
+import {ToggleButtonGroup, ToggleButtonGroupSeparator} from "../toggle-button-group";
+
+import {Toolbar} from "./index";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.

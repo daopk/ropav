@@ -2,6 +2,9 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconPaypal from "~icons/ic/baseline-paypal";
+import IconVisa from "~icons/streamline-logos/visa-logo-solid";
+import IconMastercard from "~icons/uim/master-card";
 
 import {Button} from "../button";
 import {Description} from "../description";
@@ -11,10 +14,6 @@ import {Label} from "../label";
 import {Radio, RadioContent, RadioControl, RadioIndicator} from "../radio";
 
 import {RadioGroup} from "./index";
-
-import IconPaypal from "~icons/ic/baseline-paypal";
-import IconVisa from "~icons/streamline-logos/visa-logo-solid";
-import IconMastercard from "~icons/uim/master-card";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `Radio.Content` through, so dot notation cannot be used here.

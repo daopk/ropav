@@ -1,9 +1,9 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
-import {Breadcrumbs, BreadcrumbsItem} from "./index";
-
 import IconCaretRight from "~icons/gravity-ui/caret-right";
+
+import {Breadcrumbs, BreadcrumbsItem} from "./index";
 
 const components = {Breadcrumbs, BreadcrumbsItem};
 

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {DatePickerRootProps, DatePickerRootSlotProps} from "./date-picker.types";
 import type {DateFieldControl} from "../date-input-group";
+import type {DatePickerRootProps, DatePickerRootSlotProps} from "./date-picker.types";
 import type {DateValue} from "@internationalized/date";
 
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";

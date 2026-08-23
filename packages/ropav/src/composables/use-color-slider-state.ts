@@ -1,5 +1,5 @@
-import type {SliderOrientation, SliderState} from "./use-slider-state";
 import type {Color, ColorChannel, ColorSpace} from "../utils/color-types";
+import type {SliderOrientation, SliderState} from "./use-slider-state";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, toValue} from "vue";

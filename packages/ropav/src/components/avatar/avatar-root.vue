@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {AvatarRootProps} from "./avatar.types";
 import type {ImageLoadingStatus} from "../../composables/use-image-loading-status";
+import type {AvatarRootProps} from "./avatar.types";
 
 import {avatarVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

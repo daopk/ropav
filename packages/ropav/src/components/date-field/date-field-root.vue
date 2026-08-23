@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {DateFieldRootProps, DateFieldRootSlotProps} from "./date-field.types";
 import type {DateFieldControl} from "../date-input-group";
+import type {DateFieldRootProps, DateFieldRootSlotProps} from "./date-field.types";
 import type {DateValue} from "@internationalized/date";
 
 import {createCalendar as defaultCreateCalendar} from "@internationalized/date";

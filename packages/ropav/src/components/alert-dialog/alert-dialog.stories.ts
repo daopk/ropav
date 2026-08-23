@@ -1,6 +1,13 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
+import IconCircleInfo from "~icons/gravity-ui/circle-info";
+import IconLockOpen from "~icons/gravity-ui/lock-open";
+import IconRocket from "~icons/gravity-ui/rocket";
+import IconSparkles from "~icons/gravity-ui/sparkles";
+import IconTrashBin from "~icons/gravity-ui/trash-bin";
+import IconTriangleExclamation from "~icons/gravity-ui/triangle-exclamation";
 
 import {useOverlayTriggerState} from "../../composables/use-overlay-trigger-state";
 import {ButtonRoot} from "../button";
@@ -17,14 +24,6 @@ import AlertDialogHeading from "./alert-dialog-heading.vue";
 import AlertDialogIcon from "./alert-dialog-icon.vue";
 import AlertDialogRoot from "./alert-dialog-root.vue";
 import AlertDialogTrigger from "./alert-dialog-trigger.vue";
-
-import IconArrowUpFromLine from "~icons/gravity-ui/arrow-up-from-line";
-import IconCircleInfo from "~icons/gravity-ui/circle-info";
-import IconLockOpen from "~icons/gravity-ui/lock-open";
-import IconRocket from "~icons/gravity-ui/rocket";
-import IconSparkles from "~icons/gravity-ui/sparkles";
-import IconTrashBin from "~icons/gravity-ui/trash-bin";
-import IconTriangleExclamation from "~icons/gravity-ui/triangle-exclamation";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata, so
 // a dotted tag would be looked up as a component literally named "AlertDialog.Dialog".

@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {VirtualizerLayoutProp, VirtualizerRootProps} from "./virtualizer.types";
 import type {Layout} from "../../utils/virtualizer-layout";
+import type {VirtualizerLayoutProp, VirtualizerRootProps} from "./virtualizer.types";
 
 import {computed, shallowRef, watch} from "vue";
 

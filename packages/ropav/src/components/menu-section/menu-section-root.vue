@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {MenuSectionRootProps} from "./menu-section.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {MenuSectionRootProps} from "./menu-section.types";
 
 import {menuSectionVariants} from "@ropav/styles";
 import {computed} from "vue";

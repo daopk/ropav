@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {LinkRootProps, LinkRootSlotProps} from "./link.types";
 import type {PressEvent} from "../../composables/use-press";
+import type {LinkRootProps, LinkRootSlotProps} from "./link.types";
 
 import {linkVariants} from "@ropav/styles";
 import {computed} from "vue";

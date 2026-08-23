@@ -6,6 +6,9 @@ import type {StoryObj} from "@storybook/vue3";
 
 import {getLocalTimeZone, parseDate, parseZonedDateTime, today} from "@internationalized/date";
 import {computed, shallowRef} from "vue";
+import IconCalendar from "~icons/gravity-ui/calendar";
+import IconChevronDown from "~icons/gravity-ui/chevron-down";
+import IconCircleQuestion from "~icons/gravity-ui/circle-question";
 
 import {Button} from "../button";
 import {Description} from "../description";
@@ -25,10 +28,6 @@ import {
   DateFieldSegment,
   DateFieldSuffix,
 } from "./index";
-
-import IconCalendar from "~icons/gravity-ui/calendar";
-import IconChevronDown from "~icons/gravity-ui/chevron-down";
-import IconCircleQuestion from "~icons/gravity-ui/circle-question";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata to
 // resolve `DateField.Group` through, so dot notation cannot be used here.

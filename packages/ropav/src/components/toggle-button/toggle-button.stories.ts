@@ -2,15 +2,14 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
-
-import {ToggleButton} from "./index";
-
 import IconBookmark from "~icons/gravity-ui/bookmark";
 import IconBookmarkFill from "~icons/gravity-ui/bookmark-fill";
 import IconHeart from "~icons/gravity-ui/heart";
 import IconHeartFill from "~icons/gravity-ui/heart-fill";
 import IconPin from "~icons/gravity-ui/pin";
 import IconPinFill from "~icons/gravity-ui/pin-fill";
+
+import {ToggleButton} from "./index";
 
 const components = {IconBookmark, IconBookmarkFill, IconHeart, IconHeartFill, ToggleButton};
 

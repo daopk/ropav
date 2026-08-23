@@ -2,11 +2,6 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
-
-import {ToggleButton} from "../toggle-button";
-
-import {ToggleButtonGroup, ToggleButtonGroupSeparator} from "./index";
-
 import IconBold from "~icons/gravity-ui/bold";
 import IconItalic from "~icons/gravity-ui/italic";
 import IconLayoutCellsLarge from "~icons/gravity-ui/layout-cells-large";
@@ -17,6 +12,10 @@ import IconTextAlignCenter from "~icons/gravity-ui/text-align-center";
 import IconTextAlignLeft from "~icons/gravity-ui/text-align-left";
 import IconTextAlignRight from "~icons/gravity-ui/text-align-right";
 import IconUnderline from "~icons/gravity-ui/underline";
+
+import {ToggleButton} from "../toggle-button";
+
+import {ToggleButtonGroup, ToggleButtonGroupSeparator} from "./index";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.

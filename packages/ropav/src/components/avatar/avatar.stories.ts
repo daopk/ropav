@@ -1,13 +1,13 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
+import IconPerson from "~icons/gravity-ui/person";
+import IconPersonGear from "~icons/gravity-ui/person-gear";
+
 import {avatarSrc} from "../../utils/story-assets";
 import {SeparatorRoot} from "../separator";
 
 import {Avatar, AvatarFallback, AvatarImage} from "./index";
-
-import IconPerson from "~icons/gravity-ui/person";
-import IconPersonGear from "~icons/gravity-ui/person-gear";
 
 /**
  * Runtime-compiled story templates cannot resolve `Avatar.Image` — dot notation is an SFC

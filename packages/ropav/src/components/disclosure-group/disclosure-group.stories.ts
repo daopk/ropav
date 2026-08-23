@@ -2,6 +2,11 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconChevronDown from "~icons/gravity-ui/chevron-down";
+import IconChevronUp from "~icons/gravity-ui/chevron-up";
+import IconQrCode from "~icons/gravity-ui/qr-code";
+import IconExpo from "~icons/logos/expo-icon";
+import IconApple from "~icons/tabler/brand-apple-filled";
 
 import {qrCodeSrc} from "../../utils/story-assets";
 import {Button} from "../button";
@@ -15,12 +20,6 @@ import {
 import {Separator} from "../separator";
 
 import {DisclosureGroup, useDisclosureGroupNavigation} from "./index";
-
-import IconChevronDown from "~icons/gravity-ui/chevron-down";
-import IconChevronUp from "~icons/gravity-ui/chevron-up";
-import IconQrCode from "~icons/gravity-ui/qr-code";
-import IconExpo from "~icons/logos/expo-icon";
-import IconApple from "~icons/tabler/brand-apple-filled";
 
 /**
  * The showcase trigger is an ordinary `Button` behind a wrapper of its own, which is all it

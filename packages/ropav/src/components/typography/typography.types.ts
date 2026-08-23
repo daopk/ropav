@@ -6,10 +6,8 @@ export type TypographyAlign = NonNullable<TypographyVariants["align"]>;
 export type TypographyColor = NonNullable<TypographyVariants["color"]>;
 export type TypographyWeight = NonNullable<TypographyVariants["weight"]>;
 
-export interface TypographyRootProps extends /* @vue-ignore */ Omit<
-  HTMLAttributes,
-  "class" | "color"
-> {
+export interface TypographyRootProps
+  extends /* @vue-ignore */ Omit<HTMLAttributes, "class" | "color"> {
   class?: string;
   /** Text alignment. @default "start" */
   align?: TypographyAlign;

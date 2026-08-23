@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor generic="T">
-import type {TableBodyProps, TableBodySlotProps} from "./table.types";
 import type {VirtualizerNode} from "../../utils/virtualizer-layout";
+import type {TableBodyProps, TableBodySlotProps} from "./table.types";
 
 import {computed, onMounted, shallowRef, watch} from "vue";
 

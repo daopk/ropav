@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor generic="T">
-import type {AutocompleteFilterProps, AutocompleteFilterSlotProps} from "./autocomplete.types";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {AutocompleteFilterProps, AutocompleteFilterSlotProps} from "./autocomplete.types";
 
 import {computed, shallowRef} from "vue";
 

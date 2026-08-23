@@ -1,7 +1,7 @@
+import type {Color, ColorChannel} from "../utils/color-types";
 import type {ColorSliderState} from "./use-color-slider-state";
 import type {SliderGroupAttrs, SliderOutputAttrs} from "./use-slider";
 import type {SliderThumbInputAttrs, UseSliderThumbReturn} from "./use-slider-thumb";
-import type {Color, ColorChannel} from "../utils/color-types";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
 import {computed, toValue} from "vue";

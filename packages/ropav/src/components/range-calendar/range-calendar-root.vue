@@ -1,7 +1,7 @@
 <script setup lang="ts" vapor>
-import type {RangeCalendarRootProps, RangeCalendarRootSlotProps} from "./range-calendar.types";
 import type {DateRange} from "../../composables/use-calendar";
 import type {CalendarDayViewContext} from "../calendar/calendar.context";
+import type {RangeCalendarRootProps, RangeCalendarRootSlotProps} from "./range-calendar.types";
 import type {CalendarDate as CalendarDateValue, DateValue} from "@internationalized/date";
 
 import {CalendarDate, DateFormatter, createCalendar} from "@internationalized/date";
@@ -15,8 +15,8 @@ import {useRangeCalendarState} from "../../composables/use-range-calendar-state"
 import {dataAttr} from "../../utils/assertion";
 import {getGregorianYearOffset} from "../../utils/calendar";
 import {visuallyHiddenStyle} from "../../utils/visually-hidden";
-import {provideCalendarStateContext} from "../calendar/calendar.context";
 import {provideYearPickerContext} from "../calendar-year-picker/calendar-year-picker.context";
+import {provideCalendarStateContext} from "../calendar/calendar.context";
 
 import {provideRangeCalendarContext, useRangeCalendarOwnerContext} from "./range-calendar.context";
 

@@ -1,6 +1,13 @@
 import type {Meta, StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconBars from "~icons/gravity-ui/bars";
+import IconBell from "~icons/gravity-ui/bell";
+import IconEnvelope from "~icons/gravity-ui/envelope";
+import IconGear from "~icons/gravity-ui/gear";
+import IconHouse from "~icons/gravity-ui/house";
+import IconMagnifier from "~icons/gravity-ui/magnifier";
+import IconPerson from "~icons/gravity-ui/person";
 
 import {ButtonRoot} from "../button";
 import {InputRoot} from "../input";
@@ -18,14 +25,6 @@ import DrawerHandle from "./drawer-handle.vue";
 import DrawerHeader from "./drawer-header.vue";
 import DrawerHeading from "./drawer-heading.vue";
 import DrawerRoot from "./drawer-root.vue";
-
-import IconBars from "~icons/gravity-ui/bars";
-import IconBell from "~icons/gravity-ui/bell";
-import IconEnvelope from "~icons/gravity-ui/envelope";
-import IconGear from "~icons/gravity-ui/gear";
-import IconHouse from "~icons/gravity-ui/house";
-import IconMagnifier from "~icons/gravity-ui/magnifier";
-import IconPerson from "~icons/gravity-ui/person";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata, so
 // a dotted tag would be looked up as a component literally named "Drawer.Dialog".

@@ -1,6 +1,6 @@
+import type {Color, ColorChannel, ColorSpace} from "../utils/color-types";
 import type {ValidationBehavior} from "./use-form-validation-state";
 import type {NumberFieldState} from "./use-number-field-state";
-import type {Color, ColorChannel, ColorSpace} from "../utils/color-types";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, toValue} from "vue";

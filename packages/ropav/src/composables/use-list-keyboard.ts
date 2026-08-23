@@ -1,6 +1,6 @@
+import type {Rect, Size} from "../utils/virtualizer-geometry";
 import type {CollectionKey, UseCollectionReturn} from "./use-collection";
 import type {UseSelectionManagerReturn} from "./use-selection-manager";
-import type {Rect, Size} from "../utils/virtualizer-geometry";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 
 import {computed, nextTick, toValue, watch} from "vue";

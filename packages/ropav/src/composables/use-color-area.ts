@@ -1,6 +1,6 @@
+import type {ColorChannel} from "../utils/color-types";
 import type {ColorAreaState} from "./use-color-area-state";
 import type {MoveMoveEvent} from "./use-move";
-import type {ColorChannel} from "../utils/color-types";
 import type {CSSProperties, ComputedRef, MaybeRefOrGetter, Ref} from "vue";
 
 import {computed, nextTick, onScopeDispose, shallowRef, toValue, watch} from "vue";

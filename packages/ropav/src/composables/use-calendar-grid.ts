@@ -1,5 +1,5 @@
-import type {AnyCalendarState, CalendarShared} from "./use-calendar";
 import type {DayOfWeek, WeekdayStyle} from "../utils/calendar";
+import type {AnyCalendarState, CalendarShared} from "./use-calendar";
 import type {CalendarDate} from "@internationalized/date";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 

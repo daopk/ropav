@@ -1,5 +1,5 @@
-import type {UsePressHandlers} from "./use-press";
 import type {FocusManager} from "../utils/focus";
+import type {UsePressHandlers} from "./use-press";
 import type {MaybeRefOrGetter} from "vue";
 
 import {toValue} from "vue";

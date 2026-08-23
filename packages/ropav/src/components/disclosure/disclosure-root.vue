@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {DisclosureRootProps} from "./disclosure.types";
 import type {DisclosureKey} from "../../composables/use-disclosure-group";
+import type {DisclosureRootProps} from "./disclosure.types";
 
 import {disclosureVariants} from "@ropav/styles";
 import {computed} from "vue";

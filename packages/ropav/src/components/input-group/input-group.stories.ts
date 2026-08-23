@@ -2,6 +2,16 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconArrowUp from "~icons/gravity-ui/arrow-up";
+import IconAt from "~icons/gravity-ui/at";
+import IconCopy from "~icons/gravity-ui/copy";
+import IconEnvelope from "~icons/gravity-ui/envelope";
+import IconEye from "~icons/gravity-ui/eye";
+import IconEyeSlash from "~icons/gravity-ui/eye-slash";
+import IconGlobe from "~icons/gravity-ui/globe";
+import IconMicrophone from "~icons/gravity-ui/microphone";
+import IconPlugConnection from "~icons/gravity-ui/plug-connection";
+import IconPlus from "~icons/gravity-ui/plus";
 
 import {Button} from "../button";
 import {Chip, ChipLabel} from "../chip";
@@ -21,17 +31,6 @@ import {
   InputGroupSuffix,
   InputGroupTextArea,
 } from "./index";
-
-import IconArrowUp from "~icons/gravity-ui/arrow-up";
-import IconAt from "~icons/gravity-ui/at";
-import IconCopy from "~icons/gravity-ui/copy";
-import IconEnvelope from "~icons/gravity-ui/envelope";
-import IconEye from "~icons/gravity-ui/eye";
-import IconEyeSlash from "~icons/gravity-ui/eye-slash";
-import IconGlobe from "~icons/gravity-ui/globe";
-import IconMicrophone from "~icons/gravity-ui/microphone";
-import IconPlugConnection from "~icons/gravity-ui/plug-connection";
-import IconPlus from "~icons/gravity-ui/plus";
 
 // Registered part by part: a story template is compiled at runtime, with no binding metadata
 // to resolve `InputGroup.Prefix` through, so dot notation cannot be used here.

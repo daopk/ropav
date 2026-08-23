@@ -1,4 +1,3 @@
-import type {FormValidationState, ValidationBehavior} from "./use-form-validation-state";
 import type {
   FieldOptions,
   FormatterOptions,
@@ -6,6 +5,7 @@ import type {
   MaxGranularity,
 } from "../utils/date-format";
 import type {DateSegmentType, HourCycle, SegmentLimits} from "../utils/incomplete-date";
+import type {FormValidationState, ValidationBehavior} from "./use-form-validation-state";
 import type {Calendar, CalendarIdentifier, DateValue} from "@internationalized/date";
 import type {ComputedRef, MaybeRefOrGetter} from "vue";
 

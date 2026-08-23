@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor generic="T">
-import type {AutocompleteRootProps, AutocompleteRootSlotProps} from "./autocomplete.types";
 import type {SelectedValue, UseSelectStateReturn} from "../../composables/use-select-state";
+import type {AutocompleteRootProps, AutocompleteRootSlotProps} from "./autocomplete.types";
 
 import {autocompleteVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

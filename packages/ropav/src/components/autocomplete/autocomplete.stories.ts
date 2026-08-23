@@ -4,6 +4,8 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
+import IconMapPin from "~icons/gravity-ui/map-pin";
 
 import {useFilter} from "../../composables/use-filter";
 import {avatarSrc} from "../../utils/story-assets";
@@ -40,9 +42,6 @@ import AutocompletePopover from "./autocomplete-popover.vue";
 import AutocompleteRoot from "./autocomplete-root.vue";
 import AutocompleteTrigger from "./autocomplete-trigger.vue";
 import AutocompleteValue from "./autocomplete-value.vue";
-
-import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
-import IconMapPin from "~icons/gravity-ui/map-pin";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "Autocomplete.Trigger".

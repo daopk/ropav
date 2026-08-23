@@ -4,6 +4,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {computed, shallowRef} from "vue";
+import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
 import {avatarSrc} from "../../utils/story-assets";
 import {AvatarFallback, AvatarImage, AvatarRoot} from "../avatar";
@@ -25,8 +26,6 @@ import SelectPopover from "./select-popover.vue";
 import SelectRoot from "./select-root.vue";
 import SelectTrigger from "./select-trigger.vue";
 import SelectValue from "./select-value.vue";
-
-import IconChevronsExpandVertical from "~icons/gravity-ui/chevrons-expand-vertical";
 
 // Registered under flat names: a story template is compiled at runtime with no binding metadata,
 // so a dotted tag would be looked up as a component literally named "Select.Trigger".

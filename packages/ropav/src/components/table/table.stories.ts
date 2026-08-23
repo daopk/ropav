@@ -1,6 +1,6 @@
-import type {TableRootProps, TableSortDescriptor} from "./table.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
 import type {StoryMeta} from "../../utils/story-meta";
+import type {TableRootProps, TableSortDescriptor} from "./table.types";
 import type {StoryObj} from "@storybook/vue3";
 import type {SortingState, Updater} from "@tanstack/vue-table";
 
@@ -11,6 +11,13 @@ import {
   useVueTable,
 } from "@tanstack/vue-table";
 import {computed, shallowRef} from "vue";
+import IconChevronRight from "~icons/gravity-ui/chevron-right";
+import IconCopy from "~icons/gravity-ui/copy";
+import IconEye from "~icons/gravity-ui/eye";
+import IconGrip from "~icons/gravity-ui/grip";
+import IconPencil from "~icons/gravity-ui/pencil";
+import IconTrashBin from "~icons/gravity-ui/trash-bin";
+import IconTray from "~icons/gravity-ui/tray";
 
 import {useDragAndDrop} from "../../composables/use-drag-and-drop";
 import {avatarSrc} from "../../utils/story-assets";
@@ -53,14 +60,6 @@ import {
   TableSelectionCheckbox,
   TableSortableColumnHeader,
 } from "./index";
-
-import IconChevronRight from "~icons/gravity-ui/chevron-right";
-import IconCopy from "~icons/gravity-ui/copy";
-import IconEye from "~icons/gravity-ui/eye";
-import IconGrip from "~icons/gravity-ui/grip";
-import IconPencil from "~icons/gravity-ui/pencil";
-import IconTrashBin from "~icons/gravity-ui/trash-bin";
-import IconTray from "~icons/gravity-ui/tray";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.

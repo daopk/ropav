@@ -1,15 +1,6 @@
 import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
-import {Button} from "../button";
-import {Chip, ChipLabel} from "../chip";
-import {DescriptionRoot} from "../description";
-import {DropdownMenu, DropdownPopover, DropdownRoot} from "../dropdown";
-import {LabelRoot} from "../label";
-import {MenuItemRoot} from "../menu-item";
-
-import {ButtonGroup, ButtonGroupSeparator} from "./index";
-
 import IconChevronDown from "~icons/gravity-ui/chevron-down";
 import IconChevronLeft from "~icons/gravity-ui/chevron-left";
 import IconChevronRight from "~icons/gravity-ui/chevron-right";
@@ -29,6 +20,15 @@ import IconThumbsDown from "~icons/gravity-ui/thumbs-down";
 import IconThumbsUp from "~icons/gravity-ui/thumbs-up";
 import IconTrashBin from "~icons/gravity-ui/trash-bin";
 import IconVideo from "~icons/gravity-ui/video";
+
+import {Button} from "../button";
+import {Chip, ChipLabel} from "../chip";
+import {DescriptionRoot} from "../description";
+import {DropdownMenu, DropdownPopover, DropdownRoot} from "../dropdown";
+import {LabelRoot} from "../label";
+import {MenuItemRoot} from "../menu-item";
+
+import {ButtonGroup, ButtonGroupSeparator} from "./index";
 
 // Dot notation does not resolve in a runtime-compiled template, so each part is
 // registered on its own.

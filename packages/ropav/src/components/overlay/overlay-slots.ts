@@ -1,5 +1,5 @@
-import type {OverlayArrowContext, OverlayScopeContext} from "./overlay.context";
 import type {PlacementAxis} from "../../utils/position";
+import type {OverlayArrowContext, OverlayScopeContext} from "./overlay.context";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {computed, shallowRef} from "vue";

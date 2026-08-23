@@ -1,8 +1,8 @@
 <script setup lang="ts" vapor generic="T">
-import type {ComboBoxRootProps, ComboBoxRootSlotProps} from "./combo-box.types";
 import type {UseComboBoxStateReturn} from "../../composables/use-combo-box-state";
 import type {UseListKeyboardReturn} from "../../composables/use-list-keyboard";
 import type {SelectedValue} from "../../composables/use-select-state";
+import type {ComboBoxRootProps, ComboBoxRootSlotProps} from "./combo-box.types";
 
 import {comboBoxVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

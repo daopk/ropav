@@ -1,6 +1,6 @@
 <script setup lang="ts" vapor>
-import type {TagGroupRootProps} from "./tag-group.types";
 import type {CollectionSelection} from "../../composables/use-selection-manager";
+import type {TagGroupRootProps} from "./tag-group.types";
 
 import {tagGroupVariants} from "@ropav/styles";
 import {computed, shallowRef} from "vue";

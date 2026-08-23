@@ -1,6 +1,6 @@
+import type {DragKey} from "../utils/dnd-types";
 import type {UseDroppableCollectionStateReturn} from "./use-droppable-collection-state";
 import type {UseDroppableItemOptions} from "./use-droppable-item";
-import type {DragKey} from "../utils/dnd-types";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {computed, useId} from "vue";

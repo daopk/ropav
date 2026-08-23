@@ -2,6 +2,7 @@ import type {StoryMeta} from "../../utils/story-meta";
 import type {StoryObj} from "@storybook/vue3";
 
 import {shallowRef} from "vue";
+import IconCircleDollar from "~icons/gravity-ui/circle-dollar";
 
 import {avatarSrc, photoSrc} from "../../utils/story-assets";
 import {Avatar, AvatarFallback, AvatarImage} from "../avatar";
@@ -14,8 +15,6 @@ import {LinkIcon, LinkRoot} from "../link";
 import {TextField} from "../textfield";
 
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "./index";
-
-import IconCircleDollar from "~icons/gravity-ui/circle-dollar";
 
 /**
  * Story templates are compiled at runtime, where Vue resolves a tag like `Card.Header`
