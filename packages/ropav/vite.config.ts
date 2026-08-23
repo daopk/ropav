@@ -19,11 +19,11 @@ const SKIP_DIRS = new Set(["icons", "utils", "composables", "overlay", "dnd", "d
  * Replace the version placeholder in `src/version.ts` with the real version.
  */
 const replaceVersion = (): Plugin => ({
-  name: "heroui-replace-version",
+  name: "ropav-replace-version",
   transform(code, id) {
     if (!id.includes("version.ts")) return null;
 
-    return {code: code.replace("__HEROUI_VERSION__", packageJson.version), map: null};
+    return {code: code.replace("__ROPAV_VERSION__", packageJson.version), map: null};
   },
 });
 

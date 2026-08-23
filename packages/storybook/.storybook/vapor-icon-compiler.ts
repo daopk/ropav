@@ -10,8 +10,8 @@ interface SvgTransform {
   renderLocals: string;
 }
 
-const ID_MAP_LOCAL = "__heroUIIconIdMap";
-const UID_LOCAL = "__heroUIIconUid";
+const ID_MAP_LOCAL = "__ropavIconIdMap";
+const UID_LOCAL = "__ropavIconUid";
 const RENDER_FUNCTION_START = "function render(_ctx) {";
 
 const PAINT_SERVER_REFERENCE = /\b([\w-]+)="url\(#(.+?)\)"/g;
@@ -47,7 +47,7 @@ const transformSvgIds = (svg: string): SvgTransform => {
 
   const idMapEntries = Array.from(
     referencedIds,
-    (id) => `'${id}':'heroui-icon-'+(++${UID_LOCAL})`,
+    (id) => `'${id}':'ropav-icon-'+(++${UID_LOCAL})`,
   ).join(",");
 
   return {

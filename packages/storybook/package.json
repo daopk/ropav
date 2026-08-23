@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@heroui/styles": "^3.2.4",
-    "@heroui/vue": "workspace:*",
+    "ropav": "workspace:*",
     "tailwind-variants": "3.3.1",
     "vue": "catalog:"
   },

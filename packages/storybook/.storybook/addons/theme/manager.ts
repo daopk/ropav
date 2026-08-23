@@ -17,7 +17,7 @@ import {DEFAULT_THEME, THEME_GLOBAL_TYPE_ID, ensureThemeKey} from "./constants";
  * The event names have to come from `core-events` — their values are camelCase, so
  * listening for the constant *names* subscribes to events that are never emitted.
  */
-addons.register("heroui-theme-manager", (api) => {
+addons.register("ropav-theme-manager", (api) => {
   let applied: string | undefined;
 
   const applyTheme = (theme: string | undefined) => {

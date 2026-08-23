@@ -7,7 +7,7 @@ A Vue 3 component library built on [Vue Vapor](https://github.com/vuejs/core-vap
 
 | Package              | Description                                      |
 | -------------------- | ------------------------------------------------ |
-| `packages/vue`       | The component library                            |
+| `packages/ropav`     | The component library                            |
 | `packages/storybook` | Storybook — the only place to see components run |
 | `packages/testing`   | Shared test harness (jsdom + Playwright browser) |
 

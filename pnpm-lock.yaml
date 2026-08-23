@@ -187,14 +187,78 @@ importers:
         specifier: 10.4.1
         version: 10.4.1(eslint@9.39.2(jiti@2.6.1))
 
+  packages/ropav:
+    dependencies:
+      '@heroui/styles':
+        specifier: ^3.2.4
+        version: 3.2.4(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
+      '@internationalized/date':
+        specifier: 3.12.3
+        version: 3.12.3
+      '@internationalized/number':
+        specifier: 3.6.7
+        version: 3.6.7
+      '@internationalized/string':
+        specifier: 3.2.10
+        version: 3.2.10
+      tailwind-variants:
+        specifier: 3.3.1
+        version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
+    devDependencies:
+      '@heroui/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@storybook/vue3':
+        specifier: 10.2.10
+        version: 10.2.10(storybook@10.2.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(vue@3.6.0-rc.5(typescript@5.9.3))
+      '@tailwindcss/vite':
+        specifier: 4.3.0
+        version: 4.3.0(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))
+      '@tanstack/vue-table':
+        specifier: 8.21.3
+        version: 8.21.3(vue@3.6.0-rc.5(typescript@5.9.3))
+      '@types/fs-extra':
+        specifier: 11.0.4
+        version: 11.0.4
+      '@vitejs/plugin-vue':
+        specifier: 'catalog:'
+        version: 6.0.8(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.6.0-rc.5(typescript@5.9.3))
+      clean-package:
+        specifier: 2.2.0
+        version: 2.2.0
+      fs-extra:
+        specifier: 11.3.3
+        version: 11.3.3
+      tailwindcss:
+        specifier: 4.3.0
+        version: 4.3.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      unplugin-icons:
+        specifier: 23.0.1
+        version: 23.0.1(@vue/compiler-sfc@3.5.41)
+      vite:
+        specifier: 7.3.5
+        version: 7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0)
+      vitest:
+        specifier: 4.1.10
+        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@30.0.1)(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))
+      vue:
+        specifier: 'catalog:'
+        version: 3.6.0-rc.5(typescript@5.9.3)
+      vue-tsc:
+        specifier: 'catalog:'
+        version: 3.3.10(typescript@5.9.3)
+
   packages/storybook:
     dependencies:
       '@heroui/styles':
         specifier: ^3.2.4
         version: 3.2.4(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
-      '@heroui/vue':
+      ropav:
         specifier: workspace:*
-        version: link:../vue
+        version: link:../ropav
       tailwind-variants:
         specifier: 3.3.1
         version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
@@ -299,70 +363,6 @@ importers:
       vue:
         specifier: 'catalog:'
         version: 3.6.0-rc.5(typescript@5.9.3)
-
-  packages/vue:
-    dependencies:
-      '@heroui/styles':
-        specifier: ^3.2.4
-        version: 3.2.4(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
-      '@internationalized/date':
-        specifier: 3.12.3
-        version: 3.12.3
-      '@internationalized/number':
-        specifier: 3.6.7
-        version: 3.6.7
-      '@internationalized/string':
-        specifier: 3.2.10
-        version: 3.2.10
-      tailwind-variants:
-        specifier: 3.3.1
-        version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.0)
-    devDependencies:
-      '@heroui/testing':
-        specifier: workspace:*
-        version: link:../testing
-      '@storybook/vue3':
-        specifier: 10.2.10
-        version: 10.2.10(storybook@10.2.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(vue@3.6.0-rc.5(typescript@5.9.3))
-      '@tailwindcss/vite':
-        specifier: 4.3.0
-        version: 4.3.0(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))
-      '@tanstack/vue-table':
-        specifier: 8.21.3
-        version: 8.21.3(vue@3.6.0-rc.5(typescript@5.9.3))
-      '@types/fs-extra':
-        specifier: 11.0.4
-        version: 11.0.4
-      '@vitejs/plugin-vue':
-        specifier: 'catalog:'
-        version: 6.0.8(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.6.0-rc.5(typescript@5.9.3))
-      clean-package:
-        specifier: 2.2.0
-        version: 2.2.0
-      fs-extra:
-        specifier: 11.3.3
-        version: 11.3.3
-      tailwindcss:
-        specifier: 4.3.0
-        version: 4.3.0
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-      unplugin-icons:
-        specifier: 23.0.1
-        version: 23.0.1(@vue/compiler-sfc@3.5.41)
-      vite:
-        specifier: 7.3.5
-        version: 7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0)
-      vitest:
-        specifier: 4.1.10
-        version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@25.0.3)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(jsdom@30.0.1)(vite@7.3.5(@types/node@25.0.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0))
-      vue:
-        specifier: 'catalog:'
-        version: 3.6.0-rc.5(typescript@5.9.3)
-      vue-tsc:
-        specifier: 'catalog:'
-        version: 3.3.10(typescript@5.9.3)
 
 packages:
 

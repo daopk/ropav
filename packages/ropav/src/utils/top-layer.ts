@@ -7,7 +7,7 @@
  * the element is what lets both those rules be written once. `@heroui/react` inherits the same
  * marker from React Aria, spelled `data-react-aria-top-layer`.
  */
-export const TOP_LAYER_ATTRIBUTE = "data-heroui-top-layer";
+export const TOP_LAYER_ATTRIBUTE = "data-ropav-top-layer";
 
 export const TOP_LAYER_SELECTOR = `[${TOP_LAYER_ATTRIBUTE}]`;
 

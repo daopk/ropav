@@ -19,8 +19,8 @@ const styles = computed(() =>
 // Gradient ids have to be unique per instance, or two spinners on a page paint from
 // whichever definition the document happens to resolve first.
 const id = useId();
-const headGradientId = computed(() => `heroui-spinner-head-${id.value}`);
-const tailGradientId = computed(() => `heroui-spinner-tail-${id.value}`);
+const headGradientId = computed(() => `ropav-spinner-head-${id.value}`);
+const tailGradientId = computed(() => `ropav-spinner-tail-${id.value}`);
 </script>
 
 <template>

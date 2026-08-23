@@ -1,23 +1,22 @@
 {
-  "name": "@heroui/vue",
-  "version": "0.1.0",
+  "name": "ropav",
+  "version": "0.3.0",
   "description": "🚀 Beautiful and modern Vue UI library built with Vapor Mode and Tailwind CSS 4.0.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "author": "HeroUI <support@heroui.com>",
-  "homepage": "https://heroui.com",
+  "author": "daopk",
+  "homepage": "https://github.com/daopk/ropav",
   "keywords": [
-    "hero ui",
+    "ropav",
     "vue",
     "vue 3",
     "vapor",
     "vapor mode",
     "components",
-    "modern components",
     "vue components",
     "vue ui"
   ],
@@ -25,8 +24,7 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public",
-    "tag": "alpha"
+    "access": "public"
   },
   "exports": {
     ".": {
@@ -40,11 +38,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroui-inc/heroui.git",
-    "directory": "packages/vue"
+    "url": "https://github.com/daopk/ropav.git",
+    "directory": "packages/ropav"
   },
   "bugs": {
-    "url": "https://github.com/heroui-inc/heroui/issues"
+    "url": "https://github.com/daopk/ropav/issues"
   },
   "scripts": {
     "dev": "vite build --watch",

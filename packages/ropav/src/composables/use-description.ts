@@ -57,7 +57,7 @@ export const useDescription = (
       if (!node) {
         const element = document.createElement("div");
 
-        element.id = `heroui-description-${nextId++}`;
+        element.id = `ropav-description-${nextId++}`;
         element.style.display = "none";
         element.textContent = text;
         document.body.appendChild(element);

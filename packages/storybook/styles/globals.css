@@ -1,8 +1,8 @@
 /* The stylesheet the library ships, not `@heroui/styles` directly - it carries rules on top. */
-@import "@heroui/vue/styles";
+@import "ropav/styles";
 
 /* Tailwind has to scan the Vue sources, or the classes the SFCs name never get emitted. */
-@source "../../vue/src/**/*.{vue,ts}";
+@source "../../ropav/src/**/*.{vue,ts}";
 
 :root {
   /* Use OS-native cursor for interactive elements (macOS style) */

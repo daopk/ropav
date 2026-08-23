@@ -10,7 +10,7 @@ export default defineConfig({
     exclude: ["sb-vite"],
     include: ["@mdx-js/react"],
   },
-  // `features.vapor` is only a safety net — every SFC in `@heroui/vue` opts in itself.
+  // `features.vapor` is only a safety net — every SFC in `ropav` opts in itself.
   plugins: [
     vue({features: {vapor: true}}),
     // Story icons are compiled to Vapor components, so they render on the same path as

@@ -1,4 +1,4 @@
-export const REDUCE_MOTION_GLOBAL_TYPE_ID = "heroui-reduce-motion";
+export const REDUCE_MOTION_GLOBAL_TYPE_ID = "ropav-reduce-motion";
 
 export const REDUCE_MOTION_VALUES = ["true", "false"] as const;
 export type ReduceMotionKey = (typeof REDUCE_MOTION_VALUES)[number];

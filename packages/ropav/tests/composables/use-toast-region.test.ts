@@ -67,7 +67,7 @@ describe("useToastRegion", () => {
       expect(region).toHaveAttribute("role", "region");
       expect(region).toHaveAttribute("tabindex", "-1");
       // The marker `ariaHideOutside` looks for, so an open modal does not hide the toasts behind it.
-      expect(region).toHaveAttribute("data-heroui-top-layer");
+      expect(region).toHaveAttribute("data-ropav-top-layer");
     });
 
     it("names the region with how many notifications it holds", async () => {

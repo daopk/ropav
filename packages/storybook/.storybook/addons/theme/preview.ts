@@ -7,7 +7,7 @@ export {THEME_GLOBAL_TYPE_ID};
 export const themeGlobalType = {
   [THEME_GLOBAL_TYPE_ID]: {
     name: "Theme",
-    description: "HeroUI theme for components",
+    description: "Ropav theme for components",
     defaultValue: DEFAULT_THEME,
     toolbar: {
       dynamicTitle: true,

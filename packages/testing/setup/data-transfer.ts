@@ -11,7 +11,7 @@
  * sequence a browser emits, file entries, `setDragImage` having a visible effect — belongs in
  * `*.browser.test.ts`, where the real objects exist.
  *
- * Only the surface `@heroui/vue`'s drag and drop layer reads is implemented. The gaps that
+ * Only the surface `ropav`'s drag and drop layer reads is implemented. The gaps that
  * matter are called out inline.
  */
 

@@ -70,7 +70,7 @@ describe("useDismissable", () => {
       const region = document.createElement("div");
       const button = document.createElement("button");
 
-      region.setAttribute("data-heroui-top-layer", "true");
+      region.setAttribute("data-ropav-top-layer", "true");
       region.appendChild(button);
       document.body.appendChild(region);
 

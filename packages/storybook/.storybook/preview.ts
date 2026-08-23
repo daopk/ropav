@@ -15,7 +15,7 @@ import "./globals.css";
  * The only place in this repository that may use `vaporInteropPlugin`.
  *
  * Storybook renders stories with a VDOM `createApp`, and every component in
- * `@heroui/vue` is Vapor. The plugin bridges VDOM parent to Vapor child, which is the
+ * `ropav` is Vapor. The plugin bridges VDOM parent to Vapor child, which is the
  * direction it is designed for and the one that is well supported.
  */
 setup((app) => {

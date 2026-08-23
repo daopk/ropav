@@ -1,4 +1,4 @@
-export const THEME_GLOBAL_TYPE_ID = "heroui-theme";
+export const THEME_GLOBAL_TYPE_ID = "ropav-theme";
 
 export const THEME_VALUES = ["light", "dark"] as const;
 export type ThemeKey = (typeof THEME_VALUES)[number];

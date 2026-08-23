@@ -27,7 +27,7 @@ export const useId = (idOverride?: MaybeRefOrGetter<string | undefined>): Comput
   const generatedId = useVueId();
   // `useVueId()` returns "" when called outside a component instance. An empty id
   // would silently break `aria-controls`/`aria-labelledby` wiring, so fall back.
-  const stableId = generatedId || `heroui-${++fallbackCounter}`;
+  const stableId = generatedId || `ropav-${++fallbackCounter}`;
 
   return computed(() => toValue(idOverride) || stableId);
 };

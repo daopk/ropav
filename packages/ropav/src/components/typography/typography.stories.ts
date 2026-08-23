@@ -33,7 +33,7 @@ export const Default: Story = {
   render: (args) => ({
     components,
     setup: () => ({args}),
-    template: `<Typography v-bind="args">HeroUI Typography</Typography>`,
+    template: `<Typography v-bind="args">Ropav Typography</Typography>`,
   }),
 };
 
@@ -92,7 +92,7 @@ export const InlineCode: Story = {
     template: `
       <div class="flex max-w-2xl flex-col gap-4">
         <Paragraph>
-          Install the package with <Code>pnpm add @heroui/vue</Code> and import
+          Install the package with <Code>pnpm add ropav</Code> and import
           <Code>&lt;Typography&gt;</Code> from the library.
         </Paragraph>
         <Paragraph size="sm">The <Code>typographyVariants</Code> function accepts <Code>type</Code>, <Code>align</Code>, <Code>color</Code>, and <Code>weight</Code> props.</Paragraph>
@@ -209,7 +209,7 @@ export const ArticleExample: Story = {
         <Heading :level="3">Building the Scale</Heading>
         <Paragraph>
           Start with a base size — <Code>16px</Code> (1rem) is the industry standard — and derive
-          heading sizes using a consistent ratio. HeroUI uses a tracking-tight heading stack from
+          heading sizes using a consistent ratio. Ropav uses a tracking-tight heading stack from
           <Code>text-base</Code> through <Code>text-4xl</Code>, giving six levels of hierarchy.
         </Paragraph>
         <Heading :level="3">Readable Body Copy</Heading>
@@ -220,7 +220,7 @@ export const ArticleExample: Story = {
         </Paragraph>
         <Paragraph color="muted" size="sm">
           Shorter paragraphs, generous whitespace, and intentional weight contrast all contribute to
-          readability. These defaults work out of the box with HeroUI's Typography primitive.
+          readability. These defaults work out of the box with Ropav's Typography primitive.
         </Paragraph>
       </article>
     `,
@@ -232,18 +232,18 @@ export const ProseBlock: Story = {
     components,
     template: `
       <Prose class="max-w-2xl">
-        <h1>Getting Started with HeroUI</h1>
+        <h1>Getting Started with Ropav</h1>
         <p>
-          HeroUI is a modern Vue component library built on top of <strong>Tailwind CSS v4</strong>
+          Ropav is a modern Vue component library built on top of <strong>Tailwind CSS v4</strong>
           and <strong>Vapor Mode</strong>. It provides accessible, customizable primitives that you
           can compose into complex interfaces.
         </p>
         <h2>Installation</h2>
         <p>
           Add the library to your project using your preferred package manager. The
-          <code>@heroui/vue</code> package includes every component:
+          <code>ropav</code> package includes every component:
         </p>
-        <pre><code>pnpm add @heroui/vue</code></pre>
+        <pre><code>pnpm add ropav</code></pre>
         <h3>Quick Setup</h3>
         <p>
           Import the stylesheet in your application entry point and wrap your app with the provider:
@@ -271,7 +271,7 @@ export const ProseBlock: Story = {
         <hr />
         <h2>Next Steps</h2>
         <p>
-          Explore the <a href="https://heroui.com">component stories</a> in Storybook to see every
+          Explore the <a href="https://github.com/daopk/ropav">component stories</a> in Storybook to see every
           variant and composition in action. Each component ships with comprehensive documentation and
           live examples.
         </p>

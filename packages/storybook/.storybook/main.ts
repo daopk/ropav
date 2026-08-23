@@ -8,7 +8,7 @@ import {sync as globSync} from "glob";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const STORIES_GLOB = join(__dirname, "../../vue/src/**/*.stories.ts");
+const STORIES_GLOB = join(__dirname, "../../ropav/src/**/*.stories.ts");
 
 /**
  * All stories, or only the ones marked ready. A story counts as ready when its title
