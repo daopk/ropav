@@ -7,6 +7,7 @@ import { nextTick } from "vue";
 import { resetTooltipWarmup } from "@/composables/use-tooltip-trigger-state";
 
 import { finishAnimations, startSlowMotion, stopSlowMotion } from "../../harness/slow-motion";
+import { waitUntil } from "../../harness/wait-until";
 
 import TooltipFixture from "./fixtures.vue";
 
@@ -57,6 +58,25 @@ const tooltipElement = () => document.body.querySelector<HTMLElement>(".tooltip"
  * from somewhere else — hovering an element the pointer is already over moves nothing and reports
  * nothing. React Aria gates hover the same way for the same reason.
  */
+/**
+ * Reach the trigger with a real Tab, from the button before it.
+ *
+ * Counting tab stops from wherever focus happens to be counts the whole page's tab order, and the
+ * page holds more than this fixture — a second mount, a leftover portal, anything focusable a
+ * previous case left behind shifts every stop along by one and the second Tab lands past the
+ * trigger. That surfaced as `opens at once on keyboard focus` finding no tooltip, with nothing in
+ * the case having touched focus.
+ *
+ * Starting from the outside button makes it one stop regardless, and the move is still a real
+ * keypress, which is the part that has to be real: what opens the tooltip is keyboard focus.
+ */
+const tabToTrigger = async (result: RenderResult) => {
+  (result.getByRole("button", { name: "Outside" }) as HTMLElement).focus();
+
+  await userEvent.keyboard("{Tab}");
+  await nextTick();
+};
+
 const arriveWithPointer = async (result: RenderResult) => {
   await userEvent.hover(result.getByRole("button", { name: "Outside" }) as HTMLElement);
   await nextTick();
@@ -165,12 +185,11 @@ describe("Tooltip (browser)", () => {
 
       place(result);
 
-      // The first stop is the outside button, the second is the trigger.
-      await userEvent.keyboard("{Tab}");
-      await userEvent.keyboard("{Tab}");
-      await nextTick();
-      await nextTick();
-      await nextTick();
+      await tabToTrigger(result);
+
+      // Asserted before the tooltip, so focus landing somewhere else reads as that rather than as
+      // the tooltip having failed to open.
+      expect(document.activeElement).toBe(triggerOf(result));
 
       // Focus does not wait, even with a long hover delay configured: a user who tabbed here
       // asked for the label deliberately.
@@ -184,20 +203,18 @@ describe("Tooltip (browser)", () => {
 
       place(result);
 
-      await userEvent.keyboard("{Tab}");
-      await userEvent.keyboard("{Tab}");
-      await nextTick();
-      await nextTick();
-      await nextTick();
+      await tabToTrigger(result);
+
+      expect(document.activeElement).toBe(triggerOf(result));
 
       const tooltip = tooltipElement();
 
-      await userEvent.keyboard("{Escape}");
+      // The entry finishes before Escape is pressed, so the dismissal is not racing the animation
+      // it is meant to follow.
       await settled(tooltip);
-      await nextTick();
-      await nextTick();
 
-      expect(document.body.querySelector(".tooltip")).toBeNull();
+      await userEvent.keyboard("{Escape}");
+      await waitUntil("the tooltip to leave the document", () => tooltipElement() === null);
 
       result.unmount();
     });
